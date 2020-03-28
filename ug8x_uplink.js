@@ -18,7 +18,7 @@
 
 //  "txInfo":                                                  //lorawan node tx info
 //  {
-//      "frequency":868300000,	                               //frequency used for transmission
+//      "frequency":868300000,                                 //frequency used for transmission
 //      “dataRate":
 //        {
 //          "modulation":"LORA",                               //LORA
