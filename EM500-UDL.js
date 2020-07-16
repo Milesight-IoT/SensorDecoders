@@ -14,7 +14,7 @@
  * After decode:
  * {
  *   "battery": 90,
- *   "distance": 0.03
+ *   "distance": 30
  * }
  */
 function Decoder(bytes, port) {
