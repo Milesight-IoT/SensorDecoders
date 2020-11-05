@@ -17,15 +17,15 @@ function Decoder(bytes, port) {
             continue;
         }
 
-        if (bytes[i] == 0x04 && bytes[i + 1] == 0x00) {
+        if (bytes[i] == 0x04 && bytes[i + 1] !== 0xc8) {
             decoded.gpio2 = bytes[i + 2] === 0 ? "off" : "on";
             i += 3;
             continue;
         }
         if (bytes[i] == 0x04 && bytes [i + 1] == 0xc8){
          //Pulse Counter
-          decoded.counter = readUInt16LE(bytes.slice(i + 2, i + 4)) ;
-          i += 4;
+          decoded.counter = readUInt16LE(bytes.slice(i + 2, i + 6)) ;
+          i += 6;
           continue;
         }
 
