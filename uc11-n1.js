@@ -24,7 +24,7 @@ function Decoder(bytes, port) {
         }
         if (bytes[i] == 0x04 && bytes [i + 1] == 0xc8){
          //Pulse Counter
-          decoded.counter = readUInt16LE(bytes.slice(i + 2, i + 6)) ;
+          decoded.counter = readUInt32LE(bytes.slice(i + 2, i + 6)) ;
           i += 6;
           continue;
         }
