@@ -1,5 +1,5 @@
 
-function Decode(fPort, bytes) { 
+function Decoder(bytes, port) {
     var decoded = {};
 
     for (var i = 0; i < bytes.length;) {
