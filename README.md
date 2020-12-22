@@ -1,2 +1,2 @@
 # Decoder
-Example decoder functions to Ursalink end-devices
+Example decoder functions to Milesight IoT sensors
