@@ -1,5 +1,5 @@
 /**
- * Payload Decoder for The Things Network
+ * Payload Decoder for Chirpstack and Milesight network server
  * 
  * Copyright 2020 Milesight IoT
  * 
