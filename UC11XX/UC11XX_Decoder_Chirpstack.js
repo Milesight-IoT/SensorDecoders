@@ -1,4 +1,7 @@
-// UC11XX Payload Decoder
+/** UC11XX Payload Decoder
+ * Payload Decoder for Chirpstack and Milesight network server
+ */
+ 
 function Decode(fPort, bytes) {
     var decoded = {};
 
