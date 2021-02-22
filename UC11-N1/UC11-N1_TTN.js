@@ -24,7 +24,7 @@ function Decoder(bytes, port) {
         }
         // GPIO2
         else if (channel_id === 0x04 && channel_type !== 0xC8) {
-            decoded.gpio2 = bytes[i + 2] === 0 ? "off" : "on";
+            decoded.gpio2 = bytes[i] === 0 ? "off" : "on";
             i += 1;
         }
         // PULSE COUNTER
