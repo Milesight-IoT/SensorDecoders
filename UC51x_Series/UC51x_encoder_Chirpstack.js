@@ -32,7 +32,7 @@ function Encode(fPort, obj) {
         control |= 32;
     }
 
-    // [option] time condition
+    // [option] time condition(Unit：s)
     if (obj.duration) {
         //control |= 0b10000000;
         control |= 128;
@@ -49,7 +49,7 @@ function Encode(fPort, obj) {
     // valve control mask
     encoded.push(control);
 
-    // Command sequence range from 1-255
+    // valve control package sequence from 1-255
     encoded.push(obj.index);
 
     // valve duration condition
