@@ -8,9 +8,9 @@
  */
 function Encoder(object, port) {
     var encoded = [];
-    // config package flag
+    // Package flag
     encoded.push(0xff);
-    // config valve control type
+    // Valve control type
     encoded.push(0x1d);
 
     // config value control mask
@@ -32,14 +32,14 @@ function Encoder(object, port) {
         control |= 32;
     }
 
-    // [option] time condition
+    // [option] time condition(Unit：s)
     if (object.duration) {
         //control |= 0b10000000;
         control |= 128;
         duration = writeInt24LE(object.duration);
     }
 
-    // [option] pulse condtion
+    // [option] pulse condtion(supported only when pulse meter is connected)
     if (object.pulse) {
         //control |= 0b1000000;
         control |= 64;
@@ -49,7 +49,7 @@ function Encoder(object, port) {
     // valve control mask
     encoded.push(control);
 
-    // valve package sequence, 0 means force execute
+    // valve control package sequence from 1-255
     encoded.push(object.index);
 
     // valve duration condition
