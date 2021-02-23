@@ -1,7 +1,7 @@
 /**
  * Payload Encoder for The Things Network
  *
- * Copyright 2020 Milesight IoT
+ * Copyright 2021 Milesight IoT
  *
  * @product UC51x
  * Json Format: {"valve":1,"status":"open","index":1,"duration":60,"pulse":6}
