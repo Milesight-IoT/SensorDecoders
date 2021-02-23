@@ -8,12 +8,12 @@
  */
 function Encode(fPort, obj) {
     var encoded = [];
-    // config package flag
+    // Package flag
     encoded.push(0xff);
-    // config valve control type
+    // Valve control type
     encoded.push(0x1d);
 
-    // config value control mask
+    // config valve control mask
     var duration;
     var pulse;
     var control = 0;
@@ -39,7 +39,7 @@ function Encode(fPort, obj) {
         duration = writeInt24LE(obj.duration);
     }
 
-    // [option] pulse condtion
+    // [option] pulse condtion (supported only when pulse meter is connected)
     if (obj.pulse) {
         //control |= 0b1000000;
         control |= 64;
@@ -49,7 +49,7 @@ function Encode(fPort, obj) {
     // valve control mask
     encoded.push(control);
 
-    // valve package sequence, 0 means force execute
+    // Command sequence range from 1-255
     encoded.push(obj.index);
 
     // valve duration condition
