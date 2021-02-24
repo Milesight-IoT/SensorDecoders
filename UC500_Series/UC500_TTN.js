@@ -27,9 +27,14 @@ function Decoder(bytes, port) {
             decoded.gpio2 = bytes[i] === 0 ? "off" : "on";
             i += 1;
         }
-        // PULSE COUNTER
+        // PULSE COUNTER 1
+        else if (channel_id === 0x03 && channel_type === 0xc8) {
+            decoded.counter1 = readUInt32LE(bytes.slice(i, i + 4));
+            i += 4;
+        }
+        // PULSE COUNTER 2
         else if (channel_id === 0x04 && channel_type === 0xc8) {
-            decoded.counter = readUInt32LE(bytes.slice(i, i + 4));
+            decoded.counter2 = readUInt32LE(bytes.slice(i, i + 4));
             i += 4;
         }
         // ADC 1
