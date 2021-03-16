@@ -32,5 +32,5 @@ function Encode(fPort, obj) {
         bytes.push(0xff);
     }
 
-    return decoded;
+    return bytes;
 }
