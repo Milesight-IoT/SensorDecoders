@@ -6,7 +6,7 @@ exports.handler = (event, context, callback) => {
     var chars = [...data];
 
     var params = Decoder(chars, event.WirelessMetadata.LoRaWAN.FPort);
-    var iotdata = new AWS.IotData({ endpoint: 'aeu5egssm2634-ats.iot.us-east-1.amazonaws.com' });
+    var iotdata = new AWS.IotData({ endpoint: 'xxxxxxxxxxxxx-ats.iot.us-east-1.amazonaws.com' });
     
     var response = {
         topic: event.WirelessMetadata.LoRaWAN.DevEui.concat("/project/sensor/decoded"),
