@@ -1,5 +1,4 @@
 # Connecting Milesight IoT End devices to AWS IoT Core for LoRaWAN - Milesight IoT
-![AM100](AM100.png)
 
 The header code is applicable to all Milesight IoT end-devices listed in this repository. 
 
