@@ -3,7 +3,7 @@
 
 The payload decoder function is applicable to EM500-LGT. 
 
-For more detailed information, please visit [milsight official website](https://www.milesight-iot.com/lorawan/sensor/em500-lgt/).
+For more detailed information, please visit [milesight official website](https://www.milesight-iot.com).
 
 
 ## Payload Definition

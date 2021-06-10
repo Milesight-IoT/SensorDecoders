@@ -2,7 +2,7 @@
 
 The header code is applicable to all Milesight IoT end-devices listed in this repository. 
 
-For more detailed guide, please visit [milsight official knowledge base](https://support.milesight-iot.com/hc/en-us/articles/900007629603).
+For more detailed guide, please visit [milesight official knowledge base](https://support.milesight-iot.com/hc/en-us/articles/900007629603).
 
 
 ## How to Use the Header Code

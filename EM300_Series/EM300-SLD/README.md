@@ -4,7 +4,7 @@
 
 The payload decoder function is applicable to EM300-SLD and EM300-ZLD. 
 
-For more detailed information, please visit [milsight official website](https://www.milesight-iot.com/lorawan/sensor/em300-sldzld/).
+For more detailed information, please visit [milesight official website](https://www.milesight-iot.com).
 
 
 ## Payload Definition

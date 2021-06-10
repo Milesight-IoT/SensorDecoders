@@ -3,7 +3,7 @@
 
 The payload decoder function is applicable to EM300-MCS. 
 
-For more detailed information, please visit [milsight official website](https://wwww.milesight-iot.com).
+For more detailed information, please visit [milesight official website](https://www.milesight-iot.com).
 
 
 ## Payload Definition
