@@ -32,7 +32,7 @@ function Decoder(bytes, port) {
             i += 2;
         }
         else if (channel_id === 0x04 && channel_type === 0xCA) {
-            decoded.humidity = bytes[i] / 2;
+            decoded.humidity = bytes[i] / 100;
             i += 2;
         }
         // EC
