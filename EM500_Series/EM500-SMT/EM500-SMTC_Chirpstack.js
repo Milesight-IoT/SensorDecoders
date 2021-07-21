@@ -27,12 +27,14 @@ function Decode(fPort, bytes) {
             // i +=2;
         }
         // HUMIDITY
+        //old resolution 0.5
         else if (channel_id === 0x04 && channel_type === 0x68) {
             decoded.humidity = bytes[i] / 2;
-            i += 2;
+            i += 1;
         }
+        //new resolution 0.01
         else if (channel_id === 0x04 && channel_type === 0xCA) {
-            decoded.humidity = bytes[i] / 100;
+            decoded.humidity = readInt16LE(bytes.slice(i, i + 2)) / 100;
             i += 2;
         }
         // EC
