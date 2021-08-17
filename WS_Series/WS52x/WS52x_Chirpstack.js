@@ -12,19 +12,24 @@ function Decode(fPort, bytes) {
         var channel_id = bytes[i++];
         var channel_type = bytes[i++];
 
-        // VOLTATE
+        // VOLTAGE
         if (channel_id === 0x03 && channel_type === 0x74) {
-            decoded.voltate = readUInt16LE(bytes.slice(i, i + 2)) / 10;
+            decoded.voltage = readUInt16LE(bytes.slice(i, i + 2)) / 10;
             i += 2;
+        }
+		// ACTIVE POWER
+        else if (channel_id === 0x04 && channel_type === 0x80) {
+            decoded.power = readUInt32LE(bytes.slice(i, i + 4));
+            i += 4;
         }
         // POWER FACTOR
         else if (channel_id === 0x05 && channel_type === 0x81) {
             decoded.factor = bytes[i];
             i += 1;
         }
-        // ENERGY SUM
+        // POWER CONSUMPTION
         else if (channel_id === 0x06 && channel_type == 0x83) {
-            decoded.energy_sum = readUInt32LE(bytes.slice(i, i + 4));
+            decoded.power_sum = readUInt32LE(bytes.slice(i, i + 4));
             i += 4;
         }
         // CURRENT
