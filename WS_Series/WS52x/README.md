@@ -50,6 +50,6 @@ For more detailed information, please visit [milsight official website](https://
     "current": 164,
     "factor": 82,
     "energy_sum": 1110,
-	"power": 1
+    "power": 1
 }
 ```
