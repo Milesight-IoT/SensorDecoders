@@ -17,7 +17,7 @@ function Decoder(bytes, port) {
             decoded.voltage = readUInt16LE(bytes.slice(i, i + 2)) / 10;
             i += 2;
         }
-		// ACTIVE POWER
+	// ACTIVE POWER
         else if (channel_id === 0x04 && channel_type === 0x80) {
             decoded.power = readUInt32LE(bytes.slice(i, i + 4));
             i += 4;
