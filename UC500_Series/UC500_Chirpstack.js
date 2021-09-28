@@ -59,7 +59,7 @@ function Decode(fPort, bytes) {
         }
         // MODBUS
         else if (channel_id === 0xFF && channel_type === 0x0E) {
-            var modbus_chn_id = bytes[i++];
+            var modbus_chn_id = bytes[i++]-6;
             var package_type = bytes[i++];
             var data_type = package_type & 7;
             var date_length = package_type >> 3;
