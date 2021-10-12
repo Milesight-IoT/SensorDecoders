@@ -14,9 +14,9 @@ For more detailed information, please visit [milsight official website](https://
                    [channel_id] [channel_type] [channel_value]
 03: voltage    ->   0x03         0x74          [2bytes ] Unit: V (0.1)
 04: power      ->   0x04         0x80          [4bytes ] Unit: W
-05: factor     ->   0x04         0x81          [1byte  ] Uint: %
+05: factor     ->   0x05         0x81          [1byte  ] Uint: %
 06: power_sum  ->   0x06         0x83          [4bytes ] Uint: W*h
-07: current    ->   0x07         0xc9          [2bytes ] Uint: mA
+07: current    ->   0x07         0xC9          [2bytes ] Uint: mA
 08: state      ->   0x08         0x70          [1byte  ] Uint: 
 ------------------------------------------ WS52x
 
