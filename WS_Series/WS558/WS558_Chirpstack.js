@@ -43,7 +43,7 @@ function Decode(fPort, bytes) {
             // output all switch status
             for (var idx = 0; idx < 8; idx++) {
                 var switchTag = "switch_" + (idx + 1);
-                decoded[switchTag] = (switchFlags > idx) & 1 === 1 ? "on": "off";
+                decoded[switchTag] = ((switchFlags > idx) & 1) === 1 ? "on" : "off";
             }
 
             i += 2;
