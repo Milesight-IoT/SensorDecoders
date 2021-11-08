@@ -39,7 +39,7 @@ function Decoder(bytes, port) {
         }
         // STATE
         else if (channel_id === 0x08 && channel_type == 0x70) {
-            decoded.state = bytes[i] == 1 ? "open" : "close";
+            decoded.state = bytes[i] == 1 || bytes[i] == 0x11 ? "open" : "close";
             i += 1;
         } else {
             break;
