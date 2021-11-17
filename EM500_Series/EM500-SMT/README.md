@@ -15,7 +15,7 @@ For more detailed information, please visit [milesight official website](https:/
  01: battery      -> 0x01         0x75          [1byte ] Unit: %
  03: temperature  -> 0x03         0x67          [2bytes] Unit: °C (℉)
  04: moisture     -> 0x04         0x68          [1byte ] Unit: %RH
- 06: EC           -> 0x05         0x00          [2bytes] Unit: µs/cm
+ 06: EC           -> 0x05         0x7F          [2bytes] Unit: µs/cm
  ------------------------------------------ EM500-SMTC
  ```
 
