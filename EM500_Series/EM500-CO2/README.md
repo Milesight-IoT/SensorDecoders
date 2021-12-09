@@ -15,7 +15,7 @@ For more detailed information, please visit [milesight official website](https:/
  03: temperature  -> 0x03         0x67          [2bytes] Unit: °C (℉)
  04: humidity     -> 0x04         0x68          [1byte ] Unit: %RH
  05: CO2          -> 0x05         0x7D          [2bytes] Unit: ppm
- 06: pressure     -> 0x09         0x73          [2bytes] Unit: hPa
+ 06: pressure     -> 0x06         0x73          [2bytes] Unit: hPa
  ------------------------------------------ EM500-CO2
  ```
 
