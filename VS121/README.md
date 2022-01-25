@@ -18,6 +18,8 @@ FF: hardware_version  -> 0xFF           0x09          [2bytes ] Unit:
 FF: firmware_version  -> 0xFF           0x0A          [4bytes ] Unit:
 
 04: counter           -> 0x04           0xC9          [4bytes ] Unit:
+05: passing           -> 0x05           0xCC          [2bytes ] Unit:
+06: max               -> 0x06           0xCD          [1byte  ] Unit:
 ------------------------------------------ VS121
 
 ---- People Counter Definition ---
@@ -38,6 +40,8 @@ FF 08 66 00 12 34 56 78
 FF 09 01 00
 FF 0A 1F 07 00 4B
 04 C9 03 03 00 02
+05 CC 02 00 01 00
+06 CD 05
 ```
 
 **Output**
@@ -53,5 +57,8 @@ FF 0A 1F 07 00 4B
     "region_0": 1,
     "region_1": 1,
     "region_2": 0
+    "in": 2,
+    "out": 1,
+    "max": 5
 }
 ```
