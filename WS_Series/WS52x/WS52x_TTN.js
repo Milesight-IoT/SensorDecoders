@@ -41,6 +41,9 @@ function Decoder(bytes, port) {
         else if (channel_id === 0x08 && channel_type == 0x70) {
             decoded.state = bytes[i] == 1 || bytes[i] == 0x11 ? "open" : "close";
             i += 1;
+        }
+	else if (channel_id === 0xFF && channel_type == 0x3F) {
+            decoded.outage = bytes[i] == 0xFF ? 1 : 0;
         } else {
             break;
         }
