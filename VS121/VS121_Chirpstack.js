@@ -46,6 +46,11 @@ function Decode(fPort, bytes) {
         else if (channel_id ===0x05 && channel_type === 0xcc) {
             decoded.in = readInt16LE(bytes.slice(i, i + 2));
             decoded.out = readInt16LE(bytes.slice(i + 2, i + 4));
+            i += 4；
+        } 
+        else if (channel_id ===0x06 && channel_type === 0xcd) {
+            decoded.people_max = bytes[i];
+            i += 1;
         } else {
             break;
         }
