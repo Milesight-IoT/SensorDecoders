@@ -42,6 +42,10 @@ function Decode(fPort, bytes) {
                 decoded[tmp] = (region > idx) & 1;
             }
             i += 4;
+        } 
+        else if (channel_id ===0x05 && channel_type === 0xcc) {
+            decoded.in = readInt16LE(bytes.slice(i, i + 2));
+            decoded.out = readInt16LE(bytes.slice(i + 2, i + 4));
         } else {
             break;
         }
@@ -53,6 +57,16 @@ function Decode(fPort, bytes) {
 // bytes to number
 function readUInt16BE(bytes) {
     var value = (bytes[0] << 8) + bytes[1];
+    return value & 0xffff;
+}
+
+function readInt16LE(bytes) {
+    var ref = readUInt16LE(bytes);
+    return ref > 0x7fff ? ref - 0x10000 : ref;
+}
+
+function readUInt16LE(bytes) {
+    var value = (bytes[1] << 8) + bytes[0];
     return value & 0xffff;
 }
 
