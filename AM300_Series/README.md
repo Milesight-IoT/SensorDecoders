@@ -18,7 +18,7 @@ For more detailed information, please visit [milesight official website](https:/
  05: PIR          -> 0x05         0x00          [1byte ] Unit: 
  06: light_level  -> 0x06         0xCB          [1byte ] Unit: 
  07: CO2          -> 0x07         0x7D          [2bytes] Unit: ppm
- 08: tVOC         -> 0x08         0x7D          [2bytes] Unit: ppb
+ 08: tVOC         -> 0x08         0x7D          [2bytes] Unit: 
  09: pressure     -> 0x09         0x73          [2bytes] Unit: hPa
  ------------------------------------------ AM307
  
