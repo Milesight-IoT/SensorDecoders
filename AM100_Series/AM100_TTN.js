@@ -5,7 +5,7 @@
  * 
  * @product AM104 / AM107
  */
-function Decode(bytes, port) {
+function Decoder(bytes, port) {
     var decoded = {};
 
     for (var i = 0; i < bytes.length;) {
