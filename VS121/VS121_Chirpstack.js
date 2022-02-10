@@ -39,7 +39,7 @@ function Decode(fPort, bytes) {
             var region = readUInt16BE(bytes.slice(i + 2, i + 4));
             for (var idx = 0; idx < decoded.region_count; idx++) {
                 var tmp = "region_" + idx;
-                decoded[tmp] = (region > idx) & 1;
+                decoded[tmp] = (region >> idx) & 1;
             }
             i += 4;
         } 
