@@ -1,7 +1,8 @@
 # Ambience Monitoring Sensors - Milesight IoT
-![AM100](AM100.png)
+![AM103](AM103.png)
+![AM104](AM107.png)
 
-The payload decoder function is applicable to AM104 and AM107. 
+The payload decoder function is applicable to AM103, AM103L, AM104 (AM100) and AM107(AM102). 
 
 For more detailed information, please visit [milesight official website](https://www.milesight-iot.com).
 
@@ -17,12 +18,10 @@ For more detailed information, please visit [milesight official website](https:/
  04: humidity     -> 0x04         0x68          [1byte ] Unit: %RH
  05: activity     -> 0x05         0x6A          [2bytes] Unit: 
  06: illumination -> 0x06         0x65          [6bytes] Unit: lux
- ------------------------------------------ AM104
-
  07: CO2          -> 0x07         0x7D          [2bytes] Unit: ppm
  08: tVOC         -> 0x08         0x7D          [2bytes] Unit: ppb
  09: pressure     -> 0x09         0x73          [2bytes] Unit: hPa
- ------------------------------------------ AM107
+
  ```
 
 ## Example for The Things Network
