@@ -1,5 +1,5 @@
 # Ambience Monitoring Sensors - Milesight IoT
-![AM100](AM300.png)
+![AM300](AM319.png)
 
 The payload decoder function is applicable to AM307 and AM319. 
 
