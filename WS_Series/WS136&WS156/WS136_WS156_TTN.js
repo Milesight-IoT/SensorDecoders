@@ -20,8 +20,8 @@ function Decoder(bytes, port) {
         else if (channel_id === 0xff && channel_type === 0x34) {
             var id = bytes[i];
             var command = [bytes[i + 2], bytes[i + 1]];
-            decoded[`channel_${id}`] = "trigger";
-            decoded[`channel_${id}_command`] = command;
+            decoded[`button_${id}`] = "trigger";
+       //   decoded[`button_${id}_command`] = command;
             i += 3;
         } else {
             break;
