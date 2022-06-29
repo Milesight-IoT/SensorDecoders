@@ -14,7 +14,7 @@ For more detailed information, please visit [milesight official website](https:/
                    [channel_id] [channel_type] [channel_value]
 01: battery      -> 0x01         0x75          [1byte ] Unit: %
 03: state        -> 0x03         0x00          [1byte ] Unit:
-04: remove       -> 0x04         0x00          [1byte ] Unit:
+04: install      -> 0x04         0x00          [1byte ] Unit:
 ------------------------------------------ WS301
 ```
 
