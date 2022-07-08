@@ -16,7 +16,7 @@ function Decode(fPort, bytes) {
             decoded.state= (bytes[i] === 0) ? 'normal' : 'abnormal';
             i += 1;
         }
-	      //vale
+	//vale
         else if (channel_id === 0x06 && channel_type === 0x01) {
             decoded.valve = (bytes[i] === 0) ? 'close' : 'open';
             i += 1;
@@ -27,12 +27,12 @@ function Decode(fPort, bytes) {
             i += 1;
         }
         //remained life time for the sensor
-	      else if (channel_id === 0x08 && channel_type === 0x90) {
+	else if (channel_id === 0x08 && channel_type === 0x90) {
             decoded.life_remain = readUInt32LE(bytes.slice(i, i + 4)) + "s";
             i += 4;
         }
         //alarm info
-	      else if (channel_id === 0xff && channel_type === 0x3f) {
+	else if (channel_id === 0xff && channel_type === 0x3f) {
             var alarm_type = bytes[i];
             switch (alarm_type) {
                 case 0:
@@ -43,8 +43,8 @@ function Decode(fPort, bytes) {
                     decoded.alarm = 'power on';
                     i += 1;
                     break;
-		            case 2:
-		                decoded.alarm = 'sensor failure';
+		case 2:
+		    decoded.alarm = 'sensor failure';
                     i += 1;
                     break;
                 case 3:
