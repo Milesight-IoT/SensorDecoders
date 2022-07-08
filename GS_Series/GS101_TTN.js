@@ -1,3 +1,10 @@
+/**
+ * Payload Decoder for The Things Network
+ *
+ * Copyright 2022 Milesight IoT
+ *
+ * @product GS101
+ */
 function Decoder(bytes, port) {
     var decoded = {};
 
