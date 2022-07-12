@@ -23,12 +23,12 @@ function Decoder(bytes, port) {
     return decoded;
 }
 
-function getSensorType(raw) {
-    return raw >> 4 === 1 ? "smoke sensor" : "unknown";
+function getSensorType(bytes) {
+    return bytes >> 4 === 1 ? "smoke sensor" : "unknown";
 }
 
-function getMessageType(raw) {
-    switch (raw) {
+function getMessageType(bytes) {
+    switch (bytes) {
         case 0x01:
             return 'alarm';
 	case 0x02:
@@ -51,8 +51,8 @@ function getMessageType(raw) {
 
 }
 
-function getTemperature(raw) {
-    return readInt8LE(raw);
+function getTemperature(bytes) {
+    return readInt8LE(bytes);
 }
 
 function readUInt8LE(bytes) {
