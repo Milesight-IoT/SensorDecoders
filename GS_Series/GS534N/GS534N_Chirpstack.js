@@ -31,21 +31,21 @@ function getMessageType(raw) {
     switch (raw) {
         case 0x01:
             return 'alarm';
-		case 0x02:
+	case 0x02:
             return 'silent';
         case 0x04:
             return 'low battery';
-		case 0x05:
+	case 0x05:
             return 'failover';
         case 0x07:
             return 'normal';
-		case 0x0A:
+	case 0x0A:
             return 'removed';
         case 0x0B:
             return 'installed';
-		case 0x0E:
+	case 0x0E:
             return 'testing alarm with normal battery';
-		case 0x0F:
+	case 0x0F:
             return 'testing alarm with low battery';
     }
 
