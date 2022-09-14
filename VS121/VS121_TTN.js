@@ -28,7 +28,7 @@ function Decoder(bytes, port) {
             i += 2;
         }
         // FIRMWARE VERSION
-        else if (channel_id === 0xff && channel_type === 0x0a) {
+        else if (channel_id === 0xff && channel_type === 0x1f) {
             decoded.firmware_version = readVersion(bytes.slice(i, i + 4));
             i += 4;
         }
