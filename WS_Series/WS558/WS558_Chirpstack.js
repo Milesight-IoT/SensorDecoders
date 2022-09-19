@@ -37,7 +37,7 @@ function Decode(fPort, bytes) {
             i += 2;
         }
         // SWITCH STATUS
-        else if (channel_id === 0xFF && channel_type === 0x31) {
+        else if (channel_id === 0x08 && channel_type === 0x31) {
             var switchFlags = bytes[i + 1];
 
             // output all switch status
