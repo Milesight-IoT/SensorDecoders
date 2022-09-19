@@ -17,7 +17,7 @@ For more detailed information, please visit [milesight official website](https:/
  05: power_factor       ->   0x05         0x81          [1byte ] Uint: %
  06: power_consumption  ->   0x06         0x83          [4bytes] Uint: W*h
  07: total_current      ->   0x07         0xC9          [2bytes] Uint: mA            
- FF: switch             ->   0xFF         0x31          [2bytes]  Unit: 
+ 08: switch             ->   0x08         0x31          [2bytes]  Unit: 
  ------------------------------------------ WS558
 
 ---- Switch Value Definition ---
@@ -34,7 +34,7 @@ bitmask:          change            state
 
 **Payload**
 ```
-FF 31 00 01 05 81 64 07 C9 02 00 03 74 B2 08 06 83 01 00 00 00 04 80 01 00 00 00
+08 31 00 01 05 81 64 07 C9 02 00 03 74 B2 08 06 83 01 00 00 00 04 80 01 00 00 00
 ```
 
 **Data Segmentation**
@@ -44,7 +44,7 @@ FF 31 00 01 05 81 64 07 C9 02 00 03 74 B2 08 06 83 01 00 00 00 04 80 01 00 00 00
    - `05 81 64`
    - `06 83 01 00 00 00`
    - `07 C9 02 00`
-   - `FF 31 00 01`
+   - `08 31 00 01`
 
 
 
