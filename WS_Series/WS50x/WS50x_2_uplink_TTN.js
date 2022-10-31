@@ -3,7 +3,7 @@
  *
  * Copyright 2021 Milesight IoT
  *
- * @product WS50x
+ * @product WS50x_2
  */
 function Decoder(bytes, port) {
     var decoded = {};
@@ -13,8 +13,7 @@ function Decoder(bytes, port) {
         var channel_type = bytes[i++];
 
         // SWITCH STATE
-        if (channel_id === 0xff && channel_type === 0x29) {
-            // TTN unsupport binary (0b00000001 --> 1)
+        if (channel_id === 0x08 && channel_type === 0x29) {
             // payload (0 0 0 0 0 0 0 0)
             //  Switch    3 2 1   3 2 1
             //          ------- -------
@@ -28,6 +27,31 @@ function Decoder(bytes, port) {
             decoded.switch_3 = ((bytes[i] >> 2) & 1) == 1 ? "open" : "close";
             decoded.switch_3_change = ((bytes[i] >> 6) & 1) == 1 ? "yes" : "no";
             i += 1;
+        }
+        // VOLTAGE
+        else if (channel_id === 0x03 && channel_type === 0x74) {
+            decoded.voltage = readUInt16LE(bytes.slice(i, i + 2)) / 10;
+            i += 2;
+        }
+        // ACTIVE POWER
+        else if (channel_id === 0x04 && channel_type === 0x80) {
+            decoded.power = readUInt32LE(bytes.slice(i, i + 4));
+            i += 4;
+        }
+        // POWER FACTOR
+        else if (channel_id === 0x05 && channel_type === 0x81) {
+            decoded.factor = bytes[i];
+            i += 1;
+        }
+        // POWER CONSUMPTION
+        else if (channel_id === 0x06 && channel_type == 0x83) {
+            decoded.power_sum = readUInt32LE(bytes.slice(i, i + 4));
+            i += 4;
+        }
+        // CURRENT
+        else if (channel_id === 0x07 && channel_type == 0xc9) {
+            decoded.current = readUInt16LE(bytes.slice(i, i + 2));
+            i += 2;
         } else {
             break;
         }
@@ -35,14 +59,3 @@ function Decoder(bytes, port) {
 
     return decoded;
 }
-
-/*
-{
-    "switch_1": "open|close",
-    "switch_2": "open|close",
-    "switch_3": "open|close",
-    "switch_1_change": "yes|no",
-    "switch_2_change": "yes|no",
-    "switch_3_change": "yes|no"
-}
-*/
