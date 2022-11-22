@@ -1,14 +1,14 @@
 /**
  * Payload Decoder for Chirpstack and Milesight network server
  *
- * Copyright 2021 Milesight IoT
+ * Copyright 2022 Milesight IoT
  *
  * @product UC51x
  */
-function Decode(fPort, bytes){
+function Decode(fPort, bytes) {
     var decoded = {};
 
-    for (var i = 0; i < bytes.length; ) {
+    for (var i = 0; i < bytes.length;) {
         var channel_id = bytes[i++];
         var channel_type = bytes[i++];
 
@@ -36,6 +36,16 @@ function Decode(fPort, bytes){
         else if (channel_id === 0x06 && channel_type === 0xc8) {
             decoded.valve2_pulse = readUInt32LE(bytes.slice(i, i + 4));
             i += 4;
+        }
+        // GPIO 1
+        else if (channel_id === 0x07 && channel_type == 0x01) {
+            decoded.gpio_1 = bytes[i] === 0 ? "off" : "on";
+            i += 1;
+        }
+        // GPIO 2
+        else if (channel_id === 0x08 && channel_type == 0x01) {
+            decoded.gpio_2 = bytes[i] === 0 ? "off" : "on";
+            i += 1;
         } else {
             break;
         }
