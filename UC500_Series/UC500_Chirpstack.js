@@ -38,22 +38,24 @@ function Decode(fPort, bytes) {
             i += 4;
         }
         // ADC 1
+        //For UC50x V2 with firmware version 1.10 and below and UC50x V1, change 1000 to 100.
         else if (channel_id === 0x05) {
             decoded.adc1 = {};
-            decoded.adc1.cur = readInt16LE(bytes.slice(i, i + 2)) / 100;
-            decoded.adc1.min = readInt16LE(bytes.slice(i + 2, i + 4)) / 100;
-            decoded.adc1.max = readInt16LE(bytes.slice(i + 4, i + 6)) / 100;
-            decoded.adc1.avg = readInt16LE(bytes.slice(i + 6, i + 8)) / 100;
+            decoded.adc1.cur = readInt16LE(bytes.slice(i, i + 2)) / 1000;
+            decoded.adc1.min = readInt16LE(bytes.slice(i + 2, i + 4)) / 1000;
+            decoded.adc1.max = readInt16LE(bytes.slice(i + 4, i + 6)) / 1000;
+            decoded.adc1.avg = readInt16LE(bytes.slice(i + 6, i + 8)) / 1000;
             i += 8;
             continue;
         }
         // ADC 2
+        //For UC50x V2 with firmware version 1.10 and below and UC50x V1, change 1000 to 100.
         else if (channel_id === 0x06) {
             decoded.adc2 = {};
-            decoded.adc2.cur = readInt16LE(bytes.slice(i, i + 2)) / 100;
-            decoded.adc2.min = readInt16LE(bytes.slice(i + 2, i + 4)) / 100;
-            decoded.adc2.max = readInt16LE(bytes.slice(i + 4, i + 6)) / 100;
-            decoded.adc2.avg = readInt16LE(bytes.slice(i + 6, i + 8)) / 100;
+            decoded.adc2.cur = readInt16LE(bytes.slice(i, i + 2)) / 1000;
+            decoded.adc2.min = readInt16LE(bytes.slice(i + 2, i + 4)) / 1000;
+            decoded.adc2.max = readInt16LE(bytes.slice(i + 4, i + 6)) / 1000;
+            decoded.adc2.avg = readInt16LE(bytes.slice(i + 6, i + 8)) / 1000;
             i += 8;
             continue;
         }
