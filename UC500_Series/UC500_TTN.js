@@ -1,7 +1,7 @@
 /**
  * Payload Decoder for The Things Network
  * 
- * Copyright 2020 Milesight IoT
+ * Copyright 2022 Milesight IoT
  * 
  * @product UC500 series
  */
@@ -61,7 +61,7 @@ function Decoder(bytes, port) {
         }
         // MODBUS
         else if (channel_id === 0xFF && channel_type === 0x0E) {
-            var modbus_chn_id = bytes[i++]-6;
+            var modbus_chn_id = bytes[i++] - 6;
             var package_type = bytes[i++];
             var data_type = package_type & 7;
             var date_length = package_type >> 3;
@@ -91,6 +91,16 @@ function Decoder(bytes, port) {
                     i += 4;
                     break;
             }
+        }
+        // MODBUS READ ERROR
+        else if (channel_id === 0xff && channel_type === 0x15) {
+            var modbus_chn_id = bytes[i] + 1;
+            var channel_name = "channel_" + modbus_chn_id + "_error";
+            decoded[channel_name] = true;
+            i += 1;
+        }
+        else {
+            break;
         }
     }
 
