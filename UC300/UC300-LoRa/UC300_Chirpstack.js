@@ -15,7 +15,7 @@ var av_chns = [0x0d, 0x0e];
 function Decode(fPort, bytes) {
     var decoded = {};
 
-    for (i = 0; i < bytes.length; ) {
+    for (i = 0; i < bytes.length;) {
         var channel_id = bytes[i++];
         var channel_type = bytes[i++];
 
@@ -98,6 +98,16 @@ function Decode(fPort, bytes) {
                     i += 4;
                     break;
             }
+        }
+        // MODBUS READ ERROR
+        else if (channel_id === 0xff && channel_type === 0x15) {
+            var modbus_chn_id = bytes[i] + 1;
+            var channel_name = "channel_" + modbus_chn_id + "_error";
+            decoded[channel_name] = true;
+            i += 1;
+        }
+        else {
+            break;
         }
     }
 
