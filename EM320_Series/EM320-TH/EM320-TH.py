@@ -28,6 +28,18 @@ def decodeBytes(bytes):
         elif channel_id == 0x04 and channel_type == 0x68:
             decoded['humidity'] = bytes[i] / 2
             i += 1
+        # TEMPERATURE & HUMIDITY HISTROY
+        elif channel_id == 0x20 and channel_type == 0XCE:
+            point = {}
+            point['timestamp'] = int.from_bytes(bytes[i: i + 4], 'little', signed=False)
+            point['temperature'] = int.from_bytes(bytes[i + 4:i + 6], 'little', signed=True) / 10
+            point['humidity'] = bytes[i + 6] / 2
+
+            if decoded.get('history') is None:
+                decoded['history'] = []
+
+            decoded['history'].append(point)
+            i += 7
         else:
             break
 
@@ -48,4 +60,4 @@ def decodePayload(payload, encoded="base64"):
 
 if __name__ == '__main__':
     decodePayload("AXVcA2c0AQRoZQ==", "base64")
-    decodePayload("01755C03673401046865", "hex")
+    decodePayload("01755C0367340104686520ce9e74466310015d", "hex")
