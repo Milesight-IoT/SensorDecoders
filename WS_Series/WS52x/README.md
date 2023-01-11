@@ -1,8 +1,8 @@
-# Workplace Sensors - Milesight IoT
+# Smart Portable Socket - Milesight IoT
 
-![WS52x](WS52x.png)
+![WS52X](WS52X.png)
 
-The payload decoder function is applicable to WS52x.
+The payload decoder function is applicable to WS52X.
 
 For more detailed information, please visit [milsight official website](https://wwww.milesight-iot.com).
 

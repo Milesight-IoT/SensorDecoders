@@ -1,6 +1,7 @@
 # Ambience Monitoring Sensors - Milesight IoT
 ![AM103](AM103.png)
-![AM104](AM107.png)
+![AM103L](AM103L.png)
+![AM107](AM107.png)
 
 The payload decoder function is applicable to AM103, AM103L, AM104 (AM100) and AM107(AM102). 
 

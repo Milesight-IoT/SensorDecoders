@@ -1,4 +1,4 @@
-# Workplace Sensors - Milesight IoT
+# PIR & Light Sensor - Milesight IoT
 
 ![WS202](WS202.png)
 

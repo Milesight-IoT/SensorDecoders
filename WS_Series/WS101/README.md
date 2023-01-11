@@ -1,4 +1,4 @@
-# Workplace Sensors - Milesight IoT
+# Smart Button - Milesight IoT
 
 ![WS101](WS101.png)
 

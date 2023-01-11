@@ -1,4 +1,4 @@
 # Decoder
-Example decoder functions to Milesight IoT sensors in ttn or chirpstack based platform.
+Example decoder functions to Milesight IoT sensors in TTN or Chirpstack based platform.
 
-To configure the decoder in Milesight LoRaWAN Gateway, please try the chirpstack format.
+To configure the decoder in Milesight LoRaWAN Gateway, please try the Chirpstack format.

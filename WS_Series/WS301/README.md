@@ -1,4 +1,4 @@
-# Workplace Sensors - Milesight IoT
+# Magnetic Contact Switch - Milesight IoT
 
 ![WS301](WS301.png)
 

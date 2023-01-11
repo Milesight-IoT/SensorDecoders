@@ -1,4 +1,4 @@
-# Workplace Sensors - Milesight IoT
+# Smart Wall Switch - Milesight IoT
 ![WS50x](WS50x.png)
 
 The payload decoder function is applicable to WS50x. 

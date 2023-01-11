@@ -1,4 +1,4 @@
-# Temperature & Humidity Sensor - Milesight IoT
+# Pulse Counter - Milesight IoT
 
 ![EM300-DI](EM300-DI.png)
 

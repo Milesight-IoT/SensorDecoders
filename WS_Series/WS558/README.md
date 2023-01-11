@@ -1,4 +1,4 @@
-# Workplace Sensors - Milesight IoT
+# Smart Light Controller - Milesight IoT
 ![WS558](WS558.png)
 
 The payload decoder function is applicable to WS558. 

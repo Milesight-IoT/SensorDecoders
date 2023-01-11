@@ -1,4 +1,4 @@
-# Magnetic Contact Switch - Milesight IoT
+# Ultrasonic Distance/Level Sensor - Milesight IoT
 ![EM300-UDL](EM310-UDL.png)
 
 The payload decoder function is applicable to EM310-UDL. 

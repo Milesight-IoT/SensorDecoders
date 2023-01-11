@@ -1,4 +1,4 @@
-# Workplace Sensors - Milesight IoT
+# AI Workplace Occupancy Sensor - Milesight IoT
 
 ![VS121](VS121.png)
 
