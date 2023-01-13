@@ -22,9 +22,9 @@ function Decoder(bytes, port) {
             decoded.distance = readUInt16LE(bytes.slice(i, i + 2));
             i += 2;
         }
-        // OCCUPY
+        // OCCUPANCY
         else if (channel_id === 0x03 && channel_type === 0X8E) {
-            decoded.occupy = (bytes[i] === 0) ? 'normal' : 'occupy';
+            decoded.occupancy = (bytes[i] === 0) ? 'vacant' : 'occupied';
             i += 1;
         }
         // CALIBRATION

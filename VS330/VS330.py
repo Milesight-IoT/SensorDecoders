@@ -13,15 +13,15 @@ def decodeBytes(bytes):
 
         # BATTERY
         if channel_id == 0x01 and channel_type == 0x75:
-            decoded['battery'] = bytes[i];
+            decoded['battery'] = bytes[i]
             i += 1
         # DISTANCE
         elif channel_id == 0x02 and channel_type == 0x82:
             decoded['distance'] = int.from_bytes(bytes[i: i + 2], 'little', signed=False)
             i += 2
-        # OCCUPY
+        # OCCUPANCY
         elif channel_id == 0x03 and channel_type == 0X8E:
-            decoded['occupy'] = 'normal' if (bytes[i] == 0)  else 'occupy'
+            decoded['occupancy'] = 'vacant' if (bytes[i] == 0)  else 'occupied'
             i += 1
         # CALIBRATION
         elif channel_id == 0x04 and channel_type == 0X8E:
