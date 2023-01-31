@@ -57,8 +57,8 @@ Angle X/Y/Z Definition (bits)
   "angle_x": 0,
   "angle_y": 0,
   "angle_z": 90,
-  "threhold_x": "normal",
-  "threhold_y": "trigger",
-  "threhold_z": "normal"
+  "threshold_x": "normal",
+  "threshold_y": "trigger",
+  "threshold_z": "normal"
 }
 ```

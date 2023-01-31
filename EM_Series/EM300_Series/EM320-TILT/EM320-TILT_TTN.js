@@ -22,9 +22,9 @@
             decoded.angle_x = (readInt16LE(bytes.slice(i, i + 2)) >> 1) / 100;
             decoded.angle_y = (readInt16LE(bytes.slice(i + 2, i + 4)) >> 1) / 100;
             decoded.angle_z = (readInt16LE(bytes.slice(i + 4, i + 6)) >> 1) / 100;
-            decoded.threhold_x = (bytes[i] & 0x01) === 0x01 ? "trigger" : "normal";
-            decoded.threhold_y = (bytes[i + 2] & 0x01) === 0x01 ? "trigger" : "normal";
-            decoded.threhold_z = (bytes[i + 4] & 0x01) === 0x01 ? "trigger" : "normal";
+            decoded.threshold_x = (bytes[i] & 0x01) === 0x01 ? "trigger" : "normal";
+            decoded.threshold_y = (bytes[i + 2] & 0x01) === 0x01 ? "trigger" : "normal";
+            decoded.threshold_z = (bytes[i + 4] & 0x01) === 0x01 ? "trigger" : "normal";
             i += 6;
         } else {
             break;

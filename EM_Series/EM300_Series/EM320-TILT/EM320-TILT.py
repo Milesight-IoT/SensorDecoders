@@ -20,9 +20,9 @@ def decodeBytes(bytes):
             decoded['angle_x'] = (int.from_bytes(bytes[i: i + 2], 'little', signed=True) >> 1) / 100
             decoded['angle_y'] = (int.from_bytes(bytes[i + 2: i + 4], 'little', signed=True) >> 1) / 100
             decoded['angle_z'] = (int.from_bytes(bytes[i + 4: i + 6], 'little', signed=True) >> 1) / 100
-            decoded['threhold_x'] = "trigger" if (bytes[i] & 0x01) == 0x01 else "normal"
-            decoded['threhold_y'] = "trigger" if (bytes[i + 2] & 0x01) == 0x01 else "normal"
-            decoded['threhold_z'] = "trigger" if (bytes[i + 4] & 0x01) == 0x01 else "normal"
+            decoded['threshold_x'] = "trigger" if (bytes[i] & 0x01) == 0x01 else "normal"
+            decoded['threshold_y'] = "trigger" if (bytes[i + 2] & 0x01) == 0x01 else "normal"
+            decoded['threshold_z'] = "trigger" if (bytes[i + 4] & 0x01) == 0x01 else "normal"
             i += 6
         else:
             break
