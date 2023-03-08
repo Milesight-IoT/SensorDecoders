@@ -1,12 +1,14 @@
 /**
- * Payload Decoder for Chirpstack and Milesight network server
+ * Payload Decoder for Chirpstack v4
  *
  * Copyright 2023 Milesight IoT
  *
  * @product TS101
  */
-function Decode(fPort, bytes) {
-    return milesight(bytes);
+function decodeUplink(input) {
+    var bytes = input.bytes;
+    var decoded = milesight(bytes);
+    return {data: decoded};
 }
 
 function milesight(bytes) {
@@ -32,7 +34,7 @@ function milesight(bytes) {
             i += 3;
         }
         // temperature mutation alert 
-        else if (channel_id === 0x93 && channel_type === 0xD7) {
+        else if (channel_id === 0x93 && channel_type === 0xd7) {
             decoded.temperature = readInt16LE(bytes.slice(i, i + 2)) / 10;
             decoded.temperature_change = readInt16LE(bytes.slice(i + 2, i + 4)) / 100;
             decoded.temperature_alert = readAlertType(bytes[i + 4]);

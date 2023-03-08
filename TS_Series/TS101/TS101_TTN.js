@@ -31,8 +31,8 @@ function milesight(bytes) {
             decoded.temperature_alert = readAlertType(bytes[i + 2]);
             i += 3;
         }
-        // temperature spike alert 
-        else if (channel_id === 0x84 && channel_type === 0xd7) {
+        // temperature mutation alert 
+        else if (channel_id === 0x93 && channel_type === 0xd7) {
             decoded.temperature = readInt16LE(bytes.slice(i, i + 2)) / 10;
             decoded.temperature_change = readInt16LE(bytes.slice(i + 2, i + 4)) / 100;
             decoded.temperature_alert = readAlertType(bytes[i + 4]);
@@ -78,7 +78,7 @@ function readAlertType(type) {
         case 1:
             return "threshold";
         case 2:
-            return "spike";
+            return "mutation";
         default:
             return "unkown";
     }
