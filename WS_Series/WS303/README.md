@@ -13,8 +13,6 @@ For more detailed information, please visit [milesight official website](https:/
 |  battery   |    0x01    |     0x75     |          1          | unit：%                      |
 | water_leak |    0x03    |     0x00     |          1          | 0x00：normal<br />0x01：leak |
 
-|
-
 ## Example
 
 ```json
