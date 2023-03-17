@@ -23,7 +23,7 @@ function milesight(bytes) {
         }
         // WATER LEAK
         else if (channel_id === 0x03 && channel_type === 0x00) {
-            decoded.water_leak = (bytes[i] === 0) ? 'normal' : 'leak';
+            decoded.leak_status = (bytes[i] === 0) ? 'no leak' : 'leak';
             i += 1;
         } else {
             break;

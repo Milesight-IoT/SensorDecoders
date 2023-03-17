@@ -8,10 +8,10 @@ For more detailed information, please visit [milesight official website](https:/
 
 ## Payload Definition
 
-|  channel   | channel_id | channel_type | data_length (bytes) | description                  |
-| :--------: | :--------: | :----------: | :-----------------: | ---------------------------- |
-|  battery   |    0x01    |     0x75     |          1          | unit：%                      |
-| water_leak |    0x03    |     0x00     |          1          | 0x00：normal<br />0x01：leak |
+|   channel   | channel_id | channel_type | data_length (bytes) | description                   |
+| :---------: | :--------: | :----------: | :-----------------: | ----------------------------- |
+|   battery   |    0x01    |     0x75     |          1          | unit：%                       |
+| leak_status |    0x03    |     0x00     |          1          | 0x00：no leak<br />0x01：leak |
 
 ## Example
 
@@ -19,12 +19,12 @@ For more detailed information, please visit [milesight official website](https:/
 // Sample(hex): 01 75 64 03 00 00
 {
     "battery": 100,
-    "water_leak": "normal"
+    "leak_status": "no leak"
 }
 
 // Sample(hex): 01 75 64 03 00 01
 {
     "battery": 100,
-    "water_leak": "leak"
+    "leak_status": "leak"
 }
 ```

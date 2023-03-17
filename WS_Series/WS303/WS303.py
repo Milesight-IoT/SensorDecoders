@@ -17,7 +17,7 @@ def decodeBytes(bytes):
             i += 1
         # WATER LEAK DECTECT
         elif channel_id == 0x03 and channel_type == 0x00:
-            decoded['water_leak'] = "leak" if bytes[i] else "normal"
+            decoded['leak_status'] = "leak" if bytes[i] else "no leak"
             i += 1
         else:
             break
