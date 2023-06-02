@@ -1,12 +1,14 @@
 /**
- * Payload Decoder for The Things Network
+ * Payload Decoder for Chirpstack v4
  *
- * Copyright 2021 Milesight IoT
+ * Copyright 2023 Milesight IoT
  *
- * @product EM300-TH
+ * @product EM500-SMT
  */
-function Decoder(bytes, port) {
-    return milesight(bytes);
+function decodeUplink(input) {
+    var bytes = input.bytes;
+    var decoded = milesight(bytes);
+    return { data: decoded };
 }
 
 function milesight(bytes) {
@@ -15,7 +17,6 @@ function milesight(bytes) {
     for (var i = 0; i < bytes.length; ) {
         var channel_id = bytes[i++];
         var channel_type = bytes[i++];
-
         // BATTERY
         if (channel_id === 0x01 && channel_type === 0x75) {
             decoded.battery = bytes[i];
@@ -31,21 +32,32 @@ function milesight(bytes) {
             // decoded.temperature = readInt16LE(bytes.slice(i, i + 2)) / 10 * 1.8 + 32;
             // i +=2;
         }
-        // HUMIDITY
+        // MOISTURE (old resolution 0.5)
         else if (channel_id === 0x04 && channel_type === 0x68) {
-            decoded.humidity = bytes[i] / 2;
+            decoded.moisture = bytes[i] / 2;
             i += 1;
         }
-        // TEMPERATURE & HUMIDITY HISTROY
+        // MOISTURE (new resolution 0.01)
+        else if (channel_id === 0x04 && channel_type === 0xca) {
+            decoded.moisture = readInt16LE(bytes.slice(i, i + 2)) / 100;
+            i += 2;
+        }
+        // EC
+        else if (channel_id === 0x05 && channel_type === 0x7f) {
+            decoded.ec = readUInt16LE(bytes.slice(i, i + 2));
+            i += 2;
+        }
+        // HISTROY DATA
         else if (channel_id === 0x20 && channel_type === 0xce) {
             var point = {};
             point.timestamp = readUInt32LE(bytes.slice(i, i + 4));
-            point.temperature = readInt16LE(bytes.slice(i + 4, i + 6)) / 10;
-            point.humidity = bytes[i + 6] / 2;
+            point.ec = readInt16LE(bytes.slice(i + 4, i + 6));
+            point.temperature = readInt16LE(bytes.slice(i + 6, i + 8)) / 10;
+            point.moisture = readInt16LE(bytes.slice(i + 8, i + 10)) / 100;
 
             decoded.history = decoded.history || [];
             decoded.history.push(point);
-            i += 8;
+            i += 10;
         } else {
             break;
         }

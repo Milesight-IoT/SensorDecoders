@@ -1,12 +1,14 @@
 /**
- * Payload Decoder for The Things Network
+ * Payload Decoder for Chirpstack v4
  *
  * Copyright 2023 Milesight IoT
  *
  * @product AM307 / AM319
  */
-function Decoder(bytes, port) {
-    return milesight(bytes);
+function decodeUplink(input) {
+    var bytes = input.bytes;
+    var decoded = milesight(bytes);
+    return { data: decoded };
 }
 
 function milesight(bytes) {
