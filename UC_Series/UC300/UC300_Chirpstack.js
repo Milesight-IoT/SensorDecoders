@@ -1,10 +1,13 @@
 /**
- * Payload Decoder for Chirpstack and Milesight gateway network server
+ * Payload Decoder for Milesight Network Server
  *
- * Copyright 2022 Milesight IoT
+ * Copyright 2023 Milesight IoT
  *
- * @product UC300 series
+ * @product UC300
  */
+function Decode(fPort, bytes) {
+    return milesight(bytes);
+}
 
 var gpio_in_chns = [0x03, 0x04, 0x05, 0x06];
 var gpio_out_chns = [0x07, 0x08];
@@ -12,28 +15,52 @@ var pt100_chns = [0x09, 0x0a];
 var ai_chns = [0x0b, 0x0c];
 var av_chns = [0x0d, 0x0e];
 
-function Decode(fPort, bytes) {
+function milesight(bytes) {
     var decoded = {};
 
-    for (i = 0; i < bytes.length;) {
+    for (i = 0; i < bytes.length; ) {
         var channel_id = bytes[i++];
         var channel_type = bytes[i++];
-
-        // GPIO Input
-        if (includes(gpio_in_chns, channel_id) && channel_type === 0x00) {
+        // PROTOCOL VESION
+        if (channel_id === 0xff && channel_type === 0x01) {
+            decoded.protocol_version = bytes[i];
+            i += 1;
+        }
+        // POWER ON
+        else if (channel_id === 0xff && channel_type === 0x0b) {
+            decoded.power = "on";
+            i += 1;
+        }
+        // SERIAL NUMBER
+        else if (channel_id === 0xff && channel_type === 0x16) {
+            decoded.sn = readString(bytes.slice(i, i + 8));
+            i += 8;
+        }
+        // HARDWARE VERSION
+        else if (channel_id === 0xff && channel_type === 0x09) {
+            decoded.hardware_version = readVersion(bytes.slice(i, i + 2));
+            i += 2;
+        }
+        // FIRMWARE VERSION
+        else if (channel_id === 0xff && channel_type === 0x1f) {
+            decoded.firmware_version = readVersion(bytes.slice(i, i + 4));
+            i += 4;
+        }
+        // GPIO INPUT
+        else if (includes(gpio_in_chns, channel_id) && channel_type === 0x00) {
             var id = channel_id - gpio_in_chns[0] + 1;
             var gpio_in_name = "gpio_in_" + id;
             decoded[gpio_in_name] = bytes[i] === 0 ? "off" : "on";
             i += 1;
         }
-        // GPIO Output
+        // GPIO OUTPUT
         else if (includes(gpio_out_chns, channel_id) && channel_type === 0x01) {
             var id = channel_id - gpio_out_chns[0] + 1;
             var gpio_out_name = "gpio_out_" + id;
             decoded[gpio_out_name] = bytes[i] === 0 ? "off" : "on";
             i += 1;
         }
-        // GPIO AS counter
+        // GPIO AS COUNTER
         else if (includes(gpio_in_chns, channel_id) && channel_type === 0xc8) {
             var id = channel_id - gpio_in_chns[0] + 1;
             var counter_name = "counter_" + id;
@@ -51,15 +78,15 @@ function Decode(fPort, bytes) {
         else if (includes(ai_chns, channel_id) && channel_type === 0x02) {
             var id = channel_id - ai_chns[0] + 1;
             var adc_name = "adc_" + id;
-            decoded[adc_name] = readUInt32LE(bytes.slice(i, i + 2)) / 100;
+            decoded[adc_name] = readUInt32LE(bytes.slice(i, i + 4)) / 100;
             i += 4;
             continue;
         }
-        // ADC CHANNEL for voltage
+        // ADC CHANNEL FOR VOLTAGE
         else if (includes(av_chns, channel_id) && channel_type === 0x02) {
             var id = channel_id - av_chns[0] + 1;
             var adv_name = "adv_" + id;
-            decoded[adv_name] = readUInt32LE(bytes.slice(i, i + 2)) / 100;
+            decoded[adv_name] = readUInt32LE(bytes.slice(i, i + 4)) / 100;
             i += 4;
             continue;
         }
@@ -68,28 +95,36 @@ function Decode(fPort, bytes) {
             var modbus_chn_id = bytes[i++] + 1;
             var data_length = bytes[i++];
             var data_type = bytes[i++];
-            var chn = "chn" + modbus_chn_id;
+            var sign = (data_type >>> 7) & 0x01;
+            var type = data_type & 0x7f; // 0b01111111
+            var chn = "modbus_chn_" + modbus_chn_id;
             switch (data_type) {
                 case 0:
                     decoded[chn] = bytes[i] ? "on" : "off";
                     i += 1;
                     break;
                 case 1:
-                    decoded[chn] = bytes[i];
+                    decoded[chn] = sign ? readInt8(bytes.slice(i, i + 1)) : readUInt8(bytes.slice(i, i + 1));
                     i += 1;
                     break;
                 case 2:
                 case 3:
-                    decoded[chn] = readUInt16LE(bytes.slice(i, i + 2));
+                    decoded[chn] = sign ? readInt16LE(bytes.slice(i, i + 2)) : readUInt16LE(bytes.slice(i, i + 2));
                     i += 2;
                     break;
                 case 4:
                 case 6:
+                    decoded[chn] = sign ? readInt32LE(bytes.slice(i, i + 4)) : readUInt32LE(bytes.slice(i, i + 4));
+                    i += 4;
+                    break;
                 case 8:
-                case 9:
                 case 10:
+                    decoded[chn] = sign ? readInt16LE(bytes.slice(i, i + 2)) : readUInt16LE(bytes.slice(i, i + 2));
+                    i += 4;
+                    break;
+                case 9:
                 case 11:
-                    decoded[chn] = readUInt32LE(bytes.slice(i, i + 4));
+                    decoded[chn] = sign ? readInt16LE(bytes.slice(i + 2, i + 4)) : readUInt16LE(bytes.slice(i + 2, i + 4));
                     i += 4;
                     break;
                 case 5:
@@ -102,12 +137,161 @@ function Decode(fPort, bytes) {
         // MODBUS READ ERROR
         else if (channel_id === 0xff && channel_type === 0x15) {
             var modbus_chn_id = bytes[i] + 1;
-            var channel_name = "channel_" + modbus_chn_id + "_error";
-            decoded[channel_name] = true;
+            var channel_name = "modbus_chn_" + modbus_chn_id + "_alert";
+            decoded[channel_name] = "read error";
             i += 1;
         }
+        // ANALOG INPUT STATISTICSs
+        else if (includes(ai_chns, channel_id) && channel_type === 0xe2) {
+            var id = channel_id - ai_chns[0] + 1;
+            var adc_name = "adc_" + id;
+            decoded[adc_name] = readFloat16LE(bytes.slice(i, i + 2));
+            decoded[adc_name + "_max"] = readFloat16LE(bytes.slice(i + 2, i + 4));
+            decoded[adc_name + "_min"] = readFloat16LE(bytes.slice(i + 4, i + 6));
+            decoded[adc_name + "_avg"] = readFloat16LE(bytes.slice(i + 6, i + 8));
+            i += 8;
+        }
+        // ANALOG VOLTAGE STATISTICS
+        else if (includes(av_chns, channel_id) && channel_type === 0xe2) {
+            var id = channel_id - av_chns[0] + 1;
+            var adc_name = "adv_" + id;
+            decoded[adc_name] = readFloat16LE(bytes.slice(i, i + 2));
+            decoded[adc_name + "_max"] = readFloat16LE(bytes.slice(i + 2, i + 4));
+            decoded[adc_name + "_min"] = readFloat16LE(bytes.slice(i + 4, i + 6));
+            decoded[adc_name + "_avg"] = readFloat16LE(bytes.slice(i + 6, i + 8));
+            i += 8;
+        }
+        // PT100 ARGS
+        else if (includes(pt100_chns, channel_id) && channel_type === 0xe2) {
+            var id = channel_id - pt100_chns[0] + 1;
+            var pt100_name = "pt100_" + id;
+            decoded[pt100_name] = readFloat16LE(bytes.slice(i, i + 2));
+            decoded[pt100_name + "_max"] = readFloat16LE(bytes.slice(i + 2, i + 4));
+            decoded[pt100_name + "_min"] = readFloat16LE(bytes.slice(i + 4, i + 6));
+            decoded[pt100_name + "_avg"] = readFloat16LE(bytes.slice(i + 6, i + 8));
+            i += 8;
+        }
+        // CHANNEL HISTORICAL DATA
+        else if (channel_id === 0x20 && channel_type === 0xdc) {
+            decoded.channel_history_data = decoded.channel_history_data || [];
+
+            var timestamp = readUInt32LE(bytes.slice(i, i + 4));
+            var channel_mask = numToBits(readUInt16LE(bytes.slice(i + 4, i + 6)), 16);
+            i += 6;
+
+            var data = { timestamp: timestamp };
+            for (j = 0; j < channel_mask.length; j++) {
+                // SKIP UNUSED CHANNELS
+                if (channel_mask[j] !== 1) continue;
+
+                // GPIO INPUT
+                if (j < 4) {
+                    var type = bytes[i++];
+                    // AS GPIO INPUT
+                    if (type === 0) {
+                        var name = "gpio_in_" + (j + 1);
+                        data[name] = readUInt32LE(bytes.slice(i, i + 4)) === 0 ? "off" : "on";
+                        i += 4;
+                    }
+                    // AS COUNTER
+                    else {
+                        var name = "counter_" + (j + 1);
+                        data[name] = readUInt32LE(bytes.slice(i, i + 4));
+                        i += 4;
+                    }
+                }
+                // GPIO OUTPUT
+                else if (j < 6) {
+                    var name = "gpio_out_" + (j - 4 + 1);
+                    data[name] = bytes[i] ? "on" : "off";
+                    i += 1;
+                }
+                // PT100
+                else if (j < 8) {
+                    var name = "pt100_" + (j - 6 + 1);
+                    data[name] = readFloat16LE(bytes.slice(i, i + 2));
+                    i += 2;
+                }
+                // ADC
+                else if (j < 10) {
+                    var name = "adc_" + (j - 8 + 1);
+                    data[name] = readFloat16LE(bytes.slice(i, i + 2));
+                    data[name + "_max"] = readFloat16LE(bytes.slice(i + 2, i + 4));
+                    data[name + "_min"] = readFloat16LE(bytes.slice(i + 4, i + 6));
+                    data[name + "_avg"] = readFloat16LE(bytes.slice(i + 6, i + 8));
+                    i += 8;
+                }
+                // ADV
+                else if (j < 12) {
+                    var name = "adv_" + (j - 10 + 1);
+                    data[name] = readFloat16LE(bytes.slice(i, i + 2));
+                    data[name + "_max"] = readFloat16LE(bytes.slice(i + 2, i + 4));
+                    data[name + "_min"] = readFloat16LE(bytes.slice(i + 4, i + 6));
+                    data[name + "_avg"] = readFloat16LE(bytes.slice(i + 6, i + 8));
+                    i += 8;
+                }
+                // CUSTOM MESSAGE
+                else if (j < 13) {
+                    data.text = readAscii(bytes.slice(i, 48));
+                    i += 48;
+                }
+            }
+
+            decoded.channel_history_data.push(data);
+        }
+        // MODBUS HISTORICAL DATA
+        else if (channel_id === 0x20 && channel_type === 0xdd) {
+            decoded.modbus_history_data = decoded.modbus_history_data || [];
+
+            var timestamp = readUInt32LE(bytes.slice(i, i + 4));
+            var modbus_chn_mask = numToBits(readUInt32LE(bytes.slice(i + 4, i + 8)), 32);
+            i += 8;
+
+            var data = { timestamp: timestamp };
+            for (j = 0; j < modbus_chn_mask.length; j++) {
+                if (modbus_chn_mask[j] !== 1) continue;
+
+                var chn = "modbus_chn_" + (j + 1);
+                var data_type = bytes[i++];
+                var sign = (data_type >>> 7) & 0x01;
+                var type = data_type & 0x7f; // 0b01111111
+                switch (type) {
+                    case 0: // MB_COIL
+                        decoded[chn] = bytes[i] ? "on" : "off";
+                        break;
+                    case 1: // MB_DISCRETE
+                        data[chn] = sign ? readInt8(bytes.slice(i, i + 1)) : readUInt8(bytes.slice(i, i + 1));
+                        break;
+                    case 2: // MB_INPUT_INT16
+                    case 3: // MB_HOLDING_INT16
+                        data[chn] = sign ? readInt16LE(bytes.slice(i, i + 2)) : readUInt16LE(bytes.slice(i, i + 2));
+                        break;
+                    case 4: // MB_HOLDING_INT32
+                    case 6: // MB_INPUT_INT32
+                        data[chn] = sign ? readInt32LE(bytes.slice(i, i + 4)) : readUInt32LE(bytes.slice(i, i + 4));
+                        break;
+                    case 8: // MB_INPUT_INT32_AB
+                    case 10: // MB_HOLDING_INT32_AB
+                        data[chn] = sign ? readInt16LE(bytes.slice(i, i + 2)) : readUInt16LE(bytes.slice(i, i + 2));
+                        break;
+                    case 9: // MB_INPUT_INT32_CD
+                    case 11: // MB_HOLDING_INT32_CD
+                        data[chn] = sign ? readInt16LE(bytes.slice(i + 2, i + 4)) : readUInt16LE(bytes.slice(i + 2, i + 4));
+                        break;
+                    case 5: // MB_HOLDING_FLOAT
+                    case 7: // MB_INPUT_FLOAT
+                        data[chn] = readFloatLE(bytes.slice(i, i + 4));
+                        break;
+                }
+                i += 4;
+            }
+
+            modbus_history_data.push(data);
+        }
+        // TEXT
         else {
-            break;
+            decoded.text = readAscii(bytes.slice(i - 2, bytes.length));
+            i = bytes.length;
         }
     }
 
@@ -117,12 +301,20 @@ function Decode(fPort, bytes) {
 /* ******************************************
  * bytes to number
  ********************************************/
-function readUInt8LE(bytes) {
+function numToBits(num, bit_count) {
+    var bits = [];
+    for (var i = 0; i < bit_count; i++) {
+        bits.push((num >> i) & 1);
+    }
+    return bits;
+}
+
+function readUInt8(bytes) {
     return bytes & 0xff;
 }
 
-function readInt8LE(bytes) {
-    var ref = readUInt8LE(bytes);
+function readInt8(bytes) {
+    var ref = readUInt8(bytes);
     return ref > 0x7f ? ref - 0x100 : ref;
 }
 
@@ -157,6 +349,23 @@ function readFloatLE(bytes) {
     return f;
 }
 
+function readFloat16LE(bytes) {
+    var bits = (bytes[1] << 8) | bytes[0];
+    var sign = bits >>> 15 === 0 ? 1.0 : -1.0;
+    var e = (bits >>> 10) & 0x1f;
+    var m = e === 0 ? (bits & 0x3ff) << 1 : (bits & 0x3ff) | 0x400;
+    var f = sign * m * Math.pow(2, e - 25);
+    return f;
+}
+
+function readAscii(bytes) {
+    var str = "";
+    for (var i = 0; i < bytes.length; i++) {
+        str += String.fromCharCode(bytes[i]);
+    }
+    return str;
+}
+
 function includes(datas, value) {
     var size = datas.length;
     for (var i = 0; i < size; i++) {
@@ -165,4 +374,22 @@ function includes(datas, value) {
         }
     }
     return false;
+}
+
+// bytes to version
+function readVersion(bytes) {
+    var temp = [];
+    for (var idx = 0; idx < bytes.length; idx++) {
+        temp.push((bytes[idx] & 0xff).toString(10));
+    }
+    return temp.join(".");
+}
+
+// bytes to string
+function readString(bytes) {
+    var temp = [];
+    for (var idx = 0; idx < bytes.length; idx++) {
+        temp.push(("0" + (bytes[idx] & 0xff).toString(16)).slice(-2));
+    }
+    return temp.join("");
 }

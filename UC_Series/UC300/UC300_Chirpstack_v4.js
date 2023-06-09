@@ -1,12 +1,14 @@
 /**
- * Payload Decoder for The Things Network
+ * Payload Decoder for Chirpstack v4
  *
  * Copyright 2023 Milesight IoT
  *
  * @product UC300
  */
-function Decoder(bytes, fport) {
-    return milesight(bytes);
+function decodeUplink(input) {
+    var bytes = input.bytes;
+    var decoded = milesight(bytes);
+    return { data: decoded };
 }
 
 var gpio_in_chns = [0x03, 0x04, 0x05, 0x06];
