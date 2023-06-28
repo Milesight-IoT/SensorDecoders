@@ -1,12 +1,14 @@
 /**
- * Payload Decoder for The Things Network
+ * Payload Decoder for Chirpstack v4
  *
- * Copyright 2021 Milesight IoT
+ * Copyright 2023 Milesight IoT
  *
- * @product EM300-TH
+ * @product EM500-CO2
  */
-function Decoder(bytes, port) {
-    return milesight(bytes);
+function decodeUplink(input) {
+    var bytes = input.bytes;
+    var decoded = milesight(bytes);
+    return { data: decoded };
 }
 
 function milesight(bytes) {
@@ -15,7 +17,6 @@ function milesight(bytes) {
     for (var i = 0; i < bytes.length; ) {
         var channel_id = bytes[i++];
         var channel_type = bytes[i++];
-
         // BATTERY
         if (channel_id === 0x01 && channel_type === 0x75) {
             decoded.battery = bytes[i];
@@ -36,16 +37,28 @@ function milesight(bytes) {
             decoded.humidity = bytes[i] / 2;
             i += 1;
         }
-        // TEMPERATURE & HUMIDITY HISTROY
+        // CO2
+        else if (channel_id === 0x05 && channel_type === 0x7d) {
+            decoded.co2 = readUInt16LE(bytes.slice(i, i + 2));
+            i += 2;
+        }
+        // PRESSURE
+        else if (channel_id === 0x06 && channel_type === 0x73) {
+            decoded.pressure = readUInt16LE(bytes.slice(i, i + 2)) / 10;
+            i += 2;
+        }
+        // HISTROY DATA
         else if (channel_id === 0x20 && channel_type === 0xce) {
             var point = {};
             point.timestamp = readUInt32LE(bytes.slice(i, i + 4));
-            point.temperature = readInt16LE(bytes.slice(i + 4, i + 6)) / 10;
-            point.humidity = bytes[i + 6] / 2;
+            point.co2 = readUInt16LE(bytes.slice(i + 4, i + 6));
+            point.pressure = readUInt16LE(bytes.slice(i + 6, i + 8)) / 10;
+            point.temperature = readInt16LE(bytes.slice(i + 8, i + 10)) / 10;
+            point.humidity = bytes[i + 10] / 2;
 
             decoded.history = decoded.history || [];
             decoded.history.push(point);
-            i += 8;
+            i += 11;
         } else {
             break;
         }

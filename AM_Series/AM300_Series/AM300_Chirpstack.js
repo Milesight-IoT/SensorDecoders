@@ -1,14 +1,18 @@
 /**
- * Payload Decoder for Chirpstack and Milesight network server
- * 
- * Copyright 2021 Milesight IoT
- * 
+ * Payload Decoder for Milesight Network Server
+ *
+ * Copyright 2023 Milesight IoT
+ *
  * @product AM307 / AM319
  */
 function Decode(fPort, bytes) {
+    return milesight(bytes);
+}
+
+function milesight(bytes) {
     var decoded = {};
 
-    for (var i = 0; i < bytes.length;) {
+    for (var i = 0; i < bytes.length; ) {
         var channel_id = bytes[i++];
         var channel_type = bytes[i++];
         // BATTERY
@@ -33,21 +37,21 @@ function Decode(fPort, bytes) {
         }
         // PIR
         else if (channel_id === 0x05 && channel_type === 0x00) {
-            decoded.pir = bytes[i] === 1 ? "trigger": "idle";
+            decoded.pir = bytes[i] === 1 ? "trigger" : "idle";
             i += 1;
         }
         // LIGHT
-        else if (channel_id === 0x06 && channel_type === 0xCB) {
+        else if (channel_id === 0x06 && channel_type === 0xcb) {
             decoded.light_level = bytes[i];
             i += 1;
         }
         // CO2
-        else if (channel_id === 0x07 && channel_type === 0x7D) {
+        else if (channel_id === 0x07 && channel_type === 0x7d) {
             decoded.co2 = readUInt16LE(bytes.slice(i, i + 2));
             i += 2;
         }
         // TVOC
-        else if (channel_id === 0x08 && channel_type === 0x7D) {
+        else if (channel_id === 0x08 && channel_type === 0x7d) {
             decoded.tvoc = readUInt16LE(bytes.slice(i, i + 2));
             i += 2;
         }
@@ -57,27 +61,27 @@ function Decode(fPort, bytes) {
             i += 2;
         }
         // HCHO
-        else if (channel_id === 0x0A && channel_type === 0x7D) {
+        else if (channel_id === 0x0a && channel_type === 0x7d) {
             decoded.hcho = readUInt16LE(bytes.slice(i, i + 2)) / 100;
             i += 2;
         }
         // PM2.5
-        else if (channel_id === 0x0B && channel_type === 0x7D) {
+        else if (channel_id === 0x0b && channel_type === 0x7d) {
             decoded.pm2_5 = readUInt16LE(bytes.slice(i, i + 2));
             i += 2;
         }
         // PM10
-        else if (channel_id === 0x0C && channel_type === 0x7D) {
+        else if (channel_id === 0x0c && channel_type === 0x7d) {
             decoded.pm10 = readUInt16LE(bytes.slice(i, i + 2));
             i += 2;
         }
         // O3
-        else if (channel_id === 0x0D && channel_type === 0x7D) {
+        else if (channel_id === 0x0d && channel_type === 0x7d) {
             decoded.o3 = readUInt16LE(bytes.slice(i, i + 2)) / 100;
             i += 2;
         }
         // BEEP
-        else if (channel_id === 0x0E && channel_type === 0x01) {
+        else if (channel_id === 0x0e && channel_type === 0x01) {
             decoded.beep = bytes[i] === 1 ? "yes" : "no";
             i += 1;
         } else {
