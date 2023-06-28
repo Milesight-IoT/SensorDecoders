@@ -129,7 +129,7 @@ function readInt16LE(bytes) {
 
 function readUInt32LE(bytes) {
     var value = (bytes[3] << 24) + (bytes[2] << 16) + (bytes[1] << 8) + bytes[0];
-    return (value & 0xFFFFFFFF);
+    return (value & 0xFFFFFFFF) >>> 0;
 }
 
 
