@@ -15,7 +15,7 @@ For more detailed information, please visit [milesight official website](https:/
 FF: protocol_version  -> 0xFF           0x01          [1byte  ] Unit:
 FF: serial_number     -> 0xFF           0x08          [6bytes ] Unit:
 FF: hardware_version  -> 0xFF           0x09          [2bytes ] Unit:
-FF: firmware_version  -> 0xFF           0x0A          [4bytes ] Unit:
+FF: firmware_version  -> 0xFF           0x1F          [4bytes ] Unit:
 
 04: counter           -> 0x04           0xC9          [4bytes ] Unit:
 05: passing           -> 0x05           0xCC          [2bytes ] Unit:

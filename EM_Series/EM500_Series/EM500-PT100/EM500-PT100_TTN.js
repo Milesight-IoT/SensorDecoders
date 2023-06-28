@@ -1,14 +1,18 @@
 /**
  * Payload Decoder for The Things Network
- * 
- * Copyright 2021 Milesight IoT
- * 
+ *
+ * Copyright 2023 Milesight IoT
+ *
  * @product EM500-PT100
  */
 function Decoder(bytes, port) {
+    return milesight(bytes);
+}
+
+function milesight(bytes) {
     var decoded = {};
 
-    for (var i = 0; i < bytes.length;) {
+    for (var i = 0; i < bytes.length; ) {
         var channel_id = bytes[i++];
         var channel_type = bytes[i++];
         // BATTERY
@@ -25,6 +29,16 @@ function Decoder(bytes, port) {
             // ℉
             // decoded.temperature = readInt16LE(bytes.slice(i, i + 2)) / 10 * 1.8 + 32;
             // i +=2;
+        }
+        // HISTROY DATA
+        else if (channel_id === 0x20 && channel_type === 0xce) {
+            var point = {};
+            point.timestamp = readUInt32LE(bytes.slice(i, i + 4));
+            point.temperature = readInt16LE(bytes.slice(i + 4, i + 6)) / 10;
+
+            decoded.history = decoded.history || [];
+            decoded.history.push(point);
+            i += 6;
         } else {
             break;
         }
@@ -44,4 +58,9 @@ function readUInt16LE(bytes) {
 function readInt16LE(bytes) {
     var ref = readUInt16LE(bytes);
     return ref > 0x7fff ? ref - 0x10000 : ref;
+}
+
+function readUInt32LE(bytes) {
+    var value = (bytes[3] << 24) + (bytes[2] << 16) + (bytes[1] << 8) + bytes[0];
+    return value & 0xffffffff;
 }

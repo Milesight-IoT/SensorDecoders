@@ -1,14 +1,18 @@
 /**
  * Payload Decoder for The Things Network
- * 
- * Copyright 2021 Milesight IoT
- * 
+ *
+ * Copyright 2023 Milesight IoT
+ *
  * @product AM104 / AM107
  */
 function Decoder(bytes, port) {
+    return milesight(bytes);
+}
+
+function milesight(bytes) {
     var decoded = {};
 
-    for (var i = 0; i < bytes.length;) {
+    for (var i = 0; i < bytes.length; ) {
         var channel_id = bytes[i++];
         var channel_type = bytes[i++];
         // BATTERY
@@ -32,7 +36,7 @@ function Decoder(bytes, port) {
             i += 1;
         }
         // PIR
-        else if (channel_id === 0x05 && channel_type === 0x6A) {
+        else if (channel_id === 0x05 && channel_type === 0x6a) {
             decoded.activity = readUInt16LE(bytes.slice(i, i + 2));
             i += 2;
         }
@@ -44,12 +48,12 @@ function Decoder(bytes, port) {
             i += 6;
         }
         // CO2
-        else if (channel_id === 0x07 && channel_type === 0x7D) {
+        else if (channel_id === 0x07 && channel_type === 0x7d) {
             decoded.co2 = readUInt16LE(bytes.slice(i, i + 2));
             i += 2;
         }
         // TVOC
-        else if (channel_id === 0x08 && channel_type === 0x7D) {
+        else if (channel_id === 0x08 && channel_type === 0x7d) {
             decoded.tvoc = readUInt16LE(bytes.slice(i, i + 2));
             i += 2;
         }
