@@ -84,6 +84,78 @@ function milesight(bytes) {
         else if (channel_id === 0x0e && channel_type === 0x01) {
             decoded.beep = bytes[i] === 1 ? "yes" : "no";
             i += 1;
+        }
+        // HISTORY DATA (AM307)
+        else if (channel_id === 0x20 && channel_type === 0xce) {
+            var data = {};
+            data.timestamp = readUInt32LE(bytes.slice(i, i + 4));
+            data.temperature = readInt16LE(bytes.slice(i + 4, i + 6)) / 10;
+            data.humidity = bytes[i + 6] / 2;
+            data.pir = bytes[i + 7] === 1 ? "trigger" : "idle";
+            data.light_level = bytes[i + 8];
+            data.co2 = readUInt16LE(bytes.slice(i + 9, i + 11));
+            data.tvoc = readUInt16LE(bytes.slice(i + 11, i + 13));
+            data.pressure = readUInt16LE(bytes.slice(i + 13, i + 15)) / 10;
+            i += 15;
+
+            decoded.history = decoded.history || [];
+            decoded.history.push(data);
+        }
+        // HISTORY DATA (AM308)
+        else if (channel_id === 0x20 && channel_type === 0xce) {
+            var data = {};
+            data.timestamp = readUInt32LE(bytes.slice(i, i + 4));
+            data.temperature = readInt16LE(bytes.slice(i + 4, i + 6)) / 10;
+            data.humidity = bytes[i + 6] / 2;
+            data.pir = bytes[i + 7] === 1 ? "trigger" : "idle";
+            data.light_level = bytes[i + 8];
+            data.co2 = readUInt16LE(bytes.slice(i + 9, i + 11));
+            data.tvoc = readUInt16LE(bytes.slice(i + 11, i + 13));
+            data.pressure = readUInt16LE(bytes.slice(i + 13, i + 15)) / 10;
+            data.pm2_5 = readUInt16LE(bytes.slice(i + 15, i + 17));
+            data.pm10 = readUInt16LE(bytes.slice(i + 17, i + 19));
+            i += 19;
+
+            decoded.history = decoded.history || [];
+            decoded.history.push(data);
+        }
+        // HISTORY DATA (AM319 CH2O)
+        else if (channel_id === 0x20 && channel_type === 0xce) {
+            var data = {};
+            data.timestamp = readUInt32LE(bytes.slice(i, i + 4));
+            data.temperature = readInt16LE(bytes.slice(i + 4, i + 6)) / 10;
+            data.humidity = bytes[i + 6] / 2;
+            data.pir = bytes[i + 7] === 1 ? "trigger" : "idle";
+            data.light_level = bytes[i + 8];
+            data.co2 = readUInt16LE(bytes.slice(i + 9, i + 11));
+            data.tvoc = readUInt16LE(bytes.slice(i + 11, i + 13));
+            data.pressure = readUInt16LE(bytes.slice(i + 13, i + 15)) / 10;
+            data.pm2_5 = readUInt16LE(bytes.slice(i + 15, i + 17));
+            data.pm10 = readUInt16LE(bytes.slice(i + 17, i + 19));
+            data.hcho = readUInt16LE(bytes.slice(i + 19, i + 21)) / 100;
+            i += 21;
+
+            decoded.history = decoded.history || [];
+            decoded.history.push(data);
+        }
+        // HISTORY DATA (AM319 O3)
+        else if (channel_id === 0x20 && channel_type === 0xce) {
+            var data = {};
+            data.timestamp = readUInt32LE(bytes.slice(i, i + 4));
+            data.temperature = readInt16LE(bytes.slice(i + 4, i + 6)) / 10;
+            data.humidity = bytes[i + 6] / 2;
+            data.pir = bytes[i + 7] === 1 ? "trigger" : "idle";
+            data.light_level = bytes[i + 8];
+            data.co2 = readUInt16LE(bytes.slice(i + 9, i + 11));
+            data.tvoc = readUInt16LE(bytes.slice(i + 11, i + 13));
+            data.pressure = readUInt16LE(bytes.slice(i + 13, i + 15)) / 10;
+            data.pm2_5 = readUInt16LE(bytes.slice(i + 15, i + 17));
+            data.pm10 = readUInt16LE(bytes.slice(i + 17, i + 19));
+            data.o3 = readUInt16LE(bytes.slice(i + 19, i + 21)) / 100;
+            i += 21;
+
+            decoded.history = decoded.history || [];
+            decoded.history.push(data);
         } else {
             break;
         }
@@ -103,4 +175,14 @@ function readUInt16LE(bytes) {
 function readInt16LE(bytes) {
     var ref = readUInt16LE(bytes);
     return ref > 0x7fff ? ref - 0x10000 : ref;
+}
+
+function readUInt32LE(bytes) {
+    var value = (bytes[3] << 24) + (bytes[2] << 16) + (bytes[1] << 8) + bytes[0];
+    return (value & 0xffffffff) >>> 0;
+}
+
+function readInt32LE(bytes) {
+    var ref = readUInt32LE(bytes);
+    return ref > 0x7fffffff ? ref - 0x100000000 : ref;
 }

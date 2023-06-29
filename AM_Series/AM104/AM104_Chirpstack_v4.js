@@ -1,12 +1,14 @@
 /**
- * Payload Decoder for Milesight Network Server
+ * Payload Decoder for Chirpstack v4
  *
  * Copyright 2023 Milesight IoT
  *
- * @product AM104 / AM107
+ * @product AM104
  */
-function Decode(fPort, bytes) {
-    return milesight(bytes);
+function decodeUplink(input) {
+    var bytes = input.bytes;
+    var decoded = milesight(bytes);
+    return { data: decoded };
 }
 
 function milesight(bytes) {
@@ -46,21 +48,6 @@ function milesight(bytes) {
             decoded.infrared_and_visible = readUInt16LE(bytes.slice(i + 2, i + 4));
             decoded.infrared = readUInt16LE(bytes.slice(i + 4, i + 6));
             i += 6;
-        }
-        // CO2
-        else if (channel_id === 0x07 && channel_type === 0x7d) {
-            decoded.co2 = readUInt16LE(bytes.slice(i, i + 2));
-            i += 2;
-        }
-        // TVOC
-        else if (channel_id === 0x08 && channel_type === 0x7d) {
-            decoded.tvoc = readUInt16LE(bytes.slice(i, i + 2));
-            i += 2;
-        }
-        // PRESSURE
-        else if (channel_id === 0x09 && channel_type === 0x73) {
-            decoded.pressure = readUInt16LE(bytes.slice(i, i + 2)) / 10;
-            i += 2;
         } else {
             break;
         }

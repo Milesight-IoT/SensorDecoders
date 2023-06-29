@@ -3,11 +3,10 @@
  *
  * Copyright 2023 Milesight IoT
  *
- * @product AM104 / AM107
+ * @product AM107
  */
 function decodeUplink(input) {
-    var bytes = input.bytes;
-    var decoded = milesight(bytes);
+    var decoded = milesight(input.bytes);
     return { data: decoded };
 }
 
