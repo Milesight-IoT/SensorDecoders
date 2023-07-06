@@ -36,6 +36,11 @@ function milesight(bytes) {
             decoded.humidity = bytes[i] / 2;
             i += 1;
         }
+        // CO2
+        else if (channel_id === 0x07 && channel_type === 0x7d) {
+            decoded.co2 = readUInt16LE(bytes.slice(i, i + 2));
+            i += 2;
+        }
         // PIR
         else if (channel_id === 0x05 && channel_type === 0x6a) {
             decoded.activity = readUInt16LE(bytes.slice(i, i + 2));

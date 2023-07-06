@@ -13,17 +13,19 @@ For more detailed information, please visit [milesight official website](https:/
 |     channel     | channel_id | channel_type | data_length (bytes) | description                                              |
 | :-------------: | :--------: | :----------: | :-----------------: | -------------------------------------------------------- |
 |     battery     |    0x01    |     0x75     |          1          | unit: %                                                  |
-|   temperature   |    0x03    |     0x67     |          2          | unit: ℃                                                  |
+|   temperature   |    0x03    |     0x67     |          2          | unit: ℃                                                 |
 |    humidity     |    0x04    |     0x68     |          1          | unit: %RH                                                |
+|    co2          |    0x07    |     0x7D     |          2          | unit: ppm                                                |
 | historical data |    0x20    |     0xCE     |          9          | timestamp(4B) + temperature(2B) + humidity(1B) + CO2(2B) |
 
 ## Example
 
 ```json
-// Sample: 01 75 5C 03 67 34 01 04 68 65
+// Sample: 0175640367180104686D077DC501
 {
-    "battery": 92,
-    "temperature": 30.8,
-    "humidity": 50.5
+    "battery": 100,
+    "co2": 453,
+    "temperature": 28,
+    "humidity": 54.5
 }
 ```
