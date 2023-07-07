@@ -1,12 +1,12 @@
 # Spot Leak Detection Sensor / Zone Leak Detection Sensor / Membrane Leak Detection Sensor - Milesight IoT
 
-The payload decoder function is applicable to EM300-SLD, EM300-ZLD and EM300-MLD.
+The payload decoder function is applicable to EM300-SLD and EM300-ZLD.
 
 For more detailed information, please visit [milesight official website](https://www.milesight-iot.com).
 
-|          EM300-SLD          |          EM300-ZLD          |         EM300-MLD          |
-| :-------------------------: | :-------------------------: |:-------------------------: |
-| ![EM300-SLD](EM300-SLD.png) | ![EM300-ZLD](EM300-ZLD.png) |![EM300-MLD](EM300-MLD.png) |
+|          EM300-SLD          |          EM300-ZLD          |
+| :-------------------------: | :-------------------------: |
+| ![EM300-SLD](EM300-SLD.png) | ![EM300-ZLD](EM300-ZLD.png) |
 
 ## Payload Definition
 

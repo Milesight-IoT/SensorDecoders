@@ -3,7 +3,7 @@
  *
  * Copyright 2023 Milesight IoT
  *
- * @product EM300-SLD / EM300-ZLD / EM300-MLD
+ * @product EM300-SLD / EM300-ZLD
  */
 function Decode(fPort, bytes) {
     return milesight(bytes);
@@ -74,5 +74,5 @@ function readInt16LE(bytes) {
 
 function readUInt32LE(bytes) {
     var value = (bytes[3] << 24) + (bytes[2] << 16) + (bytes[1] << 8) + bytes[0];
-    return value & 0xffffffff;
+    return (value & 0xffffffff) >>> 0;
 }
