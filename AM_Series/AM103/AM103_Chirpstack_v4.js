@@ -36,17 +36,10 @@ function milesight(bytes) {
             decoded.humidity = bytes[i] / 2;
             i += 1;
         }
-        // PIR
-        else if (channel_id === 0x05 && channel_type === 0x6a) {
-            decoded.activity = readUInt16LE(bytes.slice(i, i + 2));
+        // CO2
+        else if (channel_id === 0x07 && channel_type === 0x7d) {
+            decoded.co2 = readUInt16LE(bytes.slice(i, i + 2));
             i += 2;
-        }
-        // LIGHT
-        else if (channel_id === 0x06 && channel_type === 0x65) {
-            decoded.illumination = readUInt16LE(bytes.slice(i, i + 2));
-            decoded.infrared_and_visible = readUInt16LE(bytes.slice(i + 2, i + 4));
-            decoded.infrared = readUInt16LE(bytes.slice(i + 4, i + 6));
-            i += 6;
         }
         // HISTORY DATA
         else if (channel_id === 0x20 && channel_type === 0xce) {
