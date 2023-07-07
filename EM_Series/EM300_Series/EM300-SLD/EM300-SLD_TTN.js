@@ -3,7 +3,7 @@
  *
  * Copyright 2023 Milesight IoT
  *
- * @product EM300-SLD / EM300-ZLD
+ * @product EM300-SLD / EM300-ZLD / EM300-MLD
  */
 function Decoder(bytes, port) {
     return milesight(bytes);
