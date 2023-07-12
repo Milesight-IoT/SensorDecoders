@@ -17,13 +17,13 @@ def decodeBytes(bytes):
             #  Switch    3 2 1   3 2 1
             #          ------- -------
             # bit mask  change   state
-            decoded['switch_1'] = "close" if (bytes[i] & 1) == 0 else "open"
+            decoded['switch_1'] = "off" if (bytes[i] & 1) == 0 else "on"
             decoded['switch_1_change'] = "no" if ((bytes[i] >> 4) & 1) == 0 else "yes"
 
-            decoded['switch_2'] = "close" if ((bytes[i] >> 1) & 1) == 0 else "open"
+            decoded['switch_2'] = "off" if ((bytes[i] >> 1) & 1) == 0 else "on"
             decoded['switch_2_change'] = "no" if ((bytes[i] >> 5) & 1) == 0 else "yes"
 
-            decoded['switch_3'] = "close" if ((bytes[i] >> 2) & 1) == 0 else "open"
+            decoded['switch_3'] = "off" if ((bytes[i] >> 2) & 1) == 0 else "on"
             decoded['switch_3_change'] = "no" if ((bytes[i] >> 6) & 1) == 0 else "yes"
             i += 1
         # VOLTAGE
