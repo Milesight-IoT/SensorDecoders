@@ -1,14 +1,18 @@
 /**
- * Payload Decoder for Chirpstack and Milesight network server
+ * Payload Decoder for Milesight Network Server
  *
- * Copyright 2021 Milesight IoT
+ * Copyright 2023 Milesight IoT
  *
- * @product WS50x
+ * @product WS50x v1
  */
 function Decode(fPort, bytes) {
+    return milesight(bytes);
+}
+
+function milesight(bytes) {
     var decoded = {};
 
-    for (var i = 0; i < bytes.length;) {
+    for (var i = 0; i < bytes.length; ) {
         var channel_id = bytes[i++];
         var channel_type = bytes[i++];
 
@@ -18,13 +22,13 @@ function Decode(fPort, bytes) {
             //  Switch    3 2 1   3 2 1
             //          ------- -------
             // bit mask  change   state
-            decoded.switch_1 = (bytes[i] & 1) == 1 ? "open" : "close";
+            decoded.switch_1 = (bytes[i] & 1) == 1 ? "on" : "off";
             decoded.switch_1_change = ((bytes[i] >> 4) & 1) == 1 ? "yes" : "no";
 
-            decoded.switch_2 = ((bytes[i] >> 1) & 1) == 1 ? "open" : "close";
+            decoded.switch_2 = ((bytes[i] >> 1) & 1) == 1 ? "on" : "off";
             decoded.switch_2_change = ((bytes[i] >> 5) & 1) == 1 ? "yes" : "no";
 
-            decoded.switch_3 = ((bytes[i] >> 2) & 1) == 1 ? "open" : "close";
+            decoded.switch_3 = ((bytes[i] >> 2) & 1) == 1 ? "on" : "off";
             decoded.switch_3_change = ((bytes[i] >> 6) & 1) == 1 ? "yes" : "no";
             i += 1;
         } else {
@@ -34,14 +38,3 @@ function Decode(fPort, bytes) {
 
     return decoded;
 }
-
-/*
-{
-    "switch_1": "open|close",
-    "switch_2": "open|close",
-    "switch_3": "open|close",
-    "switch_1_change": "yes|no",
-    "switch_2_change": "yes|no",
-    "switch_3_change": "yes|no"
-}
-*/

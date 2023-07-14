@@ -1,12 +1,14 @@
 /**
- * Payload Decoder for The Things Network
+ * Payload Decoder for Milesight Network Server
  *
  * Copyright 2023 Milesight IoT
  *
  * @product WS50x v1
  */
-function Decoder(bytes, port) {
-    return milesight(bytes);
+function decodeUplink(input) {
+    var bytes = input.bytes;
+    var decoded = milesight(bytes);
+    return { data: decoded };
 }
 
 function milesight(bytes) {
@@ -18,7 +20,6 @@ function milesight(bytes) {
 
         // SWITCH STATE
         if (channel_id === 0xff && channel_type === 0x29) {
-            // TTN unsupport binary (0b00000001 --> 1)
             // payload (0 0 0 0 0 0 0 0)
             //  Switch    3 2 1   3 2 1
             //          ------- -------
