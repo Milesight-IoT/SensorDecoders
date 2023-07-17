@@ -47,6 +47,7 @@ function milesight(bytes) {
             data.temperature = readInt16LE(bytes.slice(i + 4, i + 6)) / 10;
             data.humidity = bytes[i + 6] / 2;
             data.co2 = readUInt16LE(bytes.slice(i + 7, i + 9));
+            i += 9;
 
             decoded.history = decoded.history || [];
             decoded.history.push(data);
