@@ -4,9 +4,9 @@ The payload decoder function is applicable to AM307 and AM319.
 
 For more detailed information, please visit [milesight official website](https://www.milesight-iot.com).
 
-|        AM307        |        AM319        |
-| :-----------------: | :-----------------: |
-| ![AM307](AM307.png) | ![AM319](AM319.png) |
+|        AM307        |        AM319        |        AM300L        |
+| :-----------------: | :-----------------: | :-----------------: |
+| ![AM307](AM307.png) | ![AM319](AM319.png) | ![AM300L](AM300L.png) |
 
 ## Payload Definition
 
