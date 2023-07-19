@@ -2,7 +2,7 @@
 
 The payload decoder function is applicable to GS524N.
 
-For more detailed information, please visit [Milesight official website](https://www.milesight-iot.com).
+For more detailed information, please visit [Milesight official website](https://www.milesight.cn).
 
 ![GS524N](GS524N.png)
 
@@ -18,7 +18,7 @@ For more detailed information, please visit [Milesight official website](https:/
 |   6   | CRC. byte1 + byte2 + byte3 + byte4 + byte5 + byte6 = 0x00                                                                                                                                                                                                    |
 
 # Sample
-```
+``` json
 // Sampel(Hex): 221E64001C40
 {
     "version": 2,
