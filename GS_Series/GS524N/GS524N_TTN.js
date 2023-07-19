@@ -1,20 +1,24 @@
 /**
  * Payload Decoder for The Things Network
  *
- * Copyright 2022 Milesight IoT
+ * Copyright 2023 Milesight IoT
  *
- * @product GS534N
+ * @product GS524N
  */
 function Decoder(bytes, port) {
+    return milesight(bytes);
+}
+
+function milesight(bytes) {
     var decoded = {};
 
     if (bytes.length != 6) {
         return decoded;
     }
 
-    decoded.version = bytes[0] >> 4;
+    decoded.version = bytes[0] >>> 4;
     decoded.protocol = bytes[0] & 0x0f;
-    decoded.type = getSensorType(bytes[1]);
+    decoded.type = getSensorType(bytes[1] >>> 4);
     decoded.event = getMessageType(bytes[1] & 0x0f);
     decoded.battery = bytes[2] & 0xff;
     decoded.concentration = bytes[3];
@@ -23,32 +27,31 @@ function Decoder(bytes, port) {
     return decoded;
 }
 
-function getSensorType(bytes) {
-    return bytes >> 4 === 1 ? "smoke sensor" : "unknown";
+function getSensorType(type) {
+    return type === 1 ? "smoke sensor" : "unknown";
 }
 
 function getMessageType(bytes) {
     switch (bytes) {
         case 0x01:
-            return 'alarm';
-	case 0x02:
-            return 'silent';
+            return "alarm";
+        case 0x02:
+            return "silent";
         case 0x04:
-            return 'low battery';
-	case 0x05:
-            return 'failover';
+            return "low battery";
+        case 0x05:
+            return "failover";
         case 0x07:
-            return 'normal';
-	case 0x0A:
-            return 'removed';
-        case 0x0B:
-            return 'installed';
-	case 0x0E:
-            return 'testing alarm with normal battery';
-	case 0x0F:
-            return 'testing alarm with low battery';
+            return "normal";
+        case 0x0a:
+            return "removed";
+        case 0x0b:
+            return "installed";
+        case 0x0e:
+            return "testing alarm with normal battery";
+        case 0x0f:
+            return "testing alarm with low battery";
     }
-
 }
 
 function getTemperature(bytes) {
