@@ -19,10 +19,10 @@ For more detailed information, please visit [milesight official website](https:/
 |     people max     |    0x06    |     0xCD     |          1          | people_count_max(1B)                                      |
 | region count(1-8)  |    0x07    |     0xD5     |          1          | region_1(1B) + region_2(1B) + ... + region_8(1B)          |
 | region count(9-16) |    0x08    |     0xD5     |          1          | region_9(1B) + region_10(1B) + ... + region_16(1B)        |
-|    A flow(9-16)    |    0x09    |     0xDA     |          8          | AtoA(2B) + AtoB(2B) + ... + AtoD(2B)                      |
-|    B flow(9-16)    |    0x0A    |     0xDA     |          8          | BtoA(2B) + BtoB(2B) + ... + BtoD(2B)                      |
-|    B flow(9-16)    |    0x0B    |     0xDA     |          8          | CtoA(2B) + CtoB(2B) + ... + CtoD(2B)                      |
-|    B flow(9-16)    |    0x0C    |     0xDA     |          8          | DtoA(2B) + DtoB(2B) + ... + DtoD(2B)                      |
+|       A flow       |    0x09    |     0xDA     |          8          | AtoA(2B) + AtoB(2B) + ... + AtoD(2B)                      |
+|       B flow       |    0x0A    |     0xDA     |          8          | BtoA(2B) + BtoB(2B) + ... + BtoD(2B)                      |
+|       B flow       |    0x0B    |     0xDA     |          8          | CtoA(2B) + CtoB(2B) + ... + CtoD(2B)                      |
+|       B flow       |    0x0C    |     0xDA     |          8          | DtoA(2B) + DtoB(2B) + ... + DtoD(2B)                      |
 
 ## Example
 
