@@ -1,10 +1,10 @@
 # Smart Fill Level Monitoring Sensor - Milesight IoT
 
-![WS201](WS201.png)
-
 The payload decoder function is applicable to WS201.
 
 For more detailed information, please visit [milesight official website](https://www.milesight-iot.com).
+
+![WS201](WS201.png)
 
 ## Payload Definition
 
@@ -36,8 +36,8 @@ For more detailed information, please visit [milesight official website](https:/
 
 ```json
 {
-  "battery": 100,
-  "distance": 62,
-  "remaining": 69
+    "battery": 100,
+    "distance": 62,
+    "remaining": 69
 }
 ```

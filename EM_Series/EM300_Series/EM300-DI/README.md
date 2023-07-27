@@ -1,10 +1,10 @@
 # Pulse Counter - Milesight IoT
 
-![EM300-DI](EM300-DI.png)
-
 The payload decoder function is applicable to EM300-DI.
 
 For more detailed information, please visit [milesight official website](https://www.milesight-iot.com).
+
+![EM300-DI](EM300-DI.png)
 
 ## Payload Definition
 

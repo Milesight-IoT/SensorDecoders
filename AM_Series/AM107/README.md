@@ -4,9 +4,7 @@ The payload decoder function is applicable toAM107(AM102).
 
 For more detailed information, please visit [milesight official website](https://www.milesight-iot.com).
 
-|        AM107        |
-| :-----------------: |
-| ![AM107](AM107.png) |
+![AM107](AM107.png)
 
 ## Payload Definition
 

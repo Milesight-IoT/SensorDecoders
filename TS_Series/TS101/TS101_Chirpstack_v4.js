@@ -8,7 +8,7 @@
 function decodeUplink(input) {
     var bytes = input.bytes;
     var decoded = milesight(bytes);
-    return {data: decoded};
+    return { data: decoded };
 }
 
 function milesight(bytes) {
@@ -33,7 +33,7 @@ function milesight(bytes) {
             decoded.temperature_alert = readAlertType(bytes[i + 2]);
             i += 3;
         }
-        // temperature mutation alert 
+        // temperature mutation alert
         else if (channel_id === 0x93 && channel_type === 0xd7) {
             decoded.temperature = readInt16LE(bytes.slice(i, i + 2)) / 10;
             decoded.temperature_change = readInt16LE(bytes.slice(i + 2, i + 4)) / 100;

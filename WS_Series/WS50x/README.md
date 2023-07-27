@@ -6,7 +6,7 @@ For more detailed information, please visit [Milesight official website](https:/
 
 |      WS50x v1       |         WS50x v2          |
 | :-----------------: | :-----------------------: |
-| ![WS50x](WS50x.png) | ![WS50x_v2](WS50x_v2.png) |
+| ![WS50x](WS50x_v1.png) | ![WS50x_v2](WS50x_v2.png) |
 
 ## Payload Definition
 

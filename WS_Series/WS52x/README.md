@@ -1,10 +1,12 @@
 # Smart Portable Socket - Milesight IoT
 
-![WS52X](WS52X.png)
-
 The payload decoder function is applicable to WS52X.
 
 For more detailed information, please visit [milsight official website](https://wwww.milesight-iot.com).
+
+|          WS523          |        WS525        | WS523 US |
+| :---------------------: | :-----------------: | :------: |
+|   ![WS523](WS523.png)   | ![WS525](WS525.png) | ![WS523US](WS523US.png) |
 
 ## Payload Definition
 

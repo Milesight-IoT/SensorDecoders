@@ -1,10 +1,10 @@
 # Temperature & Humidity Sensor - Milesight IoT
 
-![EM320-TH](EM320-TH.png)
-
 The payload decoder function is applicable to EM320-TH.
 
 For more detailed information, please visit [milesight official website](https://www.milesight-iot.com).
+
+![EM320-TH](EM320-TH.png)
 
 ## Payload Definition
 

@@ -1,14 +1,14 @@
 /**
  * Payload Decoder for The Things Network
- * 
+ *
  * Copyright 2020 Milesight IoT
- * 
+ *
  * @product UC11-T1
  */
 function Decoder(bytes, port) {
     var decoded = {};
 
-    for (var i = 0; i < bytes.length;) {
+    for (var i = 0; i < bytes.length; ) {
         var channel_id = bytes[i++];
         var channel_type = bytes[i++];
 
@@ -20,7 +20,7 @@ function Decoder(bytes, port) {
         // TEMPERATURE
         else if (channel_id == 0x01 && channel_type === 0x67) {
             // ℃
-            decoded.temperature = (readInt16LE(bytes.slice(i, i + 2))) / 10;
+            decoded.temperature = readInt16LE(bytes.slice(i, i + 2)) / 10;
             i += 2;
 
             // ℉
@@ -44,10 +44,10 @@ function Decoder(bytes, port) {
  ********************************************/
 function readUInt16LE(bytes) {
     var value = (bytes[1] << 8) + bytes[0];
-    return (value & 0xFFFF);
+    return value & 0xffff;
 }
 
 function readInt16LE(bytes) {
     var ref = readUInt16LE(bytes);
-    return (ref > 0x7FFF) ? ref - 0x10000 : ref;
+    return ref > 0x7fff ? ref - 0x10000 : ref;
 }

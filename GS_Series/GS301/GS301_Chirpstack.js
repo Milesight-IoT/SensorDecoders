@@ -1,14 +1,14 @@
 /**
  * Payload Decoder for Milesight Network Server & Chirpstack v3
- * 
+ *
  * Copyright 2023 Milesight IoT
- * 
+ *
  * @product GS301
  */
 function Decode(fPort, bytes) {
     var decoded = {};
 
-    for (var i = 0; i < bytes.length;) {
+    for (var i = 0; i < bytes.length; ) {
         var channel_id = bytes[i++];
         var channel_type = bytes[i++];
         // BATTERY
@@ -32,12 +32,12 @@ function Decode(fPort, bytes) {
             i += 1;
         }
         // NH3
-        else if (channel_id === 0x04 && channel_type === 0x7D) {
+        else if (channel_id === 0x04 && channel_type === 0x7d) {
             decoded.nh3 = readUInt16LE(bytes.slice(i, i + 2)) / 100;
             i += 2;
         }
         // H2S
-        else if (channel_id === 0x05 && channel_type === 0x7D) {
+        else if (channel_id === 0x05 && channel_type === 0x7d) {
             decoded.h2s = readUInt16LE(bytes.slice(i, i + 2)) / 100;
             i += 2;
         } else {

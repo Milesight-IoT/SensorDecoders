@@ -4,9 +4,7 @@ The payload decoder function is applicable to AM104 (AM100).
 
 For more detailed information, please visit [milesight official website](https://www.milesight-iot.com).
 
-|        AM104        |
-| :-----------------: |
-| ![AM104](AM104.png) |
+![AM104](AM104.png)
 
 ## Payload Definition
 

@@ -7,7 +7,6 @@ function moveDecimal(value, decimal) {
 }
 
 class BufferReader {
-
     constructor(buffer) {
         this.buffer = buffer;
         this.offset = 0;
@@ -75,20 +74,7 @@ class BufferReader {
     }
 }
 
-const REG_LABELS = [
-    "REG_COIL",
-    "REG_DISCRETE",
-    "REG_INPUT",
-    "REG_HOLD_INT16",
-    "REG_HOLD_INT32",
-    "REG_HOLD_FLOAT",
-    "REG_INPUT_INT32",
-    "REG_INPUT_FLOAT",
-    "REG_INPUT_INT32_AB",
-    "REG_INPUT_INT32_CD",
-    "REG_HOLD_INT32_AB",
-    "REG_HOLD_INT32_CD",
-];
+const REG_LABELS = ["REG_COIL", "REG_DISCRETE", "REG_INPUT", "REG_HOLD_INT16", "REG_HOLD_INT32", "REG_HOLD_FLOAT", "REG_INPUT_INT32", "REG_INPUT_FLOAT", "REG_INPUT_INT32_AB", "REG_INPUT_INT32_CD", "REG_HOLD_INT32_AB", "REG_HOLD_INT32_CD"];
 
 const decodeSinValue = (reader) => (v, i) => {
     const length = reader.readUInt8();
@@ -101,10 +87,9 @@ const decodeSinValue = (reader) => (v, i) => {
 
     let values = [];
     switch (regType) {
-        case 'REG_COIL':
+        case "REG_COIL":
         case "REG_DISCRETE":
-            values = array(times).map(() =>
-                array(quantity).map(() => reader.readUInt8()));
+            values = array(times).map(() => array(quantity).map(() => reader.readUInt8()));
             break;
         case "REG_INPUT":
         case "REG_HOLD_INT16":
@@ -117,7 +102,8 @@ const decodeSinValue = (reader) => (v, i) => {
                 array(quantity).map(() => {
                     const val = sign ? reader.readInt16LE() : reader.readUInt16LE();
                     return moveDecimal(val, decimal);
-                }));
+                })
+            );
             break;
         case "REG_HOLD_INT32":
         case "REG_INPUT_INT32":
@@ -126,7 +112,8 @@ const decodeSinValue = (reader) => (v, i) => {
                 array(quantity).map(() => {
                     const val = sign ? reader.readInt32LE() : reader.readUInt32LE();
                     return moveDecimal(val, decimal);
-                }));
+                })
+            );
             break;
         case "REG_HOLD_FLOAT":
         case "REG_INPUT_FLOAT":
@@ -135,7 +122,8 @@ const decodeSinValue = (reader) => (v, i) => {
                 array(quantity).map(() => {
                     const val = reader.readFloatLE();
                     return moveDecimal(val, decimal);
-                }));
+                })
+            );
             break;
     }
 
@@ -169,7 +157,7 @@ function decode_UART_F4(buffer) {
         dout: reader.readBits(1),
         sin: array(8).map(decodeSinValue(reader)),
         endFlag: reader.readUInt8(),
-    }
+    };
 }
 
 const payload = `   7EF4 6D00 021C 8256 5D11 0000 0405 0000 

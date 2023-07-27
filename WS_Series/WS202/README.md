@@ -1,10 +1,10 @@
 # PIR & Light Sensor - Milesight IoT
 
-![WS202](WS202.png)
-
 The payload decoder function is applicable to WS202.
 
 For more detailed information, please visit [milesight official website](https://www.milesight-iot.com).
+
+![WS202](WS202.png)
 
 ## Payload Definition
 
@@ -14,7 +14,7 @@ For more detailed information, please visit [milesight official website](https:/
                  [channel_id] [channel_type] [channel_value]
 01: battery      -> 0x01         0x75          [1byte ] Unit: %
 03: pir          -> 0x03         0x00          [1byte ] Unit:
-04: daylight     -> 0x04         0x00          [1byte ] Unit: 
+04: daylight     -> 0x04         0x00          [1byte ] Unit:
 ------------------------------------------ WS202
 ```
 
@@ -36,8 +36,8 @@ For more detailed information, please visit [milesight official website](https:/
 
 ```json
 {
-  "battery": 16,
-  "pir": "trigger",
-  "daylight": "dark"
+    "battery": 16,
+    "pir": "trigger",
+    "daylight": "dark"
 }
 ```

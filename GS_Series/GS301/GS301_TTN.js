@@ -8,7 +8,7 @@
 function Decoder(bytes, port) {
     var decoded = {};
 
-    for (var i = 0; i < bytes.length;) {
+    for (var i = 0; i < bytes.length; ) {
         var channel_id = bytes[i++];
         var channel_type = bytes[i++];
         // BATTERY
@@ -32,12 +32,12 @@ function Decoder(bytes, port) {
             i += 1;
         }
         // NH3
-        else if (channel_id === 0x04 && channel_type === 0x7D) {
+        else if (channel_id === 0x04 && channel_type === 0x7d) {
             decoded.nh3 = readUInt16LE(bytes.slice(i, i + 2)) / 100;
             i += 2;
         }
         // H2S
-        else if (channel_id === 0x05 && channel_type === 0x7D) {
+        else if (channel_id === 0x05 && channel_type === 0x7d) {
             decoded.h2s = readUInt16LE(bytes.slice(i, i + 2)) / 100;
             i += 2;
         } else {

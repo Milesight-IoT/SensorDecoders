@@ -15,10 +15,11 @@ For more detailed information, please visit [Milesight official website](https:/
 |   3   | battery. uint: %                                                                                                                                                                                                                                            |
 |   4   | smoke concentration. uint: %                                                                                                                                                                                                                                |
 |   5   | temperature. range: [-20, 70], uint: ℃                                                                                                                                                                                                                      |
-|   6   | CRC. byte1 + byte2 + byte3 + byte4 + byte5 + byte6 = 0x00                                                                                                                                                                                                    |
+|   6   | CRC. byte1 + byte2 + byte3 + byte4 + byte5 + byte6 = 0x00                                                                                                                                                                                                   |
 
 # Sample
-``` json
+
+```json
 // Sampel(Hex): 221E64001C40
 {
     "version": 2,

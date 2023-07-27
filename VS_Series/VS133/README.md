@@ -8,20 +8,20 @@ For more detailed periodic_information, please visit [Milesight official website
 
 ## Payload Definition
 
-|  channel  | channel_id | channel_type | data_length (bytes) | description                                               |
-| :-------: | :--------: | :----------: | :-----------------: | --------------------------------------------------------- |
-|  line 1   |    0x03    |     0xD2     |          4          | total_in(4B)                                              |
-|  line 1   |    0x04    |     0xD2     |          4          | total_out(4B)                                             |
-|  line 1   |    0x05    |     0xCC     |          4          | period_in(2B) + period_out(2B)                            |
-|  line 2   |    0x06    |     0xD2     |          4          | total_in(4B)                                              |
-|  line 2   |    0x07    |     0xD2     |          4          | total_out(4B)                                             |
-|  line 2   |    0x08    |     0xCC     |          4          | period_in(2B) + period_out(2B)                            |
-|  line 3   |    0x09    |     0xD2     |          4          | total_in(4B)                                              |
-|  line 3   |    0x0A    |     0xD2     |          4          | total_out(4B)                                             |
-|  line 3   |    0x0B    |     0xCC     |          4          | period_in(2B) + period_out(2B)                            |
-|  line 4   |    0x0C    |     0xD2     |          4          | total_in(4B)                                              |
-|  line 4   |    0x0D    |     0xD2     |          4          | total_out(4B)                                             |
-|  line 4   |    0x0E    |     0xCC     |          4          | period_in(2B) + period_out(2B)                            |
+| channel | channel_id | channel_type | data_length (bytes) | description                    |
+| :-----: | :--------: | :----------: | :-----------------: | ------------------------------ |
+| line 1  |    0x03    |     0xD2     |          4          | total_in(4B)                   |
+| line 1  |    0x04    |     0xD2     |          4          | total_out(4B)                  |
+| line 1  |    0x05    |     0xCC     |          4          | period_in(2B) + period_out(2B) |
+| line 2  |    0x06    |     0xD2     |          4          | total_in(4B)                   |
+| line 2  |    0x07    |     0xD2     |          4          | total_out(4B)                  |
+| line 2  |    0x08    |     0xCC     |          4          | period_in(2B) + period_out(2B) |
+| line 3  |    0x09    |     0xD2     |          4          | total_in(4B)                   |
+| line 3  |    0x0A    |     0xD2     |          4          | total_out(4B)                  |
+| line 3  |    0x0B    |     0xCC     |          4          | period_in(2B) + period_out(2B) |
+| line 4  |    0x0C    |     0xD2     |          4          | total_in(4B)                   |
+| line 4  |    0x0D    |     0xD2     |          4          | total_out(4B)                  |
+| line 4  |    0x0E    |     0xCC     |          4          | period_in(2B) + period_out(2B) |
 
 ## Example
 

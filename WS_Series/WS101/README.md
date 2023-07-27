@@ -1,10 +1,12 @@
 # Smart Button - Milesight IoT
 
-![WS101](WS101.png)
-
 The payload decoder function is applicable to WS101.
 
 For more detailed information, please visit [milesight official website](https://www.milesight-iot.com).
+
+|        WS101        |          WS101 SOS          |
+| :-----------------: | :-------------------------: |
+| ![WS101](WS101.png) | ![WS101_SOS](WS101_SOS.png) |
 
 ## Payload Definition
 
