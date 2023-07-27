@@ -15,7 +15,7 @@ For more detailed information, please visit [Milesight official website](https:/
 |       humidity       |    0x04    |     0x68     |          1          | unit: %RH                                                                                                                                                                                                             |
 |      occupancy       |    0x05    |     0x00     |          1          | 0: vacant<br />1: occupied                                                                                                                                                                                            |
 | temperature abnormal |    0x83    |     0x67     |          3          | temperature(2B) + alert(1B)                                                                                                                                                                                           |
-|   historical data    |    0x20    |     0xCE     |          9          | timestamp(4B) + report_type(1B) + occupancy(1B) + temperature(2B) + humidity(1B) <br/><br/>**report_type**:<br/>0: temperature threshold<br/>1: temperature resume<br/>2: pir ilde<br/>3: pir occupancy<br/>4: period |
+|   historical data    |    0x20    |     0xCE     |          9          | timestamp(4B) + report_type(1B) + occupancy(1B) + temperature(2B) + humidity(1B) <br/><br/>**report_type**:<br/>0: temperature resume<br/>1: temperature threshold<br/>2: pir ilde<br/>3: pir occupancy<br/>4: period |
 
 ## Example
 

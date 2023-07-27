@@ -52,7 +52,7 @@ function milesight(bytes) {
             var data = {};
             data.timestamp = readUInt32LE(bytes.slice(i, i + 4));
             var report_type = bytes[i + 4];
-            data.report_type = ["temperature threshold", "temperature resume", "pir idle", "pir occupancy", "period"][report_type & 0x07];
+            data.report_type = ["temperature resume", "temperature threshold", "pir idle", "pir occupancy", "period"][report_type & 0x07];
             data.occupancy = bytes[i + 5] === 0 ? "vacant" : "occupied";
             data.temperature = readInt16LE(bytes.slice(i + 6, i + 8)) / 10;
             data.humidity = bytes[i + 8] / 2;
