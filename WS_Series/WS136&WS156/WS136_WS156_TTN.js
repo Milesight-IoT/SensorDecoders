@@ -24,8 +24,10 @@ function milesight(bytes) {
         else if (channel_id === 0xff && channel_type === 0x34) {
             var id = bytes[i];
             var command = [bytes[i + 2], bytes[i + 1]];
-            decoded[`button_${id}`] = "trigger";
-            //   decoded[`button_${id}_command`] = command;
+            var channel_name = "button_" + id;
+            // var channel_command_name = "button_" + id + "_command";
+            decoded[channel_name] = "trigger";
+            // decoded[channel_command_name] = command;
             i += 3;
         } else {
             break;

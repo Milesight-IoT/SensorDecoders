@@ -23,40 +23,46 @@ function milesight(bytes) {
         var channel_type = bytes[i++];
 
         // GPIO Input
-        if (gpio_in_chns.includes(channel_id) && channel_type === 0x00) {
+        if (includes(gpio_in_chns, channel_id) && channel_type === 0x00) {
             var id = channel_id - gpio_in_chns[0] + 1;
-            decoded[`gpio_in_${id}`] = bytes[i] === 0 ? "off" : "on";
+            var gpio_in_name = "gpio_in_" + id;
+            decoded[gpio_in_name] = bytes[i] === 0 ? "off" : "on";
             i += 1;
         }
         // GPIO Output
-        else if (gpio_out_chns.includes(channel_id) && channel_type === 0x01) {
+        else if (includes(gpio_out_chns, channel_id) && channel_type === 0x01) {
             var id = channel_id - gpio_out_chns[0] + 1;
-            decoded[`gpio_out_${id}`] = bytes[i] === 0 ? "off" : "on";
+            var gpio_out_name = "gpio_out_" + id;
+            decoded[gpio_out_name] = bytes[i] === 0 ? "off" : "on";
             i += 1;
         }
         // GPIO AS counter
-        else if (gpio_in_chns.includes(channel_id) && channel_type === 0xc8) {
+        else if (includes(gpio_in_chns, channel_id) && channel_type === 0xc8) {
             var id = channel_id - gpio_in_chns[0] + 1;
-            decoded[`counter_${id}`] = readUInt32LE(bytes.slice(i, i + 4));
+            var counter_name = "counter_" + id;
+            decoded[counter_name] = readUInt32LE(bytes.slice(i, i + 4));
             i += 4;
         }
         // PT100
-        else if (pt100_chns.includes(channel_id) && channel_type === 0x67) {
+        else if (includes(pt100_chns, channel_id) && channel_type === 0x67) {
             var id = channel_id - pt100_chns[0] + 1;
-            decoded[`pt100_${id}`] = readInt16LE(bytes.slice(i, i + 2)) / 10;
+            var pt100_name = "pt100_" + id;
+            decoded[pt100_name] = readInt16LE(bytes.slice(i, i + 2)) / 10;
             i += 2;
         }
         // ADC CHANNEL
-        else if (ai_chns.includes(channel_id) && channel_type === 0x02) {
+        else if (includes(ai_chns, channel_id) && channel_type === 0x02) {
             var id = channel_id - ai_chns[0] + 1;
-            decoded[`adc_${id}`] = readUInt32LE(bytes.slice(i, i + 2)) / 100;
+            var adc_name = "adc_" + id;
+            decoded[adc_name] = readUInt32LE(bytes.slice(i, i + 2)) / 100;
             i += 4;
             continue;
         }
         // ADC CHANNEL for voltage
-        else if (av_chns.includes(channel_id) && channel_type === 0x02) {
+        else if (includes(av_chns, channel_id) && channel_type === 0x02) {
             var id = channel_id - av_chns[0] + 1;
-            decoded[`adv_${id}`] = readUInt32LE(bytes.slice(i, i + 2)) / 100;
+            var adv_name = "adv_" + id;
+            decoded[adv_name] = readUInt32LE(bytes.slice(i, i + 2)) / 100;
             i += 4;
             continue;
         }
@@ -151,4 +157,14 @@ function readFloatLE(bytes) {
     var m = e === 0 ? (bits & 0x7fffff) << 1 : (bits & 0x7fffff) | 0x800000;
     var f = sign * m * Math.pow(2, e - 150);
     return f;
+}
+
+function includes(datas, value) {
+    var size = datas.length;
+    for (var i = 0; i < size; i++) {
+        if (datas[i] == value) {
+            return true;
+        }
+    }
+    return false;
 }
