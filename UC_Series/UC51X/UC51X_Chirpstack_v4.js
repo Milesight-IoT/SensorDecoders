@@ -24,12 +24,12 @@ function milesight(bytes) {
         }
         // VALVE 1
         else if (channel_id === 0x03 && channel_type == 0x01) {
-            decoded.valve_1 = bytes[i] === 0 ? "off" : "on";
+            decoded.valve_1 = bytes[i] === 0 ? "close" : "open";
             i += 1;
         }
         // VALVE 2
         else if (channel_id === 0x05 && channel_type == 0x01) {
-            decoded.valve_2 = bytes[i] === 0 ? "close" : "on";
+            decoded.valve_2 = bytes[i] === 0 ? "close" : "open";
             i += 1;
         }
         // VALVE 1 Pulse
@@ -60,7 +60,7 @@ function milesight(bytes) {
 
             var timestamp = readUInt32LE(bytes.slice(i, i + 4));
             var data = bytes[i + 4];
-            var status = (data & 0x01) === 0 ? "off" : "on";
+            var status = (data & 0x01) === 0 ? "close" : "open";
             var mode = ((data >> 1) & 0x01) === 0 ? "counter" : "gpio";
             var gpio = ((data >> 2) & 0x01) === 0 ? "off" : "on";
             var index = ((data >> 4) & 0x01) === 0 ? "1" : "2";
@@ -93,7 +93,7 @@ function milesight(bytes) {
  ********************************************/
 function readUInt32LE(bytes) {
     var value = (bytes[3] << 24) + (bytes[2] << 16) + (bytes[1] << 8) + bytes[0];
-    return value & 0xffffffff;
+    return (value & 0xffffffff) >>> 0;
 }
 
 function readInt32LE(bytes) {
