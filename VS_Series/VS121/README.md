@@ -10,15 +10,15 @@ For more detailed information, please visit [milesight official website](https:/
 
 |      channel       | channel_id | channel_type | data_length (bytes) | description                                               |
 | :----------------: | :--------: | :----------: | :-----------------: | --------------------------------------------------------- |
-|  protocol version  |    0xFF    |     0x01     |          1          | protocol_version(1B)                                      |
-|   serial number    |    0xFF    |     0x08     |          6          | sn(6B)                                                    |
-|  hardware version  |    0xFF    |     0x09     |          2          | hardware_version(1B)                                      |
-|  firmware version  |    0xFF    |     0x1F     |          4          | firmware_version(6B)                                      |
-|    people count    |    0x04    |     0xC9     |          4          | people_count_all(1B) + region_count(2B) + region_mask(2B) |
-|   people passing   |    0x05    |     0xCC     |          2          | people_in(2B) + people_out(2B)                            |
-|     people max     |    0x06    |     0xCD     |          1          | people_count_max(1B)                                      |
-| region count(1-8)  |    0x07    |     0xD5     |          1          | region_1(1B) + region_2(1B) + ... + region_8(1B)          |
-| region count(9-16) |    0x08    |     0xD5     |          1          | region_9(1B) + region_10(1B) + ... + region_16(1B)        |
+|  Protocol Version  |    0xFF    |     0x01     |          1          | protocol_version(1B)                                      |
+|   Serial Number    |    0xFF    |     0x08     |          6          | sn(6B)                                                    |
+|  Hardware Version  |    0xFF    |     0x09     |          2          | hardware_version(1B)                                      |
+|  Firmware Version  |    0xFF    |     0x1F     |          4          | firmware_version(6B)                                      |
+|    People Count    |    0x04    |     0xC9     |          4          | people_count_all(1B) + region_count(2B) + region_mask(2B) |
+|   People Passing   |    0x05    |     0xCC     |          2          | people_in(2B) + people_out(2B)                            |
+|     People Max     |    0x06    |     0xCD     |          1          | people_count_max(1B)                                      |
+| Region Count(1-8)  |    0x07    |     0xD5     |          1          | region_1(1B) + region_2(1B) + ... + region_8(1B)          |
+| Region Count(9-16) |    0x08    |     0xD5     |          1          | region_9(1B) + region_10(1B) + ... + region_16(1B)        |
 |       A flow       |    0x09    |     0xDA     |          8          | AtoA(2B) + AtoB(2B) + ... + AtoD(2B)                      |
 |       B flow       |    0x0A    |     0xDA     |          8          | BtoA(2B) + BtoB(2B) + ... + BtoD(2B)                      |
 |       C flow       |    0x0B    |     0xDA     |          8          | CtoA(2B) + CtoB(2B) + ... + CtoD(2B)                      |
