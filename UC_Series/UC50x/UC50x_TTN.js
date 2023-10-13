@@ -1,7 +1,7 @@
 /**
  * Payload Decoder for The Things Network
  *
- * Copyright 2022 Milesight IoT
+ * Copyright 2023 Milesight IoT
  *
  * @product UC500 series
  */

@@ -8,18 +8,18 @@ For more detailed information, please visit [milesight official website](https:/
 
 ## Payload Definition
 
-|   channel    | channel_id | channel_type | data_length (bytes) | description |
-| :----------: | :--------: | :----------: | :-----------------: | ----------- |
-|   battery    |    0x01    |     0x75     |          1          | unit: %     |
-| temperature  |    0x03    |     0x67     |          2          | unit: ℃     |
-|   humidity   |    0x04    |     0x68     |          1          | unit: %RH   |
-|   activity   |    0x05    |     0x6A     |          2          | unit:       |
-| illumination |    0x06    |     0x65     |          6          | unit: lux   |
+|   channel    | channel_id | channel_type | data_length (bytes) | description                                           |
+| :----------: | :--------: | :----------: | :-----------------: | ----------------------------------------------------- |
+|   Battery    |    0x01    |     0x75     |          1          | **battery(1B)**<br/><br/>battery, unit: %             |
+| Temperature  |    0x03    |     0x67     |          2          | **temperature(2B)**<br/><br/>temperature, unit: ℃     |
+|   Humidity   |    0x04    |     0x68     |          1          | **humidity(1B)**<br/><br/>humidity, unit: %RH         |
+|   Activity   |    0x05    |     0x6A     |          2          | **activity(2B)**                                      |
+| Illumination |    0x06    |     0x65     |          6          | **illumination(6B)**<br/><br/>illumination, unit: lux |
 
 ## Example
 
 ```json
-// Sample: 01 75 5C 03 67 34 01 04 68 65 05 6A 49 00 06 65 1C 00 79 00 14 00
+// 01755C 03673401 046865 056A4900 06651C0079001400
 {
     "battery": 92,
     "temperature": 30.8,

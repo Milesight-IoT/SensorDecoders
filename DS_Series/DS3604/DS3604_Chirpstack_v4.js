@@ -1,23 +1,19 @@
 /**
  * Payload Decoder for Chirpstack v4
- * 
- * Copyright 2022 Milesight IoT
- * 
+ *
+ * Copyright 2023 Milesight IoT
+ *
  * @product DS3604
  */
 function decodeUplink(input) {
-    var decoded = Decode(input.fPort, input.bytes);
-
-    return {
-        data: decoded
-    }
+    var decoded = milesight(input.bytes);
+    return { data: decoded };
 }
 
-/** Use v3 Decode Function */
-function Decode(fPort, bytes) {
+function milesight(bytes) {
     var decoded = {};
 
-    for (var i = 0; i < bytes.length;) {
+    for (var i = 0; i < bytes.length; ) {
         var channel_id = bytes[i++];
         var channel_type = bytes[i++];
 
@@ -27,14 +23,14 @@ function Decode(fPort, bytes) {
             i += 1;
         }
         // TEMPLATE
-        else if (channel_id == 0xFF && channel_type == 0x73) {
+        else if (channel_id == 0xff && channel_type == 0x73) {
             decoded.template_id = bytes[i] + 1;
             i += 1;
         }
         // TEMPLATE BLOCK CHANNEL DATA
-        else if (channel_id == 0xFB && channel_type == 0x01) {
+        else if (channel_id == 0xfb && channel_type == 0x01) {
             var template_id = (bytes[i] >> 6) + 1;
-            var block_id = bytes[i++] & 0x3F;
+            var block_id = bytes[i++] & 0x3f;
             var block_name;
             if (block_id < 10) {
                 block_name = "text_" + (block_id + 1);
@@ -47,9 +43,8 @@ function Decode(fPort, bytes) {
                 decoded[block_name] = fromUtf8Bytes(bytes.slice(i, i + block_length));
                 i += block_length;
             }
-            decoded.template=template_id;
-        }
-        else {
+            decoded.template = template_id;
+        } else {
             break;
         }
     }
@@ -58,7 +53,11 @@ function Decode(fPort, bytes) {
 }
 
 function fromUtf8Bytes(bytes) {
-    return decodeURIComponent(bytes.map(function (ch) {
-        return '%' + (ch < 16 ? '0' : '') + ch.toString(16);
-    }).join(''));
+    return decodeURIComponent(
+        bytes
+            .map(function (ch) {
+                return "%" + (ch < 16 ? "0" : "") + ch.toString(16);
+            })
+            .join("")
+    );
 }

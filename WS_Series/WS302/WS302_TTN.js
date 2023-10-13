@@ -1,12 +1,15 @@
 /**
  * Payload Decoder for The Things Network
  *
- * Copyright 2022 Milesight IoT
+ * Copyright 2023 Milesight IoT
  *
  * @product WS302
  */
-
 function Decoder(bytes, port) {
+    return milesight(bytes);
+}
+
+function milesight(bytes) {
     var decoded = {};
 
     for (var i = 0; i < bytes.length; ) {
@@ -51,7 +54,7 @@ function Decoder(bytes, port) {
 
 function readFrequecyWeightType(bytes) {
     var type = "";
-    
+
     var bits = bytes & 0x03;
     switch (bits) {
         case 0:

@@ -1,11 +1,15 @@
 /**
- * Payload Decoder for Chirpstack and Milesight network server
+ * Payload Decoder for Milesight Network Server
  *
- * Copyright 2022 Milesight IoT
+ * Copyright 2023 Milesight IoT
  *
  * @product WS136 & WS156
  */
 function Decode(fPort, bytes) {
+    return milesight(bytes);
+}
+
+function milesight(bytes) {
     var decoded = {};
 
     for (var i = 0; i < bytes.length; ) {
@@ -21,9 +25,9 @@ function Decode(fPort, bytes) {
             var id = bytes[i];
             var command = [bytes[i + 2], bytes[i + 1]];
             var channel_name = "button_" + id;
- //         var channel_command_name = "button_" + id + "_command";
+            // var channel_command_name = "button_" + id + "_command";
             decoded[channel_name] = "trigger";
- //         decoded[channel_command_name] = command;
+            // decoded[channel_command_name] = command;
             i += 3;
         } else {
             break;

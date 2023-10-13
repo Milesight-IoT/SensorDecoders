@@ -6,6 +6,10 @@
  * @product GS301
  */
 function Decoder(bytes, port) {
+    return milesight(bytes);
+}
+
+function milesight(bytes) {
     var decoded = {};
 
     for (var i = 0; i < bytes.length; ) {

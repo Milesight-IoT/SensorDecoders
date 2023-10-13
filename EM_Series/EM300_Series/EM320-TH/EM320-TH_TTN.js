@@ -1,14 +1,18 @@
 /**
  * Payload Decoder for The Things Network
- * 
- * Copyright 2022 Milesight IoT
- * 
+ *
+ * Copyright 2023 Milesight IoT
+ *
  * @product EM320-TH
  */
 function Decoder(bytes, port) {
+    return milesight(bytes);
+}
+
+function milesight(bytes) {
     var decoded = {};
 
-    for (var i = 0; i < bytes.length;) {
+    for (var i = 0; i < bytes.length; ) {
         var channel_id = bytes[i++];
         var channel_type = bytes[i++];
 

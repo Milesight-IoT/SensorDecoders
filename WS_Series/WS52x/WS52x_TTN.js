@@ -1,11 +1,15 @@
 /**
  * Payload Decoder for The Things Network
  *
- * Copyright 2021 Milesight IoT
+ * Copyright 2023 Milesight IoT
  *
  * @product WS52x
  */
 function Decoder(bytes, port) {
+    return milesight(bytes);
+}
+
+function milesight(bytes) {
     var decoded = {};
 
     for (var i = 0; i < bytes.length; ) {
@@ -17,7 +21,7 @@ function Decoder(bytes, port) {
             decoded.voltage = readUInt16LE(bytes.slice(i, i + 2)) / 10;
             i += 2;
         }
-	// ACTIVE POWER
+        // ACTIVE POWER
         else if (channel_id === 0x04 && channel_type === 0x80) {
             decoded.power = readUInt32LE(bytes.slice(i, i + 4));
             i += 4;
@@ -41,9 +45,9 @@ function Decoder(bytes, port) {
         else if (channel_id === 0x08 && channel_type == 0x70) {
             decoded.state = bytes[i] == 1 || bytes[i] == 0x11 ? "open" : "close";
             i += 1;
-        }
-	else if (channel_id === 0xFF && channel_type == 0x3F) {
-            decoded.outage = bytes[i] == 0xFF ? 1 : 0;
+        } else if (channel_id === 0xff && channel_type == 0x3f) {
+            decoded.outage = bytes[i] == 0xff ? 1 : 0;
+            i += 1;
         } else {
             break;
         }

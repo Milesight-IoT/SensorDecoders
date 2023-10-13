@@ -1,14 +1,18 @@
 /**
- * Payload Decoder for Chirpstack and Milesight network server
- * 
- * Copyright 2022 Milesight IoT
- * 
+ * Payload Decoder for Milesight Network Server
+ *
+ * Copyright 2023 Milesight IoT
+ *
  * @product WTS305 / WTS506
  */
 function Decode(fPort, bytes) {
+    return milesight(bytes);
+}
+
+function milesight(bytes) {
     var decoded = {};
 
-    for (var i = 0; i < bytes.length;) {
+    for (var i = 0; i < bytes.length; ) {
         var channel_id = bytes[i++];
         var channel_type = bytes[i++];
         // BATTERY
@@ -48,8 +52,8 @@ function Decode(fPort, bytes) {
         }
         // rainfall_total, unit mm, Frame counter to define whether device enters the new rainfall accumulation phase, it will plus 1 every upload, range: 0~255
         else if (channel_id === 0x08 && channel_type === 0x77) {
-            decoded.rainfall_total = readUInt16LE(bytes.slice(i, i + 2)) /100;
-            decoded.rainfall_counter = bytes[i+2];
+            decoded.rainfall_total = readUInt16LE(bytes.slice(i, i + 2)) / 100;
+            decoded.rainfall_counter = bytes[i + 2];
             i += 3;
         } else {
             break;

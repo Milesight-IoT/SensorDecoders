@@ -1,13 +1,12 @@
 /**
- * Payload Decoder for Milesight Network Server
+ * Payload Decoder for Chirpstack v4
  *
  * Copyright 2023 Milesight IoT
  *
  * @product WS50x v1
  */
 function decodeUplink(input) {
-    var bytes = input.bytes;
-    var decoded = milesight(bytes);
+    var decoded = milesight(input.bytes);
     return { data: decoded };
 }
 

@@ -1,11 +1,15 @@
 /**
  * Payload Decoder for The Things Network
  *
- * Copyright 2022 Milesight IoT
+ * Copyright 2023 Milesight IoT
  *
  * @product EM320-TILT
  */
- function Decoder(bytes, port) {
+function Decoder(bytes, port) {
+    return milesight(bytes);
+}
+
+function milesight(bytes) {
     var decoded = {};
 
     for (var i = 0; i < bytes.length; ) {
@@ -18,7 +22,7 @@
             i += 1;
         }
         // ANGLE
-        else if (channel_id === 0x03 && channel_type === 0xD4) {
+        else if (channel_id === 0x03 && channel_type === 0xd4) {
             decoded.angle_x = (readInt16LE(bytes.slice(i, i + 2)) >> 1) / 100;
             decoded.angle_y = (readInt16LE(bytes.slice(i + 2, i + 4)) >> 1) / 100;
             decoded.angle_z = (readInt16LE(bytes.slice(i + 4, i + 6)) >> 1) / 100;

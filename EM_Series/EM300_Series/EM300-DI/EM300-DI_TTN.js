@@ -1,14 +1,18 @@
 /**
  * Payload Decoder for The Things Network
- * 
- * Copyright 2022 Milesight IoT
- * 
+ *
+ * Copyright 2023 Milesight IoT
+ *
  * @product EM300-DI
  */
 function Decoder(bytes, port) {
+    return milesight(bytes);
+}
+
+function milesight(bytes) {
     var decoded = {};
 
-    for (var i = 0; i < bytes.length;) {
+    for (var i = 0; i < bytes.length; ) {
         var channel_id = bytes[i++];
         var channel_type = bytes[i++];
 
@@ -45,8 +49,7 @@ function Decoder(bytes, port) {
         // HISTROY
         else if (channel_id === 0x20 && channel_type === 0xce) {
             // maybe not historical raw data
-            if (bytes.slice(i).length < 12)
-                break;
+            if (bytes.slice(i).length < 12) break;
 
             var point = {};
             point.timestamp = readUInt32LE(bytes.slice(i, i + 4));

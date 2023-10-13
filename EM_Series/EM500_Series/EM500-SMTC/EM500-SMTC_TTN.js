@@ -1,11 +1,11 @@
 /**
- * Payload Decoder for Milesight Network Server
+ * Payload Decoder for The Things Network
  *
  * Copyright 2023 Milesight IoT
  *
- * @product EM500-SMT
+ * @product EM500-SMTC
  */
-function Decode(fPort, bytes) {
+function Decoder(bytes, port) {
     return milesight(bytes);
 }
 

@@ -1,10 +1,13 @@
 /**
  * Payload Decoder for The Things Network
  *
- * Copyright 2022 Milesight IoT
+ * Copyright 2023 Milesight IoT
  *
  * @product UC300 series
  */
+function Decoder(bytes, port) {
+    return milesight(bytes);
+}
 
 var gpio_in_chns = [0x03, 0x04, 0x05, 0x06];
 var gpio_out_chns = [0x07, 0x08];
@@ -12,10 +15,10 @@ var pt100_chns = [0x09, 0x0a];
 var ai_chns = [0x0b, 0x0c];
 var av_chns = [0x0d, 0x0e];
 
-function Decoder(bytes, fport) {
+function milesight(bytes) {
     var decoded = {};
 
-    for (i = 0; i < bytes.length;) {
+    for (i = 0; i < bytes.length; ) {
         var channel_id = bytes[i++];
         var channel_type = bytes[i++];
 
@@ -99,8 +102,7 @@ function Decoder(bytes, fport) {
             var channel_name = "channel_" + modbus_chn_id + "_error";
             decoded[channel_name] = true;
             i += 1;
-        }
-        else {
+        } else {
             break;
         }
     }

@@ -1,11 +1,15 @@
 /**
- * Payload Decoder for Chirpstack and Milesight gateway network server
+ * Payload Decoder for Milesight Network Server
  *
- * Copyright 2022 Milesight IoT
+ * Copyright 2023 Milesight IoT
  *
  * @product UC100 series
  */
 function Decode(fPort, bytes) {
+    return milesight(bytes);
+}
+
+function milesight(bytes) {
     var decoded = {};
     for (i = 0; i < bytes.length; ) {
         var channel_id = bytes[i++];
@@ -74,7 +78,6 @@ function Decode(fPort, bytes) {
         }
         // MODBUS READ ERROR
         else if (channel_id === 0xff && channel_type === 0x15) {
-            
             var modbus_chn_id = bytes[i] + 1;
             var channel_name = "channel_" + modbus_chn_id + "_error";
             decoded[channel_name] = true;

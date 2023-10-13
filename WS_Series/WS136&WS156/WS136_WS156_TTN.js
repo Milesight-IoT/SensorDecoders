@@ -1,11 +1,15 @@
 /**
  * Payload Decoder for The Things Network
  *
- * Copyright 2022 Milesight IoT
+ * Copyright 2023 Milesight IoT
  *
  * @product WS136 / WS156
  */
 function Decoder(bytes, port) {
+    return milesight(bytes);
+}
+
+function milesight(bytes) {
     var decoded = {};
 
     for (var i = 0; i < bytes.length; ) {
@@ -21,7 +25,7 @@ function Decoder(bytes, port) {
             var id = bytes[i];
             var command = [bytes[i + 2], bytes[i + 1]];
             decoded[`button_${id}`] = "trigger";
-       //   decoded[`button_${id}_command`] = command;
+            //   decoded[`button_${id}_command`] = command;
             i += 3;
         } else {
             break;

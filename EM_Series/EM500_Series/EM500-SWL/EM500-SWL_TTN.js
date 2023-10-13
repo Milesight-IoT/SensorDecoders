@@ -1,7 +1,7 @@
 /**
  * Payload Decoder for The Things Network
  *
- * Copyright 2021 Milesight IoT
+ * Copyright 2023 Milesight IoT
  *
  * @product EM500-SWL
  */

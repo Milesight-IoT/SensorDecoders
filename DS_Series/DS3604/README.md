@@ -25,7 +25,7 @@ FB: template     -> 0xFB         0x01          [Nbytes] Unit: -
 +-------------+-------------------+---------------------+----------------------+-------------------+-----------------+---------------+
 ```
 
-## Example for The Things Network
+## Example
 
 -   Template id range `0 - 1`
 -   Text block id range `0 - 9`

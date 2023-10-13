@@ -3,7 +3,7 @@
  *
  * Copyright 2023 Milesight IoT
  *
- * @product WS50x_v2
+ * @product WS50x v2
  */
 function Decoder(bytes, port) {
     return milesight(bytes);
@@ -12,7 +12,7 @@ function Decoder(bytes, port) {
 function milesight(bytes) {
     var decoded = {};
 
-    for (var i = 0; i < bytes.length;) {
+    for (var i = 0; i < bytes.length; ) {
         var channel_id = bytes[i++];
         var channel_type = bytes[i++];
 

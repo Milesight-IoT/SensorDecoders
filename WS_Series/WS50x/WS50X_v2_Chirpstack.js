@@ -3,7 +3,7 @@
  *
  * Copyright 2023 Milesight IoT
  *
- * @product WS50x_v2
+ * @product WS50x v2
  */
 function Decode(fPort, bytes) {
     return milesight(bytes);

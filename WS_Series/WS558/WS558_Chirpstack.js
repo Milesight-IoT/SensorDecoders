@@ -1,14 +1,18 @@
 /**
- * Payload Decoder for Chirpstack and Milesight network server
+ * Payload Decoder for Milesight Network Server
  *
- * Copyright 2021 Milesight IoT
+ * Copyright 2023 Milesight IoT
  *
  * @product WS558
  */
 function Decode(fPort, bytes) {
+    return milesight(bytes);
+}
+
+function milesight(bytes) {
     var decoded = {};
 
-    for (var i = 0; i < bytes.length;) {
+    for (var i = 0; i < bytes.length; ) {
         var channel_id = bytes[i++];
         var channel_type = bytes[i++];
         // VOLTAGE
@@ -32,7 +36,7 @@ function Decode(fPort, bytes) {
             i += 4;
         }
         // TOTAL CURRENT
-        else if (channel_id === 0x07 && channel_type === 0xC9) {
+        else if (channel_id === 0x07 && channel_type === 0xc9) {
             decoded.total_current = readUInt16LE(bytes.slice(i, i + 2));
             i += 2;
         }
@@ -43,7 +47,7 @@ function Decode(fPort, bytes) {
             // output all switch status
             for (var idx = 0; idx < 8; idx++) {
                 var switchTag = "switch_" + (idx + 1);
-                decoded[switchTag] = (switchFlags >> idx) & 1 === 1 ? "on" : "off";
+                decoded[switchTag] = (switchFlags >> idx) & (1 === 1) ? "on" : "off";
             }
 
             i += 2;
@@ -59,31 +63,30 @@ function Decode(fPort, bytes) {
  * bytes to number
  ********************************************/
 function readUInt8LE(bytes) {
-    return (bytes & 0xFF);
+    return bytes & 0xff;
 }
 
 function readInt8LE(bytes) {
     var ref = readUInt8LE(bytes);
-    return (ref > 0x7F) ? ref - 0x100 : ref;
+    return ref > 0x7f ? ref - 0x100 : ref;
 }
 
 function readUInt16LE(bytes) {
     var value = (bytes[1] << 8) + bytes[0];
-    return (value & 0xFFFF);
+    return value & 0xffff;
 }
 
 function readInt16LE(bytes) {
     var ref = readUInt16LE(bytes);
-    return (ref > 0x7FFF) ? ref - 0x10000 : ref;
+    return ref > 0x7fff ? ref - 0x10000 : ref;
 }
-
 
 function readUInt32LE(bytes) {
     var value = (bytes[3] << 24) + (bytes[2] << 16) + (bytes[1] << 8) + bytes[0];
-    return (value & 0xFFFFFFFF);
+    return value & 0xffffffff;
 }
 
 function readInt32LE(bytes) {
     var ref = readUInt32LE(bytes);
-    return (ref > 0x7FFFFFFF) ? ref - 0x100000000 : ref;
+    return ref > 0x7fffffff ? ref - 0x100000000 : ref;
 }

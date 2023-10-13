@@ -3,11 +3,10 @@
  *
  * Copyright 2023 Milesight IoT
  *
- * @product WS50x_v2
+ * @product WS50x v2
  */
 function decodeUplink(input) {
-    var bytes = input.bytes;
-    var decoded = milesight(bytes);
+    var decoded = milesight(input.bytes);
     return { data: decoded };
 }
 

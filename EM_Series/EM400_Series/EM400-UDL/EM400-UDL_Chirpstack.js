@@ -1,5 +1,5 @@
 /**
- * Payload Decoder for Chirpstack and Milesight network server
+ * Payload Decoder for Milesight Network Server
  *
  * Copyright 2023 Milesight IoT
  *

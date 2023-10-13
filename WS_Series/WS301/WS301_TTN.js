@@ -1,11 +1,15 @@
 /**
- * Payload Decoder for Chirpstack and Milesight network server
+ * Payload Decoder for The Things Network
  *
- * Copyright 2021 Milesight IoT
+ * Copyright 2023 Milesight IoT
  *
  * @product WS301
  */
 function Decoder(bytes, port) {
+    return milesight(bytes);
+}
+
+function milesight(bytes) {
     var decoded = {};
 
     for (var i = 0; i < bytes.length; ) {

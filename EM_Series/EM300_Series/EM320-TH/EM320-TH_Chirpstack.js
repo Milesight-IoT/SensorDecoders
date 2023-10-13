@@ -1,14 +1,18 @@
 /**
- * Payload Decoder for Chirpstack and Milesight network server
- * 
- * Copyright 2022 Milesight IoT
- * 
+ * Payload Decoder for Milesight Network Server
+ *
+ * Copyright 2023 Milesight IoT
+ *
  * @product EM320-TH
  */
 function Decode(fPort, bytes) {
+    return milesight(bytes);
+}
+
+function milesight(bytes) {
     var decoded = {};
 
-    for (var i = 0; i < bytes.length;) {
+    for (var i = 0; i < bytes.length; ) {
         var channel_id = bytes[i++];
         var channel_type = bytes[i++];
 
