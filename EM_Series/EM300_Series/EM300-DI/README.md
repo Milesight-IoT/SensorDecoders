@@ -8,52 +8,23 @@ For more detailed information, please visit [milesight official website](https:/
 
 ## Payload Definition
 
-```
---------------------- Payload Definition ---------------------
+|     CHANNEL     |  ID  | TYPE | LENGTH | DESCRIPTION                                                                                                                                                                                                                                                                                                                                                                                                                          |
+| :-------------: | :--: | :--: | :----: | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+|     Battery     | 0x01 | 0x75 |   1    | **battery(1B)**<br/>[battery] unit: %                                                                                                                                                                                                                                                                                                                                                                                                |
+|   Temperature   | 0x03 | 0x67 |   2    | **temperature(2B)**<br/>[temperature] unit: °C                                                                                                                                                                                                                                                                                                                                                                                       |
+|    Humidity     | 0x04 | 0x68 |   1    | **humidity(1B)**<br/>[humidity] unit: %                                                                                                                                                                                                                                                                                                                                                                                              |
+|      GPIO       | 0x05 | 0x00 |   1    | **gpio(1B)**                                                                                                                                                                                                                                                                                                                                                                                                                         |
+|      GPIO       | 0x05 | 0xC8 |   4    | **pulse(4B)**                                                                                                                                                                                                                                                                                                                                                                                                                        |
+|      Water      | 0x06 | 0xE1 |   8    | **water_conv(2b) + pulse_conv(2B) + water(4B)**<br/>water_conv/pulse_conv \* counter = water                                                                                                                                                                                                                                                                                                                                         |
+|   GPIO Alarm    | 0x85 | 0x00 |   1    | **gpio(1B) + gpio_alarm(1B)**<br/>[gpio] values: (0: low, 1: high)<br/>[gpio_alarm] values:(1: gpio alarm, 0: gpio alarm release)                                                                                                                                                                                                                                                                                                    |
+|   Water Alarm   | 0x86 | 0xE1 |   9    | **water_conv(2b) + pulse_conv(2B) + water(4B) + water_alarm(1B)**<br/>[water_alarm] (1: water outage timeout alarm, 2: water outage timeout alarm release, 3: water flow timeout alarm, 4: water flow timeout alarm release)                                                                                                                                                                                                         |
+| Historical Data | 0x20 | 0xCE |   13   | **timestamp(4B) + temperature(2B) + humidity(1B) + gpio_type(1B) + gpio(1B) + pulse(4B)**<br/>[gpio_type] values: (1: gpio, 2: pulse)<br/>[gpio] values: (0: low, 1: high)                                                                                                                                                                                                                                                           |
+| Historical Data | 0x21 | 0xCE |   18   | **timestamp(4B) + temperature(2B) + humidity(1B) + alarm(1B) + gpio_type(1B) + gpio(1B) + water_conv(2B) + pulse_conv(2B) + water(4B)**<br/>[gpio_type] values: (1: gpio, 2: pulse)<br/>[gpio] values: (0: low, 1: high)<br/>[alarm] values: (0: none, 1: water outage timeout alarm, 2: water outage timeout alarm release, 3: water flow timeout alarm, 4: water flow timeout alarm release, 5: gpio alarm, 6: gpio alarm release) |
 
-                   [channel_id] [channel_type] [channel_value]
-01: battery      -> 0x01         0x75          [ 1byte ] Unit: %
-03: temperature  -> 0x03         0x67          [ 2bytes] Unit: °C (℉)
-04: humidity     -> 0x04         0x68          [ 1byte ] Unit: %RH
-05: gpio         -> 0x05         0x00          [ 1byte ] Unit: -
-05: pulse        -> 0x05         0xC8          [ 4bytes] Unit: -
-20: history      -> 0x20         0xCE          [13bytes] Unit: -
------------------------------------------- EM300-DI ----------
-
-
--- Historical Data Frame
-+------------------------------------------------------------------------------------------------------------------------------+
-| Desc   | Channel ID(1B) | Data Type(1B) | Timestamp(4B) | Temperature(2B) | Humidity(1B) | Mode(1B) | GPIO(1B) | PULSE(4B)   |
-| -------+----------------+---------------+---------------+-----------------+--------------+----------+----------+------------ |
-| Sample | 20             | CE            | 9E 74 46 63   | 10 01           | 5D           | 02       | 00       | 00 01 00 00 |
-| Value  | -              | -             | 1665561758    | 27.2            | 46.5         | PULSE    | 0        | 256         |
-+------------------------------------------------------------------------------------------------------------------------------+
-
-Mode:
-- 0: None
-- 1: GPIO
-- 2: PULSE
-
-```
-
-## Example for The Things Network
-
-**Payload**
-
-```
-01 75 5C 03 67 34 01 04 68 65 20 CE 9E 74 46 63 10 01 5D 02 00 00 01 00 00
-```
-
-**Data Segmentation**
-
--   `01 75 5C`
--   `03 67 34 01`
--   `04 68 65`
--   `20 CE 9E 74 46 63 10 01 5D 02 00 00 01 00 00`
-
-**Output**
+## Example
 
 ```json
+// 01755C 03673401 046865 20CE9E74466310015D020000010000
 {
     "battery": 92,
     "temperature": 30.8,

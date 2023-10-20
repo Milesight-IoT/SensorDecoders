@@ -3,7 +3,7 @@
  *
  * Copyright 2023 Milesight IoT
  *
- * @product EM300-DI(Hall)
+ * @product EM300-DI (HALL)
  */
 function Decoder(bytes, port) {
     return milesight(bytes);
@@ -21,24 +21,9 @@ function milesight(bytes) {
             decoded.battery = bytes[i];
             i += 1;
         }
-        // TEMPERATURE
-        else if (channel_id === 0x03 && channel_type === 0x67) {
-            // ℃
-            decoded.temperature = readInt16LE(bytes.slice(i, i + 2)) / 10;
-            i += 2;
-
-            // ℉
-            // decoded.temperature = readInt16LE(bytes.slice(i, i + 2)) / 10 * 1.8 + 32;
-            // i +=2;
-        }
-        // HUMIDITY
-        else if (channel_id === 0x04 && channel_type === 0x68) {
-            decoded.humidity = bytes[i] / 2;
-            i += 1;
-        }
         // GPIO
         else if (channel_id === 0x05 && channel_type === 0x00) {
-            decoded.gpio = bytes[i];
+            decoded.gpio = readGPIOStatus(bytes[i]);
             i += 1;
         }
         // PULSE COUNTER
@@ -63,7 +48,7 @@ function milesight(bytes) {
         else if (channel_id === 0x86 && channel_type === 0xe1) {
             decoded.water_conv = readUInt16LE(bytes.slice(i, i + 2)) / 10;
             decoded.pluse_conv = readUInt16LE(bytes.slice(i + 2, i + 4)) / 10;
-            decoded.water = readFloatLE(bytes.slice(i + 4, i + 8)).toFixed(2);
+            decoded.water = readFloatLE(bytes.slice(i + 4, i + 8));
             decoded.water_alarm = readWaterAlarm(bytes[i + 8]);
             i += 9;
         }
@@ -71,16 +56,17 @@ function milesight(bytes) {
         else if (channel_id === 0x21 && channel_type === 0xce) {
             var point = {};
             point.timestamp = readUInt32LE(bytes.slice(i, i + 4));
-            point.temperature = readInt16LE(bytes.slice(i + 4, i + 6)) / 10;
-            point.humidity = bytes[i + 6] / 2;
+            // IGNORE: byte 4,5,6
             point.alarm = readAlarm(bytes[i + 7]);
             var mode = bytes[i + 8];
             if (mode === 1) {
+                point.gpio_type = "gpio";
                 point.gpio = readGPIOStatus(bytes[i + 9]);
             } else if (mode === 2) {
+                point.gpio_type = "pulse";
                 point.water_conv = readUInt16LE(bytes.slice(i + 10, i + 12)) / 10;
                 point.pluse_conv = readUInt16LE(bytes.slice(i + 12, i + 14)) / 10;
-                point.water = readFloatLE(bytes.slice(i + 14, i + 18)).toFixed(2);
+                point.water = readFloatLE(bytes.slice(i + 14, i + 18));
             }
 
             decoded.history = decoded.history || [];
@@ -120,7 +106,9 @@ function readFloatLE(bytes) {
     var e = (bits >>> 23) & 0xff;
     var m = e === 0 ? (bits & 0x7fffff) << 1 : (bits & 0x7fffff) | 0x800000;
     var f = sign * m * Math.pow(2, e - 150);
-    return f;
+
+    var v = Number(f.toFixed(2));
+    return v;
 }
 
 function readGPIOStatus(bytes) {
