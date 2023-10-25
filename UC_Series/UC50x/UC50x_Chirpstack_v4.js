@@ -145,7 +145,7 @@ function milesight(bytes) {
         // HISTORY DATA (GPIO / ADC)
         else if (channel_id === 0x20 && channel_type === 0xdc) {
             var timestamp = readUInt32LE(bytes.slice(i, i + 4));
-            var data = {};
+            var data = { timestamp: timestamp };
             data.gpio_1 = readUInt32LE(bytes.slice(i + 5, i + 9));
             data.gpio_2 = readUInt32LE(bytes.slice(i + 10, i + 14));
             data.adc_1 = readInt32LE(bytes.slice(i + 14, i + 18)) / 1000;
