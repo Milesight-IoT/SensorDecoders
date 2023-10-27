@@ -8,32 +8,37 @@ The payload decoder function is applicable to UC300.
 
 ## Payload Definition
 
-|               channel                | channel_id | channel_type | data_length (bytes) | description                                                           |
-| :----------------------------------: | :--------: | :----------: | :-----------------: | --------------------------------------------------------------------- |
-|           Digital Input 1            |    0x03    |     0x00     |          1          | gpio_in_1(1B)                                                         |
-|           Digital Input 2            |    0x04    |     0x00     |          1          | gpio_in_2(1B)                                                         |
-|           Digital Input 3            |    0x05    |     0x00     |          1          | gpio_in_3(1B)                                                         |
-|           Digital Input 4            |    0x06    |     0x00     |          1          | gpio_in_4(1B)                                                         |
-|      Digital Input as Counter 1      |    0x03    |     0xC8     |          4          | counter_1(4B)                                                         |
-|      Digital Input as Counter 2      |    0x04    |     0xC8     |          4          | counter_2(4B)                                                         |
-|      Digital Input as Counter 3      |    0x05    |     0xC8     |          4          | counter_3(4B)                                                         |
-|      Digital Input as Counter 4      |    0x06    |     0xC8     |          4          | counter_4(4B)                                                         |
-|           Digital Output 1           |    0x07    |     0x01     |          1          | gpio_out_1(1B)                                                        |
-|           Digital Output 2           |    0x08    |     0x01     |          1          | gpio_out_2(1B)                                                        |
-|               PT100 1                |    0x09    |     0x67     |          2          | pt100_1(2B)                                                           |
-|               PT100 2                |    0x0A    |     0x67     |          2          | pt100_2(2B)                                                           |
-|    Analog to Digital (current) 1     |    0x0B    |     0x02     |          4          | adc_1(4B)                                                             |
-|    Analog to Digital (current) 2     |    0x0C    |     0x02     |          4          | adc_2(4B)                                                             |
-|    Analog to Digital (voltage) 1     |    0x0D    |     0x02     |          4          | adv_1(4B)                                                             |
-|    Analog to Digital (voltage) 2     |    0x0E    |     0x02     |          4          | adv_2(4B)                                                             |
-|                MODBUS                |    0xFF    |     0x19     |          N          | modbus_chn_id(1B) + data_size(1B) + data_type(1B) + channel_value(MB) |
-|             MODBUS ERROR             |    0xFF    |     0x15     |          1          | modbus_chn_id_alarm(1B)                                               |
-|            PT100 1(stats)            |    0x09    |     0xE2     |          8          | pt100_1(2B) + pt100_1_max(2B) + pt100_1_min(2B) + pt100_1_avg(2B)     |
-|            PT100 2(stats)            |    0x0A    |     0xE2     |          8          | pt100_2(2B) + pt100_2_max(2B) + pt100_2_min(2B) + pt100_2_avg(2B)     |
-| Analog to Digital (current) 1(stats) |    0x0B    |     0xE2     |          8          | adc_1(2B) + adc_1_max(2B) + adc_1_min(2B) + adc_1_avg(2B)             |
-| Analog to Digital (current) 2(stats) |    0x0C    |     0xE2     |          8          | adc_2(2B) + adc_2_max(2B) + adc_2_min(2B) + adc_2_avg(2B)             |
-| Analog to Digital (voltage) 1(stats) |    0x0D    |     0xE2     |          8          | adv_1(2B) + adv_1_max(2B) + adv_1_min(2B) + adv_1_avg(2B)             |
-| Analog to Digital (voltage) 2(stats) |    0x0E    |     0xE2     |          8          | adv_2(2B) + adv_2_max(2B) + adv_2_min(2B) + adv_2_avg(2B)             |
+|               CHANNEL                |  ID  | TYPE | LENGTH | DESCRIPTION                                                               |
+| :----------------------------------: | :--: | :--: | :----: | ------------------------------------------------------------------------- |
+|           Protocol Version           | 0xFF | 0x01 |   1    | protocol_version(1B)                                                      |
+|             Power Status             | 0xFF | 0x0B |   1    | **power(1B)**                                                             |
+|            Serial Number             | 0xFF | 0x16 |   8    | **sn(8B)**                                                                |
+|           Hardware Version           | 0xFF | 0x09 |   2    | **hardware_version(8B)**                                                  |
+|           Firmware Version           | 0xFF | 0x0A |   2    | **firmware_version(8B)**                                                  |
+|           Digital Input 1            | 0x03 | 0x00 |   1    | **gpio_in_1(1B)**                                                         |
+|           Digital Input 2            | 0x04 | 0x00 |   1    | **gpio_in_2(1B)**                                                         |
+|           Digital Input 3            | 0x05 | 0x00 |   1    | **gpio_in_3(1B)**                                                         |
+|           Digital Input 4            | 0x06 | 0x00 |   1    | **gpio_in_4(1B)**                                                         |
+|      Digital Input as Counter 1      | 0x03 | 0xC8 |   4    | **counter_1(4B)**                                                         |
+|      Digital Input as Counter 2      | 0x04 | 0xC8 |   4    | **counter_2(4B)**                                                         |
+|      Digital Input as Counter 3      | 0x05 | 0xC8 |   4    | **counter_3(4B)**                                                         |
+|      Digital Input as Counter 4      | 0x06 | 0xC8 |   4    | **counter_4(4B)**                                                         |
+|           Digital Output 1           | 0x07 | 0x01 |   1    | **gpio_out_1(1B)**                                                        |
+|           Digital Output 2           | 0x08 | 0x01 |   1    | **gpio_out_2(1B)**                                                        |
+|               PT100 1                | 0x09 | 0x67 |   2    | **pt100_1(2B)**                                                           |
+|               PT100 2                | 0x0A | 0x67 |   2    | **pt100_2(2B)**                                                           |
+|    Analog to Digital (current) 1     | 0x0B | 0x02 |   4    | **adc_1(4B)**                                                             |
+|    Analog to Digital (current) 2     | 0x0C | 0x02 |   4    | **adc_2(4B)**                                                             |
+|    Analog to Digital (voltage) 1     | 0x0D | 0x02 |   4    | **adv_1(4B)**                                                             |
+|    Analog to Digital (voltage) 2     | 0x0E | 0x02 |   4    | **adv_2(4B)**                                                             |
+|                MODBUS                | 0xFF | 0x19 |   N    | **modbus_chn_id(1B) + data_size(1B) + data_type(1B) + channel_value(MB)** |
+|             MODBUS ERROR             | 0xFF | 0x15 |   1    | **modbus_chn_id_alarm(1B)**                                               |
+|            PT100 1(stats)            | 0x09 | 0xE2 |   8    | **pt100_1(2B) + pt100_1_max(2B) + pt100_1_min(2B) + pt100_1_avg(2B)**     |
+|            PT100 2(stats)            | 0x0A | 0xE2 |   8    | **pt100_2(2B) + pt100_2_max(2B) + pt100_2_min(2B) + pt100_2_avg(2B)**     |
+| Analog to Digital (current) 1(stats) | 0x0B | 0xE2 |   8    | **adc_1(2B) + adc_1_max(2B) + adc_1_min(2B) + adc_1_avg(2B)**             |
+| Analog to Digital (current) 2(stats) | 0x0C | 0xE2 |   8    | **adc_2(2B) + adc_2_max(2B) + adc_2_min(2B) + adc_2_avg(2B)**             |
+| Analog to Digital (voltage) 1(stats) | 0x0D | 0xE2 |   8    | **adv_1(2B) + adv_1_max(2B) + adv_1_min(2B) + adv_1_avg(2B)**             |
+| Analog to Digital (voltage) 2(stats) | 0x0E | 0xE2 |   8    | **adv_2(2B) + adv_2_max(2B) + adv_2_min(2B) + adv_2_avg(2B)**             |
 
 **MODBUS DATA_TYPE**
 | BITS | 7 | 6...0 |
