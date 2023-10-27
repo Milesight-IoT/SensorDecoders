@@ -35,12 +35,12 @@ function milesight(bytes) {
             decoded.hardware_version = readHardwareVersion(bytes.slice(i, i + 2));
             i += 2;
         }
-        // SOFTWARE VERSION
+        // FIRMWARE VERSION
         else if (channel_id === 0xff && channel_type === 0x0a) {
-            decoded.software_version = readSoftwareVersion(bytes.slice(i, i + 2));
+            decoded.firmware_version = readFirmwareVersion(bytes.slice(i, i + 2));
             i += 2;
         }
-        // METRICS DATA REPORT
+        // MODBUS DATA REPORT
         else if (channel_id === 0xff && channel_type === 0x19) {
             var modbus_chn_id = bytes[i++] + 1;
             var data_length = bytes[i++];

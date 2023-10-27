@@ -36,9 +36,9 @@ function milesight(bytes) {
             decoded.hardware_version = readHardwareVersion(bytes.slice(i, i + 2));
             i += 2;
         }
-        // SOFTWARE VERSION
+        // FIRMWARE VERSION
         else if (channel_id === 0xff && channel_type === 0x0a) {
-            decoded.software_version = readSoftwareVersion(bytes.slice(i, i + 2));
+            decoded.firmware_version = readFirmwareVersion(bytes.slice(i, i + 2));
             i += 2;
         }
         // METRICS DATA REPORT
@@ -145,7 +145,7 @@ function readHardwareVersion(bytes) {
     return "v" + major + "." + minor;
 }
 
-function readSoftwareVersion(bytes) {
+function readFirmwareVersion(bytes) {
     var major = bytes[0] & 0xff;
     var minor = bytes[1] & 0xff;
     return "v" + major + "." + minor;
