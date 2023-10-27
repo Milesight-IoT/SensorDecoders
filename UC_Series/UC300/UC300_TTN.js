@@ -38,12 +38,12 @@ function milesight(bytes) {
         }
         // HARDWARE VERSION
         else if (channel_id === 0xff && channel_type === 0x09) {
-            decoded.hardware_version = readVersion(bytes.slice(i, i + 2));
+            decoded.hardware_version = readHardwareVersion(bytes.slice(i, i + 2));
             i += 2;
         }
         // FIRMWARE VERSION
         else if (channel_id === 0xff && channel_type === 0x0a) {
-            decoded.firmware_version = readVersion(bytes.slice(i, i + 2));
+            decoded.firmware_version = readFirmwareVersion(bytes.slice(i, i + 2));
             i += 2;
         }
         // GPIO INPUT
@@ -376,13 +376,16 @@ function includes(datas, value) {
     return false;
 }
 
-// bytes to version
-function readVersion(bytes) {
-    var temp = [];
-    for (var idx = 0; idx < bytes.length; idx++) {
-        temp.push((bytes[idx] & 0xff).toString(10));
-    }
-    return temp.join(".");
+function readHardwareVersion(bytes) {
+    var major = bytes[0] & 0xff;
+    var minor = (bytes[1] & 0xff) >> 4;
+    return "v" + major + "." + minor;
+}
+
+function readFirmwareVersion(bytes) {
+    var major = bytes[0] & 0xff;
+    var minor = bytes[1] & 0xff;
+    return "v" + major + "." + minor;
 }
 
 // bytes to string
