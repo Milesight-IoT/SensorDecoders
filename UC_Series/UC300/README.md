@@ -10,7 +10,7 @@ The payload decoder function is applicable to UC300.
 
 |               CHANNEL                |  ID  | TYPE | LENGTH | DESCRIPTION                                                               |
 | :----------------------------------: | :--: | :--: | :----: | ------------------------------------------------------------------------- |
-|           Protocol Version           | 0xFF | 0x01 |   1    | protocol_version(1B)                                                      |
+|           Protocol Version           | 0xFF | 0x01 |   1    | **protocol_version(1B)**                                                  |
 |             Power Status             | 0xFF | 0x0B |   1    | **power(1B)**                                                             |
 |            Serial Number             | 0xFF | 0x16 |   8    | **sn(8B)**                                                                |
 |           Hardware Version           | 0xFF | 0x09 |   2    | **hardware_version(8B)**                                                  |
