@@ -32,7 +32,7 @@ function milesight(bytes) {
         }
         // VALVE OPENING
         else if (channel_id === 0x05 && channel_type === 0x92) {
-            decoded.valve_opening = readUInt8LE(bytes[i]);
+            decoded.valve_opening = readUInt8(bytes[i]);
             i += 1;
         }
         // INSTALLATION STATUS
@@ -72,12 +72,12 @@ function milesight(bytes) {
     return decoded;
 }
 
-function readUInt8LE(bytes) {
+function readUInt8(bytes) {
     return bytes & 0xff;
 }
 
-function readInt8LE(bytes) {
-    var ref = readUInt8LE(bytes);
+function readInt8(bytes) {
+    var ref = readUInt8(bytes);
     return ref > 0x7f ? ref - 0x100 : ref;
 }
 

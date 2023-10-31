@@ -8,16 +8,16 @@ def decodeBytes(bytes):
     i = 0
     while i < len(bytes):
         channel_id = bytes[i]
-        channel_type = bytes[i+1]
+        channel_type = bytes[i + 1]
         i += 2
 
         # BATTERY
         if channel_id == 0x01 and channel_type == 0x75:
-            decoded['battery'] = bytes[i]
+            decoded["battery"] = bytes[i]
             i += 1
         # WATER LEAK DECTECT
         elif channel_id == 0x03 and channel_type == 0x00:
-            decoded['leak_status'] = "leak" if bytes[i] else "no leak"
+            decoded["leakage_status"] = "leak" if bytes[i] else "normal"
             i += 1
         else:
             break
@@ -37,6 +37,6 @@ def decodePayload(payload, encoded="base64"):
     return decodeBytes(bytes)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     decodePayload("AXVkAwAA", "base64")
     decodePayload("017564030001", "hex")

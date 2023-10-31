@@ -22,7 +22,10 @@ function milesight(bytes) {
         }
         // PRESS STATE
         else if (channel_id === 0xff && channel_type === 0x2e) {
-            switch (bytes[i]) {
+            var type = bytes[i];
+            i += 1;
+
+            switch (type) {
                 case 1:
                     decoded.press = "short";
                     break;
@@ -33,9 +36,9 @@ function milesight(bytes) {
                     decoded.press = "double";
                     break;
                 default:
-                    console.log("unsupported");
+                    decoded.press = "unknown";
+                    break;
             }
-            i += 1;
         } else {
             break;
         }

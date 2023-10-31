@@ -42,21 +42,19 @@ function milesight(bytes) {
         // firmware version 1.10 and below and UC50x V1, change 1000 to 100.
         else if (includes(adc_chns, channel_id) && channel_type === 0x02) {
             var adc_channel_name = "adc_" + (channel_id - adc_chns[0] + 1);
-            decoded[adc_channel_name] = decoded[adc_channel_name] || {};
-            decoded[adc_channel_name].cur = readInt16LE(bytes.slice(i, i + 2)) / 1000;
-            decoded[adc_channel_name].min = readInt16LE(bytes.slice(i + 2, i + 4)) / 1000;
-            decoded[adc_channel_name].max = readInt16LE(bytes.slice(i + 4, i + 6)) / 1000;
-            decoded[adc_channel_name].avg = readInt16LE(bytes.slice(i + 6, i + 8)) / 1000;
+            decoded[adc_channel_name] = readInt16LE(bytes.slice(i, i + 2)) / 1000;
+            decoded[adc_channel_name + "_min"] = readInt16LE(bytes.slice(i + 2, i + 4)) / 1000;
+            decoded[adc_channel_name + "_max"] = readInt16LE(bytes.slice(i + 4, i + 6)) / 1000;
+            decoded[adc_channel_name + "_avg"] = readInt16LE(bytes.slice(i + 6, i + 8)) / 1000;
             i += 8;
         }
         // ADC (UC50x v3)
         else if (includes(adc_chns, channel_id) && channel_type === 0xe2) {
             var adc_channel_name = "adc_" + (channel_id - adc_chns[0] + 1);
-            decoded[adc_channel_name] = decoded[adc_channel_name] || {};
-            decoded[adc_channel_name].cur = readFloat16LE(bytes.slice(i, i + 2));
-            decoded[adc_channel_name].min = readFloat16LE(bytes.slice(i + 2, i + 4));
-            decoded[adc_channel_name].max = readFloat16LE(bytes.slice(i + 4, i + 6));
-            decoded[adc_channel_name].avg = readFloat16LE(bytes.slice(i + 6, i + 8));
+            decoded[adc_channel_name] = readFloat16LE(bytes.slice(i, i + 2));
+            decoded[adc_channel_name + "_min"] = readFloat16LE(bytes.slice(i + 2, i + 4));
+            decoded[adc_channel_name + "_max"] = readFloat16LE(bytes.slice(i + 4, i + 6));
+            decoded[adc_channel_name + "_avg"] = readFloat16LE(bytes.slice(i + 6, i + 8));
             i += 8;
         }
         // SDI-12
@@ -122,11 +120,10 @@ function milesight(bytes) {
         // ADC alert (UC50x v3)
         else if (includes(adc_alert_chns, channel_id) && channel_type === 0xe2) {
             var adc_channel_name = "adc_" + (channel_id - adc_alert_chns[0] + 1);
-            decoded[adc_channel_name] = decoded[adc_channel_name] || {};
-            decoded[adc_channel_name].cur = readFloat16LE(bytes.slice(i, i + 2));
-            decoded[adc_channel_name].min = readFloat16LE(bytes.slice(i + 2, i + 4));
-            decoded[adc_channel_name].max = readFloat16LE(bytes.slice(i + 4, i + 6));
-            decoded[adc_channel_name].avg = readFloat16LE(bytes.slice(i + 6, i + 8));
+            decoded[adc_channel_name] = readFloat16LE(bytes.slice(i, i + 2));
+            decoded[adc_channel_name + "_min"] = readFloat16LE(bytes.slice(i + 2, i + 4));
+            decoded[adc_channel_name + "_max"] = readFloat16LE(bytes.slice(i + 4, i + 6));
+            decoded[adc_channel_name + "_avg"] = readFloat16LE(bytes.slice(i + 6, i + 8));
             i += 8;
 
             var alert = bytes[i++];
@@ -158,11 +155,10 @@ function milesight(bytes) {
         }
         // HISTORY DATA (SDI-12)
         else if (channel_id === 0x20 && channel_type === 0xe0) {
-            
             var timestamp = readUInt32LE(bytes.slice(i, i + 4));
             var channel_mask = numToBits(readUInt16LE(bytes.slice(i + 4, i + 6)), 16);
             i += 6;
-            
+
             var data = { timestamp: timestamp };
             for (j = 0; j < channel_mask.length; j++) {
                 // skip if channel is not enabled
@@ -171,7 +167,7 @@ function milesight(bytes) {
                 data[name] = readString(bytes.slice(i, i + 36));
                 i += 36;
             }
-            
+
             decoded.history = decoded.history || [];
             decoded.history.push(data);
         }
@@ -221,12 +217,12 @@ function numToBits(num, bit_count) {
     return bits;
 }
 
-function readUInt8LE(bytes) {
+function readUInt8(bytes) {
     return bytes & 0xff;
 }
 
-function readInt8LE(bytes) {
-    var ref = readUInt8LE(bytes);
+function readInt8(bytes) {
+    var ref = readUInt8(bytes);
     return ref > 0x7f ? ref - 0x100 : ref;
 }
 

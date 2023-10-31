@@ -56,14 +56,14 @@ function getMessageType(bytes) {
 }
 
 function getTemperature(bytes) {
-    return readInt8LE(bytes);
+    return readInt8(bytes);
 }
 
-function readUInt8LE(bytes) {
+function readUInt8(bytes) {
     return bytes & 0xff;
 }
 
-function readInt8LE(bytes) {
-    var ref = readUInt8LE(bytes);
+function readInt8(bytes) {
+    var ref = readUInt8(bytes);
     return ref > 0x7f ? ref - 0x100 : ref;
 }
