@@ -8,33 +8,16 @@ For more detailed information, please visit [milesight official website](https:/
 
 ## Payload Definition
 
-```
---------------------- Payload Definition ---------------------
+| CHANNEL  |  ID  | TYPE | LENGTH | DESCRIPTION                                             |
+| :------: | :--: | :--: | :----: | ------------------------------------------------------- |
+| Battery  | 0x01 | 0x75 |   1    | battery(1B)<br/>battery, unit: %                        |
+| Distance | 0x03 | 0x82 |   2    | distance(2B)<br/>distance, unit: mm                     |
+| Position | 0x04 | 0x00 |   1    | position(1B)<br/>position, values: (0: normal, 1: tilt) |
 
-                   [channel_id] [channel_type] [channel_value]
-01: battery      -> 0x01         0x75          [1byte ] Unit: %
-03: distance     -> 0x03         0x82          [2bytes] Unit: mm
-04: position     -> 0x04         0x00          [1byte ] Unit:
------------------------------------------- EM310-UDL
-```
-
-## Example for The Things Network
-
-**Payload**
-
-```
-01 75 5C 03 82 44 08 04 00 01
-```
-
-**Data Segmentation**
-
--   `01 75 5C`
--   `03 82 44 08`
--   `04 00 01`
-
-**Output**
+## Example
 
 ```json
+// 01755C 03824408 040001
 {
     "battery": 92,
     "distance": 2116,

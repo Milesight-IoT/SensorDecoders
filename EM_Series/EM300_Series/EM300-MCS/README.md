@@ -8,18 +8,18 @@ For more detailed information, please visit [milesight official website](https:/
 
 ## Payload Definition
 
-|     channel     | channel_id | channel_type | data_length (bytes) | description                                                        |
-| :-------------: | :--------: | :----------: | :-----------------: | ------------------------------------------------------------------ |
-|     battery     |    0x01    |     0x75     |          1          | unit: %                                                            |
-|   temperature   |    0x03    |     0x67     |          2          | unit: ℃                                                            |
-|    humidity     |    0x04    |     0x68     |          1          | unit: %RH                                                          |
-|  magnet status  |    0x06    |     0x00     |          1          | 0: close, 1: open                                                  |
-| historical data |    0x20    |     0XCE     |          8          | timestamp(4B) + temperature(2B) + humidity(1B) + magnet_status(1B) |
+|     CHANNEL     |  ID  | TYPE | LENGTH | DESCRIPTION                                                        |
+| :-------------: | :--: | :--: | :----: | ------------------------------------------------------------------ |
+|     Battery     | 0x01 | 0x75 |   1    | battery(1B)<br/>battery: unit: %                                   |
+|   Temperature   | 0x03 | 0x67 |   2    | temperature(2B)<br/>temperature, unit: ℃                           |
+|    Humidity     | 0x04 | 0x68 |   1    | humidity(1B)<br/>humidity, unit: %RH                               |
+|  Magnet Status  | 0x06 | 0x00 |   1    | magnet_status(1B)<br/>magnet_status, values: (0: close, 1: open)   |
+| Historical Data | 0x20 | 0XCE |   8    | timestamp(4B) + temperature(2B) + humidity(1B) + magnet_status(1B) |
 
 ## Example
 
 ```json
-// Sample(hex): 01 75 5C 03 67 34 01 04 68 65 06 00 01
+// 01755C 03673401 046865 060001
 {
     "battery": 92,
     "temperature": 30.8,
@@ -27,7 +27,7 @@ For more detailed information, please visit [milesight official website](https:/
     "magnet_status": "open"
 }
 
-// Sample(hex): 20 CE 9E 74 46 63 10 01 5D 01
+// 20CE9E74466310015D01
 {
   "history": [
     {

@@ -7,29 +7,25 @@ For more detailed information, please visit [milesight official website](https:/
 
 ## Payload Definition
 
-```
---------------------- Payload Definition ---------------------
-
-                   [channel_id] [channel_type] [channel_value]
-01: battery      -> 0x01         0x75          [1byte ] Unit: %
-03: temperature  -> 0x03         0x67          [2bytes] Unit: °C (°F)
------------------------------------------- TS101
-```
+|   CHANNEL   |  ID  | TYPE | LENGTH | DESCRIPTION                              |
+| :---------: | :--: | :--: | :----: | ---------------------------------------- |
+|   Battery   | 0x01 | 0x75 |   1    | battery(1B)<br/>battery, unit: %         |
+| Temperature | 0x03 | 0x67 |   2    | temperature(2B)<br/>temperature, unit: ℃ |
 
 ## Example for The Things Network
 
-**Payload**
+Payload
 
 ```
 01 75 64 03 67 07 01
 ```
 
-**Data Segmentation**
+Data Segmentation
 
 -   `01 75 64`
 -   `03 67 07 01`
 
-**Output**
+Output
 
 ```json
 {

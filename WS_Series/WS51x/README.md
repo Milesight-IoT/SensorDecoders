@@ -10,19 +10,19 @@ For more detailed information, please visit [milsight official website](https://
 
 ## Payload Definition
 
-|      channel      | channel_id | channel_type | data_length (bytes) | description                          |
-| :---------------: | :--------: | :----------: | :-----------------: | ------------------------------------ |
-|      voltage      |    0x03    |     0x74     |          2          | voltage(2B), uint16/10               |
-|   active power    |    0x04    |     0x80     |          4          | power(4B), uint32                    |
-|   active factor   |    0x05    |     0x81     |          1          | factor(1B), uint8<br/>unit: %        |
-| power consumption |    0x06    |     0x83     |          4          | power_sum(4B), uint32<br/>unit: W\*h |
-|      current      |    0x07    |     0xC9     |          2          | current(2B), uint16<br/>unit: mA     |
-|       state       |    0x08    |     0x70     |          1          | state(1B)<br/> 0: close, 1: open     |
+|      CHANNEL      |  ID  | TYPE | LENGTH | DESCRIPTION                                           |
+| :---------------: | :--: | :--: | :----: | ----------------------------------------------------- |
+|      Voltage      | 0x03 | 0x74 |   2    | voltage(2B)<br/>voltage, read: uint16/10              |
+|   Active power    | 0x04 | 0x80 |   4    | power(4B)<br/>power, read: uint32, unit: W            |
+|   Active factor   | 0x05 | 0x81 |   1    | factor(1B)<br/>factor, read: uint8, unit: %           |
+| Power Consumption | 0x06 | 0x83 |   4    | power_sum(4B)<br/>power_sum, read: uint32, unit: W\*h |
+|      Current      | 0x07 | 0xC9 |   2    | current(2B)<br/>current, read: uint16, unit: mA       |
+|       State       | 0x08 | 0x70 |   1    | state(1B)<br/>state, values: (0: close, 1: open)      |
 
 ## Example
 
 ```json
-// Sample(hex): 087001 058161 07c9a800 03748308 06831d000000 048023000000
+// 087001 058161 07c9a800 03748308 06831d000000 048023000000
 {
     "current": 168,
     "factor": 97,

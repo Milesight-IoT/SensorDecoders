@@ -8,33 +8,16 @@ For more detailed information, please visit [milesight official website](https:/
 
 ## Payload Definition
 
-```
---------------------- Payload Definition ---------------------
+| CHANNEL  |  ID  | TYPE | LENGTH | DESCRIPTION                                            |
+| :------: | :--: | :--: | :----: | ------------------------------------------------------ |
+| Battery  | 0x01 | 0x75 |   1    | battery(1B)<br/>battery, unit: %                       |
+|   PIR    | 0x03 | 0x00 |   1    | pir(1B)<br/>pir, values: (0: normal, 1: trigger)       |
+| Daylight | 0x04 | 0x00 |   1    | daylight(1B)<br/>daylight, values: (0: dark, 1: light) |
 
-                 [channel_id] [channel_type] [channel_value]
-01: battery      -> 0x01         0x75          [1byte ] Unit: %
-03: pir          -> 0x03         0x00          [1byte ] Unit:
-04: daylight     -> 0x04         0x00          [1byte ] Unit:
------------------------------------------- WS202
-```
-
-## Example for The Things Network
-
-**Payload**
-
-```
-01 75 10 03 00 01 04 00 00
-```
-
-**Data Segmentation**
-
--   `01 75 10`
--   `03 00 01`
--   `04 00 00`
-
-**Output**
+## Example
 
 ```json
+// 017510 030001 040000
 {
     "battery": 16,
     "pir": "trigger",

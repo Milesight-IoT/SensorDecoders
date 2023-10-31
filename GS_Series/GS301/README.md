@@ -8,37 +8,18 @@ For more detailed information, please visit [milesight official website](https:/
 
 ## Payload Definition
 
-```
---------------------- Payload Definition ---------------------
+|   CHANNEL   |  ID  | TYPE | LENGTH | DESCRIPTION                              |
+| :---------: | :--: | :--: | :----: | ---------------------------------------- |
+|   Battery   | 0x01 | 0x75 |   1    | battery(1B)<br/>battery, unit: %         |
+| Temperature | 0x02 | 0x67 |   2    | temperature(2B)<br/>temperature, unit: ℃ |
+|  Humidity   | 0x03 | 0x68 |   1    | humidity(1B)<br/>humidity, unit: %RH     |
+|     NH3     | 0x04 | 0x7D |   2    | nh3(2B)<br/>nh3, unit: ppm               |
+|     H2S     | 0x05 | 0x7D |   2    | h2s(2B)<br/>h2s, unit: ppm               |
 
-                   [channel_id] [channel_type] [channel_value]
-01: battery      -> 0x01         0x75          [1byte ] Unit: %
-02: temperature  -> 0x03         0x67          [2bytes] Unit: °C (℉)
-03: humidity     -> 0x04         0x68          [1byte ] Unit: %RH
-04: NH3          -> 0x04         0x7D          [2bytes] Unit: ppm
-05: H2S          -> 0x05         0x7D          [2bytes] Unit: ppm
------------------------------------------- GS301
-```
-
-## Example for The Things Network
-
-**Payload**
-
-```
-01 75 64 02 67 1C 01 03 68 64 04 7D 00 00 05 7D 01 00
-```
-
-**Data Segmentation**
-
--   `01 75 64`
--   `02 67 1C 01`
--   `03 68 64`
--   `04 7D 00 00`
--   `05 7D 01 00`
-
-**Output**
+## Example
 
 ```json
+// 017564 02671C01 036864 047D0000 057D0100
 {
     "battery": 100,
     "temperature": 28.4,

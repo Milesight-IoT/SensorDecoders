@@ -8,16 +8,16 @@ For more detailed information, please visit [milesight official website](https:/
 
 ## Payload Definition
 
-|     channel     | channel_id | channel_type | data_length (bytes) | description                     |
-| :-------------: | :--------: | :----------: | :-----------------: | ------------------------------- |
-|     battery     |    0x01    |     0x75     |          1          | unit: %                         |
-|   water_level   |    0x03    |     0x77     |          2          | unit: cm                        |
-| historical data |    0x20    |     0XCE     |          6          | timestamp(4B) + water_level(2B) |
+|     CHANNEL     |  ID  | TYPE | LENGTH | DESCRIPTION                               |
+| :-------------: | :--: | :--: | :----: | ----------------------------------------- |
+|     Battery     | 0x01 | 0x75 |   1    | battery(1B)<br/>battery, unit: %          |
+|   Water Level   | 0x03 | 0x77 |   2    | water_level(2B)<br/>water_level, unit: cm |
+| Historical Data | 0x20 | 0XCE |   6    | timestamp(4B) + water_level(2B)           |
 
 ## Example
 
 ```json
-// Sample(hex): 01 75 64 03 77 02 00
+// 017564 03770200
 {
     "battery": 100,
     "water_level": 2

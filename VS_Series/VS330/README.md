@@ -8,37 +8,18 @@ For more detailed information, please visit [milesight official website](https:/
 
 ## Payload Definition
 
-```
---------------------- Payload Definition ---------------------
+|   CHANNEL   |  ID  | TYPE | LENGTH | DESCRIPTION                                                      |
+| :---------: | :--: | :--: | :----: | ---------------------------------------------------------------- |
+|   Battery   | 0x01 | 0x75 |   1    | battery(1B)<br/>battery, unit: %                                 |
+|  Distance   | 0x02 | 0x82 |   2    | distance(2B)<br/>distance, unit: mm                              |
+|  Occupancy  | 0x03 | 0x8E |   1    | occupancy(1B)<br/>occupancy, values: (0: vacant, 1: occupied)    |
+| Calibration | 0x04 | 0x8E |   1    | calibration(1B)<br/>calibration, values: (0: failed, 1: success) |
 
-                    [channel_id] [channel_type] [channel_value]
-01: battery           -> 0x01         0x75          [1byte ] Unit: %
-02: distance          -> 0x02         0x82          [2bytes] Unit: mm
-03: occupancy         -> 0x03         0x8E          [1byte ] Unit:
-04: calibration       -> 0x04         0x8E          [1byte ] Unit:
-
----------------------------------------------------------------
-
-```
-
-## Example for The Things Network
-
-```
-01 75 62 02 82 0F 00 03 8E 01 04 8E 01
-```
-
-**Payload**
-
-```
-01 75 62
-02 82 0F 00
-03 8E 01
-04 8E 01
-```
-
-**Output**
+## Example
 
 ```json
+// 017562 02820F00 038E01 048E01
+
 {
     "battery": 98,
     "distance": 15,

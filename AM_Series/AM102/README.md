@@ -10,17 +10,17 @@ For more detailed information, please visit [milesight official website](https:/
 
 ## Payload Definition
 
-|     channel     | channel_id | channel_type | data_length (bytes) | description                                    |
-| :-------------: | :--------: | :----------: | :-----------------: | ---------------------------------------------- |
-|     Battery     |    0x01    |     0x75     |          1          | battery(1B), unit: %                           |
-|   Temperature   |    0x03    |     0x67     |          2          | temperature(2B), unit: ℃                       |
-|    Humidity     |    0x04    |     0x68     |          1          | humidity(1B), unit: %RH                        |
-| Historical data |    0x20    |     0xCE     |          7          | timestamp(4B) + temperature(2B) + humidity(1B) |
+|     CHANNEL     |  ID  | TYPE | LENGTH | DESCRIPTION                                    |
+| :-------------: | :--: | :--: | :----: | ---------------------------------------------- |
+|     Battery     | 0x01 | 0x75 |   1    | battery(1B)<br/>battery, unit: %               |
+|   Temperature   | 0x03 | 0x67 |   2    | temperature(2B)<br/>temperature, unit: ℃       |
+|    Humidity     | 0x04 | 0x68 |   1    | humidity(1B)<br/>humidity, unit: %RH           |
+| Historical Data | 0x20 | 0xCE |   7    | timestamp(4B) + temperature(2B) + humidity(1B) |
 
 ## Example
 
 ```json
-// Sample: 017564 03671801 04686D
+// 017564 03671801 04686D
 {
     "battery": 100,
     "temperature": 28,

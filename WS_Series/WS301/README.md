@@ -8,33 +8,16 @@ For more detailed information, please visit [milesight official website](https:/
 
 ## Payload Definition
 
-```
---------------------- Payload Definition ---------------------
+|    CHANNEL     |  ID  | TYPE | LENGTH | DESCRIPTION                                      |
+| :------------: | :--: | :--: | :----: | ------------------------------------------------ |
+|    Battery     | 0x01 | 0x75 |   1    | battery(1B)<br/>battery, unit: %                 |
+|     State      | 0x03 | 0x00 |   1    | state(1B)<br/>state, values: (0: close, 1: open) |
+| Install Status | 0x04 | 0x00 |   1    | install(1B)<br/>install, values: (0: yes, 1: no) |
 
-                   [channel_id] [channel_type] [channel_value]
-01: battery      -> 0x01         0x75          [1byte ] Unit: %
-03: state        -> 0x03         0x00          [1byte ] Unit:
-04: install      -> 0x04         0x00          [1byte ] Unit:
------------------------------------------- WS301
-```
-
-## Example for The Things Network
-
-**Payload**
-
-```
-01 75 64 03 00 01 04 00 01
-```
-
-**Data Segmentation**
-
--   `01 75 64`
--   `03 00 01`
--   `04 00 01`
-
-**Output**
+## Example
 
 ```json
+// 017564 030001 040001
 {
     "battery": 100,
     "state": "open",

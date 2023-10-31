@@ -8,23 +8,23 @@ For more detailed information, please visit [milesight official website](https:/
 
 ## Payload Definition
 
-|   channel   | channel_id | channel_type | data_length (bytes) | description                   |
-| :---------: | :--------: | :----------: | :-----------------: | ----------------------------- |
-|   battery   |    0x01    |     0x75     |          1          | unit：%                       |
-| leak_status |    0x03    |     0x00     |          1          | 0x00：no leak<br />0x01：leak |
+|    CHANNEL     |  ID  | TYPE | LENGTH | DESCRIPTION                                                 |
+| :------------: | :--: | :--: | :----: | ----------------------------------------------------------- |
+|    Battery     | 0x01 | 0x75 |   1    | battery(1B)<br/>battery, unit：%                            |
+| Leakage Status | 0x03 | 0x00 |   1    | leakage_status(1B)<br/>leakage_status: (0：normal, 1：leak) |
 
 ## Example
 
 ```json
-// Sample(hex): 01 75 64 03 00 00
+// 017564 030000
 {
     "battery": 100,
-    "leak_status": "no leak"
+    "leakage_status": "normal"
 }
 
-// Sample(hex): 01 75 64 03 00 01
+// 017564 030001
 {
     "battery": 100,
-    "leak_status": "leak"
+    "leakage_status": "leak"
 }
 ```

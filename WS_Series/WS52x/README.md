@@ -4,48 +4,25 @@ The payload decoder function is applicable to WS52X.
 
 For more detailed information, please visit [milsight official website](https://wwww.milesight-iot.com).
 
-|          WS523          |        WS525        | WS523 US |
-| :---------------------: | :-----------------: | :------: |
-|   ![WS523](WS523.png)   | ![WS525](WS525.png) | ![WS523US](WS523US.png) |
+|        WS523        |        WS525        |        WS523 US         |
+| :-----------------: | :-----------------: | :---------------------: |
+| ![WS523](WS523.png) | ![WS525](WS525.png) | ![WS523US](WS523US.png) |
 
 ## Payload Definition
 
-```
---------------------- Payload Definition ---------------------
+|      CHANNEL      |  ID  | TYPE | LENGTH | DESCRIPTION                                           |
+| :---------------: | :--: | :--: | :----: | ----------------------------------------------------- |
+|      Voltage      | 0x03 | 0x74 |   2    | voltage(2B)<br/>voltage, read: uint16/10              |
+|   Active power    | 0x04 | 0x80 |   4    | power(4B)<br/>power, read: uint32, unit: W            |
+|   Active factor   | 0x05 | 0x81 |   1    | factor(1B)<br/>factor, read: uint8, unit: %           |
+| Power Consumption | 0x06 | 0x83 |   4    | power_sum(4B)<br/>power_sum, read: uint32, unit: W\*h |
+|      Current      | 0x07 | 0xC9 |   2    | current(2B)<br/>current, read: uint16, unit: mA       |
+|       State       | 0x08 | 0x70 |   1    | state(1B)<br/>state, values: (0: close, 1: open)      |
 
-                   [channel_id] [channel_type] [channel_value]
-03: voltage    ->   0x03         0x74          [2bytes ] Unit: V (0.1)
-04: power      ->   0x04         0x80          [4bytes ] Unit: W
-05: factor     ->   0x05         0x81          [1byte  ] Uint: %
-06: power_sum  ->   0x06         0x83          [4bytes ] Uint: W*h
-07: current    ->   0x07         0xC9          [2bytes ] Uint: mA
-08: state      ->   0x08         0x70          [1byte  ] Uint: Open/Close
------------------------------------------- WS52x
-
-----------
-
-```
-
-## Example for The Things Network
-
-**Payload**
-
-```
-03 74 ED 08 06 83 56 04 00 00 08 70 01 05 81 52 07 C9 A4 00 04 80 01 00 00 00
-```
-
-**Data Segmentation**
-
--   `03 74 ED 08`
--   `06 83 56 04 00 00`
--   `08 70 01 `
--   `05 81 52`
--   `07 C9 A4 00`
--   `04 80 01 00 00 00`
-
-**Output**
+## Example
 
 ```json
+// 0374ED08 068356040000 087001 058152 07C9A400 048001000000
 {
     "state": "open",
     "voltage": 228.5,

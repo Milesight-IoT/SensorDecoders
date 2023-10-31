@@ -8,19 +8,19 @@ For more detailed information, please visit [milesight official website](https:/
 
 ## Payload Definition
 
-|     channel     | channel_id | channel_type | data_length (bytes) | description                                             |
-| :-------------: | :--------: | :----------: | :-----------------: | ------------------------------------------------------- |
-|     battery     |    0x01    |     0x75     |          1          | unit: %                                                 |
-|   temperature   |    0x03    |     0x67     |          2          | unit: ℃                                                 |
-|    moisture     |    0x04    |     0x68     |          1          | unit: %RH                                               |
-|    moisture     |    0x04    |     0xCA     |          2          | unit: %RH                                               |
-|       EC        |    0x05    |     0x7F     |          2          | unit: µs/cm                                             |
-| historical data |    0x20    |     0XCE     |         10          | timestamp(4B) + EC(2B) + temperature(2B) + moisture(2B) |
+|     CHANNEL     |  ID  | TYPE | LENGTH | DESCRIPTION                                             |
+| :-------------: | :--: | :--: | :----: | ------------------------------------------------------- |
+|     Battery     | 0x01 | 0x75 |   1    | battery(1B)<br/>battery, unit: %                        |
+|   Temperature   | 0x03 | 0x67 |   2    | temperature(2B)<br/>temperature, unit: ℃                |
+|    Moisture     | 0x04 | 0x68 |   1    | moisture(1B)<br/>moisture, unit: %RH                    |
+|    Moisture     | 0x04 | 0xCA |   2    | moisture(2B)<br/>moisture, unit: %RH                    |
+|       EC        | 0x05 | 0x7F |   2    | ec(2B)<br/>ec, unit: µs/cm                              |
+| Historical Data | 0x20 | 0XCE |   10   | timestamp(4B) + EC(2B) + temperature(2B) + moisture(2B) |
 
 ## Example
 
 ```json
-// Sample: 01 75 64 03 67 19 01 04 68 73 05 7F F0 00
+// 017564 03671901 046873 057FF000
 {
     "battery": 100,
     "temperature": 28.1,

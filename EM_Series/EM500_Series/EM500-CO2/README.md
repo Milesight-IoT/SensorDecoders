@@ -8,19 +8,19 @@ For more detailed information, please visit [milesight official website](https:/
 
 ## Payload Definition
 
-|     channel     | channel_id | channel_type | data_length (bytes) | description                                                             |
-| :-------------: | :--------: | :----------: | :-----------------: | ----------------------------------------------------------------------- |
-|     battery     |    0x01    |     0x75     |          1          | unit: %                                                                 |
-|   temperature   |    0x03    |     0x67     |          2          | unit: ℃                                                                 |
-|    humidity     |    0x04    |     0x68     |          1          | unit: %RH                                                               |
-|       co2       |    0x05    |     0x7D     |          2          | unit: ppm                                                               |
-|    pressure     |    0x06    |     0x73     |          2          | unit: hPa                                                               |
-| historical data |    0x20    |     0XCE     |         11          | timestamp(4B) + co2(2B) + pressure(2B) + temperature(2B) + humidity(1B) |
+|     CHANNEL     |  ID  | TYPE | LENGTH | DESCRIPTION                                                             |
+| :-------------: | :--: | :--: | :----: | ----------------------------------------------------------------------- |
+|     Battery     | 0x01 | 0x75 |   1    | battery(1B)<br/>battery, unit: %                                        |
+|   Temperature   | 0x03 | 0x67 |   2    | temperature(2B)<br/>temperature,unit: ℃                                 |
+|    Humidity     | 0x04 | 0x68 |   1    | humidity(1B)<br/>humidity, unit: %RH                                    |
+|       CO2       | 0x05 | 0x7D |   2    | co2(2B)<br/>co2, unit: ppm                                              |
+|    Pressure     | 0x06 | 0x73 |   2    | pressure(2B)<br/>pressure, unit: hPa                                    |
+| Historical Data | 0x20 | 0XCE |   11   | timestamp(4B) + co2(2B) + pressure(2B) + temperature(2B) + humidity(1B) |
 
 ## Example
 
 ```json
-// Sample(hex): 01 75 64 03 67 19 01 04 68 73 05 7D 67 04 06 73 68 27
+// 01756403671901 046873 057D6704 06736827
 {
     "battery": 100,
     "temperature": 28.1,

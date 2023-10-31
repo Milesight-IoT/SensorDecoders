@@ -10,13 +10,13 @@ For more detailed information, please visit [milesight official website](https:/
 
 ## Payload Definition
 
-|     channel     | channel_id | channel_type | data_length (bytes) | description                                                             |
-| :-------------: | :--------: | :----------: | :-----------------: | ----------------------------------------------------------------------- |
-|     Battery     |    0x01    |     0x75     |          1          | **battery(1B)**, unit: %                                                |
-|   Temperature   |    0x03    |     0x67     |          2          | **temperature(2B)**, unit: ℃                                            |
-|    Humidity     |    0x04    |     0x68     |          1          | **humidity(1B)**, unit: %RH                                             |
-| Leakage Status  |    0x05    |     0x00     |          1          | **leakage_status(1B)**<br/><br/>leakage_status: (0: normal, 1: leak)    |
-| Historical Data |    0x20    |     0XCE     |          8          | **timestamp(4B) + temperature(2B) + humidity(1B) + leakage_status(1B)** |
+|     CHANNEL     |  ID  | TYPE | LENGTH | DESCRIPTION                                                         |
+| :-------------: | :--: | :--: | :----: | ------------------------------------------------------------------- |
+|     Battery     | 0x01 | 0x75 |   1    | battery(1B)<br/>battery, unit: %                                    |
+|   Temperature   | 0x03 | 0x67 |   2    | temperature(2B)<br/>temperature, unit: ℃                            |
+|    Humidity     | 0x04 | 0x68 |   1    | humidity(1B)<br/>humidity, unit: %RH                                |
+| Leakage Status  | 0x05 | 0x00 |   1    | leakage_status(1B)<br/>leakage_status, values: (0: normal, 1: leak) |
+| Historical Data | 0x20 | 0XCE |   8    | timestamp(4B) + temperature(2B) + humidity(1B) + leakage_status(1B) |
 
 ## Example
 

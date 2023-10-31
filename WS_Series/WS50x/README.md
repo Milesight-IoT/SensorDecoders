@@ -4,24 +4,23 @@ The payload decoder function is applicable to WS501 / WS502 / WS503.
 
 For more detailed information, please visit [Milesight official website](https://www.milesight-iot.com).
 
-|      WS50x v1       |         WS50x v2          |
-| :-----------------: | :-----------------------: |
+|        WS50x v1        |         WS50x v2          |
+| :--------------------: | :-----------------------: |
 | ![WS50x](WS50x_v1.png) | ![WS50x_v2](WS50x_v2.png) |
 
 ## Payload Definition
 
-|          channel           | channel_id | channel_type | data_length (bytes) | description            |
-| :------------------------: | :--------: | :----------: | :-----------------: | ---------------------- |
-|      switch<br/>(v1)       |    0xFF    |     0x29     |          1          | status(1B)             |
-|      voltage<br/>(v2)      |    0x03    |     0x74     |          1          | voltage(2B), uint16/10 |
-|   active power<br/>(v2)    |    0x04    |     0x80     |          4          | power(4B), uint32      |
-|   active factor<br/>(v2)   |    0x05    |     0x81     |          1          | factor(1B), uint8      |
-| power consumption<br/>(v2) |    0x06    |     0x83     |          4          | power_sum(1B), uint32  |
-|      current<br/>(v2)      |    0x07    |     0xC9     |          1          | current(2B), uint16    |
-|      switch<br/>(v2)       |    0x08    |     0x29     |          1          | status(1B)             |
+|          CHANNEL           |  ID  | TYPE | LENGTH | DESCRIPTION                                           |
+| :------------------------: | :--: | :--: | :----: | ----------------------------------------------------- |
+|      Switch<br/>(v1)       | 0xFF | 0x29 |   1    | status(1B)                                            |
+|      Voltage<br/>(v2)      | 0x03 | 0x74 |   2    | voltage(2B)<br/>voltage, read: uint16/10              |
+|   Active Power<br/>(v2)    | 0x04 | 0x80 |   4    | power(4B)<br/>power, read: uint32, unit: W            |
+|   Active Factor<br/>(v2)   | 0x05 | 0x81 |   1    | factor(1B)<br/>factor, read: uint8, unit: %           |
+| Power Consumption<br/>(v2) | 0x06 | 0x83 |   4    | power_sum(4B)<br/>power_sum, read: uint32, unit: W\*h |
+|      Current<br/>(v2)      | 0x07 | 0xC9 |   2    | current(2B)<br/>current, read: uint16, unit: mA       |
+|      Switch<br/>(v2)       | 0x08 | 0x29 |   1    | status(1B)                                            |
 
-
-**status definition**
+### Status Definition
 
 | bits |  7  |        6        |        5        |        4        |  3  |    2     |    1     |    0     |
 | :--: | :-: | :-------------: | :-------------: | :-------------: | :-: | :------: | :------: | :------: |
@@ -30,7 +29,7 @@ For more detailed information, please visit [Milesight official website](https:/
 ## Example
 
 ```json
-// Sample(hex): FF 29 31
+// FF2931
 {
     "switch_1": "on",
     "switch_2": "off",

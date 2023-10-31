@@ -4,54 +4,34 @@ The payload decoder function is applicable to WS558.
 
 For more detailed information, please visit [milesight official website](https://www.milesight-iot.com).
 
-|        WS558        |         WS558-LN          |
+|        WS558        |        WS558-LN         |
 | :-----------------: | :---------------------: |
 | ![WS558](WS558.png) | ![WS558LN](WS558LN.png) |
 
 ## Payload Definition
 
+|      CHANNEL      |  ID  | TYPE | LENGTH | DESCRIPTION                                           |
+| :---------------: | :--: | :--: | :----: | ----------------------------------------------------- |
+|      Voltage      | 0x03 | 0x74 |   2    | voltage(2B)<br/>voltage, read: uint16/10              |
+|   Active power    | 0x04 | 0x80 |   4    | power(4B)<br/>power, read: uint32, unit: W            |
+|   Active factor   | 0x05 | 0x81 |   1    | factor(1B)<br/>factor, read: uint8, unit: %           |
+| Power Consumption | 0x06 | 0x83 |   4    | power_sum(4B)<br/>power_sum, read: uint32, unit: W\*h |
+|      Current      | 0x07 | 0xC9 |   2    | current(2B)<br/>current, read: uint16, unit: mA       |
+|      Switch       | 0x08 | 0x31 |   2    |                                                       |
+
+### Switch Value Definition
+
 ```
---------------------- Payload Definition ---------------------
-
-                           [channel_id] [channel_type] [channel_value]
-03: voltage            ->   0x03         0x74          [2bytes] Unit: V (0.1)
-04: active_power       ->   0x04         0x80          [4bytes] Unit: W
-05: power_factor       ->   0x05         0x81          [1byte ] Uint: %
-06: power_consumption  ->   0x06         0x83          [4bytes] Uint: W*h
-07: total_current      ->   0x07         0xC9          [2bytes] Uint: mA
-08: switch             ->   0x08         0x31          [2bytes]  Unit:
------------------------------------------- WS558
-
----- Switch Value Definition ---
 binary:  0 0 0 0 0 0 0 0  0 0 0 0 0 0 0 0
 switch:  8 7 6 5 4 3 2 1  8 7 6 5 4 3 2 1
-        ---------------  ---------------
+         ---------------  ---------------
 bitmask:          change            state
-
-----------
-
 ```
 
-## Example for The Things Network
-
-**Payload**
-
-```
-08 31 00 01 05 81 64 07 C9 02 00 03 74 B2 08 06 83 01 00 00 00 04 80 01 00 00 00
-```
-
-**Data Segmentation**
-
--   `03 74 B2 08`
--   `04 80 01 00 00 00`
--   `05 81 64`
--   `06 83 01 00 00 00`
--   `07 C9 02 00`
--   `08 31 00 01`
-
-**Output**
+## Example
 
 ```json
+// 08310001 058164 07C90200 0374B208 068301000000 048001000000
 {
     "voltage": 222.6,
     "active_power": 1,

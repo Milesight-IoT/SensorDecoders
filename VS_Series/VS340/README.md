@@ -9,21 +9,21 @@ For more detailed information, please visit [Milesight official website](https:/
 
 ## Payload Definition
 
-|  channel  | channel_id | channel_type | data_length (bytes) | description                |
-| :-------: | :--------: | :----------: | :-----------------: | -------------------------- |
-|  battery  |    0x01    |     0x75     |          1          | unit：%                    |
-| occupancy |    0x03    |     0x00     |          1          | 0: vacant<br />1: occupied |
+|  CHANNEL  |  ID  | TYPE | LENGTH (bytes) | description                                                  |
+| :-------: | :--: | :--: | :------------: | ------------------------------------------------------------ |
+|  Battery  | 0x01 | 0x75 |       1        | battery(1B)<br/>battery, unit：%                             |
+| Occupancy | 0x03 | 0x00 |       1        | occupancy(1B)<br/>occupancy, values:(0: vacant, 1: occupied) |
 
 ## Example
 
 ```json
-// Sample(hex): 01 75 64 03 00 00
+// 017564 030000
 {
     "battery": 100,
     "occupancy": "vacant"
 }
 
-// Sample(hex): 01 75 64 03 00 01
+// 017564 030001
 {
     "battery": 100,
     "occupancy": "occupied"

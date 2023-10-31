@@ -8,16 +8,16 @@ For more detailed information, please visit [milesight official website](https:/
 
 ## Payload Definition
 
-|     channel     | channel_id | channel_type | data_length (bytes) | description                     |
-| :-------------: | :--------: | :----------: | :-----------------: | ------------------------------- |
-|     battery     |    0x01    |     0x75     |          1          | unit: %                         |
-|   temperature   |    0x03    |     0x67     |          2          | unit: ℃                         |
-| historical data |    0x20    |     0XCE     |          6          | timestamp(4B) + temperature(2B) |
+|     CHANNEL     |  ID  | TYPE | LENGTH | DESCRIPTION                              |
+| :-------------: | :--: | :--: | :----: | ---------------------------------------- |
+|     Battery     | 0x01 | 0x75 |   1    | battery(1B)<br/>battery, unit: %         |
+|   Temperature   | 0x03 | 0x67 |   2    | temperature(2B)<br/>temperature, unit: ℃ |
+| Historical Data | 0x20 | 0XCE |   6    | timestamp(4B) + temperature(2B)          |
 
 ## Example
 
 ```json
-// Sample(hex): 01 75 64 03 67 19 01
+// 017564 03671901
 {
     "battery": 100,
     "temperature": 28.1

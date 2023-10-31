@@ -10,22 +10,22 @@ For more detailed information, please visit [milesight official website](https:/
 
 ## Payload Definition
 
-|               channel               | channel_id | channel_type | data_length (bytes) | description                                                                                                                         |
-| :---------------------------------: | :--------: | :----------: | :-----------------: | ----------------------------------------------------------------------------------------------------------------------------------- |
-|               Battery               |    0x01    |     0x75     |          1          | battery(1B), unit: %                                                                                                                |
-|       Temperature(Channel 1)        |    0x03    |     0x67     |          2          | temperature_chn1(2B), unit: ℃                                                                                                       |
-|      Magnet Status(Channel 1)       |    0x03    |     0x00     |          1          | magnet_chn1(1B)                                                                                                                     |
-|       Temperature(Channel 2)        |    0x04    |     0x67     |          2          | temperature_chn2(2B),unit: ℃                                                                                                        |
-|      Magnet Status(Channel 2)       |    0x04    |     0x00     |          1          | magnet_chn2(1B)                                                                                                                     |
-|    Temperature(Channel 1) Alarm     |    0x83    |     0x67     |          3          | temperature_chn1(2B) + temperature_chn1_alarm(1B)<br/>**temperature_chn1_alarm**: (0: threshold release, 1: threshold alarm)        |
-|    Temperature(Channel 2) Alarm     |    0x84    |     0x67     |          3          | temperature_chn2(2B) + temperature_chn2_alarm(1B)<br/>**temperature_chn2_alarm**: (0: threshold release, 1: threshold alarm)        |
-| Temperature(Channel 1) Change Alarm |    0x93    |     0xD7     |          5          | temperature_chn1(2B) + temperature_chn1_change(2B) + temperature_chn1_alarm(1B)<br/>**temperature_chn1_alarm**: (2: mutation alarm) |
-| Temperature(Channel 2) Change Alarm |    0x94    |     0xD7     |          5          | temperature_chn2(2B) + temperature_chn2_change(2B) + temperature_chn2_alarm(1B)<br/>**temperature_chn2_alarm**: (2: mutation alarm) |
-|           Historical Data           |    0x20    |     0xCE     |          N          | timestamp(4B) + chn_mask(1B) + data(MB)<br/>                                                                                        |
+|               CHANNEL                |  ID  | TYPE | LENGTH | DESCRIPTION                                                                                                                              |
+| :----------------------------------: | :--: | :--: | :----: | ---------------------------------------------------------------------------------------------------------------------------------------- |
+|               Battery                | 0x01 | 0x75 |   1    | battery(1B)<br/>battery, unit: %                                                                                                         |
+|       Temperature (Channel 1)        | 0x03 | 0x67 |   2    | temperature_chn1(2B)<br/>temperature_chn1, unit: ℃                                                                                       |
+|      Magnet Status (Channel 1)       | 0x03 | 0x00 |   1    | magnet_chn1(1B)                                                                                                                          |
+|       Temperature (Channel 2)        | 0x04 | 0x67 |   2    | temperature_chn2(2B)<br/>temperature_chn2, unit: ℃                                                                                       |
+|      Magnet Status (Channel 2)       | 0x04 | 0x00 |   1    | magnet_chn2(1B)                                                                                                                          |
+|    Temperature (Channel 1) Alarm     | 0x83 | 0x67 |   3    | temperature_chn1(2B) + temperature_chn1_alarm(1B)<br/>temperature_chn1_alarm, values: (0: threshold release, 1: threshold alarm)         |
+|    Temperature (Channel 2) Alarm     | 0x84 | 0x67 |   3    | temperature_chn2(2B) + temperature_chn2_alarm(1B)<br/>temperature_chn2_alarm, values: (0: threshold release, 1: threshold alarm)         |
+| Temperature (Channel 1) Change Alarm | 0x93 | 0xD7 |   5    | temperature_chn1(2B) + temperature_chn1_change(2B) + temperature_c hn1_alarm(1B)<br/>temperature_chn1_alarm, values: (2: mutation alarm) |
+| Temperature (Channel 2) Change Alarm | 0x94 | 0xD7 |   5    | temperature_chn2(2B) + temperature_chn2_change(2B) + temperature_chn2_alarm(1B)<br/>temperature_chn2_alarm, values: (2: mutation alarm)  |
+|           Historical Data            | 0x20 | 0xCE |   N    | timestamp(4B) + chn_mask(1B) + data(MB)                                                                                                  |
 
-**Historical Data Channel Mask**
+### Historical Data Channel Mask
 
-| channel 1(MSB)                         | channel 2 (LSB)                        |
+| CHANNEL 1(MSB)                         | CHANNEL 2(LSB)                         |
 | :------------------------------------- | :------------------------------------- |
 | 0: -                                   | 0: -                                   |
 | 1: temperature threshold alarm         | 1: temperature threshold alarm         |
@@ -36,8 +36,6 @@ For more detailed information, please visit [milesight official website](https:/
 | 6: magnet period report                | 6: magnet period report                |
 
 ## Example
-
-**Payload**
 
 ```json
 // 017564 0367F100 040001

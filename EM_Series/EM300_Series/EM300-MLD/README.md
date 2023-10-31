@@ -8,22 +8,22 @@ For more detailed information, please visit [milesight official website](https:/
 
 ## Payload Definition
 
-|     channel     | channel_id | channel_type | data_length (bytes) | description                                                         |
-| :-------------: | :--------: | :----------: | :-----------------: | ------------------------------------------------------------------- |
-|     battery     |    0x01    |     0x75     |          1          | unit: %                                                             |
-| leakage status  |    0x06    |     0x00     |          1          | 0: normal, 1: leak                                                  |
-| historical data |    0x20    |     0XCE     |          8          | timestamp(4B) + temperature(2B) + humidity(1B) + leakage_status(1B) |
+|     CHANNEL     |  ID  | TYPE | LENGTH | DESCRIPTION                                                         |
+| :-------------: | :--: | :--: | :----: | ------------------------------------------------------------------- |
+|     Battery     | 0x01 | 0x75 |   1    | battery(1B)<br/>battery, unit: %                                    |
+| Leakage Status  | 0x06 | 0x00 |   1    | leakage_status(1B)<br/>leakage_status, values:(0: normal, 1: leak)  |
+| Historical Data | 0x20 | 0XCE |   8    | timestamp(4B) + temperature(2B) + humidity(1B) + leakage_status(1B) |
 
 ## Example
 
 ```json
-// Sample(hex): 01 75 5C 05 00 00
+// 01755C 050000
 {
   "battery": 92,
   "leakage_status": "normal"
 }
 
-// Sample(hex): 20 CE 9E 74 46 63 00 00 00 01
+// 20CE9E74466300000001
 {
   "history": [
     {

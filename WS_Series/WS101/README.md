@@ -10,36 +10,15 @@ For more detailed information, please visit [milesight official website](https:/
 
 ## Payload Definition
 
-```
---------------------- Payload Definition ---------------------
+|   CHANNEL    |  ID  | TYPE | LENGTH | DESCRIPTION                                                 |
+| :----------: | :--: | :--: | :----: | ----------------------------------------------------------- |
+|   Battery    | 0x01 | 0x75 |   1    | battery(1B)<br/>battery, unit: %                            |
+| Button Press | 0xFF | 0x2E |   1    | press(1B)<br/>press, values: (1: short, 2: long, 3: double) |
 
-                   [channel_id] [channel_type] [channel_value]
-01: battery      -> 0x01         0x75          [1byte ] Unit: %
-FF: press        -> 0xFF         0x2E          [1byte ] Unit:
------------------------------------------- WS101
-
---- PRESS DEFINITION ---
-01: short
-02: long
-03: double
-```
-
-## Example for The Things Network
-
-**Payload**
-
-```
-01 75 10 FF 2E 01
-```
-
-**Data Segmentation**
-
--   `01 75 10`
--   `FF 2E 01`
-
-**Output**
+## Example
 
 ```json
+// 017510 FF2E01
 {
     "battery": 16,
     "press": "short"

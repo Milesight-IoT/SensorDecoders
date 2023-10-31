@@ -8,40 +8,20 @@ For more detailed information, please visit [milesight official website](https:/
 
 ## Payload Definition
 
-```
---------------------- Payload Definition ---------------------
+|     CHANNEL      |  ID  | TYPE | LENGTH | DESCRIPTION                                        |
+| :--------------: | :--: | :--: | :----: | -------------------------------------------------- |
+| Protocol Version | 0xFF | 0x01 |   1    | protocol_version(1B)                               |
+|  Serial Number   | 0xFF | 0x16 |   8    | sn(8B)                                             |
+| Hardware Version | 0xFF | 0x09 |   2    | hardware_version(2B)                               |
+| Firmware Version | 0xFF | 0x1F |   4    | firmware_version(4B)                               |
+|     Total IN     | 0x03 | 0xD2 |   4    | total_counter_in(4B)                               |
+|    Total OUT     | 0x04 | 0xD2 |   4    | total_counter_out(4B)                              |
+|  Period IN/OUT   | 0x05 | 0xCC |   4    | periodic_counter_in(2B) + periodic_counter_out(2B) |
 
-                        [channel_id]  [channel_type] [channel_value]
-FF: protocol_version  -> 0xFF           0x01          [1byte  ] Unit:
-FF: serial_number     -> 0xFF           0x16          [8bytes ] Unit:
-FF: hardware_version  -> 0xFF           0x09          [2bytes ] Unit:
-FF: firmware_version  -> 0xFF           0x1F          [4bytes ] Unit:
-
-03: total_in          -> 0x03           0xD2          [4bytes ] Unit:
-04: total_out         -> 0x04           0xD2          [4bytes ] Unit:
-05: counting          -> 0x05           0xCC          [2bytes ] Unit:
-
----------------------------------------------------------------
-
-```
-
-## Example for The Things Network
-
-**Payload**
-
-```
-FF 01 01
-FF 16 66 14 C3 96 94 87 00 00
-FF 09 01 02
-FF 1F 84 01 00 01
-03 D2 BE 00 00 00
-04 D2 31 01 00 00
-05 CC 00 00 00 00
-```
-
-**Output**
+## Example
 
 ```json
+// FF0101 FF166614C39694870000 FF090102 FF1F84010001 03D2BE000000 04D231010000 05CC00000000
 {
     "protocol_version": 1,
     "sn": "6614c39694870000",

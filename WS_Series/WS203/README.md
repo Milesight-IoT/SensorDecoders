@@ -8,19 +8,19 @@ For more detailed information, please visit [Milesight official website](https:/
 
 ## Payload Definition
 
-|       channel        | channel_id | channel_type | data_length (bytes) | description                                                                                                                                                                                                           |
-| :------------------: | :--------: | :----------: | :-----------------: | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-|       battery        |    0x01    |     0x75     |          1          | unit: %                                                                                                                                                                                                               |
-|     temperature      |    0x03    |     0x67     |          2          | unit: ℃                                                                                                                                                                                                               |
-|       humidity       |    0x04    |     0x68     |          1          | unit: %RH                                                                                                                                                                                                             |
-|      occupancy       |    0x05    |     0x00     |          1          | 0: vacant<br />1: occupied                                                                                                                                                                                            |
-| temperature abnormal |    0x83    |     0x67     |          3          | temperature(2B) + alert(1B)                                                                                                                                                                                           |
-|   historical data    |    0x20    |     0xCE     |          9          | timestamp(4B) + report_type(1B) + occupancy(1B) + temperature(2B) + humidity(1B) <br/><br/>**report_type**:<br/>0: temperature resume<br/>1: temperature threshold<br/>2: pir ilde<br/>3: pir occupancy<br/>4: period |
+|       CHANNEL        |  ID  | TYPE | LENGTH | DESCRIPTION                                                                                                                                                                                           |
+| :------------------: | :--: | :--: | :----: | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+|       Battery        | 0x01 | 0x75 |   1    | battery(1B)<br/>battery, unit: %                                                                                                                                                                      |
+|     Temperature      | 0x03 | 0x67 |   2    | temperature(2B)<br/>temperature, unit: ℃                                                                                                                                                              |
+|       Humidity       | 0x04 | 0x68 |   1    | humidity(1B)<br/>humidity, unit: %RH                                                                                                                                                                  |
+|      Occupancy       | 0x05 | 0x00 |   1    | occupancy(1B)<br/>occupancy, values(0: vacant, 1: occupied)                                                                                                                                           |
+| Temperature Abnormal | 0x83 | 0x67 |   3    | temperature(2B) + temperature_abnormal(1B)                                                                                                                                                            |
+|   Historical Data    | 0x20 | 0xCE |   9    | timestamp(4B) + report_type(1B) + occupancy(1B) + temperature(2B) + humidity(1B)<br/>report_type, values: (0: temperature resume, 1: temperature threshold, 2: pir ilde, 3: pir occupancy, 4: period) |
 
 ## Example
 
 ```json
-// Sample(hex): 017564 03673401 046865 050000
+// 017564 03673401 046865 050000
 {
     "battery": 100,
     "humidity": 50.5,
@@ -28,13 +28,13 @@ For more detailed information, please visit [Milesight official website](https:/
     "temperature": 30.8
 }
 
-// Sample(hex): 8367220101
+// 8367220101
 {
     "temperature": 29,
     "temperature_abnormal": "abnormal"
 }
 
-// Sample(hex): 20CEAE5BA6640400240165 20CE5C5CA6640301340165
+// 20CEAE5BA6640400240165 20CE5C5CA6640301340165
 {
     "history": [
         {
