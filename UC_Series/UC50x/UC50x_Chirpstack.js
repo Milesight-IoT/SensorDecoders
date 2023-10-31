@@ -144,6 +144,7 @@ function milesight(bytes) {
         // HISTORY DATA (GPIO / ADC)
         else if (channel_id === 0x20 && channel_type === 0xdc) {
             var timestamp = readUInt32LE(bytes.slice(i, i + 4));
+
             var data = { timestamp: timestamp };
             data.gpio_1 = readUInt32LE(bytes.slice(i + 5, i + 9));
             data.gpio_2 = readUInt32LE(bytes.slice(i + 10, i + 14));
@@ -156,12 +157,11 @@ function milesight(bytes) {
         }
         // HISTORY DATA (SDI-12)
         else if (channel_id === 0x20 && channel_type === 0xe0) {
-            decoded.history = decoded.history || [];
-
+            
             var timestamp = readUInt32LE(bytes.slice(i, i + 4));
             var channel_mask = numToBits(readUInt16LE(bytes.slice(i + 4, i + 6)), 16);
             i += 6;
-
+            
             var data = { timestamp: timestamp };
             for (j = 0; j < channel_mask.length; j++) {
                 // skip if channel is not enabled
@@ -170,7 +170,8 @@ function milesight(bytes) {
                 data[name] = readString(bytes.slice(i, i + 36));
                 i += 36;
             }
-
+            
+            decoded.history = decoded.history || [];
             decoded.history.push(data);
         }
         // HISTORY DATA (MODBUS)
