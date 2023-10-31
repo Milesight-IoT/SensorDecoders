@@ -40,10 +40,11 @@ The payload decoder function is applicable to UC300.
 | Analog to Digital (voltage) 1(stats) | 0x0D | 0xE2 |   8    | adv_1(2B) + adv_1_max(2B) + adv_1_min(2B) + adv_1_avg(2B)             |
 | Analog to Digital (voltage) 2(stats) | 0x0E | 0xE2 |   8    | adv_2(2B) + adv_2_max(2B) + adv_2_min(2B) + adv_2_avg(2B)             |
 
-MODBUS DATA_TYPE
-| BITS | 7 | 6...0 |
-|:--:|:--:|:--|
-| | signed | 0x00: MB_COIL<br/>0x01: MB_DISCRETE<br />0x02: MB_INPUT_INT16<br/>0x03: MB_HOLD_INT16<br/>0x04: MB_HOLD_INT32<br/>0x05: MB_HOLD_FLOAT<br/>0x06: MB_INPUT_INT32<br/>0x07: MB_INPUT_FLOAT<br/>0x08: MB_INPUT_INT32_AB<br/>0x09: MB_INPUT_INT32_CD<br/>0x0A: MB_HOLD_INT32_AB<br/>0x0B: MB_HOLD_INT32_CD |
+### MODBUS DATA_TYPE
+
+| BITS |   7    | 6...0                                                                                                                                                                                                                                                                                                 |
+| :--: | :----: | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+|      | signed | 0x00: MB_COIL<br/>0x01: MB_DISCRETE<br />0x02: MB_INPUT_INT16<br/>0x03: MB_HOLD_INT16<br/>0x04: MB_HOLD_INT32<br/>0x05: MB_HOLD_FLOAT<br/>0x06: MB_INPUT_INT32<br/>0x07: MB_INPUT_FLOAT<br/>0x08: MB_INPUT_INT32_AB<br/>0x09: MB_INPUT_INT32_CD<br/>0x0A: MB_HOLD_INT32_AB<br/>0x0B: MB_HOLD_INT32_CD |
 
 ## Example
 
