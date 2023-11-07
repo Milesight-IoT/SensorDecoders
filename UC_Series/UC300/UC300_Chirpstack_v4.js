@@ -99,7 +99,7 @@ function milesight(bytes) {
             var sign = (data_type >>> 7) & 0x01;
             var type = data_type & 0x7f; // 0b01111111
             var chn = "modbus_chn_" + modbus_chn_id;
-            switch (data_type) {
+            switch (type) {
                 case 0:
                     decoded[chn] = bytes[i] ? "on" : "off";
                     i += 1;
@@ -347,7 +347,9 @@ function readFloatLE(bytes) {
     var e = (bits >>> 23) & 0xff;
     var m = e === 0 ? (bits & 0x7fffff) << 1 : (bits & 0x7fffff) | 0x800000;
     var f = sign * m * Math.pow(2, e - 150);
-    return f;
+
+    var n = Number(f.toFixed(2));
+    return n;
 }
 
 function readFloat16LE(bytes) {
@@ -356,7 +358,9 @@ function readFloat16LE(bytes) {
     var e = (bits >>> 10) & 0x1f;
     var m = e === 0 ? (bits & 0x3ff) << 1 : (bits & 0x3ff) | 0x400;
     var f = sign * m * Math.pow(2, e - 25);
-    return f;
+
+    var n = Number(f.toFixed(2));
+    return n;
 }
 
 function readAscii(bytes) {
