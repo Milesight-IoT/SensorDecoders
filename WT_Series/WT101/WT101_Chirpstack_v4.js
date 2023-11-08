@@ -37,17 +37,17 @@ function milesight(bytes) {
         }
         // INSTALLATION STATUS
         else if (channel_id === 0x06 && channel_type === 0x00) {
-            decoded.install = bytes[i] === 0 ? "installed" : "uninstalled";
+            decoded.install_status = bytes[i] === 0 ? "installed" : "uninstalled";
             i += 1;
         }
-        // FEENSTRATION STATUS
+        // OPEN WINDOW DECTECTION
         else if (channel_id === 0x07 && channel_type === 0x00) {
-            decoded.fenestration = bytes[i] === 0 ? "normal" : "open";
+            decoded.window_detection = bytes[i] === 0 ? "normal" : "open";
             i += 1;
         }
         // MOTOR STORKE CALIBRATION STATUS
         else if (channel_id === 0x08 && channel_type === 0xe5) {
-            decoded.motor_calibration = readMotorCalibration(bytes[i]);
+            decoded.motor_calibration_result = readMotorCalibration(bytes[i]);
             i += 1;
         }
         // MOTOR STROKE
