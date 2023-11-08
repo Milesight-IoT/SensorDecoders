@@ -33,7 +33,7 @@ function milesight(bytes) {
             i += 4;
         }
         // WATER
-        else if (channel_id === 0x06 && channel_type === 0xe1) {
+        else if (channel_id === 0x05 && channel_type === 0xe1) {
             decoded.water_conv = readUInt16LE(bytes.slice(i, i + 2)) / 10;
             decoded.pluse_conv = readUInt16LE(bytes.slice(i + 2, i + 4)) / 10;
             decoded.water = readFloatLE(bytes.slice(i + 4, i + 8));
@@ -46,7 +46,7 @@ function milesight(bytes) {
             i += 2;
         }
         // WATER ALARM
-        else if (channel_id === 0x86 && channel_type === 0xe1) {
+        else if (channel_id === 0x85 && channel_type === 0xe1) {
             decoded.water_conv = readUInt16LE(bytes.slice(i, i + 2)) / 10;
             decoded.pluse_conv = readUInt16LE(bytes.slice(i + 2, i + 4)) / 10;
             decoded.water = readFloatLE(bytes.slice(i + 4, i + 8));
