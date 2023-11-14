@@ -113,6 +113,25 @@ function milesight(bytes) {
             decoded.d_to_c = readUInt16LE(bytes.slice(i + 4, i + 6));
             decoded.d_to_d = readUInt16LE(bytes.slice(i + 6, i + 8));
             i += 8;
+        }
+        // TOTAL IN/OUT
+        else if (channel_id === 0x0d && channel_type === 0xcc) {
+            decoded.people_total_in = readUInt16LE(bytes.slice(i, i + 2));
+            decoded.people_total_out = readUInt16LE(bytes.slice(i + 2, i + 4));
+            i += 4;
+        }
+        // DWELL TIME
+        else if (channel_id === 0x0e && channel_type === 0xe4) {
+            var region = bytes[i];
+            // decoded.region = region;
+            decoded.dwell_time_avg = readUInt16LE(bytes.slice(i + 1, i + 3));
+            decoded.dwell_time_max = readUInt16LE(bytes.slice(i + 3, i + 5));
+            i += 5;
+        }
+        // TIMESTAMP
+        else if (channel_id === 0x0f && channel_type === 0x85) {
+            decoded.timestamp = readUInt32LE(bytes.slice(i, i + 4));
+            i += 4;
         } else {
             break;
         }
