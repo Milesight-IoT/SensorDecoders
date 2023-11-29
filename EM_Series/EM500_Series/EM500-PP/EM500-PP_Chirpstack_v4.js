@@ -5,7 +5,12 @@
  *
  * @product EM500-PP
  */
-function Decode(fPort, bytes) {
+function decodeUplink(input) {
+    var decoded = milesight(input.bytes);
+    return { data: decoded };
+}
+
+function milesight(bytes) {
     var decoded = {};
 
     for (var i = 0; i < bytes.length; ) {
