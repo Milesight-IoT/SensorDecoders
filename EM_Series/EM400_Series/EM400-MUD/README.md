@@ -70,7 +70,7 @@ For more detailed information, please visit [milesight official website](https:/
     "flag": 0,
     "frameCnt": 0,
     "protocaolVersion": 1,
-    "softwareVersion": "0101",
+    "firmwareVersion": "0101",
     "hardwareVersion": "0110",
     "sn": "6749D19054690031",
     "imei": "868508064807350",

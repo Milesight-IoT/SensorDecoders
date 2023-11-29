@@ -144,7 +144,7 @@ function readHardwareVersion(bytes) {
     return "v" + major + "." + minor;
 }
 
-function readSoftwareVersion(bytes) {
+function readFirmwareVersion(bytes) {
     var major = bytes[0] & 0xff;
     var minor = bytes[1] & 0xff;
     return "v" + major + "." + minor;
