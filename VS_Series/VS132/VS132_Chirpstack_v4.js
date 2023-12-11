@@ -24,7 +24,7 @@ function milesight(bytes) {
         }
         // SERIAL NUMBER
         else if (channel_id === 0xff && channel_type === 0x16) {
-            decoded.sn = readString(bytes.slice(i, i + 8));
+            decoded.sn = readSerialNumber(bytes.slice(i, i + 8));
             i += 8;
         }
         // HARDWARE VERSION
@@ -60,7 +60,6 @@ function milesight(bytes) {
     return decoded;
 }
 
-// bytes to number
 function readUInt16LE(bytes) {
     var value = (bytes[1] << 8) + bytes[0];
     return value & 0xffff;
@@ -71,7 +70,6 @@ function readUInt32LE(bytes) {
     return (value & 0xffffffff) >>> 0;
 }
 
-// bytes to version
 function readVersion(bytes) {
     var temp = [];
     for (var idx = 0; idx < bytes.length; idx++) {
@@ -80,8 +78,7 @@ function readVersion(bytes) {
     return temp.join(".");
 }
 
-// bytes to string
-function readString(bytes) {
+function readSerialNumber(bytes) {
     var temp = [];
     for (var idx = 0; idx < bytes.length; idx++) {
         temp.push(("0" + (bytes[idx] & 0xff).toString(16)).slice(-2));
