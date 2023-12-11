@@ -8,21 +8,21 @@ For more detailed information, please visit [Milesight official website](https:/
 
 ## Payload Definition
 
-|       CHANNEL        |  ID  | TYPE | LENGTH | DESCRIPTION                                                                     |
-| :------------------: | :--: | :--: | :----: | ------------------------------------------------------------------------------- |
+|       CHANNEL        |  ID  | TYPE | LENGTH | DESCRIPTION                                                             |
+| :------------------: | :--: | :--: | :----: | ----------------------------------------------------------------------- |
 |       Battery        | 0x01 | 0x75 |   1    | battery(1B)<br/>battery, unit: %                                        |
 |     Temperature      | 0x03 | 0x67 |   2    | temperature(2B)<br/>temperature, unit: ℃                                |
-|       Location       | 0x04 | 0x88 |   9    | latitude(4B) + longitude(4B) + motion_status(1B)                            |
+|       Location       | 0x04 | 0x88 |   9    | latitude(4B) + longitude(4B) + motion_status(1B)                        |
 |       Position       | 0x05 | 0x00 |   1    | position(1B)<br/>position, values: (0: normal, 1: tilt)                 |
-|      Wifi Scan       | 0x06 | 0xD9 |   9    | ID(1B) + MAC(6B) + RSSI(1B) + motion_status(1B)                             |
+|      Wifi Scan       | 0x06 | 0xD9 |   9    | ID(1B) + MAC(6B) + RSSI(1B) + motion_status(1B)                         |
 |    Tamper Status     | 0x07 | 0x00 |   1    | tamper_status(1B)<br/>tamper_status, values: (0: install, 1: uninstall) |
-| Temperature Abnormal | 0x83 | 0x67 |   3    | temperature(2B) + temperature_abnormal(1B)                                  |
-|     History Data     | 0x20 | 0xCE |   12   | timestamp(4B) + longitude(4B) + latitude(4B)                                |
+| Temperature Abnormal | 0x83 | 0x67 |   3    | temperature(2B) + temperature_abnormal(1B)                              |
+|     History Data     | 0x20 | 0xCE |   12   | timestamp(4B) + longitude(4B) + latitude(4B)                            |
 
 motion_status
 
-|    BITS     | 7 - 4                                                              | 3 - 0                                                                       |
-| :---------: | :----------------------------------------------------------------- | :-------------------------------------------------------------------------- |
+|    BITS     | 7 - 4                                                          | 3 - 0                                                                   |
+| :---------: | :------------------------------------------------------------- | :---------------------------------------------------------------------- |
 | DESCRIPTION | Geofence Status, (0: inside, 1: outside, 2: unset, 3: unknown) | Motion Status, (0: unknown, 1: start moving, 2: moving, 3: stop moving) |
 
 ## Example
@@ -49,28 +49,34 @@ motion_status
         {
             "group": 8,
             "mac": "1c:c3:16:22:2d:f9",
+            "motion_status": "moving",
             "rssi": -61
         },
         {
             "group": 8,
             "mac": "24:e1:24:f6:a6:67",
+            "motion_status": "moving",
             "rssi": -74
         },
         {
             "group": 8,
             "mac": "24:e1:24:f5:4d:e3",
+            "motion_status": "moving",
             "rssi": -68
         },
         {
             "group": 8,
             "mac": "24:e1:24:f5:79:71",
+            "motion_status": "moving",
             "rssi": -78
         },
         {
             "group": 8,
             "mac": "24:e1:24:f3:19:a8",
+            "motion_status": "moving",
             "rssi": -56
         }
-    ]
+    ],
+    "wifi_scan_result": "finish"
 }
 ```

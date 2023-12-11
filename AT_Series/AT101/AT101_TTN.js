@@ -15,6 +15,7 @@ function milesight(bytes) {
     for (var i = 0; i < bytes.length; ) {
         var channel_id = bytes[i++];
         var channel_type = bytes[i++];
+
         // BATTERY
         if (channel_id === 0x01 && channel_type === 0x75) {
             decoded.battery = readUInt8(bytes[i]);
@@ -30,13 +31,13 @@ function milesight(bytes) {
             decoded.latitude = readInt32LE(bytes.slice(i, i + 4)) / 1000000;
             decoded.longitude = readInt32LE(bytes.slice(i + 4, i + 8)) / 1000000;
             var status = bytes[i + 8];
-            decoded.motion_status = ["unknown", "start", "moving", "stop"][status & 0x0f];
-            decoded.geofence_status = ["inside", "outside", "unset", "unknown"][status >> 4];
+            decoded.motion_status = readMotionStatus(status & 0x0f);
+            decoded.geofence_status = readGeofenceStatus(status >> 4);
             i += 9;
         }
         // DEVICE POSITION
         else if (channel_id === 0x05 && channel_type === 0x00) {
-            decoded.position = bytes[i] === 0 ? "normal" : "tilt";
+            decoded.position = readDevicePosition(bytes[i]);
             i += 1;
         }
         // Wi-Fi SCAN RESULT
@@ -45,16 +46,22 @@ function milesight(bytes) {
             wifi.group = readUInt8(bytes[i]);
             wifi.mac = readMAC(bytes.slice(i + 1, i + 7));
             wifi.rssi = readInt8(bytes[i + 7]);
+            wifi.motion_status = readMotionStatus(bytes[i + 8] & 0x0f);
+            i += 9;
 
-            var status = bytes[i + 8];
-            decoded.motion_status = ["unknown", "start", "moving", "stop"][status & 0x03];
+            decoded.wifi_scan_result = "finish";
+            if (wifi.mac === "ff:ff:ff:ff:ff:ff") {
+                decoded.wifi_scan_result = "timeout";
+                continue;
+            }
+            decoded.motion_status = wifi.motion_status;
+
             decoded.wifi = decoded.wifi || [];
             decoded.wifi.push(wifi);
-            i += 9;
         }
         // TAMPER STATUS
         else if (channel_id === 0x07 && channel_type === 0x00) {
-            decoded.tamper_status = bytes[i] === 0 ? "install" : "uninstall";
+            decoded.tamper_status = readTamperStatus(bytes[i]);
             i += 1;
         }
         // TEMPERATURE WITH ABNORMAL
@@ -115,4 +122,52 @@ function readMAC(bytes) {
         temp.push(("0" + (bytes[idx] & 0xff).toString(16)).slice(-2));
     }
     return temp.join(":");
+}
+
+function readMotionStatus(type) {
+    switch (type) {
+        case 1:
+            return "start";
+        case 2:
+            return "moving";
+        case 3:
+            return "stop";
+        default:
+            return "unknown";
+    }
+}
+
+function readGeofenceStatus(type) {
+    switch (type) {
+        case 0:
+            return "inside";
+        case 1:
+            return "outside";
+        case 2:
+            return "unset";
+        default:
+            return "unknown";
+    }
+}
+
+function readDevicePosition(type) {
+    switch (type) {
+        case 0:
+            return "normal";
+        case 1:
+            return "tilt";
+        default:
+            return "unknown";
+    }
+}
+
+function readTamperStatus(type) {
+    switch (type) {
+        case 0:
+            return "install";
+        case 1:
+            return "uninstall";
+        default:
+            return "unknown";
+    }
 }
