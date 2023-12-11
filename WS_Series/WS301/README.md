@@ -8,11 +8,11 @@ For more detailed information, please visit [milesight official website](https:/
 
 ## Payload Definition
 
-|    CHANNEL     |  ID  | TYPE | LENGTH | DESCRIPTION                                      |
-| :------------: | :--: | :--: | :----: | ------------------------------------------------ |
-|    Battery     | 0x01 | 0x75 |   1    | battery(1B)<br/>battery, unit: %                 |
-|     State      | 0x03 | 0x00 |   1    | state(1B)<br/>state, values: (0: close, 1: open) |
-| Install Status | 0x04 | 0x00 |   1    | install(1B)<br/>install, values: (0: yes, 1: no) |
+|    CHANNEL    |  ID  | TYPE | LENGTH | DESCRIPTION                                                                 |
+| :-----------: | :--: | :--: | :----: | --------------------------------------------------------------------------- |
+|    Battery    | 0x01 | 0x75 |   1    | battery(1B)<br/>battery, unit: %                                            |
+| Magnet Status | 0x03 | 0x00 |   1    | magnet_status(1B)<br/>state, values: (0: close, 1: open)                    |
+| Tamper Status | 0x04 | 0x00 |   1    | tamper_status(1B)<br/>tamper_status, values: (0: installed, 1: uninstalled) |
 
 ## Example
 
@@ -20,7 +20,7 @@ For more detailed information, please visit [milesight official website](https:/
 // 017564 030001 040001
 {
     "battery": 100,
-    "state": "open",
-    "install": "no"
+    "magnet_status": "open",
+    "tamper_status": "installed"
 }
 ```

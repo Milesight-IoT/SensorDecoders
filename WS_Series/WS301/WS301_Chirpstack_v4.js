@@ -16,6 +16,7 @@ function milesight(bytes) {
     for (var i = 0; i < bytes.length; ) {
         var channel_id = bytes[i++];
         var channel_type = bytes[i++];
+
         // BATTERY
         if (channel_id === 0x01 && channel_type === 0x75) {
             decoded.battery = bytes[i];
@@ -23,12 +24,12 @@ function milesight(bytes) {
         }
         // DOOR / WINDOW STATE (0: close 1: open)
         else if (channel_id === 0x03 && channel_type === 0x00) {
-            decoded.state = bytes[i] === 0 ? "close" : "open";
+            decoded.magnet_status = bytes[i] === 0 ? "close" : "open";
             i += 1;
         }
         // INSTALL STATE (0: install 1: uninstall)
         else if (channel_id === 0x04 && channel_type === 0x00) {
-            decoded.install = bytes[i] === 0 ? "yes" : "no";
+            decoded.tamper_status = bytes[i] === 0 ? "installed" : "uninstalled";
             i += 1;
         } else {
             break;
