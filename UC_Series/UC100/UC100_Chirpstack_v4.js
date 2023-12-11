@@ -16,17 +16,17 @@ function milesight(bytes) {
         var channel_id = bytes[i++];
         var channel_type = bytes[i++];
 
-        // POWER STATE
+        // POWER
         if (channel_id === 0xff && channel_type === 0x0b) {
             decoded.power = "on";
             i += 1;
         }
         // IPSO VERSION
         else if (channel_id === 0xff && channel_type === 0x01) {
-            decoded.ipso_version = readProtocolVersion(bytes[i]);
+            decoded.protocol_version = readProtocolVersion(bytes[i]);
             i += 1;
         }
-        // PRODUCT SERIAL NUMBER
+        // SERIAL NUMBER
         else if (channel_id === 0xff && channel_type === 0x16) {
             decoded.sn = readSerialNumber(bytes.slice(i, i + 8));
             i += 8;
@@ -41,13 +41,15 @@ function milesight(bytes) {
             decoded.firmware_version = readFirmwareVersion(bytes.slice(i, i + 2));
             i += 2;
         }
-        // METRICS DATA REPORT
+        // MODBUS
         else if (channel_id === 0xff && channel_type === 0x19) {
             var modbus_chn_id = bytes[i++] + 1;
             var data_length = bytes[i++];
             var data_type = bytes[i++];
-            var chn = "chn" + modbus_chn_id;
-            switch (data_type) {
+            var sign = (data_type >>> 7) & 0x01;
+            var type = data_type & 0x7f; // 0b01111111
+            var modbus_chn_name = "modbus_chn_" + modbus_chn_id;
+            switch (type) {
                 case 0:
                     decoded[chn] = bytes[i] ? "on" : "off";
                     i += 1;
@@ -58,7 +60,7 @@ function milesight(bytes) {
                     break;
                 case 2:
                 case 3:
-                    decoded[chn] = readUInt16LE(bytes.slice(i, i + 2));
+                    decoded[modbus_chn_name] = sign ? readInt16LE(bytes.slice(i, i + 2)) : readUInt16LE(bytes.slice(i, i + 2));
                     i += 2;
                     break;
                 case 4:
@@ -67,12 +69,12 @@ function milesight(bytes) {
                 case 9:
                 case 10:
                 case 11:
-                    decoded[chn] = readUInt32LE(bytes.slice(i, i + 4));
+                    decoded[modbus_chn_name] = sign ? readInt32LE(bytes.slice(i, i + 4)) : readUInt32LE(bytes.slice(i, i + 4));
                     i += 4;
                     break;
                 case 5:
                 case 7:
-                    decoded[chn] = readFloatLE(bytes.slice(i, i + 4));
+                    decoded[modbus_chn_name] = readFloatLE(bytes.slice(i, i + 4));
                     i += 4;
                     break;
             }
@@ -80,8 +82,8 @@ function milesight(bytes) {
         // MODBUS READ ERROR
         else if (channel_id === 0xff && channel_type === 0x15) {
             var modbus_chn_id = bytes[i] + 1;
-            var channel_name = "channel_" + modbus_chn_id + "_error";
-            decoded[channel_name] = true;
+            var channel_name = "modbus_chn_" + modbus_chn_id + "_alarm";
+            decoded[channel_name] = "read error";
             i += 1;
         } else {
             break;
