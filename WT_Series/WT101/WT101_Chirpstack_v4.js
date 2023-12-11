@@ -38,7 +38,7 @@ function milesight(bytes) {
         }
         // INSTALLATION STATUS
         else if (channel_id === 0x06 && channel_type === 0x00) {
-            decoded.install_status = bytes[i] === 0 ? "installed" : "uninstalled";
+            decoded.tamper_status = bytes[i] === 0 ? "installed" : "uninstalled";
             i += 1;
         }
         // OPEN WINDOW DECTECTION
