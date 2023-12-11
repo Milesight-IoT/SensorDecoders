@@ -15,6 +15,7 @@ function milesight(bytes) {
     for (var i = 0; i < bytes.length; ) {
         var channel_id = bytes[i++];
         var channel_type = bytes[i++];
+
         // BATTERY
         if (channel_id === 0x01 && channel_type === 0x75) {
             decoded.battery = bytes[i];
@@ -45,18 +46,25 @@ function milesight(bytes) {
             decoded.pressure = readUInt16LE(bytes.slice(i, i + 2)) / 10;
             i += 2;
         }
-        // HISTROY DATA
+        // TEMPERATURE CHANGE ALARM
+        else if (channel_id === 0x83 && channel_type === 0xd7) {
+            decoded.temperature = readInt16LE(bytes.slice(i, i + 2)) / 10;
+            decoded.temperature_change = readInt16LE(bytes.slice(i + 2, i + 4)) / 10;
+            decoded.temperature_alarm = readTempatureAlarm(bytes[i + 4]);
+            i += 5;
+        }
+        // HISTROY
         else if (channel_id === 0x20 && channel_type === 0xce) {
-            var point = {};
-            point.timestamp = readUInt32LE(bytes.slice(i, i + 4));
-            point.co2 = readUInt16LE(bytes.slice(i + 4, i + 6));
-            point.pressure = readUInt16LE(bytes.slice(i + 6, i + 8)) / 10;
-            point.temperature = readInt16LE(bytes.slice(i + 8, i + 10)) / 10;
-            point.humidity = bytes[i + 10] / 2;
+            var data = {};
+            data.timestamp = readUInt32LE(bytes.slice(i, i + 4));
+            data.co2 = readUInt16LE(bytes.slice(i + 4, i + 6));
+            data.pressure = readUInt16LE(bytes.slice(i + 6, i + 8)) / 10;
+            data.temperature = readInt16LE(bytes.slice(i + 8, i + 10)) / 10;
+            data.humidity = bytes[i + 10] / 2;
+            i += 11;
 
             decoded.history = decoded.history || [];
-            decoded.history.push(point);
-            i += 11;
+            decoded.history.push(data);
         } else {
             break;
         }
@@ -81,4 +89,17 @@ function readInt16LE(bytes) {
 function readUInt32LE(bytes) {
     var value = (bytes[3] << 24) + (bytes[2] << 16) + (bytes[1] << 8) + bytes[0];
     return value & 0xffffffff;
+}
+
+function readTempatureAlarm(type) {
+    switch (type) {
+        case 0:
+            return "threshold alarm";
+        case 1:
+            return "threshold alarm release";
+        case 2:
+            return "mutation alarm";
+        default:
+            return "unkown";
+    }
 }
