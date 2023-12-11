@@ -15,6 +15,7 @@ function milesight(bytes) {
     for (var i = 0; i < bytes.length; ) {
         var channel_id = bytes[i++];
         var channel_type = bytes[i++];
+
         // BATTERY
         if (channel_id === 0x01 && channel_type === 0x75) {
             decoded.battery = bytes[i];
@@ -28,13 +29,13 @@ function milesight(bytes) {
         }
         // TOTAL IN / OUT
         else if (channel_id === 0x04 && channel_type === 0xcc) {
-            decoded.total_in = readInt16LE(bytes.slice(i, i + 2));
+            decoded.total_in = readUInt16LE(bytes.slice(i, i + 2));
             decoded.total_out = readUInt16LE(bytes.slice(i + 2, i + 4));
             i += 4;
         }
         // PERIOD IN / OUT
         else if (channel_id === 0x05 && channel_type === 0xcc) {
-            decoded.period_in = readInt16LE(bytes.slice(i, i + 2));
+            decoded.period_in = readUInt16LE(bytes.slice(i, i + 2));
             decoded.period_out = readUInt16LE(bytes.slice(i + 2, i + 4));
             i += 4;
         }
@@ -46,14 +47,14 @@ function milesight(bytes) {
         }
         // TOTAL IN / OUT ALARM
         else if (channel_id === 0x84 && channel_type === 0xcc) {
-            decoded.total_in = readInt16LE(bytes.slice(i, i + 2));
+            decoded.total_in = readUInt16LE(bytes.slice(i, i + 2));
             decoded.total_out = readUInt16LE(bytes.slice(i + 2, i + 4));
             decoded.total_count_alarm = readAlarmType(bytes[i + 4]);
             i += 5;
         }
         // PERIOD IN / OUT ALARM
         else if (channel_id === 0x85 && channel_type === 0xcc) {
-            decoded.period_in = readInt16LE(bytes.slice(i, i + 2));
+            decoded.period_in = readUInt16LE(bytes.slice(i, i + 2));
             decoded.period_out = readUInt16LE(bytes.slice(i + 2, i + 4));
             decoded.period_count_alarm = readAlarmType(bytes[i + 4]);
             i += 5;
@@ -75,7 +76,7 @@ function milesight(bytes) {
                 data.timestamp = timestamp;
                 data.period_in = readUInt16LE(bytes.slice(i + 5, i + 7));
                 data.period_out = readUInt16LE(bytes.slice(i + 7, i + 9));
-                data.total_in = readInt16LE(bytes.slice(i + 9, i + 11));
+                data.total_in = readUInt16LE(bytes.slice(i + 9, i + 11));
                 data.total_out = readUInt16LE(bytes.slice(i + 11, i + 13));
                 i += 13;
             }
