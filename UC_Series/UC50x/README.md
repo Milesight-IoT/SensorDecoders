@@ -25,13 +25,13 @@ For more detailed information, please visit [Milesight official website](https:/
 |   ADC 2<br/>(version: v3)   | 0x06 | 0xE2 |   8    | adc_2(2B) + adc_2_min(2B) + adc_2_max(2B) + adc_2_avg(2B)<br/>adc_2, read: float16                                                                                                                                                                           |
 |  SDI-12<br/>(version: v3)   | 0x08 | 0xDB |   37   | channel_id(1B) + channel_data(36B)                                                                                                                                                                                                                           |
 |            RS485            | 0xFF | 0x0E |   N    | channel_id(1B) + channel_def(1B) + data(MB)<br/>channel_def, modbus_type(0..2) + data_length(3..7)<br/>modbus_type, values: (0: COIL, 1: DIS, 2: REG INPUT, 3: REG HOLD INT16, 4: REG HOLD INT32, 5: REG HOLD FLOAT, 6: REG INPUT INT32, 7: REG INPUT FLOAT) |
-|         RS485 Fault         | 0xFF | 0x15 |   1    | channel_id(1B)                                                                                                                                                                                                                                               |
-|         ADC 1 Alert         | 0x85 | 0xE2 |   9    | adc_1(2B) + adc_1_min(2B) + adc_1_max(2B) + adc_1_adc_1_avg(2B) + adc_1_alert(1B)<br/>read: float16<br/>adc_1_alert, values: (0: threshold, 1: value change)                                                                                                 |
-|         ADC 2 Alert         | 0x86 | 0xE2 |   9    | adc_2(2B) + adc_2_min(2B) + adc_2_max(2B) + adc_2_avg(2B) + adc_2_alert(1B)<br/>read: float16<br/>adc_2_alert, values: (0: threshold, 1: value change)                                                                                                       |
-|         RS485 Alert         | 0x80 | 0x0E |   N    | channel_id(1B) + channel_def(1B) + data(MB) + alarm_type(1B)<br/>alarm_type, values: (0: threshold 1: value change)                                                                                                                                          |
-|   Sensor Historical Data    | 0x20 | 0xDC |   22   | timestamp(4B) + gpio_1_type(1B) + gpio_1_data(4B) + gpio_2_type(1B) + gpio_2_data(4B) + ai_1_data(4B) + ai_2_data(4B)                                                                                                                                        |
-|   Modbus Historical Data    | 0x20 | 0xDD |   N    | timestamp(4B) + modbus_mask(2B) + modbus_data(M \* 5B)                                                                                                                                                                                                       |
-|   SDI-12 Historical Data    | 0x20 | 0xE0 |   N    | timestamp(4B) + sdi_mask(2B) + sdi_data(M \* 36B)                                                                                                                                                                                                            |
+|         RS485 Fault         | 0xFF | 0x15 |   1    | modbus_chn_id_alarm(1B)                                                                                                                                                                                                                                      |
+|         ADC 1 Alarm         | 0x85 | 0xE2 |   9    | adc_1(2B) + adc_1_min(2B) + adc_1_max(2B) + adc_1_adc_1_avg(2B) + adc_1_alarm(1B)<br/>read: float16<br/>adc_1_alarm, values: (0: threshold, 1: value change)                                                                                                 |
+|         ADC 2 Alarm         | 0x86 | 0xE2 |   9    | adc_2(2B) + adc_2_min(2B) + adc_2_max(2B) + adc_2_avg(2B) + adc_2_alarm(1B)<br/>read: float16<br/>adc_2_alarm, values: (0: threshold, 1: value change)                                                                                                       |
+|         RS485 Alarm         | 0x80 | 0x0E |   N    | channel_id(1B) + channel_def(1B) + data(MB) + modbus_chn_id_alarm(1B)<br/>modbus_chn_id_alarm, values: (0: threshold 1: value change)                                                                                                                        |
+|       Sensor History        | 0x20 | 0xDC |   22   | timestamp(4B) + gpio_1_type(1B) + gpio_1_data(4B) + gpio_2_type(1B) + gpio_2_data(4B) + ai_1_data(4B) + ai_2_data(4B)                                                                                                                                        |
+|       Modbus History        | 0x20 | 0xDD |   N    | timestamp(4B) + modbus_mask(2B) + modbus_data(M \* 5B)                                                                                                                                                                                                       |
+|       SDI-12 History        | 0x20 | 0xE0 |   N    | timestamp(4B) + sdi_mask(2B) + sdi_data(M \* 36B)                                                                                                                                                                                                            |
 
 ## Example
 
@@ -61,12 +61,12 @@ For more detailed information, please visit [Milesight official website](https:/
 
 // FF0E092610270000
 {
-    "chn_3": 10000
+    "modbus_chn_3": 10000
 }
 
 // FF1507
 {
-    "chn_1_alert": "read error"
+    "modbus_chn_1_alarm": "read error"
 }
 
 // 08DB02612B312E362B302B32352E370D0A00000000000000000000000000000000000000000000

@@ -12,7 +12,7 @@ function decodeUplink(input) {
 
 gpio_chns = [0x03, 0x04];
 adc_chns = [0x05, 0x06];
-adc_alert_chns = [0x85, 0x86];
+adc_alarm_chns = [0x85, 0x86];
 
 function milesight(bytes) {
     var decoded = {};
@@ -69,7 +69,7 @@ function milesight(bytes) {
             var package_type = bytes[i++];
             var data_type = package_type & 0x07; // 0x07 = 0b00000111
             var date_length = package_type >> 3;
-            var chn = "chn_" + modbus_chn_id;
+            var chn = "modbus_chn_" + modbus_chn_id;
             switch (data_type) {
                 case 0:
                     decoded[chn] = bytes[i] ? "on" : "off";
@@ -97,47 +97,26 @@ function milesight(bytes) {
             }
 
             if (channel_id === 0x80) {
-                var alert = bytes[i++];
-                switch (alert) {
-                    case 1: // THRESHOLD ALERT
-                        decoded[chn + "_alert"] = "threshold";
-                        break;
-                    case 2: // VALUE CHANGE ALERT
-                        decoded[chn + "_alert"] = "value change";
-                        break;
-                    default:
-                        decoded[chn + "_alert"] = "none";
-                }
+                decoded[chn + "_alarm"] = readAlarm(bytes[i++]);
             }
         }
         // MODBUS READ ERROR
         else if (channel_id === 0xff && channel_type === 0x15) {
             var modbus_error_chn_id = bytes[i] - 6;
-            var channel_name = "chn_" + modbus_error_chn_id + "_alert";
-            decoded[channel_name] = "read error";
+            var channel_name = "modbus_chn_" + modbus_error_chn_id;
+            decoded[channel_name + "_alarm"] = "read error";
             i += 1;
         }
         // ADC alert (UC50x v3)
-        else if (includes(adc_alert_chns, channel_id) && channel_type === 0xe2) {
-            var adc_channel_name = "adc_" + (channel_id - adc_alert_chns[0] + 1);
+        else if (includes(adc_alarm_chns, channel_id) && channel_type === 0xe2) {
+            var adc_channel_name = "adc_" + (channel_id - adc_alarm_chns[0] + 1);
             decoded[adc_channel_name] = readFloat16LE(bytes.slice(i, i + 2));
             decoded[adc_channel_name + "_min"] = readFloat16LE(bytes.slice(i + 2, i + 4));
             decoded[adc_channel_name + "_max"] = readFloat16LE(bytes.slice(i + 4, i + 6));
             decoded[adc_channel_name + "_avg"] = readFloat16LE(bytes.slice(i + 6, i + 8));
             i += 8;
 
-            var alert = bytes[i++];
-            switch (alert) {
-                case 1: // THRESHOLD ALERT
-                    decoded[adc_channel_name + "_alert"] = "threshold";
-                    break;
-                case 2: // VALUE CHANGE ALERT
-                    decoded[adc_channel_name + "_alert"] = "value change";
-                    break;
-                default:
-                    decoded[adc_channel_name + "_alert"] = "none";
-                    break;
-            }
+            decoded[adc_channel_name + "_alarm"] = readAlarm(bytes[i++]);
         }
         // HISTORY DATA (GPIO / ADC)
         else if (channel_id === 0x20 && channel_type === 0xdc) {
@@ -283,4 +262,15 @@ function includes(datas, value) {
         }
     }
     return false;
+}
+
+function readAlarm(type) {
+    switch (type) {
+        case 1:
+            return "threshold alarm";
+        case 2:
+            return "value change alarm";
+        default:
+            return "unknown";
+    }
 }
