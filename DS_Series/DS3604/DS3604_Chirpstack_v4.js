@@ -24,7 +24,7 @@ function milesight(bytes) {
         }
         // TEMPLATE
         else if (channel_id == 0xff && channel_type == 0x73) {
-            decoded.template_id = bytes[i] + 1;
+            decoded.template = bytes[i] + 1;
             i += 1;
         }
         // TEMPLATE BLOCK CHANNEL DATA
