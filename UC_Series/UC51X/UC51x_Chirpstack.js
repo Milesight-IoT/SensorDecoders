@@ -53,32 +53,26 @@ function milesight(bytes) {
         }
         // HISTORY
         else if (channel_id === 0x20 && channel_type === 0xce) {
-            if (decoded.history == undefined) {
-                decoded.history = [];
-            }
-
             var timestamp = readUInt32LE(bytes.slice(i, i + 4));
-            var data = bytes[i + 4];
-            var status = (data & 0x01) === 0 ? "close" : "open";
-            var mode = ((data >> 1) & 0x01) === 0 ? "counter" : "gpio";
-            var gpio = ((data >> 2) & 0x01) === 0 ? "off" : "on";
-            var index = ((data >> 4) & 0x01) === 0 ? "1" : "2";
+            var value = bytes[i + 4];
+            var status = (value & 0x01) === 0 ? "close" : "open";
+            var mode = ((value >> 1) & 0x01) === 0 ? "counter" : "gpio";
+            var gpio = ((value >> 2) & 0x01) === 0 ? "off" : "on";
+            var index = ((value >> 4) & 0x01) === 0 ? "1" : "2";
             var pulse = readUInt32LE(bytes.slice(i + 5, i + 9));
 
-            var payload = {};
+            var data = { timestamp: timestamp, mode: mode };
             if (mode == "gpio") {
-                payload["valve_" + index] = status;
-                payload["gpio_" + index] = gpio;
-                payload.mode = mode;
-                payload.timestamp = timestamp;
+                data["valve_" + index] = status;
+                data["gpio_" + index] = gpio;
             } else if (mode == "counter") {
-                payload["valve_" + index] = status;
-                payload["valve_" + index + "_pulse"] = pulse;
-                payload.mode = mode;
-                payload.timestamp = timestamp;
+                data["valve_" + index] = status;
+                data["valve_" + index + "_pulse"] = pulse;
             }
-            decoded.history.push(payload);
             i += 9;
+
+            decoded.history = decoded.history || [];
+            decoded.history.push(data);
         } else {
             break;
         }
