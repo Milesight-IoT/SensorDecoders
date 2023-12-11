@@ -35,7 +35,7 @@ function milesight(bytes) {
         // WATER
         else if (channel_id === 0x05 && channel_type === 0xe1) {
             decoded.water_conv = readUInt16LE(bytes.slice(i, i + 2)) / 10;
-            decoded.pluse_conv = readUInt16LE(bytes.slice(i + 2, i + 4)) / 10;
+            decoded.pulse_conv = readUInt16LE(bytes.slice(i + 2, i + 4)) / 10;
             decoded.water = readFloatLE(bytes.slice(i + 4, i + 8));
             i += 8;
         }
@@ -48,7 +48,7 @@ function milesight(bytes) {
         // WATER ALARM
         else if (channel_id === 0x85 && channel_type === 0xe1) {
             decoded.water_conv = readUInt16LE(bytes.slice(i, i + 2)) / 10;
-            decoded.pluse_conv = readUInt16LE(bytes.slice(i + 2, i + 4)) / 10;
+            decoded.pulse_conv = readUInt16LE(bytes.slice(i + 2, i + 4)) / 10;
             decoded.water = readFloatLE(bytes.slice(i + 4, i + 8));
             decoded.water_alarm = readWaterAlarm(bytes[i + 8]);
             i += 9;
@@ -66,7 +66,7 @@ function milesight(bytes) {
             } else if (mode === 2) {
                 point.gpio_type = "pulse";
                 point.water_conv = readUInt16LE(bytes.slice(i + 10, i + 12)) / 10;
-                point.pluse_conv = readUInt16LE(bytes.slice(i + 12, i + 14)) / 10;
+                point.pulse_conv = readUInt16LE(bytes.slice(i + 12, i + 14)) / 10;
                 point.water = readFloatLE(bytes.slice(i + 14, i + 18));
             }
 
