@@ -33,7 +33,7 @@ function milesight(bytes) {
         }
         // SERIAL NUMBER
         else if (channel_id === 0xff && channel_type === 0x16) {
-            decoded.sn = readString(bytes.slice(i, i + 8));
+            decoded.sn = readSerialNumber(bytes.slice(i, i + 8));
             i += 8;
         }
         // HARDWARE VERSION
@@ -137,7 +137,7 @@ function milesight(bytes) {
         // MODBUS READ ERROR
         else if (channel_id === 0xff && channel_type === 0x15) {
             var modbus_chn_id = bytes[i] + 1;
-            var channel_name = "modbus_chn_" + modbus_chn_id + "_alert";
+            var channel_name = "modbus_chn_" + modbus_chn_id + "_alarm";
             decoded[channel_name] = "read error";
             i += 1;
         }
@@ -392,8 +392,7 @@ function readFirmwareVersion(bytes) {
     return "v" + major + "." + minor;
 }
 
-// bytes to string
-function readString(bytes) {
+function readSerialNumber(bytes) {
     var temp = [];
     for (var idx = 0; idx < bytes.length; idx++) {
         temp.push(("0" + (bytes[idx] & 0xff).toString(16)).slice(-2));
