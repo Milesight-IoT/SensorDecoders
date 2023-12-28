@@ -21,6 +21,7 @@ function milesight(bytes) {
     for (i = 0; i < bytes.length; ) {
         var channel_id = bytes[i++];
         var channel_type = bytes[i++];
+
         // PROTOCOL VESION
         if (channel_id === 0xff && channel_type === 0x01) {
             decoded.protocol_version = bytes[i];
@@ -173,8 +174,6 @@ function milesight(bytes) {
         }
         // CHANNEL HISTORICAL DATA
         else if (channel_id === 0x20 && channel_type === 0xdc) {
-            decoded.channel_history_data = decoded.channel_history_data || [];
-
             var timestamp = readUInt32LE(bytes.slice(i, i + 4));
             var channel_mask = numToBits(readUInt16LE(bytes.slice(i + 4, i + 6)), 16);
             i += 6;
@@ -237,12 +236,11 @@ function milesight(bytes) {
                 }
             }
 
+            decoded.channel_history_data = decoded.channel_history_data || [];
             decoded.channel_history_data.push(data);
         }
         // MODBUS HISTORICAL DATA
         else if (channel_id === 0x20 && channel_type === 0xdd) {
-            decoded.modbus_history_data = decoded.modbus_history_data || [];
-
             var timestamp = readUInt32LE(bytes.slice(i, i + 4));
             var modbus_chn_mask = numToBits(readUInt32LE(bytes.slice(i + 4, i + 8)), 32);
             i += 8;
@@ -286,7 +284,8 @@ function milesight(bytes) {
                 i += 4;
             }
 
-            modbus_history_data.push(data);
+            decoded.modbus_history_data = decoded.modbus_history_data || [];
+            decoded.modbus_history_data.push(data);
         }
         // TEXT
         else {
