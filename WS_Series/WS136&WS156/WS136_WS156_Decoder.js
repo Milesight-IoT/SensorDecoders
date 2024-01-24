@@ -36,9 +36,37 @@ function milesightDeviceDecode(bytes) {
         // PRESS STATE
         else if (channel_id === 0xff && channel_type === 0x34) {
             var id = bytes[i];
-            var btn_chn_name = "button_" + id;
-            decoded[btn_chn_name] = "trigger";
-            decoded[btn_chn_name + "_d2d"] = readUInt16LE(bytes.slice(i + 1, i + 3));
+            var btn_mode_name = "button_" + id + "_mode";
+            var btn_chn_event_name = "button_" + id + "_event";
+            switch (bytes[i + 1]) {
+                case 0x00:
+                    decoded[btn_mode_name] = ["short_press"];
+                    break;
+                case 0x01:
+                    decoded[btn_mode_name] = ["short_press", "double_press"];
+                    break;
+                case 0x02:
+                    decoded[btn_mode_name] = ["short_press", "long_press"];
+                    break;
+                case 0x03:
+                    decoded[btn_mode_name] = ["short_press", "double_press", "long_press"];
+                    break;
+                default:
+                    decoded[btn_mode_name] = ["unknown"];
+            }
+            switch (bytes[i + 2]) {
+                case 0x00:
+                    decoded[btn_chn_event_name] = "short_press";
+                    break;
+                case 0x01:
+                    decoded[btn_chn_event_name] = "double_press";
+                    break;
+                case 0x02:
+                    decoded[btn_chn_event_name] = "long_press";
+                    break;
+                default:
+                    decoded[btn_chn_event_name] = "unknown";
+            }
             i += 3;
         } else {
             break;
@@ -46,12 +74,4 @@ function milesightDeviceDecode(bytes) {
     }
 
     return decoded;
-}
-
-function readUInt16LE(bytes) {
-    return (bytes[1] << 8) | bytes[0];
-}
-
-function readD2DCommand(bytes) {
-    return ("0" + (bytes[1] & 0xff).toString(16)).slice(-2) + ("0" + (bytes[0] & 0xff).toString(16)).slice(-2);
 }
