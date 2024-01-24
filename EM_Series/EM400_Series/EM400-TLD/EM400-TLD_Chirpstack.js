@@ -1,7 +1,7 @@
 /**
  * Payload Decoder for Milesight Network Server
  *
- * Copyright 2023 Milesight IoT
+ * Copyright 2024 Milesight IoT
  *
  * @product EM400-TLD
  */

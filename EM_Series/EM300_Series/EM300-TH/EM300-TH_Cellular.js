@@ -1,7 +1,7 @@
 /**
  * Payload Decoder for NB-IoT Device
  *
- * Copyright 2023 Milesight IoT
+ * Copyright 2024 Milesight IoT
  *
  * @product EM300-TH (NB-IoT)
  */

@@ -1,7 +1,7 @@
 /**
  * Payload Decoder for Chirpstack v4
  *
- * Copyright 2023 Milesight IoT
+ * Copyright 2024 Milesight IoT
  *
  * @product AT101
  */
