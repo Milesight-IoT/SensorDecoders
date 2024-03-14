@@ -132,6 +132,14 @@ function decodeSensorData(bytes) {
             }
 
             decoded[ai_chn_name + "_alarm"] = buffer.readUInt8() === 1 ? "threshold alarm" : "threshold alarm release";
+
+            // pack
+            history.push(decoded);
+            if ("timestamp" in decoded && buffer.remaining()) {
+                decoded = { timestamp: decoded.timestamp };
+            } else {
+                decoded = {};
+            }
         }
         // ANALOG INPUT MUTATION ALARM
         else if (includes(ai_mutation_alarm_chns, channel_id) && channel_type === 0xf1) {
@@ -166,6 +174,14 @@ function decodeSensorData(bytes) {
             }
 
             decoded[ai_chn_name + "_alarm"] = buffer.readUInt8() === 0 ? "mutation alarm" : "unknown";
+
+            // pack
+            history.push(decoded);
+            if ("timestamp" in decoded && buffer.remaining()) {
+                decoded = { timestamp: decoded.timestamp };
+            } else {
+                decoded = {};
+            }
         }
         // ANALOG INPUT ERROR
         else if (includes(ai_error_chns, channel_id) && channel_type === 0xf1) {
@@ -210,6 +226,7 @@ function decodeSensorData(bytes) {
                     break;
                 case 0x01:
                     decoded[sdi_chn_name + "_error"] = "overload";
+                    break;
                 default:
                     decoded[sdi_chn_name + "_error"] = "unknown";
                     break;
@@ -274,6 +291,14 @@ function decodeSensorData(bytes) {
             }
 
             decoded[modbus_chn_name + "_alarm"] = buffer.readUInt8() === 1 ? "threshold alarm" : "threshold alarm release";
+
+            // pack
+            history.push(decoded);
+            if ("timestamp" in decoded && buffer.remaining()) {
+                decoded = { timestamp: decoded.timestamp };
+            } else {
+                decoded = {};
+            }
         }
         // MODBUS MUTATION ALARM
         else if (channel_id === 0x99 && channel_type === 0xf3) {
@@ -309,6 +334,14 @@ function decodeSensorData(bytes) {
             }
 
             decoded[modbus_chn_name + "_alarm"] = buffer.readInt8() === 0 ? "mutation alarm" : "unknown";
+
+            // pack
+            history.push(decoded);
+            if ("timestamp" in decoded && buffer.remaining()) {
+                decoded = { timestamp: decoded.timestamp };
+            } else {
+                decoded = {};
+            }
         }
         // MODBUS ERROR
         else if (channel_id === 0xb9 && channel_type === 0xf3) {
@@ -332,7 +365,9 @@ function decodeSensorData(bytes) {
         }
     }
 
-    history.push(decoded);
+    if (Object.keys(decoded).length !== 0) {
+        history.push(decoded);
+    }
     return history;
 }
 
