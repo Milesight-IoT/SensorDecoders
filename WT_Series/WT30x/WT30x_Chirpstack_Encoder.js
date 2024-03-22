@@ -3,7 +3,7 @@
  *
  * Copyright 2024 Milesight IoT
  *
- * @product WT101
+ * @product WT301
  */
 function Encode(fPort, obj, variables) {
     return milesight(obj);
