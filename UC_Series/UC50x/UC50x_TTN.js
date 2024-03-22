@@ -36,6 +36,12 @@ function milesight(bytes) {
             var gpio_channel_name = "counter_" + (channel_id - gpio_chns[0] + 1);
             decoded[gpio_channel_name] = readUInt32LE(bytes.slice(i, i + 4));
             i += 4;
+        } else if (channel_id === 0xff && channel_type === 0x14) {
+            var channel = bytes[i++];
+            var chn_name = "adc_" + (channel >>> 4) + "_type";
+            var chn_value = (channel & 0x0f) === 0 ? "current" : "voltage";
+            decoded[chn_name] = chn_value;
+            i += 1;
         }
         // ADC (UC50x v2)
         // firmware version 1.10 and below and UC50x V1, change 1000 to 100.
@@ -68,7 +74,7 @@ function milesight(bytes) {
             var package_type = bytes[i++];
             var data_type = package_type & 0x07; // 0x07 = 0b00000111
             var date_length = package_type >> 3;
-            var chn = "modbus_chn_" + modbus_chn_id;
+            var chn = "chn_" + modbus_chn_id;
             switch (data_type) {
                 case 0:
                     decoded[chn] = bytes[i] ? "on" : "off";
