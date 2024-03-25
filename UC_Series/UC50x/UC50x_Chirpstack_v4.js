@@ -37,8 +37,10 @@ function milesight(bytes) {
             var gpio_channel_name = "counter_" + (channel_id - gpio_chns[0] + 1);
             decoded[gpio_channel_name] = readUInt32LE(bytes.slice(i, i + 4));
             i += 4;
-        } else if (channel_id === 0xff && channel_type === 0x14) {
-            var channel = bytes[i++];
+        }
+        // ANALOG INPUT TYPE
+        else if (channel_id === 0xff && channel_type === 0x14) {
+            var channel = bytes[i];
             var chn_name = "adc_" + (channel >>> 4) + "_type";
             var chn_value = (channel & 0x0f) === 0 ? "current" : "voltage";
             decoded[chn_name] = chn_value;
