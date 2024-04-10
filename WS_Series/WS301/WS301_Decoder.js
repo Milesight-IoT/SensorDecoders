@@ -1,15 +1,27 @@
 /**
- * Payload Decoder for The Things Network
+ * Payload Decoder
  *
  * Copyright 2024 Milesight IoT
  *
  * @product WS301
  */
-function Decode(fPort, bytes) {
-    return milesight(bytes);
+// Chirpstack v4
+function decodeUplink(input) {
+    var decoded = milesightDeviceDecode(input.bytes);
+    return { data: decoded };
 }
 
-function milesight(bytes) {
+// Chirpstack v3
+function Decode(fPort, bytes) {
+    return milesightDeviceDecode(bytes);
+}
+
+// The Things Network
+function Decoder(bytes, port) {
+    return milesightDeviceDecode(bytes);
+}
+
+function milesightDeviceDecode(bytes) {
     var decoded = {};
 
     for (var i = 0; i < bytes.length; ) {
