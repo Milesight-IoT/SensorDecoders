@@ -78,7 +78,7 @@ function decodeSensorData(bytes) {
         }
         // THRESHOLD ALARM
         else if (channel_id === 0xff && channel_type === 0x0d) {
-            decoded.threshold = ["disable", "below", "above", "in", "outer"](buffer.readUInt8() & 0x07);
+            decoded.threshold = ["disable", "below", "above", "in", "outer"][(buffer.readUInt8() & 0x07)];
             decoded.threshold_below = buffer.readInt16LE() / 10;
             decoded.threshold_above = buffer.readInt16LE() / 10;
             decoded.threshold_current = buffer.readInt16LE() / 10;
