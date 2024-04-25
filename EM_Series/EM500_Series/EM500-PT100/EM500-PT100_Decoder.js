@@ -47,7 +47,7 @@ function milesightDeviceDecode(bytes) {
         else if (channel_id === 0x83 && channel_type === 0xd7) {
             decoded.temperature = readInt16LE(bytes.slice(i, i + 2)) / 10;
             decoded.temperature_change = readInt16LE(bytes.slice(i + 2, i + 4)) / 10;
-            decoded.temperature_alarm = readTempatureAlarm(bytes[i + 4]);
+            decoded.temperature_alarm = readTemperatureAlarm(bytes[i + 4]);
             i += 5;
         }
         // HISTROY DATA
@@ -85,7 +85,7 @@ function readUInt32LE(bytes) {
     return value & 0xffffffff;
 }
 
-function readTempatureAlarm(type) {
+function readTemperatureAlarm(type) {
     switch (type) {
         case 0:
             return "threshold alarm";

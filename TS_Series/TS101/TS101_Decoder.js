@@ -41,14 +41,14 @@ function milesightDeviceDecode(bytes) {
         // TEMPERATURE ALARM
         else if (channel_id === 0x83 && channel_type === 0x67) {
             decoded.temperature = readInt16LE(bytes.slice(i, i + 2)) / 10;
-            decoded.temperature_alarm = readTempatureAlarm(bytes[i + 2]);
+            decoded.temperature_alarm = readTemperatureAlarm(bytes[i + 2]);
             i += 3;
         }
         // TEMPERATURE MUTATION ALERT
         else if (channel_id === 0x93 && channel_type === 0xd7) {
             decoded.temperature = readInt16LE(bytes.slice(i, i + 2)) / 10;
             decoded.temperature_change = readInt16LE(bytes.slice(i + 2, i + 4)) / 100;
-            decoded.temperature_alarm = readTempatureAlarm(bytes[i + 4]);
+            decoded.temperature_alarm = readTemperatureAlarm(bytes[i + 4]);
             i += 5;
         }
         // HISTORY
@@ -83,14 +83,14 @@ function readUInt32LE(bytes) {
     return (value & 0xffffffff) >>> 0;
 }
 
-function readTempatureAlarm(type) {
+function readTemperatureAlarm(type) {
     switch (type) {
         case 0:
-            return "normal";
+            return "threshold alarm release";
         case 1:
-            return "threshold";
+            return "threshold alarm";
         case 2:
-            return "mutation";
+            return "mutation alarm";
         default:
             return "unkown";
     }
