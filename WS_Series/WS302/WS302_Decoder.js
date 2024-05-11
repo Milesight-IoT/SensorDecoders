@@ -35,26 +35,21 @@ function milesightDeviceDecode(bytes) {
         }
         // SOUND
         else if (channel_id === 0x05 && channel_type === 0x5b) {
-            decoded.freq_weight = readFrequecyWeightType(bytes[i]);
-            decoded.time_weight = readTimeWeightType(bytes[i]);
-            decoded.la = readUInt16LE(bytes.slice(i + 1, i + 3)) / 10;
-            decoded.laeq = readUInt16LE(bytes.slice(i + 3, i + 5)) / 10;
-            decoded.lamax = readUInt16LE(bytes.slice(i + 5, i + 7)) / 10;
+            var weight = bytes[i];
+            var freq_weight = readFrequencyWeightType(weight & 0x03);
+            var time_weight = readTimeWeightType((weight >> 2) & 0x03);
+
+            sound_level_name = "L" + freq_weight + time_weight;
+            sound_level_eq_name = "L" + freq_weight + "eq";
+            sound_level_max_name = "L" + freq_weight + time_weight + "max";
+            decoded[sound_level_name] = readUInt16LE(bytes.slice(i + 1, i + 3)) / 10;
+            decoded[sound_level_eq_name] = readUInt16LE(bytes.slice(i + 3, i + 5)) / 10;
+            decoded[sound_level_max_name] = readUInt16LE(bytes.slice(i + 5, i + 7)) / 10;
             i += 7;
         }
         // LoRaWAN Class Type
         else if (channel_id === 0xff && channel_type === 0x0f) {
-            switch (bytes[i]) {
-                case 0:
-                    decoded.class_type = "class-a";
-                    break;
-                case 1:
-                    decoded.class_type = "class-b";
-                    break;
-                case 2:
-                    decoded.class_type = "class-c";
-                    break;
-            }
+            decoded.lorawan_class = readLoRaWANClass(bytes[i]);
             i += 1;
         } else {
             break;
@@ -64,42 +59,26 @@ function milesightDeviceDecode(bytes) {
     return decoded;
 }
 
-function readFrequecyWeightType(bytes) {
-    var type = "";
-
-    var bits = bytes & 0x03;
-    switch (bits) {
+function readFrequencyWeightType(type) {
+    switch (type) {
         case 0:
-            type = "Z";
-            break;
+            return "Z";
         case 1:
-            type = "A";
-            break;
+            return "A";
         case 2:
-            type = "C";
-            break;
+            return "C";
     }
-
-    return type;
 }
 
-function readTimeWeightType(bytes) {
-    var type = "";
-
-    var bits = (bytes[0] >> 2) & 0x03;
-    switch (bits) {
-        case 0:
-            type = "impulse";
-            break;
-        case 1:
-            type = "fast";
-            break;
-        case 2:
-            type = "slow";
-            break;
+function readTimeWeightType(type) {
+    switch (type) {
+        case 0: // impulse time weighting
+            return "I";
+        case 1: // fast time weighting
+            return "F";
+        case 2: // slow time weighting
+            return "S";
     }
-
-    return type;
 }
 
 function readUInt16LE(bytes) {
@@ -110,4 +89,17 @@ function readUInt16LE(bytes) {
 function readInt16LE(bytes) {
     var ref = readUInt16LE(bytes);
     return ref > 0x7fff ? ref - 0x10000 : ref;
+}
+
+function readLoRaWANClass(type) {
+    switch (type) {
+        case 0:
+            return "ClassA";
+        case 1:
+            return "ClassB";
+        case 2:
+            return "ClassC";
+        case 3:
+            return "ClassCtoB";
+    }
 }
