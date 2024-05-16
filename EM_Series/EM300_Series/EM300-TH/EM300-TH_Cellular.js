@@ -14,7 +14,7 @@ function decodePayload(bytes) {
     payload.length = buffer.readUInt16BE();
     payload.flag = buffer.readUInt8();
     payload.frameCnt = buffer.readUInt16BE();
-    payload.protocaolVersion = buffer.readUInt8();
+    payload.protocolVersion = buffer.readUInt8();
     payload.firmwareVersion = buffer.readAscii(4);
     payload.hardwareVersion = buffer.readAscii(4);
     payload.sn = buffer.readAscii(16);

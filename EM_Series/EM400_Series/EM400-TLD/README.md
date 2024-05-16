@@ -8,15 +8,15 @@ For more detailed information, please visit [milesight official website](https:/
 
 ## Payload Definition
 
-|        CHANNEL        |  ID  | TYPE | LENGTH | DESCRIPTION                                           |
-| :-------------------: | :--: | :--: | :----: | ----------------------------------------------------- |
-|        Battery        | 0x01 | 0x75 |   1    | battery(1B)<br/>battery, unit: %                      |
-|      Temperature      | 0x03 | 0x67 |   2    | temperature(2B)<br/>temperature, unit: ℃              |
-|       Distance        | 0x04 | 0x82 |   2    | distance(2B)<br/>distance, unit: mm                   |
-|       Position        | 0x05 | 0x00 |   1    | position(1B)<br/>position, values(0: normal, 1: tilt) |
-| Location<br/>(NB-IoT) | 0x06 | 0x88 |   9    | latitude(4B) + longitude(4B) + motion_status(1B)      |
-|  Temperature Anormal  | 0x83 | 0x67 |   3    | temperature(2B) + status(1B)                          |
-|    Distance Alarm     | 0x84 | 0x82 |   3    | distance(2B) + status(1B)                             |
+|        CHANNEL         |  ID  | TYPE | LENGTH | DESCRIPTION                                            |
+| :--------------------: | :--: | :--: | :----: | ------------------------------------------------------ |
+|        Battery         | 0x01 | 0x75 |   1    | battery(1B)<br />battery, unit: %                      |
+|      Temperature       | 0x03 | 0x67 |   2    | temperature(2B)<br />temperature, unit: ℃              |
+|        Distance        | 0x04 | 0x82 |   2    | distance(2B)<br />distance, unit: mm                   |
+|        Position        | 0x05 | 0x00 |   1    | position(1B)<br />position, values(0: normal, 1: tilt) |
+| Location<br />(NB-IoT) | 0x06 | 0x88 |   9    | latitude(4B) + longitude(4B) + motion_status(1B)       |
+|  Temperature Abnormal  | 0x83 | 0x67 |   3    | temperature(2B) + status(1B)                           |
+|     Distance Alarm     | 0x84 | 0x82 |   3    | distance(2B) + status(1B)                              |
 
 ### Motion Status Definition
 
@@ -69,7 +69,7 @@ For more detailed information, please visit [milesight official website](https:/
     "length": 95,
     "flag": 0,
     "frameCnt": 0,
-    "protocaolVersion": 1,
+    "protocolVersion": 1,
     "firmwareVersion": "0101",
     "hardwareVersion": "0110",
     "sn": "6749D19054690031",

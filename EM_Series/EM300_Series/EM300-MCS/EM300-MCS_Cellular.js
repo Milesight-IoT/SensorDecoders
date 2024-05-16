@@ -14,7 +14,7 @@ function decodePayload(bytes) {
     payload.length = buffer.readUInt16BE();
     payload.flag = buffer.readUInt8();
     payload.frameCnt = buffer.readUInt16BE();
-    payload.protocaolVersion = buffer.readUInt8();
+    payload.protocolVersion = buffer.readUInt8();
     payload.firmwareVersion = buffer.readAscii(4);
     payload.hardwareVersion = buffer.readAscii(4);
     payload.sn = buffer.readAscii(16);
@@ -31,19 +31,19 @@ function decodePayload(bytes) {
 function decodeSensorData(bytes) {
     var decoded = {};
     var history = [];
-    var lastid = lastid || 0;
+    var last_id = last_id || 0;
     var buffer = new Buffer(bytes);
     while (buffer.remaining() > 0) {
         var channel_id = buffer.readUInt8();
         var channel_type = buffer.readUInt8();
 
         // check if the channel id is continuous
-        if (lastid - (channel_id & 0x0f) >= 0) {
+        if (last_id - (channel_id & 0x0f) >= 0) {
             history.push(decoded);
             decoded = {};
-            lastid = 0;
+            last_id = 0;
         }
-        lastid = channel_id & 0x0f;
+        last_id = channel_id & 0x0f;
 
         // BATTERY
         if (channel_id === 0x01 && channel_type === 0x75) {
