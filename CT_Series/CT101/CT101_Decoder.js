@@ -67,6 +67,18 @@ function milesightDeviceDecode(bytes) {
             }
             i += 2;
         }
+        // TEMPERATURE
+        else if (channel_id === 0x09 && channel_type === 0x67) {
+            var temperature_value = readUInt16LE(bytes.slice(i, i + 2));
+            if (temperature_value === 0xfffd) {
+                decoded.temperature_exception = "over range alarm";
+            } else if (temperature_value === 0xffff) {
+                decoded.temperature_exception = "read failed";
+            } else {
+                decoded.temperature = readInt16LE(bytes.slice(i, i + 2)) / 10;
+            }
+            i += 2;
+        }
         // CURRENT ALARM
         else if (channel_id === 0x84 && channel_type === 0x98) {
             decoded.current_max = readUInt16LE(bytes.slice(i, i + 2)) / 100;
@@ -74,6 +86,12 @@ function milesightDeviceDecode(bytes) {
             decoded.current = readUInt16LE(bytes.slice(i + 4, i + 6)) / 100;
             decoded.alarm = readCurrentAlarm(bytes[i + 6]);
             i += 7;
+        }
+        // TEMPERATURE ALARM
+        else if (channel_id === 0x89 && channel_type === 0x67) {
+            decoded.temperature = readInt16LE(bytes.slice(i, i + 2)) / 10;
+            decoded.temperature_alarm = readTemperatureAlarm(bytes[i + 2]);
+            i += 3;
         } else {
             break;
         }
