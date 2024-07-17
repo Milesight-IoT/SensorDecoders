@@ -3,7 +3,7 @@
  *
  * Copyright 2024 Milesight IoT
  *
- * @product VS133
+ * @product VS133 / VS135
  */
 // Chirpstack v4
 function decodeUplink(input) {
