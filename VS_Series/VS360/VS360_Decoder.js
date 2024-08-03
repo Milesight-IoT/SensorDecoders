@@ -218,11 +218,11 @@ function readAlarmType(type) {
 function readEventType(type) {
     switch (type) {
         case 0x00:
-            return "Counter Exception";
+            return "Counting Anomaly";
         case 0x01:
-            return "Node Without Response";
+            return "Node Device Without Response";
         case 0x02:
-            return "Unaligned";
+            return "Devices Misaligned";
         default:
             return "Unknown";
     }
