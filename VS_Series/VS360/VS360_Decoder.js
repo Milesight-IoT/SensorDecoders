@@ -30,7 +30,7 @@ function milesightDeviceDecode(bytes) {
 
         // DEVICE STATUS
         if (channel_id === 0xff && channel_type === 0x0b) {
-            decoded.device_status = bytes[i];
+            decoded.device_status = "on";
             i += 1;
         }
         // IPSO VERSION
