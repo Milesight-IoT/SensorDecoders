@@ -7,21 +7,22 @@
  */
 // Chirpstack v4
 function encodeDownlink(input) {
-    var encoded = milesightDeviceEncode(input.data);
+    var encoded = milesightDeviceEncoder(input.data);
     return { bytes: encoded };
 }
 
 // Chirpstack v3
 function Encode(fPort, obj) {
-    return milesightDeviceEncode(obj);
+    var encoded = milesightDeviceEncoder(obj);
+    return encoded;
 }
 
 // The Things Network
 function Encoder(obj, port) {
-    return milesightDeviceEncode(obj);
+    return milesightDeviceEncoder(obj);
 }
 
-function milesightDeviceEncode(payload) {
+function milesightDeviceEncoder(payload) {
     var encoded = [];
 
     if ("reboot" in payload) {
@@ -64,13 +65,13 @@ function milesightDeviceEncode(payload) {
         encoded = encoded.concat(setHumidityCalibration(payload.humidity_calibration.enable, payload.humidity_calibration.humidity));
     }
     if ("temperature_tolerance" in payload) {
-        encoded = encoded.concat(setTemperatureTolerance(payload.temperature_tolerance.temperature_error, payload.temperature_tolerance.auto_control_temperature_error));
+        encoded = encoded.concat(setTemperatureTolerance(payload.temperature_tolerance.target_temperature_tolerance, payload.temperature_tolerance.auto_temperature_tolerance));
     }
     if ("temperature_level_up_condition" in payload) {
         encoded = encoded.concat(setTemperatureLevelUpCondition(payload.temperature_level_up_condition.type, payload.temperature_level_up_condition.time, payload.temperature_level_up_condition.temperature_error));
     }
-    if ("outside_temperature_control_config" in payload) {
-        encoded = encoded.concat(setOutsideTemperatureControl(payload.outside_temperature_control_config.enable, payload.outside_temperature_control_config.timeout));
+    if ("outside_temperature_control" in payload) {
+        encoded = encoded.concat(setOutsideTemperatureControl(payload.outside_temperature_control.enable, payload.outside_temperature_control.timeout));
     }
     if ("outside_temperature" in payload) {
         encoded = encoded.concat(setOutsideTemperature(payload.outside_temperature));
@@ -144,15 +145,20 @@ function milesightDeviceEncode(payload) {
             encoded = encoded.concat(setTemperatureAlarmConfig(config.alarm_type, config.condition, config.min, config.max, config.lock_time, config.continue_time));
         }
     }
+    if ("temperature_alarm_config" in payload) {
+        encoded = encoded.concat(setTemperatureAlarmConfig(payload.temperature_alarm_config.alarm_type, payload.temperature_alarm_config.condition, payload.temperature_alarm_config.min, payload.temperature_alarm_config.max, payload.temperature_alarm_config.lock_time, payload.temperature_alarm_config.continue_time));
+    }
     if ("control_permissions" in payload) {
         encoded = encoded.concat(setControlPermissions(payload.control_permissions));
     }
-
     if ("offline_control_mode" in payload) {
         encoded = encoded.concat(setOfflineControlMode(payload.offline_control_mode));
     }
     if ("wires_relay_config" in payload) {
         encoded = encoded.concat(setWiresRelayConfig(payload.wires_relay_config));
+    }
+    if ("screen_display_mode" in payload) {
+        encoded = encoded.concat(setScreenDisplayMode(payload.screen_display_mode));
     }
 
     return encoded;
@@ -160,8 +166,8 @@ function milesightDeviceEncode(payload) {
 
 /**
  * reboot device
- * @param {boolean} reboot
- * @example payload: { "reboot": 1 } output: FF10FF
+ * @param {number} reboot values: (0: "no", 1: "yes")
+ * @example { "reboot": 1 }
  */
 function reboot(reboot) {
     var reboot_values = [0, 1];
@@ -177,8 +183,8 @@ function reboot(reboot) {
 
 /**
  * report device status
- * @param {string} report_status values: (0: "plan", 1: "periodic")
- * @example payload: { "report_status": 1 } output: FF2801
+ * @param {number} report_status values: (0: "plan", 1: "periodic")
+ * @example { "report_status": 1 }
  */
 function reportStatus(report_status) {
     var report_status_values = [0, 1];
@@ -195,12 +201,15 @@ function reportStatus(report_status) {
 
 /**
  * set report interval
- * @param {number} report_interval unit: minute
+ * @param {number} report_interval unit: minute, range: [1, 1440]
  * @example { "report_interval": 20 }
  */
 function setReportInterval(report_interval) {
     if (typeof report_interval !== "number") {
         throw new Error("report_interval must be a number");
+    }
+    if (report_interval < 1 || report_interval > 1440) {
+        throw new Error("report_interval must be in range [1, 1440]");
     }
 
     var buffer = new Buffer(5);
@@ -213,12 +222,15 @@ function setReportInterval(report_interval) {
 
 /**
  * set collection interval
- * @param {number} collection_interval unit: second
- * @example payload: { "collection_interval": 300 } output: FF022C01
+ * @param {number} collection_interval unit: second, range: [10, 60]
+ * @example { "collection_interval": 300 }
  */
 function setCollectionInterval(collection_interval) {
     if (typeof collection_interval !== "number") {
         throw new Error("collection_interval must be a number");
+    }
+    if (collection_interval < 10 || collection_interval > 60) {
+        throw new Error("collection_interval must be in range [10, 60]");
     }
 
     var buffer = new Buffer(4);
@@ -230,7 +242,7 @@ function setCollectionInterval(collection_interval) {
 
 /**
  * sync time
- * @param {boolean} sync_time
+ * @param {number} sync_time values：(0: "no", 1: "yes")
  * @example { "sync_time": 1 }
  */
 function syncTime(sync_time) {
@@ -248,8 +260,8 @@ function syncTime(sync_time) {
 /**
  * set timezone
  * @param {number} timezone
- * @example payload: { "timezone": 8 } output: FFBDE001
- * @example payload: { "timezone": -4 } output: FFBD10FF
+ * @example { "timezone": 8 }
+ * @example { "timezone": -4 }
  */
 function setTimezone(timezone) {
     if (typeof timezone !== "number") {
@@ -265,7 +277,7 @@ function setTimezone(timezone) {
 
 /**
  * set daylight saving time
- * @param {boolean} enable
+ * @param {number} enable
  * @param {number} offset, unit: minute
  * @param {object} start_time
  * @param {number} start_time.month, range: [1, 12]
@@ -304,34 +316,34 @@ function setDaylightSavingTime(enable, offset, start_time, end_time) {
 
 /**
  * set temperature control enable
- * @param {boolean} enable values: (0: "disable", 1: "enable")
- * @example { "temperature_control": {"enable": 1 } }
+ * @param {number} enable values: (0: "disable", 1: "enable")
+ * @example { "temperature_control_enable": 1 }
  */
-function setTemperatureControlEnable(enable) {
+function setTemperatureControlEnable(temperature_control_enable) {
     var temperature_control_enable_values = [0, 1];
-    if (temperature_control_enable_values.indexOf(enable) === -1) {
-        throw new Error("temperature_control.enable must be one of " + temperature_control_enable_values.join(", "));
+    if (temperature_control_enable_values.indexOf(temperature_control_enable) === -1) {
+        throw new Error("temperature_control_enable must be one of " + temperature_control_enable_values.join(", "));
     }
 
     var buffer = new Buffer(3);
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0xc5);
-    buffer.writeUInt8(enable);
+    buffer.writeUInt8(temperature_control_enable);
     return buffer.toBytes();
 }
 
 /**
  * set temperature control
- * @param {string} mode values: (0: "heat", 1: "em heat", 2: "cool", 3: "auto")
- * @param {number} temperature unit: celsius
+ * @param {string} temperature_control_mode values: (0: "heat", 1: "em heat", 2: "cool", 3: "auto")
+ * @param {number} temperature_target unit: celsius
  * @param {string} temperature_unit values: (0: "celsius", 1: "fahrenheit")
- * @example payload: { "temperature_control": { "mode": 2, "temperature": 25 }, "temperature_unit": 0 } output: FFB70219
- * @example payload: { "temperature_control": { "mode": 2, "temperature": 77 }, "temperature_unit": 1 } output: FFB701CD
+ * @example { "temperature_control_mode": 2, "temperature_target": 25 , "temperature_unit": 0 }
+ * @example { "temperature_control_mode": 2, "temperature_target": 77 , "temperature_unit": 1 }
  */
-function setTemperatureControl(mode, temperature_target, temperature_unit) {
+function setTemperatureControl(temperature_control_mode, temperature_target, temperature_unit) {
     var temperature_control_mode_values = [0, 1, 2, 3];
-    if (temperature_control_mode_values.indexOf(mode) === -1) {
-        throw new Error("mode must be one of " + temperature_control_mode_values.join(", "));
+    if (temperature_control_mode_values.indexOf(temperature_control_mode) === -1) {
+        throw new Error("temperature_control_mode must be one of " + temperature_control_mode_values.join(", "));
     }
     if (typeof temperature_target !== "number") {
         throw new Error("temperature_target must be a number");
@@ -346,13 +358,13 @@ function setTemperatureControl(mode, temperature_target, temperature_unit) {
     var buffer = new Buffer(4);
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0xb7);
-    buffer.writeUInt8(temperature_control_mode_values.indexOf(mode));
+    buffer.writeUInt8(temperature_control_mode);
     buffer.writeUInt8(t);
     return buffer.toBytes();
 }
 
 /**
- * @param {boolean} enable
+ * @param {number} enable
  * @param {number} temperature, unit: celsius
  * @example { "temperature_calibration": { "enable": 1, "temperature": 25 } }
  */
@@ -374,9 +386,11 @@ function setTemperatureCalibration(enable, temperature) {
 }
 
 /**
- *
+ * set humidity calibration
  * @param {number} enable values: (0: disable, 1: enable)
  * @param {number} humidity
+ * @example { "humidity_calibration": { "enable": 1, "humidity": 50 } }
+ * @since v1.3
  */
 function setHumidityCalibration(enable, humidity) {
     var humidity_calibrate_enable_values = [0, 1];
@@ -397,27 +411,28 @@ function setHumidityCalibration(enable, humidity) {
 
 /**
  * set temperature tolerance
- * @param {number} temperature_error
- * @param {number} auto_control_temperature_error
- * @example { "temperature_tolerance": {"temperature_error": 1, "auto_control_temperature_error": 1 }}
+ * @param {number} target_temperature_tolerance
+ * @param {number} auto_temperature_tolerance
+ * @example { "temperature_tolerance": {"target_temperature_tolerance": 1, "auto_temperature_tolerance": 1 }}
  */
-function setTemperatureTolerance(temperature_error, auto_control_temperature_error) {
-    if (typeof temperature_error !== "number") {
-        throw new Error("temperature_tolerance.temperature_error must be a number");
+function setTemperatureTolerance(target_temperature_tolerance, auto_temperature_tolerance) {
+    if (typeof target_temperature_tolerance !== "number") {
+        throw new Error("temperature_tolerance.target_temperature_tolerance must be a number");
     }
-    if (typeof auto_control_temperature_error !== "number") {
-        throw new Error("temperature_tolerance.auto_control_temperature_error must be a number");
+    if (typeof auto_temperature_tolerance !== "number") {
+        throw new Error("temperature_tolerance.auto_temperature_tolerance must be a number");
     }
 
     var buffer = new Buffer(4);
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0xb8);
-    buffer.writeUInt8(temperature_error * 10);
-    buffer.writeUInt8(auto_control_temperature_error * 10);
+    buffer.writeUInt8(target_temperature_tolerance * 10);
+    buffer.writeUInt8(auto_temperature_tolerance * 10);
     return buffer.toBytes();
 }
 
 /**
+ * set temperature level up condition
  * @param {string} type values: (0: "heat", 1: "cool")
  * @param {number} time unit: minute
  * @param {number} temperature_error unit: celsius
@@ -438,16 +453,18 @@ function setTemperatureLevelUpCondition(type, time, temperature_error) {
     var buffer = new Buffer(5);
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0xb9);
-    buffer.writeUInt8(temperature_level_up_condition_type_values.indexOf(type));
+    buffer.writeUInt8(type);
     buffer.writeUInt8(time);
     buffer.writeUInt8(temperature_error * 10);
     return buffer.toBytes();
 }
 
 /**
- *
+ * set temperature control enable
  * @param {number} temperature_control_mode values: (0: heat, 1: em heat, 2: cool, 3: auto)
  * @param {number} temperature_target unit: celsius
+ * @example { "temperature_control_mode": 2, "temperature_target": 25 }
+ * @since v1.3
  */
 function setTemperatureTarget(temperature_control_mode, temperature_target) {
     var temperature_mode_values = [0, 1, 2, 3];
@@ -466,6 +483,12 @@ function setTemperatureTarget(temperature_control_mode, temperature_target) {
     return buffer.toBytes();
 }
 
+/**
+ * set temperature control mode
+ * @param {number} temperature_control_mode values: (0: heat, 1: em heat, 2: cool, 3: auto)
+ * @example { "temperature_control_mode": 2 }
+ * @since v1.3
+ */
 function setTemperatureControlMode(temperature_control_mode) {
     var temperature_mode_values = [0, 1, 2, 3];
     if (temperature_mode_values.indexOf(temperature_control_mode) === -1) {
@@ -480,17 +503,21 @@ function setTemperatureControlMode(temperature_control_mode) {
 }
 
 /**
- * @param {boolean} enable
- * @param {number} timeout, unit: minute
- * @example { "outside_temperature_control_config": { "enable": 1, "timeout": 10 } }
+ * set outside temperature control
+ * @param {number} enable
+ * @param {number} timeout, unit: minute, range: [3, 60]
+ * @example { "outside_temperature_control": { "enable": 1, "timeout": 10 } }
  */
 function setOutsideTemperatureControl(enable, timeout) {
     var outside_temperature_control_enable_values = [0, 1];
     if (outside_temperature_control_enable_values.indexOf(enable) === -1) {
-        throw new Error("outside_temperature_control_config.enable must be one of " + outside_temperature_control_enable_values.join(", "));
+        throw new Error("outside_temperature_control.enable must be one of " + outside_temperature_control_enable_values.join(", "));
     }
     if (enable && typeof timeout !== "number") {
-        throw new Error("outside_temperature_control_config.timeout must be a number");
+        throw new Error("outside_temperature_control.timeout must be a number");
+    }
+    if (enable && (timeout < 3 || timeout > 60)) {
+        throw new Error("outside_temperature_control.timeout must be in range [3, 60]");
     }
 
     var buffer = new Buffer(4);
@@ -502,6 +529,7 @@ function setOutsideTemperatureControl(enable, timeout) {
 }
 
 /**
+ * set outside temperature
  * @param {number} outside_temperature, unit: celsius
  * @example { "outside_temperature": 25 }
  */
@@ -513,15 +541,16 @@ function setOutsideTemperature(outside_temperature) {
     var buffer = new Buffer(4);
     buffer.writeUInt8(0x03);
     buffer.writeInt16LE(outside_temperature * 10);
-    buffer.writeUInt8(0xff);
+    buffer.writeUInt8(0x00);
     return buffer.toBytes();
 }
 
 /**
- *
+ * set humidity range
  * @param {number} min range: [0, 100]
- * @param {*} max range: [0, 100]
+ * @param {number} max range: [0, 100]
  * @example { "humidity_range": { "min": 20, "max": 80 } }
+ * @since v1.3
  */
 function setHumidityRange(min, max) {
     if (typeof min !== "number") {
@@ -529,6 +558,15 @@ function setHumidityRange(min, max) {
     }
     if (typeof max !== "number") {
         throw new Error("humidity_range.max must be a number");
+    }
+    if (min < 0 || min > 100) {
+        throw new Error("humidity_range.min must be in range [0, 100]");
+    }
+    if (max < 0 || max > 100) {
+        throw new Error("humidity_range.max must be in range [0, 100]");
+    }
+    if (min > max) {
+        throw new Error("humidity_range.min must be less than humidity_range.max");
     }
 
     var buffer = new Buffer(4);
@@ -540,14 +578,16 @@ function setHumidityRange(min, max) {
 }
 
 /**
+ * set temperature dehumidify
  * @param {number} enable values: (0: disable, 1: enable)
- * @param {*} temperature_tolerance unit: celsius
- * @example payload: { "dehumidify": { "enable": 1, "temperature_tolerance": 1 } }
+ * @param {*} temperature_tolerance unit: celsius, range: [0.1, 5]
+ * @example { "temperature_dehumidify": { "enable": 1, "temperature_tolerance": 1 } }
+ * @since v1.3
  */
 function setTemperatureDehumidify(enable, temperature_tolerance) {
     var dehumidify_enable_values = [0, 1];
     if (dehumidify_enable_values.indexOf(enable) === -1) {
-        throw new Error("dehumidify.enable must be one of " + dehumidify_enable_values.join(", "));
+        throw new Error("temperature_dehumidify.enable must be one of " + dehumidify_enable_values.join(", "));
     }
     if (enable) {
         // default value
@@ -555,7 +595,10 @@ function setTemperatureDehumidify(enable, temperature_tolerance) {
             temperature_tolerance = 0xff;
         }
         if (typeof temperature_tolerance !== "number") {
-            throw new Error("dehumidify.temperature_tolerance must be a number");
+            throw new Error("temperature_dehumidify.temperature_tolerance must be a number");
+        }
+        if (temperature_tolerance !== 0xff && (temperature_tolerance < 0.1 || temperature_tolerance > 5)) {
+            throw new Error("temperature_dehumidify.temperature_tolerance must be in range [0.1, 5]");
         }
     }
 
@@ -568,10 +611,11 @@ function setTemperatureDehumidify(enable, temperature_tolerance) {
 }
 
 /**
- *
+ * set fan dehumidify
  * @param {number} enable values: (0: disable, 1: enable)
  * @param {number} execute_time range: [5, 55], unit: minute
- * @returns
+ * @example { "fan_dehumidify": { "enable": 1, "execute_time": 10 } }
+ * @since v1.3
  */
 function setFanDehumidify(enable, execute_time) {
     var fan_dehumidify_enable_values = [0, 1];
@@ -580,6 +624,9 @@ function setFanDehumidify(enable, execute_time) {
     }
     if (enable && typeof execute_time !== "number") {
         throw new Error("fan_dehumidify.execute_time must be a number");
+    }
+    if (enable && (execute_time < 5 || execute_time > 55)) {
+        throw new Error("fan_dehumidify.execute_time must be in range [5, 55]");
     }
 
     var buffer = new Buffer(4);
@@ -592,7 +639,7 @@ function setFanDehumidify(enable, execute_time) {
 
 /**
  * freeze protection configuration
- * @param {boolean} enable
+ * @param {number} enable
  * @param {number} temperature, unit: celsius
  * @example { "freeze_protection_config": { "enable": 1, "temperature": 10 } }
  */
@@ -626,15 +673,15 @@ function setFanMode(fan_mode) {
     var buffer = new Buffer(3);
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0xb6);
-    buffer.writeUInt8(fan_mode_values.indexOf(fan_mode));
+    buffer.writeUInt8(fan_mode);
     return buffer.toBytes();
 }
 
 /**
- *
+ * set fan mode with delay
  * @param {number} fan_delay_enable values: (0: disable, 1: enable)
  * @param {number} fan_delay_time unit: minute, range: [5, 55]
- * @returns
+ * @example { "fan_delay_enable": 1, "fan_delay_time": 10 }
  */
 function setFanModeWithDelay(fan_delay_enable, fan_delay_time) {
     var fan_delay_enable_values = [0, 1];
@@ -643,6 +690,9 @@ function setFanModeWithDelay(fan_delay_enable, fan_delay_time) {
     }
     if (fan_delay_enable && typeof fan_delay_time !== "number") {
         throw new Error("fan_delay_time must be a number");
+    }
+    if (fan_delay_enable && (fan_delay_time < 5 || fan_delay_time > 55)) {
+        throw new Error("fan_delay_time must be in range [5, 55]");
     }
 
     var buffer = new Buffer(4);
@@ -654,9 +704,10 @@ function setFanModeWithDelay(fan_delay_enable, fan_delay_time) {
 }
 
 /**
- *
+ * set fan execute time
  * @param {number} fan_execute_time range: [5,55], unit: minute
- * @returns
+ * @example { "fan_execute_time": 10 }
+ * @since v1.3
  */
 function setFanExecuteTime(fan_execute_time) {
     if (typeof fan_execute_time !== "number") {
@@ -687,17 +738,18 @@ function setPlanMode(plan_mode) {
     var buffer = new Buffer(3);
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0xc2);
-    buffer.writeUInt8(plan_mode_values.indexOf(plan_mode));
+    buffer.writeUInt8(plan_mode);
     return buffer.toBytes();
 }
+
 /**
  * set plan schedule
  * @param {string} type values: (0: "wake", 1: "away", 2: "home", 3: "sleep")
- * @param {number} id range: [0, 15]
- * @param {boolean} enable
- * @param {Array} week_recycle values: (0: "mon", 1: "tues", 2: "wed", 3: "thur", 4: "fri", 5: "sat", 6: "sun")
+ * @param {number} id range: [1, 16]
+ * @param {number} enable
+ * @param {Array} week_recycle values: (1: "mon", 2: "tues", 3: "wed", 4: "thur", 5: "fri", 6: "sat", 7: "sun")
  * @param {string} time
- * @example { "plan_schedule": [{ "type": "wake", "id": 0, "enable": true, "repeat": false, "time": "04:00" }] }
+ * @example { "plan_schedule": [{ "type": 0, "id": 0, "enable": 1, "week_recycle": [1, 3], "time": "04:00" }] }
  */
 function setPlanSchedule(type, id, enable, week_recycle, time) {
     var plan_schedule_type_values = [0, 1, 2, 3];
@@ -707,8 +759,8 @@ function setPlanSchedule(type, id, enable, week_recycle, time) {
     if (typeof id !== "number") {
         throw new Error("plan_schedule[].id must be a number");
     }
-    if (id < 0 || id > 15) {
-        throw new Error("id must be in range [0, 15]");
+    if (id < 1 || id > 16) {
+        throw new Error("plan_schedule[].id must be in range [1, 16]");
     }
     var plan_schedule_enable_values = [0, 1];
     if (plan_schedule_enable_values.indexOf(enable) === -1) {
@@ -716,13 +768,13 @@ function setPlanSchedule(type, id, enable, week_recycle, time) {
     }
     var plan_schedule_week_recycle_values = [0, 1, 2, 3, 4, 5, 6, 7];
     if (Array.isArray(week_recycle) === false) {
-        throw new Error("week_recycle must be a array");
+        throw new Error("plan_schedule[].week_recycle must be a array");
     }
     var days = 0x00;
     for (var i = 0; i < week_recycle.length; i++) {
         var day = week_recycle[i];
         if (plan_schedule_week_recycle_values.indexOf(day) === -1) {
-            throw new Error("week_recycle must be one of " + plan_schedule_week_recycle_values.join(", "));
+            throw new Error("plan_schedule[].week_recycle must be one of " + plan_schedule_week_recycle_values.join(", "));
         }
         offset = plan_schedule_week_recycle_values.indexOf(day);
         days |= 1 << offset;
@@ -732,7 +784,7 @@ function setPlanSchedule(type, id, enable, week_recycle, time) {
     var buffer = new Buffer(8);
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0xc9);
-    buffer.writeUInt8(plan_schedule_type_values.indexOf(type));
+    buffer.writeUInt8(type);
     buffer.writeUInt8(id - 1);
     buffer.writeUInt8(enable);
     buffer.writeUInt8(days);
@@ -748,8 +800,8 @@ function setPlanSchedule(type, id, enable, week_recycle, time) {
  * @param {number} temperature_target
  * @param {number} temperature_error
  * @param {string} temperature_unit values: (0: "celsius", 1: "fahrenheit")
- * @example payload: { "plan_config": { "type": 0, "temperature_control_mode": 2, "fan_mode": 0, "temperature_target": 20, "temperature_error": 1 }, "temperature_unit": 0}, output: FFC8000200140A
- * @example payload: { "plan_config": { "type": 0, "temperature_control_mode": 2, "fan_mode": 0, "temperature_target": 77, "temperature_error": 1 }, "temperature_unit": 1}, output: FFC8000200CD0A
+ * @example { "plan_config": { "type": 0, "temperature_control_mode": 2, "fan_mode": 0, "temperature_target": 20, "temperature_error": 1 }, "temperature_unit": 0}
+ * @example { "plan_config": { "type": 0, "temperature_control_mode": 2, "fan_mode": 0, "temperature_target": 77, "temperature_error": 1 }, "temperature_unit": 1}
  */
 function setPlanConfig(type, temperature_control_mode, fan_mode, temperature_target, temperature_error, temperature_unit) {
     var plan_config_type_values = [0, 1, 2, 3];
@@ -765,22 +817,22 @@ function setPlanConfig(type, temperature_control_mode, fan_mode, temperature_tar
         throw new Error("plan_config.fan_mode must be one of " + plan_config_fan_mode_values.join(", "));
     }
     if (typeof temperature_target !== "number") {
-        throw new Error("temperature_target must be a number");
+        throw new Error("plan_config.temperature_target must be a number");
     }
     if (typeof temperature_error !== "number") {
-        throw new Error("temperature_error must be a number");
+        throw new Error("plan_config.temperature_error must be a number");
     }
     var temperature_unit_values = [0, 1];
     if (temperature_unit_values.indexOf(temperature_unit) === -1) {
-        throw new Error("temperature_unit must be one of " + temperature_unit_values.join(", "));
+        throw new Error("plan_config.temperature_unit must be one of " + temperature_unit_values.join(", "));
     }
 
     var buffer = new Buffer(7);
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0xc8);
-    buffer.writeUInt8(plan_config_type_values.indexOf(type));
-    buffer.writeUInt8(plan_config_temperature_control_mode_values.indexOf(temperature_control_mode));
-    buffer.writeUInt8(plan_config_fan_mode_values.indexOf(fan_mode));
+    buffer.writeUInt8(type);
+    buffer.writeUInt8(temperature_control_mode);
+    buffer.writeUInt8(fan_mode);
     var tmp = temperature_unit === 1 ? temperature_target | 0x80 : temperature_target & 0x7f;
     buffer.writeInt8(tmp);
     buffer.writeInt8(temperature_error * 10);
@@ -789,15 +841,14 @@ function setPlanConfig(type, temperature_control_mode, fan_mode, temperature_tar
 
 /**
  * set card config
- * @param {boolean} enable
+ * @param {number} enable
  * @param {string} action_type values: (0: "power", 1: "plan")
  * @param {string} in_plan_type values: (0: "wake", 1: "away", 2: "home", 3: "sleep")
  * @param {string} out_plan_type values: (0: "wake", 1: "away", 2: "home", 3: "sleep")
- * @param {boolean} invert
- * @example
- * - { "card_config": { "enable": 0 } }
- * - { "card_config": { "enable": 1, "action_type": 0, "invert": 1 } }
- * - { "card_config": { "enable": 1, "action_type": 1, "in_plan_type": 0, "out_plan_type": 1, "invert": 0 } }
+ * @param {number} invert
+ * @example { "card_config": { "enable": 0 } }
+ * @example { "card_config": { "enable": 1, "action_type": 0, "invert": 1 } }
+ * @example { "card_config": { "enable": 1, "action_type": 1, "in_plan_type": 0, "out_plan_type": 1, "invert": 0 } }
  */
 function setCardConfig(enable, action_type, in_plan_type, out_plan_type, invert) {
     var card_config_enable_values = [0, 1];
@@ -833,13 +884,14 @@ function setCardConfig(enable, action_type, in_plan_type, out_plan_type, invert)
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0xc1);
     buffer.writeUInt8(enable);
-    buffer.writeUInt8(enable ? card_config_action_type_values.indexOf(action_type) : 0);
+    buffer.writeUInt8(enable ? action_type : 0);
     buffer.writeUInt8(action);
-    buffer.writeUInt8(enable ? card_config_invert_values.indexOf(invert) : 0);
+    buffer.writeUInt8(enable ? invert : 0);
     return buffer.toBytes();
 }
 
 /**
+ * set wires relay config
  * @param {number} y1: values: (0: on, 1: off)
  * @param {number} y2_gl: values: (0: on, 1: off)
  * @param {number} w1: values: (0: on, 1: off)
@@ -847,6 +899,8 @@ function setCardConfig(enable, action_type, in_plan_type, out_plan_type, invert)
  * @param {number} e: values: (0: on, 1: off)
  * @param {number} g: values: (0: on, 1: off)
  * @param {number} ob: values: (0: on, 1: off)
+ * @example { "wires_relay_config": { "y1": 1, "y2_gl": 0, "w1": 1, "w2_aux": 0, "e": 1, "g": 0 },"ob_mode": 1 }
+ * @since v1.3
  */
 function setWiresRelayConfig(wires_relay_config) {
     var wire_relay_enable_values = [0, 1];
@@ -871,6 +925,12 @@ function setWiresRelayConfig(wires_relay_config) {
     return buffer.toBytes();
 }
 
+/**
+ * set d2d enable
+ * @param {number} d2d_master_enable
+ * @param {number} d2d_slave_enable
+ * @example { "d2d_master_enable": 1, "d2d_slave_enable": 0 }
+ */
 function setD2DEnable(d2d_master_enable, d2d_slave_enable) {
     var d2d_enable_values = [0, 1];
 
@@ -898,6 +958,7 @@ function setD2DEnable(d2d_master_enable, d2d_slave_enable) {
 }
 
 /**
+ * set child lock
  * @param {Array} btn_locked values: (0: "power", 1: "up", 2: "down", 3: "fan", 4: "mode", 5: "reset")
  * @example { "child_lock_config": { "power_button": 1, "up_button": 0, "down_button": 1, "fan_button": 0, "mode_button": 0 , "reset_button": 1 } }
  */
@@ -926,9 +987,9 @@ function setChildLock(child_lock_config) {
 
 /**
  * set wires
- * @param {Array} wires values: ("y1", "gh", "ob", "w1", "e", "di", "pek", "w2", "aux", "y2", "gl")
+ * @param {Array} wires values: ("Y1", "GH", "OB", "W1", "E", "DI", "PEK", "W2", "AUX", "Y2", "GL")
  * @param {string} mode values: (0: on cool, 1: on heat)
- * @example { "wires": ["y1", "gh", "ob", "w1", "e", "di", "pek", "w2", "aux", "y2", "gl"], "mode": "on cool" }
+ * @example { "wires": ["Y1", "GH", "OB", "W1", "E", "DI", "PEK", "W2", "AUX", "Y2", "GL"], "ob_mode": 0 }
  */
 function setWires(wires, mode) {
     if (Array.isArray(wires) === false) {
@@ -964,7 +1025,7 @@ function setWires(wires, mode) {
 
 /**
  * set ob directive mode
- * @param {string} ob_mode values: (0: "on heat", 1: "on cool")
+ * @param {string} ob_mode values: (0: "on cool", 1: "on heat")
  * @example { "ob_mode": 0 }
  */
 function setOBMode(ob_mode) {
@@ -976,13 +1037,14 @@ function setOBMode(ob_mode) {
     var buffer = new Buffer(3);
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0xb5);
-    buffer.writeUInt8(ob_mode_values.indexOf(ob_mode));
+    buffer.writeUInt8(ob_mode);
     return buffer.toBytes();
 }
 
 /**
  * multicast group configuration
  * @param {object} multicast_group_config
+ * @example { "multicast_group_config": { "group1_enable": 1, "group2_enable": 0, "group3_enable": 1, "group4_enable": 0 } }
  */
 function setMulticastGroupConfig(multicast_group_config) {
     var mask_id = 0;
@@ -991,28 +1053,28 @@ function setMulticastGroupConfig(multicast_group_config) {
     var group_enable_values = [0, 1];
     if ("group1_enable" in multicast_group_config) {
         if (group_enable_values.indexOf(multicast_group_config.group1_enable) === -1) {
-            throw new Error("group1_enable must be one of " + group_enable_values.join(", "));
+            throw new Error("multicast_group_config.group1_enable must be one of " + group_enable_values.join(", "));
         }
         mask_id |= 1 << 0;
         mask_enable |= multicast_group_config.group1_enable << 0;
     }
     if ("group2_enable" in multicast_group_config) {
         if (group_enable_values.indexOf(multicast_group_config.group2_enable) === -1) {
-            throw new Error("group2_enable must be one of " + group_enable_values.join(", "));
+            throw new Error("multicast_group_config.group2_enable must be one of " + group_enable_values.join(", "));
         }
         mask_id |= 1 << 1;
         mask_enable |= multicast_group_config.group2_enable << 1;
     }
     if ("group3_enable" in multicast_group_config) {
         if (group_enable_values.indexOf(multicast_group_config.group3_enable) === -1) {
-            throw new Error("group3_enable must be one of " + group_enable_values.join(", "));
+            throw new Error("multicast_group_config.group3_enable must be one of " + group_enable_values.join(", "));
         }
         mask_id |= 1 << 2;
         mask_enable |= multicast_group_config.group3_enable << 2;
     }
     if ("group4_enable" in multicast_group_config) {
         if (group_enable_values.indexOf(multicast_group_config.group4_enable) === -1) {
-            throw new Error("group4_enable must be one of " + group_enable_values.join(", "));
+            throw new Error("multicast_group_config.group4_enable must be one of " + group_enable_values.join(", "));
         }
         mask_id |= 1 << 3;
         mask_enable |= multicast_group_config.group4_enable << 3;
@@ -1034,6 +1096,7 @@ function setMulticastGroupConfig(multicast_group_config) {
  * @param {number} uplink_enable values: (0: disable, 1: enable)
  * @param {number} time_enable values: (0: disable, 1: enable)
  * @param {number} time unit: minute
+ * @example { "d2d_master_config": [{ "mode": 0, "enable": 1, "d2d_cmd": "0000", "uplink_enable": 1, "time_enable": 1, "time": 10 }] }
  */
 function setD2DMasterConfig(mode, enable, d2d_cmd, uplink_enable, time_enable, time) {
     var mode_values = [0, 1, 2, 3];
@@ -1070,6 +1133,7 @@ function setD2DMasterConfig(mode, enable, d2d_cmd, uplink_enable, time_enable, t
  * @param {string} d2d_cmd
  * @param {number} action_type values: (0: power, 1: plan)
  * @param {number} action values: action_type=0 (0: off, 1: on), action_type=1 (0: wake, 1: away, 2: home, 3: sleep)
+ * @example { "d2d_slave_config": [{ "id": 1, "enable": 1, "d2d_cmd": "0000", "action_type": 0, "action": 1 }] }
  */
 function setD2DSlaveConfig(id, enable, d2d_cmd, action_type, action) {
     if (typeof id !== "number") {
@@ -1112,9 +1176,12 @@ function setD2DSlaveConfig(id, enable, d2d_cmd, action_type, action) {
     buffer.writeUInt8(data);
     return buffer.toBytes();
 }
+
 /**
- *
+ * set d2d slave group
  * @param {number} control_permissions values: (0: thermostat, 1: remote control)
+ * @example { "control_permissions": 0 }
+ * @since v1.3
  */
 function setControlPermissions(control_permissions) {
     var control_permission_values = [0, 1];
@@ -1130,8 +1197,10 @@ function setControlPermissions(control_permissions) {
 }
 
 /**
- *
+ * set offline control mode
  * @param {number} offline_control_mode values: (0: keep, 1: thermostat, 2: off)
+ * @example { "offline_control_mode": 0 }
+ * @since v1.3
  */
 function setOfflineControlMode(offline_control_mode) {
     var offline_control_mode_values = [0, 1, 2];
@@ -1153,15 +1222,16 @@ function setOfflineControlMode(offline_control_mode) {
  * @param {number} min condition=(below, within, outside)
  * @param {number} max condition=(above, within, outside)
  * @param {number} continue_time unit: minute
+ * @example { "temperature_alarm_config": { "alarm_type": 0, "condition": 1, "min": 10, "max": 20, "continue_time": 10 } }
  */
 function setTemperatureAlarmConfig(alarm_type, condition, min, max, lock_time, continue_time) {
     var condition_values = [0, 1, 2, 3, 4];
     if (condition_values.indexOf(condition) === -1) {
-        throw new Error("condition must be one of " + condition_values.join(", "));
+        throw new Error("temperature_alarm_config.condition must be one of " + condition_values.join(", "));
     }
     var alarm_type_values = [0, 1, 2];
     if (alarm_type_values.indexOf(alarm_type) === -1) {
-        throw new Error("alarm_type must be one of " + alarm_type_values.join(", "));
+        throw new Error("temperature_alarm_config.alarm_type must be one of " + alarm_type_values.join(", "));
     }
 
     var data = condition | (alarm_type << 3);
@@ -1174,6 +1244,25 @@ function setTemperatureAlarmConfig(alarm_type, condition, min, max, lock_time, c
     buffer.writeInt16LE(max * 10);
     buffer.writeUInt16LE(lock_time);
     buffer.writeUInt16LE(continue_time);
+    return buffer.toBytes();
+}
+
+/**
+ *
+ * @param {number} screen_display_mode, values: (0: "on", 1: "without plan show", 2: "disable all")
+ * @example { "screen_display_mode": 0 }
+ * @since v1.3
+ */
+function setScreenDisplayMode(screen_display_mode) {
+    var screen_display_mode_values = [0, 1, 2];
+    if (screen_display_mode_values.indexOf(screen_display_mode) === -1) {
+        throw new Error("screen_display_mode must be one of " + screen_display_mode_values.join(", "));
+    }
+
+    var buffer = new Buffer(3);
+    buffer.writeUInt8(0xf9);
+    buffer.writeUInt8(0x08);
+    buffer.writeUInt8(screen_display_mode);
     return buffer.toBytes();
 }
 
