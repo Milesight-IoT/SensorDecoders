@@ -35,17 +35,17 @@ function milesightDeviceDecode(bytes) {
         }
         // ACTIVE POWER
         else if (channel_id === 0x04 && channel_type === 0x80) {
-            decoded.power = readUInt32LE(bytes.slice(i, i + 4));
+            decoded.active_power = readUInt32LE(bytes.slice(i, i + 4));
             i += 4;
         }
         // POWER FACTOR
         else if (channel_id === 0x05 && channel_type === 0x81) {
-            decoded.factor = bytes[i];
+            decoded.power_factor = bytes[i] / 100;
             i += 1;
         }
         // POWER CONSUMPTION
         else if (channel_id === 0x06 && channel_type == 0x83) {
-            decoded.power_sum = readUInt32LE(bytes.slice(i, i + 4));
+            decoded.power_consumption = readUInt32LE(bytes.slice(i, i + 4));
             i += 4;
         }
         // CURRENT
@@ -53,13 +53,10 @@ function milesightDeviceDecode(bytes) {
             decoded.current = readUInt16LE(bytes.slice(i, i + 2));
             i += 2;
         }
-        // STATE
+        // SOCKET STATUS
         else if (channel_id === 0x08 && channel_type == 0x70) {
-            decoded.state = bytes[i] == 1 || bytes[i] == 0x11 ? "open" : "close";
-            i += 1;
-        } else if (channel_id === 0xff && channel_type == 0x3f) {
-            decoded.outage = bytes[i] == 0xff ? 1 : 0;
-            i += 1;
+            var data = bytes[i++];
+            decoded.socket_status = (data & 0x01) === 0x01 ? "open" : "close";
         } else {
             break;
         }
