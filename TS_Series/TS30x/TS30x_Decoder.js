@@ -52,10 +52,26 @@ function milesightDeviceDecode(bytes) {
             decoded.magnet_chn2 = bytes[i] === 0 ? "closed" : "opened";
             i += 1;
         }
+        // BUTTON TRIGGER TEMPERATURE REPORT
+        else if (channel_id === 0x73 && channel_type === 0x67) {
+            var temperature_raw_data = readUInt16LE(bytes.slice(i, i + 2));
+            var temperature = readInt16LE(bytes.slice(i, i + 2)) / 10;
+            i += 2;
+
+            if (temperature_raw_data === 0xffff) {
+                decoded.temperature_chn1_exception = "sensor error";
+            } else {
+                decoded.temperature_chn1 = temperature;
+            }
+            decoded.temperature_chn1_data_source = "button trigger";
+        }
         // TEMPERATURE(CHANNEL 1 SENSOR) ALARM
         else if (channel_id === 0x83 && channel_type === 0x67) {
+            var data = bytes[i + 2];
+            var data_source = data >>> 7;
             decoded.temperature_chn1 = readInt16LE(bytes.slice(i, i + 2)) / 10;
-            decoded.temperature_chn1_alarm = readAlarmType(bytes[i + 2]);
+            decoded.temperature_chn1_alarm = readAlarmType(data & 0x7f);
+            decoded.temperature_chn1_data_source = data_source === 0 ? "period" : "button trigger";
             i += 3;
         }
         // TEMPERATURE(CHANNEL 1 SENSOR) ALARM
@@ -65,10 +81,26 @@ function milesightDeviceDecode(bytes) {
             decoded.temperature_chn1_alarm = readAlarmType(bytes[i + 4]);
             i += 5;
         }
+        // BUTTON TRIGGER TEMPERATURE REPORT
+        else if (channel_id === 0x74 && channel_type === 0x67) {
+            var temperature_raw_data = readUInt16LE(bytes.slice(i, i + 2));
+            var temperature = readInt16LE(bytes.slice(i, i + 2)) / 10;
+            i += 2;
+
+            if (temperature_raw_data === 0xffff) {
+                decoded.temperature_chn2_exception = "sensor error";
+            } else {
+                decoded.temperature_chn2 = temperature;
+            }
+            decoded.temperature_chn2_data_source = "button trigger";
+        }
         // TEMPERATURE(CHANNEL 2 SENSOR) ALARM
         else if (channel_id === 0x84 && channel_type === 0x67) {
+            var data = bytes[i + 2];
+            var data_source = data >>> 7;
             decoded.temperature_chn2 = readInt16LE(bytes.slice(i, i + 2)) / 10;
-            decoded.temperature_chn2_alarm = readAlarmType(bytes[i + 2]);
+            decoded.temperature_chn2_alarm = readAlarmType(data & 0x7f);
+            decoded.temperature_chn2_data_source = data_source === 0 ? "period" : "button trigger";
             i += 3;
         }
         // TEMPERATURE(CHANNEL 2 SENSOR) ALARM
@@ -178,6 +210,6 @@ function readAlarmType(type) {
         case 2:
             return "mutation";
         default:
-            return "unkown";
+            return "unknown";
     }
 }
