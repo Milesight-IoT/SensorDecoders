@@ -22,8 +22,12 @@ function Decoder(bytes, port) {
 }
 
 gpio_chns = [0x03, 0x04];
+gpio_alarm_chns = [0x83, 0x84];
+gpio_change_alarm_chns = [0x93, 0x94];
+
 adc_chns = [0x05, 0x06];
 adc_alarm_chns = [0x85, 0x86];
+adc_change_alarm_chns = [0x95, 0x96];
 
 function milesightDeviceDecode(bytes) {
     var decoded = {};
@@ -49,6 +53,21 @@ function milesightDeviceDecode(bytes) {
             decoded[gpio_channel_name] = readUInt32LE(bytes.slice(i, i + 4));
             i += 4;
         }
+        // GPIO Alarm (GPIO as PULSE COUNTER)
+        else if (includes(gpio_alarm_chns, channel_id) && channel_type === 0xc8) {
+            var gpio_channel_name = "counter_" + (channel_id - gpio_alarm_chns[0] + 1);
+            decoded[gpio_channel_name] = readUInt32LE(bytes.slice(i, i + 4));
+            decoded[gpio_channel_name + "_alarm"] = readAlarm(bytes[i + 4]);
+            i += 5;
+        }
+        // COUNTER CHANGE ALARM (GPIO as PULSE COUNTER)
+        else if (includes(gpio_change_alarm_chns, channel_id) && channel_type === 0xc8) {
+            var gpio_channel_name = "counter_" + (channel_id - gpio_change_alarm_chns[0] + 1);
+            decoded[gpio_channel_name] = readUInt32LE(bytes.slice(i, i + 4));
+            decoded[gpio_channel_name + "_change"] = readUInt32LE(bytes.slice(i + 4, i + 8));
+            decoded[gpio_channel_name + "_alarm"] = readAlarm(bytes[i + 8]);
+            i += 9;
+        }
         // ANALOG INPUT TYPE
         else if (channel_id === 0xff && channel_type === 0x14) {
             var channel = bytes[i];
@@ -70,11 +89,33 @@ function milesightDeviceDecode(bytes) {
         // ADC (UC50x v3)
         else if (includes(adc_chns, channel_id) && channel_type === 0xe2) {
             var adc_channel_name = "adc_" + (channel_id - adc_chns[0] + 1);
+            var value = readFloat16LE(bytes.slice(i, i + 2));
             decoded[adc_channel_name] = readFloat16LE(bytes.slice(i, i + 2));
             decoded[adc_channel_name + "_min"] = readFloat16LE(bytes.slice(i + 2, i + 4));
             decoded[adc_channel_name + "_max"] = readFloat16LE(bytes.slice(i + 4, i + 6));
             decoded[adc_channel_name + "_avg"] = readFloat16LE(bytes.slice(i + 6, i + 8));
             i += 8;
+        }
+        // ADC ALARM (UC50x v3)
+        else if (includes(adc_alarm_chns, channel_id) && channel_type === 0xe2) {
+            var adc_channel_name = "adc_" + (channel_id - adc_alarm_chns[0] + 1);
+            decoded[adc_channel_name] = readFloat16LE(bytes.slice(i, i + 2));
+            decoded[adc_channel_name + "_min"] = readFloat16LE(bytes.slice(i + 2, i + 4));
+            decoded[adc_channel_name + "_max"] = readFloat16LE(bytes.slice(i + 4, i + 6));
+            decoded[adc_channel_name + "_avg"] = readFloat16LE(bytes.slice(i + 6, i + 8));
+            decoded[adc_channel_name + "_alarm"] = readAlarm(bytes[i + 8]);
+            i += 9;
+        }
+        // ADC CHANGE ALARM (UC50x v3)
+        else if (includes(adc_change_alarm_chns, channel_id) && channel_type === 0xe2) {
+            var adc_channel_name = "adc_" + (channel_id - adc_change_alarm_chns[0] + 1);
+            decoded[adc_channel_name] = readFloat16LE(bytes.slice(i, i + 2));
+            decoded[adc_channel_name + "_min"] = readFloat16LE(bytes.slice(i + 2, i + 4));
+            decoded[adc_channel_name + "_max"] = readFloat16LE(bytes.slice(i + 4, i + 6));
+            decoded[adc_channel_name + "_avg"] = readFloat16LE(bytes.slice(i + 6, i + 8));
+            decoded[adc_channel_name + "_change"] = readFloatLE(bytes.slice(i + 8, i + 12));
+            decoded[adc_channel_name + "_alarm"] = readAlarm(bytes[i + 12]);
+            i += 13;
         }
         // SDI-12
         else if (channel_id === 0x08 && channel_type === 0xdb) {
@@ -83,12 +124,11 @@ function milesightDeviceDecode(bytes) {
             i += 36;
         }
         // MODBUS
-        else if ((channel_id === 0xff || channel_id === 0x80) && channel_type === 0x0e) {
+        else if ((channel_id === 0xff || channel_id === 0x80 || channel_id === 0x90) && channel_type === 0x0e) {
             var modbus_chn_id = bytes[i++] - 6;
             var package_type = bytes[i++];
             var data_type = package_type & 0x07; // 0x07 = 0b00000111
-            var date_length = package_type >> 3;
-            var chn = "chn_" + modbus_chn_id;
+            var chn = "modbus_chn_" + modbus_chn_id;
             switch (data_type) {
                 case 0:
                     decoded[chn] = bytes[i] ? "on" : "off";
@@ -115,27 +155,120 @@ function milesightDeviceDecode(bytes) {
                     break;
             }
 
+            if (channel_id === 0x90) {
+                if (data_type === 5 || data_type === 7) {
+                    decoded[chn + "_change"] = readFloatLE(bytes.slice(i, i + 4));
+                } else {
+                    decoded[chn + "_change"] = readUInt32LE(bytes.slice(i, i + 4));
+                }
+                i += 4;
+
+                var data = {};
+                data[chn] = decoded[chn];
+                data[chn + "_change"] = decoded[chn + "_change"];
+                data[chn + "_alarm"] = readAlarm(bytes[i++]);
+
+                decoded.modbus_event = decoded.modbus_event || [];
+                decoded.modbus_event.push(data);
+            }
+
             if (channel_id === 0x80) {
-                decoded[chn + "_alarm"] = readAlarm(bytes[i++]);
+                var data = {};
+                data[chn] = decoded[chn];
+                data[chn + "_alarm"] = readAlarm(bytes[i++]);
+
+                decoded.modbus_event = decoded.modbus_event || [];
+                decoded.modbus_event.push(data);
             }
         }
         // MODBUS READ ERROR
         else if (channel_id === 0xff && channel_type === 0x15) {
-            var modbus_error_chn_id = bytes[i] - 6;
-            var channel_name = "modbus_chn_" + modbus_error_chn_id;
-            decoded[channel_name + "_alarm"] = "read error";
+            var modbus_chn_id = bytes[i] - 6;
+            var channel_name = "modbus_chn_" + modbus_chn_id;
+            decoded[channel_name + "_exception"] = "read error";
             i += 1;
         }
-        // ADC alert (UC50x v3)
-        else if (includes(adc_alarm_chns, channel_id) && channel_type === 0xe2) {
-            var adc_channel_name = "adc_" + (channel_id - adc_alarm_chns[0] + 1);
-            decoded[adc_channel_name] = readFloat16LE(bytes.slice(i, i + 2));
-            decoded[adc_channel_name + "_min"] = readFloat16LE(bytes.slice(i + 2, i + 4));
-            decoded[adc_channel_name + "_max"] = readFloat16LE(bytes.slice(i + 4, i + 6));
-            decoded[adc_channel_name + "_avg"] = readFloat16LE(bytes.slice(i + 6, i + 8));
-            i += 8;
+        // MODBUS(New Version)
+        else if ((channel_id === 0x09 || channel_id === 0x89 || channel_id === 0x99) && channel_type === 0xf3) {
+            var modbus_chn_id = bytes[i++] + 1;
+            var package_type = bytes[i++];
+            var sign = package_type >>> 7;
+            var data_type = package_type & 0x0f; // 0x0F = 0b00001111
+            var modbus_chn_name = "modbus_chn_" + modbus_chn_id;
+            switch (data_type) {
+                case 0:
+                case 1:
+                    decoded[modbus_chn_name] = bytes[i];
+                    i += 1;
+                    break;
+                case 2:
+                case 3:
+                    decoded[modbus_chn_name] = sign ? readInt16LE(bytes.slice(i, i + 2)) : readUInt16LE(bytes.slice(i, i + 2));
+                    i += 2;
+                    break;
+                case 4:
+                case 6:
+                    decoded[modbus_chn_name] = sign ? readInt32LE(bytes.slice(i, i + 4)) : readUInt32LE(bytes.slice(i, i + 4));
+                    i += 4;
+                    break;
+                case 5:
+                case 7:
+                    decoded[modbus_chn_name] = readFloatLE(bytes.slice(i, i + 4));
+                    i += 4;
+                    break;
+                default:
+                    throw new Error("Unknown data type");
+            }
 
-            decoded[adc_channel_name + "_alarm"] = readAlarm(bytes[i++]);
+            var modbus_change_chn_name = modbus_chn_name + "_change";
+            if (channel_id === 0x99) {
+                switch (data_type) {
+                    case 0:
+                    case 1:
+                        decoded[modbus_change_chn_name] = bytes[i];
+                        i += 1;
+                        break;
+                    case 2:
+                    case 3:
+                        decoded[modbus_change_chn_name] = sign ? readInt16LE(bytes.slice(i, i + 2)) : readUInt16LE(bytes.slice(i, i + 2));
+                        i += 2;
+                        break;
+                    case 4:
+                    case 6:
+                        decoded[modbus_change_chn_name] = sign ? readInt32LE(bytes.slice(i, i + 4)) : readUInt32LE(bytes.slice(i, i + 4));
+                        i += 4;
+                        break;
+                    case 5:
+                    case 7:
+                        decoded[modbus_change_chn_name] = readFloatLE(bytes.slice(i, i + 4));
+                        i += 4;
+                        break;
+                }
+
+                var data = {};
+                data[modbus_chn_name] = decoded[modbus_chn_name];
+                data[modbus_change_chn_name] = decoded[modbus_change_chn_name];
+                data[modbus_chn_name + "_alarm"] = readAlarm(bytes[i++]);
+
+                decoded.modbus_event = decoded.modbus_event || [];
+                decoded.modbus_event.push(data);
+            }
+
+            if (channel_id === 0x89) {
+                var data = {};
+                data[modbus_chn_name] = decoded[modbus_chn_name];
+                data[modbus_chn_name + "_alarm"] = readAlarm(bytes[i++]);
+
+                decoded.modbus_event = decoded.modbus_event || [];
+                decoded.modbus_event.push(data);
+            }
+        }
+        // MODBUS READ ERROR(New Version)
+        else if (channel_id === 0xb9 && channel_type === 0xf3) {
+            var modbus_chn_id = bytes[i] + 1;
+            var modbus_chn_exception_name = "modbus_chn_" + modbus_chn_id + "_exception";
+            decoded[modbus_chn_exception_name] = readException(bytes[i + 1]);
+            i += 2;
         }
         // HISTORY DATA (GPIO / ADC)
         else if (channel_id === 0x20 && channel_type === 0xdc) {
@@ -171,8 +304,6 @@ function milesightDeviceDecode(bytes) {
         }
         // HISTORY DATA (MODBUS)
         else if (channel_id === 0x20 && channel_type === 0xdd) {
-            decoded.history = decoded.history || [];
-
             var timestamp = readUInt32LE(bytes.slice(i, i + 4));
             var channel_mask = numToBits(readUInt16LE(bytes.slice(i + 4, i + 6)), 16);
             i += 6;
@@ -182,13 +313,28 @@ function milesightDeviceDecode(bytes) {
                 // skip if channel is not enabled
                 if (channel_mask[j] === 0) continue;
 
-                var name = "modbus_chn_" + (j + 1);
-                var type = bytes[i++] & 0x07; // 0x07 = 0b00000111
-                // 5 MB_REG_HOLD_FLOAT, 7 MB_REG_INPUT_FLOAT
-                if (type === 5 || type === 7) {
-                    data[name] = readFloatLE(bytes.slice(i, i + 4));
-                } else {
-                    data[name] = readUInt32LE(bytes.slice(i, i + 4));
+                var modbus_chn_name = "modbus_chn_" + (j + 1);
+                var modbus_data_type = readUInt8(bytes[i++]);
+                var sign = modbus_data_type >>> 7;
+                var data_type = modbus_data_type & 0x07; // 0x07 = 0b00000111
+
+                switch (data_type) {
+                    case 0:
+                    case 1:
+                        data[modbus_chn_name] = bytes[i];
+                        break;
+                    case 2:
+                    case 3:
+                        data[modbus_chn_name] = sign ? readInt16LE(bytes.slice(i, i + 2)) : readUInt16LE(bytes.slice(i, i + 2));
+                        break;
+                    case 4:
+                    case 6:
+                        data[modbus_chn_name] = sign ? readInt32LE(bytes.slice(i, i + 4)) : readUInt32LE(bytes.slice(i, i + 4));  
+                        break;
+                    case 5:
+                    case 7:
+                        data[modbus_chn_name] = readFloatLE(bytes.slice(i, i + 4));
+                        break;
                 }
 
                 i += 4;
@@ -273,10 +419,10 @@ function readString(bytes) {
     return str;
 }
 
-function includes(datas, value) {
-    var size = datas.length;
+function includes(items, item) {
+    var size = items.length;
     for (var i = 0; i < size; i++) {
-        if (datas[i] == value) {
+        if (items[i] == item) {
             return true;
         }
     }
@@ -285,10 +431,23 @@ function includes(datas, value) {
 
 function readAlarm(type) {
     switch (type) {
+        case 0:
+            return "threshold alarm release";
         case 1:
             return "threshold alarm";
         case 2:
             return "value change alarm";
+        default:
+            return "unknown";
+    }
+}
+
+function readException(type) {
+    switch (type) {
+        case 0:
+            return "read error";
+        case 1:
+            return "out of range";
         default:
             return "unknown";
     }
