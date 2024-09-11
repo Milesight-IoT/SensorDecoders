@@ -106,7 +106,7 @@ function milesightDeviceEncoder(payload) {
         }
     }
     if ("plan_config" in payload) {
-        encoded = encoded.concat(setPlanConfig(payload.plan_config.type, payload.plan_config.temperature_control_mode, payload.plan_config.fan_mode, payload.plan_config.temperature_target, payload.plan_config.temperature_error, payload.temperature_unit));
+        encoded = encoded.concat(setPlanConfig(payload.plan_config.type, payload.plan_config.fan_mode, payload.plan_config.temperature_target, payload.plan_config.temperature_error, payload.temperature_unit));
     }
     if ("card_config" in payload) {
         encoded = encoded.concat(setCardConfig(payload.card_config.enable, payload.card_config.action_type, payload.card_config.in_plan_type, payload.card_config.out_plan_type, payload.card_config.invert));
@@ -159,6 +159,9 @@ function milesightDeviceEncoder(payload) {
     }
     if ("screen_display_mode" in payload) {
         encoded = encoded.concat(setScreenDisplayMode(payload.screen_display_mode));
+    }
+    if ("fan_control_temperature_tolerance" in payload) {
+        encoded = encoded.concat(setFanControlTemperatureTolerance(payload.fan_control_temperature_tolerance.delta_1, payload.fan_control_temperature_tolerance.delta_2));
     }
 
     return encoded;
@@ -661,11 +664,11 @@ function setFreezeProtection(enable, temperature) {
 }
 
 /**
- * @param {string} fan_mode values: (0: "auto", 1: "on", 2: "circulate")
+ * @param {string} fan_mode values: (0: auto, 1: low speed, 2: medium speed, 3: high speed)
  * @example { "fan_mode": 0 }
  */
 function setFanMode(fan_mode) {
-    var fan_mode_values = [0, 1, 2];
+    var fan_mode_values = [0, 1, 2, 3];
     if (fan_mode_values.indexOf(fan_mode) === -1) {
         throw new Error("fan_mode must be one of " + fan_mode_values.join(", "));
     }
@@ -795,26 +798,20 @@ function setPlanSchedule(type, id, enable, week_recycle, time) {
 /**
  * set plan config
  * @param {string} type values: (0: "wake", 1: "away", 2: "home", 3: "sleep")
- * @param {string} temperature_control_mode values: (0: "heat", 1: "em heat", 2: "cool", 3: "auto")
- * @param {string} fan_mode values: (0: "auto", 1: "on", 2: "circulate")
+ * @param {string} fan_mode values: (0: auto, 1: low speed, 2: medium speed, 3: high speed)
  * @param {number} temperature_target
  * @param {number} temperature_error
  * @param {string} temperature_unit values: (0: "celsius", 1: "fahrenheit")
- * @example { "plan_config": { "type": 0, "temperature_control_mode": 2, "fan_mode": 0, "temperature_target": 20, "temperature_error": 1 }, "temperature_unit": 0}
- * @example { "plan_config": { "type": 0, "temperature_control_mode": 2, "fan_mode": 0, "temperature_target": 77, "temperature_error": 1 }, "temperature_unit": 1}
+ * @example { "plan_config": { "type": 0, "fan_mode": 1, "temperature_target": 20, "temperature_error": 1 }, "temperature_unit": 0}
  */
-function setPlanConfig(type, temperature_control_mode, fan_mode, temperature_target, temperature_error, temperature_unit) {
+function setPlanConfig(type, fan_mode, temperature_target, temperature_error, temperature_unit) {
     var plan_config_type_values = [0, 1, 2, 3];
-    var plan_config_temperature_control_mode_values = [0, 1, 2, 3];
-    var plan_config_fan_mode_values = [0, 1, 2];
     if (plan_config_type_values.indexOf(type) === -1) {
         throw new Error("plan_config.type must be one of " + plan_config_type_values.join(", "));
     }
-    if (plan_config_temperature_control_mode_values.indexOf(temperature_control_mode) === -1) {
-        throw new Error("plan_config.temperature_control_mode must be one of " + plan_config_temperature_control_mode_values.join(", "));
-    }
+    var plan_config_fan_mode_values = [0, 1, 2, 3];
     if (plan_config_fan_mode_values.indexOf(fan_mode) === -1) {
-        throw new Error("plan_config.fan_mode must be one of " + plan_config_fan_mode_values.join(", "));
+        throw new Error("plan_config.fan_status must be one of " + plan_config_fan_mode_values.join(", "));
     }
     if (typeof temperature_target !== "number") {
         throw new Error("plan_config.temperature_target must be a number");
@@ -831,7 +828,7 @@ function setPlanConfig(type, temperature_control_mode, fan_mode, temperature_tar
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0xc8);
     buffer.writeUInt8(type);
-    buffer.writeUInt8(temperature_control_mode);
+    buffer.writeUInt8(0x03); // fixed value: auto mode
     buffer.writeUInt8(fan_mode);
     var tmp = temperature_unit === 1 ? temperature_target | 0x80 : temperature_target & 0x7f;
     buffer.writeInt8(tmp);
@@ -987,9 +984,9 @@ function setChildLock(child_lock_config) {
 
 /**
  * set wires
- * @param {Array} wires values: ("Y1", "GH", "OB", "W1", "E", "DI", "PEK", "W2", "AUX", "Y2", "GL")
+ * @param {Array} wires values: ("Y1", "GH", "GM", "W1", "E", "DI", "PEK", "W2", "AUX", "Y2", "GL")
  * @param {string} mode values: (0: on cool, 1: on heat)
- * @example { "wires": ["Y1", "GH", "OB", "W1", "E", "DI", "PEK", "W2", "AUX", "Y2", "GL"], "ob_mode": 0 }
+ * @example { "wires": ["Y1", "GH", "GM", "W1", "E", "DI", "PEK", "W2", "AUX", "Y2", "GL"], "ob_mode": 0 }
  */
 function setWires(wires, mode) {
     if (Array.isArray(wires) === false) {
@@ -1001,7 +998,7 @@ function setWires(wires, mode) {
     var b3 = 0x00;
     if (wires.indexOf("Y1") != -1) b1 |= 1 << 0;
     if (wires.indexOf("GH") != -1) b1 |= 1 << 2;
-    if (wires.indexOf("OB") != -1) b1 |= 1 << 4;
+    if (wires.indexOf("GM") != -1) b1 |= 1 << 4;
     if (wires.indexOf("W1") != -1) b1 |= 1 << 6;
 
     if (wires.indexOf("E") != -1) b2 |= 1 << 0;
@@ -1263,6 +1260,28 @@ function setScreenDisplayMode(screen_display_mode) {
     buffer.writeUInt8(0xf9);
     buffer.writeUInt8(0x08);
     buffer.writeUInt8(screen_display_mode);
+    return buffer.toBytes();
+}
+
+/**
+ * set fan control temperature tolerance
+ * @param {number} delta_1 unit: celsius
+ * @param {number} delta_2 unit: celsius
+ * @example { "fan_control_temperature_tolerance": { "delta_1": 1, "delta_2": 2 } }
+ */
+function setFanControlTemperatureTolerance(delta_1, delta_2) {
+    if (typeof delta_1 !== "number") {
+        throw new Error("fan_control_temperature_tolerance.delta_1 must be a number");
+    }
+    if (typeof delta_2 !== "number") {
+        throw new Error("fan_control_temperature_tolerance.delta_2 must be a number");
+    }
+
+    var buffer = new Buffer(4);
+    buffer.writeUInt8(0xf9);
+    buffer.writeUInt8(0x3c);
+    buffer.writeUInt8(delta_1 * 10);
+    buffer.writeUInt8(delta_2 * 10);
     return buffer.toBytes();
 }
 

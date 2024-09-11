@@ -127,7 +127,7 @@ function milesightDeviceDecode(bytes) {
             var plan_setting = {};
             plan_setting.type = readPlanType(bytes[i]);
             plan_setting.temperature_ctl_mode = readTemperatureCtlMode(bytes[i + 1]);
-            plan_setting.fan_mode = readFanMode(bytes[i + 2]);
+            plan_setting.fan_mode = readFanStatus(bytes[i + 2]);
             plan_setting.temperature_target = readUInt8(bytes[i + 3] & 0x7f);
             plan_setting.temperature_unit = readTemperatureUnit(bytes[i + 3] >>> 7);
             plan_setting.temperature_error = readUInt8(bytes[i + 4]) / 10;
@@ -139,7 +139,7 @@ function milesightDeviceDecode(bytes) {
         // WIRES
         else if (channel_id === 0xff && channel_type === 0xca) {
             decoded.wires = readWires(bytes[i], bytes[i + 1], bytes[i + 2]);
-            decoded.ob_mode = readObMode((bytes[i + 2] >>> 2) & 0x03);
+            // decoded.ob_mode = readObMode((bytes[i + 2] >>> 2) & 0x03);
             i += 3;
         }
         // TEMPERATURE MODE SUPPORT
@@ -371,32 +371,27 @@ function readPlanType(type) {
 }
 
 function readFanMode(type) {
-    // 0: auto, 1: on, 2: circulate, 3: disable
+    // 0: auto, 1: on
     switch (type) {
         case 0x00:
             return "auto";
         case 0x01:
             return "on";
-        case 0x02:
-            return "circulate";
-        case 0x03:
-            return "disable";
         default:
             return "unknown";
     }
 }
 
 function readFanStatus(type) {
-    // 0: standby, 1: high speed, 2: low speed, 3: on
     switch (type) {
         case 0x00:
-            return "standby";
+            return "closed";
         case 0x01:
-            return "high speed";
-        case 0x02:
             return "low speed";
+        case 0x02:
+            return "medium speed";
         case 0x03:
-            return "on";
+            return "high speed";
         default:
             return "unknown";
     }
@@ -463,7 +458,7 @@ function readWires(wire1, wire2, wire3) {
         wire.push("GH");
     }
     if ((wire1 >>> 4) & 0x03) {
-        wire.push("OB");
+        wire.push("GM");
     }
     if ((wire1 >>> 6) & 0x03) {
         wire.push("W1");
@@ -501,7 +496,7 @@ function readWires(wire1, wire2, wire3) {
 
 function readWiresRelay(status) {
     var relay = {};
-    
+
     relay.y1 = (status >>> 0) & 0x01;
     relay.y2_gl = (status >>> 1) & 0x01;
     relay.w1 = (status >>> 2) & 0x01;
@@ -736,7 +731,7 @@ function handle_downlink_response(channel_type, bytes, offset) {
             decoded.ob_mode = readUInt8(bytes[offset]);
             offset += 1;
             break;
-        case 0xb6:
+        case 0xb6: // fan_mode
             decoded.fan_mode = readUInt8(bytes[offset]);
             offset += 1;
             break;
@@ -962,6 +957,17 @@ function handle_downlink_response_ext(channel_type, bytes, offset) {
                 }
             } else {
                 throw new Error("dehumidify control failed");
+            }
+            offset += 3;
+            break;
+        case 0x3c:
+            var fan_control_temperature_tolerance_result = readUInt8(bytes[offset + 2]);
+            if (fan_control_temperature_tolerance_result === 0) {
+                decoded.fan_control_temperature_tolerance = {};
+                decoded.fan_control_temperature_tolerance.delta_1 = readUInt8(bytes[offset]) / 10;
+                decoded.fan_control_temperature_tolerance.delta_2 = readUInt8(bytes[offset + 1]) / 10;
+            } else {
+                throw new Error("fan control temperature tolerance control failed");
             }
             offset += 3;
             break;
