@@ -24,16 +24,17 @@ For more detailed information, please visit [milesight official website](https:/
 
 ### Telemetry
 
-|          CHANNEL           |  ID  | TYPE | LENGTH | DESCRIPTION                                                                                                  |
-| :------------------------: | :--: | :--: | :----: | ------------------------------------------------------------------------------------------------------------ |
-|          Voltage           | 0x03 | 0x74 |   2    | voltage(2B)<br />voltage, read: uint16/10                                                                    |
-|        Active Power        | 0x04 | 0x80 |   4    | power(4B)<br />power, read: uint32, unit: W                                                                  |
-|       Active factor        | 0x05 | 0x81 |   1    | factor(1B)<br />factor, read: uint8, unit: %                                                                 |
-|     Power Consumption      | 0x06 | 0x83 |   4    | power_consumption(4B)<br />power_consumption, read: uint32, unit: W\*h                                       |
-|          Current           | 0x07 | 0xC9 |   2    | current(2B)<br />current, read: uint16, unit: mA                                                             |
-|       Socket Status        | 0x08 | 0x70 |   1    | state(1B)<br />state, values: (0: off, 1: on)                                                                |
-|        Temperature         | 0x09 | 0x67 |   2    | temperature(2B)<br />temperature, read: int16/10, unit: ℃                                                    |
-| Temperature Mutation Alarm | 0x99 | 0x67 |   5    | temperature(2B) + temperature_mutation(2B) + temperature_alarm(1B)<br />temperature, read: int16/10, unit: ℃ |
+|          CHANNEL           |  ID  | TYPE | LENGTH | DESCRIPTION                                                                                                                                                                           |
+| :------------------------: | :--: | :--: | :----: | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+|          Voltage           | 0x03 | 0x74 |   2    | voltage(2B)<br />voltage, read: uint16/10                                                                                                                                             |
+|        Active Power        | 0x04 | 0x80 |   4    | active_power(4B)<br />active_power, read: uint32, unit: W                                                                                                                             |
+|       Active factor        | 0x05 | 0x81 |   1    | power_factor(1B)<br />power_factor, read: uint8, unit: %                                                                                                                              |
+|     Power Consumption      | 0x06 | 0x83 |   4    | power_consumption(4B)<br />power_consumption, read: uint32, unit: W\*h                                                                                                                |
+|          Current           | 0x07 | 0xC9 |   2    | current(2B)<br />current, read: uint16, unit: mA                                                                                                                                      |
+|       Socket Status        | 0x08 | 0x70 |   1    | state(1B)<br />state, values: (0: off, 1: on)                                                                                                                                         |
+|        Temperature         | 0x09 | 0x67 |   2    | temperature(2B)<br />temperature, read: int16/10, unit: ℃                                                                                                                             |
+|     Temperature Alarm      | 0x09 | 0x67 |   3    | temperature(2B) + temperature_alarm(1B)<br />temperature, read: int16/10, unit: ℃<br />temperature_alarm, values: (0: threshold alarm release, 1: threshold alarm, 2: overheat alarm) |
+| Temperature Mutation Alarm | 0x99 | 0x67 |   5    | temperature(2B) + temperature_mutation(2B) + temperature_alarm(1B)<br />temperature, read: int16/10, unit: ℃                                                                          |
 
 ## Example
 
@@ -41,8 +42,8 @@ For more detailed information, please visit [milesight official website](https:/
 // 087001 058161 07c9a800 03748308 06831d000000 048023000000
 {
     "current": 168,
-    "factor": 97,
-    "power": 35,
+    "power_factor": 97,
+    "active_power": 35,
     "power_consumption": 29,
     "socket_status": "on",
     "voltage": 217.9

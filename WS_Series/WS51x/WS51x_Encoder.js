@@ -42,6 +42,12 @@ function milesightDeviceEncode(payload) {
     if ("current_threshold" in payload) {
         encoded = encoded.concat(setCurrentThreshold(payload.current_threshold.enable, payload.current_threshold.threshold));
     }
+    if ("over_current_protection" in payload) {
+        encoded = encoded.concat(setOverCurrentProtection(payload.over_current_protection.enable, payload.over_current_protection.trip_current));
+    }
+    if ("overload_current_protection" in payload) {
+        encoded = encoded.concat(setOverloadCurrentProtection(payload.overload_current_protection));
+    }
     if ("child_lock_config" in payload) {
         encoded = encoded.concat(setChildLock(payload.child_lock_config.enable, payload.child_lock_config.lock_time));
     }
@@ -51,11 +57,17 @@ function milesightDeviceEncode(payload) {
     if ("reset_power_consumption" in payload) {
         encoded = encoded.concat(resetPowerConsumption(payload.reset_power_consumption));
     }
+    if ("led_enable" in payload) {
+        encoded = encoded.concat(setLedEnable(payload.led_enable));
+    }
     if ("led_reserve" in payload) {
         encoded = encoded.concat(setLedReserve(payload.led_reserve));
     }
     if ("temperature_calibration" in payload) {
         encoded = encoded.concat(setTemperatureCalibration(payload.temperature_calibration.enable, payload.temperature_calibration.temperature));
+    }
+    if ("temperature_alarm_config" in payload) {
+        encoded = encoded.concat(setTemperatureAlarmConfig(payload.temperature_alarm_config.condition, payload.temperature_alarm_config.min, payload.temperature_alarm_config.max, payload.temperature_alarm_config.alarm_interval, payload.temperature_alarm_config.alarm_times));
     }
     if ("d2d_command" in payload) {
         encoded = encoded.concat(setD2DCommand(payload.d2d_command));
@@ -185,6 +197,48 @@ function setCurrentThreshold(enable, threshold) {
 }
 
 /**
+ * set over_current protection configuration
+ * @param {number} enable values: (0: disable, 1: enable)
+ * @param {number} trip_current unit: A
+ * @example { "over_current_protection": { "enable": 1, "trip_current": 10 } }
+ */
+function setOverCurrentProtection(enable, trip_current) {
+    var over_current_enable_values = [0, 1];
+    if (over_current_enable_values.indexOf(enable) === -1) {
+        throw new Error("over_current_protection.enable must be one of " + over_current_enable_values.join(", "));
+    }
+    if (typeof trip_current !== "number") {
+        throw new Error("over_current_protection.trip_current must be a number");
+    }
+
+    var buffer = new Buffer(4);
+    buffer.writeUInt8(0xff);
+    buffer.writeUInt8(0x30);
+    buffer.writeUInt8(enable);
+    buffer.writeUInt8(trip_current);
+    return buffer.toBytes();
+}
+
+/**
+ * set overload current protection configuration
+ * @param {number} enable values: (0: disable, 1: enable)
+ * @example { "overload_current_protection": 1 }
+ * @since v2.1
+ */
+function setOverloadCurrentProtection(enable) {
+    var overload_current_enable_values = [0, 1];
+    if (overload_current_enable_values.indexOf(enable) === -1) {
+        throw new Error("overload_current_protection.enable must be one of " + overload_current_enable_values.join(", "));
+    }
+
+    var buffer = new Buffer(3);
+    buffer.writeUInt8(0xff);
+    buffer.writeUInt8(0x8d);
+    buffer.writeUInt8(enable);
+    return buffer.toBytes();
+}
+
+/**
  * set child lock configuration
  * @param {boolean} enable values: (0: disable, 1: enable)
  * @param {number} lock_time unit: min
@@ -244,6 +298,24 @@ function resetPowerConsumption(reset_power_consumption) {
 }
 
 /**
+ * set led enable configuration
+ * @param {number} led_enable values: (0: disable, 1: enable)
+ * @example { "led_enable": 1 }
+ */
+function setLedEnable(led_enable) {
+    var led_enable_values = [0, 1];
+    if (led_enable_values.indexOf(led_enable) === -1) {
+        throw new Error("led_enable must be one of " + led_enable_values.join(", "));
+    }
+
+    var buffer = new Buffer(3);
+    buffer.writeUInt8(0xff);
+    buffer.writeUInt8(0x2f);
+    buffer.writeUInt8(led_enable);
+    return buffer.toBytes();
+}
+
+/**
  * set led indicator reserve configuration
  * @param {number} led_reserve value: (0: disable, 1: enable)
  * @example payload: { "led_reserve": 1 } output: FFA501
@@ -268,6 +340,7 @@ function setLedReserve(led_reserve) {
  * @example payload: { "temperature_calibration": { "enable": 1, "temperature": 5 } }, output: FFAB013200
  * @example payload: { "temperature_calibration": { "enable": 1, "temperature": -5 } }, output: FFAB01CEFF
  * @example payload: { "temperature_calibration": { "enable": 0 } }, output: FFAB000000
+ * @since v1.9
  */
 function setTemperatureCalibration(enable, temperature) {
     var temperature_calibration_enable_values = [0, 1];
@@ -287,9 +360,38 @@ function setTemperatureCalibration(enable, temperature) {
 }
 
 /**
+ * set temperature threshold alarm configuration
+ * @param {number} condition values: (0: disable, 1: below, 2: above, 3: between, 4: outside)
+ * @param {number} min condition=(below, within, outside)
+ * @param {number} max condition=(above, within, outside)
+ * @param {number} alarm_interval unit: minute
+ * @param {number} alarm_times
+ * @example { "temperature_alarm_config": { "condition": 1, "min": 10, "max": 20, "alarm_interval": 10, "alarm_times": 10 } }
+ */
+function setTemperatureAlarmConfig(condition, min, max, alarm_interval, alarm_times) {
+    var condition_values = [0, 1, 2, 3, 4];
+    if (condition_values.indexOf(condition) === -1) {
+        throw new Error("temperature_alarm_config.condition must be one of " + condition_values.join(", "));
+    }
+
+    var alarm_type = 1;
+    var data = condition | (alarm_type << 3);
+
+    var buffer = new Buffer(11);
+    buffer.writeUInt8(0xff);
+    buffer.writeUInt8(0x06);
+    buffer.writeUInt8(data);
+    buffer.writeInt16LE(min * 10);
+    buffer.writeInt16LE(max * 10);
+    buffer.writeUInt16LE(alarm_interval);
+    buffer.writeUInt16LE(alarm_times);
+    return buffer.toBytes();
+}
+
+/**
  * set d2d command
- * @param {string} d2d_command 
- * @example payload: { "d2d_command": "0000" } output: FF34000000 
+ * @param {string} d2d_command
+ * @example payload: { "d2d_command": "0000" } output: FF34000000
  */
 function setD2DCommand(d2d_command) {
     var d2d_command_values = [0, 1, 2];
@@ -297,7 +399,7 @@ function setD2DCommand(d2d_command) {
         throw new Error("d2d_command must be one of " + d2d_command_values.join(", "));
     }
 
-    var buffer = new Buffer(4);
+    var buffer = new Buffer(5);
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0x34);
     buffer.writeUInt8(0x00);

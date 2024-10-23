@@ -69,12 +69,12 @@ function milesightDeviceEncode(payload) {
         }
         // ACTIVE POWER
         else if (channel_id === 0x04 && channel_type === 0x80) {
-            decoded.power = readUInt32LE(bytes.slice(i, i + 4));
+            decoded.active_power = readUInt32LE(bytes.slice(i, i + 4));
             i += 4;
         }
         // POWER FACTOR
         else if (channel_id === 0x05 && channel_type === 0x81) {
-            decoded.factor = bytes[i];
+            decoded.power_factor = bytes[i];
             i += 1;
         }
         // POWER CONSUMPTION
@@ -97,11 +97,17 @@ function milesightDeviceEncode(payload) {
             decoded.temperature = readInt16LE(bytes.slice(i, i + 2)) / 10;
             i += 2;
         }
-        // TEMPERATURE MUTATION ALARM (@since v1.9)
+        // TEMPERATURE THRESHOLD ALARM (@since v2.1)
+        else if (channel_id === 0x89 && channel_type === 0x67) {
+            decoded.temperature = readInt16LE(bytes.slice(i, i + 2)) / 10;
+            decoded.temperature_alarm = readTemperatureAlarm(bytes[i + 2]);
+            i += 3;
+        }
+        // TEMPERATURE MUTATION ALARM (@since v1.9 @deprecated v2.1)
         else if (channel_id === 0x99 && channel_type === 0x67) {
             decoded.temperature = readInt16LE(bytes.slice(i, i + 2)) / 10;
             decoded.temperature_mutation = readInt16LE(bytes.slice(i + 2, i + 4)) / 10;
-            decoded.temperature_alarm = readTemperatureAlarm(bytes[i + 4]);
+            decoded.temperature_alarm = "mutation alarm";
             i += 5;
         } else {
             break;
@@ -180,11 +186,11 @@ function readLoRaWANType(type) {
 function readTemperatureAlarm(type) {
     switch (type) {
         case 0:
-            return "threshold alarm";
-        case 1:
             return "threshold alarm release";
+        case 1:
+            return "threshold alarm";
         case 2:
-            return "mutation alarm";
+            return "overheat alarm";
         default:
             return "unknown";
     }
