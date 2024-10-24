@@ -8,12 +8,12 @@ For more detailed information, please visit [milesight official website](https:/
 
 ## Payload Definition
 
-|     CHANNEL      |  ID  | TYPE | LENGTH | DESCRIPTION                                                                                                                                       |
-| :--------------: | :--: | :--: | :----: | ------------------------------------------------------------------------------------------------------------------------------------------------- |
-|     Battery      | 0x01 | 0x75 |   1    | battery(1B)<br/>battery, unit: %                                                                                                                  |
-|  Liquid Status   | 0x03 | 0xED |   1    | liquid(1B)<br/>liquid, values: (0: uncalibrated, 1: full, 2: empty, 0xff: error)                                                                  |
-| Calibrate Result | 0x04 | 0xEE |   1    | calibrate_result(1B)<br/>calibrate_result, values: (0: failed, 1: success)                                                                        |
-|   Liquid Alarm   | 0x83 | 0xED |   2    | liquid(1B) + alarm(1B)<br/>liquid, values: (0: uncalibrated, 1: full, 2: empty, 0xff: error)<br/>alarm: (0: empty alarm release, 1: empty alarm ) |
+|     CHANNEL      |  ID  | TYPE | LENGTH | DESCRIPTION                                                                                                                                                                                             |
+| :--------------: | :--: | :--: | :----: | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+|     Battery      | 0x01 | 0x75 |   1    | battery(1B)<br/>battery, unit: %                                                                                                                                                                        |
+|  Liquid Status   | 0x03 | 0xED |   1    | liquid(1B)<br/>liquid, values: (0: uncalibrated, 1: full, 2: critical liquid level alert, 0xff: error)                                                                                                  |
+| Calibrate Result | 0x04 | 0xEE |   1    | calibrate_result(1B)<br/>calibrate_result, values: (0: failed, 1: success)                                                                                                                              |
+|   Liquid Alarm   | 0x83 | 0xED |   2    | liquid(1B) + alarm(1B)<br/>liquid, values: (0: uncalibrated, 1: full, 2: critical liquid level alert, 0xff: error)<br/>alarm: (0: critical liquid level alarm release, 1: critical liquid level alarm ) |
 
 ## Example
 
@@ -31,7 +31,7 @@ For more detailed information, please visit [milesight official website](https:/
 
 // 03ED02
 {
-    "liquid": "empty"
+    "liquid": "critical liquid level alert"
 }
 
 // 03EDFF
@@ -42,13 +42,13 @@ For more detailed information, please visit [milesight official website](https:/
 // 83ED0100
 {
     "liquid": "full",
-    "liquid_alarm": "empty alarm release"
+    "liquid_alarm": "critical liquid level alarm release"
 }
 
 // 83ED0201
 {
-    "liquid": "empty",
-    "liquid_alarm": "empty alarm"
+    "liquid": "critical liquid level alert",
+    "liquid_alarm": "critical liquid level alarm"
 }
 
 // 04EE01
