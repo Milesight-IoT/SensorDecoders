@@ -28,9 +28,9 @@ function milesightDeviceDecode(bytes) {
         var channel_id = bytes[i++];
         var channel_type = bytes[i++];
 
-        // PROTOCOL VESION
+        // PROTOCOL VERSION
         if (channel_id === 0xff && channel_type === 0x01) {
-            decoded.protocol_version = bytes[i];
+            decoded.ipso_version = readProtocolVersion(bytes[i]);
             i += 1;
         }
         // HARDWARE VERSION
@@ -45,7 +45,7 @@ function milesightDeviceDecode(bytes) {
         }
         // POWER ON
         else if (channel_id === 0xff && channel_type === 0x0b) {
-            decoded.power = "on";
+            decoded.device_status = "on";
             i += 1;
         }
         // LORAWAN CLASS TYPE
@@ -60,7 +60,7 @@ function milesightDeviceDecode(bytes) {
         }
         // POWER STATUS
         else if (channel_id === 0xff && channel_type === 0xcc) {
-            decoded.power_status = bytes[i];
+            decoded.power_status = readPowerStatus(bytes[i]);
             i += 1;
         }
         // BATTERY
@@ -169,8 +169,14 @@ function readAlarmType(type) {
         case 4:
             return "high temperature alarm release";
         default:
-            return "unkown";
+            return "unknown";
     }
+}
+
+function readProtocolVersion(bytes) {
+    var major = (bytes & 0xf0) >> 4;
+    var minor = bytes & 0x0f;
+    return "v" + major + "." + minor;
 }
 
 function readHardwareVersion(bytes) {
@@ -193,9 +199,8 @@ function readString(bytes) {
     return temp.join("");
 }
 
-function readPowerStatus(bytes) {
-    var status = bytes[0] & 0xff;
-    switch (status) {
+function readPowerStatus(type) {
+    switch (type) {
         case 0:
             return "Battery Supply";
         case 1:
@@ -203,13 +208,12 @@ function readPowerStatus(bytes) {
         case 2:
             return "Battery Charging";
         default:
-            return "Unkown";
+            return "Unknown";
     }
 }
 
-function readLorawanClass(bytes) {
-    var status = bytes[0] & 0xff;
-    switch (status) {
+function readLorawanClass(type) {
+    switch (type) {
         case 0:
             return "ClassA";
         case 1:
@@ -219,6 +223,6 @@ function readLorawanClass(bytes) {
         case 3:
             return "ClassCtoB";
         default:
-            return "Unkown";
+            return "Unknown";
     }
 }
