@@ -48,14 +48,24 @@ function milesightDeviceDecode(bytes) {
             decoded.humidity = bytes[i] / 2;
             i += 1;
         }
-        // NH3
-        else if (channel_id === 0x04 && channel_type === 0x7d) {
-            decoded.nh3 = readUInt16LE(bytes.slice(i, i + 2)) / 100;
+        // TVOC
+        else if (channel_id === 0x18 && channel_type === 0x7d) {
+            var tvoc_origin_value = readUInt16LE(bytes.slice(i, i + 2));
+            if (tvoc_origin_value > 0xfffe) {
+                decoded.tvoc_exception = "polarizing";
+            } else {
+                decoded.tvoc = tvoc_origin_value / 1000;
+            }
             i += 2;
         }
-        // H2S
-        else if (channel_id === 0x05 && channel_type === 0x7d) {
-            decoded.h2s = readUInt16LE(bytes.slice(i, i + 2)) / 100;
+        // NOX
+        else if (channel_id === 0x37 && channel_type === 0x7d) {
+            var nox_origin_value = readUInt16LE(bytes.slice(i, i + 2));
+            if (nox_origin_value > 0xfffe) {
+                decoded.nox_exception = "polarizing";
+            } else {
+                decoded.nox = nox_origin_value / 1000;
+            }
             i += 2;
         } else {
             break;
