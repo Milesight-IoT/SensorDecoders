@@ -50,12 +50,35 @@ function milesightDeviceDecode(bytes) {
         }
         // NH3
         else if (channel_id === 0x04 && channel_type === 0x7d) {
-            decoded.nh3 = readUInt16LE(bytes.slice(i, i + 2)) / 100;
+            var nh3_raw_data = readUInt16LE(bytes.slice(i, i + 2));
+            switch (nh3_raw_data) {
+                case 0xfffe:
+                    decoded.nh3_sensor_status = "polarizing";
+                    break;
+                case 0xffff:
+                    decoded.nh3_sensor_status = "device error";
+                    break;
+                default:
+                    decoded.nh3 = nh3_raw_data / 100;
+                    break;
+            }
+
             i += 2;
         }
         // H2S
         else if (channel_id === 0x05 && channel_type === 0x7d) {
-            decoded.h2s = readUInt16LE(bytes.slice(i, i + 2)) / 100;
+            var h2s_raw_data = readUInt16LE(bytes.slice(i, i + 2));
+            switch (h2s_raw_data) {
+                case 0xfffe:
+                    decoded.h2s_sensor_status = "polarizing";
+                    break;
+                case 0xffff:
+                    decoded.h2s_sensor_status = "device error";
+                    break;
+                default:
+                    decoded.h2s = h2s_raw_data / 100;
+                    break;
+            }
             i += 2;
         } else {
             break;
