@@ -1,11 +1,11 @@
 /**
  * Payload Encoder
  *
- * Copyright 2024 Milesight IoT
+ * Copyright 2025 Milesight IoT
  *
  * @product VS373
  */
-var RAW_VALUE = 0x01;
+var RAW_VALUE = 0x00;
 
 // Chirpstack v4
 function encodeDownlink(input) {
@@ -78,10 +78,7 @@ function milesightDeviceEncode(payload) {
         }
     }
     if ("delete_region" in payload) {
-        for (var i = 0; i < payload.delete_region.length; i++) {
-            var region_id = payload.delete_region[i];
-            encoded = encoded.concat(deleteRegion(region_id));
-        }
+        encoded = encoded.concat(deleteRegion(payload.delete_region));
     }
     if ("region_detection_settings" in payload) {
         encoded = encoded.concat(setRegionDetectionSettings(payload.region_detection_settings));
@@ -95,14 +92,8 @@ function milesightDeviceEncode(payload) {
     if ("retransmit_interval" in payload) {
         encoded = encoded.concat(setRetransmitInterval(payload.retransmit_interval));
     }
-    if ("stop_retransmit" in payload) {
-        encoded = encoded.concat(stopRetransmit(payload.stop_retransmit));
-    }
-    if ("fetch_history" in payload) {
-        encoded = encoded.concat(fetchHistory(payload.fetch_history));
-    }
-    if ("confirm_mode" in payload) {
-        encoded = encoded.concat(setConfirmMode(payload.confirm_mode));
+    if ("confirm_mode_enable" in payload) {
+        encoded = encoded.concat(setConfirmMode(payload.confirm_mode_enable));
     }
     if ("adr_enable" in payload) {
         encoded = encoded.concat(setAdrEnable(payload.adr_enable));
@@ -119,14 +110,20 @@ function milesightDeviceEncode(payload) {
     if ("d2d_slave_config" in payload) {
         encoded = encoded.concat(setD2dSlaveConfig(payload.d2d_slave_config));
     }
-    if ("wifi_enable" in payload) {
-        encoded = encoded.concat(setWifiEnable(payload.wifi_enable));
-    }
-    if ("wifi_ssid_hidden" in payload) {
-        encoded = encoded.concat(setWifiSsidHidden(payload.wifi_ssid_hidden));
-    }
     if ("timestamp" in payload) {
         encoded = encoded.concat(setTime(payload.timestamp));
+    }
+    if ("wifi_enable" in payload) {
+        encoded = encoded.concat(setWiFiEnable(payload.wifi_enable));
+    }
+    if ("wifi_ssid_hidden" in payload) {
+        encoded = encoded.concat(setWiFiSSIDHidden(payload.wifi_ssid_hidden));
+    }
+    if ("stop_transmit" in payload) {
+        encoded = encoded.concat(stopTransmit(payload.stop_transmit));
+    }
+    if ("fetch_history" in payload) {
+        encoded = encoded.concat(fetchHistory(payload.fetch_history));
     }
 
     return encoded;
@@ -153,7 +150,7 @@ function reboot(reboot) {
 /**
  * report device status
  * @param {number} report_status values: (0: no, 1: yes)
- * @example payload: { "report_status": 1 } output: FF28FF
+ * @example { "report_status": 1 }
  */
 function reportStatus(report_status) {
     var value_map = { 0: "no", 1: "yes" };
@@ -165,11 +162,7 @@ function reportStatus(report_status) {
     if (getValue(value_map, report_status) === 0) {
         return [];
     }
-    var buffer = new Buffer(3);
-    buffer.writeUInt8(0xff);
-    buffer.writeUInt8(0x28);
-    buffer.writeUInt8(0xff);
-    return buffer.toBytes();
+    return [0xff, 0x28, 0xff];
 }
 
 /**
@@ -245,7 +238,7 @@ function setDetectionRegion(detection_region_settings) {
  * @param {object} detection_settings
  * @param {number} detection_settings.mode values: (0: default, 1: bedroom, 2: bathroom, 3: public)
  * @param {number} detection_settings.sensitivity values: (0: low, 1: high)
- * @example { "detection": { "mode": 0, "sensitivity": 1 } }
+ * @example { "detection_settings": { "mode": 0, "sensitivity": 1 } }
  */
 function setDetectionModeAndSensitivity(detection_settings) {
     var mode = detection_settings.mode;
@@ -276,7 +269,7 @@ function setDetectionModeAndSensitivity(detection_settings) {
  * @param {number} fall_detection_settings.confirm_time unit: s, range: [0, 300]
  * @param {number} fall_detection_settings.delay_report_time unit: s, range: [0, 300]
  * @param {number} fall_detection_settings.alarm_duration unit: s, range: [0, 1800]
- * @example { "fall_detection": { "confirm_time": 10, "delay_report_time": 10, "alarm_duration": 10 } }
+ * @example { "fall_detection_settings": { "confirm_time": 10, "delay_report_time": 10, "alarm_duration": 10 } }
  */
 function setFallDetectionSettings(fall_detection_settings) {
     var confirm_time = fall_detection_settings.confirm_time;
@@ -307,7 +300,7 @@ function setFallDetectionSettings(fall_detection_settings) {
  * @param {object} dwell_detection_settings
  * @param {number} dwell_detection_settings.enable values: (0: disable, 1: enable)
  * @param {number} dwell_detection_settings.dwell_time unit: min
- * @example { "dwell_detection": { "enable": 1, "dwell_time": 10 } }
+ * @example { "dwell_detection_settings": { "enable": 1, "dwell_time": 10 } }
  */
 function setDwellDetectionSettings(dwell_detection_settings) {
     var enable = dwell_detection_settings.enable;
@@ -365,7 +358,7 @@ function setLedIndicatorEnable(led_indicator_enable) {
     }
 
     var buffer = new Buffer(3);
-    buffer.writeUInt8(0xf9);
+    buffer.writeUInt8(0xff);
     buffer.writeUInt8(0x2f);
     buffer.writeUInt8(getValue(enable_map, led_indicator_enable));
     return buffer.toBytes();
@@ -384,7 +377,7 @@ function setBuzzerEnable(buzzer_enable) {
     }
 
     var buffer = new Buffer(3);
-    buffer.writeUInt8(0xf9);
+    buffer.writeUInt8(0xff);
     buffer.writeUInt8(0x3e);
     buffer.writeUInt8(getValue(enable_map, buzzer_enable));
     return buffer.toBytes();
@@ -414,7 +407,7 @@ function releaseAlarm(release_alarm) {
  * @param {object} radar_settings
  * @param {number} radar_settings.mode values: (0: const, 1: free)
  * @param {number} radar_settings.frame_rate unit: fps
- * @example { "radar": { "mode": 0, "frame_rate": 1 } }
+ * @example { "radar_settings": { "mode": 0, "frame_rate": 1 } }
  */
 function setRadarSettings(radar_settings) {
     var mode = radar_settings.mode;
@@ -434,7 +427,7 @@ function setRadarSettings(radar_settings) {
     return buffer.toBytes();
 }
 
-function setTargetDetectionMinimumHeight(target_detection_minimum_height) {}
+function setTargetDetectionMinimumHeight(target_detection_minimum_height) { }
 
 /**
  * set existence detection settings
@@ -489,19 +482,37 @@ function setRegionSettings(region_settings) {
 
 /**
  * delete region
- * @param {number} delete_region_id range: [1, 4]
- * @example { "delete_region_id": 1 }
+ * @param {object} delete_region
+ * @param {number} delete_region.region_1 values: (0: no, 1: yes)
+ * @param {number} delete_region.region_2 values: (0: no, 1: yes)
+ * @param {number} delete_region.region_3 values: (0: no, 1: yes)
+ * @param {number} delete_region.region_4 values: (0: no, 1: yes)
+ * @example { "delete_region": { "region_1": 1 } }
  */
-function deleteRegion(delete_region_id) {
-    if (delete_region_id < 1 || delete_region_id > 4) {
-        throw new Error("delete_region_id._item must be in [1, 4]");
+function deleteRegion(delete_region) {
+    var yes_no_map = { 0: "no", 1: "yes" };
+    var yes_no_values = getValues(yes_no_map);
+
+    var data = [];
+    var region_offset = { "region_1": 0, "region_2": 1, "region_3": 2, "region_4": 3 };
+    for (var key in region_offset) {
+        if (key in delete_region) {
+            if (yes_no_values.indexOf(delete_region[key]) === -1) {
+                throw new Error("delete_region." + key + " must be in " + yes_no_values.join(", "));
+            }
+            if (getValue(yes_no_map, delete_region[key]) === 0) {
+                continue;
+            }
+
+            var buffer = new Buffer(3);
+            buffer.writeUInt8(0xf9);
+            buffer.writeUInt8(0x48);
+            buffer.writeUInt8(region_offset[key]);
+            data = data.concat(buffer.toBytes());
+        }
     }
 
-    var buffer = new Buffer(3);
-    buffer.writeUInt8(0xf9);
-    buffer.writeUInt8(0x48);
-    buffer.writeUInt8(delete_region_id - 1);
-    return buffer.toBytes();
+    return data;
 }
 
 /**
@@ -663,13 +674,13 @@ function stopTransmit(stop_transmit) {
     if (getValue(value_map, stop_transmit) === 0) {
         return [];
     }
-    return [0xff, 0x6d, 0xff];
+    return [0xfd, 0x6d, 0xff];
 }
 
 /**
  * set confirm mode
- * @param {number} confirm_mode values: (0: disable, 1: enable)
- * @example { "confirm_mode": 1 }
+ * @param {number} confirm_mode_enable values: (0: disable, 1: enable)
+ * @example { "confirm_mode_enable": 1 }
  */
 function setConfirmMode(confirm_mode_enable) {
     var enable_map = { 0: "disable", 1: "enable" };
@@ -750,7 +761,7 @@ function setD2DEnable(d2d_enable) {
 /**
  * d2d master configuration
  * @param {object} d2d_master_config
- * @param {number} d2d_master_config.mode values: (0: occupied, 1: vacant, 2: fall, 3: out of bed, 4: motionless, 5: dwell)
+ * @param {number} d2d_master_config.mode values: (0: occupied, 1: vacant, 2: fall, 3: out_of_bed, 4: motionless, 5: dwell)
  * @param {number} d2d_master_config.enable values: (0: disable, 1: enable)
  * @param {number} d2d_master_config.uplink_enable values: (0: disable, 1: enable)
  * @param {string} d2d_master_config.d2d_cmd
@@ -766,7 +777,7 @@ function setD2DMasterConfig(d2d_master_config) {
     var time_enable = d2d_master_config.time_enable;
     var time = d2d_master_config.time;
 
-    var mode_map = { 0: "occupied", 1: "vacant", 2: "fall", 3: "out of bed", 4: "motionless", 5: "dwell" };
+    var mode_map = { 0: "occupied", 1: "vacant", 2: "fall", 3: "out_of_bed", 4: "motionless", 5: "dwell" };
     var mode_values = getValues(mode_map);
     if (mode_values.indexOf(mode) === -1) {
         throw new Error("d2d_master_config._item.mode must be one of " + mode_values.join(", "));
@@ -810,7 +821,7 @@ function setD2DSlaveConfig(d2d_slave_config) {
     var control_type = d2d_slave_config.control_type;
     var alarm_type = d2d_slave_config.alarm_type;
 
-    var mode_map = { 0: "occupied", 1: "vacant", 2: "fall", 3: "out of bed", 4: "motionless", 5: "dwell" };
+    var mode_map = { 0: "occupied", 1: "vacant", 2: "fall", 3: "out_of_bed", 4: "motionless", 5: "dwell" };
     var mode_values = getValues(mode_map);
     if (mode_values.indexOf(mode) === -1) {
         throw new Error("d2d_slave_config.mode must be one of " + mode_values.join(", "));
@@ -820,7 +831,7 @@ function setD2DSlaveConfig(d2d_slave_config) {
     if (control_type_values.indexOf(control_type) === -1) {
         throw new Error("d2d_slave_config.control_type must be one of " + control_type_values.join(", "));
     }
-    var alarm_type_map = { 1: "alarm deactivate", 2: "wifi on", 3: "wifi off" };
+    var alarm_type_map = { 1: "alarm_deactivate", 2: "wifi_on", 3: "wifi_off" };
     var alarm_type_values = getValues(alarm_type_map);
     if (alarm_type_values.indexOf(alarm_type) === -1) {
         throw new Error("d2d_slave_config.alarm_type must be one of " + alarm_type_values.join(", "));
@@ -836,6 +847,11 @@ function setD2DSlaveConfig(d2d_slave_config) {
     return buffer.toBytes();
 }
 
+/**
+ * set WiFi enable
+ * @param {number} wifi_enable values: (0: disable, 1: enable)
+ * @example { "wifi_enable": 1 }
+ */
 function setWiFiEnable(wifi_enable) {
     var enable_map = { 0: "disable", 1: "enable" };
     var enable_values = getValues(enable_map);
@@ -845,7 +861,7 @@ function setWiFiEnable(wifi_enable) {
 
     var buffer = new Buffer(3);
     buffer.writeUInt8(0xff);
-    buffer.writeUInt8(0x41);
+    buffer.writeUInt8(0x42);
     buffer.writeUInt8(getValue(enable_map, wifi_enable));
     return buffer.toBytes();
 }
@@ -904,7 +920,7 @@ function getValue(map, value) {
 
     for (var key in map) {
         if (map[key] === value) {
-            return key;
+            return parseInt(key);
         }
     }
 
