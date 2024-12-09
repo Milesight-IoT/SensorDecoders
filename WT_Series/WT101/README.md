@@ -2,7 +2,7 @@
 
 The payload decoder function applies to WT101.
 
-For more detailed information, please visit Milesight's [official website](https://www.milesight.com/iot/product/lorawan-sensor/wt101).
+For more detailed information, please visit [Milesight Official Website](https://www.milesight.com/iot/product/lorawan-sensor/wt101).
 
 ![WT101](WT101.png)
 
@@ -26,7 +26,7 @@ For more detailed information, please visit Milesight's [official website](https
 | :------------------------------ | :--: | :--: | :----: | :-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Battery                         | 0x01 | 0x75 |   1    | battery(1B)<br />battery, read: uint8, unit：%                                                                                                                                                      |
 | Ambient Temperature             | 0x03 | 0x67 |   2    | temperature(2B)<br />temperature, read: int16/10, unit: ℃                                                                                                                                           |
-| Target Temperature              | 0x04 | 0x67 |   2    | temperature_target(2B)<br />temperature_target, read: int16/10, unit: ℃                                                                                                                             |
+| Target Temperature              | 0x04 | 0x67 |   2    | target_temperature(2B)<br />target_temperature, read: int16/10, unit: ℃                                                                                                                             |
 | Valve Opening                   | 0x05 | 0x92 |   1    | valve_opening(1B)<br />valve_opening, read: uint8, unit: %                                                                                                                                          |
 | Installation Status             | 0x06 | 0x00 |   1    | tamper_status(1B)<br />tamper_status, read: uint8, values: (0: installed, 1: uninstalled)                                                                                                           |
 | Open Window Detection           | 0x07 | 0x00 |   1    | window_detection(1B)<br />window_detection, read: uint8, values: (0: normal, 1: open)                                                                                                               |
@@ -42,7 +42,7 @@ For more detailed information, please visit Milesight's [official website](https
 {
     "battery": 97,
     "temperature": 26.6,
-    "temperature_target": 30,
+    "target_temperature": 30,
     "valve_opening": 100,
     "motor_position": 0,
     "motor_stroke": 0
