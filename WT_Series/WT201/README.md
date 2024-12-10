@@ -2,7 +2,7 @@
 
 The payload decoder function is applicable to WT201.
 
-For more detailed information, please visit Milesight official website(https://www.milesight-iot.com).
+For more detailed information, please visit Milesight Official Website(https://www.milesight.com/iot/product/lorawan-sensor/wt201).
 
 ![WT201](WT201.png)
 
@@ -72,10 +72,10 @@ For more detailed information, please visit Milesight official website(https://w
     "fan_mode": "auto",
     "fan_status": "standby",
     "plan_event": "not executed",
+    "target_temperature": 16.6,
     "temperature": 25.8,
-    "temperature_ctl_mode": "heat",
-    "temperature_ctl_status": "standby",
-    "temperature_target": 16.6
+    "temperature_control_mode": "heat",
+    "temperature_control_status": "standby"
 }
 
 // 8367FB0009
@@ -91,10 +91,10 @@ For more detailed information, please visit Milesight official website(https://w
             "fan_mode": "auto",
             "fan_status": "standby",
             "system_status": "on",
+            "target_temperature": 16.6,
             "temperature": 27,
-            "temperature_ctl_mode": "heat",
-            "temperature_ctl_status": "standby",
-            "temperature_target": 16.6,
+            "temperature_control_mode": "heat",
+            "temperature_control_status": "standby",
             "timestamp": 1695172444
         }
     ]
@@ -102,44 +102,83 @@ For more detailed information, please visit Milesight official website(https://w
 
 // FFCB0D1101 FFCA158004
 {
-    "ob_mode": "heat",
-    "temperature_ctl_mode_enable": ["heat", "cool", "auto"],
-    "temperature_ctl_status_enable": ["stage-1 heat", "aux heat", "stage-1 cool"],
-    "wires": ["y1", "gh", "ob", "aux"]
+    "ob_mode": "on heat",
+    "temperature_control_support_mode": {
+        "auto": "enable",
+        "cool": "enable",
+        "em_heat": "disable",
+        "heat": "enable"
+    },
+    "temperature_control_support_status": {
+        "aux_heat": "enable",
+        "stage_1_cool": "enable",
+        "stage_1_heat": "enable",
+        "stage_2_cool": "disable",
+        "stage_2_heat": "disable",
+        "stage_3_heat": "disable",
+        "stage_4_heat": "disable"
+    },
+    "wires": {
+        "aux": "on",
+        "di": "off",
+        "e": "off",
+        "gh": "on",
+        "gl": "off",
+        "ob": "on",
+        "pek": "off",
+        "w1": "off",
+        "w2": "off",
+        "y1": "on",
+        "y2": "off"
+    }
 }
 
 // FFC900000000B302 FFC9020101280000
 {
     "plan_schedule": [
         {
+            "enable": "disable",
+            "event": "wake",
             "index": 1,
-            "plan_enable": "disable",
-            "time": "11:31",
-            "type": "wake",
-            "week_recycle": []
+            "time": 691,
+            "week_recycle": {
+                "friday": "disable",
+                "monday": "disable",
+                "saturday": "disable",
+                "sunday": "disable",
+                "thursday": "disable",
+                "tuesday": "disable",
+                "wednesday": "disable"
+            }
         },
         {
+            "enable": "enable",
+            "event": "home",
             "index": 2,
-            "plan_enable": "enable",
-            "time": "0:00",
-            "type": "home",
-            "week_recycle": [
-                "Wed.",
-                "Fri."
-            ]
+            "time": 0,
+            "week_recycle": {
+                "friday": "enable",
+                "monday": "disable",
+                "saturday": "disable",
+                "sunday": "disable",
+                "thursday": "disable",
+                "tuesday": "disable",
+                "wednesday": "enable"
+            }
         }
     ]
 }
 
 // FFC80303014E36
 {
-    "plan_settings": [
+    "plan_config": [
         {
+            "event": "sleep",
             "fan_mode": "on",
-            "temperature_ctl_mode": "auto",
-            "temperature_error": 5.4,
-            "temperature_target": 78,
-            "type": "sleep"
+            "target_temperature": 78,
+            "temperature_control_mode": "auto",
+            "temperature_tolerance": 5.4,
+            "temperature_unit": "celsius"
         }
     ]
 }
