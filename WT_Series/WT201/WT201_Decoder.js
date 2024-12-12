@@ -75,6 +75,11 @@ function milesightDeviceDecode(bytes) {
             decoded.target_temperature = readInt16LE(bytes.slice(i, i + 2)) / 10;
             i += 2;
         }
+        // TARGET TEMPERATURE 2 (ODM: 2706)
+        else if (channel_id === 0x0b && channel_type === 0x67) {
+            decoded.target_temperature_2 = readInt16LE(bytes.slice(i, i + 2)) / 10;
+            i += 2;
+        }
         // TEMPERATURE CONTROL
         else if (channel_id === 0x05 && channel_type === 0xe7) {
             var value = bytes[i];
@@ -193,6 +198,30 @@ function milesightDeviceDecode(bytes) {
 
             decoded.history = decoded.history || [];
             decoded.history.push(data);
+        }
+        // HISTORICAL DATA (ODM: 2706)
+        else if (channel_id === 0x21 && channel_type === 0xce) {
+            var timestamp = readUInt32LE(bytes.slice(i, i + 4));
+            var value1 = readUInt16LE(bytes.slice(i + 4, i + 6));
+            var value2 = readUInt16LE(bytes.slice(i + 6, i + 8));
+            var value3 = readUInt16LE(bytes.slice(i + 8, i + 10));
+
+            var data = { timestamp: timestamp };
+            data.fan_mode = readFanMode(value1 & 0x03);
+            data.fan_status = readFanStatus((value1 >>> 2) & 0x03);
+            data.system_status = readOnOffStatus((value1 >>> 4) & 0x01);
+            var temperature = ((value1 >>> 5) & 0x7ff) / 10 - 100;
+            data.temperature = Number(temperature.toFixed(1));
+            data.temperature_control_mode = readTemperatureControlMode(value2 & 0x03);
+            var target_temperature = ((value2 >>> 5) & 0x7ff) / 10 - 100;
+            data.target_temperature = Number(target_temperature.toFixed(1));
+            data.temperature_control_status = readTemperatureControlStatus(value3 & 0x1f);
+            data.target_temperature_2 = ((value3 >>> 5) & 0x7ff) / 10 - 100;
+            data.target_temperature_2 = Number(target_temperature_2.toFixed(1));
+
+            decoded.history = decoded.history || [];
+            decoded.history.push(data);
+            i += 10;
         }
         // DOWNLINK RESPONSE
         else if (channel_id === 0xfe) {
@@ -429,6 +458,7 @@ function readTemperatureControlStatus(type) {
         5: "em heat",
         6: "stage-1 cool",
         7: "stage-2 cool",
+        8: "stage-5 heat",
     };
     return getValue(temperature_control_status_map, type);
 }
