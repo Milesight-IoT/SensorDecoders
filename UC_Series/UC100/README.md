@@ -2,24 +2,34 @@
 
 The payload decoder function is applicable to UC100.
 
-For more detailed information, please visit [milesight official website](https://www.milesight-iot.com).
+For more detailed information, please visit [Milesight Official Website](https://www.milesight.com/iot/product/iot-controller/uc100).
 
 ![UC100](UC100.png)
 
 ## Payload Definition
 
-|     CHANNEL      |  ID  | TYPE | LENGTH | DESCRIPTION                                                                                                                                                                                          |
-| :--------------: | :--: | :--: | :----: | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-|   IPSO Version   | 0xFF | 0x01 |   1    | ipso_version(1B)                                                                                                                                                                                     |
-|  Device Status   | 0xFF | 0x0B |   1    | device_status(1B)                                                                                                                                                                                    |
-|  Serial Number   | 0xFF | 0x16 |   8    | sn(8B)                                                                                                                                                                                               |
-| Hardware Version | 0xFF | 0x09 |   2    | hardware_version(2B)                                                                                                                                                                                 |
-| Firmware Version | 0xFF | 0x0A |   2    | firmware_version(2B)                                                                                                                                                                                 |
-|      Modbus      | 0xFF | 0x19 |   N    | modbus_chn_id(1B) + data_size(1B) + data_type(1B) + channel_value(MB)                                                                                                                                |
-|   Modbus Error   | 0xFF | 0x15 |   1    | modbus_chn_id(1B)                                                                                                                                                                                    |
-|   Modbus Alarm   | 0xFF | 0xEE |   N    | modbus_chn_def(1B) + data_length(1B) + modbus_chn_data_def(1B) + data(MB)<br/>modbus_chn_def, modbus_chn_id(0..5) + modbus_chn_event(6..7)<br/>modbus_chn_data_def, modbus_data_type(0..6) + sign(7) |
-|  Modbus History  | 0x20 | 0xCE |   10   | timestamp(4B) + data_length(1B) + modbus_chn_data_def(1B) + data(4B)<br/>modbus_chn_data_def, reserved(1) + modbus_data_type(2..6) + sign(7)                                                         |
-| Message Histroy  | 0x20 | 0xCD |   N    | timestamp(4B) + size(1B) + data(MB)                                                                                                                                                                  |
+### Attribute
+
+|     CHANNEL      |  ID  | TYPE | LENGTH | DESCRIPTION                                                                                       |
+| :--------------: | :--: | :--: | :----: | ------------------------------------------------------------------------------------------------- |
+|   IPSO Version   | 0xFF | 0x01 |   1    | ipso_version(1B)                                                                                  |
+| Hardware Version | 0xFF | 0x09 |   2    | hardware_version(2B)                                                                              |
+| Firmware Version | 0xFF | 0x0A |   2    | firmware_version(2B)                                                                              |
+|   TSL Version    | 0xFF | 0xFF |   2    | tsl_version(2B)                                                                                   |
+|  Serial Number   | 0xFF | 0x16 |   8    | sn(8B)                                                                                            |
+|  LoRaWAN Class   | 0xFF | 0x0F |   1    | lorawan_class(1B)<br />lorawan_class, values: (0: Class A, 1: Class B, 2: Class C, 3: Class CtoB) |
+|  Device Status   | 0xFF | 0x0B |   1    | device_status(1B)<br />device_status: values: (1: online)                                         |
+|   Reset Event    | 0xFF | 0xFE |   1    | reset_event(1B)                                                                                   |
+
+### Telemetry
+
+|     CHANNEL     |  ID  | TYPE | LENGTH | DESCRIPTION                                                                                                                                                                                          |
+| :-------------: | :--: | :--: | :----: | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+|     Modbus      | 0xFF | 0x19 |   N    | modbus_chn_id(1B) + data_size(1B) + data_type(1B) + channel_value(MB)                                                                                                                                |
+|  Modbus Error   | 0xFF | 0x15 |   1    | modbus_chn_id(1B)                                                                                                                                                                                    |
+|  Modbus Alarm   | 0xFF | 0xEE |   N    | modbus_chn_def(1B) + data_length(1B) + modbus_chn_data_def(1B) + data(MB)<br/>modbus_chn_def, modbus_chn_id(0..5) + modbus_chn_event(6..7)<br/>modbus_chn_data_def, modbus_data_type(0..6) + sign(7) |
+| Modbus History  | 0x20 | 0xCE |   10   | timestamp(4B) + data_length(1B) + modbus_chn_data_def(1B) + data(4B)<br/>modbus_chn_data_def, reserved(1) + modbus_data_type(2..6) + sign(7)                                                         |
+| Message History | 0x20 | 0xCD |   N    | timestamp(4B) + size(1B) + data(MB)                                                                                                                                                                  |
 
 ### MODBUS DATA DEFINITION
 

@@ -1,10 +1,12 @@
 /**
  * Payload Decoder
  *
- * Copyright 2024 Milesight IoT
+ * Copyright 2025 Milesight IoT
  *
  * @product UC100
  */
+var RAW_VALUE = 0x00;
+
 // Chirpstack v4
 function decodeUplink(input) {
     var decoded = milesightDeviceDecode(input.bytes);
@@ -23,7 +25,8 @@ function Decoder(bytes, port) {
 
 function milesightDeviceDecode(bytes) {
     var decoded = {};
-    for (i = 0; i < bytes.length; ) {
+
+    for (var i = 0; i < bytes.length;) {
         var channel_id = bytes[i++];
         var channel_type = bytes[i++];
 
@@ -42,28 +45,44 @@ function milesightDeviceDecode(bytes) {
             decoded.firmware_version = readFirmwareVersion(bytes.slice(i, i + 2));
             i += 2;
         }
-        // DEVICE STATUS
-        else if (channel_id === 0xff && channel_type === 0x0b) {
-            decoded.device_status = "on";
-            i += 1;
+        // TSL VERSION
+        else if (channel_id === 0xff && channel_type === 0xff) {
+            decoded.tsl_version = readTslVersion(bytes.slice(i, i + 2));
+            i += 2;
         }
         // SERIAL NUMBER
         else if (channel_id === 0xff && channel_type === 0x16) {
             decoded.sn = readSerialNumber(bytes.slice(i, i + 8));
             i += 8;
         }
+        // LORAWAN CLASS TYPE
+        else if (channel_id === 0xff && channel_type === 0x0f) {
+            decoded.lorawan_class = readLoRaWANClass(bytes[i]);
+            i += 1;
+        }
+        // RESET EVENT
+        else if (channel_id === 0xff && channel_type === 0xfe) {
+            decoded.reset_event = readResetEvent(1);
+            i += 1;
+        }
+        // DEVICE STATUS
+        else if (channel_id === 0xff && channel_type === 0x0b) {
+            decoded.device_status = readDeviceStatus(1);
+            i += 1;
+        }
         // MODBUS
         else if (channel_id === 0xff && channel_type === 0x19) {
-            var modbus_chn_id = bytes[i++] + 1;
-            var data_length = bytes[i++];
-            var data_def = bytes[i++];
+            var modbus_chn_id = readUInt8(bytes[i++]) + 1;
+            var data_length = readUInt8(bytes[i++]);
+            var data_def = readUInt8(bytes[i++]);
             var sign = (data_def >>> 7) & 0x01;
             var data_type = data_def & 0x7f; // 0b01111111
             var modbus_chn_name = "modbus_chn_" + modbus_chn_id;
+
             switch (data_type) {
                 case 0:
                 case 1:
-                    decoded[modbus_chn_name] = bytes[i] ? "on" : "off";
+                    decoded[modbus_chn_name] = readOnOffStatus(bytes[i]);
                     i += 1;
                     break;
                 case 2:
@@ -73,11 +92,14 @@ function milesightDeviceDecode(bytes) {
                     break;
                 case 4:
                 case 6:
+                    decoded[modbus_chn_name] = sign ? readInt32LE(bytes.slice(i, i + 4)) : readUInt32LE(bytes.slice(i, i + 4));
+                    i += 4;
+                    break;
                 case 8:
                 case 9:
                 case 10:
                 case 11:
-                    decoded[modbus_chn_name] = sign ? readInt32LE(bytes.slice(i, i + 4)) : readUInt32LE(bytes.slice(i, i + 4));
+                    decoded[modbus_chn_name] = sign ? readInt16LE(bytes.slice(i, i + 2)) : readUInt16LE(bytes.slice(i, i + 2));
                     i += 4;
                     break;
                 case 5:
@@ -89,70 +111,71 @@ function milesightDeviceDecode(bytes) {
         }
         // MODBUS READ ERROR
         else if (channel_id === 0xff && channel_type === 0x15) {
-            var modbus_chn_id = bytes[i] + 1;
+            var modbus_chn_id = readUInt8(bytes[i]) + 1;
             var channel_name = "modbus_chn_" + modbus_chn_id + "_alarm";
-            decoded[channel_name] = "read error";
+            decoded[channel_name] = readSensorStatus(1);
             i += 1;
         }
         // MODBUS ALARM (v1.7+)
         else if (channel_id === 0xff && channel_type === 0xee) {
-            var chn_def = bytes[i++];
-            var data_length = bytes[i++];
-            var data_def = bytes[i++];
+            var chn_def = readUInt8(bytes[i++]);
+            var data_length = readUInt8(bytes[i++]);
+            var data_def = readUInt8(bytes[i++]);
 
-            var modbus_chn_id = (chn_def & 0x1f) + 1;
-            var modbus_alarm = readModbusAlarmType(chn_def >>> 6);
+            var modbus_chn_id = (chn_def & 0x3f) + 1;
+            var modbus_alarm_value = chn_def >>> 6;
             var sign = (data_def >>> 7) & 0x01;
             var data_type = data_def & 0x7f;
 
             var modbus_chn_name = "modbus_chn_" + modbus_chn_id;
-            decoded[modbus_chn_name + "_alarm"] = modbus_alarm;
+            decoded[modbus_chn_name + "_alarm"] = readModbusAlarmType(modbus_alarm_value);
             switch (data_type) {
-                case 0: // MB_REG_COIL
-                case 1: // MB_REG_DISCRETE
-                    decoded[modbus_chn_name] = bytes[i] ? "on" : "off";
+                case 0:
+                case 1:
+                    decoded[modbus_chn_name] = readOnOffStatus(bytes[i]);
                     i += 1;
                     break;
-                case 2: // MB_REG_INPUT_AB
-                case 3: // MB_REG_INPUT_BA
-                case 14: // MB_REG_HOLD_INT16_AB
-                case 15: // MB_REG_HOLD_INT16_BA
+                case 2:
+                case 3:
                     decoded[modbus_chn_name] = sign ? readInt16LE(bytes.slice(i, i + 2)) : readUInt16LE(bytes.slice(i, i + 2));
                     i += 2;
                     break;
-                case 4: // MB_REG_INPUT_INT32_ABCD
-                case 5: // MB_REG_INPUT_INT32_BADC
-                case 6: // MB_REG_INPUT_INT32_CDAB
-                case 7: // MB_REG_INPUT_INT32_DCBA
-                case 16: // MB_REG_HOLD_INT32_ABCD
-                case 17: // MB_REG_HOLD_INT32_BADC
-                case 18: // MB_REG_HOLD_INT32_CDAB
-                case 19: // MB_REG_HOLD_INT32_DCBA
-                case 8: // MB_REG_INPUT_INT32_AB
-                case 9: // MB_REG_INPUT_INT32_CD
-                case 20: // MB_REG_HOLD_INT32_AB
-                case 21: // MB_REG_HOLD_INT32_CD
+                case 4:
+                case 6:
                     decoded[modbus_chn_name] = sign ? readInt32LE(bytes.slice(i, i + 4)) : readUInt32LE(bytes.slice(i, i + 4));
                     i += 4;
                     break;
-                case 10: // MB_REG_INPUT_FLOAT_ABCD
-                case 11: // MB_REG_INPUT_FLOAT_BADC
-                case 12: // MB_REG_INPUT_FLOAT_CDAB
-                case 13: // MB_REG_INPUT_FLOAT_DCBA
-                case 22: // MB_REG_HOLD_FLOAT_ABCD
-                case 23: // MB_REG_HOLD_FLOAT_BADC
-                case 24: // MB_REG_HOLD_FLOAT_CDAB
-                case 25: // MB_REG_HOLD_FLOAT_DCBA
+                case 8:
+                case 9:
+                case 10:
+                case 11:
+                    decoded[modbus_chn_name] = sign ? readInt16LE(bytes.slice(i, i + 2)) : readUInt16LE(bytes.slice(i, i + 2));
+                    i += 4;
+                    break;
+                case 5:
+                case 7:
                     decoded[modbus_chn_name] = readFloatLE(bytes.slice(i, i + 4));
                     i += 4;
                     break;
             }
         }
+        // MODBUS MUTATION (v1.9+)
+        else if (channel_id === 0xf9 && channel_type === 0x5f) {
+            var chn_def = readUInt8(bytes[i]);
+            var modbus_chn_id = (chn_def & 0x3f) + 1;
+            var modbus_alarm_value = chn_def >>> 6;
+            var modbus_chn_name = "modbus_chn_" + modbus_chn_id;
+            if (modbus_alarm_value === 3) {
+                decoded[modbus_chn_name + "_alarm"] = readModbusAlarmType(modbus_alarm_value);
+                decoded[modbus_chn_name + "_mutation"] = readFloatLE(bytes.slice(i + 3, i + 7));
+            }
+            i += 7;
+        }
         // MODBUS HISTORY (v1.7+)
         else if (channel_id === 0x20 && channel_type === 0xce) {
             var timestamp = readUInt32LE(bytes.slice(i, i + 4));
-            var chn_id = bytes[i + 4] + 1;
-            var data_def = bytes[i + 5];
+            var modbus_chn_id = readUInt8(bytes[i + 4]) + 1;
+            var data_def = readUInt8(bytes[i + 5]);
             var sign = (data_def >>> 7) & 0x01;
             var data_type = (data_def >> 2) & 0x1f;
             var read_status = (data_def >>> 1) & 0x01;
@@ -160,21 +183,25 @@ function milesightDeviceDecode(bytes) {
 
             var data = {};
             data.timestamp = timestamp;
-            var modbus_chn_name = "modbus_chn_" + chn_id;
+            var modbus_chn_name = "modbus_chn_" + modbus_chn_id;
             // READ FAILED
             if (read_status === 0) {
-                data[modbus_chn_name + "_alarm"] = "read error";
+                data[modbus_chn_name + "_alarm"] = readSensorStatus(1);
+                i += 4;
             } else {
                 switch (data_type) {
                     case 0: // MB_REG_COIL
                     case 1: // MB_REG_DISCRETE
-                        data[modbus_chn_name] = bytes[i] ? "on" : "off";
+                        data[modbus_chn_name] = readOnOffStatus(bytes[i]);
                         i += 4;
                         break;
                     case 2: // MB_REG_INPUT_AB
                     case 3: // MB_REG_INPUT_BA
                     case 14: // MB_REG_HOLD_INT16_AB
                     case 15: // MB_REG_HOLD_INT16_BA
+                        data[modbus_chn_name] = sign ? readInt32LE(bytes.slice(i, i + 4)) : readUInt32LE(bytes.slice(i, i + 4));
+                        i += 4;
+                        break;
                     case 4: // MB_REG_INPUT_INT32_ABCD
                     case 5: // MB_REG_INPUT_INT32_BADC
                     case 6: // MB_REG_INPUT_INT32_CDAB
@@ -183,11 +210,14 @@ function milesightDeviceDecode(bytes) {
                     case 17: // MB_REG_HOLD_INT32_BADC
                     case 18: // MB_REG_HOLD_INT32_CDAB
                     case 19: // MB_REG_HOLD_INT32_DCBA
+                        data[modbus_chn_name] = sign ? readInt32LE(bytes.slice(i, i + 4)) : readUInt32LE(bytes.slice(i, i + 4));
+                        i += 4;
+                        break;
                     case 8: // MB_REG_INPUT_INT32_AB
                     case 9: // MB_REG_INPUT_INT32_CD
                     case 20: // MB_REG_HOLD_INT32_AB
                     case 21: // MB_REG_HOLD_INT32_CD
-                        data[modbus_chn_name] = sign ? readInt32LE(bytes.slice(i, i + 4)) : readUInt32LE(bytes.slice(i, i + 4));
+                        data[modbus_chn_name] = sign ? readInt16LE(bytes.slice(i, i + 2)) : readUInt16LE(bytes.slice(i, i + 2));
                         i += 4;
                         break;
                     case 10: // MB_REG_INPUT_FLOAT_ABCD
@@ -210,7 +240,7 @@ function milesightDeviceDecode(bytes) {
         // CUSTOM MESSAGE HISTORY (v1.7+)
         else if (channel_id === 0x20 && channel_type === 0xcd) {
             var timestamp = readUInt32LE(bytes.slice(i, i + 4));
-            var msg_length = bytes[i + 4];
+            var msg_length = readUInt8(bytes[i + 4]);
             var msg = readAscii(bytes.slice(i + 5, i + 5 + msg_length));
             i += 5 + msg_length;
 
@@ -221,6 +251,12 @@ function milesightDeviceDecode(bytes) {
             decoded.history = decoded.history || [];
             decoded.history.push(data);
         }
+        // DOWNLINK RESPONSE
+        else if (channel_id === 0xfe || channel_id === 0xff) {
+            var result = handle_downlink_response(channel_type, bytes, i);
+            decoded = Object.assign(decoded, result.data);
+            i = result.offset;
+        }
         // CUSTOM MESSAGE
         else {
             decoded.custom_message = readAscii(bytes.slice(i - 2, bytes.length));
@@ -230,9 +266,148 @@ function milesightDeviceDecode(bytes) {
     return decoded;
 }
 
-/* ******************************************
- * bytes to number
- ********************************************/
+function handle_downlink_response(channel_type, bytes, offset) {
+    var decoded = {};
+
+    switch (channel_type) {
+        case 0x03:
+            decoded.report_interval = readUInt16LE(bytes.slice(offset, offset + 2));
+            offset += 2;
+            break;
+        case 0x04:
+            decoded.confirm_mode_enable = readEnableStatus(bytes[offset]);
+            offset += 1;
+            break;
+        case 0x10:
+            decoded.reboot = readYesNoStatus(1);
+            offset += 1;
+            break;
+        case 0xef:
+            var data = readUInt8(bytes[offset]);
+            // REMOVE MODBUS CHANNELS
+            if (data === 0x00) {
+                var channel_id = readUInt8(bytes[offset + 1]);
+                var remove_modbus_channels = { channel_id: channel_id };
+                offset += 4;
+
+                decoded.remove_modbus_channels = decoded.remove_modbus_channels || [];
+                decoded.remove_modbus_channels.push(remove_modbus_channels);
+            }
+            // ADD MODBUS CHANNELS
+            else if (data === 0x01) {
+                var modbus_channels = readModbusChannels(bytes.slice(offset + 1, offset + 7));
+                offset += 7;
+
+                decoded.modbus_channels = decoded.modbus_channels || [];
+                decoded.modbus_channels.push(modbus_channels);
+            }
+            // MODIFY MODBUS CHANNELS NAME
+            else if (data === 0x02) {
+                var channel_id = readUInt8(bytes[offset + 1]);
+                var length = readUInt8(bytes[offset + 2]);
+                var name = readAscii(bytes.slice(offset + 3, offset + 3 + length));
+                var modbus_channels_name = { channel_id: channel_id, name: name };
+                offset += 3 + length;
+
+                decoded.modbus_channels_name = decoded.modbus_channels_name || [];
+                decoded.modbus_channels_name.push(modbus_channels_name);
+            }
+            break;
+        default:
+            throw new Error("unknown downlink response");
+    }
+
+    return { data: decoded, offset: offset };
+}
+
+function readProtocolVersion(bytes) {
+    var major = (bytes & 0xf0) >> 4;
+    var minor = bytes & 0x0f;
+    return "v" + major + "." + minor;
+}
+
+function readHardwareVersion(bytes) {
+    var major = bytes[0] & 0xff;
+    var minor = (bytes[1] & 0xff) >> 4;
+    return "v" + major + "." + minor;
+}
+
+function readFirmwareVersion(bytes) {
+    var major = bytes[0] & 0xff;
+    var minor = bytes[1] & 0xff;
+    return "v" + major + "." + minor;
+}
+
+function readTslVersion(bytes) {
+    var major = bytes[0] & 0xff;
+    var minor = bytes[1] & 0xff;
+    return "v" + major + "." + minor;
+}
+
+function readSerialNumber(bytes) {
+    var temp = [];
+    for (var idx = 0; idx < bytes.length; idx++) {
+        temp.push(("0" + (bytes[idx] & 0xff).toString(16)).slice(-2));
+    }
+    return temp.join("");
+}
+
+function readLoRaWANClass(type) {
+    var class_map = {
+        0: "Class A",
+        1: "Class B",
+        2: "Class C",
+        3: "Class CtoB",
+    };
+    return getValue(class_map, type);
+}
+
+function readResetEvent(status) {
+    var status_map = { 0: "normal", 1: "reset" };
+    return getValue(status_map, status);
+}
+
+function readDeviceStatus(status) {
+    var status_map = { 0: "off", 1: "on" };
+    return getValue(status_map, status);
+}
+
+function readSensorStatus(status) {
+    var status_map = { 0: "normal", 1: "read error" };
+    return getValue(status_map, status);
+}
+
+function readOnOffStatus(status) {
+    var status_map = { 0: "off", 1: "on" };
+    return getValue(status_map, status);
+}
+
+function readModbusAlarmType(type) {
+    var alarm_type_map = {
+        0: "normal",
+        1: "threshold alarm",
+        2: "threshold release alarm",
+        3: "mutation alarm",
+    };
+    return getValue(alarm_type_map, type);
+}
+
+function readModbusChannels(bytes) {
+    var offset = 0;
+
+    var modbus_channels = {};
+    modbus_channels.channel_id = readUInt8(bytes[offset]);
+    modbus_channels.slave_id = readUInt8(bytes[offset + 1]);
+    modbus_channels.register_address = readUInt16LE(bytes.slice(offset + 2, offset + 4));
+    modbus_channels.register_type = readRegisterType(readUInt8(bytes[offset + 4]));
+    var data = bytes[offset + 5];
+    modbus_channels.sign = readSignType((data >>> 4) & 0x01);
+    modbus_channels.quantity = data & 0x0f;
+    offset += 6;
+
+    return modbus_channels;
+}
+
 function readUInt8(bytes) {
     return bytes & 0xff;
 }
@@ -263,40 +438,13 @@ function readInt32LE(bytes) {
 }
 
 function readFloatLE(bytes) {
-    // JavaScript bitwise operators yield a 32 bits integer, not a float.
-    // Assume LSB (least significant byte first).
     var bits = (bytes[3] << 24) | (bytes[2] << 16) | (bytes[1] << 8) | bytes[0];
     var sign = bits >>> 31 === 0 ? 1.0 : -1.0;
     var e = (bits >>> 23) & 0xff;
     var m = e === 0 ? (bits & 0x7fffff) << 1 : (bits & 0x7fffff) | 0x800000;
     var f = sign * m * Math.pow(2, e - 150);
-    return f;
-}
-
-function readProtocolVersion(bytes) {
-    var major = (bytes & 0xf0) >> 4;
-    var minor = bytes & 0x0f;
-    return "v" + major + "." + minor;
-}
-
-function readHardwareVersion(bytes) {
-    var major = bytes[0] & 0xff;
-    var minor = (bytes[1] & 0xff) >> 4;
-    return "v" + major + "." + minor;
-}
-
-function readFirmwareVersion(bytes) {
-    var major = bytes[0] & 0xff;
-    var minor = bytes[1] & 0xff;
-    return "v" + major + "." + minor;
-}
-
-function readSerialNumber(bytes) {
-    var temp = [];
-    for (var idx = 0; idx < bytes.length; idx++) {
-        temp.push(("0" + (bytes[idx] & 0xff).toString(16)).slice(-2));
-    }
-    return temp.join("");
+    var n = Number(f.toFixed(2));
+    return n;
 }
 
 function readAscii(bytes) {
@@ -307,17 +455,48 @@ function readAscii(bytes) {
     return str;
 }
 
-function readModbusAlarmType(type) {
-    switch (type) {
-        case 0x00:
-            return "Normal";
-        case 0x01:
-            return "Threshold Alarm";
-        case 0x02:
-            return "Threshold Release Alarm";
-        case 0x03:
-            return "Mutation Alarm";
-        default:
-            return "Unknown";
-    }
+function getValue(map, key) {
+    if (RAW_VALUE) return key;
+
+    var value = map[key];
+    if (!value) value = "unknown";
+    return value;
+}
+
+if (!Object.assign) {
+    Object.defineProperty(Object, "assign", {
+        enumerable: false,
+        configurable: true,
+        writable: true,
+        value: function (target) {
+            "use strict";
+            if (target == null) {
+                throw new TypeError("Cannot convert first argument to object");
+            }
+
+            var to = Object(target);
+            for (var i = 1; i < arguments.length; i++) {
+                var nextSource = arguments[i];
+                if (nextSource == null) {
+                    continue;
+                }
+                nextSource = Object(nextSource);
+
+                var keysArray = Object.keys(Object(nextSource));
+                for (var nextIndex = 0, len = keysArray.length; nextIndex < len; nextIndex++) {
+                    var nextKey = keysArray[nextIndex];
+                    var desc = Object.getOwnPropertyDescriptor(nextSource, nextKey);
+                    if (desc !== undefined && desc.enumerable) {
+                        // concat array
+                        if (Array.isArray(to[nextKey]) && Array.isArray(nextSource[nextKey])) {
+                            to[nextKey] = to[nextKey].concat(nextSource[nextKey]);
+                        } else {
+                            to[nextKey] = nextSource[nextKey];
+                        }
+                    }
+                }
+            }
+            return to;
+        },
+    });
 }
