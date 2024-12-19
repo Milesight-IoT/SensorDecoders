@@ -5,6 +5,8 @@
  *
  * @product UC100
  */
+var RAW_VALUE = 0x01;
+
 // Chirpstack v4
 function decodeUplink(input) {
     var decoded = milesightDeviceDecode(input.bytes);
@@ -44,7 +46,7 @@ function milesightDeviceDecode(bytes) {
         }
         // DEVICE STATUS
         else if (channel_id === 0xff && channel_type === 0x0b) {
-            decoded.device_status = "on";
+            decoded.device_status = readDeviceStatus(1);
             i += 1;
         }
         // SERIAL NUMBER
@@ -63,7 +65,7 @@ function milesightDeviceDecode(bytes) {
             switch (data_type) {
                 case 0:
                 case 1:
-                    decoded[modbus_chn_name] = bytes[i] ? "on" : "off";
+                    decoded[modbus_chn_name] = readOnOffStatus(bytes[i]);
                     i += 1;
                     break;
                 case 2:
@@ -91,26 +93,26 @@ function milesightDeviceDecode(bytes) {
         else if (channel_id === 0xff && channel_type === 0x15) {
             var modbus_chn_id = bytes[i] + 1;
             var channel_name = "modbus_chn_" + modbus_chn_id + "_alarm";
-            decoded[channel_name] = "read error";
+            decoded[channel_name] = readSensorStatus(1);
             i += 1;
         }
-        // MODBUS ALARM (v1.7+)
+        // MODBUS ALARM (only v1.7)
         else if (channel_id === 0xff && channel_type === 0xee) {
             var chn_def = bytes[i++];
             var data_length = bytes[i++];
             var data_def = bytes[i++];
 
-            var modbus_chn_id = (chn_def & 0x1f) + 1;
-            var modbus_alarm = readModbusAlarmType(chn_def >>> 6);
+            var modbus_chn_id = (chn_def & 0x3f) + 1;
+            var modbus_alarm_value = chn_def >>> 6;
             var sign = (data_def >>> 7) & 0x01;
             var data_type = data_def & 0x7f;
 
             var modbus_chn_name = "modbus_chn_" + modbus_chn_id;
-            decoded[modbus_chn_name + "_alarm"] = modbus_alarm;
+            decoded[modbus_chn_name + "_alarm"] = readModbusAlarmType(modbus_alarm_value);
             switch (data_type) {
                 case 0: // MB_REG_COIL
                 case 1: // MB_REG_DISCRETE
-                    decoded[modbus_chn_name] = bytes[i] ? "on" : "off";
+                    decoded[modbus_chn_name] = readOnOffStatus(bytes[i]);
                     i += 1;
                     break;
                 case 2: // MB_REG_INPUT_AB
@@ -148,6 +150,64 @@ function milesightDeviceDecode(bytes) {
                     break;
             }
         }
+        // MODBUS MUTATION (v1.8+)
+        else if (channel_id === 0xf9 && channel_type === 0x5f) {
+            var chn_def = bytes[i++];
+            var data_length = bytes[i++];
+            var data_def = bytes[i++];
+
+            var modbus_chn_id = (chn_def & 0x3f) + 1;
+            var modbus_alarm_value = chn_def >>> 6;
+            var sign = (data_def >>> 7) & 0x01;
+            var data_type = data_def & 0x7f;
+
+            var modbus_chn_name = "modbus_chn_" + modbus_chn_id;
+            decoded[modbus_chn_name + "_alarm"] = readModbusAlarmType(modbus_alarm_value);
+            switch (data_type) {
+                case 0: // MB_REG_COIL
+                case 1: // MB_REG_DISCRETE
+                    decoded[modbus_chn_name] = readOnOffStatus(bytes[i]);
+                    i += 1;
+                    break;
+                case 2: // MB_REG_INPUT_AB
+                case 3: // MB_REG_INPUT_BA
+                case 14: // MB_REG_HOLD_INT16_AB
+                case 15: // MB_REG_HOLD_INT16_BA
+                    decoded[modbus_chn_name] = sign ? readInt16LE(bytes.slice(i, i + 2)) : readUInt16LE(bytes.slice(i, i + 2));
+                    i += 2;
+                    break;
+                case 4: // MB_REG_INPUT_INT32_ABCD
+                case 5: // MB_REG_INPUT_INT32_BADC
+                case 6: // MB_REG_INPUT_INT32_CDAB
+                case 7: // MB_REG_INPUT_INT32_DCBA
+                case 16: // MB_REG_HOLD_INT32_ABCD
+                case 17: // MB_REG_HOLD_INT32_BADC
+                case 18: // MB_REG_HOLD_INT32_CDAB
+                case 19: // MB_REG_HOLD_INT32_DCBA
+                case 8: // MB_REG_INPUT_INT32_AB
+                case 9: // MB_REG_INPUT_INT32_CD
+                case 20: // MB_REG_HOLD_INT32_AB
+                case 21: // MB_REG_HOLD_INT32_CD
+                    decoded[modbus_chn_name] = sign ? readInt32LE(bytes.slice(i, i + 4)) : readUInt32LE(bytes.slice(i, i + 4));
+                    i += 4;
+                    break;
+                case 10: // MB_REG_INPUT_FLOAT_ABCD
+                case 11: // MB_REG_INPUT_FLOAT_BADC
+                case 12: // MB_REG_INPUT_FLOAT_CDAB
+                case 13: // MB_REG_INPUT_FLOAT_DCBA
+                case 22: // MB_REG_HOLD_FLOAT_ABCD
+                case 23: // MB_REG_HOLD_FLOAT_BADC
+                case 24: // MB_REG_HOLD_FLOAT_CDAB
+                case 25: // MB_REG_HOLD_FLOAT_DCBA
+                    decoded[modbus_chn_name] = readFloatLE(bytes.slice(i, i + 4));
+                    i += 4;
+                    break;
+            }
+            if (modbus_alarm_value === 3) {
+                decoded[modbus_chn_name + "_mutation"] = readFloatLE(bytes.slice(i, i + 4));
+            }
+            i += 4;
+        }
         // MODBUS HISTORY (v1.7+)
         else if (channel_id === 0x20 && channel_type === 0xce) {
             var timestamp = readUInt32LE(bytes.slice(i, i + 4));
@@ -163,12 +223,12 @@ function milesightDeviceDecode(bytes) {
             var modbus_chn_name = "modbus_chn_" + chn_id;
             // READ FAILED
             if (read_status === 0) {
-                data[modbus_chn_name + "_alarm"] = "read error";
+                data[modbus_chn_name + "_alarm"] = readSensorStatus(1);
             } else {
                 switch (data_type) {
                     case 0: // MB_REG_COIL
                     case 1: // MB_REG_DISCRETE
-                        data[modbus_chn_name] = bytes[i] ? "on" : "off";
+                        data[modbus_chn_name] = readOnOffStatus(bytes[i]);
                         i += 4;
                         break;
                     case 2: // MB_REG_INPUT_AB
@@ -230,9 +290,6 @@ function milesightDeviceDecode(bytes) {
     return decoded;
 }
 
-/* ******************************************
- * bytes to number
- ********************************************/
 function readUInt8(bytes) {
     return bytes & 0xff;
 }
@@ -263,14 +320,20 @@ function readInt32LE(bytes) {
 }
 
 function readFloatLE(bytes) {
-    // JavaScript bitwise operators yield a 32 bits integer, not a float.
-    // Assume LSB (least significant byte first).
     var bits = (bytes[3] << 24) | (bytes[2] << 16) | (bytes[1] << 8) | bytes[0];
     var sign = bits >>> 31 === 0 ? 1.0 : -1.0;
     var e = (bits >>> 23) & 0xff;
     var m = e === 0 ? (bits & 0x7fffff) << 1 : (bits & 0x7fffff) | 0x800000;
     var f = sign * m * Math.pow(2, e - 150);
     return f;
+}
+
+function getValue(map, key) {
+    if (RAW_VALUE) return key;
+
+    var value = map[key];
+    if (!value) value = "unknown";
+    return value;
 }
 
 function readProtocolVersion(bytes) {
@@ -307,17 +370,36 @@ function readAscii(bytes) {
     return str;
 }
 
+function readDeviceStatus(status) {
+    var status_map = {
+        0: "off",
+        1: "on",
+    };
+    return getValue(status_map, status);
+}
+
+function readSensorStatus(status) {
+    var status_map = {
+        0: "normal",
+        1: "read error",
+    };
+    return getValue(status_map, status);
+}
+
+function readOnOffStatus(status) {
+    var status_map = {
+        0: "off",
+        1: "on",
+    };
+    return getValue(status_map, status);
+}
+
 function readModbusAlarmType(type) {
-    switch (type) {
-        case 0x00:
-            return "Normal";
-        case 0x01:
-            return "Threshold Alarm";
-        case 0x02:
-            return "Threshold Release Alarm";
-        case 0x03:
-            return "Mutation Alarm";
-        default:
-            return "Unknown";
-    }
+    var alarm_type_map = {
+        0: "normal",
+        1: "threshold alarm",
+        2: "threshold release alarm",
+        3: "mutation alarm",
+    };
+    return getValue(alarm_type_map, type);
 }
