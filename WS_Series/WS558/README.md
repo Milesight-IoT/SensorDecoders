@@ -2,7 +2,7 @@
 
 The payload decoder function is applicable to WS558.
 
-For more detailed information, please visit [milesight official website](https://www.milesight-iot.com).
+For more detailed information, please visit [Milesight Official Website](https://www.milesight.com/iot/product/lorawan-sensor/ws558).
 
 |        WS558        |        WS558-LN         |
 | :-----------------: | :---------------------: |
@@ -10,14 +10,14 @@ For more detailed information, please visit [milesight official website](https:/
 
 ## Payload Definition
 
-|      CHANNEL      |  ID  | TYPE | LENGTH | DESCRIPTION                                           |
-| :---------------: | :--: | :--: | :----: | ----------------------------------------------------- |
-|      Voltage      | 0x03 | 0x74 |   2    | voltage(2B)<br/>voltage, read: uint16/10              |
-|   Active power    | 0x04 | 0x80 |   4    | power(4B)<br/>power, read: uint32, unit: W            |
-|   Active factor   | 0x05 | 0x81 |   1    | factor(1B)<br/>factor, read: uint8, unit: %           |
-| Power Consumption | 0x06 | 0x83 |   4    | power_sum(4B)<br/>power_sum, read: uint32, unit: W\*h |
-|      Current      | 0x07 | 0xC9 |   2    | current(2B)<br/>current, read: uint16, unit: mA       |
-|      Switch       | 0x08 | 0x31 |   2    |                                                       |
+|      CHANNEL      |  ID  | TYPE | LENGTH | DESCRIPTION                                            |
+| :---------------: | :--: | :--: | :----: | ------------------------------------------------------ |
+|      Voltage      | 0x03 | 0x74 |   2    | voltage(2B)<br />voltage, read: uint16/10              |
+|   Active power    | 0x04 | 0x80 |   4    | power(4B)<br />power, read: uint32, unit: W            |
+|   Active factor   | 0x05 | 0x81 |   1    | factor(1B)<br />factor, read: uint8, unit: %           |
+| Power Consumption | 0x06 | 0x83 |   4    | power_sum(4B)<br />power_sum, read: uint32, unit: W\*h |
+|      Current      | 0x07 | 0xC9 |   2    | current(2B)<br />current, read: uint16, unit: mA       |
+|      Switch       | 0x08 | 0x31 |   2    |                                                        |
 
 ### Switch Value Definition
 
