@@ -2,23 +2,30 @@
 
 The payload decoder function is applicable to WS501 / WS502 / WS503.
 
-For more detailed information, please visit [Milesight official website](https://www.milesight-iot.com).
+For more detailed information, please visit [Milesight Official Website](https://www.milesight.com/iot/product/lorawan-sensor/ws50x).
 
-|        WS50x v1        |         WS50x v2          |
-| :--------------------: | :-----------------------: |
-| ![WS50x](WS50x_v1.png) | ![WS50x_v2](WS50x_v2.png) |
+|        WS50x        |
+| :-----------------: |
+| ![WS50x](WS50x.png) |
 
 ## Payload Definition
 
-|          CHANNEL           |  ID  | TYPE | LENGTH | DESCRIPTION                                           |
-| :------------------------: | :--: | :--: | :----: | ----------------------------------------------------- |
-|      Switch<br/>(v1)       | 0xFF | 0x29 |   1    | status(1B)                                            |
-|      Voltage<br/>(v2)      | 0x03 | 0x74 |   2    | voltage(2B)<br/>voltage, read: uint16/10              |
-|   Active Power<br/>(v2)    | 0x04 | 0x80 |   4    | power(4B)<br/>power, read: uint32, unit: W            |
-|   Active Factor<br/>(v2)   | 0x05 | 0x81 |   1    | factor(1B)<br/>factor, read: uint8, unit: %           |
-| Power Consumption<br/>(v2) | 0x06 | 0x83 |   4    | power_sum(4B)<br/>power_sum, read: uint32, unit: W\*h |
-|      Current<br/>(v2)      | 0x07 | 0xC9 |   2    | current(2B)<br/>current, read: uint16, unit: mA       |
-|      Switch<br/>(v2)       | 0x08 | 0x29 |   1    | status(1B)                                            |
+### Attributes
+
+|     CHANNEL      |  ID  | TYPE | LENGTH | DESCRIPTION          |
+| :--------------: | :--: | :--: | :----: | -------------------- |
+|   IPSO Version   | 0xFF | 0x01 |   1    | ipso_version(1B)     |
+| Hardware Version | 0xFF | 0x09 |   2    | hardware_version(2B) |
+| Firmware Version | 0xFF | 0x0A |   2    | firmware_version(2B) |
+|  Serial Number   | 0xFF | 0x08 |   6    | sn(6B)               |
+|  Lorawan Class   | 0xFF | 0x0F |   1    | lorawan_class(1B)    |
+
+### Telemetry
+
+|    CHANNEL    |  ID  | TYPE | LENGTH | DESCRIPTION                  |
+| :-----------: | :--: | :--: | :----: | ---------------------------- |
+| Switch Status | 0xFF | 0x29 |   1    | switch_1, switch_2, switch_3 |
+| Button Status | 0xFF | 0x2B |   1    | button_trigger(1B)           |
 
 ### Status Definition
 
