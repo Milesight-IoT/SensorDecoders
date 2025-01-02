@@ -1,10 +1,12 @@
 /**
  * Payload Encoder
  *
- * Copyright 2024 Milesight IoT
+ * Copyright 2025 Milesight IoT
  *
  * @product WS501 | WS502 | WS503
  */
+var RAW_VALUE = 0x00;
+
 // Chirpstack v4
 function encodeDownlink(input) {
     var encoded = milesightDeviceEncode(input.data);
@@ -24,16 +26,6 @@ function Encoder(obj, port) {
 function milesightDeviceEncode(payload) {
     var encoded = [];
 
-    if ("switch_1" in payload) {
-        encoded = encoded.concat(updateSwitch(1, payload.switch_1));
-    }
-    if ("switch_2" in payload) {
-        encoded = encoded.concat(updateSwitch(2, payload.switch_2));
-    }
-    if ("switch_3" in payload) {
-        encoded = encoded.concat(updateSwitch(3, payload.switch_3));
-    }
-
     if ("reboot" in payload) {
         encoded = encoded.concat(reboot(payload.reboot));
     }
@@ -46,8 +38,17 @@ function milesightDeviceEncode(payload) {
     if ("report_attribute" in payload) {
         encoded = encoded.concat(reportAttribute(payload.report_attribute));
     }
+    if ("switch_1" in payload) {
+        encoded = encoded.concat(updateSwitch(1, payload.switch_1));
+    }
+    if ("switch_2" in payload) {
+        encoded = encoded.concat(updateSwitch(2, payload.switch_2));
+    }
+    if ("switch_3" in payload) {
+        encoded = encoded.concat(updateSwitch(3, payload.switch_3));
+    }
     if ("delay_task" in payload) {
-        encoded = encoded.concat(setDelayTask(payload.delay_task.switch_id, payload.delay_task.switch_state, payload.delay_task.frame_count, payload.delay_task.delay_time));
+        encoded = encoded.concat(setDelayTask(payload.delay_task));
     }
     if ("cancel_delay_task" in payload) {
         encoded = encoded.concat(cancelDelayTask(payload.cancel_delay_task));
@@ -56,7 +57,7 @@ function milesightDeviceEncode(payload) {
         encoded = encoded.concat(setLedMode(payload.led_mode));
     }
     if ("child_lock_config" in payload) {
-        encoded = encoded.concat(setChildLockConfig(payload.child_lock_config.enable, payload.child_lock_config.lock_time));
+        encoded = encoded.concat(setChildLockConfig(payload.child_lock_config));
     }
     if ("reset_button_enable" in payload) {
         encoded = encoded.concat(setResetButtonEnable(payload.reset_button_enable));
@@ -67,22 +68,41 @@ function milesightDeviceEncode(payload) {
     if ("clear_power_consumption" in payload) {
         encoded = encoded.concat(clearPowerConsumption(payload.clear_power_consumption));
     }
+    if ("sync_time" in payload) {
+        encoded = encoded.concat(syncTime(payload.sync_time));
+    }
+    if ("timezone" in payload) {
+        encoded = encoded.concat(setTimezone(payload.timezone));
+    }
+    if ("rule_config" in payload) {
+        for (var i = 0; i < payload.rule_config.length; i++) {
+            var rule_config = payload.rule_config[i];
+            encoded = encoded.concat(setRuleConfig(rule_config));
+        }
+    }
+    if ("query_rule_config_request" in payload) {
+        encoded = encoded.concat(queryRuleConfig(payload.query_rule_config_request));
+    }
+    if ("query_all_rule_config_request" in payload) {
+        encoded = encoded.concat(queryAllRuleConfig(payload.query_all_rule_config_request));
+    }
 
     return encoded;
 }
 
 /**
  * reboot
- * @param {number} reboot values: (0: "no action", 1: "reboot")
- * @example payload: { "reboot": 1 }, output: FF10FF
+ * @param {number} reboot values: (0: no, 1: yes)
+ * @example { "reboot": 1 }
  */
 function reboot(reboot) {
-    var reboot_values = [0, 1];
-    if (reboot_values.indexOf(reboot) === -1) {
-        throw new Error("reboot must be one of: " + reboot_values.join(", "));
+    var yes_no_map = { 0: "no", 1: "yes" };
+    var yes_no_values = getValues(yes_no_map);
+    if (yes_no_values.indexOf(reboot) === -1) {
+        throw new Error("reboot must be one of: " + yes_no_values.join(", "));
     }
 
-    if (reboot === 0) {
+    if (getValue(yes_no_map, reboot) === 0) {
         return [];
     }
     return [0xff, 0x10, 0xff];
@@ -91,7 +111,7 @@ function reboot(reboot) {
 /**
  * report interval configuration
  * @param {number} report_interval uint: second
- * @example payload: { "report_interval": 1200 }, output: FF03B004
+ * @example { "report_interval": 1200 }
  */
 function setReportInterval(report_interval) {
     if (typeof report_interval !== "number") {
@@ -110,16 +130,17 @@ function setReportInterval(report_interval) {
 
 /**
  * report status
- * @param {number} report_status values: (0: "disable", 1: "enable")
- * @example payload: { "report_status": 1 }, output: FF28FF
+ * @param {number} report_status values: (0: disable, 1: enable)
+ * @example { "report_status": 1 }
  */
 function reportStatus(report_status) {
-    var report_status_values = [0, 1];
-    if (report_status_values.indexOf(report_status) === -1) {
-        throw new Error("report_status must be one of: " + report_status_values.join(", "));
+    var enable_map = { 0: "disable", 1: "enable" };
+    var enable_values = getValues(enable_map);
+    if (enable_values.indexOf(report_status) === -1) {
+        throw new Error("report_status must be one of: " + enable_values.join(", "));
     }
 
-    if (report_status === 0) {
+    if (getValue(enable_map, report_status) === 0) {
         return [];
     }
     return [0xff, 0x28, 0xff];
@@ -127,16 +148,17 @@ function reportStatus(report_status) {
 
 /**
  * report attribute
- * @param {boolean} report_attribute values: (0: "no", 1: "yes")
- * @example payload: { "report_attribute": 1 }, output: FF2CFF
+ * @param {number} report_attribute values: (0: no, 1: yes)
+ * @example { "report_attribute": 1 }
  */
 function reportAttribute(report_attribute) {
-    var report_attribute_values = [0, 1];
-    if (report_attribute_values.indexOf(report_attribute) === -1) {
-        throw new Error("report_attribute must be one of: " + report_attribute_values.join(", "));
+    var yes_no_map = { 0: "no", 1: "yes" };
+    var yes_no_values = getValues(yes_no_map);
+    if (yes_no_values.indexOf(report_attribute) === -1) {
+        throw new Error("report_attribute must be one of: " + yes_no_values.join(", "));
     }
 
-    if (report_attribute === 0) {
+    if (getValue(yes_no_map, report_attribute) === 0) {
         return [];
     }
     return [0xff, 0x2c, 0xff];
@@ -144,17 +166,18 @@ function reportAttribute(report_attribute) {
 
 /**
  * button control
- * @param {number} id, values: (1: "switch_1", 2: "switch_2", 3: "switch_3")
- * @param {number} state, values: (0: "off", 1: "on")
- * @example payload: { "switch_1": 1 }, output: 0811FF
+ * @param {number} id, values: (1: switch_1, 2: switch_2, 3: switch_3)
+ * @param {number} state, values: (0: off, 1: on)
+ * @example { "switch_1": 1 }
  */
 function updateSwitch(id, state) {
-    var switch_values = [0, 1];
-    if (switch_values.indexOf(state) === -1) {
-        throw new Error("switch_" + id + " must be one of: " + switch_values.join(", "));
+    var on_off_map = { 0: "off", 1: "on" };
+    var on_off_values = getValues(on_off_map);
+    if (on_off_values.indexOf(state) === -1) {
+        throw new Error("switch_" + id + " must be one of: " + on_off_values.join(", "));
     }
 
-    var on_off = switch_values.indexOf(state);
+    var on_off = on_off_values.indexOf(state);
     var mask = 0x01 << (id - 1);
     var ctrl = on_off << (id - 1);
     var data = (mask << 4) + ctrl;
@@ -167,37 +190,39 @@ function updateSwitch(id, state) {
 
 /**
  * set delay task
- * @param {number} switch_id values: (1: "switch_1", 2: "switch_2", 3: "switch_3")
- * @param {number} switch_state values: (0: "off", 1: "on")
- * @param {number} frame_count values: (0-255, 0: force control)
- * @param {number} delay_time unit: second
- * @example payload: { "delay_task": { "switch_id": 1, "switch_state": 1, "frame_count": 1, "delay_time": 1 } }, output: FF2201010011
+ * @param {object} delay_task
+ * @param {number} delay_task.switch_1 values: (0: off, 1: on)
+ * @param {number} delay_task.switch_2 values: (0: off, 1: on)
+ * @param {number} delay_task.switch_3 values: (0: off, 1: on)
+ * @param {number} delay_task.frame_count values: (0-255, 0: force control)
+ * @param {number} delay_task.delay_time unit: second
+ * @example { "delay_task": { "switch_1": 1, "switch_2": 1, "switch_3": 1, "frame_count": 1, "delay_time": 1 } }
  */
-function setDelayTask(switch_id, switch_state, frame_count, delay_time) {
-    if (typeof switch_id !== "number") {
-        throw new Error("switch_id must be a number");
-    }
-    if (switch_id < 1 || switch_id > 3) {
-        throw new Error("switch_id must be between 1 and 3");
-    }
-    var switch_state_values = [0, 1];
-    if (switch_state_values.indexOf(switch_state) === -1) {
-        throw new Error("switch_state must be one of: " + switch_state_values.join(", "));
-    }
-    if (typeof frame_count !== "number") {
-        throw new Error("frame_count must be a number");
-    }
+function setDelayTask(delay_task) {
+    var switch_1 = delay_task.switch_1;
+    var switch_2 = delay_task.switch_2;
+    var switch_3 = delay_task.switch_3;
+    var frame_count = delay_task.frame_count;
+    var delay_time = delay_task.delay_time;
+
+    var on_off_map = { 0: "off", 1: "on" };
+    var on_off_values = getValues(on_off_map);
     if (frame_count < 0 || frame_count > 255) {
-        throw new Error("frame_count must be between 0 and 255");
+        throw new Error("delay_task.frame_count must be between 0 and 255");
     }
     if (typeof delay_time !== "number") {
-        throw new Error("delay_time must be a number");
+        throw new Error("delay_task.delay_time must be a number");
     }
 
-    var status = switch_state_values.indexOf(switch_state) << (switch_id - 1);
-    var mask = (0x01 << (switch_id - 1)) << 4;
+    var data = 0x00;
+    var switch_bit_offset = { switch_1: 0, switch_2: 1, switch_3: 2 };
+    for (var key in switch_bit_offset) {
+        if (key in delay_task) {
+            data |= 1 << (switch_bit_offset[key] + 4);
+            data |= getValue(on_off_map, delay_task[key]) << switch_bit_offset[key];
+        }
+    }
 
-    var data = mask + status;
     var buffer = new Buffer(6);
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0x22);
@@ -210,7 +235,7 @@ function setDelayTask(switch_id, switch_state, frame_count, delay_time) {
 /**
  * cancel delay task
  * @param {number} cancel_delay_task values: (delay_task.frame_count)
- * @example payload: { "cancel_delay_task": 1 }, output: FF230100
+ * @example { "cancel_delay_task": 1 }
  */
 function cancelDelayTask(cancel_delay_task) {
     if (typeof cancel_delay_task !== "number") {
@@ -227,11 +252,12 @@ function cancelDelayTask(cancel_delay_task) {
 
 /**
  * set led mode
- * @param {number} led_mode, values: (0: "off", 1: "on_inverted", 2: "on_synced")
- * @example payload: { "led_mode": 1 }, output: FF2F01
+ * @param {number} led_mode, values: (0: off, 1: on_inverted, 2: on_synced)
+ * @example { "led_mode": 1 }
  */
 function setLedMode(led_mode) {
-    var led_mode_values = [0, 1, 2];
+    var led_mode_map = { 0: "off", 1: "on_inverted", 2: "on_synced" };
+    var led_mode_values = getValues(led_mode_map);
     if (led_mode_values.indexOf(led_mode) === -1) {
         throw new Error("led_mode must be one of: " + led_mode_values.join(", "));
     }
@@ -239,45 +265,52 @@ function setLedMode(led_mode) {
     var buffer = new Buffer(3);
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0x2f);
-    buffer.writeUInt8(led_mode);
+    buffer.writeUInt8(getValue(led_mode_map, led_mode));
     return buffer.toBytes();
 }
 
 /**
  * reset button configuration
- * @param {number} reset_button_enable values: (0: "disable", 1: "enable")
- * @example payload: { "reset_button_enable": 0 }, output: FF5E00
+ * @param {number} reset_button_enable values: (0: disable, 1: enable)
+ * @example { "reset_button_enable": 0 }
  */
 function setResetButtonEnable(reset_button_enable) {
-    var reset_button_enable_values = [0, 1];
-    if (reset_button_enable_values.indexOf(reset_button_enable) === -1) {
-        throw new Error("reset_button_enable must be one of: " + reset_button_enable_values.join(", "));
+    var enable_map = { 0: "disable", 1: "enable" };
+    var enable_values = getValues(enable_map);
+    if (enable_values.indexOf(reset_button_enable) === -1) {
+        throw new Error("reset_button_enable must be one of: " + enable_values.join(", "));
     }
 
     var buffer = new Buffer(3);
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0x5e);
-    buffer.writeUInt8(reset_button_enable);
+    buffer.writeUInt8(getValue(enable_map, reset_button_enable));
     return buffer.toBytes();
 }
 
 /**
  * child lock configuration
- * @param {number} enable values: (0: disable, 1: enable)
- * @param {number} lock_time value: (0: forever), unit: minute
- * @example payload: { "child_lock_config": { "enable": 1, "lock_time": 60 } }, output: FF253C80
+ * @param {object} child_lock_config
+ * @param {number} child_lock_config.enable values: (0: disable, 1: enable)
+ * @param {number} child_lock_config.lock_time value: (0: forever), unit: minute
+ * @example { "child_lock_config": { "enable": 1, "lock_time": 60 } }
  */
-function setChildLockConfig(enable, lock_time) {
-    var child_lock_enable_values = [0, 1];
-    if (child_lock_enable_values.indexOf(enable) === -1) {
-        throw new Error("child_lock_config.enable must be one of: " + child_lock_enable_values.join(", "));
+function setChildLockConfig(child_lock_config) {
+    var enable = child_lock_config.enable;
+    var lock_time = child_lock_config.lock_time;
+
+    var enable_map = { 0: "disable", 1: "enable" };
+    var enable_values = getValues(enable_map);
+    if (enable_values.indexOf(enable) === -1) {
+        throw new Error("child_lock_config.enable must be one of: " + enable_values.join(", "));
     }
     if (typeof lock_time !== "number") {
         throw new Error("child_lock_config.lock_time must be a number");
     }
 
-    var data = enable ? 0x01 : 0x00;
-    data = (data << 15) + lock_time;
+    var data = 0x00;
+    data |= getValue(enable_map, enable) << 15;
+    data |= lock_time;
     var buffer = new Buffer(4);
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0x25);
@@ -287,37 +320,238 @@ function setChildLockConfig(enable, lock_time) {
 
 /**
  * power consumption Configuration
- * @param {number} power_consumption_enable
- * @example payload: { "power_consumption_enable": 1 }, output: FF2601
+ * @param {number} power_consumption_enable values: (0: disable, 1: enable)
+ * @example { "power_consumption_enable": 1 }
  */
 function setPowerConsumptionEnable(power_consumption_enable) {
-    var power_consumption_enable_values = [0, 1];
-    if (power_consumption_enable_values.indexOf(power_consumption_enable) === -1) {
-        throw new Error("power_consumption_enable must be one of: " + power_consumption_enable_values.join(", "));
+    var enable_map = { 0: "disable", 1: "enable" };
+    var enable_values = getValues(enable_map);
+    if (enable_values.indexOf(power_consumption_enable) === -1) {
+        throw new Error("power_consumption_enable must be one of: " + enable_values.join(", "));
     }
 
     var buffer = new Buffer(3);
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0x26);
-    buffer.writeUInt8(power_consumption_enable);
+    buffer.writeUInt8(getValue(enable_map, power_consumption_enable));
     return buffer.toBytes();
 }
 
 /**
  * clear power consumption
- * @param {number} clear_power_consumption values: (0: "no action", 1: "clear")
- * @example payload: { "clear_power_consumption": 1 }, output: FF27FF
+ * @param {number} clear_power_consumption values: (0: no, 1: yes)
+ * @example { "clear_power_consumption": 1 }
  */
 function clearPowerConsumption(clear_power_consumption) {
-    var clear_power_consumption_values = [0, 1];
-    if (clear_power_consumption_values.indexOf(clear_power_consumption) === -1) {
-        throw new Error("clear_power_consumption must be one of: " + clear_power_consumption_values.join(", "));
+    var yes_no_map = { 0: "no", 1: "yes" };
+    var yes_no_values = getValues(yes_no_map);
+    if (yes_no_values.indexOf(clear_power_consumption) === -1) {
+        throw new Error("clear_power_consumption must be one of: " + yes_no_values.join(", "));
     }
 
-    if (clear_power_consumption === 0) {
+    if (getValue(yes_no_map, clear_power_consumption) === 0) {
         return [];
     }
     return [0xff, 0x27, 0xff];
+}
+
+/**
+ * set rule config
+ * @since v1.3
+ * @param {object} rule_config
+ * @param {number} rule_config.rule_id range: [1, 8]
+ * @param {number} rule_config.rule_type values: (0: none, 1: enable, 2: disable)
+ * @param {object} rule_config.condition
+ * @param {number} rule_config.condition.monday values: (0: disable, 1: enable)
+ * @param {number} rule_config.condition.tuesday values: (0: disable, 1: enable)
+ * @param {number} rule_config.condition.wednesday values: (0: disable, 1: enable)
+ * @param {number} rule_config.condition.thursday values: (0: disable, 1: enable)
+ * @param {number} rule_config.condition.friday values: (0: disable, 1: enable)
+ * @param {number} rule_config.condition.saturday values: (0: disable, 1: enable)
+ * @param {number} rule_config.condition.sunday values: (0: disable, 1: enable)
+ * @param {number} rule_config.condition.hour
+ * @param {number} rule_config.condition.minute
+ * @param {object} rule_config.action
+ * @param {number} rule_config.action.switch_1 values: (0: off, 1: on)
+ * @param {number} rule_config.action.switch_2 values: (0: off, 1: on)
+ * @param {number} rule_config.action.switch_3 values: (0: off, 1: on)
+ * @param {number} rule_config.action.child_lock values: (0: keep, 1: disable, 2: enable)
+ */
+function setRuleConfig(rule_config) {
+    var rule_id = rule_config.rule_id;
+    var rule_type = rule_config.rule_type;
+    var condition = rule_config.condition;
+    var action = rule_config.action;
+
+    if (rule_id < 1 || rule_id > 8) {
+        throw new Error("rule_config._item.rule_id must be between 1 and 8");
+    }
+    var rule_type_map = { 0: "none", 1: "enable", 2: "disable" };
+    var rule_type_values = getValues(rule_type_map);
+    if (rule_type_values.indexOf(rule_type) === -1) {
+        throw new Error("rule_config._item.rule_type must be one of: " + rule_type_values.join(", "));
+    }
+
+    var condition_day = 0x00;
+    var condition_hour = 0x00;
+    var condition_minute = 0x00;
+    var day_bit_offset = { monday: 0, tuesday: 1, wednesday: 2, thursday: 3, friday: 4, saturday: 5, sunday: 6 };
+    if (getValue(rule_type_map, rule_type) !== 0) {
+        for (var key in day_bit_offset) {
+            if (key in condition) {
+                condition_day |= getValue(enable_map, condition[key]) << day_bit_offset[key];
+            }
+        }
+        condition_hour = condition.hour;
+        condition_minute = condition.minute;
+    }
+
+    var switch_status_map = { 0: "keep", 1: "on", 2: "off" };
+    var switch_status_values = getValues(switch_status_map);
+    var action_switch = 0x00;
+    var switch_bit_offset = { switch_1: 0, switch_2: 2, switch_3: 4 };
+    for (var key in switch_bit_offset) {
+        if (key in action) {
+            action_switch |= getValue(switch_status_map, action[key]) << switch_bit_offset[key];
+        }
+    }
+
+    var child_lock_map = { 0: "keep", 1: "disable", 2: "enable" };
+    var child_lock_values = getValues(child_lock_map);
+    var action_child_lock = 0x00;
+    if ("child_lock" in action) {
+        if ()
+        action_child_lock = getValue(child_lock_map, action.child_lock);
+    }
+
+    var buffer = new Buffer(9);
+    buffer.writeUInt8(0xf9);
+    buffer.writeUInt8(0x64);
+    buffer.writeUInt8(rule_id);
+    buffer.writeUInt8(rule_type);
+    buffer.writeUInt8(condition_day);
+    buffer.writeUInt8(condition_hour);
+    buffer.writeUInt8(condition_minute);
+    buffer.writeUInt8(action_switch);
+    buffer.writeUInt8(action_child_lock);
+    return buffer.toBytes();
+}
+
+/**
+ * query rule config
+ * @since v1.3
+ * @param {object} query_rule_config_request
+ * @param {number} query_rule_config_request.rule_1 values: (0: no, 1: yes)
+ * @param {number} query_rule_config_request.rule_2 values: (0: no, 1: yes)
+ * @param {number} query_rule_config_request.rule_3 values: (0: no, 1: yes)
+ * @param {number} query_rule_config_request.rule_4 values: (0: no, 1: yes)
+ * @param {number} query_rule_config_request.rule_5 values: (0: no, 1: yes)
+ * @param {number} query_rule_config_request.rule_6 values: (0: no, 1: yes)
+ * @param {number} query_rule_config_request.rule_7 values: (0: no, 1: yes)
+ * @param {number} query_rule_config_request.rule_8 values: (0: no, 1: yes)
+ * @example { "query_rule_config_request": { "rule_1": 1, "rule_2": 1, "rule_3": 1, "rule_4": 1, "rule_5": 1, "rule_6": 1, "rule_7": 1, "rule_8": 1 } }
+ */
+function queryRuleConfig(query_rule_config_request) {
+    var channel_index_map = { channel_1: 1, channel_2: 2, channel_3: 3, channel_4: 4, channel_5: 5, channel_6: 6, channel_7: 7, channel_8: 8 };
+    var yes_no_map = { 0: "no", 1: "yes" };
+    var yes_no_values = getValues(yes_no_map);
+
+    var data = [];
+    for (var key in query_rule_config_request) {
+        if (key in query_rule_config_request) {
+            if (yes_no_values.indexOf(query_rule_config_request[key]) === -1) {
+                throw new Error("query_rule_config_request." + key + " must be one of " + yes_no_values.join(", "));
+            }
+            if (getValue(yes_no_map, query_rule_config_request[key]) === 1) {
+                data.push([0xf9, 0x65, channel_index_map[key]]);
+            }
+        }
+    }
+    return data;
+}
+
+/**
+ * query all rule config
+ * @since v1.3
+ * @param {number} query_all_rule_config_request values: (0: no, 1: yes)
+ * @example { "query_all_rule_config_request": 1 }
+ */
+function queryAllRuleConfig(query_all_rule_config_request) {
+    var yes_no_map = { 0: "no", 1: "yes" };
+    var yes_no_values = getValues(yes_no_map);
+    if (yes_no_values.indexOf(query_all_rule_config_request) === -1) {
+        throw new Error("query_all_rule_config_request must be one of " + yes_no_values.join(", "));
+    }
+
+    if (getValue(yes_no_map, query_all_rule_config_request) === 0) {
+        return [];
+    }
+    return [0xf9, 0x65, 0xff];
+}
+
+/**
+ * sync time
+ * @param {number} sync_time values：(0: no, 1: yes)
+ * @example { "sync_time": 1 }
+ */
+function syncTime(sync_time) {
+    var yes_no_map = { 0: "no", 1: "yes" };
+    var yes_no_values = getValues(yes_no_map);
+    if (yes_no_values.indexOf(sync_time) === -1) {
+        throw new Error("sync_time must be one of " + yes_no_values.join(", "));
+    }
+
+    if (getValue(yes_no_map, sync_time) === 0) {
+        return [];
+    }
+    return [0xff, 0x4a, 0xff];
+}
+
+/**
+ * set timezone
+ * @since v1.3
+ * @param {number} timezone unit: minute, convert: "hh:mm" -> "hh * 60 + mm", values: ( -720: UTC-12, -660: UTC-11, -600: UTC-10, -570: UTC-9:30, -540: UTC-9, -480: UTC-8, -420: UTC-7, -360: UTC-6, -300: UTC-5, -240: UTC-4, -210: UTC-3:30, -180: UTC-3, -120: UTC-2, -60: UTC-1, 0: UTC, 60: UTC+1, 120: UTC+2, 180: UTC+3, 240: UTC+4, 300: UTC+5, 360: UTC+6, 420: UTC+7, 480: UTC+8, 540: UTC+9, 570: UTC+9:30, 600: UTC+10, 660: UTC+11, 720: UTC+12, 765: UTC+12:45, 780: UTC+13, 840: UTC+14 )
+ * @example { "timezone": 8 }
+ * @example { "timezone": -4 }
+ */
+function setTimezone(timezone) {
+    var timezone_map = { "-720": "UTC-12", "-660": "UTC-11", "-600": "UTC-10", "-570": "UTC-9:30", "-540": "UTC-9", "-480": "UTC-8", "-420": "UTC-7", "-360": "UTC-6", "-300": "UTC-5", "-240": "UTC-4", "-210": "UTC-3:30", "-180": "UTC-3", "-120": "UTC-2", "-60": "UTC-1", 0: "UTC", 60: "UTC+1", 120: "UTC+2", 180: "UTC+3", 210: "UTC+3:30", 240: "UTC+4", 270: "UTC+4:30", 300: "UTC+5", 330: "UTC+5:30", 345: "UTC+5:45", 360: "UTC+6", 390: "UTC+6:30", 420: "UTC+7", 480: "UTC+8", 540: "UTC+9", 570: "UTC+9:30", 600: "UTC+10", 630: "UTC+10:30", 660: "UTC+11", 720: "UTC+12", 765: "UTC+12:45", 780: "UTC+13", 840: "UTC+14" };
+    var timezone_values = getValues(timezone_map);
+    if (timezone_values.indexOf(timezone) === -1) {
+        throw new Error("timezone must be one of " + timezone_values.join(", "));
+    }
+
+    var buffer = new Buffer(4);
+    buffer.writeUInt8(0xff);
+    buffer.writeUInt8(0xbd);
+    buffer.writeInt16LE(getValue(timezone_map, timezone));
+    return buffer.toBytes();
+}
+
+function getValues(map) {
+    var values = [];
+    if (RAW_VALUE) {
+        for (var key in map) {
+            values.push(parseInt(key));
+        }
+    } else {
+        for (var key in map) {
+            values.push(map[key]);
+        }
+    }
+    return values;
+}
+
+function getValue(map, value) {
+    if (RAW_VALUE) return value;
+
+    for (var key in map) {
+        if (map[key] === value) {
+            return parseInt(key);
+        }
+    }
+
+    throw new Error("not match in " + JSON.stringify(map));
 }
 
 function Buffer(size) {
