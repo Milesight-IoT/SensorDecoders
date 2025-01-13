@@ -1,4 +1,4 @@
-# Smart Eink Display - Milesight IoT
+# Smart E-Ink Display - Milesight IoT
 
 The payload decoder function is applicable to DS3604.
 
@@ -29,11 +29,12 @@ For more detailed information, please visit [milesight official website](https:/
 ## Example
 
 ```json
-// 017564 FB0100054D696C6573 FB010A0568656C6C6F
+// 017564 FB0100054D696C6573 FB010A1968747470733A2F2F7777772E6D696C6573696768742E636F6D
 {
     "battery": 100,
-    "template": 1,
-    "text_1": "Miles",
-    "qrcode": "hello"
+    "template_1": {
+        "qrcode": "https://www.milesight.com",
+        "text_1": "Miles"
+    }
 }
 ```

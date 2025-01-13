@@ -26,13 +26,24 @@ function Encoder(obj, port) {
 function milesightDeviceEncode(payload) {
     var encoded = [];
 
-    if ("template_id" in payload) {
-        encoded = encoded.concat(setText(payload.template_id, payload));
+    if ("template_1" in payload) {
+        encoded = encoded.concat(setText(0, payload.template_1));
+    }
+    if ("template_2" in payload) {
+        encoded = encoded.concat(setText(1, payload.template_2));
     }
 
     return encoded;
 }
 
+/**
+ * update contents of template_x
+ * @param {object} template_x keys: (template_1, template_2)
+ * @param {string} template_x.text_x keys: (text_1, text_2, text_3, text_4, text_5, text_6, text_7, text_8, text_9, text_10)
+ * @param {string} template_x.qrcode keys: (qrcode)
+ * @example { "template_1": { "text_1": "Hello", "qrcode": "https://www.milesight.com" } }
+ * @example { "template_2": { "text_1": "Hello", "text_2": "World" } }
+ */
 function setText(template_id, contents) {
     var template_values = [1, 2];
     var content_id_map = { text_1: 0, text_2: 1, text_3: 2, text_4: 3, text_5: 4, text_6: 5, text_7: 6, text_8: 7, text_9: 8, text_10: 9, qrCode: 10 };

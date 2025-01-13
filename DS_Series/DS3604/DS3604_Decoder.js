@@ -35,26 +35,28 @@ function milesightDeviceDecode(bytes) {
         }
         // TEMPLATE
         else if (channel_id == 0xff && channel_type == 0x73) {
-            decoded.template = bytes[i] + 1;
+            decoded.current_template_id = bytes[i] + 1;
             i += 1;
         }
         // TEMPLATE BLOCK CHANNEL DATA
         else if (channel_id == 0xfb && channel_type == 0x01) {
             var template_id = (bytes[i] >> 6) + 1;
             var block_id = bytes[i++] & 0x3f;
+
+            var template_name = "template_" + template_id;
+            decoded[template_name] = decoded[template_name] || {};
             var block_name;
             if (block_id < 10) {
                 block_name = "text_" + (block_id + 1);
                 block_length = bytes[i++];
-                decoded[block_name] = decodeUtf8(bytes.slice(i, i + block_length));
+                decoded[template_name][block_name] = decodeUtf8(bytes.slice(i, i + block_length));
                 i += block_length;
             } else if (block_id == 10) {
-                block_name = "qrCode";
+                block_name = "qrcode";
                 block_length = bytes[i++];
-                decoded[block_name] = decodeUtf8(bytes.slice(i, i + block_length));
+                decoded[template_name][block_name] = decodeUtf8(bytes.slice(i, i + block_length));
                 i += block_length;
             }
-            decoded.template = template_id;
         } else {
             break;
         }
