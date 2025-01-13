@@ -1,10 +1,12 @@
 /**
  * Payload Encoder
  *
- * Copyright 2024 Milesight IoT
+ * Copyright 2025 Milesight IoT
  *
  * @product EM410-RDL
  */
+var RAW_VALUE = 0x00;
+
 // Chirpstack v4
 function encodeDownlink(input) {
     var encoded = milesightDeviceEncode(input.data);
@@ -43,13 +45,13 @@ function milesightDeviceEncode(payload) {
         encoded = encoded.concat(setTimezone(payload.timezone));
     }
     if ("distance_range" in payload) {
-        encoded = encoded.concat(setDistanceRange(payload.distance_range.mode, payload.distance_range.max));
+        encoded = encoded.concat(setDistanceRange(payload.distance_range));
     }
     if ("distance_alarm" in payload) {
-        encoded = encoded.concat(setDistanceAlarm(payload.distance_alarm.condition, payload.distance_alarm.alarm_release_report_enable, payload.distance_alarm.min, payload.distance_alarm.max));
+        encoded = encoded.concat(setDistanceAlarm(payload.distance_alarm));
     }
     if ("distance_mutation_alarm" in payload) {
-        encoded = encoded.concat(setDistanceMutationAlarm(payload.distance_mutation_alarm.alarm_release_report_enable, payload.distance_mutation_alarm.mutation));
+        encoded = encoded.concat(setDistanceMutationAlarm(payload.distance_mutation_alarm));
     }
     if ("alarm_counts" in payload) {
         encoded = encoded.concat(setAlarmCounts(payload.alarm_counts));
@@ -61,7 +63,7 @@ function milesightDeviceEncode(payload) {
         encoded = encoded.concat(setRadarBlindCalibration(payload.radar_blind_calibration));
     }
     if ("distance_calibration" in payload) {
-        encoded = encoded.concat(setDistanceCalibration(payload.distance_calibration.enable, payload.distance_calibration.distance));
+        encoded = encoded.concat(setDistanceCalibration(payload.distance_calibration));
     }
     if ("distance_mode" in payload) {
         encoded = encoded.concat(setDistanceMode(payload.distance_mode));
@@ -97,7 +99,7 @@ function milesightDeviceEncode(payload) {
         encoded = encoded.concat(setHistoryEnable(payload.history_enable));
     }
     if ("fetch_history" in payload) {
-        encoded = encoded.concat(fetchHistory(payload.fetch_history.start_time, payload.fetch_history.end_time));
+        encoded = encoded.concat(fetchHistory(payload.fetch_history));
     }
     if ("clear_history" in payload) {
         encoded = encoded.concat(clearHistory(payload.clear_history));
@@ -111,16 +113,17 @@ function milesightDeviceEncode(payload) {
 
 /**
  * reboot device
- * @param {number} reboot values: (0: "no", 1: "yes")
+ * @param {number} reboot values: (0: no, 1: yes)
  * @example { "reboot": 1 }
  */
 function reboot(reboot) {
-    var reboot_values = [0, 1];
+    var yes_no_map = { 0: "no", 1: "yes" };
+    var reboot_values = getValues(yes_no_map);
     if (reboot_values.indexOf(reboot) === -1) {
         throw new Error("reboot must be one of " + reboot_values.join(", "));
     }
 
-    if (reboot === 0) {
+    if (getValue(yes_no_map, reboot) === 0) {
         return [];
     }
     return [0xff, 0x10, 0xff];
@@ -128,11 +131,12 @@ function reboot(reboot) {
 
 /**
  * report device status
- * @param {number} report_status values: (0: "no", 1: "yes")
+ * @param {number} report_status values: (0: no, 1: yes)
  * @example { "report_status": 1 }
  */
 function reportStatus(report_status) {
-    var report_status_values = [0, 1];
+    var yes_no_map = { 0: "no", 1: "yes" };
+    var report_status_values = getValues(yes_no_map);
     if (report_status_values.indexOf(report_status) === -1) {
         throw new Error("report_status must be one of " + report_status_values.join(", "));
     }
@@ -140,7 +144,7 @@ function reportStatus(report_status) {
     var buffer = new Buffer(3);
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0x28);
-    buffer.writeUInt8(report_status);
+    buffer.writeUInt8(getValue(yes_no_map, report_status));
     return buffer.toBytes();
 }
 
@@ -187,16 +191,17 @@ function setCollectionInterval(collection_interval) {
 
 /**
  * sync time
- * @param {number} sync_time values：(0: "no", 1: "yes")
+ * @param {number} sync_time values：(0: no, 1: yes)
  * @example { "sync_time": 1 }
  */
 function syncTime(sync_time) {
-    var sync_time_values = [0, 1];
+    var yes_no_map = { 0: "no", 1: "yes" };
+    var sync_time_values = getValues(yes_no_map);
     if (sync_time_values.indexOf(sync_time) === -1) {
         throw new Error("sync_time must be one of " + sync_time_values.join(", "));
     }
 
-    if (sync_time === 0) {
+    if (getValue(yes_no_map, sync_time) === 0) {
         return [];
     }
     return [0xff, 0x4a, 0xff];
@@ -204,32 +209,39 @@ function syncTime(sync_time) {
 
 /**
  * set timezone
- * @param {number} timezone
+ * @param {number} timezone unit: minute, convert: "hh:mm" -> "hh * 60 + mm", values: ( -720: UTC-12, -660: UTC-11, -600: UTC-10, -570: UTC-9:30, -540: UTC-9, -480: UTC-8, -420: UTC-7, -360: UTC-6, -300: UTC-5, -240: UTC-4, -210: UTC-3:30, -180: UTC-3, -120: UTC-2, -60: UTC-1, 0: UTC, 60: UTC+1, 120: UTC+2, 180: UTC+3, 240: UTC+4, 300: UTC+5, 360: UTC+6, 420: UTC+7, 480: UTC+8, 540: UTC+9, 570: UTC+9:30, 600: UTC+10, 660: UTC+11, 720: UTC+12, 765: UTC+12:45, 780: UTC+13, 840: UTC+14 )
  * @example { "timezone": 8 }
  * @example { "timezone": -4 }
  */
 function setTimezone(timezone) {
-    if (typeof timezone !== "number") {
-        throw new Error("timezone must be a number");
+    var timezone_map = { "-720": "UTC-12", "-660": "UTC-11", "-600": "UTC-10", "-570": "UTC-9:30", "-540": "UTC-9", "-480": "UTC-8", "-420": "UTC-7", "-360": "UTC-6", "-300": "UTC-5", "-240": "UTC-4", "-210": "UTC-3:30", "-180": "UTC-3", "-120": "UTC-2", "-60": "UTC-1", 0: "UTC", 60: "UTC+1", 120: "UTC+2", 180: "UTC+3", 210: "UTC+3:30", 240: "UTC+4", 270: "UTC+4:30", 300: "UTC+5", 330: "UTC+5:30", 345: "UTC+5:45", 360: "UTC+6", 390: "UTC+6:30", 420: "UTC+7", 480: "UTC+8", 540: "UTC+9", 570: "UTC+9:30", 600: "UTC+10", 630: "UTC+10:30", 660: "UTC+11", 720: "UTC+12", 765: "UTC+12:45", 780: "UTC+13", 840: "UTC+14" };
+    var timezone_values = getValues(timezone_map);
+    if (timezone_values.indexOf(timezone) === -1) {
+        throw new Error("timezone must be one of " + timezone_values.join(", "));
     }
 
     var buffer = new Buffer(4);
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0xbd);
-    buffer.writeInt16LE(timezone * 60);
+    buffer.writeInt16LE(getValue(timezone_map, timezone));
     return buffer.toBytes();
 }
 
 /**
  * set distance range
- * @param {number} mode values: (0: "general", 1: "rainwater", 2: "wastewater")
- * @param {number} max unit: mm
+ * @param {object} distance_range
+ * @param {number} distance_range.mode values: (0: general, 1: rainwater, 2: wastewater)
+ * @param {number} distance_range.max unit: mm
  * @example { "distance_range": { "mode": 0, "max": 1000 } }
  */
-function setDistanceRange(mode, max) {
-    var mode_values = [0, 1, 2];
-    if (mode_values.indexOf(mode) === -1) {
-        throw new Error("distance_range.mode must be one of " + mode_values.join(", "));
+function setDistanceRange(distance_range) {
+    var mode = distance_range.mode;
+    var max = distance_range.max;
+
+    var distance_mode_map = { 0: "general", 1: "rainwater", 2: "wastewater" };
+    var distance_mode_values = getValues(distance_mode_map);
+    if (distance_mode_values.indexOf(mode) === -1) {
+        throw new Error("distance_range.mode must be one of " + distance_mode_values.join(", "));
     }
     if (typeof max !== "number") {
         throw new Error("distance_range.max must be a number");
@@ -246,20 +258,28 @@ function setDistanceRange(mode, max) {
 
 /**
  * set distance alarm
- * @param {number} condition values: (0: disable, 1: below, 2: above, 3: between, 4: outside)
- * @param {number} alarm_release_report_enable values: (0: disable, 1: enable)
- * @param {number} min
- * @param {number} max
+ * @param {object} distance_alarm
+ * @param {number} distance_alarm.condition values: (0: disable, 1: below, 2: above, 3: between, 4: outside)
+ * @param {number} distance_alarm.alarm_release_report_enable values: (0: disable, 1: enable)
+ * @param {number} distance_alarm.min
+ * @param {number} distance_alarm.max
  * @example { "distance_alarm": { "condition": 1, "alarm_release_report_enable": 1, "min": 100, "max": 1000 } }
  */
-function setDistanceAlarm(condition, alarm_release_report_enable, min, max) {
-    var condition_values = [0, 1, 2, 3, 4];
+function setDistanceAlarm(distance_alarm) {
+    var condition = distance_alarm.condition;
+    var alarm_release_report_enable = distance_alarm.alarm_release_report_enable;
+    var min = distance_alarm.min;
+    var max = distance_alarm.max;
+
+    var condition_map = { 0: "disable", 1: "below", 2: "above", 3: "between", 4: "outside" };
+    var condition_values = getValues(condition_map);
     if (condition_values.indexOf(condition) === -1) {
         throw new Error("distance_alarm.condition must be one of " + condition_values.join(", "));
     }
-    var alarm_release_report_enable_values = [0, 1];
-    if (alarm_release_report_enable_values.indexOf(alarm_release_report_enable) === -1) {
-        throw new Error("distance_alarm.alarm_release_report_enable must be one of " + alarm_release_report_enable_values.join(", "));
+    var enable_map = { 0: "disable", 1: "enable" };
+    var enable_values = getValues(enable_map);
+    if (enable_values.indexOf(alarm_release_report_enable) === -1) {
+        throw new Error("distance_alarm.alarm_release_report_enable must be one of " + enable_values.join(", "));
     }
     if (typeof min !== "number") {
         throw new Error("distance_alarm.min must be a number");
@@ -268,7 +288,10 @@ function setDistanceAlarm(condition, alarm_release_report_enable, min, max) {
         throw new Error("distance_alarm.max must be a number");
     }
 
-    var data = (alarm_release_report_enable << 7) | (1 << 3) | condition;
+    var data = 0x00;
+    data |= getValue(enable_map, alarm_release_report_enable) << 7;
+    data |= 1 << 3;
+    data |= getValue(condition_map, condition);
 
     var buffer = new Buffer(11);
     buffer.writeUInt8(0xff);
@@ -287,8 +310,19 @@ function setDistanceAlarm(condition, alarm_release_report_enable, min, max) {
  * @param {number} mutation
  * @example { "distance_mutation_alarm": { "alarm_release_report_enable": 1, "mutation": 100 } }
  */
-function setDistanceMutationAlarm(alarm_release_report_enable, mutation) {
-    var data = (alarm_release_report_enable << 7) | (2 << 3) | 5;
+function setDistanceMutationAlarm(distance_mutation_alarm) {
+    var alarm_release_report_enable = distance_mutation_alarm.alarm_release_report_enable;
+    var mutation = distance_mutation_alarm.mutation;
+
+    var enable_map = { 0: "disable", 1: "enable" };
+    var enable_values = getValues(enable_map);
+    if (enable_values.indexOf(alarm_release_report_enable) === -1) {
+        throw new Error("distance_mutation_alarm.alarm_release_report_enable must be one of " + enable_values.join(", "));
+    }
+    var data = 0x00;
+    data |= getValue(enable_map, alarm_release_report_enable) << 7;
+    data |= 2 << 3;
+    data |= 5;
 
     var buffer = new Buffer(11);
     buffer.writeUInt8(0xff);
@@ -323,16 +357,17 @@ function setAlarmCounts(alarm_counts) {
 
 /**
  * radar calibration
- * @param {number} radar_calibration_type values: (0: "no", 1: "yes")
+ * @param {number} radar_calibration_type values: (0: no, 1: yes)
  * @example { "radar_calibration": 0 }
  */
 function setRadarCalibration(radar_calibration) {
-    var radar_calibration = [0, 1];
-    if (radar_calibration.indexOf(radar_calibration) === -1) {
-        throw new Error("radar_calibration must be one of " + radar_calibration.join(", "));
+    var yes_no_map = { 0: "no", 1: "yes" };
+    var yes_no_values = getValues(yes_no_map);
+    if (yes_no_values.indexOf(radar_calibration) === -1) {
+        throw new Error("radar_calibration must be one of " + yes_no_values.join(", "));
     }
 
-    if (radar_calibration === 0) {
+    if (getValue(yes_no_map, radar_calibration) === 0) {
         return [];
     }
     return [0xff, 0x2a, 0x00];
@@ -340,15 +375,16 @@ function setRadarCalibration(radar_calibration) {
 
 /**
  * radar blind calibration
- * @param {number} radar_blind_calibration values: (0: "no", 1: "yes")
+ * @param {number} radar_blind_calibration values: (0: no, 1: yes)
  * @example { "radar_blind_calibration": 0 }
  */
 function setRadarBlindCalibration(radar_blind_calibration) {
-    var radar_blind_calibration = [0, 1];
-    if (radar_blind_calibration.indexOf(radar_blind_calibration) === -1) {
-        throw new Error("radar_blind_calibration must be one of " + radar_blind_calibration.join(", "));
+    var yes_no_map = { 0: "no", 1: "yes" };
+    var yes_no_values = getValues(yes_no_map);
+    if (yes_no_values.indexOf(radar_blind_calibration) === -1) {
+        throw new Error("radar_blind_calibration must be one of " + yes_no_values.join(", "));
     }
-    if (radar_blind_calibration === 0) {
+    if (getValue(yes_no_map, radar_blind_calibration) === 0) {
         return [];
     }
     return [0xff, 0x2a, 0x01];
@@ -356,12 +392,17 @@ function setRadarBlindCalibration(radar_blind_calibration) {
 
 /**
  * calibrate radar distance
- * @param {number} enable values: (0: "disable", 1: "enable")
- * @param {number} distance
+ * @param {object} distance_calibration
+ * @param {number} distance_calibration.enable values: (0: disable, 1: enable)
+ * @param {number} distance_calibration.distance unit: mm
  * @example { "distance_calibration": { "enable": 1, "distance": 100 } }
  */
-function setDistanceCalibration(enable, distance) {
-    var enable_values = [0, 1];
+function setDistanceCalibration(distance_calibration) {
+    var enable = distance_calibration.enable;
+    var distance = distance_calibration.distance;
+
+    var enable_map = { 0: "disable", 1: "enable" };
+    var enable_values = getValues(enable_map);
     if (enable_values.indexOf(enable) === -1) {
         throw new Error("distance_calibration.enable must be one of " + enable_values.join(", "));
     }
@@ -373,18 +414,19 @@ function setDistanceCalibration(enable, distance) {
     var buffer = new Buffer(5);
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0xab);
-    buffer.writeUInt8(enable);
+    buffer.writeUInt8(getValue(enable_map, enable));
     buffer.writeInt16LE(distance);
     return buffer.toBytes();
 }
 
 /**
  * distance mode
- * @param {number} distance_mode values: (0: "general", 1: "rain", 2: "dust")
+ * @param {number} distance_mode values: (0: general, 1: rainwater, 2: wastewater)
  * @example { "distance_mode": 0 }
  */
 function setDistanceMode(distance_mode) {
-    var distance_mode_values = [0, 1, 2];
+    var distance_mode_map = { 0: "general", 1: "rainwater", 2: "wastewater" };
+    var distance_mode_values = getValues(distance_mode_map);
     if (distance_mode_values.indexOf(distance_mode) === -1) {
         throw new Error("distance_mode must be one of " + distance_mode_values.join(", "));
     }
@@ -392,53 +434,58 @@ function setDistanceMode(distance_mode) {
     var buffer = new Buffer(3);
     buffer.writeUInt8(0xf9);
     buffer.writeUInt8(0x12);
-    buffer.writeUInt8(distance_mode);
+    buffer.writeUInt8(getValue(distance_mode_map, distance_mode));
     return buffer.toBytes();
 }
 
 /**
  * blind detection enable
- * @param {number} blind_detection_enable values: (0: "disable", 1: "enable")
+ * @param {number} blind_detection_enable values: (0: disable, 1: enable)
  * @example { "blind_detection_enable": 1 }
  */
 function setBlindDetectionEnable(blind_detection_enable) {
-    var blind_detection_enable_values = [0, 1];
-    if (blind_detection_enable_values.indexOf(blind_detection_enable) === -1) {
-        throw new Error("blind_detection_enable must be one of " + blind_detection_enable_values.join(", "));
+    var enable_map = { 0: "disable", 1: "enable" };
+    var enable_values = getValues(enable_map);
+    if (enable_values.indexOf(blind_detection_enable) === -1) {
+        throw new Error("blind_detection_enable must be one of " + enable_values.join(", "));
     }
 
     var buffer = new Buffer(3);
     buffer.writeUInt8(0xf9);
     buffer.writeUInt8(0x13);
-    buffer.writeUInt8(blind_detection_enable);
+    buffer.writeUInt8(getValue(enable_map, blind_detection_enable));
     return buffer.toBytes();
 }
 
 /**
  * set recollection config
- * @param {number} recollection_counts range: [1, 3]
- * @param {number} recollection_interval range: [1, 10]
- * @example { "recollection_counts": 3, "recollection_interval": 10 }
+ * @param {object} recollection_config
+ * @param {number} recollection_config.counts range: [1, 3]
+ * @param {number} recollection_config.interval range: [1, 10]
+ * @example { "recollection_config": { "counts": 3, "interval": 10 } }
  */
-function setRecollection(recollection_counts, recollection_interval) {
-    if (typeof recollection_counts !== "number") {
-        throw new Error("recollection_counts must be a number");
+function setRecollection(recollection_config) {
+    var counts = recollection_config.counts;
+    var interval = recollection_config.interval;
+
+    if (typeof counts !== "number") {
+        throw new Error("recollection_config.counts must be a number");
     }
-    if (recollection_counts < 1 || recollection_counts > 3) {
-        throw new Error("recollection_counts must be in range [1, 3]");
+    if (counts < 1 || counts > 3) {
+        throw new Error("recollection_config.counts must be in range [1, 3]");
     }
-    if (typeof recollection_interval !== "number") {
-        throw new Error("recollection_interval must be a number");
+    if (typeof interval !== "number") {
+        throw new Error("recollection_config.interval must be a number");
     }
-    if (recollection_interval < 1 || recollection_interval > 10) {
-        throw new Error("recollection_interval must be in range [1, 10]");
+    if (interval < 1 || interval > 10) {
+        throw new Error("recollection_config.interval must be in range [1, 10]");
     }
 
     var buffer = new Buffer(4);
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0x1c);
-    buffer.writeUInt8(recollection_counts);
-    buffer.writeUInt8(recollection_interval);
+    buffer.writeUInt8(counts);
+    buffer.writeUInt8(interval);
     return buffer.toBytes();
 }
 
@@ -478,11 +525,12 @@ function setDistanceThresholdSensitive(distance_threshold_sensitive) {
 
 /**
  * set peak sort
- * @param {number} peak_sorting values: (0: "closest", 1: "strongest")
+ * @param {number} peak_sorting values: (0: closest, 1: strongest)
  * @example { "peak_sorting": 0 }
  */
 function setPeakSortingAlgorithm(peak_sorting) {
-    var peak_sorting_values = [0, 1];
+    var peak_sorting_map = { 0: "closest", 1: "strongest" };
+    var peak_sorting_values = getValues(peak_sorting_map);
     if (peak_sorting_values.indexOf(peak_sorting) === -1) {
         throw new Error("peak_sorting must be one of " + peak_sorting_values.join(", "));
     }
@@ -490,25 +538,26 @@ function setPeakSortingAlgorithm(peak_sorting) {
     var buffer = new Buffer(3);
     buffer.writeUInt8(0xf9);
     buffer.writeUInt8(0x16);
-    buffer.writeUInt8(peak_sorting);
+    buffer.writeUInt8(getValue(peak_sorting_map, peak_sorting));
     return buffer.toBytes();
 }
 
 /**
  * retransmit enable
- * @param {number} retransmit_enable
+ * @param {number} retransmit_enable values: (0: disable, 1: enable)
  * @example { "retransmit_enable": 1 }
  */
 function setRetransmitEnable(retransmit_enable) {
-    var retransmit_enable_values = [0, 1];
-    if (retransmit_enable_values.indexOf(retransmit_enable) === -1) {
-        throw new Error("retransmit_enable must be one of " + retransmit_enable_values.join(", "));
+    var enable_map = { 0: "disable", 1: "enable" };
+    var enable_values = getValues(enable_map);
+    if (enable_values.indexOf(retransmit_enable) === -1) {
+        throw new Error("retransmit_enable must be one of " + enable_values.join(", "));
     }
 
     var buffer = new Buffer(3);
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0x69);
-    buffer.writeUInt8(retransmit_enable);
+    buffer.writeUInt8(getValue(enable_map, retransmit_enable));
     return buffer.toBytes();
 }
 
@@ -550,16 +599,17 @@ function setResendInterval(resend_interval) {
 
 /**
  * history stop transmit
- * @param {number} stop_transmit
+ * @param {number} stop_transmit values: (0: no, 1: yes)
  * @example { "stop_transmit": 1 }
  */
 function stopTransmit(stop_transmit) {
-    var stop_transmit_values = [0, 1];
-    if (stop_transmit_values.indexOf(stop_transmit) === -1) {
-        throw new Error("stop_transmit must be one of " + stop_transmit_values.join(", "));
+    var enable_map = { 0: "no", 1: "yes" };
+    var enable_values = getValues(enable_map);
+    if (enable_values.indexOf(stop_transmit) === -1) {
+        throw new Error("stop_transmit must be one of " + enable_values.join(", "));
     }
 
-    if (stop_transmit === 0) {
+    if (getValue(enable_map, stop_transmit) === 0) {
         return [];
     }
     return [0xff, 0x6d, 0xff];
@@ -567,37 +617,42 @@ function stopTransmit(stop_transmit) {
 
 /**
  * history enable
- * @param {number} history_enable values: (0: "disable", 1: "enable")
+ * @param {number} history_enable values: (0: disable, 1: enable)
  * @example { "history_enable": 1 }
  */
 function setHistoryEnable(history_enable) {
-    var history_enable_values = [0, 1];
-    if (history_enable_values.indexOf(history_enable) === -1) {
-        throw new Error("history_enable must be one of " + history_enable_values.join(", "));
+    var enable_map = { 0: "disable", 1: "enable" };
+    var enable_values = getValues(enable_map);
+    if (enable_values.indexOf(history_enable) === -1) {
+        throw new Error("history_enable must be one of " + enable_values.join(", "));
     }
 
     var buffer = new Buffer(3);
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0x68);
-    buffer.writeUInt8(history_enable);
+    buffer.writeUInt8(getValue(enable_map, history_enable));
     return buffer.toBytes();
 }
 
 /**
  * fetch history
- * @param {number} start_time
- * @param {number} end_time
+ * @param {object} fetch_history
+ * @param {number} fetch_history.start_time
+ * @param {number} fetch_history.end_time
  * @example { "fetch_history": { "start_time": 1609459200, "end_time": 1609545600 } }
  */
-function fetchHistory(start_time, end_time) {
+function fetchHistory(fetch_history) {
+    var start_time = fetch_history.start_time;
+    var end_time = fetch_history.end_time;
+
     if (typeof start_time !== "number") {
-        throw new Error("start_time must be a number");
+        throw new Error("fetch_history.start_time must be a number");
     }
     if (end_time && typeof end_time !== "number") {
-        throw new Error("end_time must be a number");
+        throw new Error("fetch_history.end_time must be a number");
     }
     if (end_time && start_time > end_time) {
-        throw new Error("start_time must be less than end_time");
+        throw new Error("fetch_history.start_time must be less than fetch_history.end_time");
     }
 
     var buffer;
@@ -623,16 +678,43 @@ function fetchHistory(start_time, end_time) {
  * @example { "tilt_distance_link": 1 }
  */
 function setTiltAndDistanceLink(tilt_distance_link) {
-    var tilt_distance_link_values = [0, 1];
-    if (tilt_distance_link_values.indexOf(tilt_distance_link) === -1) {
-        throw new Error("tilt_distance_link must be one of " + tilt_distance_link_values.join(", "));
+    var enable_map = { 0: "disable", 1: "enable" };
+    var enable_values = getValues(enable_map);
+    if (enable_values.indexOf(tilt_distance_link) === -1) {
+        throw new Error("tilt_distance_link must be one of " + enable_values.join(", "));
     }
 
     var buffer = new Buffer(3);
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0x3e);
-    buffer.writeUInt8(tilt_distance_link);
+    buffer.writeUInt8(getValue(enable_map, tilt_distance_link));
     return buffer.toBytes();
+}
+
+function getValues(map) {
+    var values = [];
+    if (RAW_VALUE) {
+        for (var key in map) {
+            values.push(parseInt(key));
+        }
+    } else {
+        for (var key in map) {
+            values.push(map[key]);
+        }
+    }
+    return values;
+}
+
+function getValue(map, value) {
+    if (RAW_VALUE) return value;
+
+    for (var key in map) {
+        if (map[key] === value) {
+            return parseInt(key);
+        }
+    }
+
+    throw new Error("not match in " + JSON.stringify(map));
 }
 
 function Buffer(size) {
