@@ -230,7 +230,7 @@ function setTimezone(timezone) {
 /**
  * set distance range
  * @param {object} distance_range
- * @param {number} distance_range.mode values: (0: general, 1: rainwater, 2: wastewater)
+ * @param {number} distance_range.mode values: (0: general, 1: rainwater, 2: wastewater, 3: tank)
  * @param {number} distance_range.max unit: mm
  * @example { "distance_range": { "mode": 0, "max": 1000 } }
  */
@@ -238,7 +238,7 @@ function setDistanceRange(distance_range) {
     var mode = distance_range.mode;
     var max = distance_range.max;
 
-    var distance_mode_map = { 0: "general", 1: "rainwater", 2: "wastewater" };
+    var distance_mode_map = { 0: "general", 1: "rainwater", 2: "wastewater", 3: "tank" };
     var distance_mode_values = getValues(distance_mode_map);
     if (distance_mode_values.indexOf(mode) === -1) {
         throw new Error("distance_range.mode must be one of " + distance_mode_values.join(", "));
@@ -421,11 +421,11 @@ function setDistanceCalibration(distance_calibration) {
 
 /**
  * distance mode
- * @param {number} distance_mode values: (0: general, 1: rainwater, 2: wastewater)
+ * @param {number} distance_mode values: (0: general, 1: rainwater, 2: wastewater, 3: tank)
  * @example { "distance_mode": 0 }
  */
 function setDistanceMode(distance_mode) {
-    var distance_mode_map = { 0: "general", 1: "rainwater", 2: "wastewater" };
+    var distance_mode_map = { 0: "general", 1: "rainwater", 2: "wastewater", 3: "tank" };
     var distance_mode_values = getValues(distance_mode_map);
     if (distance_mode_values.indexOf(distance_mode) === -1) {
         throw new Error("distance_mode must be one of " + distance_mode_values.join(", "));

@@ -435,7 +435,7 @@ function readPositionStatus(status) {
 }
 
 function readDistanceMode(status) {
-    var status_map = { 0: "general", 1: "rainwater", 2: "wastewater" };
+    var status_map = { 0: "general", 1: "rainwater", 2: "wastewater", 3: "tank" };
     return getValue(status_map, status);
 }
 
