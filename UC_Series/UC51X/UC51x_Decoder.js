@@ -157,7 +157,7 @@ function milesightDeviceDecode(bytes) {
                     if (rule.condition.repeat_type === "weekly") {
                         var week_enums = ["monday", "tuesday", "wednesday", "thursday", "friday", "saturday", "sunday"];
                         rule.condition.repeat_time = [];
-                        for (i = 0; i < 7; i++) {
+                        for (var i = 0; i < 7; i++) {
                             if ((repeat_value >> i) & (0x01 === 1)) {
                                 rule.condition.repeat_time.push(week_enums[i]);
                             }

@@ -30,7 +30,7 @@ var av_chns = [0x0d, 0x0e];
 function milesightDeviceDecode(bytes) {
     var decoded = {};
 
-    for (i = 0; i < bytes.length; ) {
+    for (var i = 0; i < bytes.length; ) {
         var channel_id = bytes[i++];
         var channel_type = bytes[i++];
 
@@ -191,7 +191,7 @@ function milesightDeviceDecode(bytes) {
             i += 6;
 
             var data = { timestamp: timestamp };
-            for (j = 0; j < channel_mask.length; j++) {
+            for (var j = 0; j < channel_mask.length; j++) {
                 // SKIP UNUSED CHANNELS
                 if (channel_mask[j] !== 1) continue;
 
@@ -258,7 +258,7 @@ function milesightDeviceDecode(bytes) {
             i += 8;
 
             var data = { timestamp: timestamp };
-            for (j = 0; j < modbus_chn_mask.length; j++) {
+            for (var j = 0; j < modbus_chn_mask.length; j++) {
                 if (modbus_chn_mask[j] !== 1) continue;
 
                 var chn = "modbus_chn_" + (j + 1);

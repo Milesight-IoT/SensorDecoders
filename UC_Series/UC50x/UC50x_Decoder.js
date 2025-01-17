@@ -28,7 +28,7 @@ adc_alarm_chns = [0x85, 0x86];
 function milesightDeviceDecode(bytes) {
     var decoded = {};
 
-    for (i = 0; i < bytes.length; ) {
+    for (var i = 0; i < bytes.length; ) {
         var channel_id = bytes[i++];
         var channel_type = bytes[i++];
 
@@ -158,7 +158,7 @@ function milesightDeviceDecode(bytes) {
             i += 6;
 
             var data = { timestamp: timestamp };
-            for (j = 0; j < channel_mask.length; j++) {
+            for (var j = 0; j < channel_mask.length; j++) {
                 // skip if channel is not enabled
                 if (channel_mask[j] === 0) continue;
                 var name = "sdi12_" + (j + 1);
@@ -178,7 +178,7 @@ function milesightDeviceDecode(bytes) {
             i += 6;
 
             var data = { timestamp: timestamp };
-            for (j = 0; j < channel_mask.length; j++) {
+            for (var j = 0; j < channel_mask.length; j++) {
                 // skip if channel is not enabled
                 if (channel_mask[j] === 0) continue;
 

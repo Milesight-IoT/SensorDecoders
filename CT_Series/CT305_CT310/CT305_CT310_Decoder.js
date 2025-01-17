@@ -27,7 +27,7 @@ var current_alarm_chns = [0x84, 0x86, 0x88];
 
 function milesightDeviceDecode(bytes) {
     var decoded = {};
-    for (i = 0; i < bytes.length; ) {
+    for (var i = 0; i < bytes.length; ) {
         var channel_id = bytes[i++];
         var channel_type = bytes[i++];
 
