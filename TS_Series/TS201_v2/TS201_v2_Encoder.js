@@ -59,8 +59,8 @@ function milesightDeviceEncode(payload) {
     if ("alarm_count" in payload) {
         encoded = encoded.concat(setAlarmCount(payload.alarm_count));
     }
-    if ("threshold_alarm_enable" in payload) {
-        encoded = encoded.concat(setThresholdAlarmEnable(payload.threshold_alarm_enable));
+    if ("threshold_alarm_release_enable" in payload) {
+        encoded = encoded.concat(setThresholdAlarmReleaseEnable(payload.threshold_alarm_release_enable));
     }
     if ("temperature_threshold_config" in payload) {
         encoded = encoded.concat(setTemperatureThresholdConfig(payload.temperature_threshold_config));
@@ -90,7 +90,9 @@ function milesightDeviceEncode(payload) {
         encoded = encoded.concat(setAckRetryTimes(payload.ack_retry_times));
     }
     if ("d2d_master_config" in payload) {
-        encoded = encoded.concat(setD2DMasterConfig(payload.d2d_master_config));
+        for (var i = 0; i < payload.d2d_master_config.length; i++) {
+            encoded = encoded.concat(setD2DMasterConfig(payload.d2d_master_config[i]));
+        }
     }
     if ("d2d_key" in payload) {
         encoded = encoded.concat(setD2DKey(payload.d2d_key));
@@ -98,14 +100,20 @@ function milesightDeviceEncode(payload) {
     if ("d2d_enable" in payload) {
         encoded = encoded.concat(setD2DEnable(payload.d2d_enable));
     }
-    if ("uplink_config" in payload) {
-        encoded = encoded.concat(setUplinkConfig(payload.uplink_config));
+    if ("d2d_uplink_config" in payload) {
+        encoded = encoded.concat(setD2DUplinkConfig(payload.d2d_uplink_config));
     }
     if ("button_lock_config" in payload) {
         encoded = encoded.concat(setButtonLockConfig(payload.button_lock_config));
     }
     if ("led_indicator_enable" in payload) {
         encoded = encoded.concat(setLedIndicatorEnable(payload.led_indicator_enable));
+    }
+    if ("temperature_unit" in payload) {
+        encoded = encoded.concat(setTemperatureUnit(payload.temperature_unit));
+    }
+    if ("query_config" in payload) {
+        encoded = encoded.concat(setQueryConfig(payload.query_config));
     }
 
     return encoded;
@@ -424,20 +432,20 @@ function setHumidityMutationConfig(humidity_mutation_config) {
 
 /**
  * threshold alarm enable
- * @param {number} threshold_alarm_enable values: (0: disable, 1: enable)
- * @example { "threshold_alarm_enable": 1 }
+ * @param {number} threshold_alarm_release_enable values: (0: disable, 1: enable)
+ * @example { "threshold_alarm_release_enable": 1 }
  */
-function setThresholdAlarmEnable(threshold_alarm_enable) {
+function setThresholdAlarmReleaseEnable(threshold_alarm_release_enable) {
     var enable_map = { 0: "disable", 1: "enable" };
     var enable_values = getValues(enable_map);
-    if (enable_values.indexOf(threshold_alarm_enable) === -1) {
-        throw new Error("threshold_alarm_enable must be one of " + enable_values.join(", "));
+    if (enable_values.indexOf(threshold_alarm_release_enable) === -1) {
+        throw new Error("threshold_alarm_release_enable must be one of " + enable_values.join(", "));
     }
 
     var buffer = new Buffer(3);
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0xf5);
-    buffer.writeUInt8(getValue(enable_map, threshold_alarm_enable));
+    buffer.writeUInt8(getValue(enable_map, threshold_alarm_release_enable));
     return buffer.toBytes();
 }
 
@@ -631,7 +639,7 @@ function setAckRetryTimes(ack_retry_times) {
  * @param {number} d2d_master_config._item.enable values: (0: disable, 1: enable)
  * @param {number} d2d_master_config._item.lora_uplink_enable values: (0: disable, 1: enable)
  * @param {string} d2d_master_config._item.d2d_cmd
- * @example { "d2d_master_config": { "event": 1, "enable": 1 } }
+ * @example { "d2d_master_config": [{ "event": 1, "enable": 1 }] }
  */
 function setD2DMasterConfig(d2d_master_config) {
     var event = d2d_master_config.event;
@@ -650,7 +658,7 @@ function setD2DMasterConfig(d2d_master_config) {
     }
 
     var buffer = new Buffer(10);
-    buffer.writeUInt8(0xf9);
+    buffer.writeUInt8(0xff);
     buffer.writeUInt8(0x96);
     buffer.writeUInt8(getValue(event_map, event));
     buffer.writeUInt8(getValue(enable_map, enable));
@@ -706,26 +714,26 @@ function setD2DEnable(d2d_enable) {
 
 /**
  * set uplink config
- * @param {object} uplink_config
- * @param {number} uplink_config.d2d_uplink_enable values: (0: disable, 1: enable)
- * @param {number} uplink_config.lora_uplink_enable values: (0: disable, 1: enable)
- * @param {object} uplink_config.sensor_data_config
- * @param {number} uplink_config.sensor_data_config.temperature values: (0: disable, 1: enable)
- * @param {number} uplink_config.sensor_data_config.humidity values: (0: disable, 1: enable)
- * @example { "uplink_config": { "d2d_uplink_enable": 1, "lora_uplink_enable": 1, "sensor_data_config": { "temperature": 1, "humidity": 1 } } }
+ * @param {object} d2d_uplink_config
+ * @param {number} d2d_uplink_config.d2d_uplink_enable values: (0: disable, 1: enable)
+ * @param {number} d2d_uplink_config.lora_uplink_enable values: (0: disable, 1: enable)
+ * @param {object} d2d_uplink_config.sensor_data_config
+ * @param {number} d2d_uplink_config.sensor_data_config.temperature values: (0: disable, 1: enable)
+ * @param {number} d2d_uplink_config.sensor_data_config.humidity values: (0: disable, 1: enable)
+ * @example { "d2d_uplink_config": { "d2d_uplink_enable": 1, "lora_uplink_enable": 1, "sensor_data_config": { "temperature": 1, "humidity": 1 } } }
  */
-function setUplinkConfig(uplink_config) {
-    var d2d_uplink_enable = uplink_config.d2d_uplink_enable;
-    var lora_uplink_enable = uplink_config.lora_uplink_enable;
-    var sensor_data_config = uplink_config.sensor_data_config;
+function setD2DUplinkConfig(d2d_uplink_config) {
+    var d2d_uplink_enable = d2d_uplink_config.d2d_uplink_enable;
+    var lora_uplink_enable = d2d_uplink_config.lora_uplink_enable;
+    var sensor_data_config = d2d_uplink_config.sensor_data_config;
 
     var enable_map = { 0: "disable", 1: "enable" };
     var enable_values = getValues(enable_map);
     if (enable_values.indexOf(d2d_uplink_enable) === -1) {
-        throw new Error("uplink_config.d2d_uplink_enable must be one of " + enable_values.join(", "));
+        throw new Error("d2d_uplink_config.d2d_uplink_enable must be one of " + enable_values.join(", "));
     }
     if (enable_values.indexOf(lora_uplink_enable) === -1) {
-        throw new Error("uplink_config.lora_uplink_enable must be one of " + enable_values.join(", "));
+        throw new Error("d2d_uplink_config.lora_uplink_enable must be one of " + enable_values.join(", "));
     }
 
     var sensor_bit_offset = { temperature: 0, humidity: 1 };
@@ -733,7 +741,7 @@ function setUplinkConfig(uplink_config) {
     for (var key in sensor_data_config) {
         if (key in sensor_bit_offset) {
             if (enable_values.indexOf(sensor_data_config[key]) === -1) {
-                throw new Error("uplink_config.sensor_data_config." + key + " must be one of " + enable_values.join(", "));
+                throw new Error("d2d_uplink_config.sensor_data_config." + key + " must be one of " + enable_values.join(", "));
             }
             data |= getValue(enable_map, sensor_data_config[key]) << sensor_bit_offset[key];
         }
@@ -751,12 +759,12 @@ function setUplinkConfig(uplink_config) {
 /**
  * set button lock config
  * @param {object} button_lock_config
- * @param {number} button_lock_config.power values: (0: disable, 1: enable)
- * @param {number} button_lock_config.report values: (0: disable, 1: enable)
- * @example { "button_lock_config": { "power": 1, "report": 1 } }
+ * @param {number} button_lock_config.power_button values: (0: disable, 1: enable)
+ * @param {number} button_lock_config.report_button values: (0: disable, 1: enable)
+ * @example { "button_lock_config": { "power_button": 1, "report_button": 1 } }
  */
 function setButtonLockConfig(button_lock_config) {
-    var button_bit_offset = { power: 0, report: 1 };
+    var button_bit_offset = { power_button: 0, report_button: 1 };
 
     var enable_map = { 0: "disable", 1: "enable" };
     var enable_values = getValues(enable_map);
@@ -795,6 +803,107 @@ function setLedIndicatorEnable(led_indicator_enable) {
     buffer.writeUInt8(0x6a);
     buffer.writeUInt8(getValue(enable_map, led_indicator_enable));
     return buffer.toBytes();
+}
+
+/**
+ * set temperature unit
+ * @param {number} temperature_unit values: (0: celsius, 1: fahrenheit)
+ * @example { "temperature_unit": 0 }
+ */
+function setTemperatureUnit(temperature_unit) {
+    var unit_map = { 0: "celsius", 1: "fahrenheit" };
+    var unit_values = getValues(unit_map);
+    if (unit_values.indexOf(temperature_unit) === -1) {
+        throw new Error("temperature_unit must be one of " + unit_values.join(", "));
+    }
+
+    var buffer = new Buffer(3);
+    buffer.writeUInt8(0xff);
+    buffer.writeUInt8(0xeb);
+    buffer.writeUInt8(getValue(unit_map, temperature_unit));
+    return buffer.toBytes();
+}
+
+/**
+ * query device config
+ * @param {object} query_config
+ * @param {number} query_config.temperature_unit values: (0: no, 1: yes)
+ * @param {number} query_config.button_lock_config values: (0: no, 1: yes)
+ * @param {number} query_config.d2d_config values: (0: no, 1: yes)
+ * @param {number} query_config.d2d_enable values: (0: no, 1: yes)
+ * @param {number} query_config.d2d_master_config_with_temperature_threshold_alarm values: (0: no, 1: yes)
+ * @param {number} query_config.d2d_master_config_with_temperature_threshold_alarm_release values: (0: no, 1: yes)
+ * @param {number} query_config.d2d_master_config_with_temperature_mutation_alarm values: (0: no, 1: yes)
+ * @param {number} query_config.d2d_master_config_with_humidity_threshold_alarm values: (0: no, 1: yes)
+ * @param {number} query_config.d2d_master_config_with_humidity_threshold_alarm_release values: (0: no, 1: yes)
+ * @param {number} query_config.d2d_master_config_with_humidity_mutation_alarm values: (0: no, 1: yes)
+ * @param {number} query_config.temperature_calibration_config values: (0: no, 1: yes)
+ * @param {number} query_config.humidity_calibration_config values: (0: no, 1: yes)
+ * @param {number} query_config.temperature_threshold_config values: (0: no, 1: yes)
+ * @param {number} query_config.humidity_threshold_config values: (0: no, 1: yes)
+ * @param {number} query_config.temperature_mutation_config values: (0: no, 1: yes)
+ * @param {number} query_config.humidity_mutation_config values: (0: no, 1: yes)
+ * @param {number} query_config.led_indicator_config values: (0: no, 1: yes)
+ * @param {number} query_config.collection_interval values: (0: no, 1: yes)
+ * @param {number} query_config.report_interval values: (0: no, 1: yes)
+ * @param {number} query_config.alarm_count values: (0: no, 1: yes)
+ * @param {number} query_config.history_retransmit_config values: (0: no, 1: yes)
+ * @param {number} query_config.history_enable values: (0: no, 1: yes)
+ * @param {number} query_config.history_resend_config values: (0: no, 1: yes)
+ * @param {number} query_config.lora_ack_config values: (0: no, 1: yes)
+ * @example { "query_config": { "temperature_unit": 1, "button_lock_config": 2, "d2d_config": 3, "d2d_enable": 4, "d2d_master_config_with_temperature_threshold_alarm": 5, "d2d_master_config_with_temperature_threshold_alarm_release": 6, "d2d_master_config_with_temperature_mutation_alarm": 7, "d2d_master_config_with_humidity_threshold_alarm": 8, "d2d_master_config_with_humidity_threshold_alarm_release": 9, "d2d_master_config_with_humidity_mutation_alarm": 10, "temperature_calibration_config": 11, "humidity_calibration_config": 12, "temperature_threshold_config": 13, "humidity_threshold_config": 14, "temperature_mutation_config": 15, "humidity_mutation_config": 16, "led_indicator_config": 17, "collection_interval": 18, "report_interval": 19, "alarm_count": 20, "history_retransmit_config": 21, "history_enable": 22, "history_resend_config": 23, "lora_ack_config": 24 } }
+ */
+function queryDeviceConfig(query_config) {
+    var config_map = {
+        temperature_unit: 1,
+        button_lock_config: 2,
+        d2d_uplink_config: 3,
+        d2d_enable: 4,
+        d2d_master_config_with_temperature_threshold_alarm: 5,
+        d2d_master_config_with_temperature_threshold_alarm_release: 6,
+        d2d_master_config_with_temperature_mutation_alarm: 7,
+        d2d_master_config_with_humidity_threshold_alarm: 8,
+        d2d_master_config_with_humidity_threshold_alarm_release: 9,
+        d2d_master_config_with_humidity_mutation_alarm: 10,
+        temperature_calibration_config: 11,
+        humidity_calibration_config: 12,
+        temperature_threshold_config: 13,
+        temperature_mutation_config: 14,
+        humidity_threshold_config: 15,
+        humidity_mutation_config: 16,
+        led_indicator_enable: 17,
+        collection_interval: 18,
+        report_interval: 19,
+        threshold_alarm_release_enable: 20,
+        alarm_count: 21,
+        retransmit_config: 22,
+        history_enable: 23,
+        history_resend_config: 24,
+        ack_retry_times: 25,
+    };
+
+    var yes_no_map = { 0: "no", 1: "yes" };
+    var yes_no_values = getValues(yes_no_map);
+
+    var data = [];
+    for (var key in config_map) {
+        if (key in query_config) {
+            if (yes_no_values.indexOf(query_config[key]) === -1) {
+                throw new Error("query_config." + key + " must be one of " + yes_no_values.join(", "));
+            }
+
+            if (getValue(yes_no_map, query_config[key]) === 0) {
+                continue;
+            }
+
+            var buffer = new Buffer(3);
+            buffer.writeUInt8(0xf9);
+            buffer.writeUInt8(0x6f);
+            buffer.writeUInt8(getValue(config_map, key));
+            data = data.concat(buffer.toBytes());
+        }
+    }
+    return data;
 }
 
 function getValues(map) {

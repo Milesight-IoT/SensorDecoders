@@ -183,13 +183,18 @@ function milesightDeviceDecode(bytes) {
             decoded.history = decoded.history || [];
             decoded.history.push(data);
         }
+        // TEMPERATURE UNIT
+        else if (channel_id === 0xff && channel_type === 0xeb) {
+            decoded.temperature_unit = readTemperatureUnit(bytes[i]);
+            i += 1;
+        }
         // DOWNLINK RESPONSE
-        else if (channel_id === 0xfe) {
+        else if (channel_id === 0xfe || channel_id === 0xff) {
             result = handle_downlink_response(channel_type, bytes, i);
             decoded = Object.assign(decoded, result.data);
             i = result.offset;
-        } else if (channel_id === 0xf8) {
-            result = handle_downlink_response_ext(channel_type, bytes, i);
+        } else if (channel_id === 0xf8 || channel_id === 0xf9) {
+            result = handle_downlink_response_ext(channel_id, channel_type, bytes, i);
             decoded = Object.assign(decoded, result.data);
             i = result.offset;
         } else {
@@ -221,6 +226,19 @@ function handle_downlink_response(channel_type, bytes, offset) {
             decoded.report_interval = readUInt16LE(bytes.slice(offset + 1, offset + 3));
             offset += 3;
             break;
+        case 0x96:
+            var d2d_master_config = {};
+            d2d_master_config.event = readD2DEventType(bytes[offset]);
+            d2d_master_config.enable = readEnableStatus(bytes[offset + 1]);
+            d2d_master_config.lora_uplink_enable = readEnableStatus(bytes[offset + 2]);
+            d2d_master_config.d2d_cmd = readSerialNumber(bytes.slice(offset + 3, offset + 5));
+            d2d_master_config.time = readUInt16LE(bytes.slice(offset + 5, offset + 7));
+            d2d_master_config.time_enable = readEnableStatus(bytes[offset + 7]);
+
+            decoded.d2d_master_config = decoded.d2d_master_config || [];
+            decoded.d2d_master_config.push(d2d_master_config);
+            offset += 8;
+            break;
         case 0xea:
             var data = readUInt8(bytes[offset]);
             var calibration_value = readInt16LE(bytes.slice(offset + 1, offset + 3));
@@ -243,7 +261,7 @@ function handle_downlink_response(channel_type, bytes, offset) {
             offset += 2;
             break;
         case 0xf5:
-            decoded.threshold_alarm_enable = readEnableStatus(bytes[offset]);
+            decoded.threshold_alarm_release_enable = readEnableStatus(bytes[offset]);
             offset += 1;
             break;
 
@@ -254,147 +272,98 @@ function handle_downlink_response(channel_type, bytes, offset) {
     return { data: decoded, offset: offset };
 }
 
-function handle_downlink_response_ext(channel_type, bytes, offset) {
+function handle_downlink_response_ext(code, channel_type, bytes, offset) {
     var decoded = {};
 
     switch (channel_type) {
         case 0x0b:
-            var threshold_config_result = readUInt8(bytes[offset + 7]);
             var data_type = readUInt8(bytes[offset]);
-            if (threshold_config_result === 0) {
-                if (data_type === 0x01) {
-                    decoded.temperature_threshold_config = {};
-                    decoded.temperature_threshold_config.condition = readMathConditionType(bytes[offset + 1]);
-                    decoded.temperature_threshold_config.max = readInt16LE(bytes.slice(offset + 2, offset + 4)) / 10;
-                    decoded.temperature_threshold_config.min = readInt16LE(bytes.slice(offset + 4, offset + 6)) / 10;
-                    decoded.temperature_threshold_config.enable = readEnableStatus(bytes[offset + 6]);
-                } else if (data_type === 0x03) {
-                    decoded.humidity_threshold_config = {};
-                    decoded.humidity_threshold_config.condition = readMathConditionType(bytes[offset + 1]);
-                    decoded.humidity_threshold_config.max = readUInt16LE(bytes.slice(offset + 2, offset + 4)) / 2;
-                    decoded.humidity_threshold_config.min = readUInt16LE(bytes.slice(offset + 4, offset + 6)) / 2;
-                    decoded.humidity_threshold_config.enable = readEnableStatus(bytes[offset + 6]);
-                }
-            } else {
-                decoded.threshold_config_result = readResultStatus(threshold_config_result);
+            if (data_type === 0x01) {
+                decoded.temperature_threshold_config = {};
+                decoded.temperature_threshold_config.condition = readMathConditionType(bytes[offset + 1]);
+                decoded.temperature_threshold_config.max = readInt16LE(bytes.slice(offset + 2, offset + 4)) / 10;
+                decoded.temperature_threshold_config.min = readInt16LE(bytes.slice(offset + 4, offset + 6)) / 10;
+                decoded.temperature_threshold_config.enable = readEnableStatus(bytes[offset + 6]);
+            } else if (data_type === 0x03) {
+                decoded.humidity_threshold_config = {};
+                decoded.humidity_threshold_config.condition = readMathConditionType(bytes[offset + 1]);
+                decoded.humidity_threshold_config.max = readUInt16LE(bytes.slice(offset + 2, offset + 4)) / 2;
+                decoded.humidity_threshold_config.min = readUInt16LE(bytes.slice(offset + 4, offset + 6)) / 2;
+                decoded.humidity_threshold_config.enable = readEnableStatus(bytes[offset + 6]);
             }
-            offset += 8;
+            offset += 7;
             break;
         case 0x0c:
-            var mutation_config_result = readUInt8(bytes[offset + 4]);
             var data_type = readUInt8(bytes[offset]);
-            if (mutation_config_result === 0) {
-                if (data_type === 0x02) {
-                    decoded.temperature_mutation_config = {};
-                    decoded.temperature_mutation_config.threshold = readUInt16LE(bytes.slice(offset + 1, offset + 3)) / 10;
-                    decoded.temperature_mutation_config.enable = readEnableStatus(bytes[offset + 3]);
-                } else if (data_type === 0x04) {
-                    decoded.humidity_mutation_config = {};
-                    decoded.humidity_mutation_config.threshold = readUInt16LE(bytes.slice(offset + 1, offset + 3)) / 2;
-                    decoded.humidity_mutation_config.enable = readEnableStatus(bytes[offset + 3]);
-                }
-            } else {
-                decoded.mutation_config_result = readResultStatus(mutation_config_result);
+            if (data_type === 0x02) {
+                decoded.temperature_mutation_config = {};
+                decoded.temperature_mutation_config.threshold = readUInt16LE(bytes.slice(offset + 1, offset + 3)) / 10;
+                decoded.temperature_mutation_config.enable = readEnableStatus(bytes[offset + 3]);
+            } else if (data_type === 0x04) {
+                decoded.humidity_mutation_config = {};
+                decoded.humidity_mutation_config.threshold = readUInt16LE(bytes.slice(offset + 1, offset + 3)) / 2;
+                decoded.humidity_mutation_config.enable = readEnableStatus(bytes[offset + 3]);
             }
-            offset += 5;
+            offset += 4;
             break;
         case 0x0d:
-            var retransmit_config_result = readUInt8(bytes[offset + 3]);
-            if (retransmit_config_result === 0) {
-                decoded.retransmit_config = {};
-                decoded.retransmit_config.enable = readEnableStatus(bytes[offset]);
-                decoded.retransmit_config.interval = readUInt16LE(bytes.slice(offset + 1, offset + 3));
-            } else {
-                decoded.retransmit_config_result = readResultStatus(retransmit_config_result);
-            }
-            offset += 4;
-            break;
-        case 0x0e:
-            var resend_config_result = readUInt8(bytes[offset + 2]);
-            if (resend_config_result === 0) {
-                decoded.resend_interval = readUInt16LE(bytes.slice(offset, offset + 2));
-            } else {
-                decoded.resend_config_result = readResultStatus(resend_config_result);
-            }
+            decoded.retransmit_config = {};
+            decoded.retransmit_config.enable = readEnableStatus(bytes[offset]);
+            decoded.retransmit_config.interval = readUInt16LE(bytes.slice(offset + 1, offset + 3));
             offset += 3;
             break;
-        case 0x31:
-            var fetch_sensor_id_result = readUInt8(bytes[offset + 1]);
-            if (fetch_sensor_id_result === 0) {
-                decoded.fetch_sensor_id = readUInt8(bytes[offset]);
-            } else {
-                decoded.fetch_sensor_id_result = readResultStatus(fetch_sensor_id_result);
-            }
+        case 0x0e:
+            decoded.resend_interval = readUInt16LE(bytes.slice(offset, offset + 2));
             offset += 2;
+            break;
+        case 0x31:
+            decoded.fetch_sensor_id = readUInt8(bytes[offset]);
+            offset += 1;
             break;
         case 0x32:
-            var ack_retry_times_result = readUInt8(bytes[offset + 3]);
-            if (ack_retry_times_result === 0) {
-                // skip 2 byte
-                decoded.ack_retry_times = readUInt8(bytes[offset + 2]);
-            } else {
-                decoded.ack_retry_times_result = readResultStatus(ack_retry_times_result);
-            }
-            offset += 4;
+            decoded.ack_retry_times = readUInt8(bytes[offset + 2]);
+            offset += 3;
             break;
         case 0x63:
-            var uplink_config_result = readUInt8(bytes[offset + 4]);
-            if (uplink_config_result === 0) {
-                decoded.uplink_config = {};
-                decoded.uplink_config.d2d_uplink_enable = readEnableStatus(bytes[offset]);
-                decoded.uplink_config.lora_uplink_enable = readEnableStatus(bytes[offset + 1]);
-                decoded.uplink_config.sensor_data_config = readSensorDataConfig(bytes.slice(offset + 2, offset + 4));
-            } else {
-                decoded.uplink_config_result = readResultStatus(uplink_config_result);
-            }
-            offset += 5;
+            decoded.d2d_uplink_config = {};
+            decoded.d2d_uplink_config.d2d_uplink_enable = readEnableStatus(bytes[offset]);
+            decoded.d2d_uplink_config.lora_uplink_enable = readEnableStatus(bytes[offset + 1]);
+            decoded.d2d_uplink_config.sensor_data_config = readSensorDataConfig(readUInt16LE(bytes.slice(offset + 2, offset + 4)));
+            offset += 4;
             break;
         case 0x66:
-            var d2d_enable_result = readUInt8(bytes[offset + 1]);
-            if (d2d_enable_result === 0) {
-                decoded.d2d_enable = readEnableStatus(bytes[offset]);
-            } else {
-                decoded.d2d_enable_result = readResultStatus(d2d_enable_result);
-            }
-            offset += 2;
+            decoded.d2d_enable = readEnableStatus(bytes[offset]);
+            offset += 1;
             break;
         case 0x69:
-            var button_lock_config_result = readUInt8(bytes[offset + 1]);
-            if (button_lock_config_result === 0) {
-                decoded.button_lock_config = readButtonLockConfig(bytes[offset]);
-            } else {
-                decoded.button_lock_config_result = readResultStatus(button_lock_config_result);
-            }
-            offset += 2;
+            decoded.button_lock_config = readButtonLockConfig(bytes[offset]);
+            offset += 1;
             break;
         case 0x6a:
-            var led_indicator_config_result = readUInt8(bytes[offset + 1]);
-            if (led_indicator_config_result === 0) {
-                decoded.led_indicator_enable = readEnableStatus(bytes[offset]);
-            } else {
-                decoded.led_indicator_config_result = readResultStatus(led_indicator_config_result);
-            }
-            offset += 2;
+            decoded.led_indicator_enable = readEnableStatus(bytes[offset]);
+            offset += 1;
             break;
-        case 0x96:
-            var d2d_master_config_result = readUInt8(bytes[offset + 8]);
-            if (d2d_master_config_result === 0) {
-                decoded.d2d_master_config = {};
-                decoded.d2d_master_config.event = readD2DEventType(bytes[offset]);
-                decoded.d2d_master_config.enable = readEnableStatus(bytes[offset + 1]);
-                decoded.d2d_master_config.lora_uplink_enable = readEnableStatus(bytes[offset + 2]);
-                decoded.d2d_master_config.d2d_cmd = readSerialNumber(bytes.slice(offset + 3, offset + 5));
-                // skip 2 byte
-            } else {
-                decoded.d2d_master_config_result = readResultStatus(d2d_master_config_result);
-            }
-            offset += 9;
+        case 0x6f:
+            decoded.query_config = {};
+            offset += 1;
             break;
         default:
-            decoded.unknown_downlink_response = readResultStatus(channel_type);
+            throw new Error("unknown downlink response");
+    }
+
+    if (hasResultFlag(code)) {
+        decoded = {};
+        decoded.device_response_result = {};
+        decoded.device_response_result.channel_type = channel_type;
+        decoded.device_response_result.result = readResultStatus(bytes[offset]);
+        offset += 1;
     }
 
     return { data: decoded, offset: offset };
+}
+
+function hasResultFlag(code) {
+    return code === 0xf8;
 }
 
 function readProtocolVersion(bytes) {
@@ -479,7 +448,7 @@ function readDataStatus(type) {
 }
 
 function readHistoryEvent(value, sensor_type) {
-    var event_map = { 1: "periodic", 2: "temperature alarm (threshold or mutation)", 3: "temperature alarm release", 4: "humidity alarm (threshold or mutation)", 5: "humidity alarm release" };
+    var event_map = { 1: "periodic", 2: "temperature alarm (threshold or mutation)", 3: "temperature alarm release", 4: "humidity alarm (threshold or mutation)", 5: "humidity alarm release", 6: "temperature mutation alarm", 7: "immediate" };
     var sensor_status_map = { 0: "normal", 1: "read error", 2: "out of range" };
 
     var report_event = getValue(event_map, value & 0x0f);
@@ -518,13 +487,18 @@ function readSensorDataConfig(value) {
 }
 
 function readButtonLockConfig(value) {
-    var button_bit_offset = { power: 0, report: 1 };
+    var button_bit_offset = { power_button: 0, report_button: 1 };
     var button_data_map = { 0: "disable", 1: "enable" };
     var data = {};
     for (var key in button_bit_offset) {
         data[key] = getValue(button_data_map, (value >>> button_bit_offset[key]) & 0x01);
     }
     return data;
+}
+
+function readTemperatureUnit(type) {
+    var unit_map = { 0: "celsius", 1: "fahrenheit" };
+    return getValue(unit_map, type);
 }
 
 function readResultStatus(status) {
