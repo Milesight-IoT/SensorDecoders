@@ -27,10 +27,10 @@ function milesightDeviceEncode(payload) {
     var encoded = [];
 
     if ("template_1" in payload) {
-        encoded = encoded.concat(setText(0, payload.template_1));
+        encoded = encoded.concat(setText(1, payload.template_1));
     }
     if ("template_2" in payload) {
-        encoded = encoded.concat(setText(1, payload.template_2));
+        encoded = encoded.concat(setText(2, payload.template_2));
     }
     if ("current_template_id" in payload) {
         encoded = encoded.concat(changeCurrentTemplate(payload.current_template_id));
@@ -317,6 +317,12 @@ function setButtonEnable(button_enable) {
     if (button_enable_values.indexOf(button_enable) === -1) {
         throw new Error("button_enable must be one of " + button_enable_values.join(", "));
     }
+
+    var buffer = new Buffer(3);
+    buffer.writeUInt8(0xff);
+    buffer.writeUInt8(0x25);
+    buffer.writeUInt8(getValue(button_enable_map, button_enable));
+    return buffer.toBytes();
 }
 
 /**
