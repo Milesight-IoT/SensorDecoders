@@ -77,6 +77,42 @@ function milesightDeviceEncode(payload) {
     if ("pressure_2_calibration_config" in payload) {
         encoded = encoded.concat(setPressureCalibration(2, payload.pressure_2_calibration_config));
     }
+    if ("wiring_switch_enable" in payload) {
+        encoded = encoded.concat(setWiringSwitchEnable(payload.wiring_switch_enable));
+    }
+    if ("valve_change_report_enable" in payload) {
+        encoded = encoded.concat(setValveChangeReportEnable(payload.valve_change_report_enable));
+    }
+    if ("query_valve_opening_duration" in payload) {
+        encoded = encoded.concat(queryValveOpeningDuration(payload.query_valve_opening_duration));
+    }
+    if ("gpio_1_type" in payload) {
+        encoded = encoded.concat(setGPIOType(1, payload.gpio_1_type));
+    }
+    if ("gpio_2_type" in payload) {
+        encoded = encoded.concat(setGPIOType(2, payload.gpio_2_type));
+    }
+    if ("query_device_config" in payload) {
+        encoded = encoded.concat(queryDeviceConfig(payload.query_device_config));
+    }
+    if ("query_pressure_calibration_config" in payload) {
+        encoded = encoded.concat(queryPressureCalibrationConfig(payload.query_pressure_calibration_config));
+    }
+    if ("query_gpio_type" in payload) {
+        encoded = encoded.concat(queryGPIOType(payload.query_gpio_type));
+    }
+    if ("query_valve_config" in payload) {
+        encoded = encoded.concat(queryValveConfig(payload.query_valve_config));
+    }
+    if ("pressure_1_config" in payload) {
+        encoded = encoded.concat(setPressureConfig(1, payload.pressure_1_config));
+    }
+    if ("pressure_2_config" in payload) {
+        encoded = encoded.concat(setPressureConfig(2, payload.pressure_2_config));
+    }
+    if ("query_pressure_config" in payload) {
+        encoded = encoded.concat(queryPressureConfig(payload.query_pressure_config));
+    }
     if ("batch_read_rules" in payload) {
         encoded = encoded.concat(batchReadRules(payload.batch_read_rules));
     }
@@ -100,7 +136,7 @@ function milesightDeviceEncode(payload) {
     }
     if ("rules_config" in payload) {
         for (var i = 0; i < payload.rules_config.length; i++) {
-            encoded = encoded.concat(setRulesConfig(payload.rules_config[i]));
+            encoded = encoded.concat(setRuleConfig(payload.rules_config[i]));
         }
     }
     if ("query_rule_config" in payload) {
@@ -414,7 +450,7 @@ function setPressureCalibration(pressure_index, pressure_calibration_config) {
     var enable_map = { 0: "disable", 1: "enable" };
     var enable_values = getValues(enable_map);
     if (enable_values.indexOf(enable) === -1) {
-        throw new Error("pressure_calibration_config.enable must be one of " + enable_values.join(", "));
+        throw new Error("pressure_" + pressure_index + "_calibration_config.enable must be one of " + enable_values.join(", "));
     }
 
     var buffer = new Buffer(6);
@@ -425,6 +461,271 @@ function setPressureCalibration(pressure_index, pressure_calibration_config) {
     buffer.writeInt16LE(calibration);
     return buffer.toBytes();
 }
+
+/**
+ * set wiring switch enable
+ * @param {number} wiring_switch_enable values: (0: disable, 1: enable)
+ * @example { "wiring_switch_enable": 1 }
+ */
+function setWiringSwitchEnable(wiring_switch_enable) {
+    var enable_map = { 0: "disable", 1: "enable" };
+    var enable_values = getValues(enable_map);
+    if (enable_values.indexOf(wiring_switch_enable) === -1) {
+        throw new Error("wiring_switch_enable must be one of " + enable_values.join(", "));
+    }
+
+    var buffer = new Buffer(3);
+    buffer.writeUInt8(0xf9);
+    buffer.writeUInt8(0x6e);
+    buffer.writeUInt8(getValue(enable_map, wiring_switch_enable));
+    return buffer.toBytes();
+}
+
+/**
+ * set valve change report enable
+ * @param {number} valve_change_report_enable values: (0: disable, 1: enable)
+ * @example { "valve_change_report_enable": 1 }
+ */
+function setValveChangeReportEnable(valve_change_report_enable) {
+    var enable_map = { 0: "disable", 1: "enable" };
+    var enable_values = getValues(enable_map);
+    if (enable_values.indexOf(valve_change_report_enable) === -1) {
+        throw new Error("valve_change_report_enable must be one of " + enable_values.join(", "));
+    }
+
+    var buffer = new Buffer(3);
+    buffer.writeUInt8(0xf9);
+    buffer.writeUInt8(0x6f);
+    buffer.writeUInt8(getValue(enable_map, valve_change_report_enable));
+    return buffer.toBytes();
+}
+
+/**
+ * 
+ * @param {object} query_valve_opening_duration 
+ * @param {number} valve_1 values: (0: no, 1:yes)
+ * @param {number} valve_2 values: (0: no, 1:yes)
+ * @example { "query_valve_opening_duration": { "valve_1": 1, "valve_2": 1 } }
+ */
+function queryValveOpeningDuration(query_valve_opening_duration) {
+    var yes_no_map = { 0: "no", 1: "yes" };
+    var yes_no_values = getValues(yes_no_map);
+
+    var data = [];
+    var valve_index_map = { valve_1: 1, valve_2: 2 };
+    for (var key in valve_index_map) {
+        if (key in query_valve_opening_duration) {
+            if (yes_no_values.indexOf(query_valve_opening_duration[key]) === -1) {
+                throw new Error("query_valve_opening_duration." + key + " must be one of " + yes_no_values.join(", "));
+            }
+
+            if (getValue(yes_no_map, query_valve_opening_duration[key]) === 0) {
+                continue;
+            }
+
+            data.push(0xf9, 0x70, valve_index_map[key]);
+        }
+    }
+
+    return data;
+}
+
+/**
+ * set gpio type
+ * @param {number} index values: (1: gpio_1, 2: gpio_2)
+ * @param {number} gpio_type values: (0: counter, 1: feedback)
+ * @example { "gpio_1_type": 0, "gpio_2_type": 1 }
+ */
+function setGPIOType(index, gpio_type) {
+    var gpio_type_map = { 0: "counter", 1: "feedback" };
+    var gpio_type_values = getValues(gpio_type_map);
+    if (gpio_type_values.indexOf(gpio_type) === -1) {
+        throw new Error("gpio_" + index + "_type must be one of " + gpio_type_values.join(", "));
+    }
+
+    var buffer = new Buffer(3);
+    buffer.writeUInt8(0xf9);
+    buffer.writeUInt8(0x71);
+    buffer.writeUInt8(index);
+    buffer.writeUInt8(getValue(gpio_type_map, gpio_type));
+    return buffer.toBytes();
+}
+
+/**
+ * query device config
+ * @param {number} query_device_config values: (0: no, 1: yes)
+ * @example { "query_device_config": 1 }
+ */
+function queryDeviceConfig(query_device_config) {
+    var yes_no_map = { 0: "no", 1: "yes" };
+    var yes_no_values = getValues(yes_no_map);
+    if (yes_no_values.indexOf(query_device_config) === -1) {
+        throw new Error("query_device_config must be one of " + yes_no_values.join(", "));
+    }
+
+    if (getValue(yes_no_map, query_device_config) === 0) {
+        return [];
+    }
+    return [0xf9, 0x72, 0xff];
+}
+
+/**
+ * query pressure calibration config
+ * @param {number} query_pressure_calibration_config values: (0: no, 1: yes)
+ * @example { "query_pressure_calibration_config": 1 }
+ */
+function queryPressureCalibrationConfig(query_pressure_calibration_config) {
+    var yes_no_map = { 0: "no", 1: "yes" };
+    var yes_no_values = getValues(yes_no_map);
+    if (yes_no_values.indexOf(query_pressure_calibration_config) === -1) {
+        throw new Error("query_pressure_calibration_config must be one of " + yes_no_values.join(", "));
+    }
+
+    if (getValue(yes_no_map, query_pressure_calibration_config) === 0) {
+        return [];
+    }
+    return [0xf9, 0x73, 0xff];
+}
+
+/**
+ * query gpio type
+ * @param {number} query_gpio_type values: (0: no, 1: yes)
+ * @example { "query_gpio_type": 1 }
+ */
+function queryGPIOType(query_gpio_type) {
+    var yes_no_map = { 0: "no", 1: "yes" };
+    var yes_no_values = getValues(yes_no_map);
+    if (yes_no_values.indexOf(query_gpio_type) === -1) {
+        throw new Error("query_gpio_type must be one of " + yes_no_values.join(", "));
+    }
+
+    if (getValue(yes_no_map, query_gpio_type) === 0) {
+        return [];
+    }
+    return [0xf9, 0x74, 0xff];
+}
+
+/**
+ * query valve config
+ * @param {number} query_valve_config values: (0: no, 1: yes)
+ * @example { "query_valve_config": 1 }
+ */
+function queryValveConfig(query_valve_config) {
+    var yes_no_map = { 0: "no", 1: "yes" };
+    var yes_no_values = getValues(yes_no_map);
+    if (yes_no_values.indexOf(query_valve_config) === -1) {
+        throw new Error("query_valve_config must be one of " + yes_no_values.join(", "));
+    }
+
+    if (getValue(yes_no_map, query_valve_config) === 0) {
+        return [];
+    }
+    return [0xf9, 0x75, 0xff];
+}
+
+/**
+ * set pressure config
+ * @param {number} index values: (1: pressure 1, 2: pressure 2)
+ * @param {object} pressure_config
+ * @param {number} pressure_x_config.enable values: (0: disable, 1: enable)
+ * @param {number} pressure_x_config.collection_interval unit: ms, range: [10, 64800]
+ * @param {number} pressure_x_config.display_unit values: (0: kPa, 1: Bar, 2: mPa)
+ * @param {number} pressure_x_config.mode values: (0: standard, 1: custom)
+ * @param {number} pressure_x_config.signal_type values: (0: voltage, 1: current)
+ * @param {number} pressure_x_config.osl unit: (mV, uA), current_range: [4000, 20000], voltage_range: [0, 10000]
+ * @param {number} pressure_x_config.osh unit: (mV, uA), current_range: [4000, 20000], voltage_range: [0, 10000]
+ * @param {number} pressure_x_config.power_supply_time unit: ms, range: [0, 65535]
+ * @param {number} pressure_x_config.range_min range: [0, 65535]
+ * @param {number} pressure_x_config.range_max range: [0, 65535]
+ * @example { "pressure_1_config": { "enable": 1, "collection_interval": 1000, "display_unit": 0, "mode": 0, "signal_type": 0, "osl": 0, "osh": 0, "power_supply_time": 0, "range_min": 0, "range_max": 0 } }
+ */
+function setPressureConfig(index, pressure_config) {
+    var enable = pressure_config.enable;
+    var collection_interval = pressure_config.collection_interval;
+    var display_unit = pressure_config.display_unit;
+    var mode = pressure_config.mode;
+    var signal_type = pressure_config.signal_type;
+    var osl = pressure_config.osl;
+    var osh = pressure_config.osh;
+    var power_supply_time = pressure_config.power_supply_time;
+    var range_min = pressure_config.range_min;
+    var range_max = pressure_config.range_max;
+
+    var enable_map = { 0: "disable", 1: "enable" };
+    var enable_values = getValues(enable_map);
+    if (enable_values.indexOf(pressure_config) === -1) {
+        throw new Error("pressure_" + index + "_config must be one of " + enable_values.join(", "));
+    }
+    if (collection_interval < 10 || collection_interval > 64800) {
+        throw new Error("pressure_" + index + "_config.collection_interval must be in range [10, 64800]");
+    }
+    var unit_map = { 0: "kPa", 1: "Bar", 2: "mPa" };
+    var unit_values = getValues(unit_map);
+    if (unit_values.indexOf(display_unit) === -1) {
+        throw new Error("pressure_" + index + "_config.display_unit must be one of " + unit_values.join(", "));
+    }
+    var mode_map = { 0: "standard", 1: "custom" };
+    var mode_values = getValues(mode_map);
+    if (mode_values.indexOf(mode) === -1) {
+        throw new Error("pressure_" + index + "_config.mode must be one of " + mode_values.join(", "));
+    }
+    var signal_type_map = { 0: "voltage", 1: "current" };
+    var signal_type_values = getValues(signal_type_map);
+    if (signal_type_values.indexOf(signal_type) === -1) {
+        throw new Error("pressure_" + index + "_config.signal_type must be one of " + signal_type_values.join(", "));
+    }
+    if (signal_type === 0 && (osl < 0 || osl > 10000)) {
+        throw new Error("pressure_" + index + "_config.osl must be in range [0, 10000]");
+    }
+    if (signal_type === 1 && (osl < 4000 || osl > 20000)) {
+        throw new Error("pressure_" + index + "_config.osl must be in range [4000, 20000]");
+    }
+    if (range_min < 0 || range_min > 65535) {
+        throw new Error("pressure_" + index + "_config.range_min must be in range [0, 65535]");
+    }
+    if (range_max < 0 || range_max > 65535) {
+        throw new Error("pressure_" + index + "_config.range_max must be in range [0, 65535]");
+    }
+
+    var buffer = new Buffer(19);
+    buffer.writeUInt8(0xf9);
+    buffer.writeUInt8(0x76);
+    buffer.writeUInt8(index);
+    buffer.writeUInt8(getValue(enable_map, enable));
+    buffer.writeUInt16LE(collection_interval);
+    buffer.writeUInt8(getValue(unit_map, display_unit));
+    buffer.writeUInt8(getValue(mode_map, mode));
+    buffer.writeUInt8(getValue(signal_type_map, signal_type));
+    buffer.writeUInt16LE(osl);
+    buffer.writeUInt16LE(osh);
+    buffer.writeUInt16LE(power_supply_time);
+    buffer.writeUInt16LE(range_min);
+    buffer.writeUInt16LE(range_max);
+    return buffer.toBytes();
+}
+
+
+
+
+
+/**
+ * query pressure config
+ * @param {number} query_pressure_config values: (0: no, 1: yes)
+ * @example { "query_pressure_config": 1 }
+ */
+function queryPressureConfig(query_pressure_config) {
+    var yes_no_map = { 0: "no", 1: "yes" };
+    var yes_no_values = getValues(yes_no_map);
+    if (yes_no_values.indexOf(query_pressure_config) === -1) {
+        throw new Error("query_pressure_config must be one of " + yes_no_values.join(", "));
+    }
+
+    if (getValue(yes_no_map, query_pressure_config) === 0) {
+        return [];
+    }
+    return [0xf9, 0x77, 0xff];
+}
+
 
 /**
  * read rules

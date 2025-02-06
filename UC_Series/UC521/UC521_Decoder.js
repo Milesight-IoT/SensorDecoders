@@ -30,10 +30,12 @@ var pressure_chns = [0x09, 0x0a];
 var pressure_alarm_chns = [0x0b, 0x0c];
 var valve_exception_chns = [0xb3, 0xb5];
 var pressure_exception_chns = [0xb9, 0xba];
+var valve_opening_duration_chns = [0x0e, 0x0f];
 
 function milesightDeviceDecode(bytes) {
     var decoded = {};
-    for (var i = 0; i < bytes.length; ) {
+
+    for (var i = 0; i < bytes.length;) {
         var channel_id = bytes[i++];
         var channel_type = bytes[i++];
 
@@ -190,6 +192,12 @@ function milesightDeviceDecode(bytes) {
             decoded[pressure_chn_name + "_sensor_status"] = sensor_status;
             i += 1;
         }
+        // VALVE OPENING DURATION
+        else if (includes(valve_opening_duration_chns, channel_id) && channel_type === 0x01) {
+            var valve_chn_name = "valve_" + (valve_opening_duration_chns.indexOf(channel_id) + 1);
+            decoded[valve_chn_name + "_opening_duration"] = readUInt8(bytes[i]);
+            i += 1;
+        }
         // CUSTOM MESSAGE
         else if (channel_id === 0xff && channel_type === 0x2a) {
             var length = bytes[i];
@@ -203,8 +211,8 @@ function milesightDeviceDecode(bytes) {
             i = result.offset;
         }
         // DOWNLINK RESPONSE EXT
-        else if (channel_id === 0xf8) {
-            result = handle_downlink_response_ext(channel_type, bytes, i);
+        else if (channel_id === 0xf8 || channel_id === 0xf9) {
+            result = handle_downlink_response_ext(channel_id, channel_type, bytes, i);
             decoded = Object.assign(decoded, result.data);
             i = result.offset;
         } else {
@@ -250,13 +258,13 @@ function handle_downlink_response(channel_type, bytes, offset) {
             else if (type === 3) {
                 var rule_index = readUInt8(bytes[offset + 1]);
                 var rule_x_name = "rule_" + rule_index + "_enable";
-                decoded[rule_x_name] = readEnableStatus(readUInt8(bytes[offset + 2]));
+                decoded[rule_x_name] = readEnableStatus(bytes[offset + 2]);
             }
             // remove single rule
             else if (type === 4) {
                 var rule_index = readUInt8(bytes[offset + 1]);
                 var rule_x_name = "rule_" + rule_index + "_remove";
-                decoded[rule_x_name] = readYesNo(readUInt8(bytes[offset + 2]));
+                decoded[rule_x_name] = readYesNo(bytes[offset + 2]);
             }
             offset += 3;
             break;
@@ -281,7 +289,7 @@ function handle_downlink_response(channel_type, bytes, offset) {
         case 0x55:
             var rule_config = {};
             rule_config.id = readUInt8(bytes[offset]) + 1;
-            rule_config.enable = readEnableStatus(readUInt8(bytes[offset + 1]));
+            rule_config.enable = readEnableStatus(bytes[offset + 1]);
             rule_config.condition = readRuleCondition(bytes.slice(offset + 2, offset + 15));
             rule_config.action = readRuleAction(bytes.slice(offset + 15, offset + 28));
             offset += 29;
@@ -311,80 +319,142 @@ function handle_downlink_response(channel_type, bytes, offset) {
     return { data: decoded, offset: offset };
 }
 
-function handle_downlink_response_ext(channel_type, bytes, offset) {
+function handle_downlink_response_ext(code, channel_type, bytes, offset) {
     var decoded = {};
 
     switch (channel_type) {
         case 0x1a:
-            var valve_config_result = readUInt8(bytes[offset + 9]);
-            if (valve_config_result === 0) {
-                var data = readUInt8(bytes[offset]);
-                var valve_index = (data >> 7) & 0x01;
-                var valve_index_name = "valve_" + valve_index + "_config";
-                decoded[valve_index_name] = {};
-                decoded[valve_index_name].type = readValveType((data >> 6) & 0x01);
-                decoded[valve_index_name].auto_calibration_enable = readEnableStatus((data >> 5) & 0x01);
-                decoded[valve_index_name].report_after_calibration_enable = readEnableStatus((data >> 4) & 0x01);
-                decoded[valve_index_name].stall_strategy = readStallStrategy((data >> 3) & 0x01);
-                decoded[valve_index_name].open_time_1 = bytes[offset + 1];
-                decoded[valve_index_name].open_time_2 = bytes[offset + 2];
-                decoded[valve_index_name].stall_current = readUInt16LE(bytes.slice(offset + 3, offset + 5));
-                decoded[valve_index_name].stall_time = readUInt16LE(bytes.slice(offset + 5, offset + 7));
-                decoded[valve_index_name].protect_time = bytes[offset + 7];
-                decoded[valve_index_name].delay_time = bytes[offset + 8];
-            }
-            offset += 10;
+            var data = readUInt8(bytes[offset]);
+            var valve_index = (data >> 7) & 0x01;
+            var valve_index_name = "valve_" + valve_index + "_config";
+            decoded[valve_index_name] = {};
+            decoded[valve_index_name].type = readValveType((data >> 6) & 0x01);
+            decoded[valve_index_name].auto_calibration_enable = readEnableStatus((data >> 5) & 0x01);
+            decoded[valve_index_name].report_after_calibration_enable = readEnableStatus((data >> 4) & 0x01);
+            decoded[valve_index_name].stall_strategy = readStallStrategy((data >> 3) & 0x01);
+            decoded[valve_index_name].open_time_1 = bytes[offset + 1];
+            decoded[valve_index_name].open_time_2 = bytes[offset + 2];
+            decoded[valve_index_name].stall_current = readUInt16LE(bytes.slice(offset + 3, offset + 5));
+            decoded[valve_index_name].stall_time = readUInt16LE(bytes.slice(offset + 5, offset + 7));
+            decoded[valve_index_name].protect_time = bytes[offset + 7];
+            decoded[valve_index_name].delay_time = bytes[offset + 8];
+            offset += 9;
             break;
         case 0x19:
-            var task_result = readUInt8(bytes[offset + 9]);
-            if (task_result === 0) {
-                var data = readUInt8(bytes[offset]);
-                var valve_index = (data & 0x01) + 1;
-                var time_control_enable_value = (data >> 7) & 0x01;
-                var valve_pulse_control_enable_value = (data >> 6) & 0x01;
-                var valve_index_name = "valve_" + valve_index + "_task";
+            var data = readUInt8(bytes[offset]);
+            var valve_index = (data & 0x01) + 1;
+            var time_control_enable_value = (data >> 7) & 0x01;
+            var valve_pulse_control_enable_value = (data >> 6) & 0x01;
+            var valve_index_name = "valve_" + valve_index + "_task";
 
-                decoded[valve_index_name] = {};
-                decoded[valve_index_name].time_control_enable = readEnableStatus(time_control_enable_value);
-                decoded[valve_index_name].valve_pulse_control_enable = readEnableStatus(valve_pulse_control_enable_value);
-                decoded[valve_index_name].task_id = readUInt8(bytes[offset + 1]);
-                decoded[valve_index_name].valve_opening = readUInt8(bytes[offset + 2]);
-                if (time_control_enable_value === 1) {
-                    decoded[valve_index_name].time = readUInt16LE(bytes.slice(offset + 3, offset + 5));
-                }
-                if (valve_pulse_control_enable_value === 1) {
-                    decoded[valve_index_name].pulse = readUInt32LE(bytes.slice(offset + 5, offset + 9));
-                }
+            decoded[valve_index_name] = {};
+            decoded[valve_index_name].time_control_enable = readEnableStatus(time_control_enable_value);
+            decoded[valve_index_name].valve_pulse_control_enable = readEnableStatus(valve_pulse_control_enable_value);
+            decoded[valve_index_name].task_id = readUInt8(bytes[offset + 1]);
+            decoded[valve_index_name].valve_opening = readUInt8(bytes[offset + 2]);
+            if (time_control_enable_value === 1) {
+                decoded[valve_index_name].time = readUInt16LE(bytes.slice(offset + 3, offset + 5));
             }
-            offset += 10;
+            if (valve_pulse_control_enable_value === 1) {
+                decoded[valve_index_name].pulse = readUInt32LE(bytes.slice(offset + 5, offset + 9));
+            }
+            offset += 9;
             break;
         case 0x5b:
-            var pressure_calibration_result = readUInt8(bytes[offset + 4]);
-            if (pressure_calibration_result === 0) {
-                var pressure_index = readUInt8(bytes[offset]);
-                var pressure_index_name = "pressure_" + pressure_index + "_calibration_config";
-                decoded[pressure_index_name] = {};
-                decoded[pressure_index_name].enable = readEnableStatus(readUInt8(bytes[offset + 1]));
-                decoded[pressure_index_name].calibration = readInt16LE(bytes.slice(offset + 2, offset + 4));
-            }
-            offset += 5;
+            var pressure_index = readUInt8(bytes[offset]);
+            var pressure_index_name = "pressure_" + pressure_index + "_calibration_config";
+            decoded[pressure_index_name] = {};
+            decoded[pressure_index_name].enable = readEnableStatus(bytes[offset + 1]);
+            decoded[pressure_index_name].calibration = readInt16LE(bytes.slice(offset + 2, offset + 4));
+            offset += 4;
             break;
         case 0x68:
-            var collection_interval_result = readUInt8(bytes[offset + 4]);
-            if (collection_interval_result === 0) {
-                var index = readUInt8(bytes[offset]);
-                var index_name = "pressure_" + index + "_collection_interval";
-                decoded[index_name] = {};
-                decoded[index_name].enable = readEnableStatus(readUInt8(bytes[offset + 1]));
-                decoded[index_name].collection_interval = readUInt16LE(bytes.slice(offset + 2, offset + 4));
-            }
-            offset += 5;
+            var index = readUInt8(bytes[offset]);
+            var index_name = "pressure_" + index + "_collection_interval";
+            decoded[index_name] = {};
+            decoded[index_name].enable = readEnableStatus(bytes[offset + 1]);
+            decoded[index_name].collection_interval = readUInt16LE(bytes.slice(offset + 2, offset + 4));
+            offset += 4;
+            break;
+        case 0x6e:
+            decoded.wiring_switch_enable = readEnableStatus(bytes[offset]);
+            offset += 1;
+            break;
+        case 0x6f:
+            decoded.valve_change_report_enable = readEnableStatus(bytes[offset]);
+            offset += 1;
+            break;
+        case 0x70:
+            decoded.query_valve_opening_duration = decoded.query_valve_opening_duration || {};
+            var valve_index = readUInt8(bytes[offset]);
+            var valve_index_name = "valve_" + valve_index;
+            decoded[valve_index_name] = readYesNo(1);
+            offset += 1;
+            break;
+        case 0x71:
+            var index = readUInt8(bytes[offset]);
+            var index_name = "gpio_" + index + "_type";
+            decoded[index_name] = readGPIOType(bytes[offset + 1]);
+            offset += 2;
+            break;
+        case 0x72:
+            decoded.query_device_config = readYesNo(1);
+            offset += 1;
+            break;
+        case 0x73:
+            decoded.query_pressure_calibration_config = readYesNo(1);
+            offset += 1;
+            break;
+        case 0x74:
+            decoded.query_gpio_type = readYesNo(1);
+            offset += 1;
+            break;
+        case 0x75:
+            decoded.query_valve_config = readYesNo(1);
+            offset += 1;
+            break;
+        case 0x76:
+            var index = readUInt8(bytes[offset]);
+            var index_name = "pressure_" + index + "_config";
+            decoded[index_name] = {};
+            decoded[index_name].enable = readEnableStatus(bytes[offset + 1]);
+            decoded[index_name].collection_interval = readUInt16LE(bytes.slice(offset + 2, offset + 4));
+            decoded[index_name].display_unit = readPressureDisplayUnit(bytes[offset + 4]);
+            decoded[index_name].mode = readPressureMode(bytes[offset + 5]);
+            decoded[index_name].signal_type = readPressureSignalType(bytes[offset + 6]);
+            decoded[index_name].osl = readUInt16LE(bytes.slice(offset + 7, offset + 9));
+            decoded[index_name].osh = readUInt16LE(bytes.slice(offset + 9, offset + 11));
+            decoded[index_name].power_supply_time = readUInt16LE(bytes.slice(offset + 11, offset + 13));
+            decoded[index_name].range_min = readUInt16LE(bytes.slice(offset + 13, offset + 15));
+            decoded[index_name].range_max = readUInt16LE(bytes.slice(offset + 15, offset + 17));
+            offset += 17;
+            break;
+        case 0x77:
+            decoded.query_pressure_config = readYesNo(1);
+            offset += 1;
             break;
         default:
             throw new Error("unknown downlink response");
     }
 
+    if (hasResultFlag(code)) {
+        decoded = {};
+        decoded.device_response_result = {};
+        decoded.device_response_result.channel_type = channel_type;
+        decoded.device_response_result.result = readResultStatus(bytes[offset]);
+        offset += 1;
+    }
+
     return { data: decoded, offset: offset };
+}
+
+function hasResultFlag(code) {
+    return code === 0xf8;
+}
+
+function readResultStatus(status) {
+    var status_map = { 0: "success", 1: "forbidden", 2: "invalid parameter" };
+    return getValue(status_map, status);
 }
 
 function readProtocolVersion(bytes) {
@@ -528,7 +598,7 @@ function readRuleCondition(bytes) {
         case 0x01:
             condition.start_time = readUInt32LE(bytes.slice(offset + 1, offset + 5));
             condition.end_time = readUInt32LE(bytes.slice(offset + 5, offset + 9));
-            condition.repeat_enable = readEnableStatus(readUInt8(bytes[offset + 9]));
+            condition.repeat_enable = readEnableStatus(bytes[offset + 9]);
             var repeat_mode_value = readUInt8(bytes[offset + 10]);
             condition.repeat_mode = getRepeatMode(repeat_mode_value);
             if (repeat_mode_value === 0x00 || repeat_mode_value === 0x01) {
@@ -608,17 +678,17 @@ function readRuleAction(bytes) {
         case 0x01:
             action.valve_index = readUInt8(bytes[offset + 1]);
             action.valve_opening = readUInt8(bytes[offset + 2]);
-            action.time_enable = readEnableStatus(readUInt8(bytes[offset + 3]));
+            action.time_enable = readEnableStatus(bytes[offset + 3]);
             action.duration = readUInt32LE(bytes.slice(offset + 4, offset + 8));
-            action.pulse_enable = readEnableStatus(readUInt8(bytes[offset + 8]));
+            action.pulse_enable = readEnableStatus(bytes[offset + 8]);
             action.pulse_threshold = readUInt32LE(bytes.slice(offset + 9, offset + 13));
             break;
         case 0x02:
             action.valve_index = readUInt8(bytes[offset + 1]);
             action.valve_opening = readUInt8(bytes[offset + 2]);
-            action.time_enable = readEnableStatus(readUInt8(bytes[offset + 3]));
+            action.time_enable = readEnableStatus(bytes[offset + 3]);
             action.duration = readUInt32LE(bytes.slice(offset + 4, offset + 8));
-            action.pulse_enable = readEnableStatus(readUInt8(bytes[offset + 8]));
+            action.pulse_enable = readEnableStatus(bytes[offset + 8]);
             action.pulse_threshold = readUInt32LE(bytes.slice(offset + 9, offset + 13));
             break;
         case 0x03:
@@ -626,7 +696,7 @@ function readRuleAction(bytes) {
             action.report_content = readAscii(bytes.slice(offset + 2, offset + 10));
             // ignore the next byte
             action.report_counts = readUInt8(bytes[offset + 11]);
-            action.threshold_release_enable = readEnableStatus(readUInt8(bytes[offset + 12]));
+            action.threshold_release_enable = readEnableStatus(bytes[offset + 12]);
             break;
     }
     return action;
@@ -635,6 +705,21 @@ function readRuleAction(bytes) {
 function readReportType(report_type_value) {
     var report_type_map = { 0: "valve 1", 1: "valve 2", 2: "custom message", 3: "pressure threshold alarm" };
     return getValue(report_type_map, report_type_value);
+}
+
+function readPressureDisplayUnit(unit_value) {
+    var unit_map = { 0: "kPa", 1: "Bar", 2: "mPa" };
+    return getValue(unit_map, unit_value);
+}
+
+function readPressureMode(mode_value) {
+    var mode_map = { 0: "standard", 1: "custom" };
+    return getValue(mode_map, mode_value);
+}
+
+function readPressureSignalType(signal_type_value) {
+    var signal_type_map = { 0: "voltage", 1: "current" };
+    return getValue(signal_type_map, signal_type_value);
 }
 
 function readUInt8(bytes) {
