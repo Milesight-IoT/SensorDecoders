@@ -145,15 +145,15 @@ function milesightDeviceDecode(bytes) {
             event.condition = condition_type;
             switch (condition_type_value) {
                 case 0x01:
-                    event.min = min;
+                    event.min_threshold = min;
                     break;
                 case 0x02:
-                    event.max = max;
+                    event.max_threshold = max;
                     break;
                 case 0x03:
                 case 0x04:
-                    event.min = min;
-                    event.max = max;
+                    event.min_threshold = min;
+                    event.max_threshold = max;
                     break;
             }
             event.pressure = pressure;
@@ -672,7 +672,7 @@ function readConditionType(condition_type_value) {
 }
 
 function readMathConditionType(condition_type_value) {
-    var condition_type_map = { 0: "none", 1: "less than", 2: "greater than", 3: "between", 4: "outside" };
+    var condition_type_map = { 0: "none", 1: "below", 2: "above", 3: "between", 4: "outside" };
     return getValue(condition_type_map, condition_type_value);
 }
 

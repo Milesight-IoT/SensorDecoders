@@ -939,7 +939,7 @@ function setRuleConfig(rule_config) {
  * @param {number} condition.duration unit: min
  * @param {number} condition.pulse_threshold
  * @param {number} condition.valve_strategy values: (0: no strategy, 1: pressure strategy)
- * @param {number} condition.threshold_condition_type values: (0: none, 1: less than, 2: greater than, 3: between, 4: outside)
+ * @param {number} condition.threshold_condition_type values: (0: none, 1: below, 2: above, 3: between, 4: outside)
  * @param {number} condition.min_threshold unit: kPa
  * @param {number} condition.max_threshold unit: kPa
  */
@@ -954,7 +954,7 @@ function encodedRuleCondition(condition) {
     var weekday_values = getValues(weekday_bit_offset);
     var valve_strategy_map = { 0: "always", 1: "valve 1 open", 2: "valve 2 open", 3: "valve 1 open or valve 2 open" };
     var valve_strategy_values = getValues(valve_strategy_map);
-    var threshold_condition_type_map = { 0: "none", 1: "less than", 2: "greater than", 3: "between", 4: "outside" };
+    var threshold_condition_type_map = { 0: "none", 1: "below", 2: "above", 3: "between", 4: "outside" };
     var threshold_condition_type_values = getValues(threshold_condition_type_map);
 
     var buffer = new Buffer(13);
