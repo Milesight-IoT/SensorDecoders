@@ -235,7 +235,7 @@ function handle_downlink_response(channel_type, bytes, offset) {
                 decoded.batch_read_rules = {};
                 var data = readUInt16LE(bytes.slice(offset + 1, offset + 3));
                 for (var key in rule_bit_offset) {
-                    decoded.batch_read_rules[key] = readEnableStatus((data >>> rule_bit_offset[key]) & 0x01);
+                    decoded.batch_read_rules[key] = readYesNo((data >>> rule_bit_offset[key]) & 0x01);
                 }
             }
             // batch enable rules
@@ -251,7 +251,7 @@ function handle_downlink_response(channel_type, bytes, offset) {
                 decoded.batch_remove_rules = {};
                 var data = readUInt16LE(bytes.slice(offset + 1, offset + 3));
                 for (var key in rule_bit_offset) {
-                    decoded.batch_remove_rules[key] = readEnableStatus((data >>> rule_bit_offset[key]) & 0x01);
+                    decoded.batch_remove_rules[key] = readYesNo((data >>> rule_bit_offset[key]) & 0x01);
                 }
             }
             // enable single rule
@@ -272,23 +272,26 @@ function handle_downlink_response(channel_type, bytes, offset) {
             var valve_index = readUInt8(bytes[offset]);
             var valve_index_name = "clear_valve_" + valve_index + "_pulse";
             // ignore the next byte
+            decoded[valve_index_name] = readYesNo(1);
             offset += 2;
             break;
         case 0x52:
             // ignore the first byte
             decoded.valve_filter_config = {};
-            decoded.valve_filter_config.mode = readValveFilterMode(readUInt8(bytes[offset]));
-            decoded.valve_filter_config.time = readUInt16LE(bytes.slice(offset + 1, offset + 3));
-            offset += 3;
+            decoded.valve_filter_config.mode = readValveFilterMode(readUInt8(bytes[offset + 1]));
+            decoded.valve_filter_config.time = readUInt16LE(bytes.slice(offset + 2, offset + 4));
+            offset += 4;
             break;
         case 0x53:
-            decoded.query_rule_config = {};
-            decoded.query_rule_config.id = readUInt8(bytes[offset]);
+            var rule_index = readUInt8(bytes[offset]);
+            var rule_index_name = "rule_" + rule_index;
+            decoded.query_rule_config = decoded.query_rule_config || {};
+            decoded.query_rule_config[rule_index_name] = readYesNo(1);
             offset += 1;
             break;
         case 0x55:
             var rule_config = {};
-            rule_config.id = readUInt8(bytes[offset]) + 1;
+            rule_config.id = readUInt8(bytes[offset]);
             rule_config.enable = readEnableStatus(bytes[offset + 1]);
             rule_config.condition = readRuleCondition(bytes.slice(offset + 2, offset + 15));
             rule_config.action = readRuleAction(bytes.slice(offset + 15, offset + 28));
@@ -325,7 +328,7 @@ function handle_downlink_response_ext(code, channel_type, bytes, offset) {
     switch (channel_type) {
         case 0x1a:
             var data = readUInt8(bytes[offset]);
-            var valve_index = (data >> 7) & 0x01;
+            var valve_index = ((data >> 7) & 0x01) + 1;
             var valve_index_name = "valve_" + valve_index + "_config";
             decoded[valve_index_name] = {};
             decoded[valve_index_name].type = readValveType((data >> 6) & 0x01);
@@ -352,13 +355,16 @@ function handle_downlink_response_ext(code, channel_type, bytes, offset) {
             decoded[valve_index_name].valve_pulse_control_enable = readEnableStatus(valve_pulse_control_enable_value);
             decoded[valve_index_name].task_id = readUInt8(bytes[offset + 1]);
             decoded[valve_index_name].valve_opening = readUInt8(bytes[offset + 2]);
+            offset += 3;
+
             if (time_control_enable_value === 1) {
-                decoded[valve_index_name].time = readUInt16LE(bytes.slice(offset + 3, offset + 5));
+                decoded[valve_index_name].time = readUInt16LE(bytes.slice(offset, offset + 2));
+                offset += 2;
             }
             if (valve_pulse_control_enable_value === 1) {
-                decoded[valve_index_name].pulse = readUInt32LE(bytes.slice(offset + 5, offset + 9));
+                decoded[valve_index_name].pulse = readUInt32LE(bytes.slice(offset, offset + 4));
+                offset += 4;
             }
-            offset += 9;
             break;
         case 0x5b:
             var pressure_index = readUInt8(bytes[offset]);
@@ -438,11 +444,15 @@ function handle_downlink_response_ext(code, channel_type, bytes, offset) {
     }
 
     if (hasResultFlag(code)) {
-        decoded = {};
-        decoded.device_response_result = {};
-        decoded.device_response_result.channel_type = channel_type;
-        decoded.device_response_result.result = readResultStatus(bytes[offset]);
+        var result_value = readUInt8(bytes[offset]);
         offset += 1;
+
+        if (result_value !== 0) {
+            decoded = {};
+            decoded.device_response_result = {};
+            decoded.device_response_result.channel_type = channel_type;
+            decoded.device_response_result.result = readResultStatus(bytes[offset]);
+        }
     }
 
     return { data: decoded, offset: offset };
@@ -569,7 +579,7 @@ function readTimeZone(timezone) {
 }
 
 function readValveFilterMode(mode) {
-    var mode_map = { 0: "hardware", 1: "software" };
+    var mode_map = { 1: "hardware", 2: "software" };
     return getValue(mode_map, mode);
 }
 
@@ -590,7 +600,9 @@ function readStallStrategy(strategy) {
 
 function readRuleCondition(bytes) {
     var condition = {};
-    var condition_type_value = readUInt8(bytes[0]);
+
+    var offset = 0;
+    var condition_type_value = readUInt8(bytes[offset]);
     condition.type = readConditionType(condition_type_value);
     switch (condition_type_value) {
         case 0x00:
@@ -611,20 +623,20 @@ function readRuleCondition(bytes) {
             condition.d2d_command = readD2DCommand(bytes.slice(offset + 1, offset + 3));
             break;
         case 0x03:
-            condition.valve_index = readUInt8(bytes[offset]);
-            condition.duration = readUInt16LE(bytes.slice(offset + 1, offset + 3));
-            condition.pulse_threshold = readUInt32LE(bytes.slice(offset + 3, offset + 7));
+            condition.valve_index = readUInt8(bytes[offset + 1]);
+            condition.duration = readUInt16LE(bytes.slice(offset + 2, offset + 4));
+            condition.pulse_threshold = readUInt32LE(bytes.slice(offset + 4, offset + 8));
             break;
         case 0x04:
-            condition.valve_index = readUInt8(bytes[offset]);
-            condition.pulse_threshold = readUInt32LE(bytes.slice(offset + 1, offset + 5));
+            condition.valve_index = readUInt8(bytes[offset + 1]);
+            condition.pulse_threshold = readUInt32LE(bytes.slice(offset + 2, offset + 6));
             break;
         case 0x05:
-            condition.valve_index = readUInt8(bytes[offset]);
-            condition.valve_strategy = readValveStrategy(readUInt8(bytes[offset + 1]));
-            condition.threshold_condition_type = readMathConditionType(readUInt8(bytes[offset + 2]));
-            condition.min_threshold = readUInt16LE(bytes.slice(offset + 3, offset + 5));
-            condition.max_threshold = readUInt16LE(bytes.slice(offset + 5, offset + 7));
+            condition.valve_index = readUInt8(bytes[offset + 1]);
+            condition.valve_strategy = readValveStrategy(readUInt8(bytes[offset + 2]));
+            condition.threshold_condition_type = readMathConditionType(readUInt8(bytes[offset + 3]));
+            condition.min_threshold = readUInt16LE(bytes.slice(offset + 4, offset + 6));
+            condition.max_threshold = readUInt16LE(bytes.slice(offset + 6, offset + 8));
             break;
     }
     return condition;
@@ -641,7 +653,6 @@ function readD2DCommand(bytes) {
 
 function readWeekday(weekday_value) {
     var weekday_bit_offset = { monday: 0, tuesday: 1, wednesday: 2, thursday: 3, friday: 4, saturday: 5, sunday: 6 };
-    var weekday_values = getValues(weekday_bit_offset);
 
     var weekday = {};
     for (var key in weekday_bit_offset) {
@@ -652,7 +663,7 @@ function readWeekday(weekday_value) {
 
 function readValveStrategy(strategy_value) {
     var valve_strategy_map = { 0: "always", 1: "valve 1 open", 2: "valve 2 open", 3: "valve 1 open or valve 2 open" };
-    return getValue(strategy_map, strategy_value);
+    return getValue(valve_strategy_map, strategy_value);
 }
 
 function readConditionType(condition_type_value) {
@@ -667,12 +678,13 @@ function readMathConditionType(condition_type_value) {
 
 function readRuleAction(bytes) {
     var action_type_map = { 0: "none", 1: "em valve control", 2: "valve control", 3: "report" };
-    var action_type_values = getValues(action_type_map);
 
     var offset = 0;
     var action = {};
-    action.type = getValue(action_type_map, readUInt8(bytes[offset]));
-    switch (action.type) {
+
+    var type_value = readUInt8(bytes[offset]);
+    action.type = getValue(action_type_map, type_value);
+    switch (type_value) {
         case 0x00:
             break;
         case 0x01:
@@ -703,7 +715,7 @@ function readRuleAction(bytes) {
 }
 
 function readReportType(report_type_value) {
-    var report_type_map = { 0: "valve 1", 1: "valve 2", 2: "custom message", 3: "pressure threshold alarm" };
+    var report_type_map = { 1: "valve 1", 2: "valve 2", 3: "custom message", 4: "pressure threshold alarm" };
     return getValue(report_type_map, report_type_value);
 }
 

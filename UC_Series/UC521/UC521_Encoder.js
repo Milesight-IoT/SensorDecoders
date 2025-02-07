@@ -408,15 +408,15 @@ function setValveConfig(valve_index, valve_config) {
 /**
  * set valve filter config
  * @param {object} valve_filter_config
- * @param {number} valve_filter_config.mode values: (0: hardware, 1: software)
- * @param {number} valve_filter_config.time (mode=0, unit: us; mode=1, unit: ms)
- * @example { "valve_filter_config": { "mode": 0, "time": 10 } }
+ * @param {number} valve_filter_config.mode values: (1: hardware, 2: software)
+ * @param {number} valve_filter_config.time (mode=1, unit: us; mode=2, unit: ms)
+ * @example { "valve_filter_config": { "mode": 1, "time": 10 } }
  */
 function setValveFilterConfig(valve_filter_config) {
     var mode = valve_filter_config.mode;
     var time = valve_filter_config.time;
 
-    var mode_map = { 0: "hardware", 1: "software" };
+    var mode_map = { 1: "hardware", 2: "software" };
     var mode_values = getValues(mode_map);
     if (mode_values.indexOf(mode) === -1) {
         throw new Error("valve_filter_config.mode must be one of " + mode_values.join(", "));
@@ -704,10 +704,6 @@ function setPressureConfig(index, pressure_config) {
     return buffer.toBytes();
 }
 
-
-
-
-
 /**
  * query pressure config
  * @param {number} query_pressure_config values: (0: no, 1: yes)
@@ -808,10 +804,10 @@ function batchRemoveRules(batch_remove_rules) {
     var rule_bit_offset = { rule_1: 0, rule_2: 1, rule_3: 2, rule_4: 3, rule_5: 4, rule_6: 5, rule_7: 6, rule_8: 7, rule_9: 8, rule_10: 9, rule_11: 10, rule_12: 11, rule_13: 12, rule_14: 13, rule_15: 14, rule_16: 15 };
     for (var key in rule_bit_offset) {
         if (key in batch_remove_rules) {
-            if (enable_values.indexOf(batch_remove_rules[key]) === -1) {
-                throw new Error("batch_remove_rules." + key + " must be one of " + enable_values.join(", "));
+            if (yes_no_values.indexOf(batch_remove_rules[key]) === -1) {
+                throw new Error("batch_remove_rules." + key + " must be one of " + yes_no_values.join(", "));
             }
-            data |= getValue(enable_map, batch_remove_rules[key]) << rule_bit_offset[key];
+            data |= getValue(yes_no_map, batch_remove_rules[key]) << rule_bit_offset[key];
         }
     }
 
@@ -831,7 +827,7 @@ function batchRemoveRules(batch_remove_rules) {
  * @example { "rule_2_enable": 1 }
  */
 function enableRule(rule_index, enable) {
-    var enable_map = { 0: "no", 1: "yes" };
+    var enable_map = { 0: "disable", 1: "enable" };
     var enable_values = getValues(enable_map);
 
     if (enable_values.indexOf(enable) === -1) {
@@ -869,13 +865,26 @@ function removeRule(rule_index) {
  * @example { "query_rule_config": { "index": 1 } }
  */
 function queryRuleConfig(query_rule_config) {
-    var index = query_rule_config.index;
+    var yes_no_map = { 0: "no", 1: "yes" };
+    var yes_no_values = getValues(yes_no_map);
 
-    var buffer = new Buffer(3);
-    buffer.writeUInt8(0xff);
-    buffer.writeUInt8(0x53);
-    buffer.writeUInt8(index); // query rule config
-    return buffer.toBytes();
+    var data = [];
+    var rule_index_offset = { rule_1: 1, rule_2: 2, rule_3: 3, rule_4: 4, rule_5: 5, rule_6: 6 };
+    for (var key in rule_index_offset) {
+        if (key in query_rule_config) {
+            if (yes_no_values.indexOf(query_rule_config[key]) === -1) {
+                throw new Error("query_rule_config." + key + " must be one of " + yes_no_values.join(", "));
+            }
+
+            if (getValue(yes_no_map, query_rule_config[key]) === 0) {
+                continue;
+            }
+
+            data = data.concat([0xff, 0x53, rule_index_offset[key]]);
+        }
+    }
+
+    return data;
 }
 
 /**
@@ -950,6 +959,7 @@ function encodedRuleCondition(condition) {
 
     var buffer = new Buffer(13);
     var condition_type_value = getValue(condition_type_map, condition.type);
+    buffer.writeUInt8(condition_type_value);
     switch (condition_type_value) {
         case 0x00: // none
             break;
@@ -1011,33 +1021,40 @@ function encodedRuleCondition(condition) {
  * @param {number} action.duration unit: min
  * @param {number} action.pulse_enable values: (0: disable, 1: enable)
  * @param {number} action.pulse_threshold
+ * @param {number} action.report_type values: (1: valve 1, 2: valve 2, 3: custom message, 4: pressure threshold alarm)
+ * @param {string} action.report_content
+ * @param {number} action.report_counts
+ * @param {number} action.threshold_release_enable values: (0: disable, 1: enable)
  * @example { "rules_config": [ { "index": 1, "enable": 1, "condition": { "type": 0 }, "action": { "type": 1, "valve_index": 1, "valve_opening": 1, "time_enable": 1, "duration": 1, "pulse_enable": 1, "pulse_threshold": 1 } }]}
  */
 function encodedAction(action) {
+    var enable_map = { 0: "disable", 1: "enable" };
+    var enable_values = getValues(enable_map);
     var action_type_map = { 0: "none", 1: "em valve control", 2: "valve control", 3: "report" };
     var action_type_values = getValues(action_type_map);
-    var report_type_map = { 0: "valve 1", 1: "valve 2", 2: "custom message", 3: "pressure threshold alarm" };
+    var report_type_map = { 1: "valve 1", 2: "valve 2", 3: "custom message", 4: "pressure threshold alarm" };
     var report_type_values = getValues(report_type_map);
 
     var buffer = new Buffer(13);
     var action_type_value = getValue(action_type_map, action.type);
+    buffer.writeUInt8(action_type_value);
     switch (action_type_value) {
         case 0x00: // none
             break;
         case 0x01: // em valve control (interrupt current execution task)
             buffer.writeUInt8(action.valve_index);
             buffer.writeUInt8(action.valve_opening);
-            buffer.writeUInt8(action.time_enable);
+            buffer.writeUInt8(getValue(enable_map, action.time_enable));
             buffer.writeUInt32LE(action.duration);
-            buffer.writeUInt8(action.pulse_enable);
+            buffer.writeUInt8(getValue(enable_map, action.pulse_enable));
             buffer.writeUInt32LE(action.pulse_threshold);
             break;
         case 0x02: // general valve control
             buffer.writeUInt8(action.valve_index);
             buffer.writeUInt8(action.valve_opening);
-            buffer.writeUInt8(action.time_enable);
+            buffer.writeUInt8(getValue(enable_map, action.time_enable));
             buffer.writeUInt32LE(action.duration);
-            buffer.writeUInt8(action.pulse_enable);
+            buffer.writeUInt8(getValue(enable_map, action.pulse_enable));
             buffer.writeUInt32LE(action.pulse_threshold);
             break;
         case 0x03: // report
@@ -1045,7 +1062,7 @@ function encodedAction(action) {
             buffer.writeAscii(action.report_content, 8);
             buffer.writeUInt8(0x00); // ignore the next byte
             buffer.writeUInt8(action.report_counts);
-            buffer.writeUInt8(action.threshold_release_enable);
+            buffer.writeUInt8(getValue(enable_map, action.threshold_release_enable));
             break;
     }
     return buffer.toBytes();
