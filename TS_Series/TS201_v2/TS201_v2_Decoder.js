@@ -26,7 +26,7 @@ function Decoder(bytes, port) {
 function milesightDeviceDecode(bytes) {
     var decoded = {};
 
-    for (var i = 0; i < bytes.length; ) {
+    for (var i = 0; i < bytes.length;) {
         var channel_id = bytes[i++];
         var channel_type = bytes[i++];
 
@@ -352,11 +352,15 @@ function handle_downlink_response_ext(code, channel_type, bytes, offset) {
     }
 
     if (hasResultFlag(code)) {
-        decoded = {};
-        decoded.device_response_result = {};
-        decoded.device_response_result.channel_type = channel_type;
-        decoded.device_response_result.result = readResultStatus(bytes[offset]);
+        var result_value = readUInt8(bytes[offset]);
         offset += 1;
+
+        if (result_value !== 0) {
+            decoded = {};
+            decoded.device_response_result = {};
+            decoded.device_response_result.channel_type = channel_type;
+            decoded.device_response_result.result = readResultStatus(bytes[offset]);
+        }
     }
 
     return { data: decoded, offset: offset };
@@ -448,7 +452,7 @@ function readDataStatus(type) {
 }
 
 function readHistoryEvent(value, sensor_type) {
-    var event_map = { 1: "periodic", 2: "temperature alarm (threshold or mutation)", 3: "temperature alarm release", 4: "humidity alarm (threshold or mutation)", 5: "humidity alarm release", 6: "temperature mutation alarm", 7: "immediate" };
+    var event_map = { 1: "periodic", 2: "temperature alarm (threshold or mutation)", 3: "temperature alarm release", 4: "humidity alarm (threshold or mutation)", 5: "humidity alarm release", 6: "immediate" };
     var sensor_status_map = { 0: "normal", 1: "read error", 2: "out of range" };
 
     var report_event = getValue(event_map, value & 0x0f);
