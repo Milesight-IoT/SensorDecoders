@@ -2,7 +2,7 @@
 
 The payload decoder function is applicable to EM500-CO2.
 
-For more detailed information, please visit [milesight official website](https://www.milesight-iot.com).
+For more detailed information, please visit [Milesight Official Website](https://www.milesight.com/iot/product/lorawan-sensor/em500-co2).
 
 ![EM500-CO2](EM500-CO2.png)
 
