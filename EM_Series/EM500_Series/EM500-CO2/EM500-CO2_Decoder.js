@@ -55,6 +55,11 @@ function milesightDeviceDecode(bytes) {
             decoded.lorawan_class = readLoRaWANClass(bytes[i]);
             i += 1;
         }
+        // DEVICE STATUS
+        else if (channel_id === 0xff && channel_type === 0x0b) {
+            decoded.device_status = readOnOffStatus(1);
+            i += 1;
+        }
         // BATTERY
         else if (channel_id === 0x01 && channel_type === 0x75) {
             decoded.battery = bytes[i];
@@ -374,6 +379,11 @@ function readLoRaWANClass(type) {
         3: "Class CtoB",
     };
     return getValue(class_map, type);
+}
+
+function readOnOffStatus(type) {
+    var on_off_map = { 0: "off", 1: "on" };
+    return getValue(on_off_map, type);
 }
 
 function readTemperatureAlarm(type) {
