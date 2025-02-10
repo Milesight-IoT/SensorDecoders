@@ -2,9 +2,11 @@
 
 The payload decoder function is applicable to VS351.
 
-For more detailed information, please visit [Milesight official website](https://www.milesight-iot.com).
+For more detailed information, please visit [Milesight Official Website](https://www.milesight.com/iot/product/lorawan-sensor/vs351).
 
-![VS351](VS351.png)
+|        VS351        |            VS351 with Battery            |
+| :-----------------: | :--------------------------------------: |
+| ![VS351](VS351.png) | ![VS351 with Battery](VS351_Battery.png) |
 
 ## Payload Definition
 
