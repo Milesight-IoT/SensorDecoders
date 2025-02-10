@@ -56,9 +56,6 @@ function milesightDeviceEncode(payload) {
     if ("co2_calibration_config" in payload) {
         encoded = encoded.concat(setCO2CalibrationConfig(payload.co2_calibration_config));
     }
-    if ("co2_abc_calibration_config" in payload) {
-        encoded = encoded.concat(setCO2AutoBackgroundCalibrationConfig(payload.co2_abc_calibration_config));
-    }
     if ("temperature_calibration_value_config" in payload) {
         encoded = encoded.concat(setTemperatureCalibrationValueConfig(payload.temperature_calibration_value_config));
     }
@@ -101,7 +98,6 @@ function milesightDeviceEncode(payload) {
     if ("d2d_enable" in payload) {
         encoded = encoded.concat(setD2DEnable(payload.d2d_enable));
     }
-
     if ("retransmit_enable" in payload) {
         encoded = encoded.concat(setRetransmitEnable(payload.retransmit_enable));
     }
@@ -299,63 +295,47 @@ function setRecollectionConfig(recollection_config) {
 
 /**
  * set CO2 calibration config
+ * @odm 2727
  * @param {object} co2_calibration_config
- * @param {number} co2_calibration_config.mode values: (0: factory, 1: abc, 2: manual, 3: background, 4: zero)
+ * @param {number} co2_calibration_config.mode values: (0: factory, 2: manual, 3: in_gas)
  * @param {number} co2_calibration_config.value
- * @example { "co2_calibration_config": { "mode": 1 } }
+ * @param {number} co2_calibration_config.in_gas_mode values: (0: low_noise_in_n2_range_0_100, 1: low_noise_in_air_range_0_100, 2: low_noise_in_n2_range_0_40, 3: low_noise_in_air_range_0_40, 16: low_cross_in_n2_range_0_100, 17: low_cross_in_air_range_0_100, 18: low_cross_in_n2_range_0_40, 19: low_cross_in_air_range_0_40)
+ * @example { "co2_calibration_config": { "mode": 0 } }
  */
 function setCO2CalibrationConfig(co2_calibration_config) {
     var mode = co2_calibration_config.mode;
     var value = co2_calibration_config.value;
+    var in_gas_mode = co2_calibration_config.in_gas_mode;
 
-    var calibration_strategy_map = { 0: "factory", 1: "abc", 2: "manual", 3: "background", 4: "zero" };
+    var calibration_strategy_map = { 0: "factory", 1: "manual", 2: "in_gas" };
     var calibration_strategy_values = getValues(calibration_strategy_map);
     if (calibration_strategy_values.indexOf(mode) == -1) {
         throw new Error("co2_calibration_config.mode must be one of " + calibration_strategy_values.join(", "));
     }
+    var in_gas_map = { 0: "low_noise_in_n2_range_0_100", 1: "low_noise_in_air_range_0_100", 2: "low_noise_in_n2_range_0_40", 3: "low_noise_in_air_range_0_40", 16: "low_cross_in_n2_range_0_100", 17: "low_cross_air_range_0_100", 18: "low_cross_in_n2_range_0_40", 19: "low_cross_in_air_range_0_40" };
+    var in_gas_values = getValues(in_gas_map);
 
-    if (getValue(calibration_strategy_map, mode) === 2) {
-        var buffer = new Buffer(5);
-        buffer.writeUInt8(0xff);
-        buffer.writeUInt8(0x1a);
-        buffer.writeUInt8(getValue(calibration_strategy_map, mode));
-        buffer.writeInt16LE(value);
-        return buffer.toBytes();
-    } else {
-        var buffer = new Buffer(3);
-        buffer.writeUInt8(0xff);
-        buffer.writeUInt8(0x1a);
-        buffer.writeUInt8(getValue(calibration_strategy_map, mode));
-        return buffer.toBytes();
+    var data = 0x00;
+    var mode_value = getValue(calibration_strategy_map, mode);
+    switch (mode_value) {
+        case 0: // factory mode
+            data = 0x00;
+            break;
+        case 1: // manual mode
+            data = value;
+            break;
+        case 2: // in_gas mode
+            if (in_gas_values.indexOf(in_gas_mode) == -1) {
+                throw new Error("co2_calibration_config.in_gas_mode must be one of " + in_gas_values.join(", "));
+            }
+            data = getValue(in_gas_map, in_gas_mode);
+            break;
     }
-}
-
-/**
- * set CO2 auto background calibration config
- * @param {object} co2_abc_calibration_config
- * @param {number} co2_abc_calibration_config.enable values: (0: disable, 1: enable)
- * @param {number} co2_abc_calibration_config.period unit: minute, range: [1, 65534]
- * @param {number} co2_abc_calibration_config.target_value unit: ppm, range: [1, 65534]
- * @example { "co2_abc_calibration_config": { "enable": 1, "period": 3600, "target_value": 400 } }
- * @product AM319
- */
-function setCO2AutoBackgroundCalibrationConfig(co2_abc_calibration_config) {
-    var enable = co2_abc_calibration_config.enable;
-    var period = co2_abc_calibration_config.period;
-    var target_value = co2_abc_calibration_config.target_value;
-
-    var enable_map = { 0: "disable", 1: "enable" };
-    var enable_values = getValues(enable_map);
-    if (enable_values.indexOf(enable) == -1) {
-        throw new Error("co2_abc_calibration_config.enable must be one of " + enable_values.join(", "));
-    }
-
     var buffer = new Buffer(7);
-    buffer.writeUInt8(0xff);
-    buffer.writeUInt8(0x39);
-    buffer.writeUInt8(getValue(enable_map, enable));
-    buffer.writeUInt16LE(period);
-    buffer.writeUInt16LE(target_value);
+    buffer.writeUInt8(0xf9);
+    buffer.writeUInt8(0x60);
+    buffer.writeUInt8(mode_value);
+    buffer.writeInt32LE(data);
     return buffer.toBytes();
 }
 
@@ -388,7 +368,7 @@ function setTemperatureCalibrationValueConfig(temperature_calibration_value_conf
 
 /**
  * set CO2 calibration value
- * @since hardware_version v2.0, firmware_version v1.7
+ * @odm 2727
  * @param {object} co2_calibration_value_config
  * @param {number} co2_calibration_value_config.enable values: (0: disable, 1: enable)
  * @param {number} co2_calibration_value_config.target_value
@@ -404,12 +384,12 @@ function setCO2CalibrationValueConfig(co2_calibration_value_config) {
         throw new Error("co2_calibration_value_config.enable must be one of " + enable_values.join(", "));
     }
 
-    var buffer = new Buffer(6);
-    buffer.writeUInt8(0xff);
-    buffer.writeUInt8(0xf1);
-    buffer.writeUInt8(0x04); // co2
+    var buffer = new Buffer(8);
+    buffer.writeUInt8(0xf9);
+    buffer.writeUInt8(0x71);
+    buffer.writeUInt8(0x00); // co2
     buffer.writeUInt8(getValue(enable_map, enable));
-    buffer.writeInt16LE(target_value);
+    buffer.writeInt32LE(target_value);
     return buffer.toBytes();
 }
 
@@ -522,6 +502,7 @@ function setSensorFunctionConfig(sensor_function_config) {
 
 /**
  * set CO2 threshold alarm config
+ * @odm 2727
  * @param {object} co2_threshold_alarm_config
  * @param {number} co2_threshold_alarm_config.enable values: (0: disable, 1: enable)
  * @param {number} co2_threshold_alarm_config.condition values: (0: disable, 1: below, 2: above, 3: between, 4: outside, 5: mutation)
@@ -552,17 +533,17 @@ function setCO2ThresholdAlarmConfig(co2_threshold_alarm_config) {
     data |= (getValue(enable_map, enable) << 6);
 
     var buffer = new Buffer(11);
-    buffer.writeUInt8(0xff);
-    buffer.writeUInt8(0x06);
+    buffer.writeUInt8(0xf9);
+    buffer.writeUInt8(0x61);
     buffer.writeUInt8(data);
-    buffer.writeUInt16LE(min_threshold);
-    buffer.writeUInt16LE(max_threshold);
-    buffer.writeUInt32LE(0x00);
+    buffer.writeUInt32LE(min_threshold);
+    buffer.writeUInt32LE(max_threshold);
     return buffer.toBytes();
 }
 
 /**
  * set temperature threshold alarm config
+ * @odm 2727
  * @param {object} temperature_threshold_alarm_config
  * @param {number} temperature_threshold_alarm_config.enable values: (0: disable, 1: enable)
  * @param {number} temperature_threshold_alarm_config.condition values: (0: disable, 1: below, 2: above, 3: between, 4: outside, 5: mutation)
@@ -593,17 +574,17 @@ function setTemperatureThresholdAlarmConfig(temperature_threshold_alarm_config) 
     data |= (getValue(enable_map, enable) << 6);
 
     var buffer = new Buffer(11);
-    buffer.writeUInt8(0xff);
-    buffer.writeUInt8(0x06);
+    buffer.writeUInt8(0xf9);
+    buffer.writeUInt8(0x61);
     buffer.writeUInt8(data);
-    buffer.writeInt16LE(min_threshold * 10);
-    buffer.writeInt16LE(max_threshold * 10);
-    buffer.writeUInt32LE(0x00);
+    buffer.writeInt32LE(min_threshold * 10);
+    buffer.writeInt32LE(max_threshold * 10);
     return buffer.toBytes();
 }
 
 /**
  * set temperature mutation alarm config
+ * @odm 2727
  * @param {object} temperature_mutation_alarm_config
  * @param {number} temperature_mutation_alarm_config.enable values: (0: disable, 1: enable)
  * @param {number} temperature_mutation_alarm_config.condition values: (0: disable, 1: below, 2: above, 3: between, 4: outside, 5: mutation)
@@ -634,12 +615,11 @@ function setTemperatureMutationAlarmConfig(temperature_mutation_alarm_config) {
     data |= (getValue(enable_map, enable) << 6);
 
     var buffer = new Buffer(11);
-    buffer.writeUInt8(0xff);
-    buffer.writeUInt8(0x06);
+    buffer.writeUInt8(0xf9);
+    buffer.writeUInt8(0x61);
     buffer.writeUInt8(data);
-    buffer.writeInt16LE(min_threshold * 10);
-    buffer.writeInt16LE(max_threshold * 10);
-    buffer.writeUInt32LE(0x00);
+    buffer.writeInt32LE(min_threshold * 10);
+    buffer.writeInt32LE(max_threshold * 10);
     return buffer.toBytes();
 }
 
