@@ -154,10 +154,8 @@ function handle_downlink_response(channel_type, bytes, offset) {
                     decoded.temperature_mutation_alarm_config.min_threshold = readInt16LE(bytes.slice(offset + 1, offset + 3)) / 10;
                     decoded.temperature_mutation_alarm_config.max_threshold = readInt16LE(bytes.slice(offset + 3, offset + 5)) / 10;
                     break;
-                default:
-                    throw new Error("unknown downlink response");
             }
-            offset += 7;
+            offset += 9;
             break;
         case 0x11:
             decoded.timestamp = readUInt32LE(bytes.slice(offset, offset + 4));
@@ -286,7 +284,6 @@ function handle_downlink_response(channel_type, bytes, offset) {
             break;
         default:
             throw new Error("unknown downlink response");
-
     }
 
     return { data: decoded, offset: offset };
