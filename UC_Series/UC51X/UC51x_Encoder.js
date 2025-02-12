@@ -1,11 +1,11 @@
 /**
  * Payload Encoder
  *
- * Copyright 2024 Milesight IoT
+ * Copyright 2025 Milesight IoT
  *
- * @product UC51X
+ * @product UC511 / UC512
  */
-var RAW_VALUE = 0x01;
+var RAW_VALUE = 0x00;
 
 // Chirpstack v4
 function encodeDownlink(input) {
@@ -41,12 +41,6 @@ function milesightDeviceEncode(payload) {
     if ("report_interval" in payload) {
         encoded = encoded.concat(setReportInterval(payload.report_interval));
     }
-    if ("clear_history_data" in payload) {
-        encoded = encoded.concat(clearHistoryData(payload.clear_history_data));
-    }
-    if ("history_enable" in payload) {
-        encoded = encoded.concat(setHistoryEnable(payload.history_enable));
-    }
     if ("retransmit_enable" in payload) {
         encoded = encoded.concat(setRetransmitEnable(payload.retransmit_enable));
     }
@@ -80,6 +74,47 @@ function milesightDeviceEncode(payload) {
     if ("valve_2_pulse" in payload) {
         encoded = encoded.concat(setValvePulse2(payload.valve_2_pulse));
     }
+    if ("valve_1_task" in payload) {
+        encoded = encoded.concat(setValveTask(1, payload.valve_1_task));
+    }
+    if ("valve_2_task" in payload) {
+        encoded = encoded.concat(setValveTask(2, payload.valve_2_task));
+    }
+    if ("batch_read_rules" in payload) {
+        encoded = encoded.concat(batchReadRules(payload.batch_read_rules));
+    }
+    if ("batch_enable_rules" in payload) {
+        encoded = encoded.concat(batchEnableRules(payload.batch_enable_rules));
+    }
+    if ("batch_remove_rules" in payload) {
+        encoded = encoded.concat(batchRemoveRules(payload.batch_remove_rules));
+    }
+    var rule_x_enable_map = { rule_1_enable: 1, rule_2_enable: 2, rule_3_enable: 3, rule_4_enable: 4, rule_5_enable: 5, rule_6_enable: 6, rule_7_enable: 7, rule_8_enable: 8, rule_9_enable: 9, rule_10_enable: 10, rule_11_enable: 11, rule_12_enable: 12, rule_13_enable: 13, rule_14_enable: 14, rule_15_enable: 15, rule_16_enable: 16 };
+    for (var key in rule_x_enable_map) {
+        if (key in payload) {
+            encoded = encoded.concat(enableRule(rule_x_enable_map[key], payload[key]));
+        }
+    }
+    var rule_x_remove_map = { rule_1_remove: 1, rule_2_remove: 2, rule_3_remove: 3, rule_4_remove: 4, rule_5_remove: 5, rule_6_remove: 6, rule_7_remove: 7, rule_8_remove: 8, rule_9_remove: 9, rule_10_remove: 10, rule_11_remove: 11, rule_12_remove: 12, rule_13_remove: 13, rule_14_remove: 14, rule_15_remove: 15, rule_16_remove: 16 };
+    for (var key in rule_x_remove_map) {
+        if (key in payload) {
+            encoded = encoded.concat(removeRule(rule_x_remove_map[key], payload[key]));
+        }
+    }
+    /*
+    // hardware_version>=v2.0, firmware_version>=v2.1
+    if ("rules_config" in payload) {
+        for (var i = 0; i < payload.rules_config.length; i++) {
+            encoded = encoded.concat(setRuleConfig(payload.rules_config[i]));
+        }
+    }
+    */
+    // hardware_version>=v4.0, firmware_version>=v1.1
+    if ("rules_config" in payload) {
+        for (var i = 0; i < payload.rules_config.length; i++) {
+            encoded = encoded.concat(setNewRuleConfig(payload.rules_config[i]));
+        }
+    }
     if ("pulse_filter_config" in payload) {
         encoded = encoded.concat(setPulseFilterConfig(payload.pulse_filter_config));
     }
@@ -91,6 +126,18 @@ function milesightDeviceEncode(payload) {
     }
     if ("pressure_calibration" in payload) {
         encoded = encoded.concat(setPressureCalibration(payload.pressure_calibration));
+    }
+    if ("history_enable" in payload) {
+        encoded = encoded.concat(setHistoryEnable(payload.history_enable));
+    }
+    if ("clear_history" in payload) {
+        encoded = encoded.concat(clearHistory(payload.clear_history));
+    }
+    if ("fetch_history" in payload) {
+        encoded = encoded.concat(fetchHistory(payload.fetch_history));
+    }
+    if ("stop_transmit" in payload) {
+        encoded = encoded.concat(stopTransmit(payload.stop_transmit));
     }
 
     return encoded;
@@ -112,7 +159,6 @@ function reboot(reboot) {
     if (getValue(reboot_map, reboot) === 0) {
         return [];
     }
-
     return [0xff, 0x10, 0xff];
 }
 
@@ -132,7 +178,6 @@ function reportStatus(report_status) {
     if (getValue(report_status_map, report_status) === 0) {
         return [];
     }
-
     return [0xff, 0x28, 0xff];
 }
 
@@ -185,46 +230,6 @@ function setReportInterval(report_interval) {
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0x03);
     buffer.writeUInt16LE(report_interval);
-    return buffer.toBytes();
-}
-
-/**
- * Clear history data
- * @since hardware_version>=v3.0, firmware_version>=v3.1
- * @param {number} clear_history_data values:(0: no, 1: yes)
- * @example { "clear_history_data": 1 }
- */
-function clearHistoryData(clear_history_data) {
-    var clear_history_data_map = { 0: "no", 1: "yes" };
-    var clear_history_data_values = getValues(clear_history_data_map);
-    if (clear_history_data_values.indexOf(clear_history_data) === -1) {
-        throw new Error("clear_history_data must be one of " + clear_history_data_values.join(", "));
-    }
-
-    if (getValue(clear_history_data_map, clear_history_data) === 0) {
-        return [];
-    }
-
-    return [0xff, 0x27, 0xff];
-}
-
-/**
- * history enable
- * @since hardware_version>=v3.0, firmware_version>=v3.1
- * @param {number} history_enable values: (0: disable, 1: enable)
- * @example { "history_enable": 1 }
- */
-function setHistoryEnable(history_enable) {
-    var enable_map = { 0: "disable", 1: "enable" };
-    var enable_values = getValues(enable_map);
-    if (enable_values.indexOf(history_enable) === -1) {
-        throw new Error("history_enable must be one of " + enable_values.join(", "));
-    }
-
-    var buffer = new Buffer(3);
-    buffer.writeUInt8(0xff);
-    buffer.writeUInt8(0x68);
-    buffer.writeUInt8(getValue(enable_map, history_enable));
     return buffer.toBytes();
 }
 
@@ -300,7 +305,7 @@ function setTimezone(timezone) {
     var buffer = new Buffer(4);
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0x17);
-    buffer.writeUInt16LE(timezone * 10);
+    buffer.writeInt16LE(timezone * 10);
     return buffer.toBytes();
 }
 
@@ -337,8 +342,8 @@ function setD2DKey(d2d_key) {
     if (d2d_key.length !== 16) {
         throw new Error("d2d_key must be 16 characters");
     }
-    if (!/^[0-9A-F]+$/.test(d2d_key)) {
-        throw new Error("d2d_key must be hex string [0-9A-F]");
+    if (!/^[0-9a-fA-F]+$/.test(d2d_key)) {
+        throw new Error("d2d_key must be hex string [0-9a-fA-F]");
     }
 
     var data = hexStringToBytes(d2d_key);
@@ -446,6 +451,562 @@ function setValvePulse2(valve_2_pulse) {
 }
 
 /**
+ * set valve task
+ * @since hardware_version>=v4.0, firmware_version>=v1.1
+ * @param {number} index
+ * @param {object} valve_task
+ * @param {number} valve_task.time_rule_enable values: (0: disable, 1: enable)
+ * @param {number} valve_task.pulse_rule_enable values: (0: disable, 1: enable)
+ * @param {number} valve_task.sequence_id values: (0: force execute, 1-255: sequence execute)
+ * @param {number} valve_task.valve_status values: (0: close, 1: open)
+ * @param {number} valve_task.duration
+ * @param {number} valve_task.valve_pulse
+ * @example { "valve_1_task": { "time_rule_enable": 1, "pulse_rule_enable": 1, "sequence_id": 0, "valve_status": 0, "duration": 100, "pulse": 100 } }
+ */
+function setValveTask(index, valve_task) {
+    var time_rule_enable = valve_task.time_rule_enable;
+    var pulse_rule_enable = valve_task.pulse_rule_enable;
+    var sequence_id = valve_task.sequence_id;
+    var valve_status = valve_task.valve_status;
+    var duration = valve_task.duration;
+    var valve_pulse = valve_task.valve_pulse;
+
+    var enable_map = { 0: "disable", 1: "enable" };
+    var enable_values = getValues(enable_map);
+    var status_map = { 0: "close", 1: "open" };
+    var status_values = getValues(status_map);
+    if (sequence_id === undefined) {
+        sequence_id = 0x00;
+    }
+    if (enable_values.indexOf(time_rule_enable) === -1) {
+        throw new Error("valve_" + index + "_task.time_rule_enable must be one of " + enable_values.join(", "));
+    }
+    if (enable_values.indexOf(pulse_rule_enable) === -1) {
+        throw new Error("valve_" + index + "_task.pulse_rule_enable must be one of " + enable_values.join(", "));
+    }
+    if (status_values.indexOf(valve_status) === -1) {
+        throw new Error("valve_" + index + "_task.valve_status must be one of " + status_values.join(", "));
+    }
+
+    var time_rule_enable_value = getValue(enable_map, time_rule_enable);
+    var pulse_rule_enable_value = getValue(enable_map, pulse_rule_enable);
+    var valve_status_value = getValue(status_map, valve_status);
+
+    var data = 0x00;
+    data |= time_rule_enable_value << 7;
+    data |= pulse_rule_enable_value << 6;
+    data |= valve_status_value << 5;
+    data |= (index - 1) << 0;
+
+    var length = 4;
+    if (time_rule_enable_value === 1) {
+        length += 3;
+    }
+    if (pulse_rule_enable_value === 1) {
+        length += 4;
+    }
+
+    var buffer = new Buffer(length);
+    buffer.writeUInt8(0xff);
+    buffer.writeUInt8(0x1d);
+    buffer.writeUInt8(data);
+    buffer.writeUInt8(sequence_id);
+    if (time_rule_enable_value === 1) {
+        buffer.writeUInt24LE(duration);
+    }
+    if (pulse_rule_enable_value === 1) {
+        buffer.writeUInt32LE(valve_pulse);
+    }
+    return buffer.toBytes();
+}
+
+/**
+ * read rules
+ * @since hardware_version>=v2.0, firmware_version>=v2.1
+ * @deprecated hardware_version>=v4.0, firmware_version>=v1.1
+ * @param {object} batch_read_rules
+ * @param {number} batch_read_rules.rule_1
+ * @param {number} batch_read_rules.rule_2
+ * @param {number} batch_read_rules.rule_x
+ * @param {number} batch_read_rules.rule_16
+ * @example { "batch_read_rules": { "rules_id": 1 } }
+ */
+function batchReadRules(batch_read_rules) {
+    var enable_map = { 0: "no", 1: "yes" };
+    var enable_values = getValues(enable_map);
+
+    var data = 0;
+    var rule_bit_offset = { rule_1: 0, rule_2: 1, rule_3: 2, rule_4: 3, rule_5: 4, rule_6: 5, rule_7: 6, rule_8: 7, rule_9: 8, rule_10: 9, rule_11: 10, rule_12: 11, rule_13: 12, rule_14: 13, rule_15: 14, rule_16: 15 };
+    for (var key in rule_bit_offset) {
+        if (key in batch_read_rules) {
+            if (enable_values.indexOf(batch_read_rules[key]) === -1) {
+                throw new Error("batch_read_rules." + key + " must be one of " + enable_values.join(", "));
+            }
+            data |= getValue(enable_map, batch_read_rules[key]) << rule_bit_offset[key];
+        }
+    }
+
+    var buffer = new Buffer(5);
+    buffer.writeUInt8(0xff);
+    buffer.writeUInt8(0x4b);
+    buffer.writeUInt8(0x00); // read rules
+    buffer.writeUInt16LE(data);
+    return buffer.toBytes();
+}
+
+/**
+ * batch enable rules
+ * @since hardware_version>=v2.0, firmware_version>=v2.1
+ * @deprecated hardware_version>=v4.0, firmware_version>=v1.1
+ * @param {object} batch_enable_rules
+ * @param {number} batch_enable_rules.rule_1
+ * @param {number} batch_enable_rules.rule_2
+ * @param {number} batch_enable_rules.rule_x
+ * @param {number} batch_enable_rules.rule_16
+ * @example { "batch_enable_rules": { "rule_1": 1, "rule_2": 1, "rule_3": 1, "rule_4": 1 } }
+ */
+function batchEnableRules(batch_enable_rules) {
+    var enable_map = { 0: "disable", 1: "enable" };
+    var enable_values = getValues(enable_map);
+
+    var data = 0;
+    var rule_bit_offset = { rule_1: 0, rule_2: 1, rule_3: 2, rule_4: 3, rule_5: 4, rule_6: 5, rule_7: 6, rule_8: 7, rule_9: 8, rule_10: 9, rule_11: 10, rule_12: 11, rule_13: 12, rule_14: 13, rule_15: 14, rule_16: 15 };
+    for (var key in rule_bit_offset) {
+        if (key in batch_enable_rules) {
+            if (enable_values.indexOf(batch_enable_rules[key]) === -1) {
+                throw new Error("batch_enable_rules." + key + " must be one of " + enable_values.join(", "));
+            }
+            data |= getValue(enable_map, batch_enable_rules[key]) << rule_bit_offset[key];
+        }
+    }
+
+    var buffer = new Buffer(5);
+    buffer.writeUInt8(0xff);
+    buffer.writeUInt8(0x4b);
+    buffer.writeUInt8(0x01); // enable rules
+    buffer.writeUInt16LE(data);
+    return buffer.toBytes();
+}
+
+/**
+ * batch remove rules
+ * @since hardware_version>=v2.0, firmware_version>=v2.1
+ * @deprecated hardware_version>=v4.0, firmware_version>=v1.1
+ * @param {object} batch_remove_rules
+ * @param {number} batch_remove_rules.rule_1
+ * @param {number} batch_remove_rules.rule_2
+ * @param {number} batch_remove_rules.rule_x
+ * @param {number} batch_remove_rules.rule_16
+ * @example { "batch_remove_rules": { "rule_1": 1, "rule_2": 1, "rule_3": 1, "rule_4": 1 } }
+ */
+function batchRemoveRules(batch_remove_rules) {
+    var yes_no_map = { 0: "no", 1: "yes" };
+    var yes_no_values = getValues(yes_no_map);
+
+    var data = 0;
+    var rule_bit_offset = { rule_1: 0, rule_2: 1, rule_3: 2, rule_4: 3, rule_5: 4, rule_6: 5, rule_7: 6, rule_8: 7, rule_9: 8, rule_10: 9, rule_11: 10, rule_12: 11, rule_13: 12, rule_14: 13, rule_15: 14, rule_16: 15 };
+    for (var key in rule_bit_offset) {
+        if (key in batch_remove_rules) {
+            if (yes_no_values.indexOf(batch_remove_rules[key]) === -1) {
+                throw new Error("batch_remove_rules." + key + " must be one of " + yes_no_values.join(", "));
+            }
+            data |= getValue(yes_no_map, batch_remove_rules[key]) << rule_bit_offset[key];
+        }
+    }
+
+    var buffer = new Buffer(5);
+    buffer.writeUInt8(0xff);
+    buffer.writeUInt8(0x4b);
+    buffer.writeUInt8(0x02); // remove rules
+    buffer.writeUInt16LE(data);
+    return buffer.toBytes();
+}
+
+/**
+ * enable rule
+ * @since hardware_version>=v2.0, firmware_version>=v2.1
+ * @deprecated hardware_version>=v4.0, firmware_version>=v1.1
+ * @param {number} rule_index range: [1, 16]
+ * @param {number} enable values: (0: disable, 1: enable)
+ * @example { "rule_1_enable": 1 }
+ * @example { "rule_2_enable": 1 }
+ */
+function enableRule(rule_index, enable) {
+    var enable_map = { 0: "disable", 1: "enable" };
+    var enable_values = getValues(enable_map);
+
+    if (enable_values.indexOf(enable) === -1) {
+        throw new Error("rule_" + rule_index + "_enable must be one of " + enable_values.join(", "));
+    }
+
+    var buffer = new Buffer(5);
+    buffer.writeUInt8(0xff);
+    buffer.writeUInt8(0x4b);
+    buffer.writeUInt8(0x03); // enable single rule
+    buffer.writeUInt8(rule_index);
+    buffer.writeUInt8(getValue(enable_map, enable));
+    return buffer.toBytes();
+}
+
+/**
+ * remove rule
+ * @since hardware_version>=v2.0, firmware_version>=v2.1
+ * @deprecated hardware_version>=v4.0, firmware_version>=v1.1
+ * @param {number} rule_index range: [1, 16]
+ * @example { "remove_rule": 1 }
+ */
+function removeRule(rule_index) {
+    var buffer = new Buffer(5);
+    buffer.writeUInt8(0xff);
+    buffer.writeUInt8(0x4b);
+    buffer.writeUInt8(0x04); // remove single rule
+    buffer.writeUInt8(rule_index);
+    buffer.writeUInt8(0x00);
+    return buffer.toBytes();
+}
+
+/**
+ * query rule config
+ * @since hardware_version>=v2.0, firmware_version>=v2.1
+ * @deprecated hardware_version>=v4.0, firmware_version>=v1.1
+ * @param {object} query_rule_config
+ * @param {number} query_rule_config.rule_1 values: (0: no, 1: yes)
+ * @param {number} query_rule_config.rule_2 values: (0: no, 1: yes)
+ * @param {number} query_rule_config.rule_x values: (0: no, 1: yes)
+ * @param {number} query_rule_config.rule_16 values: (0: no, 1: yes)
+ */
+function queryRuleConfig(query_rule_config) {
+    var yes_no_map = { 0: "no", 1: "yes" };
+    var yes_no_values = getValues(yes_no_map);
+
+    var data = [];
+    var rule_offset = { rule_1: 1, rule_2: 2, rule_3: 3, rule_4: 4, rule_5: 5, rule_6: 6, rule_7: 7, rule_8: 8, rule_9: 9, rule_10: 10, rule_11: 11, rule_12: 12, rule_13: 13, rule_14: 14, rule_15: 15, rule_16: 16 };
+    for (var key in rule_offset) {
+        if (key in query_rule_config) {
+            if (yes_no_values.indexOf(query_rule_config[key]) === -1) {
+                throw new Error("query_rule_config." + key + " must be one of " + yes_no_values.join(", "));
+            }
+            if (getValue(yes_no_map, query_rule_config[key]) === 0) {
+                continue;
+            }
+            data = data.concat([0xff, 0x4c, rule_offset[key]]);
+        }
+    }
+
+    return data;
+}
+
+/**
+ * set rule config
+ * @since hardware_version>=v2.0, firmware_version>=v2.1
+ * @deprecated hardware_version>=v4.0, firmware_version>=v1.1
+ * @param {object} rule_config
+ * @param {number} rule_config.id
+ * @param {number} rule_config.enable values: (0: disable, 1: enable)
+ * @param {number} rule_config.valve_status values: (0: open, 1: close)
+ * @param {number} rule_config.valve_1_enable values: (0: disable, 1: enable)
+ * @param {number} rule_config.valve_2_enable values: (0: disable, 1: enable)
+ * @param {object} rule_config.week_cycle
+ * @param {number} rule_config.week_cycle.monday values: (0: disable, 1: enable)
+ * @param {number} rule_config.week_cycle.tuesday values: (0: disable, 1: enable)
+ * @param {number} rule_config.week_cycle.wednesday values: (0: disable, 1: enable)
+ * @param {number} rule_config.week_cycle.thursday values: (0: disable, 1: enable)
+ * @param {number} rule_config.week_cycle.friday values: (0: disable, 1: enable)
+ * @param {number} rule_config.week_cycle.saturday values: (0: disable, 1: enable)
+ * @param {number} rule_config.week_cycle.sunday values: (0: disable, 1: enable)
+ * @param {number} rule_config.start_hour range: [0, 24]
+ * @param {number} rule_config.start_min range: [0, 59]
+ * @param {number} rule_config.end_hour range: [0, 24]
+ * @param {number} rule_config.end_min range: [0, 59]
+ * @param {number} rule_config.valve_pulse range: [0, 65535]
+ * @example { "rules_config": { "id": 1, "enable": 1, "valve_status": 0, "valve_1_enable": 1, "valve_2_enable": 1, "week_cycle": { "monday": 1, "tuesday": 1, "wednesday": 1, "thursday": 1, "friday": 1, "saturday": 1, "sunday": 1 }, "start_hour": 10, "start_min": 0, "end_hour": 18, "end_min": 0, "valve_pulse": 100 } }
+ */
+function setRuleConfig(rule_config) {
+    var id = rule_config.id;
+    var enable = rule_config.enable;
+    var valve_status = rule_config.valve_status;
+    var valve_1_enable = rule_config.valve_1_enable;
+    var valve_2_enable = rule_config.valve_2_enable;
+    var week_cycle = rule_config.week_cycle;
+    var start_hour = rule_config.start_hour;
+    var start_min = rule_config.start_min;
+    var end_hour = rule_config.end_hour;
+    var end_min = rule_config.end_min;
+    var valve_pulse = rule_config.valve_pulse;
+
+    var enable_map = { 0: "disable", 1: "enable" };
+    var enable_values = getValues(enable_map);
+    var status_map = { 0: "open", 1: "close" };
+    var status_values = getValues(status_map);
+    if (id < 1 || id > 16) {
+        throw new Error("rules_config._item.id must be in the range of 1 to 16");
+    }
+    if (enable_values.indexOf(enable) === -1) {
+        throw new Error("rules_config._item.enable must be one of " + enable_values.join(", "));
+    }
+    if (status_values.indexOf(valve_status) === -1) {
+        throw new Error("rules_config._item.valve_status must be one of " + status_values.join(", "));
+    }
+    if (enable_values.indexOf(valve_1_enable) === -1) {
+        throw new Error("rules_config._item.valve_1_enable must be one of " + enable_values.join(", "));
+    }
+    if (enable_values.indexOf(valve_2_enable) === -1) {
+        throw new Error("rules_config._item.valve_2_enable must be one of " + enable_values.join(", "));
+    }
+    if (start_hour < 0 || start_hour > 24) {
+        throw new Error("rules_config._item.start_hour must be in the range of 0 to 24");
+    }
+    if (start_min < 0 || start_min > 59) {
+        throw new Error("rules_config._item.start_min must be in the range of 0 to 59");
+    }
+    if (end_hour < 0 || end_hour > 24) {
+        throw new Error("rules_config._item.end_hour must be in the range of 0 to 24");
+    }
+    if (end_min < 0 || end_min > 59) {
+        throw new Error("rules_config._item.end_min must be in the range of 0 to 59");
+    }
+
+    var data = 0x00;
+    data |= getValue(enable_map, enable) << 7;
+    data |= getValue(status_map, valve_status) << 6;
+    data |= getValue(enable_map, valve_2_enable) << 1;
+    data |= getValue(enable_map, valve_1_enable) << 0;
+
+    var week_cycle_value = 0x00;
+    var week_offset = { monday: 0, tuesday: 1, wednesday: 2, thursday: 3, friday: 4, saturday: 5, sunday: 6 };
+    for (var key in week_offset) {
+        if (key in week_cycle) {
+            week_cycle_value |= getValue(enable_map, week_cycle[key]) << week_offset[key];
+        }
+    }
+
+    var buffer = new Buffer(11);
+    buffer.writeUInt8(0xff);
+    buffer.writeUInt8(0x4d);
+    buffer.writeUInt8(id);
+    buffer.writeUInt8(data);
+    buffer.writeUInt8(week_cycle_value);
+    buffer.writeUInt8(start_hour);
+    buffer.writeUInt8(start_min);
+    buffer.writeUInt8(end_hour);
+    buffer.writeUInt8(end_min);
+    buffer.writeUInt16LE(valve_pulse);
+    return buffer.toBytes();
+}
+
+/**
+ * set rule config
+ * @since hardware_version>=v4.0, firmware_version>=v1.1
+ * @param {object} rule_config
+ * @param {number} rule_config.id range: [1, 16]
+ * @param {number} rule_config.enable values: (0: disable, 1: enable)
+ * @param {object} rule_config.condition
+ * @param {object} rule_config.action
+ */
+function setNewRuleConfig(rule_config) {
+    var id = rule_config.id;
+    var enable = rule_config.enable;
+    var condition = rule_config.condition;
+    var action = rule_config.action;
+
+    var enable_map = { 0: "disable", 1: "enable" };
+    var enable_values = getValues(enable_map);
+    if (enable_values.indexOf(enable) === -1) {
+        throw new Error("rules_config._item.enable must be one of " + enable_values.join(", "));
+    }
+
+    var buffer = new Buffer(30);
+    buffer.writeUInt8(0xff);
+    buffer.writeUInt8(0x55);
+    buffer.writeUInt8(id); // set rule config
+    buffer.writeUInt8(getValue(enable_map, enable));
+    buffer.writeBytes(encodedRuleCondition(condition));
+    buffer.writeBytes(encodedAction(action));
+    return buffer.toBytes();
+}
+
+/**
+ * rule config condition
+ * @param {object} condition
+ * @param {number} condition.type values: (0: none, 1: time, 2: d2d, 3: time_or_pulse_threshold, 4: pulse_threshold)
+ * @param {number} condition.start_time unit: second
+ * @param {number} condition.end_time unit: second
+ * @param {number} condition.repeat_enable values: (0: disable, 1: enable)
+ * @param {number} condition.repeat_mode values: (0: monthly, 1: daily, 2: weekly)
+ * @param {number} condition.repeat_step
+ * @param {object} condition.repeat_week
+ * @param {number} condition.repeat_week.monday values: (0: disable, 1: enable)
+ * @param {number} condition.repeat_week.tuesday values: (0: disable, 1: enable)
+ * @param {number} condition.repeat_week.wednesday values: (0: disable, 1: enable)
+ * @param {number} condition.repeat_week.thursday values: (0: disable, 1: enable)
+ * @param {number} condition.repeat_week.friday values: (0: disable, 1: enable)
+ * @param {number} condition.repeat_week.saturday values: (0: disable, 1: enable)
+ * @param {number} condition.repeat_week.sunday values: (0: disable, 1: enable)
+ * @param {number} condition.d2d_command
+ * @param {number} condition.valve_index values: (1: valve_1, 2: valve_2)
+ * @param {number} condition.duration unit: min
+ * @param {number} condition.pulse_threshold
+ */
+function encodedRuleCondition(condition) {
+    var enable_map = { 0: "disable", 1: "enable" };
+    var enable_values = getValues(enable_map);
+    var condition_type_map = { 0: "none", 1: "time", 2: "d2d", 3: "time_or_pulse_threshold", 4: "pulse_threshold" };
+    var condition_type_values = getValues(condition_type_map);
+    var repeat_mode_map = { 0: "monthly", 1: "daily", 2: "weekly" };
+    var repeat_mode_values = getValues(repeat_mode_map);
+    var weekday_bit_offset = { monday: 0, tuesday: 1, wednesday: 2, thursday: 3, friday: 4, saturday: 5, sunday: 6 };
+    var weekday_values = getValues(weekday_bit_offset);
+    var valve_strategy_map = { 0: "always", 1: "valve_1_open", 2: "valve_2_open", 3: "valve_1_open_or_valve_2_open" };
+    var valve_strategy_values = getValues(valve_strategy_map);
+    var threshold_condition_type_map = { 0: "none", 1: "below", 2: "above", 3: "between", 4: "outside" };
+    var threshold_condition_type_values = getValues(threshold_condition_type_map);
+
+    if (condition_type_values.indexOf(condition.type) === -1) {
+        throw new Error("rules_config._item.condition.type must be one of " + condition_type_values.join(", "));
+    }
+    var buffer = new Buffer(13);
+    var condition_type_value = getValue(condition_type_map, condition.type);
+    buffer.writeUInt8(condition_type_value);
+    switch (condition_type_value) {
+        case 0x00: // none
+            break;
+        case 0x01: // time condition (start_time, end_time, repeat_enable, repeat_mode, [repeat_step], [repeat_week])
+            if (enable_values.indexOf(condition.repeat_enable) === -1) {
+                throw new Error("rules_config._item.condition.repeat_enable must be one of " + enable_values.join(", "));
+            }
+            if (repeat_mode_values.indexOf(condition.repeat_mode) === -1) {
+                throw new Error("rules_config._item.condition.repeat_mode must be one of " + repeat_mode_values.join(", "));
+            }
+            buffer.writeUInt32LE(condition.start_time);
+            buffer.writeUInt32LE(condition.end_time);
+            buffer.writeUInt8(getValue(enable_map, condition.repeat_enable));
+            var repeat_mode_value = getValue(repeat_mode_map, condition.repeat_mode);
+            buffer.writeUInt8(repeat_mode_value);
+            // repeat mode: monthly or daily
+            if (repeat_mode_value === 0x00 || repeat_mode_value === 0x01) {
+                buffer.writeUInt16LE(condition.repeat_step);
+            }
+            // repeat mode: weekly
+            else if (repeat_mode_value === 0x02) {
+                var weekday_value = 0;
+                for (var key in weekday_bit_offset) {
+                    if (key in condition.repeat_week) {
+                        if (enable_values.indexOf(condition.repeat_week[key]) === -1) {
+                            throw new Error("rules_config._item.repeat_week." + key + " must be one of " + enable_values.join(", "));
+                        }
+                        weekday_value |= getValue(enable_map, condition.repeat_week[key]) << weekday_bit_offset[key];
+                    }
+                }
+                buffer.writeUInt16LE(weekday_value);
+            }
+            break;
+        case 0x02: // d2d condition (d2d_command)
+            buffer.writeD2DCommand(condition.d2d_command, "0000");
+            break;
+        case 0x03: // time or pulse threshold condition (valve_index, duration, pulse_threshold)
+            buffer.writeUInt8(condition.valve_index);
+            buffer.writeUInt16LE(condition.duration);
+            buffer.writeUInt32LE(condition.pulse_threshold);
+            break;
+        case 0x04: // pulse threshold condition (valve_index, pulse_threshold)
+            buffer.writeUInt8(condition.valve_index);
+            buffer.writeUInt32LE(condition.pulse_threshold);
+            break;
+    }
+
+    return buffer.toBytes();
+}
+
+/**
+ * rule config action
+ * @param {object} action
+ * @param {number} action.type values: (0: none, 1: em_valve_control, 2: valve_control, 3: report)
+ * @param {number} action.valve_index values: (1: valve_1, 2: valve_2)
+ * @param {number} action.valve_opening
+ * @param {number} action.time_enable values: (0: disable, 1: enable)
+ * @param {number} action.duration unit: min
+ * @param {number} action.pulse_enable values: (0: disable, 1: enable)
+ * @param {number} action.pulse_threshold
+ * @param {number} action.report_type values: (1: valve_1, 2: valve_2, 3: custom_message)
+ * @param {string} action.report_content
+ * @param {number} action.report_counts
+ * @param {number} action.threshold_release_enable values: (0: disable, 1: enable)
+ * @example { "rules_config": [ { "index": 1, "enable": 1, "condition": { "type": 0 }, "action": { "type": 1, "valve_index": 1, "valve_opening": 1, "time_enable": 1, "duration": 1, "pulse_enable": 1, "pulse_threshold": 1 } }]}
+ */
+function encodedAction(action) {
+    var enable_map = { 0: "disable", 1: "enable" };
+    var enable_values = getValues(enable_map);
+    var action_type_map = { 0: "none", 1: "em_valve_control", 2: "valve_control", 3: "report" };
+    var action_type_values = getValues(action_type_map);
+    var report_type_map = { 1: "valve_1", 2: "valve_2", 3: "custom_message" };
+    var report_type_values = getValues(report_type_map);
+
+    var buffer = new Buffer(13);
+    var action_type_value = getValue(action_type_map, action.type);
+    buffer.writeUInt8(action_type_value);
+    switch (action_type_value) {
+        case 0x00: // none
+            break;
+        case 0x01: // em valve control (interrupt current execution task)
+            if (enable_values.indexOf(action.time_enable) === -1) {
+                throw new Error("rules_config._item.action.time_enable must be one of " + enable_values.join(", "));
+            }
+            if (enable_values.indexOf(action.pulse_enable) === -1) {
+                throw new Error("rules_config._item.action.pulse_enable must be one of " + enable_values.join(", "));
+            }
+            buffer.writeUInt8(action.valve_index);
+            buffer.writeUInt8(action.valve_opening);
+            buffer.writeUInt8(getValue(enable_map, action.time_enable));
+            buffer.writeUInt32LE(action.duration);
+            buffer.writeUInt8(getValue(enable_map, action.pulse_enable));
+            buffer.writeUInt32LE(action.pulse_threshold);
+            break;
+        case 0x02: // general valve control
+            if (enable_values.indexOf(action.time_enable) === -1) {
+                throw new Error("rules_config._item.action.time_enable must be one of " + enable_values.join(", "));
+            }
+            if (enable_values.indexOf(action.pulse_enable) === -1) {
+                throw new Error("rules_config._item.action.pulse_enable must be one of " + enable_values.join(", "));
+            }
+            buffer.writeUInt8(action.valve_index);
+            buffer.writeUInt8(action.valve_opening);
+            buffer.writeUInt8(getValue(enable_map, action.time_enable));
+            buffer.writeUInt32LE(action.duration);
+            buffer.writeUInt8(getValue(enable_map, action.pulse_enable));
+            buffer.writeUInt32LE(action.pulse_threshold);
+            break;
+        case 0x03: // report
+            if (report_type_values.indexOf(action.report_type) === -1) {
+                throw new Error("rules_config._item.action.report_type must be one of " + report_type_values.join(", "));
+            }
+            buffer.writeUInt8(getValue(report_type_map, action.report_type));
+            buffer.writeAscii(action.report_content, 8);
+            break;
+    }
+    return buffer.toBytes();
+}
+
+/**
+ * clear valve pulse
+ * @param {number} valve_index values: (1: valve 1, 2: valve 2)
+ * @param {number} clear_valve_pulse values: (0: no, 1: yes)
+ * @example { "clear_valve_1_pulse": 1 }
+ * @example { "clear_valve_2_pulse": 1 }
+ */
+function clearValvePulse(valve_index, clear_valve_pulse) {
+    var yes_no_map = { 0: "no", 1: "yes" };
+    var yes_no_values = getValues(yes_no_map);
+    if (yes_no_values.indexOf(clear_valve_pulse) === -1) {
+        throw new Error("clear_valve_pulse must be one of " + yes_no_values.join(", "));
+    }
+
+    if (getValue(yes_no_map, clear_valve_pulse) === 0) {
+        return [];
+    }
+    return [0xff, 0x4e, valve_index, 0x00];
+}
+
+/**
  * set pulse filter config
  * @since hardware_version>=v4.0, firmware_version>=v1.1
  * @param {object} pulse_filter_config
@@ -549,6 +1110,102 @@ function setPressureCalibration(pressure_calibration) {
     return buffer.toBytes();
 }
 
+/**
+ * history enable
+ * @since hardware_version>=v3.0, firmware_version>=v3.1
+ * @param {number} history_enable values: (0: disable, 1: enable)
+ * @example { "history_enable": 1 }
+ */
+function setHistoryEnable(history_enable) {
+    var enable_map = { 0: "disable", 1: "enable" };
+    var enable_values = getValues(enable_map);
+    if (enable_values.indexOf(history_enable) === -1) {
+        throw new Error("history_enable must be one of " + enable_values.join(", "));
+    }
+
+    var buffer = new Buffer(3);
+    buffer.writeUInt8(0xff);
+    buffer.writeUInt8(0x68);
+    buffer.writeUInt8(getValue(enable_map, history_enable));
+    return buffer.toBytes();
+}
+
+/**
+ * clear history
+ * @since hardware_version>=v3.0, firmware_version>=v3.1
+ * @param {number} clear_history values:(0: no, 1: yes)
+ * @example { "clear_history": 1 }
+ */
+function clearHistory(clear_history) {
+    var yes_no_map = { 0: "no", 1: "yes" };
+    var yes_no_values = getValues(yes_no_map);
+    if (yes_no_values.indexOf(clear_history) === -1) {
+        throw new Error("clear_history must be one of " + yes_no_values.join(", "));
+    }
+
+    if (getValue(yes_no_map, clear_history) === 0) {
+        return [];
+    }
+    return [0xff, 0x27, 0xff];
+}
+
+
+/**
+ * fetch history
+ * @param {object} fetch_history
+ * @param {number} fetch_history.start_time
+ * @param {number} fetch_history.end_time
+ * @example { "fetch_history": { "start_time": 1609459200, "end_time": 1609545600 } }
+ */
+function fetchHistory(fetch_history) {
+    var start_time = fetch_history.start_time;
+    var end_time = fetch_history.end_time;
+
+    if (typeof start_time !== "number") {
+        throw new Error("start_time must be a number");
+    }
+    if (end_time && typeof end_time !== "number") {
+        throw new Error("end_time must be a number");
+    }
+    if (end_time && start_time > end_time) {
+        throw new Error("start_time must be less than end_time");
+    }
+
+    var buffer;
+    if (end_time === 0) {
+        buffer = new Buffer(6);
+        buffer.writeUInt8(0xfd);
+        buffer.writeUInt8(0x6b);
+        buffer.writeUInt32LE(start_time);
+    } else {
+        buffer = new Buffer(10);
+        buffer.writeUInt8(0xfd);
+        buffer.writeUInt8(0x6c);
+        buffer.writeUInt32LE(start_time);
+        buffer.writeUInt32LE(end_time);
+    }
+
+    return buffer.toBytes();
+}
+
+/**
+ * history stop transmit
+ * @param {number} stop_transmit values: (0: no, 1: yes)
+ * @example { "stop_transmit": 1 }
+ */
+function stopTransmit(stop_transmit) {
+    var yes_no_map = { 0: "no", 1: "yes" };
+    var stop_transmit_values = getValues(yes_no_map);
+    if (stop_transmit_values.indexOf(stop_transmit) === -1) {
+        throw new Error("stop_transmit must be one of " + stop_transmit_values.join(", "));
+    }
+
+    if (getValue(yes_no_map, stop_transmit) === 0) {
+        return [];
+    }
+    return [0xfd, 0x6d, 0xff];
+}
+
 function getValues(map) {
     var values = [];
     if (RAW_VALUE) {
@@ -568,7 +1225,7 @@ function getValue(map, value) {
 
     for (var key in map) {
         if (map[key] === value) {
-            return key;
+            return parseInt(key);
         }
     }
 
@@ -585,9 +1242,10 @@ function Buffer(size) {
 }
 
 Buffer.prototype._write = function (value, byteLength, isLittleEndian) {
+    var offset = 0;
     for (var index = 0; index < byteLength; index++) {
-        var shift = isLittleEndian ? index << 3 : (byteLength - 1 - index) << 3;
-        this.buffer[this.offset + index] = (value & (0xff << shift)) >> shift;
+        offset = isLittleEndian ? index << 3 : (byteLength - 1 - index) << 3;
+        this.buffer[this.offset + index] = (value >> offset) & 0xff;
     }
 };
 
@@ -611,6 +1269,16 @@ Buffer.prototype.writeInt16LE = function (value) {
     this.offset += 2;
 };
 
+Buffer.prototype.writeUInt24LE = function (value) {
+    this._write(value, 3, true);
+    this.offset += 3;
+};
+
+Buffer.prototype.writeInt24LE = function (value) {
+    this._write(value < 0 ? value + 0x1000000 : value, 3, true);
+    this.offset += 3;
+};
+
 Buffer.prototype.writeUInt32LE = function (value) {
     this._write(value, 4, true);
     this.offset += 4;
@@ -626,6 +1294,29 @@ Buffer.prototype.writeBytes = function (bytes) {
         this.buffer[this.offset + i] = bytes[i];
     }
     this.offset += bytes.length;
+};
+
+Buffer.prototype.writeAscii = function (value, maxLength) {
+    for (let i = 0; i < maxLength; i++) {
+        if (i < value.length) {
+            this.buffer[this.offset + i] = value.charCodeAt(i);
+        } else {
+            this.buffer[this.offset + i] = 0;
+        }
+    }
+    this.offset += maxLength;
+};
+
+Buffer.prototype.writeD2DCommand = function (value, defaultValue) {
+    if (typeof value !== "string") {
+        value = defaultValue;
+    }
+    if (value.length !== 4) {
+        throw new Error("d2d_cmd length must be 4");
+    }
+    this.buffer[this.offset] = parseInt(value.substr(2, 2), 16);
+    this.buffer[this.offset + 1] = parseInt(value.substr(0, 2), 16);
+    this.offset += 2;
 };
 
 Buffer.prototype.toBytes = function () {
