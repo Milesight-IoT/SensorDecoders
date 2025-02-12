@@ -331,7 +331,7 @@ function handle_downlink_response_ext(code, channel_type, bytes, offset) {
             var valve_index = ((data >> 7) & 0x01) + 1;
             var valve_index_name = "valve_" + valve_index + "_config";
             decoded[valve_index_name] = {};
-            decoded[valve_index_name].type = readValveType((data >> 6) & 0x01);
+            decoded[valve_index_name].valve_type = readValveType((data >> 6) & 0x01);
             decoded[valve_index_name].auto_calibration_enable = readEnableStatus((data >> 5) & 0x01);
             decoded[valve_index_name].report_after_calibration_enable = readEnableStatus((data >> 4) & 0x01);
             decoded[valve_index_name].stall_strategy = readStallStrategy((data >> 3) & 0x01);
@@ -340,8 +340,9 @@ function handle_downlink_response_ext(code, channel_type, bytes, offset) {
             decoded[valve_index_name].stall_current = readUInt16LE(bytes.slice(offset + 3, offset + 5));
             decoded[valve_index_name].stall_time = readUInt16LE(bytes.slice(offset + 5, offset + 7));
             decoded[valve_index_name].protect_time = bytes[offset + 7];
-            decoded[valve_index_name].delay_time = bytes[offset + 8];
-            offset += 9;
+            decoded[valve_index_name].close_delay_time = bytes[offset + 8];
+            decoded[valve_index_name].open_delay_time = bytes[offset + 9];
+            offset += 10;
             break;
         case 0x19:
             var data = readUInt8(bytes[offset]);
@@ -524,6 +525,11 @@ function readGPIOStatus(status) {
     return getValue(status_map, status);
 }
 
+function readGPIOType(type) {
+    var type_map = { 0: "counter", 1: "feedback" };
+    return getValue(type_map, type);
+}
+
 function readSourceType(bytes) {
     var source_map = {
         0: "every change",
@@ -548,7 +554,7 @@ function readCalibrationResult(status) {
 }
 
 function readValveType(type) {
-    var type_map = { 0: "2-way ball valve", 1: "3-way ball valve" };
+    var type_map = { 0: "2_way_ball_valve", 1: "3_way_ball_valve" };
     return getValue(type_map, type);
 }
 

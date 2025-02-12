@@ -220,7 +220,8 @@ function setCollectionInterval(index, collection_interval) {
     if (enable_values.indexOf(enable) === -1) {
         throw new Error("pressure_" + index + "_collection_interval.enable must be one of " + enable_values.join(", "));
     }
-    if (interval < 10 || interval > 64800) {
+    var enable_value = getValue(enable_map, enable);
+    if (enable_value == 1 && (interval < 10 || interval > 64800)) {
         throw new Error("pressure_" + index + "_collection_interval.collection_interval must be in range [10, 64800]");
     }
 
@@ -228,7 +229,7 @@ function setCollectionInterval(index, collection_interval) {
     buffer.writeUInt8(0xf9);
     buffer.writeUInt8(0x68);
     buffer.writeUInt8(index);
-    buffer.writeUInt8(getValue(enable_map, enable));
+    buffer.writeUInt8(enable_value);
     buffer.writeUInt16LE(interval);
     return buffer.toBytes();
 }
@@ -357,7 +358,7 @@ function clearValvePulse(valve_index, clear_valve_pulse) {
  * set valve config
  * @param {number} valve_index values: (0: valve 1, 1: valve 2)
  * @param {object} valve_config
- * @param {number} valve_config.type values: (0: 2-way ball valve, 1: 3-way ball valve)
+ * @param {number} valve_config.valve_type values: (0: 2-way ball valve, 1: 3-way ball valve)
  * @param {number} valve_config.auto_calibration_enable values: (0: disable, 1: enable)
  * @param {number} valve_config.report_after_calibration_enable values: (0: disable, 1: enable)
  * @param {number} valve_config.stall_strategy values: (0: close, 1: keep)
@@ -366,11 +367,12 @@ function clearValvePulse(valve_index, clear_valve_pulse) {
  * @param {number} valve_config.stall_current unit: mA
  * @param {number} valve_config.stall_time unit: ms
  * @param {number} valve_config.protect_time unit: second
- * @param {number} valve_config.delay_time unit: second
- * @example { "valve_1_config": { "type": 0, "auto_calibration_enable": 1, "report_after_calibration_enable": 1, "stall_strategy": 1, "open_time_1": 10, "open_time_2": 10, "stall_current": 100, "stall_time": 10, "protect_time": 10, "delay_time": 10 } }
+ * @param {number} valve_config.close_delay_time unit: second
+ * @param {number} valve_config.open_delay_time unit: second
+ * @example { "valve_1_config": { "valve_type": 0, "auto_calibration_enable": 1, "report_after_calibration_enable": 1, "stall_strategy": 1, "open_time_1": 10, "open_time_2": 10, "stall_current": 100, "stall_time": 10, "protect_time": 10, "delay_time": 10 } }
  */
 function setValveConfig(valve_index, valve_config) {
-    var type = valve_config.type;
+    var type = valve_config.valve_type;
     var auto_calibration_enable = valve_config.auto_calibration_enable;
     var report_after_calibration_enable = valve_config.report_after_calibration_enable;
     var stall_strategy = valve_config.stall_strategy;
@@ -379,20 +381,21 @@ function setValveConfig(valve_index, valve_config) {
     var stall_current = valve_config.stall_current;
     var stall_time = valve_config.stall_time;
     var protect_time = valve_config.protect_time;
-    var delay_time = valve_config.delay_time;
+    var close_delay_time = valve_config.close_delay_time;
+    var open_delay_time = valve_config.open_delay_time;
 
-    var type_map = { 0: "2-way ball valve", 1: "3-way ball valve" };
+    var type_map = { 0: "2_way_ball_valve", 1: "3_way_ball_valve" };
     var enable_map = { 0: "disable", 1: "enable" };
     var stall_strategy_map = { 0: "close", 1: "keep" };
 
     var data = 0;
-    data |= valve_index << 7;
+    data |= (valve_index - 1) << 7;
     data |= getValue(type_map, type) << 6;
     data |= getValue(enable_map, auto_calibration_enable) << 5;
     data |= getValue(enable_map, report_after_calibration_enable) << 4;
     data |= getValue(stall_strategy_map, stall_strategy) << 3;
 
-    var buffer = new Buffer(11);
+    var buffer = new Buffer(12);
     buffer.writeUInt8(0xf9);
     buffer.writeUInt8(0x1a);
     buffer.writeUInt8(data);
@@ -401,7 +404,8 @@ function setValveConfig(valve_index, valve_config) {
     buffer.writeUInt16LE(stall_current);
     buffer.writeUInt16LE(stall_time);
     buffer.writeUInt8(protect_time);
-    buffer.writeUInt8(delay_time);
+    buffer.writeUInt8(close_delay_time);
+    buffer.writeUInt8(open_delay_time);
     return buffer.toBytes();
 }
 
@@ -1104,9 +1108,10 @@ function Buffer(size) {
 }
 
 Buffer.prototype._write = function (value, byteLength, isLittleEndian) {
+    var offset = 0;
     for (var index = 0; index < byteLength; index++) {
-        var shift = isLittleEndian ? index << 3 : (byteLength - 1 - index) << 3;
-        this.buffer[this.offset + index] = (value & (0xff << shift)) >> shift;
+        offset = isLittleEndian ? index << 3 : (byteLength - 1 - index) << 3;
+        this.buffer[this.offset + index] = (value >> offset) & 0xff;
     }
 };
 
