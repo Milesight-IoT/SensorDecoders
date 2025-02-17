@@ -24,7 +24,7 @@ function Decoder(bytes, port) {
 function milesightDeviceDecode(bytes) {
     var decoded = {};
 
-    for (var i = 0; i < bytes.length; ) {
+    for (var i = 0; i < bytes.length;) {
         var channel_id = bytes[i++];
         var channel_type = bytes[i++];
 
@@ -46,6 +46,7 @@ function milesightDeviceDecode(bytes) {
             var template_name = "template_" + template_id;
             decoded[template_name] = decoded[template_name] || {};
             var block_name;
+            var block_length;
             if (block_id < 10) {
                 block_name = "text_" + (block_id + 1);
                 block_length = bytes[i++];
@@ -84,7 +85,7 @@ function decodeUtf8(bytes) {
             byte2 = bytes[i++];
             byte3 = bytes[i++];
             byte4 = bytes[i++];
-            codepoint = ((byte1 & 0x07) << 18) | ((byte2 & 0x3f) << 12) | ((byte3 & 0x3f) << 6) | (byte4 & 0x3f);
+            var codepoint = ((byte1 & 0x07) << 18) | ((byte2 & 0x3f) << 12) | ((byte3 & 0x3f) << 6) | (byte4 & 0x3f);
             codepoint -= 0x10000;
             str += String.fromCharCode((codepoint >> 10) + 0xd800);
             str += String.fromCharCode((codepoint & 0x3ff) + 0xdc00);
