@@ -633,7 +633,7 @@ function queryValveConfig(query_valve_config) {
  * @param {object} pressure_config
  * @param {number} pressure_x_config.enable values: (0: disable, 1: enable)
  * @param {number} pressure_x_config.collection_interval unit: ms, range: [10, 64800]
- * @param {number} pressure_x_config.display_unit values: (0: kPa, 1: Bar, 2: mPa)
+ * @param {number} pressure_x_config.display_unit values: (0: kPa, 1: Bar, 2: MPa)
  * @param {number} pressure_x_config.mode values: (0: standard, 1: custom)
  * @param {number} pressure_x_config.signal_type values: (0: voltage, 1: current)
  * @param {number} pressure_x_config.osl unit: (mV, uA), current_range: [4000, 20000], voltage_range: [0, 10000]
@@ -657,13 +657,13 @@ function setPressureConfig(index, pressure_config) {
 
     var enable_map = { 0: "disable", 1: "enable" };
     var enable_values = getValues(enable_map);
-    if (enable_values.indexOf(pressure_config) === -1) {
-        throw new Error("pressure_" + index + "_config must be one of " + enable_values.join(", "));
+    if (enable_values.indexOf(enable) === -1) {
+        throw new Error("pressure_" + index + "_config.enable must be one of " + enable_values.join(", "));
     }
     if (collection_interval < 10 || collection_interval > 64800) {
         throw new Error("pressure_" + index + "_config.collection_interval must be in range [10, 64800]");
     }
-    var unit_map = { 0: "kPa", 1: "Bar", 2: "mPa" };
+    var unit_map = { 0: "kPa", 1: "Bar", 2: "MPa" };
     var unit_values = getValues(unit_map);
     if (unit_values.indexOf(display_unit) === -1) {
         throw new Error("pressure_" + index + "_config.display_unit must be one of " + unit_values.join(", "));

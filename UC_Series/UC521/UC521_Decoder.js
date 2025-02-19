@@ -395,7 +395,7 @@ function handle_downlink_response_ext(code, channel_type, bytes, offset) {
             decoded.query_valve_opening_duration = decoded.query_valve_opening_duration || {};
             var valve_index = readUInt8(bytes[offset]);
             var valve_index_name = "valve_" + valve_index;
-            decoded[valve_index_name] = readYesNo(1);
+            decoded.query_valve_opening_duration[valve_index_name] = readYesNo(1);
             offset += 1;
             break;
         case 0x71:
@@ -726,7 +726,7 @@ function readReportType(report_type_value) {
 }
 
 function readPressureDisplayUnit(unit_value) {
-    var unit_map = { 0: "kPa", 1: "Bar", 2: "mPa" };
+    var unit_map = { 0: "kPa", 1: "Bar", 2: "MPa" };
     return getValue(unit_map, unit_value);
 }
 
