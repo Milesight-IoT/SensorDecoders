@@ -80,6 +80,12 @@ function milesightDeviceEncode(payload) {
     if ("multicast_config" in payload) {
         encoded = encoded.concat(setMulticastConfig(payload.multicast_config));
     }
+    if ("template_1_config" in payload) {
+        encoded = encoded.concat(setTemplateConfig(0, payload.template_1_config));
+    }
+    if ("template_2_config" in payload) {
+        encoded = encoded.concat(setTemplateConfig(1, payload.template_2_config));
+    }
 
     return encoded;
 }
@@ -471,6 +477,173 @@ function encodeContent(template_id, content_id, content) {
     buffer.writeUInt8(data);
     buffer.writeUInt8(bytes.length);
     buffer.writeBytes(bytes);
+    return buffer.toBytes();
+}
+
+/**
+ * set template
+ * @param {number} template_id values: (0: template_1, 1: template_2)
+ * @param {object} template_config
+ * @param {object} template_config.text_1 text_1 config
+ * @param {number} template_config.text_1.enable enable values: (0: disable, 1: enable)
+ * @param {number} template_config.text_1.type type values: (0: text, 1: qrcode, 2: image, 3: battery_status, 4: connect_status)
+ * @param {number} template_config.text_1.start_x start_x
+ * @param {number} template_config.text_1.start_y start_y
+ * @param {number} template_config.text_1.end_x end_x
+ * @param {number} template_config.text_1.end_y end_y
+ * @param {number} template_config.text_1.border border values: (0: no, 1: yes)
+ * @param {number} template_config.text_1.horizontal horizontal values: (0: left, 1: center, 2: right)
+ * @param {number} template_config.text_1.vertical vertical values: (0: top, 1: center, 2: bottom)
+ * @param {number} template_config.text_1.background background values: (0: white, 1: black, 2: red)
+ * @param {number} template_config.text_1.foreground foreground values: (0: white, 1: black, 2: red)
+ * @param {number} template_config.text_1.layer layer
+ * @param {number} template_config.text_1.font_type font type, values: (1: SONG, 2: FANG, 3: BLACK, 4: KAI, 5: FT_ASCII, 6: DZ_ASCII, 7: CH_ASCII, 8: BX_ASCII, 9: BZ_ASCII, 10: FX_ASCII, 11: GD_ASCII, 12: HZ_ASCII, 13: MS_ASCII, 14: SX_ASCII, 15: ZY_ASCII, 16: TM_ASCII, 17: YJ_LATIN, 18: CYRILLIC, 19: KSC5601, 20: JIS0208_HT, 21: ARABIC, 22: THAI, 23: GREEK, 24: HEBREW)
+ * @param {number} template_config.text_1.font_size font size, values: (16, 24, 32, 40, 48, 56, 64, 72, 80, 88, 96, 104, 112, 120, 128, 136, 144, 152, 160, 168, 176, 184, 192)
+ * @param {number} template_config.text_1.wrap wrap values: (0: disable, 1: enable)
+ * @param {number} template_config.text_1.font_style font style values: (0: normal, 1: bold)
+ * @example { "template_1_config": { "text_1": { "enable": 1, "type": "text", "start_x": 0, "start_y": 0, "end_x": 100, "end_y": 100, "border": 0, "horizontal": 0, "vertical": 0, "background": 0, "foreground": 0, "layer": 1, "font_type": 1, "font_size": 16, "wrap": 1, "font_style": 1 } } }
+ */
+function setTemplateConfig(template_id, template_config) {
+    var template_values = [0, 1];
+    if (template_values.indexOf(template_id) === -1) {
+        throw new Error("template_id must be one of " + template_values.join(", "));
+    }
+
+    var text_block_offset = { text_1: 0, text_2: 1, text_3: 2, text_4: 3, text_5: 4, text_6: 5, text_7: 6, text_8: 7, text_9: 8, text_10: 9 };
+    var qrcode_offset = { qrcode: 10 };
+    var image_block_offset = { image_1: 11, image_2: 12 };
+    var battery_status_offset = { battery_status: 13 };
+    var connect_status_offset = { connect_status: 14 };
+
+    var data = [];
+    for (var key in template_config) {
+        var ctl = 0x00;
+        ctl |= template_id << 6;
+        ctl |= text_block_offset[key];
+
+        if (key in text_block_offset) {
+            data = data.concat([0xFB, 0x03, ctl, 25]);
+            data = data.concat(encodedBasicBlock(template_id, text_block_offset[key], key, template_config[key]));
+            data = data.concat(encodeFont(template_config[key].font_type, template_config[key].font_size, template_config[key].wrap, template_config[key].font_style));
+        }
+        if (key in qrcode_offset) {
+            data = data.concat([0xFB, 0x03, ctl, 22]);
+            data = data.concat(encodedBasicBlock(template_id, qrcode_offset[key], key, template_config[key]));
+            data = data.concat([0x00]); // default qrcode codec
+        }
+        if (key in image_block_offset) {
+            data = data.concat([0xFB, 0x03, ctl, 22]);
+            data = data.concat(encodedBasicBlock(template_id, image_block_offset[key], key, template_config[key]));
+            data = data.concat([0x00]); // default image codec (lzss)
+        }
+        if (key in battery_status_offset) {
+            data = data.concat([0xFB, 0x03, ctl, 21]);
+            data = data.concat(encodedBasicBlock(template_id, battery_status_offset[key], key, template_config[key]));
+        }
+        if (key in connect_status_offset) {
+            data = data.concat([0xFB, 0x03, ctl, 21]);
+            data = data.concat(encodedBasicBlock(template_id, connect_status_offset[key], key, template_config[key]));
+        }
+    }
+
+    return data;
+}
+
+function encodedBasicBlock(template_id, block_id, block_name, config) {
+    var enable = config.enable;
+    var type = config.type;
+    var start_x = config.start_x;
+    var start_y = config.start_y;
+    var end_x = config.end_x;
+    var end_y = config.end_y;
+    var border = config.border;
+    var horizontal = config.horizontal;
+    var vertical = config.vertical;
+    var background = config.background;
+    var foreground = config.foreground;
+    var layer = config.layer;
+
+    var enable_map = { 0: "disable", 1: "enable" };
+    var enable_values = getValues(enable_map);
+    var data_type_map = { 0: "text", 1: "qrcode", 2: "image", 3: "battery_status", 4: "connect_status" };
+    var data_type_values = getValues(data_type_map);
+    var border_type_map = { 0: "no", 1: "yes" };
+    var border_type_values = getValues(border_type_map);
+    var horizontal_map = { 0: "left", 1: "center", 2: "right" };
+    var horizontal_values = getValues(horizontal_map);
+    var vertical_map = { 0: "top", 1: "center", 2: "bottom" };
+    var vertical_values = getValues(vertical_map);
+    var color_map = { 0: "white", 1: "black", 2: "red" };
+    var color_values = getValues(color_map);
+
+    if (enable_values.indexOf(enable) === -1) {
+        throw new Error("template_" + template_id + "_config." + block_name + ".enable must be one of " + enable_values.join(", "));
+    }
+    if (data_type_values.indexOf(type) === -1) {
+        throw new Error("template_" + template_id + "_config." + block_name + ".type must be one of " + data_type_values.join(", "));
+    }
+    if (border_type_values.indexOf(border) === -1) {
+        throw new Error("template_" + template_id + "_config." + block_name + ".border must be one of " + border_type_values.join(", "));
+    }
+    if (horizontal_values.indexOf(horizontal) === -1) {
+        throw new Error("template_" + template_id + "_config." + block_name + ".horizontal must be one of " + horizontal_values.join(", "));
+    }
+    if (vertical_values.indexOf(vertical) === -1) {
+        throw new Error("template_" + template_id + "_config." + block_name + ".vertical must be one of " + vertical_values.join(", "));
+    }
+    if (color_values.indexOf(background) === -1) {
+        throw new Error("template_" + template_id + "_config." + block_name + ".background must be one of " + color_values.join(", "));
+    }
+    if (color_values.indexOf(foreground) === -1) {
+        throw new Error("template_" + template_id + "_config." + block_name + ".foreground must be one of " + color_values.join(", "));
+    }
+    if (layer < 0 || layer > 255) {
+        throw new Error("template_" + template_id + "_config." + block_name + ".layer must be between 0 and 255");
+    }
+
+    var buffer = new Buffer(21);
+    buffer.writeUInt8(getValue(enable_map, enable));
+    buffer.writeUInt8(getValue(data_type_map, type));
+    buffer.writeUInt16LE(start_x);
+    buffer.writeUInt16LE(start_y);
+    buffer.writeUInt16LE(end_x);
+    buffer.writeUInt16LE(end_y);
+    buffer.writeUInt8(getValue(border_type_map, border));
+    buffer.writeUInt8(getValue(horizontal_map, horizontal));
+    buffer.writeUInt8(getValue(vertical_map, vertical));
+    buffer.writeUInt8(getValue(color_map, background));
+    buffer.writeUInt8(getValue(color_map, foreground));
+    buffer.writeUInt8(0x00);
+    buffer.writeUInt8(layer);
+    buffer.writeUInt32LE(0x00);
+    return buffer.toBytes();
+}
+
+/**
+ * encode font
+ * @param {number} font_type font type, values: (1: SONG, 2: FANG, 3: BLACK, 4: KAI, 5: FT_ASCII, 6: DZ_ASCII, 7: CH_ASCII, 8: BX_ASCII, 9: BZ_ASCII, 10: FX_ASCII, 11: GD_ASCII, 12: HZ_ASCII, 13: MS_ASCII, 14: SX_ASCII, 15: ZY_ASCII, 16: TM_ASCII, 17: YJ_LATIN, 18: CYRILLIC, 19: KSC5601, 20: JIS0208_HT, 21: ARABIC, 22: THAI, 23: GREEK, 24: HEBREW)
+ * @param {number} font_size font size, values: (16, 24, 32, 40, 48, 56, 64, 72, 80, 88, 96, 104, 112, 120, 128, 136, 144, 152, 160, 168, 176, 184, 192)
+ * @param {number} wrap wrap values: (0: disable, 1: enable)
+ * @param {number} font_style font style values: (0: normal, 1: bold)
+ * @example { "font_type": 1, "font_size": 16, "wrap": 1, "font_style": 1 }
+ */
+function encodeFont(font_type, font_size, wrap, font_style) {
+    var enable_map = { 0: "disable", 1: "enable" };
+    var enable_values = getValues(enable_map);
+    var style_map = { 0: "normal", 1: "bold" };
+    var style_values = getValues(style_map);
+
+    if (enable_values.indexOf(wrap) === -1) {
+        throw new Error("wrap must be one of " + enable_values.join(", "));
+    }
+    if (style_values.indexOf(font_style) === -1) {
+        throw new Error("font_style must be one of " + style_values.join(", "));
+    }
+    var buffer = new Buffer(4);
+    buffer.writeUInt8(font_type);
+    buffer.writeUInt8(font_size);
+    buffer.writeUInt8(getValue(enable_map, wrap));
+    buffer.writeUInt8(getValue(style_map, font_style));
     return buffer.toBytes();
 }
 

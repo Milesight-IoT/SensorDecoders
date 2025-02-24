@@ -71,6 +71,21 @@ function milesightDeviceDecode(bytes) {
                 i += block_length;
             }
         }
+        // TEMPLATE CONFIG
+        else if (channel_id === 0xfb && channel_type === 0x03) {
+            var data = bytes[i];
+            var data_length = bytes[i + 1];
+
+            var template_id = (data >> 6) + 1;
+            var block_id = data & 0x3f;
+            var template_name = "template_" + template_id + "_config";
+            var block_offset = { 0: "text_1", 1: "text_2", 2: "text_3", 3: "text_4", 4: "text_5", 5: "text_6", 6: "text_7", 7: "text_8", 8: "text_9", 9: "text_10", 10: "qrcode", 11: "image_1", 12: "image_2", 13: "battery_status", 14: "connect_status" };
+            var block_name = block_offset[block_id];
+
+            decoded[template_name] = decoded[template_name] || {};
+            decoded[template_name][block_name] = readBlockConfig(block_id, bytes.slice(i + 2, i + 2 + data_length));
+            i += data_length;
+        }
         // UPDATE CONTENT RESULT
         else if (channel_id === 0xfa && channel_type === 0x01) {
             var data = readUInt8(bytes[i]);
@@ -265,6 +280,76 @@ function readProtocolVersion(bytes) {
     return "v" + major + "." + minor;
 }
 
+function readBlockConfig(block_id, bytes) {
+    var offset = 0;
+
+    var template_config = {};
+    template_config.enable = readEnableStatus(bytes[offset]);
+    template_config.type = readBlockType(bytes[offset + 1]);
+    template_config.start_x = readUInt16LE(bytes.slice(offset + 2, offset + 4));
+    template_config.start_y = readUInt16LE(bytes.slice(offset + 4, offset + 6));
+    template_config.end_x = readUInt16LE(bytes.slice(offset + 6, offset + 8));
+    template_config.end_y = readUInt16LE(bytes.slice(offset + 8, offset + 10));
+    template_config.border = readBorderType(bytes[offset + 10]);
+    template_config.horizontal = readHorizontal(bytes[offset + 11]);
+    template_config.vertical = readVertical(bytes[offset + 12]);
+    template_config.background = readColor(bytes[offset + 13]);
+    template_config.foreground = readColor(bytes[offset + 14]);
+    // reserved 1 byte
+    template_config.layer = readUInt8(bytes[offset + 16]);
+    // reserved 4 bytes
+
+    // text
+    if (block_id < 10) {
+        template_config.font_type = readFontType(bytes[offset + 21]);
+        template_config.font_size = readUInt8(bytes[offset + 22]);
+        template_config.wrap = readWrapType(bytes[offset + 23]);
+        template_config.font_style = readFontStyle(bytes[offset + 24]);
+    }
+
+    return template_config;
+}
+
+function readBlockType(type) {
+    var block_type = { 0: "text", 1: "qrcode", 2: "image", 3: "battery_status", 4: "connect_status" }
+    return getValue(block_type, type);
+}
+
+function readBorderType(type) {
+    var border_type_map = { 0: "no", 1: "yes" }
+    return getValue(border_type_map, type);
+}
+
+function readHorizontal(type) {
+    var horizontal_map = { 0: "left", 1: "center", 2: "right" }
+    return getValue(horizontal_map, type);
+}
+
+function readVertical(type) {
+    var vertical_map = { 0: "top", 1: "center", 2: "bottom" }
+    return getValue(vertical_map, type);
+}
+
+function readColor(type) {
+    var color_map = { 0: "white", 1: "black", 2: "red" }
+    return getValue(color_map, type);
+}
+
+function readFontType(type) {
+    var font_type_map = { 1: "SONG", 2: "FANG", 3: "BLACK", 4: "KAI", 5: "FT_ASCII", 6: "DZ_ASCII", 7: "CH_ASCII", 8: "BX_ASCII", 9: "BZ_ASCII", 10: "FX_ASCII", 11: "GD_ASCII", 12: "HZ_ASCII", 13: "MS_ASCII", 14: "SX_ASCII", 15: "ZY_ASCII", 16: "TM_ASCII", 17: "YJ_LATIN", 18: "CYRILLIC", 19: "KSC5601", 20: "JIS0208_HT", 21: "ARABIC", 22: "THAI", 23: "GREEK", 24: "HEBREW" }
+    return getValue(font_type_map, type);
+}
+
+function readWrapType(type) {
+    var wrap_map = { 0: "disable", 1: "enable" }
+    return getValue(wrap_map, type);
+}
+
+function readFontStyle(type) {
+    var font_style_map = { 0: "normal", 1: "bold" }
+    return getValue(font_style_map, type);
+}
+
 function readUInt8(bytes) {
     return bytes & 0xff;
 }
@@ -272,6 +357,16 @@ function readUInt8(bytes) {
 function readInt8(bytes) {
     var ref = readUInt8(bytes);
     return ref > 0x7f ? ref - 0x100 : ref;
+}
+
+function readUInt16LE(bytes) {
+    var value = (bytes[1] << 8) + bytes[0];
+    return value & 0xffff;
+}
+
+function readInt16LE(bytes) {
+    var ref = readUInt16LE(bytes);
+    return ref > 0x7fff ? ref - 0x10000 : ref;
 }
 
 function decodeUtf8(bytes) {
