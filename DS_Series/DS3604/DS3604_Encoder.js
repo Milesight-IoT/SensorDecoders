@@ -5,7 +5,7 @@
  *
  * @product DS3604
  */
-var RAW_VALUE = 0x01;
+var RAW_VALUE = 0x00;
 
 // Chirpstack v4
 function encodeDownlink(input) {
@@ -77,6 +77,9 @@ function milesightDeviceEncode(payload) {
     if ("switch_template_button_enable" in payload) {
         encoded = encoded.concat(setSwitchTemplateButtonEnable(payload.switch_template_button_enable));
     }
+    if ("multicast_config" in payload) {
+        encoded = encoded.concat(setMulticastConfig(payload.multicast_config));
+    }
 
     return encoded;
 }
@@ -91,7 +94,7 @@ function milesightDeviceEncode(payload) {
  */
 function setText(template_id, contents) {
     var template_values = [1, 2];
-    var content_id_map = { text_1: 0, text_2: 1, text_3: 2, text_4: 3, text_5: 4, text_6: 5, text_7: 6, text_8: 7, text_9: 8, text_10: 9, qrCode: 10 };
+    var content_id_map = { text_1: 0, text_2: 1, text_3: 2, text_4: 3, text_5: 4, text_6: 5, text_7: 6, text_8: 7, text_9: 8, text_10: 9, qrcode: 10 };
 
     if (template_values.indexOf(template_id) === -1) {
         throw new Error("template_id must be one of " + template_values.join(", "));
@@ -138,7 +141,7 @@ function setReportInterval(report_interval) {
     var buffer = new Buffer(4);
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0x03);
-    buffer.writeUInt8(report_interval);
+    buffer.writeUInt16LE(report_interval);
     return buffer.toBytes();
 }
 
@@ -421,6 +424,40 @@ function setSwitchTemplateButtonEnable(switch_template_button_enable) {
     return buffer.toBytes();
 }
 
+/**
+ * set multicast config
+ * @param {object} multicast_config
+ * @param {number} multicast_config.group_1 values: (0: disable, 1: enable)
+ * @param {number} multicast_config.group_2 values: (0: disable, 1: enable)
+ * @param {number} multicast_config.group_3 values: (0: disable, 1: enable)
+ * @param {number} multicast_config.group_4 values: (0: disable, 1: enable)
+ * @example { "multicast_config": { "group_1": 1, "group_2": 0, "group_3": 1, "group_4": 0 } }
+ */
+function setMulticastConfig(multicast_config) {
+    var enable_map = { 0: "disable", 1: "enable" };
+    var enable_values = getValues(enable_map);
+
+    var group_offset = { group_1: 0, group_2: 1, group_3: 2, group_4: 3 };
+    for (var key in group_offset) {
+        if (key in multicast_config) {
+            if (enable_values.indexOf(multicast_config[key]) === -1) {
+                throw new Error("multicast_config." + key + " must be one of " + enable_values.join(", "));
+            }
+            if (getValue(enable_map, multicast_config[key]) === 0) {
+                continue;
+            }
+            data |= 1 << (group_offset[key] + 4);
+            data |= getValue(enable_map, multicast_config[key]) << 0;
+        }
+    }
+
+    var buffer = new Buffer(3);
+    buffer.writeUInt8(0xff);
+    buffer.writeUInt8(0x82);
+    buffer.writeUInt8(data);
+    return buffer.toBytes();
+}
+
 function encodeContent(template_id, content_id, content) {
     var bytes = encodeUtf8(content);
 
@@ -479,7 +516,7 @@ function getValue(map, value) {
 
     for (var key in map) {
         if (map[key] === value) {
-            return key;
+            return parseInt(key);
         }
     }
 
