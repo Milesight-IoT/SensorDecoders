@@ -6,21 +6,30 @@
  * @product DS3604
  */
 var RAW_VALUE = 0x00;
+var errors = [];
 
 // Chirpstack v4
 function encodeDownlink(input) {
     var encoded = milesightDeviceEncode(input.data);
-    return { bytes: encoded };
+    return { bytes: encoded, errors: errors };
 }
 
 // Chirpstack v3
 function Encode(fPort, obj) {
-    return milesightDeviceEncode(obj);
+    var encoded = milesightDeviceEncode(obj);
+    if (errors.length > 0) {
+        throw new Error(errors.join("\n"));
+    }
+    return encoded;
 }
 
 // The Things Network
 function Encoder(obj, port) {
-    return milesightDeviceEncode(obj);
+    var encoded = milesightDeviceEncode(obj);
+    if (errors.length > 0) {
+        throw new Error(errors.join("\n"));
+    }
+    return encoded;
 }
 
 function milesightDeviceEncode(payload) {
@@ -103,7 +112,8 @@ function setText(template_id, contents) {
     var content_id_map = { text_1: 0, text_2: 1, text_3: 2, text_4: 3, text_5: 4, text_6: 5, text_7: 6, text_8: 7, text_9: 8, text_10: 9, qrcode: 10 };
 
     if (template_values.indexOf(template_id) === -1) {
-        throw new Error("template_id must be one of " + template_values.join(", "));
+        errors.push("template_id must be one of " + template_values.join(", "));
+        return [];
     }
 
     var encoded = [];
@@ -124,7 +134,8 @@ function setText(template_id, contents) {
 function changeCurrentTemplate(current_template_id) {
     var template_values = [1, 2];
     if (template_values.indexOf(current_template_id) === -1) {
-        throw new Error("current_template_id must be one of " + template_values.join(", "));
+        errors.push("current_template_id must be one of " + template_values.join(", "));
+        return [];
     }
 
     var buffer = new Buffer(3);
@@ -141,7 +152,8 @@ function changeCurrentTemplate(current_template_id) {
  */
 function setReportInterval(report_interval) {
     if (typeof report_interval !== "number") {
-        throw new Error("report_interval must be a number");
+        errors.push("report_interval must be a number");
+        return [];
     }
 
     var buffer = new Buffer(4);
@@ -160,7 +172,8 @@ function reboot(reboot) {
     var reboot_map = { 0: "no", 1: "yes" };
     var reboot_values = getValues(reboot_map);
     if (reboot_values.indexOf(reboot) === -1) {
-        throw new Error("reboot must be one of " + reboot_values.join(", "));
+        errors.push("reboot must be one of " + reboot_values.join(", "));
+        return [];
     }
 
     if (getValue(reboot_map, reboot) === 0) {
@@ -178,7 +191,8 @@ function beep(beep) {
     var beep_map = { 0: "no", 1: "yes" };
     var beep_values = getValues(beep_map);
     if (beep_values.indexOf(beep) === -1) {
-        throw new Error("beep must be one of " + beep_values.join(", "));
+        errors.push("beep must be one of " + beep_values.join(", "));
+        return [];
     }
 
     if (getValue(beep_map, beep) === 0) {
@@ -196,7 +210,8 @@ function refreshDisplay(refresh_display) {
     var refresh_display_map = { 0: "no", 1: "yes" };
     var refresh_display_values = getValues(refresh_display_map);
     if (refresh_display_values.indexOf(refresh_display) === -1) {
-        throw new Error("refresh_display must be one of " + refresh_display_values.join(", "));
+        errors.push("refresh_display must be one of " + refresh_display_values.join(", "));
+        return [];
     }
 
     if (getValue(refresh_display_map, refresh_display) === 0) {
@@ -214,7 +229,8 @@ function reportBattery(report_battery) {
     var report_battery_map = { 0: "no", 1: "yes" };
     var report_battery_values = getValues(report_battery_map);
     if (report_battery_values.indexOf(report_battery) === -1) {
-        throw new Error("report_battery must be one of " + report_battery_values.join(", "));
+        errors.push("report_battery must be one of " + report_battery_values.join(", "));
+        return [];
     }
 
     if (getValue(report_battery_map, report_battery) === 0) {
@@ -232,7 +248,8 @@ function reportBuzzer(report_buzzer) {
     var report_buzzer_map = { 0: "no", 1: "yes" };
     var report_buzzer_values = getValues(report_buzzer_map);
     if (report_buzzer_values.indexOf(report_buzzer) === -1) {
-        throw new Error("report_buzzer must be one of " + report_buzzer_values.join(", "));
+        errors.push("report_buzzer must be one of " + report_buzzer_values.join(", "));
+        return [];
     }
 
     if (getValue(report_buzzer_map, report_buzzer) === 0) {
@@ -250,7 +267,8 @@ function reportCurrentTemplate(report_current_template_id) {
     var report_current_template_id_map = { 0: "no", 1: "yes" };
     var report_current_template_id_values = getValues(report_current_template_id_map);
     if (report_current_template_id_values.indexOf(report_current_template_id) === -1) {
-        throw new Error("report_current_template_id must be one of " + report_current_template_id_values.join(", "));
+        errors.push("report_current_template_id must be one of " + report_current_template_id_values.join(", "));
+        return [];
     }
 
     if (getValue(report_current_template_id_map, report_current_template_id) === 0) {
@@ -268,7 +286,8 @@ function reportCurrentDisplay(report_current_display) {
     var report_current_display_map = { 0: "no", 1: "yes" };
     var report_current_display_values = getValues(report_current_display_map);
     if (report_current_display_values.indexOf(report_current_display) === -1) {
-        throw new Error("report_current_display must be one of " + report_current_display_values.join(", "));
+        errors.push("report_current_display must be one of " + report_current_display_values.join(", "));
+        return [];
     }
 
     if (getValue(report_current_display_map, report_current_display) === 0) {
@@ -286,7 +305,8 @@ function setBuzzerEnable(buzzer_enable) {
     var enable_map = { 0: "disable", 1: "enable" };
     var enable_values = getValues(enable_map);
     if (enable_values.indexOf(buzzer_enable) === -1) {
-        throw new Error("buzzer_enable must be one of " + enable_values.join(", "));
+        errors.push("buzzer_enable must be one of " + enable_values.join(", "));
+        return [];
     }
 
     var buffer = new Buffer(3);
@@ -305,7 +325,8 @@ function setButtonVisible(button_visible) {
     var button_visible_map = { 0: "hide", 1: "show" };
     var button_visible_values = getValues(button_visible_map);
     if (button_visible_values.indexOf(button_visible) === -1) {
-        throw new Error("button_visible must be one of " + button_visible_values.join(", "));
+        errors.push("button_visible must be one of " + button_visible_values.join(", "));
+        return [];
     }
 
     var buffer = new Buffer(3);
@@ -324,7 +345,8 @@ function setButtonEnable(button_enable) {
     var button_enable_map = { 0: "disable", 1: "enable" };
     var button_enable_values = getValues(button_enable_map);
     if (button_enable_values.indexOf(button_enable) === -1) {
-        throw new Error("button_enable must be one of " + button_enable_values.join(", "));
+        errors.push("button_enable must be one of " + button_enable_values.join(", "));
+        return [];
     }
 
     var buffer = new Buffer(3);
@@ -385,20 +407,23 @@ function clearImages(clear_image) {
     var yes_no_values = getValues(yes_no_map);
     if ("background_image" in clear_image) {
         if (yes_no_values.indexOf(background_image) === -1) {
-            throw new Error("clear_image.background_image must be one of " + yes_no_values.join(", "));
+            errors.push("clear_image.background_image must be one of " + yes_no_values.join(", "));
+            return [];
         }
         data |= 1 << 4;
     }
     if ("logo_1" in clear_image) {
         if (yes_no_values.indexOf(logo_1) === -1) {
-            throw new Error("clear_image.logo_1 must be one of " + yes_no_values.join(", "));
+            errors.push("clear_image.logo_1 must be one of " + yes_no_values.join(", "));
+            return [];
         }
         data |= 1 << 5;
         data |= getValue(yes_no_map, logo_1) << 0;
     }
     if ("logo_2" in clear_image) {
         if (yes_no_values.indexOf(logo_2) === -1) {
-            throw new Error("clear_image.logo_2 must be one of " + yes_no_values.join(", "));
+            errors.push("clear_image.logo_2 must be one of " + yes_no_values.join(", "));
+            return [];
         }
         data |= 1 << 5;
         data |= getValue(yes_no_map, logo_2) << 1;
@@ -420,7 +445,8 @@ function setSwitchTemplateButtonEnable(switch_template_button_enable) {
     var enable_map = { 0: "disable", 1: "enable" };
     var enable_values = getValues(enable_map);
     if (enable_values.indexOf(switch_template_button_enable) === -1) {
-        throw new Error("switch_template_button_enable must be one of " + enable_values.join(", "));
+        errors.push("switch_template_button_enable must be one of " + enable_values.join(", "));
+        return [];
     }
 
     var buffer = new Buffer(3);
@@ -447,7 +473,8 @@ function setMulticastConfig(multicast_config) {
     for (var key in group_offset) {
         if (key in multicast_config) {
             if (enable_values.indexOf(multicast_config[key]) === -1) {
-                throw new Error("multicast_config." + key + " must be one of " + enable_values.join(", "));
+                errors.push("multicast_config." + key + " must be one of " + enable_values.join(", "));
+                return [];
             }
             if (getValue(enable_map, multicast_config[key]) === 0) {
                 continue;
@@ -506,7 +533,8 @@ function encodeContent(template_id, content_id, content) {
 function setTemplateConfig(template_id, template_config) {
     var template_values = [0, 1];
     if (template_values.indexOf(template_id) === -1) {
-        throw new Error("template_id must be one of " + template_values.join(", "));
+        errors.push("template_id must be one of " + template_values.join(", "));
+        return [];
     }
 
     var text_block_offset = { text_1: 0, text_2: 1, text_3: 2, text_4: 3, text_5: 4, text_6: 5, text_7: 6, text_8: 7, text_9: 8, text_10: 9 };
@@ -577,28 +605,36 @@ function encodedBasicBlock(template_id, block_id, block_name, config) {
     var color_values = getValues(color_map);
 
     if (enable_values.indexOf(enable) === -1) {
-        throw new Error("template_" + template_id + "_config." + block_name + ".enable must be one of " + enable_values.join(", "));
+        errors.push("template_" + template_id + "_config." + block_name + ".enable must be one of " + enable_values.join(", "));
+        return [];
     }
     if (data_type_values.indexOf(type) === -1) {
-        throw new Error("template_" + template_id + "_config." + block_name + ".type must be one of " + data_type_values.join(", "));
+        errors.push("template_" + template_id + "_config." + block_name + ".type must be one of " + data_type_values.join(", "));
+        return [];
     }
     if (border_type_values.indexOf(border) === -1) {
-        throw new Error("template_" + template_id + "_config." + block_name + ".border must be one of " + border_type_values.join(", "));
+        errors.push("template_" + template_id + "_config." + block_name + ".border must be one of " + border_type_values.join(", "));
+        return [];
     }
     if (horizontal_values.indexOf(horizontal) === -1) {
-        throw new Error("template_" + template_id + "_config." + block_name + ".horizontal must be one of " + horizontal_values.join(", "));
+        errors.push("template_" + template_id + "_config." + block_name + ".horizontal must be one of " + horizontal_values.join(", "));
+        return [];
     }
     if (vertical_values.indexOf(vertical) === -1) {
-        throw new Error("template_" + template_id + "_config." + block_name + ".vertical must be one of " + vertical_values.join(", "));
+        errors.push("template_" + template_id + "_config." + block_name + ".vertical must be one of " + vertical_values.join(", "));
+        return [];
     }
     if (color_values.indexOf(background) === -1) {
-        throw new Error("template_" + template_id + "_config." + block_name + ".background must be one of " + color_values.join(", "));
+        errors.push("template_" + template_id + "_config." + block_name + ".background must be one of " + color_values.join(", "));
+        return [];
     }
     if (color_values.indexOf(foreground) === -1) {
-        throw new Error("template_" + template_id + "_config." + block_name + ".foreground must be one of " + color_values.join(", "));
+        errors.push("template_" + template_id + "_config." + block_name + ".foreground must be one of " + color_values.join(", "));
+        return [];
     }
     if (layer < 0 || layer > 255) {
-        throw new Error("template_" + template_id + "_config." + block_name + ".layer must be between 0 and 255");
+        errors.push("template_" + template_id + "_config." + block_name + ".layer must be between 0 and 255");
+        return [];
     }
 
     var buffer = new Buffer(21);
@@ -634,10 +670,12 @@ function encodeFont(font_type, font_size, wrap, font_style) {
     var style_values = getValues(style_map);
 
     if (enable_values.indexOf(wrap) === -1) {
-        throw new Error("wrap must be one of " + enable_values.join(", "));
+        errors.push("wrap must be one of " + enable_values.join(", "));
+        return [];
     }
     if (style_values.indexOf(font_style) === -1) {
-        throw new Error("font_style must be one of " + style_values.join(", "));
+        errors.push("font_style must be one of " + style_values.join(", "));
+        return [];
     }
     var buffer = new Buffer(4);
     buffer.writeUInt8(font_type);
@@ -693,7 +731,8 @@ function getValue(map, value) {
         }
     }
 
-    throw new Error("not match in " + JSON.stringify(map));
+    errors.push("not match in " + JSON.stringify(map));
+    return -1;
 }
 
 function Buffer(size) {

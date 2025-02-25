@@ -6,21 +6,30 @@
  * @product DS3604
  */
 var RAW_VALUE = 0x00;
+var errors = [];
 
 // Chirpstack v4
 function decodeUplink(input) {
     var decoded = milesightDeviceDecode(input.bytes);
-    return { data: decoded };
+    return { data: decoded, errors: errors };
 }
 
 // Chirpstack v3
 function Decode(fPort, bytes) {
-    return milesightDeviceDecode(bytes);
+    var decoded = milesightDeviceDecode(bytes);
+    if (errors.length > 0) {
+        return { errors: errors };
+    }
+    return decoded;
 }
 
 // The Things Network
 function Decoder(bytes, port) {
-    return milesightDeviceDecode(bytes);
+    var decoded = milesightDeviceDecode(bytes);
+    if (errors.length > 0) {
+        return { errors: errors };
+    }
+    return decoded;
 }
 
 function milesightDeviceDecode(bytes) {
@@ -74,6 +83,7 @@ function milesightDeviceDecode(bytes) {
         // IMAGE DATA
         else if (channel_id === 0xfb && channel_type === 0x02) {
             // TODO: decode image data
+            errors.push("image data not implemented");
         }
         // TEMPLATE CONFIG
         else if (channel_id === 0xfb && channel_type === 0x03) {
@@ -161,6 +171,7 @@ function milesightDeviceDecode(bytes) {
             i = result.offset;
         }
         else {
+            errors.push("unknown channel id: " + channel_id);
             break;
         }
     }
@@ -240,7 +251,7 @@ function handle_downlink_response(channel_type, bytes, offset) {
             offset += 1;
             break;
         default:
-            throw new Error("unknown downlink response");
+            errors.push("unknown downlink response");
     }
 
     return { data: decoded, offset: offset };
