@@ -36,7 +36,7 @@ function milesightDeviceDecode(bytes) {
             i += 1;
         }
         // BUTTON
-        else if (channel_id === 0x02 && channel_type === 0x2e) {
+        else if (channel_id === 0xff && channel_type === 0x2e) {
             decoded.button_status = readButtonStatus(bytes[i]);
             i += 1;
         }
@@ -70,6 +70,10 @@ function milesightDeviceDecode(bytes) {
                 decoded[template_name][block_name] = decodeUtf8(bytes.slice(i, i + block_length));
                 i += block_length;
             }
+        }
+        // IMAGE DATA
+        else if (channel_id === 0xfb && channel_type === 0x02) {
+            // TODO: decode image data
         }
         // TEMPLATE CONFIG
         else if (channel_id === 0xfb && channel_type === 0x03) {
@@ -172,12 +176,46 @@ function handle_downlink_response(channel_type, bytes, offset) {
             decoded.report_interval = readUInt16LE(bytes.slice(offset, offset + 2));
             offset += 2;
             break;
+        case 0x10:
+            decoded.reboot = readYesNo(bytes[offset]);
+            offset += 1;
+            break;
         case 0x25:
             decoded.button_enable = readEnableStatus(bytes[offset]);
             offset += 1;
             break;
+        case 0x27:
+            var data = readUInt8(bytes[offset]);
+            decoded.clear_image = {};
+            decoded.clear_image.background_image = readYesNo((data >> 4) & 0x01);
+            decoded.clear_image.logo_1 = readYesNo((data >> 5) & 0x01);
+            decoded.clear_image.logo_2 = readYesNo((data >> 5) & 0x02);
+            offset += 1;
+            break;
+        case 0x28:
+            var data = readUInt8(bytes[offset]);
+            if (data === 0x00) {
+                decoded.report_battery = readYesNo(1);
+            } else if (data === 0x01) {
+                decoded.report_buzzer = readYesNo(1);
+            } else if (data === 0x02) {
+                decoded.report_current_template = readYesNo(1);
+            } else if (data === 0x03) {
+                decoded.report_current_display = readYesNo(1);
+            }
+            offset += 1;
+            break;
         case 0x3e:
             decoded.buzzer_enable = readEnableStatus(bytes[offset]);
+            offset += 1;
+            break;
+        case 0x3d:
+            var data = readUInt8(bytes[offset]);
+            if (data === 0x01) {
+                decoded.beep = readYesNo(1);
+            } else if (data === 0x02) {
+                decoded.refresh_display = readYesNo(1);
+            }
             offset += 1;
             break;
         case 0x66:
@@ -211,6 +249,11 @@ function handle_downlink_response(channel_type, bytes, offset) {
 function readEnableStatus(status) {
     var enable_map = { 0: "disable", 1: "enable" };
     return getValue(enable_map, status);
+}
+
+function readYesNo(status) {
+    var yes_no_map = { 0: "no", 1: "yes" };
+    return getValue(yes_no_map, status);
 }
 
 function readButtonVisibleStatus(status) {

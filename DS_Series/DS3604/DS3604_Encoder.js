@@ -118,19 +118,19 @@ function setText(template_id, contents) {
 
 /**
  * change current template
- * @param {number} template_id values: (1: template_1, 2: template_2)
+ * @param {number} current_template_id values: (1: template_1, 2: template_2)
  * @example { "current_template_id": 1 }
  */
-function changeCurrentTemplate(template_id) {
+function changeCurrentTemplate(current_template_id) {
     var template_values = [1, 2];
-    if (template_values.indexOf(template_id) === -1) {
-        throw new Error("template_id must be one of " + template_values.join(", "));
+    if (template_values.indexOf(current_template_id) === -1) {
+        throw new Error("current_template_id must be one of " + template_values.join(", "));
     }
 
     var buffer = new Buffer(3);
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0x73);
-    buffer.writeUInt8(template_id - 1);
+    buffer.writeUInt8(current_template_id - 1);
     return buffer.toBytes();
 }
 
