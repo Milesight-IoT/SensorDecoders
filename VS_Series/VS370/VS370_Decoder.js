@@ -1,10 +1,12 @@
 /**
  * Payload Decoder
  *
- * Copyright 2024 Milesight IoT
+ * Copyright 2025 Milesight IoT
  *
  * @product VS370
  */
+var RAW_VALUE = 0x00;
+
 // Chirpstack v4
 function decodeUplink(input) {
     var decoded = milesightDeviceDecode(input.bytes);
@@ -24,24 +26,14 @@ function Decoder(bytes, port) {
 function milesightDeviceDecode(bytes) {
     var decoded = {};
 
-    for (var i = 0; i < bytes.length; ) {
+    for (var i = 0; i < bytes.length;) {
         var channel_id = bytes[i++];
         var channel_type = bytes[i++];
 
-        // DEVICE STATUS
-        if (channel_id === 0xff && channel_type === 0x0b) {
-            decoded.device_status = "on";
-            i += 1;
-        }
         // IPSO VERSION
-        else if (channel_id === 0xff && channel_type === 0x01) {
+        if (channel_id === 0xff && channel_type === 0x01) {
             decoded.ipso_version = readProtocolVersion(bytes[i]);
             i += 1;
-        }
-        // SERIAL NUMBER
-        else if (channel_id === 0xff && channel_type === 0x16) {
-            decoded.sn = readSerialNumber(bytes.slice(i, i + 8));
-            i += 8;
         }
         // HARDWARE VERSION
         else if (channel_id === 0xff && channel_type === 0x09) {
@@ -53,69 +45,50 @@ function milesightDeviceDecode(bytes) {
             decoded.firmware_version = readFirmwareVersion(bytes.slice(i, i + 2));
             i += 2;
         }
-        // LORAWAN CLASS TYPE
-        else if (channel_id === 0xff && channel_type === 0x0f) {
-            decoded.lorawan_class = readLoRaWANType(bytes[i]);
-            i += 1;
-        }
-        // TSL REQUEST
-        else if (channel_id === 0xff && channel_type === 0xfe) {
-            decoded.tsl_request = "get";
-            i += 1;
-        }
         // TSL VERSION
         else if (channel_id === 0xff && channel_type === 0xff) {
             decoded.tsl_version = readTslVersion(bytes.slice(i, i + 2));
             i += 2;
         }
+        // SERIAL NUMBER
+        else if (channel_id === 0xff && channel_type === 0x16) {
+            decoded.sn = readSerialNumber(bytes.slice(i, i + 8));
+            i += 8;
+        }
+        // LORAWAN CLASS TYPE
+        else if (channel_id === 0xff && channel_type === 0x0f) {
+            decoded.lorawan_class = readLoRaWANClass(bytes[i]);
+            i += 1;
+        }
+        // RESET EVENT
+        else if (channel_id === 0xff && channel_type === 0xfe) {
+            decoded.reset_event = readResetEvent(1);
+            i += 1;
+        }
+        // DEVICE STATUS
+        else if (channel_id === 0xff && channel_type === 0x0b) {
+            decoded.device_status = readDeviceStatus(1);
+            i += 1;
+        }
         // BATTERY
         else if (channel_id === 0x01 && channel_type === 0x75) {
-            decoded.battery = bytes[i];
+            decoded.battery = readUInt8(bytes[i]);
             i += 1;
         }
         // OCCUPANCY
         else if (channel_id === 0x03 && channel_type === 0x00) {
-            decoded.occupancy = bytes[i] === 0x00 ? "vacant" : "occupied";
+            decoded.occupancy = readOccupancyStatus(readUInt8(bytes[i]));
             i += 1;
         }
         // ILLUMINANCE
         else if (channel_id === 0x04 && channel_type === 0x00) {
-            decoded.illuminance = bytes[i] === 0x00 ? "dim" : "bright";
+            decoded.illuminance = readIlluminanceStatus(readUInt8(bytes[i]));
             i += 1;
         } else {
             break;
         }
     }
     return decoded;
-}
-
-function readUInt8(bytes) {
-    return bytes & 0xff;
-}
-
-function readInt8(bytes) {
-    var ref = readUInt8(bytes);
-    return ref > 0x7f ? ref - 0x100 : ref;
-}
-
-function readUInt16LE(bytes) {
-    var value = (bytes[1] << 8) + bytes[0];
-    return value & 0xffff;
-}
-
-function readInt16LE(bytes) {
-    var ref = readUInt16LE(bytes);
-    return ref > 0x7fff ? ref - 0x10000 : ref;
-}
-
-function readUInt32LE(bytes) {
-    var value = (bytes[3] << 24) + (bytes[2] << 16) + (bytes[1] << 8) + bytes[0];
-    return (value & 0xffffffff) >>> 0;
-}
-
-function readInt32LE(bytes) {
-    var ref = readUInt32LE(bytes);
-    return ref > 0x7fffffff ? ref - 0x100000000 : ref;
 }
 
 function readProtocolVersion(bytes) {
@@ -150,15 +123,69 @@ function readSerialNumber(bytes) {
     return temp.join("");
 }
 
-function readLoRaWANType(type) {
-    switch (type) {
-        case 0:
-            return "ClassA";
-        case 1:
-            return "ClassB";
-        case 2:
-            return "ClassC";
-        case 3:
-            return "ClassCtoB";
-    }
+function readLoRaWANClass(type) {
+    var class_map = {
+        0: "Class A",
+        1: "Class B",
+        2: "Class C",
+        3: "Class CtoB",
+    };
+    return getValue(class_map, type);
+}
+
+function readResetEvent(status) {
+    var status_map = { 0: "normal", 1: "reset" };
+    return getValue(status_map, status);
+}
+
+function readDeviceStatus(status) {
+    var status_map = { 0: "off", 1: "on" };
+    return getValue(status_map, status);
+}
+
+function readOccupancyStatus(status) {
+    var status_map = { 0: "vacant", 1: "occupied" };
+    return getValue(status_map, status);
+}
+
+function readIlluminanceStatus(status) {
+    var status_map = { 0: "dim", 1: "bright", 254: "disable" };
+    return getValue(status_map, status);
+}
+
+function readUInt8(bytes) {
+    return bytes & 0xff;
+}
+
+function readInt8(bytes) {
+    var ref = readUInt8(bytes);
+    return ref > 0x7f ? ref - 0x100 : ref;
+}
+
+function readUInt16LE(bytes) {
+    var value = (bytes[1] << 8) + bytes[0];
+    return value & 0xffff;
+}
+
+function readInt16LE(bytes) {
+    var ref = readUInt16LE(bytes);
+    return ref > 0x7fff ? ref - 0x10000 : ref;
+}
+
+function readUInt32LE(bytes) {
+    var value = (bytes[3] << 24) + (bytes[2] << 16) + (bytes[1] << 8) + bytes[0];
+    return (value & 0xffffffff) >>> 0;
+}
+
+function readInt32LE(bytes) {
+    var ref = readUInt32LE(bytes);
+    return ref > 0x7fffffff ? ref - 0x100000000 : ref;
+}
+
+function getValue(map, key) {
+    if (RAW_VALUE) return key;
+
+    var value = map[key];
+    if (!value) value = "unknown";
+    return value;
 }
