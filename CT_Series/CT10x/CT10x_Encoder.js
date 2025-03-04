@@ -74,12 +74,15 @@ function reboot(reboot) {
 
 /**
  * set report interval
- * @param {number} report_interval unit: minute
+ * @param {number} report_interval unit: minute, range: [1, 1440]
  * @example { "report_interval": 20 }
  */
 function setReportInterval(report_interval) {
     if (typeof report_interval !== "number") {
         throw new Error("report_interval must be a number");
+    }
+    if (report_interval < 1 || report_interval > 1440) {
+        throw new Error("report_interval must be between 1 and 1440");
     }
 
     var buffer = new Buffer(5);
@@ -91,15 +94,15 @@ function setReportInterval(report_interval) {
 }
 
 /**
- * report device status
+ * report status
  * @param {number} report_status values: (0: no, 1: yes)
  * @example { "report_status": 1 }
  */
 function reportStatus(report_status) {
     var yes_no_map = { 0: "no", 1: "yes" };
-    var report_status_values = getValues(yes_no_map);
-    if (report_status_values.indexOf(report_status) === -1) {
-        throw new Error("report_status must be one of " + report_status_values.join(", "));
+    var yes_no_values = getValues(yes_no_map);
+    if (yes_no_values.indexOf(report_status) === -1) {
+        throw new Error("report_status must be one of " + yes_no_values.join(", "));
     }
 
     if (getValue(yes_no_map, report_status) === 0) {
@@ -132,12 +135,16 @@ function clearCurrentCumulativeValue(clear_current_cumulative) {
  * @param {number} current_threshold_alarm_config.condition values: (0: disable, 1: below, 2: above, 3: between, 4: outside)
  * @param {number} current_threshold_alarm_config.min_threshold unit: A
  * @param {number} current_threshold_alarm_config.max_threshold unit: A
+ * @param {number} current_threshold_alarm_config.alarm_interval unit: minute
+ * @param {number} current_threshold_alarm_config.alarm_counts
  * @example { "current_threshold_alarm_config": { "condition": 1, "min_threshold": 100, "max_threshold": 200 } }
  */
 function setCurrentThresholdAlarmConfig(current_threshold_alarm_config) {
     var condition = current_threshold_alarm_config.condition;
     var min_threshold = current_threshold_alarm_config.min_threshold;
     var max_threshold = current_threshold_alarm_config.max_threshold;
+    var alarm_interval = current_threshold_alarm_config.alarm_interval;
+    var alarm_counts = current_threshold_alarm_config.alarm_counts;
 
     var condition_map = { 0: "disable", 1: "below", 2: "above", 3: "between", 4: "outside" };
     var condition_values = getValues(condition_map);
@@ -155,7 +162,8 @@ function setCurrentThresholdAlarmConfig(current_threshold_alarm_config) {
     buffer.writeUInt8(data);
     buffer.writeUInt16LE(min_threshold);
     buffer.writeUInt16LE(max_threshold);
-    buffer.writeUInt32LE(0x00); // reserved
+    buffer.writeUInt16LE(alarm_interval);
+    buffer.writeUInt16LE(alarm_counts);
     return buffer.toBytes();
 }
 
@@ -267,9 +275,10 @@ function Buffer(size) {
 }
 
 Buffer.prototype._write = function (value, byteLength, isLittleEndian) {
+    var offset = 0;
     for (var index = 0; index < byteLength; index++) {
-        var shift = isLittleEndian ? index << 3 : (byteLength - 1 - index) << 3;
-        this.buffer[this.offset + index] = (value & (0xff << shift)) >> shift;
+        offset = isLittleEndian ? index << 3 : (byteLength - 1 - index) << 3;
+        this.buffer[this.offset + index] = (value >> offset) & 0xff;
     }
 };
 

@@ -140,6 +140,8 @@ function handle_downlink_response(channel_type, bytes, offset) {
                 decoded.current_threshold_alarm_config.condition = readConditionType(value & 0x07);
                 decoded.current_threshold_alarm_config.min_threshold = readUInt16LE(bytes.slice(offset + 1, offset + 3));
                 decoded.current_threshold_alarm_config.max_threshold = readUInt16LE(bytes.slice(offset + 3, offset + 5));
+                decoded.current_threshold_alarm_config.alarm_interval = readUInt16LE(bytes.slice(offset + 5, offset + 7));
+                decoded.current_threshold_alarm_config.alarm_counts = readUInt16LE(bytes.slice(offset + 7, offset + 9));
             } else if (channel_value === 0x04) {
                 decoded.temperature_threshold_alarm_config = {};
                 decoded.temperature_threshold_alarm_config.condition = readConditionType(value & 0x07);
@@ -295,7 +297,6 @@ function getValue(map, key) {
     if (!value) value = "unknown";
     return value;
 }
-
 
 if (!Object.assign) {
     Object.defineProperty(Object, "assign", {
