@@ -1,11 +1,11 @@
 /**
  * Payload Encoder
  *
- * Copyright 2024 Milesight IoT
+ * Copyright 2025 Milesight IoT
  *
- * @product AM307(v2) / AM308(v2) / AM319(v2)
+ * @product AM307(v2)
  */
-var RAW_VALUE = 0x01;
+var RAW_VALUE = 0x00;
 
 // Chirpstack v4
 function encodeDownlink(input) {
@@ -111,7 +111,7 @@ function stopBuzzer(stop_buzzer) {
     var yes_no_map = { 0: "no", 1: "yes" };
     var yes_no_values = getValues(yes_no_map);
     if (yes_no_values.indexOf(stop_buzzer) === -1) {
-        throw new Error("stop_buzzer must be " + yes_no_values.join(", "));
+        throw new Error("stop_buzzer must be one of " + yes_no_values.join(", "));
     }
 
     if (getValue(yes_no_map, stop_buzzer) === 0) {
@@ -129,13 +129,12 @@ function queryStatus(query_status) {
     var query_status_map = { 0: "no", 1: "yes" };
     var query_status_values = getValues(query_status_map);
     if (query_status_values.indexOf(query_status) === -1) {
-        throw new Error("query_status must be " + query_status_values.join(", "));
+        throw new Error("query_status must be one of " + query_status_values.join(", "));
     }
 
     if (getValue(query_status_map, query_status) === 0) {
         return [];
     }
-
     return [0xff, 0x2c, 0xff];
 }
 
@@ -158,29 +157,29 @@ function setReportInterval(report_interval) {
  * @example { "time_sync_enable": 2 } output: FF3B02
  */
 function setTimeSyncEnable(time_sync_enable) {
-    var time_sync_enable_map = { 0: "disable", 2: "enable" };
-    var time_sync_enable_values = getValues(time_sync_enable_map);
-    if (time_sync_enable_values.indexOf(time_sync_enable) == -1) {
-        throw new Error("time_sync_enable must be one of " + time_sync_enable_values.join(", "));
+    var enable_map = { 0: "disable", 2: "enable" };
+    var enable_values = getValues(enable_map);
+    if (enable_values.indexOf(time_sync_enable) == -1) {
+        throw new Error("time_sync_enable must be one of " + enable_values.join(", "));
     }
 
     var buffer = new Buffer(3);
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0x3b);
-    buffer.writeUInt8(getValue(time_sync_enable_map, time_sync_enable));
+    buffer.writeUInt8(getValue(enable_map, time_sync_enable));
     return buffer.toBytes();
 }
 
 /**
  * Set timezone
  * @param {number} timezone unit: minute, UTC+8 -> 8 * 10 = 80
- * @example { "timezone": 80 }
+ * @example { "timezone": 8 }
  */
 function setTimeZone(timezone) {
     var buffer = new Buffer(4);
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0x17);
-    buffer.writeInt16LE(timezone);
+    buffer.writeInt16LE(timezone * 10);
     return buffer.toBytes();
 }
 
@@ -224,35 +223,35 @@ function setPM25CollectionInterval(pm2_5_collection_interval) {
  * @product AM319
  */
 function setCO2AutoBackgroundCalibrationEnable(co2_abc_calibration_enable) {
-    var co2_abc_calibration_enable_map = { 0: "no", 1: "yes" };
-    var co2_abc_calibration_enable_values = getValues(co2_abc_calibration_enable_map);
-    if (co2_abc_calibration_enable_values.indexOf(co2_abc_calibration_enable) == -1) {
-        throw new Error("co2_abc_calibration_enable must be one of " + co2_abc_calibration_enable_values.join(", "));
+    var enable_map = { 0: "disable", 1: "enable" };
+    var enable_values = getValues(enable_map);
+    if (enable_values.indexOf(co2_abc_calibration_enable) == -1) {
+        throw new Error("co2_abc_calibration_enable must be one of " + enable_values.join(", "));
     }
 
     var buffer = new Buffer(3);
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0x39);
-    buffer.writeUInt8(getValue(co2_abc_calibration_enable_map, co2_abc_calibration_enable));
+    buffer.writeUInt8(getValue(enable_map, co2_abc_calibration_enable));
     return buffer.toBytes();
 }
 
 /**
  * Set CO2 calibration enable
- * @param {number} co2_calibration_enable values: (0, 1)
+ * @param {number} co2_calibration_enable values: (0: disable, 1: enable)
  * @example { "co2_calibration_enable": 1 }
  */
 function setCO2CalibrationEnable(co2_calibration_enable) {
-    var co2_calibration_enable_map = { 0: "no", 1: "yes" };
-    var co2_calibration_enable_values = getValues(co2_calibration_enable_map);
-    if (co2_calibration_enable_values.indexOf(co2_calibration_enable) == -1) {
-        throw new Error("co2_calibration_enable must be one of " + co2_calibration_enable_values.join(", "));
+    var enable_map = { 0: "disable", 1: "enable" };
+    var enable_values = getValues(enable_map);
+    if (enable_values.indexOf(co2_calibration_enable) == -1) {
+        throw new Error("co2_calibration_enable must be one of " + enable_values.join(", "));
     }
 
     var buffer = new Buffer(3);
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0xf4);
-    buffer.writeUInt8(getValue(co2_calibration_enable_map, co2_calibration_enable));
+    buffer.writeUInt8(getValue(enable_map, co2_calibration_enable));
     return buffer.toBytes();
 }
 
@@ -268,24 +267,24 @@ function setCO2CalibrationSettings(co2_calibration_settings) {
     var mode = co2_calibration_settings.mode;
     var value = co2_calibration_settings.value;
 
-    var co2_calibration_settings_map = { 0: "factory", 1: "abc", 2: "manual", 3: "background", 4: "zero" };
-    var co2_calibration_settings_values = getValues(co2_calibration_settings_map);
-    if (co2_calibration_settings_values.indexOf(mode) == -1) {
-        throw new Error("co2_calibration_settings.mode must be one of " + co2_calibration_settings_values.join(", "));
+    var calibration_mode_map = { 0: "factory", 1: "abc", 2: "manual", 3: "background", 4: "zero" };
+    var calibration_mode_values = getValues(calibration_mode_map);
+    if (calibration_mode_values.indexOf(mode) == -1) {
+        throw new Error("co2_calibration_settings.mode must be one of " + calibration_mode_values.join(", "));
     }
 
-    if (getValue(co2_calibration_settings_map, mode) === 2) {
+    if (getValue(calibration_mode_map, mode) === 2) {
         var buffer = new Buffer(5);
         buffer.writeUInt8(0xff);
         buffer.writeUInt8(0x1a);
-        buffer.writeUInt8(getValue(co2_calibration_settings_map, mode));
+        buffer.writeUInt8(getValue(calibration_mode_map, mode));
         buffer.writeInt16LE(value);
         return buffer.toBytes();
     } else {
         var buffer = new Buffer(3);
         buffer.writeUInt8(0xff);
         buffer.writeUInt8(0x1a);
-        buffer.writeUInt8(getValue(co2_calibration_settings_map, mode));
+        buffer.writeUInt8(getValue(calibration_mode_map, mode));
         return buffer.toBytes();
     }
 }
@@ -296,21 +295,21 @@ function setCO2CalibrationSettings(co2_calibration_settings) {
  * @example { "buzzer_enable": 1 }
  */
 function setBuzzerEnable(buzzer_enable) {
-    var buzzer_enable_map = { 0: "disable", 1: "enable" };
-    var buzzer_enable_values = getValues(buzzer_enable_map);
-    if (buzzer_enable_values.indexOf(buzzer_enable) === -1) {
-        throw new Error("buzzer_enable must be " + buzzer_enable_values.join(", "));
+    var enable_map = { 0: "disable", 1: "enable" };
+    var enable_values = getValues(enable_map);
+    if (enable_values.indexOf(buzzer_enable) === -1) {
+        throw new Error("buzzer_enable must be one of " + enable_values.join(", "));
     }
 
     var buffer = new Buffer(3);
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0x3e);
-    buffer.writeUInt8(getValue(buzzer_enable_map, buzzer_enable));
+    buffer.writeUInt8(getValue(enable_map, buzzer_enable));
     return buffer.toBytes();
 }
 
 /**
- *
+ * Set led indicator mode
  * @param {number} led_indicator_mode values: (0: off, 1: on, 2: blink)
  * @example { "led_indicator": 1 }
  */
@@ -318,7 +317,7 @@ function setLedIndicatorMode(led_indicator_mode) {
     var led_indicator_mode_map = { 0: "off", 1: "on", 2: "blink" };
     var led_indicator_mode_values = getValues(led_indicator_mode_map);
     if (led_indicator_mode_values.indexOf(led_indicator_mode) === -1) {
-        throw new Error("led_indicator_mode must be " + led_indicator_mode_values.join(", "));
+        throw new Error("led_indicator_mode must be one of " + led_indicator_mode_values.join(", "));
     }
 
     var buffer = new Buffer(3);
@@ -334,13 +333,10 @@ function setLedIndicatorMode(led_indicator_mode) {
  * @example { "screen_display_enable": 1 }
  */
 function setScreenDisplayEnable(screen_display_enable) {
-    var enable_map = {
-        0: "disable",
-        1: "enable",
-    };
+    var enable_map = { 0: "disable", 1: "enable" };
     var enable_values = getValues(enable_map);
     if (enable_values.indexOf(screen_display_enable) === -1) {
-        throw new Error("screen_display_enable must be " + enable_values.join(", "));
+        throw new Error("screen_display_enable must be one of " + enable_values.join(", "));
     }
 
     var buffer = new Buffer(3);
@@ -356,16 +352,16 @@ function setScreenDisplayEnable(screen_display_enable) {
  * @example { "screen_display_alarm_enable": 1 }
  */
 function setScreenDisplayAlarmEnable(screen_display_alarm_enable) {
-    var screen_display_alarm_enable_map = { 0: "disable", 1: "enable" };
-    var screen_display_alarm_enable_values = getValues(screen_display_alarm_enable_map);
-    if (screen_display_alarm_enable_values.indexOf(screen_display_alarm_enable) == -1) {
-        throw new Error("screen_display_alarm_enable must be one of " + screen_display_alarm_enable_values.join(", "));
+    var enable_map = { 0: "disable", 1: "enable" };
+    var enable_values = getValues(enable_map);
+    if (enable_values.indexOf(screen_display_alarm_enable) == -1) {
+        throw new Error("screen_display_alarm_enable must be one of " + enable_values.join(", "));
     }
 
     var buffer = new Buffer(3);
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0x66);
-    buffer.writeUInt8(getValue(screen_display_alarm_enable_map, screen_display_alarm_enable));
+    buffer.writeUInt8(getValue(enable_map, screen_display_alarm_enable));
     return buffer.toBytes();
 }
 
@@ -375,9 +371,9 @@ function setScreenDisplayAlarmEnable(screen_display_alarm_enable) {
  * @example { "screen_display_pattern": 1 }
  */
 function setScreenDisplayPattern(screen_display_pattern) {
-    var screen_display_pattern_values = [1, 2, 3];
-    if (screen_display_pattern_values.indexOf(screen_display_pattern) === -1) {
-        throw new Error("screen_display_pattern must be " + screen_display_pattern_values.join(", "));
+    var pattern_values = [1, 2, 3];
+    if (pattern_values.indexOf(screen_display_pattern) === -1) {
+        throw new Error("screen_display_pattern must be one of " + pattern_values.join(", "));
     }
 
     var buffer = new Buffer(3);
@@ -404,90 +400,18 @@ function setScreenDisplayPattern(screen_display_pattern) {
  * @example { "screen_display_element_settings": { "temperature": 1, "humidity": 1, "co2": 1, "light": 1, "tvoc": 1, "smile": 1, "letter": 1, "pm2_5": 1, "pm10": 1, "hcho": 1} }
  */
 function setScreenDisplayElement(screen_display_element_settings) {
-    var temperature = screen_display_element_settings.temperature;
-    var humidity = screen_display_element_settings.humidity;
-    var co2 = screen_display_element_settings.co2;
-    var light = screen_display_element_settings.light;
-    var tvoc = screen_display_element_settings.tvoc;
-    var smile = screen_display_element_settings.smile;
-    var letter = screen_display_element_settings.letter;
-    var pm2_5 = screen_display_element_settings.pm2_5;
-    var pm10 = screen_display_element_settings.pm10;
-    var hcho = screen_display_element_settings.hcho;
-    var o3 = screen_display_element_settings.o3;
-
-    var enable_map = {
-        0: "disable",
-        1: "enable",
-    };
+    var enable_map = { 0: "disable", 1: "enable" };
     var enable_values = getValues(enable_map);
 
     var data = 0;
-    if ("temperature" in screen_display_element_settings) {
-        if (enable_values.indexOf(temperature) === -1) {
-            throw new Error("screen_display_element_settings.temperature must be " + enable_values.join(", "));
+    var sensor_bit_offset = { "temperature": 0, "humidity": 1, "co2": 2, "light": 3, "tvoc": 4, "smile": 5, "letter": 6, "pm2_5": 7, "pm10": 8, "hcho": 9, "o3": 9 };
+    for (var key in sensor_bit_offset) {
+        if (key in screen_display_element_settings) {
+            if (enable_values.indexOf(screen_display_element_settings[key]) === -1) {
+                throw new Error("screen_display_element_settings." + key + " must be one of " + enable_values.join(", "));
+            }
+            data |= getValue(enable_map, screen_display_element_settings[key]) << sensor_bit_offset[key];
         }
-        data |= getValue(enable_map, temperature) === 1 ? 0x01 << 0 : 0;
-    }
-    if ("humidity" in screen_display_element_settings) {
-        if (enable_values.indexOf(humidity) === -1) {
-            throw new Error("screen_display_element_settings.humidity must be " + enable_values.join(", "));
-        }
-        data |= getValue(enable_map, humidity) === 1 ? 0x01 << 1 : 0;
-    }
-    if ("co2" in screen_display_element_settings) {
-        if (enable_values.indexOf(co2) === -1) {
-            throw new Error("screen_display_element_settings.co2 must be " + enable_values.join(", "));
-        }
-        data |= getValue(enable_map, co2) === 1 ? 0x01 << 2 : 0;
-    }
-    if ("light" in screen_display_element_settings) {
-        if (enable_values.indexOf(light) === -1) {
-            throw new Error("screen_display_element_settings.light must be " + enable_values.join(", "));
-        }
-        data |= getValue(enable_map, light) === 1 ? 0x01 << 3 : 0;
-    }
-    if ("tvoc" in screen_display_element_settings) {
-        if (enable_values.indexOf(tvoc) === -1) {
-            throw new Error("screen_display_element_settings.tvoc must be " + enable_values.join(", "));
-        }
-        data |= getValue(enable_map, tvoc) === 1 ? 0x01 << 4 : 0;
-    }
-    if ("smile" in screen_display_element_settings) {
-        if (enable_values.indexOf(smile) === -1) {
-            throw new Error("screen_display_element_settings.smile must be " + enable_values.join(", "));
-        }
-        data |= getValue(enable_map, smile) === 1 ? 0x01 << 5 : 0;
-    }
-    if ("letter" in screen_display_element_settings) {
-        if (enable_values.indexOf(letter) === -1) {
-            throw new Error("screen_display_element_settings.letter must be " + enable_values.join(", "));
-        }
-        data |= getValue(enable_map, letter) === 1 ? 0x01 << 6 : 0;
-    }
-    if ("pm2_5" in screen_display_element_settings) {
-        if (enable_values.indexOf(pm2_5) === -1) {
-            throw new Error("screen_display_element_settings.pm2_5 must be " + enable_values.join(", "));
-        }
-        data |= getValue(enable_map, pm2_5) === 1 ? 0x01 << 7 : 0;
-    }
-    if ("pm10" in screen_display_element_settings) {
-        if (enable_values.indexOf(pm10) === -1) {
-            throw new Error("screen_display_element_settings.pm10 must be " + enable_values.join(", "));
-        }
-        data |= getValue(enable_map, pm10) === 1 ? 0x01 << 8 : 0;
-    }
-    if ("hcho" in screen_display_element_settings) {
-        if (enable_values.indexOf(hcho) === -1) {
-            throw new Error("screen_display_element_settings.hcho must be " + enable_values.join(", "));
-        }
-        data |= getValue(enable_map, hcho) === 1 ? 0x01 << 9 : 0;
-    }
-    if ("o3" in screen_display_element_settings) {
-        if (enable_values.indexOf(o3) === -1) {
-            throw new Error("screen_display_element_settings.o3 must be " + enable_values.join(", "));
-        }
-        data |= getValue(enable_map, o3) === 1 ? 0x01 << 9 : 0;
     }
 
     var buffer = new Buffer(3);
@@ -507,31 +431,18 @@ function setScreenDisplayElement(screen_display_element_settings) {
  * @example { "child_lock_settings": { "off_button": 1, "on_button": 1, "collection_button": 1 } }
  */
 function setChildLock(child_lock_settings) {
-    var off_button = child_lock_settings.off_button;
-    var on_button = child_lock_settings.on_button;
-    var collection_button = child_lock_settings.collection_button;
-
     var enable_map = { 0: "disable", 1: "enable" };
     var enable_values = getValues(enable_map);
 
     var data = 0;
-    if ("off_button" in child_lock_settings) {
-        if (enable_values.indexOf(off_button) === -1) {
-            throw new Error("child_lock_settings.off_button must be " + enable_values.join(", "));
+    var button_bit_offset = { "off_button": 0, "on_button": 1, "collection_button": 2 };
+    for (var key in button_bit_offset) {
+        if (key in child_lock_settings) {
+            if (enable_values.indexOf(child_lock_settings[key]) === -1) {
+                throw new Error("child_lock_settings." + key + " must be one of " + enable_values.join(", "));
+            }
+            data |= getValue(enable_map, child_lock_settings[key]) << button_bit_offset[key];
         }
-        data |= getValue(enable_map, off_button) === 1 ? 0x01 << 0 : 0;
-    }
-    if ("on_button" in child_lock_settings) {
-        if (enable_values.indexOf(on_button) === -1) {
-            throw new Error("child_lock_settings.on_button must be " + enable_values.join(", "));
-        }
-        data |= getValue(enable_map, on_button) === 1 ? 0x01 << 1 : 0;
-    }
-    if ("collection_button" in child_lock_settings) {
-        if (enable_values.indexOf(collection_button) === -1) {
-            throw new Error("child_lock_settings.collection_button must be " + enable_values.join(", "));
-        }
-        data |= getValue(enable_map, collection_button) === 1 ? 0x01 << 2 : 0;
     }
 
     var buffer = new Buffer(3);
@@ -577,9 +488,10 @@ function Buffer(size) {
 }
 
 Buffer.prototype._write = function (value, byteLength, isLittleEndian) {
+    var offset = 0;
     for (var index = 0; index < byteLength; index++) {
-        var shift = isLittleEndian ? index << 3 : (byteLength - 1 - index) << 3;
-        this.buffer[this.offset + index] = (value & (0xff << shift)) >> shift;
+        offset = isLittleEndian ? index << 3 : (byteLength - 1 - index) << 3;
+        this.buffer[this.offset + index] = (value >> offset) & 0xff;
     }
 };
 

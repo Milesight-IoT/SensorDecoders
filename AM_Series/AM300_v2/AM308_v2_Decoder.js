@@ -1,11 +1,11 @@
 /**
  * Payload Decoder
  *
- * Copyright 2024 Milesight IoT
+ * Copyright 2025 Milesight IoT
  *
  * @product AM308(v2)
  */
-var RAW_VALUE = 0x01;
+var RAW_VALUE = 0x00;
 
 // Chirpstack v4
 function decodeUplink(input) {
@@ -26,7 +26,7 @@ function Decoder(bytes, port) {
 function milesightDeviceDecode(bytes) {
     var decoded = {};
 
-    for (var i = 0; i < bytes.length; ) {
+    for (var i = 0; i < bytes.length;) {
         var channel_id = bytes[i++];
         var channel_type = bytes[i++];
 
@@ -167,12 +167,209 @@ function milesightDeviceDecode(bytes) {
 
             decoded.history = decoded.history || [];
             decoded.history.push(data);
+        }
+        // RESPONSE DATA
+        else if (channel_id === 0xfe || channel_id === 0xff) {
+            result = handle_downlink_response(channel_type, bytes, i);
+            decoded = Object.assign(decoded, result.data);
+            i = result.offset;
         } else {
             break;
         }
     }
 
     return decoded;
+}
+
+
+function handle_downlink_response(channel_type, bytes, offset) {
+    var decoded = {};
+
+    switch (channel_type) {
+        case 0x17:
+            decoded.timezone = readInt16LE(bytes.slice(offset, offset + 2)) / 10;
+            offset += 2;
+            break;
+        case 0x1a:
+            var mode_value = readUInt8(bytes[offset]);
+            decoded.co2_calibration_settings = {};
+            decoded.co2_calibration_settings.mode = readCalibrationMode(mode_value);
+            if (mode_value === 2) {
+                decoded.co2_calibration_settings.value = readInt16LE(bytes.slice(offset + 1, offset + 3));
+                offset += 3;
+            } else {
+                offset += 1;
+            }
+            break;
+        case 0x25:
+            decoded.child_lock_settings = readChildLockSettings(bytes[offset]);
+            offset += 1;
+            break;
+        case 0x2c:
+            decoded.query_status = readYesNoStatus(1);
+            offset += 1;
+            break;
+        case 0x2d:
+            decoded.screen_display_enable = readEnableStatus(bytes[offset]);
+            offset += 1;
+            break;
+        case 0x2e:
+            decoded.led_indicator_mode = readLedIndicatorMode(bytes[offset]);
+            offset += 1;
+            break;
+        case 0x2f:
+            decoded.tvoc_unit = readTVOCUnit(bytes[offset]);
+            offset += 1;
+            break;
+        case 0x39:
+            decoded.co2_abc_calibration_enable = readEnableStatus(bytes[offset]);
+            offset += 1;
+            break;
+        case 0x3a:
+            decoded.report_interval = readUInt16LE(bytes.slice(offset, offset + 2));
+            offset += 2;
+            break;
+        case 0x3b:
+            decoded.time_sync_enable = readEnableStatus(bytes[offset]);
+            offset += 1;
+            break;
+        case 0x3c:
+            decoded.screen_display_pattern = bytes[offset];
+            offset += 1;
+            break;
+        case 0x3d:
+            decoded.stop_buzzer = readYesNoStatus(1);
+            offset += 1;
+            break;
+        case 0x3e:
+            decoded.buzzer_enable = readEnableStatus(bytes[offset]);
+            offset += 1;
+            break;
+        case 0x65:
+            decoded.pm2_5_collection_interval = readUInt16LE(bytes.slice(offset, offset + 2));
+            offset += 2;
+            break;
+        case 0x66:
+            decoded.screen_display_alarm_enable = readEnableStatus(bytes[offset]);
+            offset += 1;
+            break;
+        case 0xf0:
+            decoded.screen_display_element_settings = readScreenDisplayElementSettings(bytes[offset]);
+            offset += 1;
+            break;
+        case 0xf4:
+            decoded.co2_calibration_enable = readEnableStatus(bytes[offset]);
+            offset += 1;
+            break;
+
+        default:
+            throw new Error("unknown downlink response");
+    }
+
+    return { data: decoded, offset: offset };
+}
+
+function readProtocolVersion(bytes) {
+    var major = (bytes & 0xf0) >> 4;
+    var minor = bytes & 0x0f;
+    return "v" + major + "." + minor;
+}
+
+function readHardwareVersion(bytes) {
+    var major = bytes[0] & 0xff;
+    var minor = (bytes[1] & 0xff) >> 4;
+    return "v" + major + "." + minor;
+}
+
+function readFirmwareVersion(bytes) {
+    var major = bytes[0] & 0xff;
+    var minor = bytes[1] & 0xff;
+    return "v" + major + "." + minor;
+}
+
+function readTslVersion(bytes) {
+    var major = bytes[0] & 0xff;
+    var minor = bytes[1] & 0xff;
+    return "v" + major + "." + minor;
+}
+
+function readDeviceStatus(type) {
+    var device_status_map = { 0: "off", 1: "on" };
+    return getValue(device_status_map, type);
+}
+
+function readSerialNumber(bytes) {
+    var temp = [];
+    for (var idx = 0; idx < bytes.length; idx++) {
+        temp.push(("0" + (bytes[idx] & 0xff).toString(16)).slice(-2));
+    }
+    return temp.join("");
+}
+
+function readLoRaWANClass(type) {
+    var lorawan_class_map = {
+        0: "Class A",
+        1: "Class B",
+        2: "Class C",
+        3: "Class CtoB",
+    };
+    return getValue(lorawan_class_map, type);
+}
+
+function readPIRStatus(type) {
+    var pir_status_map = { 0: "idle", 1: "trigger" };
+    return getValue(pir_status_map, type);
+}
+
+function readBuzzerStatus(type) {
+    var buzzer_status_map = { 0: "off", 1: "on" };
+    return getValue(buzzer_status_map, type);
+}
+
+
+function readYesNoStatus(status) {
+    var yes_no_map = { 0: "no", 1: "yes" };
+    return getValue(yes_no_map, status);
+}
+
+function readEnableStatus(status) {
+    var enable_map = { 0: "disabled", 1: "enabled" };
+    return getValue(enable_map, status);
+}
+
+function readTVOCUnit(status) {
+    var tvoc_unit_map = { 0: "iaq", 1: "ug/m3" };
+    return getValue(tvoc_unit_map, status);
+}
+
+function readCalibrationMode(status) {
+    var calibration_mode_map = { 0: "factory", 1: "abc", 2: "manual", 3: "background", 4: "zero" };
+    return getValue(calibration_mode_map, status);
+}
+
+function readLedIndicatorMode(status) {
+    var led_indicator_mode_map = { 0: "off", 1: "on", 2: "blink" };
+    return getValue(led_indicator_mode_map, status);
+}
+
+function readScreenDisplayElementSettings(data) {
+    var sensor_bit_offset = { "temperature": 0, "humidity": 1, "co2": 2, "light": 3, "tvoc": 4, "smile": 5, "letter": 6, "pm2_5": 7, "pm10": 8, "hcho": 9, "o3": 9 };
+
+    var settings = {};
+    for (var key in sensor_bit_offset) {
+        settings[key] = readEnableStatus((data >> sensor_bit_offset[key]) & 0x01);
+    }
+    return settings;
+}
+
+function readChildLockSettings(data) {
+    var button_bit_offset = { "off_button": 0, "on_button": 1, "collection_button": 2 };
+
+    var settings = {};
+    for (var key in button_bit_offset) {
+        settings[key] = readEnableStatus((data >> button_bit_offset[key]) & 0x01);
+    }
+    return settings;
 }
 
 function readUInt8(bytes) {
@@ -204,76 +401,48 @@ function readInt32LE(bytes) {
     return ref > 0x7fffffff ? ref - 0x100000000 : ref;
 }
 
-function readProtocolVersion(bytes) {
-    var major = (bytes & 0xf0) >> 4;
-    var minor = bytes & 0x0f;
-    return "v" + major + "." + minor;
-}
-
-function readHardwareVersion(bytes) {
-    var major = bytes[0] & 0xff;
-    var minor = (bytes[1] & 0xff) >> 4;
-    return "v" + major + "." + minor;
-}
-
-function readFirmwareVersion(bytes) {
-    var major = bytes[0] & 0xff;
-    var minor = bytes[1] & 0xff;
-    return "v" + major + "." + minor;
-}
-
-function readTslVersion(bytes) {
-    var major = bytes[0] & 0xff;
-    var minor = bytes[1] & 0xff;
-    return "v" + major + "." + minor;
-}
-
-function readDeviceStatus(type) {
-    var device_status_map = {
-        0: "offline",
-        1: "online",
-    };
-    return getValue(device_status_map, type);
-}
-
-function readSerialNumber(bytes) {
-    var temp = [];
-    for (var idx = 0; idx < bytes.length; idx++) {
-        temp.push(("0" + (bytes[idx] & 0xff).toString(16)).slice(-2));
-    }
-    return temp.join("");
-}
-
-function readLoRaWANClass(type) {
-    var lorawan_class_map = {
-        0: "Class A",
-        1: "Class B",
-        2: "Class C",
-        3: "Class CtoB",
-    };
-    return getValue(lorawan_class_map, type);
-}
-
-function readPIRStatus(type) {
-    var pir_status_map = {
-        0: "idle",
-        1: "trigger",
-    };
-    return getValue(pir_status_map, type);
-}
-
-function readBuzzerStatus(type) {
-    var buzzer_status_map = {
-        0: "off",
-        1: "on",
-    };
-    return getValue(buzzer_status_map, type);
-}
-
 function getValue(map, key) {
     if (RAW_VALUE) return key;
 
     var value = map[key];
     if (!value) value = "unknown";
     return value;
+}
+
+if (!Object.assign) {
+    Object.defineProperty(Object, "assign", {
+        enumerable: false,
+        configurable: true,
+        writable: true,
+        value: function (target) {
+            "use strict";
+            if (target == null) {
+                throw new TypeError("Cannot convert first argument to object");
+            }
+
+            var to = Object(target);
+            for (var i = 1; i < arguments.length; i++) {
+                var nextSource = arguments[i];
+                if (nextSource == null) {
+                    continue;
+                }
+                nextSource = Object(nextSource);
+
+                var keysArray = Object.keys(Object(nextSource));
+                for (var nextIndex = 0, len = keysArray.length; nextIndex < len; nextIndex++) {
+                    var nextKey = keysArray[nextIndex];
+                    var desc = Object.getOwnPropertyDescriptor(nextSource, nextKey);
+                    if (desc !== undefined && desc.enumerable) {
+                        // concat array
+                        if (Array.isArray(to[nextKey]) && Array.isArray(nextSource[nextKey])) {
+                            to[nextKey] = to[nextKey].concat(nextSource[nextKey]);
+                        } else {
+                            to[nextKey] = nextSource[nextKey];
+                        }
+                    }
+                }
+            }
+            return to;
+        },
+    });
 }
