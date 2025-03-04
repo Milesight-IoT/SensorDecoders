@@ -52,7 +52,7 @@ function milesightDeviceDecode(bytes) {
         }
         // SERIAL NUMBER
         else if (channel_id === 0xff && channel_type === 0x16) {
-            decoded.sn = readSerialNumber(bytes.slice(i, i + 8));
+            decoded.sn = readHexString(bytes.slice(i, i + 8));
             i += 8;
         }
         // LORAWAN CLASS TYPE
@@ -90,7 +90,7 @@ function milesightDeviceDecode(bytes) {
             var data = readUInt8(bytes[i]);
             var channel_idx = (data >>> 4) & 0x0f;
             var sensor_type = (data >>> 0) & 0x0f;
-            var sensor_id = readSerialNumber(bytes.slice(i + 1, i + 9));
+            var sensor_id = readHexString(bytes.slice(i + 1, i + 9));
             var sensor_chn_name = "sensor_" + channel_idx;
             i += 9;
 
@@ -214,7 +214,7 @@ function handle_downlink_response(channel_type, bytes, offset) {
             offset += 2;
             break;
         case 0x35:
-            decoded.d2d_key = readSerialNumber(bytes.slice(offset, offset + 8));
+            decoded.d2d_key = readHexString(bytes.slice(offset, offset + 8));
             offset += 8;
             break;
         case 0x68:
@@ -231,7 +231,7 @@ function handle_downlink_response(channel_type, bytes, offset) {
             d2d_master_config.event = readD2DEventType(bytes[offset]);
             d2d_master_config.enable = readEnableStatus(bytes[offset + 1]);
             d2d_master_config.lora_uplink_enable = readEnableStatus(bytes[offset + 2]);
-            d2d_master_config.d2d_cmd = readSerialNumber(bytes.slice(offset + 3, offset + 5));
+            d2d_master_config.d2d_cmd = readD2DCommand(bytes.slice(offset + 3, offset + 5));
             d2d_master_config.time = readUInt16LE(bytes.slice(offset + 5, offset + 7));
             d2d_master_config.time_enable = readEnableStatus(bytes[offset + 7]);
 
@@ -394,7 +394,7 @@ function readTslVersion(bytes) {
     return "v" + major + "." + minor;
 }
 
-function readSerialNumber(bytes) {
+function readHexString(bytes) {
     var temp = [];
     for (var idx = 0; idx < bytes.length; idx++) {
         temp.push(("0" + (bytes[idx] & 0xff).toString(16)).slice(-2));
@@ -430,6 +430,10 @@ function readEnableStatus(status) {
 function readSensorIDType(type) {
     var sensor_id_map = { 1: "DS18B20", 2: "SHT4X" };
     return getValue(sensor_id_map, type);
+}
+
+function readD2DCommand(bytes) {
+    return ("0" + (bytes[1] & 0xff).toString(16)).slice(-2) + ("0" + (bytes[0] & 0xff).toString(16)).slice(-2);
 }
 
 function readAlarmType(type) {
