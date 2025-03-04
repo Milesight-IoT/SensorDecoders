@@ -113,7 +113,7 @@ function milesightDeviceEncode(payload) {
         encoded = encoded.concat(setTemperatureUnit(payload.temperature_unit));
     }
     if ("query_config" in payload) {
-        encoded = encoded.concat(setQueryConfig(payload.query_config));
+        encoded = encoded.concat(queryDeviceConfig(payload.query_config));
     }
 
     return encoded;
@@ -644,18 +644,24 @@ function setAckRetryTimes(ack_retry_times) {
 function setD2DMasterConfig(d2d_master_config) {
     var event = d2d_master_config.event;
     var enable = d2d_master_config.enable;
+    var lora_uplink_enable = d2d_master_config.lora_uplink_enable;
+    var d2d_cmd = d2d_master_config.d2d_cmd;
 
     var event_map = { 1: "temperature threshold alarm", 2: "temperature threshold alarm release", 3: "temperature mutation alarm", 4: "humidity threshold alarm", 5: "humidity threshold alarm release", 6: "humidity mutation alarm" };
     var event_values = getValues(event_map);
     if (event_values.indexOf(event) === -1) {
-        throw new Error("d2d_master_config.event must be one of " + event_values.join(", "));
+        throw new Error("d2d_master_config._item.event must be one of " + event_values.join(", "));
     }
 
     var enable_map = { 0: "disable", 1: "enable" };
     var enable_values = getValues(enable_map);
     if (enable_values.indexOf(enable) === -1) {
-        throw new Error("d2d_master_config.enable must be one of " + enable_values.join(", "));
+        throw new Error("d2d_master_config._item.enable must be one of " + enable_values.join(", "));
     }
+    if (lora_uplink_enable !== undefined && enable_values.indexOf(lora_uplink_enable) === -1) {
+        throw new Error("d2d_master_config._item.lora_uplink_enable must be one of " + enable_values.join(", "));
+    }
+
 
     var buffer = new Buffer(10);
     buffer.writeUInt8(0xff);
