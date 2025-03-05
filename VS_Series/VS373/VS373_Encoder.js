@@ -38,8 +38,8 @@ function milesightDeviceEncode(payload) {
     if ("digital_output" in payload) {
         encoded = encoded.concat(setDigitalOutput(payload.digital_output));
     }
-    if ("detection_region" in payload) {
-        encoded = encoded.concat(setDetectionRegion(payload.detection_region));
+    if ("detection_region_settings" in payload) {
+        encoded = encoded.concat(setDetectionRegion(payload.detection_region_settings));
     }
     if ("detection_settings" in payload) {
         encoded = encoded.concat(setDetectionModeAndSensitivity(payload.detection_settings));
@@ -81,10 +81,16 @@ function milesightDeviceEncode(payload) {
         encoded = encoded.concat(deleteRegion(payload.delete_region));
     }
     if ("region_detection_settings" in payload) {
-        encoded = encoded.concat(setRegionDetectionSettings(payload.region_detection_settings));
+        for (var i = 0; i < payload.region_detection_settings.length; i++) {
+            var settings = payload.region_detection_settings[i];
+            encoded = encoded.concat(setRegionDetectionSettings(settings));
+        }
     }
     if ("bed_detection_settings" in payload) {
-        encoded = encoded.concat(setBedDetectionSettings(payload.bed_detection_settings));
+        for (var i = 0; i < payload.bed_detection_settings.length; i++) {
+            var settings = payload.bed_detection_settings[i];
+            encoded = encoded.concat(setBedDetectionSettings(settings));
+        }
     }
     if ("retransmit_enable" in payload) {
         encoded = encoded.concat(setRetransmitEnable(payload.retransmit_enable));
@@ -105,10 +111,16 @@ function milesightDeviceEncode(payload) {
         encoded = encoded.concat(setD2dEnable(payload.d2d_enable));
     }
     if ("d2d_master_config" in payload) {
-        encoded = encoded.concat(setD2dMasterConfig(payload.d2d_master_config));
+        for (var i = 0; i < payload.d2d_master_config.length; i++) {
+            var config = payload.d2d_master_config[i];
+            encoded = encoded.concat(setD2dMasterConfig(config));
+        }
     }
     if ("d2d_slave_config" in payload) {
-        encoded = encoded.concat(setD2dSlaveConfig(payload.d2d_slave_config));
+        for (var i = 0; i < payload.d2d_slave_config.length; i++) {
+            var config = payload.d2d_slave_config[i];
+            encoded = encoded.concat(setD2dSlaveConfig(config));
+        }
     }
     if ("timestamp" in payload) {
         encoded = encoded.concat(setTime(payload.timestamp));
@@ -148,18 +160,18 @@ function reboot(reboot) {
 }
 
 /**
- * report device status
+ * report status
  * @param {number} report_status values: (0: no, 1: yes)
  * @example { "report_status": 1 }
  */
 function reportStatus(report_status) {
-    var value_map = { 0: "no", 1: "yes" };
-    var value_values = getValues(value_map);
-    if (value_values.indexOf(report_status) === -1) {
-        throw new Error("report_status must be one of " + value_values.join(", "));
+    var yes_no_map = { 0: "no", 1: "yes" };
+    var yes_no_values = getValues(yes_no_map);
+    if (yes_no_values.indexOf(report_status) === -1) {
+        throw new Error("report_status must be one of " + yes_no_values.join(", "));
     }
 
-    if (getValue(value_map, report_status) === 0) {
+    if (getValue(yes_no_map, report_status) === 0) {
         return [];
     }
     return [0xff, 0x28, 0xff];
@@ -211,7 +223,7 @@ function setDigitalOutput(digital_output) {
  * @param {number} detection_region_settings.y_max unit: mm
  * @param {number} detection_region_settings.z_max unit: mm
  * @param {number} detection_region_settings.install_height unit: mm
- * @example { "detection_region": { "x_min": 0, "x_max": 100, "y_min": 0, "y_max": 100, "z_max": 100, "install_height": 100 } }
+ * @example { "detection_region_settings": { "x_min": 0, "x_max": 100, "y_min": 0, "y_max": 100, "z_max": 100, "install_height": 100 } }
  */
 function setDetectionRegion(detection_region_settings) {
     var x_min = detection_region_settings.x_min;
@@ -451,11 +463,11 @@ function setExistenceDetectionSettings(existence_detection_settings) {
 /**
  * set region settings
  * @param {object} region_settings
- * @param {number} region_settings.region_id range: [1, 4]
- * @param {number} region_settings.x_min unit: mm
- * @param {number} region_settings.x_max unit: mm
- * @param {number} region_settings.y_min unit: mm
- * @param {number} region_settings.y_max unit: mm
+ * @param {number} region_settings._item.region_id range: [1, 4]
+ * @param {number} region_settings._item.x_min unit: mm
+ * @param {number} region_settings._item.x_max unit: mm
+ * @param {number} region_settings._item.y_min unit: mm
+ * @param {number} region_settings._item.y_max unit: mm
  * @example { "region_settings": [{ "region_id": 1, "x_min": 0, "x_max": 100, "y_min": 0, "y_max": 100 }] }
  */
 function setRegionSettings(region_settings) {
@@ -518,12 +530,12 @@ function deleteRegion(delete_region) {
 /**
  * set region detection settings
  * @param {object} region_detection_settings
- * @param {number} region_detection_settings.region_id range: [1, 4]
- * @param {number} region_detection_settings.fall_detection_enable values: (0: disable, 1: enable)
- * @param {number} region_detection_settings.dwell_detection_enable values: (0: disable, 1: enable)
- * @param {number} region_detection_settings.motion_detection_enable values: (0: disable, 1: enable)
- * @param {number} region_detection_settings.region_type values: (0: default, 1: bed, 2: door)
- * @example { "region_detection_settings": { "region_id": 1, "fall_detection_enable": 1, "dwell_detection_enable": 1, "motion_detection_enable": 1, "region_type": 0 } }
+ * @param {number} region_detection_settings._item.region_id range: [1, 4]
+ * @param {number} region_detection_settings._item.fall_detection_enable values: (0: disable, 1: enable)
+ * @param {number} region_detection_settings._item.dwell_detection_enable values: (0: disable, 1: enable)
+ * @param {number} region_detection_settings._item.motion_detection_enable values: (0: disable, 1: enable)
+ * @param {number} region_detection_settings._item.region_type values: (0: default, 1: bed, 2: door)
+ * @example { "region_detection_settings": [{ "region_id": 1, "fall_detection_enable": 1, "dwell_detection_enable": 1, "motion_detection_enable": 1, "region_type": 0 }] }
  */
 function setRegionDetectionSettings(region_detection_settings) {
     var region_id = region_detection_settings.region_id;
@@ -535,18 +547,18 @@ function setRegionDetectionSettings(region_detection_settings) {
     var enable_map = { 0: "disable", 1: "enable" };
     var enable_values = getValues(enable_map);
     if (enable_values.indexOf(fall_detection_enable) === -1) {
-        throw new Error("region_detection_settings.fall_detection_enable must be in " + enable_values.join(", "));
+        throw new Error("region_detection_settings._item.fall_detection_enable must be in " + enable_values.join(", "));
     }
     if (enable_values.indexOf(dwell_detection_enable) === -1) {
-        throw new Error("region_detection_settings.dwell_detection_enable must be in " + enable_values.join(", "));
+        throw new Error("region_detection_settings._item.dwell_detection_enable must be in " + enable_values.join(", "));
     }
     if (enable_values.indexOf(motion_detection_enable) === -1) {
-        throw new Error("region_detection_settings.motion_detection_enable must be in " + enable_values.join(", "));
+        throw new Error("region_detection_settings._item.motion_detection_enable must be in " + enable_values.join(", "));
     }
     var region_type_map = { 0: "default", 1: "bed", 2: "door" };
     var region_type_values = getValues(region_type_map);
     if (region_type_values.indexOf(region_type) === -1) {
-        throw new Error("region_detection_settings.region_type must be in " + region_type_values.join(", "));
+        throw new Error("region_detection_settings._item.region_type must be in " + region_type_values.join(", "));
     }
 
     var buffer = new Buffer(7);
@@ -563,13 +575,13 @@ function setRegionDetectionSettings(region_detection_settings) {
 /**
  * set bed detection settings
  * @param {object} bed_detection_settings
- * @param {number} bed_detection_settings.bed_id range: [1, 4]
- * @param {number} bed_detection_settings.enable values: (0: disable, 1: enable)
- * @param {number} bed_detection_settings.start_time unit: min
- * @param {number} bed_detection_settings.end_time unit: min
- * @param {number} bed_detection_settings.bed_height unit: mm
- * @param {number} bed_detection_settings.out_of_bed_time unit: min
- * @example { "bed_detection_settings": { "bed_id": 1, "enable": 1, "start_time": 10, "end_time": 10, "bed_height": 10, "out_of_bed_time": 10 } }
+ * @param {number} bed_detection_settings._item.bed_id range: [1, 4]
+ * @param {number} bed_detection_settings._item.enable values: (0: disable, 1: enable)
+ * @param {number} bed_detection_settings._item.start_time unit: min
+ * @param {number} bed_detection_settings._item.end_time unit: min
+ * @param {number} bed_detection_settings._item.bed_height unit: mm
+ * @param {number} bed_detection_settings._item.out_of_bed_time unit: min
+ * @example { "bed_detection_settings": [{ "bed_id": 1, "enable": 1, "start_time": 10, "end_time": 10, "bed_height": 10, "out_of_bed_time": 10 }] }
  */
 function setBedDetectionSettings(bed_detection_settings) {
     var bed_id = bed_detection_settings.bed_id;
@@ -580,12 +592,12 @@ function setBedDetectionSettings(bed_detection_settings) {
     var out_of_bed_time = bed_detection_settings.out_of_bed_time;
 
     if (bed_id < 1 || bed_id > 4) {
-        throw new Error("bed_detection_settings.bed_id must be in [1, 4]");
+        throw new Error("bed_detection_settings._item.bed_id must be in [1, 4]");
     }
     var enable_map = { 0: "disable", 1: "enable" };
     var enable_values = getValues(enable_map);
     if (enable_values.indexOf(enable) === -1) {
-        throw new Error("bed_detection_settings.enable must be in " + enable_values.join(", "));
+        throw new Error("bed_detection_settings._item.enable must be in " + enable_values.join(", "));
     }
 
     var buffer = new Buffer(11);
@@ -763,7 +775,7 @@ function setD2DEnable(d2d_enable) {
  * @param {object} d2d_master_config
  * @param {number} d2d_master_config.mode values: (0: occupied, 1: vacant, 2: fall, 3: out_of_bed, 4: motionless, 5: dwell)
  * @param {number} d2d_master_config.enable values: (0: disable, 1: enable)
- * @param {number} d2d_master_config.uplink_enable values: (0: disable, 1: enable)
+ * @param {number} d2d_master_config.lora_uplink_enable values: (0: disable, 1: enable)
  * @param {string} d2d_master_config.d2d_cmd
  * @param {number} d2d_master_config.time_enable values: (0: disable, 1: enable)
  * @param {number} d2d_master_config.time unit: minute
@@ -772,8 +784,8 @@ function setD2DEnable(d2d_enable) {
 function setD2DMasterConfig(d2d_master_config) {
     var mode = d2d_master_config.mode;
     var enable = d2d_master_config.enable;
+    var lora_uplink_enable = d2d_master_config.lora_uplink_enable;
     var d2d_cmd = d2d_master_config.d2d_cmd;
-    var uplink_enable = d2d_master_config.uplink_enable;
     var time_enable = d2d_master_config.time_enable;
     var time = d2d_master_config.time;
 
@@ -787,8 +799,8 @@ function setD2DMasterConfig(d2d_master_config) {
     if (enable_values.indexOf(enable) === -1) {
         throw new Error("d2d_master_config._item.enable must be one of " + enable_values.join(", "));
     }
-    if (enable && enable_values.indexOf(uplink_enable) === -1) {
-        throw new Error("d2d_master_config._item.uplink_enable must be one of " + enable_values.join(", "));
+    if (enable && enable_values.indexOf(lora_uplink_enable) === -1) {
+        throw new Error("d2d_master_config._item.lora_uplink_enable must be one of " + enable_values.join(", "));
     }
     if (enable && enable_values.indexOf(time_enable) === -1) {
         throw new Error("d2d_master_config._item.time_enable must be one of " + enable_values.join(", "));
@@ -799,7 +811,7 @@ function setD2DMasterConfig(d2d_master_config) {
     buffer.writeUInt8(0x96);
     buffer.writeUInt8(getValue(mode_map, mode));
     buffer.writeUInt8(getValue(enable_map, enable));
-    buffer.writeUInt8(getValue(enable_map, uplink_enable));
+    buffer.writeUInt8(getValue(enable_map, lora_uplink_enable));
     buffer.writeD2DCommand(d2d_cmd, "0000");
     buffer.writeUInt16LE(time);
     buffer.writeUInt8(getValue(enable_map, time_enable));
@@ -809,11 +821,11 @@ function setD2DMasterConfig(d2d_master_config) {
 /**
  * d2d slave configuration
  * @param {object} d2d_slave_config
- * @param {number} d2d_slave_config.mode values: (0: occupied, 1: vacant, 2: fall, 3: out of bed, 4: motionless, 5: dwell)
- * @param {string} d2d_slave_config.d2d_cmd
- * @param {number} d2d_slave_config.control_type values: (1: button)
- * @param {number} d2d_slave_config.alarm_type values: (1: alarm deactivate, 2: wifi on, 3: wifi off)
- * @example { "d2d_slave_config": { "mode": 0, "d2d_cmd": "0000", "control_type": 1, "alarm_type": 1 } }
+ * @param {number} d2d_slave_config._item.mode values: (0: occupied, 1: vacant, 2: fall, 3: out of bed, 4: motionless, 5: dwell)
+ * @param {string} d2d_slave_config._item.d2d_cmd
+ * @param {number} d2d_slave_config._item.control_type values: (1: button)
+ * @param {number} d2d_slave_config._item.alarm_type values: (1: alarm deactivate, 2: wifi on, 3: wifi off)
+ * @example { "d2d_slave_config": [{ "mode": 0, "d2d_cmd": "0000", "control_type": 1, "alarm_type": 1 }] }
  */
 function setD2DSlaveConfig(d2d_slave_config) {
     var mode = d2d_slave_config.mode;
@@ -824,17 +836,17 @@ function setD2DSlaveConfig(d2d_slave_config) {
     var mode_map = { 0: "occupied", 1: "vacant", 2: "fall", 3: "out_of_bed", 4: "motionless", 5: "dwell" };
     var mode_values = getValues(mode_map);
     if (mode_values.indexOf(mode) === -1) {
-        throw new Error("d2d_slave_config.mode must be one of " + mode_values.join(", "));
+        throw new Error("d2d_slave_config._item.mode must be one of " + mode_values.join(", "));
     }
     var control_type_map = { 1: "button" };
     var control_type_values = getValues(control_type_map);
     if (control_type_values.indexOf(control_type) === -1) {
-        throw new Error("d2d_slave_config.control_type must be one of " + control_type_values.join(", "));
+        throw new Error("d2d_slave_config._item.control_type must be one of " + control_type_values.join(", "));
     }
     var alarm_type_map = { 1: "alarm_deactivate", 2: "wifi_on", 3: "wifi_off" };
     var alarm_type_values = getValues(alarm_type_map);
     if (alarm_type_values.indexOf(alarm_type) === -1) {
-        throw new Error("d2d_slave_config.alarm_type must be one of " + alarm_type_values.join(", "));
+        throw new Error("d2d_slave_config._item.alarm_type must be one of " + alarm_type_values.join(", "));
     }
 
     var buffer = new Buffer(7);
