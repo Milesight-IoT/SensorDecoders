@@ -130,8 +130,7 @@ function milesightDeviceDecode(bytes) {
             result = handle_downlink_response_ext(channel_id, channel_type, bytes, i);
             decoded = Object.assign(decoded, result.data);
             i = result.offset;
-        }
-        else {
+        } else {
             break;
         }
     }
@@ -147,9 +146,17 @@ function handle_downlink_response(channel_type, bytes, offset) {
             decoded.confirm_mode_enable = readEnableStatus(bytes[offset]);
             offset += 1;
             break;
+        case 0x10:
+            decoded.reboot = readYesNoStatus(1);
+            offset += 1;
+            break;
         case 0x11:
             decoded.timestamp = readUInt32LE(bytes.slice(offset, offset + 4));
             offset += 4;
+            break;
+        case 0x28:
+            decoded.report_status = readYesNoStatus(1);
+            offset += 1;
             break;
         case 0x2f:
             decoded.led_indicator_enable = readEnableStatus(bytes[offset]);
@@ -210,7 +217,6 @@ function handle_downlink_response(channel_type, bytes, offset) {
     return { data: decoded, offset: offset };
 }
 
-
 function handle_downlink_response_ext(code, channel_type, bytes, offset) {
     var decoded = {};
 
@@ -229,16 +235,22 @@ function handle_downlink_response_ext(code, channel_type, bytes, offset) {
             decoded.region_settings.push(region_settings);
             break;
         case 0x4a:
-            decoded.region_detection_settings = readRegionDetectionSettings(bytes.slice(offset, offset + 5));
+            var region_detection_settings = readRegionDetectionSettings(bytes.slice(offset, offset + 5));
             offset += 5;
+            decoded.region_detection_settings = decoded.region_detection_settings || [];
+            decoded.region_detection_settings.push(region_detection_settings);
             break;
         case 0x4b:
-            decoded.bed_detection_settings = readBedDetectionSettings(bytes.slice(offset, offset + 9));
+            var bed_detection_settings = readBedDetectionSettings(bytes.slice(offset, offset + 9));
             offset += 9;
+            decoded.bed_detection_settings = decoded.bed_detection_settings || [];
+            decoded.bed_detection_settings.push(bed_detection_settings);
             break;
         case 0x4c:
-            decoded.d2d_slave_config = readD2DSlaveConfig(bytes.slice(offset, offset + 5));
+            var d2d_slave_config = readD2DSlaveConfig(bytes.slice(offset, offset + 5));
             offset += 5;
+            decoded.d2d_slave_config = decoded.d2d_slave_config || [];
+            decoded.d2d_slave_config.push(d2d_slave_config);
             break;
         case 0x4e:
             decoded.digital_output = readDigitalOutput(bytes[offset]);
@@ -249,7 +261,7 @@ function handle_downlink_response_ext(code, channel_type, bytes, offset) {
             offset += 1;
             break;
         case 0x4f:
-            decoded.detection_region = readDetectionRegion(bytes.slice(offset, offset + 12));
+            decoded.detection_region_settings = readDetectionRegion(bytes.slice(offset, offset + 12));
             offset += 12;
             break;
         case 0x50:
@@ -355,8 +367,8 @@ function readDetectionStatus(status) {
     var detection_status_map = {
         0: "normal",
         1: "vacant",
-        2: "in bed",
-        3: "out of bed",
+        2: "in_bed",
+        3: "out_of_bed",
         4: "fall",
     };
     return getValue(detection_status_map, status);
@@ -384,7 +396,7 @@ function readAlarmType(type) {
         0: "fall",
         1: "motionless",
         2: "dwell",
-        3: "out of bed",
+        3: "out_of_bed",
         4: "occupied",
         5: "vacant",
     };
@@ -393,9 +405,9 @@ function readAlarmType(type) {
 
 function readAlarmStatus(status) {
     var alarm_status_map = {
-        1: "alarm triggered",
-        2: "alarm deactivated",
-        3: "alarm ignored",
+        1: "alarm_triggered",
+        2: "alarm_deactivated",
+        3: "alarm_ignored",
     };
     return getValue(alarm_status_map, status);
 }
@@ -525,7 +537,7 @@ function readD2DMasterConfig(bytes) {
     var config = {};
     config.mode = readD2DMode(readUInt8(bytes[offset]));
     config.enable = readEnableStatus(bytes[offset + 1]);
-    config.uplink_enable = readEnableStatus(bytes[offset + 2]);
+    config.lora_uplink_enable = readEnableStatus(bytes[offset + 2]);
     config.d2d_cmd = readD2DCommand(bytes.slice(offset + 3, offset + 5));
     config.time = readUInt16LE(bytes.slice(offset + 5, offset + 7));
     config.time_enable = readEnableStatus(bytes[offset + 7]);
@@ -613,7 +625,6 @@ function getValue(map, key) {
     if (!value) value = "unknown";
     return value;
 }
-
 
 if (!Object.assign) {
     Object.defineProperty(Object, "assign", {
