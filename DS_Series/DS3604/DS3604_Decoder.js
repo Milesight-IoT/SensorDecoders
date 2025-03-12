@@ -6,30 +6,37 @@
  * @product DS3604
  */
 var RAW_VALUE = 0x00;
-var errors = [];
 
 // Chirpstack v4
 function decodeUplink(input) {
-    var decoded = milesightDeviceDecode(input.bytes);
-    return { data: decoded, errors: errors };
+    try {
+        var decoded = milesightDeviceDecode(input.bytes);
+        return { data: decoded };
+    } catch (e) {
+        return asErrors(e);
+    }
 }
 
 // Chirpstack v3
 function Decode(fPort, bytes) {
-    var decoded = milesightDeviceDecode(bytes);
-    if (errors.length > 0) {
-        return { errors: errors };
+    try {
+        return milesightDeviceDecode(bytes);
+    } catch (e) {
+        return asErrors(e);
     }
-    return decoded;
 }
 
 // The Things Network
 function Decoder(bytes, port) {
-    var decoded = milesightDeviceDecode(bytes);
-    if (errors.length > 0) {
-        return { errors: errors };
+    try {
+        return milesightDeviceDecode(bytes);
+    } catch (e) {
+        return asErrors(e);
     }
-    return decoded;
+}
+
+function asErrors(e){
+    return { errors : [e.message]};
 }
 
 function milesightDeviceDecode(bytes) {
@@ -83,7 +90,7 @@ function milesightDeviceDecode(bytes) {
         // IMAGE DATA
         else if (channel_id === 0xfb && channel_type === 0x02) {
             // TODO: decode image data
-            errors.push("image data not implemented");
+            throw new Error("image data not implemented");
         }
         // TEMPLATE CONFIG
         else if (channel_id === 0xfb && channel_type === 0x03) {
@@ -171,8 +178,7 @@ function milesightDeviceDecode(bytes) {
             i = result.offset;
         }
         else {
-            errors.push("unknown channel id: " + channel_id);
-            break;
+            throw new Error("unknown channel id: " + channel_id);
         }
     }
 
@@ -251,7 +257,7 @@ function handle_downlink_response(channel_type, bytes, offset) {
             offset += 1;
             break;
         default:
-            errors.push("unknown downlink response");
+            throw new Error("unknown downlink response");
     }
 
     return { data: decoded, offset: offset };
