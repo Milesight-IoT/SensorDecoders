@@ -329,7 +329,7 @@ function setModbusSerialPortConfig(modbus_serial_port_config) {
 
     var buffer = new Buffer(9);
     buffer.writeUInt8(0xf9);
-    buffer.writeUInt8(0x78);
+    buffer.writeUInt8(0x7b);
     buffer.writeUInt32LE(baud_rate);
     buffer.writeUInt8(data_bits);
     buffer.writeUInt8(stop_bits);

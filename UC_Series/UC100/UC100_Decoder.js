@@ -122,13 +122,13 @@ function milesightDeviceDecode(bytes) {
         else if (channel_id === 0xf9 && channel_type === 0x73) {
             var value_1 = bytes[i];
             var value_2 = bytes[i + 1];
+            i += 2;
 
             var modbus_chn_id = (value_1 & 0x3f) + 1;
-            var modbus_alarm_value = (value_1 >>> 6) & 0x01;
+            var modbus_alarm_value = (value_1 >>> 6) & 0x03;
             var sign = (value_2 >>> 7) & 0x01;
             var reg_offset = (value_2 >>> 5) & 0x03;
             var data_type = value_2 & 0x1f;
-
             var value = 0;
             switch (data_type) {
                 case 0:
@@ -328,16 +328,106 @@ function milesightDeviceDecode(bytes) {
 
             var data = {};
             data.timestamp = timestamp;
-            data[modbus_chn_name + "_reg_1"] = readModbusHistoryV2(reg_type, bytes.slice(i + 8, i + 16));
+            data[modbus_chn_name + "_reg_1"] = readModbusHistoryV2(reg_type, sign, bytes.slice(i + 7, i + 15));
             if (reg_counts === 2) {
-                data[modbus_chn_name + "_reg_2"] = readModbusHistoryV2(reg_type, bytes.slice(i + 16, i + 24));
+                data[modbus_chn_name + "_reg_2"] = readModbusHistoryV2(reg_type, sign, bytes.slice(i + 15, i + 23));
             }
             data[modbus_chn_name + "_alarm"] = readModbusAlarmType(event_type);
-            i += 24;
+            i += 23;
+
+            decoded.history = decoded.history || [];
+            decoded.history.push(data);
         }
         // RULE ENGINE (v2.0)
         else if (channel_id === 0xf9 && channel_type === 0x7d) {
-            // TODO:
+            var channel_def = readUInt8(bytes[i]);
+            var rule_flag = readUInt8(bytes[i + 1]);
+
+            var enable = (channel_def >> 7) & 0x01;
+            var rule_id = channel_def & 0x7f;
+            var is_rule_condition = ((rule_flag >> 7) & 0x01) === 0;
+            if (is_rule_condition) {
+                var condition_type = rule_flag & 0x03;
+                var condition = {};
+                condition.type = readConditionType(condition_type);
+                switch (condition_type) {
+                    case 0x00:
+                        break;
+                    case 0x01:
+                        condition.time_condition = readTimeCondition(bytes.slice(i + 2, i + 9));
+                        i += 9;
+                        break;
+                    case 0x02:
+                        condition.modbus_value_condition = readModbusValueCondition(bytes.slice(i + 2, i + 19));
+                        i += 19;
+                        break;
+                    case 0x03:
+                        condition.modbus_cmd_condition = readModbusCmdCondition(bytes.slice(i + 2, i + 50));
+                        i += 50;
+                        break;
+                    case 0x04:
+                        condition.message_condition = readMessageCondition(bytes.slice(i + 2, i + 50));
+                        i += 50;
+                        break;
+                    case 0x05:
+                        condition.d2d_condition = readD2DCondition(bytes.slice(i + 2, i + 5));
+                        i += 5;
+                        break;
+                    case 0x06:
+                        condition.reboot_condition = readRebootCondition();
+                        i += 2;
+                        break;
+                }
+                decoded.rule_config = decoded.rule_config || [];
+                decoded.rule_config.push({
+                    rule_id: rule_id,
+                    enable: readEnableStatus(enable),
+                    condition: condition,
+                });
+            } else {
+                var action_index = (rule_flag >> 5) & 0x03;
+                var action_enable = (rule_flag >> 4) & 0x01;
+                var action_type = rule_flag & 0x03;
+
+                var action = {};
+                action.delay_time = readUInt32LE(bytes.slice(i + 2, i + 6));
+                action.type = readActionType(action_type);
+                action.index = action_index;
+                switch (action_type) {
+                    case 0x00:
+                        break;
+                    case 0x01:
+                        action.message_action = readMessageAction(bytes.slice(i + 6, i + 58));
+                        i += 58;
+                        break;
+                    case 0x02:
+                        action.d2d_action = readD2DAction(bytes.slice(i + 6, i + 8));
+                        i += 8;
+                        break;
+                    case 0x03:
+                        action.modbus_cmd_action = readModbusCmdAction(bytes.slice(i + 6, i + 58));
+                        i += 58;
+                        break;
+                    case 0x04:
+                        action.report_status_action = readReportStatusAction();
+                        i += 4;
+                        break;
+                    case 0x05:
+                        action.report_alarm_action = readReportAlarmAction(bytes[i + 7]);
+                        i += 8;
+                        break;
+                    case 0x06:
+                        action.reboot_action = readRebootAction();
+                        i += 4;
+                        break;
+                }
+                decoded.rule_config = decoded.rule_config || [];
+                decoded.rule_config.push({
+                    rule_id: rule_id,
+                    enable: readEnableStatus(action_enable),
+                    action: [action],
+                });
+            }
         }
         // CUSTOM MESSAGE HISTORY (v1.7+)
         else if (channel_id === 0x20 && channel_type === 0xcd) {
@@ -776,7 +866,8 @@ function readRegisterType(type) {
     return getValue(register_type_map, type);
 }
 
-function readModbusHistoryV2(bytes) {
+function readModbusHistoryV2(reg_type, sign, bytes) {
+    var i = 0;
     var value = 0;
     switch (reg_type) {
         case 0: // MB_REG_COIL
@@ -825,18 +916,18 @@ function readModbusHistoryV2(bytes) {
         case 27: // MB_REG_INPUT_DOUBLE_GHEFCDAB
         case 28: // MB_REG_INPUT_DOUBLE_BADCFEHG
         case 29: // MB_REG_INPUT_DOUBLE_HGFEDCBA
-        case 30: // MB_REG_INPUT_DOUBLE_ABCDEFGH
-        case 31: // MB_REG_INPUT_DOUBLE_GHEFCDAB
-        case 32: // MB_REG_INPUT_DOUBLE_BADCFEHG
-        case 33: // MB_REG_INPUT_DOUBLE_HGFEDCBA
+        case 30: // MB_REG_INPUT_INT64_ABCDEFGH
+        case 31: // MB_REG_INPUT_INT64_GHEFCDAB
+        case 32: // MB_REG_INPUT_INT64_BADCFEHG
+        case 33: // MB_REG_INPUT_INT64_HGFEDCBA
         case 34: // MB_REG_HOLD_DOUBLE_ABCDEFGH
         case 35: // MB_REG_HOLD_DOUBLE_GHEFCDAB
         case 36: // MB_REG_HOLD_DOUBLE_BADCFEHG
         case 37: // MB_REG_HOLD_DOUBLE_HGFEDCBA
-        case 38: // MB_REG_HOLD_DOUBLE_BADCFEHG
-        case 39: // MB_REG_HOLD_DOUBLE_HGFEDCBA
-        case 40: // MB_REG_HOLD_DOUBLE_BADCFEHG
-        case 41: // MB_REG_HOLD_DOUBLE_HGFEDCBA
+        case 38: // MB_REG_HOLD_INT64_ABCDEFGH
+        case 39: // MB_REG_HOLD_INT64_GHEFCDAB
+        case 40: // MB_REG_HOLD_INT64_BADCFEHG
+        case 41: // MB_REG_HOLD_INT64_HGFEDCBA
             value = readDoubleLE(bytes.slice(i, i + 8));
             break;
     }
@@ -1065,7 +1156,7 @@ function readMessageAction(bytes) {
 
 function readD2DAction(bytes) {
     var d2d_action = {};
-    d2d_action.d2d_cmd = readAscii(bytes);
+    d2d_action.d2d_cmd = readD2DCommand(bytes);
     return d2d_action;
 }
 
@@ -1121,13 +1212,84 @@ function readInt32LE(bytes) {
 }
 
 function readUInt64LE(bytes) {
-    var value = (bytes[7] << 56) + (bytes[6] << 48) + (bytes[5] << 40) + (bytes[4] << 32) + (bytes[3] << 24) + (bytes[2] << 16) + (bytes[1] << 8) + bytes[0];
-    return (value & 0xffffffffffffffff) >>> 0;
+    // JavaScript unable to handle 64-bit integers, so we split the 64-bit value into two 32-bit parts
+    const low = readUInt32LE(bytes.slice(0, 4));
+    const high = readUInt32LE(bytes.slice(4, 8));
+
+    // For values less than 2^53, we can directly calculate
+    if (high < 0x200000) {
+        return high * 0x100000000 + low;
+    }
+
+    // For larger values, return a string or use BigInt (if supported)
+    if (typeof BigInt !== "undefined") {
+        return (BigInt(high) << BigInt(32)) + BigInt(low);
+    } else {
+        // Return an object containing the high and low parts
+        return {
+            high: high,
+            low: low,
+            toString: function () {
+                // Simple string representation
+                return `${high.toString(16)}${low.toString(16).padStart(8, "0")}`;
+            },
+        };
+    }
 }
 
 function readInt64LE(bytes) {
-    var ref = readUInt64LE(bytes);
-    return ref > 0x7fffffffffffffff ? ref - 0x1000000000000000 : ref;
+    const low = readUInt32LE(bytes.slice(0, 4));
+    const high = readUInt32LE(bytes.slice(4, 8));
+
+    // check the sign bit
+    const isNegative = (high & 0x80000000) !== 0;
+
+    if (!isNegative) {
+        // positive number is processed the same as UInt64
+        if (high < 0x200000) {
+            return high * 0x100000000 + low;
+        }
+    } else {
+        // for negative numbers, if the absolute value is less than 2^53, we can directly calculate
+        if ((high & 0x7fffffff) < 0x200000) {
+            return -((~high & 0x7fffffff) * 0x100000000 + (~low & 0xffffffff) + 1);
+        }
+    }
+
+    // for larger values, use BigInt (if supported)
+    if (typeof BigInt !== "undefined") {
+        let value = (BigInt(high) << BigInt(32)) | BigInt(low);
+        if (isNegative) {
+            // negative numbers need to be converted to signed integers
+            value = value - BigInt("18446744073709551616");
+        }
+        return value;
+    } else {
+        // return an object containing the high, low, and sign
+        return {
+            high: high,
+            low: low,
+            isNegative: isNegative,
+            toString: function () {
+                if (!isNegative) {
+                    return `${high.toString(16)}${low.toString(16).padStart(8, "0")}`;
+                } else {
+                    // for negative numbers, calculate the two's complement
+                    const twoComp = ((~high & 0xffffffff) << 32) | ((~low & 0xffffffff) + 1);
+                    return `-${(twoComp >>> 0).toString(16)}`;
+                }
+            },
+        };
+    }
+}
+
+function readFloat16LE(bytes) {
+    var bits = (bytes[1] << 8) | bytes[0];
+    var sign = bits >>> 15 === 0 ? 1.0 : -1.0;
+    var e = (bits >>> 10) & 0x1f;
+    var m = e === 0 ? (bits & 0x3ff) << 1 : (bits & 0x3ff) | 0x400;
+    var f = sign * m * Math.pow(2, e - 25);
+    return f;
 }
 
 function readFloatLE(bytes) {
@@ -1141,13 +1303,46 @@ function readFloatLE(bytes) {
 }
 
 function readDoubleLE(bytes) {
-    var bits = (bytes[7] << 56) | (bytes[6] << 48) | (bytes[5] << 40) | (bytes[4] << 32) | (bytes[3] << 24) | (bytes[2] << 16) | (bytes[1] << 8) | bytes[0];
-    var sign = bits >>> 63 === 0 ? 1.0 : -1.0;
-    var e = (bits >>> 52) & 0x7ff;
-    var m = e === 0 ? (bits & 0xfffffffffffff) << 1 : (bits & 0xfffffffffffff) | 0x10000000000000;
-    var f = sign * m * Math.pow(2, e - 1075);
-    var n = Number(f.toFixed(2));
-    return n;
+    // read from 8 bytes
+    const low = bytes[0] | (bytes[1] << 8) | (bytes[2] << 16) | (bytes[3] << 24);
+    const high = bytes[4] | (bytes[5] << 8) | (bytes[6] << 16) | (bytes[7] << 24);
+
+    // extract the sign bit (bit 63)
+    const sign = high >>> 31 === 0 ? 1.0 : -1.0;
+
+    // extract the exponent (bit 62-52)
+    const exponent = (high >>> 20) & 0x7ff;
+
+    // extract the mantissa (bit 51-0)
+    // high part (bit 51-32)
+    const highMantissa = high & 0xfffff;
+    // low part (bit 31-0)
+    const lowMantissa = low;
+
+    let result;
+
+    if (exponent === 0) {
+        // handle denormalized numbers
+        if (highMantissa === 0 && lowMantissa === 0) {
+            result = sign * 0; // zero
+        } else {
+            // denormalized numbers, exponent offset is -1022
+            result = sign * Math.pow(2, -1022) * (highMantissa * Math.pow(2, -20) + lowMantissa * Math.pow(2, -52));
+        }
+    } else if (exponent === 0x7ff) {
+        // handle infinity and NaN
+        if (highMantissa === 0 && lowMantissa === 0) {
+            result = sign === 1.0 ? Infinity : -Infinity; // infinity
+        } else {
+            result = NaN; // Not a Number
+        }
+    } else {
+        // handle normalized numbers
+        // IEEE 754 double precision floating point exponent offset is 1023
+        result = sign * Math.pow(2, exponent - 1023) * (1 + highMantissa * Math.pow(2, -20) + lowMantissa * Math.pow(2, -52));
+    }
+
+    return result;
 }
 
 function readAscii(bytes) {
