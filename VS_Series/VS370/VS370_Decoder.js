@@ -26,7 +26,7 @@ function Decoder(bytes, port) {
 function milesightDeviceDecode(bytes) {
     var decoded = {};
 
-    for (var i = 0; i < bytes.length;) {
+    for (var i = 0; i < bytes.length; ) {
         var channel_id = bytes[i++];
         var channel_type = bytes[i++];
 
@@ -101,7 +101,6 @@ function milesightDeviceDecode(bytes) {
 
     return decoded;
 }
-
 
 function handle_downlink_response(channel_type, bytes, offset) {
     var decoded = {};
@@ -203,10 +202,12 @@ function handle_downlink_response_ext(code, channel_type, bytes, offset) {
         offset += 1;
 
         if (result_value !== 0) {
+            var request = decoded;
             decoded = {};
             decoded.device_response_result = {};
             decoded.device_response_result.channel_type = channel_type;
-            decoded.device_response_result.result = readResultStatus(bytes[offset]);
+            decoded.device_response_result.result = readResultStatus(result_value);
+            decoded.device_response_result.request = request;
         }
     }
 
@@ -215,6 +216,11 @@ function handle_downlink_response_ext(code, channel_type, bytes, offset) {
 
 function hasResultFlag(code) {
     return code === 0xf8;
+}
+
+function readResultStatus(status) {
+    var status_map = { 0: "success", 1: "forbidden", 2: "invalid parameter" };
+    return getValue(status_map, status);
 }
 
 function readProtocolVersion(bytes) {
@@ -324,12 +330,12 @@ function readDstConfig(bytes) {
     if (enable_value === 1) {
         dst_config.start_month = readMonth(bytes[offset + 2]);
         var start_week_value = bytes[offset + 3];
-        dst_config.start_week_num = (start_week_value >> 4);
+        dst_config.start_week_num = start_week_value >> 4;
         dst_config.start_week_day = readWeek(start_week_value & 0x0f);
         dst_config.start_time = readUInt16LE(bytes.slice(offset + 4, offset + 6));
         dst_config.end_month = readMonth(bytes[offset + 6]);
         var end_week_value = bytes[offset + 7];
-        dst_config.end_week_num = (end_week_value >> 4);
+        dst_config.end_week_num = end_week_value >> 4;
         dst_config.end_week_day = readWeek(end_week_value & 0x0f);
         dst_config.end_time = readUInt16LE(bytes.slice(offset + 8, offset + 10));
     }
