@@ -62,8 +62,8 @@ function milesightDeviceEncode(payload) {
     if ("threshold_alarm_enable" in payload) {
         encoded = encoded.concat(setThresholdAlarmEnable(payload.threshold_alarm_enable));
     }
-    if ("temperature_threshold_config" in payload) {
-        encoded = encoded.concat(setTemperatureThresholdConfig(payload.temperature_threshold_config));
+    if ("temperature_alarm_config" in payload) {
+        encoded = encoded.concat(setTemperatureAlarmConfig(payload.temperature_alarm_config));
     }
     if ("temperature_mutation_config" in payload) {
         encoded = encoded.concat(setTemperatureMutationConfig(payload.temperature_mutation_config));
@@ -106,25 +106,21 @@ function reboot(reboot) {
 }
 
 /**
- * report device status
+ * report status
  * @param {number} report_status values: (0: no, 1: yes)
  * @example { "report_status": 1 }
  */
 function reportStatus(report_status) {
     var yes_no_map = { 0: "no", 1: "yes" };
-    var report_status_values = getValues(yes_no_map);
-    if (report_status_values.indexOf(report_status) === -1) {
-        throw new Error("report_status must be one of " + report_status_values.join(", "));
+    var yes_no_values = getValues(yes_no_map);
+    if (yes_no_values.indexOf(report_status) === -1) {
+        throw new Error("report_status must be one of " + yes_no_values.join(", "));
     }
+
     if (getValue(yes_no_map, report_status) === 0) {
         return [];
     }
-
-    var buffer = new Buffer(3);
-    buffer.writeUInt8(0xff);
-    buffer.writeUInt8(0x28);
-    buffer.writeUInt8(getValue(yes_no_map, report_status));
-    return buffer.toBytes();
+    return [0xff, 0x28, 0xff];
 }
 
 /**
@@ -183,7 +179,7 @@ function syncTime(sync_time) {
     if (getValue(yes_no_map, sync_time) === 0) {
         return [];
     }
-    return [0xff, 0x4a, 0xff];
+    return [0xff, 0x4a, 0x00];
 }
 
 /**
@@ -268,28 +264,28 @@ function setAlarmCount(alarm_count) {
 
 /**
  * set temperature threshold config
- * @param {object} temperature_threshold_config
- * @param {number} temperature_threshold_config.condition values: (1: below, 2: above, 3: between, 4: outside)
- * @param {number} temperature_threshold_config.max
- * @param {number} temperature_threshold_config.min
- * @param {number} temperature_threshold_config.enable values: (0: disable, 1: enable)
- * @example { "temperature_threshold_config": { "condition": 1, "max": 25, "min": 20, "enable": 1 } }
+ * @param {object} temperature_alarm_config
+ * @param {number} temperature_alarm_config.condition values: (0: disable, 1: below, 2: above, 3: between, 4: outside)
+ * @param {number} temperature_alarm_config.max
+ * @param {number} temperature_alarm_config.min
+ * @param {number} temperature_alarm_config.enable values: (0: disable, 1: enable)
+ * @example { "temperature_alarm_config": { "condition": 1, "max": 25, "min": 20, "enable": 1 } }
  */
-function setTemperatureThresholdConfig(temperature_threshold_config) {
-    var condition = temperature_threshold_config.condition;
-    var max = temperature_threshold_config.max;
-    var min = temperature_threshold_config.min;
-    var enable = temperature_threshold_config.enable;
+function setTemperatureAlarmConfig(temperature_alarm_config) {
+    var condition = temperature_alarm_config.condition;
+    var max = temperature_alarm_config.max;
+    var min = temperature_alarm_config.min;
+    var enable = temperature_alarm_config.enable;
 
-    var condition_map = { 1: "below", 2: "above", 3: "between", 4: "outside" };
+    var condition_map = { 0: "disable", 1: "below", 2: "above", 3: "between", 4: "outside" };
     var condition_values = getValues(condition_map);
     if (condition_values.indexOf(condition) === -1) {
-        throw new Error("temperature_threshold_config.condition must be one of " + condition_values.join(", "));
+        throw new Error("temperature_alarm_config.condition must be one of " + condition_values.join(", "));
     }
     var enable_map = { 0: "disable", 1: "enable" };
     var enable_values = getValues(enable_map);
     if (enable_values.indexOf(enable) === -1) {
-        throw new Error("temperature_threshold_config.enable must be one of " + enable_values.join(", "));
+        throw new Error("temperature_alarm_config.enable must be one of " + enable_values.join(", "));
     }
 
     var buffer = new Buffer(9);

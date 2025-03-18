@@ -26,7 +26,7 @@ function Decoder(bytes, port) {
 function milesightDeviceDecode(bytes) {
     var decoded = {};
 
-    for (var i = 0; i < bytes.length; ) {
+    for (var i = 0; i < bytes.length;) {
         var channel_id = bytes[i++];
         var channel_type = bytes[i++];
 
@@ -143,13 +143,25 @@ function milesightDeviceDecode(bytes) {
             decoded.history = decoded.history || [];
             decoded.history.push(data);
         }
+        // SENSOR ID
+        else if (channel_id === 0xff && channel_type === 0xa0) {
+            var data = readUInt8(bytes[i]);
+            var channel_idx = (data >>> 4) & 0x0f;
+            var sensor_type = (data >>> 0) & 0x0f;
+            var sensor_id = readHexString(bytes.slice(i + 1, i + 9));
+            var sensor_chn_name = "sensor_" + channel_idx;
+            i += 9;
+
+            decoded[sensor_chn_name + "_type"] = readSensorIDType(sensor_type);
+            decoded[sensor_chn_name + "_sn"] = sensor_id;
+        }
         // DOWNLINK RESPONSE
-        else if (channel_id === 0xfe) {
+        else if (channel_id === 0xfe || channel_id === 0xff) {
             result = handle_downlink_response(channel_type, bytes, i);
             decoded = Object.assign(decoded, result.data);
             i = result.offset;
-        } else if (channel_id === 0xf8) {
-            result = handle_downlink_response_ext(channel_type, bytes, i);
+        } else if (channel_id === 0xf8 || channel_id === 0xf9) {
+            result = handle_downlink_response_ext(channel_id, channel_type, bytes, i);
             decoded = Object.assign(decoded, result.data);
             i = result.offset;
         } else {
@@ -167,6 +179,18 @@ function handle_downlink_response(channel_type, bytes, offset) {
         case 0x02:
             decoded.collection_interval = readUInt16LE(bytes.slice(offset, offset + 2));
             offset += 2;
+            break;
+        case 0x10:
+            decoded.reboot = readYesNoStatus(1);
+            offset += 1;
+            break;
+        case 0x28:
+            decoded.report_status = readYesNoStatus(1);
+            offset += 1;
+            break;
+        case 0x4a:
+            decoded.sync_time = readYesNoStatus(1);
+            offset += 1;
             break;
         case 0x68:
             decoded.history_enable = readEnableStatus(bytes[offset]);
@@ -209,84 +233,77 @@ function handle_downlink_response(channel_type, bytes, offset) {
     return { data: decoded, offset: offset };
 }
 
-function handle_downlink_response_ext(channel_type, bytes, offset) {
+function handle_downlink_response_ext(code, channel_type, bytes, offset) {
     var decoded = {};
 
     switch (channel_type) {
         case 0x0b:
-            var threshold_config_result = readUInt8(bytes[offset + 7]);
             var data_type = readUInt8(bytes[offset]);
-            if (threshold_config_result === 0) {
-                if (data_type === 0x01) {
-                    decoded.temperature_threshold_config = {};
-                    decoded.temperature_threshold_config.condition = readMathConditionType(bytes[offset + 1]);
-                    decoded.temperature_threshold_config.max = readInt16LE(bytes.slice(offset + 2, offset + 4)) / 10;
-                    decoded.temperature_threshold_config.min = readInt16LE(bytes.slice(offset + 4, offset + 6)) / 10;
-                    decoded.temperature_threshold_config.enable = readEnableStatus(bytes[offset + 6]);
-                }
-            } else {
-                decoded.threshold_config_result = readResultStatus(threshold_config_result);
+            if (data_type === 0x01) {
+                decoded.temperature_alarm_config = {};
+                decoded.temperature_alarm_config.condition = readMathConditionType(bytes[offset + 1]);
+                decoded.temperature_alarm_config.max = readInt16LE(bytes.slice(offset + 2, offset + 4)) / 10;
+                decoded.temperature_alarm_config.min = readInt16LE(bytes.slice(offset + 4, offset + 6)) / 10;
+                decoded.temperature_alarm_config.enable = readEnableStatus(bytes[offset + 6]);
             }
-            offset += 8;
+            offset += 7;
             break;
         case 0x0c:
-            var mutation_config_result = readUInt8(bytes[offset + 4]);
             var data_type = readUInt8(bytes[offset]);
-            if (mutation_config_result === 0) {
-                if (data_type === 0x02) {
-                    decoded.temperature_mutation_config = {};
-                    decoded.temperature_mutation_config.threshold = readUInt16LE(bytes.slice(offset + 1, offset + 3)) / 10;
-                    decoded.temperature_mutation_config.enable = readEnableStatus(bytes[offset + 3]);
-                }
-            } else {
-                decoded.mutation_config_result = readResultStatus(mutation_config_result);
+            if (data_type === 0x02) {
+                decoded.temperature_mutation_config = {};
+                decoded.temperature_mutation_config.threshold = readUInt16LE(bytes.slice(offset + 1, offset + 3)) / 10;
+                decoded.temperature_mutation_config.enable = readEnableStatus(bytes[offset + 3]);
             }
-            offset += 5;
+            offset += 4;
             break;
         case 0x0d:
-            var retransmit_config_result = readUInt8(bytes[offset + 3]);
-            if (retransmit_config_result === 0) {
-                decoded.retransmit_config = {};
-                decoded.retransmit_config.enable = readEnableStatus(bytes[offset]);
-                decoded.retransmit_config.interval = readUInt16LE(bytes.slice(offset + 1, offset + 3));
-            } else {
-                decoded.retransmit_config_result = readResultStatus(retransmit_config_result);
-            }
-            offset += 4;
-            break;
-        case 0x0e:
-            var resend_config_result = readUInt8(bytes[offset + 2]);
-            if (resend_config_result === 0) {
-                decoded.resend_interval = readUInt16LE(bytes.slice(offset, offset + 2));
-            } else {
-                decoded.resend_config_result = readResultStatus(resend_config_result);
-            }
+            decoded.retransmit_config = {};
+            decoded.retransmit_config.enable = readEnableStatus(bytes[offset]);
+            decoded.retransmit_config.interval = readUInt16LE(bytes.slice(offset + 1, offset + 3));
             offset += 3;
             break;
-        case 0x31:
-            var fetch_sensor_id_result = readUInt8(bytes[offset + 1]);
-            if (fetch_sensor_id_result === 0) {
-                decoded.fetch_sensor_id = readUInt8(bytes[offset]);
-            } else {
-                decoded.fetch_sensor_id_result = readResultStatus(fetch_sensor_id_result);
-            }
+        case 0x0e:
+            decoded.resend_interval = readUInt16LE(bytes.slice(offset, offset + 2));
             offset += 2;
             break;
+        case 0x31:
+            decoded.fetch_sensor_id = readUInt8(bytes[offset]);
+            offset += 1;
+            break;
         case 0x32:
-            var ack_retry_times_result = readUInt8(bytes[offset + 3]);
-            if (ack_retry_times_result === 0) {
-                // skip 2 byte
-                decoded.ack_retry_times = readUInt8(bytes[offset + 2]);
-            } else {
-                decoded.ack_retry_times_result = readResultStatus(ack_retry_times_result);
-            }
-            offset += 4;
+            // skip 2 byte
+            decoded.ack_retry_times = readUInt8(bytes[offset + 2]);
+            offset += 3;
             break;
         default:
-            decoded.unknown_downlink_response = readResultStatus(channel_type);
+            throw new Error("unknown downlink response");
+    }
+
+    if (hasResultFlag(code)) {
+        var result_value = readUInt8(bytes[offset]);
+        offset += 1;
+
+        if (result_value !== 0) {
+            var request = decoded;
+            decoded = {};
+            decoded.device_response_result = {};
+            decoded.device_response_result.channel_type = channel_type;
+            decoded.device_response_result.result = readResultStatus(result_value);
+            decoded.device_response_result.request = request;
+        }
     }
 
     return { data: decoded, offset: offset };
+}
+
+function hasResultFlag(code) {
+    return code === 0xf8;
+}
+
+function readResultStatus(status) {
+    var status_map = { 0: "success", 1: "forbidden", 2: "invalid parameter" };
+    return getValue(status_map, status);
 }
 
 function readProtocolVersion(bytes) {
@@ -346,6 +363,11 @@ function readEnableStatus(status) {
     return getValue(status_map, status);
 }
 
+function readYesNoStatus(status) {
+    var status_map = { 0: "no", 1: "yes" };
+    return getValue(status_map, status);
+}
+
 function readSensorIDType(type) {
     var sensor_id_map = { 1: "DS18B20", 2: "SHT4X" };
     return getValue(sensor_id_map, type);
@@ -392,7 +414,7 @@ function readEventType(type) {
 }
 
 function readMathConditionType(type) {
-    var condition_map = { 1: "below", 2: "above", 3: "between", 4: "outside" };
+    var condition_map = { 0: "disable", 1: "below", 2: "above", 3: "between", 4: "outside" };
     return getValue(condition_map, type);
 }
 
