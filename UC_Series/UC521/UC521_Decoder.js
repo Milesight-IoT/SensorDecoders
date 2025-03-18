@@ -227,6 +227,30 @@ function handle_downlink_response(channel_type, bytes, offset) {
     var decoded = {};
 
     switch (channel_type) {
+        case 0x10:
+            decoded.reboot = readYesNoStatus(1);
+            offset += 1;
+            break;
+        case 0x1e:
+            decoded.class_a_response_time = readUInt32LE(bytes.slice(offset, offset + 4));
+            offset += 4;
+            break;
+        case 0x28:
+            decoded.report_status = readYesNoStatus(1);
+            offset += 1;
+            break;
+        case 0x35:
+            decoded.d2d_key = readHexString(bytes.slice(offset, offset + 8));
+            offset += 8;
+            break;
+        case 0x46:
+            decoded.gpio_jitter_time = readUInt8(bytes[offset]);
+            offset += 1;
+            break;
+        case 0x4a:
+            decoded.sync_time = readYesNoStatus(1);
+            offset += 1;
+            break;
         case 0x4b: // batch_read_rules
             var type = readUInt8(bytes[offset]);
             var rule_bit_offset = { rule_1: 0, rule_2: 1, rule_3: 2, rule_4: 3, rule_5: 4, rule_6: 5, rule_7: 6, rule_8: 7, rule_9: 8, rule_10: 9, rule_11: 10, rule_12: 11, rule_13: 12, rule_14: 13, rule_15: 14, rule_16: 15 };
@@ -235,7 +259,7 @@ function handle_downlink_response(channel_type, bytes, offset) {
                 decoded.batch_read_rules = {};
                 var data = readUInt16LE(bytes.slice(offset + 1, offset + 3));
                 for (var key in rule_bit_offset) {
-                    decoded.batch_read_rules[key] = readYesNo((data >>> rule_bit_offset[key]) & 0x01);
+                    decoded.batch_read_rules[key] = readYesNoStatus((data >>> rule_bit_offset[key]) & 0x01);
                 }
             }
             // batch enable rules
@@ -251,7 +275,7 @@ function handle_downlink_response(channel_type, bytes, offset) {
                 decoded.batch_remove_rules = {};
                 var data = readUInt16LE(bytes.slice(offset + 1, offset + 3));
                 for (var key in rule_bit_offset) {
-                    decoded.batch_remove_rules[key] = readYesNo((data >>> rule_bit_offset[key]) & 0x01);
+                    decoded.batch_remove_rules[key] = readYesNoStatus((data >>> rule_bit_offset[key]) & 0x01);
                 }
             }
             // enable single rule
@@ -264,7 +288,7 @@ function handle_downlink_response(channel_type, bytes, offset) {
             else if (type === 4) {
                 var rule_index = readUInt8(bytes[offset + 1]);
                 var rule_x_name = "rule_" + rule_index + "_remove";
-                decoded[rule_x_name] = readYesNo(bytes[offset + 2]);
+                decoded[rule_x_name] = readYesNoStatus(bytes[offset + 2]);
             }
             offset += 3;
             break;
@@ -272,7 +296,7 @@ function handle_downlink_response(channel_type, bytes, offset) {
             var valve_index = readUInt8(bytes[offset]);
             var valve_index_name = "clear_valve_" + valve_index + "_pulse";
             // ignore the next byte
-            decoded[valve_index_name] = readYesNo(1);
+            decoded[valve_index_name] = readYesNoStatus(1);
             offset += 2;
             break;
         case 0x52:
@@ -286,7 +310,7 @@ function handle_downlink_response(channel_type, bytes, offset) {
             var rule_index = readUInt8(bytes[offset]);
             var rule_index_name = "rule_" + rule_index;
             decoded.query_rule_config = decoded.query_rule_config || {};
-            decoded.query_rule_config[rule_index_name] = readYesNo(1);
+            decoded.query_rule_config[rule_index_name] = readYesNoStatus(1);
             offset += 1;
             break;
         case 0x55:
@@ -299,6 +323,10 @@ function handle_downlink_response(channel_type, bytes, offset) {
 
             decoded.rules_config = decoded.rules_config || [];
             decoded.rules_config.push(rule_config);
+            break;
+        case 0x84:
+            decoded.d2d_enable = readEnableStatus(bytes[offset]);
+            offset += 1;
             break;
         case 0x8e:
             // ignore the first byte
@@ -314,6 +342,10 @@ function handle_downlink_response(channel_type, bytes, offset) {
         case 0xbd:
             decoded.timezone = readTimeZone(readInt16LE(bytes.slice(offset, offset + 2)));
             offset += 2;
+            break;
+        case 0xf3:
+            decoded.response_enable = readEnableStatus(bytes[offset]);
+            offset += 1;
             break;
         default:
             throw new Error("unknown downlink response");
@@ -395,7 +427,7 @@ function handle_downlink_response_ext(code, channel_type, bytes, offset) {
             decoded.query_valve_opening_duration = decoded.query_valve_opening_duration || {};
             var valve_index = readUInt8(bytes[offset]);
             var valve_index_name = "valve_" + valve_index;
-            decoded.query_valve_opening_duration[valve_index_name] = readYesNo(1);
+            decoded.query_valve_opening_duration[valve_index_name] = readYesNoStatus(1);
             offset += 1;
             break;
         case 0x71:
@@ -405,19 +437,19 @@ function handle_downlink_response_ext(code, channel_type, bytes, offset) {
             offset += 2;
             break;
         case 0x72:
-            decoded.query_device_config = readYesNo(1);
+            decoded.query_device_config = readYesNoStatus(1);
             offset += 1;
             break;
         case 0x73:
-            decoded.query_pressure_calibration_config = readYesNo(1);
+            decoded.query_pressure_calibration_config = readYesNoStatus(1);
             offset += 1;
             break;
         case 0x74:
-            decoded.query_gpio_type = readYesNo(1);
+            decoded.query_gpio_type = readYesNoStatus(1);
             offset += 1;
             break;
         case 0x75:
-            decoded.query_valve_config = readYesNo(1);
+            decoded.query_valve_config = readYesNoStatus(1);
             offset += 1;
             break;
         case 0x76:
@@ -437,7 +469,7 @@ function handle_downlink_response_ext(code, channel_type, bytes, offset) {
             offset += 17;
             break;
         case 0x77:
-            decoded.query_pressure_config = readYesNo(1);
+            decoded.query_pressure_config = readYesNoStatus(1);
             offset += 1;
             break;
         default:
@@ -449,10 +481,12 @@ function handle_downlink_response_ext(code, channel_type, bytes, offset) {
         offset += 1;
 
         if (result_value !== 0) {
+            var request = decoded;
             decoded = {};
             decoded.device_response_result = {};
             decoded.device_response_result.channel_type = channel_type;
-            decoded.device_response_result.result = readResultStatus(bytes[offset]);
+            decoded.device_response_result.result = readResultStatus(result_value);
+            decoded.device_response_result.request = request;
         }
     }
 
@@ -594,7 +628,7 @@ function readEnableStatus(status) {
     return getValue(status_map, status);
 }
 
-function readYesNo(status) {
+function readYesNoStatus(status) {
     var status_map = { 0: "no", 1: "yes" };
     return getValue(status_map, status);
 }
@@ -787,6 +821,14 @@ function readAscii(bytes) {
         str += String.fromCharCode(bytes[i]);
     }
     return str;
+}
+
+function readHexString(bytes) {
+    var temp = [];
+    for (var i = 0; i < bytes.length; i++) {
+        temp.push(("0" + (bytes[i] & 0xff).toString(16)).slice(-2));
+    }
+    return temp.join("");
 }
 
 function getValue(map, key) {

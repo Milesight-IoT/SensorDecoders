@@ -35,6 +35,9 @@ function milesightDeviceEncode(payload) {
     if ("report_interval" in payload) {
         encoded = encoded.concat(setReportInterval(payload.report_interval));
     }
+    if ("sync_time" in payload) {
+        encoded = encoded.concat(syncTime(payload.sync_time));
+    }
     if ("pressure_1_collection_interval" in payload) {
         encoded = encoded.concat(setCollectionInterval(1, payload.pressure_1_collection_interval));
     }
@@ -142,6 +145,21 @@ function milesightDeviceEncode(payload) {
     if ("query_rule_config" in payload) {
         encoded = encoded.concat(queryRuleConfig(payload.query_rule_config));
     }
+    if ("d2d_enable" in payload) {
+        encoded = encoded.concat(setD2DEnable(payload.d2d_enable));
+    }
+    if ("d2d_key" in payload) {
+        encoded = encoded.concat(setD2DKey(payload.d2d_key));
+    }
+    if ("response_enable" in payload) {
+        encoded = encoded.concat(setResponseEnable(payload.response_enable));
+    }
+    if ("class_a_response_time" in payload) {
+        encoded = encoded.concat(setClassAResponseTime(payload.class_a_response_time));
+    }
+    if ("gpio_jitter_time" in payload) {
+        encoded = encoded.concat(setGpioJitterTime(payload.gpio_jitter_time));
+    }
 
     return encoded;
 }
@@ -165,7 +183,7 @@ function reboot(reboot) {
 }
 
 /**
- * report device status
+ * report status
  * @param {number} report_status values: (0: no, 1: yes)
  * @example { "report_status": 1 }
  */
@@ -201,6 +219,24 @@ function setReportInterval(report_interval) {
     buffer.writeUInt8(0x00);
     buffer.writeUInt16LE(report_interval);
     return buffer.toBytes();
+}
+
+/**
+ * sync time
+ * @param {number} sync_time values: (0: no, 1: yes)
+ * @example { "sync_time": 1 }
+ */
+function syncTime(sync_time) {
+    var yes_no_map = { 0: "no", 1: "yes" };
+    var yes_no_values = getValues(yes_no_map);
+    if (yes_no_values.indexOf(sync_time) === -1) {
+        throw new Error("sync_time must be one of " + yes_no_values.join(", "));
+    }
+
+    if (getValue(yes_no_map, sync_time) === 0) {
+        return [];
+    }
+    return [0xff, 0x4a, 0xff];
 }
 
 /**
@@ -505,10 +541,10 @@ function setValveChangeReportEnable(valve_change_report_enable) {
 }
 
 /**
- * 
- * @param {object} query_valve_opening_duration 
- * @param {number} valve_1 values: (0: no, 1:yes)
- * @param {number} valve_2 values: (0: no, 1:yes)
+ * query valve opening duration
+ * @param {object} query_valve_opening_duration
+ * @param {number} query_valve_opening_duration.valve_1 values: (0: no, 1:yes)
+ * @param {number} query_valve_opening_duration.valve_2 values: (0: no, 1:yes)
  * @example { "query_valve_opening_duration": { "valve_1": 1, "valve_2": 1 } }
  */
 function queryValveOpeningDuration(query_valve_opening_duration) {
@@ -1072,6 +1108,102 @@ function encodedAction(action) {
     return buffer.toBytes();
 }
 
+/**
+ * set d2d enable
+ * @param {number} d2d_enable values: (0: disable, 1: enable)
+ * @example { "d2d_enable": 1 }
+ */
+function setD2DEnable(d2d_enable) {
+    var enable_map = { 0: "disable", 1: "enable" };
+    var enable_values = getValues(enable_map);
+    if (enable_values.indexOf(d2d_enable) === -1) {
+        throw new Error("d2d_enable must be one of " + enable_values.join(", "));
+    }
+
+    var buffer = new Buffer(3);
+    buffer.writeUInt8(0xff);
+    buffer.writeUInt8(0x84);
+    buffer.writeUInt8(getValue(enable_map, d2d_enable));
+    return buffer.toBytes();
+}
+
+/**
+ * set d2d key
+ * @param {string} d2d_key
+ * @example { "d2d_key": "0000000000000000" }
+ */
+function setD2DKey(d2d_key) {
+    if (typeof d2d_key !== "string") {
+        throw new Error("d2d_key must be a string");
+    }
+    if (d2d_key.length !== 16) {
+        throw new Error("d2d_key must be 16 characters");
+    }
+    if (!/^[0-9a-fA-F]+$/.test(d2d_key)) {
+        throw new Error("d2d_key must be hex string [0-9a-fA-F]");
+    }
+
+    var data = hexStringToBytes(d2d_key);
+    var buffer = new Buffer(10);
+    buffer.writeUInt8(0xff);
+    buffer.writeUInt8(0x35);
+    buffer.writeBytes(data);
+    return buffer.toBytes();
+}
+
+/**
+ * set response enable
+ * @param {number} response_enable values: (0: disable, 1: enable)
+ * @example { "response_enable": 1 }
+ */
+function setResponseEnable(response_enable) {
+    var enable_map = { 0: "disable", 1: "enable" };
+    var enable_values = getValues(enable_map);
+    if (enable_values.indexOf(response_enable) === -1) {
+        throw new Error("response_enable must be one of " + enable_values.join(", "));
+    }
+
+    var buffer = new Buffer(3);
+    buffer.writeUInt8(0xff);
+    buffer.writeUInt8(0xf3);
+    buffer.writeUInt8(getValue(enable_map, response_enable));
+    return buffer.toBytes();
+}
+
+/**
+ * set class a response time
+ * @param {number} class_a_response_time unit: s, range: [0, 64800]
+ * @example { "class_a_response_time": 10 }
+ */
+function setClassAResponseTime(class_a_response_time) {
+    if (class_a_response_time < 0 || class_a_response_time > 64800) {
+        throw new Error("class_a_response_time must be in the range of 0 to 64800");
+    }
+
+    var buffer = new Buffer(6);
+    buffer.writeUInt8(0xff);
+    buffer.writeUInt8(0x1e);
+    buffer.writeUInt32LE(class_a_response_time);
+    return buffer.toBytes();
+}
+
+/**
+ * set gpio jitter time
+ * @param {number} gpio_jitter_time unit: s
+ * @example { "gpio_jitter_time": 40 }
+ */
+function setGpioJitterTime(gpio_jitter_time) {
+    if (typeof gpio_jitter_time !== "number") {
+        throw new Error("gpio_jitter_time must be a number");
+    }
+
+    var buffer = new Buffer(3);
+    buffer.writeUInt8(0xff);
+    buffer.writeUInt8(0x46);
+    buffer.writeUInt8(gpio_jitter_time);
+    return buffer.toBytes();
+}
+
 function getValues(map) {
     var values = [];
     if (RAW_VALUE) {
@@ -1178,3 +1310,11 @@ Buffer.prototype.writeAscii = function (value, maxLength) {
 Buffer.prototype.toBytes = function () {
     return this.buffer;
 };
+
+function hexStringToBytes(hex) {
+    var bytes = [];
+    for (var c = 0; c < hex.length; c += 2) {
+        bytes.push(parseInt(hex.substr(c, 2), 16));
+    }
+    return bytes;
+}
