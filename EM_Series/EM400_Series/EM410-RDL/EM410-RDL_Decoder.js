@@ -26,7 +26,7 @@ function Decoder(bytes, port) {
 function milesightDeviceDecode(bytes) {
     var decoded = {};
 
-    for (var i = 0; i < bytes.length; ) {
+    for (var i = 0; i < bytes.length;) {
         var channel_id = bytes[i++];
         var channel_type = bytes[i++];
 
@@ -179,14 +179,14 @@ function milesightDeviceDecode(bytes) {
             decoded.history.push(data);
         }
         // DOWNLINK RESPONSE
-        else if (channel_id === 0xfe) {
+        else if (channel_id === 0xfe || channel_id === 0xff) {
             result = handle_downlink_response(channel_type, bytes, i);
             decoded = Object.assign(decoded, result.data);
             i = result.offset;
         }
         // DOWNLINK RESPONSE
-        else if (channel_id === 0xf8) {
-            result = handle_downlink_response_ext(channel_type, bytes, i);
+        else if (channel_id === 0xf8 || channel_id === 0xf9) {
+            var result = handle_downlink_response_ext(channel_id, channel_type, bytes, i);
             decoded = Object.assign(decoded, result.data);
             i = result.offset;
         } else {
@@ -202,32 +202,50 @@ function handle_downlink_response(channel_type, bytes, offset) {
     var decoded = {};
 
     switch (channel_type) {
-        case 0x06: // distance_alarm
+        case 0x06:
             var data = readUInt8(bytes[offset]);
             var min = readInt16LE(bytes.slice(offset + 1, offset + 3));
             var max = readInt16LE(bytes.slice(offset + 3, offset + 5));
             // skip 4 bytes (reserved)
             offset += 9;
 
-            var alarm_type = data & 0x07;
+            var condition_type = data & 0x07;
             var id = (data >>> 3) & 0x07;
-            var alarm_release_report_enable = data >>> 7;
-
-            if (alarm_type === 5 && id === 2) {
-                decoded.distance_mutation_alarm_config = {};
-                decoded.distance_mutation_alarm_config.alarm_release_report_enable = readEnableStatus(alarm_release_report_enable);
-                decoded.distance_mutation_alarm_config.mutation = max;
-            } else {
+            var alarm_release_enable = (data >>> 7) & 0x01;
+            if (id === 1) {
                 decoded.distance_alarm_config = {};
-                decoded.distance_alarm_config.condition = readMathConditionType(alarm_type);
-                decoded.distance_alarm_config.alarm_release_report_enable = readEnableStatus(alarm_release_report_enable);
-                decoded.distance_alarm_config.min = min;
-                decoded.distance_alarm_config.max = max;
+                decoded.distance_alarm_config.enable = readEnableStatus(condition_type === 0 ? 0 : 1);
+                decoded.distance_alarm_config.condition = readConditionType(condition_type);
+                decoded.distance_alarm_config.alarm_release_enable = readEnableStatus(alarm_release_enable);
+                decoded.distance_alarm_config.min_threshold = min;
+                decoded.distance_alarm_config.max_threshold = max;
+            } else if (id === 2) {
+                decoded.distance_mutation_alarm_config = {};
+                decoded.distance_mutation_alarm_config.enable = readEnableStatus(condition_type === 0 ? 0 : 1);
+                decoded.distance_mutation_alarm_config.alarm_release_enable = readEnableStatus(alarm_release_enable);
+                decoded.distance_mutation_alarm_config.mutation = max;
+            } else if (id === 3) {
+                decoded.tank_mode_distance_alarm_config = {};
+                decoded.tank_mode_distance_alarm_config.enable = readEnableStatus(condition_type === 0 ? 0 : 1);
+                decoded.tank_mode_distance_alarm_config.condition = readConditionType(condition_type);
+                decoded.tank_mode_distance_alarm_config.alarm_release_enable = readEnableStatus(alarm_release_enable);
+                decoded.tank_mode_distance_alarm_config.min_threshold = min;
+                decoded.tank_mode_distance_alarm_config.max_threshold = max;
+            }
+            else if (id === 4) {
+                decoded.tank_mode_distance_mutation_alarm_config = {};
+                decoded.tank_mode_distance_mutation_alarm_config.enable = readEnableStatus(condition_type === 0 ? 0 : 1);
+                decoded.tank_mode_distance_mutation_alarm_config.alarm_release_enable = readEnableStatus(alarm_release_enable);
+                decoded.tank_mode_distance_mutation_alarm_config.mutation = max;
             }
             break;
-        case 0x1b: // distance_range
+        case 0x10:
+            decoded.reboot = readYesNoStatus(1);
+            offset += 1;
+            break;
+        case 0x1b:
             decoded.distance_range = {};
-            decoded.distance_range.distance_mode = readDistanceMode(readUInt8(bytes[offset]));
+            decoded.distance_range.mode = readDistanceMode(readUInt8(bytes[offset]));
             // skip 2 bytes (reserved)
             decoded.distance_range.max = readUInt16LE(bytes.slice(offset + 3, offset + 5));
             offset += 5;
@@ -238,7 +256,15 @@ function handle_downlink_response(channel_type, bytes, offset) {
             decoded.recollection_config.interval = readUInt8(bytes[offset + 1]);
             offset += 2;
             break;
-        case 0x2a: // radar calibration
+        case 0x27:
+            decoded.clear_history = readYesNoStatus(1);
+            offset += 1;
+            break;
+        case 0x28:
+            decoded.report_status = readYesNoStatus(1);
+            offset += 1;
+            break;
+        case 0x2a:
             var calibrate_type = readUInt8(bytes[offset]);
             offset += 1;
 
@@ -251,19 +277,19 @@ function handle_downlink_response(channel_type, bytes, offset) {
                     break;
             }
             break;
-        case 0x3e: // tilt_distance_link
+        case 0x3e:
             decoded.tilt_distance_link = readEnableStatus(readUInt8(bytes[offset]));
             offset += 1;
             break;
-        case 0x4a: // sync_time
+        case 0x4a:
             decoded.sync_time = readYesNoStatus(1);
             offset += 1;
             break;
-        case 0x68: // history_enable
+        case 0x68:
             decoded.history_enable = readEnableStatus(readUInt8(bytes[offset]));
             offset += 1;
             break;
-        case 0x69: // retransmit_enable
+        case 0x69:
             decoded.retransmit_enable = readEnableStatus(readUInt8(bytes[offset]));
             offset += 1;
             break;
@@ -279,22 +305,22 @@ function handle_downlink_response(channel_type, bytes, offset) {
             }
             offset += 3;
             break;
-        case 0x8e: // report_interval
+        case 0x8e:
             // ignore the first byte
             decoded.report_interval = readUInt16LE(bytes.slice(offset + 1, offset + 3));
             offset += 3;
             break;
-        case 0xab: // distance_calibration
+        case 0xab:
             decoded.distance_calibration = {};
             decoded.distance_calibration.enable = readEnableStatus(readUInt8(bytes[offset]));
             decoded.distance_calibration.distance = readInt16LE(bytes.slice(offset + 1, offset + 3));
             offset += 3;
             break;
-        case 0xbd: // timezone
+        case 0xbd:
             decoded.timezone = readTimeZone(readInt16LE(bytes.slice(offset, offset + 2)));
             offset += 2;
             break;
-        case 0xf2: // alarm_counts
+        case 0xf2:
             decoded.alarm_counts = readUInt16LE(bytes.slice(offset, offset + 2));
             offset += 2;
             break;
@@ -306,80 +332,68 @@ function handle_downlink_response(channel_type, bytes, offset) {
 }
 
 // 0xF8
-function handle_downlink_response_ext(channel_type, bytes, offset) {
+function handle_downlink_response_ext(code, channel_type, bytes, offset) {
     var decoded = {};
 
     switch (channel_type) {
-        case 0x12: // distance_mode
-            var distance_mode_result = readUInt8(bytes[offset + 1]);
-            if (distance_mode_result === 0) {
-                decoded.distance_mode = readDistanceMode(readUInt8(bytes[offset]));
-            } else {
-                decoded.distance_mode_result = readResultStatus(distance_mode_result);
-            }
+        case 0x12:
+            decoded.distance_mode = readDistanceMode(readUInt8(bytes[offset]));
+            offset += 1;
+            break;
+        case 0x13:
+            decoded.blind_detection_enable = readEnableStatus(readUInt8(bytes[offset]));
+            offset += 1;
+            break;
+        case 0x14:
+            decoded.signal_quality = readInt16LE(bytes.slice(offset, offset + 2));
             offset += 2;
             break;
-        case 0x13: // blind_detection_enable
-            var blind_detection_enable_result = readUInt8(bytes[offset + 1]);
-            if (blind_detection_enable_result === 0) {
-                decoded.blind_detection_enable = readEnableStatus(readUInt8(bytes[offset]));
-            } else {
-                decoded.blind_detection_enable_result = readResultStatus(blind_detection_enable_result);
-            }
+        case 0x15:
+            decoded.distance_threshold_sensitive = readInt16LE(bytes.slice(offset, offset + 2)) / 10;
+            offset += 2
+            break;
+        case 0x16:
+            decoded.peak_sorting = readPeakSortingAlgorithm(readUInt8(bytes[offset]));
+            offset += 1;
+            break;
+        case 0x0d:
+            decoded.retransmit_config = {};
+            decoded.retransmit_config.enable = readEnableStatus(readUInt8(bytes[offset]));
+            decoded.retransmit_config.retransmit_interval = readUInt16LE(bytes.slice(offset + 1, offset + 3));
+            offset += 3;
+            break;
+        case 0x39:
+            decoded.collection_interval = readUInt16LE(bytes.slice(offset, offset + 2));
             offset += 2;
-            break;
-        case 0x14: // signal_quality
-            var signal_quality_result = readUInt8(bytes[offset + 2]);
-            if (signal_quality_result === 0) {
-                decoded.signal_quality = readInt16LE(bytes.slice(offset, offset + 2));
-            } else {
-                decoded.signal_quality_result = readResultStatus(signal_quality_result);
-            }
-            offset += 3;
-            break;
-        case 0x15: // distance_threshold_sensitive
-            var distance_threshold_sensitive_result = readUInt8(bytes[offset + 2]);
-            if (distance_threshold_sensitive_result === 0) {
-                decoded.distance_threshold_sensitive = readInt16LE(bytes.slice(offset, offset + 2)) / 10;
-            } else {
-                decoded.distance_threshold_sensitive_result = readResultStatus(distance_threshold_sensitive_result);
-            }
-            offset += 3;
-            break;
-        case 0x16: // peak_sorting
-            var peak_sorting_result = readUInt8(bytes[offset + 1]);
-            if (peak_sorting_result === 0) {
-                decoded.peak_sorting = readPeakSortingAlgorithm(readUInt8(bytes[offset]));
-            } else {
-                decoded.peak_sorting_result = readResultStatus(peak_sorting_result);
-            }
-            offset += 2;
-            break;
-        case 0x0d: // retransmit_config
-            var retransmit_config_result = readUInt8(bytes[offset + 3]);
-            if (retransmit_config_result === 0) {
-                decoded.retransmit_config = {};
-                decoded.retransmit_config.enable = readEnableStatus(readUInt8(bytes[offset]));
-                decoded.retransmit_config.retransmit_interval = readUInt16LE(bytes.slice(offset + 1, offset + 3));
-            } else {
-                decoded.retransmit_config_result = readResultStatus(retransmit_config_result);
-            }
-            offset += 4;
-            break;
-        case 0x39: // collection_interval
-            var collection_interval_result = readUInt8(bytes[offset + 2]);
-            if (collection_interval_result === 0) {
-                decoded.collection_interval = readUInt16LE(bytes.slice(offset, offset + 2));
-            } else {
-                decoded.collection_interval_result = readResultStatus(collection_interval_result);
-            }
-            offset += 3;
             break;
         default:
             throw new Error("unknown downlink response");
     }
 
+    if (hasResultFlag(code)) {
+        var result_value = readUInt8(bytes[offset]);
+        offset += 1;
+
+        if (result_value !== 0) {
+            var request = decoded;
+            decoded = {};
+            decoded.device_response_result = {};
+            decoded.device_response_result.channel_type = channel_type;
+            decoded.device_response_result.result = readResultStatus(result_value);
+            decoded.device_response_result.request = request;
+        }
+    }
+
     return { data: decoded, offset: offset };
+}
+
+function hasResultFlag(code) {
+    return code === 0xf8;
+}
+
+function readResultStatus(status) {
+    var status_map = { 0: "success", 1: "forbidden", 2: "invalid parameter" };
+    return getValue(status_map, status);
 }
 
 function readProtocolVersion(bytes) {
@@ -460,22 +474,64 @@ function readPeakSortingAlgorithm(status) {
 }
 
 function readTimeZone(timezone) {
-    var timezone_map = { "-720": "UTC-12", "-660": "UTC-11", "-600": "UTC-10", "-570": "UTC-9:30", "-540": "UTC-9", "-480": "UTC-8", "-420": "UTC-7", "-360": "UTC-6", "-300": "UTC-5", "-240": "UTC-4", "-210": "UTC-3:30", "-180": "UTC-3", "-120": "UTC-2", "-60": "UTC-1", 0: "UTC", 60: "UTC+1", 120: "UTC+2", 180: "UTC+3", 210: "UTC+3:30", 240: "UTC+4", 270: "UTC+4:30", 300: "UTC+5", 330: "UTC+5:30", 345: "UTC+5:45", 360: "UTC+6", 390: "UTC+6:30", 420: "UTC+7", 480: "UTC+8", 540: "UTC+9", 570: "UTC+9:30", 600: "UTC+10", 630: "UTC+10:30", 660: "UTC+11", 720: "UTC+12", 765: "UTC+12:45", 780: "UTC+13", 840: "UTC+14" };
+    var timezone_map = {
+        "-720": "UTC-12",
+        "-660": "UTC-11",
+        "-600": "UTC-10",
+        "-570": "UTC-9:30",
+        "-540": "UTC-9",
+        "-480": "UTC-8",
+        "-420": "UTC-7",
+        "-360": "UTC-6",
+        "-300": "UTC-5",
+        "-240": "UTC-4",
+        "-210": "UTC-3:30",
+        "-180": "UTC-3",
+        "-120": "UTC-2",
+        "-60": "UTC-1",
+        0: "UTC",
+        60: "UTC+1",
+        120: "UTC+2",
+        180: "UTC+3",
+        210: "UTC+3:30",
+        240: "UTC+4",
+        270: "UTC+4:30",
+        300: "UTC+5",
+        330: "UTC+5:30",
+        345: "UTC+5:45",
+        360: "UTC+6",
+        390: "UTC+6:30",
+        420: "UTC+7",
+        480: "UTC+8",
+        540: "UTC+9",
+        570: "UTC+9:30",
+        600: "UTC+10",
+        630: "UTC+10:30",
+        660: "UTC+11",
+        720: "UTC+12",
+        765: "UTC+12:45",
+        780: "UTC+13",
+        840: "UTC+14",
+    };
     return getValue(timezone_map, timezone);
 }
 
-function readMathConditionType(status) {
-    var status_map = { 0: "disable", 1: "below", 2: "above", 3: "between", 4: "outside" };
-    return getValue(status_map, status);
-}
-
 function readDistanceAlarm(status) {
-    var status_map = { 0: "threshold alarm release", 1: "threshold alarm", 2: "mutation alarm" };
+    var status_map = {
+        0: "threshold alarm release",
+        1: "threshold alarm",
+        2: "mutation alarm",
+    };
     return getValue(status_map, status);
 }
 
 function readDistanceException(status) {
-    var status_map = { 0: "blind spot alarm release", 1: "blind spot alarm", 2: "no target", 3: "sensor exception" };
+    var status_map = {
+        0: "blind spot alarm release",
+        1: "blind spot alarm",
+        2: "no target",
+        3: "sensor exception",
+    };
     return getValue(status_map, status);
 }
 
@@ -504,9 +560,9 @@ function readHistoryEvent(status) {
     return event;
 }
 
-function readResultStatus(status) {
-    var status_map = { 0: "success", 1: "forbidden", 2: "invalid parameter" };
-    return getValue(status_map, status);
+function readConditionType(condition) {
+    var condition_map = { 0: "disable", 1: "below", 2: "above", 3: "between", 4: "outside", 5: "mutation" };
+    return getValue(condition_map, condition);
 }
 
 function readUInt8(bytes) {
@@ -554,7 +610,6 @@ if (!Object.assign) {
         value: function (target) {
             "use strict";
             if (target == null) {
-                // TypeError if undefined or null
                 throw new TypeError("Cannot convert first argument to object");
             }
 
@@ -562,7 +617,6 @@ if (!Object.assign) {
             for (var i = 1; i < arguments.length; i++) {
                 var nextSource = arguments[i];
                 if (nextSource == null) {
-                    // Skip over if undefined or null
                     continue;
                 }
                 nextSource = Object(nextSource);
@@ -572,7 +626,12 @@ if (!Object.assign) {
                     var nextKey = keysArray[nextIndex];
                     var desc = Object.getOwnPropertyDescriptor(nextSource, nextKey);
                     if (desc !== undefined && desc.enumerable) {
-                        to[nextKey] = nextSource[nextKey];
+                        // concat array
+                        if (Array.isArray(to[nextKey]) && Array.isArray(nextSource[nextKey])) {
+                            to[nextKey] = to[nextKey].concat(nextSource[nextKey]);
+                        } else {
+                            to[nextKey] = nextSource[nextKey];
+                        }
                     }
                 }
             }
