@@ -138,25 +138,21 @@ function reboot(reboot) {
 }
 
 /**
- * report device status
+ * report status
  * @param {number} report_status values: (0: no, 1: yes)
  * @example { "report_status": 1 }
  */
 function reportStatus(report_status) {
     var yes_no_map = { 0: "no", 1: "yes" };
-    var report_status_values = getValues(yes_no_map);
-    if (report_status_values.indexOf(report_status) === -1) {
-        throw new Error("report_status must be one of " + report_status_values.join(", "));
+    var yes_no_values = getValues(yes_no_map);
+    if (yes_no_values.indexOf(report_status) === -1) {
+        throw new Error("report_status must be one of " + yes_no_values.join(", "));
     }
+
     if (getValue(yes_no_map, report_status) === 0) {
         return [];
     }
-
-    var buffer = new Buffer(3);
-    buffer.writeUInt8(0xff);
-    buffer.writeUInt8(0x28);
-    buffer.writeUInt8(getValue(yes_no_map, report_status));
-    return buffer.toBytes();
+    return [0xff, 0x28, 0xff];
 }
 
 /**
@@ -215,7 +211,7 @@ function syncTime(sync_time) {
     if (getValue(yes_no_map, sync_time) === 0) {
         return [];
     }
-    return [0xff, 0x4a, 0xff];
+    return [0xff, 0x4a, 0x00];
 }
 
 /**
@@ -301,7 +297,7 @@ function setAlarmCount(alarm_count) {
 /**
  * set temperature threshold config
  * @param {object} temperature_threshold_config
- * @param {number} temperature_threshold_config.condition values: (1: below, 2: above, 3: between, 4: outside)
+ * @param {number} temperature_threshold_config.condition values: (0: disable, 1: below, 2: above, 3: between, 4: outside)
  * @param {number} temperature_threshold_config.max
  * @param {number} temperature_threshold_config.min
  * @param {number} temperature_threshold_config.enable values: (0: disable, 1: enable)
@@ -313,7 +309,7 @@ function setTemperatureThresholdConfig(temperature_threshold_config) {
     var min = temperature_threshold_config.min;
     var enable = temperature_threshold_config.enable;
 
-    var condition_map = { 1: "below", 2: "above", 3: "between", 4: "outside" };
+    var condition_map = { 0: "disable", 1: "below", 2: "above", 3: "between", 4: "outside" };
     var condition_values = getValues(condition_map);
     if (condition_values.indexOf(condition) === -1) {
         throw new Error("temperature_threshold_config.condition must be one of " + condition_values.join(", "));
@@ -338,7 +334,7 @@ function setTemperatureThresholdConfig(temperature_threshold_config) {
 /**
  * set humidity threshold config
  * @param {object} humidity_threshold_config
- * @param {number} humidity_threshold_config.condition values: (1: below, 2: above, 3: between, 4: outside)
+ * @param {number} humidity_threshold_config.condition values: (0: disable, 1: below, 2: above, 3: between, 4: outside)
  * @param {number} humidity_threshold_config.max
  * @param {number} humidity_threshold_config.min
  * @param {number} humidity_threshold_config.enable values: (0: disable, 1: enable)
@@ -350,7 +346,7 @@ function setHumidityThresholdConfig(humidity_threshold_config) {
     var min = humidity_threshold_config.min;
     var enable = humidity_threshold_config.enable;
 
-    var condition_map = { 1: "below", 2: "above", 3: "between", 4: "outside" };
+    var condition_map = { 0: "disable", 1: "below", 2: "above", 3: "between", 4: "outside" };
     var condition_values = getValues(condition_map);
     if (condition_values.indexOf(condition) === -1) {
         throw new Error("humidity_threshold_config.condition must be one of " + condition_values.join(", "));
@@ -687,7 +683,7 @@ function setD2DKey(d2d_key) {
     if (d2d_key.length !== 16) {
         throw new Error("d2d_key must be 16 characters");
     }
-    if (!/^[0-9A-F]+$/.test(d2d_key)) {
+    if (!/^[0-9a-fA-F]+$/.test(d2d_key)) {
         throw new Error("d2d_key must be hex string [0-9A-F]");
     }
 
@@ -901,11 +897,10 @@ function queryDeviceConfig(query_config) {
             if (getValue(yes_no_map, query_config[key]) === 0) {
                 continue;
             }
-
             var buffer = new Buffer(3);
             buffer.writeUInt8(0xf9);
             buffer.writeUInt8(0x6f);
-            buffer.writeUInt8(getValue(config_map, key));
+            buffer.writeUInt8(config_map[key]);
             data = data.concat(buffer.toBytes());
         }
     }

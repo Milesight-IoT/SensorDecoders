@@ -213,9 +213,25 @@ function handle_downlink_response(channel_type, bytes, offset) {
             decoded.collection_interval = readUInt16LE(bytes.slice(offset, offset + 2));
             offset += 2;
             break;
+        case 0x10:
+            decoded.reboot = readYesNoStatus(1);
+            offset += 1;
+            break;
+        case 0x27:
+            decoded.clear_history = readYesNoStatus(1);
+            offset += 1;
+            break;
+        case 0x28:
+            decoded.report_status = readYesNoStatus(1);
+            offset += 1;
+            break;
         case 0x35:
             decoded.d2d_key = readHexString(bytes.slice(offset, offset + 8));
             offset += 8;
+            break;
+        case 0x4a:
+            decoded.sync_time = readYesNoStatus(1);
+            offset += 1;
             break;
         case 0x68:
             decoded.history_enable = readEnableStatus(bytes[offset]);
@@ -344,7 +360,9 @@ function handle_downlink_response_ext(code, channel_type, bytes, offset) {
             offset += 1;
             break;
         case 0x6f:
-            decoded.query_config = {};
+            var query_config = readQueryConfig(readUInt8(bytes[offset]));
+            decoded.query_config = decoded.query_config || {};
+            decoded.query_config = Object.assign(decoded.query_config, query_config);
             offset += 1;
             break;
         default:
@@ -356,10 +374,12 @@ function handle_downlink_response_ext(code, channel_type, bytes, offset) {
         offset += 1;
 
         if (result_value !== 0) {
+            var request = decoded;
             decoded = {};
             decoded.device_response_result = {};
             decoded.device_response_result.channel_type = channel_type;
-            decoded.device_response_result.result = readResultStatus(bytes[offset]);
+            decoded.device_response_result.result = readResultStatus(result_value);
+            decoded.device_response_result.request = request;
         }
     }
 
@@ -427,6 +447,11 @@ function readEnableStatus(status) {
     return getValue(status_map, status);
 }
 
+function readYesNoStatus(status) {
+    var status_map = { 0: "no", 1: "yes" };
+    return getValue(status_map, status);
+}
+
 function readSensorIDType(type) {
     var sensor_id_map = { 1: "DS18B20", 2: "SHT4X" };
     return getValue(sensor_id_map, type);
@@ -475,7 +500,7 @@ function readHistoryEvent(value, sensor_type) {
 }
 
 function readMathConditionType(type) {
-    var condition_map = { 1: "below", 2: "above", 3: "between", 4: "outside" };
+    var condition_map = { 0: "disable", 1: "below", 2: "above", 3: "between", 4: "outside" };
     return getValue(condition_map, type);
 }
 
@@ -512,6 +537,43 @@ function readTemperatureUnit(type) {
 function readResultStatus(status) {
     var status_map = { 0: "success", 1: "forbidden", 2: "invalid parameter" };
     return getValue(status_map, status);
+}
+
+function readQueryConfig(value) {
+    var config_map = {
+        temperature_unit: 1,
+        button_lock_config: 2,
+        d2d_uplink_config: 3,
+        d2d_enable: 4,
+        d2d_master_config_with_temperature_threshold_alarm: 5,
+        d2d_master_config_with_temperature_threshold_alarm_release: 6,
+        d2d_master_config_with_temperature_mutation_alarm: 7,
+        d2d_master_config_with_humidity_threshold_alarm: 8,
+        d2d_master_config_with_humidity_threshold_alarm_release: 9,
+        d2d_master_config_with_humidity_mutation_alarm: 10,
+        temperature_calibration_config: 11,
+        humidity_calibration_config: 12,
+        temperature_threshold_config: 13,
+        temperature_mutation_config: 14,
+        humidity_threshold_config: 15,
+        humidity_mutation_config: 16,
+        led_indicator_enable: 17,
+        collection_interval: 18,
+        report_interval: 19,
+        threshold_alarm_release_enable: 20,
+        alarm_count: 21,
+        retransmit_config: 22,
+        history_enable: 23,
+        history_resend_config: 24,
+        ack_retry_times: 25,
+    };
+    var query_config = {};
+    for (var key in config_map) {
+        if (value === config_map[key]) {
+            query_config[key] = readYesNoStatus(1);
+        }
+    }
+    return query_config;
 }
 
 function readUInt8(bytes) {
