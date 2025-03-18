@@ -163,19 +163,19 @@ function reboot(reboot) {
 }
 
 /**
- * Report status
+ * report status
  * @since hardware_version>=v3.0, firmware_version>=v3.1
  * @param {number} report_status values:(0: no, 1: yes)
  * @example { "report_status": 1 }
  */
 function reportStatus(report_status) {
-    var report_status_map = { 0: "no", 1: "yes" };
-    var report_status_values = getValues(report_status_map);
-    if (report_status_values.indexOf(report_status) === -1) {
-        throw new Error("report_status must be one of " + report_status_values.join(", "));
+    var yes_no_map = { 0: "no", 1: "yes" };
+    var yes_no_values = getValues(yes_no_map);
+    if (yes_no_values.indexOf(report_status) === -1) {
+        throw new Error("report_status must be one of " + yes_no_values.join(", "));
     }
 
-    if (getValue(report_status_map, report_status) === 0) {
+    if (getValue(yes_no_map, report_status) === 0) {
         return [];
     }
     return [0xff, 0x28, 0xff];

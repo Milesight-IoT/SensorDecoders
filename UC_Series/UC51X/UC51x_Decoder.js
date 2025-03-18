@@ -168,7 +168,7 @@ function milesightDeviceDecode(bytes) {
             decoded.history.push(data);
         }
         // DOWNLINK RESPONSE
-        else if (channel_id === 0xfe) {
+        else if (channel_id === 0xfe || channel_id === 0xff) {
             result = handle_downlink_response(channel_type, bytes, i);
             decoded = Object.assign(decoded, result.data);
             i = result.offset;
@@ -226,6 +226,10 @@ function handle_downlink_response(channel_type, bytes, offset) {
             decoded.class_a_response_time = readUInt32LE(bytes.slice(offset, offset + 4));
             offset += 4;
             break;
+        case 0x27:
+            decoded.clear_history = readYesNoStatus(1);
+            offset += 1;
+            break;
         case 0x35:
             decoded.d2d_key = bytesToHexString(bytes.slice(offset, offset + 8));
             offset += 8;
@@ -236,6 +240,10 @@ function handle_downlink_response(channel_type, bytes, offset) {
             break;
         case 0x46:
             decoded.gpio_jitter_time = readUInt8(bytes[offset]);
+            offset += 1;
+            break;
+        case 0x4a:
+            decoded.sync_time = readYesNoStatus(1);
             offset += 1;
             break;
         case 0x4b: // batch_read_rules
@@ -459,6 +467,11 @@ function readGpioStatus(status) {
 
 function readEnableStatus(status) {
     var status_map = { 0: "disable", 1: "enable" };
+    return getValue(status_map, status);
+}
+
+function readYesNoStatus(status) {
+    var status_map = { 0: "no", 1: "yes" };
     return getValue(status_map, status);
 }
 
