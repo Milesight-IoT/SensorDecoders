@@ -26,7 +26,7 @@ function Decoder(bytes, port) {
 function milesightDeviceDecode(bytes) {
     var decoded = {};
 
-    for (var i = 0; i < bytes.length; ) {
+    for (var i = 0; i < bytes.length;) {
         var channel_id = bytes[i++];
         var channel_type = bytes[i++];
 
@@ -128,16 +128,16 @@ function milesightDeviceDecode(bytes) {
             var sensor_id = readUInt8(bytes[i]);
             switch (sensor_id) {
                 case 0x00:
-                    decoded.nh3_calibration_settings = {};
-                    decoded.nh3_calibration_settings.type = readCalibrationType(bytes[i + 1]);
-                    decoded.nh3_calibration_settings.calibration_value = readInt16LE(bytes.slice(i + 2, i + 4)) / 100;
-                    decoded.nh3_calibration_settings.result = readCalibrationResult(bytes[i + 4]);
+                    decoded.nh3_calibration_result = {};
+                    decoded.nh3_calibration_result.type = readCalibrationType(bytes[i + 1]);
+                    decoded.nh3_calibration_result.calibration_value = readInt16LE(bytes.slice(i + 2, i + 4)) / 100;
+                    decoded.nh3_calibration_result.result = readCalibrationResult(bytes[i + 4]);
                     break;
                 case 0x01:
-                    decoded.h2s_calibration_settings = {};
-                    decoded.h2s_calibration_settings.type = readCalibrationType(bytes[i + 1]);
-                    decoded.h2s_calibration_settings.calibration_value = readInt16LE(bytes.slice(i + 2, i + 4)) / 1000;
-                    decoded.h2s_calibration_settings.result = readCalibrationResult(bytes[i + 4]);
+                    decoded.h2s_calibration_result = {};
+                    decoded.h2s_calibration_result.type = readCalibrationType(bytes[i + 1]);
+                    decoded.h2s_calibration_result.calibration_value = readInt16LE(bytes.slice(i + 2, i + 4)) / 1000;
+                    decoded.h2s_calibration_result.result = readCalibrationResult(bytes[i + 4]);
                     break;
                 default:
                     break;
@@ -150,8 +150,8 @@ function milesightDeviceDecode(bytes) {
             i += 43;
         }
         // DOWNLINK RESPONSE
-        else if (channel_id === 0xfe) {
-            result = handle_downlink_response(channel_type, bytes, i);
+        else if (channel_id === 0xfe || channel_id === 0xff) {
+            var result = handle_downlink_response(channel_type, bytes, i);
             decoded = Object.assign(decoded, result.data);
             i = result.offset;
         } else {
@@ -170,6 +170,22 @@ function handle_downlink_response(channel_type, bytes, offset) {
             decoded.report_interval = readUInt16LE(bytes.slice(offset, offset + 2));
             offset += 2;
             break;
+        case 0x06:
+            var data = readUInt8(bytes[offset]);
+            decoded.alarm_config = {};
+            decoded.alarm_config.enable = readEnableStatus((data & 0x07) === 0 ? 0 : 1);
+            decoded.alarm_config.condition = readConditionType(data & 0x07);
+            decoded.alarm_config.trigger_source = readTriggerSource((data >> 3) & 0x1F);
+            decoded.alarm_config.min_threshold = readUInt16LE(bytes.slice(offset + 1, offset + 3));
+            decoded.alarm_config.max_threshold = readUInt16LE(bytes.slice(offset + 3, offset + 5));
+            decoded.alarm_config.lock_time = readUInt16LE(bytes.slice(offset + 5, offset + 7));
+            decoded.alarm_config.continue_time = readUInt16LE(bytes.slice(offset + 7, offset + 9));
+            offset += 9;
+            break;
+        case 0x10:
+            decoded.reboot = readYesNoStatus(1);
+            offset += 1;
+            break;
         case 0x66:
             decoded.threshold_report_interval = readUInt16LE(bytes.slice(offset, offset + 2));
             offset += 2;
@@ -182,18 +198,22 @@ function handle_downlink_response(channel_type, bytes, offset) {
             decoded.buzzer_enable = readEnableStatus(readUInt8(bytes[offset]));
             offset += 1;
             break;
+        case 0x7d:
+            decoded.query_sensor_lifecycle_remain = readYesNoStatus(1);
+            offset += 1;
+            break;
         case 0x8d:
             var sensor_id = readUInt8(bytes[offset]);
             switch (sensor_id) {
                 case 0x00:
-                    decoded.nh3_calibration_settings = {};
-                    decoded.nh3_calibration_settings.mode = readCalibrationMode(bytes[offset + 1]);
-                    decoded.nh3_calibration_settings.calibration_value = readInt16LE(bytes.slice(offset + 2, offset + 4)) / 100;
+                    decoded.nh3_calibration_config = {};
+                    decoded.nh3_calibration_config.mode = readCalibrationMode(bytes[offset + 1]);
+                    decoded.nh3_calibration_config.calibration_value = readInt16LE(bytes.slice(offset + 2, offset + 4)) / 100;
                     break;
                 case 0x01:
-                    decoded.h2s_calibration_settings = {};
-                    decoded.h2s_calibration_settings.mode = readCalibrationMode(bytes[offset + 1]);
-                    decoded.h2s_calibration_settings.calibration_value = readInt16LE(bytes.slice(offset + 2, offset + 4)) / 1000;
+                    decoded.h2s_calibration_config = {};
+                    decoded.h2s_calibration_config.mode = readCalibrationMode(bytes[offset + 1]);
+                    decoded.h2s_calibration_config.calibration_value = readInt16LE(bytes.slice(offset + 2, offset + 4)) / 1000;
                     break;
                 default:
                     break;
@@ -281,9 +301,24 @@ function readEnableStatus(value) {
     return getValue(enable_disable_map, value);
 }
 
+function readYesNoStatus(value) {
+    var yes_no_map = { 0: "no", 1: "yes" };
+    return getValue(yes_no_map, value);
+}
+
 function readCalibrationMode(value) {
     var calibration_mode_map = { 0: "factory", 1: "manual" };
     return getValue(calibration_mode_map, value);
+}
+
+function readConditionType(value) {
+    var condition_type_map = { 0: "disable", 1: "below", 2: "above", 3: "between", 4: "outside" };
+    return getValue(condition_type_map, value);
+}
+
+function readTriggerSource(value) {
+    var trigger_source_map = { 1: "nh3", 1: "h2s", 2: "nh3_d2d", 3: "h2s_d2d", 4: "nh3_d2d", 5: "nh3_d2d_release", 6: "h2s_d2d_release", 7: "h2s_v2", 8: "h2s_d2d_v2", 9: "h2s_release_v2" };
+    return getValue(trigger_source_map, value);
 }
 
 function readUInt8(bytes) {
