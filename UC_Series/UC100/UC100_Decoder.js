@@ -25,7 +25,7 @@ function Decoder(bytes, port) {
 
 function milesightDeviceDecode(bytes) {
     var decoded = {};
-    for (var i = 0; i < bytes.length; ) {
+    for (var i = 0; i < bytes.length;) {
         var channel_id = bytes[i++];
         var channel_type = bytes[i++];
 
@@ -230,7 +230,7 @@ function milesightDeviceDecode(bytes) {
         else if (channel_id === 0xf9 && channel_type === 0x5f) {
             var chn_def = bytes[i];
             var modbus_chn_id = (chn_def & 0x3f) + 1;
-            var modbus_alarm_value = chn_def >>> 6;
+            var modbus_alarm_value = (chn_def >>> 6) & 0x03;
             var modbus_chn_name = "modbus_chn_" + modbus_chn_id;
             if (modbus_alarm_value === 3) {
                 decoded[modbus_chn_name + "_alarm"] = readModbusAlarmType(modbus_alarm_value);
@@ -500,7 +500,14 @@ function handle_downlink_response(channel_type, bytes, offset) {
             break;
         case 0xef:
             var data = bytes[offset];
-            if (data === 0x01) {
+            if (data === 0x00) {
+                var channel_id = bytes[offset + 1];
+                var remove_modbus_channels = { channel_id: channel_id };
+                decoded.remove_modbus_channels = decoded.remove_modbus_channels || [];
+                decoded.remove_modbus_channels.push(remove_modbus_channels);
+                offset += 4;
+            }
+            else if (data === 0x01) {
                 var modbus_channels = readModbusChannels(bytes.slice(offset + 1, offset + 7));
                 decoded.modbus_channels = decoded.modbus_channels || [];
                 decoded.modbus_channels.push(modbus_channels);
@@ -513,12 +520,6 @@ function handle_downlink_response(channel_type, bytes, offset) {
                 decoded.modbus_channels_name = decoded.modbus_channels_name || [];
                 decoded.modbus_channels_name.push(modbus_channels_name);
                 offset += 3 + length;
-            } else if (data === 0x03) {
-                var channel_id = bytes[offset + 1];
-                var remove_modbus_channels = { channel_id: channel_id };
-                decoded.remove_modbus_channels = decoded.remove_modbus_channels || [];
-                decoded.remove_modbus_channels.push(remove_modbus_channels);
-                offset += 4;
             }
             break;
         default:
@@ -1213,8 +1214,8 @@ function readInt32LE(bytes) {
 
 function readUInt64LE(bytes) {
     // JavaScript unable to handle 64-bit integers, so we split the 64-bit value into two 32-bit parts
-    const low = readUInt32LE(bytes.slice(0, 4));
-    const high = readUInt32LE(bytes.slice(4, 8));
+    var low = readUInt32LE(bytes.slice(0, 4));
+    var high = readUInt32LE(bytes.slice(4, 8));
 
     // For values less than 2^53, we can directly calculate
     if (high < 0x200000) {
@@ -1231,18 +1232,18 @@ function readUInt64LE(bytes) {
             low: low,
             toString: function () {
                 // Simple string representation
-                return `${high.toString(16)}${low.toString(16).padStart(8, "0")}`;
+                return high.toString(16) + low.toString(16).padStart(8, "0");;
             },
         };
     }
 }
 
 function readInt64LE(bytes) {
-    const low = readUInt32LE(bytes.slice(0, 4));
-    const high = readUInt32LE(bytes.slice(4, 8));
+    var low = readUInt32LE(bytes.slice(0, 4));
+    var high = readUInt32LE(bytes.slice(4, 8));
 
     // check the sign bit
-    const isNegative = (high & 0x80000000) !== 0;
+    var isNegative = (high & 0x80000000) !== 0;
 
     if (!isNegative) {
         // positive number is processed the same as UInt64
@@ -1258,7 +1259,7 @@ function readInt64LE(bytes) {
 
     // for larger values, use BigInt (if supported)
     if (typeof BigInt !== "undefined") {
-        let value = (BigInt(high) << BigInt(32)) | BigInt(low);
+        var value = (BigInt(high) << BigInt(32)) | BigInt(low);
         if (isNegative) {
             // negative numbers need to be converted to signed integers
             value = value - BigInt("18446744073709551616");
@@ -1272,11 +1273,11 @@ function readInt64LE(bytes) {
             isNegative: isNegative,
             toString: function () {
                 if (!isNegative) {
-                    return `${high.toString(16)}${low.toString(16).padStart(8, "0")}`;
+                    return high.toString(16) + low.toString(16).padStart(8, "0");
                 } else {
                     // for negative numbers, calculate the two's complement
-                    const twoComp = ((~high & 0xffffffff) << 32) | ((~low & 0xffffffff) + 1);
-                    return `-${(twoComp >>> 0).toString(16)}`;
+                    var twoComp = ((~high & 0xffffffff) << 32) | ((~low & 0xffffffff) + 1);
+                    return "-" + (twoComp >>> 0).toString(16);
                 }
             },
         };
@@ -1304,22 +1305,22 @@ function readFloatLE(bytes) {
 
 function readDoubleLE(bytes) {
     // read from 8 bytes
-    const low = bytes[0] | (bytes[1] << 8) | (bytes[2] << 16) | (bytes[3] << 24);
-    const high = bytes[4] | (bytes[5] << 8) | (bytes[6] << 16) | (bytes[7] << 24);
+    var low = bytes[0] | (bytes[1] << 8) | (bytes[2] << 16) | (bytes[3] << 24);
+    var high = bytes[4] | (bytes[5] << 8) | (bytes[6] << 16) | (bytes[7] << 24);
 
     // extract the sign bit (bit 63)
-    const sign = high >>> 31 === 0 ? 1.0 : -1.0;
+    var sign = high >>> 31 === 0 ? 1.0 : -1.0;
 
     // extract the exponent (bit 62-52)
-    const exponent = (high >>> 20) & 0x7ff;
+    var exponent = (high >>> 20) & 0x7ff;
 
     // extract the mantissa (bit 51-0)
     // high part (bit 51-32)
-    const highMantissa = high & 0xfffff;
+    var highMantissa = high & 0xfffff;
     // low part (bit 31-0)
-    const lowMantissa = low;
+    var lowMantissa = low;
 
-    let result;
+    var result;
 
     if (exponent === 0) {
         // handle denormalized numbers

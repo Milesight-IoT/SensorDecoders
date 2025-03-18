@@ -575,7 +575,7 @@ function removeModbusChannel(remove_modbus_channels) {
     var buffer = new Buffer(4);
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0xef);
-    buffer.writeUInt8(0x03); // remove modbus channel
+    buffer.writeUInt8(0x00); // remove modbus channel
     buffer.writeUInt8(channel_id);
     return buffer.toBytes();
 }
