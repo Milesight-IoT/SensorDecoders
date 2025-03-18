@@ -26,6 +26,9 @@ function Encoder(obj, port) {
 function milesightDeviceEncode(payload) {
     var encoded = [];
 
+    if ("reboot" in payload) {
+        encoded = encoded.concat(setReboot(payload.reboot));
+    }
     if ("report_interval" in payload) {
         encoded = encoded.concat(setReportInterval(payload.report_interval));
     }
@@ -47,8 +50,29 @@ function milesightDeviceEncode(payload) {
     if ("h2s_calibration_config" in payload) {
         encoded = encoded.concat(setH2SCalibrationConfig(payload.h2s_calibration_config));
     }
+    if ("alarm_config" in payload) {
+        encoded = encoded.concat(setAlarmConfig(payload.alarm_config));
+    }
 
     return encoded;
+}
+
+/**
+ * Set reboot
+ * @param {number} reboot values: (0: no, 1: yes)
+ * @example { "reboot": 1 }
+ */
+function setReboot(reboot) {
+    var yes_no_map = { 0: "no", 1: "yes" };
+    var yes_no_values = getValues(yes_no_map);
+    if (yes_no_values.indexOf(reboot) === -1) {
+        throw new Error("reboot must be one of " + yes_no_values.join(", "));
+    }
+
+    if (getValue(yes_no_map, reboot) === 0) {
+        return [];
+    }
+    return [0xff, 0x10, 0x01];
 }
 
 /**
@@ -153,7 +177,7 @@ function setNH3CalibrationConfig(nh3_calibration_config) {
     buffer.writeUInt8(0x8d);
     buffer.writeUInt8(0x00);
     buffer.writeUInt8(getValue(mode_map, nh3_calibration_config.mode));
-    buffer.writeUInt16LE(nh3_calibration_config.calibration_value * 100);
+    buffer.writeUInt16LE(Math.round(nh3_calibration_config.calibration_value * 100));
     return buffer.toBytes();
 }
 
@@ -176,7 +200,59 @@ function setH2SCalibrationConfig(h2s_calibration_config) {
     buffer.writeUInt8(0x8d);
     buffer.writeUInt8(0x01);
     buffer.writeUInt8(getValue(mode_map, h2s_calibration_config.mode));
-    buffer.writeUInt16LE(h2s_calibration_config.calibration_value * 1000);
+    buffer.writeUInt16LE(Math.round(h2s_calibration_config.calibration_value * 1000));
+    return buffer.toBytes();
+}
+
+/**
+ * Set alarm config
+ * @param {object} alarm_config
+ * @param {number} alarm_config.enable values: (0: disable, 1: enable)
+ * @param {number} alarm_config.condition values: (0: disable, 1: below, 2: above, 3: between, 4: outside)
+ * @param {number} alarm_config.trigger_source values: (1: nh3, 1: h2s, 2: nh3_d2d, 3: h2s_d2d, 4: nh3_d2d, 5: nh3_d2d_release, 6: h2s_d2d_release, 7: h2s_v2, 8: h2s_d2d_v2, 9: h2s_release_v2)
+ * @param {number} alarm_config.min_threshold
+ * @param {number} alarm_config.max_threshold
+ * @param {number} alarm_config.lock_time
+ * @param {number} alarm_config.continue_time
+ * @example { "alarm_config": { "enable": 1, "condition": 1, "trigger_source": 1, "min_threshold": 100, "max_threshold": 1000, "lock_time": 10, "continue_time": 10 } }
+ */
+function setAlarmConfig(alarm_config) {
+    var enable = alarm_config.enable;
+    var condition = alarm_config.condition;
+    var trigger_source = alarm_config.trigger_source;
+    var min_threshold = alarm_config.min_threshold;
+    var max_threshold = alarm_config.max_threshold;
+    var lock_time = alarm_config.lock_time;
+    var continue_time = alarm_config.continue_time;
+
+    var enable_map = { 0: "disable", 1: "enable" };
+    var enable_values = getValues(enable_map);
+    if (enable_values.indexOf(enable) === -1) {
+        throw new Error("alarm_config.enable must be one of " + enable_values.join(", "));
+    }
+    var condition_map = { 0: "disable", 1: "below", 2: "above", 3: "between", 4: "outside" };
+    var condition_values = getValues(condition_map);
+    if (condition_values.indexOf(condition) === -1) {
+        throw new Error("alarm_config.condition must be one of " + condition_values.join(", "));
+    }
+    var trigger_source_map = { 1: "nh3", 1: "h2s", 2: "nh3_d2d", 3: "h2s_d2d", 4: "nh3_d2d", 5: "nh3_d2d_release", 6: "h2s_d2d_release", 7: "h2s_v2", 8: "h2s_d2d_v2", 9: "h2s_release_v2" };
+    var trigger_source_values = getValues(trigger_source_map);
+    if (trigger_source_values.indexOf(trigger_source) === -1) {
+        throw new Error("alarm_config.trigger_source must be one of " + trigger_source_values.join(", "));
+    }
+
+    var data = 0x00;
+    data |= getValue(enable_map, enable) === 0 ? 0 : getValue(condition_map, condition);
+    data |= getValue(trigger_source_map, trigger_source) << 3;
+
+    var buffer = new Buffer(11);
+    buffer.writeUInt8(0xff);
+    buffer.writeUInt8(0x06);
+    buffer.writeUInt8(data);
+    buffer.writeUInt16LE(min_threshold);
+    buffer.writeUInt16LE(max_threshold);
+    buffer.writeUInt16LE(lock_time);
+    buffer.writeUInt16LE(continue_time);
     return buffer.toBytes();
 }
 
@@ -216,9 +292,10 @@ function Buffer(size) {
 }
 
 Buffer.prototype._write = function (value, byteLength, isLittleEndian) {
+    var offset = 0;
     for (var index = 0; index < byteLength; index++) {
-        var shift = isLittleEndian ? index << 3 : (byteLength - 1 - index) << 3;
-        this.buffer[this.offset + index] = (value & (0xff << shift)) >> shift;
+        offset = isLittleEndian ? index << 3 : (byteLength - 1 - index) << 3;
+        this.buffer[this.offset + index] = (value >> offset) & 0xff;
     }
 };
 
