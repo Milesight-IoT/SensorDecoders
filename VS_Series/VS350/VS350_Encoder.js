@@ -1,10 +1,12 @@
 /**
  * Payload Encoder
  *
- * Copyright 2024 Milesight IoT
+ * Copyright 2025 Milesight IoT
  *
  * @product VS350
  */
+var RAW_VALUE = 0x00;
+
 // Chirpstack v4
 function encodeDownlink(input) {
     var encoded = milesightDeviceEncode(input.data);
@@ -42,23 +44,29 @@ function milesightDeviceEncode(payload) {
     if ("timezone" in payload) {
         encoded = encoded.concat(setTimezone(payload.timezone));
     }
+    if ("clear_cumulative_enable" in payload) {
+        encoded = encoded.concat(clearCumulative(payload.clear_cumulative_enable));
+    }
     if ("cumulative_enable" in payload) {
         encoded = encoded.concat(setCumulativeEnable(payload.cumulative_enable));
     }
     if ("cumulative_reset_config" in payload) {
-        encoded = encoded.concat(setCumulativeResetConfig(payload.cumulative_reset_config.weekday, payload.cumulative_reset_config.hour, payload.cumulative_reset_config.minute));
+        encoded = encoded.concat(setCumulativeResetConfig(payload.cumulative_reset_config));
     }
     if ("cumulative_reset_interval" in payload) {
         encoded = encoded.concat(setCumulativeResetInterval(payload.cumulative_reset_interval));
     }
-    if ("clear_cumulative" in payload) {
-        encoded = encoded.concat(clearCumulative(payload.clear_cumulative));
+    if ("clear_cumulative_in" in payload) {
+        encoded = encoded.concat(clearCumulativeIn(payload.clear_cumulative_in));
+    }
+    if ("clear_cumulative_out" in payload) {
+        encoded = encoded.concat(clearCumulativeOut(payload.clear_cumulative_out));
     }
     if ("temperature_enable" in payload) {
         encoded = encoded.concat(setTemperatureEnable(payload.temperature_enable));
     }
     if ("temperature_calibration" in payload) {
-        encoded = encoded.concat(setTemperatureCalibration(payload.temperature_calibration.enable, payload.temperature_calibration.temperature));
+        encoded = encoded.concat(setTemperatureCalibration(payload.temperature_calibration));
     }
     if ("d2d_key" in payload) {
         encoded = encoded.concat(setD2DKey(payload.d2d_key));
@@ -69,8 +77,11 @@ function milesightDeviceEncode(payload) {
     if ("d2d_master_config" in payload) {
         for (var i = 0; i < payload.d2d_master_config.length; i++) {
             var config = payload.d2d_master_config[i];
-            encoded = encoded.concat(setD2DMasterConfig(config.mode, config.enable, config.d2d_cmd, config.uplink_enable, config.time_enable, config.time));
+            encoded = encoded.concat(setD2DMasterConfig(config));
         }
+    }
+    if ("alarm_config" in payload) {
+        encoded = encoded.concat(setAlarmConfig(payload.alarm_config));
     }
     if ("history_enable" in payload) {
         encoded = encoded.concat(setHistoryEnable(payload.history_enable));
@@ -81,8 +92,11 @@ function milesightDeviceEncode(payload) {
     if ("retransmit_interval" in payload) {
         encoded = encoded.concat(setRetransmitInterval(payload.retransmit_interval));
     }
+    if ("resend_interval" in payload) {
+        encoded = encoded.concat(setResendInterval(payload.resend_interval));
+    }
     if ("fetch_history" in payload) {
-        encoded = encoded.concat(fetchHistory(payload.fetch_history.start_time, payload.fetch_history.end_time));
+        encoded = encoded.concat(fetchHistory(payload.fetch_history));
     }
     if ("stop_transmit" in payload) {
         encoded = encoded.concat(stopTransmit(payload.stop_transmit));
@@ -93,35 +107,37 @@ function milesightDeviceEncode(payload) {
 
 /**
  * reboot device
- * @param {number} reboot values: (0: "no", 1: "yes")
+ * @param {number} reboot values: (0: no, 1: yes)
  * @example { "reboot": 1 }
  */
 function reboot(reboot) {
-    var reboot_values = [0, 1];
-    if (reboot_values.indexOf(reboot) === -1) {
-        throw new Error("reboot must be one of " + reboot_values.join(", "));
+    var yes_no_map = { 0: "no", 1: "yes" };
+    var yes_no_values = getValues(yes_no_map);
+    if (yes_no_values.indexOf(reboot) === -1) {
+        throw new Error("reboot must be one of " + yes_no_values.join(", "));
     }
 
-    if (reboot === 0) {
+    if (getValue(yes_no_map, reboot) === 0) {
         return [];
     }
     return [0xff, 0x10, 0xff];
 }
 
 /**
- * report device status
- * @param {number} report_status values: (0: "no", 1: "yes")
+ * report status
+ * @param {number} report_status values: (0: no, 1: yes)
  * @example { "report_status": 1 }
  */
 function reportStatus(report_status) {
-    var report_status_values = [0, 1];
-    if (report_status_values.indexOf(report_status) === -1) {
-        throw new Error("report_status must be one of " + report_status_values.join(", "));
-    }
-    if (report_status === 0) {
-        return [];
+    var yes_no_map = { 0: "no", 1: "yes" };
+    var yes_no_values = getValues(yes_no_map);
+    if (yes_no_values.indexOf(report_status) === -1) {
+        throw new Error("report_status must be one of " + yes_no_values.join(", "));
     }
 
+    if (getValue(yes_no_map, report_status) === 0) {
+        return [];
+    }
     return [0xff, 0x28, 0xff];
 }
 
@@ -148,12 +164,13 @@ function setReportInterval(report_interval) {
 
 /**
  * set report type
- * @param {number} report_type values: (0: "period", 1: "immediate")
+ * @param {number} report_type values: (0: period, 1: immediate)
  * @example { "report_type": 0 }
  * @since v2.0
  */
 function setReportType(report_type) {
-    var report_type_values = [0, 1];
+    var report_type_map = { 0: "period", 1: "immediate" };
+    var report_type_values = getValues(report_type_map);
     if (report_type_values.indexOf(report_type) === -1) {
         throw new Error("report_type must be one of " + report_type_values.join(", "));
     }
@@ -161,60 +178,78 @@ function setReportType(report_type) {
     var buffer = new Buffer(3);
     buffer.writeUInt8(0xf9);
     buffer.writeUInt8(0x10);
-    buffer.writeUInt8(report_type);
+    buffer.writeUInt8(getValue(report_type_map, report_type));
     return buffer.toBytes();
 }
 
 /**
  * sync time
- * @param {number} sync_time values：(0: "no", 1: "yes")
+ * @param {number} sync_time values：(0: no, 1: yes)
  * @example { "sync_time": 1 }
  */
 function syncTime(sync_time) {
-    var sync_time_values = [0, 1];
-    if (sync_time_values.indexOf(sync_time) === -1) {
-        throw new Error("sync_time must be one of " + sync_time_values.join(", "));
+    var yes_no_map = { 0: "no", 1: "yes" };
+    var yes_no_values = getValues(yes_no_map);
+    if (yes_no_values.indexOf(sync_time) === -1) {
+        throw new Error("sync_time must be one of " + yes_no_values.join(", "));
     }
 
-    if (sync_time === 0) {
+    if (getValue(yes_no_map, sync_time) === 0) {
         return [];
     }
     return [0xff, 0x4a, 0xff];
 }
 
 /**
+/**
  * set timezone
- * @param {number} timezone
+ * @param {number} timezone unit: minute, convert: "hh:mm" -> "hh * 60 + mm", values: ( -720: UTC-12, -660: UTC-11, -600: UTC-10, -570: UTC-9:30, -540: UTC-9, -480: UTC-8, -420: UTC-7, -360: UTC-6, -300: UTC-5, -240: UTC-4, -210: UTC-3:30, -180: UTC-3, -120: UTC-2, -60: UTC-1, 0: UTC, 60: UTC+1, 120: UTC+2, 180: UTC+3, 240: UTC+4, 300: UTC+5, 360: UTC+6, 420: UTC+7, 480: UTC+8, 540: UTC+9, 570: UTC+9:30, 600: UTC+10, 660: UTC+11, 720: UTC+12, 765: UTC+12:45, 780: UTC+13, 840: UTC+14 )
  * @example { "timezone": 8 }
  * @example { "timezone": -4 }
  */
 function setTimezone(timezone) {
-    if (typeof timezone !== "number") {
-        throw new Error("timezone must be a number");
+    var timezone_map = { "-720": "UTC-12", "-660": "UTC-11", "-600": "UTC-10", "-570": "UTC-9:30", "-540": "UTC-9", "-480": "UTC-8", "-420": "UTC-7", "-360": "UTC-6", "-300": "UTC-5", "-240": "UTC-4", "-210": "UTC-3:30", "-180": "UTC-3", "-120": "UTC-2", "-60": "UTC-1", 0: "UTC", 60: "UTC+1", 120: "UTC+2", 180: "UTC+3", 210: "UTC+3:30", 240: "UTC+4", 270: "UTC+4:30", 300: "UTC+5", 330: "UTC+5:30", 345: "UTC+5:45", 360: "UTC+6", 390: "UTC+6:30", 420: "UTC+7", 480: "UTC+8", 540: "UTC+9", 570: "UTC+9:30", 600: "UTC+10", 630: "UTC+10:30", 660: "UTC+11", 720: "UTC+12", 765: "UTC+12:45", 780: "UTC+13", 840: "UTC+14" };
+    var timezone_values = getValues(timezone_map);
+    if (timezone_values.indexOf(timezone) === -1) {
+        throw new Error("timezone must be one of " + timezone_values.join(", "));
     }
 
     var buffer = new Buffer(4);
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0xbd);
-    buffer.writeInt16LE(timezone * 60);
+    buffer.writeInt16LE(getValue(timezone_map, timezone));
     return buffer.toBytes();
 }
 
+function clearCumulative(clear_cumulative_enable) {
+    var enable_map = { 0: "disable", 1: "enable" };
+    var enable_values = getValues(enable_map);
+    if (enable_values.indexOf(clear_cumulative_enable) === -1) {
+        throw new Error("clear_cumulative_enable must be one of " + enable_values.join(", "));
+    }
+
+    var buffer = new Buffer(3);
+    buffer.writeUInt8(0xff);
+    buffer.writeUInt8(0xa6);
+    buffer.writeUInt8(getValue(enable_map, clear_cumulative_enable));
+    return buffer.toBytes();
+}
 /**
  * set cumulative enable
- * @param {number} cumulative_enable values: (0: "no", 1: "yes")
+ * @param {number} cumulative_enable values: (0: no, 1: yes)
  * @example { "cumulative_enable": 1 }
  */
 function setCumulativeEnable(cumulative_enable) {
-    var cumulative_enable_values = [0, 1];
-    if (cumulative_enable_values.indexOf(cumulative_enable) === -1) {
-        throw new Error("cumulative_enable must be one of " + cumulative_enable_values.join(", "));
+    var enable_map = { 0: "disable", 1: "enable" };
+    var enable_values = getValues(enable_map);
+    if (enable_values.indexOf(cumulative_enable) === -1) {
+        throw new Error("cumulative_enable must be one of " + enable_values.join(", "));
     }
 
     var buffer = new Buffer(3);
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0xa9);
-    buffer.writeUInt8(cumulative_enable);
+    buffer.writeUInt8(getValue(enable_map, cumulative_enable));
     return buffer.toBytes();
 }
 
@@ -231,7 +266,7 @@ function setCumulativeResetInterval(cumulative_reset_interval) {
         throw new Error("cumulative_reset_interval must be in range [1, 65535]");
     }
 
-    var buffer = new Buffer(5);
+    var buffer = new Buffer(4);
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0xa7);
     buffer.writeUInt16LE(cumulative_reset_interval);
@@ -240,13 +275,19 @@ function setCumulativeResetInterval(cumulative_reset_interval) {
 
 /**
  * set cumulative reset config
- * @param {number} weekday values: (0: "Everyday", 1: "Sunday", 2: "Monday", 3: "Tuesday", 4: "Wednesday", 5: "Thursday", 6: "Friday", 7: "Saturday")
- * @param {number} hour values: (0-23)
- * @param {number} minute values: (0-59)
+ * @param {object} cumulative_reset_config
+ * @param {number} cumulative_reset_config.weekday values: (0: Everyday, 1: Sunday, 2: Monday, 3: Tuesday, 4: Wednesday, 5: Thursday, 6: Friday, 7: Saturday)
+ * @param {number} cumulative_reset_config.hour values: (0-23)
+ * @param {number} cumulative_reset_config.minute values: (0-59)
  * @example { "cumulative_reset_config": { "weekday": 0, "hour": 0, "minute": 0 } }
  */
-function setCumulativeResetConfig(weekday, hour, minute) {
-    var weekday_values = [0, 1, 2, 3, 4, 5, 6, 7];
+function setCumulativeResetConfig(cumulative_reset_config) {
+    var weekday = cumulative_reset_config.weekday;
+    var hour = cumulative_reset_config.hour;
+    var minute = cumulative_reset_config.minute;
+
+    var weekday_map = { 0: "Everyday", 1: "Sunday", 2: "Monday", 3: "Tuesday", 4: "Wednesday", 5: "Thursday", 6: "Friday", 7: "Saturday" };
+    var weekday_values = getValues(weekday_map);
     if (weekday_values.indexOf(weekday) === -1) {
         throw new Error("cumulative_reset_config.weekday must be one of " + weekday_values.join(", "));
     }
@@ -260,7 +301,7 @@ function setCumulativeResetConfig(weekday, hour, minute) {
     var buffer = new Buffer(5);
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0xed);
-    buffer.writeUInt8(weekday);
+    buffer.writeUInt8(getValue(weekday_map, weekday));
     buffer.writeUInt8(hour);
     buffer.writeUInt8(minute);
     return buffer.toBytes();
@@ -268,60 +309,84 @@ function setCumulativeResetConfig(weekday, hour, minute) {
 
 /**
  * clear cumulative
- * @param {number} clear_cumulative values: (0: "no", 1: "yes")
- * @example { "clear_cumulative": 1 }
+ * @param {number} clear_cumulative_in values: (0: no, 1: yes)
+ * @example { "clear_cumulative_in": 1 }
  */
-function clearCumulative(clear_cumulative) {
-    var clear_cumulative_values = [0, 1];
-    if (clear_cumulative_values.indexOf(clear_cumulative) === -1) {
-        throw new Error("clear_cumulative must be one of " + clear_cumulative_values.join(", "));
+function clearCumulativeIn(clear_cumulative_in) {
+    var yes_no_map = { 0: "no", 1: "yes" };
+    var yes_no_values = getValues(yes_no_map);
+    if (yes_no_values.indexOf(clear_cumulative_in) === -1) {
+        throw new Error("clear_cumulative_in must be one of " + yes_no_values.join(", "));
     }
 
-    var buffer = new Buffer(3);
-    buffer.writeUInt8(0xff);
-    buffer.writeUInt8(0xa8);
-    buffer.writeUInt8(clear_cumulative);
-    return buffer.toBytes();
+    if (getValue(yes_no_map, clear_cumulative_in) === 0) {
+        return [];
+    }
+    return [0xff, 0xa8, 0x01];
+}
+
+/**
+ * clear cumulative
+ * @param {number} clear_cumulative_out values: (0: no, 1: yes)
+ * @example { "clear_cumulative_out": 1 }
+ */
+function clearCumulativeOut(clear_cumulative_out) {
+    var yes_no_map = { 0: "no", 1: "yes" };
+    var yes_no_values = getValues(yes_no_map);
+    if (yes_no_values.indexOf(clear_cumulative_out) === -1) {
+        throw new Error("clear_cumulative_out must be one of " + yes_no_values.join(", "));
+    }
+
+    if (getValue(yes_no_map, clear_cumulative_out) === 0) {
+        return [];
+    }
+    return [0xff, 0xa8, 0x02];
 }
 
 /**
  * set temperature enable
- * @param {number} temperature_enable values: (0: "no", 1: "yes")
+ * @param {number} temperature_enable values: (0: disable, 1: enable)
  * @example { "temperature_enable": 1 }
  */
 function setTemperatureEnable(temperature_enable) {
-    var temperature_enable_values = [0, 1];
-    if (temperature_enable_values.indexOf(temperature_enable) === -1) {
-        throw new Error("temperature_enable must be one of " + temperature_enable_values.join(", "));
+    var enable_map = { 0: "disable", 1: "enable" };
+    var enable_values = getValues(enable_map);
+    if (enable_values.indexOf(temperature_enable) === -1) {
+        throw new Error("temperature_enable must be one of " + enable_values.join(", "));
     }
 
     var buffer = new Buffer(3);
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0xaa);
-    buffer.writeUInt8(temperature_enable);
+    buffer.writeUInt8(getValue(enable_map, temperature_enable));
     return buffer.toBytes();
 }
 
 /**
  * set temperature calibration
- * @param {number} enable values: (0: "no", 1: "yes")
- * @param {number} temperature unit: ℃
- * @example { "temperature_calibration": { "enable": 1, "temperature": 26 } }
+ * @param {object} temperature_calibration
+ * @param {number} temperature_calibration.enable values: (0: disable, 1: enable)
+ * @param {number} temperature_calibration.calibration_value unit: ℃
+ * @example { "temperature_calibration": { "enable": 1, "calibration_value": 26 } }
  */
-function setTemperatureCalibration(enable, temperature) {
-    var enable_values = [0, 1];
+function setTemperatureCalibration(temperature_calibration) {
+    var enable = temperature_calibration.enable;
+    var calibration_value = temperature_calibration.calibration_value;
+
+    var enable_map = { 0: "disable", 1: "enable" };
+    var enable_values = getValues(enable_map);
     if (enable_values.indexOf(enable) === -1) {
         throw new Error("temperature_calibration.enable must be one of " + enable_values.join(", "));
     }
-    if (typeof temperature !== "number") {
-        throw new Error("temperature_calibration.temperature must be a number");
+    if (typeof calibration_value !== "number") {
+        throw new Error("temperature_calibration.calibration_value must be a number");
     }
 
     var buffer = new Buffer(5);
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0xab);
-    buffer.writeUInt8(enable);
-    buffer.writeInt16LE(temperature);
+    buffer.writeUInt8(getValue(enable_map, enable));
+    buffer.writeInt16LE(calibration_value * 10);
     return buffer.toBytes();
 }
 
@@ -337,8 +402,8 @@ function setD2DKey(d2d_key) {
     if (d2d_key.length !== 16) {
         throw new Error("d2d_key must be 16 characters");
     }
-    if (!/^[0-9A-F]+$/.test(d2d_key)) {
-        throw new Error("d2d_key must be hex string [0-9A-F]");
+    if (!/^[0-9a-fA-F]+$/.test(d2d_key)) {
+        throw new Error("d2d_key must be hex string [0-9a-fA-F]");
     }
 
     var data = hexStringToBytes(d2d_key);
@@ -351,93 +416,157 @@ function setD2DKey(d2d_key) {
 
 /**
  * set d2d enable
- * @param {number} d2d_enable values: (0: "disable", 1: "enable")
+ * @param {number} d2d_enable values: (0: disable, 1: enable)
  * @example { "d2d_enable": 1 }
  */
 function setD2DEnable(d2d_enable) {
-    var d2d_enable_values = [0, 1];
-    if (d2d_enable_values.indexOf(d2d_enable) === -1) {
-        throw new Error("d2d_enable must be one of " + d2d_enable_values.join(", "));
+    var enable_map = { 0: "disable", 1: "enable" };
+    var enable_values = getValues(enable_map);
+    if (enable_values.indexOf(d2d_enable) === -1) {
+        throw new Error("d2d_enable must be one of " + enable_values.join(", "));
     }
 
     var buffer = new Buffer(3);
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0x84);
-    buffer.writeUInt8(d2d_enable);
+    buffer.writeUInt8(getValue(enable_map, d2d_enable));
     return buffer.toBytes();
 }
 
 /**
  * d2d master configuration
- * @param {number} mode values: (1: "someone enter", 2: "someone leave", 3: "counting threshold alarm", 4: "temperature threshold alarm", 5: "temperature threshold alarm release")
- * @param {number} enable values: (0: disable, 1: enable)
- * @param {string} d2d_cmd
- * @param {number} uplink_enable values: (0: disable, 1: enable)
- * @param {number} time_enable values: (0: disable, 1: enable)
- * @param {number} time unit: minute
- * @example { "d2d_master_config": [{ "mode": 0, "enable": 1, "d2d_cmd": "0000", "uplink_enable": 1, "time_enable": 1, "time": 10 }] }
+ * @param {object} d2d_master_config
+ * @param {number} d2d_master_config.mode values: (1: someone_enter, 2: someone_leave, 3: counting_threshold_alarm, 4: temperature_threshold_alarm, 5: temperature_threshold_alarm_release)
+ * @param {number} d2d_master_config.enable values: (0: disable, 1: enable)
+ * @param {string} d2d_master_config.d2d_cmd
+ * @param {number} d2d_master_config.lora_uplink_enable values: (0: disable, 1: enable)
+ * @param {number} d2d_master_config.time_enable values: (0: disable, 1: enable)
+ * @param {number} d2d_master_config.time unit: minute
+ * @example { "d2d_master_config": [{ "mode": 0, "enable": 1, "d2d_cmd": "0000", "lora_uplink_enable": 1, "time_enable": 1, "time": 10 }] }
  */
-function setD2DMasterConfig(mode, enable, d2d_cmd, uplink_enable, time_enable, time) {
-    var mode_values = [0, 1, 2, 3];
+function setD2DMasterConfig(d2d_master_config) {
+    var mode = d2d_master_config.mode;
+    var enable = d2d_master_config.enable;
+    var d2d_cmd = d2d_master_config.d2d_cmd;
+    var lora_uplink_enable = d2d_master_config.lora_uplink_enable;
+    var time_enable = d2d_master_config.time_enable;
+    var time = d2d_master_config.time;
+
+    var mode_map = { 1: "someone_enter", 2: "someone_leave", 3: "counting_threshold_alarm", 4: "temperature_threshold_alarm", 5: "temperature_threshold_alarm_release" };
+    var mode_values = getValues(mode_map);
     if (mode_values.indexOf(mode) === -1) {
-        throw new Error("d2d_master_config.mode must be one of " + mode_values.join(", "));
+        throw new Error("d2d_master_config._item.mode must be one of " + mode_values.join(", "));
     }
-    var enable_values = [0, 1];
+    var enable_map = { 0: "disable", 1: "enable" };
+    var enable_values = getValues(enable_map);
     if (enable_values.indexOf(enable) === -1) {
-        throw new Error("d2d_master_config.enable must be one of " + enable_values.join(", "));
+        throw new Error("d2d_master_config._item.enable must be one of " + enable_values.join(", "));
     }
-    if (enable && enable_values.indexOf(uplink_enable) === -1) {
-        throw new Error("d2d_master_config.uplink_enable must be one of " + enable_values.join(", "));
+    if ("enable" in d2d_master_config && enable_values.indexOf(lora_uplink_enable) === -1) {
+        throw new Error("d2d_master_config._item.lora_uplink_enable must be one of " + enable_values.join(", "));
     }
-    if (enable && enable_values.indexOf(time_enable) === -1) {
-        throw new Error("d2d_master_config.time_enable must be one of " + enable_values.join(", "));
+    if ("enable" in d2d_master_config && enable_values.indexOf(time_enable) === -1) {
+        throw new Error("d2d_master_config._item.time_enable must be one of " + enable_values.join(", "));
     }
 
     var buffer = new Buffer(10);
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0x96);
-    buffer.writeUInt8(mode);
-    buffer.writeUInt8(enable);
-    buffer.writeUInt8(uplink_enable);
+    buffer.writeUInt8(getValue(mode_map, mode));
+    buffer.writeUInt8(getValue(enable_map, enable));
+    buffer.writeUInt8(getValue(enable_map, lora_uplink_enable));
     buffer.writeD2DCommand(d2d_cmd, "0000");
     buffer.writeUInt16LE(time);
-    buffer.writeUInt8(time_enable);
+    buffer.writeUInt8(getValue(enable_map, time_enable));
+    return buffer.toBytes();
+}
+
+/**
+ * set alarm config
+ * @param {object} alarm_config
+ * @param {number} alarm_config.condition values: (0: disable, 1: below, 2: above, 3: between, 4: outside)
+ * @param {number} alarm_config.trigger_source values: (1: period_count, 2: total_count, 3: temperature)
+ * @param {number} alarm_config.min_threshold
+ * @param {number} alarm_config.max_threshold
+ * @param {number} alarm_config.lock_time
+ * @param {number} alarm_config.continue_time
+ */
+function setAlarmConfig(alarm_config) {
+    var enable = alarm_config.enable;
+    var condition = alarm_config.condition;
+    var trigger_source = alarm_config.trigger_source;
+    var min_threshold = alarm_config.min_threshold;
+    var max_threshold = alarm_config.max_threshold;
+    var lock_time = alarm_config.lock_time;
+    var continue_time = alarm_config.continue_time;
+
+    var condition_map = { 0: "disable", 1: "below", 2: "above", 3: "between", 4: "outside" }
+    var condition_values = getValues(condition_map);
+    if (condition_values.indexOf(condition) === -1) {
+        throw new Error("alarm_config.condition must be one of " + condition_values.join(", "));
+    }
+    var enable_map = { 0: "disable", 1: "enable" };
+    var enable_values = getValues(enable_map);
+    if (enable_values.indexOf(enable) === -1) {
+        throw new Error("alarm_config.enable must be one of " + enable_values.join(", "));
+    }
+    var trigger_source_map = { 1: "period_count", 2: "total_count", 3: "temperature" }
+    var trigger_source_values = getValues(trigger_source_map);
+    if (trigger_source_values.indexOf(trigger_source) === -1) {
+        throw new Error("alarm_config.trigger_source must be one of " + trigger_source_values.join(", "));
+    }
+
+    var data = 0x00;
+    data |= getValue(condition_map, condition);
+    data |= getValue(trigger_source_map, trigger_source) << 3;
+    data |= getValue(enable_map, enable) << 6;
+
+    var buffer = new Buffer(11);
+    buffer.writeUInt8(0xff);
+    buffer.writeUInt8(0x06);
+    buffer.writeUInt8(data);
+    buffer.writeUInt16LE(min_threshold);
+    buffer.writeUInt16LE(max_threshold);
+    buffer.writeUInt16LE(lock_time);
+    buffer.writeUInt16LE(continue_time);
     return buffer.toBytes();
 }
 
 /**
  * set history enable
- * @param {number} history_enable values: (0: "disable", 1: "enable")
+ * @param {number} history_enable values: (0: disable, 1: enable)
  * @example { "history_enable": 1 }
  */
 function setHistoryEnable(history_enable) {
-    var history_enable_values = [0, 1];
-    if (history_enable_values.indexOf(history_enable) === -1) {
-        throw new Error("history_enable must be one of " + history_enable_values.join(", "));
+    var enable_map = { 0: "disable", 1: "enable" };
+    var enable_values = getValues(enable_map);
+    if (enable_values.indexOf(history_enable) === -1) {
+        throw new Error("history_enable must be one of " + enable_values.join(", "));
     }
 
     var buffer = new Buffer(3);
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0x68);
-    buffer.writeUInt8(history_enable);
+    buffer.writeUInt8(getValue(enable_map, history_enable));
     return buffer.toBytes();
 }
 
 /**
  * set retransmit enable
- * @param {number} retransmit_enable values: (0: "disable", 1: "enable")
+ * @param {number} retransmit_enable values: (0: disable, 1: enable)
  * @example { "retransmit_enable": 1 }
  */
 function setRetransmitEnable(retransmit_enable) {
-    var retransmit_enable_values = [0, 1];
-    if (retransmit_enable_values.indexOf(retransmit_enable) === -1) {
-        throw new Error("retransmit_enable must be one of " + retransmit_enable_values.join(", "));
+    var enable_map = { 0: "disable", 1: "enable" };
+    var enable_values = getValues(enable_map);
+    if (enable_values.indexOf(retransmit_enable) === -1) {
+        throw new Error("retransmit_enable must be one of " + enable_values.join(", "));
     }
 
     var buffer = new Buffer(3);
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0x69);
-    buffer.writeUInt8(retransmit_enable);
+    buffer.writeUInt8(getValue(enable_map, retransmit_enable));
     return buffer.toBytes();
 }
 
@@ -461,17 +590,41 @@ function setRetransmitInterval(retransmit_interval) {
     buffer.writeUInt16LE(retransmit_interval);
     return buffer.toBytes();
 }
+/**
+ * set resend interval
+ * @param {number} resend_interval unit: second range: [30, 1200]
+ * @example { "resend_interval": 600 }
+ */
+function setResendInterval(resend_interval) {
+    if (typeof resend_interval !== "number") {
+        throw new Error("resend_interval must be a number");
+    }
+    if (resend_interval < 30 || resend_interval > 1200) {
+        throw new Error("resend_interval must be between 30 and 1200");
+    }
+
+    var buffer = new Buffer(5);
+    buffer.writeUInt8(0xff);
+    buffer.writeUInt8(0x6a);
+    buffer.writeUInt8(0x01);
+    buffer.writeUInt16LE(resend_interval);
+    return buffer.toBytes();
+}
 
 /**
  * fetch history
- * @param {number} start_time
- * @param {number} end_time
+ * @param {object} fetch_history
+ * @param {number} fetch_history.start_time
+ * @param {number} fetch_history.end_time
  */
-function fetchHistory(start_time, end_time) {
+function fetchHistory(fetch_history) {
+    var start_time = fetch_history.start_time;
+    var end_time = fetch_history.end_time || 0;
+
     if (typeof start_time !== "number") {
         throw new Error("start_time must be a number");
     }
-    if (typeof end_time !== "number") {
+    if ("end_time" in fetch_history && typeof end_time !== "number") {
         throw new Error("end_time must be a number");
     }
 
@@ -486,26 +639,53 @@ function fetchHistory(start_time, end_time) {
         buffer.writeUInt32LE(start_time);
         buffer.writeUInt32LE(end_time);
     }
-
     return buffer.toBytes();
 }
 
 /**
  * stop transmit
- * @param {number} stop_transmit
+ * @param {number} stop_transmit values: (0: no, 1: yes)
  * @example { "stop_transmit": 1 }
  */
 function stopTransmit(stop_transmit) {
-    var stop_transmit_values = [0, 1];
-    if (!stop_transmit_values.indexOf(stop_transmit)) {
-        throw new Error("stop_transmit must be one of " + stop_transmit_values.join(", "));
+    var yes_no_map = { 0: "no", 1: "yes" };
+    var yes_no_values = getValues(yes_no_map);
+    if (yes_no_values.indexOf(stop_transmit) === -1) {
+        throw new Error("stop_transmit must be one of " + yes_no_values.join(", "));
     }
 
-    if (stop_transmit === 0) {
+    if (getValue(yes_no_map, stop_transmit) === 0) {
         return [];
     }
     return [0xff, 0x6d, 0xff];
 }
+
+function getValues(map) {
+    var values = [];
+    if (RAW_VALUE) {
+        for (var key in map) {
+            values.push(parseInt(key));
+        }
+    } else {
+        for (var key in map) {
+            values.push(map[key]);
+        }
+    }
+    return values;
+}
+
+function getValue(map, value) {
+    if (RAW_VALUE) return value;
+
+    for (var key in map) {
+        if (map[key] === value) {
+            return parseInt(key);
+        }
+    }
+
+    throw new Error("not match in " + JSON.stringify(map));
+}
+
 
 function Buffer(size) {
     this.buffer = new Array(size);
@@ -517,9 +697,10 @@ function Buffer(size) {
 }
 
 Buffer.prototype._write = function (value, byteLength, isLittleEndian) {
+    var offset = 0;
     for (var index = 0; index < byteLength; index++) {
-        var shift = isLittleEndian ? index << 3 : (byteLength - 1 - index) << 3;
-        this.buffer[this.offset + index] = (value & (0xff << shift)) >> shift;
+        offset = isLittleEndian ? index << 3 : (byteLength - 1 - index) << 3;
+        this.buffer[this.offset + index] = (value >> offset) & 0xff;
     }
 };
 
