@@ -92,15 +92,15 @@ function reboot(reboot) {
 
 /**
  * Set report interval
- * @param {number} report_interval unit: second, range: [60, 604800]
+ * @param {number} report_interval unit: second, range: [60, 64800]
  * @example { "report_interval": 300 }
  */
 function setReportInterval(report_interval) {
     if (typeof report_interval !== "number") {
         throw new Error("report_interval must be a number");
     }
-    if (report_interval < 60 || report_interval > 604800) {
-        throw new Error("report_interval must be between 60 and 604800");
+    if (report_interval < 60 || report_interval > 64800) {
+        throw new Error("report_interval must be between 60 and 64800");
     }
 
     var buffer = new Buffer(4);
@@ -374,9 +374,10 @@ function Buffer(size) {
 }
 
 Buffer.prototype._write = function (value, byteLength, isLittleEndian) {
+    var offset = 0;
     for (var index = 0; index < byteLength; index++) {
-        var shift = isLittleEndian ? index << 3 : (byteLength - 1 - index) << 3;
-        this.buffer[this.offset + index] = (value & (0xff << shift)) >> shift;
+        offset = isLittleEndian ? index << 3 : (byteLength - 1 - index) << 3;
+        this.buffer[this.offset + index] = (value >> offset) & 0xff;
     }
 };
 
