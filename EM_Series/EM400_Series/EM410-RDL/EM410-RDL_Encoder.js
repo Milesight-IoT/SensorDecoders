@@ -47,11 +47,17 @@ function milesightDeviceEncode(payload) {
     if ("distance_range" in payload) {
         encoded = encoded.concat(setDistanceRange(payload.distance_range));
     }
-    if ("distance_alarm" in payload) {
-        encoded = encoded.concat(setDistanceAlarm(payload.distance_alarm));
+    if ("distance_alarm_config" in payload) {
+        encoded = encoded.concat(setDistanceAlarm(payload.distance_alarm_config));
     }
-    if ("distance_mutation_alarm" in payload) {
-        encoded = encoded.concat(setDistanceMutationAlarm(payload.distance_mutation_alarm));
+    if ("distance_mutation_alarm_config" in payload) {
+        encoded = encoded.concat(setDistanceMutationAlarm(payload.distance_mutation_alarm_config));
+    }
+    if ("tank_mode_distance_alarm_config" in payload) {
+        encoded = encoded.concat(setTankModeDistanceAlarmConfig(payload.tank_mode_distance_alarm_config));
+    }
+    if ("tank_mode_distance_mutation_alarm_config" in payload) {
+        encoded = encoded.concat(setTankModeDistanceMutationAlarm(payload.tank_mode_distance_mutation_alarm_config));
     }
     if ("alarm_counts" in payload) {
         encoded = encoded.concat(setAlarmCounts(payload.alarm_counts));
@@ -71,8 +77,8 @@ function milesightDeviceEncode(payload) {
     if ("blind_detection_enable" in payload) {
         encoded = encoded.concat(setBlindDetectionEnable(payload.blind_detection_enable));
     }
-    if ("recollection_counts" in payload && "recollection_interval" in payload) {
-        encoded = encoded.concat(setRecollection(payload.recollection_counts, payload.recollection_interval));
+    if ("recollection_config" in payload) {
+        encoded = encoded.concat(setRecollectionConfig(payload.recollection_config));
     }
     if ("signal_quality" in payload) {
         encoded = encoded.concat(setSignalQuality(payload.signal_quality));
@@ -130,22 +136,21 @@ function reboot(reboot) {
 }
 
 /**
- * report device status
+ * report status
  * @param {number} report_status values: (0: no, 1: yes)
  * @example { "report_status": 1 }
  */
 function reportStatus(report_status) {
     var yes_no_map = { 0: "no", 1: "yes" };
-    var report_status_values = getValues(yes_no_map);
-    if (report_status_values.indexOf(report_status) === -1) {
-        throw new Error("report_status must be one of " + report_status_values.join(", "));
+    var yes_no_values = getValues(yes_no_map);
+    if (yes_no_values.indexOf(report_status) === -1) {
+        throw new Error("report_status must be one of " + yes_no_values.join(", "));
     }
 
-    var buffer = new Buffer(3);
-    buffer.writeUInt8(0xff);
-    buffer.writeUInt8(0x28);
-    buffer.writeUInt8(getValue(yes_no_map, report_status));
-    return buffer.toBytes();
+    if (getValue(yes_no_map, report_status) === 0) {
+        return [];
+    }
+    return [0xff, 0x28, 0x01];
 }
 
 /**
@@ -250,7 +255,7 @@ function setDistanceRange(distance_range) {
     var buffer = new Buffer(7);
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0x1b);
-    buffer.writeUInt8(mode);
+    buffer.writeUInt8(getValue(distance_mode_map, mode));
     buffer.writeUInt16LE(0);
     buffer.writeUInt16LE(max);
     return buffer.toBytes();
@@ -258,47 +263,105 @@ function setDistanceRange(distance_range) {
 
 /**
  * set distance alarm
- * @param {object} distance_alarm
- * @param {number} distance_alarm.condition values: (0: disable, 1: below, 2: above, 3: between, 4: outside)
- * @param {number} distance_alarm.alarm_release_report_enable values: (0: disable, 1: enable)
- * @param {number} distance_alarm.min
- * @param {number} distance_alarm.max
- * @example { "distance_alarm": { "condition": 1, "alarm_release_report_enable": 1, "min": 100, "max": 1000 } }
+ * @param {object} distance_alarm_config
+ * @param {number} distance_alarm_config.enable values: (0: disable, 1: enable)
+ * @param {number} distance_alarm_config.condition values: (0: disable, 1: below, 2: above, 3: between, 4: outside, 5: mutation)
+ * @param {number} distance_alarm_config.alarm_release_enable values: (0: disable, 1: enable)
+ * @param {number} distance_alarm_config.min_threshold
+ * @param {number} distance_alarm_config.max_threshold
+ * @example { "distance_alarm_config": { "condition": 1, "alarm_release_enable": 1, "min_threshold": 100, "max_threshold": 1000 } }
  */
-function setDistanceAlarm(distance_alarm) {
-    var condition = distance_alarm.condition;
-    var alarm_release_report_enable = distance_alarm.alarm_release_report_enable;
-    var min = distance_alarm.min;
-    var max = distance_alarm.max;
+function setDistanceAlarm(distance_alarm_config) {
+    var enable = distance_alarm_config.enable;
+    var condition = distance_alarm_config.condition;
+    var alarm_release_enable = distance_alarm_config.alarm_release_enable;
+    var min_threshold = distance_alarm_config.min_threshold;
+    var max_threshold = distance_alarm_config.max_threshold;
 
-    var condition_map = { 0: "disable", 1: "below", 2: "above", 3: "between", 4: "outside" };
+    var condition_map = { 0: "disable", 1: "below", 2: "above", 3: "between", 4: "outside", 5: "mutation" };
     var condition_values = getValues(condition_map);
     if (condition_values.indexOf(condition) === -1) {
-        throw new Error("distance_alarm.condition must be one of " + condition_values.join(", "));
+        throw new Error("distance_alarm_config.condition must be one of " + condition_values.join(", "));
     }
     var enable_map = { 0: "disable", 1: "enable" };
     var enable_values = getValues(enable_map);
-    if (enable_values.indexOf(alarm_release_report_enable) === -1) {
-        throw new Error("distance_alarm.alarm_release_report_enable must be one of " + enable_values.join(", "));
+    if (enable_values.indexOf(enable) === -1) {
+        throw new Error("distance_alarm_config.enable must be one of " + enable_values.join(", "));
     }
-    if (typeof min !== "number") {
-        throw new Error("distance_alarm.min must be a number");
+    if (enable_values.indexOf(alarm_release_enable) === -1) {
+        throw new Error("distance_alarm_config.alarm_release_enable must be one of " + enable_values.join(", "));
     }
-    if (typeof max !== "number") {
-        throw new Error("distance_alarm.max must be a number");
+    if (typeof min_threshold !== "number") {
+        throw new Error("distance_alarm_config.min_threshold must be a number");
+    }
+    if (typeof max_threshold !== "number") {
+        throw new Error("distance_alarm_config.max_threshold must be a number");
     }
 
     var data = 0x00;
-    data |= getValue(enable_map, alarm_release_report_enable) << 7;
+    data |= getValue(enable_map, alarm_release_enable) << 7;
     data |= 1 << 3;
-    data |= getValue(condition_map, condition);
+    data |= getValue(enable_map, enable) === 0 ? 0 : getValue(condition_map, condition);
 
     var buffer = new Buffer(11);
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0x06);
     buffer.writeUInt8(data);
-    buffer.writeInt16LE(min);
-    buffer.writeInt16LE(max);
+    buffer.writeInt16LE(min_threshold);
+    buffer.writeInt16LE(max_threshold);
+    buffer.writeUInt16LE(0);
+    buffer.writeUInt16LE(0);
+    return buffer.toBytes();
+}
+
+/**
+ * set tank mode distance alarm
+ * @param {object} tank_mode_distance_alarm_config
+ * @param {number} tank_mode_distance_alarm_config.enable values: (0: disable, 1: enable)
+ * @param {number} tank_mode_distance_alarm_config.condition values: (0: disable, 1: below, 2: above, 3: between, 4: outside, 5: mutation)
+ * @param {number} tank_mode_distance_alarm_config.alarm_release_enable values: (0: disable, 1: enable)
+ * @param {number} tank_mode_distance_alarm_config.min_threshold
+ * @param {number} tank_mode_distance_alarm_config.max_threshold
+ * @example { "tank_mode_distance_alarm_config": { "enable": 1, "condition": 1, "alarm_release_enable": 1, "min_threshold": 100, "max_threshold": 1000 } }
+ */
+function setTankModeDistanceAlarmConfig(tank_mode_distance_alarm_config) {
+    var enable = tank_mode_distance_alarm_config.enable;
+    var condition = tank_mode_distance_alarm_config.condition;
+    var alarm_release_enable = tank_mode_distance_alarm_config.alarm_release_enable;
+    var min_threshold = tank_mode_distance_alarm_config.min_threshold;
+    var max_threshold = tank_mode_distance_alarm_config.max_threshold;
+
+    var condition_map = { 0: "disable", 1: "below", 2: "above", 3: "between", 4: "outside", 5: "mutation" };
+    var condition_values = getValues(condition_map);
+    if (condition_values.indexOf(condition) === -1) {
+        throw new Error("tank_mode_distance_alarm_config.condition must be one of " + condition_values.join(", "));
+    }
+    var enable_map = { 0: "disable", 1: "enable" };
+    var enable_values = getValues(enable_map);
+    if (enable_values.indexOf(enable) === -1) {
+        throw new Error("tank_mode_distance_alarm_config.enable must be one of " + enable_values.join(", "));
+    }
+    if (enable_values.indexOf(alarm_release_enable) === -1) {
+        throw new Error("tank_mode_distance_alarm_config.alarm_release_enable must be one of " + enable_values.join(", "));
+    }
+    if (typeof min_threshold !== "number") {
+        throw new Error("tank_mode_distance_alarm_config.min_threshold must be a number");
+    }
+    if (typeof max_threshold !== "number") {
+        throw new Error("tank_mode_distance_alarm_config.max_threshold must be a number");
+    }
+
+    var data = 0x00;
+    data |= getValue(enable_map, alarm_release_enable) << 7;
+    data |= 3 << 3;
+    data |= getValue(enable_map, enable) === 0 ? 0 : getValue(condition_map, condition);
+
+    var buffer = new Buffer(11);
+    buffer.writeUInt8(0xff);
+    buffer.writeUInt8(0x06);
+    buffer.writeUInt8(data);
+    buffer.writeInt16LE(min_threshold);
+    buffer.writeInt16LE(max_threshold);
     buffer.writeUInt16LE(0);
     buffer.writeUInt16LE(0);
     return buffer.toBytes();
@@ -306,23 +369,67 @@ function setDistanceAlarm(distance_alarm) {
 
 /**
  * set distance mutation alarm
- * @param {number} alarm_release_report_enable values: (0: disable, 1: enable)
- * @param {number} mutation
- * @example { "distance_mutation_alarm": { "alarm_release_report_enable": 1, "mutation": 100 } }
+ * @param {object} distance_mutation_alarm_config
+ * @param {number} distance_mutation_alarm_config.enable values: (0: disable, 1: enable)
+ * @param {number} distance_mutation_alarm_config.alarm_release_enable values: (0: disable, 1: enable)
+ * @param {number} distance_mutation_alarm_config.mutation
+ * @example { "distance_mutation_alarm_config": { "enable": 1, "condition": 5, "alarm_release_enable": 1, "mutation": 100 } }
  */
-function setDistanceMutationAlarm(distance_mutation_alarm) {
-    var alarm_release_report_enable = distance_mutation_alarm.alarm_release_report_enable;
-    var mutation = distance_mutation_alarm.mutation;
+function setDistanceMutationAlarm(distance_mutation_alarm_config) {
+    var enable = distance_mutation_alarm_config.enable;
+    var alarm_release_enable = distance_mutation_alarm_config.alarm_release_enable;
+    var mutation = distance_mutation_alarm_config.mutation;
 
     var enable_map = { 0: "disable", 1: "enable" };
     var enable_values = getValues(enable_map);
-    if (enable_values.indexOf(alarm_release_report_enable) === -1) {
-        throw new Error("distance_mutation_alarm.alarm_release_report_enable must be one of " + enable_values.join(", "));
+    var enable = distance_mutation_alarm_config.enable;
+    if (enable_values.indexOf(enable) === -1) {
+        throw new Error("distance_mutation_alarm_config.enable must be one of " + enable_values.join(", "));
+    }
+    if (enable_values.indexOf(alarm_release_enable) === -1) {
+        throw new Error("distance_mutation_alarm_config.alarm_release_enable must be one of " + enable_values.join(", "));
     }
     var data = 0x00;
-    data |= getValue(enable_map, alarm_release_report_enable) << 7;
+    data |= getValue(enable_map, alarm_release_enable) << 7;
     data |= 2 << 3;
-    data |= 5;
+    data |= getValue(enable_map, enable) === 0 ? 0 : 5;
+
+    var buffer = new Buffer(11);
+    buffer.writeUInt8(0xff);
+    buffer.writeUInt8(0x06);
+    buffer.writeUInt8(data);
+    buffer.writeInt16LE(0x00);
+    buffer.writeInt16LE(mutation);
+    buffer.writeUInt16LE(0);
+    buffer.writeUInt16LE(0);
+    return buffer.toBytes();
+}
+
+/**
+ * set tank mode distance mutation alarm
+ * @param {object} tank_mode_distance_mutation_alarm_config
+ * @param {number} tank_mode_distance_mutation_alarm_config.enable values: (0: disable, 1: enable)
+ * @param {number} tank_mode_distance_mutation_alarm_config.alarm_release_enable values: (0: disable, 1: enable)
+ * @param {number} tank_mode_distance_mutation_alarm_config.mutation
+ * @example { "tank_mode_distance_mutation_alarm_config": { "enable": 1, "condition": 5, "alarm_release_enable": 1, "mutation": 100 } }
+ */
+function setTankModeDistanceMutationAlarm(tank_mode_distance_mutation_alarm_config) {
+    var enable = tank_mode_distance_mutation_alarm_config.enable;
+    var alarm_release_enable = tank_mode_distance_mutation_alarm_config.alarm_release_enable;
+    var mutation = tank_mode_distance_mutation_alarm_config.mutation;
+
+    var enable_map = { 0: "disable", 1: "enable" };
+    var enable_values = getValues(enable_map);
+    if (enable_values.indexOf(enable) === -1) {
+        throw new Error("tank_mode_distance_mutation_alarm_config.enable must be one of " + enable_values.join(", "));
+    }
+    if (enable_values.indexOf(alarm_release_enable) === -1) {
+        throw new Error("tank_mode_distance_mutation_alarm_config.alarm_release_enable must be one of " + enable_values.join(", "));
+    }
+    var data = 0x00;
+    data |= getValue(enable_map, alarm_release_enable) << 7;
+    data |= 4 << 3;
+    data |= getValue(enable_map, enable) === 0 ? 0 : 5;
 
     var buffer = new Buffer(11);
     buffer.writeUInt8(0xff);
@@ -344,7 +451,7 @@ function setAlarmCounts(alarm_counts) {
     if (typeof alarm_counts !== "number") {
         throw new Error("alarm_counts must be a number");
     }
-    if (alarm_count < 1 || alarm_count > 1000) {
+    if (alarm_counts < 1 || alarm_counts > 1000) {
         throw new Error("alarm_counts must be in range [1, 1000]");
     }
 
@@ -464,7 +571,7 @@ function setBlindDetectionEnable(blind_detection_enable) {
  * @param {number} recollection_config.interval range: [1, 10]
  * @example { "recollection_config": { "counts": 3, "interval": 10 } }
  */
-function setRecollection(recollection_config) {
+function setRecollectionConfig(recollection_config) {
     var counts = recollection_config.counts;
     var interval = recollection_config.interval;
 
@@ -591,7 +698,7 @@ function setResendInterval(resend_interval) {
 
     var buffer = new Buffer(5);
     buffer.writeUInt8(0xff);
-    buffer.writeUInt8(0x6b);
+    buffer.writeUInt8(0x6a);
     buffer.writeUInt8(0x01);
     buffer.writeUInt16LE(resend_interval);
     return buffer.toBytes();
@@ -670,6 +777,24 @@ function fetchHistory(fetch_history) {
     }
 
     return buffer.toBytes();
+}
+
+/**
+ * clear history
+ * @param {number} clear_history values: (0: no, 1: yes)
+ * @example { "clear_history": 1 }
+ */
+function clearHistory(clear_history) {
+    var yes_no_map = { 0: "no", 1: "yes" };
+    var yes_no_values = getValues(yes_no_map);
+    if (yes_no_values.indexOf(clear_history) === -1) {
+        throw new Error("clear_history must be one of " + yes_no_values.join(", "));
+    }
+
+    if (getValue(yes_no_map, clear_history) === 0) {
+        return [];
+    }
+    return [0xff, 0x27, 0x01];
 }
 
 /**
