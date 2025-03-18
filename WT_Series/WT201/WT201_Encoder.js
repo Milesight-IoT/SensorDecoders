@@ -254,13 +254,13 @@ function setCollectionInterval(collection_interval) {
  * @example { "sync_time": 1 }
  */
 function syncTime(sync_time) {
-    var sync_time_map = { 0: "no", 1: "yes" };
-    var sync_time_values = getValues(sync_time_map);
-    if (sync_time_values.indexOf(sync_time) === -1) {
-        throw new Error("sync_time must be one of " + sync_time_values.join(", "));
+    var yes_no_map = { 0: "no", 1: "yes" };
+    var yes_no_values = getValues(yes_no_map);
+    if (yes_no_values.indexOf(sync_time) === -1) {
+        throw new Error("sync_time must be one of " + yes_no_values.join(", "));
     }
 
-    if (sync_time === 0) {
+    if (getValue(yes_no_map, sync_time) === 0) {
         return [];
     }
     return [0xff, 0x4a, 0xff];
