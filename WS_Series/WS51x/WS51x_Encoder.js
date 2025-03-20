@@ -1,11 +1,11 @@
 /**
  * Payload Encoder
  *
- * Copyright 2024 Milesight IoT
+ * Copyright 2025 Milesight IoT
  *
  * @product WS51x
  */
-var RAW_VALUE = 0x01;
+var RAW_VALUE = 0x00;
 
 // Chirpstack v4
 function encodeDownlink(input) {
@@ -25,18 +25,20 @@ function Encoder(obj, port) {
 function milesightDeviceEncode(payload) {
     var encoded = [];
 
+    if ("reboot" in payload) {
+        encoded = encoded.concat(reboot(payload.reboot));
+    }
     if ("report_status" in payload) {
         encoded = encoded.concat(reportStatus(payload.report_status));
     }
     if ("report_interval" in payload) {
         encoded = encoded.concat(setReportInterval(payload.report_interval));
     }
+    if ("delay_task" in payload) {
+        encoded = encoded.concat(setDelayTask(payload.delay_task));
+    }
     if ("socket_status" in payload) {
-        if ("delay_time" in payload) {
-            encoded = encoded.concat(socketStatusWithDelay(payload.socket_status, payload.delay_time));
-        } else {
-            encoded = encoded.concat(socketStatus(payload.socket_status));
-        }
+        encoded = encoded.concat(socketStatus(payload.socket_status));
     }
     if ("cancel_delay_task" in payload) {
         encoded = encoded.concat(cancelDelayTask(payload.cancel_delay_task));
@@ -65,8 +67,8 @@ function milesightDeviceEncode(payload) {
     if ("led_reserve" in payload) {
         encoded = encoded.concat(setLedReserve(payload.led_reserve));
     }
-    if ("temperature_calibration" in payload) {
-        encoded = encoded.concat(setTemperatureCalibration(payload.temperature_calibration));
+    if ("temperature_calibration_config" in payload) {
+        encoded = encoded.concat(setTemperatureCalibration(payload.temperature_calibration_config));
     }
     if ("temperature_alarm_config" in payload) {
         encoded = encoded.concat(setTemperatureAlarmConfig(payload.temperature_alarm_config));
@@ -79,7 +81,25 @@ function milesightDeviceEncode(payload) {
 }
 
 /**
- * read device status
+ * reboot
+ * @param {number} reboot values: (0: no, 1: yes)
+ * @example { "reboot": 1 }
+ */
+function reboot(reboot) {
+    var yes_no_map = { 0: "no", 1: "yes" };
+    var yes_no_values = getValues(yes_no_map);
+    if (yes_no_values.indexOf(reboot) === -1) {
+        throw new Error("reboot must be one of " + yes_no_values.join(", "));
+    }
+
+    if (getValue(yes_no_map, reboot) === 0) {
+        return [];
+    }
+    return [0xff, 0x10, 0xff];
+}
+
+/**
+ * report status
  * @param {number} report_status values: (0: no, 1: yes)
  * @example { "report_status": 1 }
  */
@@ -135,26 +155,43 @@ function socketStatus(socket_status) {
 }
 
 /**
- * set socket status with delay
- * @param {number} socket_status values: (0: off, 1: on)
- * @param {number} delay_time unit: second
- * @example { "socket_status": 1, "delay_time": 60 }
+ * set delay task
+ * @param {object} delay_task
+ * @param {number} delay_task.socket_status values: (0: off, 1: on)
+ * @param {number} delay_task.frame_count values: (0-255, 0: force control)
+ * @param {number} delay_task.delay_time unit: second, range: [0, 65535]
+ * @example { "delay_task": { "socket_status": 1, "frame_count": 1, "delay_time": 1 } }
  */
-function socketStatusWithDelay(socket_status, delay_time) {
+function setDelayTask(delay_task) {
+    var socket_status = delay_task.socket_status;
+    var frame_count = delay_task.frame_count;
+    var delay_time = delay_task.delay_time;
+
     var on_off_map = { 0: "off", 1: "on" };
     var on_off_values = getValues(on_off_map);
-    if (on_off_values.indexOf(socket_status) === -1) {
-        throw new Error("socket_status must be one of " + on_off_values.join(", "));
+    if (frame_count < 0 || frame_count > 255) {
+        throw new Error("delay_task.frame_count must be between 0 and 255");
     }
     if (typeof delay_time !== "number") {
-        throw new Error("delay_time must be a number");
+        throw new Error("delay_task.delay_time must be a number");
+    }
+    if (delay_time < 0 || delay_time > 65535) {
+        throw new Error("delay_task.delay_time must be in the range of [0, 65535]");
     }
 
-    var data = (0x01 << 4) + getValue(on_off_map, socket_status);
+    var data = 0x00;
+    var switch_bit_offset = { socket_status: 0 };
+    for (var key in switch_bit_offset) {
+        if (key in delay_task) {
+            data |= 1 << (switch_bit_offset[key] + 4);
+            data |= getValue(on_off_map, delay_task[key]) << switch_bit_offset[key];
+        }
+    }
+
     var buffer = new Buffer(6);
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0x22);
-    buffer.writeUInt8(0x00);
+    buffer.writeUInt8(frame_count);
     buffer.writeUInt16LE(delay_time);
     buffer.writeUInt8(data);
     return buffer.toBytes();
@@ -307,17 +344,17 @@ function powerConsumptionEnable(power_consumption_enable) {
 
 /**
  * reset power consumption
- * @param {number} reset_power_consumption values: (0: disable, 1: enable)
+ * @param {number} reset_power_consumption values: (0: no, 1: yes)
  * @example { "reset_power_consumption": 1 }
  */
 function resetPowerConsumption(reset_power_consumption) {
-    var enable_map = { 0: "disable", 1: "enable" };
-    var enable_values = getValues(enable_map);
-    if (enable_values.indexOf(reset_power_consumption) === -1) {
-        throw new Error("reset_power_consumption must be one of " + enable_values.join(", "));
+    var yes_no_map = { 0: "no", 1: "yes" };
+    var yes_no_values = getValues(yes_no_map);
+    if (yes_no_values.indexOf(reset_power_consumption) === -1) {
+        throw new Error("reset_power_consumption must be one of " + yes_no_values.join(", "));
     }
 
-    if (getValue(enable_map, reset_power_consumption) === 0) {
+    if (getValue(yes_no_map, reset_power_consumption) === 0) {
         return [];
     }
     return [0xff, 0x27, 0xff];
@@ -335,10 +372,10 @@ function setLedEnable(led_enable) {
         throw new Error("led_enable must be one of " + enable_values.join(", "));
     }
 
-    var buffer = new Buffer(3);
+    var buffer = new Buffer(4);
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0x2f);
-    buffer.writeUInt8(getValue(enable_map, led_enable));
+    buffer.writeUInt16LE(getValue(enable_map, led_enable));
     return buffer.toBytes();
 }
 
@@ -396,16 +433,16 @@ function setTemperatureCalibration(temperature_calibration_config) {
  * set temperature threshold alarm configuration
  * @param {object} temperature_alarm_config
  * @param {number} temperature_alarm_config.condition values: (0: disable, 1: below, 2: above, 3: between, 4: outside)
- * @param {number} temperature_alarm_config.min condition=(below, within, outside)
- * @param {number} temperature_alarm_config.max condition=(above, within, outside)
+ * @param {number} temperature_alarm_config.min_threshold condition=(below, within, outside)
+ * @param {number} temperature_alarm_config.max_threshold condition=(above, within, outside)
  * @param {number} temperature_alarm_config.alarm_interval unit: minute
  * @param {number} temperature_alarm_config.alarm_times
- * @example { "temperature_alarm_config": { "condition": 1, "min": 10, "max": 20, "alarm_interval": 10, "alarm_times": 10 } }
+ * @example { "temperature_alarm_config": { "condition": 1, "min_threshold": 10, "max_threshold": 20, "alarm_interval": 10, "alarm_times": 10 } }
  */
 function setTemperatureAlarmConfig(temperature_alarm_config) {
     var condition = temperature_alarm_config.condition;
-    var min = temperature_alarm_config.min;
-    var max = temperature_alarm_config.max;
+    var min_threshold = temperature_alarm_config.min_threshold;
+    var max_threshold = temperature_alarm_config.max_threshold;
     var alarm_interval = temperature_alarm_config.alarm_interval;
     var alarm_times = temperature_alarm_config.alarm_times;
 
@@ -422,8 +459,8 @@ function setTemperatureAlarmConfig(temperature_alarm_config) {
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0x06);
     buffer.writeUInt8(data);
-    buffer.writeInt16LE(min * 10);
-    buffer.writeInt16LE(max * 10);
+    buffer.writeInt16LE(min_threshold * 10);
+    buffer.writeInt16LE(max_threshold * 10);
     buffer.writeUInt16LE(alarm_interval);
     buffer.writeUInt16LE(alarm_times);
     return buffer.toBytes();
@@ -435,11 +472,6 @@ function setTemperatureAlarmConfig(temperature_alarm_config) {
  * @example { "d2d_command": "0000" }
  */
 function setD2DCommand(d2d_command) {
-    var d2d_command_values = [0, 1, 2];
-    if (d2d_command_values.indexOf(d2d_command) === -1) {
-        throw new Error("d2d_command must be one of " + d2d_command_values.join(", "));
-    }
-
     var buffer = new Buffer(5);
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0x34);
@@ -484,9 +516,10 @@ function Buffer(size) {
 }
 
 Buffer.prototype._write = function (value, byteLength, isLittleEndian) {
+    var offset = 0;
     for (var index = 0; index < byteLength; index++) {
-        var shift = isLittleEndian ? index << 3 : (byteLength - 1 - index) << 3;
-        this.buffer[this.offset + index] = (value & (0xff << shift)) >> shift;
+        offset = isLittleEndian ? index << 3 : (byteLength - 1 - index) << 3;
+        this.buffer[this.offset + index] = (value >> offset) & 0xff;
     }
 };
 
