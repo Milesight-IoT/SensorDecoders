@@ -86,15 +86,15 @@ function reboot(reboot) {
 
 /**
  * report interval configuration
- * @param {number} report_interval uint: second, range: [60, 68400]
+ * @param {number} report_interval uint: second, range: [60, 64800]
  * @example { "report_interval": 1200 }
  */
 function setReportInterval(report_interval) {
     if (typeof report_interval !== "number") {
         throw new Error("report_interval must be a number");
     }
-    if (report_interval < 60 || report_interval > 68400) {
-        throw new Error("report_interval must be in the range of [60, 68400]");
+    if (report_interval < 60 || report_interval > 64800) {
+        throw new Error("report_interval must be in the range of [60, 64800]");
     }
 
     var buffer = new Buffer(4);
@@ -113,7 +113,7 @@ function reportStatus(report_status) {
     var yes_no_map = { 0: "no", 1: "yes" };
     var yes_no_values = getValues(yes_no_map);
     if (yes_no_values.indexOf(report_status) === -1) {
-        throw new Error("report_status must be one of: " + yes_no_values.join(", "));
+        throw new Error("report_status must be one of " + yes_no_values.join(", "));
     }
 
     if (getValue(yes_no_map, report_status) === 0) {
@@ -368,9 +368,10 @@ function Buffer(size) {
 }
 
 Buffer.prototype._write = function (value, byteLength, isLittleEndian) {
+    var offset = 0;
     for (var index = 0; index < byteLength; index++) {
-        var shift = isLittleEndian ? index << 3 : (byteLength - 1 - index) << 3;
-        this.buffer[this.offset + index] = (value & (0xff << shift)) >> shift;
+        offset = isLittleEndian ? index << 3 : (byteLength - 1 - index) << 3;
+        this.buffer[this.offset + index] = (value >> offset) & 0xff;
     }
 };
 

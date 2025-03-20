@@ -26,7 +26,7 @@ function Decoder(bytes, port) {
 function milesightDeviceDecode(bytes) {
     var decoded = {};
 
-    for (var i = 0; i < bytes.length; ) {
+    for (var i = 0; i < bytes.length;) {
         var channel_id = bytes[i++];
         var channel_type = bytes[i++];
 
@@ -107,7 +107,7 @@ function milesightDeviceDecode(bytes) {
             i += 1;
         }
         // DOWNLINK RESPONSE
-        else if (channel_id === 0xfe) {
+        else if (channel_id === 0xfe || channel_id === 0xff) {
             result = handle_downlink_response(channel_type, bytes, i);
             decoded = Object.assign(decoded, result.data);
             i = result.offset;
@@ -126,6 +126,10 @@ function handle_downlink_response(channel_type, bytes, offset) {
         case 0x03:
             decoded.report_interval = readUInt16LE(bytes.slice(offset, offset + 2));
             offset += 2;
+            break;
+        case 0x10:
+            decoded.reboot = readYesNoStatus(1);
+            offset += 1;
             break;
         case 0x22:
             decoded.delay_task = {};
@@ -158,6 +162,14 @@ function handle_downlink_response(channel_type, bytes, offset) {
             break;
         case 0x27:
             decoded.clear_power_consumption = readYesNoStatus(1);
+            offset += 1;
+            break;
+        case 0x28:
+            decoded.report_status = readYesNoStatus(1);
+            offset += 1;
+            break;
+        case 0x2c:
+            decoded.report_attribute = readYesNoStatus(1);
             offset += 1;
             break;
         case 0x2f:
@@ -292,7 +304,6 @@ if (!Object.assign) {
         value: function (target) {
             "use strict";
             if (target == null) {
-                // TypeError if undefined or null
                 throw new TypeError("Cannot convert first argument to object");
             }
 
@@ -300,7 +311,6 @@ if (!Object.assign) {
             for (var i = 1; i < arguments.length; i++) {
                 var nextSource = arguments[i];
                 if (nextSource == null) {
-                    // Skip over if undefined or null
                     continue;
                 }
                 nextSource = Object(nextSource);
@@ -310,7 +320,12 @@ if (!Object.assign) {
                     var nextKey = keysArray[nextIndex];
                     var desc = Object.getOwnPropertyDescriptor(nextSource, nextKey);
                     if (desc !== undefined && desc.enumerable) {
-                        to[nextKey] = nextSource[nextKey];
+                        // concat array
+                        if (Array.isArray(to[nextKey]) && Array.isArray(nextSource[nextKey])) {
+                            to[nextKey] = to[nextKey].concat(nextSource[nextKey]);
+                        } else {
+                            to[nextKey] = nextSource[nextKey];
+                        }
                     }
                 }
             }
