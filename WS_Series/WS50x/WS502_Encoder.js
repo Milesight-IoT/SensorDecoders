@@ -32,6 +32,9 @@ function milesightDeviceEncode(payload) {
     if ("report_interval" in payload) {
         encoded = encoded.concat(setReportInterval(payload.report_interval));
     }
+    if ("report_status" in payload) {
+        encoded = encoded.concat(reportStatus(payload.report_status));
+    }
     if ("report_attribute" in payload) {
         encoded = encoded.concat(reportAttribute(payload.report_attribute));
     }
@@ -90,6 +93,24 @@ function setReportInterval(report_interval) {
     buffer.writeUInt8(0x03);
     buffer.writeUInt16LE(report_interval);
     return buffer.toBytes();
+}
+
+/**
+ * report status
+ * @param {number} report_status values: (0: no, 1: yes)
+ * @example { "report_status": 1 }
+ */
+function reportStatus(report_status) {
+    var yes_no_map = { 0: "no", 1: "yes" };
+    var yes_no_values = getValues(yes_no_map);
+    if (yes_no_values.indexOf(report_status) === -1) {
+        throw new Error("report_status must be one of: " + yes_no_values.join(", "));
+    }
+
+    if (getValue(yes_no_map, report_status) === 0) {
+        return [];
+    }
+    return [0xff, 0x28, 0xff];
 }
 
 /**
@@ -290,9 +311,10 @@ function Buffer(size) {
 }
 
 Buffer.prototype._write = function (value, byteLength, isLittleEndian) {
+    var offset = 0;
     for (var index = 0; index < byteLength; index++) {
-        var shift = isLittleEndian ? index << 3 : (byteLength - 1 - index) << 3;
-        this.buffer[this.offset + index] = (value & (0xff << shift)) >> shift;
+        offset = isLittleEndian ? index << 3 : (byteLength - 1 - index) << 3;
+        this.buffer[this.offset + index] = (value >> offset) & 0xff;
     }
 };
 
