@@ -1,10 +1,12 @@
 /**
  * Payload Encoder
  *
- * Copyright 2024 Milesight IoT
+ * Copyright 2025 Milesight IoT
  *
  * @product WS201
  */
+var RAW_VALUE = 0x00;
+
 // Chirpstack v4
 function encodeDownlink(input) {
     var encoded = milesightDeviceEncode(input.data);
@@ -42,11 +44,13 @@ function milesightDeviceEncode(payload) {
     if ("depth" in payload) {
         encoded = encoded.concat(setDepth(payload.depth));
     }
-    if ("remaining_threshold_config" in payload) {
-        encoded = encoded.concat(setRemainingThresholdAlarm(payload.remaining_threshold_config.index, payload.remaining_threshold_config.enable, payload.remaining_threshold_config.release_alarm_enable, payload.remaining_threshold_config.value));
+    if ("remaining_alarm_config" in payload) {
+        for (var i = 0; i < payload.remaining_alarm_config.length; i++) {
+            encoded = encoded.concat(setRemainingAlarmConfig(payload.remaining_alarm_config[i]));
+        }
     }
     if ("hibernate_config" in payload) {
-        encoded = encoded.concat(setHibernate(payload.hibernate_config.enable, payload.hibernate_config.start_time, payload.hibernate_config.end_time, payload.hibernate_config.week_days));
+        encoded = encoded.concat(setHibernateConfig(payload.hibernate_config));
     }
 
     return encoded;
@@ -54,16 +58,17 @@ function milesightDeviceEncode(payload) {
 
 /**
  * reboot device
- * @param {number} reboot values: (0: "no", 1: "yes")
+ * @param {number} reboot values: (0: no, 1: yes)
  * @example { "reboot": 1 }
  */
 function reboot(reboot) {
-    var reboot_values = [0, 1];
-    if (reboot_values.indexOf(reboot) === -1) {
-        throw new Error("reboot must be one of " + reboot_values.join(", "));
+    var yes_no_map = { 0: "no", 1: "yes" };
+    var yes_no_values = getValues(yes_no_map);
+    if (yes_no_values.indexOf(reboot) === -1) {
+        throw new Error("reboot must be one of " + yes_no_values.join(", "));
     }
 
-    if (reboot === 0) {
+    if (getValue(yes_no_map, reboot) === 0) {
         return [];
     }
     return [0xff, 0x10, 0xff];
@@ -91,15 +96,12 @@ function setReportInterval(report_interval) {
 
 /**
  * set collection interval
- * @param {number} collection_interval unit: second, range: [10, 60]
+ * @param {number} collection_interval unit: second
  * @example { "collection_interval": 300 }
  */
 function setCollectionInterval(collection_interval) {
     if (typeof collection_interval !== "number") {
         throw new Error("collection_interval must be a number");
-    }
-    if (collection_interval < 10 || collection_interval > 60) {
-        throw new Error("collection_interval must be in range [10, 60]");
     }
 
     var buffer = new Buffer(4);
@@ -128,25 +130,21 @@ function setTimeZone(timezone) {
 }
 
 /**
- * report device status
- * @param {number} report_status values: (0: "no", 1: "yes")
+ * report status
+ * @param {number} report_status values: (0: no, 1: yes)
  * @example { "report_status": 1 }
  */
 function reportStatus(report_status) {
-    var report_status_values = [0, 1];
-    if (report_status_values.indexOf(report_status) === -1) {
-        throw new Error("report_status must be one of " + report_status_values.join(", "));
+    var yes_no_map = { 0: "no", 1: "yes" };
+    var yes_no_values = getValues(yes_no_map);
+    if (yes_no_values.indexOf(report_status) === -1) {
+        throw new Error("report_status must be one of " + yes_no_values.join(", "));
     }
 
-    if (report_status === 0) {
+    if (getValue(yes_no_map, report_status) === 0) {
         return [];
     }
-
-    var buffer = new Buffer(3);
-    buffer.writeUInt8(0xff);
-    buffer.writeUInt8(0x28);
-    buffer.writeUInt8(0xff);
-    return buffer.toBytes();
+    return [0xff, 0x28, 0xff];
 }
 
 /**
@@ -168,77 +166,124 @@ function setDepth(depth) {
 
 /**
  * set remaining threshold alarm configuration
- * @param {number} index values: (1: "1", 2: "2")
- * @param {number} enable values: (0: "disable", 1: "enable")
- * @param {number} release_alarm_enable values: (0: "disable", 1: "enable")
- * @param {number} value unit: %
- * @example { "remaining_threshold_config": { "index": 1, "enable": 1, "release_alarm_enable": 1, "value": 20 } }
+ * @param {object} remaining_alarm_config
+ * @param {number} remaining_alarm_config.index
+ * @param {number} remaining_alarm_config.enable values: (0: disable, 1: enable)
+ * @param {number} remaining_alarm_config.alarm_release_enable values: (0: disable, 1: enable)
+ * @param {number} remaining_alarm_config.threshold unit: %
+ * @example { "remaining_alarm_config": [{ "index": 1, "enable": 1, "alarm_release_enable": 1, "threshold": 20 }] }
  */
-function setRemainingThresholdAlarm(idx, enable, release_alarm_enable, value) {
-    var enable_values = [0, 1];
-    if (enable_values.indexOf(enable) === -1) {
-        throw new Error("remaining_threshold_config.enable must be one of " + enable_values.join(", "));
-    }
-    var release_alarm_enable_values = [0, 1];
-    if (release_alarm_enable_values.indexOf(release_alarm_enable) === -1) {
-        throw new Error("remaining_threshold_config.release_alarm_enable must be one of " + release_alarm_enable_values.join(", "));
-    }
+function setRemainingAlarmConfig(remaining_alarm_config) {
+    var index = remaining_alarm_config.index;
+    var enable = remaining_alarm_config.enable;
+    var alarm_release_enable = remaining_alarm_config.alarm_release_enable;
+    var threshold = remaining_alarm_config.threshold;
+
     var index_values = [1, 2];
-    if (index_values.indexOf(idx) === -1) {
-        throw new Error("remaining_threshold_config.index must be one of " + index_values.join(", "));
+    if (index_values.indexOf(index) === -1) {
+        throw new Error("remaining_alarm_config._item.index must be one of " + index_values.join(", "));
+    }
+    var enable_map = { 0: "disable", 1: "enable" };
+    var enable_values = getValues(enable_map);
+    if (enable_values.indexOf(enable) === -1) {
+        throw new Error("remaining_alarm_config._item.enable must be one of " + enable_values.join(", "));
+    }
+    if (enable_values.indexOf(alarm_release_enable) === -1) {
+        throw new Error("remaining_alarm_config._item.alarm_release_enable must be one of " + enable_values.join(", "));
     }
 
-    var data = (release_alarm_enable << 7) | (enable << 6) | (idx << 3);
+    var data = 0x00;
+    data |= getValue(enable_map, alarm_release_enable) << 7;
+    data |= getValue(enable_map, enable) << 6;
+    data |= index << 3;
+
     var buffer = new Buffer(11);
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0x06);
     buffer.writeUInt8(data);
     buffer.writeUInt16LE(0x00);
-    buffer.writeUInt16LE(value);
+    buffer.writeUInt16LE(threshold);
     buffer.writeUInt16LE(0x00);
     buffer.writeUInt16LE(0x00);
     return buffer.toBytes();
 }
 
 /**
- * set hibernate
- * @param {number} enable values: (0: "disable", 1: "enable")
- * @param {string} start_time format: "HH:mm"
- * @param {string} end_time format: "HH:mm"
- * @param {Array} week_days values: (1: "Monday", 2: "Tuesday", 3: "Wednesday", 4: "Thursday", 5: "Friday", 6: "Saturday", 7: "Sunday")
- * @example { "hibernate_config": { "enable": 1, "start_time": "08:00", "end_time": "21:00", "week_days": [1, 2, 3, 4, 5, 6, 7] } }
+ * set hibernate config
+ * @param {object} hibernate_config
+ * @param {number} hibernate_config.enable values: (0: "enable", 1: "disable")
+ * @param {number} hibernate_config.start_time unit: minute. (4:00 -> 240, 4:30 -> 270)
+ * @param {number} hibernate_config.end_time unit: minute. (start_time < end_time: one day, start_time > end_time: across the day, start_time == end_time: whole day)
+ * @param {object} hibernate_config.weekdays
+ * @param {number} hibernate_config.weekdays.monday values: (0: "disable", 1: "enable")
+ * @param {number} hibernate_config.weekdays.tuesday values: (0: "disable", 1: "enable")
+ * @param {number} hibernate_config.weekdays.wednesday values: (0: "disable", 1: "enable")
+ * @param {number} hibernate_config.weekdays.thursday values: (0: "disable", 1: "enable")
+ * @param {number} hibernate_config.weekdays.friday values: (0: "disable", 1: "enable")
+ * @param {number} hibernate_config.weekdays.saturday values: (0: "disable", 1: "enable")
+ * @param {number} hibernate_config.weekdays.sunday values: (0: "disable", 1: "enable")
+ * @example { "hibernate_config": { "enable": 1, "start_time": 240, "end_time": 270, "weekdays": { "monday": 1, "tuesday": 1, "wednesday": 1, "thursday": 1, "friday": 1, "saturday": 1, "sunday": 1 } } }
  */
-function setHibernate(enable, start_time, end_time, week_days) {
-    var hibernate_enable_values = [0, 1];
-    if (hibernate_enable_values.indexOf(enable) === -1) {
-        throw new Error("hibernate_config.enable must be one of " + hibernate_enable_values.join(", "));
+function setHibernateConfig(hibernate_config) {
+    var enable = hibernate_config.enable;
+    var start_time = hibernate_config.start_time;
+    var end_time = hibernate_config.end_time;
+    var weekdays = hibernate_config.weekdays;
+
+    var enable_map = { 0: "disable", 1: "enable" };
+    var enable_values = getValues(enable_map);
+    if (enable_values.indexOf(enable) === -1) {
+        throw new Error("hibernate_config.enable must be one of " + enable_values.join(", "));
+    }
+    if (typeof start_time !== "number") {
+        throw new Error("hibernate_config.start_time must be a number");
+    }
+    if (typeof end_time !== "number") {
+        throw new Error("hibernate_config.end_time must be a number");
     }
 
-    if (typeof start_time !== "string" || typeof end_time !== "string") {
-        throw new Error("hibernate_config.start_time and hibernate_config.end_time must be a 'HH:mm' string");
-    }
-
-    var week_days_values = [0, 1, 2, 3, 4, 5, 6, 7];
-    var start_time_values = start_time.split(":");
-    var end_time_values = end_time.split(":");
-    var days = 0x00;
-    for (var i = 0; i < week_days.length; i++) {
-        var day = week_days[i];
-        if (week_days_values.indexOf(day) === -1) {
-            throw new Error("week_days must be one of " + week_days_values.join(", "));
+    var weekdays_map = { "monday": 1, "tuesday": 2, "wednesday": 3, "thursday": 4, "friday": 5, "saturday": 6, "sunday": 7 };
+    var day = 0;
+    for (var key in weekdays_map) {
+        if (key in weekdays) {
+            day |= (getValue(enable_map, weekdays[key]) << weekdays_map[key]);
         }
-        offset = week_days_values.indexOf(day);
-        days |= 1 << offset;
     }
 
     var buffer = new Buffer(8);
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0x75);
-    buffer.writeUInt8(enable);
-    buffer.writeUInt16LE(parseInt(start_time_values[0]) * 60 + parseInt(start_time_values[1]));
-    buffer.writeUInt16LE(parseInt(end_time_values[0]) * 60 + parseInt(end_time_values[1]));
-    buffer.writeUInt8(days);
+    buffer.writeUInt8(getValue(enable_map, enable));
+    buffer.writeUInt16LE(start_time);
+    buffer.writeUInt16LE(end_time);
+    buffer.writeUInt8(day);
     return buffer.toBytes();
+}
+
+function getValues(map) {
+    var values = [];
+    if (RAW_VALUE) {
+        for (var key in map) {
+            values.push(parseInt(key));
+        }
+    } else {
+        for (var key in map) {
+            values.push(map[key]);
+        }
+    }
+    return values;
+}
+
+function getValue(map, value) {
+    if (RAW_VALUE) return value;
+
+    for (var key in map) {
+        if (map[key] === value) {
+            return parseInt(key);
+        }
+    }
+
+    throw new Error("not match in " + JSON.stringify(map));
 }
 
 function Buffer(size) {
@@ -251,9 +296,10 @@ function Buffer(size) {
 }
 
 Buffer.prototype._write = function (value, byteLength, isLittleEndian) {
+    var offset = 0;
     for (var index = 0; index < byteLength; index++) {
-        var shift = isLittleEndian ? index << 3 : (byteLength - 1 - index) << 3;
-        this.buffer[this.offset + index] = (value & (0xff << shift)) >> shift;
+        offset = isLittleEndian ? index << 3 : (byteLength - 1 - index) << 3;
+        this.buffer[this.offset + index] = (value >> offset) & 0xff;
     }
 };
 
