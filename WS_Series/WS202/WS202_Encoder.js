@@ -1,10 +1,12 @@
 /**
  * Payload Encoder
  *
- * Copyright 2024 Milesight IoT
+ * Copyright 2025 Milesight IoT
  *
  * @product WS202
  */
+var RAW_VALUE = 0x00;
+
 // Chirpstack v4
 function encodeDownlink(input) {
     var encoded = milesightDeviceEncode(input.data);
@@ -30,8 +32,8 @@ function milesightDeviceEncode(payload) {
     if ("report_interval" in payload) {
         encoded = encoded.concat(setReportInterval(payload.report_interval));
     }
-    if ("light_threshold" in payload) {
-        encoded = encoded.concat(setLightThreshold(payload.light_threshold.min, payload.light_threshold.max));
+    if ("light_alarm_config" in payload) {
+        encoded = encoded.concat(setLightThreshold(payload.light_alarm_config));
     }
 
     return encoded;
@@ -39,16 +41,17 @@ function milesightDeviceEncode(payload) {
 
 /**
  * reboot device
- * @param {number} reboot values: (0: "no", 1: "yes")
+ * @param {number} reboot values: (0: no, 1: yes)
  * @example { "reboot": 1 }
  */
 function reboot(reboot) {
-    var reboot_values = [0, 1];
-    if (reboot_values.indexOf(reboot) === -1) {
-        throw new Error("reboot must be one of " + reboot_values.join(", "));
+    var yes_no_map = { 0: "no", 1: "yes" };
+    var yes_no_values = getValues(yes_no_map);
+    if (yes_no_values.indexOf(reboot) === -1) {
+        throw new Error("reboot must be one of " + yes_no_values.join(", "));
     }
 
-    if (reboot === 0) {
+    if (getValue(yes_no_map, reboot) === 0) {
         return [];
     }
     return [0xff, 0x10, 0xff];
@@ -76,29 +79,58 @@ function setReportInterval(report_interval) {
 
 /**
  * set light threshold alarm
- * @param {number} min uint: lux
- * @param {number} max uint: lux
- * @example { "light_threshold": { "min": 300, "max": 3000 } }
+ * @param {object} light_alarm_config
+ * @param {number} light_alarm_config.min_threshold uint: lux
+ * @param {number} light_alarm_config.max_threshold uint: lux
+ * @example { "light_alarm_config": { "min_threshold": 300, "max_threshold": 3000 } }
  */
-function setLightThreshold(min, max) {
-    if (typeof min !== "number" || typeof max !== "number") {
-        throw new Error("light_threshold.min and light_threshold.max must be numbers");
+function setLightThreshold(light_alarm_config) {
+    var min_threshold = light_alarm_config.min_threshold;
+    var max_threshold = light_alarm_config.max_threshold;
+
+    if (typeof min_threshold !== "number" || typeof max_threshold !== "number") {
+        throw new Error("light_alarm_config.min_threshold and light_alarm_config.max_threshold must be numbers");
     }
-    if (min < 0 || min > 65535 || max < 0 || max > 65535) {
-        throw new Error("light_threshold.min and light_threshold.max must be in range [0, 65535]");
+    if (min_threshold < 0 || min_threshold > 65535 || max_threshold < 0 || max_threshold > 65535) {
+        throw new Error("light_alarm_config.min_threshold and light_alarm_config.max_threshold must be in range [0, 65535]");
     }
 
     var buffer = new Buffer(11);
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0x06);
     buffer.writeUInt8(0x00);
-    buffer.writeUInt16LE(min);
-    buffer.writeUInt16LE(max);
+    buffer.writeUInt16LE(min_threshold);
+    buffer.writeUInt16LE(max_threshold);
     buffer.writeUInt16LE(0x00);
     buffer.writeUInt16LE(0x00);
     return buffer.toBytes();
 }
 
+function getValues(map) {
+    var values = [];
+    if (RAW_VALUE) {
+        for (var key in map) {
+            values.push(parseInt(key));
+        }
+    } else {
+        for (var key in map) {
+            values.push(map[key]);
+        }
+    }
+    return values;
+}
+
+function getValue(map, value) {
+    if (RAW_VALUE) return value;
+
+    for (var key in map) {
+        if (map[key] === value) {
+            return parseInt(key);
+        }
+    }
+
+    throw new Error("not match in " + JSON.stringify(map));
+}
 function Buffer(size) {
     this.buffer = new Array(size);
     this.offset = 0;
@@ -109,9 +141,10 @@ function Buffer(size) {
 }
 
 Buffer.prototype._write = function (value, byteLength, isLittleEndian) {
+    var offset = 0;
     for (var index = 0; index < byteLength; index++) {
-        var shift = isLittleEndian ? index << 3 : (byteLength - 1 - index) << 3;
-        this.buffer[this.offset + index] = (value & (0xff << shift)) >> shift;
+        offset = isLittleEndian ? index << 3 : (byteLength - 1 - index) << 3;
+        this.buffer[this.offset + index] = (value >> offset) & 0xff;
     }
 };
 
