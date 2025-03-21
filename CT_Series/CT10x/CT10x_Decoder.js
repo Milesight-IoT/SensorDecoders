@@ -111,7 +111,7 @@ function milesightDeviceDecode(bytes) {
             i += 3;
         }
         // DOWNLINK RESPONSE
-        else if (channel_id === 0xfe) {
+        else if (channel_id === 0xfe || channel_id === 0xff) {
             result = handle_downlink_response(channel_type, bytes, i);
             decoded = Object.assign(decoded, result.data);
             i = result.offset;
@@ -150,8 +150,16 @@ function handle_downlink_response(channel_type, bytes, offset) {
             }
             offset += 9;
             break;
+        case 0x10:
+            decoded.reboot = readYesNoStatus(1);
+            offset += 1;
+            break;
         case 0x27:
             decoded.clear_current_cumulative = readYesNoStatus(1);
+            offset += 1;
+            break;
+        case 0x28:
+            decoded.report_status = readYesNoStatus(1);
             offset += 1;
             break;
         case 0x8e:
