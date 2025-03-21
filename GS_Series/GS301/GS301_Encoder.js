@@ -177,7 +177,7 @@ function setNH3CalibrationConfig(nh3_calibration_config) {
     buffer.writeUInt8(0x8d);
     buffer.writeUInt8(0x00);
     buffer.writeUInt8(getValue(mode_map, nh3_calibration_config.mode));
-    buffer.writeUInt16LE(nh3_calibration_config.calibration_value * 100);
+    buffer.writeUInt16LE(Math.round(nh3_calibration_config.calibration_value * 100));
     return buffer.toBytes();
 }
 
@@ -200,7 +200,7 @@ function setH2SCalibrationConfig(h2s_calibration_config) {
     buffer.writeUInt8(0x8d);
     buffer.writeUInt8(0x01);
     buffer.writeUInt8(getValue(mode_map, h2s_calibration_config.mode));
-    buffer.writeUInt16LE(h2s_calibration_config.calibration_value * 1000);
+    buffer.writeUInt16LE(Math.round(h2s_calibration_config.calibration_value * 1000));
     return buffer.toBytes();
 }
 
