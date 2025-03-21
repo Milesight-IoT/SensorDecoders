@@ -1,11 +1,11 @@
 /**
  * Payload Encoder
  *
- * Copyright 2024 Milesight IoT
+ * Copyright 2025 Milesight IoT
  *
  * @product WT201
  */
-var RAW_VALUE = 0x01;
+var RAW_VALUE = 0x00;
 
 // Chirpstack v4
 function encodeDownlink(input) {
@@ -309,9 +309,7 @@ function setDaylightSavingTime(dst_config) {
     if (dst_config_enable_values.indexOf(enable) === -1) {
         throw new Error("dst_config.enable must be one of " + dst_config_enable_values.join(", "));
     }
-    var month_map = { 1: "January", 2: "February", 3: "March", 4: "April", 5: "May", 6: "June", 7: "July", 8: "August", 9: "September", 10: "October", 11: "November", 12: "December" };
-    var month_values = getValues(month_map);
-
+    var month_values = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
     var enable_value = getValue(dst_config_enable_map, enable);
     if (enable_value && month_values.indexOf(start_month) === -1) {
         throw new Error("dst_config.start_month must be one of " + month_values.join(", "));
@@ -319,8 +317,7 @@ function setDaylightSavingTime(dst_config) {
     if (enable_value && month_values.indexOf(end_month) === -1) {
         throw new Error("dst_config.end_month must be one of " + month_values.join(", "));
     }
-    var week_map = { 1: "Monday", 2: "Tuesday", 3: "Wednesday", 4: "Thursday", 5: "Friday", 6: "Saturday", 7: "Sunday" };
-    var week_values = getValues(week_map);
+    var week_values = [1, 2, 3, 4, 5, 6, 7];
     if (enable_value && week_values.indexOf(start_week_day) === -1) {
         throw new Error("dst_config.start_week_day must be one of " + week_values.join(", "));
     }
@@ -330,11 +327,11 @@ function setDaylightSavingTime(dst_config) {
     buffer.writeUInt8(0xba);
     buffer.writeUInt8(enable_value);
     buffer.writeInt8(offset);
-    buffer.writeUInt8(enable_value && getValue(month_map, start_month));
-    buffer.writeUInt8(enable_value && (start_week_num << 4) | getValue(week_map, start_week_day));
+    buffer.writeUInt8(enable_value && start_month);
+    buffer.writeUInt8(enable_value && (start_week_num << 4) | start_week_day);
     buffer.writeUInt16LE(enable_value && start_time);
-    buffer.writeUInt8(enable_value && getValue(month_map, end_month));
-    buffer.writeUInt8(enable_value && (end_week_num << 4) | getValue(week_map, end_week_day));
+    buffer.writeUInt8(enable_value && end_month);
+    buffer.writeUInt8(enable_value && (end_week_num << 4) | end_week_day);
     buffer.writeUInt16LE(enable_value && end_time);
     return buffer.toBytes();
 }
@@ -345,16 +342,16 @@ function setDaylightSavingTime(dst_config) {
  * @example { "temperature_control_enable": 1 }
  */
 function setTemperatureControlEnable(temperature_control_enable) {
-    var temperature_control_enable_map = { 0: "disable", 1: "enable" };
-    var temperature_control_enable_values = getValues(temperature_control_enable_map);
-    if (temperature_control_enable_values.indexOf(temperature_control_enable) === -1) {
-        throw new Error("temperature_control_enable must be one of " + temperature_control_enable_values.join(", "));
+    var enable_map = { 0: "disable", 1: "enable" };
+    var enable_values = getValues(enable_map);
+    if (enable_values.indexOf(temperature_control_enable) === -1) {
+        throw new Error("enable must be one of " + enable_values.join(", "));
     }
 
     var buffer = new Buffer(3);
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0xc5);
-    buffer.writeUInt8(getValue(temperature_control_enable_map, temperature_control_enable));
+    buffer.writeUInt8(getValue(enable_map, temperature_control_enable));
     return buffer.toBytes();
 }
 
@@ -1481,9 +1478,10 @@ function Buffer(size) {
 }
 
 Buffer.prototype._write = function (value, byteLength, isLittleEndian) {
+    var offset = 0;
     for (var index = 0; index < byteLength; index++) {
-        var shift = isLittleEndian ? index << 3 : (byteLength - 1 - index) << 3;
-        this.buffer[this.offset + index] = (value & (0xff << shift)) >> shift;
+        offset = isLittleEndian ? index << 3 : (byteLength - 1 - index) << 3;
+        this.buffer[this.offset + index] = (value >> offset) & 0xff;
     }
 };
 
