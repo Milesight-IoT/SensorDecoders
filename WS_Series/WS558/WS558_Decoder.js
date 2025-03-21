@@ -1,11 +1,11 @@
 /**
  * Payload Decoder
  *
- * Copyright 2024 Milesight IoT
+ * Copyright 2025 Milesight IoT
  *
  * @product WS558
  */
-var RAW_VALUE = 0x01;
+var RAW_VALUE = 0x00;
 
 // Chirpstack v4
 function decodeUplink(input) {
@@ -26,7 +26,7 @@ function Decoder(bytes, port) {
 function milesightDeviceDecode(bytes) {
     var decoded = {};
 
-    for (var i = 0; i < bytes.length; ) {
+    for (var i = 0; i < bytes.length;) {
         var channel_id = bytes[i++];
         var channel_type = bytes[i++];
 
@@ -111,6 +111,12 @@ function milesightDeviceDecode(bytes) {
         else if (channel_id === 0xff && channel_type === 0x26) {
             decoded.power_consumption_enable = readEnableStatus(bytes[i]);
             i += 1;
+        }
+        // DOWNLINK RESPONSE
+        else if (channel_id === 0xfe || channel_id === 0xff) {
+            result = handle_downlink_response(channel_type, bytes, i);
+            decoded = Object.assign(decoded, result.data);
+            i = result.offset;
         } else {
             break;
         }
@@ -119,44 +125,53 @@ function milesightDeviceDecode(bytes) {
     return decoded;
 }
 
-/* ******************************************
- * bytes to number
- ********************************************/
-function readUInt8(bytes) {
-    return bytes & 0xff;
-}
+function handle_downlink_response(channel_type, bytes, offset) {
+    var decoded = {};
 
-function readInt8(bytes) {
-    var ref = readUInt8(bytes);
-    return ref > 0x7f ? ref - 0x100 : ref;
-}
+    switch (channel_type) {
+        case 0x10:
+            decoded.reboot = readYesNoStatus(1);
+            offset += 1;
+            break;
+        case 0x28:
+            decoded.report_status = readYesNoStatus(1);
+            offset += 1;
+            break;
+        case 0x03:
+            decoded.report_interval = readUInt16LE(bytes.slice(offset, offset + 2));
+            offset += 2;
+            break;
+        case 0x23:
+            decoded.cancel_delay_task = readUInt8(bytes[offset]);
+            // skip 1 byte
+            offset += 2;
+            break;
+        case 0x26:
+            decoded.power_consumption_enable = readEnableStatus(bytes[offset]);
+            offset += 1;
+            break;
+        case 0x27:
+            decoded.clear_power_consumption = readYesNoStatus(1);
+            offset += 1;
+            break;
+        case 0x32:
+            decoded.task_id = readUInt8(bytes[offset]);
+            decoded.delay_time = readUInt16LE(bytes.slice(offset + 1, offset + 3));
+            var mask = readUInt8(bytes[offset + 3]);
+            var status = readUInt8(bytes[offset + 4]);
+            offset += 5;
+            var switch_bit_offset = { switch_1: 0, switch_2: 1, switch_3: 2, switch_4: 3, switch_5: 4, switch_6: 5, switch_7: 6, switch_8: 7 };
+            for (var key in switch_bit_offset) {
+                if ((mask >> switch_bit_offset[key]) & 0x01) {
+                    decoded[key] = readSwitchStatus((status >> switch_bit_offset[key]) & 0x01);
+                }
+            }
+            break;
+        default:
+            throw new Error("unknown downlink response");
+    }
 
-function readUInt16LE(bytes) {
-    var value = (bytes[1] << 8) + bytes[0];
-    return value & 0xffff;
-}
-
-function readInt16LE(bytes) {
-    var ref = readUInt16LE(bytes);
-    return ref > 0x7fff ? ref - 0x10000 : ref;
-}
-
-function readUInt32LE(bytes) {
-    var value = (bytes[3] << 24) + (bytes[2] << 16) + (bytes[1] << 8) + bytes[0];
-    return value & 0xffffffff;
-}
-
-function readInt32LE(bytes) {
-    var ref = readUInt32LE(bytes);
-    return ref > 0x7fffffff ? ref - 0x100000000 : ref;
-}
-
-function getValue(map, key) {
-    if (RAW_VALUE) return key;
-
-    var value = map[key];
-    if (!value) value = "unknown";
-    return value;
+    return { data: decoded, offset: offset };
 }
 
 function readProtocolVersion(bytes) {
@@ -228,4 +243,84 @@ function readSwitchStatus(status) {
 function readEnableStatus(status) {
     var enable_map = { 0: "disable", 1: "enable" };
     return getValue(enable_map, status);
+}
+
+function readYesNoStatus(status) {
+    var yes_no_map = { 0: "no", 1: "yes" };
+    return getValue(yes_no_map, status);
+}
+
+function readUInt8(bytes) {
+    return bytes & 0xff;
+}
+
+function readInt8(bytes) {
+    var ref = readUInt8(bytes);
+    return ref > 0x7f ? ref - 0x100 : ref;
+}
+
+function readUInt16LE(bytes) {
+    var value = (bytes[1] << 8) + bytes[0];
+    return value & 0xffff;
+}
+
+function readInt16LE(bytes) {
+    var ref = readUInt16LE(bytes);
+    return ref > 0x7fff ? ref - 0x10000 : ref;
+}
+
+function readUInt32LE(bytes) {
+    var value = (bytes[3] << 24) + (bytes[2] << 16) + (bytes[1] << 8) + bytes[0];
+    return value & 0xffffffff;
+}
+
+function readInt32LE(bytes) {
+    var ref = readUInt32LE(bytes);
+    return ref > 0x7fffffff ? ref - 0x100000000 : ref;
+}
+
+function getValue(map, key) {
+    if (RAW_VALUE) return key;
+
+    var value = map[key];
+    if (!value) value = "unknown";
+    return value;
+}
+
+if (!Object.assign) {
+    Object.defineProperty(Object, "assign", {
+        enumerable: false,
+        configurable: true,
+        writable: true,
+        value: function (target) {
+            "use strict";
+            if (target == null) {
+                throw new TypeError("Cannot convert first argument to object");
+            }
+
+            var to = Object(target);
+            for (var i = 1; i < arguments.length; i++) {
+                var nextSource = arguments[i];
+                if (nextSource == null) {
+                    continue;
+                }
+                nextSource = Object(nextSource);
+
+                var keysArray = Object.keys(Object(nextSource));
+                for (var nextIndex = 0, len = keysArray.length; nextIndex < len; nextIndex++) {
+                    var nextKey = keysArray[nextIndex];
+                    var desc = Object.getOwnPropertyDescriptor(nextSource, nextKey);
+                    if (desc !== undefined && desc.enumerable) {
+                        // concat array
+                        if (Array.isArray(to[nextKey]) && Array.isArray(nextSource[nextKey])) {
+                            to[nextKey] = to[nextKey].concat(nextSource[nextKey]);
+                        } else {
+                            to[nextKey] = nextSource[nextKey];
+                        }
+                    }
+                }
+            }
+            return to;
+        },
+    });
 }

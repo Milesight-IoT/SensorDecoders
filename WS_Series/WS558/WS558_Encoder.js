@@ -1,11 +1,11 @@
 /**
  * Payload Encoder
  *
- * Copyright 2024 Milesight IoT
+ * Copyright 2025 Milesight IoT
  *
  * @product WS558
  */
-var RAW_VALUE = 0x01;
+var RAW_VALUE = 0x00;
 
 // Chirpstack v4
 function encodeDownlink(input) {
@@ -26,6 +26,9 @@ function Encoder(obj, port) {
 function milesightDeviceEncode(payload) {
     var encoded = [];
 
+    if ("reboot" in payload) {
+        encoded = encoded.concat(reboot(payload.reboot));
+    }
     if ("report_status" in payload) {
         encoded = encoded.concat(reportStatus(payload.report_status));
     }
@@ -53,15 +56,33 @@ function milesightDeviceEncode(payload) {
 }
 
 /**
+ * reboot
+ * @param {number} reboot values: (0: no, 1: yes)
+ * @example { "reboot": 1 }
+ */
+function reboot(reboot) {
+    var yes_no_map = { 0: "no", 1: "yes" };
+    var yes_no_values = getValues(yes_no_map);
+    if (yes_no_values.indexOf(reboot) === -1) {
+        throw new Error("reboot must be one of " + yes_no_values.join(", "));
+    }
+
+    if (getValue(yes_no_map, reboot) === 0) {
+        return [];
+    }
+    return [0xff, 0x10, 0xff];
+}
+
+/**
  * report status
- * @param {number} report_status values: (0: disable, 1: enable)
- * @example payload: { "report_status": 1 }
+ * @param {number} report_status values: (0: no, 1: yes)
+ * @example { "report_status": 1 }
  */
 function reportStatus(report_status) {
-    var yes_no_map = { 0: "disable", 1: "enable" };
+    var yes_no_map = { 0: "no", 1: "yes" };
     var yes_no_values = getValues(yes_no_map);
     if (yes_no_values.indexOf(report_status) === -1) {
-        throw new Error("report_status must be one of: " + yes_no_values.join(", "));
+        throw new Error("report_status must be one of " + yes_no_values.join(", "));
     }
 
     if (getValue(yes_no_map, report_status) === 0) {
@@ -110,6 +131,8 @@ function controlSwitch(switch_control) {
     for (var key in switch_bit_offset) {
         if (key in switch_control) {
             mask |= 1 << switch_bit_offset[key];
+            var switch_status = switch_control[key];
+            var value = getValue(switch_status_map, switch_status);
             status |= getValue(switch_status_map, switch_control[key]) << switch_bit_offset[key];
         }
     }
@@ -139,26 +162,27 @@ function controlSwitch(switch_control) {
 function controlSwitchWithDelay(switch_control) {
     var task_id = switch_control.task_id;
     var delay_time = switch_control.delay_time;
-    var switch_status = switch_control.switch_status;
 
     var switch_status_map = { 0: "off", 1: "on" };
     var switch_status_values = getValues(switch_status_map);
 
-    var switch_bit_offset = { switch_1: 0, switch_2: 1, switch_3: 2, switch_4: 3, switch_5: 4, switch_6: 5, switch_7: 6, switch_8: 7 };
-
     var mask = 0;
     var status = 0;
+    var switch_bit_offset = { switch_1: 0, switch_2: 1, switch_3: 2, switch_4: 3, switch_5: 4, switch_6: 5, switch_7: 6, switch_8: 7 };
     for (var key in switch_bit_offset) {
         if (key in switch_control) {
+            var switch_status = switch_control[key];
+            if (switch_status_values.indexOf(switch_status) === -1) {
+                throw new Error(key + " must be one of " + switch_status_values.join(", "));
+            }
             mask |= 1 << switch_bit_offset[key];
-            status |= getValue(switch_status_map, switch_control[key]) << switch_bit_offset[key];
+            status |= getValue(switch_status_map, switch_status) << switch_bit_offset[key];
         }
     }
 
     if (task_id < 0) {
         throw new Error("task_id must be greater than 0");
     }
-
     if (delay_time < 0) {
         throw new Error("delay_time must be greater than 0");
     }
@@ -186,7 +210,6 @@ function cancelDelayTask(cancel_delay_task) {
     if (cancel_delay_task === 0) {
         return [];
     }
-
     var buffer = new Buffer(4);
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0x23);
@@ -268,9 +291,10 @@ function Buffer(size) {
 }
 
 Buffer.prototype._write = function (value, byteLength, isLittleEndian) {
+    var offset = 0;
     for (var index = 0; index < byteLength; index++) {
-        var shift = isLittleEndian ? index << 3 : (byteLength - 1 - index) << 3;
-        this.buffer[this.offset + index] = (value & (0xff << shift)) >> shift;
+        offset = isLittleEndian ? index << 3 : (byteLength - 1 - index) << 3;
+        this.buffer[this.offset + index] = (value >> offset) & 0xff;
     }
 };
 
