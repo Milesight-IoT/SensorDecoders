@@ -26,7 +26,7 @@ function Decoder(bytes, port) {
 function milesightDeviceDecode(bytes) {
     var decoded = {};
 
-    for (var i = 0; i < bytes.length; ) {
+    for (var i = 0; i < bytes.length;) {
         var channel_id = bytes[i++];
         var channel_type = bytes[i++];
 
@@ -108,6 +108,11 @@ function milesightDeviceDecode(bytes) {
             decoded.similarity = readUInt8(bytes[i]);
             i += 1;
         }
+        // COLLECTION COUNTS (odm: 2713)
+        else if (channel_id === 0x09 && channel_type === 0xa9) {
+            decoded.collection_counts = readUInt32LE(bytes.slice(i, i + 4));
+            i += 4;
+        }
         // DOWNLINK RESPONSE
         else if (channel_id === 0xfe || channel_id === 0xff) {
             result = handle_downlink_response(channel_type, bytes, i);
@@ -184,6 +189,10 @@ function handle_downlink_response_ext(code, channel_type, bytes, offset) {
             decoded.learn_config.start = readUInt8(bytes[offset + 1]);
             decoded.learn_config.end = readUInt8(bytes[offset + 2]);
             offset += 3;
+            break;
+        case 0x88:
+            decoded.reset_collection_counts = readUInt32LE(bytes.slice(offset, offset + 4));
+            offset += 4;
             break;
         default:
             throw new Error("unknown downlink response");

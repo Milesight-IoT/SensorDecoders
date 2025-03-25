@@ -17,20 +17,21 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Second Learn Status | 0x08 | 0xA8 |   1    | second_learn_status(1B)<br />second_learn_status, values: (0: learn_unfinished, 1: success, 2: learn_failed_with_collect_error, 3: lear_failed_with_pir_interrupt) |
 |   Ambient Counts    | 0x06 | 0xA6 |   1    | ambient_counts(1B)                                                                                                                                                 |
 |     Similarity      | 0x07 | 0xA7 |   1    | similarity(1B)                                                                                                                                                     |
+|  Collection Counts  | 0x09 | 0xA9 |   4    | collection_counts(4B)                                                                                                                                              |
 
 ## Example
 
 ```json
 // 017562 02A5B80B800CB80B800C 038E01 04A801 06A690800000 08A801
 {
-    "ambient_counts": 32912,
-    "battery": 98,
-    "distance_1": 3000,
-    "distance_2": 3200,
-    "distance_3": 3000,
-    "distance_4": 3200,
-    "first_learn_status": "success",
-    "second_learn_status": "success",
-    "occupancy": "occupied"
+  "ambient_counts": 32912,
+  "battery": 98,
+  "distance_1": 3000,
+  "distance_2": 3200,
+  "distance_3": 3000,
+  "distance_4": 3200,
+  "first_learn_status": "success",
+  "second_learn_status": "success",
+  "occupancy": "occupied"
 }
 ```

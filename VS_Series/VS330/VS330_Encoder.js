@@ -56,6 +56,9 @@ function milesightDeviceEncode(payload) {
     if ("learn_config" in payload) {
         encoded = encoded.concat(setLearnConfig(payload.learn_config));
     }
+    if ("reset_collection_counts" in payload) {
+        encoded = encoded.concat(resetCollectionCounts(payload.reset_collection_counts));
+    }
 
     return encoded;
 }
@@ -288,6 +291,27 @@ function setLearnConfig(learn_config) {
     return buffer.toBytes();
 }
 
+/**
+ * set collection counts
+ * @odm 2713
+ * @param {number} reset_collection_counts unit: count, range: [0, 4294967295]
+ * @example { "reset_collection_counts": 100 }
+ */
+function resetCollectionCounts(reset_collection_counts) {
+    if (typeof reset_collection_counts !== "number") {
+        throw new Error("reset_collection_counts must be a number");
+    }
+    if (reset_collection_counts < 0 || reset_collection_counts > 4294967295) {
+        throw new Error("reset_collection_counts must be in range [0, 4294967295]");
+    }
+ 
+    var buffer = new Buffer(6);
+    buffer.writeUInt8(0xf9);
+    buffer.writeUInt8(0x88);
+    buffer.writeUInt32LE(reset_collection_counts);
+    return buffer.toBytes();
+}
+
 function getValues(map) {
     var values = [];
     if (RAW_VALUE) {
@@ -349,6 +373,16 @@ Buffer.prototype.writeUInt16LE = function (value) {
 Buffer.prototype.writeInt16LE = function (value) {
     this._write(value < 0 ? value + 0x10000 : value, 2, true);
     this.offset += 2;
+};
+
+Buffer.prototype.writeUInt32LE = function (value) {
+    this._write(value, 4, true);
+    this.offset += 4;
+};
+
+Buffer.prototype.writeInt32LE = function (value) {
+    this._write(value < 0 ? value + 0x100000000 : value, 4, true);
+    this.offset += 4;
 };
 
 Buffer.prototype.toBytes = function () {
