@@ -113,7 +113,7 @@ function milesightDeviceEncode(payload) {
     if ("d2d_master_config" in payload) {
         for (var i = 0; i < payload.d2d_master_config.length; i++) {
             var config = payload.d2d_master_config[i];
-            encoded = encoded.concat(setD2dMasterConfig(config));
+            encoded = encoded.concat(setD2DMasterConfig(config));
         }
     }
     if ("d2d_slave_config" in payload) {
