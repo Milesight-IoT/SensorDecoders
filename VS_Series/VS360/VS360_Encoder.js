@@ -1,7 +1,7 @@
 /**
  * Payload Encoder
  *
- * Copyright 2024 Milesight IoT
+ * Copyright 2025 Milesight IoT
  *
  * @product VS360
  */
@@ -34,6 +34,9 @@ function milesightDeviceEncode(payload) {
     }
     if ("report_interval" in payload) {
         encoded = encoded.concat(setReportInterval(payload.report_interval));
+    }
+    if ("report_type" in payload) {
+        encoded = encoded.concat(setReportType(payload.report_type));
     }
     if ("sync_time" in payload) {
         encoded = encoded.concat(syncTime(payload.sync_time));
@@ -156,6 +159,26 @@ function setReportInterval(report_interval) {
     buffer.writeUInt8(0x8e);
     buffer.writeUInt8(0x00);
     buffer.writeUInt16LE(report_interval);
+    return buffer.toBytes();
+}
+
+/**
+ * set report type
+ * @odm
+ * @param {number} report_type values: (0: hourly, 1: immediate)
+ * @example { "report_type": 0 }
+ */
+function setReportType(report_type) {
+    var report_type_map = { 0: "hourly", 1: "immediate" };
+    var report_type_values = getValues(report_type_map);
+    if (report_type_values.indexOf(report_type) === -1) {
+        throw new Error("report_type must be one of " + report_type_values.join(", "));
+    }
+
+    var buffer = new Buffer(3);
+    buffer.writeUInt8(0xf9);
+    buffer.writeUInt8(0x10);
+    buffer.writeUInt8(getValue(report_type_map, report_type));
     return buffer.toBytes();
 }
 
