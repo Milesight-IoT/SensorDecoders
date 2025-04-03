@@ -1,7 +1,7 @@
 /**
  * Payload Decoder
  *
- * Copyright 2024 Milesight IoT
+ * Copyright 2025 Milesight IoT
  *
  * @product VS360
  */
@@ -100,6 +100,11 @@ function milesightDeviceDecode(bytes) {
         else if (channel_id === 0x05 && channel_type === 0xcc) {
             decoded.period_in = readUInt16LE(bytes.slice(i, i + 2));
             decoded.period_out = readUInt16LE(bytes.slice(i + 2, i + 4));
+            i += 4;
+        }
+        // TIMESTAMP
+        else if (channel_id === 0x0a && channel_type === 0xef) {
+            decoded.timestamp = readUInt32LE(bytes.slice(i, i + 4));
             i += 4;
         }
         // TOTAL IN / OUT ALARM
@@ -284,7 +289,8 @@ function handle_downlink_response_ext(code, channel_type, bytes, offset) {
     var decoded = {};
 
     switch (channel_type) {
-        case 0x00:
+        case 0x10:
+            decoded.report_type = readReportType(bytes[offset]);
             offset += 1;
             break;
         default:
@@ -488,6 +494,11 @@ function readConditionType(type) {
 function readTriggerSourceType(type) {
     var trigger_source_map = { 1: "period_count", 2: "total_count" };
     return getValue(trigger_source_map, type);
+}
+
+function readReportType(type) {
+    var report_type_map = { 0: "hourly", 1: "immediate" };
+    return getValue(report_type_map, type);
 }
 
 function readUInt8(bytes) {
