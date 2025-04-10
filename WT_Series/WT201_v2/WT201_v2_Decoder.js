@@ -220,11 +220,11 @@ function milesightDeviceDecode(bytes) {
         }
         // DOWNLINK RESPONSE
         else if (channel_id === 0xfe || channel_id === 0xff) {
-            result = handle_downlink_response(channel_type, bytes, i);
+            var result = handle_downlink_response(channel_type, bytes, i);
             decoded = Object.assign(decoded, result.data);
             i = result.offset;
         } else if (channel_id === 0xf8 || channel_id === 0xf9) {
-            result = handle_downlink_response_ext(channel_id, channel_type, bytes, i);
+            var result = handle_downlink_response_ext(channel_id, channel_type, bytes, i);
             decoded = Object.assign(decoded, result.data);
             i = result.offset;
         } else {
@@ -959,32 +959,6 @@ function readWeekRecycleSettings(value) {
 function readTimeZone(timezone) {
     var timezone_map = { "-720": "UTC-12", "-660": "UTC-11", "-600": "UTC-10", "-570": "UTC-9:30", "-540": "UTC-9", "-480": "UTC-8", "-420": "UTC-7", "-360": "UTC-6", "-300": "UTC-5", "-240": "UTC-4", "-210": "UTC-3:30", "-180": "UTC-3", "-120": "UTC-2", "-60": "UTC-1", 0: "UTC", 60: "UTC+1", 120: "UTC+2", 180: "UTC+3", 210: "UTC+3:30", 240: "UTC+4", 270: "UTC+4:30", 300: "UTC+5", 330: "UTC+5:30", 345: "UTC+5:45", 360: "UTC+6", 390: "UTC+6:30", 420: "UTC+7", 480: "UTC+8", 540: "UTC+9", 570: "UTC+9:30", 600: "UTC+10", 630: "UTC+10:30", 660: "UTC+11", 720: "UTC+12", 765: "UTC+12:45", 780: "UTC+13", 840: "UTC+14" };
     return getValue(timezone_map, timezone);
-}
-
-function readDualTemperaturePlanConfig(bytes) {
-    var offset = 0;
-
-    var config = {};
-    config.plan_type = readPlanType(readUInt8(bytes[offset]));
-    config.temperature_control_mode = readTemperatureControlMode(readUInt8(bytes[offset + 1]));
-    config.fan_mode = readFanMode(readUInt8(bytes[offset + 2]));
-    var heat_target_temperature_value = readUInt16LE(bytes.slice(offset + 3, offset + 5));
-    if (heat_target_temperature_value !== 0xffff) {
-        config.heat_target_temperature = readInt16LE(bytes.slice(offset + 3, offset + 5)) / 10;
-    }
-    var heat_temperature_tolerance_value = readUInt8(bytes[offset + 5]);
-    if (heat_temperature_tolerance_value !== 0xff) {
-        config.heat_temperature_control_tolerance = heat_temperature_tolerance_value / 10;
-    }
-    var cool_target_temperature_value = readUInt16LE(bytes.slice(offset + 6, offset + 8));
-    if (cool_target_temperature_value !== 0xffff) {
-        config.cool_target_temperature = readInt16LE(bytes.slice(offset + 6, offset + 8)) / 10;
-    }
-    var cool_temperature_tolerance_value = readUInt8(bytes[offset + 8]);
-    if (cool_temperature_tolerance_value !== 0xff) {
-        config.cool_temperature_control_tolerance = cool_temperature_tolerance_value / 10;
-    }
-    return config;
 }
 
 function readSingleTemperaturePlanConfig(bytes) {
