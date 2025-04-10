@@ -21,10 +21,10 @@ function Decode(fPort, bytes) {
 Output Result
 ``` json
 {
-  "sensor": "24e1641092176759",
+  "sensor": "24e124136c191967",
   "vendor": "Milesight-IoT",
-  "time": "2020-0327T12:39:05.547336Z",
-  "raw": "AWcAAAJoAA=="
+  "time": "2025-04-08T09:15:18.883491Z",
+  "raw": "A2cfAQRoXg=="
 }
 ```
 
@@ -36,9 +36,9 @@ Output Result
 {
   "applicationID": 1,                   // application ID
   "applicationName": "cloud",           // application name
-  "deviceName": "24e1641092176759",     // device name
-  "devEUI": "24e1641092176759",         // device EUI
-  "time": "2020-0327T12:39:05.547336Z", // uplink receive time
+  "deviceName": "EM300-TH",             // device name
+  "devEUI": "24e124136c191967",         // device EUI
+  "time": "2025-04-08T09:15:18.883491Z", // uplink receive time
   "rxInfo": [                           // lorawan gateway information related to lora
     {
       "mac": "24e124fffef021be",        // ID of the receiving gateway
@@ -47,7 +47,8 @@ Output Result
       "name": "local_gateway",          // name of the receiving gateway
       "latitude": 0,                    // latitude of the receiving gateway
       "longitude": 0,                   // longitude of the receiving gateway
-      "altitude": 0                     // altitude of the receiving gateway
+      "altitude": 0,                    // altitude of the receiving gateway
+      "time": "2025-04-08T09:15:18.883491Z" // receive time
     }
   ],
   "txInfo": {                           // lorawan node tx info
@@ -62,6 +63,8 @@ Output Result
   },
   "fCnt": 0,                            // frame counter
   "fPort": 85,                          // application port
-  "data": "AWcAAAJoAA=="                // base64 encoded payload (decrypted)
+  "data": "A2cfAQRoXg==",               // base64 encoded payload (decrypted)
+  "cellularIP": "10.0.0.1",             // cellular ip address
+  "gatewayTime": "2025-04-08T10:15:19+01:00", // gateway time
 }
 ```
