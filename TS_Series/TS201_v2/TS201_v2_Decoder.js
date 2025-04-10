@@ -135,7 +135,7 @@ function milesightDeviceDecode(bytes) {
         else if (channel_id === 0x94 && channel_type === 0x68) {
             var data = {};
             data.humidity = readUInt8(bytes[i]) / 2;
-            data.humidity_mutation = readUInt8(bytes[i + 1]) / 10;
+            data.humidity_mutation = readUInt8(bytes[i + 1]) / 2;
             data.humidity_alarm = readAlarmType(bytes[i + 2]);
             i += 3;
 
