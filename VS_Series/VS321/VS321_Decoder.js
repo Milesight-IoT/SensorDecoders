@@ -215,8 +215,12 @@ function handle_downlink_response(channel_type, bytes, offset) {
             decoded.d2d_key = readHexString(bytes.slice(offset, offset + 8));
             offset += 8;
             break;
-        case 0x64:
+        case 0x40:
             decoded.adr_enable = readEnableStatus(bytes[offset]);
+            offset += 1;
+            break;
+        case 0x65:
+            decoded.lora_port = readUInt8(bytes[offset]);
             offset += 1;
             break;
         case 0x68:
@@ -228,8 +232,13 @@ function handle_downlink_response(channel_type, bytes, offset) {
             offset += 1;
             break;
         case 0x6a:
-            decoded.retransmit_interval = readUInt16LE(bytes.slice(offset, offset + 2));
-            offset += 2;
+            var interval_type = readUInt8(bytes[offset]);
+            if (interval_type === 0) {
+                decoded.retransmit_interval = readUInt16LE(bytes.slice(offset + 1, offset + 3));
+            } else if (interval_type === 1) {
+                decoded.resend_interval = readUInt16LE(bytes.slice(offset + 1, offset + 3));
+            }
+            offset += 3;
             break;
         case 0x6d:
             decoded.stop_transmit = readYesNoStatus(1);
@@ -276,7 +285,7 @@ function handle_downlink_response_ext(code, channel_type, bytes, offset) {
             offset += 1;
             break;
         case 0x6c:
-            decoded.detection = readYesNoStatus(1);
+            decoded.detect = readYesNoStatus(1);
             offset += 1;
             break;
         case 0x6e:
@@ -413,6 +422,11 @@ function readReportType(type) {
 function readDetectionMode(type) {
     var type_map = { 0: "auto", 1: "on" };
     return getValue(type_map, type);
+}
+
+function readConditionType(type) {
+    var condition_map = { 0: "disable", 1: "below", 2: "above", 3: "between", 4: "outside" };
+    return getValue(condition_map, type);
 }
 
 function readUInt8(bytes) {

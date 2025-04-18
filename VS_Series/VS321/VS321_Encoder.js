@@ -76,11 +76,17 @@ function milesightDeviceEncode(payload) {
     if ("retransmit_interval" in payload) {
         encoded = encoded.concat(setRetransmitInterval(payload.retransmit_interval));
     }
+    if ("resend_interval" in payload) {
+        encoded = encoded.concat(setResendInterval(payload.resend_interval));
+    }
     if ("fetch_history" in payload) {
         encoded = encoded.concat(fetchHistory(payload.fetch_history));
     }
     if ("stop_transmit" in payload) {
         encoded = encoded.concat(stopTransmit(payload.stop_transmit));
+    }
+    if ("lora_port" in payload) {
+        encoded = encoded.concat(setLoRaPort(payload.lora_port));
     }
 
     return encoded;
@@ -213,7 +219,7 @@ function setAdrEnable(adr_enable) {
 
     var buffer = new Buffer(3);
     buffer.writeUInt8(0xff);
-    buffer.writeUInt8(0x64);
+    buffer.writeUInt8(0x40);
     buffer.writeUInt8(getValue(enable_map, adr_enable));
     return buffer.toBytes();
 }
@@ -244,6 +250,7 @@ function setTemperatureAlarmConfig(temperature_alarm_config) {
     var data = 0x00;
     data |= getValue(condition_map, condition);
     data |= 1 << 3; // temperature
+    data |= 1 << 6; // reserved
 
     var buffer = new Buffer(11);
     buffer.writeUInt8(0xff);
@@ -282,6 +289,7 @@ function setHumidityAlarmConfig(humidity_alarm_config) {
     var data = 0x00;
     data |= getValue(condition_map, condition);
     data |= 2 << 3; // humidity
+    data |= 1 << 6; // reserved
 
     var buffer = new Buffer(11);
     buffer.writeUInt8(0xff);
@@ -320,6 +328,7 @@ function setIlluminanceAlarmConfig(illuminance_alarm_config) {
     var data = 0x00;
     data |= getValue(condition_map, condition);
     data |= 3 << 3; // illuminance
+    data |= 1 << 6; // reserved
 
     var buffer = new Buffer(11);
     buffer.writeUInt8(0xff);
@@ -480,6 +489,27 @@ function setRetransmitInterval(retransmit_interval) {
 }
 
 /**
+ * set resend interval
+ * @param {number} resend_interval unit: second, range: [30, 1200]
+ * @example { "resend_interval": 600 }
+ */
+function setResendInterval(resend_interval) {
+    if (typeof resend_interval !== "number") {
+        throw new Error("resend_interval must be a number");
+    }
+    if (resend_interval < 30 || resend_interval > 1200) {
+        throw new Error("resend_interval must be between 30 and 1200");
+    }
+
+    var buffer = new Buffer(5);
+    buffer.writeUInt8(0xff);
+    buffer.writeUInt8(0x6a);
+    buffer.writeUInt8(0x01);
+    buffer.writeUInt16LE(resend_interval);
+    return buffer.toBytes();
+}
+
+/**
  * fetch history
  * @param {object} fetch_history
  * @param {number} fetch_history.start_time
@@ -503,6 +533,7 @@ function fetchHistory(fetch_history) {
         buffer.writeUInt32LE(start_time);
     } else {
         var buffer = new Buffer(10);
+        buffer.writeUInt8(0xfd);
         buffer.writeUInt8(0x6c);
         buffer.writeUInt32LE(start_time);
         buffer.writeUInt32LE(end_time);
@@ -527,6 +558,19 @@ function stopTransmit(stop_transmit) {
         return [];
     }
     return [0xff, 0x6d, 0xff];
+}
+
+/**
+ * lora application port
+ * @param {number} lora_port range: [0, 255]
+ * @example { "lora_port": 85 }
+ */
+function setLoRaPort(lora_port) {
+    var buffer = new Buffer(3);
+    buffer.writeUInt8(0xff);
+    buffer.writeUInt8(0x65);
+    buffer.writeUInt8(lora_port);
+    return buffer.toBytes();
 }
 
 function getValues(map) {
