@@ -1,4 +1,3 @@
-
 /**
  * Payload Encoder
  *
@@ -36,17 +35,29 @@ function milesightDeviceEncode(payload) {
     if ("report_interval" in payload) {
         encoded = encoded.concat(setReportInterval(payload.report_interval));
     }
-    if ("human_exist_height" in payload) {
-        encoded = encoded.concat(setHumanExistHeight(payload.human_exist_height));
-    }
-    if ("test_enable" in payload) {
-        encoded = encoded.concat(setTestEnable(payload.test_enable));
+    if ("test_config" in payload) {
+        encoded = encoded.concat(setTestConfig(payload.test_config));
     }
     if ("test_duration" in payload) {
         encoded = encoded.concat(setTestDuration(payload.test_duration));
     }
-    if ("back_test_config" in payload) {
-        encoded = encoded.concat(setBackTestMode(payload.back_test_config));
+    if ("debug_enable" in payload) {
+        encoded = encoded.concat(setDebugEnable(payload.debug_enable));
+    }
+    if ("first_learn_pir_idle_time" in payload) {
+        encoded = encoded.concat(setFirstLearnPIRIdleTime(payload.first_learn_pir_idle_time));
+    }
+    if ("second_learn_enable" in payload) {
+        encoded = encoded.concat(setSecondLearnEnable(payload.second_learn_enable));
+    }
+    if ("second_learn_time" in payload) {
+        encoded = encoded.concat(setSecondLearnTime(payload.second_learn_time));
+    }
+    if ("learn_config" in payload) {
+        encoded = encoded.concat(setLearnConfig(payload.learn_config));
+    }
+    if ("reset_collection_counts" in payload) {
+        encoded = encoded.concat(resetCollectionCounts(payload.reset_collection_counts));
     }
 
     return encoded;
@@ -72,15 +83,16 @@ function reboot(reboot) {
 
 /**
  * set collection interval
- * @param {number} collection_interval unit: second, range: [1, 10]
+ * @odm 2713
+ * @param {number} collection_interval unit: second, range: [3, 65535]
  * @example { "collection_interval": 5 }
  */
 function setCollectionInterval(collection_interval) {
     if (typeof collection_interval !== "number") {
         throw new Error("collection_interval must be a number");
     }
-    if (collection_interval < 1 || collection_interval > 10) {
-        throw new Error("collection_interval must be in range [1, 10]");
+    if (collection_interval < 3 || collection_interval > 65535) {
+        throw new Error("collection_interval must be in range [3, 65535]");
     }
 
     var buffer = new Buffer(4);
@@ -111,55 +123,46 @@ function setReportInterval(report_interval) {
 }
 
 /**
- * set human exist height
- * @param {number} human_exist_height unit: mm, range: [1, 300]
- * @example { "human_exist_height": 120 }
+ * set test config
+ * @odm 2713
+ * @param {object} test_config
+ * @param {number} test_config.enable values: (0: disable, 1: enable)
+ * @param {number} test_config.install_height unit: cm, range: [250, 350]
+ * @example { "test_config": { "enable": 1, "install_height": 1000 } }
  */
-function setHumanExistHeight(human_exist_height) {
-    if (typeof human_exist_height !== "number") {
-        throw new Error("human_exist_height must be a number");
-    }
-    if (human_exist_height < 1 || human_exist_height > 300) {
-        throw new Error("human_exist_height must be in range [1, 300]");
-    }
+function setTestConfig(test_config) {
+    var enable = test_config.enable;
+    var install_height = test_config.install_height;
 
-    var buffer = new Buffer(4);
-    buffer.writeUInt8(0xff);
-    buffer.writeUInt8(0x70);
-    buffer.writeUInt16LE(human_exist_height);
-    return buffer.toBytes();
-}
-
-/**
- * set test enable
- * @param {number} test_enable values: (0: disable, 1: enable)
- * @example { "test_enable": 1 }
- */
-function setTestEnable(test_enable) {
     var enable_map = { 0: "disable", 1: "enable" };
     var enable_values = getValues(enable_map);
-    if (enable_values.indexOf(test_enable) === -1) {
-        throw new Error("test_enable must be one of " + enable_values.join(", "));
+    if (enable_values.indexOf(enable) === -1) {
+        throw new Error("test_config.enable must be one of " + enable_values.join(", "));
+    }
+    if (install_height < 250 || install_height > 350) {
+        throw new Error("test_config.install_height must be in range [250, 350]");
     }
 
-    var buffer = new Buffer(3);
-    buffer.writeUInt8(0xff);
-    buffer.writeUInt8(0x71);
-    buffer.writeUInt8(getValue(enable_map, test_enable));
+    var buffer = new Buffer(5);
+    buffer.writeUInt8(0xf9);
+    buffer.writeUInt8(0x7e);
+    buffer.writeUInt8(getValue(enable_map, enable));
+    buffer.writeUInt16LE(install_height);
     return buffer.toBytes();
 }
 
 /**
  * set test mode duration
- * @param {number} test_duration unit: min, range: [1, 30]
+ * @odm 2713
+ * @param {number} test_duration unit: min, range: [1, 60]
  * @example { "test_duration": 10 }
  */
 function setTestDuration(test_duration) {
     if (typeof test_duration !== "number") {
         throw new Error("test_duration must be a number");
     }
-    if (test_duration < 1 || test_duration > 30) {
-        throw new Error("test_duration must be in range [1, 30]");
+    if (test_duration < 1 || test_duration > 60) {
+        throw new Error("test_duration must be in range [1, 60]");
     }
 
     var buffer = new Buffer(4);
@@ -170,30 +173,142 @@ function setTestDuration(test_duration) {
 }
 
 /**
- * set back test mode
- * @param {object} back_test_config
- * @param {number} back_test_config.enable values: (0: disable, 1: enable)
- * @param {number} back_test_config.distance unit: mm, range: [40, 3500]
- * @example { "back_test_config": { "enable": 0, "distance": 1000 } }
+ * set debug enable
+ * @odm 2713
+ * @param {number} debug_enable values: (0: disable, 1: enable)
+ * @example { "debug_enable": 1 }
  */
-function setBackTestMode(back_test_config) {
-    var enable = back_test_config.enable;
-    var distance = back_test_config.distance;
+function setDebugEnable(debug_enable) {
+    var enable_map = { 0: "disable", 1: "enable" };
+    var enable_values = getValues(enable_map);
+    if (enable_values.indexOf(debug_enable) === -1) {
+        throw new Error("debug_enable must be one of " + enable_values.join(", "));
+    }
+
+    var buffer = new Buffer(3);
+    buffer.writeUInt8(0xf9);
+    buffer.writeUInt8(0x7f);
+    buffer.writeUInt8(getValue(enable_map, debug_enable));
+    return buffer.toBytes();
+}
+
+/**
+ * set first learn PIR idle time
+ * @odm 2713
+ * @param {number} first_learn_pir_idle_time unit: second, range: [1, 3600]
+ * @example { "first_learn_pir_idle_time": 60 }
+ */
+function setFirstLearnPIRIdleTime(first_learn_pir_idle_time) {
+    if (typeof first_learn_pir_idle_time !== "number") {
+        throw new Error("first_learn_pir_idle_time must be a number");
+    }
+    if (first_learn_pir_idle_time < 1 || first_learn_pir_idle_time > 3600) {
+        throw new Error("first_learn_pir_idle_time must be in range [1, 3600]");
+    }
+
+    var buffer = new Buffer(4);
+    buffer.writeUInt8(0xf9);
+    buffer.writeUInt8(0x83);
+    buffer.writeUInt16LE(first_learn_pir_idle_time);
+    return buffer.toBytes();
+}
+
+/**
+ * set second learn enable
+ * @odm 2713
+ * @param {number} second_learn_enable values: (0: disable, 1: enable)
+ * @example { "second_learn_enable": 1 }
+ */
+function setSecondLearnEnable(second_learn_enable) {
+    var enable_map = { 0: "disable", 1: "enable" };
+    var enable_values = getValues(enable_map);
+    if (enable_values.indexOf(second_learn_enable) === -1) {
+        throw new Error("second_learn_enable must be one of " + enable_values.join(", "));
+    }
+
+    var buffer = new Buffer(3);
+    buffer.writeUInt8(0xf9);
+    buffer.writeUInt8(0x80);
+    buffer.writeUInt8(getValue(enable_map, second_learn_enable));
+    return buffer.toBytes();
+}
+
+/**
+ * set second learn time
+ * @odm 2713
+ * @param {number} second_learn_time unit: minute, range: [30, 1440]
+ * @example { "second_learn_time": 10 }
+ */
+function setSecondLearnTime(second_learn_time) {
+    if (typeof second_learn_time !== "number") {
+        throw new Error("second_learn_time must be a number");
+    }
+    if (second_learn_time < 30 || second_learn_time > 1440) {
+        throw new Error("second_learn_time must be in range [30, 1440]");
+    }
+    var buffer = new Buffer(4);
+    buffer.writeUInt8(0xf9);
+    buffer.writeUInt8(0x81);
+    buffer.writeUInt16LE(second_learn_time);
+    return buffer.toBytes();
+}
+
+/**
+ * set learn config
+ * @odm 2713
+ * @param {object} learn_config
+ * @param {number} learn_config.enable values: (0: disable, 1: enable)
+ * @param {number} learn_config.start range: [20, 60]
+ * @param {number} learn_config.end range: [20, 60]
+ * @example { "learn_config": { "enable": 1, "start": 25, "end": 60 } }
+ */
+function setLearnConfig(learn_config) {
+    var enable = learn_config.enable;
+    var start = learn_config.start;
+    var end = learn_config.end;
 
     var enable_map = { 0: "disable", 1: "enable" };
     var enable_values = getValues(enable_map);
     if (enable_values.indexOf(enable) === -1) {
-        throw new Error("back_test_config.enable must be one of " + enable_values.join(", "));
+        throw new Error("learn_config.enable must be one of " + enable_values.join(", "));
     }
-    if (distance < 40 || distance > 3500) {
-        throw new Error("back_test_config.distance must be in range [40, 3500]");
+    if (start < 20 || start > 60) {
+        throw new Error("learn_config.start must be in range [20, 60]");
+    }
+    if (end < 20 || end > 60) {
+        throw new Error("learn_config.end must be in range [20, 60]");
+    }
+    if (start >= end) {
+        throw new Error("learn_config.start must be less than learn_config.end");
     }
 
     var buffer = new Buffer(5);
-    buffer.writeUInt8(0xff);
-    buffer.writeUInt8(0x7a);
+    buffer.writeUInt8(0xf9);
+    buffer.writeUInt8(0x82);
     buffer.writeUInt8(getValue(enable_map, enable));
-    buffer.writeUInt16LE(distance);
+    buffer.writeUInt8(start);
+    buffer.writeUInt8(end);
+    return buffer.toBytes();
+}
+
+/**
+ * set collection counts
+ * @odm 2713
+ * @param {number} reset_collection_counts unit: count, range: [0, 4294967295]
+ * @example { "reset_collection_counts": 100 }
+ */
+function resetCollectionCounts(reset_collection_counts) {
+    if (typeof reset_collection_counts !== "number") {
+        throw new Error("reset_collection_counts must be a number");
+    }
+    if (reset_collection_counts < 0 || reset_collection_counts > 4294967295) {
+        throw new Error("reset_collection_counts must be in range [0, 4294967295]");
+    }
+ 
+    var buffer = new Buffer(6);
+    buffer.writeUInt8(0xf9);
+    buffer.writeUInt8(0x88);
+    buffer.writeUInt32LE(reset_collection_counts);
     return buffer.toBytes();
 }
 
@@ -258,6 +373,16 @@ Buffer.prototype.writeUInt16LE = function (value) {
 Buffer.prototype.writeInt16LE = function (value) {
     this._write(value < 0 ? value + 0x10000 : value, 2, true);
     this.offset += 2;
+};
+
+Buffer.prototype.writeUInt32LE = function (value) {
+    this._write(value, 4, true);
+    this.offset += 4;
+};
+
+Buffer.prototype.writeInt32LE = function (value) {
+    this._write(value < 0 ? value + 0x100000000 : value, 4, true);
+    this.offset += 4;
 };
 
 Buffer.prototype.toBytes = function () {
