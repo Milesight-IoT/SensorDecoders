@@ -95,6 +95,11 @@ function milesightDeviceDecode(bytes) {
             decoded.light_level = readUInt8(bytes[i]);
             i += 1;
         }
+        // LIGHT (lux)
+        else if (channel_id === 0x06 && channel_type === 0x94) {
+            decoded.illuminance = readUInt32LE(bytes.slice(i, i + 4));
+            i += 4;
+        }
         // CO2
         else if (channel_id === 0x07 && channel_type === 0x7d) {
             decoded.co2 = readUInt16LE(bytes.slice(i, i + 2));
@@ -132,7 +137,8 @@ function milesightDeviceDecode(bytes) {
             // unit: iaq
             data.tvoc = readUInt16LE(bytes.slice(i + 12, i + 14)) / 100;
             data.pressure = readUInt16LE(bytes.slice(i + 14, i + 16)) / 10;
-            i += 16;
+            data.illuminance = readUInt32LE(bytes.slice(i + 16, i + 20));
+            i += 20;
 
             decoded.history = decoded.history || [];
             decoded.history.push(data);
@@ -149,7 +155,8 @@ function milesightDeviceDecode(bytes) {
             // unit: ug/m3
             data.tvoc = readUInt16LE(bytes.slice(i + 12, i + 14));
             data.pressure = readUInt16LE(bytes.slice(i + 14, i + 16)) / 10;
-            i += 16;
+            data.illuminance = readUInt32LE(bytes.slice(i + 16, i + 20));
+            i += 20;
 
             decoded.history = decoded.history || [];
             decoded.history.push(data);
