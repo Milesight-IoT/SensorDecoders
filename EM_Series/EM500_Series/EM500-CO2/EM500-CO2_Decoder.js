@@ -75,15 +75,20 @@ function milesightDeviceDecode(bytes) {
             decoded.humidity = bytes[i] / 2;
             i += 1;
         }
-        // CO2
-        else if (channel_id === 0x05 && channel_type === 0x7d) {
-            decoded.co2 = readUInt16LE(bytes.slice(i, i + 2));
-            i += 2;
+        // CO2 (ODM: 2727)
+        else if (channel_id === 0x05 && channel_type === 0xeb) {
+            decoded.co2 = readUInt32LE(bytes.slice(i, i + 4));
+            i += 4;
         }
         // PRESSURE
         else if (channel_id === 0x06 && channel_type === 0x73) {
             decoded.pressure = readUInt16LE(bytes.slice(i, i + 2)) / 10;
             i += 2;
+        }
+        // CALIBRATION RESULT
+        else if (channel_id === 0x07 && channel_type === 0xe5) {
+            decoded.calibration_result = readCalibrationResult(bytes[i]);
+            i += 1;
         }
         // TEMPERATURE CHANGE ALARM
         else if (channel_id === 0x83 && channel_type === 0xd7) {
@@ -92,15 +97,15 @@ function milesightDeviceDecode(bytes) {
             decoded.temperature_alarm = readTemperatureAlarm(bytes[i + 4]);
             i += 5;
         }
-        // HISTORY
+        // HISTORY (ODM: 2727)
         else if (channel_id === 0x20 && channel_type === 0xce) {
             var data = {};
             data.timestamp = readUInt32LE(bytes.slice(i, i + 4));
-            data.co2 = readUInt16LE(bytes.slice(i + 4, i + 6));
-            data.pressure = readUInt16LE(bytes.slice(i + 6, i + 8)) / 10;
-            data.temperature = readInt16LE(bytes.slice(i + 8, i + 10)) / 10;
-            data.humidity = bytes[i + 10] / 2;
-            i += 11;
+            data.co2 = readUInt32LE(bytes.slice(i + 4, i + 8));
+            data.pressure = readUInt16LE(bytes.slice(i + 8, i + 10)) / 10;
+            data.temperature = readInt16LE(bytes.slice(i + 10, i + 12)) / 10;
+            data.humidity = bytes[i + 12] / 2;
+            i += 13;
 
             decoded.history = decoded.history || [];
             decoded.history.push(data);
@@ -110,7 +115,14 @@ function milesightDeviceDecode(bytes) {
             var result = handle_downlink_response(channel_type, bytes, i);
             decoded = Object.assign(decoded, result.data);
             i = result.offset;
-        } else {
+        }
+        // DOWNLINK RESPONSE EXT
+        else if (channel_id === 0xf8 || channel_id === 0xf9) {
+            result = handle_downlink_response_ext(channel_id, channel_type, bytes, i);
+            decoded = Object.assign(decoded, result.data);
+            i = result.offset;
+        }
+        else {
             break;
         }
     }
@@ -188,17 +200,6 @@ function handle_downlink_response(channel_type, bytes, offset) {
             }
             offset += 2;
             break;
-        case 0x1a:
-            var strategy_value = readUInt8(bytes[offset]);
-            decoded.co2_calibration_config = {};
-            decoded.co2_calibration_config.mode = readCalibrationStrategy(strategy_value);
-            if (strategy_value === 0x02) {
-                decoded.co2_calibration_config.value = readUInt16LE(bytes.slice(offset + 1, offset + 3));
-                offset += 3;
-            } else {
-                offset += 1;
-            }
-            break;
         case 0x1c:
             decoded.recollection_config = {};
             decoded.recollection_config.counts = readUInt8(bytes[offset]);
@@ -220,11 +221,11 @@ function handle_downlink_response(channel_type, bytes, offset) {
             decoded.time_sync_enable = readEnableStatus(bytes[offset]);
             offset += 1;
             break;
-        case 0x68: // history_enable
+        case 0x68:
             decoded.history_enable = readEnableStatus(readUInt8(bytes[offset]));
             offset += 1;
             break;
-        case 0x69: // retransmit_enable
+        case 0x69:
             decoded.retransmit_enable = readEnableStatus(readUInt8(bytes[offset]));
             offset += 1;
             break;
@@ -264,10 +265,6 @@ function handle_downlink_response(channel_type, bytes, offset) {
                 decoded.temperature_calibration_value_config = {};
                 decoded.temperature_calibration_value_config.enable = readEnableStatus(bytes[offset + 1]);
                 decoded.temperature_calibration_value_config.target_value = readInt16LE(bytes.slice(offset + 2, offset + 4)) / 10;
-            } else if (calibration_value_target === 0x04) {
-                decoded.co2_calibration_value_config = {};
-                decoded.co2_calibration_value_config.enable = readEnableStatus(bytes[offset + 1]);
-                decoded.co2_calibration_value_config.target_value = readInt16LE(bytes.slice(offset + 2, offset + 4));
             } else if (calibration_value_target === 0x05) {
                 decoded.pressure_calibration_value_config = {};
                 decoded.pressure_calibration_value_config.enable = readEnableStatus(bytes[offset + 1]);
@@ -292,6 +289,91 @@ function handle_downlink_response(channel_type, bytes, offset) {
     }
 
     return { data: decoded, offset: offset };
+}
+
+// 0xF8 or 0xF9
+function handle_downlink_response_ext(code, channel_type, bytes, offset) {
+    var decoded = {};
+
+    switch (channel_type) {
+        case 0x60:
+            var mode_value = readUInt8(bytes[offset]);
+            var value = readUInt32LE(bytes.slice(offset + 1, offset + 5));
+            decoded.co2_calibration_config = {};
+            decoded.co2_calibration_config.mode = readCalibrationStrategy(mode_value);
+            if (mode_value === 0x01) {
+                decoded.co2_target_value = readInt32LE(bytes.slice(offset, offset + 4));
+            }
+            // in_gas mode
+            else if (mode_value === 0x02) {
+                decoded.in_gas_mode = readCO2CalibrationInGasMode(value);
+            }
+            offset += 5;
+            break;
+        case 0x61:
+            var data = readUInt8(bytes[offset]);
+            var enable = readEnableStatus((data >>> 6) & 0x01);
+            var condition = readCondition((data >>> 0) & 0x07);
+            var target = (data >>> 3) & 0x07;
+
+            switch (target) {
+                case 0x01:
+                    decoded.co2_threshold_alarm_config = {};
+                    decoded.co2_threshold_alarm_config.enable = enable;
+                    decoded.co2_threshold_alarm_config.condition = condition;
+                    decoded.co2_threshold_alarm_config.min_threshold = readUInt32LE(bytes.slice(offset + 1, offset + 5));
+                    decoded.co2_threshold_alarm_config.max_threshold = readUInt32LE(bytes.slice(offset + 5, offset + 9));
+                    break;
+                case 0x02:
+                    decoded.temperature_threshold_alarm_config = {};
+                    decoded.temperature_threshold_alarm_config.enable = enable;
+                    decoded.temperature_threshold_alarm_config.condition = condition;
+                    decoded.temperature_threshold_alarm_config.min_threshold = readInt32LE(bytes.slice(offset + 1, offset + 5)) / 10;
+                    decoded.temperature_threshold_alarm_config.max_threshold = readInt32LE(bytes.slice(offset + 5, offset + 9)) / 10;
+                    break;
+                case 0x03:
+                    decoded.temperature_mutation_alarm_config = {};
+                    decoded.temperature_mutation_alarm_config.enable = enable;
+                    decoded.temperature_mutation_alarm_config.condition = condition;
+                    decoded.temperature_mutation_alarm_config.min_threshold = readInt32LE(bytes.slice(offset + 1, offset + 5)) / 10;
+                    decoded.temperature_mutation_alarm_config.max_threshold = readInt32LE(bytes.slice(offset + 5, offset + 9)) / 10;
+                    break;
+            }
+            offset += 9;
+            break;
+        case 0x71:
+            // ignore first byte
+            decoded.co2_calibration_value_config = {};
+            decoded.co2_calibration_value_config.enable = readEnableStatus(bytes[offset + 1]);
+            decoded.co2_calibration_value_config.target_value = readInt32LE(bytes.slice(offset + 2, offset + 6));
+            offset += 6;
+            break;
+        default:
+            throw new Error("unknown downlink response");
+    }
+
+    if (hasResultFlag(code)) {
+        var result_value = readUInt8(bytes[offset]);
+        offset += 1;
+
+        if (result_value !== 0) {
+            decoded = {};
+            decoded.device_response_result = {};
+            decoded.device_response_result.channel_type = channel_type;
+            decoded.device_response_result.result = readResultStatus(bytes[offset]);
+        }
+    }
+
+    return { data: decoded, offset: offset };
+}
+
+function hasResultFlag(code) {
+    return code === 0xf8;
+}
+
+function readResultStatus(status) {
+    var status_map = { 0: "success", 1: "forbidden", 2: "invalid parameter" };
+    return getValue(status_map, status);
 }
 
 function readProtocolVersion(bytes) {
@@ -344,14 +426,33 @@ function readTemperatureAlarm(type) {
     return getValue(alarm_map, type);
 }
 
+function readCalibrationResult(type) {
+    var result_map = { 0: "calibrating", 1: "success", 2: "failed" };
+    return getValue(result_map, type);
+}
+
 function readEnableStatus(type) {
     var enable_map = { 0: "disable", 1: "enable" };
     return getValue(enable_map, type);
 }
 
 function readCalibrationStrategy(type) {
-    var strategy_map = { 0: "factory", 1: "abc", 2: "manual", 3: "background", 4: "zero" };
+    var strategy_map = { 0: "factory", 1: "manual", 3: "in_gas" };
     return getValue(strategy_map, type);
+}
+
+function readCO2CalibrationInGasMode(value) {
+    var in_gas_map = {
+        0: "low_noise_in_n2_range_0_100",
+        1: "low_noise_in_air_range_0_100",
+        2: "low_noise_in_n2_range_0_40",
+        3: "low_noise_in_air_range_0_40",
+        16: "low_cross_in_n2_range_0_100",
+        17: "low_cross_air_range_0_100",
+        18: "low_cross_in_n2_range_0_40",
+        19: "low_cross_in_air_range_0_40"
+    };
+    return getValue(in_gas_map, value);
 }
 
 function readPressureCalibrationMode(type) {
