@@ -1101,7 +1101,7 @@ function writeModbusValueCondition(modbus_value_condition) {
         value_1 = mutation_duration;
         value_2 = mutation;
     }
-  
+
 
     var buffer = new Buffer(18);
     buffer.writeUInt8(channel_id);
@@ -1486,24 +1486,3 @@ function getValue(map, value) {
 
     throw new Error("not match in " + JSON.stringify(map));
 }
-
-milesightDeviceEncode({
-    "rule_config": [
-        {
-            "condition": {
-                "modbus_value_condition": {
-                    "channel_id": 4,
-                    "condition": "above",
-                    "continue_time": 10000,
-                    "holding_mode": "above",
-                    "lock_time": 5000,
-                    "max": 5
-                },
-                "type": "modbus_value"
-            },
-            "enable": "enable",
-            "rule_id": 2
-        }
-    ]
-}
-)
