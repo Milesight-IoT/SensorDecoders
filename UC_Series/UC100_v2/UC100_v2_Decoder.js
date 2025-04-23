@@ -149,7 +149,7 @@ function milesightDeviceDecode(bytes) {
             var modbus_chn_id = readUInt8(bytes[i + 4]) + 1;
             var data_def = readUInt16LE(bytes.slice(i + 5, i + 7));
             var sign = (data_def >>> 15) & 0x01;
-            var reg_type = (data_def >>> 9) & 0x1f;
+            var reg_type = (data_def >>> 9) & 0x3f;
             var read_status = (data_def >>> 8) & 0x01;
             var reg_counts = (data_def >>> 6) & 0x03;
             var event_type = (data_def >>> 4) & 0x03;
@@ -653,6 +653,16 @@ function readModbusHistoryV2(reg_type, sign, bytes) {
         case 19: // MB_REG_HOLD_INT32_DCBA
             value = sign ? readInt32LE(bytes.slice(i, i + 4)) : readUInt32LE(bytes.slice(i, i + 4));
             break;
+        case 30: // MB_REG_INPUT_INT64_ABCDEFGH
+        case 31: // MB_REG_INPUT_INT64_GHEFCDAB
+        case 32: // MB_REG_INPUT_INT64_BADCFEHG
+        case 33: // MB_REG_INPUT_INT64_HGFEDCBA
+        case 38: // MB_REG_HOLD_INT64_ABCDEFGH
+        case 39: // MB_REG_HOLD_INT64_GHEFCDAB
+        case 40: // MB_REG_HOLD_INT64_BADCFEHG
+        case 41: // MB_REG_HOLD_INT64_HGFEDCBA
+            value = sign ? readInt64LE(bytes.slice(i, i + 8)) : readUInt64LE(bytes.slice(i, i + 8));
+            break;
         case 22: // MB_REG_HOLD_FLOAT_ABCD
         case 23: // MB_REG_HOLD_FLOAT_BADC
         case 24: // MB_REG_HOLD_FLOAT_CDAB
@@ -663,18 +673,10 @@ function readModbusHistoryV2(reg_type, sign, bytes) {
         case 27: // MB_REG_INPUT_DOUBLE_GHEFCDAB
         case 28: // MB_REG_INPUT_DOUBLE_BADCFEHG
         case 29: // MB_REG_INPUT_DOUBLE_HGFEDCBA
-        case 30: // MB_REG_INPUT_INT64_ABCDEFGH
-        case 31: // MB_REG_INPUT_INT64_GHEFCDAB
-        case 32: // MB_REG_INPUT_INT64_BADCFEHG
-        case 33: // MB_REG_INPUT_INT64_HGFEDCBA
         case 34: // MB_REG_HOLD_DOUBLE_ABCDEFGH
         case 35: // MB_REG_HOLD_DOUBLE_GHEFCDAB
         case 36: // MB_REG_HOLD_DOUBLE_BADCFEHG
         case 37: // MB_REG_HOLD_DOUBLE_HGFEDCBA
-        case 38: // MB_REG_HOLD_INT64_ABCDEFGH
-        case 39: // MB_REG_HOLD_INT64_GHEFCDAB
-        case 40: // MB_REG_HOLD_INT64_BADCFEHG
-        case 41: // MB_REG_HOLD_INT64_HGFEDCBA
             value = readDoubleLE(bytes.slice(i, i + 8));
             break;
     }
@@ -1140,3 +1142,5 @@ if (!Object.assign) {
         },
     });
 }
+
+milesightDeviceDecode([0x21,0xce,0x06,0x04,0xed,0x67,0x0f,0x80,0x43,0x10,0x00,0x00,0x00,0x00,0x00,0x00,0x00,0x11,0x00,0x00,0x00,0x00,0x00,0x00,0x00])
