@@ -145,22 +145,6 @@ function milesightDeviceDecode(bytes) {
             decoded.humidity_sensor_status = readSensorStatus(bytes[i]);
             i += 1;
         }
-        // SINGLE TEMPERATURE PLAN CONFIG
-        else if (channel_id === 0xf9 && channel_type === 0x5e) {
-            var single_temperature_plan_config = readSingleTemperaturePlanConfig(bytes.slice(i, i + 7));
-            i += 7;
-
-            decoded.single_temperature_plan_config = decoded.single_temperature_plan_config || [];
-            decoded.single_temperature_plan_config.push(single_temperature_plan_config);
-        }
-        // DUAL TEMPERATURE PLAN CONFIG
-        else if (channel_id === 0xf9 && channel_type === 0x59) {
-            var config = readDualTemperaturePlanConfig(bytes.slice(i, i + 9));
-            i += 9;
-
-            decoded.dual_temperature_plan_config = decoded.dual_temperature_plan_config || [];
-            decoded.dual_temperature_plan_config.push(config);
-        }
         // TEMPERATURE OUT OF RANGE ALARM
         else if (channel_id === 0xf9 && channel_type === 0x40) {
             var target_temperature_range_config = {};
