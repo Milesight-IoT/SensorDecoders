@@ -132,9 +132,22 @@ function milesightDeviceDecode(bytes) {
             decoded[node_name + "_occlusion_alarm"] = readAlarmType(bytes[i + 2]);
             i += 3;
         }
+        // HISTORY (v1.0.9)
+        else if (channel_id === 0x20 && channel_type === 0xce) {
+            var result = readHistory(bytes, i);
+            i += result.offset;
+            decoded.history = decoded.history || [];
+            decoded.history.push(result.data);
+        }
         // DOWNLINK RESPONSE
         else if (channel_id === 0xfe || channel_id === 0xff) {
-            result = handle_downlink_response(channel_type, bytes, i);
+            var result = handle_downlink_response(channel_type, bytes, i);
+            decoded = Object.assign(decoded, result.data);
+            i = result.offset;
+        }
+        // DOWNLINK RESPONSE EXT
+        else if (channel_id === 0xf8 || channel_id === 0xf9) {
+            var result = handle_downlink_response_ext(channel_id, channel_type, bytes, i);
             decoded = Object.assign(decoded, result.data);
             i = result.offset;
         }
@@ -162,6 +175,14 @@ function handle_downlink_response(channel_type, bytes, offset) {
             decoded.reboot = readYesNoStatus(1);
             offset += 1;
             break;
+        case 0x11:
+            decoded.timestamp = readUInt32LE(bytes.slice(offset, offset + 4));
+            offset += 4;
+            break;
+        case 0x27:
+            decoded.clear_history = readYesNoStatus(1);
+            offset += 1;
+            break;
         case 0x40:
             decoded.adr_enable = readEnableStatus(bytes[offset]);
             offset += 1;
@@ -182,11 +203,92 @@ function handle_downlink_response(channel_type, bytes, offset) {
             decoded.clear_total_count = readYesNoStatus(1);
             offset += 1;
             break;
+        case 0x68:
+            decoded.history_enable = readEnableStatus(bytes[offset]);
+            offset += 1;
+            break;
+        case 0x69:
+            decoded.retransmit_enable = readEnableStatus(bytes[offset]);
+            offset += 1;
+            break;
+        case 0x6a:
+            var interval_type = readUInt8(bytes[offset]);
+            if (interval_type === 0) {
+                decoded.retransmit_interval = readUInt16LE(bytes.slice(offset + 1, offset + 3));
+            } else if (interval_type === 1) {
+                decoded.resend_interval = readUInt16LE(bytes.slice(offset + 1, offset + 3));
+            }
+            offset += 3;
+            break;
+        case 0x6d:
+            decoded.stop_transmit = readYesNoStatus(1);
+            offset += 1;
+            break;
         default:
             throw new Error("unknown downlink response");
     }
 
     return { data: decoded, offset: offset };
+}
+
+function handle_downlink_response_ext(code, channel_type, bytes, offset) {
+    var decoded = {};
+
+    switch (channel_type) {
+        case 0x84:
+            decoded.sync_time_from_gateway_config = {};
+            decoded.sync_time_from_gateway_config.enable = readEnableStatus(bytes[offset]);
+            decoded.sync_time_from_gateway_config.period = readUInt16LE(bytes.slice(offset + 1, offset + 3));
+            offset += 3;
+            break;
+        case 0x85:
+            decoded.rejoin_config = {};
+            decoded.rejoin_config.enable = readEnableStatus(bytes[offset]);
+            decoded.rejoin_config.max_count = readUInt8(bytes[offset + 1]);
+            offset += 2;
+            break;
+        case 0x86:
+            decoded.data_rate = readUInt8(bytes[offset]);
+            offset += 1;
+            break;
+        case 0x87:
+            decoded.tx_power_level = readUInt8(bytes[offset]);
+            offset += 1;
+            break;
+        case 0x88:
+            decoded.log_config = {};
+            decoded.log_config.console_log_level = readLogLevel(bytes[offset]);
+            decoded.log_config.file_log_level = readLogLevel(bytes[offset + 1]);
+            offset += 2;
+            break;
+        default:
+            throw new Error("unknown downlink response");
+    }
+
+    if (hasResultFlag(code)) {
+        var result_value = readUInt8(bytes[offset]);
+        offset += 1;
+
+        if (result_value !== 0) {
+            var request = decoded;
+            decoded = {};
+            decoded.device_response_result = {};
+            decoded.device_response_result.channel_type = channel_type;
+            decoded.device_response_result.result = readResultStatus(result_value);
+            decoded.device_response_result.request = request;
+        }
+    }
+
+    return { data: decoded, offset: offset };
+}
+
+function hasResultFlag(code) {
+    return code === 0xf8;
+}
+
+function readResultStatus(status) {
+    var status_map = { 0: "success", 1: "forbidden", 2: "invalid parameter" };
+    return getValue(status_map, status);
 }
 
 function readProtocolVersion(bytes) {
@@ -230,6 +332,136 @@ function readEnableStatus(status) {
 function readYesNoStatus(status) {
     var yes_no_map = { 0: "no", 1: "yes" };
     return getVal(yes_no_map, status);
+}
+
+function readHistory(bytes, offset) {
+    var i = offset;
+
+    var timestamp = readUInt32LE(bytes.slice(i, i + 4));
+    var data_type = readUInt8(bytes[i + 4]);
+
+    var data = {};
+    data.timestamp = timestamp;
+    if (data_type === 0x03) {
+        data.line_1_total_in = readUInt32LE(bytes.slice(i + 5, i + 9));
+        i += 9;
+    } else if (data_type === 0x04) {
+        data.line_1_total_out = readUInt32LE(bytes.slice(i + 5, i + 9));
+        i += 9;
+    } else if (data_type === 0x05) {
+        data.line_1_period_in = readUInt16LE(bytes.slice(i + 5, i + 7));
+        data.line_1_period_out = readUInt16LE(bytes.slice(i + 7, i + 9));
+        i += 9;
+    } else if (data_type === 0x06) {
+        data.line_2_total_in = readUInt32LE(bytes.slice(i + 5, i + 9));
+        i += 9;
+    } else if (data_type === 0x07) {
+        data.line_2_total_out = readUInt32LE(bytes.slice(i + 5, i + 9));
+        i += 9;
+    } else if (data_type === 0x08) {
+        data.line_2_period_in = readUInt16LE(bytes.slice(i + 5, i + 7));
+        data.line_2_period_out = readUInt16LE(bytes.slice(i + 7, i + 9));
+        i += 9;
+    } else if (data_type === 0x09) {
+        data.line_3_total_in = readUInt32LE(bytes.slice(i + 5, i + 9));
+        i += 9;
+    } else if (data_type === 0x0a) {
+        data.line_3_total_out = readUInt32LE(bytes.slice(i + 5, i + 9));
+        i += 9;
+    } else if (data_type === 0x0b) {
+        data.line_3_period_in = readUInt16LE(bytes.slice(i + 5, i + 7));
+        data.line_3_period_out = readUInt16LE(bytes.slice(i + 7, i + 9));
+        i += 9;
+    } else if (data_type === 0x0c) {
+        data.line_4_total_in = readUInt32LE(bytes.slice(i + 5, i + 9));
+        i += 9;
+    } else if (data_type === 0x0d) {
+        data.line_4_total_out = readUInt32LE(bytes.slice(i + 5, i + 9));
+        i += 9;
+    } else if (data_type === 0x0e) {
+        data.line_4_period_in = readUInt16LE(bytes.slice(i + 5, i + 7));
+        data.line_4_period_out = readUInt16LE(bytes.slice(i + 7, i + 9));
+        i += 9;
+    } else if (data_type === 0x0f) {
+        data.region_1_count = readUInt8(bytes[i + 5]);
+        data.region_2_count = readUInt8(bytes[i + 6]);
+        data.region_3_count = readUInt8(bytes[i + 7]);
+        data.region_4_count = readUInt8(bytes[i + 8]);
+        i += 9;
+    } else if (data_type === 0x10) {
+        var region = readUInt8(bytes[i + 5]);
+        var region_name = "region_" + region + "_avg_dwell";
+        data[region_name] = readUInt16LE(bytes.slice(i + 6, i + 8));
+        i += 8;
+    } else if (data_type === 0x20) {
+        var region = readUInt8(bytes[i + 5]);
+        var region_name = "region_" + region + "_max_dwell";
+        data[region_name] = readUInt16LE(bytes.slice(i + 6, i + 8));
+        i += 8;
+    } else if (data_type === 0x11) {
+        data.line_1_child_total_in = readUInt32LE(bytes.slice(i + 5, i + 9));
+        i += 9;
+    } else if (data_type === 0x12) {
+        data.line_1_child_total_out = readUInt32LE(bytes.slice(i + 5, i + 9));
+        i += 9;
+    } else if (data_type === 0x13) {
+        data.line_1_child_period_in = readUInt16LE(bytes.slice(i + 5, i + 7));
+        data.line_1_child_period_out = readUInt16LE(bytes.slice(i + 7, i + 9));
+        i += 9;
+    } else if (data_type === 0x14) {
+        data.line_2_child_total_in = readUInt32LE(bytes.slice(i + 5, i + 9));
+        i += 9;
+    } else if (data_type === 0x15) {
+        data.line_2_child_total_out = readUInt32LE(bytes.slice(i + 5, i + 9));
+        i += 9;
+    } else if (data_type === 0x16) {
+        data.line_2_child_period_in = readUInt16LE(bytes.slice(i + 5, i + 7));
+        data.line_2_child_period_out = readUInt16LE(bytes.slice(i + 7, i + 9));
+        i += 9;
+    } else if (data_type === 0x17) {
+        data.line_3_child_total_in = readUInt32LE(bytes.slice(i + 5, i + 9));
+        i += 9;
+    } else if (data_type === 0x18) {
+        data.line_3_child_total_out = readUInt32LE(bytes.slice(i + 5, i + 9));
+        i += 9;
+    } else if (data_type === 0x19) {
+        data.line_3_child_period_in = readUInt16LE(bytes.slice(i + 5, i + 7));
+        data.line_3_child_period_out = readUInt16LE(bytes.slice(i + 7, i + 9));
+        i += 9;
+    } else if (data_type === 0x1a) {
+        data.line_4_child_total_in = readUInt32LE(bytes.slice(i + 5, i + 9));
+        i += 9;
+    } else if (data_type === 0x1b) {
+        data.line_4_child_total_out = readUInt32LE(bytes.slice(i + 5, i + 9));
+        i += 9;
+    } else if (data_type === 0x1c) {
+        data.line_4_child_period_in = readUInt16LE(bytes.slice(i + 5, i + 7));
+        data.line_4_child_period_out = readUInt16LE(bytes.slice(i + 7, i + 9));
+        i += 9;
+    } else if (data_type === 0x1d) {
+        data.region_1_child_count = readUInt8(bytes[i + 5]);
+        data.region_2_child_count = readUInt8(bytes[i + 6]);
+        data.region_3_child_count = readUInt8(bytes[i + 7]);
+        data.region_4_child_count = readUInt8(bytes[i + 8]);
+        i += 9;
+    } else if (data_type === 0x1e) {
+        var region = readUInt8(bytes[i + 5]);
+        var region_name = "region_" + region + "_avg_dwell";
+        data[region_name] = readUInt16LE(bytes.slice(i + 6, i + 8));
+        i += 8;
+    } else if (data_type === 0x3c) {
+        var region = readUInt8(bytes[i + 5]);
+        var region_name = "region_" + region + "_max_dwell";
+        data[region_name] = readUInt16LE(bytes.slice(i + 6, i + 8));
+        i += 8;
+    }
+
+    return { data: data, offset: i };
+}
+
+function readLogLevel(level) {
+    var log_level_map = { 1: "fatal", 2: "error", 3: "warning", 4: "debug", 5: "trace" };
+    return getValue(log_level_map, level);
 }
 
 function readUInt8(bytes) {

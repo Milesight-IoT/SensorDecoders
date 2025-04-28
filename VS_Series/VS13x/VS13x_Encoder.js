@@ -50,6 +50,42 @@ function milesightDeviceEncode(payload) {
     if ("clear_total_count" in payload) {
         encoded = encoded.concat(setClearTotalCount(payload.clear_total_count));
     }
+    if ("timestamp" in payload) {
+        encoded = encoded.concat(setTimestamp(payload.timestamp));
+    }
+    if ("retransmit_enable" in payload) {
+        encoded = encoded.concat(setRetransmitEnable(payload.retransmit_enable));
+    }
+    if ("retransmit_interval" in payload) {
+        encoded = encoded.concat(setRetransmitInterval(payload.retransmit_interval));
+    }
+    if ("resend_interval" in payload) {
+        encoded = encoded.concat(setResendInterval(payload.resend_interval));
+    }
+    if ("history_enable" in payload) {
+        encoded = encoded.concat(setHistoryEnable(payload.history_enable));
+    }
+    if ("fetch_history" in payload) {
+        encoded = encoded.concat(fetchHistory(payload.fetch_history));
+    }
+    if ("stop_transmit" in payload) {
+        encoded = encoded.concat(stopTransmit(payload.stop_transmit));
+    }
+    if ("clear_history" in payload) {
+        encoded = encoded.concat(clearHistory(payload.clear_history));
+    }
+    if ("sync_time_from_gateway_config" in payload) {
+        encoded = encoded.concat(gatewayTimeSync(payload.sync_time_from_gateway_config));
+    }
+    if ("rejoin_config" in payload) {
+        encoded = encoded.concat(setRejoinConfig(payload.rejoin_config));
+    }
+    if ("data_rate" in payload) {
+        encoded = encoded.concat(setDataRate(payload.data_rate));
+    }
+    if ("tx_power_level" in payload) {
+        encoded = encoded.concat(setTxPower(payload.tx_power_level));
+    }
 
     return encoded;
 }
@@ -202,16 +238,308 @@ function setClearTotalCount(clear_total_count) {
     return [0xff, 0x51, 0xff];
 }
 
+/**
+ * set timestamp
+ * @since firmware_version>=v1.0.9
+ * @param {number} timestamp unit: second
+ * @example { "timestamp": 1717756800 }
+ */
+function setTimestamp(timestamp) {
+    if (typeof timestamp !== "number") {
+        throw new Error("timestamp must be a number");
+    }
+    if (timestamp < 0) {
+        throw new Error("timestamp must be greater than 0");
+    }
+
+    var buffer = new Buffer(4);
+    buffer.writeUInt8(0xff);
+    buffer.writeUInt8(0x11);
+    buffer.writeUInt32LE(timestamp);
+    return buffer.toBytes();
+}
+
+/**
+ * set retransmit enable
+ * @since firmware_version>=v1.0.9
+ * @param {number} retransmit_enable values: (0: disable, 1: enable)
+ * @example { "retransmit_enable": 1 }
+ */
+function setRetransmitEnable(retransmit_enable) {
+    var enable_map = { 0: "disable", 1: "enable" };
+    var enable_values = getValues(enable_map);
+    if (enable_values.indexOf(retransmit_enable) === -1) {
+        throw new Error("retransmit_enable must be one of " + enable_values.join(", "));
+    }
+
+    var buffer = new Buffer(3);
+    buffer.writeUInt8(0xff);
+    buffer.writeUInt8(0x69);
+    buffer.writeUInt8(getValue(enable_map, retransmit_enable));
+    return buffer.toBytes();
+}
+
+/**
+ * set retransmit interval
+ * @since firmware_version>=v1.0.9
+ * @param {number} retransmit_interval unit: second, range: [1, 64800]
+ * @example { "retransmit_interval": 600 }
+ */
+function setRetransmitInterval(retransmit_interval) {
+    if (typeof retransmit_interval !== "number") {
+        throw new Error("retransmit_interval must be a number");
+    }
+    if (retransmit_interval < 1 || retransmit_interval > 64800) {
+        throw new Error("retransmit_interval must be between 1 and 64800");
+    }
+
+    var buffer = new Buffer(5);
+    buffer.writeUInt8(0xff);
+    buffer.writeUInt8(0x6a);
+    buffer.writeUInt8(0x00);
+    buffer.writeUInt16LE(retransmit_interval);
+    return buffer.toBytes();
+}
+
+/**
+ * set resend interval
+ * @since firmware_version>=v1.0.9
+ * @param {number} resend_interval unit: second, range: [1, 64800]
+ * @example { "resend_interval": 600 }
+ */
+function setResendInterval(resend_interval) {
+    if (typeof resend_interval !== "number") {
+        throw new Error("resend_interval must be a number");
+    }
+    if (resend_interval < 1 || resend_interval > 64800) {
+        throw new Error("resend_interval must be between 1 and 64800");
+    }
+
+    var buffer = new Buffer(5);
+    buffer.writeUInt8(0xff);
+    buffer.writeUInt8(0x6a);
+    buffer.writeUInt8(0x01);
+    buffer.writeUInt16LE(resend_interval);
+    return buffer.toBytes();
+}
+
+/**
+ * history enable
+ * @since firmware_version>=v1.0.9
+ * @param {number} history_enable values: (0: disable, 1: enable)
+ * @example { "history_enable": 1 }
+ */
+function setHistoryEnable(history_enable) {
+    var enable_map = { 0: "disable", 1: "enable" };
+    var enable_values = getValues(enable_map);
+    if (enable_values.indexOf(history_enable) === -1) {
+        throw new Error("history_enable must be one of " + enable_values.join(", "));
+    }
+
+    var buffer = new Buffer(3);
+    buffer.writeUInt8(0xff);
+    buffer.writeUInt8(0x68);
+    buffer.writeUInt8(getValue(enable_map, history_enable));
+    return buffer.toBytes();
+}
+
+/**
+ * fetch history
+ * @since firmware_version>=v1.0.9
+ * @param {object} fetch_history
+ * @param {number} fetch_history.start_time unit: second
+ * @param {number} fetch_history.end_time unit: second
+ * @example { "fetch_history": { "start_time": 1609459200, "end_time": 1609545600 } }
+ */
+function fetchHistory(fetch_history) {
+    var start_time = fetch_history.start_time;
+    var end_time = fetch_history.end_time;
+
+    if (typeof start_time !== "number") {
+        throw new Error("start_time must be a number");
+    }
+    if ("end_time" in fetch_history && typeof end_time !== "number") {
+        throw new Error("end_time must be a number");
+    }
+    if ("end_time" in fetch_history && start_time > end_time) {
+        throw new Error("start_time must be less than end_time");
+    }
+
+    var buffer;
+    if ("end_time" in fetch_history || end_time === 0) {
+        buffer = new Buffer(6);
+        buffer.writeUInt8(0xfd);
+        buffer.writeUInt8(0x6b);
+        buffer.writeUInt32LE(start_time);
+    } else {
+        buffer = new Buffer(10);
+        buffer.writeUInt8(0xfd);
+        buffer.writeUInt8(0x6c);
+        buffer.writeUInt32LE(start_time);
+        buffer.writeUInt32LE(end_time);
+    }
+    return buffer.toBytes();
+}
+
+/**
+ * history stop transmit
+ * @since firmware_version>=v1.0.9
+ * @param {number} stop_transmit values: (0: no, 1: yes)
+ * @example { "stop_transmit": 1 }
+ */
+function stopTransmit(stop_transmit) {
+    var yes_no_map = { 0: "no", 1: "yes" };
+    var yes_no_values = getValues(yes_no_map);
+    if (yes_no_values.indexOf(stop_transmit) === -1) {
+        throw new Error("stop_transmit must be one of " + yes_no_values.join(", "));
+    }
+
+    if (getValue(yes_no_map, stop_transmit) === 0) {
+        return [];
+    }
+    return [0xff, 0x6d, 0xff];
+}
+
+/**
+ * clear history
+ * @since firmware_version>=v1.0.9
+ * @param {number} clear_history values: (0: no, 1: yes)
+ * @example { "clear_history": 1 }
+ */
+function clearHistory(clear_history) {
+    var yes_no_map = { 0: "no", 1: "yes" };
+    var yes_no_values = getValues(yes_no_map);
+    if (yes_no_values.indexOf(clear_history) === -1) {
+        throw new Error("clear_history must be one of " + yes_no_values.join(", "));
+    }
+
+    if (getValue(yes_no_map, clear_history) === 0) {
+        return [];
+    }
+    return [0xff, 0x27, 0x01];
+}
+
+/**
+ * gateway time sync
+ * @since firmware_version>=v1.0.9
+ * @param {object} sync_time_from_gateway_config
+ * @param {number} sync_time_from_gateway_config.enable values: (0: disable, 1: enable)
+ * @param {number} sync_time_from_gateway_config.period unit: minute
+ * @example { "sync_time_from_gateway_config": { "enable": 1, "period": 10 } }
+ */
+function gatewayTimeSyncConfig(sync_time_from_gateway_config) {
+    var enable = sync_time_from_gateway_config.enable;
+    var period = sync_time_from_gateway_config.period;
+
+    var enable_map = { 0: "disable", 1: "enable" };
+    var enable_values = getValues(enable_map);
+    if (enable_values.indexOf(enable) === -1) {
+        throw new Error("enable must be one of " + enable_values.join(", "));
+    }
+
+    var buffer = new Buffer(5);
+    buffer.writeUInt8(0xf9);
+    buffer.writeUInt8(0x84);
+    buffer.writeUInt8(getValue(enable_map, enable));
+    buffer.writeUInt16LE(period);
+    return buffer.toBytes();
+}
+
+/**
+ * set rejoin config
+ * @since firmware_version>=v1.0.9
+ * @param {object} rejoin_config
+ * @param {number} rejoin_config.enable values: (0: disable, 1: enable)
+ * @param {number} rejoin_config.max_count
+ * @example { "rejoin_config": { "enable": 1, "max_count": 10 } }
+ */
+function setRejoinConfig(rejoin_config) {
+    var enable = rejoin_config.enable;
+    var max_count = rejoin_config.max_count;
+
+    var enable_map = { 0: "disable", 1: "enable" };
+    var enable_values = getValues(enable_map);
+    if (enable_values.indexOf(enable) === -1) {
+        throw new Error("enable must be one of " + enable_values.join(", "));
+    }
+
+    var buffer = new Buffer(4);
+    buffer.writeUInt8(0xf9);
+    buffer.writeUInt8(0x85);
+    buffer.writeUInt8(getValue(enable_map, enable));
+    buffer.writeUInt8(max_count);
+    return buffer.toBytes();
+}
+
+/**
+ * set data rate
+ * @since firmware_version>=v1.0.9
+ * @param {number} data_rate 
+ * @example { "data_rate": 0 }
+ */
+function setDataRate(data_rate) {
+    var buffer = new Buffer(3);
+    buffer.writeUInt8(0xf9);
+    buffer.writeUInt8(0x86);
+    buffer.writeUInt8(data_rate);
+    return buffer.toBytes();
+}
+
+/**
+ * set tx power
+ * @since firmware_version>=v1.0.9
+ * @param {number} tx_power_level 
+ *  EU868, values: (0:-16dBm, 1:-14dBm, 2:-12dBm, 3:-10dBm, 4:-8dBm, 5:-6dBm, 6:-4dBm, 7:-2dBm)
+ *  IN865, values: (0:-22dBm, 1:-22dBm, 2:-22dBm, 3:-22dBm, 4:-22dBm, 5:-20dBm, 6:-18dBm, 7:-16dBm, 8:-14dBm, 9:-12dBm, 10:-10dBm)
+ *  RU864, values: (0:-16dBm, 1:-14dBm, 2:-12dBm, 3:-10dBm, 4:-8dBm, 5:-6dBm, 6:-4dBm, 7:-2dBm)
+ *  AU915, values: (0:-22dBm, 1:-22dBm, 2:-22dBm, 3:-22dBm, 4:-22dBm, 5:-20dBm, 6:-18dBm, 7:-16dBm, 8:-14dBm, 9:-12dBm, 10:-10dBm, 11:-8dBm, 12:-6dBm, 13:-4dBm, 14:-2dBm)
+ *  KR920, values: (0:-14dBm, 1:-12dBm, 2:-10dBm, 3:-8dBm, 4:-6dBm, 5:-4dBm, 6:-2dBm, 7:0dBm)
+ *  AS923, values: (0:-16dBm, 1:-14dBm, 2:-12dBm, 3:-10dBm, 4:-8dBm, 5:-6dBm, 6:-4dBm, 7:-2dBm)
+ *  US915, values: (0:-22dBm, 1:-22dBm, 2:-22dBm, 3:-22dBm, 4:-22dBm, 5:-20dBm, 6:-18dBm, 7:-16dBm, 8:-14dBm, 9:-12dBm, 10:-10dBm, 11:-8dBm, 12:-6dBm, 13:-4dBm, 14:-2dBm)
+ *  CN470, values: (0:-19.15dBm, 1:-17.15dBm, 2:-15.15dBm, 3:-13.15dBm, 4:-11.15dBm, 5:-9.15dBm, 6:-7.15dBm, 7:-5.15dBm)
+ * @example { "tx_power_level": 0 }
+ */
+function setTxPowerLevel(tx_power_level) {
+    var buffer = new Buffer(3);
+    buffer.writeUInt8(0xf9);
+    buffer.writeUInt8(0x87);
+    buffer.writeUInt8(tx_power_level);
+    return buffer.toBytes();
+}
+
+/**
+ * set log level
+ * @since firmware_version>=v1.0.9
+ * @param {object} log_config
+ * @param {number} log_config.console_log_level values: (1: fatal, 2: error, 3: warning, 4: debug, 5: trace)
+ * @param {number} log_config.file_log_level values: (1: fatal, 2: error, 3: warning, 4: debug, 5: trace)
+ * @example { "log_config": { "console_log_level": 1, "file_log_level": 1 } }
+ */
+function setLogConfig(log_config) {
+    var console_log_level = log_config.console_log_level;
+    var file_log_level = log_config.file_log_level;
+
+    var log_level_map = { 1: "fatal", 2: "error", 3: "warning", 4: "debug", 5: "trace" };
+    var log_level_values = getValues(log_level_map);
+    if (log_level_values.indexOf(console_log_level) === -1) {
+        throw new Error("console_log_level must be one of " + log_level_values.join(", "));
+    }
+    if (log_level_values.indexOf(file_log_level) === -1) {
+        throw new Error("file_log_level must be one of " + log_level_values.join(", "));
+    }
+
+    var buffer = new Buffer(3);
+    buffer.writeUInt8(0xf9);
+    buffer.writeUInt8(0x88);
+    buffer.writeUInt8(console_log_level);
+    buffer.writeUInt8(file_log_level);
+    return buffer.toBytes();
+}
+
 function getValues(map) {
     var values = [];
-    if (RAW_VALUE) {
-        for (var key in map) {
-            values.push(parseInt(key));
-        }
-    } else {
-        for (var key in map) {
-            values.push(map[key]);
-        }
+    for (var key in map) {
+        values.push(RAW_VALUE ? parseInt(key) : map[key]);
     }
     return values;
 }
