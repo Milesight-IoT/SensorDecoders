@@ -32,7 +32,7 @@ var av_chns = [0x0d, 0x0e];
 function milesightDeviceDecode(bytes) {
     var decoded = {};
 
-    for (var i = 0; i < bytes.length; ) {
+    for (var i = 0; i < bytes.length;) {
         var channel_id = bytes[i++];
         var channel_type = bytes[i++];
 
@@ -317,8 +317,8 @@ function milesightDeviceDecode(bytes) {
             decoded.modbus_history.push(data);
         }
         // DOWNLINK RESPONSE
-        else if (channel_id === 0xfe) {
-            result = handle_downlink_response(channel_type, bytes, i);
+        else if (channel_id === 0xfe || channel_id === 0xff) {
+            var result = handle_downlink_response(channel_type, bytes, i);
             decoded = Object.assign(decoded, result.data);
             i = result.offset;
         }

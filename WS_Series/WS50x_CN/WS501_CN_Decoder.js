@@ -91,11 +91,11 @@ function milesightDeviceDecode(bytes) {
         }
         // DOWNLINK RESPONSE
         else if (channel_id === 0xfe || channel_id === 0xff) {
-            result = handle_downlink_response(channel_type, bytes, i);
+            var result = handle_downlink_response(channel_type, bytes, i);
             decoded = Object.assign(decoded, result.data);
             i = result.offset;
         } else if (channel_id === 0xf8 || channel_id === 0xf9) {
-            result = handle_downlink_response_ext(channel_type, bytes, i);
+            var result = handle_downlink_response_ext(channel_type, bytes, i);
             decoded = Object.assign(decoded, result.data);
             i = result.offset;
         } else {
