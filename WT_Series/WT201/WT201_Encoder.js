@@ -108,8 +108,11 @@ function milesightDeviceEncode(payload) {
             encoded = encoded.concat(setPlanSchedule(schedule));
         }
     }
-    if ("plan_config" in payload) {
-        encoded = encoded.concat(setPlanConfig(payload.plan_config, payload.temperature_unit));
+    if ("plan_config" in payload && "temperature_unit" in payload) {
+        for (var i = 0; i < payload.plan_config.length; i++) {
+            var config = payload.plan_config[i];
+            encoded = encoded.concat(setPlanConfig(config, payload.temperature_unit));
+        }
     }
     if ("card_config" in payload) {
         encoded = encoded.concat(setCardConfig(payload.card_config));
@@ -181,7 +184,7 @@ function reboot(reboot) {
 
 /**
  * report device status
- * @param {number} report_status values: (0: "plan", 1: "periodic")
+ * @param {number} report_status values: (0: plan, 1: periodic)
  * @example { "report_status": 1 }
  */
 function reportStatus(report_status) {
@@ -245,13 +248,13 @@ function setCollectionInterval(collection_interval) {
  * @example { "sync_time": 1 }
  */
 function syncTime(sync_time) {
-    var sync_time_map = { 0: "no", 1: "yes" };
-    var sync_time_values = getValues(sync_time_map);
-    if (sync_time_values.indexOf(sync_time) === -1) {
-        throw new Error("sync_time must be one of " + sync_time_values.join(", "));
+    var yes_no_map = { 0: "no", 1: "yes" };
+    var yes_no_values = getValues(yes_no_map);
+    if (yes_no_values.indexOf(sync_time) === -1) {
+        throw new Error("sync_time must be one of " + yes_no_values.join(", "));
     }
 
-    if (sync_time === 0) {
+    if (getValue(yes_no_map, sync_time) === 0) {
         return [];
     }
     return [0xff, 0x4a, 0xff];
@@ -357,9 +360,9 @@ function setTemperatureControlEnable(temperature_control_enable) {
 
 /**
  * set temperature control
- * @param {string} temperature_control_mode values: (0: "heat", 1: "em heat", 2: "cool", 3: "auto")
+ * @param {number} temperature_control_mode values: (0: heat, 1: em heat, 2: cool, 3: auto)
  * @param {number} target_temperature unit: celsius
- * @param {string} temperature_unit values: (0: "celsius", 1: "fahrenheit")
+ * @param {number} temperature_unit values: (0: celsius, 1: fahrenheit)
  * @example { "temperature_control_mode": 2, "target_temperature": 25 , "temperature_unit": 0 }
  * @example { "temperature_control_mode": 2, "target_temperature": 77 , "temperature_unit": 1 }
  */
@@ -473,7 +476,7 @@ function setTemperatureTolerance(temperature_tolerance) {
 /**
  * set temperature level up condition
  * @param {object} temperature_level_up_condition
- * @param {string} temperature_level_up_condition.type values: (0: heat, 1: cool)
+ * @param {number} temperature_level_up_condition.type values: (0: heat, 1: cool)
  * @param {number} temperature_level_up_condition.time unit: minute
  * @param {number} temperature_level_up_condition.temperature_tolerance unit: celsius
  * @example { "temperature_level_up_condition": { "type": 0, "time": 10, "temperature_tolerance": 1 } }
@@ -732,7 +735,7 @@ function setFreezeProtection(freeze_protection_config) {
 }
 
 /**
- * @param {string} fan_mode values: (0: auto, 1: on, 2: circulate)
+ * @param {number} fan_mode values: (0: auto, 1: on, 2: circulate)
  * @example { "fan_mode": 0 }
  */
 function setFanMode(fan_mode) {
@@ -799,7 +802,7 @@ function setFanExecuteTime(fan_execute_time) {
 
 /**
  * set plan mode
- * @param {string} plan_mode values: (0: wake, 1: away, 2: home, 3: sleep)
+ * @param {number} plan_mode values: (0: wake, 1: away, 2: home, 3: sleep)
  * @example { "plan_mode": 0 }
  */
 function setPlanMode(plan_mode) {
@@ -819,7 +822,7 @@ function setPlanMode(plan_mode) {
 /**
  * set plan schedule
  * @param {object} plan_schedule
- * @param {string} plan_schedule.type values: (0: wake, 1: away, 2: home, 3: sleep)
+ * @param {number} plan_schedule.type values: (0: wake, 1: away, 2: home, 3: sleep)
  * @param {number} plan_schedule.id range: [1, 16]
  * @param {number} plan_schedule.enable values: (0: disable, 1: enable)
  * @param {object} plan_schedule.week_recycle
@@ -883,12 +886,12 @@ function setPlanSchedule(plan_schedule) {
 /**
  * set plan config
  * @param {object} plan_config
- * @param {string} plan_config.type values: (0: wake, 1: away, 2: home, 3: sleep)
- * @param {string} plan_config.temperature_control_mode values: (0: heat, 1: em heat, 2: cool, 3: auto)
- * @param {string} plan_config.fan_mode values: (0: auto, 1: on, 2: circulate)
+ * @param {number} plan_config.type values: (0: wake, 1: away, 2: home, 3: sleep)
+ * @param {number} plan_config.temperature_control_mode values: (0: heat, 1: em heat, 2: cool, 3: auto)
+ * @param {number} plan_config.fan_mode values: (0: auto, 1: on, 2: circulate)
  * @param {number} plan_config.target_temperature
  * @param {number} plan_config.temperature_tolerance
- * @param {string} temperature_unit values: (0: celsius, 1: fahrenheit)
+ * @param {number} temperature_unit values: (0: celsius, 1: fahrenheit)
  * @example { "plan_config": { "type": 0, "temperature_control_mode": 2, "fan_mode": 0, "target_temperature": 20, "temperature_tolerance": 1 }, "temperature_unit": 0}
  * @example { "plan_config": { "type": 0, "temperature_control_mode": 2, "fan_mode": 0, "target_temperature": 77, "temperature_tolerance": 1 }, "temperature_unit": 1}
  */
@@ -942,9 +945,9 @@ function setPlanConfig(plan_config, temperature_unit) {
  * set card config
  * @param {object} card_config
  * @param {number} card_config.enable values: (0: disable, 1: enable)
- * @param {string} card_config.action_type values: (0: power, 1: plan)
- * @param {string} card_config.in_plan_type values: (0: wake, 1: away, 2: home, 3: sleep)
- * @param {string} card_config.out_plan_type values: (0: wake, 1: away, 2: home, 3: sleep)
+ * @param {number} card_config.action_type values: (0: power, 1: plan)
+ * @param {number} card_config.in_plan_type values: (0: wake, 1: away, 2: home, 3: sleep)
+ * @param {number} card_config.out_plan_type values: (0: wake, 1: away, 2: home, 3: sleep)
  * @param {number} card_config.invert values: (0: no, 1: yes)
  * @example { "card_config": { "enable": 0 } }
  * @example { "card_config": { "enable": 1, "action_type": 0, "invert": 1 } }
@@ -1177,7 +1180,7 @@ function setWires(wires, ob_mode) {
 
 /**
  * set ob directive mode
- * @param {string} ob_mode values: (0: on cool, 1: on heat)
+ * @param {number} ob_mode values: (0: on cool, 1: on heat)
  * @example { "ob_mode": 0 }
  */
 function setOBMode(ob_mode) {

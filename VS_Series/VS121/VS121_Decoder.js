@@ -24,11 +24,11 @@ function Decoder(bytes, port) {
 function milesightDeviceDecode(bytes) {
     var decoded = {};
 
-    for (var i = 0; i < bytes.length; ) {
+    for (var i = 0; i < bytes.length;) {
         var channel_id = bytes[i++];
         var channel_type = bytes[i++];
 
-        // PROTOCOL VESION
+        // PROTOCOL VERSION
         if (channel_id === 0xff && channel_type === 0x01) {
             decoded.protocol_version = bytes[i];
             i += 1;

@@ -227,7 +227,7 @@ function handle_downlink_response(channel_type, bytes, offset) {
             decoded.outside_temperature = readInt16LE(bytes.slice(offset, offset + 2)) / 10;
             offset += 2;
             break;
-        case 0x06: // temperature_alarm_config
+        case 0x06:
             var ctl = readUInt8(bytes[offset]);
             var condition = ctl & 0x07;
             var alarm_type = (ctl >>> 3) & 0x07;
@@ -313,11 +313,11 @@ function handle_downlink_response(channel_type, bytes, offset) {
             decoded.d2d_master_config = decoded.d2d_master_config || [];
             decoded.d2d_master_config.push(config);
             break;
-        case 0x4a: // sync_time
+        case 0x4a:
             decoded.sync_time = readYesNoStatus(1);
             offset += 1;
             break;
-        case 0x8e: // report_interval
+        case 0x8e:
             // ignore the first byte
             decoded.report_interval = readUInt16LE(bytes.slice(offset + 1, offset + 3));
             offset += 3;
@@ -334,7 +334,7 @@ function handle_downlink_response(channel_type, bytes, offset) {
             decoded.freeze_protection_config.temperature = readInt16LE(bytes.slice(offset + 1, offset + 3)) / 10;
             offset += 3;
             break;
-        case 0xb5: // ob_mode
+        case 0xb5:
             decoded.ob_mode = readObMode(readUInt8(bytes[offset]));
             offset += 1;
             break;
@@ -349,7 +349,7 @@ function handle_downlink_response(channel_type, bytes, offset) {
             decoded.temperature_unit = readTemperatureUnit((t >>> 7) & 0x01);
             offset += 2;
             break;
-        case 0xb8: // temperature_tolerance
+        case 0xb8:
             decoded.temperature_tolerance = {};
             decoded.temperature_tolerance.target_temperature_tolerance = readUInt8(bytes[offset]) / 10;
             decoded.temperature_tolerance.auto_temperature_tolerance = readUInt8(bytes[offset + 1]) / 10;
@@ -381,7 +381,7 @@ function handle_downlink_response(channel_type, bytes, offset) {
             }
             offset += 10;
             break;
-        case 0xbd: // timezone
+        case 0xbd:
             decoded.timezone = readTimeZone(readInt16LE(bytes.slice(offset, offset + 2)));
             offset += 2;
             break;
