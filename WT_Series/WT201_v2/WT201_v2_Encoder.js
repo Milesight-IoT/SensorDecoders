@@ -1204,7 +1204,6 @@ function setWiresRelayChangeReport(wires_relay_change_report_enable) {
 
 /**
  * set aux config
- * @odm 2706
  * @param {object} aux_control_config
  * @param {number} aux_control_config.y2_enable values: (0: disable, 1: enable)
  * @param {number} aux_control_config.w2_enable values: (0: disable, 1: enable)
