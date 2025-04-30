@@ -8,17 +8,20 @@
 var RAW_VALUE = 0x00;
 
 // Chirpstack v4
+// eslint-disable-next-line no-unused-vars
 function decodeUplink(input) {
     var decoded = milesightDeviceDecode(input.bytes);
     return { data: decoded };
 }
 
 // Chirpstack v3
+// eslint-disable-next-line no-unused-vars
 function Decode(fPort, bytes) {
     return milesightDeviceDecode(bytes);
 }
 
 // The Things Network
+// eslint-disable-next-line no-unused-vars
 function Decoder(bytes, port) {
     return milesightDeviceDecode(bytes);
 }
@@ -1019,6 +1022,7 @@ function readFanControlDuringHeating(value) {
     return getValue(mode_map, value);
 }
 
+/* eslint-disable no-unused-vars */
 function readUInt8(bytes) {
     return bytes & 0xff;
 }

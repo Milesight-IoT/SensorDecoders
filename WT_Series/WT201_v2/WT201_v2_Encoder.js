@@ -8,18 +8,21 @@
 var RAW_VALUE = 0x00;
 
 // Chirpstack v4
+// eslint-disable-next-line no-unused-vars
 function encodeDownlink(input) {
     var encoded = milesightDeviceEncode(input.data);
     return { bytes: encoded };
 }
 
 // Chirpstack v3
+// eslint-disable-next-line no-unused-vars
 function Encode(fPort, obj) {
     var encoded = milesightDeviceEncode(obj);
     return encoded;
 }
 
 // The Things Network
+// eslint-disable-next-line no-unused-vars
 function Encoder(obj, port) {
     return milesightDeviceEncode(obj);
 }
