@@ -8,17 +8,20 @@
 var RAW_VALUE = 0x00;
 
 // Chirpstack v4
+// eslint-disable-next-line no-unused-vars
 function encodeDownlink(input) {
     var encoded = milesightDeviceEncode(input.data);
     return { bytes: encoded };
 }
 
 // Chirpstack v3
+// eslint-disable-next-line no-unused-vars
 function Encode(fPort, obj) {
     return milesightDeviceEncode(obj);
 }
 
 // The Things Network
+// eslint-disable-next-line no-unused-vars
 function Encoder(obj, port) {
     return milesightDeviceEncode(obj);
 }
@@ -75,7 +78,7 @@ function milesightDeviceEncode(payload) {
         encoded = encoded.concat(clearHistory(payload.clear_history));
     }
     if ("sync_time_from_gateway_config" in payload) {
-        encoded = encoded.concat(gatewayTimeSync(payload.sync_time_from_gateway_config));
+        encoded = encoded.concat(gatewayTimeSyncConfig(payload.sync_time_from_gateway_config));
     }
     if ("rejoin_config" in payload) {
         encoded = encoded.concat(setRejoinConfig(payload.rejoin_config));
@@ -84,7 +87,10 @@ function milesightDeviceEncode(payload) {
         encoded = encoded.concat(setDataRate(payload.data_rate));
     }
     if ("tx_power_level" in payload) {
-        encoded = encoded.concat(setTxPower(payload.tx_power_level));
+        encoded = encoded.concat(setTxPowerLevel(payload.tx_power_level));
+    }
+    if ("log_config" in payload) {
+        encoded = encoded.concat(setLogConfig(payload.log_config));
     }
 
     return encoded;
