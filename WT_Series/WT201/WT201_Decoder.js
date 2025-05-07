@@ -139,29 +139,44 @@ function milesightDeviceDecode(bytes) {
             decoded.humidity_sensor_status = readSensorStatus(bytes[i]);
             i += 1;
         }
-        // HISTORICAL DATA
-        else if (channel_id === 0x20 && channel_type === 0xce) {
+        // HISTORICAL DATA (ODM: 2706)
+        else if (channel_id === 0x21 && channel_type === 0xce) {
             var timestamp = readUInt32LE(bytes.slice(i, i + 4));
             var value1 = readUInt16LE(bytes.slice(i + 4, i + 6));
             var value2 = readUInt16LE(bytes.slice(i + 6, i + 8));
+            var value3 = readUInt16LE(bytes.slice(i + 8, i + 10));
 
             var data = { timestamp: timestamp };
+<<<<<<< HEAD
             // fan_mode(0..1) + fan_status(2..3) + system_status(4) + temperature(5..15)
             data.fan_mode = readFanMode((value1 >>> 0) & 0x03);
+=======
+            data.fan_mode = readFanMode(value1 & 0x03);
+>>>>>>> ae64d45 (odm(2706): wt201 support dual temperature)
             data.fan_status = readFanStatus((value1 >>> 2) & 0x03);
             data.system_status = readOnOffStatus((value1 >>> 4) & 0x01);
             var temperature = ((value1 >>> 5) & 0x7ff) / 10 - 100;
             data.temperature = Number(temperature.toFixed(1));
+<<<<<<< HEAD
 
             // temperature_control_mode(0..1) + temperature_control_status(2..4) + target_temperature(5..15)
             data.temperature_control_mode = readTemperatureControlMode((value2 >>> 0) & 0x03);
             data.temperature_control_status = readTemperatureControlStatus((value2 >>> 2) & 0x07);
+=======
+            data.temperature_control_mode = readTemperatureControlMode(value2 & 0x03);
+>>>>>>> ae64d45 (odm(2706): wt201 support dual temperature)
             var target_temperature = ((value2 >>> 5) & 0x7ff) / 10 - 100;
             data.target_temperature = Number(target_temperature.toFixed(1));
-            i += 8;
+            data.temperature_control_status = readTemperatureControlStatus(value3 & 0x1f);
+            var target_temperature_2_raw = (value3 >>> 5) & 0x7ff;
+            if (target_temperature_2_raw !== 0x7ff) {
+                var target_temperature_2 = target_temperature_2_raw / 10 - 100;
+                data.target_temperature_2 = Number(target_temperature_2.toFixed(1));
+            }
 
             decoded.history = decoded.history || [];
             decoded.history.push(data);
+            i += 10;
         }
         // DOWNLINK RESPONSE
         else if (channel_id === 0xfe || channel_id === 0xff) {
@@ -525,6 +540,35 @@ function handle_downlink_response_ext(code, channel_type, bytes, offset) {
             }
             offset += 2;
             break;
+        case 0x42:
+            decoded.target_temperature_range = {};
+            decoded.target_temperature_range.min = readInt16LE(bytes.slice(offset + 1, offset + 3)) / 10;
+            decoded.target_temperature_range.max = readInt16LE(bytes.slice(offset + 3, offset + 5)) / 10;
+            offset += 6;
+            break;
+        case 0x57:
+            decoded.temperature_tolerance_2 = readUInt8(bytes[offset]) / 10;
+            offset += 2;
+            break;
+        case 0x58:
+            decoded.target_temperature_dual = readEnableStatus(readUInt8(bytes[offset]));
+            offset += 2;
+            break;
+        case 0x59:
+            decoded.target_temperature_dual = readDualTemperaturePlanConfig(bytes.slice(offset, offset + 9));
+            offset += 10;
+            break;
+        case 0x5a:
+            decoded.dual_temperature_tolerance = decoded.dual_temperature_tolerance || {};
+            var tolerance_index = readUInt8(bytes[offset]);
+            var tolerance_value = readUInt8(bytes[offset + 1]) / 10;
+            if (tolerance_index === 0x00) {
+                decoded.dual_temperature_tolerance.heat_tolerance = tolerance_value;
+            } else if (tolerance_index === 0x01) {
+                decoded.dual_temperature_tolerance.cool_tolerance = tolerance_value;
+            }
+            offset += 3;
+            break;
         default:
             throw new Error("unknown downlink response");
     }
@@ -703,7 +747,18 @@ function readOfflineControlMode(type) {
 }
 
 function readTemperatureControlMode(type) {
+<<<<<<< HEAD
     var temperature_control_mode_map = { 0: "heat", 1: "em_heat", 2: "cool", 3: "auto" };
+=======
+    var temperature_control_mode_map = {
+        0: "heat",
+        1: "em_heat",
+        2: "cool",
+        3: "auto",
+        4: "auto heat",
+        5: "auto cool",
+    };
+>>>>>>> ae64d45 (odm(2706): wt201 support dual temperature)
     return getValue(temperature_control_mode_map, type);
 }
 
@@ -717,6 +772,7 @@ function readTemperatureControlStatus(type) {
         5: "em_heat",
         6: "stage-1 cool",
         7: "stage-2 cool",
+        8: "stage-5 heat",
     };
     return getValue(temperature_control_status_map, type);
 }
@@ -810,6 +866,35 @@ function readD2DCommand(bytes) {
     return ("0" + (bytes[1] & 0xff).toString(16)).slice(-2) + ("0" + (bytes[0] & 0xff).toString(16)).slice(-2);
 }
 
+<<<<<<< HEAD
+=======
+function readDualTemperaturePlanConfig(bytes) {
+    var offset = 0;
+
+    var config = {};
+    config.type = readPlanEventType(readUInt8(bytes[offset]));
+    config.temperature_control_mode = readTemperatureControlMode(readUInt8(bytes[offset + 1]));
+    config.fan_mode = readFanMode(readUInt8(bytes[offset + 2]));
+    var heat_target_temperature_value = readUInt16LE(bytes.slice(offset + 3, offset + 5));
+    if (heat_target_temperature_value !== 0xffff) {
+        config.heat_target_temperature = readUInt16LE(bytes.slice(offset + 3, offset + 5)) / 10;
+    }
+    var heat_temperature_tolerance_value = readUInt8(bytes[offset + 5]);
+    if (heat_temperature_tolerance_value !== 0xff) {
+        config.heat_temperature_tolerance = heat_temperature_tolerance_value / 10;
+    }
+    var cool_target_temperature_value = readUInt16LE(bytes.slice(offset + 6, offset + 8));
+    if (cool_target_temperature_value !== 0xffff) {
+        config.cool_target_temperature = readUInt16LE(bytes.slice(offset + 6, offset + 8)) / 10;
+    }
+    var cool_temperature_tolerance_value = readUInt8(bytes[offset + 8]);
+    if (cool_temperature_tolerance_value !== 0xff) {
+        config.cool_temperature_tolerance = cool_temperature_tolerance_value / 10;
+    }
+    return config;
+}
+
+>>>>>>> ae64d45 (odm(2706): wt201 support dual temperature)
 /* eslint-disable */
 function readUInt8(bytes) {
     return bytes & 0xff;
