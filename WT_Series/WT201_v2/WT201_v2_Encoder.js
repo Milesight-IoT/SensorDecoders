@@ -167,8 +167,8 @@ function milesightDeviceEncode(payload) {
     if ("temperature_alarm_config" in payload) {
         encoded = encoded.concat(setTemperatureAlarmConfig(payload.temperature_alarm_config));
     }
-    if ("control_permissions" in payload) {
-        encoded = encoded.concat(setControlPermissions(payload.control_permissions));
+    if ("control_permission" in payload) {
+        encoded = encoded.concat(setControlPermission(payload.control_permission));
     }
     if ("offline_control_mode" in payload) {
         encoded = encoded.concat(setOfflineControlMode(payload.offline_control_mode));
@@ -1623,20 +1623,20 @@ function setD2DSlaveConfig(d2d_slave_config) {
 /**
  * set d2d slave group
  * @since v1.3
- * @param {number} control_permissions values: (0: thermostat, 1: remote control)
- * @example { "control_permissions": 0 }
+ * @param {number} control_permission values: (0: thermostat, 1: remote control)
+ * @example { "control_permission": 0 }
  */
-function setControlPermissions(control_permissions) {
+function setControlPermission(control_permission) {
     var control_permission_map = { 0: "thermostat", 1: "remote control" };
     var control_permission_values = getValues(control_permission_map);
-    if (control_permission_values.indexOf(control_permissions) === -1) {
-        throw new Error("control_permissions must be one of " + control_permission_values.join(", "));
+    if (control_permission_values.indexOf(control_permission) === -1) {
+        throw new Error("control_permission must be one of " + control_permission_values.join(", "));
     }
 
     var buffer = new Buffer(3);
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0xf6);
-    buffer.writeUInt8(getValue(control_permission_map, control_permissions));
+    buffer.writeUInt8(getValue(control_permission_map, control_permission));
     return buffer.toBytes();
 }
 
