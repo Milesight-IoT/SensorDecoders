@@ -194,8 +194,6 @@ function milesightDeviceEncode(payload) {
     if ("stop_transmit" in payload) {
         encoded = encoded.concat(stopTransmit(payload.stop_transmit));
     }
-<<<<<<< HEAD
-=======
     if ("wire_relay_change_report_enable" in payload) {
         encoded = encoded.concat(setRelayChangeReportEnable(payload.wire_relay_change_report_enable));
     }
@@ -220,7 +218,6 @@ function milesightDeviceEncode(payload) {
     if ("target_temperature_dual_enable" in payload) {
         encoded = encoded.concat(setTargetTemperatureDualEnable(payload.target_temperature_dual_enable));
     }
->>>>>>> ae64d45 (odm(2706): wt201 support dual temperature)
 
     return encoded;
 }
@@ -571,21 +568,13 @@ function setTemperatureLevelUpCondition(temperature_level_up_condition) {
 /**
  * set temperature control enable
  * @since v1.3
-<<<<<<< HEAD
- * @param {number} temperature_control_mode values: (0: heat, 1: em_heat, 2: cool, 3: auto)
-=======
  * @odm 2706
- * @param {number} temperature_control_mode values: (0: heat, 1: em_heat, 2: cool, 3: auto, 4: auto heat, 5: auto cool)
->>>>>>> ae64d45 (odm(2706): wt201 support dual temperature)
+ * @param {number} temperature_control_mode values: (0: heat, 1: em_heat, 2: cool, 3: auto, 4: auto_heat, 5: auto_cool)
  * @param {number} target_temperature unit: celsius
  * @example { "temperature_control_mode": 2, "target_temperature": 25 }
  */
 function setTemperatureTarget(temperature_control_mode, target_temperature) {
-<<<<<<< HEAD
-    var temperature_mode_map = { 0: "heat", 1: "em_heat", 2: "cool", 3: "auto" };
-=======
-    var temperature_mode_map = { 0: "heat", 1: "em_heat", 2: "cool", 3: "auto", 4: "auto heat", 5: "auto cool" };
->>>>>>> ae64d45 (odm(2706): wt201 support dual temperature)
+    var temperature_mode_map = { 0: "heat", 1: "em_heat", 2: "cool", 3: "auto", 4: "auto_heat", 5: "auto_cool" };
     var temperature_mode_values = getValues(temperature_mode_map);
     if (temperature_mode_values.indexOf(temperature_control_mode) === -1) {
         throw new Error("temperature_control_mode must be one of " + temperature_mode_values.join(", "));
@@ -1012,16 +1001,16 @@ function setPlanConfig(plan_config, temperature_unit) {
  * set plan config (target temperature dual)
  * @odm 2706
  * @param {object} dual_plan_config
- * @param {number} dual_plan_config.type values: (0: wake, 1: away, 2: home, 3: sleep)
- * @param {number} dual_plan_config.temperature_control_mode values: (0: heat, 1: em heat, 2: cool, 3: auto)
- * @param {number} dual_plan_config.fan_mode values: (0: auto, 1: on, 2: circulate)
- * @param {number} dual_plan_config.heat_target_temperature
- * @param {number} dual_plan_config.heat_temperature_tolerance
- * @param {number} dual_plan_config.cool_target_temperature
- * @param {number} dual_plan_config.cool_temperature_tolerance
+ * @param {number} dual_plan_config._item.type values: (0: wake, 1: away, 2: home, 3: sleep)
+ * @param {number} dual_plan_config._item.temperature_control_mode values: (0: heat, 1: em heat, 2: cool, 3: auto)
+ * @param {number} dual_plan_config._item.fan_mode values: (0: auto, 1: on, 2: circulate)
+ * @param {number} dual_plan_config._item.heat_target_temperature
+ * @param {number} dual_plan_config._item.heat_temperature_tolerance
+ * @param {number} dual_plan_config._item.cool_target_temperature
+ * @param {number} dual_plan_config._item.cool_temperature_tolerance
  * @param {number} temperature_unit values: (0: celsius, 1: fahrenheit)
- * @example { "dual_temperature_plan_config": { "type": 0, "temperature_control_mode": 2, "fan_mode": 0, "heat_target_temperature": 20, "heat_temperature_tolerance": 1, "cool_target_temperature": 20, "cool_temperature_tolerance": 1 }, "temperature_unit": 0}
- * @example { "dual_temperature_plan_config": { "type": 0, "temperature_control_mode": 2, "fan_mode": 0, "target_temperature": 77, "temperature_tolerance": 1 }, "temperature_unit": 1}
+ * @example { "dual_temperature_plan_config": [{ "type": 0, "temperature_control_mode": 2, "fan_mode": 0, "heat_target_temperature": 20, "heat_temperature_tolerance": 1, "cool_target_temperature": 20, "cool_temperature_tolerance": 1 }]}
+ * @example { "dual_temperature_plan_config": [{ "type": 0, "temperature_control_mode": 2, "fan_mode": 0, "target_temperature": 77, "temperature_tolerance": 1 }]}
  */
 function setPlanConfigWithDualTemperature(dual_temperature_plan_config) {
     var type = dual_temperature_plan_config.type;
@@ -1795,9 +1784,6 @@ function clearHistory(clear_history) {
     return [0xff, 0x27, 0x01];
 }
 
-<<<<<<< HEAD
-=======
-
 /**
  * set relay change report enable
  * @odm 2706
@@ -1805,16 +1791,16 @@ function clearHistory(clear_history) {
  * @example { "wire_relay_change_report_enable": 1 }
  */
 function setRelayChangeReportEnable(wire_relay_change_report_enable) {
-    var wire_relay_change_report_enable_map = { 0: "disable", 1: "enable" };
-    var wire_relay_change_report_enable_values = getValues(wire_relay_change_report_enable_map);
-    if (wire_relay_change_report_enable_values.indexOf(wire_relay_change_report_enable) === -1) {
-        throw new Error("wire_relay_change_report_enable must be one of " + wire_relay_change_report_enable_values.join(", "));
+    var enable_map = { 0: "disable", 1: "enable" };
+    var enable_values = getValues(enable_map);
+    if (enable_values.indexOf(wire_relay_change_report_enable) === -1) {
+        throw new Error("wire_relay_change_report_enable must be one of " + enable_values.join(", "));
     }
 
     var buffer = new Buffer(3);
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0x3a);
-    buffer.writeUInt8(getValue(wire_relay_change_report_enable_map, wire_relay_change_report_enable));
+    buffer.writeUInt8(getValue(enable_map, wire_relay_change_report_enable));
     return buffer.toBytes();
 }
 
@@ -1836,8 +1822,8 @@ function setTemperatureTolerance2(temperature_tolerance_2) {
  * set d2d id
  * @odm 2706
  * @param {object} d2d_config
- * @param {number} d2d_config.id
- * @param {string} d2d_config.deveui
+ * @param {number} d2d_config._item.id
+ * @param {string} d2d_config._item.deveui
  * @example { "d2d_config": [{ "id": 1, "deveui": "0000000000000000" }] }
  */
 function setD2DId(d2d_config) {
@@ -1855,7 +1841,7 @@ function setD2DId(d2d_config) {
     buffer.writeUInt8(0xf9);
     buffer.writeUInt8(0x3e);
     buffer.writeUInt8(id - 1);
-    buffer.writeD2DCommand(deveui, "0000000000000000");
+    buffer.writeHexString(deveui);
     return buffer.toBytes();
 }
 
@@ -1868,26 +1854,17 @@ function setD2DId(d2d_config) {
  * @example { "aux_settings": { "y2": 1, "w2": 1 } }
  */
 function setAuxConfig(aux_settings) {
-    var y2 = aux_settings.y2;
-    var w2 = aux_settings.w2;
-
     var enable_map = { 0: "disable", 1: "enable" };
     var enable_values = getValues(enable_map);
 
     var data = 0;
-    if ("y2" in aux_settings) {
-        if (enable_values.indexOf(y2) === -1) {
-            throw new Error("aux_settings.y2 must be one of " + enable_values.join(", "));
+    var bit_offset = { y2: 0, w2: 1 };
+    for (var key in aux_settings) {
+        if (enable_values.indexOf(aux_settings[key]) === -1) {
+            throw new Error("aux_settings." + key + " must be one of " + enable_values.join(", "));
         }
-        data |= 1 << 4;
-        data |= getValue(enable_map, y2) << 0;
-    }
-    if ("w2" in aux_settings) {
-        if (enable_values.indexOf(w2) === -1) {
-            throw new Error("aux_settings.w2 must be one of " + enable_values.join(", "));
-        }
-        data |= 1 << 5;
-        data |= getValue(enable_map, w2) << 1;
+        data |= 1 << (bit_offset[key] + 4);
+        data |= getValue(enable_map, aux_settings[key]) << bit_offset[key];
     }
 
     var buffer = new Buffer(3);
@@ -1958,7 +1935,6 @@ function setTargetTemperatureDualEnable(target_temperature_dual_enable) {
     return buffer.toBytes();
 }
 
->>>>>>> ae64d45 (odm(2706): wt201 support dual temperature)
 function getValues(map) {
     var values = [];
     for (var key in map) {
@@ -2024,6 +2000,14 @@ Buffer.prototype.writeUInt32LE = function (value) {
 Buffer.prototype.writeInt32LE = function (value) {
     this._write(value < 0 ? value + 0x100000000 : value, 4, true);
     this.offset += 4;
+};
+
+Buffer.prototype.writeHexString = function (hexString) {
+    var bytes = [];
+    for (var i = 0; i < hexString.length; i += 2) {
+        bytes.push(parseInt(hexString.substr(i, 2), 16));
+    }
+    this.writeBytes(bytes);
 };
 
 Buffer.prototype.writeD2DCommand = function (value, defaultValue) {
