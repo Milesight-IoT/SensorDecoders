@@ -54,14 +54,18 @@ function milesightDeviceEncode(payload) {
     if ("temperature_unit" in payload) {
         encoded = encoded.concat(setTemperatureUnitDisplay(payload.temperature_unit));
     }
-    if ("temperature_control_mode" in payload && "target_temperature" in payload) {
-        if ("system_status" in payload) {
-            encoded = encoded.concat(setTemperatureControl(payload.system_status, payload.temperature_control_mode, payload.target_temperature));
+    if ("temperature_control_mode" in payload) {
+        if ("target_temperature" in payload) {
+            if ("temperature_unit" in payload) {
+                encoded = encoded.concat(setTemperatureControl(payload.temperature_control_mode, payload.target_temperature, payload.temperature_unit));
+            } else {
+                encoded = encoded.concat(setTemperatureTarget(payload.temperature_control_mode, payload.target_temperature));
+            }
         } else {
-            encoded = encoded.concat(setTemperatureTarget(payload.temperature_control_mode, payload.target_temperature));
+            encoded = encoded.concat(setTemperatureControlMode(payload.temperature_control_mode));
         }
     }
-    if ("system_status" in payload && !("temperature_control_mode" in payload)) {
+    if ("system_status" in payload) {
         encoded = encoded.concat(setSystemStatus(payload.system_status));
     }
     if ("temperature_calibration" in payload) {
@@ -712,6 +716,27 @@ function setTemperatureTarget(temperature_control_mode, target_temperature) {
     buffer.writeUInt8(0xfa);
     buffer.writeUInt8(getValue(temperature_mode_map, temperature_control_mode));
     buffer.writeInt16LE(target_temperature * 10);
+    return buffer.toBytes();
+}
+
+
+/**
+ * set temperature control mode
+ * @since v1.3
+ * @param {number} temperature_control_mode values: (0: heat, 1: em_heat, 2: cool, 3: auto)
+ * @example { "temperature_control_mode": 2 }
+ */
+function setTemperatureControlMode(temperature_control_mode) {
+    var temperature_mode_map = { 0: "heat", 1: "em_heat", 2: "cool", 3: "auto" };
+    var temperature_mode_values = getValues(temperature_mode_map);
+    if (temperature_mode_values.indexOf(temperature_control_mode) === -1) {
+        throw new Error("temperature_control_mode must be one of " + temperature_mode_values.join(", "));
+    }
+
+    var buffer = new Buffer(3);
+    buffer.writeUInt8(0xff);
+    buffer.writeUInt8(0xfb);
+    buffer.writeUInt8(getValue(temperature_mode_map, temperature_control_mode));
     return buffer.toBytes();
 }
 
