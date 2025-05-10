@@ -73,7 +73,7 @@ function milesightDeviceDecode(bytes) {
             case 0xcf:
                 // skip 1 byte
                 decoded.lorawan_class = readLoRaWANClass(bytes[i + 1]);
-                i += 1;
+                i += 2;
                 break;
 
             // telemetry
