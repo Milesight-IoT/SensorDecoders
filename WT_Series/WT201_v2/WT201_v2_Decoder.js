@@ -150,15 +150,15 @@ function milesightDeviceDecode(bytes) {
         }
         // TEMPERATURE OUT OF RANGE ALARM
         else if (channel_id === 0xf9 && channel_type === 0x40) {
-            var target_temperature_range_config = {};
-            target_temperature_range_config.temperature_control_mode = readTemperatureControlMode(bytes[i]);
-            target_temperature_range_config.target_temperature = readInt16LE(bytes.slice(i + 1, i + 3)) / 10;
-            target_temperature_range_config.min = readInt16LE(bytes.slice(i + 3, i + 5)) / 10;
-            target_temperature_range_config.max = readInt16LE(bytes.slice(i + 5, i + 7)) / 10;
+            var target_temperature_range_alarm = {};
+            target_temperature_range_alarm.temperature_control_mode = readTemperatureControlMode(bytes[i]);
+            target_temperature_range_alarm.target_temperature = readInt16LE(bytes.slice(i + 1, i + 3)) / 10;
+            target_temperature_range_alarm.min = readInt16LE(bytes.slice(i + 3, i + 5)) / 10;
+            target_temperature_range_alarm.max = readInt16LE(bytes.slice(i + 5, i + 7)) / 10;
             i += 7;
 
-            decoded.target_temperature_range_config = decoded.target_temperature_range_config || [];
-            decoded.target_temperature_range_config.push(target_temperature_range_config);
+            decoded.target_temperature_range_alarm = decoded.target_temperature_range_alarm || [];
+            decoded.target_temperature_range_alarm.push(target_temperature_range_alarm);
         }
         // HISTORICAL DATA
         else if (channel_id === 0x20 && channel_type === 0xce) {
@@ -455,11 +455,6 @@ function handle_downlink_response_ext(code, channel_type, bytes, offset) {
     var decoded = {};
 
     switch (channel_type) {
-        case 0x05:
-            decoded.fan_delay_enable = readEnableStatus(readUInt8(bytes[offset]));
-            decoded.fan_delay_time = readUInt8(bytes[offset + 1]);
-            offset += 2;
-            break;
         case 0x06:
             decoded.fan_execute_time = readUInt8(bytes[offset]);
             offset += 1;
@@ -567,10 +562,6 @@ function handle_downlink_response_ext(code, channel_type, bytes, offset) {
             decoded.system_protect_config.enable = readEnableStatus(readUInt8(bytes[offset]));
             decoded.system_protect_config.duration = readUInt8(bytes[offset + 1]);
             offset += 2;
-            break;
-        case 0x57:
-            decoded.temperature_tolerance_2 = readUInt8(bytes[offset]) / 10;
-            offset += 1;
             break;
         case 0x58:
             decoded.target_temperature_dual = readEnableStatus(readUInt8(bytes[offset]));

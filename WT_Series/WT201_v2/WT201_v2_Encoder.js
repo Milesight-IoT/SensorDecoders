@@ -95,9 +95,6 @@ function milesightDeviceEncode(payload) {
     if ("fan_mode" in payload) {
         encoded = encoded.concat(setFanMode(payload.fan_mode));
     }
-    if ("fan_delay_enable" in payload) {
-        encoded = encoded.concat(setFanModeWithDelay(payload.fan_delay_enable, payload.fan_delay_time));
-    }
     if ("fan_execute_time" in payload) {
         encoded = encoded.concat(setFanExecuteTime(payload.fan_execute_time));
     }
@@ -121,8 +118,8 @@ function milesightDeviceEncode(payload) {
     }
     if ("single_temperature_plan_config" in payload) {
         for (var single_plan_index = 0; single_plan_index < payload.single_temperature_plan_config.length; single_plan_index++) {
-            var config = payload.single_temperature_plan_config[single_plan_index];
-            encoded = encoded.concat(setPlanConfigWithSingleTemperature(config));
+            var single_temperature_plan_config = payload.single_temperature_plan_config[single_plan_index];
+            encoded = encoded.concat(setPlanConfigWithSingleTemperature(single_temperature_plan_config));
         }
     }
     if ("dual_temperature_plan_config" in payload) {
@@ -192,8 +189,8 @@ function milesightDeviceEncode(payload) {
     if ("system_protect_config" in payload) {
         encoded = encoded.concat(setSystemProtectConfig(payload.system_protect_config));
     }
-    if ("target_temperature_range" in payload) {
-        encoded = encoded.concat(setTargetTemperatureRange(payload.target_temperature_range));
+    if ("target_temperature_range_config" in payload) {
+        encoded = encoded.concat(setTargetTemperatureRangeConfig(payload.target_temperature_range_config));
     }
     if ("fan_control_during_heating" in payload) {
         encoded = encoded.concat(setFanControlDuringHeating(payload.fan_control_during_heating));
@@ -581,16 +578,16 @@ function setTargetTemperatureResolution(target_temperature_resolution) {
 /**
  * set temperature target range
  * @since v2.0
- * @param {object} target_temperature_range
- * @param {number} target_temperature_range.temperature_control_mode values: (0: heat, 1: em heat, 2: cool, 3: auto)
- * @param {number} target_temperature_range.min unit: celsius
- * @param {number} target_temperature_range.max unit: celsius
- * @example { "target_temperature_range": { "temperature_control_mode": 2, "min": 15, "max": 30 } }
+ * @param {object} target_temperature_range_config
+ * @param {number} target_temperature_range_config.temperature_control_mode values: (0: heat, 1: em heat, 2: cool, 3: auto)
+ * @param {number} target_temperature_range_config.min unit: celsius
+ * @param {number} target_temperature_range_config.max unit: celsius
+ * @example { "target_temperature_range_config": { "temperature_control_mode": 2, "min": 15, "max": 30 } }
  */
-function setTargetTemperatureRange(target_temperature_range) {
-    var temperature_control_mode = target_temperature_range.temperature_control_mode;
-    var min = target_temperature_range.min;
-    var max = target_temperature_range.max;
+function setTargetTemperatureRangeConfig(target_temperature_range_config) {
+    var temperature_control_mode = target_temperature_range_config.temperature_control_mode;
+    var min = target_temperature_range_config.min;
+    var max = target_temperature_range_config.max;
 
     var temperature_mode_map = { 0: "heat", 1: "em heat", 2: "cool", 3: "auto" };
     var temperature_mode_values = getValues(temperature_mode_map);
@@ -960,33 +957,6 @@ function setFanMode(fan_mode) {
 }
 
 /**
- * set fan mode with delay
- * @param {number} fan_delay_enable values: (0: disable, 1: enable)
- * @param {number} fan_delay_time unit: minute, range: [5, 55]
- * @example { "fan_delay_enable": 1, "fan_delay_time": 10 }
- */
-function setFanModeWithDelay(fan_delay_enable, fan_delay_time) {
-    var fan_delay_enable_map = { 0: "disable", 1: "enable" };
-    var fan_delay_enable_values = getValues(fan_delay_enable_map);
-    if (fan_delay_enable_values.indexOf(fan_delay_enable) === -1) {
-        throw new Error("fan_delay_enable must be one of " + fan_delay_enable_values.join(", "));
-    }
-    if (fan_delay_enable && typeof fan_delay_time !== "number") {
-        throw new Error("fan_delay_time must be a number");
-    }
-    if (fan_delay_enable && (fan_delay_time < 5 || fan_delay_time > 55)) {
-        throw new Error("fan_delay_time must be in range [5, 55]");
-    }
-
-    var buffer = new Buffer(4);
-    buffer.writeUInt8(0xf9);
-    buffer.writeUInt8(0x05);
-    buffer.writeUInt8(getValue(fan_delay_enable_map, fan_delay_enable));
-    buffer.writeUInt8(fan_delay_time);
-    return buffer.toBytes();
-}
-
-/**
  * set fan execute time
  * @since v1.3
  * @param {number} fan_execute_time range: [5,55], unit: minute
@@ -1241,8 +1211,9 @@ function setAuxControlConfig(aux_control_config) {
 
 /**
  * set fan delay config
- * @param {number} enable values: (0: disable, 1: enable)
- * @param {number} delay_time unit: second, range: [1, 3600]
+ * @param {object} fan_delay_config
+ * @param {number} fan_delay_config.enable values: (0: disable, 1: enable)
+ * @param {number} fan_delay_config.delay_time unit: second, range: [1, 3600]
  * @example { "fan_delay_config": { "enable": 1, "delay_time": 10 } }
  */
 function setFanDelayConfig(fan_delay_config) {
@@ -1861,23 +1832,23 @@ function setPlanConfigWithDualTemperature(dual_temperature_plan_config) {
     var plan_config_type_map = { 0: "wake", 1: "away", 2: "home", 3: "sleep", 4: "occupied", 5: "vacant", 6: "eco" };
     var plan_config_type_values = getValues(plan_config_type_map);
     if (plan_config_type_values.indexOf(type) === -1) {
-        throw new Error("dual_temperature_plan_config.type must be one of " + plan_config_type_values.join(", "));
+        throw new Error("dual_temperature_plan_config._item.type must be one of " + plan_config_type_values.join(", "));
     }
     var plan_config_temperature_control_mode_map = { 0: "heat", 1: "em heat", 2: "cool", 3: "auto" };
     var plan_config_temperature_control_mode_values = getValues(plan_config_temperature_control_mode_map);
     if (plan_config_temperature_control_mode_values.indexOf(temperature_control_mode) === -1) {
-        throw new Error("plan_config.temperature_control_mode must be one of " + plan_config_temperature_control_mode_values.join(", "));
+        throw new Error("dual_temperature_plan_config._item.temperature_control_mode must be one of " + plan_config_temperature_control_mode_values.join(", "));
     }
     var plan_config_fan_mode_map = { 0: "auto", 1: "on", 2: "circulate" };
     var plan_config_fan_mode_values = getValues(plan_config_fan_mode_map);
     if (plan_config_fan_mode_values.indexOf(fan_mode) === -1) {
-        throw new Error("dual_temperature_plan_config.fan_mode must be one of " + plan_config_fan_mode_values.join(", "));
+        throw new Error("dual_temperature_plan_config._item.fan_mode must be one of " + plan_config_fan_mode_values.join(", "));
     }
 
     var heat_target_temperature_value = 0xffff;
     if ("heat_target_temperature" in dual_temperature_plan_config) {
         if (typeof heat_target_temperature !== "number") {
-            throw new Error("dual_temperature_plan_config.heat_target_temperature must be a number");
+            throw new Error("dual_temperature_plan_config._item.heat_target_temperature must be a number");
         }
         heat_target_temperature_value = heat_target_temperature * 10;
     }
@@ -1885,7 +1856,7 @@ function setPlanConfigWithDualTemperature(dual_temperature_plan_config) {
     var heat_temperature_tolerance_value = 0xff;
     if ("heat_temperature_tolerance" in dual_temperature_plan_config) {
         if (typeof heat_temperature_tolerance !== "number") {
-            throw new Error("dual_temperature_plan_config.heat_temperature_tolerance must be a number");
+            throw new Error("dual_temperature_plan_config._item.heat_temperature_tolerance must be a number");
         }
         heat_temperature_tolerance_value = heat_temperature_tolerance * 10;
     }
@@ -1893,7 +1864,7 @@ function setPlanConfigWithDualTemperature(dual_temperature_plan_config) {
     var cool_target_temperature_value = 0xffff;
     if ("cool_target_temperature" in dual_temperature_plan_config) {
         if (typeof cool_target_temperature !== "number") {
-            throw new Error("dual_temperature_plan_config.cool_target_temperature must be a number");
+            throw new Error("dual_temperature_plan_config._item.cool_target_temperature must be a number");
         }
         cool_target_temperature_value = cool_target_temperature * 10;
     }
@@ -1901,7 +1872,7 @@ function setPlanConfigWithDualTemperature(dual_temperature_plan_config) {
     var cool_temperature_tolerance_value = 0xff;
     if ("cool_temperature_tolerance" in dual_temperature_plan_config) {
         if (typeof cool_temperature_tolerance !== "number") {
-            throw new Error("dual_temperature_plan_config.cool_temperature_tolerance must be a number");
+            throw new Error("dual_temperature_plan_config._item.cool_temperature_tolerance must be a number");
         }
         cool_temperature_tolerance_value = cool_temperature_tolerance * 10;
     }
