@@ -5,6 +5,9 @@
  *
  * @product UC50x
  */
+
+/*eslint no-redeclare: "off" */
+/*eslint-disable-next-line */
 function decodePayload(bytes) {
     var buffer = new Buffer(bytes);
 
@@ -28,11 +31,11 @@ function decodePayload(bytes) {
     return payload;
 }
 
-gpio_chns = [0x03, 0x04];
-ai_chns = [0x05, 0x06];
-ai_alarm_chns = [0x85, 0x86];
-ai_mutation_alarm_chns = [0x95, 0x96];
-ai_error_chns = [0xb5, 0xb6];
+var gpio_chns = [0x03, 0x04];
+var ai_chns = [0x05, 0x06];
+var ai_alarm_chns = [0x85, 0x86];
+var ai_mutation_alarm_chns = [0x95, 0x96];
+var ai_error_chns = [0xb5, 0xb6];
 
 function decodeSensorData(bytes) {
     var history = [];
