@@ -7,6 +7,8 @@
  */
 var RAW_VALUE = 0x00;
 
+/* eslint no-redeclare: "off" */
+/* eslint-disable */
 // Chirpstack v4
 function decodeUplink(input) {
     var decoded = milesightDeviceDecode(input.bytes);
@@ -22,6 +24,7 @@ function Decode(fPort, bytes) {
 function Decoder(bytes, port) {
     return milesightDeviceDecode(bytes);
 }
+/* eslint-enable */
 
 var gpio_chns = [0x03, 0x04];
 var adc_chns = [0x05, 0x06];
@@ -30,7 +33,7 @@ var adc_alarm_chns = [0x85, 0x86];
 function milesightDeviceDecode(bytes) {
     var decoded = {};
 
-    for (i = 0; i < bytes.length;) {
+    for (var i = 0; i < bytes.length;) {
         var channel_id = bytes[i++];
         var channel_type = bytes[i++];
 
@@ -128,7 +131,6 @@ function milesightDeviceDecode(bytes) {
             var modbus_chn_id = bytes[i++] - 6;
             var package_type = bytes[i++];
             var data_type = package_type & 0x07; // 0x07 = 0b00000111
-            var date_length = package_type >> 3;
             var chn = "chn_" + modbus_chn_id;
             switch (data_type) {
                 case 0:
@@ -196,7 +198,7 @@ function milesightDeviceDecode(bytes) {
             i += 6;
 
             var data = { timestamp: timestamp };
-            for (j = 0; j < channel_mask.length; j++) {
+            for (var j = 0; j < channel_mask.length; j++) {
                 // skip if channel is not enabled
                 if (channel_mask[j] === 0) continue;
                 var name = "sdi12_" + (j + 1);
@@ -214,7 +216,7 @@ function milesightDeviceDecode(bytes) {
             i += 6;
 
             var data = { timestamp: timestamp };
-            for (j = 0; j < channel_mask.length; j++) {
+            for (var j = 0; j < channel_mask.length; j++) {
                 // skip if channel is not enabled
                 if (channel_mask[j] === 0) continue;
 
@@ -382,6 +384,7 @@ function numToBits(num, bit_count) {
     return bits;
 }
 
+/* eslint-disable */
 function readUInt8(bytes) {
     return bytes & 0xff;
 }
