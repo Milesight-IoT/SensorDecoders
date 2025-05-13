@@ -3,7 +3,7 @@
  *
  * Copyright 2025 Milesight IoT
  *
- * @product UC50x
+ * @product UC50x (odm: 7050)
  */
 var RAW_VALUE = 0x00;
 

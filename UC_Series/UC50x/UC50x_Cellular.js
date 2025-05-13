@@ -3,8 +3,9 @@
  *
  * Copyright 2024 Milesight IoT
  *
- * @product UC50x
+ * @product UC50x (odm: 7050)
  */
+var RAW_VALUE = 0x00;
 
 /*eslint no-redeclare: "off" */
 /*eslint-disable-next-line */
@@ -217,6 +218,75 @@ function decodeSensorData(bytes) {
                 decoded[sdi_chn_name] = buffer.readAscii(sdi_data_length);
             }
         }
+        // TEMPERATURE (odm: 7050)
+        else if (channel_id === 0x0a && channel_type === 0x67) {
+            decoded.temperature = buffer.readInt16LE() / 10;
+        }
+        // TEMPERATURE THRESHOLD ALARM (odm: 7050)
+        else if (channel_id === 0x8a && channel_type === 0x67) {
+            var event = {};
+            event.temperature = buffer.readInt16LE() / 10;
+            event.alarm = readThresholdAlarm(buffer.readUInt8());
+            
+            decoded.event = decoded.event || [];
+            decoded.event.push(event);
+            decoded.temperature = event.temperature;
+        }
+        // TEMPERATURE MUTATION ALARM (odm: 7050)
+        else if (channel_id === 0x9a && channel_type === 0x67) {
+            var event = {};
+            event.temperature = buffer.readInt16LE() / 10;
+            event.temperature_mutation = buffer.readInt16LE() / 10;
+            event.alarm = readMutationAlarm(buffer.readUInt8());
+            decoded.event = decoded.event || [];
+            decoded.event.push(event);
+            decoded.temperature = event.temperature;
+        }
+        // TEMPERATURE ERROR (odm: 7050)
+        else if (channel_id === 0xba && channel_type === 0x67) {
+            var event = {};
+            event.temperature_sensor_status = readSensorStatus(buffer.readUInt8());
+            decoded.event = decoded.event || [];
+            decoded.event.push(event);
+        }
+        // PRESSURE (odm: 7050)
+        else if (channel_id === 0x0b && channel_type === 0xaa) {
+            decoded.pressure = buffer.readUInt16LE();
+        }
+        // PRESSURE THRESHOLD ALARM (odm: 7050)
+        else if (channel_id === 0x8b && channel_type === 0xaa) {
+            var event = {};
+            event.pressure = buffer.readUInt16LE();
+            event.alarm = readThresholdAlarm(buffer.readUInt8());
+            decoded.event = decoded.event || [];
+            decoded.event.push(event);
+            decoded.pressure = event.pressure;
+        }
+        // PRESSURE MUTATION ALARM (odm: 7050)
+        else if (channel_id === 0x9b && channel_type === 0xaa) {
+            var event = {};
+            event.pressure = buffer.readUInt16LE();
+            event.pressure_mutation = buffer.readUInt16LE();
+            event.alarm = readMutationAlarm(buffer.readUInt8());
+            decoded.event = decoded.event || [];
+            decoded.event.push(event);
+            decoded.pressure = event.pressure;
+        }
+        // PRESSURE ERROR (odm: 7050)
+        else if (channel_id === 0xbb && channel_type === 0xaa) {
+            var event = {};
+            event.pressure_sensor_status = readSensorStatus(buffer.readUInt8());
+            decoded.event = decoded.event || [];
+            decoded.event.push(event);
+        }
+        // TAMPER STATUS (odm: 7050)
+        else if (channel_id === 0x0c && channel_type === 0xab) {
+            decoded.tamper_status = readTamperStatus(buffer.readUInt8());
+        }
+        // TAMPER STATUS ALARM (odm: 7050)
+        else if (channel_id === 0x8c && channel_type === 0xab) {
+            decoded.tamper_status = readTamperStatus(buffer.readUInt8());
+        }
         // SDI-12 ERROR
         else if (channel_id === 0xb8 && channel_type === 0xf2) {
             var sdi_chn_id = buffer.readUInt8() + 1;
@@ -374,6 +444,26 @@ function decodeSensorData(bytes) {
     return history;
 }
 
+function readThresholdAlarm(status) {
+    var status_map = { 0: "normal", 1: "threshold alarm", 2: "threshold alarm release" };
+    return getValue(status_map, status);
+}
+
+function readMutationAlarm(status) {
+    var status_map = { 0: "normal", 1: "mutation alarm" };
+    return getValue(status_map, status);
+}
+
+function readSensorStatus(status) {
+    var status_map = { 0: "normal", 1: "read failed", 2: "out of range" };
+    return getValue(status_map, status);
+}
+
+function readTamperStatus(status) {
+    var status_map = { 0: "normal", 1: "triggered" };
+    return getValue(status_map, status);
+}
+
 function Buffer(bytes) {
     this.bytes = bytes;
     this.length = bytes.length;
@@ -474,4 +564,12 @@ function includes(items, item) {
         }
     }
     return false;
+}
+
+function getValue(map, key) {
+    if (RAW_VALUE) return key;
+
+    var value = map[key];
+    if (!value) value = "unknown";
+    return value;
 }
