@@ -226,7 +226,7 @@ function decodeSensorData(bytes) {
         else if (channel_id === 0x8a && channel_type === 0x67) {
             var event = {};
             event.temperature = buffer.readInt16LE() / 10;
-            event.alarm = readThresholdAlarm(buffer.readUInt8());
+            event.alarm = readTemperatureAlarm(buffer.readUInt8());
             
             decoded.event = decoded.event || [];
             decoded.event.push(event);
@@ -237,7 +237,7 @@ function decodeSensorData(bytes) {
             var event = {};
             event.temperature = buffer.readInt16LE() / 10;
             event.temperature_mutation = buffer.readInt16LE() / 10;
-            event.alarm = readMutationAlarm(buffer.readUInt8());
+            event.alarm = readTemperatureAlarm(buffer.readUInt8());
             decoded.event = decoded.event || [];
             decoded.event.push(event);
             decoded.temperature = event.temperature;
@@ -257,7 +257,7 @@ function decodeSensorData(bytes) {
         else if (channel_id === 0x8b && channel_type === 0xaa) {
             var event = {};
             event.pressure = buffer.readUInt16LE();
-            event.alarm = readThresholdAlarm(buffer.readUInt8());
+            event.alarm = readPressureAlarm(buffer.readUInt8());
             decoded.event = decoded.event || [];
             decoded.event.push(event);
             decoded.pressure = event.pressure;
@@ -267,7 +267,7 @@ function decodeSensorData(bytes) {
             var event = {};
             event.pressure = buffer.readUInt16LE();
             event.pressure_mutation = buffer.readUInt16LE();
-            event.alarm = readMutationAlarm(buffer.readUInt8());
+            event.alarm = readPressureAlarm(buffer.readUInt8());
             decoded.event = decoded.event || [];
             decoded.event.push(event);
             decoded.pressure = event.pressure;
@@ -444,13 +444,13 @@ function decodeSensorData(bytes) {
     return history;
 }
 
-function readThresholdAlarm(status) {
-    var status_map = { 0: "normal", 1: "threshold alarm", 2: "threshold alarm release" };
+function readTemperatureAlarm(status) {
+    var status_map = { 0: "alarm release", 1: "threshold alarm", 2: "mutation alarm" };
     return getValue(status_map, status);
 }
 
-function readMutationAlarm(status) {
-    var status_map = { 0: "normal", 1: "mutation alarm" };
+function readPressureAlarm(status) {
+    var status_map = { 0: "alarm release", 1: "threshold alarm", 2: "mutation alarm" };
     return getValue(status_map, status);
 }
 
