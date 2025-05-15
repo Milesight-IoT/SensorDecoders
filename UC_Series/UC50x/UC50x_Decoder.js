@@ -184,33 +184,51 @@ function milesightDeviceDecode(bytes) {
             var gpio_1_data = readUInt32LE(bytes.slice(i + 5, i + 9));
             var gpio_2_type = readUInt8(bytes[i + 9]);
             var gpio_2_data = readUInt32LE(bytes.slice(i + 10, i + 14));
-            var temperature_data = readInt32LE(bytes.slice(i + 14, i + 18)) / 10;
-            var pressure_data = readUInt32LE(bytes.slice(i + 18, i + 22));
+            var temperature_value = readUInt32LE(bytes.slice(i + 14, i + 18));
+            var pressure_value = readUInt32LE(bytes.slice(i + 18, i + 22));
             var temperature_mutation_data = readInt16LE(bytes.slice(i + 22, i + 24)) / 10;
             var pressure_mutation_data = readUInt16LE(bytes.slice(i + 24, i + 26));
             var sensor_status_data = readUInt8(bytes[i + 26]);
-            var tamper_status_data = readTamperStatus(bytes[i + 27]);
-            i += 28;
+            var tamper_status_value = readUInt8(bytes[i + 27]);
 
             var data = { timestamp: timestamp };
-            data.gpio_1_type = readGPIOType(gpio_1_type);
-            if (gpio_1_type === 0x00 || gpio_1_type === 0x01) {
-                data.gpio_1 = readOnOffStatus(gpio_1_data);
+            if (tamper_status_value === 0x01) {
+                data.tamper_status = readTamperStatus(tamper_status_value);
             } else {
-                data.gpio_1 = gpio_1_data;
+                data.gpio_1_type = readGPIOType(gpio_1_type);
+                if (gpio_1_type === 0x00 || gpio_1_type === 0x01) {
+                    data.gpio_1 = readOnOffStatus(gpio_1_data);
+                } else {
+                    data.gpio_1 = gpio_1_data;
+                }
+                data.gpio_2_type = readGPIOType(gpio_2_type);
+                if (gpio_2_type === 0x00 || gpio_2_type === 0x01) {
+                    data.gpio_2 = readOnOffStatus(gpio_2_data);
+                } else {
+                    data.gpio_2 = gpio_2_data;
+                }
+                if (!hasIllegalValue(temperature_value)) {
+                    data.temperature = readInt32LE(bytes.slice(i + 14, i + 18)) / 10;
+                    data.temperature_mutation = temperature_mutation_data;
+                }
+                if (!hasIllegalValue(pressure_value)) {
+                    data.pressure = pressure_value;
+                    data.pressure_mutation = pressure_mutation_data;
+                }
+                var sensor_type = 0x00;
+                // no temperature sensor
+                if (temperature_value === 0xfffe) {
+                    sensor_type = 0x02; // pressure sensor
+                } 
+                // no pressure sensor
+                else if (pressure_value === 0xfffe) {
+                    sensor_type = 0x01; // temperature sensor
+                }
+
+                data.sensor_status = readHistorySensorStatus(sensor_type, sensor_status_data);
+                data.tamper_status = readTamperStatus(tamper_status_value);
             }
-            data.gpio_2_type = readGPIOType(gpio_2_type);
-            if (gpio_2_type === 0x00 || gpio_2_type === 0x01) {
-                data.gpio_2 = readOnOffStatus(gpio_2_data);
-            } else {
-                data.gpio_2 = gpio_2_data;
-            }
-            data.temperature = temperature_data;
-            data.temperature_mutation = temperature_mutation_data;
-            data.pressure = pressure_data;
-            data.pressure_mutation = pressure_mutation_data;
-            data.sensor_status = readHistorySensorStatus(sensor_status_data);
-            data.tamper_status = tamper_status_data;
+            i += 28;
 
             decoded.history = decoded.history || [];
             decoded.history.push(data);
@@ -309,8 +327,8 @@ function milesightDeviceDecode(bytes) {
             decoded.event.push(event);
             decoded.pressure = event.pressure;
         }
-         // PRESSURE MUTATION ALARM (odm: 7050)
-         else if (channel_id === 0x9b && channel_type === 0xaa) {
+        // PRESSURE MUTATION ALARM (odm: 7050)
+        else if (channel_id === 0x9b && channel_type === 0xaa) {
             var event = {};
             event.pressure = readUInt16LE(bytes.slice(i, i + 2));
             event.pressure_mutation = readUInt16LE(bytes.slice(i + 2, i + 4));
@@ -499,15 +517,20 @@ function readGPIOType(type) {
     return getValue(type_map, type);
 }
 
-function readHistorySensorStatus(status) {
+function readHistorySensorStatus(type, status) {
     var data = {};
-    data.temperature_sensor_status = readSensorStatus((status >>> 0) & 0x01);
-    data.temperature_alarm = readThresholdAlarm((status >>> 1) & 0x03);
-    data.temperature_mutation_alarm = readMutationAlarm((status >>> 3) & 0x01);
-    data.pressure_sensor_status = readSensorStatus((status >>> 4) & 0x01);
-    data.pressure_alarm = readThresholdAlarm((status >>> 5) & 0x03);
-    data.pressure_mutation_alarm = readMutationAlarm((status >>> 7) & 0x01);
-
+    // temperature sensor
+    if (type === 0x01) {
+        data.temperature_sensor_status = readSensorStatus((status >>> 0) & 0x01);
+        data.temperature_alarm = readThresholdAlarm((status >>> 1) & 0x03);
+        data.temperature_mutation_alarm = readMutationAlarm((status >>> 3) & 0x01);
+    } 
+    // pressure sensor
+    else if (type === 0x02) {
+        data.pressure_sensor_status = readSensorStatus((status >>> 4) & 0x01);
+        data.pressure_alarm = readThresholdAlarm((status >>> 5) & 0x03);
+        data.pressure_mutation_alarm = readMutationAlarm((status >>> 7) & 0x01);
+    }
     return data;
 }
 
@@ -522,8 +545,12 @@ function readThresholdAlarm(status) {
 }
 
 function readMutationAlarm(status) {
-    var status_map = { 0: "normal", 1: "mutation alarm"};
+    var status_map = { 0: "normal", 1: "mutation alarm" };
     return getValue(status_map, status);
+}
+
+function hasIllegalValue(value) {
+    return value === 0xfffe || value === 0xffff || value === 0xfffd;
 }
 
 function numToBits(num, bit_count) {
