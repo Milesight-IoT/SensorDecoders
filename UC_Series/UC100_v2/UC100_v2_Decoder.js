@@ -7,6 +7,8 @@
  */
 var RAW_VALUE = 0x00;
 
+/* eslint no-redeclare: "off" */
+/* eslint-disable */
 // Chirpstack v4
 function decodeUplink(input) {
     var decoded = milesightDeviceDecode(input.bytes);
@@ -22,6 +24,7 @@ function Decode(fPort, bytes) {
 function Decoder(bytes, port) {
     return milesightDeviceDecode(bytes);
 }
+/* eslint-enable */
 
 function milesightDeviceDecode(bytes) {
     var decoded = {};
@@ -124,7 +127,13 @@ function milesightDeviceDecode(bytes) {
             var modbus_chn_name = "modbus_chn_" + modbus_chn_id;
             var modbus_chn_reg_name = modbus_chn_name + "_reg_" + (reg_offset + 1);
             decoded[modbus_chn_reg_name] = value;
-            decoded[modbus_chn_name + "_alarm"] = readModbusAlarmType(modbus_alarm_value);
+            if (hasAlarm(modbus_alarm_value)) {
+                var event = {};
+                event[modbus_chn_reg_name] = value;
+                event[modbus_chn_reg_name + "_alarm"] = readModbusAlarmType(modbus_alarm_value);
+                decoded.event = decoded.event || [];
+                decoded.event.push(event);
+            }
         }
         // MODBUS READ ERROR
         else if (channel_id === 0xff && channel_type === 0x15) {
@@ -157,11 +166,15 @@ function milesightDeviceDecode(bytes) {
 
             var data = {};
             data.timestamp = timestamp;
-            data[modbus_chn_name + "_reg_1"] = readModbusHistoryV2(reg_type, sign, bytes.slice(i + 7, i + 15));
-            if (reg_counts === 2) {
-                data[modbus_chn_name + "_reg_2"] = readModbusHistoryV2(reg_type, sign, bytes.slice(i + 15, i + 23));
+            if (read_status === 1) {
+                data[modbus_chn_name + "_reg_1"] = readModbusHistoryV2(reg_type, sign, bytes.slice(i + 7, i + 15));
+                if (reg_counts === 2) {
+                    data[modbus_chn_name + "_reg_2"] = readModbusHistoryV2(reg_type, sign, bytes.slice(i + 15, i + 23));
+                }
+                data[modbus_chn_name + "_alarm"] = readModbusAlarmType(event_type);
+            } else {
+                data[modbus_chn_name + "_alarm"] = readSensorStatus(1);
             }
-            data[modbus_chn_name + "_alarm"] = readModbusAlarmType(event_type);
             i += 23;
 
             decoded.history = decoded.history || [];
@@ -440,6 +453,10 @@ function readModbusAlarmType(type) {
         3: "mutation alarm",
     };
     return getValue(alarm_type_map, type);
+}
+
+function hasAlarm(type) {
+    return type !== 0;
 }
 
 function readParityType(type) {
@@ -923,6 +940,7 @@ function readReportAlarmAction(type) {
     return report_alarm_action;
 }
 
+/* eslint-disable */
 function readUInt8(bytes) {
     return bytes & 0xff;
 }
