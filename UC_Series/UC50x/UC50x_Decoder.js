@@ -82,15 +82,21 @@ function milesightDeviceDecode(bytes) {
             decoded.battery = readUInt8(bytes[i]);
             i += 1;
         }
-        // GPIO (GPIO as Digital Input or Output)
-        else if (includes(gpio_chns, channel_id) && (channel_type === 0x00 || channel_type === 0x01)) {
-            var gpio_channel_name = "gpio_" + (channel_id - gpio_chns[0] + 1);
+        // GPIO (GPIO as Digital Input)
+        else if (includes(gpio_chns, channel_id) && channel_type === 0x00) {
+            var gpio_channel_name = "gpio_input_" + (channel_id - gpio_chns[0] + 1);
+            decoded[gpio_channel_name] = readOnOffStatus(bytes[i]);
+            i += 1;
+        }
+        // GPIO (GPIO as Digital Output)
+        else if (includes(gpio_chns, channel_id) && channel_type ===  0x01) {
+            var gpio_channel_name = "gpio_output_" + (channel_id - gpio_chns[0] + 1);
             decoded[gpio_channel_name] = readOnOffStatus(bytes[i]);
             i += 1;
         }
         //  GPIO (GPIO as PULSE COUNTER)
         else if (includes(gpio_chns, channel_id) && channel_type === 0xc8) {
-            var gpio_channel_name = "counter_" + (channel_id - gpio_chns[0] + 1);
+            var gpio_channel_name = "gpio_counter_" + (channel_id - gpio_chns[0] + 1);
             decoded[gpio_channel_name] = readUInt32LE(bytes.slice(i, i + 4));
             i += 4;
         }
@@ -195,25 +201,33 @@ function milesightDeviceDecode(bytes) {
             if (tamper_status_value === 0x01) {
                 data.tamper_status = readTamperStatus(tamper_status_value);
             } else {
-                data.gpio_1_type = readGPIOType(gpio_1_type);
-                if (gpio_1_type === 0x00 || gpio_1_type === 0x01) {
-                    data.gpio_1 = readOnOffStatus(gpio_1_data);
+                if (gpio_1_type === 0x00) {
+                    data.gpio_input_1 = readOnOffStatus(gpio_1_data);
+                } else if ( gpio_1_type === 0x01) {
+                    data.gpio_output_1 = readOnOffStatus(gpio_1_data);
                 } else {
-                    data.gpio_1 = gpio_1_data;
+                    data.gpio_counter_1 = gpio_1_data;
                 }
-                data.gpio_2_type = readGPIOType(gpio_2_type);
-                if (gpio_2_type === 0x00 || gpio_2_type === 0x01) {
-                    data.gpio_2 = readOnOffStatus(gpio_2_data);
+                if (gpio_2_type === 0x00) {
+                    data.gpio_input_2 = readOnOffStatus(gpio_2_data);
+                } else if ( gpio_2_type === 0x01) {
+                    data.gpio_output_2 = readOnOffStatus(gpio_2_data);
                 } else {
-                    data.gpio_2 = gpio_2_data;
+                    data.gpio_counter_2 = gpio_2_data;
                 }
                 if (!hasIllegalValue(temperature_value)) {
                     data.temperature = readInt32LE(bytes.slice(i + 14, i + 18)) / 10;
-                    data.temperature_mutation = temperature_mutation_data;
+                    // check if temperature mutation is triggered
+                    if( (sensor_status_data >>> 3) & 0x01 === 1 ) {
+                        data.temperature_mutation = temperature_mutation_data;
+                    }
                 }
                 if (!hasIllegalValue(pressure_value)) {
                     data.pressure = pressure_value;
-                    data.pressure_mutation = pressure_mutation_data;
+                    // check if pressure mutation is triggered
+                    if( (sensor_status_data >>> 7) & 0x01 === 1 ) {
+                        data.pressure_mutation = pressure_mutation_data;
+                    }
                 }
                 var sensor_type = 0x00;
                 // no temperature sensor
@@ -224,7 +238,6 @@ function milesightDeviceDecode(bytes) {
                 else if (pressure_value === 0xfffe) {
                     sensor_type = 0x01; // temperature sensor
                 }
-
                 data.sensor_status = readHistorySensorStatus(sensor_type, sensor_status_data);
                 data.tamper_status = readTamperStatus(tamper_status_value);
             }
