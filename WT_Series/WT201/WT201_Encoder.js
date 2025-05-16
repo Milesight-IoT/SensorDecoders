@@ -785,7 +785,7 @@ function setFreezeProtection(freeze_protection_config) {
         throw new Error("freeze_protection_config.temperature must be a number");
     }
 
-    var buffer = new Buffer(4);
+    var buffer = new Buffer(5);
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0xb0);
     buffer.writeUInt8(getValue(enable_map, enable));
@@ -1100,7 +1100,7 @@ function setDualTemperatureTolerance(dual_temperature_tolerance) {
             throw new Error("dual_temperature_tolerance.heat_tolerance must be a number");
         }
 
-        var buffer = new Buffer(3);
+        var buffer = new Buffer(4);
         buffer.writeUInt8(0xf9);
         buffer.writeUInt8(0x5a);
         buffer.writeUInt8(0x00);
@@ -1115,7 +1115,7 @@ function setDualTemperatureTolerance(dual_temperature_tolerance) {
         }
 
         var coolBuffer = new Buffer(4);
-        coolBuffer.writeUInt8(0xff);
+        coolBuffer.writeUInt8(0xf9);
         coolBuffer.writeUInt8(0x5a);
         coolBuffer.writeUInt8(0x01);
         coolBuffer.writeUInt8(cool_tolerance * 10);
@@ -1600,7 +1600,7 @@ function setTemperatureAlarmConfig(temperature_alarm_config) {
     data |= getValue(condition_map, condition);
     data |= getValue(alarm_type_map, alarm_type) << 3;
 
-    var buffer = new Buffer(6);
+    var buffer = new Buffer(11);
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0x06);
     buffer.writeUInt8(data);
