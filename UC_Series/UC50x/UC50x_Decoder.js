@@ -89,7 +89,7 @@ function milesightDeviceDecode(bytes) {
             i += 1;
         }
         // GPIO (GPIO as Digital Output)
-        else if (includes(gpio_chns, channel_id) && channel_type ===  0x01) {
+        else if (includes(gpio_chns, channel_id) && channel_type === 0x01) {
             var gpio_channel_name = "gpio_output_" + (channel_id - gpio_chns[0] + 1);
             decoded[gpio_channel_name] = readOnOffStatus(bytes[i]);
             i += 1;
@@ -203,14 +203,14 @@ function milesightDeviceDecode(bytes) {
             } else {
                 if (gpio_1_type === 0x00) {
                     data.gpio_input_1 = readOnOffStatus(gpio_1_data);
-                } else if ( gpio_1_type === 0x01) {
+                } else if (gpio_1_type === 0x01) {
                     data.gpio_output_1 = readOnOffStatus(gpio_1_data);
                 } else {
                     data.gpio_counter_1 = gpio_1_data;
                 }
                 if (gpio_2_type === 0x00) {
                     data.gpio_input_2 = readOnOffStatus(gpio_2_data);
-                } else if ( gpio_2_type === 0x01) {
+                } else if (gpio_2_type === 0x01) {
                     data.gpio_output_2 = readOnOffStatus(gpio_2_data);
                 } else {
                     data.gpio_counter_2 = gpio_2_data;
@@ -218,27 +218,18 @@ function milesightDeviceDecode(bytes) {
                 if (!hasIllegalValue(temperature_value)) {
                     data.temperature = readInt32LE(bytes.slice(i + 14, i + 18)) / 10;
                     // check if temperature mutation is triggered
-                    if( (sensor_status_data >>> 3) & 0x01 === 1 ) {
+                    if ((sensor_status_data >>> 3) & 0x01 === 1) {
                         data.temperature_mutation = temperature_mutation_data;
                     }
                 }
                 if (!hasIllegalValue(pressure_value)) {
                     data.pressure = pressure_value;
                     // check if pressure mutation is triggered
-                    if( (sensor_status_data >>> 7) & 0x01 === 1 ) {
+                    if ((sensor_status_data >>> 7) & 0x01 === 1) {
                         data.pressure_mutation = pressure_mutation_data;
                     }
                 }
-                var sensor_type = 0x00;
-                // no temperature sensor
-                if (temperature_value === 0xfffe) {
-                    sensor_type = 0x02; // pressure sensor
-                } 
-                // no pressure sensor
-                else if (pressure_value === 0xfffe) {
-                    sensor_type = 0x01; // temperature sensor
-                }
-                data.sensor_status = readHistorySensorStatus(sensor_type, sensor_status_data);
+                data.sensor_status = readHistorySensorStatus(temperature_value, pressure_value, sensor_status_data);
                 data.tamper_status = readTamperStatus(tamper_status_value);
             }
             i += 28;
@@ -525,25 +516,33 @@ function readTamperStatus(status) {
     return getValue(status_map, status);
 }
 
-function readGPIOType(type) {
-    var type_map = { 0: "digital_input", 1: "digital_output", 2: "counter" };
-    return getValue(type_map, type);
-}
-
-function readHistorySensorStatus(type, status) {
+function readHistorySensorStatus(temperature_value, pressure_value, status) {
     var data = {};
     // temperature sensor
-    if (type === 0x01) {
-        data.temperature_sensor_status = readSensorStatus((status >>> 0) & 0x01);
-        data.temperature_alarm = readThresholdAlarm((status >>> 1) & 0x03);
-        data.temperature_mutation_alarm = readMutationAlarm((status >>> 3) & 0x01);
-    } 
-    // pressure sensor
-    else if (type === 0x02) {
-        data.pressure_sensor_status = readSensorStatus((status >>> 4) & 0x01);
-        data.pressure_alarm = readThresholdAlarm((status >>> 5) & 0x03);
-        data.pressure_mutation_alarm = readMutationAlarm((status >>> 7) & 0x01);
+    if (temperature_value !== 0xfffe) {
+        if (temperature_value === 0xffff) {
+            data.temperature_sensor_status = readSensorStatus(1);
+        } else if (temperature_value === 0xfffd) {
+            data.temperature_sensor_status = readSensorStatus(2);
+        } else {
+            data.temperature_sensor_status = readSensorStatus(0);
+            data.temperature_alarm = readThresholdAlarm((status >>> 1) & 0x03);
+            data.temperature_mutation_alarm = readMutationAlarm((status >>> 3) & 0x01);
+        }
     }
+    // pressure sensor
+    else if (pressure_value !== 0xfffe) {
+        if (pressure_value === 0xffff) {
+            data.pressure_sensor_status = readSensorStatus(1);
+        } else if (pressure_value === 0xfffd) {
+            data.pressure_sensor_status = readSensorStatus(2);
+        } else {
+            data.pressure_sensor_status = readSensorStatus((status >>> 4) & 0x01);
+            data.pressure_alarm = readThresholdAlarm((status >>> 5) & 0x03);
+            data.pressure_mutation_alarm = readMutationAlarm((status >>> 7) & 0x01);
+        }
+    }
+
     return data;
 }
 
@@ -688,4 +687,3 @@ if (!Object.assign) {
         },
     });
 }
-
