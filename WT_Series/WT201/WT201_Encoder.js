@@ -751,7 +751,7 @@ function setFreezeProtection(freeze_protection_config) {
         throw new Error("freeze_protection_config.temperature must be a number");
     }
 
-    var buffer = new Buffer(4);
+    var buffer = new Buffer(5);
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0xb0);
     buffer.writeUInt8(getValue(enable_map, enable));
@@ -1438,7 +1438,7 @@ function setTemperatureAlarmConfig(temperature_alarm_config) {
     data |= getValue(condition_map, condition);
     data |= getValue(alarm_type_map, alarm_type) << 3;
 
-    var buffer = new Buffer(6);
+    var buffer = new Buffer(11);
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0x06);
     buffer.writeUInt8(data);
