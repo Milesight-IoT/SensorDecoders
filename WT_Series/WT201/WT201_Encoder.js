@@ -103,8 +103,8 @@ function milesightDeviceEncode(payload) {
     if ("fan_dehumidify" in payload) {
         encoded = encoded.concat(setFanDehumidify(payload.fan_dehumidify));
     }
-    if ("plan_mode" in payload) {
-        encoded = encoded.concat(setPlanMode(payload.plan_mode));
+    if ("plan_type" in payload) {
+        encoded = encoded.concat(setPlanType(payload.plan_type));
     }
     if ("plan_schedule" in payload) {
         for (var plan_schedule_index = 0; plan_schedule_index < payload.plan_schedule.length; plan_schedule_index++) {
@@ -827,20 +827,20 @@ function setFanExecuteTime(fan_execute_time) {
 
 /**
  * set plan mode
- * @param {number} plan_mode values: (0: wake, 1: away, 2: home, 3: sleep)
- * @example { "plan_mode": 0 }
+ * @param {number} plan_type values: (0: wake, 1: away, 2: home, 3: sleep)
+ * @example { "plan_type": 0 }
  */
-function setPlanMode(plan_mode) {
-    var plan_mode_map = { 0: "wake", 1: "away", 2: "home", 3: "sleep" };
-    var plan_mode_values = getValues(plan_mode_map);
-    if (plan_mode_values.indexOf(plan_mode) === -1) {
-        throw new Error("plan_mode must be one of " + plan_mode_values.join(", "));
+function setPlanType(plan_type) {
+    var plan_type_map = { 0: "wake", 1: "away", 2: "home", 3: "sleep" };
+    var plan_type_values = getValues(plan_type_map);
+    if (plan_type_values.indexOf(plan_type) === -1) {
+        throw new Error("plan_type must be one of " + plan_type_values.join(", "));
     }
 
     var buffer = new Buffer(3);
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0xc2);
-    buffer.writeUInt8(getValue(plan_mode_map, plan_mode));
+    buffer.writeUInt8(getValue(plan_type_map, plan_type));
     return buffer.toBytes();
 }
 
