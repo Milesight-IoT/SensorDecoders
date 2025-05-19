@@ -99,7 +99,7 @@ function milesightDeviceDecode(bytes) {
         // PLAN EVENT
         else if (channel_id === 0x07 && channel_type === 0xbc) {
             var plan_event_value = bytes[i];
-            decoded.plan_event = readPlanEvent((plan_event_value >>> 0) & 0x0f);
+            decoded.plan_type = readPlanEvent((plan_event_value >>> 0) & 0x0f);
             i += 1;
         }
         // SYSTEM STATUS
@@ -389,7 +389,7 @@ function handle_downlink_response(channel_type, bytes, offset) {
             offset += 4;
             break;
         case 0xc2:
-            decoded.plan_mode = readPlanEventType(readUInt8(bytes[offset]));
+            decoded.plan_type = readPlanEventType(readUInt8(bytes[offset]));
             offset += 1;
             break;
         case 0xc4:
@@ -652,12 +652,16 @@ function readSensorStatus(type) {
 }
 
 function readPlanEvent(type) {
+    var fix_type = type -1;
+    if (fix_type === -1) {
+        type = 255;
+    }    
     var plan_event_map = {
-        0: "not executed",
         1: "wake",
         2: "away",
         3: "home",
         4: "sleep",
+        255: "not executed",
     };
     return getValue(plan_event_map, type);
 }
