@@ -747,7 +747,7 @@ function readSensorStatus(type) {
 function readExecutePlanType(type) {
     var fix_type = type - 1;
     if (fix_type === -1) {
-        type = 255;
+        fix_type = 255;
     }
     var plan_event_map = {
         0: "wake",
@@ -759,7 +759,7 @@ function readExecutePlanType(type) {
         6: "eco",
         255: "not executed",
     };
-    return getValue(plan_event_map, type);
+    return getValue(plan_event_map, fix_type);
 }
 
 function readPlanType(type) {

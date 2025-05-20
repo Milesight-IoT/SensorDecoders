@@ -652,18 +652,18 @@ function readSensorStatus(type) {
 }
 
 function readPlanEvent(type) {
-    var fix_type = type -1;
+    var fix_type = type - 1;
     if (fix_type === -1) {
-        type = 255;
-    }    
+        fix_type = 255;
+    }
     var plan_event_map = {
-        1: "wake",
-        2: "away",
-        3: "home",
-        4: "sleep",
+        0: "wake",
+        1: "away",
+        2: "home",
+        3: "sleep",
         255: "not executed",
     };
-    return getValue(plan_event_map, type);
+    return getValue(plan_event_map, fix_type);
 }
 
 function readPlanEventType(type) {
