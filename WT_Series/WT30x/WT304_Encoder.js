@@ -7,6 +7,8 @@
  */
 var RAW_VALUE = 0x00;
 
+/* eslint no-redeclare: "off" */
+/* eslint-disable */
 // Chirpstack v4
 function encodeDownlink(input) {
     var encoded = milesightDeviceEncode(input.data);
@@ -22,6 +24,7 @@ function Encode(fPort, obj) {
 function Encoder(obj, port) {
     return milesightDeviceEncode(obj);
 }
+/* eslint-enable */
 
 function milesightDeviceEncode(payload) {
     var encoded = [];
@@ -141,24 +144,33 @@ function milesightDeviceEncode(payload) {
             encoded = encoded.concat(setD2DPairingSettings(payload.d2d_pairing_settings[i]));
         }
     }
+    if ("d2d_master_enable" in payload) {
+        encoded = encoded.concat(setD2DMasterEnable(payload.d2d_master_enable));
+    }
     if ("d2d_master_settings" in payload) {
         for (var i = 0; i < payload.d2d_master_settings.length; i++) {
             encoded = encoded.concat(setD2DMasterSettings(payload.d2d_master_settings[i]));
         }
+    }
+    if ("d2d_slave_enable" in payload) {
+        encoded = encoded.concat(setD2DSlaveEnable(payload.d2d_slave_enable));
     }
     if ("d2d_slave_settings" in payload) {
         for (var i = 0; i < payload.d2d_slave_settings.length; i++) {
             encoded = encoded.concat(setD2DSlaveSettings(payload.d2d_slave_settings[i]));
         }
     }
-    if ("system_auto_work_config" in payload) {
-        encoded = encoded.concat(setSystemAutoWorkConfig(payload.system_auto_work_config));
-    }
     if ("timed_system_control_settings" in payload) {
         encoded = encoded.concat(setTimedSystemControlSettings(payload.timed_system_control_settings));
     }
     if ("temporary_unlock_settings" in payload) {
         encoded = encoded.concat(setButtonTemporaryUnlockedConfig(payload.temporary_unlock_settings));
+    }
+    if ("temperature_control_with_standby_fan_mode" in payload) {
+        encoded = encoded.concat(setTemperatureControlWithStandbyFanMode(payload.temperature_control_with_standby_fan_mode));
+    }
+    if ("valve_opening_negative_valve_mode" in payload) {
+        encoded = encoded.concat(setValveOpeningNegativeValveMode(payload.valve_opening_negative_valve_mode));
     }
     if ("relay_changes_report_enable" in payload) {
         encoded = encoded.concat(setRelayChangeReportEnable(payload.relay_changes_report_enable));
@@ -317,10 +329,6 @@ function setTemperatureUnit(temperature_unit) {
  * @example { "support_mode_config": { "fan_enable": 1, "heating_enable": 1, "cooling_enable": 1 } }
  */
 function setSupportModeConfig(support_mode_config) {
-    var fan_enable = support_mode_config.fan_enable;
-    var heating_enable = support_mode_config.heating_enable;
-    var cooling_enable = support_mode_config.cooling_enable;
-
     var enable_map = { 0: "disable", 1: "enable" };
     var enable_values = getValues(enable_map);
 
@@ -683,6 +691,9 @@ function setChildLockSettings(child_lock_settings) {
     var button_offset = { system_button: 0, temperature_button: 1, fan_button: 2, temperature_control_button: 3, reboot_reset_button: 4 };
     for (var key in button_offset) {
         if (key in child_lock_settings) {
+            if (enable_values.indexOf(child_lock_settings[key]) === -1) {
+                throw new Error("child_lock_settings." + key + " must be one of " + enable_values.join(", "));
+            }
             data |= getValue(enable_map, child_lock_settings[key]) << button_offset[key];
         }
     }
@@ -915,11 +926,11 @@ function setPlanNameFirst(plan_id, name_first) {
         throw new Error("plan_config._item.name_first must be less than 10 characters");
     }
 
-    var buffer = new Buffer(8);
+    var buffer = new Buffer(9);
     buffer.writeUInt8(0x7b);
     buffer.writeUInt8(plan_id);
     buffer.writeUInt8(0x01); // name1 sub-command
-    buffer.writeBytes(stringToBytes(name_first));
+    buffer.writeBytes(encodeUtf8(name_first));
     return buffer.toBytes();
 }
 
@@ -928,11 +939,11 @@ function setPlanNameLast(plan_id, name_last) {
         throw new Error("plan_config._item.name_last must be less than 10 characters");
     }
 
-    var buffer = new Buffer(8);
+    var buffer = new Buffer(7);
     buffer.writeUInt8(0x7b);
     buffer.writeUInt8(plan_id);
     buffer.writeUInt8(0x02); // name2 sub-command
-    buffer.writeBytes(stringToBytes(name_last));
+    buffer.writeBytes(encodeUtf8(name_last));
     return buffer.toBytes();
 }
 
@@ -948,7 +959,6 @@ function setPlanNameLast(plan_id, name_last) {
  * @param {number} plan_config.temperature_tolerance unit: celsius, range: [0.1, 5]
  */
 function setPlanTemperatureControlConfig(plan_id, plan_config) {
-    var data = [];
     var fan_mode = plan_config.fan_mode;
     var heating_temperature_enable = plan_config.heating_temperature_enable;
     var heating_temperature = plan_config.heating_temperature;
@@ -1739,7 +1749,7 @@ function setD2DPairingNameFirst(index, name_first) {
     firstBuffer.writeUInt8(0x87);
     firstBuffer.writeUInt8(index);
     firstBuffer.writeUInt8(0x02); // First part command
-    firstBuffer.writeBytes(stringToBytes(name_first));
+    firstBuffer.writeBytes(encodeUtf8(name_first));
     return firstBuffer.toBytes();
 }
 
@@ -1758,8 +1768,26 @@ function setD2DPairingNameLast(index, name_last) {
     lastBuffer.writeUInt8(0x87);
     lastBuffer.writeUInt8(index);
     lastBuffer.writeUInt8(0x03); // Last part command
-    lastBuffer.writeBytes(stringToBytes(name_last));
+    lastBuffer.writeBytes(encodeUtf8(name_last));
     return lastBuffer.toBytes();
+}
+
+/**
+ * Set D2D master enable
+ * @param {number} d2d_master_enable values: (0: disable, 1: enable)
+ * @example { "d2d_master_enable": 0 }
+ */
+function setD2DMasterEnable(d2d_master_enable) {
+    var enable_map = { 0: "disable", 1: "enable" };
+    var enable_values = getValues(enable_map);
+    if (enable_values.indexOf(d2d_master_enable) === -1) {
+        throw new Error("d2d_master_enable must be one of " + enable_values.join(", "));
+    }
+
+    var buffer = new Buffer(2);
+    buffer.writeUInt8(0x88);
+    buffer.writeUInt8(getValue(enable_map, d2d_master_enable));
+    return buffer.toBytes();
 }
 
 /**
@@ -1799,13 +1827,31 @@ function setD2DMasterSettings(d2d_master_settings) {
     }
 
     var buffer = new Buffer(9);
-    buffer.writeUInt8(0x88);
+    buffer.writeUInt8(0x89);
     buffer.writeUInt8(getValue(trigger_source_map, trigger_source));
     buffer.writeUInt8(getValue(enable_map, enable));
     buffer.writeUInt8(getValue(enable_map, lora_uplink_enable));
     buffer.writeHexStringReverse(command);
     buffer.writeUInt8(getValue(enable_map, time_enable));
     buffer.writeUInt16LE(time);
+    return buffer.toBytes();
+}
+
+/**
+ * Set D2D slave enable
+ * @param {number} d2d_slave_enable values: (0: disable, 1: enable)
+ * @example { "d2d_slave_enable": 0 }
+ */
+function setD2DSlaveEnable(d2d_slave_enable) {
+    var enable_map = { 0: "disable", 1: "enable" };
+    var enable_values = getValues(enable_map);
+    if (enable_values.indexOf(d2d_slave_enable) === -1) {
+        throw new Error("d2d_slave_enable must be one of " + enable_values.join(", "));
+    }
+
+    var buffer = new Buffer(2);
+    buffer.writeUInt8(0x8a);
+    buffer.writeUInt8(getValue(enable_map, d2d_slave_enable));
     return buffer.toBytes();
 }
 
@@ -1840,7 +1886,7 @@ function setD2DSlaveSettings(d2d_slave_settings) {
     }
 
     var buffer = new Buffer(6);
-    buffer.writeUInt8(0x89);
+    buffer.writeUInt8(0x8b);
     buffer.writeUInt8(index - 1);
     buffer.writeUInt8(getValue(enable_map, enable));
     buffer.writeHexStringReverse(command);
@@ -1886,7 +1932,7 @@ function setTimedSystemControlEnable(enable) {
     }
 
     var buffer = new Buffer(3);
-    buffer.writeUInt8(0x8a);
+    buffer.writeUInt8(0x8c);
     buffer.writeUInt8(0x00);
     buffer.writeUInt8(getValue(enable_map, enable));
     return buffer.toBytes();
@@ -1926,15 +1972,15 @@ function setTimedSystemControlStartTimeCycle(start_cycle_settings) {
     var weekday_data = 0x00;
     var week_bits_offset = { sunday: 0, monday: 1, tuesday: 2, wednesday: 3, thursday: 4, friday: 5, saturday: 6 };
     for (var key in week_bits_offset) {
-        if (key in start_cycle_settings.weekday) {
-            if (enable_values.indexOf(start_cycle_settings.weekday[key]) === -1) {
+        if (key in weekday) {
+            if (enable_values.indexOf(weekday[key]) === -1) {
                 throw new Error("start_cycle_settings._item.weekday." + key + " must be one of " + enable_values.join(", "));
             }
-            weekday_data |= getValue(enable_map, start_cycle_settings.weekday[key]) << week_bits_offset[key];
+            weekday_data |= getValue(enable_map, weekday[key]) << week_bits_offset[key];
         }
     }
     var buffer = new Buffer(7);
-    buffer.writeUInt8(0x8a);
+    buffer.writeUInt8(0x8c);
     buffer.writeUInt8(0x01); // sub-command (start time)
     buffer.writeUInt8(index - 1);
     buffer.writeUInt8(getValue(enable_map, enable));
@@ -1977,15 +2023,15 @@ function setTimedSystemControlEndTimeCycle(end_cycle_settings) {
     var weekday_data = 0x00;
     var week_bits_offset = { sunday: 0, monday: 1, tuesday: 2, wednesday: 3, thursday: 4, friday: 5, saturday: 6 };
     for (var key in week_bits_offset) {
-        if (key in end_cycle_settings.weekday) {
-            if (enable_values.indexOf(end_cycle_settings.weekday[key]) === -1) {
+        if (key in weekday) {
+            if (enable_values.indexOf(weekday[key]) === -1) {
                 throw new Error("end_cycle_settings._item.weekday." + key + " must be one of " + enable_values.join(", "));
             }
-            weekday_data |= getValue(enable_map, end_cycle_settings.weekday[key]) << week_bits_offset[key];
+            weekday_data |= getValue(enable_map, weekday[key]) << week_bits_offset[key];
         }
     }
     var buffer = new Buffer(7);
-    buffer.writeUInt8(0x8a);
+    buffer.writeUInt8(0x8c);
     buffer.writeUInt8(0x02); // sub-command (end time)
     buffer.writeUInt8(index - 1);
     buffer.writeUInt8(getValue(enable_map, enable));
@@ -2026,9 +2072,45 @@ function setButtonTemporaryUnlockedConfig(temporary_unlock_settings) {
     }
 
     var buffer = new Buffer(4);
-    buffer.writeUInt8(0x8b);
+    buffer.writeUInt8(0x8d);
     buffer.writeUInt8(data);
     buffer.writeUInt16LE(duration);
+    return buffer.toBytes();
+}
+
+/**
+ * Set temperature control with standby fan mode
+ * @param {number} temperature_control_with_standby_fan_mode values: (0: low, 1: standby, 2: high)
+ * @example { "temperature_control_with_standby_fan_mode": 0 }
+ */
+function setTemperatureControlWithStandbyFanMode(temperature_control_with_standby_fan_mode) {
+    var mode = { 0: "low", 1: "standby", 2: "high" };
+    var mode_values = getValues(mode);
+    if (mode_values.indexOf(temperature_control_with_standby_fan_mode) === -1) {
+        throw new Error("temperature_control_with_standby_fan_mode must be one of " + mode_values.join(", "));
+    }
+
+    var buffer = new Buffer(2);
+    buffer.writeUInt8(0x8e);
+    buffer.writeUInt8(getValue(mode, temperature_control_with_standby_fan_mode));
+    return buffer.toBytes();
+}
+
+/**
+ * Set valve opening negative valve mode
+ * @param {number} valve_opening_negative_valve_mode values: (0: low, 1: stop)
+ * @example { "valve_opening_negative_valve_mode": 0 }
+ */
+function setValveOpeningNegativeValveMode(valve_opening_negative_valve_mode) {
+    var mode = { 0: "low", 1: "stop" };
+    var mode_values = getValues(mode);
+    if (mode_values.indexOf(valve_opening_negative_valve_mode) === -1) {
+        throw new Error("valve_opening_negative_valve_mode must be one of " + mode_values.join(", "));
+    }
+
+    var buffer = new Buffer(2);
+    buffer.writeUInt8(0x8f);
+    buffer.writeUInt8(getValue(mode, valve_opening_negative_valve_mode));
     return buffer.toBytes();
 }
 
@@ -2045,7 +2127,7 @@ function setRelayChangeReportEnable(relay_changes_report_enable) {
     }
 
     var buffer = new Buffer(2);
-    buffer.writeUInt8(0x8c);
+    buffer.writeUInt8(0x90);
     buffer.writeUInt8(getValue(enable_map, relay_changes_report_enable));
     return buffer.toBytes();
 }
@@ -2158,6 +2240,7 @@ function setAutoProvisioningEnable(auto_provisioning_enable) {
 function setHistoryConfig(history_transmit_settings) {
     var data = [];
     if ("enable" in history_transmit_settings) {
+        var enable = history_transmit_settings.enable;
         var enable_map = { 0: "disable", 1: "enable" };
         var enable_values = getValues(enable_map);
         if (enable_values.indexOf(enable) === -1) {
@@ -2468,11 +2551,25 @@ Buffer.prototype.toBytes = function () {
     return this.buffer;
 };
 
-function stringToBytes(str) {
-    var bytes = [];
+function encodeUtf8(str) {
+    var byteArray = [];
     for (var i = 0; i < str.length; i++) {
-        bytes.push(str.charCodeAt(i));
+        var charCode = str.charCodeAt(i);
+        if (charCode < 0x80) {
+            byteArray.push(charCode);
+        } else if (charCode < 0x800) {
+            byteArray.push(0xc0 | (charCode >> 6));
+            byteArray.push(0x80 | (charCode & 0x3f));
+        } else if (charCode < 0x10000) {
+            byteArray.push(0xe0 | (charCode >> 12));
+            byteArray.push(0x80 | ((charCode >> 6) & 0x3f));
+            byteArray.push(0x80 | (charCode & 0x3f));
+        } else if (charCode < 0x200000) {
+            byteArray.push(0xf0 | (charCode >> 18));
+            byteArray.push(0x80 | ((charCode >> 12) & 0x3f));
+            byteArray.push(0x80 | ((charCode >> 6) & 0x3f));
+            byteArray.push(0x80 | (charCode & 0x3f));
+        }
     }
-    return bytes;
+    return byteArray;
 }
-

@@ -7,6 +7,8 @@
  */
 var RAW_VALUE = 0x00;
 
+/* eslint no-redeclare: "off" */
+/* eslint-disable */
 // Chirpstack v4
 function decodeUplink(input) {
     var decoded = milesightDeviceDecode(input.bytes);
@@ -22,6 +24,7 @@ function Decode(fPort, bytes) {
 function Decoder(bytes, port) {
     return milesightDeviceDecode(bytes);
 }
+/* eslint-enable */
 
 function milesightDeviceDecode(bytes) {
     var decoded = {};
@@ -110,7 +113,7 @@ function milesightDeviceDecode(bytes) {
                 i += 1;
                 break;
             case 0x08:
-                decoded.plan_id = readUInt8(bytes[i]);
+                decoded.plan_id = readPlanId(readUInt8(bytes[i]));
                 i += 1;
                 break;
             case 0x09:
@@ -310,11 +313,11 @@ function milesightDeviceDecode(bytes) {
                     plan_config.enable = readEnableStatus(bytes[i + 2]);
                     i += 3;
                 } else if (data === 0x01) {
-                    plan_config.name_first = readString(bytes.slice(i + 2, i + 10));
-                    i += 10;
+                    plan_config.name_first = readString(bytes.slice(i + 2, i + 8));
+                    i += 8;
                 } else if (data === 0x02) {
-                    plan_config.name_last = readString(bytes.slice(i + 2, i + 10));
-                    i += 10;
+                    plan_config.name_last = readString(bytes.slice(i + 2, i + 6));
+                    i += 6;
                 } else if (data === 0x03) {
                     var fan_mode_data = readUInt8(bytes[i + 2]);
                     var heating_temperature_data = readInt16LE(bytes.slice(i + 3, i + 5));
@@ -468,6 +471,10 @@ function milesightDeviceDecode(bytes) {
                 decoded.d2d_pairing_settings.push(d2d_pairing_settings);
                 break;
             case 0x88:
+                decoded.d2d_master_enable = readEnableStatus(bytes[i]);
+                i += 1;
+                break;
+            case 0x89:
                 var trigger_source_data = readUInt8(bytes[i]);
                 var d2d_master_settings = {};
                 d2d_master_settings.trigger_source = readD2DTriggerSource(trigger_source_data);
@@ -480,7 +487,11 @@ function milesightDeviceDecode(bytes) {
                 decoded.d2d_master_settings = decoded.d2d_master_settings || [];
                 decoded.d2d_master_settings.push(d2d_master_settings);
                 break;
-            case 0x89:
+            case 0x8a:
+                decoded.d2d_slave_enable = readEnableStatus(bytes[i]);
+                i += 1;
+                break;
+            case 0x8b:
                 var d2d_slave_settings = {};
                 d2d_slave_settings.index = readUInt8(bytes[i]) + 1;
                 d2d_slave_settings.enable = readEnableStatus(bytes[i + 1]);
@@ -490,7 +501,7 @@ function milesightDeviceDecode(bytes) {
                 decoded.d2d_slave_settings = decoded.d2d_slave_settings || [];
                 decoded.d2d_slave_settings.push(d2d_slave_settings);
                 break;
-            case 0x8a:
+            case 0x8c:
                 var type = readUInt8(bytes[i]);
                 decoded.timed_system_control_settings = decoded.timed_system_control_settings || {};
                 if (type === 0) {
@@ -526,7 +537,7 @@ function milesightDeviceDecode(bytes) {
                     decoded.timed_system_control_settings.end_cycle_settings.push(end_cycle_settings);
                 }
                 break;
-            case 0x8b:
+            case 0x8d:
                 var data = readUInt8(bytes[i]);
                 var unlock_bits_offset = { system_button: 0, temperature_up_button: 1, temperature_down_button: 2, fan_button: 3, temperature_control_mode_button: 4 };
                 decoded.temporary_unlock_settings = decoded.temporary_unlock_settings || {};
@@ -536,7 +547,15 @@ function milesightDeviceDecode(bytes) {
                 decoded.temporary_unlock_settings.duration = readUInt16LE(bytes.slice(i + 1, i + 3));
                 i += 3;
                 break;
-            case 0x8c:
+            case 0x8e:
+                decoded.temperature_control_with_standby_fan_mode = readTemperatureControlWithStandbyFanMode(bytes[i]);
+                i += 1;
+                break;
+            case 0x8f:
+                decoded.valve_opening_negative_valve_mode = readValveOpeningNegativeValveMode(bytes[i]);
+                i += 1;
+                break;
+            case 0x90:
                 decoded.relay_changes_report_enable = readEnableStatus(bytes[i]);
                 i += 1;
                 break;
@@ -733,6 +752,11 @@ function readFanMode(type) {
     return getValue(mode_map, type);
 }
 
+function readPlanId(type) {
+    var plan_id_map = { 0: "plan_1", 1: "plan_2", 2: "plan_3", 3: "plan_4", 4: "plan_5", 5: "plan_6", 6: "plan_7", 7: "plan_8", 8: "plan_9", 9: "plan_10", 10: "plan_11", 11: "plan_12", 12: "plan_13", 13: "plan_14", 14: "plan_15", 15: "plan_16", 255: "no_plan" };
+    return getValue(plan_id_map, type);
+}
+
 function readFanStatus(type) {
     var status_map = { 0: "off", 1: "low", 2: "medium", 3: "high" };
     return getValue(status_map, type);
@@ -870,11 +894,22 @@ function readD2DTriggerTarget(type) {
     return getValue(trigger_target_map, type);
 }
 
+function readTemperatureControlWithStandbyFanMode(type) {
+    var mode_map = { 0: "low", 1: "stop" };
+    return getValue(mode_map, type);
+}
+
+function readValveOpeningNegativeValveMode(type) {
+    var mode_map = { 0: "low", 1: "stop" };
+    return getValue(mode_map, type);
+}
+
 function readTimeZone(type) {
     var timezone_map = { "-720": "UTC-12:00", "-660": "UTC-11:00", "-600": "UTC-10:00", "-570": "UTC-09:30", "-540": "UTC-09:00", "-480": "UTC-08:00", "-420": "UTC-07:00", "-360": "UTC-06:00", "-300": "UTC-05:00", "-240": "UTC-04:00", "-210": "UTC-03:30", "-180": "UTC-03:00", "-120": "UTC-02:00", "-60": "UTC-01:00", 0: "UTC+00:00", 60: "UTC+01:00", 120: "UTC+02:00", 180: "UTC+03:00", 210: "UTC+03:30", 240: "UTC+04:00", 270: "UTC+04:30", 300: "UTC+05:00", 330: "UTC+05:30", 345: "UTC+05:45", 360: "UTC+06:00", 390: "UTC+06:30", 420: "UTC+07:00", 480: "UTC+08:00", 540: "UTC+09:00", 570: "UTC+09:30", 600: "UTC+10:00", 630: "UTC+10:30", 660: "UTC+11:00", 720: "UTC+12:00", 765: "UTC+12:45", 780: "UTC+13:00", 840: "UTC+14:00" };
     return getValue(timezone_map, type);
 }
 
+/* eslint-disable */
 function readUInt8(bytes) {
     return bytes & 0xff;
 }
@@ -926,9 +961,28 @@ function readFloatLE(bytes) {
 
 function readString(bytes) {
     var str = "";
-    for (var i = 0; i < bytes.length; i++) {
-        if (bytes[i] === 0x00) break;
-        str += String.fromCharCode(bytes[i]);
+    var i = 0;
+    var byte1, byte2, byte3, byte4;
+    while (i < bytes.length) {
+        byte1 = bytes[i++];
+        if (byte1 <= 0x7f) {
+            str += String.fromCharCode(byte1);
+        } else if (byte1 <= 0xdf) {
+            byte2 = bytes[i++];
+            str += String.fromCharCode(((byte1 & 0x1f) << 6) | (byte2 & 0x3f));
+        } else if (byte1 <= 0xef) {
+            byte2 = bytes[i++];
+            byte3 = bytes[i++];
+            str += String.fromCharCode(((byte1 & 0x0f) << 12) | ((byte2 & 0x3f) << 6) | (byte3 & 0x3f));
+        } else if (byte1 <= 0xf7) {
+            byte2 = bytes[i++];
+            byte3 = bytes[i++];
+            byte4 = bytes[i++];
+            var codepoint = ((byte1 & 0x07) << 18) | ((byte2 & 0x3f) << 12) | ((byte3 & 0x3f) << 6) | (byte4 & 0x3f);
+            codepoint -= 0x10000;
+            str += String.fromCharCode((codepoint >> 10) + 0xd800);
+            str += String.fromCharCode((codepoint & 0x3ff) + 0xdc00);
+        }
     }
     return str;
 }
