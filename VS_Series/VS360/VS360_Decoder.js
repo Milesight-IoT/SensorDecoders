@@ -7,6 +7,8 @@
  */
 var RAW_VALUE = 0x00;
 
+/* eslint no-redeclare: "off" */
+/* eslint-disable */
 // Chirpstack v4
 function decodeUplink(input) {
     var decoded = milesightDeviceDecode(input.bytes);
@@ -22,6 +24,7 @@ function Decode(fPort, bytes) {
 function Decoder(bytes, port) {
     return milesightDeviceDecode(bytes);
 }
+/* eslint-enable */
 
 function milesightDeviceDecode(bytes) {
     var decoded = {};
@@ -143,11 +146,11 @@ function milesightDeviceDecode(bytes) {
         }
         // DOWNLINK RESPONSE
         else if (channel_id === 0xfe || channel_id === 0xff) {
-            result = handle_downlink_response(channel_type, bytes, i);
+            var result = handle_downlink_response(channel_type, bytes, i);
             decoded = Object.assign(decoded, result.data);
             i = result.offset;
         } else if (channel_id === 0xf8 || channel_id === 0xf9) {
-            result = handle_downlink_response_ext(channel_id, channel_type, bytes, i);
+            var result = handle_downlink_response_ext(channel_id, channel_type, bytes, i);
             decoded = Object.assign(decoded, result.data);
             i = result.offset;
         }
@@ -244,10 +247,6 @@ function handle_downlink_response(channel_type, bytes, offset) {
         case 0xbd:
             decoded.timezone = readTimeZone(readInt16LE(bytes.slice(offset, offset + 2)));
             offset += 2;
-            break;
-        case 0xa6:
-            decoded.cumulative_enable = readEnableStatus(bytes[offset]);
-            offset += 1;
             break;
         case 0xa8:
             var data = readUInt8(bytes[offset]);
@@ -462,7 +461,6 @@ function readD2DMode(mode) {
     return getValue(mode_map, mode);
 }
 
-
 function readAlarmConfig(bytes) {
     var offset = 0;
 
@@ -490,6 +488,7 @@ function readTriggerSourceType(type) {
     return getValue(trigger_source_map, type);
 }
 
+/* eslint-disable */
 function readUInt8(bytes) {
     return bytes & 0xff;
 }
@@ -576,4 +575,3 @@ if (!Object.assign) {
         },
     });
 }
-

@@ -7,6 +7,8 @@
  */
 var RAW_VALUE = 0x00;
 
+/* eslint no-redeclare: "off" */
+/* eslint-disable */
 // Chirpstack v4
 function encodeDownlink(input) {
     var encoded = milesightDeviceEncode(input.data);
@@ -22,7 +24,7 @@ function Encode(fPort, obj) {
 function Encoder(obj, port) {
     return milesightDeviceEncode(obj);
 }
-
+/* eslint-enable */
 function milesightDeviceEncode(payload) {
     var encoded = [];
 
@@ -635,6 +637,7 @@ function fetchHistory(fetch_history) {
         buffer.writeUInt32LE(start_time);
     } else {
         var buffer = new Buffer(10);
+        buffer.writeUInt8(0xfd);
         buffer.writeUInt8(0x6c);
         buffer.writeUInt32LE(start_time);
         buffer.writeUInt32LE(end_time);
@@ -663,14 +666,8 @@ function stopTransmit(stop_transmit) {
 
 function getValues(map) {
     var values = [];
-    if (RAW_VALUE) {
-        for (var key in map) {
-            values.push(parseInt(key));
-        }
-    } else {
-        for (var key in map) {
-            values.push(map[key]);
-        }
+    for (var key in map) {
+        values.push(RAW_VALUE ? parseInt(key) : map[key]);
     }
     return values;
 }
