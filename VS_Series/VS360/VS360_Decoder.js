@@ -1,12 +1,14 @@
 /**
  * Payload Decoder
  *
- * Copyright 2024 Milesight IoT
+ * Copyright 2025 Milesight IoT
  *
  * @product VS360
  */
 var RAW_VALUE = 0x00;
 
+/* eslint no-redeclare: "off" */
+/* eslint-disable */
 // Chirpstack v4
 function decodeUplink(input) {
     var decoded = milesightDeviceDecode(input.bytes);
@@ -22,11 +24,12 @@ function Decode(fPort, bytes) {
 function Decoder(bytes, port) {
     return milesightDeviceDecode(bytes);
 }
+/* eslint-enable */
 
 function milesightDeviceDecode(bytes) {
     var decoded = {};
 
-    for (var i = 0; i < bytes.length;) {
+    for (var i = 0; i < bytes.length; ) {
         var channel_id = bytes[i++];
         var channel_type = bytes[i++];
 
@@ -72,12 +75,12 @@ function milesightDeviceDecode(bytes) {
         }
         // BATTERY(MAIN)
         else if (channel_id === 0x01 && channel_type === 0x75) {
-            decoded.battery_main = bytes[i];
+            decoded.battery_main = readUInt8(bytes[i]);
             i += 1;
         }
         // BATTERY(NODE)
         else if (channel_id === 0x02 && channel_type === 0x75) {
-            decoded.battery_node = bytes[i];
+            decoded.battery_node = readUInt8(bytes[i]);
             i += 1;
         }
         // EVENT
@@ -85,7 +88,6 @@ function milesightDeviceDecode(bytes) {
             var data = {};
             data.type = readEventType(bytes[i]);
             data.status = readEventStatus(bytes[i + 1]);
-
             decoded.event = decoded.event || [];
             decoded.event.push(data);
             i += 2;
@@ -116,6 +118,11 @@ function milesightDeviceDecode(bytes) {
             decoded.period_count_alarm = readAlarmType(bytes[i + 4]);
             i += 5;
         }
+        // TIMESTAMP
+        else if (channel_id === 0x0a && channel_type === 0xef) {
+            decoded.timestamp = readUInt32LE(bytes.slice(i, i + 4));
+            i += 4;
+        }
         // HISTORICAL DATA
         else if (channel_id === 0x20 && channel_type === 0xce) {
             var data = {};
@@ -137,7 +144,6 @@ function milesightDeviceDecode(bytes) {
                 data.total_out = readUInt16LE(bytes.slice(i + 11, i + 13));
                 i += 13;
             }
-
             decoded.history = decoded.history || [];
             decoded.history.push(data);
         }
@@ -150,8 +156,7 @@ function milesightDeviceDecode(bytes) {
             var result = handle_downlink_response_ext(channel_id, channel_type, bytes, i);
             decoded = Object.assign(decoded, result.data);
             i = result.offset;
-        }
-        else {
+        } else {
             break;
         }
     }
@@ -164,7 +169,24 @@ function handle_downlink_response(channel_type, bytes, offset) {
 
     switch (channel_type) {
         case 0x06:
-            decoded.alarm_config = readAlarmConfig(bytes.slice(offset, offset + 9));
+            var data = readUInt8(bytes[offset]);
+            var trigger_source = (data >>> 3) & 0x07;
+            if (trigger_source === 1) {
+                decoded.people_period_alarm_config = {};
+                decoded.people_period_alarm_config.condition = readConditionType(data & 0x07);
+                decoded.people_period_alarm_config.threshold_out = readUInt16LE(bytes.slice(offset + 1, offset + 3));
+                decoded.people_period_alarm_config.threshold_in = readUInt16LE(bytes.slice(offset + 3, offset + 5));
+            } else if (trigger_source === 2) {
+                decoded.people_cumulative_alarm_config = {};
+                decoded.people_cumulative_alarm_config.condition = readConditionType(data & 0x07);
+                decoded.people_cumulative_alarm_config.threshold_out = readUInt16LE(bytes.slice(offset + 1, offset + 3));
+                decoded.people_cumulative_alarm_config.threshold_in = readUInt16LE(bytes.slice(offset + 3, offset + 5));
+            } else if (trigger_source === 3) {
+                decoded.temperature_alarm_config = {};
+                decoded.temperature_alarm_config.condition = readConditionType(data & 0x07);
+                decoded.temperature_alarm_config.threshold_min = readUInt16LE(bytes.slice(offset + 1, offset + 3)) / 10;
+                decoded.temperature_alarm_config.threshold_max = readUInt16LE(bytes.slice(offset + 3, offset + 5)) / 10;
+            }
             offset += 9;
             break;
         case 0x10:
@@ -209,7 +231,12 @@ function handle_downlink_response(channel_type, bytes, offset) {
             decoded.hibernate_config.enable = readEnableStatus(bytes[offset]);
             decoded.hibernate_config.start_time = readUInt16LE(bytes.slice(offset + 1, offset + 3));
             decoded.hibernate_config.end_time = readUInt16LE(bytes.slice(offset + 3, offset + 5));
-            decoded.hibernate_config.weekdays = readWeekdays(readUInt8(bytes[offset + 5]));
+            var weekdays = readUInt8(bytes[offset + 5]);
+            decoded.hibernate_config.weekdays = {};
+            var weekday_bit_offset = { monday: 1, tuesday: 2, wednesday: 3, thursday: 4, friday: 5, saturday: 6, sunday: 7 };
+            for (var key in weekday_bit_offset) {
+                decoded.hibernate_config.weekdays[key] = readEnableStatus((weekdays >> weekday_bit_offset[key]) & 0x01);
+            }
             offset += 6;
             break;
         case 0x84:
@@ -234,35 +261,31 @@ function handle_downlink_response(channel_type, bytes, offset) {
             decoded.d2d_master_config.push(d2d_master_config);
             break;
         case 0xa6:
-            decoded.clear_cumulative_enable = readEnableStatus(bytes[offset]);
+            decoded.reset_cumulative_enable = readEnableStatus(bytes[offset]);
             offset += 1;
             break;
         case 0xa9:
-            decoded.cumulative_enable = readEnableStatus(bytes[offset]);
+            decoded.report_cumulative_enable = readEnableStatus(bytes[offset]);
             offset += 1;
             break;
         case 0xbd:
-            decoded.timezone = readTimeZone(readInt16LE(bytes.slice(offset, offset + 2)));
+            decoded.time_zone = readTimeZone(readInt16LE(bytes.slice(offset, offset + 2)));
             offset += 2;
-            break;
-        case 0xa6:
-            decoded.cumulative_enable = readEnableStatus(bytes[offset]);
-            offset += 1;
             break;
         case 0xa8:
             var data = readUInt8(bytes[offset]);
             if (data === 0x01) {
-                decoded.clear_cumulative_in = readYesNoStatus(1);
+                decoded.reset_cumulative_in = readYesNoStatus(1);
             } else if (data === 0x02) {
-                decoded.clear_cumulative_out = readYesNoStatus(1);
+                decoded.reset_cumulative_out = readYesNoStatus(1);
             }
             offset += 1;
             break;
         case 0xed:
-            decoded.cumulative_reset_config = {};
-            decoded.cumulative_reset_config.weekday = readWeekday(readUInt8(bytes.slice(offset, offset + 1)));
-            decoded.cumulative_reset_config.hour = readUInt8(bytes.slice(offset + 1, offset + 2));
-            decoded.cumulative_reset_config.minute = readUInt8(bytes.slice(offset + 2, offset + 3));
+            decoded.reset_cumulative_schedule_config = {};
+            decoded.reset_cumulative_schedule_config.weekday = readWeekday(readUInt8(bytes.slice(offset, offset + 1)));
+            decoded.reset_cumulative_schedule_config.hour = readUInt8(bytes.slice(offset + 1, offset + 2));
+            decoded.reset_cumulative_schedule_config.minute = readUInt8(bytes.slice(offset + 2, offset + 3));
             offset += 3;
             break;
         case 0xfc:
@@ -270,7 +293,7 @@ function handle_downlink_response(channel_type, bytes, offset) {
             offset += 1;
             break;
         case 0xfd:
-            decoded.led_enable = readEnableStatus(bytes[offset]);
+            decoded.led_indicator_enable = readEnableStatus(bytes[offset]);
             offset += 1;
             break;
         default:
@@ -284,7 +307,8 @@ function handle_downlink_response_ext(code, channel_type, bytes, offset) {
     var decoded = {};
 
     switch (channel_type) {
-        case 0x00:
+        case 0x10:
+            decoded.report_type = readReportType(bytes[offset]);
             offset += 1;
             break;
         default:
@@ -380,104 +404,38 @@ function readYesNoStatus(status) {
 }
 
 function readAlarmType(type) {
-    var alarm_map = { 1: "threshold_alarm" }
+    var alarm_map = { 1: "threshold_alarm" };
     return getValue(alarm_map, type);
 }
 
 function readEventType(type) {
-    var event_type = { 0: "counting_anomaly", 1: "node_device_without_response", 2: "devices_misaligned" }
+    var event_type = { 0: "counting_anomaly", 1: "node_device_without_response", 2: "devices_misaligned" };
     return getValue(event_type, type);
 }
 
 function readEventStatus(status) {
-    var event_status = { 0: "alarm_release", 1: "alarm" }
+    var event_status = { 0: "alarm_release", 1: "alarm" };
     return getValue(event_status, status);
 }
 
-function readTimeZone(timezone) {
-    var timezone_map = {
-        "-720": "UTC-12",
-        "-660": "UTC-11",
-        "-600": "UTC-10",
-        "-570": "UTC-9:30",
-        "-540": "UTC-9",
-        "-480": "UTC-8",
-        "-420": "UTC-7",
-        "-360": "UTC-6",
-        "-300": "UTC-5",
-        "-240": "UTC-4",
-        "-210": "UTC-3:30",
-        "-180": "UTC-3",
-        "-120": "UTC-2",
-        "-60": "UTC-1",
-        0: "UTC",
-        60: "UTC+1",
-        120: "UTC+2",
-        180: "UTC+3",
-        210: "UTC+3:30",
-        240: "UTC+4",
-        270: "UTC+4:30",
-        300: "UTC+5",
-        330: "UTC+5:30",
-        345: "UTC+5:45",
-        360: "UTC+6",
-        390: "UTC+6:30",
-        420: "UTC+7",
-        480: "UTC+8",
-        540: "UTC+9",
-        570: "UTC+9:30",
-        600: "UTC+10",
-        630: "UTC+10:30",
-        660: "UTC+11",
-        720: "UTC+12",
-        765: "UTC+12:45",
-        780: "UTC+13",
-        840: "UTC+14",
-    };
-    return getValue(timezone_map, timezone);
+function readTimeZone(time_zone) {
+    var timezone_map = { "-720": "UTC-12", "-660": "UTC-11", "-600": "UTC-10", "-570": "UTC-9:30", "-540": "UTC-9", "-480": "UTC-8", "-420": "UTC-7", "-360": "UTC-6", "-300": "UTC-5", "-240": "UTC-4", "-210": "UTC-3:30", "-180": "UTC-3", "-120": "UTC-2", "-60": "UTC-1", 0: "UTC", 60: "UTC+1", 120: "UTC+2", 180: "UTC+3", 210: "UTC+3:30", 240: "UTC+4", 270: "UTC+4:30", 300: "UTC+5", 330: "UTC+5:30", 345: "UTC+5:45", 360: "UTC+6", 390: "UTC+6:30", 420: "UTC+7", 480: "UTC+8", 540: "UTC+9", 570: "UTC+9:30", 600: "UTC+10", 630: "UTC+10:30", 660: "UTC+11", 720: "UTC+12", 765: "UTC+12:45", 780: "UTC+13", 840: "UTC+14" };
+    return getValue(timezone_map, time_zone);
 }
 
 function readWeekday(weekday) {
-    var weekday_map = { 0: "everyday", 1: "sunday", 2: "monday", 3: "tuesday", 4: "wednesday", 5: "thursday", 6: "friday", 7: "saturday" }
+    var weekday_map = { 0: "everyday", 1: "sunday", 2: "monday", 3: "tuesday", 4: "wednesday", 5: "thursday", 6: "friday", 7: "saturday" };
     return getValue(weekday_map, weekday);
 }
 
 function readCountingMode(mode) {
-    var mode_map = { 2: "high_mode", 3: "low_mode" }
+    var mode_map = { 2: "high_mode", 3: "low_mode" };
     return getValue(mode_map, mode);
-}
-
-function readWeekdays(weekdays) {
-    var weekdays_list = [];
-    for (var i = 0; i < 7; i++) {
-        if ((weekdays >> i) & 0x01) {
-            weekdays_list.push(i + 1);
-        }
-    }
-    return weekdays_list;
 }
 
 function readD2DMode(mode) {
-    var mode_map = { 1: "someone_enter", 2: "someone_leave", 3: "counting_threshold_alarm" }
+    var mode_map = { 1: "someone_enter", 2: "someone_leave", 3: "counting_threshold_alarm" };
     return getValue(mode_map, mode);
-}
-
-
-function readAlarmConfig(bytes) {
-    var offset = 0;
-
-    var alarm_config = {};
-    var data = readUInt8(bytes[offset]);
-    alarm_config.enable = readEnableStatus((data >> 6) & 0x03);
-    alarm_config.condition = readConditionType(data & 0x07);
-    alarm_config.trigger_source = readTriggerSourceType((data >> 3) & 0x07);
-    alarm_config.min_threshold = readUInt16LE(bytes.slice(offset + 1, offset + 3));
-    alarm_config.max_threshold = readUInt16LE(bytes.slice(offset + 3, offset + 5));
-    alarm_config.lock_time = readUInt16LE(bytes.slice(offset + 5, offset + 7));
-    alarm_config.continue_time = readUInt16LE(bytes.slice(offset + 7, offset + 9));
-    offset += 9;
-
-    return alarm_config;
 }
 
 function readConditionType(type) {
@@ -485,11 +443,12 @@ function readConditionType(type) {
     return getValue(condition_map, type);
 }
 
-function readTriggerSourceType(type) {
-    var trigger_source_map = { 1: "period_count", 2: "total_count" };
-    return getValue(trigger_source_map, type);
+function readReportType(type) {
+    var report_type_map = { 0: "period", 1: "immediately" };
+    return getValue(report_type_map, type);
 }
 
+/* eslint-disable */
 function readUInt8(bytes) {
     return bytes & 0xff;
 }
@@ -576,4 +535,3 @@ if (!Object.assign) {
         },
     });
 }
-
