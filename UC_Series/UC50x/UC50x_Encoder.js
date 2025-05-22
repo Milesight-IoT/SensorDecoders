@@ -330,6 +330,7 @@ function fetchHistory(fetch_history) {
         buffer.writeUInt32LE(start_time);
     } else {
         buffer = new Buffer(10);
+        buffer.writeUInt8(0xfd);
         buffer.writeUInt8(0x6c);
         buffer.writeUInt32LE(start_time);
         buffer.writeUInt32LE(end_time);
