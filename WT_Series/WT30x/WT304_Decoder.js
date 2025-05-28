@@ -619,26 +619,7 @@ function milesightDeviceDecode(bytes) {
                 decoded.relay_changes_report_enable = readEnableStatus(bytes[i]);
                 i += 1;
                 break;
-            case 0xc7:
-                decoded.time_zone = readTimeZone(readInt16LE(bytes.slice(i, i + 2)));
-                i += 2;
-                break;
-            case 0xc6:
-                decoded.daylight_saving_time = {};
-                decoded.daylight_saving_time.enable = readEnableStatus(bytes[i]);
-                decoded.daylight_saving_time.offset = readUInt8(bytes[i + 1]);
-                decoded.daylight_saving_time.start_month = readUInt8(bytes[i + 2]);
-                var start_day_value = readUInt8(bytes[i + 3]);
-                decoded.daylight_saving_time.start_week_num = (start_day_value >>> 4) & 0x07;
-                decoded.daylight_saving_time.start_week_day = start_day_value & 0x0f;
-                decoded.daylight_saving_time.start_hour_min = readUInt16LE(bytes.slice(i + 4, i + 6));
-                decoded.daylight_saving_time.end_month = readUInt8(bytes[i + 6]);
-                var end_day_value = readUInt8(bytes[i + 7]);
-                decoded.daylight_saving_time.end_week_num = (end_day_value >>> 4) & 0x0f;
-                decoded.daylight_saving_time.end_week_day = end_day_value & 0x0f;
-                decoded.daylight_saving_time.end_hour_min = readUInt16LE(bytes.slice(i + 8, i + 10));
-                i += 10;
-                break;
+
             case 0xc4:
                 decoded.auto_provisioning_enable = readEnableStatus(bytes[i]);
                 i += 1;
@@ -659,6 +640,28 @@ function milesightDeviceDecode(bytes) {
                     i += 3;
                 }
                 break;
+            case 0xc6:
+                decoded.daylight_saving_time = {};
+                decoded.daylight_saving_time.enable = readEnableStatus(bytes[i]);
+                decoded.daylight_saving_time.offset = readUInt8(bytes[i + 1]);
+                decoded.daylight_saving_time.start_month = readUInt8(bytes[i + 2]);
+                var start_day_value = readUInt8(bytes[i + 3]);
+                decoded.daylight_saving_time.start_week_num = (start_day_value >>> 4) & 0x07;
+                decoded.daylight_saving_time.start_week_day = start_day_value & 0x0f;
+                decoded.daylight_saving_time.start_hour_min = readUInt16LE(bytes.slice(i + 4, i + 6));
+                decoded.daylight_saving_time.end_month = readUInt8(bytes[i + 6]);
+                var end_day_value = readUInt8(bytes[i + 7]);
+                decoded.daylight_saving_time.end_week_num = (end_day_value >>> 4) & 0x0f;
+                decoded.daylight_saving_time.end_week_day = end_day_value & 0x0f;
+                decoded.daylight_saving_time.end_hour_min = readUInt16LE(bytes.slice(i + 8, i + 10));
+                i += 10;
+                break;
+            case 0xc7:
+                decoded.time_zone = readTimeZone(readInt16LE(bytes.slice(i, i + 2)));
+                i += 2;
+                break;
+
+            // services
             case 0xb6:
                 decoded.reconnect = readYesNoStatus(1);
                 break;
@@ -701,7 +704,7 @@ function milesightDeviceDecode(bytes) {
                 i += 1;
                 break;
             case 0x5e:
-                decoded.plan_id = readUInt8(bytes[i]) + 1;
+                decoded.insert_plan_id = readUInt8(bytes[i]) + 1;
                 i += 1;
                 break;
             case 0x5f:
@@ -711,7 +714,23 @@ function milesightDeviceDecode(bytes) {
                 decoded.clear_plan[plan_offset[plan_data]] = readYesNoStatus(1);
                 i += 1;
                 break;
+
             // control frame
+            case 0xEF:
+                var cmd_data = readUInt8(bytes[i]);
+                var cmd_result = (cmd_data >>> 4) & 0x0f;
+                var cmd_length = cmd_data & 0x0f;
+                var cmd_id = readHexString(bytes.slice(i + 1, i + 1 + cmd_length));
+                i += 1 + cmd_length;
+
+                var response = {};
+                response.result = readCmdResult(cmd_result);
+                response.cmd_id = cmd_id;
+                response.cmd_name = readCmdName(cmd_id);
+
+                decoded.request_result = decoded.request_result || [];
+                decoded.request_result.push(response);
+                break;
             case 0xFE:
                 decoded.frame = readUInt8(bytes[i]);
                 i += 1;
@@ -967,6 +986,83 @@ function readValveOpeningNegativeValveMode(type) {
 function readTimeZone(type) {
     var timezone_map = { "-720": "UTC-12:00", "-660": "UTC-11:00", "-600": "UTC-10:00", "-570": "UTC-09:30", "-540": "UTC-09:00", "-480": "UTC-08:00", "-420": "UTC-07:00", "-360": "UTC-06:00", "-300": "UTC-05:00", "-240": "UTC-04:00", "-210": "UTC-03:30", "-180": "UTC-03:00", "-120": "UTC-02:00", "-60": "UTC-01:00", 0: "UTC+00:00", 60: "UTC+01:00", 120: "UTC+02:00", 180: "UTC+03:00", 210: "UTC+03:30", 240: "UTC+04:00", 270: "UTC+04:30", 300: "UTC+05:00", 330: "UTC+05:30", 345: "UTC+05:45", 360: "UTC+06:00", 390: "UTC+06:30", 420: "UTC+07:00", 480: "UTC+08:00", 540: "UTC+09:00", 570: "UTC+09:30", 600: "UTC+10:00", 630: "UTC+10:30", 660: "UTC+11:00", 720: "UTC+12:00", 765: "UTC+12:45", 780: "UTC+13:00", 840: "UTC+14:00" };
     return getValue(timezone_map, type);
+}
+
+function readCmdResult(type) {
+    var result_map = { 0: "success", 1: "parsing error", 2: "order error", 3: "password error", 4: "read params error", 5: "write params error", 6: "read execution error", 7: "write execution error", 8: "read apply error", 9: "write apply error", 10: "associative error" };
+    return getValue(result_map, type);
+}
+
+function readCmdName(type) {
+    var name_map = {
+        "60": { "level": 1, "name": "collection_interval" },
+        "62": { "level": 1, "name": "reporting_interval" },
+        "63": { "level": 1, "name": "temperature_unit" },
+        "64": { "level": 1, "name": "support_mode_config" },
+        "65": { "level": 1, "name": "intelligent_display_enable" },
+        "66": { "level": 1, "name": "screen_object_settings" },
+        "67": { "level": 1, "name": "system_status" },
+        "68": { "level": 1, "name": "temperature_control_mode" },
+        "69": { "level": 1, "name": "target_temperature_resolution" },
+        "6a": { "level": 1, "name": "target_temperature_tolerance" },
+        "6b": { "level": 1, "name": "heating_target_temperature" },
+        "6c": { "level": 1, "name": "cooling_target_temperature" },
+        "6d": { "level": 1, "name": "heating_target_temperature_range" },
+        "6e": { "level": 1, "name": "cooling_target_temperature_range" },
+        "6f": { "level": 1, "name": "dehumidify_config" },
+        "70": { "level": 1, "name": "target_humidity_range" },
+        "72": { "level": 1, "name": "fan_mode" },
+        "73": { "level": 1, "name": "fan_speed_config" },
+        "74": { "level": 1, "name": "fan_delay_config" },
+        "75": { "level": 1, "name": "child_lock_settings" },
+        "76": { "level": 1, "name": "temperature_alarm_settings" },
+        "77": { "level": 1, "name": "high_temperature_alarm_settings" },
+        "78": { "level": 1, "name": "low_temperature_alarm_settings" },
+        "79": { "level": 1, "name": "temperature_calibration_config" },
+        "7a": { "level": 1, "name": "humidity_calibration_config" },
+        "7b": { "level": 3, "name": "plan_config" },
+        "7c": { "level": 1, "name": "valve_interface_settings" },
+        "7d": { "level": 1, "name": "valve_control_settings" },
+        "7e": { "level": 1, "name": "fan_control_settings" },
+        "80": { "level": 1, "name": "di_setting_enable" },
+        "81": { "level": 1, "name": "di_settings" },
+        "82": { "level": 1, "name": "window_opening_detection_enable" },
+        "83": { "level": 1, "name": "window_opening_detection_settings" },
+        "84": { "level": 1, "name": "freeze_protection_settings" },
+        "85": { "level": 1, "name": "temperature_source_settings" },
+        "86": { "level": 1, "name": "d2d_pairing_enable" },
+        "87": { "level": 3, "name": "d2d_pairing_settings" },
+        "88": { "level": 1, "name": "d2d_master_enable" },
+        "89": { "level": 2, "name": "d2d_master_settings" },
+        "8a": { "level": 1, "name": "d2d_slave_enable" },
+        "8b": { "level": 2, "name": "d2d_slave_settings" },
+        "8c": { "level": 3, "name": "timed_system_control_settings" },
+        "8d": { "level": 1, "name": "temporary_unlock_settings" },
+        "8e": { "level": 1, "name": "temperature_control_with_standby_fan_mode" },
+        "8f": { "level": 1, "name": "valve_opening_negative_valve_mode" },
+        "90": { "level": 1, "name": "relay_changes_report_enable" },
+        "c4": { "level": 1, "name": "auto_provisioning_enable" },
+        "c5": { "level": 1, "name": "history_transmit_settings" },
+        "c6": { "level": 1, "name": "daylight_saving_time" },
+        "c7": { "level": 1, "name": "time_zone" },
+        "b6": { "level": 0, "name": "reconnect" },
+        "b8": { "level": 0, "name": "synchronize_time" },
+        "b9": { "level": 0, "name": "query_device_status" },
+        "ba": { "level": 0, "name": "fetch_history" },
+        "bb": { "level": 0, "name": "fetch_history" },
+        "bc": { "level": 0, "name": "stop_transmit_history" },
+        "bd": { "level": 0, "name": "clear_history" },
+        "be": { "level": 0, "name": "reboot" },
+        "5b": { "level": 0, "name": "temperature" },
+        "5c": { "level": 0, "name": "humidity" },
+        "5d": { "level": 0, "name": "opening_window_alarm" },
+        "5e": { "level": 0, "name": "insert_plan_id" },
+        "5f": { "level": 0, "name": "clear_plan" },
+    }
+
+    var data = name_map[type];
+    if (data === undefined) return "unknown";
+    return data.name;
 }
 
 /* eslint-disable */

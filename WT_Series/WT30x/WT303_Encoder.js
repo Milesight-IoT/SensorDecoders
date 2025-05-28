@@ -6,6 +6,7 @@
  * @product WT303
  */
 var RAW_VALUE = 0x00;
+var WITH_QUERY_CMD = 0x00;
 
 /* eslint no-redeclare: "off" */
 /* eslint-disable */
@@ -33,153 +34,247 @@ function milesightDeviceEncode(payload) {
         encoded = encoded.concat(setFrame(payload.frame));
     }
     if ("collection_interval" in payload) {
-        encoded = encoded.concat(setCollectionInterval(payload.collection_interval));
+        var cmd_buffer = setCollectionInterval(payload.collection_interval);
+        encoded = encoded.concat(cmd_buffer);
+        encoded = WITH_QUERY_CMD ? encoded.concat(setQueryCmd(cmd_buffer)) : encoded;
     }
     if ("reporting_interval" in payload) {
-        encoded = encoded.concat(setReportingInterval(payload.reporting_interval));
+        var cmd_buffer = setReportingInterval(payload.reporting_interval);
+        encoded = encoded.concat(cmd_buffer);
+        encoded = WITH_QUERY_CMD ? encoded.concat(setQueryCmd(cmd_buffer)) : encoded;
     }
     if ("temperature_unit" in payload) {
-        encoded = encoded.concat(setTemperatureUnit(payload.temperature_unit));
+        var cmd_buffer = setTemperatureUnit(payload.temperature_unit);
+        encoded = encoded.concat(cmd_buffer);
+        encoded = WITH_QUERY_CMD ? encoded.concat(setQueryCmd(cmd_buffer)) : encoded;
     }
     if ("support_mode_config" in payload) {
-        encoded = encoded.concat(setSupportModeConfig(payload.support_mode_config));
+        var cmd_buffer = setSupportModeConfig(payload.support_mode_config);
+        encoded = encoded.concat(cmd_buffer);
+        encoded = WITH_QUERY_CMD ? encoded.concat(setQueryCmd(cmd_buffer)) : encoded;
     }
     if ("intelligent_display_enable" in payload) {
-        encoded = encoded.concat(setSmartDisplayConfig(payload.intelligent_display_enable));
+        var cmd_buffer = setSmartDisplayConfig(payload.intelligent_display_enable);
+        encoded = encoded.concat(cmd_buffer);
+        encoded = WITH_QUERY_CMD ? encoded.concat(setQueryCmd(cmd_buffer)) : encoded;
     }
     if ("screen_object_settings" in payload) {
-        encoded = encoded.concat(setScreenObjectSettings(payload.screen_object_settings));
+        var cmd_buffer = setScreenObjectSettings(payload.screen_object_settings);
+        encoded = encoded.concat(cmd_buffer);
+        encoded = WITH_QUERY_CMD ? encoded.concat(setQueryCmd(cmd_buffer)) : encoded;
     }
     if ("system_status" in payload) {
-        encoded = encoded.concat(controlSystemStatus(payload.system_status));
+        var cmd_buffer = controlSystemStatus(payload.system_status);
+        encoded = encoded.concat(cmd_buffer);
+        encoded = WITH_QUERY_CMD ? encoded.concat(setQueryCmd(cmd_buffer)) : encoded;
     }
     if ("temperature_control_mode" in payload) {
-        encoded = encoded.concat(setTemperatureControlMode(payload.temperature_control_mode));
+        var cmd_buffer = setTemperatureControlMode(payload.temperature_control_mode);
+        encoded = encoded.concat(cmd_buffer);
+        encoded = WITH_QUERY_CMD ? encoded.concat(setQueryCmd(cmd_buffer)) : encoded;
     }
     if ("target_temperature_resolution" in payload) {
-        encoded = encoded.concat(setTargetTemperatureResolution(payload.target_temperature_resolution));
+        var cmd_buffer = setTargetTemperatureResolution(payload.target_temperature_resolution);
+        encoded = encoded.concat(cmd_buffer);
+        encoded = WITH_QUERY_CMD ? encoded.concat(setQueryCmd(cmd_buffer)) : encoded;
     }
     if ("target_temperature_tolerance" in payload) {
-        encoded = encoded.concat(setTargetTemperatureTolerance(payload.target_temperature_tolerance));
+        var cmd_buffer = setTargetTemperatureTolerance(payload.target_temperature_tolerance);
+        encoded = encoded.concat(cmd_buffer);
+        encoded = WITH_QUERY_CMD ? encoded.concat(setQueryCmd(cmd_buffer)) : encoded;
     }
     if ("heating_target_temperature" in payload) {
-        encoded = encoded.concat(setHeatingTargetTemperature(payload.heating_target_temperature));
+        var cmd_buffer = setHeatingTargetTemperature(payload.heating_target_temperature);
+        encoded = encoded.concat(cmd_buffer);
+        encoded = WITH_QUERY_CMD ? encoded.concat(setQueryCmd(cmd_buffer)) : encoded;
     }
     if ("cooling_target_temperature" in payload) {
-        encoded = encoded.concat(setCoolingTargetTemperature(payload.cooling_target_temperature));
+        var cmd_buffer = setCoolingTargetTemperature(payload.cooling_target_temperature);
+        encoded = encoded.concat(cmd_buffer);
+        encoded = WITH_QUERY_CMD ? encoded.concat(setQueryCmd(cmd_buffer)) : encoded;
     }
     if ("heating_target_temperature_range" in payload) {
-        encoded = encoded.concat(setHeatingTargetTemperatureRange(payload.heating_target_temperature_range));
+        var cmd_buffer = setHeatingTargetTemperatureRange(payload.heating_target_temperature_range);
+        encoded = encoded.concat(cmd_buffer);
+        encoded = WITH_QUERY_CMD ? encoded.concat(setQueryCmd(cmd_buffer)) : encoded;
     }
     if ("cooling_target_temperature_range" in payload) {
-        encoded = encoded.concat(setCoolingTargetTemperatureRange(payload.cooling_target_temperature_range));
+        var cmd_buffer = setCoolingTargetTemperatureRange(payload.cooling_target_temperature_range);
+        encoded = encoded.concat(cmd_buffer);
+        encoded = WITH_QUERY_CMD ? encoded.concat(setQueryCmd(cmd_buffer)) : encoded;
     }
     if ("dehumidify_config" in payload) {
-        encoded = encoded.concat(setDehumidifyConfig(payload.dehumidify_config));
+        var cmd_buffer = setDehumidifyConfig(payload.dehumidify_config);
+        encoded = encoded.concat(cmd_buffer);
+        encoded = WITH_QUERY_CMD ? encoded.concat(setQueryCmd(cmd_buffer)) : encoded;
     }
     if ("target_humidity_range" in payload) {
-        encoded = encoded.concat(setTargetHumidityRange(payload.target_humidity_range));
+        var cmd_buffer = setTargetHumidityRange(payload.target_humidity_range);
+        encoded = encoded.concat(cmd_buffer);
+        encoded = WITH_QUERY_CMD ? encoded.concat(setQueryCmd(cmd_buffer)) : encoded;
     }
     if ("fan_mode" in payload) {
-        encoded = encoded.concat(setFanMode(payload.fan_mode));
+        var cmd_buffer = setFanMode(payload.fan_mode);
+        encoded = encoded.concat(cmd_buffer);
+        encoded = WITH_QUERY_CMD ? encoded.concat(setQueryCmd(cmd_buffer)) : encoded;
     }
     if ("fan_speed_config" in payload) {
-        encoded = encoded.concat(setFanSpeedConfig(payload.fan_speed_config));
+        var cmd_buffer = setFanSpeedConfig(payload.fan_speed_config);
+        encoded = encoded.concat(cmd_buffer);
+        encoded = WITH_QUERY_CMD ? encoded.concat(setQueryCmd(cmd_buffer)) : encoded;
     }
     if ("fan_delay_config" in payload) {
-        encoded = encoded.concat(setFanDelayConfig(payload.fan_delay_config));
+        var cmd_buffer = setFanDelayConfig(payload.fan_delay_config);
+        encoded = encoded.concat(cmd_buffer);
+        encoded = WITH_QUERY_CMD ? encoded.concat(setQueryCmd(cmd_buffer)) : encoded;
     }
     if ("child_lock_settings" in payload) {
-        encoded = encoded.concat(setChildLockSettings(payload.child_lock_settings));
+        var cmd_buffer = setChildLockSettings(payload.child_lock_settings);
+        encoded = encoded.concat(cmd_buffer);
+        encoded = WITH_QUERY_CMD ? encoded.concat(setQueryCmd(cmd_buffer)) : encoded;
     }
     if ("temperature_alarm_settings" in payload) {
-        encoded = encoded.concat(setTemperatureAlarmSettings(payload.temperature_alarm_settings));
+        var cmd_buffer = setTemperatureAlarmSettings(payload.temperature_alarm_settings);
+        encoded = encoded.concat(cmd_buffer);
+        encoded = WITH_QUERY_CMD ? encoded.concat(setQueryCmd(cmd_buffer)) : encoded;
     }
     if ("high_temperature_alarm_settings" in payload) {
-        encoded = encoded.concat(setContinuousHighTemperatureAlarmSettings(payload.high_temperature_alarm_settings));
+        var cmd_buffer = setContinuousHighTemperatureAlarmSettings(payload.high_temperature_alarm_settings);
+        encoded = encoded.concat(cmd_buffer);
+        encoded = WITH_QUERY_CMD ? encoded.concat(setQueryCmd(cmd_buffer)) : encoded;
     }
     if ("low_temperature_alarm_settings" in payload) {
-        encoded = encoded.concat(setContinuousLowTemperatureAlarmSettings(payload.low_temperature_alarm_settings));
+        var cmd_buffer = setContinuousLowTemperatureAlarmSettings(payload.low_temperature_alarm_settings);
+        encoded = encoded.concat(cmd_buffer);
+        encoded = WITH_QUERY_CMD ? encoded.concat(setQueryCmd(cmd_buffer)) : encoded;
     }
     if ("temperature_calibration_config" in payload) {
-        encoded = encoded.concat(setTemperatureCalibrationConfig(payload.temperature_calibration_config));
+        var cmd_buffer = setTemperatureCalibrationConfig(payload.temperature_calibration_config);
+        encoded = encoded.concat(cmd_buffer);
+        encoded = WITH_QUERY_CMD ? encoded.concat(setQueryCmd(cmd_buffer)) : encoded;
     }
     if ("humidity_calibration_config" in payload) {
-        encoded = encoded.concat(setHumidityCalibrationConfig(payload.humidity_calibration_config));
+        var cmd_buffer = setHumidityCalibrationConfig(payload.humidity_calibration_config);
+        encoded = encoded.concat(cmd_buffer);
+        encoded = WITH_QUERY_CMD ? encoded.concat(setQueryCmd(cmd_buffer)) : encoded;
     }
     if ("plan_config" in payload) {
         for (var i = 0; i < payload.plan_config.length; i++) {
-            encoded = encoded.concat(setPlanConfig(payload.plan_config[i]));
+            var cmd_buffer = setPlanConfig(payload.plan_config[i]);
+            encoded = encoded.concat(cmd_buffer);
+            encoded = WITH_QUERY_CMD ? encoded.concat(setQueryCmd(cmd_buffer)) : encoded;
         }
     }
     if ("valve_interface_settings" in payload) {
-        encoded = encoded.concat(setValveInterfaceSettings(payload.valve_interface_settings));
+        var cmd_buffer = setValveInterfaceSettings(payload.valve_interface_settings);
+        encoded = encoded.concat(cmd_buffer);
+        encoded = WITH_QUERY_CMD ? encoded.concat(setQueryCmd(cmd_buffer)) : encoded;
     }
     if ("di_settings" in payload) {
-        encoded = encoded.concat(setDISettings(payload.di_settings));
+        var cmd_buffer = setDISettings(payload.di_settings);
+        encoded = encoded.concat(cmd_buffer);
+        encoded = WITH_QUERY_CMD ? encoded.concat(setQueryCmd(cmd_buffer)) : encoded;
     }
     if ("di_enable" in payload) {
-        encoded = encoded.concat(setDIEnable(payload.di_enable));
+        var cmd_buffer = setDIEnable(payload.di_enable);
+        encoded = encoded.concat(cmd_buffer);
+        encoded = WITH_QUERY_CMD ? encoded.concat(setQueryCmd(cmd_buffer)) : encoded;
     }
     if ("window_opening_detection_settings" in payload) {
-        encoded = encoded.concat(setWindowOpeningDetectionSettings(payload.window_opening_detection_settings));
+        var cmd_buffer = setWindowOpeningDetectionSettings(payload.window_opening_detection_settings);
+        encoded = encoded.concat(cmd_buffer);
+        encoded = WITH_QUERY_CMD ? encoded.concat(setQueryCmd(cmd_buffer)) : encoded;
     }
     if ("freeze_protection_settings" in payload) {
-        encoded = encoded.concat(setFreezeProtectionConfig(payload.freeze_protection_settings));
+        var cmd_buffer = setFreezeProtectionConfig(payload.freeze_protection_settings);
+        encoded = encoded.concat(cmd_buffer);
+        encoded = WITH_QUERY_CMD ? encoded.concat(setQueryCmd(cmd_buffer)) : encoded;
     }
     if ("temperature_source_settings" in payload) {
-        encoded = encoded.concat(setTemperatureSourceConfig(payload.temperature_source_settings));
+        var cmd_buffer = setTemperatureSourceConfig(payload.temperature_source_settings);
+        encoded = encoded.concat(cmd_buffer);
+        encoded = WITH_QUERY_CMD ? encoded.concat(setQueryCmd(cmd_buffer)) : encoded;
     }
     if ("d2d_pairing_enable" in payload) {
-        encoded = encoded.concat(setD2DEnable(payload.d2d_pairing_enable));
+        var cmd_buffer = setD2DEnable(payload.d2d_pairing_enable);
+        encoded = encoded.concat(cmd_buffer);
+        encoded = WITH_QUERY_CMD ? encoded.concat(setQueryCmd(cmd_buffer)) : encoded;
     }
     if ("d2d_pairing_settings" in payload) {
         for (var i = 0; i < payload.d2d_pairing_settings.length; i++) {
-            encoded = encoded.concat(setD2DPairingSettings(payload.d2d_pairing_settings[i]));
+            var cmd_buffer = setD2DPairingSettings(payload.d2d_pairing_settings[i]);
+            encoded = encoded.concat(cmd_buffer);
+            encoded = WITH_QUERY_CMD ? encoded.concat(setQueryCmd(cmd_buffer)) : encoded;
         }
     }
     if ("d2d_master_enable" in payload) {
-        encoded = encoded.concat(setD2DMasterEnable(payload.d2d_master_enable));
+        var cmd_buffer = setD2DMasterEnable(payload.d2d_master_enable);
+        encoded = encoded.concat(cmd_buffer);
+        encoded = WITH_QUERY_CMD ? encoded.concat(setQueryCmd(cmd_buffer)) : encoded;
     }
     if ("d2d_master_settings" in payload) {
         for (var i = 0; i < payload.d2d_master_settings.length; i++) {
-            encoded = encoded.concat(setD2DMasterSettings(payload.d2d_master_settings[i]));
+            var cmd_buffer = setD2DMasterSettings(payload.d2d_master_settings[i]);
+            encoded = encoded.concat(cmd_buffer);
+            encoded = WITH_QUERY_CMD ? encoded.concat(setQueryCmd(cmd_buffer)) : encoded;
         }
     }
     if ("d2d_slave_enable" in payload) {
-        encoded = encoded.concat(setD2DSlaveEnable(payload.d2d_slave_enable));
+        var cmd_buffer = setD2DSlaveEnable(payload.d2d_slave_enable);
+        encoded = encoded.concat(cmd_buffer);
+        encoded = WITH_QUERY_CMD ? encoded.concat(setQueryCmd(cmd_buffer)) : encoded;
     }
     if ("d2d_slave_settings" in payload) {
         for (var i = 0; i < payload.d2d_slave_settings.length; i++) {
-            encoded = encoded.concat(setD2DSlaveSettings(payload.d2d_slave_settings[i]));
+            var cmd_buffer = setD2DSlaveSettings(payload.d2d_slave_settings[i]);
+            encoded = encoded.concat(cmd_buffer);
+            encoded = WITH_QUERY_CMD ? encoded.concat(setQueryCmd(cmd_buffer)) : encoded;
         }
     }
     if ("timed_system_control_settings" in payload) {
-        encoded = encoded.concat(setTimedSystemControlSettings(payload.timed_system_control_settings));
+        var cmd_buffer = setTimedSystemControlSettings(payload.timed_system_control_settings);
+        encoded = encoded.concat(cmd_buffer);
+        encoded = WITH_QUERY_CMD ? encoded.concat(setQueryCmd(cmd_buffer)) : encoded;
     }
     if ("temporary_unlock_settings" in payload) {
-        encoded = encoded.concat(setButtonTemporaryUnlockedConfig(payload.temporary_unlock_settings));
+        var cmd_buffer = setButtonTemporaryUnlockedConfig(payload.temporary_unlock_settings);
+        encoded = encoded.concat(cmd_buffer);
+        encoded = WITH_QUERY_CMD ? encoded.concat(setQueryCmd(cmd_buffer)) : encoded;
     }
     if ("temperature_control_with_standby_fan_mode" in payload) {
-        encoded = encoded.concat(setTemperatureControlWithStandbyFanMode(payload.temperature_control_with_standby_fan_mode));
+        var cmd_buffer = setTemperatureControlWithStandbyFanMode(payload.temperature_control_with_standby_fan_mode);
+        encoded = encoded.concat(cmd_buffer);
+        encoded = WITH_QUERY_CMD ? encoded.concat(setQueryCmd(cmd_buffer)) : encoded;
     }
     if ("valve_opening_negative_valve_mode" in payload) {
-        encoded = encoded.concat(setValveOpeningNegativeValveMode(payload.valve_opening_negative_valve_mode));
+        var cmd_buffer = setValveOpeningNegativeValveMode(payload.valve_opening_negative_valve_mode);
+        encoded = encoded.concat(cmd_buffer);
+        encoded = WITH_QUERY_CMD ? encoded.concat(setQueryCmd(cmd_buffer)) : encoded;
     }
     if ("relay_changes_report_enable" in payload) {
-        encoded = encoded.concat(setRelayChangeReportEnable(payload.relay_changes_report_enable));
+        var cmd_buffer = setRelayChangeReportEnable(payload.relay_changes_report_enable);
+        encoded = encoded.concat(cmd_buffer);
+        encoded = WITH_QUERY_CMD ? encoded.concat(setQueryCmd(cmd_buffer)) : encoded;
     }
     if ("time_zone" in payload) {
-        encoded = encoded.concat(setTimeZone(payload.time_zone));
+        var cmd_buffer = setTimeZone(payload.time_zone);
+        encoded = encoded.concat(cmd_buffer);
+        encoded = WITH_QUERY_CMD ? encoded.concat(setQueryCmd(cmd_buffer)) : encoded;
     }
     if ("daylight_saving_time" in payload) {
-        encoded = encoded.concat(setDaylightSavingTimeSettings(payload.daylight_saving_time));
+        var cmd_buffer = setDaylightSavingTimeSettings(payload.daylight_saving_time);
+        encoded = encoded.concat(cmd_buffer);
+        encoded = WITH_QUERY_CMD ? encoded.concat(setQueryCmd(cmd_buffer)) : encoded;
     }
     if ("auto_provisioning_enable" in payload) {
-        encoded = encoded.concat(setAutoProvisioningEnable(payload.auto_provisioning_enable));
+        var cmd_buffer = setAutoProvisioningEnable(payload.auto_provisioning_enable);
+        encoded = encoded.concat(cmd_buffer);
+        encoded = WITH_QUERY_CMD ? encoded.concat(setQueryCmd(cmd_buffer)) : encoded;
     }
     if ("history_transmit_settings" in payload) {
-        encoded = encoded.concat(setHistoryConfig(payload.history_transmit_settings));
+        var cmd_buffer = setHistoryConfig(payload.history_transmit_settings);
+        encoded = encoded.concat(cmd_buffer);
+        encoded = WITH_QUERY_CMD ? encoded.concat(setQueryCmd(cmd_buffer)) : encoded;
     }
     if ("reboot" in payload) {
         encoded = encoded.concat(reboot());
@@ -211,8 +306,8 @@ function milesightDeviceEncode(payload) {
     if ("opening_window_alarm" in payload) {
         encoded = encoded.concat(setOpeningWindowStatus(payload.opening_window_alarm));
     }
-    if ("plan_id" in payload) {
-        encoded = encoded.concat(setPlan(payload.plan_id));
+    if ("insert_plan_id" in payload) {
+        encoded = encoded.concat(setPlan(payload.insert_plan_id));
     }
     if ("clear_plan" in payload) {
         encoded = encoded.concat(clearPlan(payload.clear_plan));
@@ -2195,16 +2290,16 @@ function setOpeningWindowStatus(opening_window_alarm) {
 
 /**
  * Set plan
- * @param {number} plan_id, range: [1, 16]
+ * @param {number} insert_plan_id, range: [1, 16]
  * @example { "plan": 1 }
  */
-function setPlan(plan_id) {
-    if (plan_id < 1 || plan_id > 16) {
-        throw new Error("plan_id must be between 1 and 16");
+function setPlan(insert_plan_id) {
+    if (insert_plan_id < 1 || insert_plan_id > 16) {
+        throw new Error("insert_plan_id must be between 1 and 16");
     }
     var buffer = new Buffer(2);
     buffer.writeUInt8(0x5E);
-    buffer.writeUInt8(plan_id - 1);
+    buffer.writeUInt8(insert_plan_id - 1);
     return buffer.toBytes();
 }
 
@@ -2248,6 +2343,84 @@ function clearPlan(clear_plan) {
         }
     }
     return data;
+}
+
+function setQueryCmd(bytes) {
+    var name_map = {
+        "60": { "level": 1, "name": "collection_interval" },
+        "62": { "level": 1, "name": "reporting_interval" },
+        "63": { "level": 1, "name": "temperature_unit" },
+        "64": { "level": 1, "name": "support_mode_config" },
+        "65": { "level": 1, "name": "intelligent_display_enable" },
+        "66": { "level": 1, "name": "screen_object_settings" },
+        "67": { "level": 1, "name": "system_status" },
+        "68": { "level": 1, "name": "temperature_control_mode" },
+        "69": { "level": 1, "name": "target_temperature_resolution" },
+        "6a": { "level": 1, "name": "target_temperature_tolerance" },
+        "6b": { "level": 1, "name": "heating_target_temperature" },
+        "6c": { "level": 1, "name": "cooling_target_temperature" },
+        "6d": { "level": 1, "name": "heating_target_temperature_range" },
+        "6e": { "level": 1, "name": "cooling_target_temperature_range" },
+        "6f": { "level": 1, "name": "dehumidify_config" },
+        "70": { "level": 1, "name": "target_humidity_range" },
+        "72": { "level": 1, "name": "fan_mode" },
+        "73": { "level": 1, "name": "fan_speed_config" },
+        "74": { "level": 1, "name": "fan_delay_config" },
+        "75": { "level": 1, "name": "child_lock_settings" },
+        "76": { "level": 1, "name": "temperature_alarm_settings" },
+        "77": { "level": 1, "name": "high_temperature_alarm_settings" },
+        "78": { "level": 1, "name": "low_temperature_alarm_settings" },
+        "79": { "level": 1, "name": "temperature_calibration_config" },
+        "7a": { "level": 1, "name": "humidity_calibration_config" },
+        "7b": { "level": 3, "name": "plan_config" },
+        "7c": { "level": 1, "name": "valve_interface_settings" },
+        "80": { "level": 1, "name": "di_setting_enable" },
+        "81": { "level": 1, "name": "di_settings" },
+        "82": { "level": 1, "name": "window_opening_detection_enable" },
+        "83": { "level": 1, "name": "window_opening_detection_settings" },
+        "84": { "level": 1, "name": "freeze_protection_settings" },
+        "85": { "level": 1, "name": "temperature_source_settings" },
+        "86": { "level": 1, "name": "d2d_pairing_enable" },
+        "87": { "level": 3, "name": "d2d_pairing_settings" },
+        "88": { "level": 1, "name": "d2d_master_enable" },
+        "89": { "level": 2, "name": "d2d_master_settings" },
+        "8a": { "level": 1, "name": "d2d_slave_enable" },
+        "8b": { "level": 2, "name": "d2d_slave_settings" },
+        "8c": { "level": 3, "name": "timed_system_control_settings" },
+        "8d": { "level": 1, "name": "temporary_unlock_settings" },
+        "8e": { "level": 1, "name": "temperature_control_with_standby_fan_mode" },
+        "8f": { "level": 1, "name": "valve_opening_negative_valve_mode" },
+        "90": { "level": 1, "name": "relay_changes_report_enable" },
+        "c4": { "level": 1, "name": "auto_provisioning_enable" },
+        "c5": { "level": 1, "name": "history_transmit_settings" },
+        "c6": { "level": 1, "name": "daylight_saving_time" },
+        "c7": { "level": 1, "name": "time_zone" },
+        "b6": { "level": 0, "name": "reconnect" },
+        "b8": { "level": 0, "name": "synchronize_time" },
+        "b9": { "level": 0, "name": "query_device_status" },
+        "ba": { "level": 0, "name": "fetch_history" },
+        "bb": { "level": 0, "name": "fetch_history" },
+        "bc": { "level": 0, "name": "stop_transmit_history" },
+        "bd": { "level": 0, "name": "clear_history" },
+        "be": { "level": 0, "name": "reboot" },
+        "5b": { "level": 0, "name": "temperature" },
+        "5c": { "level": 0, "name": "humidity" },
+        "5d": { "level": 0, "name": "opening_window_alarm" },
+        "5e": { "level": 0, "name": "insert_plan_id" },
+        "5f": { "level": 0, "name": "clear_plan" },
+    }
+
+    var cmd = readHexString(bytes.slice(0, 1));
+    var cmd_level = name_map[cmd].level;
+
+    if (cmd_level != 0) {
+        var buffer = new Buffer(2 + cmd_level);
+        buffer.writeUInt8(0xef);
+        buffer.writeUInt8(cmd_level);
+        buffer.writeBytes(bytes.slice(0, cmd_level));
+        return buffer.toBytes();
+    }
+    return [];
 }
 
 function getValues(map) {
@@ -2363,4 +2536,12 @@ function encodeUtf8(str) {
         }
     }
     return byteArray;
+}
+
+function readHexString(bytes) {
+    var temp = [];
+    for (var idx = 0; idx < bytes.length; idx++) {
+        temp.push(("0" + (bytes[idx] & 0xff).toString(16)).slice(-2));
+    }
+    return temp.join("");
 }
