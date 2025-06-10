@@ -532,8 +532,8 @@ function setVapingIndexAlarmSettings(vaping_index_alarm_settings) {
     buffer.writeUInt8(0x6e);
     buffer.writeUInt8(getValue(enable_map, enable));
     buffer.writeUInt8(getValue(threshold_condition_map, threshold_condition));
-    buffer.writeInt16LE(threshold_min);
-    buffer.writeInt16LE(threshold_max);
+    buffer.writeUInt8(threshold_min);
+    buffer.writeUInt8(threshold_max);
     return buffer.toBytes();
 }
 
