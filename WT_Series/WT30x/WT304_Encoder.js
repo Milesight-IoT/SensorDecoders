@@ -48,8 +48,8 @@ function milesightDeviceEncode(payload) {
         encoded = encoded.concat(cmd_buffer);
         encoded = WITH_QUERY_CMD ? encoded.concat(setQueryCmd(cmd_buffer)) : encoded;
     }
-    if ("support_mode_config" in payload) {
-        var cmd_buffer = setSupportModeConfig(payload.support_mode_config);
+    if ("support_mode" in payload) {
+        var cmd_buffer = setSupportMode(payload.support_mode);
         encoded = encoded.concat(cmd_buffer);
         encoded = WITH_QUERY_CMD ? encoded.concat(setQueryCmd(cmd_buffer)) : encoded;
     }
@@ -420,31 +420,20 @@ function setTemperatureUnit(temperature_unit) {
 }
 
 /**
- * Set support mode config
- * @param {object} support_mode_config
- * @param {number} support_mode_config.fan_enable values: (0: disable, 1: enable)
- * @param {number} support_mode_config.heating_enable values: (0: disable, 1: enable)
- * @param {number} support_mode_config.cooling_enable values: (0: disable, 1: enable)
- * @example { "support_mode_config": { "fan_enable": 1, "heating_enable": 1, "cooling_enable": 1 } }
+ * Set support mode
+ * @param {number} support_mode values: (3: fan_and_heating, 5: fan_and_cooling, 7: fan_and_heating_and_cooling)
+ * @example { "support_mode": 3 }
  */
-function setSupportModeConfig(support_mode_config) {
-    var enable_map = { 0: "disable", 1: "enable" };
-    var enable_values = getValues(enable_map);
-
-    var data = 0x00;
-    var support_bits_offset = { fan_enable: 0, heating_enable: 1, cooling_enable: 2 };
-    for (var key in support_bits_offset) {
-        if (key in support_mode_config) {
-            if (enable_values.indexOf(support_mode_config[key]) === -1) {
-                throw new Error("support_mode_config." + key + " must be one of " + enable_values.join(", "));
-            }
-            data |= getValue(enable_map, support_mode_config[key]) << support_bits_offset[key];
-        }
+function setSupportMode(support_mode) {
+    var mode_map = { 3: "fan_and_heating", 5: "fan_and_cooling", 7: "fan_and_heating_and_cooling" };
+    var mode_values = getValues(mode_map);
+    if (mode_values.indexOf(support_mode) === -1) {
+        throw new Error("support_mode must be one of " + mode_values.join(", "));
     }
 
     var buffer = new Buffer(2);
     buffer.writeUInt8(0x64);
-    buffer.writeUInt8(data);
+    buffer.writeUInt8(support_mode);
     return buffer.toBytes();
 }
 
@@ -2563,7 +2552,7 @@ function setQueryCmd(bytes) {
         "60": { "level": 1, "name": "collection_interval" },
         "62": { "level": 1, "name": "reporting_interval" },
         "63": { "level": 1, "name": "temperature_unit" },
-        "64": { "level": 1, "name": "support_mode_config" },
+        "64": { "level": 1, "name": "support_mode" },
         "65": { "level": 1, "name": "intelligent_display_enable" },
         "66": { "level": 1, "name": "screen_object_settings" },
         "67": { "level": 1, "name": "system_status" },

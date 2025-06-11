@@ -175,12 +175,7 @@ function milesightDeviceDecode(bytes) {
                 i += 1;
                 break;
             case 0x64:
-                var support_mode_data = readUInt8(bytes[i]);
-                var support_mode_offset = { fan_enable: 0, heating_enable: 1, cooling_enable: 2 };
-                decoded.support_mode_config = decoded.support_mode_config || {};
-                for (var key in support_mode_offset) {
-                    decoded.support_mode_config[key] = readEnableStatus((support_mode_data >>> support_mode_offset[key]) & 0x01);
-                }
+                decoded.support_mode = readSupportMode(bytes[i]);
                 i += 1;
                 break;
             case 0x65:
@@ -721,12 +716,13 @@ function milesightDeviceDecode(bytes) {
                 var cmd_result = (cmd_data >>> 4) & 0x0f;
                 var cmd_length = cmd_data & 0x0f;
                 var cmd_id = readHexString(bytes.slice(i + 1, i + 1 + cmd_length));
+                var cmd_header = readHexString(bytes.slice(i + 1, i + 2));
                 i += 1 + cmd_length;
 
                 var response = {};
                 response.result = readCmdResult(cmd_result);
                 response.cmd_id = cmd_id;
-                response.cmd_name = readCmdName(cmd_id);
+                response.cmd_name = readCmdName(cmd_header);                
 
                 decoded.request_result = decoded.request_result || [];
                 decoded.request_result.push(response);
@@ -908,6 +904,11 @@ function readTemperatureUnit(type) {
     return getValue(unit_map, type);
 }
 
+function readSupportMode(type) {
+    var mode_map = { 3: "fan_and_heating", 5: "fan_and_cooling", 7: "fan_and_heating_and_cooling" };
+    return getValue(mode_map, type);
+}
+
 function readSystemStatus(type) {
     var status_map = { 0: "off", 1: "on" };
     return getValue(status_map, type);
@@ -998,7 +999,7 @@ function readCmdName(type) {
         "60": { "level": 1, "name": "collection_interval" },
         "62": { "level": 1, "name": "reporting_interval" },
         "63": { "level": 1, "name": "temperature_unit" },
-        "64": { "level": 1, "name": "support_mode_config" },
+        "64": { "level": 1, "name": "support_mode" },
         "65": { "level": 1, "name": "intelligent_display_enable" },
         "66": { "level": 1, "name": "screen_object_settings" },
         "67": { "level": 1, "name": "system_status" },
