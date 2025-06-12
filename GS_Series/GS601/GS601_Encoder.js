@@ -7,6 +7,8 @@
  */
 var RAW_VALUE = 0x00;
 
+/* eslint no-redeclare: "off" */
+/* eslint-disable */
 // Chirpstack v4
 function encodeDownlink(input) {
     var encoded = milesightDeviceEncode(input.data);
@@ -22,6 +24,7 @@ function Encode(fPort, obj) {
 function Encoder(obj, port) {
     return milesightDeviceEncode(obj);
 }
+/* eslint-enable */
 
 function milesightDeviceEncode(payload) {
     var encoded = [];
@@ -40,10 +43,10 @@ function milesightDeviceEncode(payload) {
     }
     if ("buzzer_sleep" in payload) {
         if ("item_1" in payload.buzzer_sleep) {
-            encoded = encoded.concat(setBuzzerSleepSettings(0, payload.buzzer_sleep.item_1));
+            encoded = encoded.concat(setBuzzerSleepSettings(1, payload.buzzer_sleep.item_1));
         }
         if ("item_2" in payload.buzzer_sleep) {
-            encoded = encoded.concat(setBuzzerSleepSettings(1, payload.buzzer_sleep.item_2));
+            encoded = encoded.concat(setBuzzerSleepSettings(2, payload.buzzer_sleep.item_2));
         }
     }
     if ("buzzer_button_stop_enable" in payload) {
@@ -156,7 +159,7 @@ function setReportingInterval(reporting_interval) {
         throw new Error("reporting_interval.minutes_of_time must be between 1 and 1440 when reporting_interval.unit is 1");
     }
 
-    var buffer = new Buffer(3);
+    var buffer = new Buffer(4);
     buffer.writeUInt8(0x60);
     buffer.writeUInt8(getValue(unit_map, unit));
     buffer.writeUInt16LE(getValue(unit_map, unit) === 0 ? seconds_of_time : minutes_of_time);
@@ -231,7 +234,7 @@ function setBuzzerSleepSettings(index, buzzer_sleep_config) {
     var start_time = buzzer_sleep_config.start_time;
     var end_time = buzzer_sleep_config.end_time;
 
-    var index_values = [0, 1];
+    var index_values = [1, 2];
     if (index_values.indexOf(index) === -1) {
         throw new Error("buzzer_sleep.item_1 or buzzer_sleep.item_2");
     }
@@ -247,7 +250,7 @@ function setBuzzerSleepSettings(index, buzzer_sleep_config) {
         throw new Error("buzzer_sleep.item_" + index + ".end_time must be between 0 and 1440");
     }
 
-    var buffer = new Buffer(6);
+    var buffer = new Buffer(7);
     buffer.writeUInt8(0x64);
     buffer.writeUInt8(index);
     buffer.writeUInt8(getValue(enable_map, enable));
@@ -276,7 +279,7 @@ function setBuzzerButtonStopEnable(buzzer_button_stop_enable) {
 
 /**
  * Set buzzer silent time
- * @param {number} buzzer_silent_time unit: minute, range: 1-1440
+ * @param {number} buzzer_silent_time unit: minute, range: [1, 1440]
  * @example { "buzzer_silent_time": 10 }
  */
 function setBuzzerSilentTime(buzzer_silent_time) {
@@ -352,7 +355,7 @@ function setTemperatureAlarmSettings(temperature_alarm_settings) {
         throw new Error("temperature_alarm_settings.threshold_condition must be one of " + threshold_condition_values.join(", "));
     }
 
-    var buffer = new Buffer(6);
+    var buffer = new Buffer(7);
     buffer.writeUInt8(0x69);
     buffer.writeUInt8(getValue(enable_map, enable));
     buffer.writeUInt8(getValue(threshold_condition_map, threshold_condition));
@@ -387,7 +390,7 @@ function setPM1AlarmSettings(pm1_0_alarm_settings) {
         throw new Error("pm1_0_alarm_settings.threshold_condition must be one of " + threshold_condition_values.join(", "));
     }
 
-    var buffer = new Buffer(6);
+    var buffer = new Buffer(7);
     buffer.writeUInt8(0x6a);
     buffer.writeUInt8(getValue(enable_map, enable));
     buffer.writeUInt8(getValue(threshold_condition_map, threshold_condition));
@@ -422,7 +425,7 @@ function setPM25AlarmSettings(pm2_5_alarm_settings) {
         throw new Error("pm_2_5_alarm_settings.threshold_condition must be one of " + threshold_condition_values.join(", "));
     }
 
-    var buffer = new Buffer(6);
+    var buffer = new Buffer(7);
     buffer.writeUInt8(0x6b);
     buffer.writeUInt8(getValue(enable_map, enable));
     buffer.writeUInt8(getValue(threshold_condition_map, threshold_condition));
@@ -457,7 +460,7 @@ function setPM10AlarmSettings(pm10_alarm_settings) {
         throw new Error("pm_10_alarm_settings.threshold_condition must be one of " + threshold_condition_values.join(", "));
     }
 
-    var buffer = new Buffer(6);
+    var buffer = new Buffer(7);
     buffer.writeUInt8(0x6c);
     buffer.writeUInt8(getValue(enable_map, enable));
     buffer.writeUInt8(getValue(threshold_condition_map, threshold_condition));
@@ -493,7 +496,7 @@ function setTVOCAlarmSettings(tvoc_alarm_settings) {
         throw new Error("tvoc_alarm_settings.threshold_condition must be one of " + threshold_condition_values.join(", "));
     }
 
-    var buffer = new Buffer(6);
+    var buffer = new Buffer(7);
     buffer.writeUInt8(0x6d);
     buffer.writeUInt8(getValue(enable_map, enable));
     buffer.writeUInt8(getValue(condition_map, threshold_condition));
@@ -532,8 +535,8 @@ function setVapingIndexAlarmSettings(vaping_index_alarm_settings) {
     buffer.writeUInt8(0x6e);
     buffer.writeUInt8(getValue(enable_map, enable));
     buffer.writeUInt8(getValue(threshold_condition_map, threshold_condition));
-    buffer.writeInt16LE(threshold_min);
-    buffer.writeInt16LE(threshold_max);
+    buffer.writeUInt8(threshold_min);
+    buffer.writeUInt8(threshold_max);
     return buffer.toBytes();
 }
 
@@ -547,7 +550,7 @@ function setAlarmReportingTimes(alarm_reporting_times) {
         throw new Error("alarm_reporting_times must be between 1 and 1000");
     }
 
-    var buffer = new Buffer(2);
+    var buffer = new Buffer(3);
     buffer.writeUInt8(0x6f);
     buffer.writeUInt16LE(alarm_reporting_times);
     return buffer.toBytes();
@@ -594,7 +597,7 @@ function setTemperatureCalibrationSettings(temperature_calibration_settings) {
         throw new Error("temperature_calibration_settings.calibration_value must be between -80 and 80");
     }
 
-    var buffer = new Buffer(3);
+    var buffer = new Buffer(4);
     buffer.writeUInt8(0x71);
     buffer.writeUInt8(getValue(enable_map, enable));
     buffer.writeInt16LE(calibration_value * 10);
@@ -621,7 +624,7 @@ function setHumidityCalibrationSettings(humidity_calibration_settings) {
         throw new Error("humidity_calibration_settings.calibration_value must be between -100 and 100");
     }
 
-    var buffer = new Buffer(3);
+    var buffer = new Buffer(4);
     buffer.writeUInt8(0x72);
     buffer.writeUInt8(getValue(enable_map, enable));
     buffer.writeInt16LE(calibration_value * 10);
@@ -648,7 +651,7 @@ function setPM1CalibrationSettings(pm1_0_calibration_settings) {
         throw new Error("pm1_0_calibration_settings.calibration_value must be between -1000 and 1000");
     }
 
-    var buffer = new Buffer(3);
+    var buffer = new Buffer(4);
     buffer.writeUInt8(0x73);
     buffer.writeUInt8(getValue(enable_map, enable));
     buffer.writeInt16LE(calibration_value);
@@ -675,7 +678,7 @@ function setPM25CalibrationSettings(pm2_5_calibration_settings) {
         throw new Error("pm2_5_calibration_settings.calibration_value must be between -1000 and 1000");
     }
 
-    var buffer = new Buffer(3);
+    var buffer = new Buffer(4);
     buffer.writeUInt8(0x74);
     buffer.writeUInt8(getValue(enable_map, enable));
     buffer.writeInt16LE(calibration_value);
@@ -702,7 +705,7 @@ function setPM10CalibrationSettings(pm10_calibration_settings) {
         throw new Error("pm10_calibration_settings.calibration_value must be between -1000 and 1000");
     }
 
-    var buffer = new Buffer(3);
+    var buffer = new Buffer(4);
     buffer.writeUInt8(0x75);
     buffer.writeUInt8(getValue(enable_map, enable));
     buffer.writeInt16LE(calibration_value);
@@ -729,7 +732,7 @@ function setTVOCCalibrationSettings(tvoc_calibration_settings) {
         throw new Error("tvoc_calibration_settings.calibration_value must be between -2000 and 2000");
     }
 
-    var buffer = new Buffer(3);
+    var buffer = new Buffer(4);
     buffer.writeUInt8(0x76);
     buffer.writeUInt8(getValue(enable_map, enable));
     buffer.writeInt16LE(calibration_value);
@@ -756,7 +759,7 @@ function setVapingIndexCalibrationSettings(vaping_index_calibration_settings) {
         throw new Error("vaping_index_calibration_settings.calibration_value must be between -100 and 100");
     }
 
-    var buffer = new Buffer(2);
+    var buffer = new Buffer(3);
     buffer.writeUInt8(0x77);
     buffer.writeUInt8(getValue(enable_map, enable));
     buffer.writeInt8(calibration_value);
@@ -780,7 +783,7 @@ function setTimeZone(time_zone) {
         throw new Error("time_zone must be one of " + timezone_values.join(", "));
     }
 
-    var buffer = new Buffer(2);
+    var buffer = new Buffer(3);
     buffer.writeUInt8(0xc7);
     buffer.writeInt16LE(getValue(timezone_map, time_zone));
     return buffer.toBytes();
@@ -913,14 +916,8 @@ function executeTVOCSelfClean() {
 
 function getValues(map) {
     var values = [];
-    if (RAW_VALUE) {
-        for (var key in map) {
-            values.push(parseInt(key));
-        }
-    } else {
-        for (var key in map) {
-            values.push(map[key]);
-        }
+    for (var key in map) {
+        values.push(RAW_VALUE ? parseInt(key) : map[key]);
     }
     return values;
 }
