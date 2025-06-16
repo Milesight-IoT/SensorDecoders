@@ -120,7 +120,8 @@ function milesightDeviceDecode(bytes) {
         }
         // CONFIDENCE STATUS
         else if (channel_id === 0x08 && channel_type === 0xF4) {
-            decoded.confidence = readConfidenceStatus(bytes[i + 1]);
+            // skip first byte
+            decoded.detection_status = readDetectionStatus(bytes[i + 1]);
             i += 2;
         }
         // TIMESTAMP
@@ -392,8 +393,8 @@ function readIlluminanceStatus(status) {
     return getValue(status_map, status);
 }
 
-function readConfidenceStatus(status) {
-    var status_map = { 0: "high", 1: "low" };
+function readDetectionStatus(status) {
+    var status_map = { 0: "normal", 1: "unavailable" };
     return getValue(status_map, status);
 }
 

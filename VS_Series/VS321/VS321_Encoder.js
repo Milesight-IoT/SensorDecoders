@@ -171,12 +171,12 @@ function setReportInterval(report_interval) {
 }
 
 /**
- * setReportType
- * @param {number} report_type values: (0: hourly, 1: immediately)
+ * set report type
+ * @param {number} report_type values: (0: period, 1: immediately)
  * @example { "report_type": 0 }
  */
 function setReportType(report_type) {
-    var report_type_map = { 0: "hourly", 1: "immediately" };
+    var report_type_map = { 0: "period", 1: "immediately" };
     var report_type_values = getValues(report_type_map);
     if (report_type_values.indexOf(report_type) === -1) {
         throw new Error("report_type must be one of " + report_type_values.join(", "));
