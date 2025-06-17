@@ -7,6 +7,8 @@
  */
 var RAW_VALUE = 0x00;
 
+/* eslint no-redeclare: "off" */
+/* eslint-disable */
 // Chirpstack v4
 function decodeUplink(input) {
     var decoded = milesightDeviceDecode(input.bytes);
@@ -22,6 +24,7 @@ function Decode(fPort, bytes) {
 function Decoder(bytes, port) {
     return milesightDeviceDecode(bytes);
 }
+/* eslint-enable */
 
 function milesightDeviceDecode(bytes) {
     var decoded = {};
@@ -382,10 +385,10 @@ function readYesNoStatus(status) {
 
 function readAlarmType(type) {
     var alarm_map = {
-        0: "threshold_alarm_release",
-        1: "threshold_alarm",
-        2: "high_temperature_alarm",
-        3: "high_temperature_alarm_release"
+        0: "threshold alarm release",
+        1: "threshold alarm",
+        3: "high temperature alarm",
+        4: "high temperature alarm release"
     }
     return getValue(alarm_map, type);
 }
@@ -471,6 +474,7 @@ function readTriggerSourceType(type) {
     return getValue(trigger_source_map, type);
 }
 
+/* eslint-disable */
 function readUInt8(bytes) {
     return bytes & 0xff;
 }
