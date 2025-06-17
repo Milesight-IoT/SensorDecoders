@@ -7,6 +7,8 @@
  */
 var RAW_VALUE = 0x00;
 
+/* eslint no-redeclare: "off" */
+/* eslint-disable */
 // Chirpstack v4
 function encodeDownlink(input) {
     var encoded = milesightDeviceEncode(input.data);
@@ -22,6 +24,7 @@ function Encode(fPort, obj) {
 function Encoder(obj, port) {
     return milesightDeviceEncode(obj);
 }
+/* eslint-enable */
 
 function milesightDeviceEncode(payload) {
     var encoded = [];
@@ -164,12 +167,11 @@ function setReportInterval(report_interval) {
 
 /**
  * set report type
- * @param {number} report_type values: (0: period, 1: immediate)
+ * @param {number} report_type values: (0: period, 1: immediately)
  * @example { "report_type": 0 }
- * @since v2.0
  */
 function setReportType(report_type) {
-    var report_type_map = { 0: "period", 1: "immediate" };
+    var report_type_map = { 0: "period", 1: "immediately" };
     var report_type_values = getValues(report_type_map);
     if (report_type_values.indexOf(report_type) === -1) {
         throw new Error("report_type must be one of " + report_type_values.join(", "));
