@@ -7,24 +7,24 @@
  */
 var RAW_VALUE = 0x00;
 
+/* eslint no-redeclare: "off" */
+/* eslint-disable */
 // Chirpstack v4
-// eslint-disable-next-line no-unused-vars
 function encodeDownlink(input) {
     var encoded = milesightDeviceEncode(input.data);
     return { bytes: encoded };
 }
 
 // Chirpstack v3
-// eslint-disable-next-line no-unused-vars
 function Encode(fPort, obj) {
     return milesightDeviceEncode(obj);
 }
 
 // The Things Network
-// eslint-disable-next-line no-unused-vars
 function Encoder(obj, port) {
     return milesightDeviceEncode(obj);
 }
+/* eslint-enable */
 
 function milesightDeviceEncode(payload) {
     var encoded = [];
@@ -116,7 +116,7 @@ function reboot(reboot) {
 
 /**
  * report_interval
- * @param {number} report_interval unit: second
+ * @param {number} report_interval unit: second, range: [1, 64800]
  * @example { "report_interval": 10 }
  */
 function setReportInterval(report_interval) {
@@ -124,10 +124,10 @@ function setReportInterval(report_interval) {
         throw new Error("report_interval must be between 1 and 64800");
     }
 
-    var buffer = new Buffer(3);
+    var buffer = new Buffer(4);
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0x03);
-    buffer.writeUInt8(report_interval);
+    buffer.writeUInt16LE(report_interval);
     return buffer.toBytes();
 }
 
@@ -258,7 +258,7 @@ function setTimestamp(timestamp) {
         throw new Error("timestamp must be greater than 0");
     }
 
-    var buffer = new Buffer(4);
+    var buffer = new Buffer(6);
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0x11);
     buffer.writeUInt32LE(timestamp);
@@ -403,7 +403,7 @@ function stopTransmit(stop_transmit) {
     if (getValue(yes_no_map, stop_transmit) === 0) {
         return [];
     }
-    return [0xff, 0x6d, 0xff];
+    return [0xfd, 0x6d, 0xff];
 }
 
 /**
@@ -534,7 +534,7 @@ function setLogConfig(log_config) {
         throw new Error("file_log_level must be one of " + log_level_values.join(", "));
     }
 
-    var buffer = new Buffer(3);
+    var buffer = new Buffer(4);
     buffer.writeUInt8(0xf9);
     buffer.writeUInt8(0x88);
     buffer.writeUInt8(console_log_level);

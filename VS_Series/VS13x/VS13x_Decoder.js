@@ -7,24 +7,24 @@
  */
 var RAW_VALUE = 0x00;
 
+/* eslint no-redeclare: "off" */
+/* eslint-disable */
 // Chirpstack v4
-// eslint-disable-next-line no-unused-vars
 function decodeUplink(input) {
     var decoded = milesightDeviceDecode(input.bytes);
     return { data: decoded };
 }
 
 // Chirpstack v3
-// eslint-disable-next-line no-unused-vars
 function Decode(fPort, bytes) {
     return milesightDeviceDecode(bytes);
 }
 
 // The Things Network
-// eslint-disable-next-line no-unused-vars
 function Decoder(bytes, port) {
     return milesightDeviceDecode(bytes);
 }
+/* eslint-enable */
 
 var total_in_chns = [0x03, 0x06, 0x09, 0x0c];
 var total_out_chns = [0x04, 0x07, 0x0a, 0x0d];
