@@ -1,7 +1,7 @@
 /**
  * Payload Encoder
  *
- * Copyright 2024 Milesight IoT
+ * Copyright 2025 Milesight IoT
  *
  * @product VS360
  */
@@ -25,6 +25,7 @@ function Encoder(obj, port) {
     return milesightDeviceEncode(obj);
 }
 /* eslint-enable */
+
 function milesightDeviceEncode(payload) {
     var encoded = [];
 
@@ -289,7 +290,6 @@ function clearCumulativeIn(clear_cumulative_in) {
     return [0xff, 0xa8, 0x01];
 }
 
-
 /**
  * clear cumulative
  * @param {number} clear_cumulative_out values: (0: no, 1: yes)
@@ -481,7 +481,6 @@ function setD2DMasterConfig(d2d_master_config) {
     return buffer.toBytes();
 }
 
-
 /**
  * set alarm config
  * @param {object} alarm_config
@@ -661,7 +660,7 @@ function stopTransmit(stop_transmit) {
     if (getValue(yes_no_map, stop_transmit) === 0) {
         return [];
     }
-    return [0xff, 0x6d, 0xff];
+    return [0xfd, 0x6d, 0xff];
 }
 
 function getValues(map) {
