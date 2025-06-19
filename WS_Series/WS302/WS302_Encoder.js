@@ -1,10 +1,14 @@
 /**
  * Payload Encoder
  *
- * Copyright 2024 Milesight IoT
+ * Copyright 2025 Milesight IoT
  *
- * @product WT301
+ * @product WS302
  */
+var RAW_VALUE = 0x00;
+
+/* eslint no-redeclare: "off" */
+/* eslint-disable */
 // Chirpstack v4
 function encodeDownlink(input) {
     return milesightDeviceEncode(input.data);
@@ -19,6 +23,7 @@ function Encode(fPort, obj, variables) {
 function Encoder(obj, port) {
     return milesightDeviceEncode(obj);
 }
+/* eslint-enable */
 
 function milesightDeviceEncode(payload) {
     var encoded = [];
@@ -26,8 +31,8 @@ function milesightDeviceEncode(payload) {
     if ("reboot" in payload) {
         encoded = encoded.concat(reboot(payload.reboot));
     }
-    if ("timezone" in payload) {
-        encoded = encoded.concat(setTimeZone(payload.timezone));
+    if ("time_zone" in payload) {
+        encoded = encoded.concat(setTimeZone(payload.time_zone));
     }
     if ("timestamp" in payload) {
         encoded = encoded.concat(setTime(payload.timestamp));
@@ -35,8 +40,8 @@ function milesightDeviceEncode(payload) {
     if ("time_sync_enable" in payload) {
         encoded = encoded.concat(timeSyncEnable(payload.time_sync_enable));
     }
-    if ("led_enable" in payload) {
-        encoded = encoded.concat(ledEnable(payload.led_enable));
+    if ("led_indicator_enable" in payload) {
+        encoded = encoded.concat(setLedIndicatorEnable(payload.led_indicator_enable));
     }
     if ("frequency_weighting_type" in payload && "time_weighting_type" in payload) {
         encoded = encoded.concat(setWeightingType(payload.frequency_weighting_type, payload.time_weighting_type));
@@ -47,26 +52,26 @@ function milesightDeviceEncode(payload) {
 
 /**
  * reboot device
- * @param {number} reboot 
- * @example payload: { "reboot": 1 }, output: FF10FF
+ * @param {number} reboot values: (0: no, 1: yes)
+ * @example { "reboot": 1 }
  */
 function reboot(reboot) {
-    var reboot_values = [0, 1];
-    if (reboot_values.indexOf(reboot) === -1) {
-        throw new Error("reboot must be 0 or 1");
+    var yes_no_map = { 0: "no", 1: "yes" };
+    var yes_no_values = getValues(yes_no_map);
+    if (yes_no_values.indexOf(reboot) === -1) {
+        throw new Error("reboot must be one of " + yes_no_values.join(", "));
     }
-    if (reboot === 0) {
+
+    if (getValue(yes_no_map, reboot) === 0) {
         return [];
     }
-
     return [0xff, 0x10, 0xff];
 }
-
 
 /**
  * set device time
  * @param {number} timestamp unit: second, UTC time
- * @example payload: { "timestamp": 1628832309 }, output: FF1135021661
+ * @example { "timestamp": 1628832309 }
  */
 function setTime(timestamp) {
     if (typeof timestamp !== "number") {
@@ -81,54 +86,57 @@ function setTime(timestamp) {
 
 /**
  * set time zone
- * @param {number} timezone
- * @example payload: { "timezone": -4 }, output: FF17D8FF
+ * @param {number} time_zone unit: minute
+ * @example { "time_zone": -4 }
  */
-function setTimeZone(timezone) {
-    if (typeof timezone !== "number") {
-        throw new Error("timezone must be a number");
+function setTimeZone(time_zone) {
+    var timezone_values = [-120, -110, -100, -95, -90, -80, -70, -60, -50, -40, -35, -30, -20, -10, 0, 10, 20, 30, 35, 40, 45, 50, 55, 57, 60, 65, 70, 80, 90, 95, 100, 105, 110, 120, 127, 130, 140];
+    if (timezone_values.indexOf(time_zone) === -1) {
+        throw new Error("time_zone must be one of " + timezone_values.join(", "));
     }
 
     var buffer = new Buffer(4);
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0x17);
-    buffer.writeInt16LE(timezone * 10);
+    buffer.writeInt16LE(time_zone);
     return buffer.toBytes();
 }
 
 /**
  * time sync enable
  * @param {number} time_sync_enable values: (0: disable, 1: enable)
- * @example payload: { "time_sync_enable": 1 }, output: FF3B01
+ * @example { "time_sync_enable": 1 }
  */
 function timeSyncEnable(time_sync_enable) {
-    var time_sync_enable_values = [0, 1];
-    if (time_sync_enable_values.indexOf(time_sync_enable) === -1) {
-        throw new Error("time_sync_enable must be 0 or 1");
+    var enable_map = { 0: "disable", 1: "enable" };
+    var enable_values = getValues(enable_map);
+    if (enable_values.indexOf(time_sync_enable) === -1) {
+        throw new Error("time_sync_enable must be one of " + enable_values.join(", "));
     }
 
     var buffer = new Buffer(3);
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0x3b);
-    buffer.writeUInt8(time_sync_enable);
+    buffer.writeUInt8(getValue(enable_map, time_sync_enable));
     return buffer.toBytes();
 }
 
 /**
  * set led enable
- * @param {number} led_enable values: (0: disable, 1: enable)
- * @example payload: { "led_enable": 1 }, output: FF2F01
+ * @param {number} led_indicator_enable values: (0: disable, 1: enable)
+ * @example { "led_indicator_enable": 1 }
  */
-function ledEnable(led_enable) {
-    var led_enable_values = [0, 1];
-    if (led_enable_values.indexOf(led_enable) === -1) {
-        throw new Error("led_enable must be 0 or 1");
+function setLedIndicatorEnable(led_indicator_enable) {
+    var enable_map = { 0: "disable", 1: "enable" };
+    var enable_values = getValues(enable_map);
+    if (enable_values.indexOf(led_indicator_enable) === -1) {
+        throw new Error("led_indicator_enable must be one of " + enable_values.join(", "));
     }
 
     var buffer = new Buffer(3);
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0x2d);
-    buffer.writeUInt8(led_enable);
+    buffer.writeUInt8(getValue(enable_map, led_indicator_enable));
     return buffer.toBytes();
 }
 
@@ -139,24 +147,43 @@ function ledEnable(led_enable) {
  * @returns 
  */
 function setWeightingType(frequency_weighting_type, time_weighting_type) {
-    var frequency_weighting_type_values = [0, 1, 2];
-    var time_weighting_type_values = [0, 1, 2];
-    if (typeof frequency_weighting_type !== "number" || typeof time_weighting_type !== "number") {
-        throw new Error("frequency_weighting_type and time_weighting_type must be a number");
-    }
+    var frequency_weighting_type_map = { 0: "Z", 1: "A", 2: "C" };
+    var time_weighting_type_map = { 0: "I", 1: "F", 2: "S" };
+    var frequency_weighting_type_values = getValues(frequency_weighting_type_map);
+    var time_weighting_type_values = getValues(time_weighting_type_map);
     if (frequency_weighting_type_values.indexOf(frequency_weighting_type) === -1) {
-        throw new Error("frequency_weighting_type must be 0, 1 or 2");
+        throw new Error("frequency_weighting_type must be one of " + frequency_weighting_type_values.join(", "));
     }
     if (time_weighting_type_values.indexOf(time_weighting_type) === -1) {
-        throw new Error("time_weighting_type must be 0, 1 or 2");
+        throw new Error("time_weighting_type must be one of " + time_weighting_type_values.join(", "));
     }
 
     var buffer = new Buffer(4);
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0x1d);
-    buffer.writeUInt8(frequency_weighting_type);
-    buffer.writeUInt8(time_weighting_type);
+    buffer.writeUInt8(getValue(frequency_weighting_type_map, frequency_weighting_type));
+    buffer.writeUInt8(getValue(time_weighting_type_map, time_weighting_type));
     return buffer.toBytes();
+}
+
+function getValues(map) {
+    var values = [];
+    for (var key in map) {
+        values.push(RAW_VALUE ? parseInt(key) : map[key]);
+    }
+    return values;
+}
+
+function getValue(map, value) {
+    if (RAW_VALUE) return value;
+
+    for (var key in map) {
+        if (map[key] === value) {
+            return parseInt(key);
+        }
+    }
+
+    throw new Error("not match in " + JSON.stringify(map));
 }
 
 function Buffer(size) {

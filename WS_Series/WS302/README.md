@@ -1,8 +1,8 @@
-# Sound Contact Switch - Milesight IoT
+# Sound Level Sensor - Milesight IoT
 
 The payload decoder function is applicable to WS302.
 
-For more detailed information, please visit [milesight official website](https://www.milesight-iot.com).
+For more detailed information, please visit [Milesight Official Website](https://www.milesight.com/iot/product/lorawan-sensor/ws302).
 
 ![WS302](WS302.png)
 
