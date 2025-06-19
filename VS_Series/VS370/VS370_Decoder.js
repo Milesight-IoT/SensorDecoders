@@ -7,6 +7,8 @@
  */
 var RAW_VALUE = 0x00;
 
+/* eslint no-redeclare: "off" */
+/* eslint-disable */
 // Chirpstack v4
 function decodeUplink(input) {
     var decoded = milesightDeviceDecode(input.bytes);
@@ -22,11 +24,12 @@ function Decode(fPort, bytes) {
 function Decoder(bytes, port) {
     return milesightDeviceDecode(bytes);
 }
+/* eslint-enable */
 
 function milesightDeviceDecode(bytes) {
     var decoded = {};
 
-    for (var i = 0; i < bytes.length; ) {
+    for (var i = 0; i < bytes.length;) {
         var channel_id = bytes[i++];
         var channel_type = bytes[i++];
 
@@ -87,11 +90,11 @@ function milesightDeviceDecode(bytes) {
         }
         // DOWNLINK RESPONSE
         else if (channel_id === 0xfe || channel_id === 0xff) {
-            result = handle_downlink_response(channel_type, bytes, i);
+            var result = handle_downlink_response(channel_type, bytes, i);
             decoded = Object.assign(decoded, result.data);
             i = result.offset;
         } else if (channel_id === 0xf8 || channel_id === 0xf9) {
-            result = handle_downlink_response_ext(channel_id, channel_type, bytes, i);
+            var result = handle_downlink_response_ext(channel_id, channel_type, bytes, i);
             decoded = Object.assign(decoded, result.data);
             i = result.offset;
         } else {
@@ -389,6 +392,8 @@ function readHibernateConfig(bytes) {
     config.end_time = readUInt16LE(bytes.slice(offset + 4, offset + 6));
     return config;
 }
+
+/* eslint-disable */
 function readUInt8(bytes) {
     return bytes & 0xff;
 }
