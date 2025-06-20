@@ -7,6 +7,7 @@
  */
 var RAW_VALUE = 0x00;
 
+/* eslint no-redeclare: "off" */
 /* eslint-disable */
 // Chirpstack v4
 function encodeDownlink(input) {
@@ -1601,7 +1602,7 @@ function stopTransmit(stop_transmit) {
     if (getValue(yes_no_map, stop_transmit) === 0) {
         return [];
     }
-    return [0xff, 0x6d, 0xff];
+    return [0xfd, 0x6d, 0xff];
 }
 
 /**
