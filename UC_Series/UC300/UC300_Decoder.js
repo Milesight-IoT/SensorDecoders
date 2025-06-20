@@ -7,6 +7,8 @@
  */
 var RAW_VALUE = 0x00;
 
+/* eslint no-redeclare: "off" */
+/* eslint-disable */
 // Chirpstack v4
 function decodeUplink(input) {
     var decoded = milesightDeviceDecode(input.bytes);
@@ -22,6 +24,7 @@ function Decode(fPort, bytes) {
 function Decoder(bytes, port) {
     return milesightDeviceDecode(bytes);
 }
+/* eslint-enable */
 
 var gpio_in_chns = [0x03, 0x04, 0x05, 0x06];
 var gpio_out_chns = [0x07, 0x08];
@@ -32,7 +35,7 @@ var av_chns = [0x0d, 0x0e];
 function milesightDeviceDecode(bytes) {
     var decoded = {};
 
-    for (i = 0; i < bytes.length; ) {
+    for (var i = 0; i < bytes.length;) {
         var channel_id = bytes[i++];
         var channel_type = bytes[i++];
 
@@ -208,7 +211,7 @@ function milesightDeviceDecode(bytes) {
             i += 6;
 
             var data = { timestamp: timestamp };
-            for (j = 0; j < channel_mask.length; j++) {
+            for (var j = 0; j < channel_mask.length; j++) {
                 // SKIP UNUSED CHANNELS
                 if (channel_mask[j] !== 1) continue;
 
@@ -275,7 +278,7 @@ function milesightDeviceDecode(bytes) {
             i += 8;
 
             var data = { timestamp: timestamp };
-            for (j = 0; j < modbus_chn_mask.length; j++) {
+            for (var j = 0; j < modbus_chn_mask.length; j++) {
                 if (modbus_chn_mask[j] !== 1) continue;
 
                 var chn = "modbus_chn_" + (j + 1);
@@ -317,8 +320,8 @@ function milesightDeviceDecode(bytes) {
             decoded.modbus_history.push(data);
         }
         // DOWNLINK RESPONSE
-        else if (channel_id === 0xfe) {
-            result = handle_downlink_response(channel_type, bytes, i);
+        else if (channel_id === 0xfe || channel_id === 0xff) {
+            var result = handle_downlink_response(channel_type, bytes, i);
             decoded = Object.assign(decoded, result.data);
             i = result.offset;
         }
