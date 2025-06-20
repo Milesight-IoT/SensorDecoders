@@ -354,9 +354,6 @@ function setRetransmitEnable(retransmit_enable) {
  * @example { "retransmit_interval": 300 }
  */
 function setRetransmitInterval(retransmit_interval) {
-    if (typeof type !== "number") {
-        throw new Error("type must be a number");
-    }
     if (typeof retransmit_interval !== "number") {
         throw new Error("retransmit_interval must be a number");
     }
@@ -437,7 +434,7 @@ function stopTransmit(stop_transmit) {
     if (stop_transmit === 0) {
         return [];
     }
-    return [0xff, 0x6d, 0xff];
+    return [0xfd, 0x6d, 0xff];
 }
 
 function Buffer(size) {
