@@ -7,6 +7,8 @@
  */
 var RAW_VALUE = 0x00;
 
+/* eslint no-redeclare: "off" */
+/* eslint-disable */
 // Chirpstack v4
 function decodeUplink(input) {
     var decoded = milesightDeviceDecode(input.bytes);
@@ -22,6 +24,7 @@ function Decode(fPort, bytes) {
 function Decoder(bytes, port) {
     return milesightDeviceDecode(bytes);
 }
+/* eslint-enable */
 
 var valve_chns = [0x03, 0x05];
 var valve_pulse_chns = [0x04, 0x06];
@@ -774,6 +777,7 @@ function readPressureSignalType(signal_type_value) {
     return getValue(signal_type_map, signal_type_value);
 }
 
+/* eslint-disable */
 function readUInt8(bytes) {
     return bytes & 0xff;
 }
