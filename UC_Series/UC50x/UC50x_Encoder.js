@@ -330,6 +330,7 @@ function fetchHistory(fetch_history) {
         buffer.writeUInt32LE(start_time);
     } else {
         buffer = new Buffer(10);
+        buffer.writeUInt8(0xfd);
         buffer.writeUInt8(0x6c);
         buffer.writeUInt32LE(start_time);
         buffer.writeUInt32LE(end_time);
@@ -353,7 +354,7 @@ function stopTransmit(stop_transmit) {
     if (getValue(yes_no_map, stop_transmit) === 0) {
         return [];
     }
-    return [0xff, 0x6d, 0xff];
+    return [0xfd, 0x6d, 0xff];
 }
 
 /**
