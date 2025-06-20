@@ -7,6 +7,8 @@
  */
 var RAW_VALUE = 0x00;
 
+/* eslint no-redeclare: "off" */
+/* eslint-disable */
 // Chirpstack v4
 function decodeUplink(input) {
     var decoded = milesightDeviceDecode(input.bytes);
@@ -22,6 +24,7 @@ function Decode(fPort, bytes) {
 function Decoder(bytes, port) {
     return milesightDeviceDecode(bytes);
 }
+/* eslint-enable */
 
 function milesightDeviceDecode(bytes) {
     var decoded = {};
@@ -207,6 +210,7 @@ function readConditionType(value) {
     return getValue(condition_map, value);
 }
 
+/* eslint-disable */
 function readUInt8(bytes) {
     return bytes & 0xff;
 }

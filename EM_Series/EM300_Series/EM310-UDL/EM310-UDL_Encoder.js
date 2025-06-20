@@ -7,6 +7,8 @@
  */
 var RAW_VALUE = 0x00;
 
+/* eslint no-redeclare: "off" */
+/* eslint-disable */
 // Chirpstack v4
 function encodeDownlink(input) {
     var encoded = milesightDeviceEncode(input.data);
@@ -22,6 +24,7 @@ function Encode(fPort, obj) {
 function Encoder(obj, port) {
     return milesightDeviceEncode(obj);
 }
+/* eslint-enable */
 
 function milesightDeviceEncode(payload) {
     var encoded = [];
@@ -110,7 +113,7 @@ function setReportInterval(report_interval) {
  * @param {number} distance_alarm_config.continue_time
  * @param {number} distance_alarm_config.alarm_release_enable values: (0: disable, 1: enable)
  */
-function setDistanceThresholdConfig(distance_alarm_config) {
+function setDistanceAlarmConfig(distance_alarm_config) {
     var condition = distance_alarm_config.condition;
     var min_threshold = distance_alarm_config.min_threshold;
     var max_threshold = distance_alarm_config.max_threshold;
