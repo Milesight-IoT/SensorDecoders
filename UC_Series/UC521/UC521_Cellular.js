@@ -1,10 +1,14 @@
 /**
  * Payload Decoder for Cellular
  *
- * Copyright 2024 Milesight IoT
+ * Copyright 2025 Milesight IoT
  *
  * @product UC521
  */
+var RAW_VALUE = 0x00;
+
+/* eslint no-redeclare: "off" */
+/* eslint-disable */
 function decodePayload(bytes) {
     var buffer = new Buffer(bytes);
 
@@ -27,6 +31,7 @@ function decodePayload(bytes) {
 
     return payload;
 }
+/* eslint-enable */
 
 var valve_chns = [0x03, 0x05];
 var valve_pulse_chns = [0x04, 0x06];
@@ -84,13 +89,13 @@ function milesightDeviceDecode(bytes) {
         // GPIO
         else if (includes(gpio_chns, channel_id) && channel_type === 0x01) {
             var gpio_channel_name = "gpio_" + (channel_id - gpio_chns[0] + 1);
-            decoded[gpio_channel_name] = buffer.readUInt8() === 0 ? "low" : "high";
+            decoded[gpio_channel_name] = readGPIOStatus(buffer.readUInt8());
         }
         // PIPE PRESSURE
         else if (channel_id === 0x09 && channel_type === 0x7b) {
             var pipe_pressure = buffer.readUInt16LE();
             if (pipe_pressure === 0xffff) {
-                decoded.pipe_pressure_exception = "Read Error";
+                decoded.pipe_pressure_exception = readSensorStatus(1);
             } else {
                 decoded.pipe_pressure = pipe_pressure;
             }
@@ -110,42 +115,26 @@ function milesightDeviceDecode(bytes) {
             var alarm = buffer.readUInt8();
 
             var event = {};
-            switch (source_type) {
-                case 0x00:
-                    event.source = "Every Change";
-                    break;
-                case 0x01:
-                    event.source = "Valve 1 Opening";
-                    break;
-                case 0x02:
-                    event.source = "Valve 2 Opening";
-                    break;
-                case 0x03:
-                    event.source = "Valve 1 Opening or Valve 2 Opening";
-                    break;
-            }
+            event.source = readSourceType(source_type);
+            event.condition = readConditionType(condition_type);
             switch (condition_type) {
                 case 0x01:
-                    event.condition = "pipe_pressure less than min";
                     event.min = min;
                     break;
                 case 0x02:
-                    event.condition = "pipe_pressure more than max";
                     event.max = max;
                     break;
                 case 0x03:
-                    event.condition = "pipe_pressure between min and max";
                     event.min = min;
                     event.max = max;
                     break;
                 case 0x04:
-                    event.condition = "pipe_pressure out of min and max";
                     event.min = min;
                     event.max = max;
                     break;
             }
             event.pressure = pressure;
-            event.alarm = alarm === 0 ? "Pipe Pressure Threshold Alarm Release" : "Pipe Pressure Threshold Alarm";
+            event.alarm = readPressureAlarmType(alarm);
             decoded.pipe_pressure = pressure;
             decoded.pipe_pressure_alarm = event;
         }
@@ -157,7 +146,7 @@ function milesightDeviceDecode(bytes) {
             var event = {};
             event.source = buffer.readUInt8();
             event.target = buffer.readUInt8();
-            event.result = buffer.readUInt8() === 0 ? "Failed" : "Success";
+            event.result = readValveCalibrationResult(buffer.readUInt8());
 
             decoded[valve_channel_name + "_calibration"] = event;
         }
@@ -179,7 +168,7 @@ function milesightDeviceDecode(bytes) {
         // PIPE PRESSURE EXCEPTION
         else if (channel_id === 0xb9 && channel_type === 0x7b) {
             var exception = buffer.readUInt8();
-            decoded.pipe_pressure_exception = "Read Error";
+            decoded.pipe_pressure_exception = readSensorStatus(1);
         }
         // CUSTOM MESSAGE
         else if (channel_id === 0xff && channel_type === 0x2a) {
@@ -194,6 +183,101 @@ function milesightDeviceDecode(bytes) {
         history.push(decoded);
     }
     return history;
+}
+
+function readTslVersion(bytes) {
+    var major = bytes[0] & 0xff;
+    var minor = bytes[1] & 0xff;
+    return "v" + major + "." + minor;
+}
+
+function readGPIOStatus(status) {
+    var gpio_status_map = {
+        0: "low",
+        1: "high",
+    }
+    return getValue(gpio_status_map, status);
+}
+
+function readSourceType(source_type) {
+    var source_type_map = {
+        0: "every change",
+        1: "valve 1 opening",
+        2: "valve 2 opening",
+        3: "valve 1 opening or valve 2 opening",
+    }
+    return getValue(source_type_map, source_type);
+}
+
+function readConditionType(condition_type) {
+    var condition_type_map = {
+        1: "pipe pressure less than min",
+        2: "pipe pressure more than max",
+        3: "pipe pressure between min and max",
+        4: "pipe pressure out of min and max",
+    }
+    return getValue(condition_type_map, condition_type);
+}
+
+function readPressureAlarmType(pressure_alarm_type) {
+    var alarm_map = {
+        0: "pressure threshold alarm",
+        1: "pressure threshold alarm release",
+    }
+    return getValue(alarm_map, pressure_alarm_type);
+}
+
+function readValveCalibrationResult(result) {
+    var result_map = { 0: "failed", 1: "success" }
+    return getValue(result_map, result);
+}
+
+function readSensorStatus(status) {
+    var sensor_status_map = { 1: "read error" }
+    return getValue(sensor_status_map, status);
+}
+
+function readValveType(type) {
+    var valve_type_map = {
+        0: "2-way ball valve",
+        1: "3-way ball valve",
+    }
+    return getValue(valve_type_map, type);
+}
+
+function readOTATaskResult(type) {
+    var task_result_map = {
+        0: "success",
+        1: "failed: URL error",
+        2: "failed: download error",
+        3: "failed: OTA package is too large",
+        4: "failed: incorrect version",
+        5: "failed: unknown error",
+        6: "failed: incorrect format",
+        7: "failed: CRC check error",
+        8: "failed: incorrect model",
+        9: "failed: patch recover error",
+    }
+    return getValue(task_result_map, type);
+}
+
+function readValveException(type) {
+    var error_map = {
+        0: "low battery power",
+        1: "shutdown after getting I/O feedback",
+        2: "incorrect opening time",
+        3: "timeout",
+        4: "valve stall",
+    }
+    return getValue(error_map, type);
+}
+
+function getValue(map, key) {
+    if (RAW_VALUE) return key;
+
+    var value = map[key];
+    if (!value) value = "unknown";
+    return value;
 }
 
 function Buffer(bytes) {
@@ -302,59 +386,4 @@ function includes(items, item) {
         }
     }
     return false;
-}
-
-function readValveType(type) {
-    switch (type) {
-        case 0x00:
-            return "2-Way Ball Valve";
-        case 0x01:
-            return "3-Way Ball Valve";
-    }
-}
-
-function readOTATaskResult(type) {
-    switch (type) {
-        case 0x00:
-            return "Success";
-        case 0x01:
-            return "Failed: URL Error";
-        case 0x02:
-            return "Failed: Download Error";
-        case 0x03:
-            return "Failed: OTA Package is too Large";
-        case 0x04:
-            return "Failed: Incorrect Version";
-        case 0x05:
-            return "Failed: Unknown Error";
-        case 0x06:
-            return "Failed: Incorrect Format";
-        case 0x07:
-            return "Failed: CRC Check Error";
-        case 0x08:
-            return "Failed: Incorrect Model";
-        case 0x09:
-            return "Failed: Patch Recover Error";
-    }
-}
-
-function readValveException(type) {
-    switch (type) {
-        case 0x00:
-            return "Low Battery Power";
-        case 0x01:
-            return "Shutdown after getting I/O feedback";
-        case 0x02:
-            return "Incorrect Opening Time";
-        case 0x03:
-            return "Timeout";
-        case 0x04:
-            return "Valve Stall";
-    }
-}
-
-function readTslVersion(bytes) {
-    var major = bytes[0] & 0xff;
-    var minor = bytes[1] & 0xff;
-    return "v" + major + "." + minor;
 }
