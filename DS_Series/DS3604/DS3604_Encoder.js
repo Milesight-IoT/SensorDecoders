@@ -7,11 +7,13 @@
  */
 var RAW_VALUE = 0x00;
 
+/* eslint no-redeclare: "off" */
+/* eslint-disable */
 // Chirpstack v4
 function encodeDownlink(input) {
     try {
         var encoded = milesightDeviceEncode(input.data);
-        return {bytes: encoded};
+        return { bytes: encoded };
     } catch (e) {
         return asErrors(e);
     }
@@ -34,9 +36,10 @@ function Encoder(obj, port) {
         return asErrors(e);
     }
 }
+/* eslint-enable */
 
 function asErrors(e) {
-    return {errors: [e.message]};
+    return { errors: [e.message] };
 }
 
 function milesightDeviceEncode(payload) {
@@ -120,7 +123,6 @@ function setText(template_id, contents) {
 
     if (template_values.indexOf(template_id) === -1) {
         throw new Error("template_id must be one of " + template_values.join(", "));
-        return [];
     }
 
     var encoded = [];
@@ -370,6 +372,9 @@ function setBlockVisible(block_visible) {
     var block_bits_offset = { text_1: 0, text_2: 1, text_3: 2, text_4: 3, text_5: 4, text_6: 5, text_7: 6, text_8: 7, text_9: 8, text_10: 9, qrcode: 10, image_1: 11, image_2: 12, battery_status: 13, connect_status: 14 };
     for (var key in block_bits_offset) {
         if (key in block_visible) {
+            if (visible_values.indexOf(block_visible[key]) === -1) {
+                throw new Error("block_visible." + key + " must be one of " + visible_values.join(", "));
+            }
             masked |= 1 << block_bits_offset[key];
             data |= getValue(visible_map, block_visible[key]) << block_bits_offset[key];
         }
@@ -459,7 +464,7 @@ function setSwitchTemplateButtonEnable(switch_template_button_enable) {
 function setMulticastConfig(multicast_config) {
     var enable_map = { 0: "disable", 1: "enable" };
     var enable_values = getValues(enable_map);
-    
+
     var data = 0;
     var group_offset = { group_1: 0, group_2: 1, group_3: 2, group_4: 3 };
     for (var key in group_offset) {
@@ -710,7 +715,7 @@ function getValue(map, value) {
             return parseInt(key);
         }
     }
-    
+
     throw new Error("not match in " + JSON.stringify(map));
 }
 

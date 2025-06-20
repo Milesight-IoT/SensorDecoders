@@ -7,6 +7,8 @@
  */
 var RAW_VALUE = 0x00;
 
+/* eslint no-redeclare: "off" */
+/* eslint-disable */
 // Chirpstack v4
 function decodeUplink(input) {
     try {
@@ -34,9 +36,10 @@ function Decoder(bytes, port) {
         return asErrors(e);
     }
 }
+/* eslint-enable */
 
-function asErrors(e){
-    return { errors : [e.message]};
+function asErrors(e) {
+    return { errors: [e.message] };
 }
 
 function milesightDeviceDecode(bytes) {
@@ -173,7 +176,7 @@ function milesightDeviceDecode(bytes) {
         }
         // DOWNLINK RESPONSE
         else if (channel_id === 0xfe || channel_id === 0xff) {
-            result = handle_downlink_response(channel_type, bytes, i);
+            var result = handle_downlink_response(channel_type, bytes, i);
             decoded = Object.assign(decoded, result.data);
             i = result.offset;
         }
@@ -410,6 +413,7 @@ function readFontStyle(type) {
     return getValue(font_style_map, type);
 }
 
+/* eslint-disable */
 function readUInt8(bytes) {
     return bytes & 0xff;
 }
