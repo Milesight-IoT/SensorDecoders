@@ -7,6 +7,8 @@
  */
 var RAW_VALUE = 0x00;
 
+/* eslint no-redeclare: "off" */
+/* eslint-disable */
 // Chirpstack v4
 function encodeDownlink(input) {
     var encoded = milesightDeviceEncode(input.data);
@@ -22,6 +24,7 @@ function Encode(fPort, obj) {
 function Encoder(obj, port) {
     return milesightDeviceEncode(obj);
 }
+/* eslint-enable */
 
 function milesightDeviceEncode(payload) {
     var encoded = [];
@@ -991,19 +994,27 @@ function encodedRuleCondition(condition) {
     var repeat_mode_map = { 0: "monthly", 1: "daily", 2: "weekly" };
     var repeat_mode_values = getValues(repeat_mode_map);
     var weekday_bit_offset = { monday: 0, tuesday: 1, wednesday: 2, thursday: 3, friday: 4, saturday: 5, sunday: 6 };
-    var weekday_values = getValues(weekday_bit_offset);
     var valve_strategy_map = { 0: "always", 1: "valve 1 open", 2: "valve 2 open", 3: "valve 1 open or valve 2 open" };
     var valve_strategy_values = getValues(valve_strategy_map);
     var threshold_condition_type_map = { 0: "none", 1: "below", 2: "above", 3: "between", 4: "outside" };
     var threshold_condition_type_values = getValues(threshold_condition_type_map);
 
     var buffer = new Buffer(13);
+    if (condition_type_values.indexOf(condition.type) === -1) {
+        throw new Error("condition.type must be one of " + condition_type_values.join(", "));
+    }
     var condition_type_value = getValue(condition_type_map, condition.type);
     buffer.writeUInt8(condition_type_value);
     switch (condition_type_value) {
         case 0x00: // none
             break;
         case 0x01: // time condition (start_time, end_time, repeat_enable, repeat_mode, [repeat_step], [repeat_week])
+            if (enable_values.indexOf(condition.repeat_enable) === -1) {
+                throw new Error("condition.repeat_enable must be one of " + enable_values.join(", "));
+            }
+            if (repeat_mode_values.indexOf(condition.repeat_mode) === -1) {
+                throw new Error("condition.repeat_mode must be one of " + repeat_mode_values.join(", "));
+            }
             buffer.writeUInt32LE(condition.start_time);
             buffer.writeUInt32LE(condition.end_time);
             buffer.writeUInt8(getValue(enable_map, condition.repeat_enable));
@@ -1040,6 +1051,12 @@ function encodedRuleCondition(condition) {
             buffer.writeUInt32LE(condition.pulse_threshold);
             break;
         case 0x05: // pressure threshold condition
+            if (valve_strategy_values.indexOf(condition.valve_strategy) === -1) {
+                throw new Error("rules_config._item.condition.valve_strategy must be one of " + valve_strategy_values.join(", "));
+            }
+            if (threshold_condition_type_values.indexOf(condition.threshold_condition_type) === -1) {
+                throw new Error("rules_config._item.condition.threshold_condition_type must be one of " + threshold_condition_type_values.join(", "));
+            }
             buffer.writeUInt8(condition.valve_index);
             buffer.writeUInt8(getValue(valve_strategy_map, condition.valve_strategy));
             buffer.writeUInt8(getValue(threshold_condition_type_map, condition.threshold_condition_type));
@@ -1076,12 +1093,21 @@ function encodedAction(action) {
     var report_type_values = getValues(report_type_map);
 
     var buffer = new Buffer(13);
+    if (action_type_values.indexOf(action.type) === -1) {
+        throw new Error("action.type must be one of " + action_type_values.join(", "));
+    }
     var action_type_value = getValue(action_type_map, action.type);
     buffer.writeUInt8(action_type_value);
     switch (action_type_value) {
         case 0x00: // none
             break;
         case 0x01: // em valve control (interrupt current execution task)
+            if (enable_values.indexOf(action.time_enable) === -1) {
+                throw new Error("action.time_enable must be one of " + enable_values.join(", "));
+            }
+            if (enable_values.indexOf(action.pulse_enable) === -1) {
+                throw new Error("action.pulse_enable must be one of " + enable_values.join(", "));
+            }
             buffer.writeUInt8(action.valve_index);
             buffer.writeUInt8(action.valve_opening);
             buffer.writeUInt8(getValue(enable_map, action.time_enable));
@@ -1090,6 +1116,12 @@ function encodedAction(action) {
             buffer.writeUInt32LE(action.pulse_threshold);
             break;
         case 0x02: // general valve control
+            if (enable_values.indexOf(action.time_enable) === -1) {
+                throw new Error("action.time_enable must be one of " + enable_values.join(", "));
+            }
+            if (enable_values.indexOf(action.pulse_enable) === -1) {
+                throw new Error("action.pulse_enable must be one of " + enable_values.join(", "));
+            }
             buffer.writeUInt8(action.valve_index);
             buffer.writeUInt8(action.valve_opening);
             buffer.writeUInt8(getValue(enable_map, action.time_enable));
@@ -1098,6 +1130,12 @@ function encodedAction(action) {
             buffer.writeUInt32LE(action.pulse_threshold);
             break;
         case 0x03: // report
+            if (report_type_values.indexOf(action.report_type) === -1) {
+                throw new Error("action.report_type must be one of " + report_type_values.join(", "));
+            }
+            if (enable_values.indexOf(action.threshold_release_enable) === -1) {
+                throw new Error("action.threshold_release_enable must be one of " + enable_values.join(", "));
+            }
             buffer.writeUInt8(getValue(report_type_map, action.report_type));
             buffer.writeAscii(action.report_content, 8);
             buffer.writeUInt8(0x00); // ignore the next byte
