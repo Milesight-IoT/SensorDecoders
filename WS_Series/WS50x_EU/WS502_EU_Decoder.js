@@ -7,6 +7,8 @@
  */
 var RAW_VALUE = 0x00;
 
+/* eslint no-redeclare: "off" */
+/* eslint-disable */
 // Chirpstack v4
 function decodeUplink(input) {
     var decoded = milesightDeviceDecode(input.bytes);
@@ -22,6 +24,7 @@ function Decode(fPort, bytes) {
 function Decoder(bytes, port) {
     return milesightDeviceDecode(bytes);
 }
+/* eslint-enable */
 
 function milesightDeviceDecode(bytes) {
     var decoded = {};
@@ -110,7 +113,7 @@ function milesightDeviceDecode(bytes) {
         }
         // DOWNLINK RESPONSE
         else if (channel_id === 0xfe || channel_id === 0xff) {
-            result = handle_downlink_response(channel_type, bytes, i);
+            var result = handle_downlink_response(channel_type, bytes, i);
             decoded = Object.assign(decoded, result.data);
             i = result.offset;
         } else {
@@ -246,78 +249,6 @@ function readYesNoStatus(status) {
     return getValue(status_map, status);
 }
 
-function readRuleConfig(bytes) {
-    var offset = 0;
-
-    var rule_config = {};
-    rule_config.rule_id = readUInt8(bytes[offset]);
-    var rule_type_value = readUInt8(bytes[offset + 1]);
-    rule_config.rule_type = readRuleType(rule_type_value);
-    if (rule_type_value !== 0) {
-        // condition
-        var day_bit_offset = { monday: 0, tuesday: 1, wednesday: 2, thursday: 3, friday: 4, saturday: 5, sunday: 6 };
-        rule_config.condition = {};
-        var day = readUInt8(bytes[offset + 2]);
-        for (var key in day_bit_offset) {
-            rule_config.condition[key] = readEnableStatus((day >> day_bit_offset[key]) & 0x01);
-        }
-        rule_config.condition.hour = readUInt8(bytes[offset + 3]);
-        rule_config.condition.minute = readUInt8(bytes[offset + 4]);
-
-        // action
-        var switch_bit_offset = { switch_1: 0, switch_2: 2, switch_3: 4 };
-        rule_config.action = {};
-        var switch_raw_data = readUInt8(bytes[offset + 5]);
-        for (var key in switch_bit_offset) {
-            rule_config.action[key] = readSwitchStatus((switch_raw_data >> switch_bit_offset[key]) & 0x03);
-        }
-        rule_config.action.child_lock = readChildLockStatus(bytes[offset + 6]);
-    }
-
-    offset += 6;
-    return rule_config;
-}
-
-function readRuleType(type) {
-    var rule_type_map = { 0: "none", 1: "enable", 2: "disable" };
-    return getValue(rule_type_map, type);
-}
-
-function readSwitchStatus(status) {
-    var switch_status_map = { 0: "keep", 1: "on", 2: "off" };
-    return getValue(switch_status_map, status);
-}
-
-function readRuleConfigResult(result) {
-    var rule_config_result_map = {
-        0: "success",
-        2: "failed, out of range",
-        17: "success, conflict with rule_id=1",
-        18: "success, conflict with rule_id=2",
-        19: "success, conflict with rule_id=3",
-        20: "success, conflict with rule_id=4",
-        21: "success, conflict with rule_id=5",
-        22: "success, conflict with rule_id=6",
-        23: "success, conflict with rule_id=7",
-        24: "success, conflict with rule_id=8",
-        49: "failed, conflict with rule_id=1",
-        50: "failed, conflict with rule_id=2",
-        51: "failed, conflict with rule_id=3",
-        52: "failed, conflict with rule_id=4",
-        53: "failed, conflict with rule_id=5",
-        54: "failed, conflict with rule_id=6",
-        55: "failed, conflict with rule_id=7",
-        56: "failed, conflict with rule_id=8",
-        81: "failed,rule config empty",
-    };
-    return getValue(rule_config_result_map, result);
-}
-
-function readChildLockStatus(status) {
-    var child_lock_status_map = { 0: "keep", 1: "enable", 2: "disable" };
-    return getValue(child_lock_status_map, status);
-}
-
 function readLedMode(bytes) {
     var led_mode_map = { 0: "off", 1: "on_inverted", 2: "on_synced" };
     return getValue(led_mode_map, bytes);
@@ -328,11 +259,7 @@ function readEnableStatus(bytes) {
     return getValue(enable_map, bytes);
 }
 
-function readTimeZone(timezone) {
-    var timezone_map = { "-720": "UTC-12", "-660": "UTC-11", "-600": "UTC-10", "-570": "UTC-9:30", "-540": "UTC-9", "-480": "UTC-8", "-420": "UTC-7", "-360": "UTC-6", "-300": "UTC-5", "-240": "UTC-4", "-210": "UTC-3:30", "-180": "UTC-3", "-120": "UTC-2", "-60": "UTC-1", 0: "UTC", 60: "UTC+1", 120: "UTC+2", 180: "UTC+3", 210: "UTC+3:30", 240: "UTC+4", 270: "UTC+4:30", 300: "UTC+5", 330: "UTC+5:30", 345: "UTC+5:45", 360: "UTC+6", 390: "UTC+6:30", 420: "UTC+7", 480: "UTC+8", 540: "UTC+9", 570: "UTC+9:30", 600: "UTC+10", 630: "UTC+10:30", 660: "UTC+11", 720: "UTC+12", 765: "UTC+12:45", 780: "UTC+13", 840: "UTC+14" };
-    return getValue(timezone_map, timezone);
-}
-
+/* eslint-disable */
 function readUInt8(bytes) {
     return bytes & 0xff;
 }
