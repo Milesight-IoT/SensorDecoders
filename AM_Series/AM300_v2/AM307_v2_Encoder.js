@@ -609,7 +609,7 @@ function stopTransmit(stop_transmit) {
     if (getValue(yes_no_map, stop_transmit) === 0) {
         return [];
     }
-    return [0xff, 0x6d, 0xff];
+    return [0xfd, 0x6d, 0xff];
 }
 
 /**
