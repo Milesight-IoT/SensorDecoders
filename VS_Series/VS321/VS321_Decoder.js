@@ -183,6 +183,10 @@ function handle_downlink_response(channel_type, bytes, offset) {
     var decoded = {};
 
     switch (channel_type) {
+        case 0x02:
+            decoded.collection_interval = readUInt16LE(bytes.slice(offset, offset + 2));
+            offset += 2;
+            break;
         case 0x06:
             var data = readUInt8(bytes[offset]);
             var condition_value = data & 0x07;
@@ -419,7 +423,7 @@ function readYesNoStatus(status) {
 }
 
 function readReportType(type) {
-    var type_map = { 0: "hourly", 1: "immediately" };
+    var type_map = { 0: "period", 1: "immediately" };
     return getValue(type_map, type);
 }
 

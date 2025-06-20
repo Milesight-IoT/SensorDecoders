@@ -41,6 +41,9 @@ function milesightDeviceEncode(payload) {
     if ("report_interval" in payload) {
         encoded = encoded.concat(setReportInterval(payload.report_interval));
     }
+    if ("collection_interval" in payload) {
+        encoded = encoded.concat(setCollectionInterval(payload.collection_interval));
+    }
     if ("report_type" in payload) {
         encoded = encoded.concat(setReportType(payload.report_type));
     }
@@ -167,6 +170,24 @@ function setReportInterval(report_interval) {
     buffer.writeUInt8(0x8e);
     buffer.writeUInt8(0x00);
     buffer.writeUInt16LE(report_interval);
+    return buffer.toBytes();
+}
+
+/**
+ * collection interval
+ * @param {number} collection_interval unit: minute, values: (2: 2min, 5: 5min, 10: 10min, 15: 15min, 30: 30min, 60: 1h)
+ * @example { "collection_interval": 60 }
+ */
+function setCollectionInterval(collection_interval) {
+    var interval = [2, 5, 10, 15, 30, 60];
+    if (interval.indexOf(collection_interval) === -1) {
+        throw new Error("collection_interval must be one of " + interval.join(", "));
+    }
+
+    var buffer = new Buffer(4);
+    buffer.writeUInt8(0xff);
+    buffer.writeUInt8(0x02);
+    buffer.writeUInt16LE(collection_interval);
     return buffer.toBytes();
 }
 
@@ -560,7 +581,7 @@ function stopTransmit(stop_transmit) {
     if (getValue(yes_no_map, stop_transmit) === 0) {
         return [];
     }
-    return [0xff, 0x6d, 0xff];
+    return [0xfd, 0x6d, 0xff];
 }
 
 /**
