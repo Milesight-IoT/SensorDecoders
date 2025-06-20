@@ -206,7 +206,7 @@ function setTimestamp(timestamp) {
         throw new Error("timestamp must be greater than 0");
     }
 
-    var buffer = new Buffer(4);
+    var buffer = new Buffer(6);
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0x11);
     buffer.writeUInt32LE(timestamp);
