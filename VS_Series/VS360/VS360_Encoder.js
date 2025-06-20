@@ -164,12 +164,12 @@ function setReportInterval(report_interval) {
 
 /**
  * set report type
- * @odm
- * @param {number} report_type values: (0: hourly, 1: immediate)
+ * @odm 2754
+ * @param {number} report_type values: (0: period, 1: immediately)
  * @example { "report_type": 0 }
  */
 function setReportType(report_type) {
-    var report_type_map = { 0: "hourly", 1: "immediate" };
+    var report_type_map = { 0: "period", 1: "immediately" };
     var report_type_values = getValues(report_type_map);
     if (report_type_values.indexOf(report_type) === -1) {
         throw new Error("report_type must be one of " + report_type_values.join(", "));
@@ -658,6 +658,7 @@ function fetchHistory(fetch_history) {
         buffer.writeUInt32LE(start_time);
     } else {
         var buffer = new Buffer(10);
+        buffer.writeUInt8(0xfd);
         buffer.writeUInt8(0x6c);
         buffer.writeUInt32LE(start_time);
         buffer.writeUInt32LE(end_time);
@@ -681,7 +682,7 @@ function stopTransmit(stop_transmit) {
     if (getValue(yes_no_map, stop_transmit) === 0) {
         return [];
     }
-    return [0xff, 0x6d, 0xff];
+    return [0xfd, 0x6d, 0xff];
 }
 
 function getValues(map) {
