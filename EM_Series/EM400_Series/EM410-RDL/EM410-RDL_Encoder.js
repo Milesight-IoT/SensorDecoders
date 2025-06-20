@@ -7,6 +7,8 @@
  */
 var RAW_VALUE = 0x00;
 
+/* eslint no-redeclare: "off" */
+/* eslint-disable */
 // Chirpstack v4
 function encodeDownlink(input) {
     var encoded = milesightDeviceEncode(input.data);
@@ -22,6 +24,7 @@ function Encode(fPort, obj) {
 function Encoder(obj, port) {
     return milesightDeviceEncode(obj);
 }
+/* eslint-enable */
 
 function milesightDeviceEncode(payload) {
     var encoded = [];
@@ -464,7 +467,7 @@ function setAlarmCounts(alarm_counts) {
 
 /**
  * radar calibration
- * @param {number} radar_calibration_type values: (0: no, 1: yes)
+ * @param {number} radar_calibration values: (0: no, 1: yes)
  * @example { "radar_calibration": 0 }
  */
 function setRadarCalibration(radar_calibration) {
@@ -568,7 +571,7 @@ function setBlindDetectionEnable(blind_detection_enable) {
  * set recollection config
  * @param {object} recollection_config
  * @param {number} recollection_config.counts range: [1, 3]
- * @param {number} recollection_config.interval range: [1, 10]
+ * @param {number} recollection_config.interval unit: s, range: [1, 10]
  * @example { "recollection_config": { "counts": 3, "interval": 10 } }
  */
 function setRecollectionConfig(recollection_config) {
@@ -719,7 +722,7 @@ function stopTransmit(stop_transmit) {
     if (getValue(enable_map, stop_transmit) === 0) {
         return [];
     }
-    return [0xff, 0x6d, 0xff];
+    return [0xfd, 0x6d, 0xff];
 }
 
 /**
@@ -775,7 +778,6 @@ function fetchHistory(fetch_history) {
         buffer.writeUInt32LE(start_time);
         buffer.writeUInt32LE(end_time);
     }
-
     return buffer.toBytes();
 }
 
@@ -818,14 +820,8 @@ function setTiltAndDistanceLink(tilt_distance_link) {
 
 function getValues(map) {
     var values = [];
-    if (RAW_VALUE) {
-        for (var key in map) {
-            values.push(parseInt(key));
-        }
-    } else {
-        for (var key in map) {
-            values.push(map[key]);
-        }
+    for (var key in map) {
+        values.push(RAW_VALUE ? parseInt(key) : map[key]);
     }
     return values;
 }
