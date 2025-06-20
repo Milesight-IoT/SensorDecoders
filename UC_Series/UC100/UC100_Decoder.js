@@ -7,6 +7,8 @@
  */
 var RAW_VALUE = 0x00;
 
+/* eslint no-redeclare: "off" */
+/* eslint-disable */
 // Chirpstack v4
 function decodeUplink(input) {
     var decoded = milesightDeviceDecode(input.bytes);
@@ -22,6 +24,7 @@ function Decode(fPort, bytes) {
 function Decoder(bytes, port) {
     return milesightDeviceDecode(bytes);
 }
+/* eslint-enable */
 
 function milesightDeviceDecode(bytes) {
     var decoded = {};
@@ -73,7 +76,7 @@ function milesightDeviceDecode(bytes) {
         // MODBUS
         else if (channel_id === 0xff && channel_type === 0x19) {
             var modbus_chn_id = readUInt8(bytes[i++]) + 1;
-            var data_length = readUInt8(bytes[i++]);
+            readUInt8(bytes[i++]); // skip data_length
             var data_def = readUInt8(bytes[i++]);
             var sign = (data_def >>> 7) & 0x01;
             var data_type = data_def & 0x7f; // 0b01111111
@@ -119,7 +122,7 @@ function milesightDeviceDecode(bytes) {
         // MODBUS ALARM (v1.7+)
         else if (channel_id === 0xff && channel_type === 0xee) {
             var chn_def = readUInt8(bytes[i++]);
-            var data_length = readUInt8(bytes[i++]);
+            readUInt8(bytes[i++]); // skip data_length
             var data_def = readUInt8(bytes[i++]);
 
             var modbus_chn_id = (chn_def & 0x3f) + 1;
@@ -377,6 +380,16 @@ function readSensorStatus(status) {
     return getValue(status_map, status);
 }
 
+function readEnableStatus(status) {
+    var status_map = { 0: "disable", 1: "enable" };
+    return getValue(status_map, status);
+}
+
+function readYesNoStatus(status) {
+    var status_map = { 0: "no", 1: "yes" };
+    return getValue(status_map, status);
+}
+
 function readOnOffStatus(status) {
     var status_map = { 0: "off", 1: "on" };
     return getValue(status_map, status);
@@ -408,6 +421,60 @@ function readModbusChannels(bytes) {
     return modbus_channels;
 }
 
+function readRegisterType(type) {
+    var register_type_map = {
+        0: "MB_REG_COIL",
+        1: "MB_REG_DIS",
+        2: "MB_REG_INPUT_AB",
+        3: "MB_REG_INPUT_BA",
+        4: "MB_REG_INPUT_INT32_ABCD",
+        5: "MB_REG_INPUT_INT32_BADC",
+        6: "MB_REG_INPUT_INT32_CDAB",
+        7: "MB_REG_INPUT_INT32_DCBA",
+        8: "MB_REG_INPUT_INT32_AB",
+        9: "MB_REG_INPUT_INT32_CD",
+        10: "MB_REG_INPUT_FLOAT_ABCD",
+        11: "MB_REG_INPUT_FLOAT_BADC",
+        12: "MB_REG_INPUT_FLOAT_CDAB",
+        13: "MB_REG_INPUT_FLOAT_DCBA",
+        14: "MB_REG_HOLD_INT16_AB",
+        15: "MB_REG_HOLD_INT16_BA",
+        16: "MB_REG_HOLD_INT32_ABCD",
+        17: "MB_REG_HOLD_INT32_BADC",
+        18: "MB_REG_HOLD_INT32_CDAB",
+        19: "MB_REG_HOLD_INT32_DCBA",
+        20: "MB_REG_HOLD_INT32_AB",
+        21: "MB_REG_HOLD_INT32_CD",
+        22: "MB_REG_HOLD_FLOAT_ABCD",
+        23: "MB_REG_HOLD_FLOAT_BADC",
+        24: "MB_REG_HOLD_FLOAT_CDAB",
+        25: "MB_REG_HOLD_FLOAT_DCBA",
+        26: "MB_REG_INPUT_DOUBLE_ABCDEFGH",
+        27: "MB_REG_INPUT_DOUBLE_GHEFCDAB",
+        28: "MB_REG_INPUT_DOUBLE_BADCFEHG",
+        29: "MB_REG_INPUT_DOUBLE_HGFEDCBA",
+        30: "MB_REG_INPUT_INT64_ABCDEFGH",
+        31: "MB_REG_INPUT_INT64_GHEFCDAB",
+        32: "MB_REG_INPUT_INT64_BADCFEHG",
+        33: "MB_REG_INPUT_INT64_HGFEDCBA",
+        34: "MB_REG_HOLD_DOUBLE_ABCDEFGH",
+        35: "MB_REG_HOLD_DOUBLE_GHEFCDAB",
+        36: "MB_REG_HOLD_DOUBLE_BADCFEHG",
+        37: "MB_REG_HOLD_DOUBLE_HGFEDCBA",
+        38: "MB_REG_HOLD_INT64_ABCDEFGH",
+        39: "MB_REG_HOLD_INT64_GHEFCDAB",
+        40: "MB_REG_HOLD_INT64_BADCFEHG",
+        41: "MB_REG_HOLD_INT64_HGFEDCBA",
+    };
+    return getValue(register_type_map, type);
+}
+
+function readSignType(type) {
+    var sign_map = { 0: "unsigned", 1: "signed" };
+    return getValue(sign_map, type);
+}
+
+/* eslint-disable */
 function readUInt8(bytes) {
     return bytes & 0xff;
 }
