@@ -7,6 +7,7 @@
  */
 var RAW_VALUE = 0x00;
 
+/* eslint no-redeclare: "off" */
 /* eslint-disable */
 // Chirpstack v4
 function encodeDownlink(input) {
@@ -314,7 +315,6 @@ function setMulticastConfig(multicast_config) {
     return buffer.toBytes();
 }
 
-/* eslint-disable */
 function encodeUtf8(str) {
     var byteArray = [];
     for (var i = 0; i < str.length; i++) {
@@ -414,4 +414,3 @@ Buffer.prototype.writeBytes = function (bytes) {
 Buffer.prototype.toBytes = function () {
     return this.buffer;
 };
-/* eslint-enable */
