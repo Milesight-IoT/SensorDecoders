@@ -7,6 +7,8 @@
  */
 var RAW_VALUE = 0x00;
 
+/* eslint no-redeclare: "off" */
+/* eslint-disable */
 // Chirpstack v4
 function encodeDownlink(input) {
     var encoded = milesightDeviceEncode(input.data);
@@ -22,6 +24,7 @@ function Encode(fPort, obj) {
 function Encoder(obj, port) {
     return milesightDeviceEncode(obj);
 }
+/* eslint-enable */
 
 function milesightDeviceEncode(payload) {
     var encoded = [];
@@ -210,7 +213,7 @@ function setTimestamp(timestamp) {
         throw new Error("timestamp must be greater than 0");
     }
 
-    var buffer = new Buffer(4);
+    var buffer = new Buffer(6);
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0x11);
     buffer.writeUInt32LE(timestamp);
@@ -457,6 +460,9 @@ function setPressureCalibrationValueConfig(pressure_calibration_value_config) {
 
     var enable_map = { 0: "disable", 1: "enable" };
     var enable_values = getValues(enable_map);
+    if (enable_values.indexOf(enable) === -1) {
+        throw new Error("pressure_calibration_value_config.enable must be one of " + enable_values.join(", "));
+    }
 
     var buffer = new Buffer(6);
     buffer.writeUInt8(0xff);
@@ -681,7 +687,6 @@ function setAlarmReleaseEnable(alarm_release_enable) {
     return buffer.toBytes();
 }
 
-
 /**
  * d2d master configuration
  * @since hardware_version v2.0, firmware_version v1.7
@@ -708,7 +713,7 @@ function setD2DMasterConfig(d2d_master_config) {
     if (enable_values.indexOf(uplink_enable) === -1) {
         throw new Error("d2d_master_config._item.enable must be one of " + enable_values.join(", "));
     }
-    if (enable && enable_values.indexOf(lora_uplink_enable) === -1) {
+    if (enable_values.indexOf(lora_uplink_enable) === -1) {
         throw new Error("d2d_master_config._item.lora_uplink_enable must be one of " + enable_values.join(", "));
     }
 
