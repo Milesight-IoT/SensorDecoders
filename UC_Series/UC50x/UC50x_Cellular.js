@@ -6,8 +6,8 @@
  * @product UC50x
  */
 
-/*eslint no-redeclare: "off" */
-/*eslint-disable-next-line */
+/* eslint no-redeclare: "off" */
+/* eslint-disable-next-line */
 function decodePayload(bytes) {
     var buffer = new Buffer(bytes);
 
