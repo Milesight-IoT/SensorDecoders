@@ -7,6 +7,8 @@
  */
 var RAW_VALUE = 0x00;
 
+/* eslint no-redeclare: "off" */
+/* eslint-disable */
 // Chirpstack v4
 function decodeUplink(input) {
     var decoded = milesightDeviceDecode(input.bytes);
@@ -22,6 +24,7 @@ function Decode(fPort, bytes) {
 function Decoder(bytes, port) {
     return milesightDeviceDecode(bytes);
 }
+/* eslint-enable */
 
 function milesightDeviceDecode(bytes) {
     var decoded = {};
@@ -77,7 +80,7 @@ function milesightDeviceDecode(bytes) {
         }
         // ACTIVE POWER
         else if (channel_id === 0x04 && channel_type === 0x80) {
-            decoded.power = readUInt32LE(bytes.slice(i, i + 4));
+            decoded.active_power = readUInt32LE(bytes.slice(i, i + 4));
             i += 4;
         }
         // POWER FACTOR
@@ -108,7 +111,7 @@ function milesightDeviceDecode(bytes) {
         }
         // DOWNLINK RESPONSE
         else if (channel_id === 0xfe || channel_id === 0xff) {
-            result = handle_downlink_response(channel_type, bytes, i);
+            var result = handle_downlink_response(channel_type, bytes, i);
             decoded = Object.assign(decoded, result.data);
             i = result.offset;
         } else {
@@ -244,11 +247,6 @@ function readYesNoStatus(status) {
     return getValue(status_map, status);
 }
 
-function readChildLockStatus(status) {
-    var child_lock_status_map = { 0: "keep", 1: "enable", 2: "disable" };
-    return getValue(child_lock_status_map, status);
-}
-
 function readLedMode(bytes) {
     var led_mode_map = { 0: "off", 1: "on_inverted", 2: "on_synced" };
     return getValue(led_mode_map, bytes);
@@ -259,6 +257,7 @@ function readEnableStatus(bytes) {
     return getValue(enable_map, bytes);
 }
 
+/* eslint-disable */
 function readUInt8(bytes) {
     return bytes & 0xff;
 }
