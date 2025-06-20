@@ -7,6 +7,8 @@
  */
 var RAW_VALUE = 0x00;
 
+/* eslint no-redeclare: "off" */
+/* eslint-disable */
 // Chirpstack v4
 function encodeDownlink(input) {
     var encoded = milesightDeviceEncode(input.data);
@@ -22,6 +24,7 @@ function Encode(fPort, obj) {
 function Encoder(obj, port) {
     return milesightDeviceEncode(obj);
 }
+/* eslint-enable */
 
 function milesightDeviceEncode(payload) {
     var encoded = [];
@@ -338,6 +341,8 @@ function setRuleConfig(rule_config) {
     if (rule_type_values.indexOf(rule_type) === -1) {
         throw new Error("rule_config._item.rule_type must be one of: " + rule_type_values.join(", "));
     }
+    var enable_map = { 0: "disable", 1: "enable" };
+    var enable_values = getValues(enable_map);
 
     var condition_day = 0x00;
     var condition_hour = 0x00;
@@ -349,7 +354,6 @@ function setRuleConfig(rule_config) {
                 if (enable_values.indexOf(condition[key]) === -1) {
                     throw new Error("rule_config._item.condition." + key + " must be one of: " + enable_values.join(", "));
                 }
-
                 condition_day |= getValue(enable_map, condition[key]) << day_bit_offset[key];
             }
         }
@@ -366,7 +370,6 @@ function setRuleConfig(rule_config) {
             if (switch_status_values.indexOf(action[key]) === -1) {
                 throw new Error("rule_config._item.action." + key + " must be one of: " + switch_status_values.join(", "));
             }
-
             action_switch |= getValue(switch_status_map, action[key]) << switch_bit_offset[key];
         }
     }
@@ -378,7 +381,6 @@ function setRuleConfig(rule_config) {
         if (child_lock_values.indexOf(action.child_lock) === -1) {
             throw new Error("rule_config._item.action.child_lock must be one of: " + child_lock_values.join(", "));
         }
-
         action_child_lock = getValue(child_lock_map, action.child_lock);
     }
 
