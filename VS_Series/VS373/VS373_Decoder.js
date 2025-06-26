@@ -111,15 +111,16 @@ function milesightDeviceDecode(bytes) {
         // HISTORY DATA
         else if (channel_id === 0x20 && channel_type === 0xce) {
             var data = {};
-            data.id = readUInt16LE(bytes.slice(i, i + 2));
-            data.event_type = readAlarmType(bytes[i + 2]);
-            data.event_status = readAlarmStatus(bytes[i + 3]);
-            var event_type = bytes[i + 2];
+            data.timestamp = readUInt32LE(bytes.slice(i, i + 4));
+            data.alarm_id = readUInt16LE(bytes.slice(i + 4, i + 6));
+            data.alarm_type = readAlarmType(bytes[i + 6]);
+            data.alarm_status = readAlarmStatus(bytes[i + 7]);
+            var event_type = bytes[i + 6];
             // EVENT TYPE: OUT OF BED
             if (event_type === 3) {
-                data.region_id = readUInt8(bytes[i + 4]);
+                data.region_id = readUInt8(bytes[i + 8]);
             }
-            i += 5;
+            i += 9;
 
             decoded.history = decoded.history || [];
             decoded.history.push(data);
