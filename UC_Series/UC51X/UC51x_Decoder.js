@@ -7,6 +7,8 @@
  */
 var RAW_VALUE = 0x00;
 
+/* eslint no-redeclare: "off" */
+/* eslint-disable */
 // Chirpstack v4
 function decodeUplink(input) {
     var decoded = milesightDeviceDecode(input.bytes);
@@ -22,6 +24,7 @@ function Decode(fPort, bytes) {
 function Decoder(bytes, port) {
     return milesightDeviceDecode(bytes);
 }
+/* eslint-enable */
 
 function milesightDeviceDecode(bytes) {
     var decoded = {};
@@ -254,7 +257,7 @@ function handle_downlink_response(channel_type, bytes, offset) {
                 decoded.batch_read_rules = {};
                 var data = readUInt16LE(bytes.slice(offset + 1, offset + 3));
                 for (var key in rule_bit_offset) {
-                    decoded.batch_read_rules[key] = readYesNo((data >>> rule_bit_offset[key]) & 0x01);
+                    decoded.batch_read_rules[key] = readYesNoStatus((data >>> rule_bit_offset[key]) & 0x01);
                 }
             }
             // batch enable rules
@@ -270,7 +273,7 @@ function handle_downlink_response(channel_type, bytes, offset) {
                 decoded.batch_remove_rules = {};
                 var data = readUInt16LE(bytes.slice(offset + 1, offset + 3));
                 for (var key in rule_bit_offset) {
-                    decoded.batch_remove_rules[key] = readYesNo((data >>> rule_bit_offset[key]) & 0x01);
+                    decoded.batch_remove_rules[key] = readYesNoStatus((data >>> rule_bit_offset[key]) & 0x01);
                 }
             }
             // enable single rule
@@ -283,7 +286,7 @@ function handle_downlink_response(channel_type, bytes, offset) {
             else if (type === 4) {
                 var rule_index = readUInt8(bytes[offset + 1]);
                 var rule_x_name = "rule_" + rule_index + "_remove";
-                decoded[rule_x_name] = readYesNo(bytes[offset + 2]);
+                decoded[rule_x_name] = readYesNoStatus(bytes[offset + 2]);
             }
             offset += 3;
             break;
@@ -291,7 +294,7 @@ function handle_downlink_response(channel_type, bytes, offset) {
             var rule_index = readUInt8(bytes[offset]);
             var rule_index_name = "rule_" + rule_index;
             decoded.query_rule_config = decoded.query_rule_config || {};
-            decoded.query_rule_config[rule_index_name] = readYesNo(1);
+            decoded.query_rule_config[rule_index_name] = readYesNoStatus(1);
             offset += 1;
             break;
         case 0x4d:
@@ -314,7 +317,7 @@ function handle_downlink_response(channel_type, bytes, offset) {
             var valve_index = readUInt8(bytes[offset]);
             var valve_index_name = "clear_valve_" + valve_index + "_pulse";
             // ignore the next byte
-            decoded[valve_index_name] = readYesNo(1);
+            decoded[valve_index_name] = readYesNoStatus(1);
             offset += 2;
             break;
         case 0x4f:
@@ -537,18 +540,8 @@ function readWeekday(weekday_value) {
     return weekday;
 }
 
-function readValveStrategy(strategy_value) {
-    var valve_strategy_map = { 0: "always", 1: "valve 1 open", 2: "valve 2 open", 3: "valve 1 open or valve 2 open" };
-    return getValue(valve_strategy_map, strategy_value);
-}
-
 function readNewConditionType(condition_type_value) {
     var condition_type_map = { 0: "none", 1: "time", 2: "d2d", 3: "time_or_pulse_threshold", 4: "pulse_threshold", 5: "pressure_threshold" };
-    return getValue(condition_type_map, condition_type_value);
-}
-
-function readMathConditionType(condition_type_value) {
-    var condition_type_map = { 0: "none", 1: "below", 2: "above", 3: "between", 4: "outside" };
     return getValue(condition_type_map, condition_type_value);
 }
 
@@ -592,6 +585,7 @@ function readReportType(report_type_value) {
     return getValue(report_type_map, report_type_value);
 }
 
+/* eslint-disable */
 function readUInt8(bytes) {
     return bytes & 0xff;
 }

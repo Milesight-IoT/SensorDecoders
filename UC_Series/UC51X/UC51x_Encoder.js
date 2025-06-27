@@ -7,6 +7,8 @@
  */
 var RAW_VALUE = 0x00;
 
+/* eslint no-redeclare: "off" */
+/* eslint-disable */
 // Chirpstack v4
 function encodeDownlink(input) {
     var encoded = milesightDeviceEncode(input.data);
@@ -22,6 +24,7 @@ function Encode(fPort, obj) {
 function Encoder(obj, port) {
     return milesightDeviceEncode(obj);
 }
+/* eslint-enable */
 
 function milesightDeviceEncode(payload) {
     var encoded = [];
@@ -89,6 +92,9 @@ function milesightDeviceEncode(payload) {
     if ("batch_remove_rules" in payload) {
         encoded = encoded.concat(batchRemoveRules(payload.batch_remove_rules));
     }
+    if ("query_rule_config" in payload) {
+        encoded = encoded.concat(queryRuleConfig(payload.query_rule_config));
+    }
     var rule_x_enable_map = { rule_1_enable: 1, rule_2_enable: 2, rule_3_enable: 3, rule_4_enable: 4, rule_5_enable: 5, rule_6_enable: 6, rule_7_enable: 7, rule_8_enable: 8, rule_9_enable: 9, rule_10_enable: 10, rule_11_enable: 11, rule_12_enable: 12, rule_13_enable: 13, rule_14_enable: 14, rule_15_enable: 15, rule_16_enable: 16 };
     for (var key in rule_x_enable_map) {
         if (key in payload) {
@@ -101,19 +107,23 @@ function milesightDeviceEncode(payload) {
             encoded = encoded.concat(removeRule(rule_x_remove_map[key], payload[key]));
         }
     }
-    /*
     // hardware_version>=v2.0, firmware_version>=v2.1
-    if ("rules_config" in payload) {
-        for (var i = 0; i < payload.rules_config.length; i++) {
-            encoded = encoded.concat(setRuleConfig(payload.rules_config[i]));
+    if ("rule_config" in payload) {
+        for (var i = 0; i < payload.rule_config.length; i++) {
+            encoded = encoded.concat(setRuleConfig(payload.rule_config[i]));
         }
     }
-    */
     // hardware_version>=v4.0, firmware_version>=v1.1
     if ("rules_config" in payload) {
         for (var i = 0; i < payload.rules_config.length; i++) {
             encoded = encoded.concat(setNewRuleConfig(payload.rules_config[i]));
         }
+    }
+    if ("clear_valve_1_pulse" in payload) {
+        encoded = encoded.concat(clearValvePulse(1, payload.clear_valve_1_pulse));
+    }
+    if ("clear_valve_2_pulse" in payload) {
+        encoded = encoded.concat(clearValvePulse(2, payload.clear_valve_2_pulse));
     }
     if ("pulse_filter_config" in payload) {
         encoded = encoded.concat(setPulseFilterConfig(payload.pulse_filter_config));
@@ -719,7 +729,7 @@ function queryRuleConfig(query_rule_config) {
  * @param {number} rule_config.end_hour range: [0, 24]
  * @param {number} rule_config.end_min range: [0, 59]
  * @param {number} rule_config.valve_pulse range: [0, 65535]
- * @example { "rules_config": { "id": 1, "enable": 1, "valve_status": 0, "valve_1_enable": 1, "valve_2_enable": 1, "week_cycle": { "monday": 1, "tuesday": 1, "wednesday": 1, "thursday": 1, "friday": 1, "saturday": 1, "sunday": 1 }, "start_hour": 10, "start_min": 0, "end_hour": 18, "end_min": 0, "valve_pulse": 100 } }
+ * @example { "rule_config": { "id": 1, "enable": 1, "valve_status": 0, "valve_1_enable": 1, "valve_2_enable": 1, "week_cycle": { "monday": 1, "tuesday": 1, "wednesday": 1, "thursday": 1, "friday": 1, "saturday": 1, "sunday": 1 }, "start_hour": 10, "start_min": 0, "end_hour": 18, "end_min": 0, "valve_pulse": 100 } }
  */
 function setRuleConfig(rule_config) {
     var id = rule_config.id;
@@ -855,11 +865,6 @@ function encodedRuleCondition(condition) {
     var repeat_mode_map = { 0: "monthly", 1: "daily", 2: "weekly" };
     var repeat_mode_values = getValues(repeat_mode_map);
     var weekday_bit_offset = { monday: 0, tuesday: 1, wednesday: 2, thursday: 3, friday: 4, saturday: 5, sunday: 6 };
-    var weekday_values = getValues(weekday_bit_offset);
-    var valve_strategy_map = { 0: "always", 1: "valve_1_open", 2: "valve_2_open", 3: "valve_1_open_or_valve_2_open" };
-    var valve_strategy_values = getValues(valve_strategy_map);
-    var threshold_condition_type_map = { 0: "none", 1: "below", 2: "above", 3: "between", 4: "outside" };
-    var threshold_condition_type_values = getValues(threshold_condition_type_map);
 
     if (condition_type_values.indexOf(condition.type) === -1) {
         throw new Error("rules_config._item.condition.type must be one of " + condition_type_values.join(", "));
@@ -942,6 +947,9 @@ function encodedAction(action) {
     var report_type_values = getValues(report_type_map);
 
     var buffer = new Buffer(13);
+    if (action_type_values.indexOf(action.type) === -1) {
+        throw new Error("rules_config._item.action.type must be one of " + action_type_values.join(", "));
+    }
     var action_type_value = getValue(action_type_map, action.type);
     buffer.writeUInt8(action_type_value);
     switch (action_type_value) {
