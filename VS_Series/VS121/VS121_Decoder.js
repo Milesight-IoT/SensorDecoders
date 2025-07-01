@@ -156,6 +156,13 @@ function milesightDeviceDecode(bytes) {
             decoded.line_out = readUInt16LE(bytes.slice(i + 2, i + 4));
             i += 4;
         }
+        // HISTORY DATA
+        else if (channel_id === 0x20 && channel_type === 0xce) {
+            var result = readHistoryData(bytes, i);
+            i = result.offset;
+            decoded.history = decoded.history || [];
+            decoded.history.push(result.data);
+        }
         // DOWNLINK RESPONSE
         else if (channel_id === 0xfe || channel_id === 0xff) {
             var result = handle_downlink_response(channel_type, bytes, i);
@@ -474,6 +481,122 @@ function readPeopleCountingType(type) {
 function readWeekday(weekday) {
     var weekday_map = { 0: "sun", 1: "mon", 2: "tue", 3: "wed", 4: "thu", 5: "fri", 6: "sat" };
     return getValue(weekday_map, weekday);
+}
+
+function readHistoryData(bytes, offset) {
+    var data = {};
+    data.timestamp = readUInt32LE(bytes.slice(offset, offset + 4));
+    var data_type = readUInt8(bytes[offset + 4]);
+    offset += 5;
+
+    switch (data_type) {
+        case 0x01:
+            data.people_count_all = readUInt8(bytes[offset]);
+            data.region_count = readUInt8(bytes[offset + 1]);
+            var region = readUInt16BE(bytes.slice(offset + 2, offset + 4));
+            for (var idx = 0; idx < data.region_count; idx++) {
+                var tmp = "region_" + (idx + 1);
+                data[tmp] = (region >> idx) & 1;
+            }
+            offset += 4;
+            break;
+        case 0x02:
+            data.people_in = readUInt16LE(bytes.slice(offset, offset + 2));
+            data.people_out = readUInt16LE(bytes.slice(offset + 2, offset + 4));
+            offset += 4;
+            break;
+        case 0x03:
+            data.people_count_max = readUInt8(bytes[offset]);
+            offset += 1;
+            break;
+        case 0x04:
+            data.region_1_count = readUInt8(bytes[offset]);
+            data.region_2_count = readUInt8(bytes[offset + 1]);
+            data.region_3_count = readUInt8(bytes[offset + 2]);
+            data.region_4_count = readUInt8(bytes[offset + 3]);
+            offset += 4;
+            break;
+        case 0x05:
+            data.region_5_count = readUInt8(bytes[offset]);
+            data.region_6_count = readUInt8(bytes[offset + 1]);
+            data.region_7_count = readUInt8(bytes[offset + 2]);
+            data.region_8_count = readUInt8(bytes[offset + 3]);
+            offset += 4;
+            break;
+        case 0x06:
+            data.region_9_count = readUInt8(bytes[offset]);
+            data.region_10_count = readUInt8(bytes[offset + 1]);
+            data.region_11_count = readUInt8(bytes[offset + 2]);
+            data.region_12_count = readUInt8(bytes[offset + 3]);
+            offset += 4;
+            break;
+        case 0x07:
+            data.region_13_count = readUInt8(bytes[offset]);
+            data.region_14_count = readUInt8(bytes[offset + 1]);
+            data.region_15_count = readUInt8(bytes[offset + 2]);
+            data.region_16_count = readUInt8(bytes[offset + 3]);
+            offset += 4;
+            break;
+        case 0x08:
+            data.a_to_a = readUInt16LE(bytes.slice(offset, offset + 2));
+            data.a_to_b = readUInt16LE(bytes.slice(offset + 2, offset + 4));
+            offset += 4;
+            break;
+        case 0x09:
+            data.a_to_c = readUInt16LE(bytes.slice(offset, offset + 2));
+            data.a_to_d = readUInt16LE(bytes.slice(offset + 2, offset + 4));
+            offset += 4;
+            break;
+        case 0x0a:
+            data.b_to_a = readUInt16LE(bytes.slice(offset, offset + 2));
+            data.b_to_b = readUInt16LE(bytes.slice(offset + 2, offset + 4));
+            offset += 4;
+            break;
+        case 0x0b:
+            data.b_to_c = readUInt16LE(bytes.slice(offset, offset + 2));
+            data.b_to_d = readUInt16LE(bytes.slice(offset + 2, offset + 4));
+            offset += 4;
+            break;
+        case 0x0c:
+            data.c_to_a = readUInt16LE(bytes.slice(offset, offset + 2));
+            data.c_to_b = readUInt16LE(bytes.slice(offset + 2, offset + 4));
+            offset += 4;
+            break;
+        case 0x0d:
+            data.c_to_c = readUInt16LE(bytes.slice(offset, offset + 2));
+            data.c_to_d = readUInt16LE(bytes.slice(offset + 2, offset + 4));
+            offset += 4;
+            break;
+        case 0x0e:
+            data.d_to_a = readUInt16LE(bytes.slice(offset, offset + 2));
+            data.d_to_b = readUInt16LE(bytes.slice(offset + 2, offset + 4));
+            offset += 4;
+            break;
+        case 0x0f:
+            data.d_to_c = readUInt16LE(bytes.slice(offset, offset + 2));
+            data.d_to_d = readUInt16LE(bytes.slice(offset + 2, offset + 4));
+            offset += 4;
+            break;
+        case 0x10:
+            data.people_total_in = readUInt16LE(bytes.slice(offset, offset + 2));
+            data.people_total_out = readUInt16LE(bytes.slice(offset + 2, offset + 4));
+            offset += 4;
+            break;
+        case 0x11:
+            data.dwell_time_avg = readUInt16LE(bytes.slice(offset + 1, offset + 3));
+            data.dwell_time_max = readUInt16LE(bytes.slice(offset + 3, offset + 5));
+            offset += 5;
+            break;
+        case 0x12:
+            data.line_in = readUInt16LE(bytes.slice(offset, offset + 2));
+            data.line_out = readUInt16LE(bytes.slice(offset + 2, offset + 4));
+            offset += 4;
+            break;
+        default:
+            throw new Error("unknown history data type");
+    }
+
+    return { data: data, offset: offset };
 }
 
 /* eslint-disable */
