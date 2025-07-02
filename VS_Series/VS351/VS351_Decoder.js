@@ -122,6 +122,11 @@ function milesightDeviceDecode(bytes) {
             decoded.period_count_alarm = readAlarmType(bytes[i + 4]);
             i += 5;
         }
+        // TIMESTAMP
+        else if (channel_id === 0x0a && channel_type === 0xef) {
+            decoded.timestamp = readUInt32LE(bytes.slice(i, i + 4));
+            i += 4;
+        }
         // HISTORICAL DATA
         else if (channel_id === 0x20 && channel_type === 0xce) {
             var data = {};
@@ -150,6 +155,10 @@ function milesightDeviceDecode(bytes) {
         // DOWNLINK RESPONSE
         else if (channel_id === 0xfe || channel_id === 0xff) {
             var result = handle_downlink_response(channel_type, bytes, i);
+            decoded = Object.assign(decoded, result.data);
+            i = result.offset;
+        } else if (channel_id === 0xf8 || channel_id === 0xf9) {
+            var result = handle_downlink_response_ext(channel_id, channel_type, bytes, i);
             decoded = Object.assign(decoded, result.data);
             i = result.offset;
         } else {
@@ -305,6 +314,49 @@ function handle_downlink_response(channel_type, bytes, offset) {
     return { data: decoded, offset: offset };
 }
 
+
+function handle_downlink_response_ext(code, channel_type, bytes, offset) {
+    var decoded = {};
+
+    switch (channel_type) {
+        case 0x10:
+            decoded.report_type = readReportType(bytes[offset]);
+            offset += 1;
+            break;
+        case 0xa2:
+            decoded.installation_scene = readInstallationScene(bytes[offset]);
+            offset += 1;
+            break;
+        default:
+            throw new Error("unknown downlink response");
+    }
+
+    if (hasResultFlag(code)) {
+        var result_value = readUInt8(bytes[offset]);
+        offset += 1;
+
+        if (result_value !== 0) {
+            var request = decoded;
+            decoded = {};
+            decoded.device_response_result = {};
+            decoded.device_response_result.channel_type = channel_type;
+            decoded.device_response_result.result = readResultStatus(result_value);
+            decoded.device_response_result.request = request;
+        }
+    }
+
+    return { data: decoded, offset: offset };
+}
+
+function hasResultFlag(code) {
+    return code === 0xf8;
+}
+
+function readResultStatus(status) {
+    var status_map = { 0: "success", 1: "forbidden", 2: "invalid parameter" };
+    return getValue(status_map, status);
+}
+
 function readProtocolVersion(bytes) {
     var major = (bytes & 0xf0) >> 4;
     var minor = bytes & 0x0f;
@@ -408,6 +460,16 @@ function readDetectionDirection(direction) {
 function readResetCumulativeWeekday(weekday) {
     var weekday_map = { 0: "everyday", 1: "sunday", 2: "monday", 3: "tuesday", 4: "wednesday", 5: "thursday", 6: "friday", 7: "saturday" };
     return getValue(weekday_map, weekday);
+}
+
+function readReportType(type) {
+    var type_map = { 0: "period", 1: "immediately" };
+    return getValue(type_map, type);
+}
+
+function readInstallationScene(scene) {
+    var scene_map = { 0: "no_door_access", 1: "door_controlled_access" };
+    return getValue(scene_map, scene);
 }
 
 /* eslint-disable */

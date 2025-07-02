@@ -109,6 +109,12 @@ function milesightDeviceEncode(payload) {
     if ("clear_history" in payload) {
         encoded = encoded.concat(clearHistory(payload.clear_history));
     }
+    if ("report_type" in payload) {
+        encoded = encoded.concat(setReportType(payload.report_type));
+    }
+    if ("installation_scene" in payload) {
+        encoded = encoded.concat(setInstallationScene(payload.installation_scene));
+    }
 
     return encoded;
 }
@@ -738,6 +744,44 @@ function clearHistory(clear_history) {
         return [];
     }
     return [0xff, 0x27, 0x01];
+}
+
+/**
+ * set report type
+ * @param {number} report_type values: (0: period, 1: immediately)
+ * @example { "report_type": 0 }
+ */
+function setReportType(report_type) {
+    var report_type_map = { 0: "period", 1: "immediately" };
+    var report_type_values = getValues(report_type_map);
+    if (report_type_values.indexOf(report_type) === -1) {
+        throw new Error("report_type must be one of " + report_type_values.join(", "));
+    }
+
+    var buffer = new Buffer(3);
+    buffer.writeUInt8(0xf9);
+    buffer.writeUInt8(0x10);
+    buffer.writeUInt8(getValue(report_type_map, report_type));
+    return buffer.toBytes();
+}
+
+/**
+ * set installation scene
+ * @param {number} installation_scene values: (0: no_door_access, 1: door_controlled_access)
+ * @example { "installation_scene": 0 }
+ */
+function setInstallationScene(installation_scene) {
+    var scene_map = { 0: "no_door_access", 1: "door_controlled_access" };
+    var scene_values = getValues(scene_map);
+    if (scene_values.indexOf(installation_scene) === -1) {
+        throw new Error("installation_scene must be one of " + scene_values.join(", "));
+    }
+
+    var buffer = new Buffer(3);
+    buffer.writeUInt8(0xf9);
+    buffer.writeUInt8(0xa2);
+    buffer.writeUInt8(getValue(scene_map, installation_scene));
+    return buffer.toBytes();
 }
 
 function getValues(map) {
