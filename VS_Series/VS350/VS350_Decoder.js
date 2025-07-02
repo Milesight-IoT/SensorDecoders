@@ -394,7 +394,7 @@ function readAlarmType(type) {
 }
 
 function readReportType(type) {
-    var report_type_map = { 0: "period", 1: "immediate" };
+    var report_type_map = { 0: "period", 1: "immediately" };
     return getValue(report_type_map, type);
 }
 
