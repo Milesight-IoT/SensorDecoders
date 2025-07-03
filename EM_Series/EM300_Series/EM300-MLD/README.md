@@ -2,17 +2,17 @@
 
 The payload decoder function is applicable to EM300-MLD.
 
-For more detailed information, please visit [milesight official website](https://www.milesight-iot.com).
+For more detailed information, please visit [Milesight Official Website](https://www.milesight.com/iot/product/lorawan-sensor/em300-mld).
 
 ![EM300-MLD](EM300-MLD.png)
 
 ## Payload Definition
 
-|     CHANNEL     |  ID  | TYPE | LENGTH | DESCRIPTION                                                         |
-| :-------------: | :--: | :--: | :----: | ------------------------------------------------------------------- |
-|     Battery     | 0x01 | 0x75 |   1    | battery(1B)<br/>battery, unit: %                                    |
-| Leakage Status  | 0x06 | 0x00 |   1    | leakage_status(1B)<br/>leakage_status, values:(0: normal, 1: leak)  |
-| Historical Data | 0x20 | 0XCE |   8    | timestamp(4B) + temperature(2B) + humidity(1B) + leakage_status(1B) |
+|     CHANNEL     |  ID  | TYPE | LENGTH | DESCRIPTION                                                        |
+| :-------------: | :--: | :--: | :----: | ------------------------------------------------------------------ |
+|     Battery     | 0x01 | 0x75 |   1    | battery(1B)<br/>battery, unit: %                                   |
+| Leakage Status  | 0x06 | 0x00 |   1    | leakage_status(1B)<br/>leakage_status, values:(0: normal, 1: leak) |
+| Historical Data | 0x20 | 0XCE |   8    | timestamp(4B) + reserved(3B) + leakage_status(1B)                  |
 
 ## Example
 
