@@ -1,4 +1,4 @@
-# Ultrasonic Distance/ Level Sensor - Milesight IoT
+# Ultrasonic Distance/Level Sensor - Milesight IoT
 
 The payload decoder function is applicable to EM400-UDL.
 
@@ -38,17 +38,9 @@ For more detailed information, please visit [milesight official website](https:/
 // 8367e80001 8482410601
 {
   "temperature": 23.2,
-  "temperature_abnormal": true,
+  "temperature_alarm": "threshold_alarm",
   "distance": 1601,
-  "distance_alarming": true
-}
-
-// 068836bf7701f000090722
-{
-  "longitude": 24.62495,
-  "latitude": 118.030576,
-  "motion_status": "moving",
-  "geofence_status": "unset"
+  "distance_alarm": "threshold_alarm"
 }
 ```
 
@@ -63,6 +55,7 @@ For more detailed information, please visit [milesight official website](https:/
 ## Example (NB-IoT)
 
 ```json
+// 020001005f00000001303130313031313036373439443139303534363930303331383638353038303634383037333530343630303433323234323133313130383938363034313231303232373030363238353709000e01756403670b0104823b01050001
 {
     "startFlag": 2,
     "id": 1,

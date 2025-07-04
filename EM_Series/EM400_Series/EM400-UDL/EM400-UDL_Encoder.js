@@ -47,12 +47,6 @@ function milesightDeviceEncode(payload) {
     if ("people_existing_height" in payload) {
         encoded = encoded.concat(setPeopleExistingHeight(payload.people_existing_height));
     }
-    if ("install_height" in payload) {
-        encoded = encoded.concat(setInstallHeight(payload.install_height));
-    }
-    if ("install_height_enable" in payload) {
-        encoded = encoded.concat(setInstallHeightEnable(payload.install_height_enable));
-    }
     if ("working_mode" in payload) {
         encoded = encoded.concat(setWorkingMode(payload.working_mode));
     }
@@ -64,9 +58,6 @@ function milesightDeviceEncode(payload) {
     }
     if ("standard_mode_alarm_config" in payload) {
         encoded = encoded.concat(setStandardModeAlarmConfig(payload.standard_mode_alarm_config));
-    }
-    if ("bin_mode_alarm_config" in payload) {
-        encoded = encoded.concat(setBinModeAlarmConfig(payload.bin_mode_alarm_config));
     }
     if ("recollection_config" in payload) {
         encoded = encoded.concat(setRecollectionConfig(payload.recollection_config));
@@ -177,44 +168,12 @@ function setPeopleExistingHeight(people_existing_height) {
 }
 
 /**
- * install height
- * @param {number} install_height unit: mm
- * @example { "install_height": 20 }
- */
-function setInstallHeight(install_height) {
-    var buffer = new Buffer(4);
-    buffer.writeUInt8(0xff);
-    buffer.writeUInt8(0x77);
-    buffer.writeUInt16LE(install_height);
-    return buffer.toBytes();
-}
-
-/**
- * install height enable
- * @param {number} install_height_enable values: (0: disable, 1: enable)
- * @example { "install_height_enable": 1 }
- */
-function setInstallHeightEnable(install_height_enable) {
-    var enable_map = { 0: "disable", 1: "enable" };
-    var enable_values = getValues(enable_map);
-    if (enable_values.indexOf(install_height_enable) === -1) {
-        throw new Error("install_height_enable must be one of " + enable_values.join(", "));
-    }
-
-    var buffer = new Buffer(3);
-    buffer.writeUInt8(0xff);
-    buffer.writeUInt8(0x13);
-    buffer.writeUInt8(getValue(enable_map, install_height_enable));
-    return buffer.toBytes();
-}
-
-/**
  * working mode
  * @param {number} working_mode values: (0: standard, 1: bin)
  * @example { "working_mode": 0 }
  */
 function setWorkingMode(working_mode) {
-    var working_mode_map = { 0: "standard", 1: "bin" };
+    var working_mode_map = { 0: "standard" };
     var working_mode_values = getValues(working_mode_map);
     if (working_mode_values.indexOf(working_mode) === -1) {
         throw new Error("working_mode must be one of " + working_mode_values.join(", "));
@@ -290,52 +249,16 @@ function setStandardModeAlarmConfig(standard_mode_alarm_config) {
     if (enable_values.indexOf(alarm_release_enable) === -1) {
         throw new Error("standard_mode_alarm_config.alarm_release_enable must be one of " + enable_values.join(", "));
     }
+    if (threshold_min < 0 || threshold_min > 10000) {
+        throw new Error("standard_mode_alarm_config.threshold_min must be in range [0, 10000]");
+    }
+    if (threshold_max < 0 || threshold_max > 10000) {
+        throw new Error("standard_mode_alarm_config.threshold_max must be in range [0, 10000]");
+    }
 
     var data = 0x00;
     data |= getValue(condition_map, condition) << 0;
     data |= 1 << 3; // standard mode
-    data |= getValue(enable_map, alarm_release_enable) << 7;
-
-    var buffer = new Buffer(11);
-    buffer.writeUInt8(0xff);
-    buffer.writeUInt8(0x06);
-    buffer.writeUInt8(data);
-    buffer.writeUInt16LE(threshold_min);
-    buffer.writeUInt16LE(threshold_max);
-    buffer.writeUInt16LE(0x00);
-    buffer.writeUInt16LE(0x00);
-    return buffer.toBytes();
-}
-
-/**
- * bin mode alarm config
- * @param {object} bin_mode_alarm_config
- * @param {number} bin_mode_alarm_config.condition values: (0: disable, 1: below, 2: above, 3: between, 4: outside)
- * @param {number} bin_mode_alarm_config.alarm_release_enable values: (0: disable, 1: enable)
- * @param {number} bin_mode_alarm_config.threshold_min unit: mm, range: [0, 10000]
- * @param {number} bin_mode_alarm_config.threshold_max unit: mm, range: [0, 10000]
- * @example { "bin_mode_alarm_config": { "condition": 1, "threshold_min": 10, "threshold_max": 20 } }
- */
-function setBinModeAlarmConfig(bin_mode_alarm_config) {
-    var condition = bin_mode_alarm_config.condition;
-    var alarm_release_enable = bin_mode_alarm_config.alarm_release_enable;
-    var threshold_min = bin_mode_alarm_config.threshold_min;
-    var threshold_max = bin_mode_alarm_config.threshold_max;
-
-    var condition_map = { 0: "disable", 1: "below", 2: "above", 3: "between", 4: "outside" };
-    var condition_values = getValues(condition_map);
-    if (condition_values.indexOf(condition) === -1) {
-        throw new Error("bin_mode_alarm_config.condition must be one of " + condition_values.join(", "));
-    }
-    var enable_map = { 0: "disable", 1: "enable" };
-    var enable_values = getValues(enable_map);
-    if (enable_values.indexOf(alarm_release_enable) === -1) {
-        throw new Error("bin_mode_alarm_config.alarm_release_enable must be one of " + enable_values.join(", "));
-    }
-
-    var data = 0x00;
-    data |= getValue(condition_map, condition) << 0;
-    data |= 2 << 3; // bin mode
     data |= getValue(enable_map, alarm_release_enable) << 7;
 
     var buffer = new Buffer(11);
