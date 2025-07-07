@@ -28,7 +28,7 @@ function Decoder(bytes, port) {
 
 function milesightDeviceDecode(bytes) {
     var decoded = {};
-    for (var i = 0; i < bytes.length;) {
+    for (var i = 0; i < bytes.length; ) {
         var channel_id = bytes[i++];
         var channel_type = bytes[i++];
 
@@ -181,7 +181,7 @@ function milesightDeviceDecode(bytes) {
             decoded.history.push(data);
         }
         // CUSTOM MESSAGE HISTORY
-        else if (channel_id === 0x20 && channel_type === 0xcd) {
+        else if (channel_id === 0x21 && channel_type === 0xcd) {
             var timestamp = readUInt32LE(bytes.slice(i, i + 4));
             var msg_length = bytes[i + 4];
             var msg = readAscii(bytes.slice(i + 5, i + 5 + msg_length));
@@ -205,6 +205,10 @@ function milesightDeviceDecode(bytes) {
             var result = handle_downlink_response_ext(channel_id, channel_type, bytes, i);
             decoded = Object.assign(decoded, result.data);
             i = result.offset;
+        }
+        // HISTORY RESPONSE
+        else if (channel_id === 0xfc) {
+            i += 1;
         }
         // CUSTOM MESSAGE
         else {
@@ -263,8 +267,7 @@ function handle_downlink_response(channel_type, bytes, offset) {
                 decoded.remove_modbus_channels = decoded.remove_modbus_channels || [];
                 decoded.remove_modbus_channels.push(remove_modbus_channels);
                 offset += 4;
-            }
-            else if (data === 0x01) {
+            } else if (data === 0x01) {
                 var modbus_channels = readModbusChannels(bytes.slice(offset + 1, offset + 7));
                 decoded.modbus_channels = decoded.modbus_channels || [];
                 decoded.modbus_channels.push(modbus_channels);
@@ -990,7 +993,7 @@ function readUInt64LE(bytes) {
             low: low,
             toString: function () {
                 // Simple string representation
-                return high.toString(16) + low.toString(16).padStart(8, "0");;
+                return high.toString(16) + low.toString(16).padStart(8, "0");
             },
         };
     }
