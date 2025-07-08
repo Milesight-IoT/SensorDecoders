@@ -1,8 +1,8 @@
 # Ambience Monitoring Sensors - Milesight IoT
 
-The payload decoder function is applicable toAM107(AM102).
+The payload decoder function is applicable to AM107.
 
-For more detailed information, please visit [milesight official website](https://www.milesight-iot.com).
+For more detailed information, please visit [Milesight Official Website](https://www.milesight.com/iot/product/lorawan-sensor/am107).
 
 ![AM107](AM107.png)
 
