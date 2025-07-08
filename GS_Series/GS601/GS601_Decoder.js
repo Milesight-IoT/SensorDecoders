@@ -77,8 +77,9 @@ function milesightDeviceDecode(bytes) {
                 i += 1;
                 break;
             case 0xcf: // lorawan class
-                decoded.lorawan_class = readLoRaWANClass(bytes[i]);
-                i += 1;
+                // skip 1 byte
+                decoded.lorawan_class = readLoRaWANClass(bytes[i + 1]);
+                i += 2;
                 break;
             case 0x00: // battery
                 decoded.battery = readUInt8(bytes[i]);
