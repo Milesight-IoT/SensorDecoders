@@ -3,7 +3,7 @@
  *
  * Copyright 2025 Milesight IoT
  *
- * @product AM102
+ * @product AM102L
  */
 var RAW_VALUE = 0x00;
 
@@ -160,10 +160,6 @@ function handle_downlink_response(channel_type, bytes, offset) {
             decoded.clear_history = readYesNoStatus(1);
             offset += 1;
             break;
-        case 0x2d:
-            decoded.screen_display_enable = readEnableStatus(bytes[offset]);
-            offset += 1;
-            break;
         case 0x2f:
             decoded.led_indicator_mode = readLedIndicatorStatus(bytes[offset]);
             offset += 1;
@@ -187,10 +183,6 @@ function handle_downlink_response(channel_type, bytes, offset) {
             decoded.time_sync_enable = readEnableStatus(bytes[offset]);
             offset += 1;
             break;
-        case 0x56:
-            decoded.screen_intelligent_enable = readEnableStatus(bytes[offset]);
-            offset += 1;
-            break;
         case 0x57:
             decoded.clear_report_schedule = readYesNoStatus(1);
             offset += 1;
@@ -198,10 +190,6 @@ function handle_downlink_response(channel_type, bytes, offset) {
         case 0x59:
             decoded.reset_battery = readYesNoStatus(1);
             offset += 1;
-            break;
-        case 0x5a:
-            decoded.screen_refresh_interval = readUInt16LE(bytes.slice(offset, offset + 2));
-            offset += 2;
             break;
         case 0x68:
             decoded.history_enable = readEnableStatus(bytes[offset]);
@@ -219,28 +207,6 @@ function handle_downlink_response(channel_type, bytes, offset) {
                 decoded.resend_interval = readUInt16LE(bytes.slice(offset + 1, offset + 3));
             }
             offset += 3;
-            break;
-        case 0x75:
-            decoded.hibernate_config = {};
-            decoded.hibernate_config.enable = readEnableStatus(bytes[offset]);
-            decoded.hibernate_config.lora_uplink_enable = readEnableStatus(bytes[offset + 1]);
-            decoded.hibernate_config.start_time = readUInt16LE(bytes.slice(offset + 2, offset + 4));
-            decoded.hibernate_config.end_time = readUInt16LE(bytes.slice(offset + 4, offset + 6));
-            decoded.hibernate_config.weekdays = {};
-            var data = readUInt8(bytes[offset + 6]);
-            var weekday_bit_offset = { monday: 1, tuesday: 2, wednesday: 3, thursday: 4, friday: 5, saturday: 6, sunday: 7 };
-            for (var key in weekday_bit_offset) {
-                decoded.hibernate_config.weekdays[key] = readEnableStatus((data >> weekday_bit_offset[key]) & 0x01);
-            }
-            offset += 7;
-            break;
-        case 0x85:
-            decoded.screen_display_time_enable = readEnableStatus(bytes[offset]);
-            offset += 1;
-            break;
-        case 0x86:
-            decoded.screen_last_refresh_interval = readUInt8(bytes[offset]);
-            offset += 1;
             break;
         default:
             throw new Error("unknown downlink response");

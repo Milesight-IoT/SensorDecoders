@@ -2,7 +2,7 @@
 
 The payload decoder function is applicable to AM102, AM102L
 
-For more detailed information, please visit [milesight official website](https://www.milesight-iot.com).
+For more detailed information, please visit [Milesight Official Website](https://www.milesight.com/iot/product/lorawan-sensor/am102).
 
 |        AM102        |        AM102L         |
 | :-----------------: | :-------------------: |
