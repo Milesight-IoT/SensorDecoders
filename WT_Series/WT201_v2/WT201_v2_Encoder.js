@@ -7,25 +7,25 @@
  */
 var RAW_VALUE = 0x00;
 
+/* eslint no-redeclare: "off" */
+/* eslint-disable */
 // Chirpstack v4
-// eslint-disable-next-line no-unused-vars
 function encodeDownlink(input) {
     var encoded = milesightDeviceEncode(input.data);
     return { bytes: encoded };
 }
 
 // Chirpstack v3
-// eslint-disable-next-line no-unused-vars
 function Encode(fPort, obj) {
     var encoded = milesightDeviceEncode(obj);
     return encoded;
 }
 
 // The Things Network
-// eslint-disable-next-line no-unused-vars
 function Encoder(obj, port) {
     return milesightDeviceEncode(obj);
 }
+/* eslint-enable */
 
 function milesightDeviceEncode(payload) {
     var encoded = [];
@@ -115,6 +115,9 @@ function milesightDeviceEncode(payload) {
             var schedule = payload.plan_schedule[schedule_index];
             encoded = encoded.concat(setPlanSchedule(schedule));
         }
+    }
+    if ("plan_schedule_enable_config" in payload) {
+        encoded = encoded.concat(setPlanScheduleEnableConfig(payload.plan_schedule_enable_config));
     }
     if ("single_temperature_plan_config" in payload) {
         for (var single_plan_index = 0; single_plan_index < payload.single_temperature_plan_config.length; single_plan_index++) {
@@ -1057,6 +1060,43 @@ function setPlanSchedule(plan_schedule) {
     buffer.writeUInt8(getValue(plan_schedule_enable_map, enable));
     buffer.writeUInt8(days);
     buffer.writeUInt16LE(time);
+    return buffer.toBytes();
+}
+
+/**
+ * set plan schedule enable config
+ * @since v1.2
+ * @param {object} plan_schedule_enable_config
+ * @param {number} plan_schedule_enable_config.wake values: (0: disable, 1: enable)
+ * @param {number} plan_schedule_enable_config.away values: (0: disable, 1: enable)
+ * @param {number} plan_schedule_enable_config.home values: (0: disable, 1: enable)
+ * @param {number} plan_schedule_enable_config.sleep values: (0: disable, 1: enable)
+ * @param {number} plan_schedule_enable_config.occupied values: (0: disable, 1: enable)
+ * @param {number} plan_schedule_enable_config.vacant values: (0: disable, 1: enable)
+ * @param {number} plan_schedule_enable_config.eco values: (0: disable, 1: enable)
+ */
+function setPlanScheduleEnableConfig(plan_schedule_enable_config) {
+    var enable_map = { 0: "disable", 1: "enable" };
+    var enable_values = getValues(enable_map);
+
+    var mask = 0x00;
+    var value = 0x00;
+    var plan_bit_offset = { wake: 0, away: 1, home: 2, sleep: 3, occupied: 4, vacant: 5, eco: 6 };
+    for (var key in plan_bit_offset) {
+        if (key in plan_schedule_enable_config) {
+            if (enable_values.indexOf(plan_schedule_enable_config[key]) === -1) {
+                throw new Error("plan_schedule_enable_config." + key + " must be one of " + enable_values.join(", "));
+            }
+            mask |= 1 << plan_bit_offset[key];
+            value |= getValue(enable_map, plan_schedule_enable_config[key]) << plan_bit_offset[key];
+        }
+    }
+
+    var buffer = new Buffer(4);
+    buffer.writeUInt8(0xf9);
+    buffer.writeUInt8(0x8b);
+    buffer.writeUInt8(mask);
+    buffer.writeUInt8(value);
     return buffer.toBytes();
 }
 

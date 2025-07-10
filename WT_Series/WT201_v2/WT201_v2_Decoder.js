@@ -7,29 +7,29 @@
  */
 var RAW_VALUE = 0x00;
 
+/* eslint no-redeclare: "off" */
+/* eslint-disable */
 // Chirpstack v4
-// eslint-disable-next-line no-unused-vars
 function decodeUplink(input) {
     var decoded = milesightDeviceDecode(input.bytes);
     return { data: decoded };
 }
 
 // Chirpstack v3
-// eslint-disable-next-line no-unused-vars
 function Decode(fPort, bytes) {
     return milesightDeviceDecode(bytes);
 }
 
 // The Things Network
-// eslint-disable-next-line no-unused-vars
 function Decoder(bytes, port) {
     return milesightDeviceDecode(bytes);
 }
+/* eslint-enable */
 
 function milesightDeviceDecode(bytes) {
     var decoded = {};
 
-    for (var i = 0; i < bytes.length;) {
+    for (var i = 0; i < bytes.length; ) {
         var channel_id = bytes[i++];
         var channel_type = bytes[i++];
 
@@ -528,10 +528,10 @@ function handle_downlink_response_ext(code, channel_type, bytes, offset) {
             offset += 1;
             break;
         case 0x42:
-            decoded.target_temperature_range = {};
-            decoded.target_temperature_range.temperature_control_mode = readTemperatureControlMode(readUInt8(bytes[offset]));
-            decoded.target_temperature_range.min = readInt16LE(bytes.slice(offset + 1, offset + 3)) / 10;
-            decoded.target_temperature_range.max = readInt16LE(bytes.slice(offset + 3, offset + 5)) / 10;
+            decoded.target_temperature_range_config = {};
+            decoded.target_temperature_range_config.temperature_control_mode = readTemperatureControlMode(readUInt8(bytes[offset]));
+            decoded.target_temperature_range_config.min = readInt16LE(bytes.slice(offset + 1, offset + 3)) / 10;
+            decoded.target_temperature_range_config.max = readInt16LE(bytes.slice(offset + 3, offset + 5)) / 10;
             offset += 5;
             break;
         case 0x43:
@@ -612,6 +612,10 @@ function handle_downlink_response_ext(code, channel_type, bytes, offset) {
         case 0x62:
             decoded.fan_control_during_heating = readFanControlDuringHeating(readUInt8(bytes[offset]));
             offset += 1;
+            break;
+        case 0x8b:
+            decoded.plan_schedule_enable_config = readPlanScheduleEnableConfig(bytes.slice(offset, offset + 2));
+            offset += 2;
             break;
         default:
             throw new Error("unknown downlink response");
@@ -969,6 +973,20 @@ function readPlanSchedule(bytes) {
     return schedule;
 }
 
+function readPlanScheduleEnableConfig(bytes) {
+    var offset = 0;
+    var mask = readUInt8(bytes[offset]);
+    var value = readUInt8(bytes[offset + 1]);
+
+    var plan_schedule_enable_config = {};
+    var plan_bit_offset = { wake: 0, away: 1, home: 2, sleep: 3, occupied: 4, vacant: 5, eco: 6 };
+    for (var key in plan_bit_offset) {
+        if ((mask >>> plan_bit_offset[key]) & 0x01) {
+            plan_schedule_enable_config[key] = readEnableStatus((value >>> plan_bit_offset[key]) & 0x01);
+        }
+    }
+    return plan_schedule_enable_config;
+}
 function readD2DCommand(bytes) {
     return ("0" + (bytes[1] & 0xff).toString(16)).slice(-2) + ("0" + (bytes[0] & 0xff).toString(16)).slice(-2);
 }
@@ -1017,7 +1035,7 @@ function readFanControlDuringHeating(value) {
     return getValue(mode_map, value);
 }
 
-/* eslint-disable no-unused-vars */
+/* eslint-disable */
 function readUInt8(bytes) {
     return bytes & 0xff;
 }
