@@ -97,6 +97,39 @@ function milesightDeviceEncode(payload) {
             encoded = encoded.concat(setD2DMasterConfig(payload.d2d_master_config[i]));
         }
     }
+    if ("confirm_mode_enable" in payload) {
+        encoded = encoded.concat(setConfirmMode(payload.confirm_mode_enable));
+    }
+    if ("lora_channel_mask_config" in payload) {
+        encoded = encoded.concat(setLoRaChannelMaskConfig(payload.lora_channel_mask_config));
+    }
+    if ("adr_enable" in payload) {
+        encoded = encoded.concat(setADREnable(payload.adr_enable));
+    }
+    if ("lora_port" in payload) {
+        encoded = encoded.concat(setLoRaPort(payload.lora_port));
+    }
+    if ("rejoin_config" in payload) {
+        encoded = encoded.concat(setRejoinConfig(payload.rejoin_config));
+    }
+    if ("data_rate" in payload) {
+        encoded = encoded.concat(setDataRate(payload.data_rate));
+    }
+    if ("tx_power_level" in payload) {
+        encoded = encoded.concat(setTxPowerLevel(payload.tx_power_level));
+    }
+    if ("lorawan_version" in payload) {
+        encoded = encoded.concat(setLoRaWANVersion(payload.lorawan_version));
+    }
+    if ("rx2_data_rate" in payload) {
+        encoded = encoded.concat(setRx2DataRate(payload.rx2_data_rate));
+    }
+    if ("rx2_frequency" in payload) {
+        encoded = encoded.concat(setRx2Frequency(payload.rx2_frequency));
+    }
+    if ("lora_join_mode" in payload) {
+        encoded = encoded.concat(setLoRaJoinMode(payload.lora_join_mode));
+    }
     if ("history_enable" in payload) {
         encoded = encoded.concat(setHistoryEnable(payload.history_enable));
     }
@@ -319,7 +352,7 @@ function setTemperatureReportEnable(temperature_report_enable) {
 
 /**
  * set temperature calibration setting
- * @param {object} temperature_calibration_settings 
+ * @param {object} temperature_calibration_settings
  * @param {number} temperature_calibration_settings.enable values: (0: disable, 1: enable)
  * @param {number} temperature_calibration_settings.calibration_value unit: ℃, range: [-100, 100]
  * @example { "temperature_calibration_settings": { "enable": 1, "calibration_value": 0 } }
@@ -398,7 +431,7 @@ function setHibernateConfig(hibernate_config) {
 
 /**
  * set people period alarm settings
- * @param {object} people_period_alarm_settings 
+ * @param {object} people_period_alarm_settings
  * @param {number} people_period_alarm_settings.threshold_condition values: (0: disable, 1: below, 2: above, 3: between, 4: outside)
  * @param {number} people_period_alarm_settings.threshold_out range: [1, 65535]
  * @param {number} people_period_alarm_settings.threshold_in range: [1, 65535]
@@ -433,7 +466,7 @@ function setPeoplePeriodAlarmSettings(people_period_alarm_settings) {
 
 /**
  * set people cumulative alarm settings
- * @param {object} people_cumulative_alarm_settings 
+ * @param {object} people_cumulative_alarm_settings
  * @param {number} people_cumulative_alarm_settings.threshold_condition values: (0: disable, 1: below, 2: above, 3: between, 4: outside)
  * @param {number} people_cumulative_alarm_settings.threshold_out range: [1, 65535]
  * @param {number} people_cumulative_alarm_settings.threshold_in range: [1, 65535]
@@ -468,7 +501,7 @@ function setPeopleCumulativeAlarmSettings(people_cumulative_alarm_settings) {
 
 /**
  * set temperature alarm settings
- * @param {object} temperature_alarm_settings 
+ * @param {object} temperature_alarm_settings
  * @param {number} temperature_alarm_settings.threshold_condition values: (0: disable, 1: below, 2: above, 3: between, 4: outside)
  * @param {number} temperature_alarm_settings.threshold_min unit: ℃
  * @param {number} temperature_alarm_settings.threshold_max unit: ℃
@@ -500,7 +533,6 @@ function setTemperatureAlarmSettings(temperature_alarm_settings) {
     buffer.writeUInt16LE(0x00);
     return buffer.toBytes();
 }
-
 
 /**
  * set retransmit enable
@@ -651,6 +683,214 @@ function setD2DMasterConfig(d2d_master_config) {
     buffer.writeD2DCommand(d2d_cmd, "0000");
     buffer.writeUInt16LE(time);
     buffer.writeUInt8(getValue(enable_map, time_enable));
+    return buffer.toBytes();
+}
+
+/**
+ * confirm mode
+ * @since v1.5
+ * @param {number} confirm_mode_enable values: (0: disable, 1: enable)
+ * @example { "confirm_mode_enable": 1 }
+ */
+function setConfirmMode(confirm_mode_enable) {
+    var enable_map = { 0: "disable", 1: "enable" };
+    var enable_values = getValues(enable_map);
+    if (enable_values.indexOf(confirm_mode_enable) === -1) {
+        throw new Error("confirm_mode must be in " + enable_values.join(", "));
+    }
+
+    var buffer = new Buffer(3);
+    buffer.writeUInt8(0xff);
+    buffer.writeUInt8(0x04);
+    buffer.writeUInt8(getValue(enable_map, confirm_mode_enable));
+    return buffer.toBytes();
+}
+
+/**
+ * LoRa channel mask config
+ * @since v1.5
+ * @param {object} lora_channel_mask_config
+ * @param {number} lora_channel_mask_config.id range: [1, 16]
+ * @param {number} lora_channel_mask_config.mask
+ * @example { "lora_channel_mask_config": { "id": 1, "mask": 255 } }
+ */
+function setLoRaChannelMaskConfig(lora_channel_mask_config) {
+    var id = lora_channel_mask_config.id;
+    var mask = lora_channel_mask_config.mask;
+
+    if (id < 1 || id > 16) {
+        throw new Error("lora_channel_mask_config.id must be between 1 and 16");
+    }
+
+    var buffer = new Buffer(5);
+    buffer.writeUInt8(0xff);
+    buffer.writeUInt8(0x05);
+    buffer.writeUInt8(id);
+    buffer.writeUInt16LE(mask);
+    return buffer.toBytes();
+}
+
+/**
+ * set ADR
+ * @since v1.5
+ * @param {number} adr_enable values: (0: disable, 1: enable)
+ * @example { "adr_enable": 1 }
+ */
+function setADREnable(adr_enable) {
+    var enable_map = { 0: "disable", 1: "enable" };
+    var enable_values = getValues(enable_map);
+    if (enable_values.indexOf(adr_enable) === -1) {
+        throw new Error("adr_enable must be in " + enable_values.join(", "));
+    }
+
+    var buffer = new Buffer(3);
+    buffer.writeUInt8(0xff);
+    buffer.writeUInt8(0x40);
+    buffer.writeUInt8(getValue(enable_map, adr_enable));
+    return buffer.toBytes();
+}
+
+/**
+ * LoRa port
+ * @since v1.5
+ * @param {number} lora_port range: [1, 223]
+ * @example { "lora_port": 1 }
+ */
+function setLoRaPort(lora_port) {
+    var buffer = new Buffer(3);
+    buffer.writeUInt8(0xff);
+    buffer.writeUInt8(0x41);
+    buffer.writeUInt8(lora_port);
+    return buffer.toBytes();
+}
+
+/**
+ * rejoin config
+ * @since v1.5
+ * @param {object} rejoin_config
+ * @param {number} rejoin_config.enable values: (0: disable, 1: enable)
+ * @param {number} rejoin_config.max_count
+ * @example { "rejoin_config": { "enable": 1, "max_count": 10 } }
+ */
+function setRejoinConfig(rejoin_config) {
+    var enable = rejoin_config.enable;
+    var max_count = rejoin_config.max_count;
+
+    var enable_map = { 0: "disable", 1: "enable" };
+    var enable_values = getValues(enable_map);
+    if (enable_values.indexOf(enable) === -1) {
+        throw new Error("enable must be one of " + enable_values.join(", "));
+    }
+
+    var buffer = new Buffer(4);
+    buffer.writeUInt8(0xf9);
+    buffer.writeUInt8(0x85);
+    buffer.writeUInt8(getValue(enable_map, enable));
+    buffer.writeUInt8(max_count);
+    return buffer.toBytes();
+}
+
+/**
+ * set data rate
+ * @since v1.5
+ * @param {number} data_rate
+ * @example { "data_rate": 0 }
+ */
+function setDataRate(data_rate) {
+    var buffer = new Buffer(3);
+    buffer.writeUInt8(0xf9);
+    buffer.writeUInt8(0x86);
+    buffer.writeUInt8(data_rate);
+    return buffer.toBytes();
+}
+
+/**
+ * tx power
+ * @since v1.5
+ * @param {number} tx_power_level
+ *  EU868, values: (0:-16dBm, 1:-14dBm, 2:-12dBm, 3:-10dBm, 4:-8dBm, 5:-6dBm, 6:-4dBm, 7:-2dBm)
+ *  IN865, values: (0:-22dBm, 1:-22dBm, 2:-22dBm, 3:-22dBm, 4:-22dBm, 5:-20dBm, 6:-18dBm, 7:-16dBm, 8:-14dBm, 9:-12dBm, 10:-10dBm)
+ *  RU864, values: (0:-16dBm, 1:-14dBm, 2:-12dBm, 3:-10dBm, 4:-8dBm, 5:-6dBm, 6:-4dBm, 7:-2dBm)
+ *  AU915, values: (0:-22dBm, 1:-22dBm, 2:-22dBm, 3:-22dBm, 4:-22dBm, 5:-20dBm, 6:-18dBm, 7:-16dBm, 8:-14dBm, 9:-12dBm, 10:-10dBm, 11:-8dBm, 12:-6dBm, 13:-4dBm, 14:-2dBm)
+ *  KR920, values: (0:-14dBm, 1:-12dBm, 2:-10dBm, 3:-8dBm, 4:-6dBm, 5:-4dBm, 6:-2dBm, 7:0dBm)
+ *  AS923, values: (0:-16dBm, 1:-14dBm, 2:-12dBm, 3:-10dBm, 4:-8dBm, 5:-6dBm, 6:-4dBm, 7:-2dBm)
+ *  US915, values: (0:-22dBm, 1:-22dBm, 2:-22dBm, 3:-22dBm, 4:-22dBm, 5:-20dBm, 6:-18dBm, 7:-16dBm, 8:-14dBm, 9:-12dBm, 10:-10dBm, 11:-8dBm, 12:-6dBm, 13:-4dBm, 14:-2dBm)
+ *  CN470, values: (0:-19.15dBm, 1:-17.15dBm, 2:-15.15dBm, 3:-13.15dBm, 4:-11.15dBm, 5:-9.15dBm, 6:-7.15dBm, 7:-5.15dBm)
+ * @example { "tx_power_level": 0 }
+ */
+function setTxPowerLevel(tx_power_level) {
+    var buffer = new Buffer(3);
+    buffer.writeUInt8(0xf9);
+    buffer.writeUInt8(0x87);
+    buffer.writeUInt8(tx_power_level);
+    return buffer.toBytes();
+}
+
+/**
+ * LoRaWAN version
+ * @since v1.5
+ * @param {number} lorawan_version values: (1: v1.0.2, 2: v1.0.3)
+ * @example { "lorawan_version": 1 }
+ */
+function setLoRaWANVersion(lorawan_version) {
+    var version_map = { 1: "v1.0.2", 2: "v1.0.3" };
+    var version_values = getValues(version_map);
+    if (version_values.indexOf(lorawan_version) === -1) {
+        throw new Error("lorawan_version must be one of " + version_values.join(", "));
+    }
+
+    var buffer = new Buffer(3);
+    buffer.writeUInt8(0xf9);
+    buffer.writeUInt8(0x8b);
+    buffer.writeUInt8(getValue(version_map, lorawan_version));
+    return buffer.toBytes();
+}
+
+/**
+ * set RX2 data rate
+ * @since v1.5
+ * @param {number} rx2_data_rate
+ * @example { "rx2_data_rate": 0 }
+ */
+function setRx2DataRate(rx2_data_rate) {
+    var buffer = new Buffer(3);
+    buffer.writeUInt8(0xf9);
+    buffer.writeUInt8(0x8c);
+    buffer.writeUInt8(rx2_data_rate);
+    return buffer.toBytes();
+}
+
+/**
+ * set RX2 frequency
+ * @since v1.5
+ * @param {number} rx2_frequency
+ * @example { "rx2_frequency": 923500000 }
+ */
+function setRx2Frequency(rx2_frequency) {
+    var buffer = new Buffer(3);
+    buffer.writeUInt8(0xf9);
+    buffer.writeUInt8(0x8d);
+    buffer.writeUInt32LE(rx2_frequency);
+    return buffer.toBytes();
+}
+
+/**
+ * set LoRa join mode
+ * @since v1.5
+ * @param {number} lora_join_mode values: (0: ABP, 1: OTAA)
+ * @example { "lora_join_mode": 0 }
+ */
+function setLoRaJoinMode(lora_join_mode) {
+    var mode_map = { 0: "ABP", 1: "OTAA" };
+    var mode_values = getValues(mode_map);
+    if (mode_values.indexOf(lora_join_mode) === -1) {
+        throw new Error("lora_join_mode must be one of " + mode_values.join(", "));
+    }
+
+    var buffer = new Buffer(3);
+    buffer.writeUInt8(0xf9);
+    buffer.writeUInt8(0xa3);
+    buffer.writeUInt8(getValue(mode_map, lora_join_mode));
     return buffer.toBytes();
 }
 

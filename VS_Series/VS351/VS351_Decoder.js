@@ -29,7 +29,7 @@ function Decoder(bytes, port) {
 function milesightDeviceDecode(bytes) {
     var decoded = {};
 
-    for (var i = 0; i < bytes.length;) {
+    for (var i = 0; i < bytes.length; ) {
         var channel_id = bytes[i++];
         var channel_type = bytes[i++];
 
@@ -173,6 +173,16 @@ function handle_downlink_response(channel_type, bytes, offset) {
     var decoded = {};
 
     switch (channel_type) {
+        case 0x04:
+            decoded.confirm_mode_enable = readEnableStatus(bytes[offset]);
+            offset += 1;
+            break;
+        case 0x05:
+            decoded.lora_channel_mask_config = {};
+            decoded.lora_channel_mask_config.id = readUInt8(bytes[offset]);
+            decoded.lora_channel_mask_config.mask = readUInt16LE(bytes.slice(offset + 1, offset + 3));
+            offset += 3;
+            break;
         case 0x06:
             var value = readUInt8(bytes[offset]);
             var condition = value & 0x07;
@@ -210,6 +220,14 @@ function handle_downlink_response(channel_type, bytes, offset) {
         case 0x35:
             decoded.d2d_key = readHexString(bytes.slice(offset, offset + 8));
             offset += 8;
+            break;
+        case 0x40:
+            decoded.adr_enable = readEnableStatus(bytes[offset]);
+            offset += 1;
+            break;
+        case 0x41:
+            decoded.lora_port = readUInt8(bytes[offset]);
+            offset += 1;
             break;
         case 0x68:
             decoded.history_enable = readEnableStatus(bytes[offset]);
@@ -314,7 +332,6 @@ function handle_downlink_response(channel_type, bytes, offset) {
     return { data: decoded, offset: offset };
 }
 
-
 function handle_downlink_response_ext(code, channel_type, bytes, offset) {
     var decoded = {};
 
@@ -323,8 +340,38 @@ function handle_downlink_response_ext(code, channel_type, bytes, offset) {
             decoded.report_type = readReportType(bytes[offset]);
             offset += 1;
             break;
+        case 0x85:
+            decoded.rejoin_config = {};
+            decoded.rejoin_config.enable = readEnableStatus(bytes[offset]);
+            decoded.rejoin_config.max_count = readUInt8(bytes[offset + 1]);
+            offset += 2;
+            break;
+        case 0x86:
+            decoded.data_rate = readUInt8(bytes[offset]);
+            offset += 1;
+            break;
+        case 0x87:
+            decoded.tx_power_level = readUInt8(bytes[offset]);
+            offset += 1;
+            break;
+        case 0x8b:
+            decoded.lorawan_version = readLoRaWANVersion(bytes[offset]);
+            offset += 1;
+            break;
+        case 0x8c:
+            decoded.rx2_data_rate = readUInt8(bytes[offset]);
+            offset += 1;
+            break;
+        case 0x8d:
+            decoded.rx2_frequency = readUInt32LE(bytes.slice(offset, offset + 4));
+            offset += 4;
+            break;
         case 0xa2:
             decoded.installation_scene = readInstallationScene(bytes[offset]);
+            offset += 1;
+            break;
+        case 0xa3:
+            decoded.lora_join_mode = readLoRaJoinMode(bytes[offset]);
             offset += 1;
             break;
         default:
@@ -443,6 +490,11 @@ function readThresholdCondition(condition) {
     return getValue(condition_map, condition);
 }
 
+function readLoRaWANVersion(version) {
+    var lorawan_version_map = { 1: "v1.0.2", 2: "v1.0.3" };
+    return getValue(lorawan_version_map, version);
+}
+
 function readD2DMode(mode) {
     var mode_map = { 1: "someone enter", 2: "someone leave", 3: "counting threshold alarm", 4: "temperature alarm", 5: "temperature alarm release" };
     return getValue(mode_map, mode);
@@ -470,6 +522,11 @@ function readReportType(type) {
 function readInstallationScene(scene) {
     var scene_map = { 0: "no_door_access", 1: "door_controlled_access" };
     return getValue(scene_map, scene);
+}
+
+function readLoRaJoinMode(mode) {
+    var mode_map = { 0: "ABP", 1: "OTAA" };
+    return getValue(mode_map, mode);
 }
 
 /* eslint-disable */
