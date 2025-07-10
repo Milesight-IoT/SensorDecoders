@@ -88,6 +88,11 @@ function milesightDeviceDecode(bytes) {
             decoded.target_temperature_2 = readInt16LE(bytes.slice(i, i + 2)) / 10;
             i += 2;
         }
+        // OUTSIDE TEMPERATURE (odm: 7048)
+        else if (channel_id === 0x0c && channel_type === 0x67) {
+            decoded.outside_temperature = readInt16LE(bytes.slice(i, i + 2)) / 10;
+            i += 2;
+        }
         // TEMPERATURE CONTROL
         else if (channel_id === 0x05 && channel_type === 0xe7) {
             var value = bytes[i];
@@ -295,12 +300,6 @@ function handle_downlink_response(channel_type, bytes, offset) {
             decoded.temperature_calibration.temperature = readInt16LE(bytes.slice(offset + 1, offset + 3)) / 10;
             offset += 3;
             break;
-        case 0xb0:
-            decoded.freeze_protection_config = decoded.freeze_protection_config || {};
-            decoded.freeze_protection_config.enable = readEnableStatus(readUInt8(bytes[offset]));
-            decoded.freeze_protection_config.temperature = readInt16LE(bytes.slice(offset + 1, offset + 3)) / 10;
-            offset += 3;
-            break;
         case 0xb5:
             decoded.ob_mode = readObMode(readUInt8(bytes[offset]));
             offset += 1;
@@ -315,19 +314,6 @@ function handle_downlink_response(channel_type, bytes, offset) {
             decoded.target_temperature = t & 0x7f;
             decoded.temperature_unit = readTemperatureUnit((t >>> 7) & 0x01);
             offset += 2;
-            break;
-        case 0xb8:
-            decoded.temperature_tolerance = {};
-            decoded.temperature_tolerance.target_temperature_tolerance = readUInt8(bytes[offset]) / 10;
-            decoded.temperature_tolerance.auto_temperature_tolerance = readUInt8(bytes[offset + 1]) / 10;
-            offset += 2;
-            break;
-        case 0xb9:
-            decoded.temperature_level_up_condition = {};
-            decoded.temperature_level_up_condition.type = readTemperatureLevelUpCondition(readUInt8(bytes[offset]));
-            decoded.temperature_level_up_condition.time = readUInt8(bytes[offset + 1]);
-            decoded.temperature_level_up_condition.temperature_control_tolerance = readInt16LE(bytes.slice(offset + 2, offset + 4)) / 10;
-            offset += 4;
             break;
         case 0xba:
             var enable_value = bytes[offset];
@@ -455,10 +441,6 @@ function handle_downlink_response_ext(code, channel_type, bytes, offset) {
     var decoded = {};
 
     switch (channel_type) {
-        case 0x06:
-            decoded.fan_execute_time = readUInt8(bytes[offset]);
-            offset += 1;
-            break;
         case 0x07:
             decoded.fan_dehumidify = {};
             var enable_value = readUInt8(bytes[offset]);
@@ -485,18 +467,6 @@ function handle_downlink_response_ext(code, channel_type, bytes, offset) {
             var temperature_tolerance_value = readUInt8(bytes[offset + 1]);
             if (temperature_tolerance_value !== 0xff) {
                 decoded.temperature_dehumidify.temperature_tolerance = temperature_tolerance_value / 10;
-            }
-            offset += 2;
-            break;
-        case 0x1b:
-            var masked = readUInt8(bytes[offset]);
-            var enabled = readUInt8(bytes[offset + 1]);
-            decoded.temperature_up_down_enable = {};
-            var bit_offset = { forward_enable: 0, backward_enable: 1 };
-            for (var key in bit_offset) {
-                if ((masked >>> bit_offset[key]) & 0x01) {
-                    decoded.temperature_up_down_enable[key] = readEnableStatus((enabled >>> bit_offset[key]) & 0x01);
-                }
             }
             offset += 2;
             break;
@@ -534,13 +504,6 @@ function handle_downlink_response_ext(code, channel_type, bytes, offset) {
             decoded.target_temperature_range_config.max = readInt16LE(bytes.slice(offset + 3, offset + 5)) / 10;
             offset += 5;
             break;
-        case 0x43:
-            decoded.temperature_level_up_down_delta = {};
-            // skip the first byte
-            decoded.temperature_level_up_down_delta.delta_1 = readUInt8(bytes[offset + 1]) / 10;
-            decoded.temperature_level_up_down_delta.delta_2 = readUInt8(bytes[offset + 2]) / 10;
-            offset += 3;
-            break;
         case 0x44:
             decoded.fan_delay_config = {};
             decoded.fan_delay_config.enable = readEnableStatus(readUInt8(bytes[offset]));
@@ -553,37 +516,6 @@ function handle_downlink_response_ext(code, channel_type, bytes, offset) {
             decoded.target_temperature = readInt16LE(bytes.slice(offset + 2, offset + 4)) / 10;
             offset += 4;
             break;
-        case 0x46:
-            decoded.compressor_aux_combine_enable = readEnableStatus(readUInt8(bytes[offset]));
-            offset += 1;
-            break;
-        case 0x47:
-            decoded.system_protect_config = {};
-            decoded.system_protect_config.enable = readEnableStatus(readUInt8(bytes[offset]));
-            decoded.system_protect_config.duration = readUInt8(bytes[offset + 1]);
-            offset += 2;
-            break;
-        case 0x58:
-            decoded.target_temperature_dual = readEnableStatus(readUInt8(bytes[offset]));
-            offset += 1;
-            break;
-        case 0x59:
-            var dual_temperature_plan_config = readDualTemperaturePlanConfig(bytes.slice(offset, offset + 9));
-            decoded.dual_temperature_plan_config = decoded.dual_temperature_plan_config || [];
-            decoded.dual_temperature_plan_config.push(dual_temperature_plan_config);
-            offset += 9;
-            break;
-        case 0x5a:
-            decoded.dual_temperature_tolerance = decoded.dual_temperature_tolerance || {};
-            var tolerance_index = readUInt8(bytes[offset]);
-            var tolerance_value = readUInt8(bytes[offset + 1]) / 10;
-            if (tolerance_index === 0x00) {
-                decoded.dual_temperature_tolerance.heat_tolerance = tolerance_value;
-            } else if (tolerance_index === 0x01) {
-                decoded.dual_temperature_tolerance.cool_tolerance = tolerance_value;
-            }
-            offset += 2;
-            break;
         case 0x5c:
             var unlock_button_bit_offset = { power_button: 0, temperature_up_button: 1, temperature_down_button: 2, fan_mode_button: 3, temperature_control_mode_button: 4 };
             var unlock_button_data = readUInt8(bytes[offset]);
@@ -593,12 +525,6 @@ function handle_downlink_response_ext(code, channel_type, bytes, offset) {
             }
             decoded.unlock_config.time = readUInt16LE(bytes.slice(offset + 1, offset + 3));
             offset += 3;
-            break;
-        case 0x5e:
-            var single_temperature_plan_config = readSingleTemperaturePlanConfig(bytes.slice(offset, offset + 7));
-            decoded.single_temperature_plan_config = decoded.single_temperature_plan_config || [];
-            decoded.single_temperature_plan_config.push(single_temperature_plan_config);
-            offset += 7;
             break;
         case 0x5d:
             var forbidden_control_bit_offset = { heat_enable: 0, em_heat_enable: 1, cool_enable: 2, auto_enable: 3 };
@@ -783,7 +709,7 @@ function readFanMode(type) {
     var fan_mode_map = {
         0: "auto",
         1: "on",
-        2: "circulate",
+        // 2: "circulate", // (odm: 7048)
         3: "disable",
     };
     return getValue(fan_mode_map, type);
@@ -812,7 +738,7 @@ function readOfflineControlMode(type) {
 function readTemperatureControlMode(type) {
     var temperature_control_mode_map = {
         0: "heat",
-        1: "em heat",
+        // 1: "em heat", // (odm: 7048)
         2: "cool",
         3: "auto",
         4: "auto heat",
@@ -826,12 +752,12 @@ function readTemperatureControlStatus(type) {
         0: "standby",
         1: "stage-1 heat",
         2: "stage-2 heat",
-        3: "stage-3 heat",
-        4: "stage-4 heat",
-        5: "em heat",
+        // 3: "stage-3 heat", // (odm: 7048)
+        // 4: "stage-4 heat", // (odm: 7048)
+        // 5: "em heat", // (odm: 7048)
         6: "stage-1 cool",
         7: "stage-2 cool",
-        8: "stage-5 heat",
+        // 8: "stage-5 heat", // (odm: 7048)
     };
     return getValue(temperature_control_status_map, type);
 }
@@ -883,11 +809,6 @@ function readActionType(type) {
     return getValue(action_type_map, type);
 }
 
-function readTemperatureLevelUpCondition(type) {
-    var temperature_level_up_condition_map = { 0: "heat", 1: "cool" };
-    return getValue(temperature_level_up_condition_map, type);
-}
-
 function readTemperatureControlSupportMode(value) {
     var enable = {};
     enable.heat = readEnableStatus((value >>> 0) & 0x01);
@@ -921,45 +842,6 @@ function readWeekRecycleSettings(value) {
 function readTimeZone(timezone) {
     var timezone_map = { "-720": "UTC-12", "-660": "UTC-11", "-600": "UTC-10", "-570": "UTC-9:30", "-540": "UTC-9", "-480": "UTC-8", "-420": "UTC-7", "-360": "UTC-6", "-300": "UTC-5", "-240": "UTC-4", "-210": "UTC-3:30", "-180": "UTC-3", "-120": "UTC-2", "-60": "UTC-1", 0: "UTC", 60: "UTC+1", 120: "UTC+2", 180: "UTC+3", 210: "UTC+3:30", 240: "UTC+4", 270: "UTC+4:30", 300: "UTC+5", 330: "UTC+5:30", 345: "UTC+5:45", 360: "UTC+6", 390: "UTC+6:30", 420: "UTC+7", 480: "UTC+8", 540: "UTC+9", 570: "UTC+9:30", 600: "UTC+10", 630: "UTC+10:30", 660: "UTC+11", 720: "UTC+12", 765: "UTC+12:45", 780: "UTC+13", 840: "UTC+14" };
     return getValue(timezone_map, timezone);
-}
-
-function readSingleTemperaturePlanConfig(bytes) {
-    var offset = 0;
-
-    var config = {};
-    config.plan_type = readPlanType(readUInt8(bytes[offset]));
-    config.temperature_control_mode = readTemperatureControlMode(readUInt8(bytes[offset + 1]));
-    config.fan_mode = readFanMode(readUInt8(bytes[offset + 2]));
-    config.target_temperature = readInt16LE(bytes.slice(offset + 3, offset + 5)) / 10;
-    config.target_temperature_tolerance = readUInt8(bytes[offset + 5]) / 10;
-    config.temperature_control_tolerance = readUInt8(bytes[offset + 6]) / 10;
-    return config;
-}
-
-function readDualTemperaturePlanConfig(bytes) {
-    var offset = 0;
-
-    var config = {};
-    config.type = readPlanType(readUInt8(bytes[offset]));
-    config.temperature_control_mode = readTemperatureControlMode(readUInt8(bytes[offset + 1]));
-    config.fan_mode = readFanMode(readUInt8(bytes[offset + 2]));
-    var heat_target_temperature_value = readUInt16LE(bytes.slice(offset + 3, offset + 5));
-    if (heat_target_temperature_value !== 0xffff) {
-        config.heat_target_temperature = readUInt16LE(bytes.slice(offset + 3, offset + 5)) / 10;
-    }
-    var heat_temperature_tolerance_value = readUInt8(bytes[offset + 5]);
-    if (heat_temperature_tolerance_value !== 0xff) {
-        config.heat_temperature_tolerance = heat_temperature_tolerance_value / 10;
-    }
-    var cool_target_temperature_value = readUInt16LE(bytes.slice(offset + 6, offset + 8));
-    if (cool_target_temperature_value !== 0xffff) {
-        config.cool_target_temperature = readUInt16LE(bytes.slice(offset + 6, offset + 8)) / 10;
-    }
-    var cool_temperature_tolerance_value = readUInt8(bytes[offset + 8]);
-    if (cool_temperature_tolerance_value !== 0xff) {
-        config.cool_temperature_tolerance = cool_temperature_tolerance_value / 10;
-    }
-    return config;
 }
 
 function readPlanSchedule(bytes) {
