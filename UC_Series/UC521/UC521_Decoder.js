@@ -34,11 +34,12 @@ var pressure_alarm_chns = [0x0b, 0x0c];
 var valve_exception_chns = [0xb3, 0xb5];
 var pressure_exception_chns = [0xb9, 0xba];
 var valve_opening_duration_chns = [0x0e, 0x0f];
+var valve_3_way_opening_duration_chns = [0x10, 0x11];
 
 function milesightDeviceDecode(bytes) {
     var decoded = {};
 
-    for (var i = 0; i < bytes.length;) {
+    for (var i = 0; i < bytes.length; ) {
         var channel_id = bytes[i++];
         var channel_type = bytes[i++];
 
@@ -195,11 +196,18 @@ function milesightDeviceDecode(bytes) {
             decoded[pressure_chn_name + "_sensor_status"] = sensor_status;
             i += 1;
         }
-        // VALVE OPENING DURATION
+        // VALVE OPENING DURATION (2 WAY)
         else if (includes(valve_opening_duration_chns, channel_id) && channel_type === 0x01) {
             var valve_chn_name = "valve_" + (valve_opening_duration_chns.indexOf(channel_id) + 1);
             decoded[valve_chn_name + "_opening_duration"] = readUInt8(bytes[i]);
             i += 1;
+        }
+        // VALVE OPENING DURATION (3 WAY)
+        else if (includes(valve_3_way_opening_duration_chns, channel_id) && channel_type === 0x01) {
+            var valve_chn_name = "valve_" + (valve_3_way_opening_duration_chns.indexOf(channel_id) + 1);
+            decoded[valve_chn_name + "_left_opening_duration"] = readUInt8(bytes[i]);
+            decoded[valve_chn_name + "_right_opening_duration"] = readUInt8(bytes[i + 1]);
+            i += 2;
         }
         // CUSTOM MESSAGE
         else if (channel_id === 0xff && channel_type === 0x2a) {
@@ -379,13 +387,32 @@ function handle_downlink_response_ext(code, channel_type, bytes, offset) {
             decoded[valve_index_name].open_delay_time = bytes[offset + 9];
             offset += 10;
             break;
+        case 0x1b:
+            var data = readUInt8(bytes[offset]);
+            var valve_index = ((data >> 7) & 0x01) + 1;
+            var valve_index_name = "valve_" + valve_index + "_config";
+            decoded[valve_index_name] = {};
+            decoded[valve_index_name].valve_type = readValveType((data >> 6) & 0x01);
+            decoded[valve_index_name].auto_calibration_enable = readEnableStatus((data >> 5) & 0x01);
+            decoded[valve_index_name].report_after_calibration_enable = readEnableStatus((data >> 4) & 0x01);
+            decoded[valve_index_name].stall_strategy = readStallStrategy((data >> 3) & 0x01);
+            decoded[valve_index_name].open_time_1 = bytes[offset + 1];
+            decoded[valve_index_name].open_time_2 = bytes[offset + 2];
+            decoded[valve_index_name].stall_current = readUInt16LE(bytes.slice(offset + 3, offset + 5));
+            decoded[valve_index_name].stall_time = readUInt16LE(bytes.slice(offset + 5, offset + 7));
+            decoded[valve_index_name].protect_time = bytes[offset + 7];
+            decoded[valve_index_name].close_delay_time = bytes[offset + 8];
+            decoded[valve_index_name].open_delay_time = bytes[offset + 9];
+            decoded[valve_index_name].open_delay_all_time = bytes[offset + 10];
+            decoded[valve_index_name].open_delay_all_time_2 = bytes[offset + 11];
+            offset += 12;
+            break;
         case 0x19:
             var data = readUInt8(bytes[offset]);
             var valve_index = (data & 0x01) + 1;
             var time_control_enable_value = (data >> 7) & 0x01;
             var valve_pulse_control_enable_value = (data >> 6) & 0x01;
             var valve_index_name = "valve_" + valve_index + "_task";
-
             decoded[valve_index_name] = {};
             decoded[valve_index_name].time_control_enable = readEnableStatus(time_control_enable_value);
             decoded[valve_index_name].valve_pulse_control_enable = readEnableStatus(valve_pulse_control_enable_value);
@@ -417,6 +444,16 @@ function handle_downlink_response_ext(code, channel_type, bytes, offset) {
             decoded[index_name].enable = readEnableStatus(bytes[offset + 1]);
             decoded[index_name].collection_interval = readUInt16LE(bytes.slice(offset + 2, offset + 4));
             offset += 4;
+            break;
+        case 0x69:
+            var index = readUInt8(bytes[offset]);
+            var index_name = "pressure_" + index + "_collection_interval";
+            decoded[index_name] = {};
+            decoded[index_name].enable = readEnableStatus(bytes[offset + 1]);
+            decoded[index_name].collection_interval = readUInt16LE(bytes.slice(offset + 2, offset + 4));
+            decoded[index_name].irrigation_collection_interval = readUInt16LE(bytes.slice(offset + 4, offset + 6));
+            decoded[index_name].open_valve_collection_delay = readUInt8(bytes[offset + 6]);
+            offset += 7;
             break;
         case 0x6e:
             decoded.wiring_switch_enable = readEnableStatus(bytes[offset]);
@@ -452,7 +489,8 @@ function handle_downlink_response_ext(code, channel_type, bytes, offset) {
             offset += 1;
             break;
         case 0x75:
-            decoded.query_valve_config = readYesNoStatus(1);
+            var data = readUInt8(bytes[offset]);
+            decoded.query_valve_config = data === 0xff ? readYesNoStatus(1) : readParams(data);
             offset += 1;
             break;
         case 0x76:
@@ -472,8 +510,16 @@ function handle_downlink_response_ext(code, channel_type, bytes, offset) {
             offset += 17;
             break;
         case 0x77:
-            decoded.query_pressure_config = readYesNoStatus(1);
+            var data = readUInt8(bytes[offset]);
+            decoded.query_pressure_config = data === 0xff ? readYesNoStatus(1) : readParams(data);
             offset += 1;
+            break;
+        case 0x90:
+            decoded.lorawan_class_mode_schedule = {};
+            decoded.lorawan_class_mode_schedule.start_time = readUInt32LE(bytes.slice(offset, offset + 4));
+            decoded.lorawan_class_mode_schedule.duration = readUInt16LE(bytes.slice(offset + 4, offset + 6));
+            decoded.lorawan_class_mode_schedule.target_class_mode = readLoRaWANClass(bytes[offset + 6]);
+            offset += 7;
             break;
         default:
             throw new Error("unknown downlink response");
@@ -501,7 +547,7 @@ function hasResultFlag(code) {
 }
 
 function readResultStatus(status) {
-    var status_map = { 0: "success", 1: "forbidden", 2: "invalid parameter" };
+    var status_map = { 0: "success", 1: "forbidden", 2: "invalid parameter", 16: "timestamp before device time", 17: "same lorawan class" };
     return getValue(status_map, status);
 }
 
@@ -775,6 +821,11 @@ function readPressureMode(mode_value) {
 function readPressureSignalType(signal_type_value) {
     var signal_type_map = { 0: "voltage", 1: "current" };
     return getValue(signal_type_map, signal_type_value);
+}
+
+function readParams(params_value) {
+    var params_map = { 0: "params_1", 1: "params_2" };
+    return getValue(params_map, params_value);
 }
 
 /* eslint-disable */

@@ -42,10 +42,18 @@ function milesightDeviceEncode(payload) {
         encoded = encoded.concat(syncTime(payload.sync_time));
     }
     if ("pressure_1_collection_interval" in payload) {
-        encoded = encoded.concat(setCollectionInterval(1, payload.pressure_1_collection_interval));
+        if ("irrigation_collection_interval" in payload.pressure_1_collection_interval) {
+            encoded = encoded.concat(setCollectionIntervalV2(1, payload.pressure_1_collection_interval));
+        } else {
+            encoded = encoded.concat(setCollectionInterval(1, payload.pressure_1_collection_interval));
+        }
     }
     if ("pressure_2_collection_interval" in payload) {
-        encoded = encoded.concat(setCollectionInterval(2, payload.pressure_2_collection_interval));
+        if ("irrigation_collection_interval" in payload.pressure_2_collection_interval) {
+            encoded = encoded.concat(setCollectionIntervalV2(2, payload.pressure_2_collection_interval));
+        } else {
+            encoded = encoded.concat(setCollectionInterval(2, payload.pressure_2_collection_interval));
+        }
     }
     if ("timezone" in payload) {
         encoded = encoded.concat(setTimezone(payload.timezone));
@@ -69,10 +77,18 @@ function milesightDeviceEncode(payload) {
         encoded = encoded.concat(clearValvePulse(2, payload.clear_valve_2_pulse));
     }
     if ("valve_1_config" in payload) {
-        encoded = encoded.concat(setValveConfig(1, payload.valve_1_config));
+        if ("open_delay_all_time" in payload.valve_1_config) {
+            encoded = encoded.concat(setValveConfig2(1, payload.valve_1_config));
+        } else {
+            encoded = encoded.concat(setValveConfig(1, payload.valve_1_config));
+        }
     }
     if ("valve_2_config" in payload) {
-        encoded = encoded.concat(setValveConfig(2, payload.valve_2_config));
+        if ("open_delay_all_time" in payload.valve_2_config) {
+            encoded = encoded.concat(setValveConfig2(2, payload.valve_2_config));
+        } else {
+            encoded = encoded.concat(setValveConfig(2, payload.valve_2_config));
+        }
     }
     if ("valve_filter_config" in payload) {
         encoded = encoded.concat(setValveFilterConfig(payload.valve_filter_config));
@@ -162,6 +178,9 @@ function milesightDeviceEncode(payload) {
     }
     if ("gpio_jitter_time" in payload) {
         encoded = encoded.concat(setGpioJitterTime(payload.gpio_jitter_time));
+    }
+    if ("lorawan_class_mode_schedule" in payload) {
+        encoded = encoded.concat(setLoRaWANClassModeSchedule(payload.lorawan_class_mode_schedule));
     }
 
     return encoded;
@@ -270,6 +289,49 @@ function setCollectionInterval(index, collection_interval) {
     buffer.writeUInt8(index);
     buffer.writeUInt8(enable_value);
     buffer.writeUInt16LE(interval);
+    return buffer.toBytes();
+}
+
+/**
+ * set collection interval (v2)
+ * @param {number} index values: (1: pressure 1, 2: pressure 2)
+ * @param {object} collection_interval
+ * @param {number} collection_interval.enable values: (0: disable, 1: enable)
+ * @param {number} collection_interval.collection_interval unit: second, range: [10, 64800]
+ * @param {number} collection_interval.irrigation_collection_interval unit: second, range: [10, 64800]
+ * @param {number} collection_interval.open_valve_collection_delay unit: second, range: [0, 60]
+ * @example { "pressure_1_collection_interval_v2": { "enable": 1, "collection_interval": 300 } }
+ */
+function setCollectionIntervalV2(index, collection_interval) {
+    var enable = collection_interval.enable;
+    var interval = collection_interval.collection_interval;
+    var irrigation_interval = collection_interval.irrigation_collection_interval;
+    var open_valve_delay = collection_interval.open_valve_collection_delay;
+
+    var enable_map = { 0: "disable", 1: "enable" };
+    var enable_values = getValues(enable_map);
+    if (enable_values.indexOf(enable) === -1) {
+        throw new Error("pressure_" + index + "_collection_interval.enable must be one of " + enable_values.join(", "));
+    }
+    var enable_value = getValue(enable_map, enable);
+    if (enable_value == 1 && (interval < 10 || interval > 64800)) {
+        throw new Error("pressure_" + index + "_collection_interval.collection_interval must be in range [10, 64800]");
+    }
+    if (enable_value == 1 && (irrigation_interval < 10 || irrigation_interval > 64800)) {
+        throw new Error("pressure_" + index + "_collection_interval.irrigation_collection_interval must be in range [10, 64800]");
+    }
+    if (enable_value == 1 && (open_valve_delay < 0 || open_valve_delay > 60)) {
+        throw new Error("pressure_" + index + "_collection_interval.open_valve_collection_delay must be in range [0, 60]");
+    }
+
+    var buffer = new Buffer(9);
+    buffer.writeUInt8(0xf9);
+    buffer.writeUInt8(0x69);
+    buffer.writeUInt8(index);
+    buffer.writeUInt8(enable_value);
+    buffer.writeUInt16LE(interval);
+    buffer.writeUInt16LE(irrigation_interval);
+    buffer.writeUInt8(open_valve_delay);
     return buffer.toBytes();
 }
 
@@ -445,6 +507,67 @@ function setValveConfig(valve_index, valve_config) {
     buffer.writeUInt8(protect_time);
     buffer.writeUInt8(close_delay_time);
     buffer.writeUInt8(open_delay_time);
+    return buffer.toBytes();
+}
+
+/**
+ * set valve config
+ * @param {number} valve_index values: (0: valve 1, 1: valve 2)
+ * @param {object} valve_config
+ * @param {number} valve_config.valve_type values: (0: 2-way ball valve, 1: 3-way ball valve)
+ * @param {number} valve_config.auto_calibration_enable values: (0: disable, 1: enable)
+ * @param {number} valve_config.report_after_calibration_enable values: (0: disable, 1: enable)
+ * @param {number} valve_config.stall_strategy values: (0: close, 1: keep)
+ * @param {number} valve_config.open_time_1 unit: second, (type=0, use; type=1, left)
+ * @param {number} valve_config.open_time_2 unit: second, (type=0, no use; type=1, right)
+ * @param {number} valve_config.stall_current unit: mA
+ * @param {number} valve_config.stall_time unit: ms
+ * @param {number} valve_config.protect_time unit: second
+ * @param {number} valve_config.close_delay_time unit: second
+ * @param {number} valve_config.open_delay_time unit: second
+ * @param {number} valve_config.open_delay_all_time unit: second
+ * @param {number} valve_config.open_delay_all_time_2 unit: second
+ * @example { "valve_1_config": { "valve_type": 0, "auto_calibration_enable": 1, "report_after_calibration_enable": 1, "stall_strategy": 1, "open_time_1": 10, "open_time_2": 10, "stall_current": 100, "stall_time": 10, "protect_time": 10, "delay_time": 10 } }
+ */
+function setValveConfig2(valve_index, valve_config) {
+    var type = valve_config.valve_type;
+    var auto_calibration_enable = valve_config.auto_calibration_enable;
+    var report_after_calibration_enable = valve_config.report_after_calibration_enable;
+    var stall_strategy = valve_config.stall_strategy;
+    var open_time_1 = valve_config.open_time_1;
+    var open_time_2 = valve_config.open_time_2;
+    var stall_current = valve_config.stall_current;
+    var stall_time = valve_config.stall_time;
+    var protect_time = valve_config.protect_time;
+    var close_delay_time = valve_config.close_delay_time;
+    var open_delay_time = valve_config.open_delay_time;
+    var open_delay_all_time = valve_config.open_delay_all_time;
+    var open_delay_all_time_2 = valve_config.open_delay_all_time_2;
+
+    var type_map = { 0: "2_way_ball_valve", 1: "3_way_ball_valve" };
+    var enable_map = { 0: "disable", 1: "enable" };
+    var stall_strategy_map = { 0: "close", 1: "keep" };
+
+    var data = 0;
+    data |= (valve_index - 1) << 7;
+    data |= getValue(type_map, type) << 6;
+    data |= getValue(enable_map, auto_calibration_enable) << 5;
+    data |= getValue(enable_map, report_after_calibration_enable) << 4;
+    data |= getValue(stall_strategy_map, stall_strategy) << 3;
+
+    var buffer = new Buffer(14);
+    buffer.writeUInt8(0xf9);
+    buffer.writeUInt8(0x1b);
+    buffer.writeUInt8(data);
+    buffer.writeUInt8(open_time_1);
+    buffer.writeUInt8(open_time_2);
+    buffer.writeUInt16LE(stall_current);
+    buffer.writeUInt16LE(stall_time);
+    buffer.writeUInt8(protect_time);
+    buffer.writeUInt8(close_delay_time);
+    buffer.writeUInt8(open_delay_time);
+    buffer.writeUInt8(open_delay_all_time);
+    buffer.writeUInt8(open_delay_all_time_2);
     return buffer.toBytes();
 }
 
@@ -650,20 +773,21 @@ function queryGPIOType(query_gpio_type) {
 
 /**
  * query valve config
- * @param {number} query_valve_config values: (0: no, 1: yes)
+ * @param {number} query_valve_config values: (0: params_1, 1: params_2)
  * @example { "query_valve_config": 1 }
  */
 function queryValveConfig(query_valve_config) {
-    var yes_no_map = { 0: "no", 1: "yes" };
-    var yes_no_values = getValues(yes_no_map);
-    if (yes_no_values.indexOf(query_valve_config) === -1) {
-        throw new Error("query_valve_config must be one of " + yes_no_values.join(", "));
+    var param_map = { 0: "params_1", 1: "params_2" };
+    var param_values = getValues(param_map);
+    if (param_values.indexOf(query_valve_config) === -1) {
+        throw new Error("query_valve_config must be one of " + param_values.join(", "));
     }
 
-    if (getValue(yes_no_map, query_valve_config) === 0) {
-        return [];
-    }
-    return [0xf9, 0x75, 0xff];
+    var buffer = new Buffer(3);
+    buffer.writeUInt8(0xf9);
+    buffer.writeUInt8(0x75);
+    buffer.writeUInt8(getValue(param_map, query_valve_config));
+    return buffer.toBytes();
 }
 
 /**
@@ -749,22 +873,22 @@ function setPressureConfig(index, pressure_config) {
 
 /**
  * query pressure config
- * @param {number} query_pressure_config values: (0: no, 1: yes)
+ * @param {number} query_pressure_config values: (0: params_1, 1: params_2)
  * @example { "query_pressure_config": 1 }
  */
 function queryPressureConfig(query_pressure_config) {
-    var yes_no_map = { 0: "no", 1: "yes" };
-    var yes_no_values = getValues(yes_no_map);
-    if (yes_no_values.indexOf(query_pressure_config) === -1) {
-        throw new Error("query_pressure_config must be one of " + yes_no_values.join(", "));
+    var param_map = { 0: "params_1", 1: "params_2" };
+    var param_values = getValues(param_map);
+    if (param_values.indexOf(query_pressure_config) === -1) {
+        throw new Error("query_pressure_config must be one of " + param_values.join(", "));
     }
 
-    if (getValue(yes_no_map, query_pressure_config) === 0) {
-        return [];
-    }
-    return [0xf9, 0x77, 0xff];
+    var buffer = new Buffer(3);
+    buffer.writeUInt8(0xf9);
+    buffer.writeUInt8(0x77);
+    buffer.writeUInt8(getValue(param_map, query_pressure_config));
+    return buffer.toBytes();
 }
-
 
 /**
  * read rules
@@ -1242,16 +1366,38 @@ function setGpioJitterTime(gpio_jitter_time) {
     return buffer.toBytes();
 }
 
+/**
+ * set lorawan class mode schedule
+ * @param {object} lorawan_class_mode_schedule
+ * @param {number} lorawan_class_mode_schedule.start_time unit: s
+ * @param {number} lorawan_class_mode_schedule.duration unit: min, range: [0,1440]
+ * @param {number} lorawan_class_mode_schedule.target_class_mode values: (0: Class A, 1: Class B, 2: Class C, 3: Class CtoB)
+ * @example { "lorawan_class_mode_schedule": { "start_time": 10, "duration": 10, "target_class_mode": 0 } }
+ */
+function setLoRaWANClassModeSchedule(lorawan_class_mode_schedule) {
+    var start_time = lorawan_class_mode_schedule.start_time;
+    var duration = lorawan_class_mode_schedule.duration;
+    var target_class_mode = lorawan_class_mode_schedule.target_class_mode;
+
+    var class_mode_map = { 0: "Class A", 1: "Class B", 2: "Class C", 3: "Class CtoB" };
+    var class_mode_values = getValues(class_mode_map);
+    if (class_mode_values.indexOf(target_class_mode) === -1) {
+        throw new Error("lorawan_class_mode_schedule.target_class_mode must be one of " + class_mode_values.join(", "));
+    }
+
+    var buffer = new Buffer(9);
+    buffer.writeUInt8(0xf9);
+    buffer.writeUInt8(0x90);
+    buffer.writeUInt32LE(start_time);
+    buffer.writeUInt16LE(duration);
+    buffer.writeUInt8(getValue(class_mode_map, target_class_mode));
+    return buffer.toBytes();
+}
+
 function getValues(map) {
     var values = [];
-    if (RAW_VALUE) {
-        for (var key in map) {
-            values.push(parseInt(key));
-        }
-    } else {
-        for (var key in map) {
-            values.push(map[key]);
-        }
+    for (var key in map) {
+        values.push(RAW_VALUE ? parseInt(key) : map[key]);
     }
     return values;
 }
