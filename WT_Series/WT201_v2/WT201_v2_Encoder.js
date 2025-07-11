@@ -3,7 +3,7 @@
  *
  * Copyright 2025 Milesight IoT
  *
- * @product WT201 v2
+ * @product WT201 v2 (odm: 7089)
  */
 var RAW_VALUE = 0x00;
 
@@ -85,9 +85,6 @@ function milesightDeviceEncode(payload) {
     }
     if ("humidity" in payload) {
         encoded = encoded.concat(setHumidity(payload.humidity));
-    }
-    if ("temperature_tolerance" in payload) {
-        encoded = encoded.concat(setTemperatureTolerance(payload.temperature_tolerance));
     }
     if ("freeze_protection_config" in payload) {
         encoded = encoded.concat(setFreezeProtection(payload.freeze_protection_config));
@@ -189,6 +186,9 @@ function milesightDeviceEncode(payload) {
     if ("screen_display_mode" in payload) {
         encoded = encoded.concat(setScreenDisplayMode(payload.screen_display_mode));
     }
+    if ("screen_humidity_enable" in payload) {
+        encoded = encoded.concat(setScreenHumidityDisplayMode(payload.screen_humidity_enable));
+    }
     if ("system_protect_config" in payload) {
         encoded = encoded.concat(setSystemProtectConfig(payload.system_protect_config));
     }
@@ -198,8 +198,11 @@ function milesightDeviceEncode(payload) {
     if ("fan_control_during_heating" in payload) {
         encoded = encoded.concat(setFanControlDuringHeating(payload.fan_control_during_heating));
     }
-    if ("dual_temperature_tolerance" in payload) {
-        encoded = encoded.concat(setDualTemperatureTolerance(payload.dual_temperature_tolerance));
+    if ("target_temperature_tolerance_config" in payload) {
+        encoded = encoded.concat(setTargetTemperatureToleranceConfig(payload.target_temperature_tolerance_config));
+    }
+    if ("auto_control_tolerance" in payload) {
+        encoded = encoded.concat(setAutoControlTolerance(payload.auto_control_tolerance));
     }
     if ("target_temperature_dual_enable" in payload) {
         encoded = encoded.concat(setTargetTemperatureDual(payload.target_temperature_dual_enable));
@@ -533,32 +536,6 @@ function setHumidityCalibration(humidity_calibration) {
 }
 
 /**
- * set temperature tolerance
- * @param {object} temperature_tolerance
- * @param {number} temperature_tolerance.target_temperature_tolerance unit: celsius
- * @param {number} temperature_tolerance.auto_temperature_tolerance unit: celsius
- * @example { "temperature_tolerance": {"target_temperature_tolerance": 1, "auto_temperature_tolerance": 1 }}
- */
-function setTemperatureTolerance(temperature_tolerance) {
-    var target_temperature_tolerance = temperature_tolerance.target_temperature_tolerance;
-    var auto_temperature_tolerance = temperature_tolerance.auto_temperature_tolerance;
-
-    if (typeof target_temperature_tolerance !== "number") {
-        throw new Error("temperature_tolerance.target_temperature_tolerance must be a number");
-    }
-    if (typeof auto_temperature_tolerance !== "number") {
-        throw new Error("temperature_tolerance.auto_temperature_tolerance must be a number");
-    }
-
-    var buffer = new Buffer(4);
-    buffer.writeUInt8(0xff);
-    buffer.writeUInt8(0xb8);
-    buffer.writeUInt8(target_temperature_tolerance * 10);
-    buffer.writeUInt8(auto_temperature_tolerance * 10);
-    return buffer.toBytes();
-}
-
-/**
  * set target temperature resolution
  * @since v2.0
  * @param {number} target_temperature_resolution values: (0: 0.5, 1: 1)
@@ -718,7 +695,6 @@ function setTemperatureTarget(temperature_control_mode, target_temperature) {
     buffer.writeInt16LE(target_temperature * 10);
     return buffer.toBytes();
 }
-
 
 /**
  * set temperature control mode
@@ -1780,6 +1756,26 @@ function setScreenDisplayMode(screen_display_mode) {
 }
 
 /**
+ * set screen humidity display mode
+ * @odm 7089
+ * @param {number} screen_humidity_enable values: (0: disable, 1: enable)
+ * @example { "screen_humidity_enable": 0 }
+ */
+function setScreenHumidityDisplayMode(screen_humidity_enable) {
+    var enable_map = { 0: "disable", 1: "enable" };
+    var enable_values = getValues(enable_map);
+    if (enable_values.indexOf(screen_humidity_enable) === -1) {
+        throw new Error("screen_humidity_enable must be one of " + enable_values.join(", "));
+    }
+
+    var buffer = new Buffer(3);
+    buffer.writeUInt8(0xff);
+    buffer.writeUInt8(0xf4);
+    buffer.writeUInt8(getValue(enable_map, screen_humidity_enable));
+    return buffer.toBytes();
+}
+
+/**
  * set unlock config
  * @since v2.0
  * @param {object} unlock_config
@@ -1978,45 +1974,50 @@ function setPlanConfigWithSingleTemperature(single_temperature_plan_config) {
 }
 
 /**
- * set dual temperature tolerance
- * @param {object} dual_temperature_tolerance
- * @param {number} dual_temperature_tolerance.heat_tolerance
- * @param {number} dual_temperature_tolerance.cool_tolerance
- * @example { "dual_temperature_tolerance": { "heat_tolerance": 1, "cool_tolerance": 1 } }
+ * set target temperature tolerance config
+ * @odm 7089
+ * @param {object} target_temperature_tolerance_config
+ * @param {number} target_temperature_tolerance_config.heat_tolerance
+ * @param {number} target_temperature_tolerance_config.em_heat_tolerance
+ * @param {number} target_temperature_tolerance_config.cool_tolerance
+ * @param {number} target_temperature_tolerance_config.auto_tolerance
+ * @param {number} target_temperature_tolerance_config.dual_auto_heat_tolerance
+ * @param {number} target_temperature_tolerance_config.dual_auto_cool_tolerance
+ * @example { "target_temperature_tolerance_config": { "heat_tolerance": 1, "em_heat_tolerance": 1, "cool_tolerance": 1, "auto_tolerance": 1 } }
  */
-function setDualTemperatureTolerance(dual_temperature_tolerance) {
-    var heat_tolerance = dual_temperature_tolerance.heat_tolerance;
-    var cool_tolerance = dual_temperature_tolerance.cool_tolerance;
-
-    var heat_tolerance_buffer = [];
-    if ("heat_tolerance" in dual_temperature_tolerance) {
-        if (typeof heat_tolerance !== "number") {
-            throw new Error("dual_temperature_tolerance.heat_tolerance must be a number");
+function setTargetTemperatureToleranceConfig(target_temperature_tolerance_config) {
+    var data = [];
+    var type_index = { heat_tolerance: 0, em_heat_tolerance: 1, cool_tolerance: 2, auto_tolerance: 3, dual_auto_heat_tolerance: 4, dual_auto_cool_tolerance: 5 };
+    for (var type in type_index) {
+        if (type in target_temperature_tolerance_config) {
+            var buffer = new Buffer(4);
+            buffer.writeUInt8(0xf9);
+            buffer.writeUInt8(0x5b);
+            buffer.writeUInt8(type_index[type]);
+            buffer.writeUInt8(target_temperature_tolerance_config[type] * 10);
+            data = data.concat(buffer.toBytes());
         }
+    }
+    return data;
+}
 
-        var heat_buffer = new Buffer(4);
-        heat_buffer.writeUInt8(0xf9);
-        heat_buffer.writeUInt8(0x5a);
-        heat_buffer.writeUInt8(0x00);
-        heat_buffer.writeUInt8(heat_tolerance * 10);
-        heat_tolerance_buffer = heat_buffer.toBytes();
+/**
+ * set auto control tolerance
+ * @odm 7089
+ * @param {object} auto_control_tolerance range: [0.5, 10]
+ * @example { "auto_control_tolerance": { "heat_tolerance": 1, "cool_tolerance": 1 } }
+ */
+function setAutoControlTolerance(auto_control_tolerance) {
+    var data = auto_control_tolerance * 10;
+    if (data < 5 || data > 100) {
+        throw new Error("auto_control_tolerance must be in range [0.5, 10]");
     }
 
-    var cool_tolerance_buffer = [];
-    if ("cool_tolerance" in dual_temperature_tolerance) {
-        if (typeof cool_tolerance !== "number") {
-            throw new Error("dual_temperature_tolerance.cool_tolerance must be a number");
-        }
-
-        var cool_buffer = new Buffer(4);
-        cool_buffer.writeUInt8(0xf9);
-        cool_buffer.writeUInt8(0x5a);
-        cool_buffer.writeUInt8(0x01);
-        cool_buffer.writeUInt8(cool_tolerance * 10);
-        cool_tolerance_buffer = cool_buffer.toBytes();
-    }
-
-    return heat_tolerance_buffer.concat(cool_tolerance_buffer);
+    var buffer = new Buffer(3);
+    buffer.writeUInt8(0xf9);
+    buffer.writeUInt8(0x57);
+    buffer.writeUInt8(data);
+    return buffer.toBytes();
 }
 
 /**

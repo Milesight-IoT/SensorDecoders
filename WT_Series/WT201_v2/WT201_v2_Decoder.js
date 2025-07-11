@@ -3,7 +3,7 @@
  *
  * Copyright 2025 Milesight IoT
  *
- * @product WT201 v2
+ * @product WT201 v2 (odm: 7089)
  */
 var RAW_VALUE = 0x00;
 
@@ -316,12 +316,6 @@ function handle_downlink_response(channel_type, bytes, offset) {
             decoded.temperature_unit = readTemperatureUnit((t >>> 7) & 0x01);
             offset += 2;
             break;
-        case 0xb8:
-            decoded.temperature_tolerance = {};
-            decoded.temperature_tolerance.target_temperature_tolerance = readUInt8(bytes[offset]) / 10;
-            decoded.temperature_tolerance.auto_temperature_tolerance = readUInt8(bytes[offset + 1]) / 10;
-            offset += 2;
-            break;
         case 0xb9:
             decoded.temperature_level_up_condition = {};
             decoded.temperature_level_up_condition.type = readTemperatureLevelUpCondition(readUInt8(bytes[offset]));
@@ -406,6 +400,10 @@ function handle_downlink_response(channel_type, bytes, offset) {
             break;
         case 0xeb:
             decoded.temperature_unit = readTemperatureUnit(bytes[offset]);
+            offset += 1;
+            break;
+        case 0xf4:
+            decoded.screen_humidity_enable = readEnableStatus(readUInt8(bytes[offset]));
             offset += 1;
             break;
         case 0xf6:
@@ -564,7 +562,11 @@ function handle_downlink_response_ext(code, channel_type, bytes, offset) {
             offset += 2;
             break;
         case 0x58:
-            decoded.target_temperature_dual = readEnableStatus(readUInt8(bytes[offset]));
+            decoded.target_temperature_dual_enable = readEnableStatus(readUInt8(bytes[offset]));
+            offset += 1;
+            break;
+        case 0x57:
+            decoded.auto_control_tolerance = readUInt8(bytes[offset]) / 10;
             offset += 1;
             break;
         case 0x59:
@@ -573,14 +575,14 @@ function handle_downlink_response_ext(code, channel_type, bytes, offset) {
             decoded.dual_temperature_plan_config.push(dual_temperature_plan_config);
             offset += 9;
             break;
-        case 0x5a:
-            decoded.dual_temperature_tolerance = decoded.dual_temperature_tolerance || {};
-            var tolerance_index = readUInt8(bytes[offset]);
-            var tolerance_value = readUInt8(bytes[offset + 1]) / 10;
-            if (tolerance_index === 0x00) {
-                decoded.dual_temperature_tolerance.heat_tolerance = tolerance_value;
-            } else if (tolerance_index === 0x01) {
-                decoded.dual_temperature_tolerance.cool_tolerance = tolerance_value;
+        case 0x5b:
+            var type_value = readUInt8(bytes[offset]);
+            decoded.target_temperature_tolerance_config = decoded.target_temperature_tolerance_config || {};
+            var type_index = { heat_tolerance: 0, em_heat_tolerance: 1, cool_tolerance: 2, auto_tolerance: 3, dual_auto_heat_tolerance: 4, dual_auto_cool_tolerance: 5 };
+            for (var type in type_index) {
+                if (type_value === type_index[type]) {
+                    decoded.target_temperature_tolerance_config[type] = readUInt8(bytes[offset + 1]) / 10;
+                }
             }
             offset += 2;
             break;
