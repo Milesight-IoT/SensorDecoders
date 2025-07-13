@@ -7,6 +7,8 @@
  */
 var RAW_VALUE = 0x00;
 
+/* eslint no-redeclare: "off" */
+/* eslint-disable */
 // Chirpstack v4
 function encodeDownlink(input) {
     var encoded = milesightDeviceEncode(input.data);
@@ -22,6 +24,7 @@ function Encode(fPort, obj) {
 function Encoder(obj, port) {
     return milesightDeviceEncode(obj);
 }
+/* eslint-enable */
 
 function milesightDeviceEncode(payload) {
     var encoded = [];
@@ -243,7 +246,7 @@ function setTimestamp(timestamp) {
         throw new Error("timestamp must be greater than 0");
     }
 
-    var buffer = new Buffer(4);
+    var buffer = new Buffer(6);
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0x11);
     buffer.writeUInt32LE(timestamp);
@@ -653,7 +656,7 @@ function stopTransmit(stop_transmit) {
     if (getValue(yes_no_map, stop_transmit) === 0) {
         return [];
     }
-    return [0xff, 0x6d, 0xff];
+    return [0xfd, 0x6d, 0xff];
 }
 
 /**

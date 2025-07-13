@@ -5,6 +5,10 @@
  *
  * @product EM400-UDL (NB-IoT)
  */
+var RAW_VALUE = 0x00;
+
+/* eslint no-redeclare: "off" */
+/* eslint-disable */
 function decodePayload(bytes) {
     var buffer = new Buffer(bytes);
 
@@ -27,11 +31,12 @@ function decodePayload(bytes) {
 
     return payload;
 }
+/* eslint-enable */
 
 function decodeSensorData(bytes) {
     var history = [];
 
-    var lastid = lastid || 0;
+    var lastId = lastId || 0;
     var decoded = {};
     var buffer = new Buffer(bytes);
     while (buffer.remaining() > 0) {
@@ -39,12 +44,12 @@ function decodeSensorData(bytes) {
         var channel_type = buffer.readUInt8();
 
         // check if the channel id is continuous
-        if (lastid - (channel_id & 0x0f) >= 0) {
+        if (lastId - (channel_id & 0x0f) >= 0) {
             history.push(decoded);
             decoded = {};
-            lastid = 0;
+            lastId = 0;
         }
-        lastid = channel_id & 0x0f;
+        lastId = channel_id & 0x0f;
 
         // BATTERY
         if (channel_id === 0x01 && channel_type === 0x75) {
@@ -60,7 +65,7 @@ function decodeSensorData(bytes) {
         }
         // POSITION
         else if (channel_id === 0x05 && channel_type === 0x00) {
-            decoded.position = buffer.readUInt8() === 0 ? "normal" : "tilt";
+            decoded.position = readPositionType(buffer.readUInt8());
         }
         // LOCATION
         else if (channel_id === 0x06 && channel_type === 0x88) {
@@ -68,18 +73,18 @@ function decodeSensorData(bytes) {
             decoded.longitude = buffer.readInt32LE() / 1000000;
 
             var status = buffer.readUInt8();
-            decoded.motion_status = ["unknown", "start", "moving", "stop"][status & 0x03];
-            decoded.geofence_status = ["inside", "outside", "unset", "unknown"][status >> 4];
+            decoded.motion_status = readMotionStatus(status & 0x03);
+            decoded.geofence_status = readGeofenceStatus(status >> 4);
         }
         // TEMPERATURE WITH ABNORMAL
         else if (channel_id === 0x83 && channel_type === 0x67) {
             decoded.temperature = buffer.readUInt16LE() / 10;
-            decoded.temperature_abnormal = buffer.readUInt8() == 0 ? false : true;
+            decoded.temperature_alarm = readAlarmType(buffer.readUInt8());
         }
         // DISTANCE WITH ALARMING
         else if (channel_id === 0x84 && channel_type === 0x82) {
             decoded.distance = buffer.readUInt16LE();
-            decoded.distance_alarming = buffer.readUInt8() == 0 ? false : true;
+            decoded.distance_alarm = readAlarmType(buffer.readUInt8());
         } else {
             break;
         }
@@ -89,6 +94,34 @@ function decodeSensorData(bytes) {
     history.push(decoded);
 
     return history;
+}
+
+function readPositionType(type) {
+    var type_map = { 0: "normal", 1: "tilt" };
+    return getValue(type_map, type);
+}
+
+function readAlarmType(type) {
+    var type_map = { 0: "threshold_alarm_release", 1: "threshold_alarm" };
+    return getValue(type_map, type);
+}
+
+function readMotionStatus(status) {
+    var status_map = { 0: "unknown", 1: "start", 2: "moving", 3: "stop" };
+    return getValue(status_map, status);
+}
+
+function readGeofenceStatus(status) {
+    var status_map = { 0: "inside", 1: "outside", 2: "unset", 3: "unknown" };
+    return getValue(status_map, status);
+}
+
+function getValue(map, key) {
+    if (RAW_VALUE) return key;
+
+    var value = map[key];
+    if (!value) value = "unknown";
+    return value;
 }
 
 function Buffer(bytes) {
@@ -154,16 +187,3 @@ Buffer.prototype.slice = function (length) {
 Buffer.prototype.remaining = function () {
     return this.bytes.length - this.offset;
 };
-
-function readHexString(hexString) {
-    var bytes = [];
-    for (var i = 0; i < hexString.length; i += 2) {
-        bytes.push(parseInt(hexString.substr(i, 2), 16));
-    }
-    return bytes;
-}
-
-// SAMPLE
-// var bytes = readHexString("020001005f00000001303130313031313036373439443139303534363930303331383638353038303634383037333530343630303433323234323133313130383938363034313231303232373030363238353709000e01756403670b0104823b01050001");
-// var payload = decodePayload(bytes);
-// console.log(payload);

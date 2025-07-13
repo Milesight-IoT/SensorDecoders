@@ -38,17 +38,9 @@ For more detailed information, please visit [milesight official website](https:/
 // 8367e80001 8482410601
 {
   "temperature": 23.2,
-  "temperature_abnormal": true,
+  "temperature_alarm": "threshold_alarm",
   "distance": 1601,
-  "distance_alarming": true
-}
-
-// 068836bf7701f000090722
-{
-  "longitude": 24.62495,
-  "latitude": 118.030576,
-  "motion_status": "moving",
-  "geofence_status": "unset"
+  "distance_alarm": "threshold_alarm"
 }
 ```
 

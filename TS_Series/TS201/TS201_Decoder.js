@@ -7,6 +7,8 @@
  */
 var RAW_VALUE = 0x00;
 
+/* eslint no-redeclare: "off" */
+/* eslint-disable */
 // Chirpstack v4
 function decodeUplink(input) {
     var decoded = milesightDeviceDecode(input.bytes);
@@ -22,6 +24,7 @@ function Decode(fPort, bytes) {
 function Decoder(bytes, port) {
     return milesightDeviceDecode(bytes);
 }
+/* eslint-enable */
 
 function milesightDeviceDecode(bytes) {
     var decoded = {};
@@ -143,18 +146,7 @@ function milesightDeviceDecode(bytes) {
             decoded.history = decoded.history || [];
             decoded.history.push(data);
         }
-        // SENSOR ID
-        else if (channel_id === 0xff && channel_type === 0xa0) {
-            var data = readUInt8(bytes[i]);
-            var channel_idx = (data >>> 4) & 0x0f;
-            var sensor_type = (data >>> 0) & 0x0f;
-            var sensor_id = readHexString(bytes.slice(i + 1, i + 9));
-            var sensor_chn_name = "sensor_" + channel_idx;
-            i += 9;
 
-            decoded[sensor_chn_name + "_type"] = readSensorIDType(sensor_type);
-            decoded[sensor_chn_name + "_sn"] = sensor_id;
-        }
         // DOWNLINK RESPONSE
         else if (channel_id === 0xfe || channel_id === 0xff) {
             var result = handle_downlink_response(channel_type, bytes, i);
@@ -396,18 +388,6 @@ function readDataStatus(type) {
     return getValue(status_map, type);
 }
 
-function readHistoryEvent(type) {
-    var event_map = {
-        0: "time update",
-        1: "periodic",
-        2: "threshold or mutation",
-        3: "alarm release",
-        4: "read error",
-        5: "overload",
-    };
-    return getValue(event_map, type);
-}
-
 function readEventType(type) {
     var type_map = {
         1: "periodic event",
@@ -422,31 +402,7 @@ function readMathConditionType(type) {
     return getValue(condition_map, type);
 }
 
-function readD2DEventType(type) {
-    var event_map = { 1: "temperature threshold alarm", 2: "temperature threshold alarm release", 3: "temperature mutation alarm" };
-    return getValue(event_map, type);
-}
-
-function readSensorDataConfig(value) {
-    var sensor_bit_offset = { temperature: 0 };
-    var sensor_data_map = { 0: "disable", 1: "enable" };
-    var data = {};
-    for (var key in sensor_bit_offset) {
-        data[key] = getValue(sensor_data_map, (value >>> sensor_bit_offset[key]) & 0x01);
-    }
-    return data;
-}
-
-function readButtonLockConfig(value) {
-    var button_bit_offset = { power: 0, report: 1 };
-    var button_data_map = { 0: "disable", 1: "enable" };
-    var data = {};
-    for (var key in button_bit_offset) {
-        data[key] = getValue(button_data_map, (value >>> button_bit_offset[key]) & 0x01);
-    }
-    return data;
-}
-
+/* eslint-disable */
 function readUInt8(bytes) {
     return bytes & 0xff;
 }

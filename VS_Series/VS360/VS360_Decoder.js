@@ -1,12 +1,14 @@
 /**
  * Payload Decoder
  *
- * Copyright 2024 Milesight IoT
+ * Copyright 2025 Milesight IoT
  *
  * @product VS360
  */
 var RAW_VALUE = 0x00;
 
+/* eslint no-redeclare: "off" */
+/* eslint-disable */
 // Chirpstack v4
 function decodeUplink(input) {
     var decoded = milesightDeviceDecode(input.bytes);
@@ -22,6 +24,7 @@ function Decode(fPort, bytes) {
 function Decoder(bytes, port) {
     return milesightDeviceDecode(bytes);
 }
+/* eslint-enable */
 
 function milesightDeviceDecode(bytes) {
     var decoded = {};
@@ -245,10 +248,6 @@ function handle_downlink_response(channel_type, bytes, offset) {
             decoded.timezone = readTimeZone(readInt16LE(bytes.slice(offset, offset + 2)));
             offset += 2;
             break;
-        case 0xa6:
-            decoded.cumulative_enable = readEnableStatus(bytes[offset]);
-            offset += 1;
-            break;
         case 0xa8:
             var data = readUInt8(bytes[offset]);
             if (data === 0x01) {
@@ -462,7 +461,6 @@ function readD2DMode(mode) {
     return getValue(mode_map, mode);
 }
 
-
 function readAlarmConfig(bytes) {
     var offset = 0;
 
@@ -490,6 +488,7 @@ function readTriggerSourceType(type) {
     return getValue(trigger_source_map, type);
 }
 
+/* eslint-disable */
 function readUInt8(bytes) {
     return bytes & 0xff;
 }
@@ -576,4 +575,3 @@ if (!Object.assign) {
         },
     });
 }
-

@@ -1,8 +1,8 @@
-# Ambience Monitoring Sensors - Milesight IoT
+# Ambience Monitoring Sensor - Milesight IoT
 
 The payload decoder function is applicable to AM307(v2)、AM308(v2) and AM319(v2).
 
-For more detailed information, please visit [milesight official website](https://www.milesight-iot.com).
+For more detailed information, please visit [Milesight Official Website](https://www.milesight.com/iot/product/lorawan-sensor/am319).
 
 |        AM307        |        AM319        |        AM300L         |
 | :-----------------: | :-----------------: | :-------------------: |

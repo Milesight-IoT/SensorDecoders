@@ -7,6 +7,8 @@
  */
 var RAW_VALUE = 0x00;
 
+/* eslint no-redeclare: "off" */
+/* eslint-disable */
 // Chirpstack v4
 function encodeDownlink(input) {
     return milesightDeviceEncode(input.data);
@@ -21,6 +23,7 @@ function Encode(fPort, obj, variables) {
 function Encoder(obj, port) {
     return milesightDeviceEncode(obj);
 }
+/* eslint-enable */
 
 function milesightDeviceEncode(payload) {
     var encoded = [];
@@ -163,7 +166,6 @@ function socketStatus(socket_status) {
  * @example { "delay_task": { "socket_status": 1, "frame_count": 1, "delay_time": 1 } }
  */
 function setDelayTask(delay_task) {
-    var socket_status = delay_task.socket_status;
     var frame_count = delay_task.frame_count;
     var delay_time = delay_task.delay_time;
 
@@ -183,8 +185,10 @@ function setDelayTask(delay_task) {
     var switch_bit_offset = { socket_status: 0 };
     for (var key in switch_bit_offset) {
         if (key in delay_task) {
-            data |= 1 << (switch_bit_offset[key] + 4);
-            data |= getValue(on_off_map, delay_task[key]) << switch_bit_offset[key];
+            if (on_off_values.indexOf(delay_task[key]) !== -1) {
+                data |= 1 << (switch_bit_offset[key] + 4);
+                data |= getValue(on_off_map, delay_task[key]) << switch_bit_offset[key];
+            }
         }
     }
 

@@ -2,7 +2,7 @@
 
 The payload decoder function is applicable to EM300-MCS.
 
-For more detailed information, please visit [milesight official website](https://www.milesight-iot.com).
+For more detailed information, please visit [Milesight Official Website](https://www.milesight.com/iot/product/lorawan-sensor/em300-mcs).
 
 ![EM300-MCS](EM300-MCS.png)
 

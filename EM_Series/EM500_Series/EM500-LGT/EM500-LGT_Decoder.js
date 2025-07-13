@@ -7,6 +7,8 @@
  */
 var RAW_VALUE = 0x00;
 
+/* eslint no-redeclare: "off" */
+/* eslint-disable */
 // Chirpstack v4
 function decodeUplink(input) {
     var decoded = milesightDeviceDecode(input.bytes);
@@ -22,6 +24,7 @@ function Decode(fPort, bytes) {
 function Decoder(bytes, port) {
     return milesightDeviceDecode(bytes);
 }
+/* eslint-enable */
 
 function milesightDeviceDecode(bytes) {
     var decoded = {};
@@ -294,11 +297,6 @@ function readConditionType(condition) {
     return getValue(condition_map, condition);
 }
 
-function readDistanceAlarm(status) {
-    var status_map = { 0: "normal", 1: "threshold_alarm", 2: "mutation_alarm" };
-    return getValue(status_map, status);
-}
-
 function readD2DMode(mode) {
     var mode_map = { 1: "threshold_alarm", 2: "threshold_alarm_release", 3: "mutation_alarm" };
     return getValue(mode_map, mode);
@@ -308,6 +306,15 @@ function readD2DCommand(bytes) {
     return ("0" + (bytes[1] & 0xff).toString(16)).slice(-2) + ("0" + (bytes[0] & 0xff).toString(16)).slice(-2);
 }
 
+function readHexString(bytes) {
+    var temp = [];
+    for (var idx = 0; idx < bytes.length; idx++) {
+        temp.push(("0" + (bytes[idx] & 0xff).toString(16)).slice(-2));
+    }
+    return temp.join("");
+}
+
+/* eslint-disable */
 function readUInt8(bytes) {
     return bytes & 0xff;
 }

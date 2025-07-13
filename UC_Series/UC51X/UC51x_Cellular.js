@@ -5,6 +5,8 @@
  *
  * @product UC51x
  */
+/* eslint no-redeclare: "off" */
+// eslint-disable-next-line 
 function decodePayload(bytes) {
     var buffer = new Buffer(bytes);
 
@@ -100,7 +102,6 @@ function decodeSensorData(bytes) {
         }
         // PRESSURE ALARM
         else if (channel_id === 0x0b && channel_type === 0xf5) {
-            var data = {};
             var event_type = buffer.readUInt8();
             var condition = buffer.readUInt8();
             var min = buffer.readUInt16LE();
@@ -249,16 +250,6 @@ Buffer.prototype.slice = function (length) {
 Buffer.prototype.remaining = function () {
     return this.bytes.length - this.offset;
 };
-
-function includes(items, item) {
-    var size = items.length;
-    for (var i = 0; i < size; i++) {
-        if (items[i] == item) {
-            return true;
-        }
-    }
-    return false;
-}
 
 function readVersion(b1, b2) {
     return ("0" + b1.toString(16)).slice(-2) + ("0" + b2.toString(16)).slice(-2);

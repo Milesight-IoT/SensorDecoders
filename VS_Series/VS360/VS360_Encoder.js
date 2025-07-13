@@ -1,12 +1,14 @@
 /**
  * Payload Encoder
  *
- * Copyright 2024 Milesight IoT
+ * Copyright 2025 Milesight IoT
  *
  * @product VS360
  */
 var RAW_VALUE = 0x00;
 
+/* eslint no-redeclare: "off" */
+/* eslint-disable */
 // Chirpstack v4
 function encodeDownlink(input) {
     var encoded = milesightDeviceEncode(input.data);
@@ -22,6 +24,7 @@ function Encode(fPort, obj) {
 function Encoder(obj, port) {
     return milesightDeviceEncode(obj);
 }
+/* eslint-enable */
 
 function milesightDeviceEncode(payload) {
     var encoded = [];
@@ -287,7 +290,6 @@ function clearCumulativeIn(clear_cumulative_in) {
     return [0xff, 0xa8, 0x01];
 }
 
-
 /**
  * clear cumulative
  * @param {number} clear_cumulative_out values: (0: no, 1: yes)
@@ -479,7 +481,6 @@ function setD2DMasterConfig(d2d_master_config) {
     return buffer.toBytes();
 }
 
-
 /**
  * set alarm config
  * @param {object} alarm_config
@@ -659,19 +660,13 @@ function stopTransmit(stop_transmit) {
     if (getValue(yes_no_map, stop_transmit) === 0) {
         return [];
     }
-    return [0xff, 0x6d, 0xff];
+    return [0xfd, 0x6d, 0xff];
 }
 
 function getValues(map) {
     var values = [];
-    if (RAW_VALUE) {
-        for (var key in map) {
-            values.push(parseInt(key));
-        }
-    } else {
-        for (var key in map) {
-            values.push(map[key]);
-        }
+    for (var key in map) {
+        values.push(RAW_VALUE ? parseInt(key) : map[key]);
     }
     return values;
 }

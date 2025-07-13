@@ -7,6 +7,8 @@
  */
 var RAW_VALUE = 0x00;
 
+/* eslint no-redeclare: "off" */
+/* eslint-disable */
 // Chirpstack v4
 function decodeUplink(input) {
     var decoded = milesightDeviceDecode(input.bytes);
@@ -22,6 +24,7 @@ function Decode(fPort, bytes) {
 function Decoder(bytes, port) {
     return milesightDeviceDecode(bytes);
 }
+/* eslint-enable */
 
 function milesightDeviceDecode(bytes) {
     var decoded = {};
@@ -67,7 +70,7 @@ function milesightDeviceDecode(bytes) {
         }
         // DEVICE STATUS
         else if (channel_id === 0xff && channel_type === 0x0b) {
-            decoded.device_status = readOnOffStatus(1);
+            decoded.device_status = readDeviceStatus(1);
             i += 1;
         }
         // SWITCH STATE
@@ -237,6 +240,7 @@ function readLedMode(type) {
     return getValue(led_mode_map, type);
 }
 
+/* eslint-disable */
 function readUInt8(bytes) {
     return bytes & 0xff;
 }

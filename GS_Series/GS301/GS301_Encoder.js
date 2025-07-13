@@ -7,6 +7,8 @@
  */
 var RAW_VALUE = 0x00;
 
+/* eslint no-redeclare: "off" */
+/* eslint-disable */
 // Chirpstack v4
 function encodeDownlink(input) {
     var encoded = milesightDeviceEncode(input.data);
@@ -22,6 +24,7 @@ function Encode(fPort, obj) {
 function Encoder(obj, port) {
     return milesightDeviceEncode(obj);
 }
+/* eslint-enable */
 
 function milesightDeviceEncode(payload) {
     var encoded = [];
@@ -235,7 +238,7 @@ function setAlarmConfig(alarm_config) {
     if (condition_values.indexOf(condition) === -1) {
         throw new Error("alarm_config.condition must be one of " + condition_values.join(", "));
     }
-    var trigger_source_map = { 1: "nh3", 1: "h2s", 2: "nh3_d2d", 3: "h2s_d2d", 4: "nh3_d2d", 5: "nh3_d2d_release", 6: "h2s_d2d_release", 7: "h2s_v2", 8: "h2s_d2d_v2", 9: "h2s_release_v2" };
+    var trigger_source_map = { 1: "nh3", 2: "h2s", 3: "nh3_d2d", 4: "h2s_d2d", 5: "nh3_d2d", 6: "nh3_d2d_release", 7: "h2s_d2d_release", 8: "h2s_v2", 9: "h2s_d2d_v2", 10: "h2s_release_v2" };
     var trigger_source_values = getValues(trigger_source_map);
     if (trigger_source_values.indexOf(trigger_source) === -1) {
         throw new Error("alarm_config.trigger_source must be one of " + trigger_source_values.join(", "));

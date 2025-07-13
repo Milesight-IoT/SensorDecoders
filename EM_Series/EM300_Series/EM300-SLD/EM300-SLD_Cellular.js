@@ -5,6 +5,8 @@
  *
  * @product EM300-SLD / EM300-ZLD (NB-IoT)
  */
+/* eslint no-redeclare: "off" */
+/* eslint-disable */
 function decodePayload(bytes) {
     var buffer = new Buffer(bytes);
 
@@ -27,6 +29,7 @@ function decodePayload(bytes) {
 
     return payload;
 }
+/* eslint-enable */
 
 function decodeSensorData(bytes) {
     var decoded = {};
@@ -160,11 +163,3 @@ Buffer.prototype.slice = function (length) {
 Buffer.prototype.remaining = function () {
     return this.bytes.length - this.offset;
 };
-
-function readHexString(hexString) {
-    var bytes = [];
-    for (var i = 0; i < hexString.length; i += 2) {
-        bytes.push(parseInt(hexString.substr(i, 2), 16));
-    }
-    return bytes;
-}
