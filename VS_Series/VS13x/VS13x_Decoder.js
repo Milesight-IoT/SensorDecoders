@@ -3,7 +3,7 @@
  *
  * Copyright 2025 Milesight IoT
  *
- * @product VS133 / VS135
+ * @product VS135 (ODM: 2793)
  */
 var RAW_VALUE = 0x00;
 
@@ -29,9 +29,9 @@ function Decoder(bytes, port) {
 var total_in_chns = [0x03, 0x06, 0x09, 0x0c];
 var total_out_chns = [0x04, 0x07, 0x0a, 0x0d];
 var period_chns = [0x05, 0x08, 0x0b, 0x0e];
-var child_total_in_chns = [0x11, 0x14, 0x17, 0x1a];
-var child_total_out_chns = [0x12, 0x15, 0x18, 0x1b];
-var child_period_chns = [0x13, 0x16, 0x19, 0x1c];
+var staff_total_in_chns = [0x11, 0x14, 0x17, 0x1a];
+var staff_total_out_chns = [0x12, 0x15, 0x18, 0x1b];
+var staff_period_chns = [0x13, 0x16, 0x19, 0x1c];
 
 function milesightDeviceDecode(bytes) {
     var decoded = {};
@@ -66,10 +66,10 @@ function milesightDeviceDecode(bytes) {
             decoded[channel_in_name + "_total_in"] = readUInt32LE(bytes.slice(i, i + 4));
             i += 4;
         }
-        // LINE TOTAL IN (child)
-        else if (includes(child_total_in_chns, channel_id) && channel_type === 0xd2) {
-            var child_total_in_name = "line_" + ((channel_id - child_total_in_chns[0]) / 3 + 1);
-            decoded[child_total_in_name + "_child_total_in"] = readUInt32LE(bytes.slice(i, i + 4));
+        // LINE TOTAL IN (staff)
+        else if (includes(staff_total_in_chns, channel_id) && channel_type === 0xd2) {
+            var staff_total_in_name = "line_" + ((channel_id - staff_total_in_chns[0]) / 3 + 1);
+            decoded[staff_total_in_name + "_staff_total_in"] = readUInt32LE(bytes.slice(i, i + 4));
             i += 4;
         }
         // LINE TOTAL OUT
@@ -78,10 +78,10 @@ function milesightDeviceDecode(bytes) {
             decoded[channel_out_name + "_total_out"] = readUInt32LE(bytes.slice(i, i + 4));
             i += 4;
         }
-        // LINE TOTAL OUT (child)
-        else if (includes(child_total_out_chns, channel_id) && channel_type === 0xd2) {
-            var child_total_out_name = "line_" + ((channel_id - child_total_out_chns[0]) / 3 + 1);
-            decoded[child_total_out_name + "_child_total_out"] = readUInt32LE(bytes.slice(i, i + 4));
+        // LINE TOTAL OUT (staff)
+        else if (includes(staff_total_out_chns, channel_id) && channel_type === 0xd2) {
+            var staff_total_out_name = "line_" + ((channel_id - staff_total_out_chns[0]) / 3 + 1);
+            decoded[staff_total_out_name + "_staff_total_out"] = readUInt32LE(bytes.slice(i, i + 4));
             i += 4;
         }
         // LINE PERIOD
@@ -91,11 +91,11 @@ function milesightDeviceDecode(bytes) {
             decoded[channel_period_name + "_period_out"] = readUInt16LE(bytes.slice(i + 2, i + 4));
             i += 4;
         }
-        // LINE PERIOD (child)
-        else if (includes(child_period_chns, channel_id) && channel_type === 0xcc) {
-            var child_period_name = "line_" + ((channel_id - child_period_chns[0]) / 3 + 1);
-            decoded[child_period_name + "_child_period_in"] = readUInt16LE(bytes.slice(i, i + 2));
-            decoded[channel_period_name + "_child_period_out"] = readUInt16LE(bytes.slice(i + 2, i + 4));
+        // LINE PERIOD (staff)
+        else if (includes(staff_period_chns, channel_id) && channel_type === 0xcc) {
+            var staff_period_name = "line_" + ((channel_id - staff_period_chns[0]) / 3 + 1);
+            decoded[staff_period_name + "_staff_period_in"] = readUInt16LE(bytes.slice(i, i + 2));
+            decoded[channel_period_name + "_staff_period_out"] = readUInt16LE(bytes.slice(i + 2, i + 4));
             i += 4;
         }
         // REGION COUNT
@@ -106,12 +106,12 @@ function milesightDeviceDecode(bytes) {
             decoded.region_4_count = readUInt8(bytes[i + 3]);
             i += 4;
         }
-        // REGION COUNT (child)
+        // REGION COUNT (staff)
         else if (channel_id === 0x1d && channel_type === 0xe3) {
-            decoded.region_1_child_count = readUInt8(bytes[i]);
-            decoded.region_2_child_count = readUInt8(bytes[i + 1]);
-            decoded.region_3_child_count = readUInt8(bytes[i + 2]);
-            decoded.region_4_child_count = readUInt8(bytes[i + 3]);
+            decoded.region_1_staff_count = readUInt8(bytes[i]);
+            decoded.region_2_staff_count = readUInt8(bytes[i + 1]);
+            decoded.region_3_staff_count = readUInt8(bytes[i + 2]);
+            decoded.region_4_staff_count = readUInt8(bytes[i + 3]);
             i += 4;
         }
         // REGION DWELL TIME
@@ -121,11 +121,11 @@ function milesightDeviceDecode(bytes) {
             decoded[dwell_channel_name + "_max_dwell"] = readUInt16LE(bytes.slice(i + 3, i + 5));
             i += 5;
         }
-        // REGION DWELL TIME (child)
+        // REGION DWELL TIME (staff)
         else if (channel_id === 0x1e && channel_type === 0xe4) {
-            var child_dwell_channel_name = "region_" + bytes[i];
-            decoded[child_dwell_channel_name + "_child_avg_dwell"] = readUInt16LE(bytes.slice(i + 1, i + 3));
-            decoded[child_dwell_channel_name + "_child_max_dwell"] = readUInt16LE(bytes.slice(i + 3, i + 5));
+            var staff_dwell_channel_name = "region_" + bytes[i];
+            decoded[staff_dwell_channel_name + "_staff_avg_dwell"] = readUInt16LE(bytes.slice(i + 1, i + 3));
+            decoded[staff_dwell_channel_name + "_staff_max_dwell"] = readUInt16LE(bytes.slice(i + 3, i + 5));
             i += 5;
         }
         // ALARM
@@ -402,60 +402,60 @@ function readHistory(bytes, offset) {
         data[max_dwell_region_name] = readUInt16LE(bytes.slice(i + 6, i + 8));
         i += 8;
     } else if (data_type === 0x11) {
-        data.line_1_child_total_in = readUInt32LE(bytes.slice(i + 5, i + 9));
+        data.line_1_staff_total_in = readUInt32LE(bytes.slice(i + 5, i + 9));
         i += 9;
     } else if (data_type === 0x12) {
-        data.line_1_child_total_out = readUInt32LE(bytes.slice(i + 5, i + 9));
+        data.line_1_staff_total_out = readUInt32LE(bytes.slice(i + 5, i + 9));
         i += 9;
     } else if (data_type === 0x13) {
-        data.line_1_child_period_in = readUInt16LE(bytes.slice(i + 5, i + 7));
-        data.line_1_child_period_out = readUInt16LE(bytes.slice(i + 7, i + 9));
+        data.line_1_staff_period_in = readUInt16LE(bytes.slice(i + 5, i + 7));
+        data.line_1_staff_period_out = readUInt16LE(bytes.slice(i + 7, i + 9));
         i += 9;
     } else if (data_type === 0x14) {
-        data.line_2_child_total_in = readUInt32LE(bytes.slice(i + 5, i + 9));
+        data.line_2_staff_total_in = readUInt32LE(bytes.slice(i + 5, i + 9));
         i += 9;
     } else if (data_type === 0x15) {
-        data.line_2_child_total_out = readUInt32LE(bytes.slice(i + 5, i + 9));
+        data.line_2_staff_total_out = readUInt32LE(bytes.slice(i + 5, i + 9));
         i += 9;
     } else if (data_type === 0x16) {
-        data.line_2_child_period_in = readUInt16LE(bytes.slice(i + 5, i + 7));
-        data.line_2_child_period_out = readUInt16LE(bytes.slice(i + 7, i + 9));
+        data.line_2_staff_period_in = readUInt16LE(bytes.slice(i + 5, i + 7));
+        data.line_2_staff_period_out = readUInt16LE(bytes.slice(i + 7, i + 9));
         i += 9;
     } else if (data_type === 0x17) {
-        data.line_3_child_total_in = readUInt32LE(bytes.slice(i + 5, i + 9));
+        data.line_3_staff_total_in = readUInt32LE(bytes.slice(i + 5, i + 9));
         i += 9;
     } else if (data_type === 0x18) {
-        data.line_3_child_total_out = readUInt32LE(bytes.slice(i + 5, i + 9));
+        data.line_3_staff_total_out = readUInt32LE(bytes.slice(i + 5, i + 9));
         i += 9;
     } else if (data_type === 0x19) {
-        data.line_3_child_period_in = readUInt16LE(bytes.slice(i + 5, i + 7));
-        data.line_3_child_period_out = readUInt16LE(bytes.slice(i + 7, i + 9));
+        data.line_3_staff_period_in = readUInt16LE(bytes.slice(i + 5, i + 7));
+        data.line_3_staff_period_out = readUInt16LE(bytes.slice(i + 7, i + 9));
         i += 9;
     } else if (data_type === 0x1a) {
-        data.line_4_child_total_in = readUInt32LE(bytes.slice(i + 5, i + 9));
+        data.line_4_staff_total_in = readUInt32LE(bytes.slice(i + 5, i + 9));
         i += 9;
     } else if (data_type === 0x1b) {
-        data.line_4_child_total_out = readUInt32LE(bytes.slice(i + 5, i + 9));
+        data.line_4_staff_total_out = readUInt32LE(bytes.slice(i + 5, i + 9));
         i += 9;
     } else if (data_type === 0x1c) {
-        data.line_4_child_period_in = readUInt16LE(bytes.slice(i + 5, i + 7));
-        data.line_4_child_period_out = readUInt16LE(bytes.slice(i + 7, i + 9));
+        data.line_4_staff_period_in = readUInt16LE(bytes.slice(i + 5, i + 7));
+        data.line_4_staff_period_out = readUInt16LE(bytes.slice(i + 7, i + 9));
         i += 9;
     } else if (data_type === 0x1d) {
-        data.region_1_child_count = readUInt8(bytes[i + 5]);
-        data.region_2_child_count = readUInt8(bytes[i + 6]);
-        data.region_3_child_count = readUInt8(bytes[i + 7]);
-        data.region_4_child_count = readUInt8(bytes[i + 8]);
+        data.region_1_staff_count = readUInt8(bytes[i + 5]);
+        data.region_2_staff_count = readUInt8(bytes[i + 6]);
+        data.region_3_staff_count = readUInt8(bytes[i + 7]);
+        data.region_4_staff_count = readUInt8(bytes[i + 8]);
         i += 9;
     } else if (data_type === 0x1e) {
-        var child_avg_dwell_region = readUInt8(bytes[i + 5]);
-        var child_avg_dwell_region_name = "region_" + child_avg_dwell_region + "_child_avg_dwell";
-        data[child_avg_dwell_region_name] = readUInt16LE(bytes.slice(i + 6, i + 8));
+        var staff_avg_dwell_region = readUInt8(bytes[i + 5]);
+        var staff_avg_dwell_region_name = "region_" + staff_avg_dwell_region + "_staff_avg_dwell";
+        data[staff_avg_dwell_region_name] = readUInt16LE(bytes.slice(i + 6, i + 8));
         i += 8;
     } else if (data_type === 0x3c) {
-        var child_max_dwell_region = readUInt8(bytes[i + 5]);
-        var child_max_dwell_region_name = "region_" + child_max_dwell_region + "_child_max_dwell";
-        data[child_max_dwell_region_name] = readUInt16LE(bytes.slice(i + 6, i + 8));
+        var staff_max_dwell_region = readUInt8(bytes[i + 5]);
+        var staff_max_dwell_region_name = "region_" + staff_max_dwell_region + "_staff_max_dwell";
+        data[staff_max_dwell_region_name] = readUInt16LE(bytes.slice(i + 6, i + 8));
         i += 8;
     }
 
