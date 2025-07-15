@@ -137,11 +137,10 @@ function controlSwitch(switch_control) {
         }
     }
 
-    var buffer = new Buffer(4);
+    var buffer = new Buffer(3);
     buffer.writeUInt8(0x08);
     buffer.writeUInt8(mask);
     buffer.writeUInt8(status);
-    buffer.writeUInt8(0xff);
     return buffer.toBytes();
 }
 
