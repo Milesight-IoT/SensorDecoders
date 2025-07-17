@@ -3,7 +3,7 @@
  *
  * Copyright 2025 Milesight IoT
  *
- * @product CT101 / CT103 / CT105
+ * @product CT101 / CT103 / CT105  (ODM: 7092)
  */
 var RAW_VALUE = 0x00;
 
@@ -70,6 +70,12 @@ function milesightDeviceDecode(bytes) {
         // DEVICE STATUS
         else if (channel_id === 0xff && channel_type === 0x0b) {
             decoded.device_status = readDeviceStatus(1);
+            i += 1;
+        }
+
+        // BATTERY (ODM: 7092)
+        else if (channel_id === 0x01 && channel_type === 0x75) {
+            decoded.battery = readUInt8(bytes[i]);
             i += 1;
         }
         // TOTAL CURRENT

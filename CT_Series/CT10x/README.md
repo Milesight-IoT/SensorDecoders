@@ -27,6 +27,7 @@ For more detailed information, please visit [Milesight Official Website](https:/
 
 |      CHANNEL      |  ID  | TYPE | LENGTH | DESCRIPTION                                                                                                                                                                        |
 | :---------------: | :--: | :--: | :----: | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+|      Battery      | 0x01 | 0x75 |   1    | battery(1B)                                                                                                                                                                        |
 |   Total Current   | 0x03 | 0x97 |   4    | total_ah(4B)<br />total_ah, read: uint32/100, unit: Ah                                                                                                                             |
 |      Current      | 0x04 | 0x98 |   2    | current(2B)<br />current, read: uint16/100, unit: A                                                                                                                                |
 |    Temperature    | 0x09 | 0x67 |   2    | temperature(2B)<br />temperature, read: int16/10, unit: ℃                                                                                                                          |
