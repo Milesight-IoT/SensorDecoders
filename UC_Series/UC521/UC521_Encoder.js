@@ -326,7 +326,7 @@ function setCollectionIntervalV2(index, collection_interval) {
 
     var buffer = new Buffer(9);
     buffer.writeUInt8(0xf9);
-    buffer.writeUInt8(0x69);
+    buffer.writeUInt8(0xa8);
     buffer.writeUInt8(index);
     buffer.writeUInt8(enable_value);
     buffer.writeUInt16LE(interval);
@@ -557,7 +557,7 @@ function setValveConfig2(valve_index, valve_config) {
 
     var buffer = new Buffer(14);
     buffer.writeUInt8(0xf9);
-    buffer.writeUInt8(0x1b);
+    buffer.writeUInt8(0xa9);
     buffer.writeUInt8(data);
     buffer.writeUInt8(open_time_1);
     buffer.writeUInt8(open_time_2);
@@ -1369,8 +1369,8 @@ function setGpioJitterTime(gpio_jitter_time) {
 /**
  * set lorawan class mode schedule
  * @param {object} lorawan_class_mode_schedule
- * @param {number} lorawan_class_mode_schedule.start_time unit: s
- * @param {number} lorawan_class_mode_schedule.duration unit: min, range: [0,1440]
+ * @param {number} lorawan_class_mode_schedule.start_time unit: s, (0: immediate, other: timestamp)
+ * @param {number} lorawan_class_mode_schedule.duration unit: min, range: [0, 1440]
  * @param {number} lorawan_class_mode_schedule.target_class_mode values: (0: Class A, 1: Class B, 2: Class C, 3: Class CtoB)
  * @example { "lorawan_class_mode_schedule": { "start_time": 10, "duration": 10, "target_class_mode": 0 } }
  */
@@ -1385,12 +1385,13 @@ function setLoRaWANClassModeSchedule(lorawan_class_mode_schedule) {
         throw new Error("lorawan_class_mode_schedule.target_class_mode must be one of " + class_mode_values.join(", "));
     }
 
-    var buffer = new Buffer(9);
+    var buffer = new Buffer(10);
     buffer.writeUInt8(0xf9);
-    buffer.writeUInt8(0x90);
+    buffer.writeUInt8(0xa4);
     buffer.writeUInt32LE(start_time);
     buffer.writeUInt16LE(duration);
     buffer.writeUInt8(getValue(class_mode_map, target_class_mode));
+    buffer.writeUInt8(0x00);
     return buffer.toBytes();
 }
 

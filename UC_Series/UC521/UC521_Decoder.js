@@ -203,7 +203,7 @@ function milesightDeviceDecode(bytes) {
             i += 1;
         }
         // VALVE OPENING DURATION (3 WAY)
-        else if (includes(valve_3_way_opening_duration_chns, channel_id) && channel_type === 0x01) {
+        else if (includes(valve_3_way_opening_duration_chns, channel_id) && channel_type === 0xfd) {
             var valve_chn_name = "valve_" + (valve_3_way_opening_duration_chns.indexOf(channel_id) + 1);
             decoded[valve_chn_name + "_left_opening_duration"] = readUInt8(bytes[i]);
             decoded[valve_chn_name + "_right_opening_duration"] = readUInt8(bytes[i + 1]);
@@ -387,26 +387,6 @@ function handle_downlink_response_ext(code, channel_type, bytes, offset) {
             decoded[valve_index_name].open_delay_time = bytes[offset + 9];
             offset += 10;
             break;
-        case 0x1b:
-            var data = readUInt8(bytes[offset]);
-            var valve_index = ((data >> 7) & 0x01) + 1;
-            var valve_index_name = "valve_" + valve_index + "_config";
-            decoded[valve_index_name] = {};
-            decoded[valve_index_name].valve_type = readValveType((data >> 6) & 0x01);
-            decoded[valve_index_name].auto_calibration_enable = readEnableStatus((data >> 5) & 0x01);
-            decoded[valve_index_name].report_after_calibration_enable = readEnableStatus((data >> 4) & 0x01);
-            decoded[valve_index_name].stall_strategy = readStallStrategy((data >> 3) & 0x01);
-            decoded[valve_index_name].open_time_1 = bytes[offset + 1];
-            decoded[valve_index_name].open_time_2 = bytes[offset + 2];
-            decoded[valve_index_name].stall_current = readUInt16LE(bytes.slice(offset + 3, offset + 5));
-            decoded[valve_index_name].stall_time = readUInt16LE(bytes.slice(offset + 5, offset + 7));
-            decoded[valve_index_name].protect_time = bytes[offset + 7];
-            decoded[valve_index_name].close_delay_time = bytes[offset + 8];
-            decoded[valve_index_name].open_delay_time = bytes[offset + 9];
-            decoded[valve_index_name].open_delay_all_time = bytes[offset + 10];
-            decoded[valve_index_name].open_delay_all_time_2 = bytes[offset + 11];
-            offset += 12;
-            break;
         case 0x19:
             var data = readUInt8(bytes[offset]);
             var valve_index = (data & 0x01) + 1;
@@ -445,16 +425,6 @@ function handle_downlink_response_ext(code, channel_type, bytes, offset) {
             decoded[index_name].collection_interval = readUInt16LE(bytes.slice(offset + 2, offset + 4));
             offset += 4;
             break;
-        case 0x69:
-            var index = readUInt8(bytes[offset]);
-            var index_name = "pressure_" + index + "_collection_interval";
-            decoded[index_name] = {};
-            decoded[index_name].enable = readEnableStatus(bytes[offset + 1]);
-            decoded[index_name].collection_interval = readUInt16LE(bytes.slice(offset + 2, offset + 4));
-            decoded[index_name].irrigation_collection_interval = readUInt16LE(bytes.slice(offset + 4, offset + 6));
-            decoded[index_name].open_valve_collection_delay = readUInt8(bytes[offset + 6]);
-            offset += 7;
-            break;
         case 0x6e:
             decoded.wiring_switch_enable = readEnableStatus(bytes[offset]);
             offset += 1;
@@ -490,7 +460,7 @@ function handle_downlink_response_ext(code, channel_type, bytes, offset) {
             break;
         case 0x75:
             var data = readUInt8(bytes[offset]);
-            decoded.query_valve_config = data === 0xff ? readYesNoStatus(1) : readParams(data);
+            decoded.query_valve_config = readParams(data);
             offset += 1;
             break;
         case 0x76:
@@ -511,15 +481,45 @@ function handle_downlink_response_ext(code, channel_type, bytes, offset) {
             break;
         case 0x77:
             var data = readUInt8(bytes[offset]);
-            decoded.query_pressure_config = data === 0xff ? readYesNoStatus(1) : readParams(data);
+            decoded.query_pressure_config = readParams(data);
             offset += 1;
             break;
-        case 0x90:
+        case 0xa4:
             decoded.lorawan_class_mode_schedule = {};
             decoded.lorawan_class_mode_schedule.start_time = readUInt32LE(bytes.slice(offset, offset + 4));
             decoded.lorawan_class_mode_schedule.duration = readUInt16LE(bytes.slice(offset + 4, offset + 6));
             decoded.lorawan_class_mode_schedule.target_class_mode = readLoRaWANClass(bytes[offset + 6]);
+            offset += 8;
+            break;
+        case 0xa8:
+            var index = readUInt8(bytes[offset]);
+            var index_name = "pressure_" + index + "_collection_interval";
+            decoded[index_name] = {};
+            decoded[index_name].enable = readEnableStatus(bytes[offset + 1]);
+            decoded[index_name].collection_interval = readUInt16LE(bytes.slice(offset + 2, offset + 4));
+            decoded[index_name].irrigation_collection_interval = readUInt16LE(bytes.slice(offset + 4, offset + 6));
+            decoded[index_name].open_valve_collection_delay = readUInt8(bytes[offset + 6]);
             offset += 7;
+            break;
+        case 0xa9:
+            var data = readUInt8(bytes[offset]);
+            var valve_index = ((data >> 7) & 0x01) + 1;
+            var valve_index_name = "valve_" + valve_index + "_config";
+            decoded[valve_index_name] = {};
+            decoded[valve_index_name].valve_type = readValveType((data >> 6) & 0x01);
+            decoded[valve_index_name].auto_calibration_enable = readEnableStatus((data >> 5) & 0x01);
+            decoded[valve_index_name].report_after_calibration_enable = readEnableStatus((data >> 4) & 0x01);
+            decoded[valve_index_name].stall_strategy = readStallStrategy((data >> 3) & 0x01);
+            decoded[valve_index_name].open_time_1 = bytes[offset + 1];
+            decoded[valve_index_name].open_time_2 = bytes[offset + 2];
+            decoded[valve_index_name].stall_current = readUInt16LE(bytes.slice(offset + 3, offset + 5));
+            decoded[valve_index_name].stall_time = readUInt16LE(bytes.slice(offset + 5, offset + 7));
+            decoded[valve_index_name].protect_time = bytes[offset + 7];
+            decoded[valve_index_name].close_delay_time = bytes[offset + 8];
+            decoded[valve_index_name].open_delay_time = bytes[offset + 9];
+            decoded[valve_index_name].open_delay_all_time = bytes[offset + 10];
+            decoded[valve_index_name].open_delay_all_time_2 = bytes[offset + 11];
+            offset += 12;
             break;
         default:
             throw new Error("unknown downlink response");
