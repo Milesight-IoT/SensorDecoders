@@ -442,6 +442,22 @@
             "bacnet_unit_type": "UNITS_NO_UNITS"
         },
         {
+            "id": "temperature_control_support_mode.em_heat",
+            "name": "Temperature Control Support Mode (EM Heat)",
+            "value": "",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                { "value": 0, "name": "disable" },
+                { "value": 1, "name": "enable" }
+            ],
+            "bacnet_type": "binary_input_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS"
+        },
+        {
             "id": "temperature_control_support_mode.cool",
             "name": "Temperature Control Support Mode (Cool)",
             "value": "",
@@ -706,6 +722,18 @@
             "bacnet_unit_type": "UNITS_DEGREES_CELSIUS"
         },
         {
+            "id": "auto_control_band",
+            "name": "Auto Control Band",
+            "value": "",
+            "unit": "°C",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 62,
+            "bacnet_unit_type": "UNITS_DEGREES_CELSIUS"
+        },
+        {
             "id": "reboot",
             "name": "Reboot",
             "value": "",
@@ -732,7 +760,7 @@
             "values": [
                 { "value": 0, "name": "plan" },
                 { "value": 1, "name": "periodic" },
-                { "value": 2, "name": "target_temperature_range" }
+                { "value": 2, "name": "setpoint_range" }
             ],
             "bacnet_type": "multistate_value_object",
             "bacnet_unit_type_id": 95,
@@ -1086,7 +1114,7 @@
             "reference": ["humidity_calibration.enable", "humidity_calibration.humidity"]
         },
         {
-            "id": "temperature_tolerance.target_temperature_tolerance",
+            "id": "temperature_tolerance.setpoint_tolerance",
             "name": "Target Temperature Tolerance",
             "value": "1",
             "unit": "°C",
@@ -1096,7 +1124,7 @@
             "bacnet_type": "analog_value_object",
             "bacnet_unit_type_id": 62,
             "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
-            "reference": ["temperature_tolerance.target_temperature_tolerance", "temperature_tolerance.auto_temperature_tolerance"]
+            "reference": ["temperature_tolerance.setpoint_tolerance", "temperature_tolerance.auto_temperature_tolerance"]
         },
         {
             "id": "temperature_tolerance.auto_temperature_tolerance",
@@ -1109,10 +1137,10 @@
             "bacnet_type": "analog_value_object",
             "bacnet_unit_type_id": 62,
             "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
-            "reference": ["temperature_tolerance.target_temperature_tolerance", "temperature_tolerance.auto_temperature_tolerance"]
+            "reference": ["temperature_tolerance.setpoint_tolerance", "temperature_tolerance.auto_temperature_tolerance"]
         },
         {
-            "id": "target_temperature_resolution",
+            "id": "setpoint_resolution",
             "name": "Target Temperature Resolution",
             "value": "",
             "unit": "",
@@ -1128,7 +1156,7 @@
             "bacnet_unit_type": "UNITS_NO_UNITS"
         },
         {
-            "id": "target_temperature_range_config.temperature_control_mode",
+            "id": "setpoint_range_config.temperature_control_mode",
             "name": "Target Temperature Range (Temperature Control Mode)",
             "value": "",
             "unit": "",
@@ -1144,10 +1172,10 @@
             "bacnet_type": "multistate_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": ["target_temperature_range_config.temperature_control_mode", "target_temperature_range_config.min", "target_temperature_range_config.max"]
+            "reference": ["setpoint_range_config.temperature_control_mode", "setpoint_range_config.min", "setpoint_range_config.max"]
         },
         {
-            "id": "target_temperature_range_config.min",
+            "id": "setpoint_range_config.min",
             "name": "Target Temperature Range Min",
             "value": "",
             "unit": "°C",
@@ -1157,10 +1185,10 @@
             "bacnet_type": "analog_value_object",
             "bacnet_unit_type_id": 62,
             "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
-            "reference": ["target_temperature_range_config.temperature_control_mode", "target_temperature_range_config.min", "target_temperature_range_config.max"]
+            "reference": ["setpoint_range_config.temperature_control_mode", "setpoint_range_config.min", "setpoint_range_config.max"]
         },
         {
-            "id": "target_temperature_range_config.max",
+            "id": "setpoint_range_config.max",
             "name": "Target Temperature Range Max",
             "value": "",
             "unit": "°C",
@@ -1170,7 +1198,7 @@
             "bacnet_type": "analog_value_object",
             "bacnet_unit_type_id": 62,
             "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
-            "reference": ["target_temperature_range_config.temperature_control_mode", "target_temperature_range_config.min", "target_temperature_range_config.max"]
+            "reference": ["setpoint_range_config.temperature_control_mode", "setpoint_range_config.min", "setpoint_range_config.max"]
         },
         {
             "id": "temperature_level_up_condition.type",
@@ -2361,6 +2389,22 @@
             "bacnet_unit_type": "UNITS_NO_UNITS"
         },
         {
+            "id": "screen_display_config.humidity",
+            "name": "Screen Display Config (Humidity)",
+            "value": "",
+            "unit": "",
+            "access_mode": "RW",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                { "value": 0, "name": "disable" },
+                { "value": 1, "name": "enable" }
+            ],
+            "bacnet_type": "binary_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS"
+        },
+        {
             "id": "unlock_config.time",
             "name": "Unlock Config (Time)",
             "value": "",
@@ -2553,7 +2597,7 @@
             "reference": ["dual_temperature_tolerance.heat_tolerance", "dual_temperature_tolerance.cool_tolerance"]
         },
         {
-            "id": "target_temperature_dual_enable",
+            "id": "setpoint_dual_enable",
             "name": "Target Temperature Dual Enable",
             "value": "",
             "unit": "",

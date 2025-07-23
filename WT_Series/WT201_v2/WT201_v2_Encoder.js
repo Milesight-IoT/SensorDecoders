@@ -221,8 +221,8 @@ function milesightDeviceEncode(payload) {
     if ("system_protect_config" in payload) {
         encoded = encoded.concat(setSystemProtectConfig(payload.system_protect_config));
     }
-    if ("target_temperature_range_config" in payload) {
-        encoded = encoded.concat(setTargetTemperatureRangeConfig(payload.target_temperature_range_config));
+    if ("setpoint_range_config" in payload) {
+        encoded = encoded.concat(setTargetTemperatureRangeConfig(payload.setpoint_range_config));
     }
     if ("fan_control_during_heating" in payload) {
         encoded = encoded.concat(setFanControlDuringHeating(payload.fan_control_during_heating));
@@ -230,8 +230,8 @@ function milesightDeviceEncode(payload) {
     if ("dual_temperature_tolerance" in payload) {
         encoded = encoded.concat(setDualTemperatureTolerance(payload.dual_temperature_tolerance));
     }
-    if ("target_temperature_dual_enable" in payload) {
-        encoded = encoded.concat(setTargetTemperatureDual(payload.target_temperature_dual_enable));
+    if ("setpoint_dual_enable" in payload) {
+        encoded = encoded.concat(setTargetTemperatureDual(payload.setpoint_dual_enable));
     }
     if ("compressor_aux_combine_enable" in payload) {
         encoded = encoded.concat(setCompressorAndAuxCombineEnable(payload.compressor_aux_combine_enable));
@@ -245,8 +245,8 @@ function milesightDeviceEncode(payload) {
     if ("temperature_level_up_down_delta" in payload) {
         encoded = encoded.concat(setTemperatureLevelUpDownDelta(payload.temperature_level_up_down_delta));
     }
-    if ("target_temperature_resolution" in payload) {
-        encoded = encoded.concat(setTargetTemperatureResolution(payload.target_temperature_resolution));
+    if ("setpoint_resolution" in payload) {
+        encoded = encoded.concat(setTargetTemperatureResolution(payload.setpoint_resolution));
     }
     if ("temperature_up_down_enable" in payload) {
         encoded = encoded.concat(setTemperatureUpDownEnable(payload.temperature_up_down_enable));
@@ -320,6 +320,11 @@ function setBand(mode, band) {
         throw new Error("mode must be one of " + mode_values.join(", "));
     }
 
+    var band_value = band * 10;
+    if (band_value < 1 || band_value > 50) {
+        throw new Error(mode_map[mode] + "_band must be in range [0.1, 5]");
+    }
+
     var buffer = new Buffer(4);
     buffer.writeUInt8(0xf9);
     buffer.writeUInt8(0x5b);
@@ -329,6 +334,11 @@ function setBand(mode, band) {
 }
 
 function setAutoControlBand(auto_control_band) {
+    var auto_control_band_value = auto_control_band * 10;
+    if (auto_control_band_value < 5 || auto_control_band_value > 100) {
+        throw new Error("auto_control_band must be in range [0.5, 10]");
+    }
+
     var buffer = new Buffer(3);
     buffer.writeUInt8(0xf9);
     buffer.writeUInt8(0x57);
@@ -378,14 +388,7 @@ function setFanMode(fan_mode) {
  * screen display config
  * @odm 7089
  * @param {object} screen_display_config
- * @param {number} screen_display_config.temperature values: (0: disable, 1: enable)
  * @param {number} screen_display_config.humidity values: (0: disable, 1: enable)
- * @param {number} screen_display_config.setpoint values: (0: disable, 1: enable)
- * @param {number} screen_display_config.plan values: (0: disable, 1: enable)
- * @param {number} screen_display_config.time values: (0: disable, 1: enable)
- * @param {number} screen_display_config.connection_status values: (0: disable, 1: enable)
- * @param {number} screen_display_config.temperature_control_mode values: (0: disable, 1: enable)
- * @param {number} screen_display_config.fan_mode values: (0: disable, 1: enable)
  * @example { "screen_display_config": { "temperature": 1 } }
  */
 function setScreenDisplayConfig(screen_display_config) {
@@ -393,7 +396,7 @@ function setScreenDisplayConfig(screen_display_config) {
     var enable_values = getValues(enable_status);
 
     var data = 0x00;
-    var element_bit_offset = { temperature: 0, humidity: 1, setpoint: 2, plan: 3, time: 4, connection_status: 5, temperature_control_mode: 6, fan_mode: 7 };
+    var element_bit_offset = { humidity: 1 };
     for (var key in element_bit_offset) {
         if (key in screen_display_config) {
             if (enable_values.indexOf(screen_display_config[key]) === -1) {
@@ -430,11 +433,11 @@ function reboot(reboot) {
 
 /**
  * report device status
- * @param {number} report_status values: (0: plan, 1: periodic, 2: target_temperature_range)
+ * @param {number} report_status values: (0: plan, 1: periodic, 2: setpoint_range)
  * @example { "report_status": 1 }
  */
 function reportStatus(report_status) {
-    var report_status_map = { 0: "plan", 1: "periodic", 2: "target_temperature_range" };
+    var report_status_map = { 0: "plan", 1: "periodic", 2: "setpoint_range" };
     var report_status_values = getValues(report_status_map);
     if (report_status_values.indexOf(report_status) === -1) {
         throw new Error("report_status must be one of " + report_status_values.join(", "));
@@ -684,16 +687,16 @@ function setHumidityCalibration(humidity_calibration) {
 /**
  * set temperature tolerance
  * @param {object} temperature_tolerance
- * @param {number} temperature_tolerance.target_temperature_tolerance unit: celsius
+ * @param {number} temperature_tolerance.setpoint_tolerance unit: celsius
  * @param {number} temperature_tolerance.auto_temperature_tolerance unit: celsius
- * @example { "temperature_tolerance": {"target_temperature_tolerance": 1, "auto_temperature_tolerance": 1 }}
+ * @example { "temperature_tolerance": {"setpoint_tolerance": 1, "auto_temperature_tolerance": 1 }}
  */
 function setTemperatureTolerance(temperature_tolerance) {
-    var target_temperature_tolerance = temperature_tolerance.target_temperature_tolerance;
+    var setpoint_tolerance = temperature_tolerance.setpoint_tolerance;
     var auto_temperature_tolerance = temperature_tolerance.auto_temperature_tolerance;
 
-    if (typeof target_temperature_tolerance !== "number") {
-        throw new Error("temperature_tolerance.target_temperature_tolerance must be a number");
+    if (typeof setpoint_tolerance !== "number") {
+        throw new Error("temperature_tolerance.setpoint_tolerance must be a number");
     }
     if (typeof auto_temperature_tolerance !== "number") {
         throw new Error("temperature_tolerance.auto_temperature_tolerance must be a number");
@@ -702,7 +705,7 @@ function setTemperatureTolerance(temperature_tolerance) {
     var buffer = new Buffer(4);
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0xb8);
-    buffer.writeUInt8(target_temperature_tolerance * 10);
+    buffer.writeUInt8(setpoint_tolerance * 10);
     buffer.writeUInt8(auto_temperature_tolerance * 10);
     return buffer.toBytes();
 }
@@ -710,36 +713,36 @@ function setTemperatureTolerance(temperature_tolerance) {
 /**
  * set target temperature resolution
  * @since v2.0
- * @param {number} target_temperature_resolution values: (0: 0.5, 1: 1)
- * @example { "target_temperature_resolution": 0.5 }
+ * @param {number} setpoint_resolution values: (0: 0.5, 1: 1)
+ * @example { "setpoint_resolution": 0.5 }
  */
-function setTargetTemperatureResolution(target_temperature_resolution) {
+function setTargetTemperatureResolution(setpoint_resolution) {
     var resolution_map = { 0: 0.5, 1: 1 };
     var resolution_values = getValues(resolution_map);
-    if (resolution_values.indexOf(target_temperature_resolution) === -1) {
-        throw new Error("target_temperature_resolution must be one of " + resolution_values.join(", "));
+    if (resolution_values.indexOf(setpoint_resolution) === -1) {
+        throw new Error("setpoint_resolution must be one of " + resolution_values.join(", "));
     }
 
     var buffer = new Buffer(3);
     buffer.writeUInt8(0xf9);
     buffer.writeUInt8(0x41);
-    buffer.writeUInt8(getValue(resolution_map, target_temperature_resolution));
+    buffer.writeUInt8(getValue(resolution_map, setpoint_resolution));
     return buffer.toBytes();
 }
 
 /**
  * set temperature target range
  * @since v2.0
- * @param {object} target_temperature_range_config
- * @param {number} target_temperature_range_config.temperature_control_mode values: (0: heat, 1: em heat, 2: cool, 3: auto)
- * @param {number} target_temperature_range_config.min unit: celsius
- * @param {number} target_temperature_range_config.max unit: celsius
- * @example { "target_temperature_range_config": { "temperature_control_mode": 2, "min": 15, "max": 30 } }
+ * @param {object} setpoint_range_config
+ * @param {number} setpoint_range_config.temperature_control_mode values: (0: heat, 1: em heat, 2: cool, 3: auto)
+ * @param {number} setpoint_range_config.min unit: celsius
+ * @param {number} setpoint_range_config.max unit: celsius
+ * @example { "setpoint_range_config": { "temperature_control_mode": 2, "min": 15, "max": 30 } }
  */
-function setTargetTemperatureRangeConfig(target_temperature_range_config) {
-    var temperature_control_mode = target_temperature_range_config.temperature_control_mode;
-    var min = target_temperature_range_config.min;
-    var max = target_temperature_range_config.max;
+function setTargetTemperatureRangeConfig(setpoint_range_config) {
+    var temperature_control_mode = setpoint_range_config.temperature_control_mode;
+    var min = setpoint_range_config.min;
+    var max = setpoint_range_config.max;
 
     var temperature_mode_map = { 0: "heat", 1: "em heat", 2: "cool", 3: "auto" };
     var temperature_mode_values = getValues(temperature_mode_map);
@@ -1957,19 +1960,19 @@ function setTemperatureControlForbiddenConfig(temperature_control_forbidden_conf
  * @param {number} dual_plan_config.type values: (0: wake, 1: away, 2: home, 3: sleep, 4: occupied, 5: vacant, 6: eco)
  * @param {number} dual_plan_config.temperature_control_mode values: (0: heat, 1: em heat, 2: cool, 3: auto)
  * @param {number} dual_plan_config.fan_mode values: (0: auto, 1: on, 2: circulate)
- * @param {number} dual_plan_config.heat_target_temperature
+ * @param {number} dual_plan_config.heat_setpoint
  * @param {number} dual_plan_config.heat_temperature_tolerance
- * @param {number} dual_plan_config.cool_target_temperature
+ * @param {number} dual_plan_config.cool_setpoint
  * @param {number} dual_plan_config.cool_temperature_tolerance
- * @example { "dual_temperature_plan_config": [{ "type": 0, "temperature_control_mode": 2, "fan_mode": 0, "heat_target_temperature": 20, "heat_temperature_tolerance": 1, "cool_target_temperature": 20, "cool_temperature_tolerance": 1 }]}
+ * @example { "dual_temperature_plan_config": [{ "type": 0, "temperature_control_mode": 2, "fan_mode": 0, "heat_setpoint": 20, "heat_temperature_tolerance": 1, "cool_setpoint": 20, "cool_temperature_tolerance": 1 }]}
  */
 function setPlanConfigWithDualTemperature(dual_temperature_plan_config) {
     var type = dual_temperature_plan_config.type;
     var temperature_control_mode = dual_temperature_plan_config.temperature_control_mode;
     var fan_mode = dual_temperature_plan_config.fan_mode;
-    var heat_target_temperature = dual_temperature_plan_config.heat_target_temperature;
+    var heat_setpoint = dual_temperature_plan_config.heat_setpoint;
     var heat_temperature_tolerance = dual_temperature_plan_config.heat_temperature_tolerance;
-    var cool_target_temperature = dual_temperature_plan_config.cool_target_temperature;
+    var cool_setpoint = dual_temperature_plan_config.cool_setpoint;
     var cool_temperature_tolerance = dual_temperature_plan_config.cool_temperature_tolerance;
 
     var plan_config_type_map = { 0: "wake", 1: "away", 2: "home", 3: "sleep", 4: "occupied", 5: "vacant", 6: "eco" };
@@ -1988,12 +1991,12 @@ function setPlanConfigWithDualTemperature(dual_temperature_plan_config) {
         throw new Error("dual_temperature_plan_config._item.fan_mode must be one of " + plan_config_fan_mode_values.join(", "));
     }
 
-    var heat_target_temperature_value = 0xffff;
-    if ("heat_target_temperature" in dual_temperature_plan_config) {
-        if (typeof heat_target_temperature !== "number") {
-            throw new Error("dual_temperature_plan_config._item.heat_target_temperature must be a number");
+    var heat_setpoint_value = 0xffff;
+    if ("heat_setpoint" in dual_temperature_plan_config) {
+        if (typeof heat_setpoint !== "number") {
+            throw new Error("dual_temperature_plan_config._item.heat_setpoint must be a number");
         }
-        heat_target_temperature_value = heat_target_temperature * 10;
+        heat_setpoint_value = heat_setpoint * 10;
     }
 
     var heat_temperature_tolerance_value = 0xff;
@@ -2004,12 +2007,12 @@ function setPlanConfigWithDualTemperature(dual_temperature_plan_config) {
         heat_temperature_tolerance_value = heat_temperature_tolerance * 10;
     }
 
-    var cool_target_temperature_value = 0xffff;
-    if ("cool_target_temperature" in dual_temperature_plan_config) {
-        if (typeof cool_target_temperature !== "number") {
-            throw new Error("dual_temperature_plan_config._item.cool_target_temperature must be a number");
+    var cool_setpoint_value = 0xffff;
+    if ("cool_setpoint" in dual_temperature_plan_config) {
+        if (typeof cool_setpoint !== "number") {
+            throw new Error("dual_temperature_plan_config._item.cool_setpoint must be a number");
         }
-        cool_target_temperature_value = cool_target_temperature * 10;
+        cool_setpoint_value = cool_setpoint * 10;
     }
 
     var cool_temperature_tolerance_value = 0xff;
@@ -2026,9 +2029,9 @@ function setPlanConfigWithDualTemperature(dual_temperature_plan_config) {
     buffer.writeUInt8(getValue(plan_config_type_map, type));
     buffer.writeUInt8(getValue(plan_config_temperature_control_mode_map, temperature_control_mode));
     buffer.writeUInt8(getValue(plan_config_fan_mode_map, fan_mode));
-    buffer.writeInt16LE(heat_target_temperature_value);
+    buffer.writeInt16LE(heat_setpoint_value);
     buffer.writeUInt8(heat_temperature_tolerance_value);
-    buffer.writeInt16LE(cool_target_temperature_value);
+    buffer.writeInt16LE(cool_setpoint_value);
     buffer.writeUInt8(cool_temperature_tolerance_value);
     return buffer.toBytes();
 }
@@ -2039,17 +2042,17 @@ function setPlanConfigWithDualTemperature(dual_temperature_plan_config) {
  * @param {number} single_temperature_plan_config.plan_type values: (0: wake, 1: away, 2: home, 3: sleep, 4: occupied, 5: vacant, 6: eco)
  * @param {number} single_temperature_plan_config.temperature_control_mode values: (0: heat, 1: em heat, 2: cool, 3: auto)
  * @param {number} single_temperature_plan_config.fan_mode values: (0: auto, 1: on, 2: circulate)
- * @param {number} single_temperature_plan_config.target_temperature
- * @param {number} single_temperature_plan_config.target_temperature_tolerance
+ * @param {number} single_temperature_plan_config.setpoint
+ * @param {number} single_temperature_plan_config.setpoint_tolerance
  * @param {number} single_temperature_plan_config.temperature_control_tolerance
- * @example { "single_temperature_plan_config": [{ "type": 0, "temperature_control_mode": 2, "fan_mode": 0, "target_temperature": 20, "target_temperature_tolerance": 1, "temperature_control_tolerance": 1 }] }
+ * @example { "single_temperature_plan_config": [{ "type": 0, "temperature_control_mode": 2, "fan_mode": 0, "setpoint": 20, "setpoint_tolerance": 1, "temperature_control_tolerance": 1 }] }
  */
 function setPlanConfigWithSingleTemperature(single_temperature_plan_config) {
     var plan_type = single_temperature_plan_config.plan_type;
     var temperature_control_mode = single_temperature_plan_config.temperature_control_mode;
     var fan_mode = single_temperature_plan_config.fan_mode;
-    var target_temperature = single_temperature_plan_config.target_temperature;
-    var target_temperature_tolerance = single_temperature_plan_config.target_temperature_tolerance;
+    var setpoint = single_temperature_plan_config.setpoint;
+    var setpoint_tolerance = single_temperature_plan_config.setpoint_tolerance;
     var temperature_control_tolerance = single_temperature_plan_config.temperature_control_tolerance;
 
     var plan_type_map = { 0: "wake", 1: "away", 2: "home", 3: "sleep", 4: "occupied", 5: "vacant", 6: "eco" };
@@ -2074,8 +2077,8 @@ function setPlanConfigWithSingleTemperature(single_temperature_plan_config) {
     buffer.writeUInt8(getValue(plan_type_map, plan_type));
     buffer.writeUInt8(getValue(temperature_control_mode_map, temperature_control_mode));
     buffer.writeUInt8(getValue(fan_mode_map, fan_mode));
-    buffer.writeInt16LE(target_temperature * 10);
-    buffer.writeUInt8(target_temperature_tolerance * 10);
+    buffer.writeInt16LE(setpoint * 10);
+    buffer.writeUInt8(setpoint_tolerance * 10);
     buffer.writeUInt8(temperature_control_tolerance * 10);
     return buffer.toBytes();
 }
@@ -2124,20 +2127,20 @@ function setDualTemperatureTolerance(dual_temperature_tolerance) {
 
 /**
  * set target temperature dual enable
- * @param {number} target_temperature_dual_enable values: (0: disable, 1: enable)
- * @example { "target_temperature_dual_enable": 1 }
+ * @param {number} setpoint_dual_enable values: (0: disable, 1: enable)
+ * @example { "setpoint_dual_enable": 1 }
  */
-function setTargetTemperatureDual(target_temperature_dual_enable) {
+function setTargetTemperatureDual(setpoint_dual_enable) {
     var enable_map = { 0: "disable", 1: "enable" };
     var enable_values = getValues(enable_map);
-    if (enable_values.indexOf(target_temperature_dual_enable) === -1) {
-        throw new Error("target_temperature_dual_enable must be one of " + enable_values.join(", "));
+    if (enable_values.indexOf(setpoint_dual_enable) === -1) {
+        throw new Error("setpoint_dual_enable must be one of " + enable_values.join(", "));
     }
 
     var buffer = new Buffer(3);
     buffer.writeUInt8(0xf9);
     buffer.writeUInt8(0x58);
-    buffer.writeUInt8(getValue(enable_map, target_temperature_dual_enable));
+    buffer.writeUInt8(getValue(enable_map, setpoint_dual_enable));
     return buffer.toBytes();
 }
 
