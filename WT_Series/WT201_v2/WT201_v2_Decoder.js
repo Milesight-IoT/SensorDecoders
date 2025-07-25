@@ -200,6 +200,29 @@ function milesightDeviceDecode(bytes) {
         }
     }
 
+    if ("temperature_control_mode" in decoded && "setpoint" in decoded) {
+        var mode = getTemperatureModeValue(decoded.temperature_control_mode);
+        switch (mode) {
+            case 0: // heat
+                decoded.heat_setpoint = decoded.setpoint;
+                break;
+            case 1: // em heat
+                decoded.em_heat_setpoint = decoded.setpoint;
+                break;
+            case 2: // cool
+                decoded.cool_setpoint = decoded.setpoint;
+                break;
+            case 3: // auto
+                if ("setpoint_2" in decoded) {
+                    decoded.auto_heat_setpoint = decoded.setpoint;
+                    decoded.auto_cool_setpoint = decoded.setpoint_2;
+                } else {
+                    decoded.auto_setpoint = decoded.setpoint;
+                }
+                break;
+        }
+    }
+
     return decoded;
 }
 
@@ -857,6 +880,17 @@ function readTemperatureControlMode(type) {
         3: "auto",
     };
     return getValue(temperature_control_mode_map, type);
+}
+
+function getTemperatureModeValue(value) {
+    var map = { 0: "heat", 1: "em heat", 2: "cool", 3: "auto" };
+
+    if (RAW_VALUE) return value;
+    for (var key in map) {
+        if (map[key] === value) {
+            return parseInt(key);
+        }
+    }
 }
 
 function readTemperatureControlStatus(type) {
