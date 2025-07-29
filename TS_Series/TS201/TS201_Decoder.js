@@ -29,7 +29,7 @@ function Decoder(bytes, port) {
 function milesightDeviceDecode(bytes) {
     var decoded = {};
 
-    for (var i = 0; i < bytes.length;) {
+    for (var i = 0; i < bytes.length; ) {
         var channel_id = bytes[i++];
         var channel_type = bytes[i++];
 
@@ -91,7 +91,6 @@ function milesightDeviceDecode(bytes) {
             var sensor_id = readSerialNumber(bytes.slice(i + 1, i + 9));
             var sensor_chn_name = "sensor_" + channel_idx;
             i += 9;
-
             decoded[sensor_chn_name + "_type"] = readSensorIDType(sensor_type);
             decoded[sensor_chn_name + "_sn"] = sensor_id;
         }
@@ -101,7 +100,6 @@ function milesightDeviceDecode(bytes) {
             data.temperature = readInt16LE(bytes.slice(i, i + 2)) / 10;
             data.temperature_alarm = readAlarmType(bytes[i + 2]);
             i += 3;
-
             decoded.temperature = data.temperature;
             decoded.event = decoded.event || [];
             decoded.event.push(data);
@@ -113,7 +111,6 @@ function milesightDeviceDecode(bytes) {
             data.temperature_mutation = readInt16LE(bytes.slice(i + 2, i + 4)) / 10;
             data.temperature_alarm = readAlarmType(bytes[i + 4]);
             i += 5;
-
             decoded.temperature = data.temperature;
             decoded.event = decoded.event || [];
             decoded.event.push(data);
@@ -123,7 +120,6 @@ function milesightDeviceDecode(bytes) {
             var data = {};
             data.temperature_sensor_status = readSensorStatus(bytes[i]);
             i += 1;
-
             decoded.event = decoded.event || [];
             decoded.event.push(data);
         }
@@ -133,20 +129,16 @@ function milesightDeviceDecode(bytes) {
             var event = bytes[i + 4];
             var temperature = readInt16LE(bytes.slice(i + 5, i + 7)) / 10;
             i += 7;
-
             var read_status = readDataStatus((event >>> 4) & 0x0f);
             var event_type = readEventType((event >>> 0) & 0x0f);
-
             var data = {};
             data.timestamp = timestamp;
             data.read_status = read_status;
             data.event_type = event_type;
             data.temperature = temperature;
-
             decoded.history = decoded.history || [];
             decoded.history.push(data);
         }
-
         // DOWNLINK RESPONSE
         else if (channel_id === 0xfe || channel_id === 0xff) {
             var result = handle_downlink_response(channel_type, bytes, i);
@@ -204,22 +196,22 @@ function handle_downlink_response(channel_type, bytes, offset) {
             var type = (data >>> 0) & 0x01;
             var enable_value = (data >>> 7) & 0x01;
             if (type === 0) {
-                decoded.temperature_calibrate = {};
-                decoded.temperature_calibrate.enable = readEnableStatus(enable_value);
-                decoded.temperature_calibrate.calibration_value = calibration_value / 10;
+                decoded.temperature_calibration_settings = {};
+                decoded.temperature_calibration_settings.enable = readEnableStatus(enable_value);
+                decoded.temperature_calibration_settings.calibration_value = calibration_value / 10;
             } else if (type === 1) {
-                decoded.humidity_calibrate = {};
-                decoded.humidity_calibrate.enable = readEnableStatus(enable_value);
-                decoded.humidity_calibrate.calibration_value = calibration_value / 2;
+                decoded.humidity_calibration_settings = {};
+                decoded.humidity_calibration_settings.enable = readEnableStatus(enable_value);
+                decoded.humidity_calibration_settings.calibration_value = calibration_value / 2;
             }
             offset += 3;
             break;
         case 0xf2:
-            decoded.alarm_count = readUInt16LE(bytes.slice(offset, offset + 2));
+            decoded.alarm_report_counts = readUInt16LE(bytes.slice(offset, offset + 2));
             offset += 2;
             break;
         case 0xf5:
-            decoded.threshold_alarm_enable = readEnableStatus(bytes[offset]);
+            decoded.alarm_release_enable = readEnableStatus(bytes[offset]);
             offset += 1;
             break;
         default:
@@ -238,8 +230,8 @@ function handle_downlink_response_ext(code, channel_type, bytes, offset) {
             if (data_type === 0x01) {
                 decoded.temperature_alarm_config = {};
                 decoded.temperature_alarm_config.condition = readMathConditionType(bytes[offset + 1]);
-                decoded.temperature_alarm_config.max = readInt16LE(bytes.slice(offset + 2, offset + 4)) / 10;
-                decoded.temperature_alarm_config.min = readInt16LE(bytes.slice(offset + 4, offset + 6)) / 10;
+                decoded.temperature_alarm_config.threshold_max = readInt16LE(bytes.slice(offset + 2, offset + 4)) / 10;
+                decoded.temperature_alarm_config.threshold_min = readInt16LE(bytes.slice(offset + 4, offset + 6)) / 10;
                 decoded.temperature_alarm_config.enable = readEnableStatus(bytes[offset + 6]);
             }
             offset += 7;
@@ -247,9 +239,9 @@ function handle_downlink_response_ext(code, channel_type, bytes, offset) {
         case 0x0c:
             var data_type = readUInt8(bytes[offset]);
             if (data_type === 0x02) {
-                decoded.temperature_mutation_config = {};
-                decoded.temperature_mutation_config.threshold = readUInt16LE(bytes.slice(offset + 1, offset + 3)) / 10;
-                decoded.temperature_mutation_config.enable = readEnableStatus(bytes[offset + 3]);
+                decoded.temperature_mutation_alarm_config = {};
+                decoded.temperature_mutation_alarm_config.mutation = readUInt16LE(bytes.slice(offset + 1, offset + 3)) / 10;
+                decoded.temperature_mutation_alarm_config.enable = readEnableStatus(bytes[offset + 3]);
             }
             offset += 4;
             break;
@@ -264,7 +256,7 @@ function handle_downlink_response_ext(code, channel_type, bytes, offset) {
             offset += 2;
             break;
         case 0x31:
-            decoded.fetch_sensor_id = readUInt8(bytes[offset]);
+            decoded.fetch_sensor_id = readSensorId(bytes[offset]);
             offset += 1;
             break;
         case 0x32:
@@ -366,6 +358,11 @@ function readYesNoStatus(status) {
 
 function readSensorIDType(type) {
     var sensor_id_map = { 1: "DS18B20", 2: "SHT4X" };
+    return getValue(sensor_id_map, type);
+}
+
+function readSensorId(type) {
+    var sensor_id_map = { 0: "all", 1: "sensor_1" };
     return getValue(sensor_id_map, type);
 }
 
