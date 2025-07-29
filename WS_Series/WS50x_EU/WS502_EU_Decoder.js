@@ -29,7 +29,7 @@ function Decoder(bytes, port) {
 function milesightDeviceDecode(bytes) {
     var decoded = {};
 
-    for (var i = 0; i < bytes.length;) {
+    for (var i = 0; i < bytes.length; ) {
         var channel_id = bytes[i++];
         var channel_type = bytes[i++];
 
@@ -254,9 +254,9 @@ function readLedMode(bytes) {
     return getValue(led_mode_map, bytes);
 }
 
-function readEnableStatus(bytes) {
-    var enable_map = { 0: "disable", 1: "enable" };
-    return getValue(enable_map, bytes);
+function readEnableStatus(status) {
+    var status_map = { 0: "disable", 1: "enable" };
+    return getValue(status_map, status);
 }
 
 /* eslint-disable */
@@ -296,7 +296,6 @@ function getValue(map, key) {
     if (!value) value = "unknown";
     return value;
 }
-
 
 if (!Object.assign) {
     Object.defineProperty(Object, "assign", {
