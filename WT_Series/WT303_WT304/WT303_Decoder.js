@@ -30,7 +30,7 @@ function milesightDeviceDecode(bytes) {
     var decoded = {};
 
     var unknown_command = 0;
-    for (var i = 0; i < bytes.length;) {
+    for (var i = 0; i < bytes.length; ) {
         var command_id = bytes[i++];
 
         switch (command_id) {
@@ -98,8 +98,8 @@ function milesightDeviceDecode(bytes) {
                 break;
             case 0x05:
                 var temperature_control_data = readUInt8(bytes[i]);
-                decoded.temperature_control_status = readTemperatureControlStatus((temperature_control_data >>> 0) & 0x0F);
-                decoded.temperature_control_mode = readTemperatureControlMode((temperature_control_data >>> 4) & 0x0F);
+                decoded.temperature_control_status = readTemperatureControlStatus((temperature_control_data >>> 0) & 0x0f);
+                decoded.temperature_control_mode = readTemperatureControlMode((temperature_control_data >>> 4) & 0x0f);
                 i += 1;
                 break;
             case 0x06:
@@ -108,8 +108,8 @@ function milesightDeviceDecode(bytes) {
                 break;
             case 0x07:
                 var fan_data = readUInt8(bytes[i]);
-                decoded.fan_status = readFanStatus((fan_data >>> 0) & 0x0F);
-                decoded.fan_mode = readFanMode((fan_data >>> 4) & 0x0F);
+                decoded.fan_status = readFanStatus((fan_data >>> 0) & 0x0f);
+                decoded.fan_mode = readFanMode((fan_data >>> 4) & 0x0f);
                 i += 1;
                 break;
             case 0x08:
@@ -269,7 +269,7 @@ function milesightDeviceDecode(bytes) {
             case 0x76:
                 decoded.temperature_alarm_settings = {};
                 decoded.temperature_alarm_settings.enable = readEnableStatus(bytes[i]);
-                decoded.temperature_alarm_settings.threshold_condition = readMathConditionType(readUInt8(bytes[i + 1]));
+                decoded.temperature_alarm_settings.condition = readMathConditionType(readUInt8(bytes[i + 1]));
                 decoded.temperature_alarm_settings.threshold_min = readInt16LE(bytes.slice(i + 2, i + 4)) / 100;
                 decoded.temperature_alarm_settings.threshold_max = readInt16LE(bytes.slice(i + 4, i + 6)) / 100;
                 i += 6;
@@ -289,15 +289,15 @@ function milesightDeviceDecode(bytes) {
                 i += 4;
                 break;
             case 0x79:
-                decoded.temperature_calibration_config = {};
-                decoded.temperature_calibration_config.enable = readEnableStatus(bytes[i]);
-                decoded.temperature_calibration_config.calibration_value = readInt16LE(bytes.slice(i + 1, i + 3)) / 100;
+                decoded.temperature_calibration_settings = {};
+                decoded.temperature_calibration_settings.enable = readEnableStatus(bytes[i]);
+                decoded.temperature_calibration_settings.calibration_value = readInt16LE(bytes.slice(i + 1, i + 3)) / 100;
                 i += 3;
                 break;
             case 0x7a:
-                decoded.humidity_calibration_config = {};
-                decoded.humidity_calibration_config.enable = readEnableStatus(bytes[i]);
-                decoded.humidity_calibration_config.calibration_value = readInt16LE(bytes.slice(i + 1, i + 3)) / 10;
+                decoded.humidity_calibration_settings = {};
+                decoded.humidity_calibration_settings.enable = readEnableStatus(bytes[i]);
+                decoded.humidity_calibration_settings.calibration_value = readInt16LE(bytes.slice(i + 1, i + 3)) / 10;
                 i += 3;
                 break;
             case 0x7b:
@@ -565,12 +565,10 @@ function milesightDeviceDecode(bytes) {
                 if (data === 0x00) {
                     decoded.history_transmit_settings.enable = readEnableStatus(bytes[i + 1]);
                     i += 2;
-                }
-                else if (data === 0x01) {
+                } else if (data === 0x01) {
                     decoded.history_transmit_settings.retransmission_interval = readUInt16LE(bytes.slice(i + 1, i + 3));
                     i += 3;
-                }
-                else if (data === 0x02) {
+                } else if (data === 0x02) {
                     decoded.history_transmit_settings.resend_interval = readUInt16LE(bytes.slice(i + 1, i + 3));
                     i += 3;
                 }
@@ -651,7 +649,7 @@ function milesightDeviceDecode(bytes) {
                 break;
 
             // control frame
-            case 0xEF:
+            case 0xef:
                 var cmd_data = readUInt8(bytes[i]);
                 var cmd_result = (cmd_data >>> 4) & 0x0f;
                 var cmd_length = cmd_data & 0x0f;
@@ -667,7 +665,7 @@ function milesightDeviceDecode(bytes) {
                 decoded.request_result = decoded.request_result || [];
                 decoded.request_result.push(response);
                 break;
-            case 0xFE:
+            case 0xfe:
                 decoded.frame = readUInt8(bytes[i]);
                 i += 1;
                 break;
@@ -732,9 +730,9 @@ function readYesNoStatus(type) {
     return getValue(yes_no_map, type);
 }
 
-function readEnableStatus(type) {
-    var enable_map = { 0: "disable", 1: "enable" };
-    return getValue(enable_map, type);
+function readEnableStatus(status) {
+    var status_map = { 0: "disable", 1: "enable" };
+    return getValue(status_map, status);
 }
 
 function readTemperatureDataSource(type) {
@@ -834,7 +832,7 @@ function readHumidityAlarm(type) {
 
 function readTargetTemperatureAlarm(type) {
     var type_map = {
-        3: "no data",           // 0x03
+        3: "no data", // 0x03
     };
     return getValue(type_map, type);
 }
@@ -924,9 +922,9 @@ function readValveOpeningNegativeValveMode(type) {
     return getValue(mode_map, type);
 }
 
-function readTimeZone(type) {
-    var timezone_map = { "-720": "UTC-12:00", "-660": "UTC-11:00", "-600": "UTC-10:00", "-570": "UTC-09:30", "-540": "UTC-09:00", "-480": "UTC-08:00", "-420": "UTC-07:00", "-360": "UTC-06:00", "-300": "UTC-05:00", "-240": "UTC-04:00", "-210": "UTC-03:30", "-180": "UTC-03:00", "-120": "UTC-02:00", "-60": "UTC-01:00", 0: "UTC+00:00", 60: "UTC+01:00", 120: "UTC+02:00", 180: "UTC+03:00", 210: "UTC+03:30", 240: "UTC+04:00", 270: "UTC+04:30", 300: "UTC+05:00", 330: "UTC+05:30", 345: "UTC+05:45", 360: "UTC+06:00", 390: "UTC+06:30", 420: "UTC+07:00", 480: "UTC+08:00", 540: "UTC+09:00", 570: "UTC+09:30", 600: "UTC+10:00", 630: "UTC+10:30", 660: "UTC+11:00", 720: "UTC+12:00", 765: "UTC+12:45", 780: "UTC+13:00", 840: "UTC+14:00" };
-    return getValue(timezone_map, type);
+function readTimeZone(time_zone) {
+    var timezone_map = { "-720": "UTC-12", "-660": "UTC-11", "-600": "UTC-10", "-570": "UTC-9:30", "-540": "UTC-9", "-480": "UTC-8", "-420": "UTC-7", "-360": "UTC-6", "-300": "UTC-5", "-240": "UTC-4", "-210": "UTC-3:30", "-180": "UTC-3", "-120": "UTC-2", "-60": "UTC-1", 0: "UTC", 60: "UTC+1", 120: "UTC+2", 180: "UTC+3", 210: "UTC+3:30", 240: "UTC+4", 270: "UTC+4:30", 300: "UTC+5", 330: "UTC+5:30", 345: "UTC+5:45", 360: "UTC+6", 390: "UTC+6:30", 420: "UTC+7", 480: "UTC+8", 540: "UTC+9", 570: "UTC+9:30", 600: "UTC+10", 630: "UTC+10:30", 660: "UTC+11", 720: "UTC+12", 765: "UTC+12:45", 780: "UTC+13", 840: "UTC+14" };
+    return getValue(timezone_map, time_zone);
 }
 
 function readCmdResult(type) {
@@ -959,8 +957,8 @@ function readCmdName(type) {
         "76": { "level": 1, "name": "temperature_alarm_settings" },
         "77": { "level": 1, "name": "high_temperature_alarm_settings" },
         "78": { "level": 1, "name": "low_temperature_alarm_settings" },
-        "79": { "level": 1, "name": "temperature_calibration_config" },
-        "7a": { "level": 1, "name": "humidity_calibration_config" },
+        "79": { "level": 1, "name": "temperature_calibration_settings" },
+        "7a": { "level": 1, "name": "humidity_calibration_settings" },
         "7b": { "level": 3, "name": "plan_config" },
         "7c": { "level": 1, "name": "valve_interface_settings" },
         "80": { "level": 1, "name": "di_setting_enable" },
