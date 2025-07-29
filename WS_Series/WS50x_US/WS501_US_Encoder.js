@@ -145,7 +145,7 @@ function reportAttribute(report_attribute) {
 
 /**
  * button control
- * @param {number} id, values: (1: switch_1, 2: switch_2, 3: switch_3)
+ * @param {number} id, values: (1: switch_1)
  * @param {number} state, values: (0: off, 1: on)
  * @example { "switch_1": 1 }
  */
@@ -182,7 +182,7 @@ function setDelayTask(delay_task) {
     var on_off_map = { 0: "off", 1: "on" };
     var on_off_values = getValues(on_off_map);
     if (frame_count < 0 || frame_count > 255) {
-        throw new Error("delay_task.frame_count must be between 0 and 255");
+        throw new Error("delay_task.frame_count must be in the range of [0, 255]");
     }
     if (typeof delay_time !== "number") {
         throw new Error("delay_task.delay_time must be a number");
@@ -195,10 +195,12 @@ function setDelayTask(delay_task) {
     var switch_bit_offset = { switch_1: 0 };
     for (var key in switch_bit_offset) {
         if (key in delay_task) {
-            if (on_off_values.indexOf(delay_task[key]) !== -1) {
-                data |= 1 << (switch_bit_offset[key] + 4);
-                data |= getValue(on_off_map, delay_task[key]) << switch_bit_offset[key];
+            if (on_off_values.indexOf(delay_task[key]) === -1) {
+                throw new Error("delay_task." + key + " must be one of: " + on_off_values.join(", "));
             }
+
+            data |= 1 << (switch_bit_offset[key] + 4);
+            data |= getValue(on_off_map, delay_task[key]) << switch_bit_offset[key];
         }
     }
 
@@ -336,14 +338,8 @@ function clearPowerConsumption(clear_power_consumption) {
 
 function getValues(map) {
     var values = [];
-    if (RAW_VALUE) {
-        for (var key in map) {
-            values.push(parseInt(key));
-        }
-    } else {
-        for (var key in map) {
-            values.push(map[key]);
-        }
+    for (var key in map) {
+        values.push(RAW_VALUE ? parseInt(key) : map[key]);
     }
     return values;
 }
