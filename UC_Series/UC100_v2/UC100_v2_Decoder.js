@@ -477,9 +477,9 @@ function readEnableStatus(status) {
     return getValue(status_map, status);
 }
 
-function readTimeZone(timezone) {
+function readTimeZone(time_zone) {
     var timezone_map = { "-720": "UTC-12", "-660": "UTC-11", "-600": "UTC-10", "-570": "UTC-9:30", "-540": "UTC-9", "-480": "UTC-8", "-420": "UTC-7", "-360": "UTC-6", "-300": "UTC-5", "-240": "UTC-4", "-210": "UTC-3:30", "-180": "UTC-3", "-120": "UTC-2", "-60": "UTC-1", 0: "UTC", 60: "UTC+1", 120: "UTC+2", 180: "UTC+3", 210: "UTC+3:30", 240: "UTC+4", 270: "UTC+4:30", 300: "UTC+5", 330: "UTC+5:30", 345: "UTC+5:45", 360: "UTC+6", 390: "UTC+6:30", 420: "UTC+7", 480: "UTC+8", 540: "UTC+9", 570: "UTC+9:30", 600: "UTC+10", 630: "UTC+10:30", 660: "UTC+11", 720: "UTC+12", 765: "UTC+12:45", 780: "UTC+13", 840: "UTC+14" };
-    return getValue(timezone_map, timezone);
+    return getValue(timezone_map, time_zone);
 }
 
 function readDstConfig(bytes) {
@@ -863,9 +863,9 @@ function readModbusValueCondition(bytes) {
     modbus_value_condition.continue_time = continue_time;
     modbus_value_condition.lock_time = lock_time;
     if (condition_value === 2 || condition_value === 4) {
-        modbus_value_condition.min_threshold = value_1;
+        modbus_value_condition.threshold_min = value_1;
     } else if (condition_value === 3 || condition_value === 4) {
-        modbus_value_condition.max_threshold = value_2;
+        modbus_value_condition.threshold_max = value_2;
     } else if (condition_value === 6 || condition_value === 7) {
         modbus_value_condition.mutation_duration = value_1;
         modbus_value_condition.mutation = value_2;
