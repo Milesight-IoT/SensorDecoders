@@ -124,8 +124,8 @@ function setReportInterval(report_interval) {
  * @example { "switch_1": 1, "switch_2": 0, "switch_3": 1, "switch_4": 0, "switch_5": 1, "switch_6": 0, "switch_7": 1, "switch_8": 0 }
  */
 function controlSwitch(switch_control) {
-    var switch_status_map = { 0: "off", 1: "on" };
-    var switch_status_values = getValues(switch_status_map);
+    var on_off_map = { 0: "off", 1: "on" };
+    var on_off_values = getValues(on_off_map);
 
     var switch_bit_offset = { switch_1: 0, switch_2: 1, switch_3: 2, switch_4: 3, switch_5: 4, switch_6: 5, switch_7: 6, switch_8: 7 };
 
@@ -133,11 +133,11 @@ function controlSwitch(switch_control) {
     var status = 0;
     for (var key in switch_bit_offset) {
         if (key in switch_control) {
-            if (switch_status_values.indexOf(switch_control[key]) === -1) {
-                throw new Error(key + " must be one of " + switch_status_values.join(", "));
+            if (on_off_values.indexOf(switch_control[key]) === -1) {
+                throw new Error(key + " must be one of " + on_off_values.join(", "));
             }
             mask |= 1 << switch_bit_offset[key];
-            status |= getValue(switch_status_map, switch_control[key]) << switch_bit_offset[key];
+            status |= getValue(on_off_map, switch_control[key]) << switch_bit_offset[key];
         }
     }
 
@@ -150,36 +150,37 @@ function controlSwitch(switch_control) {
 
 /**
  * Control switch with delay
- * @param {number} task_id value: (0: force control, > 0: task_id)
- * @param {number} delay_time unit: second
- * @param {string} switch_1 values: (0: off, 1: on)
- * @param {string} switch_2 values: (0: off, 1: on)
- * @param {string} switch_3 values: (0: off, 1: on)
- * @param {string} switch_4 values: (0: off, 1: on)
- * @param {string} switch_5 values: (0: off, 1: on)
- * @param {string} switch_6 values: (0: off, 1: on)
- * @param {string} switch_7 values: (0: off, 1: on)
- * @param {string} switch_8 values: (0: off, 1: on)
- * @example { "task_id": 1, "delay_time": 300, "switch_1": 1, "switch_2": 0, "switch_3": 1, "switch_4": 0, "switch_5": 1, "switch_6": 0, "switch_7": 1, "switch_8": 0 }
+ * @param {object} delay_task
+ * @param {number} delay_task.task_id value: (0: force control, > 0: task_id)
+ * @param {number} delay_task.delay_time unit: second
+ * @param {string} delay_task.switch_1 values: (0: off, 1: on)
+ * @param {string} delay_task.switch_2 values: (0: off, 1: on)
+ * @param {string} delay_task.switch_3 values: (0: off, 1: on)
+ * @param {string} delay_task.switch_4 values: (0: off, 1: on)
+ * @param {string} delay_task.switch_5 values: (0: off, 1: on)
+ * @param {string} delay_task.switch_6 values: (0: off, 1: on)
+ * @param {string} delay_task.switch_7 values: (0: off, 1: on)
+ * @param {string} delay_task.switch_8 values: (0: off, 1: on)
+ * @example { "delay_task": { "task_id": 1, "delay_time": 300, "switch_1": 1, "switch_2": 0, "switch_3": 1, "switch_4": 0, "switch_5": 1, "switch_6": 0, "switch_7": 1, "switch_8": 0 } }
  */
-function controlSwitchWithDelay(switch_control) {
-    var task_id = switch_control.task_id;
-    var delay_time = switch_control.delay_time;
+function controlSwitchWithDelay(delay_task) {
+    var task_id = delay_task.task_id;
+    var delay_time = delay_task.delay_time;
 
-    var switch_status_map = { 0: "off", 1: "on" };
-    var switch_status_values = getValues(switch_status_map);
+    var on_off_map = { 0: "off", 1: "on" };
+    var on_off_values = getValues(on_off_map);
 
     var mask = 0;
     var status = 0;
     var switch_bit_offset = { switch_1: 0, switch_2: 1, switch_3: 2, switch_4: 3, switch_5: 4, switch_6: 5, switch_7: 6, switch_8: 7 };
     for (var key in switch_bit_offset) {
-        if (key in switch_control) {
-            var switch_status = switch_control[key];
-            if (switch_status_values.indexOf(switch_status) === -1) {
-                throw new Error(key + " must be one of " + switch_status_values.join(", "));
+        if (key in delay_task) {
+            var switch_status = delay_task[key];
+            if (on_off_values.indexOf(switch_status) === -1) {
+                throw new Error(key + " must be one of " + on_off_values.join(", "));
             }
             mask |= 1 << switch_bit_offset[key];
-            status |= getValue(switch_status_map, switch_status) << switch_bit_offset[key];
+            status |= getValue(on_off_map, switch_status) << switch_bit_offset[key];
         }
     }
 

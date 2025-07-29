@@ -29,7 +29,7 @@ function Decoder(bytes, port) {
 function milesightDeviceDecode(bytes) {
     var decoded = {};
 
-    for (var i = 0; i < bytes.length;) {
+    for (var i = 0; i < bytes.length; ) {
         var channel_id = bytes[i++];
         var channel_type = bytes[i++];
 
@@ -158,15 +158,16 @@ function handle_downlink_response(channel_type, bytes, offset) {
             offset += 1;
             break;
         case 0x32:
-            decoded.task_id = readUInt8(bytes[offset]);
-            decoded.delay_time = readUInt16LE(bytes.slice(offset + 1, offset + 3));
+            decoded.delay_task = {};
+            decoded.delay_task.task_id = readUInt8(bytes[offset]);
+            decoded.delay_task.delay_time = readUInt16LE(bytes.slice(offset + 1, offset + 3));
             var mask = readUInt8(bytes[offset + 3]);
             var status = readUInt8(bytes[offset + 4]);
             offset += 5;
             var switch_bit_offset = { switch_1: 0, switch_2: 1, switch_3: 2, switch_4: 3, switch_5: 4, switch_6: 5, switch_7: 6, switch_8: 7 };
             for (var key in switch_bit_offset) {
                 if ((mask >> switch_bit_offset[key]) & 0x01) {
-                    decoded[key] = readSwitchStatus((status >> switch_bit_offset[key]) & 0x01);
+                    decoded.delay_task[key] = readSwitchStatus((status >> switch_bit_offset[key]) & 0x01);
                 }
             }
             break;
@@ -244,8 +245,8 @@ function readSwitchStatus(status) {
 }
 
 function readEnableStatus(status) {
-    var enable_map = { 0: "disable", 1: "enable" };
-    return getValue(enable_map, status);
+    var status_map = { 0: "disable", 1: "enable" };
+    return getValue(status_map, status);
 }
 
 function readYesNoStatus(status) {
