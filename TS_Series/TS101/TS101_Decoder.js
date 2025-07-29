@@ -76,7 +76,7 @@ function milesightDeviceDecode(bytes) {
 
         // BATTERY
         else if (channel_id === 0x01 && channel_type === 0x75) {
-            decoded.battery = bytes[i];
+            decoded.battery = readUInt8(bytes[i]);
             i += 1;
         }
         // TEMPERATURE
@@ -93,7 +93,7 @@ function milesightDeviceDecode(bytes) {
         // TEMPERATURE MUTATION ALARM
         else if (channel_id === 0x93 && channel_type === 0xd7) {
             decoded.temperature = readInt16LE(bytes.slice(i, i + 2)) / 10;
-            decoded.temperature_change = readInt16LE(bytes.slice(i + 2, i + 4)) / 100;
+            decoded.temperature_mutation = readInt16LE(bytes.slice(i + 2, i + 4)) / 100;
             decoded.temperature_alarm = readTemperatureAlarm(bytes[i + 4]);
             i += 5;
         }
@@ -155,7 +155,7 @@ function handle_downlink_response(channel_type, bytes, offset) {
             offset += 1;
             break;
         case 0x17:
-            decoded.time_zone = readInt16LE(bytes.slice(offset, offset + 2));
+            decoded.time_zone = readTimeZone(readInt16LE(bytes.slice(offset, offset + 2)));
             offset += 2;
             break;
         case 0x27:
@@ -191,9 +191,9 @@ function handle_downlink_response(channel_type, bytes, offset) {
             offset += 3;
             break;
         case 0xab:
-            decoded.temperature_calibration = {};
-            decoded.temperature_calibration.enable = readEnableStatus(bytes[offset]);
-            decoded.temperature_calibration.calibration_value = readInt16LE(bytes.slice(offset + 1, offset + 3)) / 10;
+            decoded.temperature_calibration_settings = {};
+            decoded.temperature_calibration_settings.enable = readEnableStatus(bytes[offset]);
+            decoded.temperature_calibration_settings.calibration_value = readInt16LE(bytes.slice(offset + 1, offset + 3)) / 10;
             offset += 3;
             break;
         default:
@@ -272,6 +272,11 @@ function readYesNoStatus(status) {
 function readEnableStatus(status) {
     var status_map = { 0: "disable", 1: "enable" };
     return getValue(status_map, status);
+}
+
+function readTimeZone(time_zone) {
+    var timezone_map = { "-120": "UTC-12", "-110": "UTC-11", "-100": "UTC-10", "-95": "UTC-9:30", "-90": "UTC-9", "-80": "UTC-8", "-70": "UTC-7", "-60": "UTC-6", "-50": "UTC-5", "-40": "UTC-4", "-35": "UTC-3:30", "-30": "UTC-3", "-20": "UTC-2", "-10": "UTC-1", 0: "UTC", 10: "UTC+1", 20: "UTC+2", 30: "UTC+3", 35: "UTC+3:30", 40: "UTC+4", 45: "UTC+4:30", 50: "UTC+5", 55: "UTC+5:30", 57: "UTC+5:45", 60: "UTC+6", 65: "UTC+6:30", 70: "UTC+7", 80: "UTC+8", 90: "UTC+9", 95: "UTC+9:30", 100: "UTC+10", 105: "UTC+10:30", 110: "UTC+11", 120: "UTC+12", 127: "UTC+12:45", 130: "UTC+13", 140: "UTC+14" };
+    return getValue(timezone_map, time_zone);
 }
 
 function readMathConditionType(type) {
