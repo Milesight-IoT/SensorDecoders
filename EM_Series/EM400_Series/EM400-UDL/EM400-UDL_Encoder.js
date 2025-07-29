@@ -47,6 +47,9 @@ function milesightDeviceEncode(payload) {
     if ("people_existing_height" in payload) {
         encoded = encoded.concat(setPeopleExistingHeight(payload.people_existing_height));
     }
+    if ("install_height_enable" in payload) {
+        encoded = encoded.concat(setInstallHeightEnable(payload.install_height_enable));
+    }
     if ("working_mode" in payload) {
         encoded = encoded.concat(setWorkingMode(payload.working_mode));
     }
@@ -72,13 +75,13 @@ function milesightDeviceEncode(payload) {
  * @example { "reboot": 1 }
  */
 function reboot(reboot) {
-    var reboot_map = { 0: "no", 1: "yes" };
-    var reboot_values = getValues(reboot_map);
+    var yes_no_map = { 0: "no", 1: "yes" };
+    var reboot_values = getValues(yes_no_map);
     if (reboot_values.indexOf(reboot) === -1) {
         throw new Error("reboot must be one of " + reboot_values.join(", "));
     }
 
-    if (getValue(reboot_map, reboot) === 0) {
+    if (getValue(yes_no_map, reboot) === 0) {
         return [];
     }
     return [0xff, 0x10, 0xff];
@@ -164,6 +167,25 @@ function setPeopleExistingHeight(people_existing_height) {
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0x70);
     buffer.writeUInt16LE(people_existing_height);
+    return buffer.toBytes();
+}
+
+/**
+ * install height enable
+ * @param {number} install_height_enable values: (0: disable, 1: enable)
+ * @example { "install_height_enable": 1 }
+ */
+function setInstallHeightEnable(install_height_enable) {
+    var enable_map = { 0: "disable", 1: "enable" };
+    var enable_values = getValues(enable_map);
+    if (enable_values.indexOf(install_height_enable) === -1) {
+        throw new Error("install_height_enable must be one of " + enable_values.join(", "));
+    }
+
+    var buffer = new Buffer(3);
+    buffer.writeUInt8(0xff);
+    buffer.writeUInt8(0x13);
+    buffer.writeUInt8(getValue(enable_map, install_height_enable));
     return buffer.toBytes();
 }
 
