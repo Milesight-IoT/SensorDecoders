@@ -106,13 +106,14 @@ function milesightDeviceDecode(bytes) {
         }
         // SENSOR ENABLE
         else if (channel_id === 0xff && channel_type === 0x18) {
-            var data = readUInt8(bytes[i]);
+            // skip 1 byte
+            var data = readUInt8(bytes[i + 1]);
             var sensor_bit_offset = { temperature: 0, humidity: 1 };
             decoded.sensor_enable = {};
             for (var key in sensor_bit_offset) {
                 decoded.sensor_enable[key] = readEnableStatus((data >> sensor_bit_offset[key]) & 0x01);
             }
-            i += 1;
+            i += 2;
         }
         // DOWNLINK RESPONSE
         else if (channel_id === 0xfe || channel_id === 0xff) {
@@ -153,7 +154,7 @@ function handle_downlink_response(channel_type, bytes, offset) {
             offset += 4;
             break;
         case 0x17:
-            decoded.time_zone = readInt16LE(bytes.slice(offset, offset + 2));
+            decoded.time_zone = readTimeZone(readInt16LE(bytes.slice(offset, offset + 2)));
             offset += 2;
             break;
         case 0x27:
@@ -275,6 +276,11 @@ function readYesNoStatus(status) {
 function readEnableStatus(status) {
     var status_map = { 0: "disable", 1: "enable" };
     return getValue(status_map, status);
+}
+
+function readTimeZone(time_zone) {
+    var timezone_map = { "-120": "UTC-12", "-110": "UTC-11", "-100": "UTC-10", "-95": "UTC-9:30", "-90": "UTC-9", "-80": "UTC-8", "-70": "UTC-7", "-60": "UTC-6", "-50": "UTC-5", "-40": "UTC-4", "-35": "UTC-3:30", "-30": "UTC-3", "-20": "UTC-2", "-10": "UTC-1", 0: "UTC", 10: "UTC+1", 20: "UTC+2", 30: "UTC+3", 35: "UTC+3:30", 40: "UTC+4", 45: "UTC+4:30", 50: "UTC+5", 55: "UTC+5:30", 57: "UTC+5:45", 60: "UTC+6", 65: "UTC+6:30", 70: "UTC+7", 80: "UTC+8", 90: "UTC+9", 95: "UTC+9:30", 100: "UTC+10", 105: "UTC+10:30", 110: "UTC+11", 120: "UTC+12", 127: "UTC+12:45", 130: "UTC+13", 140: "UTC+14" };
+    return getValue(timezone_map, time_zone);
 }
 
 function readLedIndicatorStatus(status) {

@@ -45,7 +45,9 @@ function milesightDeviceEncode(payload) {
         encoded = encoded.concat(setTimeSyncEnable(payload.time_sync_enable));
     }
     if ("report_schedule_config" in payload) {
-        encoded = encoded.concat(setReportScheduleConfig(payload.report_schedule_config));
+        for (var i = 0; i < payload.report_schedule_config.length; i++) {
+            encoded = encoded.concat(setReportScheduleConfig(payload.report_schedule_config[i]));
+        }
     }
     if ("clear_report_schedule" in payload) {
         encoded = encoded.concat(clearReportSchedule(payload.clear_report_schedule));
@@ -108,13 +110,13 @@ function milesightDeviceEncode(payload) {
  * @example { "reboot": 1 }
  */
 function reboot(reboot) {
-    var reboot_map = { 0: "no", 1: "yes" };
-    var reboot_values = getValues(reboot_map);
-    if (reboot_values.indexOf(reboot) === -1) {
-        throw new Error("reboot must be one of " + reboot_values.join(", "));
+    var yes_no_map = { 0: "no", 1: "yes" };
+    var yes_no_values = getValues(yes_no_map);
+    if (yes_no_values.indexOf(reboot) === -1) {
+        throw new Error("reboot must be one of " + yes_no_values.join(", "));
     }
 
-    if (getValue(reboot_map, reboot) === 0) {
+    if (getValue(yes_no_map, reboot) === 0) {
         return [];
     }
     return [0xff, 0x10, 0xff];
@@ -134,12 +136,13 @@ function setReportInterval(report_interval) {
 }
 
 /**
- * timezone
+ * set time zone
  * @param {number} time_zone unit: minute, UTC+8 -> 8 * 10 = 80
- * @example { "time_zone": 8 }
+ * @example { "time_zone": 80 }
  */
 function setTimeZone(time_zone) {
-    var timezone_values = [-120, -110, -100, -95, -90, -80, -70, -60, -50, -40, -35, -30, -20, -10, 0, 10, 20, 30, 35, 40, 45, 50, 55, 57, 60, 65, 70, 80, 90, 95, 100, 105, 110, 120, 127, 130, 140];
+    var timezone_map = { "-120": "UTC-12", "-110": "UTC-11", "-100": "UTC-10", "-95": "UTC-9:30", "-90": "UTC-9", "-80": "UTC-8", "-70": "UTC-7", "-60": "UTC-6", "-50": "UTC-5", "-40": "UTC-4", "-35": "UTC-3:30", "-30": "UTC-3", "-20": "UTC-2", "-10": "UTC-1", 0: "UTC", 10: "UTC+1", 20: "UTC+2", 30: "UTC+3", 35: "UTC+3:30", 40: "UTC+4", 45: "UTC+4:30", 50: "UTC+5", 55: "UTC+5:30", 57: "UTC+5:45", 60: "UTC+6", 65: "UTC+6:30", 70: "UTC+7", 80: "UTC+8", 90: "UTC+9", 95: "UTC+9:30", 100: "UTC+10", 105: "UTC+10:30", 110: "UTC+11", 120: "UTC+12", 127: "UTC+12:45", 130: "UTC+13", 140: "UTC+14" };
+    var timezone_values = getValues(timezone_map);
     if (timezone_values.indexOf(time_zone) === -1) {
         throw new Error("time_zone must be one of " + timezone_values.join(", "));
     }
@@ -147,7 +150,7 @@ function setTimeZone(time_zone) {
     var buffer = new Buffer(4);
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0x17);
-    buffer.writeInt16LE(time_zone);
+    buffer.writeInt16LE(getValue(timezone_map, time_zone));
     return buffer.toBytes();
 }
 
