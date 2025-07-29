@@ -44,8 +44,8 @@ function milesightDeviceEncode(payload) {
     if ("timestamp" in payload) {
         encoded = encoded.concat(setTimestamp(payload.timestamp));
     }
-    if ("timezone" in payload) {
-        encoded = encoded.concat(setTimeZone(payload.timezone));
+    if ("time_zone" in payload) {
+        encoded = encoded.concat(setTimeZone(payload.time_zone));
     }
     if ("report_status" in payload) {
         encoded = encoded.concat(reportStatus(payload.report_status));
@@ -71,11 +71,11 @@ function milesightDeviceEncode(payload) {
     if ("stop_transmit" in payload) {
         encoded = encoded.concat(stopTransmit(payload.stop_transmit));
     }
-    if ("gpio_out_1" in payload) {
-        encoded = encoded.concat(controlOutputStatus(1, payload.gpio_out_1));
+    if ("gpio_output_1" in payload) {
+        encoded = encoded.concat(controlOutputStatus(1, payload.gpio_output_1));
     }
-    if ("gpio_out_2" in payload) {
-        encoded = encoded.concat(controlOutputStatus(2, payload.gpio_out_2));
+    if ("gpio_output_2" in payload) {
+        encoded = encoded.concat(controlOutputStatus(2, payload.gpio_output_2));
     }
 
     return encoded;
@@ -145,9 +145,9 @@ function reboot(reboot) {
  */
 function syncTime(sync_time) {
     var yes_no_map = { 0: "no", 1: "yes" };
-    var sync_time_values = getValues(yes_no_map);
-    if (sync_time_values.indexOf(sync_time) === -1) {
-        throw new Error("sync_time must be one of " + sync_time_values.join(", "));
+    var yes_no_values = getValues(yes_no_map);
+    if (yes_no_values.indexOf(sync_time) === -1) {
+        throw new Error("sync_time must be one of " + yes_no_values.join(", "));
     }
 
     if (getValue(yes_no_map, sync_time) === 0) {
@@ -177,20 +177,21 @@ function setTimestamp(timestamp) {
 }
 
 /**
- * set timezone
- * @param {number} timezone
- * @example { "timezone": -4 }
- * @example { "timezone": 8 }
+ * set time zone
+ * @param {number} time_zone unit: minute, UTC+8 -> 8 * 10 = 80
+ * @example { "time_zone": 80 }
  */
-function setTimeZone(timezone) {
-    if (typeof timezone !== "number") {
-        throw new Error("timezone must be a number");
+function setTimeZone(time_zone) {
+    var timezone_map = { "-120": "UTC-12", "-110": "UTC-11", "-100": "UTC-10", "-95": "UTC-9:30", "-90": "UTC-9", "-80": "UTC-8", "-70": "UTC-7", "-60": "UTC-6", "-50": "UTC-5", "-40": "UTC-4", "-35": "UTC-3:30", "-30": "UTC-3", "-20": "UTC-2", "-10": "UTC-1", 0: "UTC", 10: "UTC+1", 20: "UTC+2", 30: "UTC+3", 35: "UTC+3:30", 40: "UTC+4", 45: "UTC+4:30", 50: "UTC+5", 55: "UTC+5:30", 57: "UTC+5:45", 60: "UTC+6", 65: "UTC+6:30", 70: "UTC+7", 80: "UTC+8", 90: "UTC+9", 95: "UTC+9:30", 100: "UTC+10", 105: "UTC+10:30", 110: "UTC+11", 120: "UTC+12", 127: "UTC+12:45", 130: "UTC+13", 140: "UTC+14" };
+    var timezone_values = getValues(timezone_map);
+    if (timezone_values.indexOf(time_zone) === -1) {
+        throw new Error("time_zone must be one of " + timezone_values.join(", "));
     }
 
     var buffer = new Buffer(4);
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0x17);
-    buffer.writeInt16LE(timezone * 10);
+    buffer.writeInt16LE(getValue(timezone_map, time_zone));
     return buffer.toBytes();
 }
 
@@ -367,12 +368,12 @@ function stopTransmit(stop_transmit) {
 function controlOutputStatus(gpio_index, status) {
     var gpio_chns = [1, 2];
     if (gpio_chns.indexOf(gpio_index) === -1) {
-        throw new Error("gpio_index must be one of " + gpio_chns.join(", "));
+        throw new Error("gpio_output_x must be one of " + gpio_chns.join(", "));
     }
     var on_off_map = { 0: "off", 1: "on" };
     var on_off_values = getValues(on_off_map);
     if (on_off_values.indexOf(status) === -1) {
-        throw new Error("gpio_out_" + gpio_index + "_control.status must be one of " + on_off_values.join(", "));
+        throw new Error("gpio_output_" + gpio_index + "_control.status must be one of " + on_off_values.join(", "));
     }
 
     var channel_ids = [0x03, 0x04];
