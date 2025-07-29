@@ -29,7 +29,7 @@ function Decoder(bytes, port) {
 function milesightDeviceDecode(bytes) {
     var decoded = {};
 
-    for (var i = 0; i < bytes.length;) {
+    for (var i = 0; i < bytes.length; ) {
         var channel_id = bytes[i++];
         var channel_type = bytes[i++];
 
@@ -285,6 +285,27 @@ function handle_downlink_response(channel_type, bytes, offset) {
             decoded.reboot = readYesNoStatus(1);
             offset += 1;
             break;
+        case 0x27:
+            decoded.clear_history = readYesNoStatus(1);
+            offset += 1;
+            break;
+        case 0x68:
+            decoded.history_enable = readEnableStatus(bytes[offset]);
+            offset += 1;
+            break;
+        case 0x69:
+            decoded.retransmit_enable = readEnableStatus(bytes[offset]);
+            offset += 1;
+            break;
+        case 0x6a:
+            var data = readUInt8(bytes[offset]);
+            if (data === 0x00) {
+                decoded.retransmit_interval = readUInt16LE(bytes.slice(offset + 1, offset + 3));
+            } else if (data === 0x01) {
+                decoded.resend_interval = readUInt16LE(bytes.slice(offset + 1, offset + 3));
+            }
+            offset += 3;
+            break;
         case 0xef:
             var data = readUInt8(bytes[offset]);
             // REMOVE MODBUS CHANNELS
@@ -292,7 +313,6 @@ function handle_downlink_response(channel_type, bytes, offset) {
                 var channel_id = readUInt8(bytes[offset + 1]);
                 var remove_modbus_channels = { channel_id: channel_id };
                 offset += 4;
-
                 decoded.remove_modbus_channels = decoded.remove_modbus_channels || [];
                 decoded.remove_modbus_channels.push(remove_modbus_channels);
             }
@@ -300,7 +320,6 @@ function handle_downlink_response(channel_type, bytes, offset) {
             else if (data === 0x01) {
                 var modbus_channels = readModbusChannels(bytes.slice(offset + 1, offset + 7));
                 offset += 7;
-
                 decoded.modbus_channels = decoded.modbus_channels || [];
                 decoded.modbus_channels.push(modbus_channels);
             }
@@ -311,7 +330,6 @@ function handle_downlink_response(channel_type, bytes, offset) {
                 var name = readAscii(bytes.slice(offset + 3, offset + 3 + length));
                 var modbus_channels_name = { channel_id: channel_id, name: name };
                 offset += 3 + length;
-
                 decoded.modbus_channels_name = decoded.modbus_channels_name || [];
                 decoded.modbus_channels_name.push(modbus_channels_name);
             }
