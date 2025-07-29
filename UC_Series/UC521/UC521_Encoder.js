@@ -55,8 +55,8 @@ function milesightDeviceEncode(payload) {
             encoded = encoded.concat(setCollectionInterval(2, payload.pressure_2_collection_interval));
         }
     }
-    if ("timezone" in payload) {
-        encoded = encoded.concat(setTimezone(payload.timezone));
+    if ("time_zone" in payload) {
+        encoded = encoded.concat(setTimeZone(payload.time_zone));
     }
     if ("valve_1_task" in payload) {
         encoded = encoded.concat(setValveTask(0, payload.valve_1_task));
@@ -93,11 +93,11 @@ function milesightDeviceEncode(payload) {
     if ("valve_filter_config" in payload) {
         encoded = encoded.concat(setValveFilterConfig(payload.valve_filter_config));
     }
-    if ("pressure_1_calibration_config" in payload) {
-        encoded = encoded.concat(setPressureCalibration(1, payload.pressure_1_calibration_config));
+    if ("pressure_1_calibration_settings" in payload) {
+        encoded = encoded.concat(setPressureCalibration(1, payload.pressure_1_calibration_settings));
     }
-    if ("pressure_2_calibration_config" in payload) {
-        encoded = encoded.concat(setPressureCalibration(2, payload.pressure_2_calibration_config));
+    if ("pressure_2_calibration_settings" in payload) {
+        encoded = encoded.concat(setPressureCalibration(2, payload.pressure_2_calibration_settings));
     }
     if ("wiring_switch_enable" in payload) {
         encoded = encoded.concat(setWiringSwitchEnable(payload.wiring_switch_enable));
@@ -117,8 +117,8 @@ function milesightDeviceEncode(payload) {
     if ("query_device_config" in payload) {
         encoded = encoded.concat(queryDeviceConfig(payload.query_device_config));
     }
-    if ("query_pressure_calibration_config" in payload) {
-        encoded = encoded.concat(queryPressureCalibrationConfig(payload.query_pressure_calibration_config));
+    if ("query_pressure_calibration_settings" in payload) {
+        encoded = encoded.concat(queryPressureCalibrationConfig(payload.query_pressure_calibration_settings));
     }
     if ("query_gpio_type" in payload) {
         encoded = encoded.concat(queryGPIOType(payload.query_gpio_type));
@@ -336,22 +336,22 @@ function setCollectionIntervalV2(index, collection_interval) {
 }
 
 /**
- * set timezone
- * @param {number} timezone unit: minute, convert: "hh:mm" -> "hh * 60 + mm", values: ( -720: UTC-12, -660: UTC-11, -600: UTC-10, -570: UTC-9:30, -540: UTC-9, -480: UTC-8, -420: UTC-7, -360: UTC-6, -300: UTC-5, -240: UTC-4, -210: UTC-3:30, -180: UTC-3, -120: UTC-2, -60: UTC-1, 0: UTC, 60: UTC+1, 120: UTC+2, 180: UTC+3, 240: UTC+4, 300: UTC+5, 360: UTC+6, 420: UTC+7, 480: UTC+8, 540: UTC+9, 570: UTC+9:30, 600: UTC+10, 660: UTC+11, 720: UTC+12, 765: UTC+12:45, 780: UTC+13, 840: UTC+14 )
- * @example { "timezone": 480 }
- * @example { "timezone": -240 }
+ * set time zone
+ * @param {number} time_zone unit: minute, convert: "hh:mm" -> "hh * 60 + mm", values: ( -720: UTC-12, -660: UTC-11, -600: UTC-10, -570: UTC-9:30, -540: UTC-9, -480: UTC-8, -420: UTC-7, -360: UTC-6, -300: UTC-5, -240: UTC-4, -210: UTC-3:30, -180: UTC-3, -120: UTC-2, -60: UTC-1, 0: UTC, 60: UTC+1, 120: UTC+2, 180: UTC+3, 240: UTC+4, 300: UTC+5, 360: UTC+6, 420: UTC+7, 480: UTC+8, 540: UTC+9, 570: UTC+9:30, 600: UTC+10, 660: UTC+11, 720: UTC+12, 765: UTC+12:45, 780: UTC+13, 840: UTC+14 )
+ * @example { "time_zone": 480 }
+ * @example { "time_zone": -240 }
  */
-function setTimezone(timezone) {
+function setTimeZone(time_zone) {
     var timezone_map = { "-720": "UTC-12", "-660": "UTC-11", "-600": "UTC-10", "-570": "UTC-9:30", "-540": "UTC-9", "-480": "UTC-8", "-420": "UTC-7", "-360": "UTC-6", "-300": "UTC-5", "-240": "UTC-4", "-210": "UTC-3:30", "-180": "UTC-3", "-120": "UTC-2", "-60": "UTC-1", 0: "UTC", 60: "UTC+1", 120: "UTC+2", 180: "UTC+3", 210: "UTC+3:30", 240: "UTC+4", 270: "UTC+4:30", 300: "UTC+5", 330: "UTC+5:30", 345: "UTC+5:45", 360: "UTC+6", 390: "UTC+6:30", 420: "UTC+7", 480: "UTC+8", 540: "UTC+9", 570: "UTC+9:30", 600: "UTC+10", 630: "UTC+10:30", 660: "UTC+11", 720: "UTC+12", 765: "UTC+12:45", 780: "UTC+13", 840: "UTC+14" };
     var timezone_values = getValues(timezone_map);
-    if (timezone_values.indexOf(timezone) === -1) {
-        throw new Error("timezone must be one of " + timezone_values.join(", "));
+    if (timezone_values.indexOf(time_zone) === -1) {
+        throw new Error("time_zone must be one of " + timezone_values.join(", "));
     }
 
     var buffer = new Buffer(4);
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0xbd);
-    buffer.writeInt16LE(getValue(timezone_map, timezone));
+    buffer.writeInt16LE(getValue(timezone_map, time_zone));
     return buffer.toBytes();
 }
 
@@ -604,19 +604,19 @@ function setValveFilterConfig(valve_filter_config) {
 /**
  * set pressure calibration
  * @param {number} pressure_index values: (1: pressure 1, 2: pressure 2)
- * @param {object} pressure_calibration_config
- * @param {number} pressure_calibration_config.enable values: (0: disable, 1: enable)
- * @param {number} pressure_calibration_config.calibration unit: kPa
- * @example { "pressure_1_calibration_config": { "enable": 1, "calibration": 1 } }
+ * @param {object} pressure_calibration_settings
+ * @param {number} pressure_calibration_settings.enable values: (0: disable, 1: enable)
+ * @param {number} pressure_calibration_settings.calibration unit: kPa
+ * @example { "pressure_1_calibration_settings": { "enable": 1, "calibration": 1 } }
  */
-function setPressureCalibration(pressure_index, pressure_calibration_config) {
-    var enable = pressure_calibration_config.enable;
-    var calibration = pressure_calibration_config.calibration;
+function setPressureCalibration(pressure_index, pressure_calibration_settings) {
+    var enable = pressure_calibration_settings.enable;
+    var calibration = pressure_calibration_settings.calibration;
 
     var enable_map = { 0: "disable", 1: "enable" };
     var enable_values = getValues(enable_map);
     if (enable_values.indexOf(enable) === -1) {
-        throw new Error("pressure_" + pressure_index + "_calibration_config.enable must be one of " + enable_values.join(", "));
+        throw new Error("pressure_" + pressure_index + "_calibration_settings.enable must be one of " + enable_values.join(", "));
     }
 
     var buffer = new Buffer(6);
@@ -737,17 +737,17 @@ function queryDeviceConfig(query_device_config) {
 
 /**
  * query pressure calibration config
- * @param {number} query_pressure_calibration_config values: (0: no, 1: yes)
- * @example { "query_pressure_calibration_config": 1 }
+ * @param {number} query_pressure_calibration_settings values: (0: no, 1: yes)
+ * @example { "query_pressure_calibration_settings": 1 }
  */
-function queryPressureCalibrationConfig(query_pressure_calibration_config) {
+function queryPressureCalibrationConfig(query_pressure_calibration_settings) {
     var yes_no_map = { 0: "no", 1: "yes" };
     var yes_no_values = getValues(yes_no_map);
-    if (yes_no_values.indexOf(query_pressure_calibration_config) === -1) {
-        throw new Error("query_pressure_calibration_config must be one of " + yes_no_values.join(", "));
+    if (yes_no_values.indexOf(query_pressure_calibration_settings) === -1) {
+        throw new Error("query_pressure_calibration_settings must be one of " + yes_no_values.join(", "));
     }
 
-    if (getValue(yes_no_map, query_pressure_calibration_config) === 0) {
+    if (getValue(yes_no_map, query_pressure_calibration_settings) === 0) {
         return [];
     }
     return [0xf9, 0x73, 0xff];
@@ -1106,9 +1106,9 @@ function setRuleConfig(rule_config) {
  * @param {number} condition.duration unit: min
  * @param {number} condition.pulse_threshold
  * @param {number} condition.valve_strategy values: (0: no strategy, 1: pressure strategy)
- * @param {number} condition.threshold_condition_type values: (0: none, 1: below, 2: above, 3: between, 4: outside)
- * @param {number} condition.min_threshold unit: kPa
- * @param {number} condition.max_threshold unit: kPa
+ * @param {number} condition.condition_type values: (0: none, 1: below, 2: above, 3: between, 4: outside)
+ * @param {number} condition.threshold_min unit: kPa
+ * @param {number} condition.threshold_max unit: kPa
  */
 function encodedRuleCondition(condition) {
     var enable_map = { 0: "disable", 1: "enable" };
@@ -1120,8 +1120,8 @@ function encodedRuleCondition(condition) {
     var weekday_bit_offset = { monday: 0, tuesday: 1, wednesday: 2, thursday: 3, friday: 4, saturday: 5, sunday: 6 };
     var valve_strategy_map = { 0: "always", 1: "valve 1 open", 2: "valve 2 open", 3: "valve 1 open or valve 2 open" };
     var valve_strategy_values = getValues(valve_strategy_map);
-    var threshold_condition_type_map = { 0: "none", 1: "below", 2: "above", 3: "between", 4: "outside" };
-    var threshold_condition_type_values = getValues(threshold_condition_type_map);
+    var condition_type_map = { 0: "none", 1: "below", 2: "above", 3: "between", 4: "outside" };
+    var condition_type_values = getValues(condition_type_map);
 
     var buffer = new Buffer(13);
     if (condition_type_values.indexOf(condition.type) === -1) {
@@ -1178,14 +1178,14 @@ function encodedRuleCondition(condition) {
             if (valve_strategy_values.indexOf(condition.valve_strategy) === -1) {
                 throw new Error("rules_config._item.condition.valve_strategy must be one of " + valve_strategy_values.join(", "));
             }
-            if (threshold_condition_type_values.indexOf(condition.threshold_condition_type) === -1) {
-                throw new Error("rules_config._item.condition.threshold_condition_type must be one of " + threshold_condition_type_values.join(", "));
+            if (condition_type_values.indexOf(condition.condition_type) === -1) {
+                throw new Error("rules_config._item.condition.condition_type must be one of " + condition_type_values.join(", "));
             }
             buffer.writeUInt8(condition.valve_index);
             buffer.writeUInt8(getValue(valve_strategy_map, condition.valve_strategy));
-            buffer.writeUInt8(getValue(threshold_condition_type_map, condition.threshold_condition_type));
-            buffer.writeUInt16LE(condition.min_threshold);
-            buffer.writeUInt16LE(condition.max_threshold);
+            buffer.writeUInt8(getValue(condition_type_map, condition.condition_type));
+            buffer.writeUInt16LE(condition.threshold_min);
+            buffer.writeUInt16LE(condition.threshold_max);
             break;
     }
 

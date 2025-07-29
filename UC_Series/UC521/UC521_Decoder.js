@@ -149,15 +149,15 @@ function milesightDeviceDecode(bytes) {
             event.condition = condition_type;
             switch (condition_type_value) {
                 case 0x01:
-                    event.min_threshold = min;
+                    event.threshold_min = min;
                     break;
                 case 0x02:
-                    event.max_threshold = max;
+                    event.threshold_max = max;
                     break;
                 case 0x03:
                 case 0x04:
-                    event.min_threshold = min;
-                    event.max_threshold = max;
+                    event.threshold_min = min;
+                    event.threshold_max = max;
                     break;
             }
             event.pressure = pressure;
@@ -351,7 +351,7 @@ function handle_downlink_response(channel_type, bytes, offset) {
             offset += 5;
             break;
         case 0xbd:
-            decoded.timezone = readTimeZone(readInt16LE(bytes.slice(offset, offset + 2)));
+            decoded.time_zone = readTimeZone(readInt16LE(bytes.slice(offset, offset + 2)));
             offset += 2;
             break;
         case 0xf3:
@@ -411,7 +411,7 @@ function handle_downlink_response_ext(code, channel_type, bytes, offset) {
             break;
         case 0x5b:
             var pressure_index = readUInt8(bytes[offset]);
-            var pressure_index_name = "pressure_" + pressure_index + "_calibration_config";
+            var pressure_index_name = "pressure_" + pressure_index + "_calibration_settings";
             decoded[pressure_index_name] = {};
             decoded[pressure_index_name].enable = readEnableStatus(bytes[offset + 1]);
             decoded[pressure_index_name].calibration = readInt16LE(bytes.slice(offset + 2, offset + 4));
@@ -451,7 +451,7 @@ function handle_downlink_response_ext(code, channel_type, bytes, offset) {
             offset += 1;
             break;
         case 0x73:
-            decoded.query_pressure_calibration_config = readYesNoStatus(1);
+            decoded.query_pressure_calibration_settings = readYesNoStatus(1);
             offset += 1;
             break;
         case 0x74:
@@ -662,9 +662,9 @@ function readPressureSensorStatus(status) {
     return getValue(status_map, status);
 }
 
-function readTimeZone(timezone) {
+function readTimeZone(time_zone) {
     var timezone_map = { "-720": "UTC-12", "-660": "UTC-11", "-600": "UTC-10", "-570": "UTC-9:30", "-540": "UTC-9", "-480": "UTC-8", "-420": "UTC-7", "-360": "UTC-6", "-300": "UTC-5", "-240": "UTC-4", "-210": "UTC-3:30", "-180": "UTC-3", "-120": "UTC-2", "-60": "UTC-1", 0: "UTC", 60: "UTC+1", 120: "UTC+2", 180: "UTC+3", 210: "UTC+3:30", 240: "UTC+4", 270: "UTC+4:30", 300: "UTC+5", 330: "UTC+5:30", 345: "UTC+5:45", 360: "UTC+6", 390: "UTC+6:30", 420: "UTC+7", 480: "UTC+8", 540: "UTC+9", 570: "UTC+9:30", 600: "UTC+10", 630: "UTC+10:30", 660: "UTC+11", 720: "UTC+12", 765: "UTC+12:45", 780: "UTC+13", 840: "UTC+14" };
-    return getValue(timezone_map, timezone);
+    return getValue(timezone_map, time_zone);
 }
 
 function readValveFilterMode(mode) {
@@ -723,9 +723,9 @@ function readRuleCondition(bytes) {
         case 0x05:
             condition.valve_index = readUInt8(bytes[offset + 1]);
             condition.valve_strategy = readValveStrategy(readUInt8(bytes[offset + 2]));
-            condition.threshold_condition_type = readMathConditionType(readUInt8(bytes[offset + 3]));
-            condition.min_threshold = readUInt16LE(bytes.slice(offset + 4, offset + 6));
-            condition.max_threshold = readUInt16LE(bytes.slice(offset + 6, offset + 8));
+            condition.condition_type = readMathConditionType(readUInt8(bytes[offset + 3]));
+            condition.threshold_min = readUInt16LE(bytes.slice(offset + 4, offset + 6));
+            condition.threshold_max = readUInt16LE(bytes.slice(offset + 6, offset + 8));
             break;
     }
     return condition;
