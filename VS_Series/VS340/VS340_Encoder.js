@@ -74,13 +74,13 @@ function milesightDeviceEncode(payload) {
  * @example { "reboot": 1 }
  */
 function reboot(reboot) {
-    var reboot_map = { 0: "no", 1: "yes" };
-    var reboot_values = getValues(reboot_map);
+    var yes_no_map = { 0: "no", 1: "yes" };
+    var reboot_values = getValues(yes_no_map);
     if (reboot_values.indexOf(reboot) === -1) {
         throw new Error("reboot must be one of " + reboot_values.join(", "));
     }
 
-    if (getValue(reboot_map, reboot) === 0) {
+    if (getValue(yes_no_map, reboot) === 0) {
         return [];
     }
     return [0xff, 0x10, 0xff];
@@ -166,7 +166,7 @@ function setVacancyReportingInterval(vacancy_reporting_interval) {
  */
 function setPIRCollectionSettings(pir_collect_settings) {
     var enable = pir_collect_settings.enable;
-    var count = pir_collect_settings.count
+    var count = pir_collect_settings.count;
 
     var enable_map = { 0: "disable", 1: "enable" };
     var enable_values = getValues(enable_map);
@@ -299,9 +299,9 @@ function setThermopileCollectSettings(thermopile_collect_settings) {
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0x99);
     buffer.writeUInt8(getValue(enable_map, enable));
-    buffer.writeUInt16LE(separate);
-    buffer.writeUInt8(threshold_l);
-    buffer.writeUInt8(threshold_h);
+    buffer.writeUInt16LE(separate * 10);
+    buffer.writeUInt8(threshold_l * 10);
+    buffer.writeUInt8(threshold_h * 10);
     return buffer.toBytes();
 }
 
@@ -313,7 +313,7 @@ function setThermopileCollectSettings(thermopile_collect_settings) {
 function setThermopileNegativeThreshold(thermopile_negative_threshold) {
     var buffer = new Buffer(3);
     buffer.writeUInt8(0xff);
-    buffer.writeUInt8(0x9a);
+    buffer.writeUInt8(0xb2);
     buffer.writeInt8(thermopile_negative_threshold);
     return buffer.toBytes();
 }
