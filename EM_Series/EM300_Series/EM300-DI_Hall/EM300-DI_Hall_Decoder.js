@@ -29,10 +29,9 @@ function Decoder(bytes, port) {
 function milesightDeviceDecode(bytes) {
     var decoded = {};
 
-    for (var i = 0; i < bytes.length;) {
+    for (var i = 0; i < bytes.length; ) {
         var channel_id = bytes[i++];
         var channel_type = bytes[i++];
-
 
         // IPSO VERSION
         if (channel_id === 0xff && channel_type === 0x01) {
@@ -77,7 +76,7 @@ function milesightDeviceDecode(bytes) {
 
         // BATTERY
         else if (channel_id === 0x01 && channel_type === 0x75) {
-            decoded.battery = bytes[i];
+            decoded.battery = readUInt8(bytes[i]);
             i += 1;
         }
         // GPIO
@@ -118,11 +117,10 @@ function milesightDeviceDecode(bytes) {
             // IGNORE: byte 4,5,6
             point.alarm = readAlarm(bytes[i + 7]);
             var mode = bytes[i + 8];
+            point.gpio_type = readGPIOType(mode);
             if (mode === 1) {
-                point.gpio_type = "gpio";
                 point.gpio = readGPIOStatus(bytes[i + 9]);
             } else if (mode === 2) {
-                point.gpio_type = "pulse";
                 point.water_conv = readUInt16LE(bytes.slice(i + 10, i + 12)) / 10;
                 point.pulse_conv = readUInt16LE(bytes.slice(i + 12, i + 14)) / 10;
                 point.water = readFloatLE(bytes.slice(i + 14, i + 18));
@@ -137,6 +135,8 @@ function milesightDeviceDecode(bytes) {
             var result = handle_downlink_response(channel_type, bytes, i);
             decoded = Object.assign(decoded, result.data);
             i = result.offset;
+        } else {
+            break;
         }
     }
 
@@ -158,7 +158,7 @@ function handle_downlink_response(channel_type, bytes, offset) {
         case 0x06:
             decoded.temperature_alarm_settings = {};
             var condition = readUInt8(bytes[offset]);
-            decoded.temperature_alarm_settings.threshold_condition = readMathCondition(condition & 0x07);
+            decoded.temperature_alarm_settings.condition = readMathCondition(condition & 0x07);
             decoded.temperature_alarm_settings.threshold_min = readInt16LE(bytes.slice(offset + 1, offset + 3)) / 10;
             decoded.temperature_alarm_settings.threshold_max = readInt16LE(bytes.slice(offset + 3, offset + 5)) / 10;
             // skip 4 bytes
@@ -169,7 +169,7 @@ function handle_downlink_response(channel_type, bytes, offset) {
             offset += 1;
             break;
         case 0x17:
-            decoded.time_zone = readInt16LE(bytes.slice(offset, offset + 2));
+            decoded.time_zone = readTimeZone(readInt16LE(bytes.slice(offset, offset + 2)));
             offset += 2;
             break;
         case 0x27:
@@ -335,12 +335,14 @@ function readGPIOStatus(status) {
     return getValue(status_map, status);
 }
 
-function readGPIOAlarm(type) {
-    var alarm_map = {
-        0: "gpio alarm release",
-        1: "gpio alarm"
-    };
-    return getValue(alarm_map, type);
+function readGPIOType(type) {
+    var type_map = { 1: "gpio", 2: "counter" };
+    return getValue(type_map, type);
+}
+
+function readGPIOAlarm(bytes) {
+    var alarm_map = { 0: "gpio alarm release", 1: "gpio alarm" };
+    return getValue(alarm_map, bytes);
 }
 
 function readWaterAlarm(type) {
@@ -348,7 +350,7 @@ function readWaterAlarm(type) {
         1: "water outage timeout alarm",
         2: "water outage timeout alarm release",
         3: "water flow timeout alarm",
-        4: "water flow timeout alarm release"
+        4: "water flow timeout alarm release",
     };
     return getValue(alarm_map, type);
 }
@@ -361,7 +363,7 @@ function readAlarm(bytes) {
         3: "water flow timeout alarm",
         4: "water flow timeout alarm release",
         5: "gpio alarm",
-        6: "gpio alarm release"
+        6: "gpio alarm release",
     };
     return getValue(alarm_map, bytes);
 }
@@ -374,6 +376,11 @@ function readYesNoStatus(status) {
 function readEnableStatus(status) {
     var status_map = { 0: "disable", 1: "enable" };
     return getValue(status_map, status);
+}
+
+function readTimeZone(time_zone) {
+    var timezone_map = { "-120": "UTC-12", "-110": "UTC-11", "-100": "UTC-10", "-95": "UTC-9:30", "-90": "UTC-9", "-80": "UTC-8", "-70": "UTC-7", "-60": "UTC-6", "-50": "UTC-5", "-40": "UTC-4", "-35": "UTC-3:30", "-30": "UTC-3", "-20": "UTC-2", "-10": "UTC-1", 0: "UTC", 10: "UTC+1", 20: "UTC+2", 30: "UTC+3", 35: "UTC+3:30", 40: "UTC+4", 45: "UTC+4:30", 50: "UTC+5", 55: "UTC+5:30", 57: "UTC+5:45", 60: "UTC+6", 65: "UTC+6:30", 70: "UTC+7", 80: "UTC+8", 90: "UTC+9", 95: "UTC+9:30", 100: "UTC+10", 105: "UTC+10:30", 110: "UTC+11", 120: "UTC+12", 127: "UTC+12:45", 130: "UTC+13", 140: "UTC+14" };
+    return getValue(timezone_map, time_zone);
 }
 
 function readMathCondition(bytes) {
