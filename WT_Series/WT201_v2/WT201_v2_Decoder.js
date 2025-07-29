@@ -225,10 +225,10 @@ function handle_downlink_response(channel_type, bytes, offset) {
             var data = { condition: getValue(condition_map, condition), alarm_type: getValue(alarm_type_map, alarm_type) };
 
             if (condition === 1 || condition === 3 || condition === 4) {
-                data.min = readInt16LE(bytes.slice(offset + 1, offset + 3)) / 10;
+                data.threshold_min = readInt16LE(bytes.slice(offset + 1, offset + 3)) / 10;
             }
             if (condition === 2 || condition === 3 || condition === 4) {
-                data.max = readInt16LE(bytes.slice(offset + 3, offset + 5)) / 10;
+                data.threshold_max = readInt16LE(bytes.slice(offset + 3, offset + 5)) / 10;
             }
             data.lock_time = readInt16LE(bytes.slice(offset + 5, offset + 7));
             data.continue_time = readInt16LE(bytes.slice(offset + 7, offset + 9));
@@ -290,9 +290,9 @@ function handle_downlink_response(channel_type, bytes, offset) {
             offset += 3;
             break;
         case 0xab:
-            decoded.temperature_calibration = {};
-            decoded.temperature_calibration.enable = readEnableStatus(readUInt8(bytes[offset]));
-            decoded.temperature_calibration.temperature = readInt16LE(bytes.slice(offset + 1, offset + 3)) / 10;
+            decoded.temperature_calibration_settings = {};
+            decoded.temperature_calibration_settings.enable = readEnableStatus(readUInt8(bytes[offset]));
+            decoded.temperature_calibration_settings.calibration_value = readInt16LE(bytes.slice(offset + 1, offset + 3)) / 10;
             offset += 3;
             break;
         case 0xb0:
@@ -349,7 +349,7 @@ function handle_downlink_response(channel_type, bytes, offset) {
             offset += 10;
             break;
         case 0xbd:
-            decoded.timezone = readTimeZone(readInt16LE(bytes.slice(offset, offset + 2)));
+            decoded.time_zone = readTimeZone(readInt16LE(bytes.slice(offset, offset + 2)));
             offset += 2;
             break;
         case 0xc1:
@@ -430,9 +430,9 @@ function handle_downlink_response(channel_type, bytes, offset) {
             offset += 1;
             break;
         case 0xf9:
-            decoded.humidity_calibration = {};
-            decoded.humidity_calibration.enable = readEnableStatus(readUInt8(bytes[offset]));
-            decoded.humidity_calibration.humidity = readInt16LE(bytes.slice(offset + 1, offset + 3)) / 10;
+            decoded.humidity_calibration_settings = {};
+            decoded.humidity_calibration_settings.enable = readEnableStatus(readUInt8(bytes[offset]));
+            decoded.humidity_calibration_settings.calibration_value = readInt16LE(bytes.slice(offset + 1, offset + 3)) / 10;
             offset += 3;
             break;
         case 0xfa:
@@ -699,9 +699,9 @@ function readDeviceStatus(status) {
     return getValue(status_map, status);
 }
 
-function readEnableStatus(type) {
-    var enable_status_map = { 0: "disable", 1: "enable" };
-    return getValue(enable_status_map, type);
+function readEnableStatus(status) {
+    var status_map = { 0: "disable", 1: "enable" };
+    return getValue(status_map, status);
 }
 
 function readYesNoStatus(type) {
@@ -918,9 +918,9 @@ function readWeekRecycleSettings(value) {
     return week_enable;
 }
 
-function readTimeZone(timezone) {
+function readTimeZone(time_zone) {
     var timezone_map = { "-720": "UTC-12", "-660": "UTC-11", "-600": "UTC-10", "-570": "UTC-9:30", "-540": "UTC-9", "-480": "UTC-8", "-420": "UTC-7", "-360": "UTC-6", "-300": "UTC-5", "-240": "UTC-4", "-210": "UTC-3:30", "-180": "UTC-3", "-120": "UTC-2", "-60": "UTC-1", 0: "UTC", 60: "UTC+1", 120: "UTC+2", 180: "UTC+3", 210: "UTC+3:30", 240: "UTC+4", 270: "UTC+4:30", 300: "UTC+5", 330: "UTC+5:30", 345: "UTC+5:45", 360: "UTC+6", 390: "UTC+6:30", 420: "UTC+7", 480: "UTC+8", 540: "UTC+9", 570: "UTC+9:30", 600: "UTC+10", 630: "UTC+10:30", 660: "UTC+11", 720: "UTC+12", 765: "UTC+12:45", 780: "UTC+13", 840: "UTC+14" };
-    return getValue(timezone_map, timezone);
+    return getValue(timezone_map, time_zone);
 }
 
 function readSingleTemperaturePlanConfig(bytes) {
@@ -996,7 +996,7 @@ function readD2DMasterConfig(bytes) {
     var config = {};
     config.plan_type = readPlanType(readUInt8(bytes[offset]));
     config.enable = readEnableStatus(bytes[offset + 1]);
-    config.uplink_enable = readEnableStatus(bytes[offset + 2]);
+    config.lora_uplink_enable = readEnableStatus(bytes[offset + 2]);
     config.d2d_cmd = readD2DCommand(bytes.slice(offset + 3, offset + 5));
     config.time = readUInt16LE(bytes.slice(offset + 5, offset + 7));
     config.time_enable = readEnableStatus(bytes[offset + 7]);
