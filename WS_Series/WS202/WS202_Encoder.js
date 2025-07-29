@@ -83,27 +83,27 @@ function setReportInterval(report_interval) {
 /**
  * set light threshold alarm
  * @param {object} light_alarm_config
- * @param {number} light_alarm_config.min_threshold uint: lux
- * @param {number} light_alarm_config.max_threshold uint: lux
- * @example { "light_alarm_config": { "min_threshold": 300, "max_threshold": 3000 } }
+ * @param {number} light_alarm_config.threshold_min uint: lux
+ * @param {number} light_alarm_config.threshold_max uint: lux
+ * @example { "light_alarm_config": { "threshold_min": 300, "threshold_max": 3000 } }
  */
 function setLightThreshold(light_alarm_config) {
-    var min_threshold = light_alarm_config.min_threshold;
-    var max_threshold = light_alarm_config.max_threshold;
+    var threshold_min = light_alarm_config.threshold_min;
+    var threshold_max = light_alarm_config.threshold_max;
 
-    if (typeof min_threshold !== "number" || typeof max_threshold !== "number") {
-        throw new Error("light_alarm_config.min_threshold and light_alarm_config.max_threshold must be numbers");
+    if (typeof threshold_min !== "number" || typeof threshold_max !== "number") {
+        throw new Error("light_alarm_config.threshold_min and light_alarm_config.threshold_max must be numbers");
     }
-    if (min_threshold < 0 || min_threshold > 65535 || max_threshold < 0 || max_threshold > 65535) {
-        throw new Error("light_alarm_config.min_threshold and light_alarm_config.max_threshold must be in range [0, 65535]");
+    if (threshold_min < 0 || threshold_min > 65535 || threshold_max < 0 || threshold_max > 65535) {
+        throw new Error("light_alarm_config.threshold_min and light_alarm_config.threshold_max must be in range [0, 65535]");
     }
 
     var buffer = new Buffer(11);
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0x06);
     buffer.writeUInt8(0x00);
-    buffer.writeUInt16LE(min_threshold);
-    buffer.writeUInt16LE(max_threshold);
+    buffer.writeUInt16LE(threshold_min);
+    buffer.writeUInt16LE(threshold_max);
     buffer.writeUInt16LE(0x00);
     buffer.writeUInt16LE(0x00);
     return buffer.toBytes();
