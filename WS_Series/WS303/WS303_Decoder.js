@@ -29,7 +29,7 @@ function Decoder(bytes, port) {
 function milesightDeviceDecode(bytes) {
     var decoded = {};
 
-    for (var i = 0; i < bytes.length;) {
+    for (var i = 0; i < bytes.length; ) {
         var channel_id = bytes[i++];
         var channel_type = bytes[i++];
 
@@ -123,10 +123,10 @@ function handle_downlink_response(channel_type, bytes, offset) {
             break;
 
         case 0x7e:
-            decoded.leakage_alarm_settings = {};
-            decoded.leakage_alarm_settings.enable = readEnableStatus(bytes[offset]);
-            decoded.leakage_alarm_settings.alarm_interval = readUInt16LE(bytes.slice(offset + 1, offset + 3));
-            decoded.leakage_alarm_settings.alarm_count = readUInt16LE(bytes.slice(offset + 3, offset + 5));
+            decoded.leakage_alarm_config = {};
+            decoded.leakage_alarm_config.enable = readEnableStatus(bytes[offset]);
+            decoded.leakage_alarm_config.alarm_interval = readUInt16LE(bytes.slice(offset + 1, offset + 3));
+            decoded.leakage_alarm_config.alarm_count = readUInt16LE(bytes.slice(offset + 3, offset + 5));
             offset += 5;
             break;
         case 0x7f:
