@@ -41,11 +41,11 @@ function milesightDeviceEncode(payload) {
     if ("installation_height" in payload) {
         encoded = encoded.concat(setInstallationHeight(payload.installation_height));
     }
-    if ("cumulative_reset_enable" in payload) {
-        encoded = encoded.concat(setCumulativeResetEnable(payload.cumulative_reset_enable));
+    if ("reset_cumulative_enable" in payload) {
+        encoded = encoded.concat(setCumulativeResetEnable(payload.reset_cumulative_enable));
     }
-    if ("cumulative_reset_schedule_config" in payload) {
-        encoded = encoded.concat(setCumulativeResetScheduleConfig(payload.cumulative_reset_schedule_config));
+    if ("reset_cumulative_schedule_config" in payload) {
+        encoded = encoded.concat(setCumulativeResetScheduleConfig(payload.reset_cumulative_schedule_config));
     }
     if ("reset_cumulative_in" in payload) {
         encoded = encoded.concat(resetCumulativeIn(payload.reset_cumulative_in));
@@ -53,11 +53,11 @@ function milesightDeviceEncode(payload) {
     if ("reset_cumulative_out" in payload) {
         encoded = encoded.concat(resetCumulativeOut(payload.reset_cumulative_out));
     }
-    if ("cumulative_report_enable" in payload) {
-        encoded = encoded.concat(setCumulativeReportEnable(payload.cumulative_report_enable));
+    if ("report_cumulative_enable" in payload) {
+        encoded = encoded.concat(setCumulativeReportEnable(payload.report_cumulative_enable));
     }
-    if ("temperature_report_enable" in payload) {
-        encoded = encoded.concat(setTemperatureReportEnable(payload.temperature_report_enable));
+    if ("report_temperature_enable" in payload) {
+        encoded = encoded.concat(setTemperatureReportEnable(payload.report_temperature_enable));
     }
     if ("temperature_calibration_settings" in payload) {
         encoded = encoded.concat(setTemperatureCalibrationSetting(payload.temperature_calibration_settings));
@@ -68,14 +68,14 @@ function milesightDeviceEncode(payload) {
     if ("hibernate_config" in payload) {
         encoded = encoded.concat(setHibernateConfig(payload.hibernate_config));
     }
-    if ("people_period_alarm_settings" in payload) {
-        encoded = encoded.concat(setPeoplePeriodAlarmSettings(payload.people_period_alarm_settings));
+    if ("people_period_alarm_config" in payload) {
+        encoded = encoded.concat(setPeoplePeriodAlarmSettings(payload.people_period_alarm_config));
     }
-    if ("people_cumulative_alarm_settings" in payload) {
-        encoded = encoded.concat(setPeopleCumulativeAlarmSettings(payload.people_cumulative_alarm_settings));
+    if ("people_cumulative_alarm_config" in payload) {
+        encoded = encoded.concat(setPeopleCumulativeAlarmSettings(payload.people_cumulative_alarm_config));
     }
-    if ("temperature_alarm_settings" in payload) {
-        encoded = encoded.concat(setTemperatureAlarmSettings(payload.temperature_alarm_settings));
+    if ("temperature_alarm_config" in payload) {
+        encoded = encoded.concat(setTemperatureAlarmSettings(payload.temperature_alarm_config));
     }
     if ("retransmit_enable" in payload) {
         encoded = encoded.concat(setRetransmitEnable(payload.retransmit_enable));
@@ -101,7 +101,9 @@ function milesightDeviceEncode(payload) {
         encoded = encoded.concat(setConfirmMode(payload.confirm_mode_enable));
     }
     if ("lora_channel_mask_config" in payload) {
-        encoded = encoded.concat(setLoRaChannelMaskConfig(payload.lora_channel_mask_config));
+        for (var i = 0; i < payload.lora_channel_mask_config.length; i++) {
+            encoded = encoded.concat(setLoRaChannelMaskConfig(payload.lora_channel_mask_config[i]));
+        }
     }
     if ("adr_enable" in payload) {
         encoded = encoded.concat(setADREnable(payload.adr_enable));
@@ -158,13 +160,13 @@ function milesightDeviceEncode(payload) {
  * @example { "reboot": 1 }
  */
 function reboot(reboot) {
-    var reboot_map = { 0: "no", 1: "yes" };
-    var reboot_values = getValues(reboot_map);
+    var yes_no_map = { 0: "no", 1: "yes" };
+    var reboot_values = getValues(yes_no_map);
     if (reboot_values.indexOf(reboot) === -1) {
         throw new Error("reboot must be one of " + reboot_values.join(", "));
     }
 
-    if (getValue(reboot_map, reboot) === 0) {
+    if (getValue(yes_no_map, reboot) === 0) {
         return [];
     }
     return [0xff, 0x10, 0xff];
@@ -225,20 +227,20 @@ function setInstallationHeight(installation_height) {
 
 /**
  * set reset cumulative enable
- * @param {number} cumulative_reset_enable values: (0: disable, 1: enable)
- * @example { "cumulative_reset_enable": 1 }
+ * @param {number} reset_cumulative_enable values: (0: disable, 1: enable)
+ * @example { "reset_cumulative_enable": 1 }
  */
-function setCumulativeResetEnable(cumulative_reset_enable) {
+function setCumulativeResetEnable(reset_cumulative_enable) {
     var enable_map = { 0: "disable", 1: "enable" };
     var enable_values = getValues(enable_map);
-    if (enable_values.indexOf(cumulative_reset_enable) === -1) {
-        throw new Error("cumulative_reset_enable must be one of " + enable_values.join(", "));
+    if (enable_values.indexOf(reset_cumulative_enable) === -1) {
+        throw new Error("reset_cumulative_enable must be one of " + enable_values.join(", "));
     }
 
     var buffer = new Buffer(3);
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0xa6);
-    buffer.writeUInt8(getValue(enable_map, cumulative_reset_enable));
+    buffer.writeUInt8(getValue(enable_map, reset_cumulative_enable));
     return buffer.toBytes();
 }
 
@@ -314,39 +316,39 @@ function resetCumulativeOut(reset_cumulative_out) {
 
 /**
  * set cumulative report enable
- * @param {number} cumulative_report_enable values: (0: disable, 1: enable)
- * @example { "cumulative_report_enable": 1 }
+ * @param {number} report_cumulative_enable values: (0: disable, 1: enable)
+ * @example { "report_cumulative_enable": 1 }
  */
-function setCumulativeReportEnable(cumulative_report_enable) {
+function setCumulativeReportEnable(report_cumulative_enable) {
     var enable_map = { 0: "disable", 1: "enable" };
     var enable_values = getValues(enable_map);
-    if (enable_values.indexOf(cumulative_report_enable) === -1) {
-        throw new Error("cumulative_report_enable must be one of " + enable_values.join(", "));
+    if (enable_values.indexOf(report_cumulative_enable) === -1) {
+        throw new Error("report_cumulative_enable must be one of " + enable_values.join(", "));
     }
 
     var buffer = new Buffer(3);
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0xa9);
-    buffer.writeUInt8(getValue(enable_map, cumulative_report_enable));
+    buffer.writeUInt8(getValue(enable_map, report_cumulative_enable));
     return buffer.toBytes();
 }
 
 /**
  * set temperature report enable
- * @param {number} temperature_report_enable values: (0: disable, 1: enable)
- * @example { "temperature_report_enable": 1 }
+ * @param {number} report_temperature_enable values: (0: disable, 1: enable)
+ * @example { "report_temperature_enable": 1 }
  */
-function setTemperatureReportEnable(temperature_report_enable) {
+function setTemperatureReportEnable(report_temperature_enable) {
     var enable_map = { 0: "disable", 1: "enable" };
     var enable_values = getValues(enable_map);
-    if (enable_values.indexOf(temperature_report_enable) === -1) {
-        throw new Error("temperature_report_enable must be one of " + enable_values.join(", "));
+    if (enable_values.indexOf(report_temperature_enable) === -1) {
+        throw new Error("report_temperature_enable must be one of " + enable_values.join(", "));
     }
 
     var buffer = new Buffer(3);
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0xaa);
-    buffer.writeUInt8(getValue(enable_map, temperature_report_enable));
+    buffer.writeUInt8(getValue(enable_map, report_temperature_enable));
     return buffer.toBytes();
 }
 
@@ -431,25 +433,25 @@ function setHibernateConfig(hibernate_config) {
 
 /**
  * set people period alarm settings
- * @param {object} people_period_alarm_settings
- * @param {number} people_period_alarm_settings.threshold_condition values: (0: disable, 1: below, 2: above, 3: between, 4: outside)
- * @param {number} people_period_alarm_settings.threshold_out range: [1, 65535]
- * @param {number} people_period_alarm_settings.threshold_in range: [1, 65535]
- * @example { "people_period_alarm_settings": { "threshold_condition": 3, "threshold_out": 20, "threshold_in": 25 } }
+ * @param {object} people_period_alarm_config
+ * @param {number} people_period_alarm_config.condition values: (0: disable, 1: below, 2: above, 3: between, 4: outside)
+ * @param {number} people_period_alarm_config.threshold_out range: [1, 65535]
+ * @param {number} people_period_alarm_config.threshold_in range: [1, 65535]
+ * @example { "people_period_alarm_config": { "condition": 3, "threshold_out": 20, "threshold_in": 25 } }
  */
-function setPeoplePeriodAlarmSettings(people_period_alarm_settings) {
-    var threshold_condition = people_period_alarm_settings.threshold_condition;
-    var threshold_out = people_period_alarm_settings.threshold_out;
-    var threshold_in = people_period_alarm_settings.threshold_in;
+function setPeoplePeriodAlarmSettings(people_period_alarm_config) {
+    var condition = people_period_alarm_config.condition;
+    var threshold_out = people_period_alarm_config.threshold_out;
+    var threshold_in = people_period_alarm_config.threshold_in;
 
     var condition_map = { 0: "disable", 1: "below", 2: "above", 3: "between", 4: "outside" };
     var condition_values = getValues(condition_map);
-    if (condition_values.indexOf(threshold_condition) === -1) {
-        throw new Error("people_period_alarm_settings.threshold_condition must be one of " + condition_values.join(", "));
+    if (condition_values.indexOf(condition) === -1) {
+        throw new Error("people_period_alarm_config.condition must be one of " + condition_values.join(", "));
     }
 
     var data = 0x00;
-    data |= getValue(condition_map, threshold_condition) << 0;
+    data |= getValue(condition_map, condition) << 0;
     data |= 1 << 3; // 1: period
     data |= 1 << 6; // enable
 
@@ -466,25 +468,25 @@ function setPeoplePeriodAlarmSettings(people_period_alarm_settings) {
 
 /**
  * set people cumulative alarm settings
- * @param {object} people_cumulative_alarm_settings
- * @param {number} people_cumulative_alarm_settings.threshold_condition values: (0: disable, 1: below, 2: above, 3: between, 4: outside)
- * @param {number} people_cumulative_alarm_settings.threshold_out range: [1, 65535]
- * @param {number} people_cumulative_alarm_settings.threshold_in range: [1, 65535]
- * @example { "people_cumulative_alarm_settings": { "threshold_condition": 3, "threshold_out": 20, "threshold_in": 25 } }
+ * @param {object} people_cumulative_alarm_config
+ * @param {number} people_cumulative_alarm_config.condition values: (0: disable, 1: below, 2: above, 3: between, 4: outside)
+ * @param {number} people_cumulative_alarm_config.threshold_out range: [1, 65535]
+ * @param {number} people_cumulative_alarm_config.threshold_in range: [1, 65535]
+ * @example { "people_cumulative_alarm_config": { "condition": 3, "threshold_out": 20, "threshold_in": 25 } }
  */
-function setPeopleCumulativeAlarmSettings(people_cumulative_alarm_settings) {
-    var threshold_condition = people_cumulative_alarm_settings.threshold_condition;
-    var threshold_out = people_cumulative_alarm_settings.threshold_out;
-    var threshold_in = people_cumulative_alarm_settings.threshold_in;
+function setPeopleCumulativeAlarmSettings(people_cumulative_alarm_config) {
+    var condition = people_cumulative_alarm_config.condition;
+    var threshold_out = people_cumulative_alarm_config.threshold_out;
+    var threshold_in = people_cumulative_alarm_config.threshold_in;
 
     var condition_map = { 0: "disable", 1: "below", 2: "above", 3: "between", 4: "outside" };
     var condition_values = getValues(condition_map);
-    if (condition_values.indexOf(threshold_condition) === -1) {
-        throw new Error("people_cumulative_alarm_settings.threshold_condition must be one of " + condition_values.join(", "));
+    if (condition_values.indexOf(condition) === -1) {
+        throw new Error("people_cumulative_alarm_config.condition must be one of " + condition_values.join(", "));
     }
 
     var data = 0x00;
-    data |= getValue(condition_map, threshold_condition) << 0;
+    data |= getValue(condition_map, condition) << 0;
     data |= 2 << 3; // 2: cumulative
     data |= 1 << 6; // enable
 
@@ -501,25 +503,25 @@ function setPeopleCumulativeAlarmSettings(people_cumulative_alarm_settings) {
 
 /**
  * set temperature alarm settings
- * @param {object} temperature_alarm_settings
- * @param {number} temperature_alarm_settings.threshold_condition values: (0: disable, 1: below, 2: above, 3: between, 4: outside)
- * @param {number} temperature_alarm_settings.threshold_min unit: ℃
- * @param {number} temperature_alarm_settings.threshold_max unit: ℃
- * @example { "temperature_alarm_settings": { "threshold_condition": 3, "threshold_min": 20, "threshold_max": 25 } }
+ * @param {object} temperature_alarm_config
+ * @param {number} temperature_alarm_config.condition values: (0: disable, 1: below, 2: above, 3: between, 4: outside)
+ * @param {number} temperature_alarm_config.threshold_min unit: ℃
+ * @param {number} temperature_alarm_config.threshold_max unit: ℃
+ * @example { "temperature_alarm_config": { "condition": 3, "threshold_min": 20, "threshold_max": 25 } }
  */
-function setTemperatureAlarmSettings(temperature_alarm_settings) {
-    var threshold_condition = temperature_alarm_settings.threshold_condition;
-    var threshold_min = temperature_alarm_settings.threshold_min;
-    var threshold_max = temperature_alarm_settings.threshold_max;
+function setTemperatureAlarmSettings(temperature_alarm_config) {
+    var condition = temperature_alarm_config.condition;
+    var threshold_min = temperature_alarm_config.threshold_min;
+    var threshold_max = temperature_alarm_config.threshold_max;
 
     var condition_map = { 0: "disable", 1: "below", 2: "above", 3: "between", 4: "outside" };
     var condition_values = getValues(condition_map);
-    if (condition_values.indexOf(threshold_condition) === -1) {
-        throw new Error("temperature_alarm_settings.threshold_condition must be one of " + condition_values.join(", "));
+    if (condition_values.indexOf(condition) === -1) {
+        throw new Error("temperature_alarm_config.condition must be one of " + condition_values.join(", "));
     }
 
     var data = 0x00;
-    data |= getValue(condition_map, threshold_condition) << 0;
+    data |= getValue(condition_map, condition) << 0;
     data |= 3 << 3; // 3: temperature
     data |= 1 << 6; // enable
 
@@ -668,7 +670,7 @@ function setD2DMasterConfig(d2d_master_config) {
         throw new Error("d2d_master_config._item.enable must be one of " + enable_values.join(", "));
     }
     if ("enable" in d2d_master_config && enable_values.indexOf(lora_uplink_enable) === -1) {
-        throw new Error("d2d_master_config._item.uplink_enable must be one of " + enable_values.join(", "));
+        throw new Error("d2d_master_config._item.lora_uplink_enable must be one of " + enable_values.join(", "));
     }
     if ("enable" in d2d_master_config && enable_values.indexOf(time_enable) === -1) {
         throw new Error("d2d_master_config._item.time_enable must be one of " + enable_values.join(", "));
@@ -719,7 +721,7 @@ function setLoRaChannelMaskConfig(lora_channel_mask_config) {
     var mask = lora_channel_mask_config.mask;
 
     if (id < 1 || id > 16) {
-        throw new Error("lora_channel_mask_config.id must be between 1 and 16");
+        throw new Error("lora_channel_mask_config._item.id must be between 1 and 16");
     }
 
     var buffer = new Buffer(5);
