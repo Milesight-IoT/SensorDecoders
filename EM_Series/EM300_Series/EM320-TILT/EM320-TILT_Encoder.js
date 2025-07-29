@@ -32,17 +32,17 @@ function milesightDeviceEncode(payload) {
     if ("reboot" in payload) {
         encoded = encoded.concat(reboot(payload.reboot));
     }
+    if ("report_interval" in payload) {
+        encoded = encoded.concat(setReportInterval(payload.report_interval));
+    }
     if ("query_device_status" in payload) {
         encoded = encoded.concat(queryDeviceStatus(payload.query_device_status));
     }
     if ("sync_time" in payload) {
         encoded = encoded.concat(syncTime(payload.sync_time));
     }
-    if ("report_interval" in payload) {
-        encoded = encoded.concat(setReportInterval(payload.report_interval));
-    }
     if ("angle_x_alarm_config" in payload) {
-        encoded = encoded.concat(setAngleAlarmConfig(payload.angle_x_alarm_config));
+        encoded = encoded.concat(setAngleXAlarmConfig(payload.angle_x_alarm_config));
     }
     if ("angle_y_alarm_config" in payload) {
         encoded = encoded.concat(setAngleYAlarmConfig(payload.angle_y_alarm_config));
@@ -98,8 +98,8 @@ function queryDeviceStatus(query_device_status) {
 
 /**
  * sync time
- * @param {boolean} sync_time values: (0: no, 1: yes)
- * @example payload: { "sync_time": 1 }, output: FF4A00
+ * @param {number} sync_time values: (0: no, 1: yes)
+ * @example { "sync_time": 1 }
  */
 function syncTime(sync_time) {
     var yes_no_map = { 0: "no", 1: "yes" };
@@ -140,16 +140,16 @@ function setReportInterval(report_interval) {
  * @param {number} angle_x_alarm_config.condition values: (0: disable, 1: below, 2: above, 3: between, 4: outside, 5: mutation)
  * @param {number} angle_x_alarm_config.threshold_min unit: °
  * @param {number} angle_x_alarm_config.threshold_max unit: °
- * @param {number} angle_x_alarm_config.alarm_interval unit: minute, range: [1, 1080]
- * @param {number} angle_x_alarm_config.alarm_times
+ * @param {number} angle_x_alarm_config.report_interval unit: minute, range: [1, 1080]
+ * @param {number} angle_x_alarm_config.report_times
  * @example { "angle_x_alarm_config": { "condition": 1, "threshold_min": 10, "threshold_max": 20 } }
  */
-function setAngleAlarmConfig(angle_x_alarm_config) {
+function setAngleXAlarmConfig(angle_x_alarm_config) {
     var condition = angle_x_alarm_config.condition;
     var threshold_min = angle_x_alarm_config.threshold_min;
     var threshold_max = angle_x_alarm_config.threshold_max;
-    var alarm_interval = angle_x_alarm_config.alarm_interval;
-    var alarm_times = angle_x_alarm_config.alarm_times;
+    var report_interval = angle_x_alarm_config.report_interval;
+    var report_times = angle_x_alarm_config.report_times;
 
     var condition_map = { 0: "disable", 1: "below", 2: "above", 3: "between", 4: "outside", 5: "mutation" };
     var condition_values = getValues(condition_map);
@@ -167,8 +167,8 @@ function setAngleAlarmConfig(angle_x_alarm_config) {
     buffer.writeUInt8(data);
     buffer.writeInt16LE(threshold_min * 100);
     buffer.writeInt16LE(threshold_max * 100);
-    buffer.writeUInt16LE(alarm_interval);
-    buffer.writeUInt16LE(alarm_times);
+    buffer.writeUInt16LE(report_interval);
+    buffer.writeUInt16LE(report_times);
     return buffer.toBytes();
 }
 
@@ -178,16 +178,16 @@ function setAngleAlarmConfig(angle_x_alarm_config) {
  * @param {number} angle_y_alarm_config.condition values: (0: disable, 1: below, 2: above, 3: between, 4: outside, 5: mutation)
  * @param {number} angle_y_alarm_config.threshold_min unit: °
  * @param {number} angle_y_alarm_config.threshold_max unit: °
- * @param {number} angle_y_alarm_config.alarm_interval unit: minute, range: [1, 1080]
- * @param {number} angle_y_alarm_config.alarm_times
+ * @param {number} angle_y_alarm_config.report_interval unit: minute, range: [1, 1080]
+ * @param {number} angle_y_alarm_config.report_times
  * @example { "angle_y_alarm_config": { "condition": 1, "threshold_min": 10, "threshold_max": 20 } }
  */
 function setAngleYAlarmConfig(angle_y_alarm_config) {
     var condition = angle_y_alarm_config.condition;
     var threshold_min = angle_y_alarm_config.threshold_min;
     var threshold_max = angle_y_alarm_config.threshold_max;
-    var alarm_interval = angle_y_alarm_config.alarm_interval;
-    var alarm_times = angle_y_alarm_config.alarm_times;
+    var report_interval = angle_y_alarm_config.report_interval;
+    var report_times = angle_y_alarm_config.report_times;
 
     var condition_map = { 0: "disable", 1: "below", 2: "above", 3: "between", 4: "outside", 5: "mutation" };
     var condition_values = getValues(condition_map);
@@ -205,8 +205,8 @@ function setAngleYAlarmConfig(angle_y_alarm_config) {
     buffer.writeUInt8(data);
     buffer.writeInt16LE(threshold_min * 100);
     buffer.writeInt16LE(threshold_max * 100);
-    buffer.writeUInt16LE(alarm_interval);
-    buffer.writeUInt16LE(alarm_times);
+    buffer.writeUInt16LE(report_interval);
+    buffer.writeUInt16LE(report_times);
     return buffer.toBytes();
 }
 
@@ -216,16 +216,16 @@ function setAngleYAlarmConfig(angle_y_alarm_config) {
  * @param {number} angle_z_alarm_config.condition values: (0: disable, 1: below, 2: above, 3: between, 4: outside, 5: mutation)
  * @param {number} angle_z_alarm_config.threshold_min unit: °
  * @param {number} angle_z_alarm_config.threshold_max unit: °
- * @param {number} angle_z_alarm_config.alarm_interval unit: minute, range: [1, 1080]
- * @param {number} angle_z_alarm_config.alarm_times
+ * @param {number} angle_z_alarm_config.report_interval unit: minute, range: [1, 1080]
+ * @param {number} angle_z_alarm_config.report_times
  * @example { "angle_z_alarm_config": { "condition": 1, "threshold_min": 10, "threshold_max": 20 } }
  */
 function setAngleZAlarmConfig(angle_z_alarm_config) {
     var condition = angle_z_alarm_config.condition;
     var threshold_min = angle_z_alarm_config.threshold_min;
     var threshold_max = angle_z_alarm_config.threshold_max;
-    var alarm_interval = angle_z_alarm_config.alarm_interval;
-    var alarm_times = angle_z_alarm_config.alarm_times;
+    var report_interval = angle_z_alarm_config.report_interval;
+    var report_times = angle_z_alarm_config.report_times;
 
     var condition_map = { 0: "disable", 1: "below", 2: "above", 3: "between", 4: "outside", 5: "mutation" };
     var condition_values = getValues(condition_map);
@@ -243,8 +243,8 @@ function setAngleZAlarmConfig(angle_z_alarm_config) {
     buffer.writeUInt8(data);
     buffer.writeInt16LE(threshold_min * 100);
     buffer.writeInt16LE(threshold_max * 100);
-    buffer.writeUInt16LE(alarm_interval);
-    buffer.writeUInt16LE(alarm_times);
+    buffer.writeUInt16LE(report_interval);
+    buffer.writeUInt16LE(report_times);
     return buffer.toBytes();
 }
 
@@ -356,7 +356,6 @@ Buffer.prototype.writeInt32LE = function (value) {
     this._write(value < 0 ? value + 0x100000000 : value, 4, true);
     this.offset += 4;
 };
-
 
 Buffer.prototype.writeBytes = function (bytes) {
     for (var i = 0; i < bytes.length; i++) {

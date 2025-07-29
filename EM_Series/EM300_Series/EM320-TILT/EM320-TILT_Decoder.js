@@ -29,7 +29,7 @@ function Decoder(bytes, port) {
 function milesightDeviceDecode(bytes) {
     var decoded = {};
 
-    for (var i = 0; i < bytes.length;) {
+    for (var i = 0; i < bytes.length; ) {
         var channel_id = bytes[i++];
         var channel_type = bytes[i++];
 
@@ -84,9 +84,9 @@ function milesightDeviceDecode(bytes) {
             decoded.angle_x = (readInt16LE(bytes.slice(i, i + 2)) >> 1) / 100;
             decoded.angle_y = (readInt16LE(bytes.slice(i + 2, i + 4)) >> 1) / 100;
             decoded.angle_z = (readInt16LE(bytes.slice(i + 4, i + 6)) >> 1) / 100;
-            decoded.threshold_x = readAngleStatus((bytes[i] & 0x01));
-            decoded.threshold_y = readAngleStatus((bytes[i + 2] & 0x01));
-            decoded.threshold_z = readAngleStatus((bytes[i + 4] & 0x01));
+            decoded.threshold_x = readAngleStatus(bytes[i] & 0x01);
+            decoded.threshold_y = readAngleStatus(bytes[i + 2] & 0x01);
+            decoded.threshold_z = readAngleStatus(bytes[i + 4] & 0x01);
             i += 6;
         }
         // DOWNLINK RESPONSE
@@ -118,8 +118,8 @@ function handle_downlink_response(channel_type, bytes, offset) {
             config.condition = readMathConditionType(condition_type);
             config.threshold_min = readInt16LE(bytes.slice(offset + 1, offset + 3)) / 100;
             config.threshold_max = readInt16LE(bytes.slice(offset + 3, offset + 5)) / 100;
-            config.alarm_interval = readUInt16LE(bytes.slice(offset + 5, offset + 7));
-            config.alarm_times = readUInt16LE(bytes.slice(offset + 7, offset + 9));
+            config.report_interval = readUInt16LE(bytes.slice(offset + 5, offset + 7));
+            config.report_times = readUInt16LE(bytes.slice(offset + 7, offset + 9));
             offset += 9;
             if (alarm_type === 0x01) {
                 decoded.angle_x_alarm_config = config;
@@ -213,14 +213,14 @@ function readAngleStatus(status) {
     return getValue(status_map, status);
 }
 
-function readYesNoStatus(status) {
-    var status_map = { 0: "no", 1: "yes" };
-    return getValue(status_map, status);
-}
-
 function readMathConditionType(type) {
     var type_map = { 0: "disable", 1: "below", 2: "above", 3: "between", 4: "outside", 5: "mutation" };
     return getValue(type_map, type);
+}
+
+function readYesNoStatus(status) {
+    var status_map = { 0: "no", 1: "yes" };
+    return getValue(status_map, status);
 }
 
 function readInitialSurfaceType(type) {
