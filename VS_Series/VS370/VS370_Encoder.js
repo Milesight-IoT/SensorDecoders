@@ -174,13 +174,13 @@ function setPIRIdleInterval(pir_idle_interval) {
  * @example { "sync_time": 1 }
  */
 function syncTime(sync_time) {
-    var sync_time_type_map = { 0: "no", 1: "yes" };
-    var sync_time_type_values = getValues(sync_time_type_map);
-    if (sync_time_type_values.indexOf(sync_time) === -1) {
-        throw new Error("sync_time must be one of " + sync_time_type_values.join(", "));
+    var yes_no_map = { 0: "no", 1: "yes" };
+    var yes_no_values = getValues(yes_no_map);
+    if (yes_no_values.indexOf(sync_time) === -1) {
+        throw new Error("sync_time must be one of " + yes_no_values.join(", "));
     }
 
-    if (getValue(sync_time_type_map, sync_time) === 0) {
+    if (getValue(yes_no_map, sync_time) === 0) {
         return [];
     }
     return [0xff, 0x4a, 0xff];
@@ -188,21 +188,21 @@ function syncTime(sync_time) {
 
 /**
  * set time zone
- * @param {number} time_zone unit: minute, convert: "hh:mm" -> "hh * 60 + mm", values: ( -720: UTC-12, -660: UTC-11, -600: UTC-10, -570: UTC-9:30, -540: UTC-9, -480: UTC-8, -420: UTC-7, -360: UTC-6, -300: UTC-5, -240: UTC-4, -210: UTC-3:30, -180: UTC-3, -120: UTC-2, -60: UTC-1, 0: UTC, 60: UTC+1, 120: UTC+2, 180: UTC+3, 240: UTC+4, 300: UTC+5, 360: UTC+6, 420: UTC+7, 480: UTC+8, 540: UTC+9, 570: UTC+9:30, 600: UTC+10, 660: UTC+11, 720: UTC+12, 750: UTC+12:45, 780: UTC+13, 840: UTC+14 )
+ * @param {number} time_zone unit: minute, convert: "hh:mm" -> "hh * 60 + mm", values: ( -720: UTC-12, -660: UTC-11, -600: UTC-10, -570: UTC-9:30, -540: UTC-9, -480: UTC-8, -420: UTC-7, -360: UTC-6, -300: UTC-5, -240: UTC-4, -210: UTC-3:30, -180: UTC-3, -120: UTC-2, -60: UTC-1, 0: UTC, 60: UTC+1, 120: UTC+2, 180: UTC+3, 240: UTC+4, 300: UTC+5, 360: UTC+6, 420: UTC+7, 480: UTC+8, 540: UTC+9, 570: UTC+9:30, 600: UTC+10, 660: UTC+11, 720: UTC+12, 765: UTC+12:45, 780: UTC+13, 840: UTC+14 )
  * @example { "time_zone": 480 }
- * @example { "time_zone": -210 }
+ * @example { "time_zone": -240 }
  */
 function setTimeZone(time_zone) {
-    var time_zone_map = { "-720": "UTC-12", "-660": "UTC-11", "-600": "UTC-10", "-570": "UTC-9:30", "-540": "UTC-9", "-480": "UTC-8", "-420": "UTC-7", "-360": "UTC-6", "-300": "UTC-5", "-240": "UTC-4", "-210": "UTC-3:30", "-180": "UTC-3", "-120": "UTC-2", "-60": "UTC-1", 0: "UTC", 60: "UTC+1", 120: "UTC+2", 180: "UTC+3", 210: "UTC+3:30", 240: "UTC+4", 270: "UTC+4:30", 300: "UTC+5", 330: "UTC+5:30", 345: "UTC+5:45", 360: "UTC+6", 390: "UTC+6:30", 420: "UTC+7", 480: "UTC+8", 540: "UTC+9", 570: "UTC+9:30", 600: "UTC+10", 630: "UTC+10:30", 660: "UTC+11", 720: "UTC+12", 750: "UTC+12:45", 780: "UTC+13", 840: "UTC+14" };
-    var time_zone_values = getValues(time_zone_map);
-    if (time_zone_values.indexOf(time_zone) === -1) {
-        throw new Error("time_zone must be one of " + time_zone_values.join(", "));
+    var timezone_map = { "-720": "UTC-12", "-660": "UTC-11", "-600": "UTC-10", "-570": "UTC-9:30", "-540": "UTC-9", "-480": "UTC-8", "-420": "UTC-7", "-360": "UTC-6", "-300": "UTC-5", "-240": "UTC-4", "-210": "UTC-3:30", "-180": "UTC-3", "-120": "UTC-2", "-60": "UTC-1", 0: "UTC", 60: "UTC+1", 120: "UTC+2", 180: "UTC+3", 210: "UTC+3:30", 240: "UTC+4", 270: "UTC+4:30", 300: "UTC+5", 330: "UTC+5:30", 345: "UTC+5:45", 360: "UTC+6", 390: "UTC+6:30", 420: "UTC+7", 480: "UTC+8", 540: "UTC+9", 570: "UTC+9:30", 600: "UTC+10", 630: "UTC+10:30", 660: "UTC+11", 720: "UTC+12", 765: "UTC+12:45", 780: "UTC+13", 840: "UTC+14" };
+    var timezone_values = getValues(timezone_map);
+    if (timezone_values.indexOf(time_zone) === -1) {
+        throw new Error("time_zone must be one of " + timezone_values.join(", "));
     }
 
     var buffer = new Buffer(4);
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0xbd);
-    buffer.writeInt16LE(getValue(time_zone_map, time_zone));
+    buffer.writeInt16LE(getValue(timezone_map, time_zone));
     return buffer.toBytes();
 }
 
@@ -336,15 +336,15 @@ function setDaylightSavingTime(dst_config) {
     var end_week_day = dst_config.end_week_day;
     var end_time = dst_config.end_time;
 
-    var dst_config_enable_map = { 0: "disable", 1: "enable" };
-    var dst_config_enable_values = getValues(dst_config_enable_map);
-    if (dst_config_enable_values.indexOf(enable) === -1) {
-        throw new Error("dst_config.enable must be one of " + dst_config_enable_values.join(", "));
+    var enable_map = { 0: "disable", 1: "enable" };
+    var enable_values = getValues(enable_map);
+    if (enable_values.indexOf(enable) === -1) {
+        throw new Error("dst_config.enable must be one of " + enable_values.join(", "));
     }
     var month_map = { 1: "January", 2: "February", 3: "March", 4: "April", 5: "May", 6: "June", 7: "July", 8: "August", 9: "September", 10: "October", 11: "November", 12: "December" };
     var month_values = getValues(month_map);
 
-    var enable_value = getValue(dst_config_enable_map, enable);
+    var enable_value = getValue(enable_map, enable);
     if (enable_value && month_values.indexOf(start_month) === -1) {
         throw new Error("dst_config.start_month must be one of " + month_values.join(", "));
     }

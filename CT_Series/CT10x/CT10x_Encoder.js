@@ -47,11 +47,11 @@ function milesightDeviceEncode(payload) {
     if ("alarm_report_interval" in payload) {
         encoded = encoded.concat(alarmReportInterval(payload.alarm_report_interval));
     }
-    if ("current_threshold_alarm_config" in payload) {
-        encoded = encoded.concat(setCurrentThresholdAlarmConfig(payload.current_threshold_alarm_config));
+    if ("current_alarm_config" in payload) {
+        encoded = encoded.concat(setCurrentThresholdAlarmConfig(payload.current_alarm_config));
     }
-    if ("temperature_threshold_alarm_config" in payload) {
-        encoded = encoded.concat(setTemperatureThresholdAlarmConfig(payload.temperature_threshold_alarm_config));
+    if ("temperature_alarm_config" in payload) {
+        encoded = encoded.concat(setTemperatureThresholdAlarmConfig(payload.temperature_alarm_config));
     }
 
     return encoded;
@@ -134,25 +134,25 @@ function clearCurrentCumulativeValue(clear_current_cumulative) {
 
 /**
  * set current threshold alarm config
- * @param {object} current_threshold_alarm_config
- * @param {number} current_threshold_alarm_config.condition values: (0: disable, 1: below, 2: above, 3: between, 4: outside)
- * @param {number} current_threshold_alarm_config.min_threshold unit: A
- * @param {number} current_threshold_alarm_config.max_threshold unit: A
- * @param {number} current_threshold_alarm_config.alarm_interval unit: minute
- * @param {number} current_threshold_alarm_config.alarm_counts
- * @example { "current_threshold_alarm_config": { "condition": 1, "min_threshold": 100, "max_threshold": 200 } }
+ * @param {object} current_alarm_config
+ * @param {number} current_alarm_config.condition values: (0: disable, 1: below, 2: above, 3: between, 4: outside)
+ * @param {number} current_alarm_config.threshold_min unit: A
+ * @param {number} current_alarm_config.threshold_max unit: A
+ * @param {number} current_alarm_config.alarm_interval unit: minute
+ * @param {number} current_alarm_config.alarm_counts
+ * @example { "current_alarm_config": { "condition": 1, "threshold_min": 100, "threshold_max": 200 } }
  */
-function setCurrentThresholdAlarmConfig(current_threshold_alarm_config) {
-    var condition = current_threshold_alarm_config.condition;
-    var min_threshold = current_threshold_alarm_config.min_threshold;
-    var max_threshold = current_threshold_alarm_config.max_threshold;
-    var alarm_interval = current_threshold_alarm_config.alarm_interval;
-    var alarm_counts = current_threshold_alarm_config.alarm_counts;
+function setCurrentThresholdAlarmConfig(current_alarm_config) {
+    var condition = current_alarm_config.condition;
+    var threshold_min = current_alarm_config.threshold_min;
+    var threshold_max = current_alarm_config.threshold_max;
+    var alarm_interval = current_alarm_config.alarm_interval;
+    var alarm_counts = current_alarm_config.alarm_counts;
 
     var condition_map = { 0: "disable", 1: "below", 2: "above", 3: "between", 4: "outside" };
     var condition_values = getValues(condition_map);
     if (condition_values.indexOf(condition) === -1) {
-        throw new Error("current_threshold_alarm_config.condition must be one of " + condition_values.join(", "));
+        throw new Error("current_alarm_config.condition must be one of " + condition_values.join(", "));
     }
 
     var data = 0x00;
@@ -163,8 +163,8 @@ function setCurrentThresholdAlarmConfig(current_threshold_alarm_config) {
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0x06);
     buffer.writeUInt8(data);
-    buffer.writeUInt16LE(min_threshold);
-    buffer.writeUInt16LE(max_threshold);
+    buffer.writeUInt16LE(threshold_min);
+    buffer.writeUInt16LE(threshold_max);
     buffer.writeUInt16LE(alarm_interval);
     buffer.writeUInt16LE(alarm_counts);
     return buffer.toBytes();
@@ -172,21 +172,21 @@ function setCurrentThresholdAlarmConfig(current_threshold_alarm_config) {
 
 /**
  * set temperature threshold alarm config
- * @param {object} temperature_threshold_alarm_config
- * @param {number} temperature_threshold_alarm_config.condition values: (0: disable, 1: below, 2: above, 3: between, 4: outside)
- * @param {number} temperature_threshold_alarm_config.min_threshold unit: °C
- * @param {number} temperature_threshold_alarm_config.max_threshold unit: °C
- * @example { "temperature_threshold_alarm_config": { "condition": 1, "min_threshold": 100, "max_threshold": 200 } }
+ * @param {object} temperature_alarm_config
+ * @param {number} temperature_alarm_config.condition values: (0: disable, 1: below, 2: above, 3: between, 4: outside)
+ * @param {number} temperature_alarm_config.threshold_min unit: °C
+ * @param {number} temperature_alarm_config.threshold_max unit: °C
+ * @example { "temperature_alarm_config": { "condition": 1, "threshold_min": 100, "threshold_max": 200 } }
  */
-function setTemperatureThresholdAlarmConfig(temperature_threshold_alarm_config) {
-    var condition = temperature_threshold_alarm_config.condition;
-    var min_threshold = temperature_threshold_alarm_config.min_threshold;
-    var max_threshold = temperature_threshold_alarm_config.max_threshold;
+function setTemperatureThresholdAlarmConfig(temperature_alarm_config) {
+    var condition = temperature_alarm_config.condition;
+    var threshold_min = temperature_alarm_config.threshold_min;
+    var threshold_max = temperature_alarm_config.threshold_max;
 
     var condition_map = { 0: "disable", 1: "below", 2: "above", 3: "between", 4: "outside" };
     var condition_values = getValues(condition_map);
     if (condition_values.indexOf(condition) === -1) {
-        throw new Error("temperature_threshold_alarm_config.condition must be one of " + condition_values.join(", "));
+        throw new Error("temperature_alarm_config.condition must be one of " + condition_values.join(", "));
     }
     var data = 0x00;
     data |= 0x04 << 3; // temperature
@@ -196,8 +196,8 @@ function setTemperatureThresholdAlarmConfig(temperature_threshold_alarm_config) 
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0x06);
     buffer.writeUInt8(data);
-    buffer.writeInt16LE(min_threshold * 10);
-    buffer.writeInt16LE(max_threshold * 10);
+    buffer.writeInt16LE(threshold_min * 10);
+    buffer.writeInt16LE(threshold_max * 10);
     buffer.writeUInt32LE(0x00); // reserved
     return buffer.toBytes();
 }
@@ -244,14 +244,8 @@ function alarmReportInterval(alarm_report_interval) {
 
 function getValues(map) {
     var values = [];
-    if (RAW_VALUE) {
-        for (var key in map) {
-            values.push(parseInt(key));
-        }
-    } else {
-        for (var key in map) {
-            values.push(map[key]);
-        }
+    for (var key in map) {
+        values.push(RAW_VALUE ? parseInt(key) : map[key]);
     }
     return values;
 }

@@ -53,8 +53,8 @@ function milesightDeviceEncode(payload) {
     if ("temperature_mutation_alarm_config" in payload) {
         encoded = encoded.concat(setTemperatureMutationAlarmConfig(payload.temperature_mutation_alarm_config));
     }
-    if ("temperature_calibration" in payload) {
-        encoded = encoded.concat(setTemperatureCalibration(payload.temperature_calibration));
+    if ("temperature_calibration_settings" in payload) {
+        encoded = encoded.concat(setTemperatureCalibration(payload.temperature_calibration_settings));
     }
     if ("history_enable" in payload) {
         encoded = encoded.concat(setHistoryEnable(payload.history_enable));
@@ -87,13 +87,13 @@ function milesightDeviceEncode(payload) {
  * @example { "reboot": 1 }
  */
 function reboot(reboot) {
-    var reboot_map = { 0: "no", 1: "yes" };
-    var reboot_values = getValues(reboot_map);
+    var yes_no_map = { 0: "no", 1: "yes" };
+    var reboot_values = getValues(yes_no_map);
     if (reboot_values.indexOf(reboot) === -1) {
         throw new Error("reboot must be one of " + reboot_values.join(", "));
     }
 
-    if (getValue(reboot_map, reboot) === 0) {
+    if (getValue(yes_no_map, reboot) === 0) {
         return [];
     }
     return [0xff, 0x10, 0xff];
@@ -124,9 +124,9 @@ function queryDeviceStatus(query_device_status) {
  */
 function syncTime(sync_time) {
     var yes_no_map = { 0: "no", 1: "yes" };
-    var sync_time_values = getValues(yes_no_map);
-    if (sync_time_values.indexOf(sync_time) === -1) {
-        throw new Error("sync_time must be one of " + sync_time_values.join(", "));
+    var yes_no_values = getValues(yes_no_map);
+    if (yes_no_values.indexOf(sync_time) === -1) {
+        throw new Error("sync_time must be one of " + yes_no_values.join(", "));
     }
 
     if (getValue(yes_no_map, sync_time) === 0) {
@@ -166,12 +166,13 @@ function setReportInterval(report_interval) {
 }
 
 /**
- * set timezone
+ * set time zone
  * @param {number} time_zone unit: minute, UTC+8 -> 8 * 10 = 80
- * @example { "time_zone": 8 }
+ * @example { "time_zone": 80 }
  */
 function setTimeZone(time_zone) {
-    var timezone_values = [-120, -110, -100, -95, -90, -80, -70, -60, -50, -40, -35, -30, -20, -10, 0, 10, 20, 30, 35, 40, 45, 50, 55, 57, 60, 65, 70, 80, 90, 95, 100, 105, 110, 120, 127, 130, 140];
+    var timezone_map = { "-120": "UTC-12", "-110": "UTC-11", "-100": "UTC-10", "-95": "UTC-9:30", "-90": "UTC-9", "-80": "UTC-8", "-70": "UTC-7", "-60": "UTC-6", "-50": "UTC-5", "-40": "UTC-4", "-35": "UTC-3:30", "-30": "UTC-3", "-20": "UTC-2", "-10": "UTC-1", 0: "UTC", 10: "UTC+1", 20: "UTC+2", 30: "UTC+3", 35: "UTC+3:30", 40: "UTC+4", 45: "UTC+4:30", 50: "UTC+5", 55: "UTC+5:30", 57: "UTC+5:45", 60: "UTC+6", 65: "UTC+6:30", 70: "UTC+7", 80: "UTC+8", 90: "UTC+9", 95: "UTC+9:30", 100: "UTC+10", 105: "UTC+10:30", 110: "UTC+11", 120: "UTC+12", 127: "UTC+12:45", 130: "UTC+13", 140: "UTC+14" };
+    var timezone_values = getValues(timezone_map);
     if (timezone_values.indexOf(time_zone) === -1) {
         throw new Error("time_zone must be one of " + timezone_values.join(", "));
     }
@@ -179,7 +180,7 @@ function setTimeZone(time_zone) {
     var buffer = new Buffer(4);
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0x17);
-    buffer.writeInt16LE(time_zone);
+    buffer.writeInt16LE(getValue(timezone_map, time_zone));
     return buffer.toBytes();
 }
 
@@ -260,22 +261,22 @@ function setTemperatureMutationAlarmConfig(temperature_mutation_alarm_config) {
 
 /**
  * set temperature calibration
- * @param {object} temperature_calibration
- * @param {number} temperature_calibration.enable values: (0: disable, 1: enable)
- * @param {number} temperature_calibration.calibration_value unit: ℃
- * @example { "temperature_calibration": { "enable": 1, "calibration_value": 26 } }
+ * @param {object} temperature_calibration_settings
+ * @param {number} temperature_calibration_settings.enable values: (0: disable, 1: enable)
+ * @param {number} temperature_calibration_settings.calibration_value unit: ℃
+ * @example { "temperature_calibration_settings": { "enable": 1, "calibration_value": 26 } }
  */
-function setTemperatureCalibration(temperature_calibration) {
-    var enable = temperature_calibration.enable;
-    var calibration_value = temperature_calibration.calibration_value;
+function setTemperatureCalibration(temperature_calibration_settings) {
+    var enable = temperature_calibration_settings.enable;
+    var calibration_value = temperature_calibration_settings.calibration_value;
 
     var enable_map = { 0: "disable", 1: "enable" };
     var enable_values = getValues(enable_map);
     if (enable_values.indexOf(enable) === -1) {
-        throw new Error("temperature_calibration.enable must be one of " + enable_values.join(", "));
+        throw new Error("temperature_calibration_settings.enable must be one of " + enable_values.join(", "));
     }
     if (typeof calibration_value !== "number") {
-        throw new Error("temperature_calibration.calibration_value must be a number");
+        throw new Error("temperature_calibration_settings.calibration_value must be a number");
     }
 
     var buffer = new Buffer(5);

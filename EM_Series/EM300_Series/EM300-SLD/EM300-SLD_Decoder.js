@@ -29,7 +29,7 @@ function Decoder(bytes, port) {
 function milesightDeviceDecode(bytes) {
     var decoded = {};
 
-    for (var i = 0; i < bytes.length;) {
+    for (var i = 0; i < bytes.length; ) {
         var channel_id = bytes[i++];
         var channel_type = bytes[i++];
 
@@ -101,10 +101,9 @@ function milesightDeviceDecode(bytes) {
             data.temperature = readInt16LE(bytes.slice(i + 4, i + 6)) / 10;
             data.humidity = readUInt8(bytes[i + 6]) / 2;
             data.leakage_status = readLeakageStatus(bytes[i + 7]);
-
+            i += 8;
             decoded.history = decoded.history || [];
             decoded.history.push(data);
-            i += 8;
         }
         // DOWNLINK RESPONSE
         else if (channel_id === 0xfe || channel_id === 0xff) {
@@ -138,8 +137,8 @@ function handle_downlink_response(channel_type, bytes, offset) {
             if (channel === 0x01) {
                 decoded.temperature_alarm_config = {};
                 decoded.temperature_alarm_config.condition = readConditionType(value);
-                decoded.temperature_alarm_config.min_threshold = readInt16LE(bytes.slice(offset + 1, offset + 3)) / 10;
-                decoded.temperature_alarm_config.max_threshold = readInt16LE(bytes.slice(offset + 3, offset + 5)) / 10;
+                decoded.temperature_alarm_config.threshold_min = readInt16LE(bytes.slice(offset + 1, offset + 3)) / 10;
+                decoded.temperature_alarm_config.threshold_max = readInt16LE(bytes.slice(offset + 3, offset + 5)) / 10;
             } else if (channel === 0x02) {
                 decoded.leakage_alarm_config = {};
                 decoded.leakage_alarm_config.enable = readEnableStatus(value);
@@ -186,24 +185,26 @@ function handle_downlink_response(channel_type, bytes, offset) {
             offset += 1;
             break;
         case 0x79:
-            decoded.d2d_config = {};
-            decoded.d2d_config.trigger_event = readTriggerEvent(bytes[offset]);
-            decoded.d2d_config.report_type = readReportType(bytes[offset + 1]);
-            decoded.d2d_config.d2d_cmd = readD2DCommand(bytes.slice(offset + 2, offset + 6));
+            var d2d_master_config = {};
+            d2d_master_config.mode = readD2DMode(bytes[offset]);
+            d2d_master_config.report_type = readReportType(bytes[offset + 1]);
+            d2d_master_config.d2d_cmd = readD2DCommand(bytes.slice(offset + 2, offset + 6));
             offset += 6;
+            decoded.d2d_master_config = decoded.d2d_master_config || [];
+            decoded.d2d_master_config.push(d2d_master_config);
             break;
         case 0xea:
             var data = readUInt8(bytes[offset]);
             var channel = data & 0x03;
             var enable_value = (data >>> 7) & 0x01;
             if (channel === 0x00) {
-                decoded.temperature_calibration_config = {};
-                decoded.temperature_calibration_config.enable = readEnableStatus(enable_value);
-                decoded.temperature_calibration_config.value = readInt16LE(bytes.slice(offset + 1, offset + 3)) / 10;
+                decoded.temperature_calibration_settings = {};
+                decoded.temperature_calibration_settings.enable = readEnableStatus(enable_value);
+                decoded.temperature_calibration_settings.calibration_value = readInt16LE(bytes.slice(offset + 1, offset + 3)) / 10;
             } else if (channel === 0x01) {
-                decoded.humidity_calibration_config = {};
-                decoded.humidity_calibration_config.enable = readEnableStatus(enable_value);
-                decoded.humidity_calibration_config.value = readInt16LE(bytes.slice(offset + 1, offset + 3)) / 2;
+                decoded.humidity_calibration_settings = {};
+                decoded.humidity_calibration_settings.enable = readEnableStatus(enable_value);
+                decoded.humidity_calibration_settings.calibration_value = readInt16LE(bytes.slice(offset + 1, offset + 3)) / 2;
             }
             offset += 3;
             break;
@@ -286,7 +287,7 @@ function readConditionType(value) {
     return getValue(condition_map, value);
 }
 
-function readTriggerEvent(value) {
+function readD2DMode(value) {
     var event_map = { 0: "disable", 1: "temperature_alarm", 2: "temperature_alarm_release", 3: "leakage_alarm", 4: "leakage_alarm_release" };
     return getValue(event_map, value);
 }

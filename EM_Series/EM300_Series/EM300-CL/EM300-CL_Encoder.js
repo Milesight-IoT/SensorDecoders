@@ -1,4 +1,3 @@
-
 /**
  * Payload Encoder
  *
@@ -279,8 +278,8 @@ function setCalibrateWithDelay(calibrate_delay_time) {
 /**
  * set capacitor config
  * @param {object} capacitor_config
- * @param {number} capacitor_config.c1 
- * @param {number} capacitor_config.c2 
+ * @param {number} capacitor_config.c1
+ * @param {number} capacitor_config.c2
  * @param {number} capacitor_config.delta
  * @example { "capacitor_config": { "c1": 100, "c2": 200, "delta": 300 } }
  */
@@ -326,14 +325,8 @@ function setCapacitorJudgeConfig(capacitor_judge_config) {
 
 function getValues(map) {
     var values = [];
-    if (RAW_VALUE) {
-        for (var key in map) {
-            values.push(parseInt(key));
-        }
-    } else {
-        for (var key in map) {
-            values.push(map[key]);
-        }
+    for (var key in map) {
+        values.push(RAW_VALUE ? parseInt(key) : map[key]);
     }
     return values;
 }

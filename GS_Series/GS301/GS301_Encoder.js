@@ -35,8 +35,8 @@ function milesightDeviceEncode(payload) {
     if ("report_interval" in payload) {
         encoded = encoded.concat(setReportInterval(payload.report_interval));
     }
-    if ("query_sensor_lifecycle_remain" in payload) {
-        encoded = encoded.concat(querySensorLifeRemain(payload.query_sensor_lifecycle_remain));
+    if ("query_life_remain" in payload) {
+        encoded = encoded.concat(querySensorLifeRemain(payload.query_life_remain));
     }
     if ("threshold_report_interval" in payload) {
         encoded = encoded.concat(setThresholdReportInterval(payload.threshold_report_interval));
@@ -47,11 +47,11 @@ function milesightDeviceEncode(payload) {
     if ("buzzer_enable" in payload) {
         encoded = encoded.concat(setBuzzerEnable(payload.buzzer_enable));
     }
-    if ("nh3_calibration_config" in payload) {
-        encoded = encoded.concat(setNH3CalibrationConfig(payload.nh3_calibration_config));
+    if ("nh3_calibration_settings" in payload) {
+        encoded = encoded.concat(setNH3CalibrationConfig(payload.nh3_calibration_settings));
     }
-    if ("h2s_calibration_config" in payload) {
-        encoded = encoded.concat(setH2SCalibrationConfig(payload.h2s_calibration_config));
+    if ("h2s_calibration_settings" in payload) {
+        encoded = encoded.concat(setH2SCalibrationConfig(payload.h2s_calibration_settings));
     }
     if ("alarm_config" in payload) {
         encoded = encoded.concat(setAlarmConfig(payload.alarm_config));
@@ -93,17 +93,17 @@ function setReportInterval(report_interval) {
 
 /**
  * Report sensor life remain
- * @param {number} query_sensor_lifecycle_remain values: (0: no, 1: yes)
- * @example { "query_sensor_lifecycle_remain": 1 }
+ * @param {number} query_life_remain values: (0: no, 1: yes)
+ * @example { "query_life_remain": 1 }
  */
-function querySensorLifeRemain(query_sensor_lifecycle_remain) {
+function querySensorLifeRemain(query_life_remain) {
     var yes_no_map = { 0: "no", 1: "yes" };
     var yes_no_values = getValues(yes_no_map);
-    if (yes_no_values.indexOf(query_sensor_lifecycle_remain) === -1) {
-        throw new Error("query_sensor_lifecycle_remain must be one of " + yes_no_values.join(", "));
+    if (yes_no_values.indexOf(query_life_remain) === -1) {
+        throw new Error("query_life_remain must be one of " + yes_no_values.join(", "));
     }
 
-    if (getValue(yes_no_map, query_sensor_lifecycle_remain) === 0) {
+    if (getValue(yes_no_map, query_life_remain) === 0) {
         return [];
     }
 
@@ -163,47 +163,53 @@ function setBuzzerEnable(buzzer_enable) {
 
 /**
  * Set NH3 calibration config
- * @param {object} nh3_calibration_config
- * @param {number} nh3_calibration_config.mode  values: (0: factory, 1: manual)
- * @param {number} nh3_calibration_config.calibration_value
- * @example { "nh3_calibration_config": { "mode": 1, "nh3_calibration_value": 0.01 } }
+ * @param {object} nh3_calibration_settings
+ * @param {number} nh3_calibration_settings.mode  values: (0: factory, 1: manual)
+ * @param {number} nh3_calibration_settings.calibration_value
+ * @example { "nh3_calibration_settings": { "mode": 1, "nh3_calibration_value": 0.01 } }
  */
-function setNH3CalibrationConfig(nh3_calibration_config) {
+function setNH3CalibrationConfig(nh3_calibration_settings) {
+    var mode = nh3_calibration_settings.mode;
+    var calibration_value = nh3_calibration_settings.calibration_value || 0;
+
     var mode_map = { 0: "factory", 1: "manual" };
     var mode_values = getValues(mode_map);
-    if (mode_values.indexOf(nh3_calibration_config.mode) === -1) {
-        throw new Error("nh3_calibration_config.mode must be one of " + mode_values.join(", "));
+    if (mode_values.indexOf(mode) === -1) {
+        throw new Error("nh3_calibration_settings.mode must be one of " + mode_values.join(", "));
     }
 
     var buffer = new Buffer(6);
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0x8d);
     buffer.writeUInt8(0x00);
-    buffer.writeUInt8(getValue(mode_map, nh3_calibration_config.mode));
-    buffer.writeUInt16LE(Math.round(nh3_calibration_config.calibration_value * 100));
+    buffer.writeUInt8(getValue(mode_map, mode));
+    buffer.writeUInt16LE(calibration_value * 100);
     return buffer.toBytes();
 }
 
 /**
  * Set H2S calibration config
- * @param {object} h2s_calibration_config
- * @param {number} h2s_calibration_config.mode  values: (0: factory, 1: manual)
- * @param {number} h2s_calibration_config.calibration_value
- * @example { "h2s_calibration_config": { "mode": 1, "h2s_calibration_value": 0.001 } }
+ * @param {object} h2s_calibration_settings
+ * @param {number} h2s_calibration_settings.mode  values: (0: factory, 1: manual)
+ * @param {number} h2s_calibration_settings.calibration_value
+ * @example { "h2s_calibration_settings": { "mode": 1, "h2s_calibration_value": 0.001 } }
  */
-function setH2SCalibrationConfig(h2s_calibration_config) {
+function setH2SCalibrationConfig(h2s_calibration_settings) {
+    var mode = h2s_calibration_settings.mode;
+    var calibration_value = h2s_calibration_settings.calibration_value || 0;
+
     var mode_map = { 0: "factory", 1: "manual" };
     var mode_values = getValues(mode_map);
-    if (mode_values.indexOf(h2s_calibration_config.mode) === -1) {
-        throw new Error("h2s_calibration_config.mode must be one of " + mode_values.join(", "));
+    if (mode_values.indexOf(mode) === -1) {
+        throw new Error("h2s_calibration_settings.mode must be one of " + mode_values.join(", "));
     }
 
     var buffer = new Buffer(6);
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0x8d);
     buffer.writeUInt8(0x01);
-    buffer.writeUInt8(getValue(mode_map, h2s_calibration_config.mode));
-    buffer.writeUInt16LE(Math.round(h2s_calibration_config.calibration_value * 1000));
+    buffer.writeUInt8(getValue(mode_map, mode));
+    buffer.writeUInt16LE(calibration_value * 1000);
     return buffer.toBytes();
 }
 
@@ -213,18 +219,18 @@ function setH2SCalibrationConfig(h2s_calibration_config) {
  * @param {number} alarm_config.enable values: (0: disable, 1: enable)
  * @param {number} alarm_config.condition values: (0: disable, 1: below, 2: above, 3: between, 4: outside)
  * @param {number} alarm_config.trigger_source values: (1: nh3, 1: h2s, 2: nh3_d2d, 3: h2s_d2d, 4: nh3_d2d, 5: nh3_d2d_release, 6: h2s_d2d_release, 7: h2s_v2, 8: h2s_d2d_v2, 9: h2s_release_v2)
- * @param {number} alarm_config.min_threshold
- * @param {number} alarm_config.max_threshold
+ * @param {number} alarm_config.threshold_min
+ * @param {number} alarm_config.threshold_max
  * @param {number} alarm_config.lock_time
  * @param {number} alarm_config.continue_time
- * @example { "alarm_config": { "enable": 1, "condition": 1, "trigger_source": 1, "min_threshold": 100, "max_threshold": 1000, "lock_time": 10, "continue_time": 10 } }
+ * @example { "alarm_config": { "enable": 1, "condition": 1, "trigger_source": 1, "threshold": 100, "threshold_max": 1000, "lock_time": 10, "continue_time": 10 } }_min
  */
 function setAlarmConfig(alarm_config) {
     var enable = alarm_config.enable;
     var condition = alarm_config.condition;
     var trigger_source = alarm_config.trigger_source;
-    var min_threshold = alarm_config.min_threshold;
-    var max_threshold = alarm_config.max_threshold;
+    var threshold_min = alarm_config.threshold_min;
+    var threshold_max = alarm_config.threshold_max;
     var lock_time = alarm_config.lock_time;
     var continue_time = alarm_config.continue_time;
 
@@ -252,8 +258,8 @@ function setAlarmConfig(alarm_config) {
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0x06);
     buffer.writeUInt8(data);
-    buffer.writeUInt16LE(min_threshold);
-    buffer.writeUInt16LE(max_threshold);
+    buffer.writeUInt16LE(threshold_min);
+    buffer.writeUInt16LE(threshold_max);
     buffer.writeUInt16LE(lock_time);
     buffer.writeUInt16LE(continue_time);
     return buffer.toBytes();
@@ -261,14 +267,8 @@ function setAlarmConfig(alarm_config) {
 
 function getValues(map) {
     var values = [];
-    if (RAW_VALUE) {
-        for (var key in map) {
-            values.push(parseInt(key));
-        }
-    } else {
-        for (var key in map) {
-            values.push(map[key]);
-        }
+    for (var key in map) {
+        values.push(RAW_VALUE ? parseInt(key) : map[key]);
     }
     return values;
 }

@@ -53,32 +53,20 @@ function milesightDeviceEncode(payload) {
     if ("time_zone" in payload) {
         encoded = encoded.concat(setTimeZone(payload.time_zone));
     }
-    if ("sensor_all_enable" in payload) {
-        encoded = encoded.concat(setSensorAllEnable(payload.sensor_all_enable));
-    }
-    if ("sensor_temperature_enable" in payload) {
-        encoded = encoded.concat(setSensorTemperatureEnable(payload.sensor_temperature_enable));
-    }
-    if ("sensor_moisture_enable" in payload) {
-        encoded = encoded.concat(setSensorMoistureEnable(payload.sensor_moisture_enable));
-    }
-    if ("sensor_electricity_enable" in payload) {
-        encoded = encoded.concat(setSensorElectricityEnable(payload.sensor_electricity_enable));
-    }
     if ("time_sync_enable" in payload) {
         encoded = encoded.concat(setTimeSyncEnable(payload.time_sync_enable));
     }
     if ("depth_alarm_config" in payload) {
         encoded = encoded.concat(setDepthAlarmConfig(payload.depth_alarm_config));
     }
-    if ("threshold_alarm_release_enable" in payload) {
-        encoded = encoded.concat(setThresholdAlarmReleaseEnable(payload.threshold_alarm_release_enable));
+    if ("alarm_release_enable" in payload) {
+        encoded = encoded.concat(setThresholdAlarmReleaseEnable(payload.alarm_release_enable));
     }
     if ("alarm_report_counts" in payload) {
         encoded = encoded.concat(alarmReportCounts(payload.alarm_report_counts));
     }
-    if ("depth_calibration_config" in payload) {
-        encoded = encoded.concat(setDepthCalibrationConfig(payload.depth_calibration_config));
+    if ("depth_calibration_settings" in payload) {
+        encoded = encoded.concat(setDepthCalibrationConfig(payload.depth_calibration_settings));
     }
     if ("d2d_master_config" in payload) {
         for (var i = 0; i < payload.d2d_master_config.length; i++) {
@@ -122,13 +110,13 @@ function milesightDeviceEncode(payload) {
  * @example { "reboot": 1 }
  */
 function reboot(reboot) {
-    var reboot_map = { 0: "no", 1: "yes" };
-    var reboot_values = getValues(reboot_map);
+    var yes_no_map = { 0: "no", 1: "yes" };
+    var reboot_values = getValues(yes_no_map);
     if (reboot_values.indexOf(reboot) === -1) {
         throw new Error("reboot must be one of " + reboot_values.join(", "));
     }
 
-    if (getValue(reboot_map, reboot) === 0) {
+    if (getValue(yes_no_map, reboot) === 0) {
         return [];
     }
     return [0xff, 0x10, 0xff];
@@ -159,9 +147,9 @@ function reportStatus(report_status) {
  */
 function syncTime(sync_time) {
     var yes_no_map = { 0: "no", 1: "yes" };
-    var sync_time_values = getValues(yes_no_map);
-    if (sync_time_values.indexOf(sync_time) === -1) {
-        throw new Error("sync_time must be one of " + sync_time_values.join(", "));
+    var yes_no_values = getValues(yes_no_map);
+    if (yes_no_values.indexOf(sync_time) === -1) {
+        throw new Error("sync_time must be one of " + yes_no_values.join(", "));
     }
 
     if (getValue(yes_no_map, sync_time) === 0) {
@@ -263,99 +251,21 @@ function setTimestamp(timestamp) {
 }
 
 /**
- * time zone
+ * set time zone
  * @param {number} time_zone unit: minute, UTC+8 -> 8 * 10 = 80
  * @example { "time_zone": 80 }
  */
 function setTimeZone(time_zone) {
-    if (typeof time_zone !== "number") {
-        throw new Error("time_zone must be a number");
+    var timezone_map = { "-120": "UTC-12", "-110": "UTC-11", "-100": "UTC-10", "-95": "UTC-9:30", "-90": "UTC-9", "-80": "UTC-8", "-70": "UTC-7", "-60": "UTC-6", "-50": "UTC-5", "-40": "UTC-4", "-35": "UTC-3:30", "-30": "UTC-3", "-20": "UTC-2", "-10": "UTC-1", 0: "UTC", 10: "UTC+1", 20: "UTC+2", 30: "UTC+3", 35: "UTC+3:30", 40: "UTC+4", 45: "UTC+4:30", 50: "UTC+5", 55: "UTC+5:30", 57: "UTC+5:45", 60: "UTC+6", 65: "UTC+6:30", 70: "UTC+7", 80: "UTC+8", 90: "UTC+9", 95: "UTC+9:30", 100: "UTC+10", 105: "UTC+10:30", 110: "UTC+11", 120: "UTC+12", 127: "UTC+12:45", 130: "UTC+13", 140: "UTC+14" };
+    var timezone_values = getValues(timezone_map);
+    if (timezone_values.indexOf(time_zone) === -1) {
+        throw new Error("time_zone must be one of " + timezone_values.join(", "));
     }
 
     var buffer = new Buffer(4);
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0x17);
-    buffer.writeInt16LE(time_zone);
-    return buffer.toBytes();
-}
-
-/**
- * sensor all enable
- * @param {number} sensor_all_enable values: (0: disable, 1: enable)
- * @example { "sensor_all_enable": 1 }
- */
-function setSensorAllEnable(sensor_all_enable) {
-    var enable_map = { 0: "disable", 1: "enable" };
-    var enable_values = getValues(enable_map);
-    if (enable_values.indexOf(sensor_all_enable) == -1) {
-        throw new Error("sensor_all_enable must be one of " + enable_values.join(", "));
-    }
-
-    var buffer = new Buffer(4);
-    buffer.writeUInt8(0xff);
-    buffer.writeUInt8(0x18);
-    buffer.writeUInt8(0x00); // all
-    buffer.writeUInt8(getValue(enable_map, sensor_all_enable));
-    return buffer.toBytes();
-}
-
-/**
- * sensor temperature enable
- * @param {number} sensor_temperature_enable values: (0: disable, 1: enable)
- * @example { "sensor_temperature_enable": 1 }
- */
-function setSensorTemperatureEnable(sensor_temperature_enable) {
-    var enable_map = { 0: "disable", 1: "enable" };
-    var enable_values = getValues(enable_map);
-    if (enable_values.indexOf(sensor_temperature_enable) == -1) {
-        throw new Error("sensor_temperature_enable must be one of " + enable_values.join(", "));
-    }
-
-    var buffer = new Buffer(4);
-    buffer.writeUInt8(0xff);
-    buffer.writeUInt8(0x18);
-    buffer.writeUInt8(0x01); // temperature
-    buffer.writeUInt8(getValue(enable_map, sensor_temperature_enable));
-    return buffer.toBytes();
-}
-
-/**
- * sensor moisture enable
- * @param {number} sensor_moisture_enable values: (0: disable, 1: enable)
- * @example { "sensor_moisture_enable": 1 }
- */
-function setSensorMoistureEnable(sensor_moisture_enable) {
-    var enable_map = { 0: "disable", 1: "enable" };
-    var enable_values = getValues(enable_map);
-    if (enable_values.indexOf(sensor_moisture_enable) == -1) {
-        throw new Error("sensor_moisture_enable must be one of " + enable_values.join(", "));
-    }
-
-    var buffer = new Buffer(4);
-    buffer.writeUInt8(0xff);
-    buffer.writeUInt8(0x18);
-    buffer.writeUInt8(0x02); // moisture
-    buffer.writeUInt8(getValue(enable_map, sensor_moisture_enable));
-    return buffer.toBytes();
-}
-
-/**
- * sensor electricity enable
- * @param {number} sensor_electricity_enable values: (0: disable, 1: enable)
- * @example { "sensor_electricity_enable": 1 }
- */
-function setSensorElectricityEnable(sensor_electricity_enable) {
-    var enable_map = { 0: "disable", 1: "enable" };
-    var enable_values = getValues(enable_map);
-    if (enable_values.indexOf(sensor_electricity_enable) == -1) {
-        throw new Error("sensor_electricity_enable must be one of " + enable_values.join(", "));
-    }
-
-    var buffer = new Buffer(4);
-    buffer.writeUInt8(0xff);
-    buffer.writeUInt8(0x18);
-    buffer.writeUInt8(0x03); // electricity
-    buffer.writeUInt8(getValue(enable_map, sensor_electricity_enable));
+    buffer.writeInt16LE(getValue(timezone_map, time_zone));
     return buffer.toBytes();
 }
 
@@ -421,20 +331,20 @@ function setDepthAlarmConfig(depth_alarm_config) {
 
 /**
  * all rule engine threshold alarm release enable
- * @param {number} threshold_alarm_release_enable values: (0: disable, 1: enable)
- * @example { "threshold_alarm_release_enable": 1 }
+ * @param {number} alarm_release_enable values: (0: disable, 1: enable)
+ * @example { "alarm_release_enable": 1 }
  */
-function setThresholdAlarmReleaseEnable(threshold_alarm_release_enable) {
+function setThresholdAlarmReleaseEnable(alarm_release_enable) {
     var enable_map = { 0: "disable", 1: "enable" };
     var enable_values = getValues(enable_map);
-    if (enable_values.indexOf(threshold_alarm_release_enable) === -1) {
-        throw new Error("threshold_alarm_release_enable must be one of " + enable_values.join(", "));
+    if (enable_values.indexOf(alarm_release_enable) === -1) {
+        throw new Error("alarm_release_enable must be one of " + enable_values.join(", "));
     }
 
     var buffer = new Buffer(3);
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0xf5);
-    buffer.writeUInt8(getValue(enable_map, threshold_alarm_release_enable));
+    buffer.writeUInt8(getValue(enable_map, alarm_release_enable));
     return buffer.toBytes();
 }
 
@@ -460,19 +370,19 @@ function alarmReportCounts(alarm_report_counts) {
 
 /**
  * depth calibration
- * @param {object} depth_calibration_config
- * @param {number} depth_calibration_config.enable values: (0: disable, 1: enable)
- * @param {number} depth_calibration_config.calibration_value
- * @example { "depth_calibration_config": { "enable": 1, "calibration_value": 23 } }
+ * @param {object} depth_calibration_settings
+ * @param {number} depth_calibration_settings.enable values: (0: disable, 1: enable)
+ * @param {number} depth_calibration_settings.calibration_value
+ * @example { "depth_calibration_settings": { "enable": 1, "calibration_value": 23 } }
  */
-function setDepthCalibrationConfig(depth_calibration_config) {
-    var enable = depth_calibration_config.enable;
-    var calibration_value = depth_calibration_config.calibration_value;
+function setDepthCalibrationConfig(depth_calibration_settings) {
+    var enable = depth_calibration_settings.enable;
+    var calibration_value = depth_calibration_settings.calibration_value;
 
     var enable_map = { 0: "disable", 1: "enable" };
     var enable_values = getValues(enable_map);
     if (enable_values.indexOf(enable) === -1) {
-        throw new Error("depth_calibration_config.enable must be one of " + enable_values.join(", "));
+        throw new Error("depth_calibration_settings.enable must be one of " + enable_values.join(", "));
     }
 
     var buffer = new Buffer(6);
@@ -567,7 +477,6 @@ function setD2DKey(d2d_key) {
     buffer.writeBytes(data);
     return buffer.toBytes();
 }
-
 
 /**
  * history enable
@@ -679,7 +588,6 @@ function setRetransmitEnable(retransmit_enable) {
     buffer.writeUInt8(getValue(enable_map, retransmit_enable));
     return buffer.toBytes();
 }
-
 
 /**
  * set retransmit interval

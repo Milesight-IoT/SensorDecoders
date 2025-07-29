@@ -7,6 +7,8 @@
  */
 var RAW_VALUE = 0x00;
 
+/* eslint no-redeclare: "off" */
+/* eslint-disable */
 // Chirpstack v4
 function encodeDownlink(input) {
     var encoded = milesightDeviceEncode(input.data);
@@ -22,6 +24,7 @@ function Encode(fPort, obj) {
 function Encoder(obj, port) {
     return milesightDeviceEncode(obj);
 }
+/* eslint-enable */
 
 function milesightDeviceEncode(payload) {
     var encoded = [];
@@ -65,9 +68,6 @@ function milesightDeviceEncode(payload) {
     if ("radar_settings" in payload) {
         encoded = encoded.concat(setRadarSettings(payload.radar_settings));
     }
-    if ("target_detection_minimum_height" in payload) {
-        encoded = encoded.concat(setTargetDetectionMinimumHeight(payload.target_detection_minimum_height));
-    }
     if ("existence_detection_settings" in payload) {
         encoded = encoded.concat(setExistenceDetectionSettings(payload.existence_detection_settings));
     }
@@ -102,13 +102,13 @@ function milesightDeviceEncode(payload) {
         encoded = encoded.concat(setConfirmMode(payload.confirm_mode_enable));
     }
     if ("adr_enable" in payload) {
-        encoded = encoded.concat(setAdrEnable(payload.adr_enable));
+        encoded = encoded.concat(setADREnable(payload.adr_enable));
     }
     if ("d2d_key" in payload) {
-        encoded = encoded.concat(setD2dKey(payload.d2d_key));
+        encoded = encoded.concat(setD2DKey(payload.d2d_key));
     }
     if ("d2d_enable" in payload) {
-        encoded = encoded.concat(setD2dEnable(payload.d2d_enable));
+        encoded = encoded.concat(setD2DEnable(payload.d2d_enable));
     }
     if ("d2d_master_config" in payload) {
         for (var i = 0; i < payload.d2d_master_config.length; i++) {
@@ -119,7 +119,7 @@ function milesightDeviceEncode(payload) {
     if ("d2d_slave_config" in payload) {
         for (var i = 0; i < payload.d2d_slave_config.length; i++) {
             var config = payload.d2d_slave_config[i];
-            encoded = encoded.concat(setD2dSlaveConfig(config));
+            encoded = encoded.concat(setD2DSlaveConfig(config));
         }
     }
     if ("timestamp" in payload) {
@@ -401,16 +401,16 @@ function setBuzzerEnable(buzzer_enable) {
  * @example { "release_alarm": 1 } }
  */
 function releaseAlarm(release_alarm) {
-    var release_alarm_map = { 0: "no", 1: "yes" };
-    var release_alarm_values = getValues(release_alarm_map);
-    if (release_alarm_values.indexOf(release_alarm) === -1) {
-        throw new Error("release_alarm must be in " + release_alarm_values.join(", "));
+    var yes_no_map = { 0: "no", 1: "yes" };
+    var yes_no_values = getValues(yes_no_map);
+    if (yes_no_values.indexOf(release_alarm) === -1) {
+        throw new Error("release_alarm must be in " + yes_no_values.join(", "));
     }
 
     var buffer = new Buffer(3);
     buffer.writeUInt8(0xf9);
     buffer.writeUInt8(0x64);
-    buffer.writeUInt8(getValue(release_alarm_map, release_alarm));
+    buffer.writeUInt8(getValue(yes_no_map, release_alarm));
     return buffer.toBytes();
 }
 
@@ -438,8 +438,6 @@ function setRadarSettings(radar_settings) {
     buffer.writeUInt8(frame_rate);
     return buffer.toBytes();
 }
-
-function setTargetDetectionMinimumHeight(target_detection_minimum_height) { }
 
 /**
  * set existence detection settings
@@ -506,7 +504,7 @@ function deleteRegion(delete_region) {
     var yes_no_values = getValues(yes_no_map);
 
     var data = [];
-    var region_offset = { "region_1": 0, "region_2": 1, "region_3": 2, "region_4": 3 };
+    var region_offset = { region_1: 0, region_2: 1, region_3: 2, region_4: 3 };
     for (var key in region_offset) {
         if (key in delete_region) {
             if (yes_no_values.indexOf(delete_region[key]) === -1) {
@@ -713,7 +711,7 @@ function setConfirmMode(confirm_mode_enable) {
  * @param {number} adr_enable values: (0: disable, 1: enable)
  * @example { "adr_enable": 1 }
  */
-function setADR(adr_enable) {
+function setADREnable(adr_enable) {
     var enable_map = { 0: "disable", 1: "enable" };
     var enable_values = getValues(enable_map);
     if (enable_values.indexOf(adr_enable) === -1) {
@@ -915,14 +913,8 @@ function setTime(timestamp) {
 
 function getValues(map) {
     var values = [];
-    if (RAW_VALUE) {
-        for (var key in map) {
-            values.push(parseInt(key));
-        }
-    } else {
-        for (var key in map) {
-            values.push(map[key]);
-        }
+    for (var key in map) {
+        values.push(RAW_VALUE ? parseInt(key) : map[key]);
     }
     return values;
 }

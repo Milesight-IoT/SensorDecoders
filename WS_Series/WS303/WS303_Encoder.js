@@ -38,8 +38,8 @@ function milesightDeviceEncode(payload) {
     if ("report_interval" in payload) {
         encoded = encoded.concat(setReportInterval(payload.report_interval));
     }
-    if ("leakage_alarm_settings" in payload) {
-        encoded = encoded.concat(setLeakageAlarmSettings(payload.leakage_alarm_settings));
+    if ("leakage_alarm_config" in payload) {
+        encoded = encoded.concat(setLeakageAlarmSettings(payload.leakage_alarm_config));
     }
     if ("buzzer_enable" in payload) {
         encoded = encoded.concat(setBuzzerEnable(payload.buzzer_enable));
@@ -74,13 +74,13 @@ function milesightDeviceEncode(payload) {
  * @example { "reboot": 1 }
  */
 function reboot(reboot) {
-    var reboot_map = { 0: "no", 1: "yes" };
-    var reboot_values = getValues(reboot_map);
+    var yes_no_map = { 0: "no", 1: "yes" };
+    var reboot_values = getValues(yes_no_map);
     if (reboot_values.indexOf(reboot) === -1) {
         throw new Error("reboot must be one of " + reboot_values.join(", "));
     }
 
-    if (getValue(reboot_map, reboot) === 0) {
+    if (getValue(yes_no_map, reboot) === 0) {
         return [];
     }
     return [0xff, 0x10, 0xff];
@@ -123,27 +123,27 @@ function setReportInterval(report_interval) {
 
 /**
  * set leakage alarm settings
- * @param {object} leakage_alarm_settings
- * @param {number} leakage_alarm_settings.enable values: (0: disable, 1: enable)
- * @param {number} leakage_alarm_settings.alarm_interval unit: second, range: [60, 64800]
- * @param {number} leakage_alarm_settings.alarm_count unit: count, range: [2, 1000]
- * @example { "leakage_alarm_settings": { "enable": 1, "alarm_interval": 60, "alarm_count": 2 } }
+ * @param {object} leakage_alarm_config
+ * @param {number} leakage_alarm_config.enable values: (0: disable, 1: enable)
+ * @param {number} leakage_alarm_config.alarm_interval unit: second, range: [60, 64800]
+ * @param {number} leakage_alarm_config.alarm_count unit: count, range: [2, 1000]
+ * @example { "leakage_alarm_config": { "enable": 1, "alarm_interval": 60, "alarm_count": 2 } }
  */
-function setLeakageAlarmSettings(leakage_alarm_settings) {
-    var enable = leakage_alarm_settings.enable;
-    var alarm_interval = leakage_alarm_settings.alarm_interval;
-    var alarm_count = leakage_alarm_settings.alarm_count;
+function setLeakageAlarmSettings(leakage_alarm_config) {
+    var enable = leakage_alarm_config.enable;
+    var alarm_interval = leakage_alarm_config.alarm_interval;
+    var alarm_count = leakage_alarm_config.alarm_count;
 
     var enable_map = { 0: "disable", 1: "enable" };
     var enable_values = getValues(enable_map);
     if (enable_values.indexOf(enable) === -1) {
-        throw new Error("leakage_alarm_settings.enable must be one of " + enable_values.join(", "));
+        throw new Error("leakage_alarm_config.enable must be one of " + enable_values.join(", "));
     }
     if (alarm_interval < 60 || alarm_interval > 64800) {
-        throw new Error("leakage_alarm_settings.alarm_interval must be between 60 and 64800");
+        throw new Error("leakage_alarm_config.alarm_interval must be between 60 and 64800");
     }
     if (alarm_count < 2 || alarm_count > 1000) {
-        throw new Error("leakage_alarm_settings.alarm_count must be between 2 and 1000");
+        throw new Error("leakage_alarm_config.alarm_count must be between 2 and 1000");
     }
 
     var buffer = new Buffer(7);
@@ -279,9 +279,9 @@ function setD2DEnable(d2d_enable) {
 /**
  * set D2D master settings
  * @param {object} d2d_master_config
- * @param {number} d2d_master_config    for.mode values: (0: normal, 1: leakage)
- * @param {string} d2d_master_config    for.d2d_command
- * @example { "d2d_master_config": {    for "mode": 1, "d2d_command": "0000" } }
+ * @param {number} d2d_master_config.mode values: (0: normal, 1: leakage)
+ * @param {string} d2d_master_config.d2d_command
+ * @example { "d2d_master_config": { "mode": 1, "d2d_command": "0000" } }
  */
 function setD2DMasterSettings(d2d_master_config) {
     var mode = d2d_master_config.mode;

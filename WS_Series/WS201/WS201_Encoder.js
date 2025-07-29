@@ -38,8 +38,8 @@ function milesightDeviceEncode(payload) {
     if ("collection_interval" in payload) {
         encoded = encoded.concat(setCollectionInterval(payload.collection_interval));
     }
-    if ("timezone" in payload) {
-        encoded = encoded.concat(setTimeZone(payload.timezone));
+    if ("time_zone" in payload) {
+        encoded = encoded.concat(setTimeZone(payload.time_zone));
     }
     if ("report_status" in payload) {
         encoded = encoded.concat(reportStatus(payload.report_status));
@@ -115,20 +115,21 @@ function setCollectionInterval(collection_interval) {
 }
 
 /**
- * set timezone
- * @param {number} timezone
- * @example { "timezone": -4 }
- * @example { "timezone": 8 }
+ * set time zone
+ * @param {number} time_zone unit: minute, UTC+8 -> 8 * 10 = 80
+ * @example { "time_zone": 80 }
  */
-function setTimeZone(timezone) {
-    if (typeof timezone !== "number") {
-        throw new Error("timezone must be a number");
+function setTimeZone(time_zone) {
+    var timezone_map = { "-120": "UTC-12", "-110": "UTC-11", "-100": "UTC-10", "-95": "UTC-9:30", "-90": "UTC-9", "-80": "UTC-8", "-70": "UTC-7", "-60": "UTC-6", "-50": "UTC-5", "-40": "UTC-4", "-35": "UTC-3:30", "-30": "UTC-3", "-20": "UTC-2", "-10": "UTC-1", 0: "UTC", 10: "UTC+1", 20: "UTC+2", 30: "UTC+3", 35: "UTC+3:30", 40: "UTC+4", 45: "UTC+4:30", 50: "UTC+5", 55: "UTC+5:30", 57: "UTC+5:45", 60: "UTC+6", 65: "UTC+6:30", 70: "UTC+7", 80: "UTC+8", 90: "UTC+9", 95: "UTC+9:30", 100: "UTC+10", 105: "UTC+10:30", 110: "UTC+11", 120: "UTC+12", 127: "UTC+12:45", 130: "UTC+13", 140: "UTC+14" };
+    var timezone_values = getValues(timezone_map);
+    if (timezone_values.indexOf(time_zone) === -1) {
+        throw new Error("time_zone must be one of " + timezone_values.join(", "));
     }
 
     var buffer = new Buffer(4);
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0x17);
-    buffer.writeInt16LE(timezone * 10);
+    buffer.writeInt16LE(getValue(timezone_map, time_zone));
     return buffer.toBytes();
 }
 
@@ -214,17 +215,17 @@ function setRemainingAlarmConfig(remaining_alarm_config) {
 /**
  * set hibernate config
  * @param {object} hibernate_config
- * @param {number} hibernate_config.enable values: (0: "enable", 1: "disable")
+ * @param {number} hibernate_config.enable values: (0: disable, 1: enable)
  * @param {number} hibernate_config.start_time unit: minute. (4:00 -> 240, 4:30 -> 270)
  * @param {number} hibernate_config.end_time unit: minute. (start_time < end_time: one day, start_time > end_time: across the day, start_time == end_time: whole day)
  * @param {object} hibernate_config.weekdays
- * @param {number} hibernate_config.weekdays.monday values: (0: "disable", 1: "enable")
- * @param {number} hibernate_config.weekdays.tuesday values: (0: "disable", 1: "enable")
- * @param {number} hibernate_config.weekdays.wednesday values: (0: "disable", 1: "enable")
- * @param {number} hibernate_config.weekdays.thursday values: (0: "disable", 1: "enable")
- * @param {number} hibernate_config.weekdays.friday values: (0: "disable", 1: "enable")
- * @param {number} hibernate_config.weekdays.saturday values: (0: "disable", 1: "enable")
- * @param {number} hibernate_config.weekdays.sunday values: (0: "disable", 1: "enable")
+ * @param {number} hibernate_config.weekdays.monday values: (0: disable, 1: enable)
+ * @param {number} hibernate_config.weekdays.tuesday values: (0: disable, 1: enable)
+ * @param {number} hibernate_config.weekdays.wednesday values: (0: disable, 1: enable)
+ * @param {number} hibernate_config.weekdays.thursday values: (0: disable, 1: enable)
+ * @param {number} hibernate_config.weekdays.friday values: (0: disable, 1: enable)
+ * @param {number} hibernate_config.weekdays.saturday values: (0: disable, 1: enable)
+ * @param {number} hibernate_config.weekdays.sunday values: (0: disable, 1: enable)
  * @example { "hibernate_config": { "enable": 1, "start_time": 240, "end_time": 270, "weekdays": { "monday": 1, "tuesday": 1, "wednesday": 1, "thursday": 1, "friday": 1, "saturday": 1, "sunday": 1 } } }
  */
 function setHibernateConfig(hibernate_config) {
@@ -245,11 +246,11 @@ function setHibernateConfig(hibernate_config) {
         throw new Error("hibernate_config.end_time must be a number");
     }
 
-    var weekdays_map = { "monday": 1, "tuesday": 2, "wednesday": 3, "thursday": 4, "friday": 5, "saturday": 6, "sunday": 7 };
+    var weekdays_map = { monday: 1, tuesday: 2, wednesday: 3, thursday: 4, friday: 5, saturday: 6, sunday: 7 };
     var day = 0;
     for (var key in weekdays_map) {
         if (key in weekdays) {
-            day |= (getValue(enable_map, weekdays[key]) << weekdays_map[key]);
+            day |= getValue(enable_map, weekdays[key]) << weekdays_map[key];
         }
     }
 

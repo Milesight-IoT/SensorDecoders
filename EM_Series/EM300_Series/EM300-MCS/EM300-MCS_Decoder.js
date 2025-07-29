@@ -29,7 +29,7 @@ function Decoder(bytes, port) {
 function milesightDeviceDecode(bytes) {
     var decoded = {};
 
-    for (var i = 0; i < bytes.length;) {
+    for (var i = 0; i < bytes.length; ) {
         var channel_id = bytes[i++];
         var channel_type = bytes[i++];
 
@@ -86,7 +86,7 @@ function milesightDeviceDecode(bytes) {
         }
         // HUMIDITY
         else if (channel_id === 0x04 && channel_type === 0x68) {
-            decoded.humidity = bytes[i] / 2;
+            decoded.humidity = readUInt8(bytes[i]) / 2;
             i += 1;
         }
         // MAGNET STATUS
@@ -99,7 +99,7 @@ function milesightDeviceDecode(bytes) {
             var point = {};
             point.timestamp = readUInt32LE(bytes.slice(i, i + 4));
             point.temperature = readInt16LE(bytes.slice(i + 4, i + 6)) / 10;
-            point.humidity = bytes[i + 6] / 2;
+            point.humidity = readUInt8(bytes[i + 6]) / 2;
             point.magnet_status = readMagnetStatus(bytes[i + 7]);
             i += 8;
             decoded.history = decoded.history || [];
@@ -137,8 +137,8 @@ function handle_downlink_response(channel_type, bytes, offset) {
             if (channel === 0x01) {
                 decoded.temperature_alarm_config = {};
                 decoded.temperature_alarm_config.condition = readConditionType(value);
-                decoded.temperature_alarm_config.min_threshold = readInt16LE(bytes.slice(offset + 1, offset + 3)) / 10;
-                decoded.temperature_alarm_config.max_threshold = readInt16LE(bytes.slice(offset + 3, offset + 5)) / 10;
+                decoded.temperature_alarm_config.threshold_min = readInt16LE(bytes.slice(offset + 1, offset + 3)) / 10;
+                decoded.temperature_alarm_config.threshold_max = readInt16LE(bytes.slice(offset + 3, offset + 5)) / 10;
             } else if (channel === 0x02) {
                 decoded.magnet_alarm_config = {};
                 decoded.magnet_alarm_config.enable = readEnableStatus(value);
@@ -198,13 +198,13 @@ function handle_downlink_response(channel_type, bytes, offset) {
             var channel = data & 0x03;
             var enable_value = (data >>> 7) & 0x01;
             if (channel === 0x00) {
-                decoded.temperature_calibration_config = {};
-                decoded.temperature_calibration_config.enable = readEnableStatus(enable_value);
-                decoded.temperature_calibration_config.value = readInt16LE(bytes.slice(offset + 1, offset + 3)) / 10;
+                decoded.temperature_calibration_settings = {};
+                decoded.temperature_calibration_settings.enable = readEnableStatus(enable_value);
+                decoded.temperature_calibration_settings.calibration_value = readInt16LE(bytes.slice(offset + 1, offset + 3)) / 10;
             } else if (channel === 0x01) {
-                decoded.humidity_calibration_config = {};
-                decoded.humidity_calibration_config.enable = readEnableStatus(enable_value);
-                decoded.humidity_calibration_config.value = readInt16LE(bytes.slice(offset + 1, offset + 3)) / 2;
+                decoded.humidity_calibration_settings = {};
+                decoded.humidity_calibration_settings.enable = readEnableStatus(enable_value);
+                decoded.humidity_calibration_settings.calibration_value = readInt16LE(bytes.slice(offset + 1, offset + 3)) / 2;
             }
             offset += 3;
             break;

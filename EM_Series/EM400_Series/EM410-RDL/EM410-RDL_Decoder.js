@@ -29,7 +29,7 @@ function Decoder(bytes, port) {
 function milesightDeviceDecode(bytes) {
     var decoded = {};
 
-    for (var i = 0; i < bytes.length;) {
+    for (var i = 0; i < bytes.length; ) {
         var channel_id = bytes[i++];
         var channel_type = bytes[i++];
 
@@ -220,8 +220,8 @@ function handle_downlink_response(channel_type, bytes, offset) {
                 decoded.distance_alarm_config.enable = readEnableStatus(condition_type === 0 ? 0 : 1);
                 decoded.distance_alarm_config.condition = readConditionType(condition_type);
                 decoded.distance_alarm_config.alarm_release_enable = readEnableStatus(alarm_release_enable);
-                decoded.distance_alarm_config.min_threshold = min;
-                decoded.distance_alarm_config.max_threshold = max;
+                decoded.distance_alarm_config.threshold_min = min;
+                decoded.distance_alarm_config.threshold_max = max;
             } else if (id === 2) {
                 decoded.distance_mutation_alarm_config = {};
                 decoded.distance_mutation_alarm_config.enable = readEnableStatus(condition_type === 0 ? 0 : 1);
@@ -232,10 +232,9 @@ function handle_downlink_response(channel_type, bytes, offset) {
                 decoded.tank_mode_distance_alarm_config.enable = readEnableStatus(condition_type === 0 ? 0 : 1);
                 decoded.tank_mode_distance_alarm_config.condition = readConditionType(condition_type);
                 decoded.tank_mode_distance_alarm_config.alarm_release_enable = readEnableStatus(alarm_release_enable);
-                decoded.tank_mode_distance_alarm_config.min_threshold = min;
-                decoded.tank_mode_distance_alarm_config.max_threshold = max;
-            }
-            else if (id === 4) {
+                decoded.tank_mode_distance_alarm_config.threshold_min = min;
+                decoded.tank_mode_distance_alarm_config.threshold_max = max;
+            } else if (id === 4) {
                 decoded.tank_mode_distance_mutation_alarm_config = {};
                 decoded.tank_mode_distance_mutation_alarm_config.enable = readEnableStatus(condition_type === 0 ? 0 : 1);
                 decoded.tank_mode_distance_mutation_alarm_config.alarm_release_enable = readEnableStatus(alarm_release_enable);
@@ -314,13 +313,13 @@ function handle_downlink_response(channel_type, bytes, offset) {
             offset += 3;
             break;
         case 0xab:
-            decoded.distance_calibration = {};
-            decoded.distance_calibration.enable = readEnableStatus(readUInt8(bytes[offset]));
-            decoded.distance_calibration.distance = readInt16LE(bytes.slice(offset + 1, offset + 3));
+            decoded.distance_calibration_settings = {};
+            decoded.distance_calibration_settings.enable = readEnableStatus(readUInt8(bytes[offset]));
+            decoded.distance_calibration_settings.calibration_value = readInt16LE(bytes.slice(offset + 1, offset + 3));
             offset += 3;
             break;
         case 0xbd:
-            decoded.timezone = readTimeZone(readInt16LE(bytes.slice(offset, offset + 2)));
+            decoded.time_zone = readTimeZone(readInt16LE(bytes.slice(offset, offset + 2)));
             offset += 2;
             break;
         case 0xf2:
@@ -353,7 +352,7 @@ function handle_downlink_response_ext(code, channel_type, bytes, offset) {
             break;
         case 0x15:
             decoded.distance_threshold_sensitive = readInt16LE(bytes.slice(offset, offset + 2)) / 10;
-            offset += 2
+            offset += 2;
             break;
         case 0x16:
             decoded.peak_sorting = readPeakSortingAlgorithm(readUInt8(bytes[offset]));
@@ -476,47 +475,9 @@ function readPeakSortingAlgorithm(status) {
     return getValue(status_map, status);
 }
 
-function readTimeZone(timezone) {
-    var timezone_map = {
-        "-720": "UTC-12",
-        "-660": "UTC-11",
-        "-600": "UTC-10",
-        "-570": "UTC-9:30",
-        "-540": "UTC-9",
-        "-480": "UTC-8",
-        "-420": "UTC-7",
-        "-360": "UTC-6",
-        "-300": "UTC-5",
-        "-240": "UTC-4",
-        "-210": "UTC-3:30",
-        "-180": "UTC-3",
-        "-120": "UTC-2",
-        "-60": "UTC-1",
-        0: "UTC",
-        60: "UTC+1",
-        120: "UTC+2",
-        180: "UTC+3",
-        210: "UTC+3:30",
-        240: "UTC+4",
-        270: "UTC+4:30",
-        300: "UTC+5",
-        330: "UTC+5:30",
-        345: "UTC+5:45",
-        360: "UTC+6",
-        390: "UTC+6:30",
-        420: "UTC+7",
-        480: "UTC+8",
-        540: "UTC+9",
-        570: "UTC+9:30",
-        600: "UTC+10",
-        630: "UTC+10:30",
-        660: "UTC+11",
-        720: "UTC+12",
-        765: "UTC+12:45",
-        780: "UTC+13",
-        840: "UTC+14",
-    };
-    return getValue(timezone_map, timezone);
+function readTimeZone(time_zone) {
+    var timezone_map = { "-720": "UTC-12", "-660": "UTC-11", "-600": "UTC-10", "-570": "UTC-9:30", "-540": "UTC-9", "-480": "UTC-8", "-420": "UTC-7", "-360": "UTC-6", "-300": "UTC-5", "-240": "UTC-4", "-210": "UTC-3:30", "-180": "UTC-3", "-120": "UTC-2", "-60": "UTC-1", 0: "UTC", 60: "UTC+1", 120: "UTC+2", 180: "UTC+3", 210: "UTC+3:30", 240: "UTC+4", 270: "UTC+4:30", 300: "UTC+5", 330: "UTC+5:30", 345: "UTC+5:45", 360: "UTC+6", 390: "UTC+6:30", 420: "UTC+7", 480: "UTC+8", 540: "UTC+9", 570: "UTC+9:30", 600: "UTC+10", 630: "UTC+10:30", 660: "UTC+11", 720: "UTC+12", 765: "UTC+12:45", 780: "UTC+13", 840: "UTC+14" };
+    return getValue(timezone_map, time_zone);
 }
 
 function readDistanceAlarm(status) {

@@ -59,23 +59,23 @@ function milesightDeviceEncode(payload) {
     if ("resend_interval" in payload) {
         encoded = encoded.concat(setResendInterval(payload.resend_interval));
     }
-    if ("alarm_count" in payload) {
-        encoded = encoded.concat(setAlarmCount(payload.alarm_count));
+    if ("alarm_report_counts" in payload) {
+        encoded = encoded.concat(setAlarmCount(payload.alarm_report_counts));
     }
-    if ("threshold_alarm_enable" in payload) {
-        encoded = encoded.concat(setThresholdAlarmEnable(payload.threshold_alarm_enable));
+    if ("alarm_release_enable" in payload) {
+        encoded = encoded.concat(setThresholdAlarmEnable(payload.alarm_release_enable));
     }
     if ("temperature_alarm_config" in payload) {
         encoded = encoded.concat(setTemperatureAlarmConfig(payload.temperature_alarm_config));
     }
-    if ("temperature_mutation_config" in payload) {
-        encoded = encoded.concat(setTemperatureMutationConfig(payload.temperature_mutation_config));
+    if ("temperature_mutation_alarm_config" in payload) {
+        encoded = encoded.concat(setTemperatureMutationConfig(payload.temperature_mutation_alarm_config));
     }
-    if ("temperature_calibrate" in payload) {
-        encoded = encoded.concat(calibrateTemperature(payload.temperature_calibrate));
+    if ("temperature_calibration_settings" in payload) {
+        encoded = encoded.concat(calibrateTemperature(payload.temperature_calibration_settings));
     }
-    if ("humidity_calibrate" in payload) {
-        encoded = encoded.concat(calibrateHumidity(payload.humidity_calibrate));
+    if ("humidity_calibration_settings" in payload) {
+        encoded = encoded.concat(calibrateHumidity(payload.humidity_calibration_settings));
     }
     if ("stop_transmit" in payload) {
         encoded = encoded.concat(stopTransmit(payload.stop_transmit));
@@ -174,9 +174,9 @@ function setCollectionInterval(collection_interval) {
  */
 function syncTime(sync_time) {
     var yes_no_map = { 0: "no", 1: "yes" };
-    var sync_time_values = getValues(yes_no_map);
-    if (sync_time_values.indexOf(sync_time) === -1) {
-        throw new Error("sync_time must be one of " + sync_time_values.join(", "));
+    var yes_no_values = getValues(yes_no_map);
+    if (yes_no_values.indexOf(sync_time) === -1) {
+        throw new Error("sync_time must be one of " + yes_no_values.join(", "));
     }
 
     if (getValue(yes_no_map, sync_time) === 0) {
@@ -187,22 +187,22 @@ function syncTime(sync_time) {
 
 /**
  * calibrate temperature
- * @param {object} temperature_calibrate
- * @param {number} temperature_calibrate.enable values: (0: disable, 1: enable)
- * @param {number} temperature_calibrate.calibration_value range: [-200, 1000]
- * @example { "temperature_calibrate": { "enable": 1, "calibration_value": 1 }
+ * @param {object} temperature_calibration_settings
+ * @param {number} temperature_calibration_settings.enable values: (0: disable, 1: enable)
+ * @param {number} temperature_calibration_settings.calibration_value range: [-200, 1000]
+ * @example { "temperature_calibration_settings": { "enable": 1, "calibration_value": 1 }
  */
-function calibrateTemperature(temperature_calibrate) {
-    var enable = temperature_calibrate.enable;
-    var calibration_value = temperature_calibrate.calibration_value;
+function calibrateTemperature(temperature_calibration_settings) {
+    var enable = temperature_calibration_settings.enable;
+    var calibration_value = temperature_calibration_settings.calibration_value;
 
     var enable_map = { 0: "disable", 1: "enable" };
     var enable_values = getValues(enable_map);
     if (enable_values.indexOf(enable) === -1) {
-        throw new Error("temperature_calibrate.enable must be one of " + enable_values.join(", "));
+        throw new Error("temperature_calibration_settings.enable must be one of " + enable_values.join(", "));
     }
     if (calibration_value < -200 || calibration_value > 1000) {
-        throw new Error("temperature_calibrate.calibration_value must be in range [-200, 1000]");
+        throw new Error("temperature_calibration_settings.calibration_value must be in range [-200, 1000]");
     }
 
     var data = 0 | (getValue(enable_map, enable) << 7);
@@ -217,22 +217,22 @@ function calibrateTemperature(temperature_calibrate) {
 
 /**
  * calibrate humidity
- * @param {object} humidity_calibrate
- * @param {number} humidity_calibrate.enable values: (0: disable, 1: enable)
- * @param {number} humidity_calibrate.calibration_value range: [-100, 100]
- * @example { "humidity_calibrate": { "enable": 1, "calibration_value": 1 }
+ * @param {object} humidity_calibration_settings
+ * @param {number} humidity_calibration_settings.enable values: (0: disable, 1: enable)
+ * @param {number} humidity_calibration_settings.calibration_value range: [-100, 100]
+ * @example { "humidity_calibration_settings": { "enable": 1, "calibration_value": 1 }
  */
-function calibrateHumidity(humidity_calibrate) {
-    var enable = humidity_calibrate.enable;
-    var calibration_value = humidity_calibrate.calibration_value;
+function calibrateHumidity(humidity_calibration_settings) {
+    var enable = humidity_calibration_settings.enable;
+    var calibration_value = humidity_calibration_settings.calibration_value;
 
     var enable_map = { 0: "disable", 1: "enable" };
     var enable_values = getValues(enable_map);
     if (enable_values.indexOf(enable) === -1) {
-        throw new Error("humidity_calibrate.enable must be one of " + enable_values.join(", "));
+        throw new Error("humidity_calibration_settings.enable must be one of " + enable_values.join(", "));
     }
     if (calibration_value < -100 || calibration_value > 100) {
-        throw new Error("humidity_calibrate.calibration_value must be in range [-100, 100]");
+        throw new Error("humidity_calibration_settings.calibration_value must be in range [-100, 100]");
     }
 
     var data = 1 | (getValue(enable_map, enable) << 7);
@@ -247,37 +247,37 @@ function calibrateHumidity(humidity_calibrate) {
 
 /**
  * set alarm count
- * @param {number} alarm_count range: [1, 1000]
- * @example { "alarm_count": 10 }
+ * @param {number} alarm_report_counts range: [1, 1000]
+ * @example { "alarm_report_counts": 10 }
  */
-function setAlarmCount(alarm_count) {
-    if (typeof alarm_count !== "number") {
-        throw new Error("alarm_count must be a number");
+function setAlarmCount(alarm_report_counts) {
+    if (typeof alarm_report_counts !== "number") {
+        throw new Error("alarm_report_counts must be a number");
     }
-    if (alarm_count < 1 || alarm_count > 1000) {
-        throw new Error("alarm_count must be in range [1, 1000]");
+    if (alarm_report_counts < 1 || alarm_report_counts > 1000) {
+        throw new Error("alarm_report_counts must be in range [1, 1000]");
     }
 
     var buffer = new Buffer(4);
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0xf2);
-    buffer.writeUInt16LE(alarm_count);
+    buffer.writeUInt16LE(alarm_report_counts);
     return buffer.toBytes();
 }
 
 /**
  * set temperature threshold config
  * @param {object} temperature_alarm_config
- * @param {number} temperature_alarm_config.condition values: (0: disable, 1: below, 2: above, 3: between, 4: outside)
- * @param {number} temperature_alarm_config.max
- * @param {number} temperature_alarm_config.min
  * @param {number} temperature_alarm_config.enable values: (0: disable, 1: enable)
- * @example { "temperature_alarm_config": { "condition": 1, "max": 25, "min": 20, "enable": 1 } }
+ * @param {number} temperature_alarm_config.condition values: (0: disable, 1: below, 2: above, 3: between, 4: outside)
+ * @param {number} temperature_alarm_config.threshold_max
+ * @param {number} temperature_alarm_config.threshold_min
+ * @example { "temperature_alarm_config": { "condition": 1, "threshold_max": 25, "threshold_min": 20, "enable": 1 } }
  */
 function setTemperatureAlarmConfig(temperature_alarm_config) {
     var condition = temperature_alarm_config.condition;
-    var max = temperature_alarm_config.max;
-    var min = temperature_alarm_config.min;
+    var threshold_min = temperature_alarm_config.threshold_min;
+    var threshold_max = temperature_alarm_config.threshold_max;
     var enable = temperature_alarm_config.enable;
 
     var condition_map = { 0: "disable", 1: "below", 2: "above", 3: "between", 4: "outside" };
@@ -296,30 +296,30 @@ function setTemperatureAlarmConfig(temperature_alarm_config) {
     buffer.writeUInt8(0x0b);
     buffer.writeUInt8(0x01);
     buffer.writeUInt8(getValue(condition_map, condition));
-    buffer.writeUInt16LE(max * 10);
-    buffer.writeUInt16LE(min * 10);
+    buffer.writeUInt16LE(threshold_max * 10);
+    buffer.writeUInt16LE(threshold_min * 10);
     buffer.writeUInt8(getValue(enable_map, enable));
     return buffer.toBytes();
 }
 
 /**
  * set temperature mutation config
- * @param {object} temperature_mutation_config
- * @param {number} temperature_mutation_config.threshold range: [0.1, 100]
- * @param {number} temperature_mutation_config.enable values: (0: disable, 1: enable)
- * @example { "temperature_mutation_config": { "threshold": 1, "enable": 1 } }
+ * @param {object} temperature_mutation_alarm_config
+ * @param {number} temperature_mutation_alarm_config.enable values: (0: disable, 1: enable)
+ * @param {number} temperature_mutation_alarm_config.mutation range: [0.1, 100]
+ * @example { "temperature_mutation_alarm_config": { "mutation": 1, "enable": 1 } }
  */
-function setTemperatureMutationConfig(temperature_mutation_config) {
-    var threshold = temperature_mutation_config.threshold;
-    var enable = temperature_mutation_config.enable;
+function setTemperatureMutationConfig(temperature_mutation_alarm_config) {
+    var threshold = temperature_mutation_alarm_config.threshold;
+    var enable = temperature_mutation_alarm_config.enable;
 
     var enable_map = { 0: "disable", 1: "enable" };
     var enable_values = getValues(enable_map);
     if (enable_values.indexOf(enable) === -1) {
-        throw new Error("temperature_mutation_config.enable must be one of " + enable_values.join(", "));
+        throw new Error("temperature_mutation_alarm_config.enable must be one of " + enable_values.join(", "));
     }
     if (threshold < 0.1 || threshold > 100) {
-        throw new Error("temperature_mutation_config.threshold must be in range [0.1, 100]");
+        throw new Error("temperature_mutation_alarm_config.threshold must be in range [0.1, 100]");
     }
 
     var buffer = new Buffer(6);
@@ -333,20 +333,20 @@ function setTemperatureMutationConfig(temperature_mutation_config) {
 
 /**
  * threshold alarm enable
- * @param {number} threshold_alarm_enable values: (0: disable, 1: enable)
- * @example { "threshold_alarm_enable": 1 }
+ * @param {number} alarm_release_enable values: (0: disable, 1: enable)
+ * @example { "alarm_release_enable": 1 }
  */
-function setThresholdAlarmEnable(threshold_alarm_enable) {
+function setThresholdAlarmEnable(alarm_release_enable) {
     var enable_map = { 0: "disable", 1: "enable" };
     var enable_values = getValues(enable_map);
-    if (enable_values.indexOf(threshold_alarm_enable) === -1) {
-        throw new Error("threshold_alarm_enable must be one of " + enable_values.join(", "));
+    if (enable_values.indexOf(alarm_release_enable) === -1) {
+        throw new Error("alarm_release_enable must be one of " + enable_values.join(", "));
     }
 
     var buffer = new Buffer(3);
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0xf5);
-    buffer.writeUInt8(getValue(enable_map, threshold_alarm_enable));
+    buffer.writeUInt8(getValue(enable_map, alarm_release_enable));
     return buffer.toBytes();
 }
 
@@ -414,9 +414,9 @@ function fetchHistory(fetch_history) {
  */
 function clearHistory(clear_history) {
     var yes_no_map = { 0: "no", 1: "yes" };
-    var clear_history_values = getValues(yes_no_map);
-    if (clear_history_values.indexOf(clear_history) === -1) {
-        throw new Error("clear_history must be one of " + clear_history_values.join(", "));
+    var yes_no_values = getValues(yes_no_map);
+    if (yes_no_values.indexOf(clear_history) === -1) {
+        throw new Error("clear_history must be one of " + yes_no_values.join(", "));
     }
 
     if (getValue(yes_no_map, clear_history) === 0) {
@@ -427,8 +427,9 @@ function clearHistory(clear_history) {
 
 /**
  * set retransmit config
- * @param {number} enable values: (0: disable, 1: enable)
- * @param {number} interval range: [30, 1200], unit: seconds
+ * @param {object} retransmit_config
+ * @param {number} retransmit_config.enable values: (0: disable, 1: enable)
+ * @param {number} retransmit_config.interval range: [30, 1200], unit: seconds
  * @example { "retransmit_config": { "enable": 1, "interval": 60 } }
  */
 function setRetransmitConfig(retransmit_config) {
@@ -482,9 +483,9 @@ function setResendInterval(resend_interval) {
  */
 function stopTransmit(stop_transmit) {
     var yes_no_map = { 0: "no", 1: "yes" };
-    var stop_transmit_values = getValues(yes_no_map);
-    if (stop_transmit_values.indexOf(stop_transmit) === -1) {
-        throw new Error("stop_transmit must be one of " + stop_transmit_values.join(", "));
+    var yes_no_values = getValues(yes_no_map);
+    if (yes_no_values.indexOf(stop_transmit) === -1) {
+        throw new Error("stop_transmit must be one of " + yes_no_values.join(", "));
     }
 
     if (getValue(yes_no_map, stop_transmit) === 0) {
@@ -499,15 +500,16 @@ function stopTransmit(stop_transmit) {
  * @example { "fetch_sensor_id": 0 }
  */
 function fetchSensorID(fetch_sensor_id) {
-    var fetch_sensor_id_values = [0, 1];
-    if (fetch_sensor_id_values.indexOf(fetch_sensor_id) === -1) {
-        throw new Error("fetch_sensor_id must be one of " + fetch_sensor_id_values.join(", "));
+    var sensor_map = { 0: "all", 1: "sensor_1" };
+    var sensor_values = getValues(sensor_map);
+    if (sensor_values.indexOf(fetch_sensor_id) === -1) {
+        throw new Error("fetch_sensor_id must be one of " + sensor_values.join(", "));
     }
 
     var buffer = new Buffer(3);
     buffer.writeUInt8(0xf9);
     buffer.writeUInt8(0x31);
-    buffer.writeUInt8(fetch_sensor_id);
+    buffer.writeUInt8(getValue(sensor_map, fetch_sensor_id));
     return buffer.toBytes();
 }
 
@@ -535,14 +537,8 @@ function setAckRetryTimes(ack_retry_times) {
 
 function getValues(map) {
     var values = [];
-    if (RAW_VALUE) {
-        for (var key in map) {
-            values.push(parseInt(key));
-        }
-    } else {
-        for (var key in map) {
-            values.push(map[key]);
-        }
+    for (var key in map) {
+        values.push(RAW_VALUE ? parseInt(key) : map[key]);
     }
     return values;
 }

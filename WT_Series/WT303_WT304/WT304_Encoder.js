@@ -148,13 +148,13 @@ function milesightDeviceEncode(payload) {
         encoded = encoded.concat(cmd_buffer);
         encoded = WITH_QUERY_CMD ? encoded.concat(setQueryCmd(cmd_buffer)) : encoded;
     }
-    if ("temperature_calibration_config" in payload) {
-        var cmd_buffer = setTemperatureCalibrationConfig(payload.temperature_calibration_config);
+    if ("temperature_calibration_settings" in payload) {
+        var cmd_buffer = setTemperatureCalibrationConfig(payload.temperature_calibration_settings);
         encoded = encoded.concat(cmd_buffer);
         encoded = WITH_QUERY_CMD ? encoded.concat(setQueryCmd(cmd_buffer)) : encoded;
     }
-    if ("humidity_calibration_config" in payload) {
-        var cmd_buffer = setHumidityCalibrationConfig(payload.humidity_calibration_config);
+    if ("humidity_calibration_settings" in payload) {
+        var cmd_buffer = setHumidityCalibrationConfig(payload.humidity_calibration_settings);
         encoded = encoded.concat(cmd_buffer);
         encoded = WITH_QUERY_CMD ? encoded.concat(setQueryCmd(cmd_buffer)) : encoded;
     }
@@ -332,7 +332,7 @@ function milesightDeviceEncode(payload) {
  */
 function setFrame(frame) {
     var buffer = new Buffer(2);
-    buffer.writeUInt8(0xFE);
+    buffer.writeUInt8(0xfe);
     buffer.writeUInt8(frame);
     return buffer.toBytes();
 }
@@ -797,14 +797,14 @@ function setChildLockSettings(child_lock_settings) {
  * Set temperature alarm settings
  * @param {object} temperature_alarm_settings
  * @param {number} temperature_alarm_settings.enable values: (0: disable, 1: enable)
- * @param {number} temperature_alarm_settings.threshold_condition values: (1: below, 2: above, 3: between, 4: outside)
+ * @param {number} temperature_alarm_settings.condition values: (1: below, 2: above, 3: between, 4: outside)
  * @param {number} temperature_alarm_settings.threshold_min unit: celsius, range: [-20, 60]
  * @param {number} temperature_alarm_settings.threshold_max unit: celsius, range: [-20, 60]
- * @example { "temperature_alarm_settings": { "enable": 1, "threshold_condition": 1, "threshold_min": 20, "threshold_max": 25 } }
+ * @example { "temperature_alarm_settings": { "enable": 1, "condition": 1, "threshold_min": 20, "threshold_max": 25 } }
  */
 function setTemperatureAlarmSettings(temperature_alarm_settings) {
     var enable = temperature_alarm_settings.enable;
-    var threshold_condition = temperature_alarm_settings.threshold_condition;
+    var condition = temperature_alarm_settings.condition;
     var threshold_min = temperature_alarm_settings.threshold_min;
     var threshold_max = temperature_alarm_settings.threshold_max;
 
@@ -815,14 +815,14 @@ function setTemperatureAlarmSettings(temperature_alarm_settings) {
     }
     var condition_map = { 0: "disable", 1: "below", 2: "above", 3: "between", 4: "outside" };
     var condition_values = getValues(condition_map);
-    if (condition_values.indexOf(threshold_condition) === -1) {
-        throw new Error("temperature_alarm_settings.threshold_condition must be one of " + condition_values.join(", "));
+    if (condition_values.indexOf(condition) === -1) {
+        throw new Error("temperature_alarm_settings.condition must be one of " + condition_values.join(", "));
     }
 
     var buffer = new Buffer(7);
     buffer.writeUInt8(0x76);
     buffer.writeUInt8(getValue(enable_map, enable));
-    buffer.writeUInt8(getValue(condition_map, threshold_condition));
+    buffer.writeUInt8(getValue(condition_map, condition));
     buffer.writeInt16LE(threshold_min * 100);
     buffer.writeInt16LE(threshold_max * 100);
     return buffer.toBytes();
@@ -896,22 +896,22 @@ function setContinuousLowTemperatureAlarmSettings(low_temperature_alarm_settings
 
 /**
  * Set temperature calibration config
- * @param {object} temperature_calibration_config
- * @param {number} temperature_calibration_config.enable values: (0: disable, 1: enable)
- * @param {number} temperature_calibration_config.calibration_value unit: celsius, range: [-80, 80]
- * @example { "temperature_calibration_config": { "enable": 1, "calibration_value": 0.5 } }
+ * @param {object} temperature_calibration_settings
+ * @param {number} temperature_calibration_settings.enable values: (0: disable, 1: enable)
+ * @param {number} temperature_calibration_settings.calibration_value unit: celsius, range: [-80, 80]
+ * @example { "temperature_calibration_settings": { "enable": 1, "calibration_value": 0.5 } }
  */
-function setTemperatureCalibrationConfig(temperature_calibration_config) {
-    var enable = temperature_calibration_config.enable;
-    var calibration_value = temperature_calibration_config.calibration_value;
+function setTemperatureCalibrationConfig(temperature_calibration_settings) {
+    var enable = temperature_calibration_settings.enable;
+    var calibration_value = temperature_calibration_settings.calibration_value;
 
     var enable_map = { 0: "disable", 1: "enable" };
     var enable_values = getValues(enable_map);
     if (enable_values.indexOf(enable) === -1) {
-        throw new Error("temperature_calibration_config.enable must be one of " + enable_values.join(", "));
+        throw new Error("temperature_calibration_settings.enable must be one of " + enable_values.join(", "));
     }
     if (calibration_value < -80 || calibration_value > 80) {
-        throw new Error("temperature_calibration_config.calibration_value must be between -80 and 80");
+        throw new Error("temperature_calibration_settings.calibration_value must be between -80 and 80");
     }
 
     var buffer = new Buffer(4);
@@ -923,22 +923,22 @@ function setTemperatureCalibrationConfig(temperature_calibration_config) {
 
 /**
  * Set humidity calibration config
- * @param {object} humidity_calibration_config
- * @param {number} humidity_calibration_config.enable values: (0: disable, 1: enable)
- * @param {number} humidity_calibration_config.calibration_value unit: %, range: [-100, 100]
- * @example { "humidity_calibration_config": { "enable": 1, "calibration_value": 0.5 } }
+ * @param {object} humidity_calibration_settings
+ * @param {number} humidity_calibration_settings.enable values: (0: disable, 1: enable)
+ * @param {number} humidity_calibration_settings.calibration_value unit: %, range: [-100, 100]
+ * @example { "humidity_calibration_settings": { "enable": 1, "calibration_value": 0.5 } }
  */
-function setHumidityCalibrationConfig(humidity_calibration_config) {
-    var enable = humidity_calibration_config.enable;
-    var calibration_value = humidity_calibration_config.calibration_value;
+function setHumidityCalibrationConfig(humidity_calibration_settings) {
+    var enable = humidity_calibration_settings.enable;
+    var calibration_value = humidity_calibration_settings.calibration_value;
 
     var enable_map = { 0: "disable", 1: "enable" };
     var enable_values = getValues(enable_map);
     if (enable_values.indexOf(enable) === -1) {
-        throw new Error("humidity_calibration_config.enable must be one of " + enable_values.join(", "));
+        throw new Error("humidity_calibration_settings.enable must be one of " + enable_values.join(", "));
     }
     if (calibration_value < -100 || calibration_value > 100) {
-        throw new Error("humidity_calibration_config.calibration_value must be between -100 and 100");
+        throw new Error("humidity_calibration_settings.calibration_value must be between -100 and 100");
     }
 
     var buffer = new Buffer(4);
@@ -1036,7 +1036,7 @@ function setPlanNameLast(plan_id, name_last) {
 }
 
 /**
- * @param {number} plan_id 
+ * @param {number} plan_id
  * @param {object} plan_config
  * @param {number} plan_config.fan_mode values: (0: auto, 1: low, 2: medium, 3: high)
  * @param {number} plan_config.heating_temperature_enable values: (0: disable, 1: enable)
@@ -1094,7 +1094,7 @@ function setPlanTemperatureControlConfig(plan_id, plan_config) {
 }
 
 /**
- * @param {number} plan_id 
+ * @param {number} plan_id
  * @param {object} schedule_config
  * @param {number} schedule_config.index range: [1, 16]
  * @param {number} schedule_config.enable values: (0: disable, 1: enable)
@@ -1193,14 +1193,14 @@ function setValveInterfaceSettings(valve_interface_settings) {
 
 /**
  * @param {object} four_pipe_voltage
- * @param {number} four_pipe_voltage.cooling_valve values: (0: valve_1, 1: valve_2)
- * @param {number} four_pipe_voltage.heating_valve values: (0: valve_1, 1: valve_2)
+ * @param {number} four_pipe_voltage.cooling_valve values: (1: valve_1, 2: valve_2)
+ * @param {number} four_pipe_voltage.heating_valve values: (1: valve_1, 2: valve_2)
  */
 function setFourPipeVoltageConfig(four_pipe_voltage) {
     var cooling_valve = four_pipe_voltage.cooling_valve;
     var heating_valve = four_pipe_voltage.heating_valve;
 
-    var valve_map = { 0: "valve_1", 1: "valve_2" }
+    var valve_map = { 1: "valve_1", 2: "valve_2" };
     var valve_values = getValues(valve_map);
     if (valve_values.indexOf(cooling_valve) === -1) {
         throw new Error("four_pipe_voltage.cooling_valve must be one of " + valve_values.join(", "));
@@ -1219,12 +1219,12 @@ function setFourPipeVoltageConfig(four_pipe_voltage) {
 
 /**
  * @param {object} two_pipe_voltage
- * @param {number} two_pipe_voltage.valve values: (0: valve_1, 1: valve_2)
+ * @param {number} two_pipe_voltage.control_valve values: (1: valve_1, 2: valve_2)
  */
 function setTwoPipeVoltageConfig(two_pipe_voltage) {
     var control_valve = two_pipe_voltage.control_valve;
 
-    var valve_map = { 0: "valve_1", 1: "valve_2" }
+    var valve_map = { 1: "valve_1", 2: "valve_2" };
     var valve_values = getValues(valve_map);
     if (valve_values.indexOf(control_valve) === -1) {
         throw new Error("two_pipe_voltage.control_valve must be one of " + valve_values.join(", "));
@@ -1239,8 +1239,8 @@ function setTwoPipeVoltageConfig(two_pipe_voltage) {
 
 /**
  * @param {object} two_pipe_voltage_ec
- * @param {number} two_pipe_voltage_ec.valve values: (0: valve_1, 1: valve_2)
- * @param {number} two_pipe_voltage_ec.ec values: (0: valve_1, 1: valve_2)
+ * @param {number} two_pipe_voltage_ec.valve values: (1: valve_1, 2: valve_2)
+ * @param {number} two_pipe_voltage_ec.ec values: (1: valve_1, 2: valve_2)
  * @param {number} two_pipe_voltage_ec.ec_power values: (0: none, 3: low, 4: medium, 5: high)
  */
 function setTwoPipeVoltageEcConfig(two_pipe_voltage_ec) {
@@ -1248,9 +1248,9 @@ function setTwoPipeVoltageEcConfig(two_pipe_voltage_ec) {
     var ec = two_pipe_voltage_ec.ec;
     var ec_power = two_pipe_voltage_ec.ec_power;
 
-    var valve_map = { 0: "valve_1", 1: "valve_2" }
-    var ec_map = { 0: "valve_1", 1: "valve_2" }
-    var ec_power_map = { 0: "none", 3: "low", 4: "medium", 5: "high" }
+    var valve_map = { 1: "valve_1", 2: "valve_2" };
+    var ec_map = { 1: "valve_1", 2: "valve_2" };
+    var ec_power_map = { 0: "none", 3: "low", 4: "medium", 5: "high" };
     var valve_values = getValues(valve_map);
     var ec_values = getValues(ec_map);
     var ec_power_values = getValues(ec_power_map);
@@ -1273,17 +1273,24 @@ function setTwoPipeVoltageEcConfig(two_pipe_voltage_ec) {
     return buffer.toBytes();
 }
 
+/**
+ * @param {object} four_pipe_two_wire_ec
+ * @param {number} four_pipe_two_wire_ec.cooling_valve values: (3: low, 4: medium, 5: high)
+ * @param {number} four_pipe_two_wire_ec.heating_valve values: (3: low, 4: medium, 5: high)
+ * @param {number} four_pipe_two_wire_ec.ec values: (1: valve_1, 2: valve_2)
+ * @param {number} four_pipe_two_wire_ec.ec_power values: (0: none, 3: low, 4: medium, 5: high)
+ */
 function setFourPipeTwoWireEcConfig(four_pipe_two_wire_ec) {
     var cooling_valve = four_pipe_two_wire_ec.cooling_valve;
     var heating_valve = four_pipe_two_wire_ec.heating_valve;
     var ec = four_pipe_two_wire_ec.ec;
     var ec_power = four_pipe_two_wire_ec.ec_power;
 
-    var mode_map = { 3: "low", 4: "medium", 5: "high" }
+    var mode_map = { 3: "low", 4: "medium", 5: "high" };
     var mode_values = getValues(mode_map);
-    var valve_map = { 0: "valve_1", 1: "valve_2" }
+    var valve_map = { 1: "valve_1", 2: "valve_2" };
     var valve_values = getValues(valve_map);
-    var ec_power_type_map = { 0: "none", 3: "low", 4: "medium", 5: "high" }
+    var ec_power_type_map = { 0: "none", 3: "low", 4: "medium", 5: "high" };
     var ec_power_type_values = getValues(ec_power_type_map);
 
     if (mode_values.indexOf(cooling_valve) === -1) {
@@ -1312,17 +1319,17 @@ function setFourPipeTwoWireEcConfig(four_pipe_two_wire_ec) {
 /**
  * @param {object} two_pipe_two_wire_ec
  * @param {number} two_pipe_two_wire_ec.control_valve values: (3: low, 4: medium, 5: high)
- * @param {number} two_pipe_two_wire_ec.ec values: (0: valve_1, 1: valve_2)
- * @param {number} two_pipe_two_wire_ec.ec_power values: (0: low, 3: medium, 4: high, 5: none)
+ * @param {number} two_pipe_two_wire_ec.ec values: (1: valve_1, 2: valve_2)
+ * @param {number} two_pipe_two_wire_ec.ec_power values: (0: none, 3: low, 4: medium, 5: high)
  */
 function setTwoPipeTwoWireEcConfig(two_pipe_two_wire_ec) {
     var control_valve = two_pipe_two_wire_ec.control_valve;
     var ec = two_pipe_two_wire_ec.ec;
     var ec_power = two_pipe_two_wire_ec.ec_power;
 
-    var control_valve_map = { 3: "low", 4: "medium", 5: "high" }
-    var ec_map = { 0: "valve_1", 1: "valve_2" }
-    var ec_power_map = { 0: "none", 3: "low", 4: "medium", 5: "high" }
+    var control_valve_map = { 3: "low", 4: "medium", 5: "high" };
+    var ec_map = { 1: "valve_1", 2: "valve_2" };
+    var ec_power_map = { 0: "none", 3: "low", 4: "medium", 5: "high" };
     var control_valve_values = getValues(control_valve_map);
     var ec_values = getValues(ec_map);
     var ec_power_values = getValues(ec_power_map);
@@ -1346,15 +1353,22 @@ function setTwoPipeTwoWireEcConfig(two_pipe_two_wire_ec) {
     return buffer.toBytes();
 }
 
+/**
+ * @param {object} two_pipe_three_wire_ec
+ * @param {number} two_pipe_three_wire_ec.no values: (3: low, 4: medium, 5: high)
+ * @param {number} two_pipe_three_wire_ec.nc values: (3: low, 4: medium, 5: high)
+ * @param {number} two_pipe_three_wire_ec.ec values: (1: valve_1, 2: valve_2)
+ * @param {number} two_pipe_three_wire_ec.ec_power values: (0: none, 3: low, 4: medium, 5: high)
+ */
 function setTwoPipeThreeWireECConfig(two_pipe_three_wire_ec) {
     var no = two_pipe_three_wire_ec.no;
     var nc = two_pipe_three_wire_ec.nc;
     var ec = two_pipe_three_wire_ec.ec;
     var ec_power = two_pipe_three_wire_ec.ec_power;
 
-    var n_map = { 3: "low", 4: "medium", 5: "high" }
-    var ec_map = { 0: "valve_1", 1: "valve_2" }
-    var ec_power_map = { 0: "low", 3: "medium", 4: "high", 5: "none" }
+    var n_map = { 3: "low", 4: "medium", 5: "high" };
+    var ec_map = { 1: "valve_1", 2: "valve_2" };
+    var ec_power_map = { 0: "none", 3: "low", 4: "medium", 5: "high" };
     var n_values = getValues(n_map);
     var ec_values = getValues(ec_map);
     var ec_power_values = getValues(ec_power_map);
@@ -1385,20 +1399,21 @@ function setTwoPipeThreeWireECConfig(two_pipe_three_wire_ec) {
 /**
  * Set valve control settings
  * @param {object} valve_control_settings
- * @param {object} valve_control_settings.adjustment_range
- * @param {object} valve_control_settings.opening_range
- * @param {object} valve_control_settings.control_time_interval
+ * @param {object} valve_control_settings.temperature_control_range unit: °C, range: [1, 15]
+ * @param {object} valve_control_settings.opening_range.min unit: %, range: [0, 100]
+ * @param {object} valve_control_settings.opening_range.max unit: %, range: [0, 100]
+ * @param {object} valve_control_settings.control_time_interval unit: s, range: [1, 60]
  * @example { "valve_control_settings": { "type": 0 } }
  */
 function setValveControlSettings(valve_control_settings) {
     var data = [];
 
-    // adjustment_range
-    if ("adjustment_range" in valve_control_settings) {
+    // temperature_control_range
+    if ("temperature_control_range" in valve_control_settings) {
         var buffer = new Buffer(4);
         buffer.writeUInt8(0x7d);
-        buffer.writeUInt8(0x00); // adjustment_range sub-command
-        buffer.writeInt16LE(valve_control_settings.adjustment_range * 100);
+        buffer.writeUInt8(0x00); // temperature_control_range sub-command
+        buffer.writeInt16LE(valve_control_settings.temperature_control_range * 100);
         data = data.concat(buffer.toBytes());
     }
     // opening_range
@@ -1491,15 +1506,15 @@ function setDISettings(di_settings) {
  * @example { "di_enable": 0 }
  */
 function setDIEnable(di_enable) {
-    var di_enable_map = { 0: "disable", 1: "enable" };
-    var di_enable_values = getValues(di_enable_map);
-    if (di_enable_values.indexOf(di_enable) === -1) {
-        throw new Error("di_settings.enable must be one of " + di_enable_values.join(", "));
+    var enable_map = { 0: "disable", 1: "enable" };
+    var enable_values = getValues(enable_map);
+    if (enable_values.indexOf(di_enable) === -1) {
+        throw new Error("di_settings.enable must be one of " + enable_values.join(", "));
     }
 
     var buffer = new Buffer(2);
     buffer.writeUInt8(0x80);
-    buffer.writeUInt8(getValue(di_enable_map, di_enable));
+    buffer.writeUInt8(getValue(enable_map, di_enable));
     return buffer.toBytes();
 }
 
@@ -1758,8 +1773,9 @@ function setD2DEnable(d2d_pairing_enable) {
  * @param {number} d2d_pairing_settings.index range: [1, 16]
  * @param {number} d2d_pairing_settings.enable values: (0: disable, 1: enable)
  * @param {string} d2d_pairing_settings.eui
- * @param {string} d2d_pairing_settings.name
- * @example { "d2d_pairing_settings": [{ "index": 1, "enable": 0, "eui": "0000000000000000", "name": "test" }] }
+ * @param {string} d2d_pairing_settings.name_first
+ * @param {string} d2d_pairing_settings.name_last
+ * @example { "d2d_pairing_settings": [{ "index": 1, "enable": 0, "eui": "0000000000000000", "name_first": "test", "name_last": "test" }] }
  */
 function setD2DPairingSettings(d2d_pairing_settings) {
     var index = d2d_pairing_settings.index;
@@ -2033,13 +2049,13 @@ function setTimedSystemControlEnable(enable) {
  * @param {number} start_cycle_settings._item.enable values: (0: disable, 1: enable)
  * @param {number} start_cycle_settings._item.time converter: 08:30 -> 08 * 60 + 30 = 510
  * @param {object} start_cycle_settings._item.weekday
- * @param {boolean} start_cycle_settings._item.weekday.sunday values: (0: disable, 1: enable)
- * @param {boolean} start_cycle_settings._item.weekday.monday values: (0: disable, 1: enable)
- * @param {boolean} start_cycle_settings._item.weekday.tuesday values: (0: disable, 1: enable)
- * @param {boolean} start_cycle_settings._item.weekday.wednesday values: (0: disable, 1: enable)
- * @param {boolean} start_cycle_settings._item.weekday.thursday values: (0: disable, 1: enable)
- * @param {boolean} start_cycle_settings._item.weekday.friday values: (0: disable, 1: enable)
- * @param {boolean} start_cycle_settings._item.weekday.saturday values: (0: disable, 1: enable)
+ * @param {number} start_cycle_settings._item.weekday.sunday values: (0: disable, 1: enable)
+ * @param {number} start_cycle_settings._item.weekday.monday values: (0: disable, 1: enable)
+ * @param {number} start_cycle_settings._item.weekday.tuesday values: (0: disable, 1: enable)
+ * @param {number} start_cycle_settings._item.weekday.wednesday values: (0: disable, 1: enable)
+ * @param {number} start_cycle_settings._item.weekday.thursday values: (0: disable, 1: enable)
+ * @param {number} start_cycle_settings._item.weekday.friday values: (0: disable, 1: enable)
+ * @param {number} start_cycle_settings._item.weekday.saturday values: (0: disable, 1: enable)
  */
 function setTimedSystemControlStartTimeCycle(start_cycle_settings) {
     var index = start_cycle_settings.index;
@@ -2084,13 +2100,13 @@ function setTimedSystemControlStartTimeCycle(start_cycle_settings) {
  * @param {number} end_cycle_settings._item.enable values: (0: disable, 1: enable)
  * @param {number} end_cycle_settings._item.time converter: 08:30 -> 08 * 60 + 30 = 510
  * @param {object} end_cycle_settings._item.weekday
- * @param {boolean} end_cycle_settings._item.weekday.sunday values: (0: disable, 1: enable)
- * @param {boolean} end_cycle_settings._item.weekday.monday values: (0: disable, 1: enable)
- * @param {boolean} end_cycle_settings._item.weekday.tuesday values: (0: disable, 1: enable)
- * @param {boolean} end_cycle_settings._item.weekday.wednesday values: (0: disable, 1: enable)
- * @param {boolean} end_cycle_settings._item.weekday.thursday values: (0: disable, 1: enable)
- * @param {boolean} end_cycle_settings._item.weekday.friday values: (0: disable, 1: enable)
- * @param {boolean} end_cycle_settings._item.weekday.saturday values: (0: disable, 1: enable)
+ * @param {number} end_cycle_settings._item.weekday.sunday values: (0: disable, 1: enable)
+ * @param {number} end_cycle_settings._item.weekday.monday values: (0: disable, 1: enable)
+ * @param {number} end_cycle_settings._item.weekday.tuesday values: (0: disable, 1: enable)
+ * @param {number} end_cycle_settings._item.weekday.wednesday values: (0: disable, 1: enable)
+ * @param {number} end_cycle_settings._item.weekday.thursday values: (0: disable, 1: enable)
+ * @param {number} end_cycle_settings._item.weekday.friday values: (0: disable, 1: enable)
+ * @param {number} end_cycle_settings._item.weekday.saturday values: (0: disable, 1: enable)
  */
 function setTimedSystemControlEndTimeCycle(end_cycle_settings) {
     var index = end_cycle_settings.index;
@@ -2222,11 +2238,11 @@ function setRelayChangeReportEnable(relay_changes_report_enable) {
 
 /**
  * Set time zone
- * @param {number} time_zone values: ( -720: UTC-12:00, -660: UTC-11:00, -600: UTC-10:00, -570: UTC-09:30, -540: UTC-09:00, -480: UTC-08:00, -420: UTC-07:00, -360: UTC-06:00, -300: UTC-05:00, -240: UTC-04:00, -210: UTC-03:30, -180: UTC-03:00, -120: UTC-02:00, -60: UTC-01:00, 0: UTC+00:00, 60: UTC+01:00, 120: UTC+02:00, 180: UTC+03:00, 210: UTC+03:30, 240: UTC+04:00, 270: UTC+04:30, 300: UTC+05:00, 330: UTC+05:30, 345: UTC+05:45, 360: UTC+06:00, 390: UTC+06:30, 420: UTC+07:00, 480: UTC+08:00, 540: UTC+09:00, 570: UTC+09:30, 600: UTC+10:00, 630: UTC+10:30, 660: UTC+11:00, 720: UTC+12:00, 765: UTC+12:45, 780: UTC+13:00, 840: UTC+14:00)
+ * @param {number} time_zone unit: minute, convert: "hh:mm" -> "hh * 60 + mm", values: ( -720: UTC-12, -660: UTC-11, -600: UTC-10, -570: UTC-9:30, -540: UTC-9, -480: UTC-8, -420: UTC-7, -360: UTC-6, -300: UTC-5, -240: UTC-4, -210: UTC-3:30, -180: UTC-3, -120: UTC-2, -60: UTC-1, 0: UTC, 60: UTC+1, 120: UTC+2, 180: UTC+3, 240: UTC+4, 300: UTC+5, 360: UTC+6, 420: UTC+7, 480: UTC+8, 540: UTC+9, 570: UTC+9:30, 600: UTC+10, 660: UTC+11, 720: UTC+12, 765: UTC+12:45, 780: UTC+13, 840: UTC+14 )
  * @example { "time_zone": 480 }
  */
 function setTimeZone(time_zone) {
-    var timezone_map = { "-720": "UTC-12:00", "-660": "UTC-11:00", "-600": "UTC-10:00", "-570": "UTC-09:30", "-540": "UTC-09:00", "-480": "UTC-08:00", "-420": "UTC-07:00", "-360": "UTC-06:00", "-300": "UTC-05:00", "-240": "UTC-04:00", "-210": "UTC-03:30", "-180": "UTC-03:00", "-120": "UTC-02:00", "-60": "UTC-01:00", 0: "UTC+00:00", 60: "UTC+01:00", 120: "UTC+02:00", 180: "UTC+03:00", 210: "UTC+03:30", 240: "UTC+04:00", 270: "UTC+04:30", 300: "UTC+05:00", 330: "UTC+05:30", 345: "UTC+05:45", 360: "UTC+06:00", 390: "UTC+06:30", 420: "UTC+07:00", 480: "UTC+08:00", 540: "UTC+09:00", 570: "UTC+09:30", 600: "UTC+10:00", 630: "UTC+10:30", 660: "UTC+11:00", 720: "UTC+12:00", 765: "UTC+12:45", 780: "UTC+13:00", 840: "UTC+14:00" };
+    var timezone_map = { "-720": "UTC-12", "-660": "UTC-11", "-600": "UTC-10", "-570": "UTC-9:30", "-540": "UTC-9", "-480": "UTC-8", "-420": "UTC-7", "-360": "UTC-6", "-300": "UTC-5", "-240": "UTC-4", "-210": "UTC-3:30", "-180": "UTC-3", "-120": "UTC-2", "-60": "UTC-1", 0: "UTC", 60: "UTC+1", 120: "UTC+2", 180: "UTC+3", 210: "UTC+3:30", 240: "UTC+4", 270: "UTC+4:30", 300: "UTC+5", 330: "UTC+5:30", 345: "UTC+5:45", 360: "UTC+6", 390: "UTC+6:30", 420: "UTC+7", 480: "UTC+8", 540: "UTC+9", 570: "UTC+9:30", 600: "UTC+10", 630: "UTC+10:30", 660: "UTC+11", 720: "UTC+12", 765: "UTC+12:45", 780: "UTC+13", 840: "UTC+14" };
     var timezone_values = getValues(timezone_map);
     if (timezone_values.indexOf(time_zone) === -1) {
         throw new Error("time_zone must be one of " + timezone_values.join(", "));
@@ -2456,7 +2472,7 @@ function stopTransmitHistory() {
  */
 function setTemperature(temperature) {
     var buffer = new Buffer(3);
-    buffer.writeUInt8(0x5B);
+    buffer.writeUInt8(0x5b);
     buffer.writeInt16LE(temperature * 100);
     return buffer.toBytes();
 }
@@ -2468,7 +2484,7 @@ function setTemperature(temperature) {
  */
 function setHumidity(humidity) {
     var buffer = new Buffer(3);
-    buffer.writeUInt8(0x5C);
+    buffer.writeUInt8(0x5c);
     buffer.writeInt16LE(humidity * 10);
     return buffer.toBytes();
 }
@@ -2485,7 +2501,7 @@ function setOpeningWindowStatus(opening_window_alarm) {
         throw new Error("opening_window_alarm must be one of " + alarm_values.join(", "));
     }
     var buffer = new Buffer(2);
-    buffer.writeUInt8(0x5D);
+    buffer.writeUInt8(0x5d);
     buffer.writeUInt8(getValue(alarm_map, opening_window_alarm));
     return buffer.toBytes();
 }
@@ -2500,7 +2516,7 @@ function setPlan(insert_plan_id) {
         throw new Error("insert_plan_id must be between 1 and 16");
     }
     var buffer = new Buffer(2);
-    buffer.writeUInt8(0x5E);
+    buffer.writeUInt8(0x5e);
     buffer.writeUInt8(insert_plan_id - 1);
     return buffer.toBytes();
 }
@@ -2549,70 +2565,70 @@ function clearPlan(clear_plan) {
 
 function setQueryCmd(bytes) {
     var name_map = {
-        "60": { "level": 1, "name": "collection_interval" },
-        "62": { "level": 1, "name": "reporting_interval" },
-        "63": { "level": 1, "name": "temperature_unit" },
-        "64": { "level": 1, "name": "support_mode" },
-        "65": { "level": 1, "name": "intelligent_display_enable" },
-        "66": { "level": 1, "name": "screen_object_settings" },
-        "67": { "level": 1, "name": "system_status" },
-        "68": { "level": 1, "name": "temperature_control_mode" },
-        "69": { "level": 1, "name": "target_temperature_resolution" },
-        "6a": { "level": 1, "name": "target_temperature_tolerance" },
-        "6b": { "level": 1, "name": "heating_target_temperature" },
-        "6c": { "level": 1, "name": "cooling_target_temperature" },
-        "6d": { "level": 1, "name": "heating_target_temperature_range" },
-        "6e": { "level": 1, "name": "cooling_target_temperature_range" },
-        "6f": { "level": 1, "name": "dehumidify_config" },
-        "70": { "level": 1, "name": "target_humidity_range" },
-        "72": { "level": 1, "name": "fan_mode" },
-        "73": { "level": 1, "name": "fan_speed_config" },
-        "74": { "level": 1, "name": "fan_delay_config" },
-        "75": { "level": 1, "name": "child_lock_settings" },
-        "76": { "level": 1, "name": "temperature_alarm_settings" },
-        "77": { "level": 1, "name": "high_temperature_alarm_settings" },
-        "78": { "level": 1, "name": "low_temperature_alarm_settings" },
-        "79": { "level": 1, "name": "temperature_calibration_config" },
-        "7a": { "level": 1, "name": "humidity_calibration_config" },
-        "7b": { "level": 3, "name": "plan_config" },
-        "7c": { "level": 1, "name": "valve_interface_settings" },
-        "7d": { "level": 1, "name": "valve_control_settings" },
-        "7e": { "level": 1, "name": "fan_control_settings" },
-        "80": { "level": 1, "name": "di_setting_enable" },
-        "81": { "level": 1, "name": "di_settings" },
-        "82": { "level": 1, "name": "window_opening_detection_enable" },
-        "83": { "level": 1, "name": "window_opening_detection_settings" },
-        "84": { "level": 1, "name": "freeze_protection_settings" },
-        "85": { "level": 1, "name": "temperature_source_settings" },
-        "86": { "level": 1, "name": "d2d_pairing_enable" },
-        "87": { "level": 3, "name": "d2d_pairing_settings" },
-        "88": { "level": 1, "name": "d2d_master_enable" },
-        "89": { "level": 2, "name": "d2d_master_settings" },
-        "8a": { "level": 1, "name": "d2d_slave_enable" },
-        "8b": { "level": 2, "name": "d2d_slave_settings" },
-        "8c": { "level": 3, "name": "timed_system_control_settings" },
-        "8d": { "level": 1, "name": "temporary_unlock_settings" },
-        "8e": { "level": 1, "name": "temperature_control_with_standby_fan_mode" },
-        "8f": { "level": 1, "name": "valve_opening_negative_valve_mode" },
-        "90": { "level": 1, "name": "relay_changes_report_enable" },
-        "c4": { "level": 1, "name": "auto_provisioning_enable" },
-        "c5": { "level": 1, "name": "history_transmit_settings" },
-        "c6": { "level": 1, "name": "daylight_saving_time" },
-        "c7": { "level": 1, "name": "time_zone" },
-        "b6": { "level": 0, "name": "reconnect" },
-        "b8": { "level": 0, "name": "synchronize_time" },
-        "b9": { "level": 0, "name": "query_device_status" },
-        "ba": { "level": 0, "name": "fetch_history" },
-        "bb": { "level": 0, "name": "fetch_history" },
-        "bc": { "level": 0, "name": "stop_transmit_history" },
-        "bd": { "level": 0, "name": "clear_history" },
-        "be": { "level": 0, "name": "reboot" },
-        "5b": { "level": 0, "name": "temperature" },
-        "5c": { "level": 0, "name": "humidity" },
-        "5d": { "level": 0, "name": "opening_window_alarm" },
-        "5e": { "level": 0, "name": "insert_plan_id" },
-        "5f": { "level": 0, "name": "clear_plan" },
-    }
+        "60": { level: 1, name: "collection_interval" },
+        "62": { level: 1, name: "reporting_interval" },
+        "63": { level: 1, name: "temperature_unit" },
+        "64": { level: 1, name: "support_mode" },
+        "65": { level: 1, name: "intelligent_display_enable" },
+        "66": { level: 1, name: "screen_object_settings" },
+        "67": { level: 1, name: "system_status" },
+        "68": { level: 1, name: "temperature_control_mode" },
+        "69": { level: 1, name: "target_temperature_resolution" },
+        "6a": { level: 1, name: "target_temperature_tolerance" },
+        "6b": { level: 1, name: "heating_target_temperature" },
+        "6c": { level: 1, name: "cooling_target_temperature" },
+        "6d": { level: 1, name: "heating_target_temperature_range" },
+        "6e": { level: 1, name: "cooling_target_temperature_range" },
+        "6f": { level: 1, name: "dehumidify_config" },
+        "70": { level: 1, name: "target_humidity_range" },
+        "72": { level: 1, name: "fan_mode" },
+        "73": { level: 1, name: "fan_speed_config" },
+        "74": { level: 1, name: "fan_delay_config" },
+        "75": { level: 1, name: "child_lock_settings" },
+        "76": { level: 1, name: "temperature_alarm_settings" },
+        "77": { level: 1, name: "high_temperature_alarm_settings" },
+        "78": { level: 1, name: "low_temperature_alarm_settings" },
+        "79": { level: 1, name: "temperature_calibration_settings" },
+        "7a": { level: 1, name: "humidity_calibration_settings" },
+        "7b": { level: 3, name: "plan_config" },
+        "7c": { level: 1, name: "valve_interface_settings" },
+        "7d": { level: 1, name: "valve_control_settings" },
+        "7e": { level: 1, name: "fan_control_settings" },
+        "80": { level: 1, name: "di_setting_enable" },
+        "81": { level: 1, name: "di_settings" },
+        "82": { level: 1, name: "window_opening_detection_enable" },
+        "83": { level: 1, name: "window_opening_detection_settings" },
+        "84": { level: 1, name: "freeze_protection_settings" },
+        "85": { level: 1, name: "temperature_source_settings" },
+        "86": { level: 1, name: "d2d_pairing_enable" },
+        "87": { level: 3, name: "d2d_pairing_settings" },
+        "88": { level: 1, name: "d2d_master_enable" },
+        "89": { level: 2, name: "d2d_master_settings" },
+        "8a": { level: 1, name: "d2d_slave_enable" },
+        "8b": { level: 2, name: "d2d_slave_settings" },
+        "8c": { level: 3, name: "timed_system_control_settings" },
+        "8d": { level: 1, name: "temporary_unlock_settings" },
+        "8e": { level: 1, name: "temperature_control_with_standby_fan_mode" },
+        "8f": { level: 1, name: "valve_opening_negative_valve_mode" },
+        "90": { level: 1, name: "relay_changes_report_enable" },
+        "c4": { level: 1, name: "auto_provisioning_enable" },
+        "c5": { level: 1, name: "history_transmit_settings" },
+        "c6": { level: 1, name: "daylight_saving_time" },
+        "c7": { level: 1, name: "time_zone" },
+        "b6": { level: 0, name: "reconnect" },
+        "b8": { level: 0, name: "synchronize_time" },
+        "b9": { level: 0, name: "query_device_status" },
+        "ba": { level: 0, name: "fetch_history" },
+        "bb": { level: 0, name: "fetch_history" },
+        "bc": { level: 0, name: "stop_transmit_history" },
+        "bd": { level: 0, name: "clear_history" },
+        "be": { level: 0, name: "reboot" },
+        "5b": { level: 0, name: "temperature" },
+        "5c": { level: 0, name: "humidity" },
+        "5d": { level: 0, name: "opening_window_alarm" },
+        "5e": { level: 0, name: "insert_plan_id" },
+        "5f": { level: 0, name: "clear_plan" },
+    };
 
     var cmd = readHexString(bytes.slice(0, 1));
     var cmd_level = name_map[cmd].level;
@@ -2705,7 +2721,7 @@ Buffer.prototype.writeHexString = function (hexString) {
         bytes.push(parseInt(hexString.substr(i, 2), 16));
     }
     this.writeBytes(bytes);
-}
+};
 
 Buffer.prototype.writeHexStringReverse = function (hexString) {
     var bytes = [];
@@ -2713,7 +2729,7 @@ Buffer.prototype.writeHexStringReverse = function (hexString) {
         bytes.push(parseInt(hexString.substr(i, 2), 16));
     }
     this.writeBytes(bytes);
-}
+};
 
 Buffer.prototype.toBytes = function () {
     return this.buffer;

@@ -29,7 +29,7 @@ function Decoder(bytes, port) {
 function milesightDeviceDecode(bytes) {
     var decoded = {};
 
-    for (var i = 0; i < bytes.length;) {
+    for (var i = 0; i < bytes.length; ) {
         var channel_id = bytes[i++];
         var channel_type = bytes[i++];
 
@@ -108,7 +108,7 @@ function milesightDeviceDecode(bytes) {
             decoded.tvoc = readUInt16LE(bytes.slice(i, i + 2)) / 100;
             i += 2;
         }
-        // TVOC (ug/m3)
+        // TVOC (µg/m³)
         else if (channel_id === 0x08 && channel_type === 0xe6) {
             decoded.tvoc = readUInt16LE(bytes.slice(i, i + 2));
             i += 2;
@@ -158,7 +158,7 @@ function milesightDeviceDecode(bytes) {
             decoded.history = decoded.history || [];
             decoded.history.push(data);
         }
-        // HISTORY DATA (AM319 CH2O) with tvoc unit: ug/m3
+        // HISTORY DATA (AM319 CH2O) with tvoc unit: µg/m³
         else if (channel_id === 0x21 && channel_type === 0xce) {
             var data = {};
             data.timestamp = readUInt32LE(bytes.slice(i, i + 4));
@@ -167,7 +167,7 @@ function milesightDeviceDecode(bytes) {
             data.pir = readPIRStatus(bytes[i + 8]);
             data.light_level = readUInt8(bytes[i + 9]);
             data.co2 = readUInt16LE(bytes.slice(i + 10, i + 12));
-            // unit: ug/m3
+            // unit: µg/m³
             data.tvoc = readUInt16LE(bytes.slice(i + 12, i + 14));
             data.pressure = readUInt16LE(bytes.slice(i + 14, i + 16)) / 10;
             data.pm2_5 = readUInt16LE(bytes.slice(i + 16, i + 18));
@@ -204,7 +204,7 @@ function handle_downlink_response(channel_type, bytes, offset) {
             offset += 1;
             break;
         case 0x17:
-            decoded.timezone = readInt16LE(bytes.slice(offset, offset + 2)) / 10;
+            decoded.time_zone = readTimeZone(readInt16LE(bytes.slice(offset, offset + 2)));
             offset += 2;
             break;
         case 0x1a:
@@ -212,7 +212,7 @@ function handle_downlink_response(channel_type, bytes, offset) {
             decoded.co2_calibration_settings = {};
             decoded.co2_calibration_settings.mode = readCalibrationMode(mode_value);
             if (mode_value === 2) {
-                decoded.co2_calibration_settings.value = readInt16LE(bytes.slice(offset + 1, offset + 3));
+                decoded.co2_calibration_settings.calibration_value = readUInt16LE(bytes.slice(offset + 1, offset + 3));
                 offset += 3;
             } else {
                 offset += 1;
@@ -303,7 +303,6 @@ function handle_downlink_response(channel_type, bytes, offset) {
             decoded.co2_calibration_enable = readEnableStatus(bytes[offset]);
             offset += 1;
             break;
-
         default:
             throw new Error("unknown downlink response");
     }
@@ -377,12 +376,17 @@ function readYesNoStatus(status) {
 }
 
 function readEnableStatus(status) {
-    var enable_map = { 0: "disable", 1: "enable" };
-    return getValue(enable_map, status);
+    var status_map = { 0: "disable", 1: "enable" };
+    return getValue(status_map, status);
+}
+
+function readTimeZone(time_zone) {
+    var timezone_map = { "-120": "UTC-12", "-110": "UTC-11", "-100": "UTC-10", "-95": "UTC-9:30", "-90": "UTC-9", "-80": "UTC-8", "-70": "UTC-7", "-60": "UTC-6", "-50": "UTC-5", "-40": "UTC-4", "-35": "UTC-3:30", "-30": "UTC-3", "-20": "UTC-2", "-10": "UTC-1", 0: "UTC", 10: "UTC+1", 20: "UTC+2", 30: "UTC+3", 35: "UTC+3:30", 40: "UTC+4", 45: "UTC+4:30", 50: "UTC+5", 55: "UTC+5:30", 57: "UTC+5:45", 60: "UTC+6", 65: "UTC+6:30", 70: "UTC+7", 80: "UTC+8", 90: "UTC+9", 95: "UTC+9:30", 100: "UTC+10", 105: "UTC+10:30", 110: "UTC+11", 120: "UTC+12", 127: "UTC+12:45", 130: "UTC+13", 140: "UTC+14" };
+    return getValue(timezone_map, time_zone);
 }
 
 function readTVOCUnit(status) {
-    var tvoc_unit_map = { 0: "iaq", 1: "ug/m3" };
+    var tvoc_unit_map = { 0: "iaq", 1: "µg/m³" };
     return getValue(tvoc_unit_map, status);
 }
 
@@ -401,7 +405,7 @@ function readScreenDisplayElementSettings(bytes) {
     var data = readUInt16LE(bytes.slice(2, 4));
 
     var settings = {};
-    var sensor_bit_offset = { "temperature": 0, "humidity": 1, "co2": 2, "light": 3, "tvoc": 4, "smile": 5, "letter": 6, "pm2_5": 7, "pm10": 8, "hcho": 9, "o3": 9 };
+    var sensor_bit_offset = { temperature: 0, humidity: 1, co2: 2, light: 3, tvoc: 4, smile: 5, letter: 6, pm2_5: 7, pm10: 8, hcho: 9, o3: 9 };
     for (var key in sensor_bit_offset) {
         if ((mask >>> sensor_bit_offset[key]) & 0x01) {
             settings[key] = readEnableStatus((data >> sensor_bit_offset[key]) & 0x01);
@@ -411,7 +415,7 @@ function readScreenDisplayElementSettings(bytes) {
 }
 
 function readChildLockSettings(data) {
-    var button_bit_offset = { "off_button": 0, "on_button": 1, "collection_button": 2 };
+    var button_bit_offset = { off_button: 0, on_button: 1, collection_button: 2 };
 
     var settings = {};
     for (var key in button_bit_offset) {

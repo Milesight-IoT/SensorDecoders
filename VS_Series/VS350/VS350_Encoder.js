@@ -44,32 +44,29 @@ function milesightDeviceEncode(payload) {
     if ("sync_time" in payload) {
         encoded = encoded.concat(syncTime(payload.sync_time));
     }
-    if ("timezone" in payload) {
-        encoded = encoded.concat(setTimezone(payload.timezone));
+    if ("time_zone" in payload) {
+        encoded = encoded.concat(setTimeZone(payload.time_zone));
     }
-    if ("clear_cumulative_enable" in payload) {
-        encoded = encoded.concat(clearCumulative(payload.clear_cumulative_enable));
+    if ("reset_cumulative_enable" in payload) {
+        encoded = encoded.concat(clearCumulative(payload.reset_cumulative_enable));
     }
-    if ("cumulative_enable" in payload) {
-        encoded = encoded.concat(setCumulativeEnable(payload.cumulative_enable));
+    if ("report_cumulative_enable" in payload) {
+        encoded = encoded.concat(setCumulativeEnable(payload.report_cumulative_enable));
     }
-    if ("cumulative_reset_config" in payload) {
-        encoded = encoded.concat(setCumulativeResetConfig(payload.cumulative_reset_config));
+    if ("reset_cumulative_interval" in payload) {
+        encoded = encoded.concat(setCumulativeResetInterval(payload.reset_cumulative_interval));
     }
-    if ("cumulative_reset_interval" in payload) {
-        encoded = encoded.concat(setCumulativeResetInterval(payload.cumulative_reset_interval));
+    if ("reset_cumulative_in" in payload) {
+        encoded = encoded.concat(clearCumulativeIn(payload.reset_cumulative_in));
     }
-    if ("clear_cumulative_in" in payload) {
-        encoded = encoded.concat(clearCumulativeIn(payload.clear_cumulative_in));
+    if ("reset_cumulative_out" in payload) {
+        encoded = encoded.concat(clearCumulativeOut(payload.reset_cumulative_out));
     }
-    if ("clear_cumulative_out" in payload) {
-        encoded = encoded.concat(clearCumulativeOut(payload.clear_cumulative_out));
+    if ("report_temperature_enable" in payload) {
+        encoded = encoded.concat(setTemperatureEnable(payload.report_temperature_enable));
     }
-    if ("temperature_enable" in payload) {
-        encoded = encoded.concat(setTemperatureEnable(payload.temperature_enable));
-    }
-    if ("temperature_calibration" in payload) {
-        encoded = encoded.concat(setTemperatureCalibration(payload.temperature_calibration));
+    if ("temperature_calibration_settings" in payload) {
+        encoded = encoded.concat(setTemperatureCalibration(payload.temperature_calibration_settings));
     }
     if ("d2d_key" in payload) {
         encoded = encoded.concat(setD2DKey(payload.d2d_key));
@@ -83,8 +80,14 @@ function milesightDeviceEncode(payload) {
             encoded = encoded.concat(setD2DMasterConfig(config));
         }
     }
-    if ("alarm_config" in payload) {
-        encoded = encoded.concat(setAlarmConfig(payload.alarm_config));
+    if ("people_period_alarm_config" in payload) {
+        encoded = encoded.concat(setPeriodPeopleAlarmConfig(payload.people_period_alarm_config));
+    }
+    if ("people_cumulative_alarm_config" in payload) {
+        encoded = encoded.concat(setCumulativePeopleAlarmConfig(payload.people_cumulative_alarm_config));
+    }
+    if ("temperature_alarm_config" in payload) {
+        encoded = encoded.concat(setTemperatureAlarmConfig(payload.temperature_alarm_config));
     }
     if ("history_enable" in payload) {
         encoded = encoded.concat(setHistoryEnable(payload.history_enable));
@@ -203,185 +206,156 @@ function syncTime(sync_time) {
 }
 
 /**
-/**
- * set timezone
- * @param {number} timezone unit: minute, convert: "hh:mm" -> "hh * 60 + mm", values: ( -720: UTC-12, -660: UTC-11, -600: UTC-10, -570: UTC-9:30, -540: UTC-9, -480: UTC-8, -420: UTC-7, -360: UTC-6, -300: UTC-5, -240: UTC-4, -210: UTC-3:30, -180: UTC-3, -120: UTC-2, -60: UTC-1, 0: UTC, 60: UTC+1, 120: UTC+2, 180: UTC+3, 240: UTC+4, 300: UTC+5, 360: UTC+6, 420: UTC+7, 480: UTC+8, 540: UTC+9, 570: UTC+9:30, 600: UTC+10, 660: UTC+11, 720: UTC+12, 765: UTC+12:45, 780: UTC+13, 840: UTC+14 )
- * @example { "timezone": 8 }
- * @example { "timezone": -4 }
+ * set time zone
+ * @param {number} time_zone unit: minute, convert: "hh:mm" -> "hh * 60 + mm", values: ( -720: UTC-12, -660: UTC-11, -600: UTC-10, -570: UTC-9:30, -540: UTC-9, -480: UTC-8, -420: UTC-7, -360: UTC-6, -300: UTC-5, -240: UTC-4, -210: UTC-3:30, -180: UTC-3, -120: UTC-2, -60: UTC-1, 0: UTC, 60: UTC+1, 120: UTC+2, 180: UTC+3, 240: UTC+4, 300: UTC+5, 360: UTC+6, 420: UTC+7, 480: UTC+8, 540: UTC+9, 570: UTC+9:30, 600: UTC+10, 660: UTC+11, 720: UTC+12, 765: UTC+12:45, 780: UTC+13, 840: UTC+14 )
+ * @example { "time_zone": 480 }
+ * @example { "time_zone": -240 }
  */
-function setTimezone(timezone) {
+function setTimeZone(time_zone) {
     var timezone_map = { "-720": "UTC-12", "-660": "UTC-11", "-600": "UTC-10", "-570": "UTC-9:30", "-540": "UTC-9", "-480": "UTC-8", "-420": "UTC-7", "-360": "UTC-6", "-300": "UTC-5", "-240": "UTC-4", "-210": "UTC-3:30", "-180": "UTC-3", "-120": "UTC-2", "-60": "UTC-1", 0: "UTC", 60: "UTC+1", 120: "UTC+2", 180: "UTC+3", 210: "UTC+3:30", 240: "UTC+4", 270: "UTC+4:30", 300: "UTC+5", 330: "UTC+5:30", 345: "UTC+5:45", 360: "UTC+6", 390: "UTC+6:30", 420: "UTC+7", 480: "UTC+8", 540: "UTC+9", 570: "UTC+9:30", 600: "UTC+10", 630: "UTC+10:30", 660: "UTC+11", 720: "UTC+12", 765: "UTC+12:45", 780: "UTC+13", 840: "UTC+14" };
     var timezone_values = getValues(timezone_map);
-    if (timezone_values.indexOf(timezone) === -1) {
-        throw new Error("timezone must be one of " + timezone_values.join(", "));
+    if (timezone_values.indexOf(time_zone) === -1) {
+        throw new Error("time_zone must be one of " + timezone_values.join(", "));
     }
 
     var buffer = new Buffer(4);
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0xbd);
-    buffer.writeInt16LE(getValue(timezone_map, timezone));
+    buffer.writeInt16LE(getValue(timezone_map, time_zone));
     return buffer.toBytes();
 }
 
-function clearCumulative(clear_cumulative_enable) {
+/**
+ * set reset cumulative enable
+ * @param {number} reset_cumulative_enable values: (0: disable, 1: enable)
+ * @example { "reset_cumulative_enable": 1 }
+ */
+function clearCumulative(reset_cumulative_enable) {
     var enable_map = { 0: "disable", 1: "enable" };
     var enable_values = getValues(enable_map);
-    if (enable_values.indexOf(clear_cumulative_enable) === -1) {
-        throw new Error("clear_cumulative_enable must be one of " + enable_values.join(", "));
+    if (enable_values.indexOf(reset_cumulative_enable) === -1) {
+        throw new Error("reset_cumulative_enable must be one of " + enable_values.join(", "));
     }
 
     var buffer = new Buffer(3);
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0xa6);
-    buffer.writeUInt8(getValue(enable_map, clear_cumulative_enable));
-    return buffer.toBytes();
-}
-/**
- * set cumulative enable
- * @param {number} cumulative_enable values: (0: no, 1: yes)
- * @example { "cumulative_enable": 1 }
- */
-function setCumulativeEnable(cumulative_enable) {
-    var enable_map = { 0: "disable", 1: "enable" };
-    var enable_values = getValues(enable_map);
-    if (enable_values.indexOf(cumulative_enable) === -1) {
-        throw new Error("cumulative_enable must be one of " + enable_values.join(", "));
-    }
-
-    var buffer = new Buffer(3);
-    buffer.writeUInt8(0xff);
-    buffer.writeUInt8(0xa9);
-    buffer.writeUInt8(getValue(enable_map, cumulative_enable));
+    buffer.writeUInt8(getValue(enable_map, reset_cumulative_enable));
     return buffer.toBytes();
 }
 
 /**
  * set cumulative reset interval
- * @param {number} cumulative_reset_interval unit: minute, range: [1, 65535]
- * @example { "cumulative_reset_interval": 10 }
+ * @param {number} reset_cumulative_interval unit: minute, range: [1, 65535]
+ * @example { "reset_cumulative_interval": 10 }
  */
-function setCumulativeResetInterval(cumulative_reset_interval) {
-    if (typeof cumulative_reset_interval !== "number") {
-        throw new Error("cumulative_reset_interval must be a number");
+function setCumulativeResetInterval(reset_cumulative_interval) {
+    if (typeof reset_cumulative_interval !== "number") {
+        throw new Error("reset_cumulative_interval must be a number");
     }
-    if (cumulative_reset_interval < 1 || cumulative_reset_interval > 65535) {
-        throw new Error("cumulative_reset_interval must be in range [1, 65535]");
+    if (reset_cumulative_interval < 1 || reset_cumulative_interval > 65535) {
+        throw new Error("reset_cumulative_interval must be in range [1, 65535]");
     }
 
     var buffer = new Buffer(4);
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0xa7);
-    buffer.writeUInt16LE(cumulative_reset_interval);
+    buffer.writeUInt16LE(reset_cumulative_interval);
     return buffer.toBytes();
 }
 
 /**
- * set cumulative reset config
- * @param {object} cumulative_reset_config
- * @param {number} cumulative_reset_config.weekday values: (0: Everyday, 1: Sunday, 2: Monday, 3: Tuesday, 4: Wednesday, 5: Thursday, 6: Friday, 7: Saturday)
- * @param {number} cumulative_reset_config.hour values: (0-23)
- * @param {number} cumulative_reset_config.minute values: (0-59)
- * @example { "cumulative_reset_config": { "weekday": 0, "hour": 0, "minute": 0 } }
+ * clear cumulative in
+ * @param {number} reset_cumulative_in values: (0: no, 1: yes)
+ * @example { "reset_cumulative_in": 1 }
  */
-function setCumulativeResetConfig(cumulative_reset_config) {
-    var weekday = cumulative_reset_config.weekday;
-    var hour = cumulative_reset_config.hour;
-    var minute = cumulative_reset_config.minute;
-
-    var weekday_map = { 0: "Everyday", 1: "Sunday", 2: "Monday", 3: "Tuesday", 4: "Wednesday", 5: "Thursday", 6: "Friday", 7: "Saturday" };
-    var weekday_values = getValues(weekday_map);
-    if (weekday_values.indexOf(weekday) === -1) {
-        throw new Error("cumulative_reset_config.weekday must be one of " + weekday_values.join(", "));
-    }
-    if (typeof hour !== "number" || hour < 0 || hour > 23) {
-        throw new Error("cumulative_reset_config.hour must be a number in range [0, 23]");
-    }
-    if (typeof minute !== "number" || minute < 0 || minute > 59) {
-        throw new Error("cumulative_reset_config.minute must be a number in range [0, 59]");
-    }
-
-    var buffer = new Buffer(5);
-    buffer.writeUInt8(0xff);
-    buffer.writeUInt8(0xed);
-    buffer.writeUInt8(getValue(weekday_map, weekday));
-    buffer.writeUInt8(hour);
-    buffer.writeUInt8(minute);
-    return buffer.toBytes();
-}
-
-/**
- * clear cumulative
- * @param {number} clear_cumulative_in values: (0: no, 1: yes)
- * @example { "clear_cumulative_in": 1 }
- */
-function clearCumulativeIn(clear_cumulative_in) {
+function clearCumulativeIn(reset_cumulative_in) {
     var yes_no_map = { 0: "no", 1: "yes" };
     var yes_no_values = getValues(yes_no_map);
-    if (yes_no_values.indexOf(clear_cumulative_in) === -1) {
-        throw new Error("clear_cumulative_in must be one of " + yes_no_values.join(", "));
+    if (yes_no_values.indexOf(reset_cumulative_in) === -1) {
+        throw new Error("reset_cumulative_in must be one of " + yes_no_values.join(", "));
     }
 
-    if (getValue(yes_no_map, clear_cumulative_in) === 0) {
+    if (getValue(yes_no_map, reset_cumulative_in) === 0) {
         return [];
     }
     return [0xff, 0xa8, 0x01];
 }
 
 /**
- * clear cumulative
- * @param {number} clear_cumulative_out values: (0: no, 1: yes)
- * @example { "clear_cumulative_out": 1 }
+ * clear cumulative out
+ * @param {number} reset_cumulative_out values: (0: no, 1: yes)
+ * @example { "reset_cumulative_out": 1 }
  */
-function clearCumulativeOut(clear_cumulative_out) {
+function clearCumulativeOut(reset_cumulative_out) {
     var yes_no_map = { 0: "no", 1: "yes" };
     var yes_no_values = getValues(yes_no_map);
-    if (yes_no_values.indexOf(clear_cumulative_out) === -1) {
-        throw new Error("clear_cumulative_out must be one of " + yes_no_values.join(", "));
+    if (yes_no_values.indexOf(reset_cumulative_out) === -1) {
+        throw new Error("reset_cumulative_out must be one of " + yes_no_values.join(", "));
     }
 
-    if (getValue(yes_no_map, clear_cumulative_out) === 0) {
+    if (getValue(yes_no_map, reset_cumulative_out) === 0) {
         return [];
     }
     return [0xff, 0xa8, 0x02];
 }
 
 /**
- * set temperature enable
- * @param {number} temperature_enable values: (0: disable, 1: enable)
- * @example { "temperature_enable": 1 }
+ * set cumulative enable
+ * @param {number} report_cumulative_enable values: (0: no, 1: yes)
+ * @example { "report_cumulative_enable": 1 }
  */
-function setTemperatureEnable(temperature_enable) {
+function setCumulativeEnable(report_cumulative_enable) {
     var enable_map = { 0: "disable", 1: "enable" };
     var enable_values = getValues(enable_map);
-    if (enable_values.indexOf(temperature_enable) === -1) {
-        throw new Error("temperature_enable must be one of " + enable_values.join(", "));
+    if (enable_values.indexOf(report_cumulative_enable) === -1) {
+        throw new Error("report_cumulative_enable must be one of " + enable_values.join(", "));
+    }
+
+    var buffer = new Buffer(3);
+    buffer.writeUInt8(0xff);
+    buffer.writeUInt8(0xa9);
+    buffer.writeUInt8(getValue(enable_map, report_cumulative_enable));
+    return buffer.toBytes();
+}
+
+/**
+ * set temperature enable
+ * @param {number} report_temperature_enable values: (0: disable, 1: enable)
+ * @example { "report_temperature_enable": 1 }
+ */
+function setTemperatureEnable(report_temperature_enable) {
+    var enable_map = { 0: "disable", 1: "enable" };
+    var enable_values = getValues(enable_map);
+    if (enable_values.indexOf(report_temperature_enable) === -1) {
+        throw new Error("report_temperature_enable must be one of " + enable_values.join(", "));
     }
 
     var buffer = new Buffer(3);
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0xaa);
-    buffer.writeUInt8(getValue(enable_map, temperature_enable));
+    buffer.writeUInt8(getValue(enable_map, report_temperature_enable));
     return buffer.toBytes();
 }
 
 /**
  * set temperature calibration
- * @param {object} temperature_calibration
- * @param {number} temperature_calibration.enable values: (0: disable, 1: enable)
- * @param {number} temperature_calibration.calibration_value unit: ℃
- * @example { "temperature_calibration": { "enable": 1, "calibration_value": 26 } }
+ * @param {object} temperature_calibration_settings
+ * @param {number} temperature_calibration_settings.enable values: (0: disable, 1: enable)
+ * @param {number} temperature_calibration_settings.calibration_value unit: ℃
+ * @example { "temperature_calibration_settings": { "enable": 1, "calibration_value": 26 } }
  */
-function setTemperatureCalibration(temperature_calibration) {
-    var enable = temperature_calibration.enable;
-    var calibration_value = temperature_calibration.calibration_value;
+function setTemperatureCalibration(temperature_calibration_settings) {
+    var enable = temperature_calibration_settings.enable;
+    var calibration_value = temperature_calibration_settings.calibration_value;
 
     var enable_map = { 0: "disable", 1: "enable" };
     var enable_values = getValues(enable_map);
     if (enable_values.indexOf(enable) === -1) {
-        throw new Error("temperature_calibration.enable must be one of " + enable_values.join(", "));
+        throw new Error("temperature_calibration_settings.enable must be one of " + enable_values.join(", "));
     }
     if (typeof calibration_value !== "number") {
-        throw new Error("temperature_calibration.calibration_value must be a number");
+        throw new Error("temperature_calibration_settings.calibration_value must be a number");
     }
 
     var buffer = new Buffer(5);
@@ -484,53 +458,107 @@ function setD2DMasterConfig(d2d_master_config) {
 }
 
 /**
- * set alarm config
- * @param {object} alarm_config
- * @param {number} alarm_config.condition values: (0: disable, 1: below, 2: above, 3: between, 4: outside)
- * @param {number} alarm_config.trigger_source values: (1: period_count, 2: total_count, 3: temperature)
- * @param {number} alarm_config.min_threshold
- * @param {number} alarm_config.max_threshold
- * @param {number} alarm_config.lock_time
- * @param {number} alarm_config.continue_time
+ * set period people alarm config
+ * @param {object} people_period_alarm_config
+ * @param {number} people_period_alarm_config.condition values: (0: disable, 1: below, 2: above, 3: between, 4: outside)
+ * @param {number} people_period_alarm_config.threshold_out
+ * @param {number} people_period_alarm_config.threshold_in
+ * @example { "people_period_alarm_config": { "condition": 1, "threshold_out": 10, "threshold_in": 20 } }
  */
-function setAlarmConfig(alarm_config) {
-    var enable = alarm_config.enable;
-    var condition = alarm_config.condition;
-    var trigger_source = alarm_config.trigger_source;
-    var min_threshold = alarm_config.min_threshold;
-    var max_threshold = alarm_config.max_threshold;
-    var lock_time = alarm_config.lock_time;
-    var continue_time = alarm_config.continue_time;
+function setPeriodPeopleAlarmConfig(people_period_alarm_config) {
+    var condition = people_period_alarm_config.condition;
+    var threshold_out = people_period_alarm_config.threshold_out;
+    var threshold_in = people_period_alarm_config.threshold_in;
 
-    var condition_map = { 0: "disable", 1: "below", 2: "above", 3: "between", 4: "outside" }
+    var condition_map = { 0: "disable", 1: "below", 2: "above", 3: "between", 4: "outside" };
     var condition_values = getValues(condition_map);
     if (condition_values.indexOf(condition) === -1) {
-        throw new Error("alarm_config.condition must be one of " + condition_values.join(", "));
-    }
-    var enable_map = { 0: "disable", 1: "enable" };
-    var enable_values = getValues(enable_map);
-    if (enable_values.indexOf(enable) === -1) {
-        throw new Error("alarm_config.enable must be one of " + enable_values.join(", "));
-    }
-    var trigger_source_map = { 1: "period_count", 2: "total_count", 3: "temperature" }
-    var trigger_source_values = getValues(trigger_source_map);
-    if (trigger_source_values.indexOf(trigger_source) === -1) {
-        throw new Error("alarm_config.trigger_source must be one of " + trigger_source_values.join(", "));
+        throw new Error("people_period_alarm_config.condition must be one of " + condition_values.join(", "));
     }
 
     var data = 0x00;
     data |= getValue(condition_map, condition);
-    data |= getValue(trigger_source_map, trigger_source) << 3;
-    data |= getValue(enable_map, enable) << 6;
+    data |= 0x01 << 3; // period count
+    data |= 0x01 << 6; // enable
 
     var buffer = new Buffer(11);
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0x06);
     buffer.writeUInt8(data);
-    buffer.writeUInt16LE(min_threshold);
-    buffer.writeUInt16LE(max_threshold);
-    buffer.writeUInt16LE(lock_time);
-    buffer.writeUInt16LE(continue_time);
+    buffer.writeUInt16LE(threshold_out);
+    buffer.writeUInt16LE(threshold_in);
+    buffer.writeUInt16LE(0x00);
+    buffer.writeUInt16LE(0x00);
+    return buffer.toBytes();
+}
+
+/**
+ * set period people alarm config
+ * @param {object} people_cumulative_alarm_config
+ * @param {number} people_cumulative_alarm_config.condition values: (0: disable, 1: below, 2: above, 3: between, 4: outside)
+ * @param {number} people_cumulative_alarm_config.threshold_out
+ * @param {number} people_cumulative_alarm_config.threshold_in
+ * @example { "people_cumulative_alarm_config": { "condition": 1, "threshold_out": 10, "threshold_in": 20 } }
+ */
+function setCumulativePeopleAlarmConfig(people_cumulative_alarm_config) {
+    var condition = people_cumulative_alarm_config.condition;
+    var threshold_out = people_cumulative_alarm_config.threshold_out;
+    var threshold_in = people_cumulative_alarm_config.threshold_in;
+
+    var condition_map = { 0: "disable", 1: "below", 2: "above", 3: "between", 4: "outside" };
+    var condition_values = getValues(condition_map);
+    if (condition_values.indexOf(condition) === -1) {
+        throw new Error("people_cumulative_alarm_config.condition must be one of " + condition_values.join(", "));
+    }
+
+    var data = 0x00;
+    data |= getValue(condition_map, condition);
+    data |= 0x02 << 3; // total count
+    data |= 0x01 << 6; // enable
+
+    var buffer = new Buffer(11);
+    buffer.writeUInt8(0xff);
+    buffer.writeUInt8(0x06);
+    buffer.writeUInt8(data);
+    buffer.writeUInt16LE(threshold_out);
+    buffer.writeUInt16LE(threshold_in);
+    buffer.writeUInt16LE(0x00);
+    buffer.writeUInt16LE(0x00);
+    return buffer.toBytes();
+}
+
+/**
+ * set temperature alarm config
+ * @param {object} temperature_alarm_config
+ * @param {number} temperature_alarm_config.condition values: (0: disable, 1: below, 2: above, 3: between, 4: outside)
+ * @param {number} temperature_alarm_config.threshold_min unit: °C
+ * @param {number} temperature_alarm_config.threshold_max unit: °C
+ * @example { "temperature_alarm_config": { "condition": 1, "threshold_min": 10, "threshold_max": 20 } }
+ */
+function setTemperatureAlarmConfig(temperature_alarm_config) {
+    var condition = temperature_alarm_config.condition;
+    var threshold_min = temperature_alarm_config.threshold_min;
+    var threshold_max = temperature_alarm_config.threshold_max;
+
+    var condition_map = { 0: "disable", 1: "below", 2: "above", 3: "between", 4: "outside" };
+    var condition_values = getValues(condition_map);
+    if (condition_values.indexOf(condition) === -1) {
+        throw new Error("temperature_alarm_config.condition must be one of " + condition_values.join(", "));
+    }
+
+    var data = 0x00;
+    data |= getValue(condition_map, condition);
+    data |= 0x03 << 3; // temperature
+    data |= 0x01 << 6; // enable
+
+    var buffer = new Buffer(11);
+    buffer.writeUInt8(0xff);
+    buffer.writeUInt8(0x06);
+    buffer.writeUInt8(data);
+    buffer.writeUInt16LE(threshold_min * 10);
+    buffer.writeUInt16LE(threshold_max * 10);
+    buffer.writeUInt16LE(0x00);
+    buffer.writeUInt16LE(0x00);
     return buffer.toBytes();
 }
 

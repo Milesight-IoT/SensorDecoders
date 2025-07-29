@@ -107,18 +107,18 @@ function setReportInterval(report_interval) {
  * set distance threshold alarm configuration
  * @param {object} distance_alarm_config
  * @param {number} distance_alarm_config.condition values: (0: disable, 1: below, 2: above, 3: between, 4: outside)
- * @param {number} distance_alarm_config.min_threshold condition=(below, within, outside)
- * @param {number} distance_alarm_config.max_threshold condition=(above, within, outside)
+ * @param {number} distance_alarm_config.threshold_min condition=(below, within, outside)
+ * @param {number} distance_alarm_config.threshold_max condition=(above, within, outside)
  * @param {number} distance_alarm_config.lock_time
  * @param {number} distance_alarm_config.continue_time
  * @param {number} distance_alarm_config.alarm_release_enable values: (0: disable, 1: enable)
  */
 function setDistanceAlarmConfig(distance_alarm_config) {
     var condition = distance_alarm_config.condition;
-    var min_threshold = distance_alarm_config.min_threshold;
-    var max_threshold = distance_alarm_config.max_threshold;
-    var continue_time = distance_alarm_config.continue_time;
+    var threshold_min = distance_alarm_config.threshold_min;
+    var threshold_max = distance_alarm_config.threshold_max;
     var lock_time = distance_alarm_config.lock_time;
+    var continue_time = distance_alarm_config.continue_time;
     var alarm_release_enable = distance_alarm_config.alarm_release_enable;
 
     var condition_map = { 0: "disable", 1: "below", 2: "above", 3: "between", 4: "outside" };
@@ -141,8 +141,8 @@ function setDistanceAlarmConfig(distance_alarm_config) {
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0x06);
     buffer.writeUInt8(data);
-    buffer.writeInt16LE(min_threshold * 10);
-    buffer.writeInt16LE(max_threshold * 10);
+    buffer.writeInt16LE(threshold_min * 10);
+    buffer.writeInt16LE(threshold_max * 10);
     buffer.writeUInt16LE(lock_time);
     buffer.writeUInt16LE(continue_time);
     return buffer.toBytes();
@@ -150,14 +150,8 @@ function setDistanceAlarmConfig(distance_alarm_config) {
 
 function getValues(map) {
     var values = [];
-    if (RAW_VALUE) {
-        for (var key in map) {
-            values.push(parseInt(key));
-        }
-    } else {
-        for (var key in map) {
-            values.push(map[key]);
-        }
+    for (var key in map) {
+        values.push(RAW_VALUE ? parseInt(key) : map[key]);
     }
     return values;
 }

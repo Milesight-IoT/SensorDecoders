@@ -54,9 +54,9 @@ function milesightDeviceDecode(bytes) {
             i += 2;
         }
         // SERIAL NUMBER
-        else if (channel_id === 0xff && channel_type === 0x16) {
-            decoded.sn = readSerialNumber(bytes.slice(i, i + 8));
-            i += 8;
+        else if (channel_id === 0xff && channel_type === 0x08) {
+            decoded.sn = readSerialNumber(bytes.slice(i, i + 6));
+            i += 6;
         }
         // LORAWAN CLASS TYPE
         else if (channel_id === 0xff && channel_type === 0x0f) {

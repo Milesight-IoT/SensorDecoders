@@ -424,8 +424,8 @@ function readYesNoStatus(value) {
 }
 
 function readEnableStatus(status) {
-    var enable_status_map = { 0: "disable", 1: "enable" };
-    return getValue(enable_status_map, status);
+    var status_map = { 0: "disable", 1: "enable" };
+    return getValue(status_map, status);
 }
 
 function readPeopleCountingReportMode(mode) {

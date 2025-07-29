@@ -38,8 +38,8 @@ function milesightDeviceEncode(payload) {
     if ("reporting_interval" in payload) {
         encoded = encoded.concat(setReportInterval(payload.reporting_interval));
     }
-    if ("led_indicator" in payload) {
-        encoded = encoded.concat(setLedIndicatorEnable(payload.led_indicator));
+    if ("led_indicator_enable" in payload) {
+        encoded = encoded.concat(setLedIndicatorEnable(payload.led_indicator_enable));
     }
     if ("double_click_enable" in payload) {
         encoded = encoded.concat(setDoubleClickEnable(payload.double_click_enable));
@@ -109,20 +109,20 @@ function setReportInterval(reporting_interval) {
 
 /**
  * set led enable configuration
- * @param {number} led_indicator values: (0: disable, 1: enable)
- * @example { "led_indicator": 1 }
+ * @param {number} led_indicator_enable values: (0: disable, 1: enable)
+ * @example { "led_indicator_enable": 1 }
  */
-function setLedIndicatorEnable(led_indicator) {
+function setLedIndicatorEnable(led_indicator_enable) {
     var enable_map = { 0: "disable", 1: "enable" };
     var enable_values = getValues(enable_map);
-    if (enable_values.indexOf(led_indicator) === -1) {
+    if (enable_values.indexOf(led_indicator_enable) === -1) {
         throw new Error("led_enable must be one of " + enable_values.join(", "));
     }
 
     var buffer = new Buffer(3);
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0x2f);
-    buffer.writeUInt8(getValue(enable_map, led_indicator));
+    buffer.writeUInt8(getValue(enable_map, led_indicator_enable));
     return buffer.toBytes();
 }
 
@@ -166,14 +166,8 @@ function setBuzzerEnable(buzzer_enable) {
 
 function getValues(map) {
     var values = [];
-    if (RAW_VALUE) {
-        for (var key in map) {
-            values.push(parseInt(key));
-        }
-    } else {
-        for (var key in map) {
-            values.push(map[key]);
-        }
+    for (var key in map) {
+        values.push(RAW_VALUE ? parseInt(key) : map[key]);
     }
     return values;
 }

@@ -29,7 +29,7 @@ function Decoder(bytes, port) {
 function milesightDeviceDecode(bytes) {
     var decoded = {};
 
-    for (var i = 0; i < bytes.length;) {
+    for (var i = 0; i < bytes.length; ) {
         var channel_id = bytes[i++];
         var channel_type = bytes[i++];
 
@@ -75,7 +75,7 @@ function milesightDeviceDecode(bytes) {
         }
         // BATTERY
         else if (channel_id === 0x01 && channel_type === 0x75) {
-            decoded.battery = bytes[i];
+            decoded.battery = readUInt8(bytes[i]);
             i += 1;
         }
         // TEMPERATURE
@@ -142,7 +142,6 @@ function milesightDeviceDecode(bytes) {
                 data.total_out = readUInt16LE(bytes.slice(i + 11, i + 13));
                 i += 13;
             }
-
             decoded.history = decoded.history || [];
             decoded.history.push(data);
         }
@@ -155,8 +154,7 @@ function milesightDeviceDecode(bytes) {
             var result = handle_downlink_response_ext(channel_id, channel_type, bytes, i);
             decoded = Object.assign(decoded, result.data);
             i = result.offset;
-        }
-        else {
+        } else {
             break;
         }
     }
@@ -169,7 +167,24 @@ function handle_downlink_response(channel_type, bytes, offset) {
 
     switch (channel_type) {
         case 0x06:
-            decoded.alarm_config = readAlarmConfig(bytes.slice(offset, offset + 9));
+            var data = readUInt8(bytes[offset]);
+            var trigger_source = (data >>> 3) & 0x07;
+            if (trigger_source === 1) {
+                decoded.people_period_alarm_config = {};
+                decoded.people_period_alarm_config.condition = readConditionType(data & 0x07);
+                decoded.people_period_alarm_config.threshold_out = readUInt16LE(bytes.slice(offset + 1, offset + 3));
+                decoded.people_period_alarm_config.threshold_in = readUInt16LE(bytes.slice(offset + 3, offset + 5));
+            } else if (trigger_source === 2) {
+                decoded.people_cumulative_alarm_config = {};
+                decoded.people_cumulative_alarm_config.condition = readConditionType(data & 0x07);
+                decoded.people_cumulative_alarm_config.threshold_out = readUInt16LE(bytes.slice(offset + 1, offset + 3));
+                decoded.people_cumulative_alarm_config.threshold_in = readUInt16LE(bytes.slice(offset + 3, offset + 5));
+            } else if (trigger_source === 3) {
+                decoded.temperature_alarm_config = {};
+                decoded.temperature_alarm_config.condition = readConditionType(data & 0x07);
+                decoded.temperature_alarm_config.threshold_min = readUInt16LE(bytes.slice(offset + 1, offset + 3)) / 10;
+                decoded.temperature_alarm_config.threshold_max = readUInt16LE(bytes.slice(offset + 3, offset + 5)) / 10;
+            }
             offset += 9;
             break;
         case 0x10:
@@ -235,45 +250,45 @@ function handle_downlink_response(channel_type, bytes, offset) {
             decoded.d2d_master_config.push(d2d_master_config);
             break;
         case 0xa6:
-            decoded.clear_cumulative_enable = readEnableStatus(bytes[offset]);
+            decoded.reset_cumulative_enable = readEnableStatus(bytes[offset]);
             offset += 1;
             break;
         case 0xa7:
-            decoded.cumulative_reset_interval = readUInt16LE(bytes.slice(offset, offset + 2));
+            decoded.reset_cumulative_interval = readUInt16LE(bytes.slice(offset, offset + 2));
             offset += 2;
             break;
         case 0xa8:
             var data = readUInt8(bytes[offset]);
             if (data === 0x01) {
-                decoded.clear_cumulative_in = readYesNoStatus(1);
+                decoded.reset_cumulative_in = readYesNoStatus(1);
             } else if (data === 0x02) {
-                decoded.clear_cumulative_out = readYesNoStatus(1);
+                decoded.reset_cumulative_out = readYesNoStatus(1);
             }
             offset += 1;
             break;
         case 0xa9:
-            decoded.cumulative_enable = readEnableStatus(bytes[offset]);
+            decoded.report_cumulative_enable = readEnableStatus(bytes[offset]);
             offset += 1;
             break;
         case 0xaa:
-            decoded.temperature_enable = readEnableStatus(bytes[offset]);
+            decoded.report_temperature_enable = readEnableStatus(bytes[offset]);
             offset += 1;
             break;
         case 0xab:
-            decoded.temperature_calibration = {};
-            decoded.temperature_calibration.enable = readEnableStatus(bytes[offset]);
-            decoded.temperature_calibration.calibration_value = readInt16LE(bytes.slice(offset + 1, offset + 3)) / 10;
+            decoded.temperature_calibration_settings = {};
+            decoded.temperature_calibration_settings.enable = readEnableStatus(bytes[offset]);
+            decoded.temperature_calibration_settings.calibration_value = readInt16LE(bytes.slice(offset + 1, offset + 3)) / 10;
             offset += 3;
             break;
         case 0xbd:
-            decoded.timezone = readTimeZone(readInt16LE(bytes.slice(offset, offset + 2)));
+            decoded.time_zone = readTimeZone(readInt16LE(bytes.slice(offset, offset + 2)));
             offset += 2;
             break;
         case 0xef:
-            decoded.cumulative_reset_config = {};
-            decoded.cumulative_reset_config.enable = readEnableStatus(bytes[offset]);
-            decoded.cumulative_reset_config.hour = readUInt8(bytes.slice(offset + 1, offset + 2));
-            decoded.cumulative_reset_config.minute = readUInt8(bytes.slice(offset + 2, offset + 3));
+            decoded.reset_cumulative_config = {};
+            decoded.reset_cumulative_config.enable = readEnableStatus(bytes[offset]);
+            decoded.reset_cumulative_config.hour = readUInt8(bytes.slice(offset + 1, offset + 2));
+            decoded.reset_cumulative_config.minute = readUInt8(bytes.slice(offset + 2, offset + 3));
             offset += 3;
             break;
         default:
@@ -374,8 +389,8 @@ function readDeviceStatus(status) {
 }
 
 function readEnableStatus(status) {
-    var enable_map = { 0: "disable", 1: "enable" };
-    return getValue(enable_map, status);
+    var status_map = { 0: "disable", 1: "enable" };
+    return getValue(status_map, status);
 }
 
 function readYesNoStatus(status) {
@@ -388,8 +403,8 @@ function readAlarmType(type) {
         0: "threshold alarm release",
         1: "threshold alarm",
         3: "high temperature alarm",
-        4: "high temperature alarm release"
-    }
+        4: "high temperature alarm release",
+    };
     return getValue(alarm_map, type);
 }
 
@@ -398,48 +413,9 @@ function readReportType(type) {
     return getValue(report_type_map, type);
 }
 
-
-function readTimeZone(timezone) {
-    var timezone_map = {
-        "-720": "UTC-12",
-        "-660": "UTC-11",
-        "-600": "UTC-10",
-        "-570": "UTC-9:30",
-        "-540": "UTC-9",
-        "-480": "UTC-8",
-        "-420": "UTC-7",
-        "-360": "UTC-6",
-        "-300": "UTC-5",
-        "-240": "UTC-4",
-        "-210": "UTC-3:30",
-        "-180": "UTC-3",
-        "-120": "UTC-2",
-        "-60": "UTC-1",
-        0: "UTC",
-        60: "UTC+1",
-        120: "UTC+2",
-        180: "UTC+3",
-        210: "UTC+3:30",
-        240: "UTC+4",
-        270: "UTC+4:30",
-        300: "UTC+5",
-        330: "UTC+5:30",
-        345: "UTC+5:45",
-        360: "UTC+6",
-        390: "UTC+6:30",
-        420: "UTC+7",
-        480: "UTC+8",
-        540: "UTC+9",
-        570: "UTC+9:30",
-        600: "UTC+10",
-        630: "UTC+10:30",
-        660: "UTC+11",
-        720: "UTC+12",
-        765: "UTC+12:45",
-        780: "UTC+13",
-        840: "UTC+14",
-    };
-    return getValue(timezone_map, timezone);
+function readTimeZone(time_zone) {
+    var timezone_map = { "-720": "UTC-12", "-660": "UTC-11", "-600": "UTC-10", "-570": "UTC-9:30", "-540": "UTC-9", "-480": "UTC-8", "-420": "UTC-7", "-360": "UTC-6", "-300": "UTC-5", "-240": "UTC-4", "-210": "UTC-3:30", "-180": "UTC-3", "-120": "UTC-2", "-60": "UTC-1", 0: "UTC", 60: "UTC+1", 120: "UTC+2", 180: "UTC+3", 210: "UTC+3:30", 240: "UTC+4", 270: "UTC+4:30", 300: "UTC+5", 330: "UTC+5:30", 345: "UTC+5:45", 360: "UTC+6", 390: "UTC+6:30", 420: "UTC+7", 480: "UTC+8", 540: "UTC+9", 570: "UTC+9:30", 600: "UTC+10", 630: "UTC+10:30", 660: "UTC+11", 720: "UTC+12", 765: "UTC+12:45", 780: "UTC+13", 840: "UTC+14" };
+    return getValue(timezone_map, time_zone);
 }
 
 function readD2DMode(mode) {
@@ -447,31 +423,9 @@ function readD2DMode(mode) {
     return getValue(mode_map, mode);
 }
 
-function readAlarmConfig(bytes) {
-    var offset = 0;
-
-    var alarm_config = {};
-    var data = readUInt8(bytes[offset]);
-    alarm_config.enable = readEnableStatus((data >> 6) & 0x03);
-    alarm_config.condition = readConditionType(data & 0x07);
-    alarm_config.trigger_source = readTriggerSourceType((data >> 3) & 0x07);
-    alarm_config.min_threshold = readUInt16LE(bytes.slice(offset + 1, offset + 3));
-    alarm_config.max_threshold = readUInt16LE(bytes.slice(offset + 3, offset + 5));
-    alarm_config.lock_time = readUInt16LE(bytes.slice(offset + 5, offset + 7));
-    alarm_config.continue_time = readUInt16LE(bytes.slice(offset + 7, offset + 9));
-    offset += 9;
-
-    return alarm_config;
-}
-
 function readConditionType(type) {
     var condition_map = { 0: "disable", 1: "below", 2: "above", 3: "between", 4: "outside" };
     return getValue(condition_map, type);
-}
-
-function readTriggerSourceType(type) {
-    var trigger_source_map = { 1: "period_count", 2: "total_count", 3: "temperature" };
-    return getValue(trigger_source_map, type);
 }
 
 /* eslint-disable */

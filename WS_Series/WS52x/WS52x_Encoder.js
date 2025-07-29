@@ -54,8 +54,8 @@ function milesightDeviceEncode(payload) {
     if ("over_current_protection" in payload) {
         encoded = encoded.concat(setOverCurrentProtection(payload.over_current_protection));
     }
-    if ("current_threshold_config" in payload) {
-        encoded = encoded.concat(setCurrentThreshold(payload.current_threshold_config));
+    if ("current_alarm_config" in payload) {
+        encoded = encoded.concat(setCurrentAlarmConfig(payload.current_alarm_config));
     }
     if ("child_lock_config" in payload) {
         encoded = encoded.concat(setChildLock(payload.child_lock_config));
@@ -66,8 +66,8 @@ function milesightDeviceEncode(payload) {
     if ("reset_power_consumption" in payload) {
         encoded = encoded.concat(resetPowerConsumption(payload.reset_power_consumption));
     }
-    if ("led_enable" in payload) {
-        encoded = encoded.concat(setLedEnable(payload.led_enable));
+    if ("led_indicator_enable" in payload) {
+        encoded = encoded.concat(setLedEnable(payload.led_indicator_enable));
     }
 
     return encoded;
@@ -242,23 +242,23 @@ function setOverCurrentProtection(over_current_protection) {
 }
 
 /**
- * set current threshold configuration
- * @param {object} current_threshold_config
- * @param {number} current_threshold_config.enable values: (0: disable, 1: enable)
- * @param {number} current_threshold_config.threshold unit: A
- * @example { "current_threshold_config": { "enable": 1, "threshold": 10 } }
+ * set current alarm configuration
+ * @param {object} current_alarm_config
+ * @param {number} current_alarm_config.enable values: (0: disable, 1: enable)
+ * @param {number} current_alarm_config.threshold unit: A
+ * @example { "current_alarm_config": { "enable": 1, "threshold": 10 } }
  */
-function setCurrentThreshold(current_threshold_config) {
-    var enable = current_threshold_config.enable;
-    var threshold = current_threshold_config.threshold;
+function setCurrentAlarmConfig(current_alarm_config) {
+    var enable = current_alarm_config.enable;
+    var threshold = current_alarm_config.threshold;
 
     var enable_map = { 0: "disable", 1: "enable" };
     var enable_values = getValues(enable_map);
     if (enable_values.indexOf(enable) === -1) {
-        throw new Error("current_threshold_config.enable must be one of " + enable_values.join(", "));
+        throw new Error("current_alarm_config.enable must be one of " + enable_values.join(", "));
     }
     if (typeof threshold !== "number") {
-        throw new Error("current_threshold_config.threshold must be a number");
+        throw new Error("current_alarm_config.threshold must be a number");
     }
 
     var buffer = new Buffer(4);
@@ -336,33 +336,27 @@ function resetPowerConsumption(reset_power_consumption) {
 
 /**
  * set led enable configuration
- * @param {number} led_enable values: (0: disable, 1: enable)
- * @example { "led_enable": 1 }
+ * @param {number} led_indicator_enable values: (0: disable, 1: enable)
+ * @example { "led_indicator_enable": 1 }
  */
-function setLedEnable(led_enable) {
+function setLedEnable(led_indicator_enable) {
     var enable_map = { 0: "disable", 1: "enable" };
     var enable_values = getValues(enable_map);
-    if (enable_values.indexOf(led_enable) === -1) {
-        throw new Error("led_enable must be one of " + enable_values.join(", "));
+    if (enable_values.indexOf(led_indicator_enable) === -1) {
+        throw new Error("led_indicator_enable must be one of " + enable_values.join(", "));
     }
 
     var buffer = new Buffer(3);
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0x2f);
-    buffer.writeUInt8(getValue(enable_map, led_enable));
+    buffer.writeUInt8(getValue(enable_map, led_indicator_enable));
     return buffer.toBytes();
 }
 
 function getValues(map) {
     var values = [];
-    if (RAW_VALUE) {
-        for (var key in map) {
-            values.push(parseInt(key));
-        }
-    } else {
-        for (var key in map) {
-            values.push(map[key]);
-        }
+    for (var key in map) {
+        values.push(RAW_VALUE ? parseInt(key) : map[key]);
     }
     return values;
 }

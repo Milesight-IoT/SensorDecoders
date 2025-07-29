@@ -29,11 +29,52 @@ function Decoder(bytes, port) {
 function milesightDeviceDecode(bytes) {
     var decoded = {};
 
-    for (var i = 0; i < bytes.length;) {
+    for (var i = 0; i < bytes.length; ) {
         var channel_id = bytes[i++];
         var channel_type = bytes[i++];
+
+        // IPSO VERSION
+        if (channel_id === 0xff && channel_type === 0x01) {
+            decoded.ipso_version = readProtocolVersion(bytes[i]);
+            i += 1;
+        }
+        // HARDWARE VERSION
+        else if (channel_id === 0xff && channel_type === 0x09) {
+            decoded.hardware_version = readHardwareVersion(bytes.slice(i, i + 2));
+            i += 2;
+        }
+        // FIRMWARE VERSION
+        else if (channel_id === 0xff && channel_type === 0x0a) {
+            decoded.firmware_version = readFirmwareVersion(bytes.slice(i, i + 2));
+            i += 2;
+        }
+        // TSL VERSION
+        else if (channel_id === 0xff && channel_type === 0xff) {
+            decoded.tsl_version = readTslVersion(bytes.slice(i, i + 2));
+            i += 2;
+        }
+        // SERIAL NUMBER
+        else if (channel_id === 0xff && channel_type === 0x16) {
+            decoded.sn = readSerialNumber(bytes.slice(i, i + 8));
+            i += 8;
+        }
+        // LORAWAN CLASS TYPE
+        else if (channel_id === 0xff && channel_type === 0x0f) {
+            decoded.lorawan_class = readLoRaWANClass(bytes[i]);
+            i += 1;
+        }
+        // RESET EVENT
+        else if (channel_id === 0xff && channel_type === 0xfe) {
+            decoded.reset_event = readResetEvent(1);
+            i += 1;
+        }
+        // DEVICE STATUS
+        else if (channel_id === 0xff && channel_type === 0x0b) {
+            decoded.device_status = readDeviceStatus(1);
+            i += 1;
+        }
         // BATTERY
-        if (channel_id === 0x01 && channel_type === 0x75) {
+        else if (channel_id === 0x01 && channel_type === 0x75) {
             decoded.battery = readUInt8(bytes[i]);
             i += 1;
         }
@@ -109,12 +150,12 @@ function handle_downlink_response(channel_type, bytes, offset) {
         case 0x99:
             decoded.thermopile_collect_settings = {};
             decoded.thermopile_collect_settings.enable = readEnableStatus(bytes[offset]);
-            decoded.thermopile_collect_settings.separate = readUInt16LE(bytes.slice(offset + 1, offset + 3));
-            decoded.thermopile_collect_settings.threshold_l = readUInt8(bytes.slice(offset + 3, offset + 4));
-            decoded.thermopile_collect_settings.threshold_h = readUInt8(bytes.slice(offset + 4, offset + 5));
+            decoded.thermopile_collect_settings.separate = readUInt16LE(bytes.slice(offset + 1, offset + 3)) / 10;
+            decoded.thermopile_collect_settings.threshold_l = readUInt8(bytes.slice(offset + 3, offset + 4)) / 10;
+            decoded.thermopile_collect_settings.threshold_h = readUInt8(bytes.slice(offset + 4, offset + 5)) / 10;
             offset += 5;
             break;
-        case 0x9a:
+        case 0xb2:
             decoded.thermopile_negative_threshold = readInt8(bytes.slice(offset, offset + 1));
             offset += 1;
             break;
@@ -123,6 +164,58 @@ function handle_downlink_response(channel_type, bytes, offset) {
     }
 
     return { data: decoded, offset: offset };
+}
+
+function readProtocolVersion(bytes) {
+    var major = (bytes & 0xf0) >> 4;
+    var minor = bytes & 0x0f;
+    return "v" + major + "." + minor;
+}
+
+function readHardwareVersion(bytes) {
+    var major = bytes[0] & 0xff;
+    var minor = (bytes[1] & 0xff) >> 4;
+    return "v" + major + "." + minor;
+}
+
+function readFirmwareVersion(bytes) {
+    var major = bytes[0] & 0xff;
+    var minor = bytes[1] & 0xff;
+    return "v" + major + "." + minor;
+}
+
+function readTslVersion(bytes) {
+    var major = bytes[0] & 0xff;
+    var minor = bytes[1] & 0xff;
+    return "v" + major + "." + minor;
+}
+
+function readSerialNumber(bytes) {
+    var temp = [];
+    for (var idx = 0; idx < bytes.length; idx++) {
+        temp.push(("0" + (bytes[idx] & 0xff).toString(16)).slice(-2));
+    }
+    return temp.join("");
+}
+
+function readLoRaWANClass(type) {
+    var class_map = {
+        0: "Class A",
+        1: "Class B",
+        2: "Class C",
+        3: "Class CtoB",
+    };
+    return getValue(class_map, type);
+}
+
+function readResetEvent(status) {
+    var status_map = { 0: "normal", 1: "reset" };
+    return getValue(status_map, status);
+}
+
+function readDeviceStatus(status) {
+    var status_map = { 0: "off", 1: "on" };
+    return getValue(status_map, status);
 }
 
 function readOccupancyStatus(status) {
@@ -170,9 +263,11 @@ function readD2DCommand(bytes) {
 }
 
 function readHexString(bytes) {
-    return bytes.map(function (byte) {
-        return ("0" + (byte & 0xff).toString(16)).slice(-2);
-    }).join("");
+    return bytes
+        .map(function (byte) {
+            return ("0" + (byte & 0xff).toString(16)).slice(-2);
+        })
+        .join("");
 }
 
 function getValue(map, key) {

@@ -29,10 +29,10 @@ function Decoder(bytes, port) {
 function milesightDeviceDecode(bytes) {
     var decoded = {};
 
-    for (var i = 0; i < bytes.length;) {
+    for (var i = 0; i < bytes.length; ) {
         var channel_id = bytes[i++];
         var channel_type = bytes[i++];
-       
+
         // IPSO VERSION
         if (channel_id === 0xff && channel_type === 0x01) {
             decoded.ipso_version = readProtocolVersion(bytes[i]);
@@ -54,9 +54,9 @@ function milesightDeviceDecode(bytes) {
             i += 2;
         }
         // SERIAL NUMBER
-        else if (channel_id === 0xff && channel_type === 0x16) {
-            decoded.sn = readSerialNumber(bytes.slice(i, i + 8));
-            i += 8;
+        else if (channel_id === 0xff && channel_type === 0x08) {
+            decoded.sn = readSerialNumber(bytes.slice(i, i + 6));
+            i += 6;
         }
         // LORAWAN CLASS TYPE
         else if (channel_id === 0xff && channel_type === 0x0f) {
@@ -116,8 +116,8 @@ function handle_downlink_response(channel_type, bytes, offset) {
         case 0x06:
             decoded.light_alarm_config = {};
             // skip 1 byte
-            decoded.light_alarm_config.min_threshold = readUInt16LE(bytes.slice(offset + 1, offset + 3));
-            decoded.light_alarm_config.max_threshold = readUInt16LE(bytes.slice(offset + 3, offset + 5));
+            decoded.light_alarm_config.threshold_min = readUInt16LE(bytes.slice(offset + 1, offset + 3));
+            decoded.light_alarm_config.threshold_max = readUInt16LE(bytes.slice(offset + 3, offset + 5));
             // skip 4 bytes
             offset += 9;
             break;

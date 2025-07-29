@@ -98,7 +98,7 @@ function queryDeviceStatus(query_device_status) {
 
 /**
  * sync time
- * @param {boolean} sync_time values: (0: no, 1: yes)
+ * @param {number} sync_time values: (0: no, 1: yes)
  * @example { "sync_time": 1 }
  */
 function syncTime(sync_time) {
@@ -113,7 +113,6 @@ function syncTime(sync_time) {
     }
     return [0xff, 0x4a, 0x00];
 }
-
 
 /**
  * report interval configuration

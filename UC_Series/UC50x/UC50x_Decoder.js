@@ -33,7 +33,7 @@ var adc_alarm_chns = [0x85, 0x86];
 function milesightDeviceDecode(bytes) {
     var decoded = {};
 
-    for (var i = 0; i < bytes.length;) {
+    for (var i = 0; i < bytes.length; ) {
         var channel_id = bytes[i++];
         var channel_type = bytes[i++];
 
@@ -82,29 +82,35 @@ function milesightDeviceDecode(bytes) {
             decoded.battery = readUInt8(bytes[i]);
             i += 1;
         }
-        // GPIO (GPIO as Digital Input or Output)
-        else if (includes(gpio_chns, channel_id) && (channel_type === 0x00 || channel_type === 0x01)) {
-            var gpio_channel_name = "gpio_" + (channel_id - gpio_chns[0] + 1);
+        // GPIO (Input)
+        else if (includes(gpio_chns, channel_id) && channel_type === 0x00) {
+            var gpio_channel_name = "gpio_input_" + (channel_id - gpio_chns[0] + 1);
+            decoded[gpio_channel_name] = readOnOffStatus(bytes[i]);
+            i += 1;
+        }
+        // GPIO (Output)
+        else if (includes(gpio_chns, channel_id) && channel_type === 0x01) {
+            var gpio_channel_name = "gpio_output_" + (channel_id - gpio_chns[0] + 1);
             decoded[gpio_channel_name] = readOnOffStatus(bytes[i]);
             i += 1;
         }
         //  GPIO (GPIO as PULSE COUNTER)
         else if (includes(gpio_chns, channel_id) && channel_type === 0xc8) {
-            var gpio_channel_name = "counter_" + (channel_id - gpio_chns[0] + 1);
+            var gpio_channel_name = "gpio_counter_" + (channel_id - gpio_chns[0] + 1);
             decoded[gpio_channel_name] = readUInt32LE(bytes.slice(i, i + 4));
             i += 4;
         }
         // ANALOG INPUT TYPE
         else if (channel_id === 0xff && channel_type === 0x14) {
             var channel = bytes[i];
-            var chn_name = "adc_" + (channel >>> 4) + "_type";
+            var chn_name = "analog_input_" + (channel >>> 4) + "_type";
             decoded[chn_name] = readAnalogInputType(channel & 0x0f);
             i += 1;
         }
         // ADC (UC50x v2)
         // firmware version 1.10 and below and UC50x V1, change 1000 to 100.
         else if (includes(adc_chns, channel_id) && channel_type === 0x02) {
-            var adc_channel_name = "adc_" + (channel_id - adc_chns[0] + 1);
+            var adc_channel_name = "analog_input_" + (channel_id - adc_chns[0] + 1);
             decoded[adc_channel_name] = readInt16LE(bytes.slice(i, i + 2)) / 1000;
             decoded[adc_channel_name + "_min"] = readInt16LE(bytes.slice(i + 2, i + 4)) / 1000;
             decoded[adc_channel_name + "_max"] = readInt16LE(bytes.slice(i + 4, i + 6)) / 1000;
@@ -113,7 +119,7 @@ function milesightDeviceDecode(bytes) {
         }
         // ADC (UC50x v3)
         else if (includes(adc_chns, channel_id) && channel_type === 0xe2) {
-            var adc_channel_name = "adc_" + (channel_id - adc_chns[0] + 1);
+            var adc_channel_name = "analog_input_" + (channel_id - adc_chns[0] + 1);
             decoded[adc_channel_name] = readFloat16LE(bytes.slice(i, i + 2));
             decoded[adc_channel_name + "_min"] = readFloat16LE(bytes.slice(i + 2, i + 4));
             decoded[adc_channel_name + "_max"] = readFloat16LE(bytes.slice(i + 4, i + 6));
@@ -131,7 +137,7 @@ function milesightDeviceDecode(bytes) {
             var modbus_chn_id = bytes[i++] - 6;
             var package_type = bytes[i++];
             var data_type = package_type & 0x07; // 0x07 = 0b00000111
-            var chn = "chn_" + modbus_chn_id;
+            var chn = "modbus_chn_" + modbus_chn_id;
             switch (data_type) {
                 case 0:
                 case 1:
@@ -154,7 +160,6 @@ function milesightDeviceDecode(bytes) {
                     i += 4;
                     break;
             }
-
             if (channel_id === 0x80) {
                 decoded[chn + "_alarm"] = readAlarm(bytes[i++]);
             }
@@ -168,26 +173,37 @@ function milesightDeviceDecode(bytes) {
         }
         // ADC alert (UC50x v3)
         else if (includes(adc_alarm_chns, channel_id) && channel_type === 0xe2) {
-            var adc_channel_name = "adc_" + (channel_id - adc_alarm_chns[0] + 1);
+            var adc_channel_name = "analog_input_" + (channel_id - adc_alarm_chns[0] + 1);
             decoded[adc_channel_name] = readFloat16LE(bytes.slice(i, i + 2));
             decoded[adc_channel_name + "_min"] = readFloat16LE(bytes.slice(i + 2, i + 4));
             decoded[adc_channel_name + "_max"] = readFloat16LE(bytes.slice(i + 4, i + 6));
             decoded[adc_channel_name + "_avg"] = readFloat16LE(bytes.slice(i + 6, i + 8));
             i += 8;
-
             decoded[adc_channel_name + "_alarm"] = readAlarm(bytes[i++]);
         }
         // HISTORY DATA (GPIO / ADC)
         else if (channel_id === 0x20 && channel_type === 0xdc) {
             var timestamp = readUInt32LE(bytes.slice(i, i + 4));
-
             var data = { timestamp: timestamp };
-            data.gpio_1 = readUInt32LE(bytes.slice(i + 5, i + 9));
-            data.gpio_2 = readUInt32LE(bytes.slice(i + 10, i + 14));
-            data.adc_1 = readInt32LE(bytes.slice(i + 14, i + 18)) / 1000;
-            data.adc_2 = readInt32LE(bytes.slice(i + 18, i + 22)) / 1000;
+            var gpio_1_type = readUInt8(bytes[i + 4]);
+            if (gpio_1_type === 0x00) {
+                data.gpio_input_1 = readOnOffStatus(readUInt32LE(bytes.slice(i + 5, i + 9)));
+            } else if (gpio_1_type === 0x01) {
+                data.gpio_output_1 = readOnOffStatus(readUInt32LE(bytes.slice(i + 5, i + 9)));
+            } else if (gpio_1_type === 0x02) {
+                data.gpio_counter_1 = readUInt32LE(bytes.slice(i + 5, i + 9));
+            }
+            var gpio_2_type = readUInt8(bytes[i + 9]);
+            if (gpio_2_type === 0x00) {
+                data.gpio_input_2 = readOnOffStatus(readUInt32LE(bytes.slice(i + 10, i + 14)));
+            } else if (gpio_2_type === 0x01) {
+                data.gpio_output_2 = readOnOffStatus(readUInt32LE(bytes.slice(i + 10, i + 14)));
+            } else if (gpio_2_type === 0x02) {
+                data.gpio_counter_2 = readUInt32LE(bytes.slice(i + 10, i + 14));
+            }
+            data.analog_input_1 = readInt32LE(bytes.slice(i + 14, i + 18)) / 1000;
+            data.analog_input_2 = readInt32LE(bytes.slice(i + 18, i + 22)) / 1000;
             i += 22;
-
             decoded.history = decoded.history || [];
             decoded.history.push(data);
         }
@@ -196,7 +212,6 @@ function milesightDeviceDecode(bytes) {
             var timestamp = readUInt32LE(bytes.slice(i, i + 4));
             var channel_mask = numToBits(readUInt16LE(bytes.slice(i + 4, i + 6)), 16);
             i += 6;
-
             var data = { timestamp: timestamp };
             for (var j = 0; j < channel_mask.length; j++) {
                 // skip if channel is not enabled
@@ -205,7 +220,6 @@ function milesightDeviceDecode(bytes) {
                 data[name] = readString(bytes.slice(i, i + 36));
                 i += 36;
             }
-
             decoded.history = decoded.history || [];
             decoded.history.push(data);
         }
@@ -214,7 +228,6 @@ function milesightDeviceDecode(bytes) {
             var timestamp = readUInt32LE(bytes.slice(i, i + 4));
             var channel_mask = numToBits(readUInt16LE(bytes.slice(i + 4, i + 6)), 16);
             i += 6;
-
             var data = { timestamp: timestamp };
             for (var j = 0; j < channel_mask.length; j++) {
                 // skip if channel is not enabled
@@ -228,10 +241,8 @@ function milesightDeviceDecode(bytes) {
                 } else {
                     data[name] = readUInt32LE(bytes.slice(i, i + 4));
                 }
-
                 i += 4;
             }
-
             decoded.history = decoded.history || [];
             decoded.history.push(data);
         }
@@ -269,7 +280,7 @@ function handle_downlink_response(channel_type, bytes, offset) {
             offset += 4;
             break;
         case 0x17:
-            decoded.timezone = readInt16LE(bytes.slice(offset, offset + 2)) / 10;
+            decoded.time_zone = readTimeZone(readInt16LE(bytes.slice(offset, offset + 2)));
             offset += 2;
             break;
         case 0x27:
@@ -364,6 +375,11 @@ function readEnableStatus(status) {
 function readYesNoStatus(status) {
     var status_map = { 0: "no", 1: "yes" };
     return getValue(status_map, status);
+}
+
+function readTimeZone(time_zone) {
+    var timezone_map = { "-120": "UTC-12", "-110": "UTC-11", "-100": "UTC-10", "-95": "UTC-9:30", "-90": "UTC-9", "-80": "UTC-8", "-70": "UTC-7", "-60": "UTC-6", "-50": "UTC-5", "-40": "UTC-4", "-35": "UTC-3:30", "-30": "UTC-3", "-20": "UTC-2", "-10": "UTC-1", 0: "UTC", 10: "UTC+1", 20: "UTC+2", 30: "UTC+3", 35: "UTC+3:30", 40: "UTC+4", 45: "UTC+4:30", 50: "UTC+5", 55: "UTC+5:30", 57: "UTC+5:45", 60: "UTC+6", 65: "UTC+6:30", 70: "UTC+7", 80: "UTC+8", 90: "UTC+9", 95: "UTC+9:30", 100: "UTC+10", 105: "UTC+10:30", 110: "UTC+11", 120: "UTC+12", 127: "UTC+12:45", 130: "UTC+13", 140: "UTC+14" };
+    return getValue(timezone_map, time_zone);
 }
 
 function readAlarm(type) {
@@ -498,4 +514,3 @@ if (!Object.assign) {
         },
     });
 }
-

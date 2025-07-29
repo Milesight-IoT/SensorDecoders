@@ -44,8 +44,8 @@ function milesightDeviceEncode(payload) {
     if ("confirm_mode_enable" in payload) {
         encoded = encoded.concat(setConfirmModeEnable(payload.confirm_mode_enable));
     }
-    if ("timezone" in payload) {
-        encoded = encoded.concat(setTimezone(payload.timezone));
+    if ("time_zone" in payload) {
+        encoded = encoded.concat(setTimeZone(payload.time_zone));
     }
     if ("dst_config" in payload) {
         encoded = encoded.concat(setDaylightSavingTime(payload.dst_config));
@@ -212,22 +212,22 @@ function setConfirmModeEnable(confirm_mode_enable) {
 }
 
 /**
- * set timezone
- * @param {number} timezone unit: minute, convert: "hh:mm" -> "hh * 60 + mm", values: ( -720: UTC-12, -660: UTC-11, -600: UTC-10, -570: UTC-9:30, -540: UTC-9, -480: UTC-8, -420: UTC-7, -360: UTC-6, -300: UTC-5, -240: UTC-4, -210: UTC-3:30, -180: UTC-3, -120: UTC-2, -60: UTC-1, 0: UTC, 60: UTC+1, 120: UTC+2, 180: UTC+3, 240: UTC+4, 300: UTC+5, 360: UTC+6, 420: UTC+7, 480: UTC+8, 540: UTC+9, 570: UTC+9:30, 600: UTC+10, 660: UTC+11, 720: UTC+12, 750: UTC+12:45, 780: UTC+13, 840: UTC+14 )
- * @example { "timezone": 8 }
- * @example { "timezone": -4 }
+ * set time zone
+ * @param {number} time_zone unit: minute, convert: "hh:mm" -> "hh * 60 + mm", values: ( -720: UTC-12, -660: UTC-11, -600: UTC-10, -570: UTC-9:30, -540: UTC-9, -480: UTC-8, -420: UTC-7, -360: UTC-6, -300: UTC-5, -240: UTC-4, -210: UTC-3:30, -180: UTC-3, -120: UTC-2, -60: UTC-1, 0: UTC, 60: UTC+1, 120: UTC+2, 180: UTC+3, 240: UTC+4, 300: UTC+5, 360: UTC+6, 420: UTC+7, 480: UTC+8, 540: UTC+9, 570: UTC+9:30, 600: UTC+10, 660: UTC+11, 720: UTC+12, 765: UTC+12:45, 780: UTC+13, 840: UTC+14 )
+ * @example { "time_zone": 480 }
+ * @example { "time_zone": -240 }
  */
-function setTimezone(timezone) {
-    var timezone_map = { "-720": "UTC-12", "-660": "UTC-11", "-600": "UTC-10", "-570": "UTC-9:30", "-540": "UTC-9", "-480": "UTC-8", "-420": "UTC-7", "-360": "UTC-6", "-300": "UTC-5", "-240": "UTC-4", "-210": "UTC-3:30", "-180": "UTC-3", "-120": "UTC-2", "-60": "UTC-1", 0: "UTC", 60: "UTC+1", 120: "UTC+2", 180: "UTC+3", 210: "UTC+3:30", 240: "UTC+4", 270: "UTC+4:30", 300: "UTC+5", 330: "UTC+5:30", 345: "UTC+5:45", 360: "UTC+6", 390: "UTC+6:30", 420: "UTC+7", 480: "UTC+8", 540: "UTC+9", 570: "UTC+9:30", 600: "UTC+10", 630: "UTC+10:30", 660: "UTC+11", 720: "UTC+12", 750: "UTC+12:45", 780: "UTC+13", 840: "UTC+14" };
+function setTimeZone(time_zone) {
+    var timezone_map = { "-720": "UTC-12", "-660": "UTC-11", "-600": "UTC-10", "-570": "UTC-9:30", "-540": "UTC-9", "-480": "UTC-8", "-420": "UTC-7", "-360": "UTC-6", "-300": "UTC-5", "-240": "UTC-4", "-210": "UTC-3:30", "-180": "UTC-3", "-120": "UTC-2", "-60": "UTC-1", 0: "UTC", 60: "UTC+1", 120: "UTC+2", 180: "UTC+3", 210: "UTC+3:30", 240: "UTC+4", 270: "UTC+4:30", 300: "UTC+5", 330: "UTC+5:30", 345: "UTC+5:45", 360: "UTC+6", 390: "UTC+6:30", 420: "UTC+7", 480: "UTC+8", 540: "UTC+9", 570: "UTC+9:30", 600: "UTC+10", 630: "UTC+10:30", 660: "UTC+11", 720: "UTC+12", 765: "UTC+12:45", 780: "UTC+13", 840: "UTC+14" };
     var timezone_values = getValues(timezone_map);
-    if (timezone_values.indexOf(timezone) === -1) {
-        throw new Error("timezone must be one of " + timezone_values.join(", "));
+    if (timezone_values.indexOf(time_zone) === -1) {
+        throw new Error("time_zone must be one of " + timezone_values.join(", "));
     }
 
     var buffer = new Buffer(4);
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0xbd);
-    buffer.writeInt16LE(getValue(timezone_map, timezone));
+    buffer.writeInt16LE(getValue(timezone_map, time_zone));
     return buffer.toBytes();
 }
 
@@ -1041,8 +1041,8 @@ function writeModbusValueCondition(modbus_value_condition) {
     var channel_id = modbus_value_condition.channel_id;
     var condition = modbus_value_condition.condition;
     var holding_mode = modbus_value_condition.holding_mode;
-    var min_threshold = modbus_value_condition.min_threshold || 0;
-    var max_threshold = modbus_value_condition.max_threshold || 0;
+    var threshold_min = modbus_value_condition.threshold_min || 0;
+    var threshold_max = modbus_value_condition.threshold_max || 0;
     var mutation = modbus_value_condition.mutation || 0;
     var mutation_duration = modbus_value_condition.mutation_duration || 0;
     var continue_time = modbus_value_condition.continue_time || 0;
@@ -1100,14 +1100,13 @@ function writeModbusValueCondition(modbus_value_condition) {
     var value_2 = 0x00;
     // condition(below, between)
     if (condition_value === 2 || condition_value === 4) {
-        value_1 = min_threshold;
+        value_1 = threshold_min;
     } else if (condition_value === 3 || condition_value === 4) {
-        value_2 = max_threshold;
+        value_2 = threshold_max;
     } else if (condition_value === 6 || condition_value === 7) {
         value_1 = mutation_duration;
         value_2 = mutation;
     }
-
 
     var buffer = new Buffer(18);
     buffer.writeUInt8(channel_id);
@@ -1229,18 +1228,18 @@ function writeAction(action) {
     switch (action_type_value) {
         case 0x00:
             break;
-        case 0x01:  // MESSAGE ACTION
+        case 0x01: // MESSAGE ACTION
             params_data = writeMessageAction(action.message_action);
             break;
-        case 0x02:  // D2D ACTION
+        case 0x02: // D2D ACTION
             params_data = writeD2DAction(action.d2d_action);
             break;
-        case 0x03:  // MODBUS CMD ACTION
+        case 0x03: // MODBUS CMD ACTION
             params_data = writeModbusAction(action.modbus_cmd_action);
             break;
-        case 0x04:  // REPORT STATUS ACTION
+        case 0x04: // REPORT STATUS ACTION
             break;
-        case 0x05:  // REPORT ALARM ACTION
+        case 0x05: // REPORT ALARM ACTION
             params_data = writeReportAlarmAction(action.report_alarm_action);
             break;
         case 0x06: // REBOOT ACTION
@@ -1354,9 +1353,9 @@ function writeReportAlarmAction(report_alarm_action) {
 
     // validate values
     var enable_map = { 0: "disable", 1: "enable" };
-    var release_enable_values = getValues(enable_map);
-    if (release_enable_values.indexOf(release_enable) === -1) {
-        throw new Error("rule_config._item.action.report_alarm_action.release_enable must be one of " + release_enable_values.join(", "));
+    var enable_values = getValues(enable_map);
+    if (enable_values.indexOf(release_enable) === -1) {
+        throw new Error("rule_config._item.action.report_alarm_action.release_enable must be one of " + enable_values.join(", "));
     }
 
     // encode
@@ -1423,7 +1422,7 @@ Buffer.prototype.writeFloatLE = function (value) {
         this._write(0x7f800000, 4, true);
     } else {
         var exponent = Math.floor(Math.log(absValue) / Math.LN2);
-        var mantissa = (absValue / Math.pow(2, exponent)) - 1;
+        var mantissa = absValue / Math.pow(2, exponent) - 1;
 
         var biasedExponent = exponent + 127; // Bias
 

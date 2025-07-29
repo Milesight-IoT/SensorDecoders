@@ -29,7 +29,7 @@ function Decoder(bytes, port) {
 function milesightDeviceDecode(bytes) {
     var decoded = {};
 
-    for (var i = 0; i < bytes.length;) {
+    for (var i = 0; i < bytes.length; ) {
         var channel_id = bytes[i++];
         var channel_type = bytes[i++];
 
@@ -154,7 +154,6 @@ function milesightDeviceDecode(bytes) {
     return decoded;
 }
 
-
 function handle_downlink_response(channel_type, bytes, offset) {
     var decoded = {};
 
@@ -162,6 +161,10 @@ function handle_downlink_response(channel_type, bytes, offset) {
         case 0x10:
             decoded.reboot = readYesNoStatus(1);
             offset += 1;
+            break;
+        case 0x17:
+            decoded.time_zone = readTimeZoneV1(readInt16LE(bytes.slice(offset, offset + 2)));
+            offset += 2;
             break;
         case 0x25:
             decoded.child_lock_config = decoded.child_lock_config || {};
@@ -195,9 +198,9 @@ function handle_downlink_response(channel_type, bytes, offset) {
             offset += 1;
             break;
         case 0xab:
-            decoded.temperature_calibration = {};
-            decoded.temperature_calibration.enable = readEnableStatus(bytes[offset]);
-            decoded.temperature_calibration.temperature = readInt16LE(bytes.slice(offset + 1, offset + 3)) / 10;
+            decoded.temperature_calibration_settings = {};
+            decoded.temperature_calibration_settings.enable = readEnableStatus(bytes[offset]);
+            decoded.temperature_calibration_settings.calibration_value = readInt16LE(bytes.slice(offset + 1, offset + 3)) / 10;
             offset += 3;
             break;
         case 0xac:
@@ -241,16 +244,16 @@ function handle_downlink_response(channel_type, bytes, offset) {
             decoded.dst_config.offset = readInt8(bytes[offset + 1]);
             decoded.dst_config.start_month = bytes[offset + 2];
             decoded.dst_config.start_week_num = readUInt8(bytes[offset + 3]) >> 4;
-            decoded.dst_config.start_week_day = (bytes[offset + 3] & 0x0f);
+            decoded.dst_config.start_week_day = bytes[offset + 3] & 0x0f;
             decoded.dst_config.start_time = readUInt16LE(bytes.slice(offset + 4, offset + 6));
             decoded.dst_config.end_month = bytes[offset + 6];
             decoded.dst_config.end_week_num = readUInt8(bytes[offset + 7]) >> 4;
-            decoded.dst_config.end_week_day = (bytes[offset + 7] & 0x0f);
+            decoded.dst_config.end_week_day = bytes[offset + 7] & 0x0f;
             decoded.dst_config.end_time = readUInt16LE(bytes.slice(offset + 8, offset + 10));
             offset += 10;
             break;
         case 0xbd:
-            decoded.timezone = readTimeZone(readInt16LE(bytes.slice(offset, offset + 2)));
+            decoded.time_zone = readTimeZone(readInt16LE(bytes.slice(offset, offset + 2)));
             offset += 2;
             break;
         case 0xc4:
@@ -424,9 +427,9 @@ function readHeatingDate(bytes) {
     var offset = 0;
     heating_date.enable = readEnableStatus(bytes[offset]);
     heating_date.report_interval = readUInt16LE(bytes.slice(offset + 1, offset + 3));
-    heating_date.start_month = (bytes[offset + 3]);
+    heating_date.start_month = bytes[offset + 3];
     heating_date.start_day = readUInt8(bytes[offset + 4]);
-    heating_date.end_month = (bytes[offset + 5]);
+    heating_date.end_month = bytes[offset + 5];
     heating_date.end_day = readUInt8(bytes[offset + 6]);
     return heating_date;
 }
@@ -456,8 +459,8 @@ function readYesNoStatus(type) {
 }
 
 function readEnableStatus(type) {
-    var enable_status_map = { 0: "disable", 1: "enable" };
-    return getValue(enable_status_map, type);
+    var status_map = { 0: "disable", 1: "enable" };
+    return getValue(status_map, type);
 }
 
 function readTemperatureControlMode(type) {
@@ -465,9 +468,14 @@ function readTemperatureControlMode(type) {
     return getValue(temperature_control_mode_map, type);
 }
 
-function readTimeZone(type) {
+function readTimeZoneV1(time_zone) {
+    var timezone_map = { "-120": "UTC-12", "-110": "UTC-11", "-100": "UTC-10", "-95": "UTC-9:30", "-90": "UTC-9", "-80": "UTC-8", "-70": "UTC-7", "-60": "UTC-6", "-50": "UTC-5", "-40": "UTC-4", "-35": "UTC-3:30", "-30": "UTC-3", "-20": "UTC-2", "-10": "UTC-1", 0: "UTC", 10: "UTC+1", 20: "UTC+2", 30: "UTC+3", 35: "UTC+3:30", 40: "UTC+4", 45: "UTC+4:30", 50: "UTC+5", 55: "UTC+5:30", 57: "UTC+5:45", 60: "UTC+6", 65: "UTC+6:30", 70: "UTC+7", 80: "UTC+8", 90: "UTC+9", 95: "UTC+9:30", 100: "UTC+10", 105: "UTC+10:30", 110: "UTC+11", 120: "UTC+12", 127: "UTC+12:45", 130: "UTC+13", 140: "UTC+14" };
+    return getValue(timezone_map, time_zone);
+}
+
+function readTimeZone(time_zone) {
     var timezone_map = { "-720": "UTC-12", "-660": "UTC-11", "-600": "UTC-10", "-570": "UTC-9:30", "-540": "UTC-9", "-480": "UTC-8", "-420": "UTC-7", "-360": "UTC-6", "-300": "UTC-5", "-240": "UTC-4", "-210": "UTC-3:30", "-180": "UTC-3", "-120": "UTC-2", "-60": "UTC-1", 0: "UTC", 60: "UTC+1", 120: "UTC+2", 180: "UTC+3", 210: "UTC+3:30", 240: "UTC+4", 270: "UTC+4:30", 300: "UTC+5", 330: "UTC+5:30", 345: "UTC+5:45", 360: "UTC+6", 390: "UTC+6:30", 420: "UTC+7", 480: "UTC+8", 540: "UTC+9", 570: "UTC+9:30", 600: "UTC+10", 630: "UTC+10:30", 660: "UTC+11", 720: "UTC+12", 765: "UTC+12:45", 780: "UTC+13", 840: "UTC+14" };
-    return getValue(timezone_map, type);
+    return getValue(timezone_map, time_zone);
 }
 
 function readTimeSyncEnable(type) {

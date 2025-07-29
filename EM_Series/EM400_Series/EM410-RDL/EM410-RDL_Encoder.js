@@ -44,8 +44,8 @@ function milesightDeviceEncode(payload) {
     if ("sync_time" in payload) {
         encoded = encoded.concat(syncTime(payload.sync_time));
     }
-    if ("timezone" in payload) {
-        encoded = encoded.concat(setTimezone(payload.timezone));
+    if ("time_zone" in payload) {
+        encoded = encoded.concat(setTimeZone(payload.time_zone));
     }
     if ("distance_range" in payload) {
         encoded = encoded.concat(setDistanceRange(payload.distance_range));
@@ -71,8 +71,8 @@ function milesightDeviceEncode(payload) {
     if ("radar_blind_calibration" in payload) {
         encoded = encoded.concat(setRadarBlindCalibration(payload.radar_blind_calibration));
     }
-    if ("distance_calibration" in payload) {
-        encoded = encoded.concat(setDistanceCalibration(payload.distance_calibration));
+    if ("distance_calibration_settings" in payload) {
+        encoded = encoded.concat(setDistanceCalibration(payload.distance_calibration_settings));
     }
     if ("distance_mode" in payload) {
         encoded = encoded.concat(setDistanceMode(payload.distance_mode));
@@ -204,9 +204,9 @@ function setCollectionInterval(collection_interval) {
  */
 function syncTime(sync_time) {
     var yes_no_map = { 0: "no", 1: "yes" };
-    var sync_time_values = getValues(yes_no_map);
-    if (sync_time_values.indexOf(sync_time) === -1) {
-        throw new Error("sync_time must be one of " + sync_time_values.join(", "));
+    var yes_no_values = getValues(yes_no_map);
+    if (yes_no_values.indexOf(sync_time) === -1) {
+        throw new Error("sync_time must be one of " + yes_no_values.join(", "));
     }
 
     if (getValue(yes_no_map, sync_time) === 0) {
@@ -216,22 +216,22 @@ function syncTime(sync_time) {
 }
 
 /**
- * set timezone
- * @param {number} timezone unit: minute, convert: "hh:mm" -> "hh * 60 + mm", values: ( -720: UTC-12, -660: UTC-11, -600: UTC-10, -570: UTC-9:30, -540: UTC-9, -480: UTC-8, -420: UTC-7, -360: UTC-6, -300: UTC-5, -240: UTC-4, -210: UTC-3:30, -180: UTC-3, -120: UTC-2, -60: UTC-1, 0: UTC, 60: UTC+1, 120: UTC+2, 180: UTC+3, 240: UTC+4, 300: UTC+5, 360: UTC+6, 420: UTC+7, 480: UTC+8, 540: UTC+9, 570: UTC+9:30, 600: UTC+10, 660: UTC+11, 720: UTC+12, 765: UTC+12:45, 780: UTC+13, 840: UTC+14 )
- * @example { "timezone": 8 }
- * @example { "timezone": -4 }
+ * set time zone
+ * @param {number} time_zone unit: minute, convert: "hh:mm" -> "hh * 60 + mm", values: ( -720: UTC-12, -660: UTC-11, -600: UTC-10, -570: UTC-9:30, -540: UTC-9, -480: UTC-8, -420: UTC-7, -360: UTC-6, -300: UTC-5, -240: UTC-4, -210: UTC-3:30, -180: UTC-3, -120: UTC-2, -60: UTC-1, 0: UTC, 60: UTC+1, 120: UTC+2, 180: UTC+3, 240: UTC+4, 300: UTC+5, 360: UTC+6, 420: UTC+7, 480: UTC+8, 540: UTC+9, 570: UTC+9:30, 600: UTC+10, 660: UTC+11, 720: UTC+12, 765: UTC+12:45, 780: UTC+13, 840: UTC+14 )
+ * @example { "time_zone": 480 }
+ * @example { "time_zone": -240 }
  */
-function setTimezone(timezone) {
+function setTimeZone(time_zone) {
     var timezone_map = { "-720": "UTC-12", "-660": "UTC-11", "-600": "UTC-10", "-570": "UTC-9:30", "-540": "UTC-9", "-480": "UTC-8", "-420": "UTC-7", "-360": "UTC-6", "-300": "UTC-5", "-240": "UTC-4", "-210": "UTC-3:30", "-180": "UTC-3", "-120": "UTC-2", "-60": "UTC-1", 0: "UTC", 60: "UTC+1", 120: "UTC+2", 180: "UTC+3", 210: "UTC+3:30", 240: "UTC+4", 270: "UTC+4:30", 300: "UTC+5", 330: "UTC+5:30", 345: "UTC+5:45", 360: "UTC+6", 390: "UTC+6:30", 420: "UTC+7", 480: "UTC+8", 540: "UTC+9", 570: "UTC+9:30", 600: "UTC+10", 630: "UTC+10:30", 660: "UTC+11", 720: "UTC+12", 765: "UTC+12:45", 780: "UTC+13", 840: "UTC+14" };
     var timezone_values = getValues(timezone_map);
-    if (timezone_values.indexOf(timezone) === -1) {
-        throw new Error("timezone must be one of " + timezone_values.join(", "));
+    if (timezone_values.indexOf(time_zone) === -1) {
+        throw new Error("time_zone must be one of " + timezone_values.join(", "));
     }
 
     var buffer = new Buffer(4);
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0xbd);
-    buffer.writeInt16LE(getValue(timezone_map, timezone));
+    buffer.writeInt16LE(getValue(timezone_map, time_zone));
     return buffer.toBytes();
 }
 
@@ -270,16 +270,16 @@ function setDistanceRange(distance_range) {
  * @param {number} distance_alarm_config.enable values: (0: disable, 1: enable)
  * @param {number} distance_alarm_config.condition values: (0: disable, 1: below, 2: above, 3: between, 4: outside, 5: mutation)
  * @param {number} distance_alarm_config.alarm_release_enable values: (0: disable, 1: enable)
- * @param {number} distance_alarm_config.min_threshold
- * @param {number} distance_alarm_config.max_threshold
- * @example { "distance_alarm_config": { "condition": 1, "alarm_release_enable": 1, "min_threshold": 100, "max_threshold": 1000 } }
+ * @param {number} distance_alarm_config.threshold_min
+ * @param {number} distance_alarm_config.threshold_max
+ * @example { "distance_alarm_config": { "condition": 1, "alarm_release_enable": 1, "threshold": 100, "threshold": 1000 } }_min_max
  */
 function setDistanceAlarm(distance_alarm_config) {
     var enable = distance_alarm_config.enable;
     var condition = distance_alarm_config.condition;
     var alarm_release_enable = distance_alarm_config.alarm_release_enable;
-    var min_threshold = distance_alarm_config.min_threshold;
-    var max_threshold = distance_alarm_config.max_threshold;
+    var threshold_min = distance_alarm_config.threshold_min;
+    var threshold_max = distance_alarm_config.threshold_max;
 
     var condition_map = { 0: "disable", 1: "below", 2: "above", 3: "between", 4: "outside", 5: "mutation" };
     var condition_values = getValues(condition_map);
@@ -294,11 +294,11 @@ function setDistanceAlarm(distance_alarm_config) {
     if (enable_values.indexOf(alarm_release_enable) === -1) {
         throw new Error("distance_alarm_config.alarm_release_enable must be one of " + enable_values.join(", "));
     }
-    if (typeof min_threshold !== "number") {
-        throw new Error("distance_alarm_config.min_threshold must be a number");
+    if (typeof threshold_min !== "number") {
+        throw new Error("distance_alarm_config.threshold_min must be a number");
     }
-    if (typeof max_threshold !== "number") {
-        throw new Error("distance_alarm_config.max_threshold must be a number");
+    if (typeof threshold_max !== "number") {
+        throw new Error("distance_alarm_config.threshold_max must be a number");
     }
 
     var data = 0x00;
@@ -310,8 +310,8 @@ function setDistanceAlarm(distance_alarm_config) {
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0x06);
     buffer.writeUInt8(data);
-    buffer.writeInt16LE(min_threshold);
-    buffer.writeInt16LE(max_threshold);
+    buffer.writeInt16LE(threshold_min);
+    buffer.writeInt16LE(threshold_max);
     buffer.writeUInt16LE(0);
     buffer.writeUInt16LE(0);
     return buffer.toBytes();
@@ -323,16 +323,16 @@ function setDistanceAlarm(distance_alarm_config) {
  * @param {number} tank_mode_distance_alarm_config.enable values: (0: disable, 1: enable)
  * @param {number} tank_mode_distance_alarm_config.condition values: (0: disable, 1: below, 2: above, 3: between, 4: outside, 5: mutation)
  * @param {number} tank_mode_distance_alarm_config.alarm_release_enable values: (0: disable, 1: enable)
- * @param {number} tank_mode_distance_alarm_config.min_threshold
- * @param {number} tank_mode_distance_alarm_config.max_threshold
- * @example { "tank_mode_distance_alarm_config": { "enable": 1, "condition": 1, "alarm_release_enable": 1, "min_threshold": 100, "max_threshold": 1000 } }
+ * @param {number} tank_mode_distance_alarm_config.threshold_min
+ * @param {number} tank_mode_distance_alarm_config.threshold_max
+ * @example { "tank_mode_distance_alarm_config": { "enable": 1, "condition": 1, "alarm_release_enable": 1, "threshold": 100, "threshold": 1000 } }_min_max
  */
 function setTankModeDistanceAlarmConfig(tank_mode_distance_alarm_config) {
     var enable = tank_mode_distance_alarm_config.enable;
     var condition = tank_mode_distance_alarm_config.condition;
     var alarm_release_enable = tank_mode_distance_alarm_config.alarm_release_enable;
-    var min_threshold = tank_mode_distance_alarm_config.min_threshold;
-    var max_threshold = tank_mode_distance_alarm_config.max_threshold;
+    var threshold_min = tank_mode_distance_alarm_config.threshold_min;
+    var threshold_max = tank_mode_distance_alarm_config.threshold_max;
 
     var condition_map = { 0: "disable", 1: "below", 2: "above", 3: "between", 4: "outside", 5: "mutation" };
     var condition_values = getValues(condition_map);
@@ -347,11 +347,11 @@ function setTankModeDistanceAlarmConfig(tank_mode_distance_alarm_config) {
     if (enable_values.indexOf(alarm_release_enable) === -1) {
         throw new Error("tank_mode_distance_alarm_config.alarm_release_enable must be one of " + enable_values.join(", "));
     }
-    if (typeof min_threshold !== "number") {
-        throw new Error("tank_mode_distance_alarm_config.min_threshold must be a number");
+    if (typeof threshold_min !== "number") {
+        throw new Error("tank_mode_distance_alarm_config.threshold_min must be a number");
     }
-    if (typeof max_threshold !== "number") {
-        throw new Error("tank_mode_distance_alarm_config.max_threshold must be a number");
+    if (typeof threshold_max !== "number") {
+        throw new Error("tank_mode_distance_alarm_config.threshold_max must be a number");
     }
 
     var data = 0x00;
@@ -363,8 +363,8 @@ function setTankModeDistanceAlarmConfig(tank_mode_distance_alarm_config) {
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0x06);
     buffer.writeUInt8(data);
-    buffer.writeInt16LE(min_threshold);
-    buffer.writeInt16LE(max_threshold);
+    buffer.writeInt16LE(threshold_min);
+    buffer.writeInt16LE(threshold_max);
     buffer.writeUInt16LE(0);
     buffer.writeUInt16LE(0);
     return buffer.toBytes();
@@ -376,7 +376,7 @@ function setTankModeDistanceAlarmConfig(tank_mode_distance_alarm_config) {
  * @param {number} distance_mutation_alarm_config.enable values: (0: disable, 1: enable)
  * @param {number} distance_mutation_alarm_config.alarm_release_enable values: (0: disable, 1: enable)
  * @param {number} distance_mutation_alarm_config.mutation
- * @example { "distance_mutation_alarm_config": { "enable": 1, "condition": 5, "alarm_release_enable": 1, "mutation": 100 } }
+ * @example { "distance_mutation_alarm_config": { "enable": 1, "alarm_release_enable": 1, "mutation": 100 } }
  */
 function setDistanceMutationAlarm(distance_mutation_alarm_config) {
     var enable = distance_mutation_alarm_config.enable;
@@ -414,7 +414,7 @@ function setDistanceMutationAlarm(distance_mutation_alarm_config) {
  * @param {number} tank_mode_distance_mutation_alarm_config.enable values: (0: disable, 1: enable)
  * @param {number} tank_mode_distance_mutation_alarm_config.alarm_release_enable values: (0: disable, 1: enable)
  * @param {number} tank_mode_distance_mutation_alarm_config.mutation
- * @example { "tank_mode_distance_mutation_alarm_config": { "enable": 1, "condition": 5, "alarm_release_enable": 1, "mutation": 100 } }
+ * @example { "tank_mode_distance_mutation_alarm_config": { "enable": 1, "alarm_release_enable": 1, "mutation": 100 } }
  */
 function setTankModeDistanceMutationAlarm(tank_mode_distance_mutation_alarm_config) {
     var enable = tank_mode_distance_mutation_alarm_config.enable;
@@ -502,30 +502,30 @@ function setRadarBlindCalibration(radar_blind_calibration) {
 
 /**
  * calibrate radar distance
- * @param {object} distance_calibration
- * @param {number} distance_calibration.enable values: (0: disable, 1: enable)
- * @param {number} distance_calibration.distance unit: mm
- * @example { "distance_calibration": { "enable": 1, "distance": 100 } }
+ * @param {object} distance_calibration_settings
+ * @param {number} distance_calibration_settings.enable values: (0: disable, 1: enable)
+ * @param {number} distance_calibration_settings.calibration_value unit: mm
+ * @example { "distance_calibration_settings": { "enable": 1, "calibration_value": 100 } }
  */
-function setDistanceCalibration(distance_calibration) {
-    var enable = distance_calibration.enable;
-    var distance = distance_calibration.distance;
+function setDistanceCalibration(distance_calibration_settings) {
+    var enable = distance_calibration_settings.enable;
+    var calibration_value = distance_calibration_settings.calibration_value;
 
     var enable_map = { 0: "disable", 1: "enable" };
     var enable_values = getValues(enable_map);
     if (enable_values.indexOf(enable) === -1) {
-        throw new Error("distance_calibration.enable must be one of " + enable_values.join(", "));
+        throw new Error("distance_calibration_settings.enable must be one of " + enable_values.join(", "));
     }
 
-    if (typeof distance !== "number") {
-        throw new Error("distance_calibration.distance must be a number");
+    if (typeof calibration_value !== "number") {
+        throw new Error("distance_calibration_settings.calibration_value must be a number");
     }
 
     var buffer = new Buffer(5);
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0xab);
     buffer.writeUInt8(getValue(enable_map, enable));
-    buffer.writeInt16LE(distance);
+    buffer.writeInt16LE(calibration_value);
     return buffer.toBytes();
 }
 

@@ -80,20 +80,20 @@ function milesightDeviceEncode(payload) {
     if ("moisture_alarm_config" in payload) {
         encoded = encoded.concat(setMoistureAlarmConfig(payload.moisture_alarm_config));
     }
-    if ("threshold_alarm_release_enable" in payload) {
-        encoded = encoded.concat(setThresholdAlarmReleaseEnable(payload.threshold_alarm_release_enable));
+    if ("alarm_release_enable" in payload) {
+        encoded = encoded.concat(setThresholdAlarmReleaseEnable(payload.alarm_release_enable));
     }
     if ("alarm_report_counts" in payload) {
         encoded = encoded.concat(alarmReportCounts(payload.alarm_report_counts));
     }
-    if ("temperature_calibration_config" in payload) {
-        encoded = encoded.concat(setTemperatureCalibrationConfig(payload.temperature_calibration_config));
+    if ("temperature_calibration_settings" in payload) {
+        encoded = encoded.concat(setTemperatureCalibrationConfig(payload.temperature_calibration_settings));
     }
-    if ("moisture_calibration_config" in payload) {
-        encoded = encoded.concat(setMoistureCalibrationConfig(payload.moisture_calibration_config));
+    if ("moisture_calibration_settings" in payload) {
+        encoded = encoded.concat(setMoistureCalibrationConfig(payload.moisture_calibration_settings));
     }
-    if ("electricity_calibration_config" in payload) {
-        encoded = encoded.concat(setElectricityCalibrationConfig(payload.electricity_calibration_config));
+    if ("electricity_calibration_settings" in payload) {
+        encoded = encoded.concat(setElectricityCalibrationConfig(payload.electricity_calibration_settings));
     }
     if ("d2d_master_config" in payload) {
         for (var i = 0; i < payload.d2d_master_config.length; i++) {
@@ -137,13 +137,13 @@ function milesightDeviceEncode(payload) {
  * @example { "reboot": 1 }
  */
 function reboot(reboot) {
-    var reboot_map = { 0: "no", 1: "yes" };
-    var reboot_values = getValues(reboot_map);
+    var yes_no_map = { 0: "no", 1: "yes" };
+    var reboot_values = getValues(yes_no_map);
     if (reboot_values.indexOf(reboot) === -1) {
         throw new Error("reboot must be one of " + reboot_values.join(", "));
     }
 
-    if (getValue(reboot_map, reboot) === 0) {
+    if (getValue(yes_no_map, reboot) === 0) {
         return [];
     }
     return [0xff, 0x10, 0xff];
@@ -174,9 +174,9 @@ function reportStatus(report_status) {
  */
 function syncTime(sync_time) {
     var yes_no_map = { 0: "no", 1: "yes" };
-    var sync_time_values = getValues(yes_no_map);
-    if (sync_time_values.indexOf(sync_time) === -1) {
-        throw new Error("sync_time must be one of " + sync_time_values.join(", "));
+    var yes_no_values = getValues(yes_no_map);
+    if (yes_no_values.indexOf(sync_time) === -1) {
+        throw new Error("sync_time must be one of " + yes_no_values.join(", "));
     }
 
     if (getValue(yes_no_map, sync_time) === 0) {
@@ -278,19 +278,21 @@ function setTimestamp(timestamp) {
 }
 
 /**
- * time zone
+ * set time zone
  * @param {number} time_zone unit: minute, UTC+8 -> 8 * 10 = 80
  * @example { "time_zone": 80 }
  */
 function setTimeZone(time_zone) {
-    if (typeof time_zone !== "number") {
-        throw new Error("time_zone must be a number");
+    var timezone_map = { "-120": "UTC-12", "-110": "UTC-11", "-100": "UTC-10", "-95": "UTC-9:30", "-90": "UTC-9", "-80": "UTC-8", "-70": "UTC-7", "-60": "UTC-6", "-50": "UTC-5", "-40": "UTC-4", "-35": "UTC-3:30", "-30": "UTC-3", "-20": "UTC-2", "-10": "UTC-1", 0: "UTC", 10: "UTC+1", 20: "UTC+2", 30: "UTC+3", 35: "UTC+3:30", 40: "UTC+4", 45: "UTC+4:30", 50: "UTC+5", 55: "UTC+5:30", 57: "UTC+5:45", 60: "UTC+6", 65: "UTC+6:30", 70: "UTC+7", 80: "UTC+8", 90: "UTC+9", 95: "UTC+9:30", 100: "UTC+10", 105: "UTC+10:30", 110: "UTC+11", 120: "UTC+12", 127: "UTC+12:45", 130: "UTC+13", 140: "UTC+14" };
+    var timezone_values = getValues(timezone_map);
+    if (timezone_values.indexOf(time_zone) === -1) {
+        throw new Error("time_zone must be one of " + timezone_values.join(", "));
     }
 
     var buffer = new Buffer(4);
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0x17);
-    buffer.writeInt16LE(time_zone);
+    buffer.writeInt16LE(getValue(timezone_map, time_zone));
     return buffer.toBytes();
 }
 
@@ -477,7 +479,7 @@ function setTemperatureAlarmConfig(temperature_alarm_config) {
 
 /**
  * set temperature mutation alarm config
- * @param {object} temperature_mutation_alarm_config 
+ * @param {object} temperature_mutation_alarm_config
  * @param {number} temperature_mutation_alarm_config.enable values: (0: disable, 1: enable)
  * @param {number} temperature_mutation_alarm_config.mutation unit: ℃, condition=(5: mutation)
  * @example { "temperature_mutation_alarm_config": { "enable": 1, "mutation": 100 } }
@@ -551,20 +553,20 @@ function setMoistureAlarmConfig(moisture_alarm_config) {
 
 /**
  * all rule engine threshold alarm release enable
- * @param {number} threshold_alarm_release_enable values: (0: disable, 1: enable)
- * @example { "threshold_alarm_release_enable": 1 }
+ * @param {number} alarm_release_enable values: (0: disable, 1: enable)
+ * @example { "alarm_release_enable": 1 }
  */
-function setThresholdAlarmReleaseEnable(threshold_alarm_release_enable) {
+function setThresholdAlarmReleaseEnable(alarm_release_enable) {
     var enable_map = { 0: "disable", 1: "enable" };
     var enable_values = getValues(enable_map);
-    if (enable_values.indexOf(threshold_alarm_release_enable) === -1) {
-        throw new Error("threshold_alarm_release_enable must be one of " + enable_values.join(", "));
+    if (enable_values.indexOf(alarm_release_enable) === -1) {
+        throw new Error("alarm_release_enable must be one of " + enable_values.join(", "));
     }
 
     var buffer = new Buffer(3);
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0xf5);
-    buffer.writeUInt8(getValue(enable_map, threshold_alarm_release_enable));
+    buffer.writeUInt8(getValue(enable_map, alarm_release_enable));
     return buffer.toBytes();
 }
 
@@ -590,19 +592,19 @@ function alarmReportCounts(alarm_report_counts) {
 
 /**
  * temperature calibration
- * @param {object} temperature_calibration_config
- * @param {number} temperature_calibration_config.enable values: (0: disable, 1: enable)
- * @param {number} temperature_calibration_config.calibration_value
- * @example { "temperature_calibration_config": { "enable": 1, "calibration_value": 23 } }
+ * @param {object} temperature_calibration_settings
+ * @param {number} temperature_calibration_settings.enable values: (0: disable, 1: enable)
+ * @param {number} temperature_calibration_settings.calibration_value
+ * @example { "temperature_calibration_settings": { "enable": 1, "calibration_value": 23 } }
  */
-function setTemperatureCalibrationConfig(temperature_calibration_config) {
-    var enable = temperature_calibration_config.enable;
-    var calibration_value = temperature_calibration_config.calibration_value;
+function setTemperatureCalibrationConfig(temperature_calibration_settings) {
+    var enable = temperature_calibration_settings.enable;
+    var calibration_value = temperature_calibration_settings.calibration_value;
 
     var enable_map = { 0: "disable", 1: "enable" };
     var enable_values = getValues(enable_map);
     if (enable_values.indexOf(enable) === -1) {
-        throw new Error("temperature_calibration_config.enable must be one of " + enable_values.join(", "));
+        throw new Error("temperature_calibration_settings.enable must be one of " + enable_values.join(", "));
     }
 
     var buffer = new Buffer(6);
@@ -616,19 +618,19 @@ function setTemperatureCalibrationConfig(temperature_calibration_config) {
 
 /**
  * moisture calibration
- * @param {object} moisture_calibration_config
- * @param {number} moisture_calibration_config.enable values: (0: disable, 1: enable)
- * @param {number} moisture_calibration_config.calibration_value
- * @example { "moisture_calibration_config": { "enable": 1, "calibration_value": 23 } }
+ * @param {object} moisture_calibration_settings
+ * @param {number} moisture_calibration_settings.enable values: (0: disable, 1: enable)
+ * @param {number} moisture_calibration_settings.calibration_value
+ * @example { "moisture_calibration_settings": { "enable": 1, "calibration_value": 23 } }
  */
-function setMoistureCalibrationConfig(moisture_calibration_config) {
-    var enable = moisture_calibration_config.enable;
-    var calibration_value = moisture_calibration_config.calibration_value;
+function setMoistureCalibrationConfig(moisture_calibration_settings) {
+    var enable = moisture_calibration_settings.enable;
+    var calibration_value = moisture_calibration_settings.calibration_value;
 
     var enable_map = { 0: "disable", 1: "enable" };
     var enable_values = getValues(enable_map);
     if (enable_values.indexOf(enable) === -1) {
-        throw new Error("moisture_calibration_config.enable must be one of " + enable_values.join(", "));
+        throw new Error("moisture_calibration_settings.enable must be one of " + enable_values.join(", "));
     }
 
     var buffer = new Buffer(6);
@@ -642,19 +644,19 @@ function setMoistureCalibrationConfig(moisture_calibration_config) {
 
 /**
  * electricity calibration
- * @param {object} electricity_calibration_config
- * @param {number} electricity_calibration_config.enable values: (0: disable, 1: enable)
- * @param {number} electricity_calibration_config.calibration_value
- * @example { "electricity_calibration_config": { "enable": 1, "calibration_value": 23 } }
+ * @param {object} electricity_calibration_settings
+ * @param {number} electricity_calibration_settings.enable values: (0: disable, 1: enable)
+ * @param {number} electricity_calibration_settings.calibration_value
+ * @example { "electricity_calibration_settings": { "enable": 1, "calibration_value": 23 } }
  */
-function setElectricityCalibrationConfig(electricity_calibration_config) {
-    var enable = electricity_calibration_config.enable;
-    var calibration_value = electricity_calibration_config.calibration_value;
+function setElectricityCalibrationConfig(electricity_calibration_settings) {
+    var enable = electricity_calibration_settings.enable;
+    var calibration_value = electricity_calibration_settings.calibration_value;
 
     var enable_map = { 0: "disable", 1: "enable" };
     var enable_values = getValues(enable_map);
     if (enable_values.indexOf(enable) === -1) {
-        throw new Error("electricity_calibration_config.enable must be one of " + enable_values.join(", "));
+        throw new Error("electricity_calibration_settings.enable must be one of " + enable_values.join(", "));
     }
 
     var buffer = new Buffer(6);
@@ -669,7 +671,7 @@ function setElectricityCalibrationConfig(electricity_calibration_config) {
 /**
  * d2d master configuration
  * @param {object} d2d_master_config
- * @param {number} d2d_master_config.mode values: (1: "threshold_alarm", 2: "threshold_alarm_release", 3: "mutation_alarm", 4: "electricity_alarm", 5: "electricity_alarm_release", 6: "moisture_alarm", 7: "moisture_alarm_release")
+ * @param {number} d2d_master_config.mode values: (1: threshold_alarm, 2: threshold_alarm_release, 3: mutation_alarm, 4: electricity_alarm, 5: electricity_alarm_release, 6: moisture_alarm, 7: moisture_alarm_release)
  * @param {number} d2d_master_config.enable values: (0: disable, 1: enable)
  * @param {string} d2d_master_config.d2d_cmd
  * @param {number} d2d_master_config.lora_uplink_enable values: (0: disable, 1: enable)
@@ -749,7 +751,6 @@ function setD2DKey(d2d_key) {
     buffer.writeBytes(data);
     return buffer.toBytes();
 }
-
 
 /**
  * history enable
@@ -861,7 +862,6 @@ function setRetransmitEnable(retransmit_enable) {
     buffer.writeUInt8(getValue(enable_map, retransmit_enable));
     return buffer.toBytes();
 }
-
 
 /**
  * set retransmit interval

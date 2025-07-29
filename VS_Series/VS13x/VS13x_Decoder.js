@@ -328,8 +328,8 @@ function readAlarmType(type) {
 }
 
 function readEnableStatus(status) {
-    var enable_map = { 0: "disable", 1: "enable" };
-    return getValue(enable_map, status);
+    var status_map = { 0: "disable", 1: "enable" };
+    return getValue(status_map, status);
 }
 
 function readYesNoStatus(status) {

@@ -81,7 +81,7 @@ function milesightDeviceDecode(bytes) {
         }
         // BATTERY
         else if (channel_id === 0x01 && channel_type === 0x75) {
-            decoded.battery = bytes[i];
+            decoded.battery = readUInt8(bytes[i]);
             i += 1;
         }
         // TEMPERATURE
@@ -178,30 +178,32 @@ function handle_downlink_response(channel_type, bytes, offset) {
             offset += 1;
             break;
         case 0x05:
-            decoded.lora_channel_mask_config = {};
-            decoded.lora_channel_mask_config.id = readUInt8(bytes[offset]);
-            decoded.lora_channel_mask_config.mask = readUInt16LE(bytes.slice(offset + 1, offset + 3));
+            var lora_channel_mask_config = {};
+            lora_channel_mask_config.id = readUInt8(bytes[offset]);
+            lora_channel_mask_config.mask = readUInt16LE(bytes.slice(offset + 1, offset + 3));
             offset += 3;
+            decoded.lora_channel_mask_config = decoded.lora_channel_mask_config || [];
+            decoded.lora_channel_mask_config.push(lora_channel_mask_config);
             break;
         case 0x06:
             var value = readUInt8(bytes[offset]);
             var condition = value & 0x07;
             var type = (value >>> 3) & 0x07;
             if (type === 1) {
-                decoded.people_period_alarm_settings = {};
-                decoded.people_period_alarm_settings.threshold_condition = readThresholdCondition(condition);
-                decoded.people_period_alarm_settings.threshold_out = readUInt16LE(bytes.slice(offset + 1, offset + 3));
-                decoded.people_period_alarm_settings.threshold_in = readUInt16LE(bytes.slice(offset + 3, offset + 5));
+                decoded.people_period_alarm_config = {};
+                decoded.people_period_alarm_config.condition = readThresholdCondition(condition);
+                decoded.people_period_alarm_config.threshold_out = readUInt16LE(bytes.slice(offset + 1, offset + 3));
+                decoded.people_period_alarm_config.threshold_in = readUInt16LE(bytes.slice(offset + 3, offset + 5));
             } else if (type === 2) {
-                decoded.people_cumulative_alarm_settings = {};
-                decoded.people_cumulative_alarm_settings.threshold_condition = readThresholdCondition(condition);
-                decoded.people_cumulative_alarm_settings.threshold_out = readUInt16LE(bytes.slice(offset + 1, offset + 3));
-                decoded.people_cumulative_alarm_settings.threshold_in = readUInt16LE(bytes.slice(offset + 3, offset + 5));
+                decoded.people_cumulative_alarm_config = {};
+                decoded.people_cumulative_alarm_config.condition = readThresholdCondition(condition);
+                decoded.people_cumulative_alarm_config.threshold_out = readUInt16LE(bytes.slice(offset + 1, offset + 3));
+                decoded.people_cumulative_alarm_config.threshold_in = readUInt16LE(bytes.slice(offset + 3, offset + 5));
             } else if (type === 3) {
-                decoded.temperature_alarm_settings = {};
-                decoded.temperature_alarm_settings.threshold_condition = readThresholdCondition(condition);
-                decoded.temperature_alarm_settings.threshold_min = readInt16LE(bytes.slice(offset + 1, offset + 3)) / 10;
-                decoded.temperature_alarm_settings.threshold_max = readInt16LE(bytes.slice(offset + 3, offset + 5)) / 10;
+                decoded.temperature_alarm_config = {};
+                decoded.temperature_alarm_config.condition = readThresholdCondition(condition);
+                decoded.temperature_alarm_config.threshold_min = readInt16LE(bytes.slice(offset + 1, offset + 3)) / 10;
+                decoded.temperature_alarm_config.threshold_max = readInt16LE(bytes.slice(offset + 3, offset + 5)) / 10;
             }
             offset += 9;
             break;
@@ -288,7 +290,7 @@ function handle_downlink_response(channel_type, bytes, offset) {
             offset += 1;
             break;
         case 0xa6:
-            decoded.cumulative_reset_enable = readEnableStatus(bytes[offset]);
+            decoded.reset_cumulative_enable = readEnableStatus(bytes[offset]);
             offset += 1;
             break;
         case 0xa8:
@@ -301,11 +303,11 @@ function handle_downlink_response(channel_type, bytes, offset) {
             offset += 1;
             break;
         case 0xa9:
-            decoded.cumulative_report_enable = readEnableStatus(bytes[offset]);
+            decoded.report_cumulative_enable = readEnableStatus(bytes[offset]);
             offset += 1;
             break;
         case 0xaa:
-            decoded.temperature_report_enable = readEnableStatus(bytes[offset]);
+            decoded.report_temperature_enable = readEnableStatus(bytes[offset]);
             offset += 1;
             break;
         case 0xab:
@@ -319,10 +321,10 @@ function handle_downlink_response(channel_type, bytes, offset) {
             offset += 1;
             break;
         case 0xed:
-            decoded.cumulative_reset_schedule_config = {};
-            decoded.cumulative_reset_schedule_config.weekday = readResetCumulativeWeekday(bytes[offset]);
-            decoded.cumulative_reset_schedule_config.hour = readUInt8(bytes[offset + 1]);
-            decoded.cumulative_reset_schedule_config.minute = readUInt8(bytes[offset + 2]);
+            decoded.reset_cumulative_schedule_config = {};
+            decoded.reset_cumulative_schedule_config.weekday = readResetCumulativeWeekday(bytes[offset]);
+            decoded.reset_cumulative_schedule_config.hour = readUInt8(bytes[offset + 1]);
+            decoded.reset_cumulative_schedule_config.minute = readUInt8(bytes[offset + 2]);
             offset += 3;
             break;
         default:
@@ -457,8 +459,8 @@ function readDeviceStatus(status) {
 }
 
 function readEnableStatus(status) {
-    var enable_map = { 0: "disable", 1: "enable" };
-    return getValue(enable_map, status);
+    var status_map = { 0: "disable", 1: "enable" };
+    return getValue(status_map, status);
 }
 
 function readYesNoStatus(status) {

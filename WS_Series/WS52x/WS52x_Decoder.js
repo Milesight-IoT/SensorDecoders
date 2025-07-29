@@ -143,9 +143,9 @@ function handle_downlink_response(channel_type, bytes, offset) {
             offset += 2;
             break;
         case 0x24:
-            decoded.current_threshold_config = {};
-            decoded.current_threshold_config.enable = readEnableStatus(bytes[offset]);
-            decoded.current_threshold_config.threshold = readUInt8(bytes[offset + 1]);
+            decoded.current_alarm_config = {};
+            decoded.current_alarm_config.enable = readEnableStatus(bytes[offset]);
+            decoded.current_alarm_config.threshold = readUInt8(bytes[offset + 1]);
             offset += 2;
             break;
         case 0x25:
@@ -168,7 +168,7 @@ function handle_downlink_response(channel_type, bytes, offset) {
             offset += 1;
             break;
         case 0x2f:
-            decoded.led_enable = readEnableStatus(bytes[offset]);
+            decoded.led_indicator_enable = readEnableStatus(bytes[offset]);
             offset += 1;
             break;
         case 0x30:
@@ -242,8 +242,8 @@ function readSocketStatus(status) {
 }
 
 function readEnableStatus(status) {
-    var enable_map = { 0: "disable", 1: "enable" };
-    return getValue(enable_map, status);
+    var status_map = { 0: "disable", 1: "enable" };
+    return getValue(status_map, status);
 }
 
 function readYesNoStatus(status) {

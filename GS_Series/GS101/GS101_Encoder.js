@@ -81,13 +81,13 @@ function milesightDeviceEncode(payload) {
  * @example { "reboot": 1 }
  */
 function reboot(reboot) {
-    var reboot_map = { 0: "no", 1: "yes" };
-    var reboot_values = getValues(reboot_map);
+    var yes_no_map = { 0: "no", 1: "yes" };
+    var reboot_values = getValues(yes_no_map);
     if (reboot_values.indexOf(reboot) === -1) {
         throw new Error("reboot must be one of " + reboot_values.join(", "));
     }
 
-    if (getValue(reboot_map, reboot) === 0) {
+    if (getValue(yes_no_map, reboot) === 0) {
         return [];
     }
     return [0xff, 0x10, 0xff];
@@ -119,16 +119,16 @@ function setReportInterval(report_interval) {
  * @example { "relay_output_status": 1 }
  */
 function setRelayControl(relay_output_status) {
-    var relay_status_map = { 0: "off", 1: "on" };
-    var relay_status_values = getValues(relay_status_map);
-    if (relay_status_values.indexOf(relay_output_status) === -1) {
-        throw new Error("relay_status must be one of " + relay_status_values.join(", "));
+    var on_off_map = { 0: "off", 1: "on" };
+    var on_off_values = getValues(on_off_map);
+    if (on_off_values.indexOf(relay_output_status) === -1) {
+        throw new Error("relay_status must be one of " + on_off_values.join(", "));
     }
 
     var buffer = new Buffer(4);
     buffer.writeUInt8(0x07);
     buffer.writeUInt8(0x00);
-    buffer.writeUInt8(getValue(relay_status_map, relay_output_status));
+    buffer.writeUInt8(getValue(on_off_map, relay_output_status));
     buffer.writeUInt8(0xff);
     return buffer.toBytes();
 }
@@ -139,16 +139,16 @@ function setRelayControl(relay_output_status) {
  * @example { "valve_status": 1 }
  */
 function setValveControl(valve_status) {
-    var valve_status_map = { 0: "off", 1: "on" };
-    var valve_status_values = getValues(valve_status_map);
-    if (valve_status_values.indexOf(valve_status) === -1) {
-        throw new Error("valve_status must be one of " + valve_status_values.join(", "));
+    var on_off_map = { 0: "off", 1: "on" };
+    var on_off_values = getValues(on_off_map);
+    if (on_off_values.indexOf(valve_status) === -1) {
+        throw new Error("valve_status must be one of " + on_off_values.join(", "));
     }
 
     var buffer = new Buffer(4);
     buffer.writeUInt8(0x06);
     buffer.writeUInt8(0x00);
-    buffer.writeUInt8(getValue(valve_status_map, valve_status));
+    buffer.writeUInt8(getValue(on_off_map, valve_status));
     buffer.writeUInt8(0xff);
     return buffer.toBytes();
 }
@@ -210,15 +210,21 @@ function setTimestamp(timestamp) {
 }
 
 /**
- * Set device time zone
- * @param {number} time_zone
- * @example { "time_zone": -8 }
+ * set time zone
+ * @param {number} time_zone unit: minute, UTC+8 -> 8 * 10 = 80
+ * @example { "time_zone": 80 }
  */
 function setTimeZone(time_zone) {
-    var buffer = new Buffer(6);
+    var timezone_map = { "-120": "UTC-12", "-110": "UTC-11", "-100": "UTC-10", "-95": "UTC-9:30", "-90": "UTC-9", "-80": "UTC-8", "-70": "UTC-7", "-60": "UTC-6", "-50": "UTC-5", "-40": "UTC-4", "-35": "UTC-3:30", "-30": "UTC-3", "-20": "UTC-2", "-10": "UTC-1", 0: "UTC", 10: "UTC+1", 20: "UTC+2", 30: "UTC+3", 35: "UTC+3:30", 40: "UTC+4", 45: "UTC+4:30", 50: "UTC+5", 55: "UTC+5:30", 57: "UTC+5:45", 60: "UTC+6", 65: "UTC+6:30", 70: "UTC+7", 80: "UTC+8", 90: "UTC+9", 95: "UTC+9:30", 100: "UTC+10", 105: "UTC+10:30", 110: "UTC+11", 120: "UTC+12", 127: "UTC+12:45", 130: "UTC+13", 140: "UTC+14" };
+    var timezone_values = getValues(timezone_map);
+    if (timezone_values.indexOf(time_zone) === -1) {
+        throw new Error("time_zone must be one of " + timezone_values.join(", "));
+    }
+
+    var buffer = new Buffer(4);
     buffer.writeUInt8(0xff);
-    buffer.writeUInt8(0x12);
-    buffer.writeInt16LE(time_zone * 10);
+    buffer.writeUInt8(0x17);
+    buffer.writeInt16LE(getValue(timezone_map, time_zone));
     return buffer.toBytes();
 }
 
@@ -247,13 +253,13 @@ function setTimeSyncEnable(time_sync_enable) {
  * @example { "stop_buzzer_with_silent_time": 1 }
  */
 function stopBuzzerWithSilentTime(stop_buzzer_with_silent_time) {
-    var stop_buzzer_with_silent_time_map = { 0: "no", 1: "yes" };
-    var stop_buzzer_with_silent_time_values = getValues(stop_buzzer_with_silent_time_map);
-    if (stop_buzzer_with_silent_time_values.indexOf(stop_buzzer_with_silent_time) === -1) {
-        throw new Error("stop_buzzer_with_silent_time must be one of " + stop_buzzer_with_silent_time_values.join(", "));
+    var yes_no_map = { 0: "no", 1: "yes" };
+    var yes_no_values = getValues(yes_no_map);
+    if (yes_no_values.indexOf(stop_buzzer_with_silent_time) === -1) {
+        throw new Error("stop_buzzer_with_silent_time must be one of " + yes_no_values.join(", "));
     }
 
-    if (getValue(stop_buzzer_with_silent_time_map, stop_buzzer_with_silent_time) === 0) {
+    if (getValue(yes_no_map, stop_buzzer_with_silent_time) === 0) {
         return [];
     }
     if (stop_buzzer_with_silent_time < 0) {
@@ -273,16 +279,16 @@ function stopBuzzerWithSilentTime(stop_buzzer_with_silent_time) {
  * @example { "buzzer_enable": 1 }
  */
 function setBuzzerEnable(buzzer_enable) {
-    var buzzer_enable_map = { 0: "disable", 1: "enable" };
-    var buzzer_enable_values = getValues(buzzer_enable_map);
-    if (buzzer_enable_values.indexOf(buzzer_enable) === -1) {
-        throw new Error("buzzer_enable must be one of " + buzzer_enable_values.join(", "));
+    var enable_map = { 0: "disable", 1: "enable" };
+    var enable_values = getValues(enable_map);
+    if (enable_values.indexOf(buzzer_enable) === -1) {
+        throw new Error("buzzer_enable must be one of " + enable_values.join(", "));
     }
 
     var buffer = new Buffer(4);
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0x3e);
-    buffer.writeUInt8(getValue(buzzer_enable_map, buzzer_enable));
+    buffer.writeUInt8(getValue(enable_map, buzzer_enable));
     return buffer.toBytes();
 }
 
@@ -292,16 +298,16 @@ function setBuzzerEnable(buzzer_enable) {
  * @example { "led_indicator_enable": 1 }
  */
 function setLedIndicatorEnable(led_indicator_enable) {
-    var led_indicator_enable_map = { 0: "disable", 1: "enable" };
-    var led_indicator_enable_values = getValues(led_indicator_enable_map);
-    if (led_indicator_enable_values.indexOf(led_indicator_enable) === -1) {
-        throw new Error("led_indicator_enable must be one of " + led_indicator_enable_values.join(", "));
+    var enable_map = { 0: "disable", 1: "enable" };
+    var enable_values = getValues(enable_map);
+    if (enable_values.indexOf(led_indicator_enable) === -1) {
+        throw new Error("led_indicator_enable must be one of " + enable_values.join(", "));
     }
 
     var buffer = new Buffer(4);
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0x2f);
-    buffer.writeUInt8(getValue(led_indicator_enable_map, led_indicator_enable));
+    buffer.writeUInt8(getValue(enable_map, led_indicator_enable));
     return buffer.toBytes();
 }
 
@@ -343,14 +349,8 @@ function calibrationRequest(calibration_request) {
 
 function getValues(map) {
     var values = [];
-    if (RAW_VALUE) {
-        for (var key in map) {
-            values.push(parseInt(key));
-        }
-    } else {
-        for (var key in map) {
-            values.push(map[key]);
-        }
+    for (var key in map) {
+        values.push(RAW_VALUE ? parseInt(key) : map[key]);
     }
     return values;
 }

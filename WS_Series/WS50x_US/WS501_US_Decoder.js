@@ -252,9 +252,9 @@ function readLedMode(bytes) {
     return getValue(led_mode_map, bytes);
 }
 
-function readEnableStatus(bytes) {
-    var enable_map = { 0: "disable", 1: "enable" };
-    return getValue(enable_map, bytes);
+function readEnableStatus(status) {
+    var status_map = { 0: "disable", 1: "enable" };
+    return getValue(status_map, status);
 }
 
 /* eslint-disable */

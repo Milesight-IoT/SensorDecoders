@@ -53,8 +53,8 @@ function milesightDeviceEncode(payload) {
     if ("resend_interval" in payload) {
         encoded = encoded.concat(setResendInterval(payload.resend_interval));
     }
-    if ("timezone" in payload) {
-        encoded = encoded.concat(setTimezone(payload.timezone));
+    if ("time_zone" in payload) {
+        encoded = encoded.concat(setTimeZone(payload.time_zone));
     }
     if ("sync_time_type" in payload) {
         encoded = encoded.concat(setSyncTimeType(payload.sync_time_type));
@@ -134,8 +134,8 @@ function milesightDeviceEncode(payload) {
     if ("valve_power_supply_config" in payload) {
         encoded = encoded.concat(setValvePowerSupplyConfig(payload.valve_power_supply_config));
     }
-    if ("pressure_calibration" in payload) {
-        encoded = encoded.concat(setPressureCalibration(payload.pressure_calibration));
+    if ("pressure_calibration_settings" in payload) {
+        encoded = encoded.concat(setPressureCalibration(payload.pressure_calibration_settings));
     }
     if ("history_enable" in payload) {
         encoded = encoded.concat(setHistoryEnable(payload.history_enable));
@@ -160,13 +160,13 @@ function milesightDeviceEncode(payload) {
  * @example { "reboot": 1 }
  */
 function reboot(reboot) {
-    var reboot_map = { 0: "no", 1: "yes" };
-    var reboot_values = getValues(reboot_map);
+    var yes_no_map = { 0: "no", 1: "yes" };
+    var reboot_values = getValues(yes_no_map);
     if (reboot_values.indexOf(reboot) === -1) {
         throw new Error("reboot must be one of " + reboot_values.join(", "));
     }
 
-    if (getValue(reboot_map, reboot) === 0) {
+    if (getValue(yes_no_map, reboot) === 0) {
         return [];
     }
     return [0xff, 0x10, 0xff];
@@ -302,20 +302,21 @@ function setResendInterval(resend_interval) {
 }
 
 /**
- * Set timezone
- * @since hardware_version>=v2.0, firmware_version>=v2.1
- * @param {number} timezone unit: minute, range: [-12, 14]
- * @example { "timezone": 8 }
+ * set time zone
+ * @param {number} time_zone unit: minute, UTC+8 -> 8 * 10 = 80
+ * @example { "time_zone": 80 }
  */
-function setTimezone(timezone) {
-    if (timezone < -12 || timezone > 14) {
-        throw new Error("timezone must be in the range of -12 to 14");
+function setTimeZone(time_zone) {
+    var timezone_map = { "-120": "UTC-12", "-110": "UTC-11", "-100": "UTC-10", "-95": "UTC-9:30", "-90": "UTC-9", "-80": "UTC-8", "-70": "UTC-7", "-60": "UTC-6", "-50": "UTC-5", "-40": "UTC-4", "-35": "UTC-3:30", "-30": "UTC-3", "-20": "UTC-2", "-10": "UTC-1", 0: "UTC", 10: "UTC+1", 20: "UTC+2", 30: "UTC+3", 35: "UTC+3:30", 40: "UTC+4", 45: "UTC+4:30", 50: "UTC+5", 55: "UTC+5:30", 57: "UTC+5:45", 60: "UTC+6", 65: "UTC+6:30", 70: "UTC+7", 80: "UTC+8", 90: "UTC+9", 95: "UTC+9:30", 100: "UTC+10", 105: "UTC+10:30", 110: "UTC+11", 120: "UTC+12", 127: "UTC+12:45", 130: "UTC+13", 140: "UTC+14" };
+    var timezone_values = getValues(timezone_map);
+    if (timezone_values.indexOf(time_zone) === -1) {
+        throw new Error("time_zone must be one of " + timezone_values.join(", "));
     }
 
     var buffer = new Buffer(4);
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0x17);
-    buffer.writeInt16LE(timezone * 10);
+    buffer.writeInt16LE(getValue(timezone_map, time_zone));
     return buffer.toBytes();
 }
 
@@ -1095,19 +1096,19 @@ function setValvePowerSupplyConfig(valve_power_supply_config) {
 /**
  * set pressure calibration
  * @since hardware_version>=v4.0, firmware_version>=v1.1
- * @param {object} pressure_calibration
- * @param {number} pressure_calibration.enable values: (0: disable, 1: enable)
- * @param {number} pressure_calibration.calibration_value unit: kPa
- * @example { "pressure_calibration": { "enable": 1, "calibration_value": 1 } }
+ * @param {object} pressure_calibration_settings
+ * @param {number} pressure_calibration_settings.enable values: (0: disable, 1: enable)
+ * @param {number} pressure_calibration_settings.calibration_value unit: kPa
+ * @example { "pressure_calibration_settings": { "enable": 1, "calibration_value": 1 } }
  */
-function setPressureCalibration(pressure_calibration) {
-    var enable = pressure_calibration.enable;
-    var calibration_value = pressure_calibration.calibration_value;
+function setPressureCalibration(pressure_calibration_settings) {
+    var enable = pressure_calibration_settings.enable;
+    var calibration_value = pressure_calibration_settings.calibration_value;
 
     var enable_map = { 0: "disable", 1: "enable" };
     var enable_values = getValues(enable_map);
     if (enable_values.indexOf(enable) === -1) {
-        throw new Error("pressure_calibration.enable must be one of " + enable_values.join(", "));
+        throw new Error("pressure_calibration_settings.enable must be one of " + enable_values.join(", "));
     }
 
     var buffer = new Buffer(5);
@@ -1157,7 +1158,6 @@ function clearHistory(clear_history) {
     return [0xff, 0x27, 0xff];
 }
 
-
 /**
  * fetch history
  * @param {object} fetch_history
@@ -1203,9 +1203,9 @@ function fetchHistory(fetch_history) {
  */
 function stopTransmit(stop_transmit) {
     var yes_no_map = { 0: "no", 1: "yes" };
-    var stop_transmit_values = getValues(yes_no_map);
-    if (stop_transmit_values.indexOf(stop_transmit) === -1) {
-        throw new Error("stop_transmit must be one of " + stop_transmit_values.join(", "));
+    var yes_no_values = getValues(yes_no_map);
+    if (yes_no_values.indexOf(stop_transmit) === -1) {
+        throw new Error("stop_transmit must be one of " + yes_no_values.join(", "));
     }
 
     if (getValue(yes_no_map, stop_transmit) === 0) {
@@ -1216,14 +1216,8 @@ function stopTransmit(stop_transmit) {
 
 function getValues(map) {
     var values = [];
-    if (RAW_VALUE) {
-        for (var key in map) {
-            values.push(parseInt(key));
-        }
-    } else {
-        for (var key in map) {
-            values.push(map[key]);
-        }
+    for (var key in map) {
+        values.push(RAW_VALUE ? parseInt(key) : map[key]);
     }
     return values;
 }

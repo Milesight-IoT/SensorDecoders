@@ -29,7 +29,7 @@ function Decoder(bytes, port) {
 function milesightDeviceDecode(bytes) {
     var decoded = {};
 
-    for (var i = 0; i < bytes.length;) {
+    for (var i = 0; i < bytes.length; ) {
         var channel_id = bytes[i++];
         var channel_type = bytes[i++];
 
@@ -238,7 +238,6 @@ function readDeviceStatus(status) {
     var status_map = { 0: "off", 1: "on" };
     return getValue(status_map, status);
 }
-
 
 function readYesNoStatus(status) {
     var status_map = { 0: "no", 1: "yes" };
