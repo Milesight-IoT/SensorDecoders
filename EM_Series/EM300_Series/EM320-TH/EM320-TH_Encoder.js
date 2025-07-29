@@ -71,7 +71,7 @@ function milesightDeviceEncode(payload) {
 
 /**
  * reboot device
- * @param {number} reboot values: (0: "no", 1: "yes")
+ * @param {number} reboot values: (0: no, 1: yes)
  * @example { "reboot": 1 }
  */
 function reboot(reboot) {
@@ -123,7 +123,7 @@ function setCollectionInterval(collection_interval) {
 
 /**
  * report device status
- * @param {number} report_status values: (0: "no", 1: "yes")
+ * @param {number} report_status values: (0: no, 1: yes)
  * @example { "report_status": 1 }
  */
 function reportStatus(report_status) {
@@ -175,7 +175,7 @@ function setTemperatureAlarmConfig(temperature_alarm_config) {
 
 /**
  * history enable
- * @param {number} history_enable values: (0: "disable", 1: "enable")
+ * @param {number} history_enable values: (0: disable, 1: enable)
  * @example { "history_enable": 1 }
  */
 function setHistoryEnable(history_enable) {
@@ -194,7 +194,7 @@ function setHistoryEnable(history_enable) {
 
 /**
  * retransmit enable
- * @param {boolean} retransmit_enable values: (0: "disable", 1: "enable")
+ * @param {number} retransmit_enable values: (0: disable, 1: enable)
  * @example { "retransmit_enable": 1 }
  */
 function setRetransmitEnable(retransmit_enable) {
@@ -281,7 +281,7 @@ function fetchHistory(fetch_history) {
 
 /**
  * history stop transmit
- * @param {number} stop_transmit values: (0: "no", 1: "yes")
+ * @param {number} stop_transmit values: (0: no, 1: yes)
  * @example { "stop_transmit": 1 }
  */
 function stopTransmit(stop_transmit) {
