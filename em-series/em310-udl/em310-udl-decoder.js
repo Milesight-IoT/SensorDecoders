@@ -29,7 +29,7 @@ function Decoder(bytes, port) {
 function milesightDeviceDecode(bytes) {
     var decoded = {};
 
-    for (var i = 0; i < bytes.length;) {
+    for (var i = 0; i < bytes.length; ) {
         var channel_id = bytes[i++];
         var channel_type = bytes[i++];
 
@@ -125,8 +125,8 @@ function handle_downlink_response(channel_type, bytes, offset) {
             decoded.distance_alarm_config = {};
             decoded.distance_alarm_config.condition = readConditionType(condition_value);
             decoded.distance_alarm_config.alarm_release_enable = readEnableStatus(alarm_release_enable);
-            decoded.distance_alarm_config.min_threshold = readInt16LE(bytes.slice(offset + 1, offset + 3));
-            decoded.distance_alarm_config.max_threshold = readInt16LE(bytes.slice(offset + 3, offset + 5));
+            decoded.distance_alarm_config.threshold_min = readInt16LE(bytes.slice(offset + 1, offset + 3));
+            decoded.distance_alarm_config.threshold_max = readInt16LE(bytes.slice(offset + 3, offset + 5));
             decoded.distance_alarm_config.lock_time = readUInt16LE(bytes.slice(offset + 5, offset + 7));
             decoded.distance_alarm_config.continue_time = readUInt16LE(bytes.slice(offset + 7, offset + 9));
             offset += 9;
