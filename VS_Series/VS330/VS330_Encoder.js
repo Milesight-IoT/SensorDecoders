@@ -1,4 +1,3 @@
-
 /**
  * Payload Encoder
  *
