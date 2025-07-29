@@ -50,23 +50,23 @@ function milesightDeviceEncode(payload) {
     if ("timestamp" in payload) {
         encoded = encoded.concat(setTimestamp(payload.timestamp));
     }
-    if ("timezone" in payload) {
-        encoded = encoded.concat(setTimeZone(payload.timezone));
+    if ("time_zone" in payload) {
+        encoded = encoded.concat(setTimeZone(payload.time_zone));
     }
     if ("time_sync_enable" in payload) {
         encoded = encoded.concat(setTimeSyncEnable(payload.time_sync_enable));
     }
-    if ("illuminance_threshold_alarm_config" in payload) {
-        encoded = encoded.concat(setIlluminanceThresholdAlarmConfig(payload.illuminance_threshold_alarm_config));
+    if ("illuminance_alarm_config" in payload) {
+        encoded = encoded.concat(setIlluminanceAlarmConfig(payload.illuminance_alarm_config));
     }
-    if ("threshold_alarm_release_enable" in payload) {
-        encoded = encoded.concat(setThresholdAlarmReleaseEnable(payload.threshold_alarm_release_enable));
+    if ("alarm_release_enable" in payload) {
+        encoded = encoded.concat(setThresholdAlarmReleaseEnable(payload.alarm_release_enable));
     }
     if ("alarm_report_counts" in payload) {
         encoded = encoded.concat(alarmReportCounts(payload.alarm_report_counts));
     }
-    if ("illuminance_calibration_config" in payload) {
-        encoded = encoded.concat(setIlluminanceCalibrationConfig(payload.illuminance_calibration_config));
+    if ("illuminance_calibration_settings" in payload) {
+        encoded = encoded.concat(setIlluminanceCalibrationConfig(payload.illuminance_calibration_settings));
     }
     if ("d2d_master_config" in payload) {
         for (var i = 0; i < payload.d2d_master_config.length; i++) {
@@ -110,13 +110,13 @@ function milesightDeviceEncode(payload) {
  * @example { "reboot": 1 }
  */
 function reboot(reboot) {
-    var reboot_map = { 0: "no", 1: "yes" };
-    var reboot_values = getValues(reboot_map);
+    var yes_no_map = { 0: "no", 1: "yes" };
+    var reboot_values = getValues(yes_no_map);
     if (reboot_values.indexOf(reboot) === -1) {
         throw new Error("reboot must be one of " + reboot_values.join(", "));
     }
 
-    if (getValue(reboot_map, reboot) === 0) {
+    if (getValue(yes_no_map, reboot) === 0) {
         return [];
     }
     return [0xff, 0x10, 0xff];
@@ -147,9 +147,9 @@ function reportStatus(report_status) {
  */
 function syncTime(sync_time) {
     var yes_no_map = { 0: "no", 1: "yes" };
-    var sync_time_values = getValues(yes_no_map);
-    if (sync_time_values.indexOf(sync_time) === -1) {
-        throw new Error("sync_time must be one of " + sync_time_values.join(", "));
+    var yes_no_values = getValues(yes_no_map);
+    if (yes_no_values.indexOf(sync_time) === -1) {
+        throw new Error("sync_time must be one of " + yes_no_values.join(", "));
     }
 
     if (getValue(yes_no_map, sync_time) === 0) {
@@ -251,19 +251,21 @@ function setTimestamp(timestamp) {
 }
 
 /**
- * timezone
- * @param {number} timezone unit: minute, UTC+8 -> 8 * 10 = 80
- * @example { "timezone": 8 }
+ * set time zone
+ * @param {number} time_zone unit: minute, UTC+8 -> 8 * 10 = 80
+ * @example { "time_zone": 80 }
  */
-function setTimeZone(timezone) {
-    if (typeof timezone !== "number") {
-        throw new Error("timezone must be a number");
+function setTimeZone(time_zone) {
+    var timezone_map = { "-120": "UTC-12", "-110": "UTC-11", "-100": "UTC-10", "-95": "UTC-9:30", "-90": "UTC-9", "-80": "UTC-8", "-70": "UTC-7", "-60": "UTC-6", "-50": "UTC-5", "-40": "UTC-4", "-35": "UTC-3:30", "-30": "UTC-3", "-20": "UTC-2", "-10": "UTC-1", 0: "UTC", 10: "UTC+1", 20: "UTC+2", 30: "UTC+3", 35: "UTC+3:30", 40: "UTC+4", 45: "UTC+4:30", 50: "UTC+5", 55: "UTC+5:30", 57: "UTC+5:45", 60: "UTC+6", 65: "UTC+6:30", 70: "UTC+7", 80: "UTC+8", 90: "UTC+9", 95: "UTC+9:30", 100: "UTC+10", 105: "UTC+10:30", 110: "UTC+11", 120: "UTC+12", 127: "UTC+12:45", 130: "UTC+13", 140: "UTC+14" };
+    var timezone_values = getValues(timezone_map);
+    if (timezone_values.indexOf(time_zone) === -1) {
+        throw new Error("time_zone must be one of " + timezone_values.join(", "));
     }
 
     var buffer = new Buffer(4);
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0x17);
-    buffer.writeInt16LE(timezone * 10);
+    buffer.writeInt16LE(getValue(timezone_map, time_zone));
     return buffer.toBytes();
 }
 
@@ -288,32 +290,32 @@ function setTimeSyncEnable(time_sync_enable) {
 
 /**
  * illuminance threshold alarm configuration
- * @param {object} illuminance_threshold_alarm_config
- * @param {number} illuminance_threshold_alarm_config.enable values: (0: disable, 1: enable)
- * @param {number} illuminance_threshold_alarm_config.condition values: (0: disable, 1: below, 2: above, 3: between, 4: outside)
- * @param {number} illuminance_threshold_alarm_config.min_threshold condition=(below, within, outside)
- * @param {number} illuminance_threshold_alarm_config.max_threshold condition=(above, within, outside)
- * @param {number} illuminance_threshold_alarm_config.alarm_release_enable values: (0: disable, 1: enable)
+ * @param {object} illuminance_alarm_config
+ * @param {number} illuminance_alarm_config.enable values: (0: disable, 1: enable)
+ * @param {number} illuminance_alarm_config.condition values: (0: disable, 1: below, 2: above, 3: between, 4: outside)
+ * @param {number} illuminance_alarm_config.threshold_min condition=(below, within, outside)
+ * @param {number} illuminance_alarm_config.threshold_max condition=(above, within, outside)
+ * @param {number} illuminance_alarm_config.alarm_release_enable values: (0: disable, 1: enable)
  */
-function setIlluminanceThresholdAlarmConfig(illuminance_threshold_alarm_config) {
-    var enable = illuminance_threshold_alarm_config.enable;
-    var condition = illuminance_threshold_alarm_config.condition;
-    var min_threshold = illuminance_threshold_alarm_config.min_threshold;
-    var max_threshold = illuminance_threshold_alarm_config.max_threshold;
-    var alarm_release_enable = illuminance_threshold_alarm_config.alarm_release_enable;
+function setIlluminanceAlarmConfig(illuminance_alarm_config) {
+    var enable = illuminance_alarm_config.enable;
+    var condition = illuminance_alarm_config.condition;
+    var threshold_min = illuminance_alarm_config.threshold_min;
+    var threshold_max = illuminance_alarm_config.threshold_max;
+    var alarm_release_enable = illuminance_alarm_config.alarm_release_enable;
 
     var condition_map = { 0: "disable", 1: "below", 2: "above", 3: "between", 4: "outside" };
     var condition_values = getValues(condition_map);
     if (condition_values.indexOf(condition) === -1) {
-        throw new Error("illuminance_threshold_alarm_config.condition must be one of " + condition_values.join(", "));
+        throw new Error("illuminance_alarm_config.condition must be one of " + condition_values.join(", "));
     }
     var enable_map = { 0: "disable", 1: "enable" };
     var enable_values = getValues(enable_map);
     if (enable_values.indexOf(enable) === -1) {
-        throw new Error("illuminance_threshold_alarm_config.enable must be one of " + enable_values.join(", "));
+        throw new Error("illuminance_alarm_config.enable must be one of " + enable_values.join(", "));
     }
     if (enable_values.indexOf(alarm_release_enable) === -1) {
-        throw new Error("illuminance_threshold_alarm_config.alarm_release_enable must be one of " + enable_values.join(", "));
+        throw new Error("illuminance_alarm_config.alarm_release_enable must be one of " + enable_values.join(", "));
     }
 
     var data = 0x00;
@@ -326,8 +328,8 @@ function setIlluminanceThresholdAlarmConfig(illuminance_threshold_alarm_config) 
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0x06);
     buffer.writeUInt8(data);
-    buffer.writeInt16LE(min_threshold);
-    buffer.writeInt16LE(max_threshold);
+    buffer.writeInt16LE(threshold_min);
+    buffer.writeInt16LE(threshold_max);
     buffer.writeUInt16LE(0x00);
     buffer.writeUInt16LE(0x00);
     return buffer.toBytes();
@@ -335,20 +337,20 @@ function setIlluminanceThresholdAlarmConfig(illuminance_threshold_alarm_config) 
 
 /**
  * all rule engine threshold alarm release enable
- * @param {number} threshold_alarm_release_enable values: (0: disable, 1: enable)
- * @example { "threshold_alarm_release_enable": 1 }
+ * @param {number} alarm_release_enable values: (0: disable, 1: enable)
+ * @example { "alarm_release_enable": 1 }
  */
-function setThresholdAlarmReleaseEnable(threshold_alarm_release_enable) {
+function setThresholdAlarmReleaseEnable(alarm_release_enable) {
     var enable_map = { 0: "disable", 1: "enable" };
     var enable_values = getValues(enable_map);
-    if (enable_values.indexOf(threshold_alarm_release_enable) === -1) {
-        throw new Error("threshold_alarm_release_enable must be one of " + enable_values.join(", "));
+    if (enable_values.indexOf(alarm_release_enable) === -1) {
+        throw new Error("alarm_release_enable must be one of " + enable_values.join(", "));
     }
 
     var buffer = new Buffer(3);
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0xf5);
-    buffer.writeUInt8(getValue(enable_map, threshold_alarm_release_enable));
+    buffer.writeUInt8(getValue(enable_map, alarm_release_enable));
     return buffer.toBytes();
 }
 
@@ -374,19 +376,19 @@ function alarmReportCounts(alarm_report_counts) {
 
 /**
  * set illuminance calibration
- * @param {object} illuminance_calibration_config
- * @param {number} illuminance_calibration_config.enable values: (0: disable, 1: enable)
- * @param {number} illuminance_calibration_config.calibration_value
- * @example { "illuminance_calibration_config": { "enable": 1, "calibration_value": 23 } }
+ * @param {object} illuminance_calibration_settings
+ * @param {number} illuminance_calibration_settings.enable values: (0: disable, 1: enable)
+ * @param {number} illuminance_calibration_settings.calibration_value
+ * @example { "illuminance_calibration_settings": { "enable": 1, "calibration_value": 23 } }
  */
-function setIlluminanceCalibrationConfig(illuminance_calibration_config) {
-    var enable = illuminance_calibration_config.enable;
-    var calibration_value = illuminance_calibration_config.calibration_value;
+function setIlluminanceCalibrationConfig(illuminance_calibration_settings) {
+    var enable = illuminance_calibration_settings.enable;
+    var calibration_value = illuminance_calibration_settings.calibration_value;
 
     var enable_map = { 0: "disable", 1: "enable" };
     var enable_values = getValues(enable_map);
     if (enable_values.indexOf(enable) === -1) {
-        throw new Error("illuminance_calibration_config.enable must be one of " + enable_values.join(", "));
+        throw new Error("illuminance_calibration_settings.enable must be one of " + enable_values.join(", "));
     }
 
     var buffer = new Buffer(6);
@@ -482,7 +484,6 @@ function setD2DKey(d2d_key) {
     buffer.writeBytes(data);
     return buffer.toBytes();
 }
-
 
 /**
  * history enable
@@ -595,7 +596,6 @@ function setRetransmitEnable(retransmit_enable) {
     return buffer.toBytes();
 }
 
-
 /**
  * set retransmit interval
  * @param {number} retransmit_interval unit: second, range: [1, 64800]
@@ -640,14 +640,8 @@ function setResendInterval(resend_interval) {
 
 function getValues(map) {
     var values = [];
-    if (RAW_VALUE) {
-        for (var key in map) {
-            values.push(parseInt(key));
-        }
-    } else {
-        for (var key in map) {
-            values.push(map[key]);
-        }
+    for (var key in map) {
+        values.push(RAW_VALUE ? parseInt(key) : map[key]);
     }
     return values;
 }
