@@ -54,9 +54,9 @@ function milesightDeviceDecode(bytes) {
             i += 2;
         }
         // SERIAL NUMBER
-        else if (channel_id === 0xff && channel_type === 0x16) {
-            decoded.sn = readSerialNumber(bytes.slice(i, i + 8));
-            i += 8;
+        else if (channel_id === 0xff && channel_type === 0x08) {
+            decoded.sn = readSerialNumber(bytes.slice(i, i + 6));
+            i += 6;
         }
         // LORAWAN CLASS TYPE
         else if (channel_id === 0xff && channel_type === 0x0f) {
@@ -83,6 +83,7 @@ function milesightDeviceDecode(bytes) {
         else if (channel_id === 0xff && channel_type === 0x2e) {
             decoded.button_event = {};
             decoded.button_event.status = readButtonEvent(bytes[i]);
+            decoded.button_event.msgid = getRandomIntInclusive(100000, 999999);
             i += 1;
         }
         // DOWNLINK RESPONSE
@@ -115,7 +116,7 @@ function handle_downlink_response(channel_type, bytes, offset) {
             offset += 1;
             break;
         case 0x2f:
-            decoded.led_indicator = readEnableStatus(bytes[offset]);
+            decoded.led_indicator_enable = readEnableStatus(bytes[offset]);
             offset += 1;
             break;
         case 0x3e:
@@ -198,6 +199,12 @@ function readEnableStatus(status) {
 function readYesNoStatus(status) {
     var status_map = { 0: "no", 1: "yes" };
     return getValue(status_map, status);
+}
+
+function getRandomIntInclusive(min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
 /* eslint-disable */
