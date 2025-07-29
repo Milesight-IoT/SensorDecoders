@@ -176,13 +176,13 @@ function setReportInterval(report_interval) {
  * @example { "reboot": 1 }
  */
 function reboot(reboot) {
-    var reboot_map = { 0: "no", 1: "yes" };
-    var reboot_values = getValues(reboot_map);
+    var yes_no_map = { 0: "no", 1: "yes" };
+    var reboot_values = getValues(yes_no_map);
     if (reboot_values.indexOf(reboot) === -1) {
         throw new Error("reboot must be one of " + reboot_values.join(", "));
     }
 
-    if (getValue(reboot_map, reboot) === 0) {
+    if (getValue(yes_no_map, reboot) === 0) {
         return [];
     }
     return [0xff, 0x10, 0xff];
@@ -212,13 +212,13 @@ function beep(beep) {
  * @example { "refresh_display": 1 }
  */
 function refreshDisplay(refresh_display) {
-    var refresh_display_map = { 0: "no", 1: "yes" };
-    var refresh_display_values = getValues(refresh_display_map);
-    if (refresh_display_values.indexOf(refresh_display) === -1) {
-        throw new Error("refresh_display must be one of " + refresh_display_values.join(", "));
+    var yes_no_map = { 0: "no", 1: "yes" };
+    var yes_no_values = getValues(yes_no_map);
+    if (yes_no_values.indexOf(refresh_display) === -1) {
+        throw new Error("refresh_display must be one of " + yes_no_values.join(", "));
     }
 
-    if (getValue(refresh_display_map, refresh_display) === 0) {
+    if (getValue(yes_no_map, refresh_display) === 0) {
         return [];
     }
     return [0xff, 0x3d, 0x02];
@@ -230,13 +230,13 @@ function refreshDisplay(refresh_display) {
  * @example { "report_battery": 1 }
  */
 function reportBattery(report_battery) {
-    var report_battery_map = { 0: "no", 1: "yes" };
-    var report_battery_values = getValues(report_battery_map);
-    if (report_battery_values.indexOf(report_battery) === -1) {
-        throw new Error("report_battery must be one of " + report_battery_values.join(", "));
+    var yes_no_map = { 0: "no", 1: "yes" };
+    var yes_no_values = getValues(yes_no_map);
+    if (yes_no_values.indexOf(report_battery) === -1) {
+        throw new Error("report_battery must be one of " + yes_no_values.join(", "));
     }
 
-    if (getValue(report_battery_map, report_battery) === 0) {
+    if (getValue(yes_no_map, report_battery) === 0) {
         return [];
     }
     return [0xff, 0x28, 0x00];
@@ -248,13 +248,13 @@ function reportBattery(report_battery) {
  * @example { "report_buzzer": 1 }
  */
 function reportBuzzer(report_buzzer) {
-    var report_buzzer_map = { 0: "no", 1: "yes" };
-    var report_buzzer_values = getValues(report_buzzer_map);
-    if (report_buzzer_values.indexOf(report_buzzer) === -1) {
-        throw new Error("report_buzzer must be one of " + report_buzzer_values.join(", "));
+    var yes_no_map = { 0: "no", 1: "yes" };
+    var yes_no_values = getValues(yes_no_map);
+    if (yes_no_values.indexOf(report_buzzer) === -1) {
+        throw new Error("report_buzzer must be one of " + yes_no_values.join(", "));
     }
 
-    if (getValue(report_buzzer_map, report_buzzer) === 0) {
+    if (getValue(yes_no_map, report_buzzer) === 0) {
         return [];
     }
     return [0xff, 0x28, 0x01];
@@ -266,13 +266,13 @@ function reportBuzzer(report_buzzer) {
  * @example { "report_current_template_id": 1 }
  */
 function reportCurrentTemplate(report_current_template_id) {
-    var report_current_template_id_map = { 0: "no", 1: "yes" };
-    var report_current_template_id_values = getValues(report_current_template_id_map);
-    if (report_current_template_id_values.indexOf(report_current_template_id) === -1) {
-        throw new Error("report_current_template_id must be one of " + report_current_template_id_values.join(", "));
+    var yes_no_map = { 0: "no", 1: "yes" };
+    var yes_no_values = getValues(yes_no_map);
+    if (yes_no_values.indexOf(report_current_template_id) === -1) {
+        throw new Error("report_current_template_id must be one of " + yes_no_values.join(", "));
     }
 
-    if (getValue(report_current_template_id_map, report_current_template_id) === 0) {
+    if (getValue(yes_no_map, report_current_template_id) === 0) {
         return [];
     }
     return [0xff, 0x28, 0x02];
@@ -284,13 +284,13 @@ function reportCurrentTemplate(report_current_template_id) {
  * @example { "report_current_display": 1 }
  */
 function reportCurrentDisplay(report_current_display) {
-    var report_current_display_map = { 0: "no", 1: "yes" };
-    var report_current_display_values = getValues(report_current_display_map);
-    if (report_current_display_values.indexOf(report_current_display) === -1) {
-        throw new Error("report_current_display must be one of " + report_current_display_values.join(", "));
+    var yes_no_map = { 0: "no", 1: "yes" };
+    var yes_no_values = getValues(yes_no_map);
+    if (yes_no_values.indexOf(report_current_display) === -1) {
+        throw new Error("report_current_display must be one of " + yes_no_values.join(", "));
     }
 
-    if (getValue(report_current_display_map, report_current_display) === 0) {
+    if (getValue(yes_no_map, report_current_display) === 0) {
         return [];
     }
     return [0xff, 0x28, 0x03];
@@ -340,16 +340,16 @@ function setButtonVisible(button_visible) {
  * @example { "button_enable": 1 }
  */
 function setButtonEnable(button_enable) {
-    var button_enable_map = { 0: "disable", 1: "enable" };
-    var button_enable_values = getValues(button_enable_map);
-    if (button_enable_values.indexOf(button_enable) === -1) {
-        throw new Error("button_enable must be one of " + button_enable_values.join(", "));
+    var enable_map = { 0: "disable", 1: "enable" };
+    var enable_values = getValues(enable_map);
+    if (enable_values.indexOf(button_enable) === -1) {
+        throw new Error("button_enable must be one of " + enable_values.join(", "));
     }
 
     var buffer = new Buffer(3);
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0x25);
-    buffer.writeUInt8(getValue(button_enable_map, button_enable));
+    buffer.writeUInt8(getValue(enable_map, button_enable));
     return buffer.toBytes();
 }
 
@@ -471,9 +471,6 @@ function setMulticastConfig(multicast_config) {
         if (key in multicast_config) {
             if (enable_values.indexOf(multicast_config[key]) === -1) {
                 throw new Error("multicast_config." + key + " must be one of " + enable_values.join(", "));
-            }
-            if (getValue(enable_map, multicast_config[key]) === 0) {
-                continue;
             }
             data |= 1 << (group_offset[key] + 4);
             data |= getValue(enable_map, multicast_config[key]) << 0;
@@ -695,14 +692,8 @@ function encodeUtf8(str) {
 
 function getValues(map) {
     var values = [];
-    if (RAW_VALUE) {
-        for (var key in map) {
-            values.push(parseInt(key));
-        }
-    } else {
-        for (var key in map) {
-            values.push(map[key]);
-        }
+    for (var key in map) {
+        values.push(RAW_VALUE ? parseInt(key) : map[key]);
     }
     return values;
 }

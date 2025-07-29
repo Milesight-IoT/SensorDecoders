@@ -45,23 +45,59 @@ function asErrors(e) {
 function milesightDeviceDecode(bytes) {
     var decoded = {};
 
-    for (var i = 0; i < bytes.length;) {
+    for (var i = 0; i < bytes.length; ) {
         var channel_id = bytes[i++];
         var channel_type = bytes[i++];
 
+        // IPSO VERSION
+        if (channel_id === 0xff && channel_type === 0x01) {
+            decoded.ipso_version = readProtocolVersion(bytes[i]);
+            i += 1;
+        }
+        // HARDWARE VERSION
+        else if (channel_id === 0xff && channel_type === 0x09) {
+            decoded.hardware_version = readHardwareVersion(bytes.slice(i, i + 2));
+            i += 2;
+        }
+        // FIRMWARE VERSION
+        else if (channel_id === 0xff && channel_type === 0x0a) {
+            decoded.firmware_version = readFirmwareVersion(bytes.slice(i, i + 2));
+            i += 2;
+        }
+        // TSL VERSION
+        else if (channel_id === 0xff && channel_type === 0xff) {
+            decoded.tsl_version = readTslVersion(bytes.slice(i, i + 2));
+            i += 2;
+        }
+        // SERIAL NUMBER
+        else if (channel_id === 0xff && channel_type === 0x16) {
+            decoded.sn = readSerialNumber(bytes.slice(i, i + 8));
+            i += 8;
+        }
+        // LORAWAN CLASS TYPE
+        else if (channel_id === 0xff && channel_type === 0x0f) {
+            decoded.lorawan_class = readLoRaWANClass(bytes[i]);
+            i += 1;
+        }
+        // RESET EVENT
+        else if (channel_id === 0xff && channel_type === 0xfe) {
+            decoded.reset_event = readResetEvent(1);
+            i += 1;
+        }
+        // DEVICE STATUS
+        else if (channel_id === 0xff && channel_type === 0x0b) {
+            decoded.device_status = readDeviceStatus(1);
+            i += 1;
+        }
+
         // BATTERY
-        if (channel_id === 0x01 && channel_type === 0x75) {
-            decoded.battery = bytes[i];
+        else if (channel_id === 0x01 && channel_type === 0x75) {
+            decoded.battery = readUInt8(bytes[i]);
             i += 1;
         }
         // BUTTON
         else if (channel_id === 0xff && channel_type === 0x2e) {
             decoded.button_status = readButtonStatus(bytes[i]);
-            i += 1;
-        }
-        // PROTOCOL VERSION
-        else if (channel_id === 0xff && channel_type === 0x01) {
-            decoded.ipso_version = readProtocolVersion(bytes[i]);
             i += 1;
         }
         // TEMPLATE
@@ -179,8 +215,7 @@ function milesightDeviceDecode(bytes) {
             var result = handle_downlink_response(channel_type, bytes, i);
             decoded = Object.assign(decoded, result.data);
             i = result.offset;
-        }
-        else {
+        } else {
             throw new Error("unknown channel id: " + channel_id);
         }
     }
@@ -197,7 +232,7 @@ function handle_downlink_response(channel_type, bytes, offset) {
             offset += 2;
             break;
         case 0x10:
-            decoded.reboot = readYesNo(bytes[offset]);
+            decoded.reboot = readYesNoStatus(1);
             offset += 1;
             break;
         case 0x25:
@@ -207,21 +242,21 @@ function handle_downlink_response(channel_type, bytes, offset) {
         case 0x27:
             var data = readUInt8(bytes[offset]);
             decoded.clear_image = {};
-            decoded.clear_image.background_image = readYesNo((data >> 4) & 0x01);
-            decoded.clear_image.logo_1 = readYesNo((data >> 5) & 0x01);
-            decoded.clear_image.logo_2 = readYesNo((data >> 5) & 0x02);
+            decoded.clear_image.background_image = readYesNoStatus((data >> 4) & 0x01);
+            decoded.clear_image.logo_1 = readYesNoStatus((data >> 5) & 0x01);
+            decoded.clear_image.logo_2 = readYesNoStatus((data >> 5) & 0x02);
             offset += 1;
             break;
         case 0x28:
             var data = readUInt8(bytes[offset]);
             if (data === 0x00) {
-                decoded.report_battery = readYesNo(1);
+                decoded.report_battery = readYesNoStatus(1);
             } else if (data === 0x01) {
-                decoded.report_buzzer = readYesNo(1);
+                decoded.report_buzzer = readYesNoStatus(1);
             } else if (data === 0x02) {
-                decoded.report_current_template = readYesNo(1);
+                decoded.report_current_template = readYesNoStatus(1);
             } else if (data === 0x03) {
-                decoded.report_current_display = readYesNo(1);
+                decoded.report_current_display = readYesNoStatus(1);
             }
             offset += 1;
             break;
@@ -232,9 +267,9 @@ function handle_downlink_response(channel_type, bytes, offset) {
         case 0x3d:
             var data = readUInt8(bytes[offset]);
             if (data === 0x01) {
-                decoded.beep = readYesNo(1);
+                decoded.beep = readYesNoStatus(1);
             } else if (data === 0x02) {
-                decoded.refresh_display = readYesNo(1);
+                decoded.refresh_display = readYesNoStatus(1);
             }
             offset += 1;
             break;
@@ -266,12 +301,64 @@ function handle_downlink_response(channel_type, bytes, offset) {
     return { data: decoded, offset: offset };
 }
 
-function readEnableStatus(status) {
-    var enable_map = { 0: "disable", 1: "enable" };
-    return getValue(enable_map, status);
+function readProtocolVersion(bytes) {
+    var major = (bytes & 0xf0) >> 4;
+    var minor = bytes & 0x0f;
+    return "v" + major + "." + minor;
 }
 
-function readYesNo(status) {
+function readHardwareVersion(bytes) {
+    var major = bytes[0] & 0xff;
+    var minor = (bytes[1] & 0xff) >> 4;
+    return "v" + major + "." + minor;
+}
+
+function readFirmwareVersion(bytes) {
+    var major = bytes[0] & 0xff;
+    var minor = bytes[1] & 0xff;
+    return "v" + major + "." + minor;
+}
+
+function readTslVersion(bytes) {
+    var major = bytes[0] & 0xff;
+    var minor = bytes[1] & 0xff;
+    return "v" + major + "." + minor;
+}
+
+function readSerialNumber(bytes) {
+    var temp = [];
+    for (var idx = 0; idx < bytes.length; idx++) {
+        temp.push(("0" + (bytes[idx] & 0xff).toString(16)).slice(-2));
+    }
+    return temp.join("");
+}
+
+function readLoRaWANClass(type) {
+    var class_map = {
+        0: "Class A",
+        1: "Class B",
+        2: "Class C",
+        3: "Class CtoB",
+    };
+    return getValue(class_map, type);
+}
+
+function readResetEvent(status) {
+    var status_map = { 0: "normal", 1: "reset" };
+    return getValue(status_map, status);
+}
+
+function readDeviceStatus(status) {
+    var status_map = { 0: "off", 1: "on" };
+    return getValue(status_map, status);
+}
+
+function readEnableStatus(status) {
+    var status_map = { 0: "disable", 1: "enable" };
+    return getValue(status_map, status);
+}
+
+function readYesNoStatus(status) {
     var yes_no_map = { 0: "no", 1: "yes" };
     return getValue(yes_no_map, status);
 }
@@ -314,7 +401,7 @@ function readButtonStatus(status) {
         1: "double_click",
         2: "short_press",
         3: "long_press",
-    }
+    };
     return getValue(button_status, status);
 }
 
@@ -325,7 +412,7 @@ function readResultType(type) {
         2: "block id not exist",
         3: "content is too long",
         4: "block unable to modify",
-    }
+    };
     return getValue(result_type, type);
 }
 
@@ -374,42 +461,42 @@ function readBlockConfig(block_id, bytes) {
 }
 
 function readBlockType(type) {
-    var block_type = { 0: "text", 1: "qrcode", 2: "image", 3: "battery_status", 4: "connect_status" }
+    var block_type = { 0: "text", 1: "qrcode", 2: "image", 3: "battery_status", 4: "connect_status" };
     return getValue(block_type, type);
 }
 
 function readBorderType(type) {
-    var border_type_map = { 0: "no", 1: "yes" }
+    var border_type_map = { 0: "no", 1: "yes" };
     return getValue(border_type_map, type);
 }
 
 function readHorizontal(type) {
-    var horizontal_map = { 0: "left", 1: "center", 2: "right" }
+    var horizontal_map = { 0: "left", 1: "center", 2: "right" };
     return getValue(horizontal_map, type);
 }
 
 function readVertical(type) {
-    var vertical_map = { 0: "top", 1: "center", 2: "bottom" }
+    var vertical_map = { 0: "top", 1: "center", 2: "bottom" };
     return getValue(vertical_map, type);
 }
 
 function readColor(type) {
-    var color_map = { 0: "white", 1: "black", 2: "red" }
+    var color_map = { 0: "white", 1: "black", 2: "red" };
     return getValue(color_map, type);
 }
 
 function readFontType(type) {
-    var font_type_map = { 1: "SONG", 2: "FANG", 3: "BLACK", 4: "KAI", 5: "FT_ASCII", 6: "DZ_ASCII", 7: "CH_ASCII", 8: "BX_ASCII", 9: "BZ_ASCII", 10: "FX_ASCII", 11: "GD_ASCII", 12: "HZ_ASCII", 13: "MS_ASCII", 14: "SX_ASCII", 15: "ZY_ASCII", 16: "TM_ASCII", 17: "YJ_LATIN", 18: "CYRILLIC", 19: "KSC5601", 20: "JIS0208_HT", 21: "ARABIC", 22: "THAI", 23: "GREEK", 24: "HEBREW" }
+    var font_type_map = { 1: "SONG", 2: "FANG", 3: "BLACK", 4: "KAI", 5: "FT_ASCII", 6: "DZ_ASCII", 7: "CH_ASCII", 8: "BX_ASCII", 9: "BZ_ASCII", 10: "FX_ASCII", 11: "GD_ASCII", 12: "HZ_ASCII", 13: "MS_ASCII", 14: "SX_ASCII", 15: "ZY_ASCII", 16: "TM_ASCII", 17: "YJ_LATIN", 18: "CYRILLIC", 19: "KSC5601", 20: "JIS0208_HT", 21: "ARABIC", 22: "THAI", 23: "GREEK", 24: "HEBREW" };
     return getValue(font_type_map, type);
 }
 
 function readWrapType(type) {
-    var wrap_map = { 0: "disable", 1: "enable" }
+    var wrap_map = { 0: "disable", 1: "enable" };
     return getValue(wrap_map, type);
 }
 
 function readFontStyle(type) {
-    var font_style_map = { 0: "normal", 1: "bold" }
+    var font_style_map = { 0: "normal", 1: "bold" };
     return getValue(font_style_map, type);
 }
 
