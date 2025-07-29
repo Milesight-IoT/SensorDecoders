@@ -52,8 +52,8 @@ function milesightDeviceEncode(payload) {
             encoded = encoded.concat(setD2DMasterConfig(payload.d2d_master_config[i]));
         }
     }
-    if ("temperature_alarm_settings" in payload) {
-        encoded = encoded.concat(setTemperatureAlarmSettings(payload.temperature_alarm_settings));
+    if ("temperature_alarm_config" in payload) {
+        encoded = encoded.concat(setTemperatureAlarmSettings(payload.temperature_alarm_config));
     }
     if ("vacant_reporting_interval" in payload) {
         encoded = encoded.concat(setVacantReportingInterval(payload.vacant_reporting_interval));
@@ -98,13 +98,13 @@ function milesightDeviceEncode(payload) {
  * @example { "reboot": 1 }
  */
 function reboot(reboot) {
-    var reboot_map = { 0: "no", 1: "yes" };
-    var reboot_values = getValues(reboot_map);
+    var yes_no_map = { 0: "no", 1: "yes" };
+    var reboot_values = getValues(yes_no_map);
     if (reboot_values.indexOf(reboot) === -1) {
         throw new Error("reboot must be one of " + reboot_values.join(", "));
     }
 
-    if (getValue(reboot_map, reboot) === 0) {
+    if (getValue(yes_no_map, reboot) === 0) {
         return [];
     }
     return [0xff, 0x10, 0xff];
@@ -207,7 +207,7 @@ function setLedIndicatorEnable(led_indicator_enable) {
  * d2d master configuration
  * @since hardware_version v2.0, firmware_version v1.7
  * @param {object} d2d_master_config
- * @param {number} d2d_master_config.mode values: (1: "occupied and temperature threshold alarm", 2: "occupied", 3: "vacant", 4: "temperature threshold alarm", 5: "temperature threshold alarm release")
+ * @param {number} d2d_master_config.mode values: (1: occupied and temperature threshold alarm, 2: occupied, 3: vacant, 4: temperature threshold alarm, 5: temperature threshold alarm release)
  * @param {number} d2d_master_config.enable values: (0: disable, 1: enable)
  * @param {string} d2d_master_config.d2d_cmd
  * @param {number} d2d_master_config.lora_uplink_enable values: (0: disable, 1: enable)
@@ -251,32 +251,32 @@ function setD2DMasterConfig(d2d_master_config) {
 
 /**
  * set current threshold alarm config
- * @param {object} temperature_alarm_settings
- * @param {number} temperature_alarm_settings.threshold_condition values: (0: disable, 1: below, 2: above, 3: between, 4: outside)
- * @param {number} temperature_alarm_settings.threshold_min unit: °C, range: [-30, 60]
- * @param {number} temperature_alarm_settings.threshold_max unit: °C, range: [-30, 60]
- * @example { "temperature_alarm_settings": { "threshold_condition": 1, "threshold_min": 100, "threshold_max": 200 } }
+ * @param {object} temperature_alarm_config
+ * @param {number} temperature_alarm_config.condition values: (0: disable, 1: below, 2: above, 3: between, 4: outside)
+ * @param {number} temperature_alarm_config.threshold_min unit: °C, range: [-30, 60]
+ * @param {number} temperature_alarm_config.threshold_max unit: °C, range: [-30, 60]
+ * @example { "temperature_alarm_config": { "condition": 1, "threshold_min": 100, "threshold_max": 200 } }
  */
-function setTemperatureAlarmSettings(temperature_alarm_settings) {
-    var threshold_condition = temperature_alarm_settings.threshold_condition;
-    var threshold_min = temperature_alarm_settings.threshold_min;
-    var threshold_max = temperature_alarm_settings.threshold_max;
+function setTemperatureAlarmSettings(temperature_alarm_config) {
+    var condition = temperature_alarm_config.condition;
+    var threshold_min = temperature_alarm_config.threshold_min;
+    var threshold_max = temperature_alarm_config.threshold_max;
 
     var condition_map = { 0: "disable", 1: "below", 2: "above", 3: "between", 4: "outside" };
     var condition_values = getValues(condition_map);
-    if (condition_values.indexOf(threshold_condition) === -1) {
-        throw new Error("temperature_alarm_settings.threshold_condition must be one of " + condition_values.join(", "));
+    if (condition_values.indexOf(condition) === -1) {
+        throw new Error("temperature_alarm_config.condition must be one of " + condition_values.join(", "));
     }
     if (threshold_min < -30 || threshold_min > 60) {
-        throw new Error("temperature_alarm_settings.threshold_min must be between -30 and 60");
+        throw new Error("temperature_alarm_config.threshold_min must be between -30 and 60");
     }
     if (threshold_max < -30 || threshold_max > 60) {
-        throw new Error("temperature_alarm_settings.threshold_max must be between -30 and 60");
+        throw new Error("temperature_alarm_config.threshold_max must be between -30 and 60");
     }
 
     var data = 0x00;
     data |= 0x01 << 3; // temperature alarm
-    data |= getValue(condition_map, threshold_condition) << 0;
+    data |= getValue(condition_map, condition) << 0;
 
     var buffer = new Buffer(11);
     buffer.writeUInt8(0xff);
@@ -350,12 +350,13 @@ function setD2DKey(d2d_key) {
 }
 
 /**
- * Set timezone
- * @param {number} timezone unit: minute, UTC+8 -> 8 * 10 = 80
- * @example { "timezone": 8 }
+ * set time zone
+ * @param {number} time_zone unit: minute, UTC+8 -> 8 * 10 = 80
+ * @example { "time_zone": 80 }
  */
 function setTimeZone(time_zone) {
-    var timezone_values = [-120, -110, -100, -95, -90, -80, -70, -60, -50, -40, -35, -30, -20, -10, 0, 10, 20, 30, 35, 40, 45, 50, 55, 57, 60, 65, 70, 80, 90, 95, 100, 105, 110, 120, 127, 130, 140];
+    var timezone_map = { "-120": "UTC-12", "-110": "UTC-11", "-100": "UTC-10", "-95": "UTC-9:30", "-90": "UTC-9", "-80": "UTC-8", "-70": "UTC-7", "-60": "UTC-6", "-50": "UTC-5", "-40": "UTC-4", "-35": "UTC-3:30", "-30": "UTC-3", "-20": "UTC-2", "-10": "UTC-1", 0: "UTC", 10: "UTC+1", 20: "UTC+2", 30: "UTC+3", 35: "UTC+3:30", 40: "UTC+4", 45: "UTC+4:30", 50: "UTC+5", 55: "UTC+5:30", 57: "UTC+5:45", 60: "UTC+6", 65: "UTC+6:30", 70: "UTC+7", 80: "UTC+8", 90: "UTC+9", 95: "UTC+9:30", 100: "UTC+10", 105: "UTC+10:30", 110: "UTC+11", 120: "UTC+12", 127: "UTC+12:45", 130: "UTC+13", 140: "UTC+14" };
+    var timezone_values = getValues(timezone_map);
     if (timezone_values.indexOf(time_zone) === -1) {
         throw new Error("time_zone must be one of " + timezone_values.join(", "));
     }
@@ -363,7 +364,7 @@ function setTimeZone(time_zone) {
     var buffer = new Buffer(4);
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0x17);
-    buffer.writeInt16LE(time_zone);
+    buffer.writeInt16LE(getValue(timezone_map, time_zone));
     return buffer.toBytes();
 }
 
