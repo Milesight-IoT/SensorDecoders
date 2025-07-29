@@ -3,7 +3,7 @@
  *
  * Copyright 2025 Milesight IoT
  *
- * @product WS136 & WS156
+ * @product WS156
  */
 var RAW_VALUE = 0x00;
 
@@ -29,10 +29,9 @@ function Decoder(bytes, port) {
 function milesightDeviceDecode(bytes) {
     var decoded = {};
 
-    for (var i = 0; i < bytes.length;) {
+    for (var i = 0; i < bytes.length; ) {
         var channel_id = bytes[i++];
         var channel_type = bytes[i++];
-
 
         // IPSO VERSION
         if (channel_id === 0xff && channel_type === 0x01) {
@@ -80,62 +79,20 @@ function milesightDeviceDecode(bytes) {
             decoded.battery = readUInt8(bytes[i]);
             i += 1;
         }
-        // BUTTON EVENT
+        // BUTTON PRESS STATE
         else if (channel_id === 0xff && channel_type === 0x34) {
-            var id = readUInt8(bytes[i]);
-            var btn_mode_name = "button_" + id + "_mode";
-            var btn_chn_event_name = "button_" + id + "_event";
-            decoded[btn_mode_name] = readButtonSupportMode(bytes[i + 1]);
-            decoded[btn_chn_event_name] = readButtonEvent(bytes[i + 2]);
+            var id = bytes[i];
+            var btn_chn_name = "button_" + id;
+            decoded[btn_chn_name] = 1;
+            decoded[btn_chn_name + "_d2d"] = readUInt16LE(bytes.slice(i + 1, i + 3));
+            decoded[btn_chn_name + "_msgid"] = getRandomIntInclusive(100000, 999999);
             i += 3;
-
-        }
-        // DOWNLINK RESPONSE
-        else if (channel_id === 0xfe || channel_id === 0xff) {
-            var result = handle_downlink_response(channel_type, bytes, i);
-            decoded = Object.assign(decoded, result.data);
-            i = result.offset;
         } else {
             break;
         }
     }
 
     return decoded;
-}
-
-function handle_downlink_response(channel_type, bytes, offset) {
-    var decoded = {};
-
-    switch (channel_type) {
-        case 0x10:
-            decoded.reboot = readYesNoStatus(bytes[offset]);
-            offset += 1;
-            break;
-        case 0x2f:
-            decoded.delay_report_enable = readEnableStatus(bytes[offset]);
-            offset += 1;
-            break;
-        case 0x35:
-            decoded.d2d_key = readHexString(bytes.slice(offset, offset + 8));
-            offset += 8;
-            break;
-        case 0x36:
-            decoded.d2d_data_rate_config = {};
-            decoded.d2d_data_rate_config.date_rate = readUInt8(bytes[offset]);
-            decoded.d2d_data_rate_config.frequency = readUInt32LE(bytes.slice(offset + 1, offset + 5));
-            offset += 5;
-            break;
-        case 0xc6:
-            decoded.resend_config = {};
-            decoded.resend_config.enable = readEnableStatus(bytes[offset]);
-            decoded.resend_config.retry_times = readUInt8(bytes[offset + 1]);
-            offset += 2;
-            break;
-        default:
-            throw new Error("unknown downlink response");
-    }
-
-    return { data: decoded, offset: offset };
 }
 
 function readProtocolVersion(bytes) {
@@ -190,26 +147,11 @@ function readDeviceStatus(status) {
     return getValue(status_map, status);
 }
 
-function readButtonSupportMode(status) {
-    var status_map = { 0: "short press", 1: "short press and double press", 2: "short press and long press", 3: "short press, double press and long press" };
-    return getValue(status_map, status);
+function getRandomIntInclusive(min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min + 1)) + min;
 }
-
-function readEnableStatus(status) {
-    var status_map = { 0: "disable", 1: "enable" };
-    return getValue(status_map, status);
-}
-
-function readButtonEvent(status) {
-    var status_map = { 0: "short press", 1: "long press", 2: "double press" };
-    return getValue(status_map, status);
-}
-
-function readYesNoStatus(status) {
-    var status_map = { 0: "no", 1: "yes" };
-    return getValue(status_map, status);
-}
-
 
 /* eslint-disable */
 function readUInt8(bytes) {
@@ -229,24 +171,6 @@ function readUInt16LE(bytes) {
 function readInt16LE(bytes) {
     var ref = readUInt16LE(bytes);
     return ref > 0x7fff ? ref - 0x10000 : ref;
-}
-
-function readUInt32LE(bytes) {
-    var value = (bytes[3] << 24) + (bytes[2] << 16) + (bytes[1] << 8) + bytes[0];
-    return (value & 0xffffffff) >>> 0;
-}
-
-function readInt32LE(bytes) {
-    var ref = readUInt32LE(bytes);
-    return ref > 0x7fffffff ? ref - 0x100000000 : ref;
-}
-
-function readHexString(bytes) {
-    var temp = [];
-    for (var i = 0; i < bytes.length; i++) {
-        temp.push(("0" + (bytes[i] & 0xff).toString(16)).slice(-2));
-    }
-    return temp.join("");
 }
 
 function getValue(map, key) {
