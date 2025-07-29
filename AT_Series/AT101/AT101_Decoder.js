@@ -29,7 +29,7 @@ function Decoder(bytes, port) {
 function milesightDeviceDecode(bytes) {
     var decoded = {};
 
-    for (var i = 0; i < bytes.length;) {
+    for (var i = 0; i < bytes.length; ) {
         var channel_id = bytes[i++];
         var channel_type = bytes[i++];
 
@@ -143,8 +143,7 @@ function milesightDeviceDecode(bytes) {
             var result = handle_downlink_response(channel_type, bytes, i);
             decoded = Object.assign(decoded, result.data);
             i = result.offset;
-        }
-        else {
+        } else {
             break;
         }
     }
@@ -167,7 +166,7 @@ function handle_downlink_response(channel_type, bytes, offset) {
             offset += 3;
             break;
         case 0x17:
-            decoded.timezone = readInt16LE(bytes.slice(offset, offset + 2)) / 10;
+            decoded.time_zone = readTimeZone(readInt16LE(bytes.slice(offset, offset + 2)));
             offset += 2;
             break;
         case 0x28:
@@ -240,8 +239,8 @@ function handle_downlink_response(channel_type, bytes, offset) {
         case 0x8a:
             var timed_report_config = {};
             timed_report_config.index = readUInt8(bytes[offset]) + 1;
-            timed_report_config.time = readUInt8(bytes[offset + 1]);
-            offset += 2;
+            timed_report_config.time = readUInt16LE(bytes.slice(offset + 1, offset + 3));
+            offset += 3;
             decoded.timed_report_config = decoded.timed_report_config || [];
             decoded.timed_report_config.push(timed_report_config);
             break;
@@ -252,11 +251,11 @@ function handle_downlink_response(channel_type, bytes, offset) {
         case 0x8e:
             var report_type_value = readUInt8(bytes[offset]);
             if (report_type_value === 0x00) {
-                decoded.report_interval = readUInt16LE(bytes.slice(offset, offset + 2));
+                decoded.report_interval = readUInt16LE(bytes.slice(offset + 1, offset + 3));
             } else if (report_type_value === 0x01) {
-                decoded.motion_report_interval = readUInt16LE(bytes.slice(offset, offset + 2));
+                decoded.motion_report_interval = readUInt16LE(bytes.slice(offset + 1, offset + 3));
             }
-            offset += 2;
+            offset += 3;
             break;
         default:
             throw new Error("unknown downlink response");
@@ -330,7 +329,7 @@ function readMotionStatus(type) {
         0: "unknown",
         1: "start",
         2: "moving",
-        3: "stop"
+        3: "stop",
     };
     return getValue(motion_status_map, type);
 }
@@ -340,7 +339,7 @@ function readGeofenceStatus(type) {
         0: "inside",
         1: "outside",
         2: "unset",
-        3: "unknown"
+        3: "unknown",
     };
     return getValue(geofence_status_map, type);
 }
@@ -348,7 +347,7 @@ function readGeofenceStatus(type) {
 function readDevicePosition(type) {
     var device_position_map = {
         0: "normal",
-        1: "tilt"
+        1: "tilt",
     };
     return getValue(device_position_map, type);
 }
@@ -356,7 +355,7 @@ function readDevicePosition(type) {
 function readTamperStatus(type) {
     var tamper_status_map = {
         0: "install",
-        1: "uninstall"
+        1: "uninstall",
     };
     return getValue(tamper_status_map, type);
 }
@@ -367,8 +366,13 @@ function readYesNoStatus(status) {
 }
 
 function readEnableStatus(status) {
-    var enable_map = { 0: "disable", 1: "enable" };
-    return getValue(enable_map, status);
+    var status_map = { 0: "disable", 1: "enable" };
+    return getValue(status_map, status);
+}
+
+function readTimeZone(time_zone) {
+    var timezone_map = { "-120": "UTC-12", "-110": "UTC-11", "-100": "UTC-10", "-95": "UTC-9:30", "-90": "UTC-9", "-80": "UTC-8", "-70": "UTC-7", "-60": "UTC-6", "-50": "UTC-5", "-40": "UTC-4", "-35": "UTC-3:30", "-30": "UTC-3", "-20": "UTC-2", "-10": "UTC-1", 0: "UTC", 10: "UTC+1", 20: "UTC+2", 30: "UTC+3", 35: "UTC+3:30", 40: "UTC+4", 45: "UTC+4:30", 50: "UTC+5", 55: "UTC+5:30", 57: "UTC+5:45", 60: "UTC+6", 65: "UTC+6:30", 70: "UTC+7", 80: "UTC+8", 90: "UTC+9", 95: "UTC+9:30", 100: "UTC+10", 105: "UTC+10:30", 110: "UTC+11", 120: "UTC+12", 127: "UTC+12:45", 130: "UTC+13", 140: "UTC+14" };
+    return getValue(timezone_map, time_zone);
 }
 
 function readReportStrategy(type) {

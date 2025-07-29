@@ -35,8 +35,8 @@ function milesightDeviceEncode(payload) {
     if ("report_status" in payload) {
         encoded = encoded.concat(reportStatus(payload.report_status));
     }
-    if ("timezone" in payload) {
-        encoded = encoded.concat(setTimeZone(payload.timezone));
+    if ("time_zone" in payload) {
+        encoded = encoded.concat(setTimeZone(payload.time_zone));
     }
     if ("sync_time" in payload) {
         encoded = encoded.concat(syncTime(payload.sync_time));
@@ -98,13 +98,13 @@ function milesightDeviceEncode(payload) {
  * @example { "reboot": 1 }
  */
 function reboot(reboot) {
-    var reboot_map = { 0: "no", 1: "yes" };
-    var reboot_values = getValues(reboot_map);
+    var yes_no_map = { 0: "no", 1: "yes" };
+    var reboot_values = getValues(yes_no_map);
     if (reboot_values.indexOf(reboot) === -1) {
         throw new Error("reboot must be one of " + reboot_values.join(", "));
     }
 
-    if (getValue(reboot_map, reboot) === 0) {
+    if (getValue(yes_no_map, reboot) === 0) {
         return [];
     }
     return [0xff, 0x10, 0xff];
@@ -129,15 +129,21 @@ function reportStatus(report_status) {
 }
 
 /**
- * timezone
- * @param {number} timezone unit: minute, UTC+8 -> 8 * 10 = 80
- * @example { "timezone": 8 }
+ * set time zone
+ * @param {number} time_zone unit: minute, UTC+8 -> 8 * 10 = 80
+ * @example { "time_zone": 80 }
  */
-function setTimeZone(timezone) {
+function setTimeZone(time_zone) {
+    var timezone_map = { "-120": "UTC-12", "-110": "UTC-11", "-100": "UTC-10", "-95": "UTC-9:30", "-90": "UTC-9", "-80": "UTC-8", "-70": "UTC-7", "-60": "UTC-6", "-50": "UTC-5", "-40": "UTC-4", "-35": "UTC-3:30", "-30": "UTC-3", "-20": "UTC-2", "-10": "UTC-1", 0: "UTC", 10: "UTC+1", 20: "UTC+2", 30: "UTC+3", 35: "UTC+3:30", 40: "UTC+4", 45: "UTC+4:30", 50: "UTC+5", 55: "UTC+5:30", 57: "UTC+5:45", 60: "UTC+6", 65: "UTC+6:30", 70: "UTC+7", 80: "UTC+8", 90: "UTC+9", 95: "UTC+9:30", 100: "UTC+10", 105: "UTC+10:30", 110: "UTC+11", 120: "UTC+12", 127: "UTC+12:45", 130: "UTC+13", 140: "UTC+14" };
+    var timezone_values = getValues(timezone_map);
+    if (timezone_values.indexOf(time_zone) === -1) {
+        throw new Error("time_zone must be one of " + timezone_values.join(", "));
+    }
+
     var buffer = new Buffer(4);
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0x17);
-    buffer.writeInt16LE(timezone * 10);
+    buffer.writeInt16LE(getValue(timezone_map, time_zone));
     return buffer.toBytes();
 }
 
@@ -441,22 +447,22 @@ function setGeofenceAlarmConfig(geofence_alarm_config) {
 /**
  * set timed report config
  * @param {object} timed_report_config
- * @param {number} timed_report_config.index range: [1, 4]
+ * @param {number} timed_report_config.index range: [1, 5]
  * @param {number} timed_report_config.time unit: minute, convert: hh:mm -> hh * 60 + mm
- * @example { "timed_report_config": { "index": 1, "time": 60 } }
+ * @example { "timed_report_config": [{ "index": 1, "time": 60 }] }
  */
 function setTimedReportConfig(timed_report_config) {
     var index = timed_report_config.index;
     var time = timed_report_config.time;
-    if (index < 1 || index > 4) {
-        throw new Error("timed_report_config._item.index must be between 1 and 4");
+    if (index < 1 || index > 5) {
+        throw new Error("timed_report_config._item.index must be between 1 and 5");
     }
 
     var buffer = new Buffer(5);
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0x8a);
     buffer.writeUInt8(index - 1);
-    buffer.writeUInt8(time);
+    buffer.writeUInt16LE(time);
     return buffer.toBytes();
 }
 
