@@ -403,14 +403,14 @@ function setTvocRawReportingEnable(tvoc_raw_reporting_enable) {
  * temperature alarm settings
  * @param {object} temperature_alarm_settings
  * @param {number} temperature_alarm_settings.enable values: (0: disable, 1: enable)
- * @param {number} temperature_alarm_settings.threshold_condition values: (1: below, 2: above, 3: between, 4: outside)
+ * @param {number} temperature_alarm_settings.condition values: (1: below, 2: above, 3: between, 4: outside)
  * @param {number} temperature_alarm_settings.threshold_min unit: Celsius
  * @param {number} temperature_alarm_settings.threshold_max unit: Celsius
- * @example { "temperature_alarm_settings": { "enable": 1, "threshold_condition": 2, "threshold_min": 30, "threshold_max": 40 } }
+ * @example { "temperature_alarm_settings": { "enable": 1, "condition": 2, "threshold_min": 30, "threshold_max": 40 } }
  */
 function setTemperatureAlarmSettings(temperature_alarm_settings) {
     var enable = temperature_alarm_settings.enable;
-    var threshold_condition = temperature_alarm_settings.threshold_condition;
+    var condition = temperature_alarm_settings.condition;
     var threshold_min = temperature_alarm_settings.threshold_min;
     var threshold_max = temperature_alarm_settings.threshold_max;
 
@@ -419,16 +419,16 @@ function setTemperatureAlarmSettings(temperature_alarm_settings) {
     if (enable_values.indexOf(enable) === -1) {
         throw new Error("temperature_alarm_settings.enable must be one of " + enable_values.join(", "));
     }
-    var threshold_condition_map = { 0: "disable", 1: "below", 2: "above", 3: "between", 4: "outside" };
-    var threshold_condition_values = getValues(threshold_condition_map);
-    if (threshold_condition_values.indexOf(threshold_condition) === -1) {
-        throw new Error("temperature_alarm_settings.threshold_condition must be one of " + threshold_condition_values.join(", "));
+    var condition_map = { 0: "disable", 1: "below", 2: "above", 3: "between", 4: "outside" };
+    var condition_values = getValues(condition_map);
+    if (condition_values.indexOf(condition) === -1) {
+        throw new Error("temperature_alarm_settings.condition must be one of " + condition_values.join(", "));
     }
 
     var buffer = new Buffer(7);
     buffer.writeUInt8(0x69);
     buffer.writeUInt8(getValue(enable_map, enable));
-    buffer.writeUInt8(getValue(threshold_condition_map, threshold_condition));
+    buffer.writeUInt8(getValue(condition_map, condition));
     buffer.writeInt16LE(threshold_min * 10);
     buffer.writeInt16LE(threshold_max * 10);
     return buffer.toBytes();
@@ -465,7 +465,7 @@ function setPM1AlarmSettings(pm1_0_alarm_settings) {
  * @param {object} pm2_5_alarm_settings
  * @param {number} pm2_5_alarm_settings.enable values: (0: disable, 1: enable)
  * @param {number} pm2_5_alarm_settings.threshold_max
- * @example { "pm2_5_alarm_settings": { "enable": 1, "threshold_condition": 2, "threshold_min": 30, "threshold_max": 40 } }
+ * @example { "pm2_5_alarm_settings": { "enable": 1, "condition": 2, "threshold_min": 30, "threshold_max": 40 } }
  */
 function setPM25AlarmSettings(pm2_5_alarm_settings) {
     var enable = pm2_5_alarm_settings.enable;

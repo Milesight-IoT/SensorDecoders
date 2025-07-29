@@ -354,7 +354,7 @@ function milesightDeviceDecode(bytes) {
             case 0x69:
                 decoded.temperature_alarm_settings = {};
                 decoded.temperature_alarm_settings.enable = readEnableStatus(bytes[i]);
-                decoded.temperature_alarm_settings.threshold_condition = readThresholdCondition(bytes[i + 1]);
+                decoded.temperature_alarm_settings.condition = readThresholdCondition(bytes[i + 1]);
                 decoded.temperature_alarm_settings.threshold_min = readInt16LE(bytes.slice(i + 2, i + 4)) / 10;
                 decoded.temperature_alarm_settings.threshold_max = readInt16LE(bytes.slice(i + 4, i + 6)) / 10;
                 i += 6;
@@ -362,7 +362,7 @@ function milesightDeviceDecode(bytes) {
             case 0x6a:
                 decoded.pm1_0_alarm_settings = {};
                 decoded.pm1_0_alarm_settings.enable = readEnableStatus(bytes[i]);
-                // decoded.pm1_0_alarm_settings.threshold_condition = readThresholdCondition(bytes[i + 1]);
+                // decoded.pm1_0_alarm_settings.condition = readThresholdCondition(bytes[i + 1]);
                 // decoded.pm1_0_alarm_settings.threshold_min = readInt16LE(bytes.slice(i + 2, i + 4));
                 decoded.pm1_0_alarm_settings.threshold_max = readInt16LE(bytes.slice(i + 4, i + 6));
                 i += 6;
@@ -370,7 +370,7 @@ function milesightDeviceDecode(bytes) {
             case 0x6b:
                 decoded.pm2_5_alarm_settings = {};
                 decoded.pm2_5_alarm_settings.enable = readEnableStatus(bytes[i]);
-                // decoded.pm2_5_alarm_settings.threshold_condition = readThresholdCondition(bytes[i + 1]);
+                // decoded.pm2_5_alarm_settings.condition = readThresholdCondition(bytes[i + 1]);
                 // decoded.pm2_5_alarm_settings.threshold_min = readInt16LE(bytes.slice(i + 2, i + 4));
                 decoded.pm2_5_alarm_settings.threshold_max = readInt16LE(bytes.slice(i + 4, i + 6));
                 i += 6;
@@ -378,7 +378,7 @@ function milesightDeviceDecode(bytes) {
             case 0x6c:
                 decoded.pm10_alarm_settings = {};
                 decoded.pm10_alarm_settings.enable = readEnableStatus(bytes[i]);
-                // decoded.pm10_alarm_settings.threshold_condition = readThresholdCondition(bytes[i + 1]);
+                // decoded.pm10_alarm_settings.condition = readThresholdCondition(bytes[i + 1]);
                 // decoded.pm10_alarm_settings.threshold_min = readInt16LE(bytes.slice(i + 2, i + 4));
                 decoded.pm10_alarm_settings.threshold_max = readInt16LE(bytes.slice(i + 4, i + 6));
                 i += 6;
@@ -386,7 +386,7 @@ function milesightDeviceDecode(bytes) {
             case 0x6d:
                 decoded.tvoc_alarm_settings = {};
                 decoded.tvoc_alarm_settings.enable = readEnableStatus(bytes[i]);
-                // decoded.tvoc_alarm_settings.threshold_condition = readThresholdCondition(bytes[i + 1]);
+                // decoded.tvoc_alarm_settings.condition = readThresholdCondition(bytes[i + 1]);
                 // decoded.tvoc_alarm_settings.threshold_min = readInt16LE(bytes.slice(i + 2, i + 4));
                 decoded.tvoc_alarm_settings.threshold_max = readInt16LE(bytes.slice(i + 4, i + 6));
                 i += 6;
@@ -394,7 +394,7 @@ function milesightDeviceDecode(bytes) {
             case 0x6e:
                 decoded.vaping_index_alarm_settings = {};
                 decoded.vaping_index_alarm_settings.enable = readEnableStatus(bytes[i]);
-                // decoded.vaping_index_alarm_settings.threshold_condition = readThresholdCondition(bytes[i + 1]);
+                // decoded.vaping_index_alarm_settings.condition = readThresholdCondition(bytes[i + 1]);
                 // decoded.vaping_index_alarm_settings.threshold_min = readUInt8(bytes[i + 2]);
                 decoded.vaping_index_alarm_settings.threshold_max = readUInt8(bytes[i + 3]);
                 i += 4;
@@ -551,49 +551,6 @@ function readFirmwareVersion(bytes) {
     return version;
 }
 
-function readTimeZone(value) {
-    var time_zone_map = {
-        "-720": "UTC-12",
-        "-660": "UTC-11",
-        "-600": "UTC-10",
-        "-570": "UTC-9:30",
-        "-540": "UTC-9",
-        "-480": "UTC-8",
-        "-420": "UTC-7",
-        "-360": "UTC-6",
-        "-300": "UTC-5",
-        "-240": "UTC-4",
-        "-210": "UTC-3:30",
-        "-180": "UTC-3",
-        "-120": "UTC-2",
-        "-60": "UTC-1",
-        0: "UTC",
-        60: "UTC+1",
-        120: "UTC+2",
-        180: "UTC+3",
-        210: "UTC+3:30",
-        240: "UTC+4",
-        270: "UTC+4:30",
-        300: "UTC+5",
-        330: "UTC+5:30",
-        345: "UTC+5:45",
-        360: "UTC+6",
-        390: "UTC+6:30",
-        420: "UTC+7",
-        480: "UTC+8",
-        540: "UTC+9",
-        570: "UTC+9:30",
-        600: "UTC+10",
-        630: "UTC+10:30",
-        660: "UTC+11",
-        720: "UTC+12",
-        765: "UTC+12:45",
-        780: "UTC+13",
-        840: "UTC+14",
-    };
-    return getValue(time_zone_map, value);
-}
-
 function readDeviceStatus(type) {
     var device_status_map = { 0: "off", 1: "on" };
     return getValue(device_status_map, type);
@@ -699,9 +656,9 @@ function readTemperatureType(type) {
     return getValue(unit_map, type);
 }
 
-function readEnableStatus(type) {
-    var enable_map = { 0: "disable", 1: "enable" };
-    return getValue(enable_map, type);
+function readEnableStatus(status) {
+    var status_map = { 0: "disable", 1: "enable" };
+    return getValue(status_map, status);
 }
 
 function readYesNoStatus(type) {
@@ -710,8 +667,8 @@ function readYesNoStatus(type) {
 }
 
 function readThresholdCondition(type) {
-    var threshold_condition_map = { 0: "disable", 1: "below", 2: "above", 3: "between", 4: "outside" };
-    return getValue(threshold_condition_map, type);
+    var condition_map = { 0: "disable", 1: "below", 2: "above", 3: "between", 4: "outside" };
+    return getValue(condition_map, type);
 }
 
 function readTimeZone(time_zone) {
