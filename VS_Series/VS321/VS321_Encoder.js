@@ -104,13 +104,13 @@ function milesightDeviceEncode(payload) {
  * @example { "reboot": 1 }
  */
 function reboot(reboot) {
-    var reboot_map = { 0: "no", 1: "yes" };
-    var reboot_values = getValues(reboot_map);
+    var yes_no_map = { 0: "no", 1: "yes" };
+    var reboot_values = getValues(yes_no_map);
     if (reboot_values.indexOf(reboot) === -1) {
         throw new Error("reboot must be one of " + reboot_values.join(", "));
     }
 
-    if (getValue(reboot_map, reboot) === 0) {
+    if (getValue(yes_no_map, reboot) === 0) {
         return [];
     }
     return [0xff, 0x10, 0xff];
@@ -250,18 +250,18 @@ function setAdrEnable(adr_enable) {
 
 /**
  * set temperature alarm config
- * @param {object} temperature_alarm_config 
+ * @param {object} temperature_alarm_config
  * @param {number} temperature_alarm_config.condition values: (0: disable, 1: below, 2: above, 3: between, 4: outside)
- * @param {number} temperature_alarm_config.min_threshold unit: °C
- * @param {number} temperature_alarm_config.max_threshold unit: °C
+ * @param {number} temperature_alarm_config.threshold_min unit: °C
+ * @param {number} temperature_alarm_config.threshold_max unit: °C
  * @param {number} temperature_alarm_config.lock_time unit: minute
  * @param {number} temperature_alarm_config.continue_time unit: minute
- * @example { "temperature_alarm_config": { "condition": 0, "min_threshold": 20, "max_threshold": 25, "lock_time": 10, "continue_time": 10 } }
+ * @example { "temperature_alarm_config": { "condition": 0, "threshold_min": 20, "threshold_max": 25, "lock_time": 10, "continue_time": 10 } }
  */
 function setTemperatureAlarmConfig(temperature_alarm_config) {
     var condition = temperature_alarm_config.condition;
-    var min_threshold = temperature_alarm_config.min_threshold;
-    var max_threshold = temperature_alarm_config.max_threshold;
+    var threshold_min = temperature_alarm_config.threshold_min;
+    var threshold_max = temperature_alarm_config.threshold_max;
     var lock_time = temperature_alarm_config.lock_time;
     var continue_time = temperature_alarm_config.continue_time;
 
@@ -280,8 +280,8 @@ function setTemperatureAlarmConfig(temperature_alarm_config) {
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0x06);
     buffer.writeUInt8(data);
-    buffer.writeInt16LE(min_threshold * 10);
-    buffer.writeInt16LE(max_threshold * 10);
+    buffer.writeInt16LE(threshold_min * 10);
+    buffer.writeInt16LE(threshold_max * 10);
     buffer.writeUInt16LE(lock_time);
     buffer.writeUInt16LE(continue_time);
     return buffer.toBytes();
@@ -289,18 +289,18 @@ function setTemperatureAlarmConfig(temperature_alarm_config) {
 
 /**
  * set humidity alarm config
- * @param {object} humidity_alarm_config 
+ * @param {object} humidity_alarm_config
  * @param {number} humidity_alarm_config.condition values: (0: disable, 1: below, 2: above, 3: between, 4: outside)
- * @param {number} humidity_alarm_config.min_threshold unit: %
- * @param {number} humidity_alarm_config.max_threshold unit: %
+ * @param {number} humidity_alarm_config.threshold_min unit: %
+ * @param {number} humidity_alarm_config.threshold_max unit: %
  * @param {number} humidity_alarm_config.lock_time unit: minute
  * @param {number} humidity_alarm_config.continue_time unit: minute
- * @example { "humidity_alarm_config": { "condition": 0, "min_threshold": 20, "max_threshold": 25, "lock_time": 10, "continue_time": 10 } }
+ * @example { "humidity_alarm_config": { "condition": 0, "threshold_min": 20, "threshold_max": 25, "lock_time": 10, "continue_time": 10 } }
  */
 function setHumidityAlarmConfig(humidity_alarm_config) {
     var condition = humidity_alarm_config.condition;
-    var min_threshold = humidity_alarm_config.min_threshold;
-    var max_threshold = humidity_alarm_config.max_threshold;
+    var threshold_min = humidity_alarm_config.threshold_min;
+    var threshold_max = humidity_alarm_config.threshold_max;
     var lock_time = humidity_alarm_config.lock_time;
     var continue_time = humidity_alarm_config.continue_time;
 
@@ -319,8 +319,8 @@ function setHumidityAlarmConfig(humidity_alarm_config) {
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0x06);
     buffer.writeUInt8(data);
-    buffer.writeUInt16LE(min_threshold * 2);
-    buffer.writeUInt16LE(max_threshold * 2);
+    buffer.writeUInt16LE(threshold_min * 2);
+    buffer.writeUInt16LE(threshold_max * 2);
     buffer.writeUInt16LE(lock_time);
     buffer.writeUInt16LE(continue_time);
     return buffer.toBytes();
@@ -328,18 +328,18 @@ function setHumidityAlarmConfig(humidity_alarm_config) {
 
 /**
  * set illuminance alarm config
- * @param {object} illuminance_alarm_config 
+ * @param {object} illuminance_alarm_config
  * @param {number} illuminance_alarm_config.condition values: (0: disable, 1: below, 2: above, 3: between, 4: outside)
- * @param {number} illuminance_alarm_config.min_threshold unit: lux
- * @param {number} illuminance_alarm_config.max_threshold unit: lux
+ * @param {number} illuminance_alarm_config.threshold_min unit: lux
+ * @param {number} illuminance_alarm_config.threshold_max unit: lux
  * @param {number} illuminance_alarm_config.lock_time unit: minute
  * @param {number} illuminance_alarm_config.continue_time unit: minute
- * @example { "illuminance_alarm_config": { "condition": 0, "min_threshold": 20, "max_threshold": 25, "lock_time": 10, "continue_time": 10 } }
+ * @example { "illuminance_alarm_config": { "condition": 0, "threshold_min": 20, "threshold_max": 25, "lock_time": 10, "continue_time": 10 } }
  */
 function setIlluminanceAlarmConfig(illuminance_alarm_config) {
     var condition = illuminance_alarm_config.condition;
-    var min_threshold = illuminance_alarm_config.min_threshold;
-    var max_threshold = illuminance_alarm_config.max_threshold;
+    var threshold_min = illuminance_alarm_config.threshold_min;
+    var threshold_max = illuminance_alarm_config.threshold_max;
     var lock_time = illuminance_alarm_config.lock_time;
     var continue_time = illuminance_alarm_config.continue_time;
 
@@ -358,8 +358,8 @@ function setIlluminanceAlarmConfig(illuminance_alarm_config) {
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0x06);
     buffer.writeUInt8(data);
-    buffer.writeUInt16LE(min_threshold);
-    buffer.writeUInt16LE(max_threshold);
+    buffer.writeUInt16LE(threshold_min);
+    buffer.writeUInt16LE(threshold_max);
     buffer.writeUInt16LE(lock_time);
     buffer.writeUInt16LE(continue_time);
     return buffer.toBytes();
@@ -599,14 +599,8 @@ function setLoRaPort(lora_port) {
 
 function getValues(map) {
     var values = [];
-    if (RAW_VALUE) {
-        for (var key in map) {
-            values.push(parseInt(key));
-        }
-    } else {
-        for (var key in map) {
-            values.push(map[key]);
-        }
+    for (var key in map) {
+        values.push(RAW_VALUE ? parseInt(key) : map[key]);
     }
     return values;
 }

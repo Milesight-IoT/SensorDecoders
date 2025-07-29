@@ -158,7 +158,6 @@ function milesightDeviceDecode(bytes) {
                 }
                 i += 9;
             }
-
             decoded.history = decoded.history || [];
             decoded.history.push(data);
         }
@@ -194,22 +193,22 @@ function handle_downlink_response(channel_type, bytes, offset) {
             if (channel_id === 0x01) {
                 decoded.temperature_alarm_config = {};
                 decoded.temperature_alarm_config.condition = readConditionType(condition_value);
-                decoded.temperature_alarm_config.min_threshold = readInt16LE(bytes.slice(offset + 1, offset + 3)) / 10;
-                decoded.temperature_alarm_config.max_threshold = readInt16LE(bytes.slice(offset + 3, offset + 5)) / 10;
+                decoded.temperature_alarm_config.threshold_min = readInt16LE(bytes.slice(offset + 1, offset + 3)) / 10;
+                decoded.temperature_alarm_config.threshold_max = readInt16LE(bytes.slice(offset + 3, offset + 5)) / 10;
                 decoded.temperature_alarm_config.lock_time = readUInt16LE(bytes.slice(offset + 5, offset + 7));
                 decoded.temperature_alarm_config.continue_time = readUInt16LE(bytes.slice(offset + 7, offset + 9));
             } else if (channel_id === 0x02) {
                 decoded.humidity_alarm_config = {};
                 decoded.humidity_alarm_config.condition = readConditionType(condition_value);
-                decoded.humidity_alarm_config.min_threshold = readUInt16LE(bytes.slice(offset + 1, offset + 3)) / 2;
-                decoded.humidity_alarm_config.max_threshold = readUInt16LE(bytes.slice(offset + 3, offset + 5)) / 2;
+                decoded.humidity_alarm_config.threshold_min = readUInt16LE(bytes.slice(offset + 1, offset + 3)) / 2;
+                decoded.humidity_alarm_config.threshold_max = readUInt16LE(bytes.slice(offset + 3, offset + 5)) / 2;
                 decoded.humidity_alarm_config.lock_time = readUInt16LE(bytes.slice(offset + 5, offset + 7));
                 decoded.humidity_alarm_config.continue_time = readUInt16LE(bytes.slice(offset + 7, offset + 9));
             } else if (channel_id === 0x03) {
                 decoded.illuminance_alarm_config = {};
                 decoded.illuminance_alarm_config.condition = readConditionType(condition_value);
-                decoded.illuminance_alarm_config.min_threshold = readUInt16LE(bytes.slice(offset + 1, offset + 3));
-                decoded.illuminance_alarm_config.max_threshold = readUInt16LE(bytes.slice(offset + 3, offset + 5));
+                decoded.illuminance_alarm_config.threshold_min = readUInt16LE(bytes.slice(offset + 1, offset + 3));
+                decoded.illuminance_alarm_config.threshold_max = readUInt16LE(bytes.slice(offset + 3, offset + 5));
                 decoded.illuminance_alarm_config.lock_time = readUInt16LE(bytes.slice(offset + 5, offset + 7));
                 decoded.illuminance_alarm_config.continue_time = readUInt16LE(bytes.slice(offset + 7, offset + 9));
             }
