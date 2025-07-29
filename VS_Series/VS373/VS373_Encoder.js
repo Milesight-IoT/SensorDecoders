@@ -102,7 +102,7 @@ function milesightDeviceEncode(payload) {
         encoded = encoded.concat(setConfirmMode(payload.confirm_mode_enable));
     }
     if ("adr_enable" in payload) {
-        encoded = encoded.concat(setADR(payload.adr_enable));
+        encoded = encoded.concat(setADREnable(payload.adr_enable));
     }
     if ("d2d_key" in payload) {
         encoded = encoded.concat(setD2DKey(payload.d2d_key));
@@ -401,16 +401,16 @@ function setBuzzerEnable(buzzer_enable) {
  * @example { "release_alarm": 1 } }
  */
 function releaseAlarm(release_alarm) {
-    var release_alarm_map = { 0: "no", 1: "yes" };
-    var release_alarm_values = getValues(release_alarm_map);
-    if (release_alarm_values.indexOf(release_alarm) === -1) {
-        throw new Error("release_alarm must be in " + release_alarm_values.join(", "));
+    var yes_no_map = { 0: "no", 1: "yes" };
+    var yes_no_values = getValues(yes_no_map);
+    if (yes_no_values.indexOf(release_alarm) === -1) {
+        throw new Error("release_alarm must be in " + yes_no_values.join(", "));
     }
 
     var buffer = new Buffer(3);
     buffer.writeUInt8(0xf9);
     buffer.writeUInt8(0x64);
-    buffer.writeUInt8(getValue(release_alarm_map, release_alarm));
+    buffer.writeUInt8(getValue(yes_no_map, release_alarm));
     return buffer.toBytes();
 }
 
@@ -504,7 +504,7 @@ function deleteRegion(delete_region) {
     var yes_no_values = getValues(yes_no_map);
 
     var data = [];
-    var region_offset = { "region_1": 0, "region_2": 1, "region_3": 2, "region_4": 3 };
+    var region_offset = { region_1: 0, region_2: 1, region_3: 2, region_4: 3 };
     for (var key in region_offset) {
         if (key in delete_region) {
             if (yes_no_values.indexOf(delete_region[key]) === -1) {
@@ -711,7 +711,7 @@ function setConfirmMode(confirm_mode_enable) {
  * @param {number} adr_enable values: (0: disable, 1: enable)
  * @example { "adr_enable": 1 }
  */
-function setADR(adr_enable) {
+function setADREnable(adr_enable) {
     var enable_map = { 0: "disable", 1: "enable" };
     var enable_values = getValues(enable_map);
     if (enable_values.indexOf(adr_enable) === -1) {
@@ -913,14 +913,8 @@ function setTime(timestamp) {
 
 function getValues(map) {
     var values = [];
-    if (RAW_VALUE) {
-        for (var key in map) {
-            values.push(parseInt(key));
-        }
-    } else {
-        for (var key in map) {
-            values.push(map[key]);
-        }
+    for (var key in map) {
+        values.push(RAW_VALUE ? parseInt(key) : map[key]);
     }
     return values;
 }

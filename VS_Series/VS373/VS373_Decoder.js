@@ -29,7 +29,7 @@ function Decoder(bytes, port) {
 function milesightDeviceDecode(bytes) {
     var decoded = {};
 
-    for (var i = 0; i < bytes.length;) {
+    for (var i = 0; i < bytes.length; ) {
         var channel_id = bytes[i++];
         var channel_type = bytes[i++];
 
@@ -104,7 +104,6 @@ function milesightDeviceDecode(bytes) {
                 event.region_id = readUInt8(bytes[i + 4]);
             }
             i += 5;
-
             decoded.events = decoded.events || [];
             decoded.events.push(event);
         }
@@ -121,7 +120,6 @@ function milesightDeviceDecode(bytes) {
                 data.region_id = readUInt8(bytes[i + 8]);
             }
             i += 9;
-
             decoded.history = decoded.history || [];
             decoded.history.push(data);
         }
@@ -424,8 +422,8 @@ function readAlarmStatus(status) {
 }
 
 function readEnableStatus(status) {
-    var enable_status_map = { 0: "disable", 1: "enable" };
-    return getValue(enable_status_map, status);
+    var status_map = { 0: "disable", 1: "enable" };
+    return getValue(status_map, status);
 }
 
 function readYesNoStatus(status) {
