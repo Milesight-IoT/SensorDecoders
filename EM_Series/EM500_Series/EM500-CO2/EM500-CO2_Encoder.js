@@ -44,8 +44,8 @@ function milesightDeviceEncode(payload) {
     if ("timestamp" in payload) {
         encoded = encoded.concat(setTimestamp(payload.timestamp));
     }
-    if ("timezone" in payload) {
-        encoded = encoded.concat(setTimeZone(payload.timezone));
+    if ("time_zone" in payload) {
+        encoded = encoded.concat(setTimeZone(payload.time_zone));
     }
     if ("time_sync_enable" in payload) {
         encoded = encoded.concat(setTimeSyncEnable(payload.time_sync_enable));
@@ -59,32 +59,32 @@ function milesightDeviceEncode(payload) {
     if ("co2_calibration_config" in payload) {
         encoded = encoded.concat(setCO2CalibrationConfig(payload.co2_calibration_config));
     }
-    if ("co2_abc_calibration_config" in payload) {
-        encoded = encoded.concat(setCO2AutoBackgroundCalibrationConfig(payload.co2_abc_calibration_config));
+    if ("co2_abc_calibration_schedule" in payload) {
+        encoded = encoded.concat(setCO2AutoBackgroundCalibrationConfig(payload.co2_abc_calibration_schedule));
     }
-    if ("temperature_calibration_value_config" in payload) {
-        encoded = encoded.concat(setTemperatureCalibrationValueConfig(payload.temperature_calibration_value_config));
+    if ("temperature_calibration_settings" in payload) {
+        encoded = encoded.concat(setTemperatureCalibrationValueConfig(payload.temperature_calibration_settings));
     }
-    if ("co2_calibration_value_config" in payload) {
-        encoded = encoded.concat(setCO2CalibrationValueConfig(payload.co2_calibration_value_config));
+    if ("co2_calibration_settings" in payload) {
+        encoded = encoded.concat(setCO2CalibrationValueConfig(payload.co2_calibration_settings));
     }
-    if ("humidity_calibration_value_config" in payload) {
-        encoded = encoded.concat(setHumidityCalibrationValueConfig(payload.humidity_calibration_value_config));
+    if ("humidity_calibration_settings" in payload) {
+        encoded = encoded.concat(setHumidityCalibrationValueConfig(payload.humidity_calibration_settings));
     }
-    if ("pressure_calibration_value_config" in payload) {
-        encoded = encoded.concat(setPressureCalibrationValueConfig(payload.pressure_calibration_value_config));
+    if ("pressure_calibration_settings" in payload) {
+        encoded = encoded.concat(setPressureCalibrationValueConfig(payload.pressure_calibration_settings));
     }
-    if ("pressure_calibration_config" in payload) {
-        encoded = encoded.concat(setPressureCalibrationConfig(payload.pressure_calibration_config));
+    if ("altitude_calibration_settings" in payload) {
+        encoded = encoded.concat(setAltitudeCalibrationConfig(payload.altitude_calibration_settings));
     }
     if ("sensor_function_config" in payload) {
         encoded = encoded.concat(setSensorFunctionConfig(payload.sensor_function_config));
     }
-    if ("co2_threshold_alarm_config" in payload) {
-        encoded = encoded.concat(setCO2ThresholdAlarmConfig(payload.co2_threshold_alarm_config));
+    if ("co2_alarm_config" in payload) {
+        encoded = encoded.concat(setCO2ThresholdAlarmConfig(payload.co2_alarm_config));
     }
-    if ("temperature_threshold_alarm_config" in payload) {
-        encoded = encoded.concat(setTemperatureThresholdAlarmConfig(payload.temperature_threshold_alarm_config));
+    if ("temperature_alarm_config" in payload) {
+        encoded = encoded.concat(setTemperatureThresholdAlarmConfig(payload.temperature_alarm_config));
     }
     if ("temperature_mutation_alarm_config" in payload) {
         encoded = encoded.concat(setTemperatureMutationAlarmConfig(payload.temperature_mutation_alarm_config));
@@ -96,7 +96,9 @@ function milesightDeviceEncode(payload) {
         encoded = encoded.concat(setAlarmReleaseEnable(payload.alarm_release_enable));
     }
     if ("d2d_master_config" in payload) {
-        encoded = encoded.concat(setD2DMasterConfig(payload.d2d_master_config));
+        for (var i = 0; i < payload.d2d_master_config.length; i++) {
+            encoded = encoded.concat(setD2DMasterConfig(payload.d2d_master_config[i]));
+        }
     }
     if ("d2d_key" in payload) {
         encoded = encoded.concat(setD2DKey(payload.d2d_key));
@@ -136,13 +138,13 @@ function milesightDeviceEncode(payload) {
  * @example { "reboot": 1 }
  */
 function reboot(reboot) {
-    var reboot_map = { 0: "no", 1: "yes" };
-    var reboot_values = getValues(reboot_map);
+    var yes_no_map = { 0: "no", 1: "yes" };
+    var reboot_values = getValues(yes_no_map);
     if (reboot_values.indexOf(reboot) === -1) {
         throw new Error("reboot must be one of " + reboot_values.join(", "));
     }
 
-    if (getValue(reboot_map, reboot) === 0) {
+    if (getValue(yes_no_map, reboot) === 0) {
         return [];
     }
     return [0xff, 0x10, 0xff];
@@ -184,7 +186,7 @@ function setReportInterval(report_interval) {
 
 /**
  * report device status
- * @param {number} report_status values: (0: "no", 1: "yes")
+ * @param {number} report_status values: (0: no, 1: yes)
  * @example { "report_status": 1 }
  */
 function reportStatus(report_status) {
@@ -222,18 +224,20 @@ function setTimestamp(timestamp) {
 
 /**
  * set time zone
- * @param {number} timezone unit: hour
- * @example { "timezone": -4 }
+ * @param {number} time_zone unit: minute, UTC+8 -> 8 * 10 = 80
+ * @example { "time_zone": 80 }
  */
-function setTimeZone(timezone) {
-    if (typeof timezone !== "number") {
-        throw new Error("timezone must be a number");
+function setTimeZone(time_zone) {
+    var timezone_map = { "-120": "UTC-12", "-110": "UTC-11", "-100": "UTC-10", "-95": "UTC-9:30", "-90": "UTC-9", "-80": "UTC-8", "-70": "UTC-7", "-60": "UTC-6", "-50": "UTC-5", "-40": "UTC-4", "-35": "UTC-3:30", "-30": "UTC-3", "-20": "UTC-2", "-10": "UTC-1", 0: "UTC", 10: "UTC+1", 20: "UTC+2", 30: "UTC+3", 35: "UTC+3:30", 40: "UTC+4", 45: "UTC+4:30", 50: "UTC+5", 55: "UTC+5:30", 57: "UTC+5:45", 60: "UTC+6", 65: "UTC+6:30", 70: "UTC+7", 80: "UTC+8", 90: "UTC+9", 95: "UTC+9:30", 100: "UTC+10", 105: "UTC+10:30", 110: "UTC+11", 120: "UTC+12", 127: "UTC+12:45", 130: "UTC+13", 140: "UTC+14" };
+    var timezone_values = getValues(timezone_map);
+    if (timezone_values.indexOf(time_zone) === -1) {
+        throw new Error("time_zone must be one of " + timezone_values.join(", "));
     }
 
     var buffer = new Buffer(4);
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0x17);
-    buffer.writeInt16LE(timezone * 10);
+    buffer.writeInt16LE(getValue(timezone_map, time_zone));
     return buffer.toBytes();
 }
 
@@ -304,12 +308,12 @@ function setRecollectionConfig(recollection_config) {
  * set CO2 calibration config
  * @param {object} co2_calibration_config
  * @param {number} co2_calibration_config.mode values: (0: factory, 1: abc, 2: manual, 3: background, 4: zero)
- * @param {number} co2_calibration_config.value
+ * @param {number} co2_calibration_config.calibration_value
  * @example { "co2_calibration_config": { "mode": 1 } }
  */
 function setCO2CalibrationConfig(co2_calibration_config) {
     var mode = co2_calibration_config.mode;
-    var value = co2_calibration_config.value;
+    var calibration_value = co2_calibration_config.calibration_value;
 
     var calibration_strategy_map = { 0: "factory", 1: "abc", 2: "manual", 3: "background", 4: "zero" };
     var calibration_strategy_values = getValues(calibration_strategy_map);
@@ -322,7 +326,7 @@ function setCO2CalibrationConfig(co2_calibration_config) {
         buffer.writeUInt8(0xff);
         buffer.writeUInt8(0x1a);
         buffer.writeUInt8(getValue(calibration_strategy_map, mode));
-        buffer.writeInt16LE(value);
+        buffer.writeUInt16LE(calibration_value);
         return buffer.toBytes();
     } else {
         var buffer = new Buffer(3);
@@ -334,23 +338,23 @@ function setCO2CalibrationConfig(co2_calibration_config) {
 }
 
 /**
- * set CO2 auto background calibration config
- * @param {object} co2_abc_calibration_config
- * @param {number} co2_abc_calibration_config.enable values: (0: disable, 1: enable)
- * @param {number} co2_abc_calibration_config.period unit: minute, range: [1, 65534]
- * @param {number} co2_abc_calibration_config.target_value unit: ppm, range: [1, 65534]
- * @example { "co2_abc_calibration_config": { "enable": 1, "period": 3600, "target_value": 400 } }
+ * set CO2 auto background calibration schedule
+ * @param {object} co2_abc_calibration_schedule
+ * @param {number} co2_abc_calibration_schedule.enable values: (0: disable, 1: enable)
+ * @param {number} co2_abc_calibration_schedule.period unit: minute, range: [1, 65534]
+ * @param {number} co2_abc_calibration_schedule.calibration_value unit: ppm, range: [1, 65534]
+ * @example { "co2_abc_calibration_schedule": { "enable": 1, "period": 3600, "calibration_value": 400 } }
  * @product AM319
  */
-function setCO2AutoBackgroundCalibrationConfig(co2_abc_calibration_config) {
-    var enable = co2_abc_calibration_config.enable;
-    var period = co2_abc_calibration_config.period;
-    var target_value = co2_abc_calibration_config.target_value;
+function setCO2AutoBackgroundCalibrationConfig(co2_abc_calibration_schedule) {
+    var enable = co2_abc_calibration_schedule.enable;
+    var period = co2_abc_calibration_schedule.period;
+    var calibration_value = co2_abc_calibration_schedule.calibration_value;
 
     var enable_map = { 0: "disable", 1: "enable" };
     var enable_values = getValues(enable_map);
     if (enable_values.indexOf(enable) == -1) {
-        throw new Error("co2_abc_calibration_config.enable must be one of " + enable_values.join(", "));
+        throw new Error("co2_abc_calibration_schedule.enable must be one of " + enable_values.join(", "));
     }
 
     var buffer = new Buffer(7);
@@ -358,26 +362,26 @@ function setCO2AutoBackgroundCalibrationConfig(co2_abc_calibration_config) {
     buffer.writeUInt8(0x39);
     buffer.writeUInt8(getValue(enable_map, enable));
     buffer.writeUInt16LE(period);
-    buffer.writeUInt16LE(target_value);
+    buffer.writeUInt16LE(calibration_value);
     return buffer.toBytes();
 }
 
 /**
  * set temperature calibration value
  * @since hardware_version v2.0, firmware_version v1.7
- * @param {object} temperature_calibration_value_config
- * @param {number} temperature_calibration_value_config.enable values: (0: disable, 1: enable)
- * @param {number} temperature_calibration_value_config.target_value
- * @example { "temperature_calibration_value_config": { "enable": 1, "target_value": 23 } }
+ * @param {object} temperature_calibration_settings
+ * @param {number} temperature_calibration_settings.enable values: (0: disable, 1: enable)
+ * @param {number} temperature_calibration_settings.calibration_value
+ * @example { "temperature_calibration_settings": { "enable": 1, "calibration_value": 23 } }
  */
-function setTemperatureCalibrationValueConfig(temperature_calibration_value_config) {
-    var enable = temperature_calibration_value_config.enable;
-    var target_value = temperature_calibration_value_config.target_value;
+function setTemperatureCalibrationValueConfig(temperature_calibration_settings) {
+    var enable = temperature_calibration_settings.enable;
+    var calibration_value = temperature_calibration_settings.calibration_value;
 
     var enable_map = { 0: "disable", 1: "enable" };
     var enable_values = getValues(enable_map);
     if (enable_values.indexOf(enable) === -1) {
-        throw new Error("temperature_calibration_value_config.enable must be one of " + enable_values.join(", "));
+        throw new Error("temperature_calibration_settings.enable must be one of " + enable_values.join(", "));
     }
 
     var buffer = new Buffer(6);
@@ -385,26 +389,26 @@ function setTemperatureCalibrationValueConfig(temperature_calibration_value_conf
     buffer.writeUInt8(0xf1);
     buffer.writeUInt8(0x00); // temperature
     buffer.writeUInt8(getValue(enable_map, enable));
-    buffer.writeInt16LE(target_value * 10);
+    buffer.writeInt16LE(calibration_value * 10);
     return buffer.toBytes();
 }
 
 /**
  * set CO2 calibration value
  * @since hardware_version v2.0, firmware_version v1.7
- * @param {object} co2_calibration_value_config
- * @param {number} co2_calibration_value_config.enable values: (0: disable, 1: enable)
- * @param {number} co2_calibration_value_config.target_value
- * @example { "co2_calibration_value_config": { "enable": 1, "target_value": 1000 } }
+ * @param {object} co2_calibration_settings
+ * @param {number} co2_calibration_settings.enable values: (0: disable, 1: enable)
+ * @param {number} co2_calibration_settings.calibration_value
+ * @example { "co2_calibration_settings": { "enable": 1, "calibration_value": 1000 } }
  */
-function setCO2CalibrationValueConfig(co2_calibration_value_config) {
-    var enable = co2_calibration_value_config.enable;
-    var target_value = co2_calibration_value_config.target_value;
+function setCO2CalibrationValueConfig(co2_calibration_settings) {
+    var enable = co2_calibration_settings.enable;
+    var calibration_value = co2_calibration_settings.calibration_value;
 
     var enable_map = { 0: "disable", 1: "enable" };
     var enable_values = getValues(enable_map);
     if (enable_values.indexOf(enable) === -1) {
-        throw new Error("co2_calibration_value_config.enable must be one of " + enable_values.join(", "));
+        throw new Error("co2_calibration_settings.enable must be one of " + enable_values.join(", "));
     }
 
     var buffer = new Buffer(6);
@@ -412,26 +416,26 @@ function setCO2CalibrationValueConfig(co2_calibration_value_config) {
     buffer.writeUInt8(0xf1);
     buffer.writeUInt8(0x04); // co2
     buffer.writeUInt8(getValue(enable_map, enable));
-    buffer.writeInt16LE(target_value);
+    buffer.writeInt16LE(calibration_value);
     return buffer.toBytes();
 }
 
 /**
  * set humidity calibration value
  * @since hardware_version v2.0, firmware_version v1.7
- * @param {object} humidity_calibration_value_config
- * @param {number} humidity_calibration_value_config.enable values: (0: disable, 1: enable)
- * @param {number} humidity_calibration_value_config.target_value
- * @example { "humidity_calibration_value_config": { "enable": 1, "target_value": 50 } }
+ * @param {object} humidity_calibration_settings
+ * @param {number} humidity_calibration_settings.enable values: (0: disable, 1: enable)
+ * @param {number} humidity_calibration_settings.calibration_value
+ * @example { "humidity_calibration_settings": { "enable": 1, "calibration_value": 50 } }
  */
-function setHumidityCalibrationValueConfig(humidity_calibration_value_config) {
-    var enable = humidity_calibration_value_config.enable;
-    var target_value = humidity_calibration_value_config.target_value;
+function setHumidityCalibrationValueConfig(humidity_calibration_settings) {
+    var enable = humidity_calibration_settings.enable;
+    var calibration_value = humidity_calibration_settings.calibration_value;
 
     var enable_map = { 0: "disable", 1: "enable" };
     var enable_values = getValues(enable_map);
     if (enable_values.indexOf(enable) === -1) {
-        throw new Error("humidity_calibration_value_config.enable must be one of " + enable_values.join(", "));
+        throw new Error("humidity_calibration_settings.enable must be one of " + enable_values.join(", "));
     }
 
     var buffer = new Buffer(6);
@@ -442,26 +446,26 @@ function setHumidityCalibrationValueConfig(humidity_calibration_value_config) {
     buffer.writeUInt8(0xf1);
     buffer.writeUInt8(0x09);
     buffer.writeUInt8(getValue(enable_map, enable));
-    buffer.writeInt16LE(target_value * 2);
+    buffer.writeInt16LE(calibration_value * 2);
     return buffer.toBytes();
 }
 
 /**
  * set pressure calibration value
  * @since hardware_version v2.0, firmware_version v1.7
- * @param {object} pressure_calibration_value_config
- * @param {number} pressure_calibration_value_config.enable values: (0: disable, 1: enable)
- * @param {number} pressure_calibration_value_config.target_value
- * @example { "pressure_calibration_value_config": { "enable": 1, "target_value": 1000 } }
+ * @param {object} pressure_calibration_settings
+ * @param {number} pressure_calibration_settings.enable values: (0: disable, 1: enable)
+ * @param {number} pressure_calibration_settings.calibration_value
+ * @example { "pressure_calibration_settings": { "enable": 1, "calibration_value": 1000 } }
  */
-function setPressureCalibrationValueConfig(pressure_calibration_value_config) {
-    var enable = pressure_calibration_value_config.enable;
-    var target_value = pressure_calibration_value_config.target_value;
+function setPressureCalibrationValueConfig(pressure_calibration_settings) {
+    var enable = pressure_calibration_settings.enable;
+    var calibration_value = pressure_calibration_settings.calibration_value;
 
     var enable_map = { 0: "disable", 1: "enable" };
     var enable_values = getValues(enable_map);
     if (enable_values.indexOf(enable) === -1) {
-        throw new Error("pressure_calibration_value_config.enable must be one of " + enable_values.join(", "));
+        throw new Error("pressure_calibration_settings.enable must be one of " + enable_values.join(", "));
     }
 
     var buffer = new Buffer(6);
@@ -469,32 +473,32 @@ function setPressureCalibrationValueConfig(pressure_calibration_value_config) {
     buffer.writeUInt8(0xf1);
     buffer.writeUInt8(0x05);
     buffer.writeUInt8(getValue(enable_map, enable));
-    buffer.writeInt16LE(target_value * 10);
+    buffer.writeInt16LE(calibration_value * 10);
     return buffer.toBytes();
 }
 
 /**
  * set pressure calibration config
- * @param {object} pressure_calibration_config
- * @param {number} pressure_calibration_config.mode values: (0: disable, 1: auto, 2: manual)
- * @param {number} pressure_calibration_config.value
- * @example { "pressure_calibration_config": { "mode": 1, "value": 1000 } }
+ * @param {object} altitude_calibration_settings
+ * @param {number} altitude_calibration_settings.mode values: (0: disable, 1: auto, 2: manual)
+ * @param {number} altitude_calibration_settings.calibration_value
+ * @example { "altitude_calibration_settings": { "mode": 1, "calibration_value": 1000 } }
  */
-function setPressureCalibrationConfig(pressure_calibration_config) {
-    var mode = pressure_calibration_config.mode;
-    var value = pressure_calibration_config.value;
+function setAltitudeCalibrationConfig(altitude_calibration_settings) {
+    var mode = altitude_calibration_settings.mode;
+    var calibration_value = altitude_calibration_settings.calibration_value;
 
     var mode_map = { 0: "disable", 1: "auto", 2: "manual" };
     var mode_values = getValues(mode_map);
     if (mode_values.indexOf(mode) == -1) {
-        throw new Error("pressure_calibration_config.mode must be one of " + mode_values.join(", "));
+        throw new Error("pressure_calibration_settings.mode must be one of " + mode_values.join(", "));
     }
 
     var buffer = new Buffer(5);
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0x87);
     buffer.writeUInt8(getValue(mode_map, mode));
-    buffer.writeInt16LE(value);
+    buffer.writeInt16LE(calibration_value);
     return buffer.toBytes();
 }
 
@@ -512,7 +516,7 @@ function setSensorFunctionConfig(sensor_function_config) {
     var enable_values = getValues(enable_map);
 
     var data = [];
-    var sensor_offset = { "temperature_enable": 1, "humidity_enable": 2, "pressure_enable": 6, "co2_enable": 5 };
+    var sensor_offset = { temperature_enable: 1, humidity_enable: 2, pressure_enable: 6, co2_enable: 5 };
     for (var key in sensor_offset) {
         if (key in sensor_function_config) {
             if (enable_values.indexOf(sensor_function_config[key]) == -1) {
@@ -528,82 +532,82 @@ function setSensorFunctionConfig(sensor_function_config) {
 
 /**
  * set CO2 threshold alarm config
- * @param {object} co2_threshold_alarm_config
- * @param {number} co2_threshold_alarm_config.enable values: (0: disable, 1: enable)
- * @param {number} co2_threshold_alarm_config.condition values: (0: disable, 1: below, 2: above, 3: between, 4: outside, 5: mutation)
- * @param {number} co2_threshold_alarm_config.min_threshold unit: ppm
- * @param {number} co2_threshold_alarm_config.max_threshold unit: ppm
- * @example { "co2_threshold_alarm_config": { "enable": 1, "condition": 1, "max_threshold": 1000, "min_threshold": 1000 } }
+ * @param {object} co2_alarm_config
+ * @param {number} co2_alarm_config.enable values: (0: disable, 1: enable)
+ * @param {number} co2_alarm_config.condition values: (0: disable, 1: below, 2: above, 3: between, 4: outside, 5: mutation)
+ * @param {number} co2_alarm_config.threshold_min unit: ppm
+ * @param {number} co2_alarm_config.threshold_max unit: ppm
+ * @example { "co2_alarm_config": { "enable": 1, "condition": 1, "threshold_max": 1000, "threshold_min": 1000 } }
  */
-function setCO2ThresholdAlarmConfig(co2_threshold_alarm_config) {
-    var enable = co2_threshold_alarm_config.enable;
-    var condition = co2_threshold_alarm_config.condition;
-    var max_threshold = co2_threshold_alarm_config.max_threshold;
-    var min_threshold = co2_threshold_alarm_config.min_threshold;
+function setCO2ThresholdAlarmConfig(co2_alarm_config) {
+    var enable = co2_alarm_config.enable;
+    var condition = co2_alarm_config.condition;
+    var threshold_max = co2_alarm_config.threshold_max;
+    var threshold_min = co2_alarm_config.threshold_min;
 
     var condition_map = { 0: "disable", 1: "below", 2: "above", 3: "between", 4: "outside", 5: "mutation" };
     var condition_values = getValues(condition_map);
     if (condition_values.indexOf(condition) == -1) {
-        throw new Error("co2_threshold_alarm_config.condition must be one of " + condition_values.join(", "));
+        throw new Error("co2_alarm_config.condition must be one of " + condition_values.join(", "));
     }
     var enable_map = { 0: "disable", 1: "enable" };
     var enable_values = getValues(enable_map);
     if (enable_values.indexOf(enable) == -1) {
-        throw new Error("co2_threshold_alarm_config.enable must be one of " + enable_values.join(", "));
+        throw new Error("co2_alarm_config.enable must be one of " + enable_values.join(", "));
     }
 
     var data = 0x00;
-    data |= (getValue(condition_map, condition) << 0);
+    data |= getValue(condition_map, condition) << 0;
     data |= 1 << 3; // co2
-    data |= (getValue(enable_map, enable) << 6);
+    data |= getValue(enable_map, enable) << 6;
 
     var buffer = new Buffer(11);
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0x06);
     buffer.writeUInt8(data);
-    buffer.writeUInt16LE(min_threshold);
-    buffer.writeUInt16LE(max_threshold);
+    buffer.writeUInt16LE(threshold_min);
+    buffer.writeUInt16LE(threshold_max);
     buffer.writeUInt32LE(0x00);
     return buffer.toBytes();
 }
 
 /**
  * set temperature threshold alarm config
- * @param {object} temperature_threshold_alarm_config
- * @param {number} temperature_threshold_alarm_config.enable values: (0: disable, 1: enable)
- * @param {number} temperature_threshold_alarm_config.condition values: (0: disable, 1: below, 2: above, 3: between, 4: outside, 5: mutation)
- * @param {number} temperature_threshold_alarm_config.min_threshold unit: ℃
- * @param {number} temperature_threshold_alarm_config.max_threshold unit: ℃
- * @example { "temperature_threshold_alarm_config": { "enable": 1, "condition": 1, "max_threshold": 20, "min_threshold": 0 } }
+ * @param {object} temperature_alarm_config
+ * @param {number} temperature_alarm_config.enable values: (0: disable, 1: enable)
+ * @param {number} temperature_alarm_config.condition values: (0: disable, 1: below, 2: above, 3: between, 4: outside)
+ * @param {number} temperature_alarm_config.threshold_min unit: ℃
+ * @param {number} temperature_alarm_config.threshold_max unit: ℃
+ * @example { "temperature_alarm_config": { "enable": 1, "condition": 1, "threshold_max": 20, "threshold_min": 0 } }
  */
-function setTemperatureThresholdAlarmConfig(temperature_threshold_alarm_config) {
-    var enable = temperature_threshold_alarm_config.enable;
-    var condition = temperature_threshold_alarm_config.condition;
-    var max_threshold = temperature_threshold_alarm_config.max_threshold;
-    var min_threshold = temperature_threshold_alarm_config.min_threshold;
+function setTemperatureThresholdAlarmConfig(temperature_alarm_config) {
+    var enable = temperature_alarm_config.enable;
+    var condition = temperature_alarm_config.condition;
+    var threshold_max = temperature_alarm_config.threshold_max;
+    var threshold_min = temperature_alarm_config.threshold_min;
 
     var enable_map = { 0: "disable", 1: "enable" };
     var enable_values = getValues(enable_map);
     if (enable_values.indexOf(enable) == -1) {
-        throw new Error("temperature_threshold_alarm_config.enable must be one of " + enable_values.join(", "));
+        throw new Error("temperature_alarm_config.enable must be one of " + enable_values.join(", "));
     }
-    var condition_map = { 0: "disable", 1: "below", 2: "above", 3: "between", 4: "outside", 5: "mutation" };
+    var condition_map = { 0: "disable", 1: "below", 2: "above", 3: "between", 4: "outside" };
     var condition_values = getValues(condition_map);
     if (condition_values.indexOf(condition) == -1) {
-        throw new Error("temperature_threshold_alarm_config.condition must be one of " + condition_values.join(", "));
+        throw new Error("temperature_alarm_config.condition must be one of " + condition_values.join(", "));
     }
 
     var data = 0x00;
-    data |= (getValue(condition_map, condition) << 0);
+    data |= getValue(condition_map, condition) << 0;
     data |= 2 << 3; // temperature
-    data |= (getValue(enable_map, enable) << 6);
+    data |= getValue(enable_map, enable) << 6;
 
     var buffer = new Buffer(11);
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0x06);
     buffer.writeUInt8(data);
-    buffer.writeInt16LE(min_threshold * 10);
-    buffer.writeInt16LE(max_threshold * 10);
+    buffer.writeInt16LE(threshold_min * 10);
+    buffer.writeInt16LE(threshold_max * 10);
     buffer.writeUInt32LE(0x00);
     return buffer.toBytes();
 }
@@ -612,39 +616,30 @@ function setTemperatureThresholdAlarmConfig(temperature_threshold_alarm_config) 
  * set temperature mutation alarm config
  * @param {object} temperature_mutation_alarm_config
  * @param {number} temperature_mutation_alarm_config.enable values: (0: disable, 1: enable)
- * @param {number} temperature_mutation_alarm_config.condition values: (0: disable, 1: below, 2: above, 3: between, 4: outside, 5: mutation)
- * @param {number} temperature_mutation_alarm_config.min_threshold unit: ℃
- * @param {number} temperature_mutation_alarm_config.max_threshold unit: ℃
- * @example { "temperature_mutation_alarm_config": { "enable": 1, "condition": 1, "max_threshold": 0, "min_threshold": 20 } }
+ * @param {number} temperature_mutation_alarm_config.mutation unit: ℃
+ * @example { "temperature_mutation_alarm_config": { "enable": 1, "mutation": 0 } }
  */
 function setTemperatureMutationAlarmConfig(temperature_mutation_alarm_config) {
     var enable = temperature_mutation_alarm_config.enable;
-    var condition = temperature_mutation_alarm_config.condition;
-    var max_threshold = temperature_mutation_alarm_config.max_threshold;
-    var min_threshold = temperature_mutation_alarm_config.min_threshold;
+    var mutation = temperature_mutation_alarm_config.mutation;
 
     var enable_map = { 0: "disable", 1: "enable" };
     var enable_values = getValues(enable_map);
     if (enable_values.indexOf(enable) == -1) {
         throw new Error("temperature_mutation_alarm_config.enable must be one of " + enable_values.join(", "));
     }
-    var condition_map = { 0: "disable", 1: "below", 2: "above", 3: "between", 4: "outside", 5: "mutation" };
-    var condition_values = getValues(condition_map);
-    if (condition_values.indexOf(condition) == -1) {
-        throw new Error("temperature_mutation_alarm_config.condition must be one of " + condition_values.join(", "));
-    }
 
     var data = 0x00;
-    data |= (getValue(condition_map, condition) << 0);
+    data |= 5 << 0; // mutation
     data |= 3 << 3; // temperature
-    data |= (getValue(enable_map, enable) << 6);
+    data |= getValue(enable_map, enable) << 6;
 
     var buffer = new Buffer(11);
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0x06);
     buffer.writeUInt8(data);
-    buffer.writeInt16LE(min_threshold * 10);
-    buffer.writeInt16LE(max_threshold * 10);
+    buffer.writeInt16LE(0x00);
+    buffer.writeInt16LE(mutation * 10);
     buffer.writeUInt32LE(0x00);
     return buffer.toBytes();
 }
@@ -691,15 +686,15 @@ function setAlarmReleaseEnable(alarm_release_enable) {
  * d2d master configuration
  * @since hardware_version v2.0, firmware_version v1.7
  * @param {object} d2d_master_config
- * @param {number} d2d_master_config.mode values: (1: "threshold_alarm", 2: "threshold_alarm_release", 3: "mutation_alarm")
- * @param {number} d2d_master_config.uplink_enable values: (0: disable, 1: enable)
+ * @param {number} d2d_master_config.mode values: (1: threshold_alarm, 2: threshold_alarm_release, 3: mutation_alarm)
+ * @param {number} d2d_master_config.enable values: (0: disable, 1: enable)
  * @param {string} d2d_master_config.d2d_cmd
  * @param {number} d2d_master_config.lora_uplink_enable values: (0: disable, 1: enable)
- * @example { "d2d_master_config": [{ "mode": 0, "uplink_enable": 1, "d2d_cmd": "0000", "lora_uplink_enable": 1 }] }
+ * @example { "d2d_master_config": [{ "mode": 0, "enable": 1, "d2d_cmd": "0000", "lora_uplink_enable": 1 }] }
  */
 function setD2DMasterConfig(d2d_master_config) {
     var mode = d2d_master_config.mode;
-    var uplink_enable = d2d_master_config.uplink_enable;
+    var enable = d2d_master_config.enable;
     var d2d_cmd = d2d_master_config.d2d_cmd;
     var lora_uplink_enable = d2d_master_config.lora_uplink_enable;
 
@@ -710,7 +705,7 @@ function setD2DMasterConfig(d2d_master_config) {
     }
     var enable_map = { 0: "disable", 1: "enable" };
     var enable_values = getValues(enable_map);
-    if (enable_values.indexOf(uplink_enable) === -1) {
+    if (enable_values.indexOf(enable) === -1) {
         throw new Error("d2d_master_config._item.enable must be one of " + enable_values.join(", "));
     }
     if (enable_values.indexOf(lora_uplink_enable) === -1) {
@@ -721,7 +716,7 @@ function setD2DMasterConfig(d2d_master_config) {
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0x96);
     buffer.writeUInt8(getValue(mode_map, mode));
-    buffer.writeUInt8(getValue(enable_map, uplink_enable));
+    buffer.writeUInt8(getValue(enable_map, enable));
     buffer.writeUInt8(getValue(enable_map, lora_uplink_enable));
     buffer.writeD2DCommand(d2d_cmd, "0000");
     buffer.writeUInt16LE(0x00);
@@ -773,7 +768,6 @@ function setD2DEnable(d2d_enable) {
     buffer.writeUInt8(getValue(enable_map, d2d_enable));
     return buffer.toBytes();
 }
-
 
 /**
  * retransmit enable
@@ -907,7 +901,7 @@ function fetchHistory(fetch_history) {
 
 /**
  * clear history
- * @param {number} clear_history values: (0: "no", 1: "yes")
+ * @param {number} clear_history values: (0: no, 1: yes)
  * @example { "clear_history": 1 }
  */
 function clearHistory(clear_history) {
@@ -925,14 +919,8 @@ function clearHistory(clear_history) {
 
 function getValues(map) {
     var values = [];
-    if (RAW_VALUE) {
-        for (var key in map) {
-            values.push(parseInt(key));
-        }
-    } else {
-        for (var key in map) {
-            values.push(map[key]);
-        }
+    for (var key in map) {
+        values.push(RAW_VALUE ? parseInt(key) : map[key]);
     }
     return values;
 }
