@@ -3,7 +3,7 @@
  *
  * Copyright 2025 Milesight IoT
  *
- * @product TS301 / TS302
+ * @product TS302
  */
 var RAW_VALUE = 0x00;
 
@@ -29,7 +29,7 @@ function Decoder(bytes, port) {
 function milesightDeviceDecode(bytes) {
     var decoded = {};
 
-    for (var i = 0; i < bytes.length;) {
+    for (var i = 0; i < bytes.length; ) {
         var channel_id = bytes[i++];
         var channel_type = bytes[i++];
 
@@ -107,7 +107,7 @@ function milesightDeviceDecode(bytes) {
         // TEMPERATURE(CHANNEL 1 SENSOR) ALARM
         else if (channel_id === 0x93 && channel_type === 0xd7) {
             decoded.temperature_chn1 = readInt16LE(bytes.slice(i, i + 2)) / 10;
-            decoded.temperature_chn1_change = readInt16LE(bytes.slice(i + 2, i + 4)) / 100;
+            decoded.temperature_chn1_mutation = readInt16LE(bytes.slice(i + 2, i + 4)) / 100;
             decoded.temperature_chn1_alarm = readAlarmType(bytes[i + 4]);
             i += 5;
         }
@@ -120,7 +120,7 @@ function milesightDeviceDecode(bytes) {
         // TEMPERATURE(CHANNEL 2 SENSOR) ALARM
         else if (channel_id === 0x94 && channel_type === 0xd7) {
             decoded.temperature_chn2 = readInt16LE(bytes.slice(i, i + 2)) / 10;
-            decoded.temperature_chn2_change = readInt16LE(bytes.slice(i + 2, i + 4)) / 100;
+            decoded.temperature_chn2_mutation = readInt16LE(bytes.slice(i + 2, i + 4)) / 100;
             decoded.temperature_chn2_alarm = readAlarmType(bytes[i + 4]);
             i += 5;
         }
@@ -216,15 +216,31 @@ function handle_downlink_response(channel_type, bytes, offset) {
             break;
         case 0x06:
             var data = readUInt8(bytes[offset]);
-            decoded.alarm_config = {};
-            decoded.alarm_config.enable = readEnableStatus((data >>> 6) & 0x01);
-            decoded.alarm_config.alarm_release_enable = readEnableStatus((data >>> 7) & 0x01);
-            decoded.alarm_config.condition = readConditionType(data & 0x07);
-            decoded.alarm_config.trigger_source = readTriggerSourceType((data >>> 3) & 0x07);
-            decoded.alarm_config.min_threshold = readInt16LE(bytes.slice(offset + 1, offset + 3)) / 10;
-            decoded.alarm_config.max_threshold = readInt16LE(bytes.slice(offset + 3, offset + 5)) / 10;
-            decoded.alarm_config.lock_time = readUInt16LE(bytes.slice(offset + 5, offset + 7));
-            decoded.alarm_config.continue_time = readUInt16LE(bytes.slice(offset + 7, offset + 9));
+            var condition_value = data & 0x07;
+            var trigger_source = (data >>> 3) & 0x07;
+            if (condition_value === 0x05) {
+                var temperature_mutation_alarm_config = {};
+                temperature_mutation_alarm_config.enable = readEnableStatus((data >>> 6) & 0x01);
+                temperature_mutation_alarm_config.alarm_release_enable = readEnableStatus((data >>> 7) & 0x01);
+                temperature_mutation_alarm_config.mutation = readInt16LE(bytes.slice(offset + 3, offset + 5)) / 10;
+                if (trigger_source === 3) {
+                    decoded.temperature_chn1_mutation_alarm_config = temperature_mutation_alarm_config;
+                } else if (trigger_source === 4) {
+                    decoded.temperature_chn2_mutation_alarm_config = temperature_mutation_alarm_config;
+                }
+            } else {
+                var temperature_alarm_config = {};
+                temperature_alarm_config.enable = readEnableStatus((data >>> 6) & 0x01);
+                temperature_alarm_config.alarm_release_enable = readEnableStatus((data >>> 7) & 0x01);
+                temperature_alarm_config.condition = readConditionType(data & 0x07);
+                temperature_alarm_config.threshold_min = readInt16LE(bytes.slice(offset + 1, offset + 3)) / 10;
+                temperature_alarm_config.threshold_max = readInt16LE(bytes.slice(offset + 3, offset + 5)) / 10;
+                if (trigger_source === 1) {
+                    decoded.temperature_chn1_alarm_config = temperature_alarm_config;
+                } else if (trigger_source === 2) {
+                    decoded.temperature_chn2_alarm_config = temperature_alarm_config;
+                }
+            }
             offset += 9;
             break;
         case 0x10:
@@ -232,7 +248,7 @@ function handle_downlink_response(channel_type, bytes, offset) {
             offset += 1;
             break;
         case 0x17:
-            decoded.timezone = readInt16LE(bytes.slice(offset, offset + 2)) / 10;
+            decoded.time_zone = readTimeZone(readInt16LE(bytes.slice(offset, offset + 2)));
             offset += 2;
             break;
         case 0x25:
@@ -294,7 +310,7 @@ function handle_downlink_response(channel_type, bytes, offset) {
             var data = readUInt8(bytes[offset]);
             var index = data & 0x01;
             var enable = (data >>> 7) & 0x01;
-            var channel_name = "temperature_chn" + (index + 1) + "_calibration";
+            var channel_name = "temperature_chn" + (index + 1) + "_calibration_settings";
             decoded[channel_name] = {};
             decoded[channel_name].enable = readEnableStatus(enable);
             decoded[channel_name].calibration_value = readInt16LE(bytes.slice(offset + 1, offset + 3)) / 10;
@@ -373,19 +389,19 @@ function readYesNoStatus(status) {
     return getValue(status_map, status);
 }
 
+function readTimeZone(time_zone) {
+    var timezone_map = { "-120": "UTC-12", "-110": "UTC-11", "-100": "UTC-10", "-95": "UTC-9:30", "-90": "UTC-9", "-80": "UTC-8", "-70": "UTC-7", "-60": "UTC-6", "-50": "UTC-5", "-40": "UTC-4", "-35": "UTC-3:30", "-30": "UTC-3", "-20": "UTC-2", "-10": "UTC-1", 0: "UTC", 10: "UTC+1", 20: "UTC+2", 30: "UTC+3", 35: "UTC+3:30", 40: "UTC+4", 45: "UTC+4:30", 50: "UTC+5", 55: "UTC+5:30", 57: "UTC+5:45", 60: "UTC+6", 65: "UTC+6:30", 70: "UTC+7", 80: "UTC+8", 90: "UTC+9", 95: "UTC+9:30", 100: "UTC+10", 105: "UTC+10:30", 110: "UTC+11", 120: "UTC+12", 127: "UTC+12:45", 130: "UTC+13", 140: "UTC+14" };
+    return getValue(timezone_map, time_zone);
+}
+
 function readMagnetStatus(status) {
-    var status_map = { 0: "closed", 1: "opened" };
+    var status_map = { 0: "close", 1: "open" };
     return getValue(status_map, status);
 }
 
 function readConditionType(type) {
     var condition_map = { 0: "disable", 1: "below", 2: "above", 3: "between", 4: "outside", 5: "mutation" };
     return getValue(condition_map, type);
-}
-
-function readTriggerSourceType(type) {
-    var trigger_source_map = { 1: "chn_1_alarm", 2: "chn_2_alarm", 3: "chn_1_mutation", 4: "chn_2_mutation" };
-    return getValue(trigger_source_map, type);
 }
 
 function readTimeDisplayType(type) {
@@ -424,7 +440,7 @@ function readUInt32LE(bytes) {
 }
 
 function readAlarmType(type) {
-    var alarm_type_map = { 0: "threshold_release", 1: "threshold", 2: "mutation" };
+    var alarm_type_map = { 0: "threshold_alarm_release", 1: "threshold_alarm", 2: "mutation_alarm" };
     return getValue(alarm_type_map, type);
 }
 
@@ -473,4 +489,3 @@ if (!Object.assign) {
         },
     });
 }
-
