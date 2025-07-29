@@ -46,8 +46,8 @@ function milesightDeviceEncode(payload) {
     if ("cancel_delay_task" in payload) {
         encoded = encoded.concat(cancelDelayTask(payload.cancel_delay_task));
     }
-    if ("current_threshold_config" in payload) {
-        encoded = encoded.concat(setCurrentThreshold(payload.current_threshold_config));
+    if ("current_alarm_config" in payload) {
+        encoded = encoded.concat(setCurrentThreshold(payload.current_alarm_config));
     }
     if ("over_current_protection" in payload) {
         encoded = encoded.concat(setOverCurrentProtection(payload.over_current_protection));
@@ -64,14 +64,14 @@ function milesightDeviceEncode(payload) {
     if ("reset_power_consumption" in payload) {
         encoded = encoded.concat(resetPowerConsumption(payload.reset_power_consumption));
     }
-    if ("led_enable" in payload) {
-        encoded = encoded.concat(setLedEnable(payload.led_enable));
+    if ("led_indicator_enable" in payload) {
+        encoded = encoded.concat(setLedEnable(payload.led_indicator_enable));
     }
-    if ("led_reserve" in payload) {
-        encoded = encoded.concat(setLedReserve(payload.led_reserve));
+    if ("led_indicator_reserve" in payload) {
+        encoded = encoded.concat(setLedReserve(payload.led_indicator_reserve));
     }
-    if ("temperature_calibration_config" in payload) {
-        encoded = encoded.concat(setTemperatureCalibration(payload.temperature_calibration_config));
+    if ("temperature_calibration_settings" in payload) {
+        encoded = encoded.concat(setTemperatureCalibration(payload.temperature_calibration_settings));
     }
     if ("temperature_alarm_config" in payload) {
         encoded = encoded.concat(setTemperatureAlarmConfig(payload.temperature_alarm_config));
@@ -221,22 +221,22 @@ function cancelDelayTask(cancel_delay_task) {
 
 /**
  * set current threshold configuration
- * @param {object} current_threshold_config
- * @param {number} current_threshold_config.enable values: (0: disable, 1: enable)
- * @param {number} current_threshold_config.threshold unit: A
+ * @param {object} current_alarm_config
+ * @param {number} current_alarm_config.enable values: (0: disable, 1: enable)
+ * @param {number} current_alarm_config.threshold unit: A
  * @example { "current_threshold": { "enable": 1, "threshold": 10 } }
  */
-function setCurrentThreshold(current_threshold_config) {
-    var enable = current_threshold_config.enable;
-    var threshold = current_threshold_config.threshold;
+function setCurrentThreshold(current_alarm_config) {
+    var enable = current_alarm_config.enable;
+    var threshold = current_alarm_config.threshold;
 
     var enable_map = { 0: "disable", 1: "enable" };
     var enable_values = getValues(enable_map);
     if (enable_values.indexOf(enable) === -1) {
-        throw new Error("current_threshold_config.enable must be one of " + enable_values.join(", "));
+        throw new Error("current_alarm_config.enable must be one of " + enable_values.join(", "));
     }
     if (typeof threshold !== "number") {
-        throw new Error("current_threshold_config.threshold must be a number");
+        throw new Error("current_alarm_config.threshold must be a number");
     }
 
     var buffer = new Buffer(4);
@@ -366,70 +366,70 @@ function resetPowerConsumption(reset_power_consumption) {
 
 /**
  * set led enable configuration
- * @param {number} led_enable values: (0: disable, 1: enable)
- * @example { "led_enable": 1 }
+ * @param {number} led_indicator_enable values: (0: disable, 1: enable)
+ * @example { "led_indicator_enable": 1 }
  */
-function setLedEnable(led_enable) {
+function setLedEnable(led_indicator_enable) {
     var enable_map = { 0: "disable", 1: "enable" };
     var enable_values = getValues(enable_map);
-    if (enable_values.indexOf(led_enable) === -1) {
-        throw new Error("led_enable must be one of " + enable_values.join(", "));
+    if (enable_values.indexOf(led_indicator_enable) === -1) {
+        throw new Error("led_indicator_enable must be one of " + enable_values.join(", "));
     }
 
     var buffer = new Buffer(4);
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0x2f);
-    buffer.writeUInt16LE(getValue(enable_map, led_enable));
+    buffer.writeUInt16LE(getValue(enable_map, led_indicator_enable));
     return buffer.toBytes();
 }
 
 /**
  * set led indicator reserve configuration
- * @param {number} led_reserve value: (0: disable, 1: enable)
- * @example { "led_reserve": 1 }
+ * @param {number} led_indicator_reserve value: (0: disable, 1: enable)
+ * @example { "led_indicator_reserve": 1 }
  */
-function setLedReserve(led_reserve) {
+function setLedReserve(led_indicator_reserve) {
     var enable_map = { 0: "disable", 1: "enable" };
     var enable_values = getValues(enable_map);
-    if (enable_values.indexOf(led_reserve) === -1) {
-        throw new Error("led_reserve must be one of " + enable_values.join(", "));
+    if (enable_values.indexOf(led_indicator_reserve) === -1) {
+        throw new Error("led_indicator_reserve must be one of " + enable_values.join(", "));
     }
 
     var buffer = new Buffer(3);
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0xa5);
-    buffer.writeUInt8(getValue(enable_map, led_reserve));
+    buffer.writeUInt8(getValue(enable_map, led_indicator_reserve));
     return buffer.toBytes();
 }
 
 /**
  * temperature calibration configuration
  * @since v1.9
- * @param {object} temperature_calibration_config values: (0: disable, 1: enable)
- * @param {number} temperature_calibration_config.enable values: (0: disable, 1: enable)
- * @param {number} temperature_calibration_config.temperature uint: Celsius
- * @example { "temperature_calibration": { "enable": 1, "temperature": 5 } }
- * @example { "temperature_calibration": { "enable": 1, "temperature": -5 } }
- * @example { "temperature_calibration": { "enable": 0 } }
+ * @param {object} temperature_calibration_settings
+ * @param {number} temperature_calibration_settings.enable values: (0: disable, 1: enable)
+ * @param {number} temperature_calibration_settings.calibration_value uint: Celsius
+ * @example { "temperature_calibration_settings": { "enable": 1, "calibration_value": 5 } }
+ * @example { "temperature_calibration_settings": { "enable": 1, "calibration_value": -5 } }
+ * @example { "temperature_calibration_settings": { "enable": 0 } }
  */
-function setTemperatureCalibration(temperature_calibration_config) {
-    var enable = temperature_calibration_config.enable;
-    var temperature = temperature_calibration_config.temperature;
+function setTemperatureCalibration(temperature_calibration_settings) {
+    var enable = temperature_calibration_settings.enable;
+    var calibration_value = temperature_calibration_settings.calibration_value;
 
     var enable_map = { 0: "disable", 1: "enable" };
     var enable_values = getValues(enable_map);
     if (enable_values.indexOf(enable) === -1) {
-        throw new Error("temperature_calibration.enable must be one of " + enable_values.join(", "));
+        throw new Error("temperature_calibration_settings.enable must be one of " + enable_values.join(", "));
     }
-    if (getValue(enable_map, enable) === 1 && typeof temperature !== "number") {
-        throw new Error("temperature_calibration.temperature must be a number");
+    if (getValue(enable_map, enable) === 1 && typeof calibration_value !== "number") {
+        throw new Error("temperature_calibration_settings.calibration_value must be a number");
     }
 
     var buffer = new Buffer(5);
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0xab);
     buffer.writeUInt8(getValue(enable_map, enable));
-    buffer.writeInt16LE(temperature * 10);
+    buffer.writeInt16LE(calibration_value * 10);
     return buffer.toBytes();
 }
 
@@ -437,16 +437,16 @@ function setTemperatureCalibration(temperature_calibration_config) {
  * set temperature threshold alarm configuration
  * @param {object} temperature_alarm_config
  * @param {number} temperature_alarm_config.condition values: (0: disable, 1: below, 2: above, 3: between, 4: outside)
- * @param {number} temperature_alarm_config.min_threshold condition=(below, within, outside)
- * @param {number} temperature_alarm_config.max_threshold condition=(above, within, outside)
+ * @param {number} temperature_alarm_config.threshold_min condition=(below, within, outside)
+ * @param {number} temperature_alarm_config.threshold_max condition=(above, within, outside)
  * @param {number} temperature_alarm_config.alarm_interval unit: minute
  * @param {number} temperature_alarm_config.alarm_times
- * @example { "temperature_alarm_config": { "condition": 1, "min_threshold": 10, "max_threshold": 20, "alarm_interval": 10, "alarm_times": 10 } }
+ * @example { "temperature_alarm_config": { "condition": 1, "threshold_min": 10, "threshold_max": 20, "alarm_interval": 10, "alarm_times": 10 } }
  */
 function setTemperatureAlarmConfig(temperature_alarm_config) {
     var condition = temperature_alarm_config.condition;
-    var min_threshold = temperature_alarm_config.min_threshold;
-    var max_threshold = temperature_alarm_config.max_threshold;
+    var threshold_min = temperature_alarm_config.threshold_min;
+    var threshold_max = temperature_alarm_config.threshold_max;
     var alarm_interval = temperature_alarm_config.alarm_interval;
     var alarm_times = temperature_alarm_config.alarm_times;
 
@@ -463,8 +463,8 @@ function setTemperatureAlarmConfig(temperature_alarm_config) {
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0x06);
     buffer.writeUInt8(data);
-    buffer.writeInt16LE(min_threshold * 10);
-    buffer.writeInt16LE(max_threshold * 10);
+    buffer.writeInt16LE(threshold_min * 10);
+    buffer.writeInt16LE(threshold_max * 10);
     buffer.writeUInt16LE(alarm_interval);
     buffer.writeUInt16LE(alarm_times);
     return buffer.toBytes();
@@ -486,14 +486,8 @@ function setD2DCommand(d2d_command) {
 
 function getValues(map) {
     var values = [];
-    if (RAW_VALUE) {
-        for (var key in map) {
-            values.push(parseInt(key));
-        }
-    } else {
-        for (var key in map) {
-            values.push(map[key]);
-        }
+    for (var key in map) {
+        values.push(RAW_VALUE ? parseInt(key) : map[key]);
     }
     return values;
 }

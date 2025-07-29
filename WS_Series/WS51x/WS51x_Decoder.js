@@ -29,7 +29,7 @@ function Decoder(bytes, port) {
 function milesightDeviceDecode(bytes) {
     var decoded = {};
 
-    for (var i = 0; i < bytes.length;) {
+    for (var i = 0; i < bytes.length; ) {
         var channel_id = bytes[i++];
         var channel_type = bytes[i++];
 
@@ -124,8 +124,7 @@ function milesightDeviceDecode(bytes) {
         // TEMPERATURE MUTATION ALARM (@since v1.9 @deprecated v2.1)
         else if (channel_id === 0x99 && channel_type === 0x67) {
             decoded.temperature = readInt16LE(bytes.slice(i, i + 2)) / 10;
-            decoded.temperature_mutation =
-                readInt16LE(bytes.slice(i + 2, i + 4)) / 10;
+            decoded.temperature_mutation = readInt16LE(bytes.slice(i + 2, i + 4)) / 10;
             decoded.temperature_alarm = readTemperatureAlarm(3);
             i += 5;
         }
@@ -153,8 +152,8 @@ function handle_downlink_response(channel_type, bytes, offset) {
             var data = readUInt8(bytes[offset]);
             decoded.temperature_alarm_config = {};
             decoded.temperature_alarm_config.condition = readConditionType(data & 0x07);
-            decoded.temperature_alarm_config.min_threshold = readInt16LE(bytes.slice(offset + 1, offset + 3)) / 10;
-            decoded.temperature_alarm_config.max_threshold = readInt16LE(bytes.slice(offset + 3, offset + 5)) / 10;
+            decoded.temperature_alarm_config.threshold_min = readInt16LE(bytes.slice(offset + 1, offset + 3)) / 10;
+            decoded.temperature_alarm_config.threshold_max = readInt16LE(bytes.slice(offset + 3, offset + 5)) / 10;
             decoded.temperature_alarm_config.alarm_interval = readUInt16LE(bytes.slice(offset + 5, offset + 7));
             decoded.temperature_alarm_config.alarm_times = readUInt16LE(bytes.slice(offset + 7, offset + 9));
             offset += 9;
@@ -181,9 +180,9 @@ function handle_downlink_response(channel_type, bytes, offset) {
             offset += 2;
             break;
         case 0x24:
-            decoded.current_threshold_config = {};
-            decoded.current_threshold_config.enable = readEnableStatus(bytes[offset]);
-            decoded.current_threshold_config.threshold = readUInt8(bytes[offset + 1]);
+            decoded.current_alarm_config = {};
+            decoded.current_alarm_config.enable = readEnableStatus(bytes[offset]);
+            decoded.current_alarm_config.threshold = readUInt8(bytes[offset + 1]);
             offset += 2;
             break;
         case 0x25:
@@ -206,7 +205,7 @@ function handle_downlink_response(channel_type, bytes, offset) {
             offset += 1;
             break;
         case 0x2f:
-            decoded.led_enable = readEnableStatus(readUInt16LE(bytes.slice(offset, offset + 2)));
+            decoded.led_indicator_enable = readEnableStatus(readUInt16LE(bytes.slice(offset, offset + 2)));
             offset += 2;
             break;
         case 0x30:
@@ -226,13 +225,13 @@ function handle_downlink_response(channel_type, bytes, offset) {
             offset += 1;
             break;
         case 0xa5:
-            decoded.led_reserve = readEnableStatus(bytes[offset]);
+            decoded.led_indicator_reserve = readEnableStatus(bytes[offset]);
             offset += 1;
             break;
         case 0xab:
-            decoded.temperature_calibration_config = {};
-            decoded.temperature_calibration_config.enable = readEnableStatus(bytes[offset]);
-            decoded.temperature_calibration_config.temperature = readInt16LE(bytes.slice(offset + 1, offset + 3)) / 10;
+            decoded.temperature_calibration_settings = {};
+            decoded.temperature_calibration_settings.enable = readEnableStatus(bytes[offset]);
+            decoded.temperature_calibration_settings.calibration_value = readInt16LE(bytes.slice(offset + 1, offset + 3)) / 10;
             offset += 3;
             break;
         default:
@@ -241,7 +240,6 @@ function handle_downlink_response(channel_type, bytes, offset) {
 
     return { data: decoded, offset: offset };
 }
-
 
 function readProtocolVersion(bytes) {
     var major = (bytes & 0xf0) >> 4;
