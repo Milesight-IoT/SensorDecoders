@@ -342,7 +342,7 @@ function setTemperatureEnable(report_temperature_enable) {
  * set temperature calibration
  * @param {object} temperature_calibration_settings
  * @param {number} temperature_calibration_settings.enable values: (0: disable, 1: enable)
- * @param {number} temperature_calibration_settings.calibration_value unit: ℃
+ * @param {number} temperature_calibration_settings.calibration_value unit: °C
  * @example { "temperature_calibration_settings": { "enable": 1, "calibration_value": 26 } }
  */
 function setTemperatureCalibration(temperature_calibration_settings) {
