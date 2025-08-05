@@ -481,7 +481,7 @@ function setTemperatureAlarmConfig(temperature_alarm_config) {
  * set temperature mutation alarm config
  * @param {object} temperature_mutation_alarm_config
  * @param {number} temperature_mutation_alarm_config.enable values: (0: disable, 1: enable)
- * @param {number} temperature_mutation_alarm_config.mutation unit: ℃, condition=(5: mutation)
+ * @param {number} temperature_mutation_alarm_config.mutation unit: °C, condition=(5: mutation)
  * @example { "temperature_mutation_alarm_config": { "enable": 1, "mutation": 100 } }
  */
 function setTemperatureMutationAlarmConfig(temperature_mutation_alarm_config) {
