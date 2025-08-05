@@ -1,12 +1,37 @@
-# IoT Controller - Milesight IoT
+# IoT Controller - UC300
 
-For more detailed information, please visit [milesight official website](https://www.milesight-iot.com).
+![UC300](uc300.png)
 
-The payload decoder function is applicable to UC300.
+For more detailed information, please visit [Milesight Official Website](https://www.milesight.com/iot/product/iot-controller/uc300)
 
-![UC300](UC300.png)
+## Payload
 
-## Payload Definition
+```
++-------------------------------------------------------+
+|           DEVICE UPLINK / DOWNLINK PAYLOAD            |
++---------------------------+---------------------------+
+|          DATA 1           |          DATA 2           |
++--------+--------+---------+--------+--------+---------+
+|   ID   |  TYPE  |  DATA   |   ID   |  TYPE  |  DATA   |
++--------+--------+---------+--------+--------+---------+
+| 1 Byte | 1 Byte | N Bytes | 1 Byte | 1 Byte | N Bytes |
+|--------+--------+---------+--------+--------+---------+
+```
+
+### Attribute
+
+|    CHANNEL    |  ID  | TYPE | LENGTH | DESCRIPTION                                                                                       |
+| :-----------: | :--: | :--: | :----: | ------------------------------------------------------------------------------------------------ |
+|     IPSO      | 0xFF | 0x01 |   1    | ipso_version(1B)                                                                                 |
+|   Hardware    | 0xFF | 0x09 |   2    | hardware_version(2B)<br/>hardware_version, e.g. 0110 -> v1.1                                     |
+|   Firmware    | 0xFF | 0x0A |   2    | firmware_version(2B)<br/>firmware_version, e.g. 0110 -> v1.10                                    |
+|      TSL      | 0xFF | 0xFF |   2    | tsl_version(2B)                                                                                  |
+| Serial Number | 0xFF | 0x16 |   2    | sn(8B)                                                                                           |
+| LoRaWAN Class | 0xFF | 0x0F |   1    | lorawan_class(1B)<br/>lorawan_class, values: (0: Class A, 1: Class B, 2: Class C, 3: Class CtoB) |
+|  Reset Event  | 0xFF | 0xFE |   1    | reset_event(1B)                                                                                  |
+| Device Status | 0xFF | 0x0B |   1    | device_status(1B)                                                                                |
+
+### Telemetry
 
 |               CHANNEL                |  ID  | TYPE | LENGTH | DESCRIPTION                                                           |
 | :----------------------------------: | :--: | :--: | :----: | --------------------------------------------------------------------- |
@@ -42,9 +67,9 @@ The payload decoder function is applicable to UC300.
 
 ### MODBUS DATA_TYPE
 
-| BITS |   7    | 6...0                                                                                                                                                                                                                                                                                                 |
-| :--: | :----: | :---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-|      | signed | 0x00: MB_COIL<br/>0x01: MB_DISCRETE<br />0x02: MB_INPUT_INT16<br/>0x03: MB_HOLD_INT16<br/>0x04: MB_HOLD_INT32<br/>0x05: MB_HOLD_FLOAT<br/>0x06: MB_INPUT_INT32<br/>0x07: MB_INPUT_FLOAT<br/>0x08: MB_INPUT_INT32_AB<br/>0x09: MB_INPUT_INT32_CD<br/>0x0A: MB_HOLD_INT32_AB<br/>0x0B: MB_HOLD_INT32_CD |
+| BITS |   7    | 6...0                                                                                                                                                                                                                                                                                                |
+| :--: | :----: | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+|      | signed | 0x00: MB_COIL<br/>0x01: MB_DISCRETE<br/>0x02: MB_INPUT_INT16<br/>0x03: MB_HOLD_INT16<br/>0x04: MB_HOLD_INT32<br/>0x05: MB_HOLD_FLOAT<br/>0x06: MB_INPUT_INT32<br/>0x07: MB_INPUT_FLOAT<br/>0x08: MB_INPUT_INT32_AB<br/>0x09: MB_INPUT_INT32_CD<br/>0x0A: MB_HOLD_INT32_AB<br/>0x0B: MB_HOLD_INT32_CD |
 
 ## Example
 
