@@ -124,7 +124,7 @@ function milesightDeviceDecode(bytes) {
         // TEMPERATURE WITH ABNORMAL
         else if (channel_id === 0x83 && channel_type === 0x67) {
             decoded.temperature = readInt16LE(bytes.slice(i, i + 2)) / 10;
-            decoded.temperature_abnormal = bytes[i + 2] == 0 ? false : true;
+            decoded.temperature_alarm = readTemperatureAlarm(bytes[i + 2]);
             i += 3;
         }
         // HISTORICAL DATA
@@ -345,19 +345,18 @@ function readGeofenceStatus(type) {
 }
 
 function readDevicePosition(type) {
-    var device_position_map = {
-        0: "normal",
-        1: "tilt",
-    };
+    var device_position_map = { 0: "normal", 1: "tilt" };
     return getValue(device_position_map, type);
 }
 
 function readTamperStatus(type) {
-    var tamper_status_map = {
-        0: "install",
-        1: "uninstall",
-    };
+    var tamper_status_map = { 0: "install", 1: "uninstall" };
     return getValue(tamper_status_map, type);
+}
+
+function readTemperatureAlarm(type) {
+    var alarm_map = { 0: "normal", 1: "abnormal" };
+    return getValue(alarm_map, type);
 }
 
 function readYesNoStatus(status) {
