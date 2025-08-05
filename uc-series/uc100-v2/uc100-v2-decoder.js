@@ -124,13 +124,12 @@ function milesightDeviceDecode(bytes) {
                     i += 8;
                     break;
             }
-            var modbus_chn_name = "modbus_chn_" + modbus_chn_id;
-            var modbus_chn_reg_name = modbus_chn_name + "_reg_" + (reg_offset + 1);
-            decoded[modbus_chn_reg_name] = value;
+            var modbus_chn_name = readModbusChannelName(modbus_chn_id, reg_offset);
+            decoded[modbus_chn_name] = value;
             if (hasAlarm(modbus_alarm_value)) {
                 var event = {};
-                event[modbus_chn_reg_name] = value;
-                event[modbus_chn_reg_name + "_alarm"] = readModbusAlarmType(modbus_alarm_value);
+                event[modbus_chn_name] = value;
+                event[modbus_chn_name + "_alarm"] = readModbusAlarmType(modbus_alarm_value);
                 decoded.event = decoded.event || [];
                 decoded.event.push(event);
             }
@@ -147,9 +146,8 @@ function milesightDeviceDecode(bytes) {
             var chn_def = readUInt8(bytes[i]);
             var modbus_chn_id = (chn_def & 0x3f) + 1;
             var reg_offset = (chn_def >>> 6) & 0x03;
-            var modbus_chn_name = "modbus_chn_" + modbus_chn_id;
-            var modbus_chn_reg_name = modbus_chn_name + "_reg_" + (reg_offset + 1) + "_mutation";
-            decoded[modbus_chn_reg_name] = readDoubleLE(bytes.slice(i + 1, i + 9));
+            var modbus_chn_name = readModbusChannelName(modbus_chn_id, reg_offset);
+            decoded[modbus_chn_name + "_mutation"] = readDoubleLE(bytes.slice(i + 1, i + 9));
             i += 9;
         }
         // MODBUS HISTORY
@@ -167,7 +165,7 @@ function milesightDeviceDecode(bytes) {
             var data = {};
             data.timestamp = timestamp;
             if (read_status === 1) {
-                data[modbus_chn_name + "_reg_1"] = readModbusHistoryV2(reg_type, sign, bytes.slice(i + 7, i + 15));
+                data[modbus_chn_name] = readModbusHistoryV2(reg_type, sign, bytes.slice(i + 7, i + 15));
                 if (reg_counts === 2) {
                     data[modbus_chn_name + "_reg_2"] = readModbusHistoryV2(reg_type, sign, bytes.slice(i + 15, i + 23));
                 }
@@ -256,7 +254,7 @@ function handle_downlink_response(channel_type, bytes, offset) {
             offset += 1;
             break;
         case 0xbd:
-            decoded.timezone = readTimeZone(readInt16LE(bytes.slice(offset, offset + 2)));
+            decoded.time_zone = readTimeZone(readInt16LE(bytes.slice(offset, offset + 2)));
             offset += 2;
             break;
         case 0xef:
@@ -318,7 +316,7 @@ function handle_downlink_response_ext(code, channel_type, bytes, offset) {
             offset += 3;
             break;
         case 0x77:
-            decoded.query_rule_config = readYesNoStatus(readUInt8(bytes[offset]));
+            decoded.query_rule_config = readUInt8(bytes[offset]);
             offset += 1;
             break;
         case 0x78:
@@ -475,6 +473,13 @@ function readYesNoStatus(status) {
 function readEnableStatus(status) {
     var status_map = { 0: "disable", 1: "enable" };
     return getValue(status_map, status);
+}
+
+function readModbusChannelName(index, offset) {
+    if (offset === 0) {
+        return "modbus_chn_" + index;
+    }
+    return "modbus_chn_" + index + "_reg_" + (offset + 1);
 }
 
 function readTimeZone(time_zone) {
