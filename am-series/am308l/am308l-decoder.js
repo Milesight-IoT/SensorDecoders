@@ -3,7 +3,7 @@
  *
  * Copyright 2025 Milesight IoT
  *
- * @product AM307(v2)
+ * @product AM308L(v2)
  */
 var RAW_VALUE = 0x00;
 
@@ -75,13 +75,9 @@ function milesightDeviceDecode(bytes) {
         }
         // TEMPERATURE
         else if (channel_id === 0x03 && channel_type === 0x67) {
-            // ℃
+            // °C
             decoded.temperature = readInt16LE(bytes.slice(i, i + 2)) / 10;
             i += 2;
-
-            // ℉
-            // decoded.temperature = readInt16LE(bytes.slice(i, i + 2)) / 10 * 1.8 + 32;
-            // i +=2;
         }
         // HUMIDITY
         else if (channel_id === 0x04 && channel_type === 0x68) {
@@ -118,12 +114,22 @@ function milesightDeviceDecode(bytes) {
             decoded.pressure = readUInt16LE(bytes.slice(i, i + 2)) / 10;
             i += 2;
         }
+        // PM2.5
+        else if (channel_id === 0x0b && channel_type === 0x7d) {
+            decoded.pm2_5 = readUInt16LE(bytes.slice(i, i + 2));
+            i += 2;
+        }
+        // PM10
+        else if (channel_id === 0x0c && channel_type === 0x7d) {
+            decoded.pm10 = readUInt16LE(bytes.slice(i, i + 2));
+            i += 2;
+        }
         // BEEP
         else if (channel_id === 0x0e && channel_type === 0x01) {
             decoded.buzzer_status = readBuzzerStatus(bytes[i]);
             i += 1;
         }
-        // HISTORY DATA (AM307)
+        // HISTORY DATA (AM308)
         else if (channel_id === 0x20 && channel_type === 0xce) {
             var data = {};
             data.timestamp = readUInt32LE(bytes.slice(i, i + 4));
@@ -135,12 +141,14 @@ function milesightDeviceDecode(bytes) {
             // unit: iaq
             data.tvoc = readUInt16LE(bytes.slice(i + 12, i + 14)) / 100;
             data.pressure = readUInt16LE(bytes.slice(i + 14, i + 16)) / 10;
-            i += 16;
+            data.pm2_5 = readUInt16LE(bytes.slice(i + 16, i + 18));
+            data.pm10 = readUInt16LE(bytes.slice(i + 18, i + 20));
+            i += 20;
 
             decoded.history = decoded.history || [];
             decoded.history.push(data);
         }
-        // HISTORY DATA (AM307) with tvoc unit: µg/m³
+        // HISTORY DATA (AM308) with tvoc unit: µg/m³
         else if (channel_id === 0x21 && channel_type === 0xce) {
             var data = {};
             data.timestamp = readUInt32LE(bytes.slice(i, i + 4));
@@ -152,7 +160,9 @@ function milesightDeviceDecode(bytes) {
             // unit: µg/m³
             data.tvoc = readUInt16LE(bytes.slice(i + 12, i + 14));
             data.pressure = readUInt16LE(bytes.slice(i + 14, i + 16)) / 10;
-            i += 16;
+            data.pm2_5 = readUInt16LE(bytes.slice(i + 16, i + 18));
+            data.pm10 = readUInt16LE(bytes.slice(i + 18, i + 20));
+            i += 20;
 
             decoded.history = decoded.history || [];
             decoded.history.push(data);
@@ -209,10 +219,6 @@ function handle_downlink_response(channel_type, bytes, offset) {
             decoded.query_status = readYesNoStatus(1);
             offset += 1;
             break;
-        case 0x2d:
-            decoded.screen_display_enable = readEnableStatus(bytes[offset]);
-            offset += 1;
-            break;
         case 0x2e:
             decoded.led_indicator_mode = readLedIndicatorMode(bytes[offset]);
             offset += 1;
@@ -234,10 +240,6 @@ function handle_downlink_response(channel_type, bytes, offset) {
             decoded.time_sync_enable = readEnableStatus(bytes[offset]);
             offset += 1;
             break;
-        case 0x3c:
-            decoded.screen_display_pattern = bytes[offset];
-            offset += 1;
-            break;
         case 0x3d:
             decoded.stop_buzzer = readYesNoStatus(1);
             offset += 1;
@@ -246,9 +248,9 @@ function handle_downlink_response(channel_type, bytes, offset) {
             decoded.buzzer_enable = readEnableStatus(bytes[offset]);
             offset += 1;
             break;
-        case 0x66:
-            decoded.screen_display_alarm_enable = readEnableStatus(bytes[offset]);
-            offset += 1;
+        case 0x65:
+            decoded.pm2_5_collection_interval = readUInt16LE(bytes.slice(offset, offset + 2));
+            offset += 2;
             break;
         case 0x68:
             decoded.history_enable = readEnableStatus(bytes[offset]);
@@ -270,10 +272,6 @@ function handle_downlink_response(channel_type, bytes, offset) {
         case 0x6d:
             decoded.stop_transmit = readYesNoStatus(1);
             offset += 1;
-            break;
-        case 0xf0:
-            decoded.screen_display_element_settings = readScreenDisplayElementSettings(bytes.slice(offset, offset + 4));
-            offset += 4;
             break;
         case 0xf4:
             decoded.co2_calibration_enable = readEnableStatus(bytes[offset]);
@@ -371,20 +369,6 @@ function readCalibrationMode(status) {
 function readLedIndicatorMode(status) {
     var led_indicator_mode_map = { 0: "off", 1: "on", 2: "blink" };
     return getValue(led_indicator_mode_map, status);
-}
-
-function readScreenDisplayElementSettings(bytes) {
-    var mask = readUInt16LE(bytes.slice(0, 2));
-    var data = readUInt16LE(bytes.slice(2, 4));
-
-    var settings = {};
-    var sensor_bit_offset = { temperature: 0, humidity: 1, co2: 2, light: 3, tvoc: 4, smile: 5, letter: 6 };
-    for (var key in sensor_bit_offset) {
-        if ((mask >>> sensor_bit_offset[key]) & 0x01) {
-            settings[key] = readEnableStatus((data >> sensor_bit_offset[key]) & 0x01);
-        }
-    }
-    return settings;
 }
 
 function readChildLockSettings(data) {

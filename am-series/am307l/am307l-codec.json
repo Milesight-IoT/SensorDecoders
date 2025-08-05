@@ -1,6 +1,6 @@
 {
     "version": "1.0.0",
-    "bytes": "03670A0104685805000106CB01077DFF02087DE3000973FE270B7D07000C7D0800017562",
+    "bytes": "01755C03673401046865056A490006651C0079001400077DE704087D070009733F27",
     "object": [
         {
             "id": "ipso_version",
@@ -117,11 +117,10 @@
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS"
         },
-
         {
             "id": "battery",
             "name": "Battery",
-            "value": "98",
+            "value": "92",
             "unit": "%",
             "access_mode": "R",
             "data_type": "NUMBER",
@@ -133,7 +132,7 @@
         {
             "id": "temperature",
             "name": "Temperature",
-            "value": "26.6",
+            "value": "30.8",
             "unit": "°C",
             "access_mode": "R",
             "data_type": "NUMBER",
@@ -145,7 +144,7 @@
         {
             "id": "humidity",
             "name": "Humidity",
-            "value": "44",
+            "value": "50.5",
             "unit": "%r.h.",
             "access_mode": "R",
             "data_type": "NUMBER",
@@ -157,7 +156,7 @@
         {
             "id": "pir",
             "name": "PIR",
-            "value": "1",
+            "value": "0",
             "unit": "",
             "access_mode": "R",
             "data_type": "BOOL",
@@ -173,7 +172,7 @@
         {
             "id": "light_level",
             "name": "Light Level",
-            "value": "1",
+            "value": "0",
             "unit": "",
             "access_mode": "R",
             "data_type": "NUMBER",
@@ -197,7 +196,7 @@
         {
             "id": "tvoc",
             "name": "TVOC",
-            "value": "2.27",
+            "value": "",
             "unit": "",
             "access_mode": "R",
             "data_type": "NUMBER",
@@ -209,7 +208,7 @@
         {
             "id": "pressure",
             "name": "Barometric Pressure",
-            "value": "1023.8",
+            "value": "1004.7",
             "unit": "hPa",
             "access_mode": "R",
             "data_type": "NUMBER",
@@ -217,30 +216,6 @@
             "bacnet_type": "analog_input_object",
             "bacnet_unit_type_id": 133,
             "bacnet_unit_type": "UNITS_HECTOPASCALS"
-        },
-        {
-            "id": "hcho",
-            "name": "HCHO",
-            "value": "",
-            "unit": "ppm",
-            "access_mode": "R",
-            "data_type": "NUMBER",
-            "value_type": "FLOAT",
-            "bacnet_type": "analog_input_object",
-            "bacnet_unit_type_id": 96,
-            "bacnet_unit_type": "UNITS_PARTS_PER_MILLION"
-        },
-        {
-            "id": "pm2_5",
-            "name": "PM2.5",
-            "value": "7",
-            "unit": "µg/m³",
-            "access_mode": "R",
-            "data_type": "NUMBER",
-            "value_type": "UINT16",
-            "bacnet_type": "analog_input_object",
-            "bacnet_unit_type_id": 219,
-            "bacnet_unit_type": "UNITS_MICROGRAMS_PER_CUBIC_METER"
         },
         {
             "id": "buzzer_status",
@@ -258,131 +233,6 @@
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS"
         },
-        {
-            "id": "history._item.timestamp",
-            "name": "Timestamp",
-            "value": "",
-            "unit": "s",
-            "access_mode": "R",
-            "data_type": "NUMBER",
-            "value_type": "UINT32",
-            "bacnet_type": "analog_input_object",
-            "bacnet_unit_type_id": 73,
-            "bacnet_unit_type": "UNITS_SECONDS"
-        },
-        {
-            "id": "history._item.temperature",
-            "name": "Temperature",
-            "value": "",
-            "unit": "°C",
-            "access_mode": "R",
-            "data_type": "NUMBER",
-            "value_type": "FLOAT",
-            "bacnet_type": "analog_input_object",
-            "bacnet_unit_type_id": 62,
-            "bacnet_unit_type": "UNITS_DEGREES_CELSIUS"
-        },
-        {
-            "id": "history._item.humidity",
-            "name": "Humidity",
-            "value": "",
-            "unit": "%r.h.",
-            "access_mode": "R",
-            "data_type": "NUMBER",
-            "value_type": "FLOAT",
-            "bacnet_type": "analog_input_object",
-            "bacnet_unit_type_id": 29,
-            "bacnet_unit_type": "UNITS_PERCENT_RELATIVE_HUMIDITY"
-        },
-        {
-            "id": "history._item.pir",
-            "name": "PIR",
-            "value": "",
-            "unit": "",
-            "access_mode": "R",
-            "data_type": "BOOL",
-            "value_type": "UINT8",
-            "values": [
-                { "value": 0, "name": "idle" },
-                { "value": 1, "name": "trigger" }
-            ],
-            "bacnet_type": "binary_input_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS"
-        },
-        {
-            "id": "history._item.light_level",
-            "name": "Light Level",
-            "value": "",
-            "unit": "",
-            "access_mode": "R",
-            "data_type": "NUMBER",
-            "value_type": "UINT8",
-            "bacnet_type": "analog_input_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS"
-        },
-        {
-            "id": "history._item.co2",
-            "name": "CO2",
-            "value": "",
-            "unit": "ppm",
-            "access_mode": "R",
-            "data_type": "NUMBER",
-            "value_type": "UINT16",
-            "bacnet_type": "analog_input_object",
-            "bacnet_unit_type_id": 96,
-            "bacnet_unit_type": "UNITS_PARTS_PER_MILLION"
-        },
-        {
-            "id": "history._item.tvoc",
-            "name": "TVOC",
-            "value": "",
-            "unit": "",
-            "access_mode": "R",
-            "data_type": "NUMBER",
-            "value_type": "FLOAT",
-            "bacnet_type": "analog_input_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS"
-        },
-        {
-            "id": "history._item.pressure",
-            "name": "Barometric Pressure",
-            "value": "",
-            "unit": "hPa",
-            "access_mode": "R",
-            "data_type": "NUMBER",
-            "value_type": "FLOAT",
-            "bacnet_type": "analog_input_object",
-            "bacnet_unit_type_id": 133,
-            "bacnet_unit_type": "UNITS_HECTOPASCALS"
-        },
-        {
-            "id": "history._item.pm2_5",
-            "name": "PM2.5",
-            "value": "",
-            "unit": "µg/m³",
-            "access_mode": "R",
-            "data_type": "NUMBER",
-            "value_type": "UINT16",
-            "bacnet_type": "analog_input_object",
-            "bacnet_unit_type_id": 219,
-            "bacnet_unit_type": "UNITS_MICROGRAMS_PER_CUBIC_METER"
-        },
-        {
-            "id": "history._item.hcho",
-            "name": "HCHO",
-            "value": "",
-            "unit": "ppm",
-            "access_mode": "R",
-            "data_type": "NUMBER",
-            "value_type": "FLOAT",
-            "bacnet_type": "analog_input_object",
-            "bacnet_unit_type_id": 96,
-            "bacnet_unit_type": "UNITS_PARTS_PER_MILLION"
-        },
-
         {
             "id": "reboot",
             "name": "Reboot",
@@ -448,14 +298,14 @@
             "name": "Time Sync Enable",
             "value": "",
             "unit": "",
-            "access_mode": "W",
-            "data_type": "BOOL",
+            "access_mode": "RW",
+            "data_type": "ENUM",
             "value_type": "UINT8",
             "values": [
                 { "value": 0, "name": "disable" },
                 { "value": 2, "name": "enable" }
             ],
-            "bacnet_type": "binary_output_object",
+            "bacnet_type": "multistate_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS"
         },
@@ -525,18 +375,6 @@
             "bacnet_type": "multistate_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS"
-        },
-        {
-            "id": "pm2_5_collection_interval",
-            "name": "PM2.5 Collection Interval",
-            "value": "",
-            "unit": "s",
-            "access_mode": "RW",
-            "data_type": "NUMBER",
-            "value_type": "UINT16",
-            "bacnet_type": "analog_value_object",
-            "bacnet_unit_type_id": 73,
-            "bacnet_unit_type": "UNITS_SECONDS"
         },
         {
             "id": "co2_abc_calibration_enable",
@@ -684,52 +522,6 @@
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": ["child_lock_settings.off_button", "child_lock_settings.on_button", "child_lock_settings.collection_button"]
-        },
-        {
-            "id": "pm_self_clean_config.enable",
-            "name": "PM Self Clean Config (Enable)",
-            "value": "",
-            "unit": "",
-            "access_mode": "RW",
-            "data_type": "BOOL",
-            "value_type": "UINT8",
-            "values": [
-                { "value": 0, "name": "disable" },
-                { "value": 1, "name": "enable" }
-            ],
-            "bacnet_type": "binary_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": ["pm_self_clean_config.enable", "pm_self_clean_config.period"]
-        },
-        {
-            "id": "pm_self_clean_config.period",
-            "name": "PM Self Clean Config (Period)",
-            "value": "",
-            "unit": "d",
-            "access_mode": "RW",
-            "data_type": "NUMBER",
-            "value_type": "UINT8",
-            "bacnet_type": "analog_value_object",
-            "bacnet_unit_type_id": 70,
-            "bacnet_unit_type": "UNITS_DAYS",
-            "reference": ["pm_self_clean_config.enable", "pm_self_clean_config.period"]
-        },
-        {
-            "id": "pm_self_clean",
-            "name": "PM Self Clean",
-            "value": "",
-            "unit": "",
-            "access_mode": "W",
-            "data_type": "BOOL",
-            "value_type": "UINT8",
-            "values": [
-                { "value": 0, "name": "no" },
-                { "value": 1, "name": "yes" }
-            ],
-            "bacnet_type": "binary_output_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS"
         },
         {
             "id": "retransmit_enable",
