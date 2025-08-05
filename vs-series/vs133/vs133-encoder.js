@@ -480,7 +480,7 @@ function setRejoinConfig(rejoin_config) {
 /**
  * set data rate
  * @since firmware_version>=v1.0.9
- * @param {number} data_rate 
+ * @param {number} data_rate
  * @example { "data_rate": 0 }
  */
 function setDataRate(data_rate) {
@@ -494,7 +494,7 @@ function setDataRate(data_rate) {
 /**
  * set tx power
  * @since firmware_version>=v1.0.9
- * @param {number} tx_power_level 
+ * @param {number} tx_power_level
  *  EU868, values: (0:-16dBm, 1:-14dBm, 2:-12dBm, 3:-10dBm, 4:-8dBm, 5:-6dBm, 6:-4dBm, 7:-2dBm)
  *  IN865, values: (0:-22dBm, 1:-22dBm, 2:-22dBm, 3:-22dBm, 4:-22dBm, 5:-20dBm, 6:-18dBm, 7:-16dBm, 8:-14dBm, 9:-12dBm, 10:-10dBm)
  *  RU864, values: (0:-16dBm, 1:-14dBm, 2:-12dBm, 3:-10dBm, 4:-8dBm, 5:-6dBm, 6:-4dBm, 7:-2dBm)

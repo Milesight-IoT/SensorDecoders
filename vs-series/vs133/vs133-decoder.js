@@ -36,7 +36,7 @@ var child_period_chns = [0x13, 0x16, 0x19, 0x1c];
 function milesightDeviceDecode(bytes) {
     var decoded = {};
 
-    for (var i = 0; i < bytes.length;) {
+    for (var i = 0; i < bytes.length; ) {
         var channel_id = bytes[i++];
         var channel_type = bytes[i++];
 
@@ -153,8 +153,7 @@ function milesightDeviceDecode(bytes) {
             var resultExt = handle_downlink_response_ext(channel_id, channel_type, bytes, i);
             decoded = Object.assign(decoded, resultExt.data);
             i = resultExt.offset;
-        }
-        else {
+        } else {
             break;
         }
     }
