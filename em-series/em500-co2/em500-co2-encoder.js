@@ -576,8 +576,8 @@ function setCO2ThresholdAlarmConfig(co2_alarm_config) {
  * @param {object} temperature_alarm_config
  * @param {number} temperature_alarm_config.enable values: (0: disable, 1: enable)
  * @param {number} temperature_alarm_config.condition values: (0: disable, 1: below, 2: above, 3: between, 4: outside)
- * @param {number} temperature_alarm_config.threshold_min unit: ℃
- * @param {number} temperature_alarm_config.threshold_max unit: ℃
+ * @param {number} temperature_alarm_config.threshold_min unit: °C
+ * @param {number} temperature_alarm_config.threshold_max unit: °C
  * @example { "temperature_alarm_config": { "enable": 1, "condition": 1, "threshold_max": 20, "threshold_min": 0 } }
  */
 function setTemperatureThresholdAlarmConfig(temperature_alarm_config) {
@@ -616,7 +616,7 @@ function setTemperatureThresholdAlarmConfig(temperature_alarm_config) {
  * set temperature mutation alarm config
  * @param {object} temperature_mutation_alarm_config
  * @param {number} temperature_mutation_alarm_config.enable values: (0: disable, 1: enable)
- * @param {number} temperature_mutation_alarm_config.mutation unit: ℃
+ * @param {number} temperature_mutation_alarm_config.mutation unit: °C
  * @example { "temperature_mutation_alarm_config": { "enable": 1, "mutation": 0 } }
  */
 function setTemperatureMutationAlarmConfig(temperature_mutation_alarm_config) {
