@@ -1,26 +1,49 @@
-# Weather Station - Milesight IoT
+# Weather Station - WTS506
 
-The payload decoder function is applicable to WTS305 / WTS505 / WTS506.
+![WTS506](wts506.png)
 
-For more detailed information, please visit [milesight official website](https://www.milesight-iot.com).
+For more detailed information, please visit [Milesight Official Website](https://www.milesight.com/iot/product/lorawan-sensor/wts506)
 
-|        WTS305         |        WTS505         |        WTS506         |
-| :-------------------: | :-------------------: | :-------------------: |
-| ![WTS305](WTS305.png) | ![WTS505](WTS505.png) | ![WTS506](WTS506.png) |
+## Payload
 
-## Payload Definition
+```
++-------------------------------------------------------+
+|           DEVICE UPLINK / DOWNLINK PAYLOAD            |
++---------------------------+---------------------------+
+|          DATA 1           |          DATA 2           |
++--------+--------+---------+--------+--------+---------+
+|   ID   |  TYPE  |  DATA   |   ID   |  TYPE  |  DATA   |
++--------+--------+---------+--------+--------+---------+
+| 1 Byte | 1 Byte | N Bytes | 1 Byte | 1 Byte | N Bytes |
+|--------+--------+---------+--------+--------+---------+
+```
+
+### Attribute
+
+|    CHANNEL    |  ID  | TYPE | LENGTH | DESCRIPTION                                                                                       |
+| :-----------: | :--: | :--: | :----: | ------------------------------------------------------------------------------------------------ |
+|     IPSO      | 0xFF | 0x01 |   1    | ipso_version(1B)                                                                                 |
+|   Hardware    | 0xFF | 0x09 |   2    | hardware_version(2B)<br/>hardware_version, e.g. 0110 -> v1.1                                     |
+|   Firmware    | 0xFF | 0x0A |   2    | firmware_version(2B)<br/>firmware_version, e.g. 0110 -> v1.10                                    |
+|      TSL      | 0xFF | 0xFF |   2    | tsl_version(2B)                                                                                  |
+| Serial Number | 0xFF | 0x16 |   2    | sn(8B)                                                                                           |
+| LoRaWAN Class | 0xFF | 0x0F |   1    | lorawan_class(1B)<br/>lorawan_class, values: (0: Class A, 1: Class B, 2: Class C, 3: Class CtoB) |
+|  Reset Event  | 0xFF | 0xFE |   1    | reset_event(1B)                                                                                  |
+| Device Status | 0xFF | 0x0B |   1    | device_status(1B)                                                                                |
+
+### Telemetry
 
 |          CHANNEL          |  ID  | TYPE | LENGTH | DESCRIPTION                                                                                                                        |
 | :-----------------------: | :--: | :--: | :----: | ---------------------------------------------------------------------------------------------------------------------------------- |
 |          Battery          | 0x01 | 0x75 |   1    | battery(1B)<br/>battery, unit: %                                                                                                   |
-|        Temperature        | 0x03 | 0x67 |   2    | temperature(2B)<br/>temperature, unit: ℃                                                                                           |
-|         Humidity          | 0x04 | 0x68 |   1    | humidity(1B)<br/>humidity, unit: %RH                                                                                               |
+|        Temperature        | 0x03 | 0x67 |   2    | temperature(2B)<br/>temperature, unit: °C                                                                                          |
+|         Humidity          | 0x04 | 0x68 |   1    | humidity(1B)<br/>humidity, unit: %r.h.                                                                                               |
 |      Wind Direction       | 0x05 | 0x84 |   2    | wind_direction(2B)<br/>wind_direction, unit: °                                                                                     |
 |    Barometric Pressure    | 0x06 | 0x73 |   2    | pressure(2B)<br/>pressure, unit: hPa                                                                                               |
 |        Wind Speed         | 0x07 | 0x92 |   2    | wind_speed(2B)<br/>wind_speed, unit: m/s                                                                                           |
 |       Rainfall(v1)        | 0x08 | 0x77 |   3    | rainfall_total(2B) + rainfall_counter(1B)<br/>rainfall_total, unit: mm                                                             |
 |       Rainfall(v2)        | 0x08 | 0xEC |   5    | rainfall_total(4B) + rainfall_counter(1B)<br/>rainfall_total, unit: mm                                                             |
-|     Temperature Alarm     | 0x83 | 0x67 |   3    | temperature(2B) + temperature_alarm(1B)<br/>temperature, unit: ℃<br/>temperature_alarm, values: (1: threshold)                     |
+|     Temperature Alarm     | 0x83 | 0x67 |   3    | temperature(2B) + temperature_alarm(1B)<br/>temperature, unit: °C<br/>temperature_alarm, values: (1: threshold)                    |
 | Barometric Pressure Alarm | 0x86 | 0x73 |   3    | pressure(2B) + pressure_alarm(1B)<br/>pressure, unit: hPa<br/>pressure_alarm, values: (1: threshold)                               |
 |     Wind Speed Alarm      | 0x87 | 0x92 |   3    | wind_speed(2B) + wind_speed_alarm<br/>wind_speed, unit: m/s<br/>wind_speed_alarm, values: (1: threshold)                           |
 |       Rainfall(v2)        | 0x88 | 0xEC |   6    | rainfall_total(4B) + rainfall_counter(1B) + rainfall_alarm<br/>rainfall_total, unit: mm<br/>rainfall_alarm, values: (1: threshold) |
