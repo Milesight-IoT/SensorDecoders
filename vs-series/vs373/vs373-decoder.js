@@ -180,6 +180,10 @@ function handle_downlink_response(channel_type, bytes, offset) {
             decoded.wifi_enable = readEnableStatus(bytes[offset]);
             offset += 1;
             break;
+        case 0x64:
+            decoded.release_alarm = readYesNoStatus(1);
+            offset += 1;
+            break;
         case 0x69:
             decoded.retransmit_enable = readEnableStatus(bytes[offset]);
             offset += 1;
@@ -282,19 +286,10 @@ function handle_downlink_response_ext(code, channel_type, bytes, offset) {
             decoded.motion_detection_settings = readMotionDetectionSettings(bytes.slice(offset, offset + 3));
             offset += 3;
             break;
-        case 0x54:
-            decoded.radar_settings = readRadarSettings(bytes.slice(offset, offset + 2));
-            offset += 2;
-            break;
         case 0x56:
             decoded.existence_detection_settings = readExistenceDetectionSettings(bytes.slice(offset, offset + 2));
             offset += 2;
             break;
-        case 0x64:
-            decoded.release_alarm = readYesNoStatus(bytes[offset]);
-            offset += 1;
-            break;
-
         default:
             throw new Error("unknown downlink response");
     }
@@ -482,20 +477,8 @@ function readDwellDetectionSettings(bytes) {
 function readMotionDetectionSettings(bytes) {
     var motion_detection_settings = {};
     motion_detection_settings.enable = readEnableStatus(bytes[0]);
-    motion_detection_settings.motionless_time = readUInt16LE(bytes.slice(1, 3));
+    motion_detection_settings.motionless_time = readUInt8(bytes[2]);
     return motion_detection_settings;
-}
-
-function readRadarSettings(bytes) {
-    var radar_settings = {};
-    radar_settings.mode = readRadarMode(bytes[0]);
-    radar_settings.frame_rate = readUInt8(bytes[1]);
-    return radar_settings;
-}
-
-function readRadarMode(type) {
-    var radar_mode_map = { 0: "const", 1: "free" };
-    return getValue(radar_mode_map, type);
 }
 
 function readExistenceDetectionSettings(bytes) {
