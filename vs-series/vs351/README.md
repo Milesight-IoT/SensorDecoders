@@ -1,14 +1,39 @@
 # Mini AI Thermopile People Counter - Milesight IoT
 
-The payload decoder function is applicable to VS351.
-
-For more detailed information, please visit [Milesight Official Website](https://www.milesight.com/iot/product/lorawan-sensor/vs351).
-
 |        VS351        |            VS351 with Battery            |
 | :-----------------: | :--------------------------------------: |
-| ![VS351](VS351.png) | ![VS351 with Battery](VS351_Battery.png) |
+| ![VS351](vs351.png) | ![VS351 with Battery](vs351-battery.png) |
 
-## Payload Definition
+For more detailed information, please visit [Milesight Official Website](https://www.milesight.com/iot/product/lorawan-sensor/vs351)
+
+## Payload
+
+```
++-------------------------------------------------------+
+|           DEVICE UPLINK / DOWNLINK PAYLOAD            |
++---------------------------+---------------------------+
+|          DATA 1           |          DATA 2           |
++--------+--------+---------+--------+--------+---------+
+|   ID   |  TYPE  |  DATA   |   ID   |  TYPE  |  DATA   |
++--------+--------+---------+--------+--------+---------+
+| 1 Byte | 1 Byte | N Bytes | 1 Byte | 1 Byte | N Bytes |
+|--------+--------+---------+--------+--------+---------+
+```
+
+### Attribute
+
+|    CHANNEL    |  ID  | TYPE | LENGTH | DESCRIPTION                                                                                       |
+| :-----------: | :--: | :--: | :----: | ------------------------------------------------------------------------------------------------ |
+|     IPSO      | 0xFF | 0x01 |   1    | ipso_version(1B)                                                                                 |
+|   Hardware    | 0xFF | 0x09 |   2    | hardware_version(2B)<br/>hardware_version, e.g. 0110 -> v1.1                                     |
+|   Firmware    | 0xFF | 0x0A |   2    | firmware_version(2B)<br/>firmware_version, e.g. 0110 -> v1.10                                    |
+|      TSL      | 0xFF | 0xFF |   2    | tsl_version(2B)                                                                                  |
+| Serial Number | 0xFF | 0x16 |   2    | sn(8B)                                                                                           |
+| LoRaWAN Class | 0xFF | 0x0F |   1    | lorawan_class(1B)<br/>lorawan_class, values: (0: Class A, 1: Class B, 2: Class C, 3: Class CtoB) |
+|  Reset Event  | 0xFF | 0xFE |   1    | reset_event(1B)                                                                                  |
+| Device Status | 0xFF | 0x0B |   1    | device_status(1B)                                                                                |
+
+### Telemetry
 
 |       CHANNEL       |  ID  | TYPE | LENGTH  | DESCRIPTION                                                                                                                                                                                         |
 | :-----------------: | :--: | :--: | :-----: | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -17,7 +42,7 @@ For more detailed information, please visit [Milesight Official Website](https:/
 |  Hardware Version   | 0xFF | 0x09 |    2    | hardware_version(2B)                                                                                                                                                                                |
 |  Firmware Version   | 0xFF | 0x1F |    4    | firmware_version(4B)                                                                                                                                                                                |
 |       Battery       | 0x01 | 0x75 |    1    | battery(1B)<br/>battery, read: uint8, unit：%                                                                                                                                                       |
-|     Temperature     | 0x03 | 0x67 |    2    | temperature(2B)<br/>temperature, read: int16/10, unit: ℃                                                                                                                                            |
+|     Temperature     | 0x03 | 0x67 |    2    | temperature(2B)<br/>temperature, read: int16/10, unit: °C                                                                                                                                           |
 |    Total IN/OUT     | 0x04 | 0xCC |    4    | total_in(2B) + total_out(2B)                                                                                                                                                                        |
 |    Period IN/OUT    | 0x05 | 0xCC |    4    | period_in(2B) + period_out(2B)                                                                                                                                                                      |
 |  Temperature Alarm  | 0x83 | 0x67 |    3    | temperature(2B) + temperature_alarm(1B)<br/>temperature_alarm, values: (0: threshold alarm release, 1: threshold alarm, 3: high temperature alarm, 4: high temperature alarm release)               |

@@ -356,7 +356,7 @@ function setTemperatureReportEnable(report_temperature_enable) {
  * set temperature calibration setting
  * @param {object} temperature_calibration_settings
  * @param {number} temperature_calibration_settings.enable values: (0: disable, 1: enable)
- * @param {number} temperature_calibration_settings.calibration_value unit: ℃, range: [-100, 100]
+ * @param {number} temperature_calibration_settings.calibration_value unit: °C, range: [-100, 100]
  * @example { "temperature_calibration_settings": { "enable": 1, "calibration_value": 0 } }
  */
 function setTemperatureCalibrationSetting(temperature_calibration_settings) {
@@ -505,8 +505,8 @@ function setPeopleCumulativeAlarmSettings(people_cumulative_alarm_config) {
  * set temperature alarm settings
  * @param {object} temperature_alarm_config
  * @param {number} temperature_alarm_config.condition values: (0: disable, 1: below, 2: above, 3: between, 4: outside)
- * @param {number} temperature_alarm_config.threshold_min unit: ℃
- * @param {number} temperature_alarm_config.threshold_max unit: ℃
+ * @param {number} temperature_alarm_config.threshold_min unit: °C
+ * @param {number} temperature_alarm_config.threshold_max unit: °C
  * @example { "temperature_alarm_config": { "condition": 3, "threshold_min": 20, "threshold_max": 25 } }
  */
 function setTemperatureAlarmSettings(temperature_alarm_config) {

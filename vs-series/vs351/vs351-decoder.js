@@ -86,7 +86,7 @@ function milesightDeviceDecode(bytes) {
         }
         // TEMPERATURE
         else if (channel_id === 0x03 && channel_type === 0x67) {
-            // ℃
+            // °C
             decoded.temperature = readInt16LE(bytes.slice(i, i + 2)) / 10;
             i += 2;
         }
