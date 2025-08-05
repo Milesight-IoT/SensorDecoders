@@ -3,7 +3,7 @@
  *
  * Copyright 2025 Milesight IoT
  *
- * @product WS501_EU
+ * @product WS501_US / WS501_EU
  */
 var RAW_VALUE = 0x00;
 
