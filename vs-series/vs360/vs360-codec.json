@@ -117,7 +117,6 @@
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS"
         },
-
         {
             "id": "battery_main",
             "name": "Battery (Main)",
@@ -141,39 +140,6 @@
             "bacnet_type": "analog_input_object",
             "bacnet_unit_type_id": 98,
             "bacnet_unit_type": "UNITS_PERCENT"
-        },
-        {
-            "id": "event._item.type",
-            "name": "Event (Type)",
-            "value": "",
-            "unit": "",
-            "access_mode": "R",
-            "data_type": "ENUM",
-            "value_type": "UINT8",
-            "values": [
-                { "value": 0, "name": "counting_anomaly" },
-                { "value": 1, "name": "node_device_without_response" },
-                { "value": 2, "name": "devices_misaligned" }
-            ],
-            "bacnet_type": "multistate_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS"
-        },
-        {
-            "id": "event._item.status",
-            "name": "Event (Status)",
-            "value": "",
-            "unit": "",
-            "access_mode": "R",
-            "data_type": "ENUM",
-            "value_type": "UINT8",
-            "values": [
-                { "value": 0, "name": "alarm_release" },
-                { "value": 1, "name": "alarm" }
-            ],
-            "bacnet_type": "multistate_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS"
         },
         {
             "id": "total_in",
@@ -267,67 +233,6 @@
             "bacnet_unit_type_id": 73,
             "bacnet_unit_type": "UNITS_SECONDS"
         },
-        {
-            "id": "history._item.timestamp",
-            "name": "History (Timestamp)",
-            "value": "",
-            "unit": "s",
-            "access_mode": "R",
-            "data_type": "NUMBER",
-            "value_type": "UINT32",
-            "bacnet_type": "analog_input_object",
-            "bacnet_unit_type_id": 73,
-            "bacnet_unit_type": "UNITS_SECONDS"
-        },
-        {
-            "id": "history._item.period_in",
-            "name": "History (Period In)",
-            "value": "",
-            "unit": "",
-            "access_mode": "R",
-            "data_type": "NUMBER",
-            "value_type": "UINT16",
-            "bacnet_type": "analog_input_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS"
-        },
-        {
-            "id": "history._item.period_out",
-            "name": "History (Period Out)",
-            "value": "",
-            "unit": "",
-            "access_mode": "R",
-            "data_type": "NUMBER",
-            "value_type": "UINT16",
-            "bacnet_type": "analog_input_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS"
-        },
-        {
-            "id": "history._item.total_in",
-            "name": "History (Total In)",
-            "value": "",
-            "unit": "",
-            "access_mode": "R",
-            "data_type": "NUMBER",
-            "value_type": "UINT16",
-            "bacnet_type": "analog_input_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS"
-        },
-        {
-            "id": "history._item.total_out",
-            "name": "History (Total Out)",
-            "value": "",
-            "unit": "",
-            "access_mode": "R",
-            "data_type": "NUMBER",
-            "value_type": "UINT16",
-            "bacnet_type": "analog_input_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS"
-        },
-
         {
             "id": "reboot",
             "name": "Reboot",
@@ -807,105 +712,6 @@
             "bacnet_type": "binary_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS"
-        },
-        {
-            "id": "d2d_master_config._item.mode",
-            "name": "D2D Master Config (Mode)",
-            "value": "",
-            "unit": "",
-            "access_mode": "RW",
-            "data_type": "ENUM",
-            "value_type": "UINT8",
-            "values": [
-                { "value": 1, "name": "someone_enter" },
-                { "value": 2, "name": "someone_leave" },
-                { "value": 3, "name": "counting_threshold_alarm" },
-                { "value": 4, "name": "temperature_threshold_alarm" },
-                { "value": 5, "name": "temperature_threshold_alarm_release" }
-            ],
-            "bacnet_type": "multistate_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": ["d2d_master_config._item.mode", "d2d_master_config._item.enable", "d2d_master_config._item.lora_uplink_enable", "d2d_master_config._item.d2d_cmd", "d2d_master_config._item.time_enable", "d2d_master_config._item.time"]
-        },
-        {
-            "id": "d2d_master_config._item.enable",
-            "name": "D2D Master Config (Enable)",
-            "value": "",
-            "unit": "",
-            "access_mode": "RW",
-            "data_type": "BOOL",
-            "value_type": "UINT8",
-            "values": [
-                { "value": 0, "name": "disable" },
-                { "value": 1, "name": "enable" }
-            ],
-            "bacnet_type": "binary_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": ["d2d_master_config._item.mode", "d2d_master_config._item.enable", "d2d_master_config._item.lora_uplink_enable", "d2d_master_config._item.d2d_cmd", "d2d_master_config._item.time_enable", "d2d_master_config._item.time"]
-        },
-
-        {
-            "id": "d2d_master_config._item.lora_uplink_enable",
-            "name": "D2D Master Config (LoRa Uplink Enable)",
-            "value": "",
-            "unit": "",
-            "access_mode": "RW",
-            "data_type": "BOOL",
-            "value_type": "UINT8",
-            "values": [
-                { "value": 0, "name": "disable" },
-                { "value": 1, "name": "enable" }
-            ],
-            "bacnet_type": "binary_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": ["d2d_master_config._item.mode", "d2d_master_config._item.enable", "d2d_master_config._item.lora_uplink_enable", "d2d_master_config._item.d2d_cmd", "d2d_master_config._item.time_enable", "d2d_master_config._item.time"]
-        },
-        {
-            "id": "d2d_master_config._item.d2d_cmd",
-            "name": "D2D Master Config (D2D Cmd)",
-            "value": "",
-            "unit": "",
-            "access_mode": "RW",
-            "data_type": "TEXT",
-            "value_type": "STRING",
-            "max_length": 4,
-            "bacnet_type": "character_string_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": ["d2d_master_config._item.mode", "d2d_master_config._item.enable", "d2d_master_config._item.lora_uplink_enable", "d2d_master_config._item.d2d_cmd", "d2d_master_config._item.time_enable", "d2d_master_config._item.time"]
-        },
-        {
-            "id": "d2d_master_config._item.time_enable",
-            "name": "D2D Master Config (Time Enable)",
-            "value": "",
-            "unit": "",
-            "access_mode": "RW",
-            "data_type": "BOOL",
-            "value_type": "UINT8",
-            "values": [
-                { "value": 0, "name": "disable" },
-                { "value": 1, "name": "enable" }
-            ],
-            "bacnet_type": "binary_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": ["d2d_master_config._item.mode", "d2d_master_config._item.enable", "d2d_master_config._item.lora_uplink_enable", "d2d_master_config._item.d2d_cmd", "d2d_master_config._item.time_enable", "d2d_master_config._item.time"]
-        },
-        {
-            "id": "d2d_master_config._item.time",
-            "name": "D2D Master Config (Time)",
-            "value": "",
-            "unit": "min",
-            "access_mode": "RW",
-            "data_type": "NUMBER",
-            "value_type": "UINT16",
-            "bacnet_type": "analog_value_object",
-            "bacnet_unit_type_id": 72,
-            "bacnet_unit_type": "UNITS_MINUTES",
-            "reference": ["d2d_master_config._item.mode", "d2d_master_config._item.enable", "d2d_master_config._item.lora_uplink_enable", "d2d_master_config._item.d2d_cmd", "d2d_master_config._item.time_enable", "d2d_master_config._item.time"]
         },
         {
             "id": "people_period_alarm_config.condition",
