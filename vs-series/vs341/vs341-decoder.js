@@ -3,7 +3,7 @@
  *
  * Copyright 2025 Milesight IoT
  *
- * @product VS340 / VS341
+ * @product VS341
  */
 var RAW_VALUE = 0x00;
 

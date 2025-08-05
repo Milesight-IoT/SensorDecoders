@@ -3,7 +3,7 @@
  *
  * Copyright 2025 Milesight IoT
  *
- * @product VS340 / VS341
+ * @product VS340
  */
 var RAW_VALUE = 0x00;
 
@@ -278,9 +278,9 @@ function setD2DKey(d2d_key) {
  * thermopile collect settings
  * @param {object} thermopile_collect_settings
  * @param {number} thermopile_collect_settings.enable values: (0: disable, 1: enable)
- * @param {number} thermopile_collect_settings.separate unit: ℃
- * @param {number} thermopile_collect_settings.threshold_l unit: ℃, range: [0, 25.5]
- * @param {number} thermopile_collect_settings.threshold_h unit: ℃, range: [0, 25.5]
+ * @param {number} thermopile_collect_settings.separate unit: °C
+ * @param {number} thermopile_collect_settings.threshold_l unit: °C, range: [0, 25.5]
+ * @param {number} thermopile_collect_settings.threshold_h unit: °C, range: [0, 25.5]
  * @example { "thermopile_collect_settings": { "enable": 1, "separate": 1, "threshold_l": 10, "threshold_h": 20 } }
  */
 function setThermopileCollectSettings(thermopile_collect_settings) {
@@ -307,7 +307,7 @@ function setThermopileCollectSettings(thermopile_collect_settings) {
 
 /**
  * thermopile negative threshold
- * @param {number} thermopile_negative_threshold unit: ℃, range: [-128, -1]
+ * @param {number} thermopile_negative_threshold unit: °C, range: [-128, -1]
  * @example { "thermopile_negative_threshold": -10 }
  */
 function setThermopileNegativeThreshold(thermopile_negative_threshold) {
