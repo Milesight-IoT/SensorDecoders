@@ -177,7 +177,7 @@ function milesightDeviceDecode(bytes) {
             event.result = readCalibrationResult(bytes[i + 3]);
             i += 4;
 
-            decoded[valve_chn_name + "_calibration_result"] = event;
+            decoded[valve_chn_name + "_calibration_event"] = event;
         }
         // VALVE SENSOR STATUS
         else if (includes(valve_exception_chns, channel_id) && channel_type === 0xf6) {
@@ -414,7 +414,7 @@ function handle_downlink_response_ext(code, channel_type, bytes, offset) {
             var pressure_index_name = "pressure_" + pressure_index + "_calibration_settings";
             decoded[pressure_index_name] = {};
             decoded[pressure_index_name].enable = readEnableStatus(bytes[offset + 1]);
-            decoded[pressure_index_name].calibration = readInt16LE(bytes.slice(offset + 2, offset + 4));
+            decoded[pressure_index_name].calibration_value = readInt16LE(bytes.slice(offset + 2, offset + 4));
             offset += 4;
             break;
         case 0x68:

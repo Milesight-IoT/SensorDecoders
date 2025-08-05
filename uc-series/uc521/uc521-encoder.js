@@ -606,12 +606,12 @@ function setValveFilterConfig(valve_filter_config) {
  * @param {number} pressure_index values: (1: pressure 1, 2: pressure 2)
  * @param {object} pressure_calibration_settings
  * @param {number} pressure_calibration_settings.enable values: (0: disable, 1: enable)
- * @param {number} pressure_calibration_settings.calibration unit: kPa
- * @example { "pressure_1_calibration_settings": { "enable": 1, "calibration": 1 } }
+ * @param {number} pressure_calibration_settings.calibration_value unit: kPa
+ * @example { "pressure_1_calibration_settings": { "enable": 1, "calibration_value": 1 } }
  */
 function setPressureCalibration(pressure_index, pressure_calibration_settings) {
     var enable = pressure_calibration_settings.enable;
-    var calibration = pressure_calibration_settings.calibration;
+    var calibration_value = pressure_calibration_settings.calibration_value;
 
     var enable_map = { 0: "disable", 1: "enable" };
     var enable_values = getValues(enable_map);
@@ -624,7 +624,7 @@ function setPressureCalibration(pressure_index, pressure_calibration_settings) {
     buffer.writeUInt8(0x5b);
     buffer.writeUInt8(pressure_index);
     buffer.writeUInt8(getValue(enable_map, enable));
-    buffer.writeInt16LE(calibration);
+    buffer.writeInt16LE(calibration_value);
     return buffer.toBytes();
 }
 
