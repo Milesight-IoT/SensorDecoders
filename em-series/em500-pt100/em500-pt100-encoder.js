@@ -296,8 +296,8 @@ function setTimeSyncEnable(time_sync_enable) {
  * @param {object} temperature_alarm_config
  * @param {number} temperature_alarm_config.enable values: (0: disable, 1: enable)
  * @param {number} temperature_alarm_config.condition values: (0: disable, 1: below, 2: above, 3: between, 4: outside)
- * @param {number} temperature_alarm_config.threshold_min unit: ℃, condition=(below, within, outside)
- * @param {number} temperature_alarm_config.threshold_max unit: ℃, condition=(above, within, outside)
+ * @param {number} temperature_alarm_config.threshold_min unit: °C, condition=(below, within, outside)
+ * @param {number} temperature_alarm_config.threshold_max unit: °C, condition=(above, within, outside)
  */
 function setTemperatureAlarmConfig(temperature_alarm_config) {
     var condition = temperature_alarm_config.condition;
@@ -336,7 +336,7 @@ function setTemperatureAlarmConfig(temperature_alarm_config) {
  * set temperature mutation alarm config
  * @param {object} temperature_mutation_alarm_config
  * @param {number} temperature_mutation_alarm_config.enable values: (0: disable, 1: enable)
- * @param {number} temperature_mutation_alarm_config.mutation unit: ℃, condition=(5: mutation)
+ * @param {number} temperature_mutation_alarm_config.mutation unit: °C, condition=(5: mutation)
  * @example { "temperature_mutation_alarm_config": { "enable": 1, "mutation": 100 } }
  */
 function setTemperatureMutationAlarmConfig(temperature_mutation_alarm_config) {
