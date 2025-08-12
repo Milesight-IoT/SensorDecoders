@@ -255,8 +255,7 @@ function handle_downlink_response(channel_type, bytes, offset) {
             offset += 2;
             break;
         case 0x28:
-            var report_status_map = { 0: "plan", 1: "periodic", 2: "target_temperature_range" };
-            decoded.report_status = getValue(report_status_map, readUInt8(bytes[offset]));
+            decoded.report_status = readReportStatus(readUInt8(bytes[offset]));
             offset += 1;
             break;
         case 0x82:
@@ -542,6 +541,51 @@ function handle_downlink_response_ext(code, channel_type, bytes, offset) {
         case 0x8b:
             decoded.plan_schedule_enable_config = readPlanScheduleEnableConfig(bytes.slice(offset, offset + 2));
             offset += 2;
+            break;
+        case 0x9b:
+            var temperature_band_config = {};
+            temperature_band_config.mode = readTemperatureBandConfigMode(bytes[offset]);
+            temperature_band_config.value = readInt16LE(bytes.slice(offset + 1, offset + 3)) / 10;
+            offset += 3;
+            decoded.temperature_band_config = decoded.temperature_band_config || [];
+            decoded.temperature_band_config.push(temperature_band_config);
+            break;
+        case 0x9c:
+            decoded.temperature_dead_band = readInt16LE(bytes.slice(offset, offset + 2)) / 10;
+            offset += 2;
+            break;
+        case 0x9d:
+            decoded.system_protection_config = {};
+            decoded.system_protection_config.mode = readSystemProtectionConfigMode(bytes[offset]);
+            decoded.system_protection_config.enable = readEnableStatus(bytes[offset + 1]);
+            decoded.system_protection_config.duration = readUInt16LE(bytes.slice(offset + 2, offset + 4));
+            offset += 4;
+            break;
+        case 0x9e:
+            decoded.fan_heat_enable = readEnableStatus(readUInt8(bytes[offset]));
+            offset += 1;
+            break;
+        case 0x9f:
+            var plan_base_config = {};
+            plan_base_config.plan_type = readPlanType(readUInt8(bytes[offset]));
+            plan_base_config.system_status = readOnOffStatus(readUInt8(bytes[offset + 1]));
+            plan_base_config.temperature_control_mode = readTemperatureControlMode(readUInt8(bytes[offset + 2]));
+            plan_base_config.fan_mode = readFanMode(readUInt8(bytes[offset + 3]));
+            plan_base_config.heat_target_temperature = readInt16LE(bytes.slice(offset + 4, offset + 6)) / 10;
+            plan_base_config.cool_target_temperature = readInt16LE(bytes.slice(offset + 6, offset + 8)) / 10;
+            offset += 8;
+            decoded.plan_base_config = decoded.plan_base_config || [];
+            decoded.plan_base_config.push(plan_base_config);
+            break;
+        case 0xa0:
+            var plan_band_config = {};
+            plan_band_config.plan_type = readPlanType(readUInt8(bytes[offset]));
+            plan_band_config.band_type = readBandType(readUInt8(bytes[offset + 1]));
+            plan_band_config.band_on = readInt16LE(bytes.slice(offset + 2, offset + 4)) / 10;
+            plan_band_config.band_off = readInt16LE(bytes.slice(offset + 4, offset + 6)) / 10;
+            offset += 6;
+            decoded.plan_band_config = decoded.plan_band_config || [];
+            decoded.plan_band_config.push(plan_band_config);
             break;
         default:
             throw new Error("unknown downlink response");
@@ -917,6 +961,26 @@ function readFanControlDuringHeating(value) {
     return getValue(mode_map, value);
 }
 
+function readTemperatureBandConfigMode(value) {
+    var mode_map = { 0: "heat_band_on_1", 1: "heat_band_on_2", 2: "heat_band_off_1", 3: "heat_band_off_2", 4: "cool_band_on_1", 5: "cool_band_on_2", 6: "cool_band_off_1", 7: "cool_band_off_2", 8: "fan_ban_on", 9: "fan_ban_off" };
+    return getValue(mode_map, value);
+}
+
+function readSystemProtectionConfigMode(value) {
+    var mode_map = { 0: "heat_pump_protection", 1: "compressor_delay" };
+    return getValue(mode_map, value);
+}
+
+function readBandType(value) {
+    var band_type_map = { 0: "heat_band_1", 1: "heat_band_2", 2: "cool_band_1", 3: "cool_band_2", 4: "fan_band" };
+    return getValue(band_type_map, value);
+}
+
+function readReportStatus(value) {
+    var report_status_map = { 0: "plan", 1: "periodic", 2: "target_temperature_range", 3: "params_1", 4: "params_2" };
+    return getValue(report_status_map, value);
+}
+
 /* eslint-disable */
 function readUInt8(bytes) {
     return bytes & 0xff;
@@ -963,40 +1027,40 @@ function getValue(map, key) {
     return value;
 }
 
-if (!Object.assign) {
-    Object.defineProperty(Object, "assign", {
-        enumerable: false,
-        configurable: true,
-        writable: true,
-        value: function (target) {
-            "use strict";
-            if (target == null) {
-                throw new TypeError("Cannot convert first argument to object");
+// if (!Object.assign) {
+Object.defineProperty(Object, "assign", {
+    enumerable: false,
+    configurable: true,
+    writable: true,
+    value: function (target) {
+        "use strict";
+        if (target == null) {
+            throw new TypeError("Cannot convert first argument to object");
+        }
+
+        var to = Object(target);
+        for (var i = 1; i < arguments.length; i++) {
+            var nextSource = arguments[i];
+            if (nextSource == null) {
+                continue;
             }
+            nextSource = Object(nextSource);
 
-            var to = Object(target);
-            for (var i = 1; i < arguments.length; i++) {
-                var nextSource = arguments[i];
-                if (nextSource == null) {
-                    continue;
-                }
-                nextSource = Object(nextSource);
-
-                var keysArray = Object.keys(Object(nextSource));
-                for (var nextIndex = 0, len = keysArray.length; nextIndex < len; nextIndex++) {
-                    var nextKey = keysArray[nextIndex];
-                    var desc = Object.getOwnPropertyDescriptor(nextSource, nextKey);
-                    if (desc !== undefined && desc.enumerable) {
-                        // concat array
-                        if (Array.isArray(to[nextKey]) && Array.isArray(nextSource[nextKey])) {
-                            to[nextKey] = to[nextKey].concat(nextSource[nextKey]);
-                        } else {
-                            to[nextKey] = nextSource[nextKey];
-                        }
+            var keysArray = Object.keys(Object(nextSource));
+            for (var nextIndex = 0, len = keysArray.length; nextIndex < len; nextIndex++) {
+                var nextKey = keysArray[nextIndex];
+                var desc = Object.getOwnPropertyDescriptor(nextSource, nextKey);
+                if (desc !== undefined && desc.enumerable) {
+                    // concat array
+                    if (Array.isArray(to[nextKey]) && Array.isArray(nextSource[nextKey])) {
+                        to[nextKey] = to[nextKey].concat(nextSource[nextKey]);
+                    } else {
+                        to[nextKey] = nextSource[nextKey];
                     }
                 }
             }
-            return to;
-        },
-    });
-}
+        }
+        return to;
+    },
+});
+// }

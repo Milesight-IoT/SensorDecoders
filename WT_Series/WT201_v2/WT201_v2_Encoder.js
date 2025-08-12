@@ -175,7 +175,10 @@ function milesightDeviceEncode(payload) {
         encoded = encoded.concat(setSystemProtectionConfig(payload.system_protection_config));
     }
     if ("temperature_band_config" in payload) {
-        encoded = encoded.concat(setTemperatureBandConfig(payload.temperature_band_config));
+        for (var temperature_band_index = 0; temperature_band_index < payload.temperature_band_config.length; temperature_band_index++) {
+            var temperature_band_config = payload.temperature_band_config[temperature_band_index];
+            encoded = encoded.concat(setTemperatureBandConfig(temperature_band_config));
+        }
     }
     if ("temperature_dead_band" in payload) {
         encoded = encoded.concat(setTemperatureDeadBandConfig(payload.temperature_dead_band));
@@ -236,7 +239,7 @@ function reboot(reboot) {
  * @example { "report_status": 1 }
  */
 function reportStatus(report_status) {
-    var report_status_map = { 0: "plan", 1: "periodic", 2: "target_temperature_range" };
+    var report_status_map = { 0: "plan", 1: "periodic", 2: "target_temperature_range", 3: "params_1", 4: "params_2" };
     var report_status_values = getValues(report_status_map);
     if (report_status_values.indexOf(report_status) === -1) {
         throw new Error("report_status must be one of " + report_status_values.join(", "));
@@ -1731,6 +1734,7 @@ function setFanHeatEnable(fan_heat_enable) {
  * @param {number} plan_base_config.fan_mode values: (0: auto, 1: on)
  * @param {number} plan_base_config.heat_target_temperature unit: celsius
  * @param {number} plan_base_config.cool_target_temperature unit: celsius
+ * @example { "plan_base_config": [{ "plan_type": 0, "system_status": 1, "temperature_control_mode": 0, "fan_mode": 0, "heat_target_temperature": 25, "cool_target_temperature": 25 }] }
  */
 function setPlanBaseConfig(plan_base_config) {
     var plan_type = plan_base_config.plan_type;
@@ -1773,6 +1777,16 @@ function setPlanBaseConfig(plan_base_config) {
     return buffer.toBytes();
 }
 
+/**
+ * set plan band config
+ * @odm 7048
+ * @param {object} plan_band_config
+ * @param {number} plan_band_config.plan_type values: (0: wake, 1: away, 2: home, 3: sleep, 4: occupied, 5: vacant, 6: eco)
+ * @param {number} plan_band_config.band_type values: (0: heat_band_1, 1: heat_band_2, 2: cool_band_1, 3: cool_band_2, 4: fan_band)
+ * @param {number} plan_band_config.band_on unit: celsius
+ * @param {number} plan_band_config.band_off unit: celsius
+ * @example { "plan_band_config": [{ "plan_type": 0, "band_type": 0, "band_on": 25, "band_off": 25 }] }
+ */
 function setPlanBandConfig(plan_band_config) {
     var plan_type = plan_band_config.plan_type;
     var band_type = plan_band_config.band_type;
