@@ -3,7 +3,7 @@
  *
  * Copyright 2025 Milesight IoT
  *
- * @product WS301
+ * @product WS301 (ODM: 2809)
  */
 var RAW_VALUE = 0x00;
 
@@ -37,6 +37,12 @@ function milesightDeviceEncode(payload) {
     }
     if ("report_interval" in payload) {
         encoded = encoded.concat(setReportInterval(payload.report_interval));
+    }
+    if ("alarm_config" in payload) {
+        encoded = encoded.concat(setAlarmConfig(payload.alarm_config));
+    }
+    if ("magnet_alarm_config" in payload) {
+        encoded = encoded.concat(setMagnetAlarmConfig(payload.magnet_alarm_config));
     }
 
     return encoded;
@@ -92,6 +98,69 @@ function setReportInterval(report_interval) {
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0x03);
     buffer.writeUInt16LE(report_interval);
+    return buffer.toBytes();
+}
+
+/**
+ * set alarm config
+ * @odm 2809
+ * @param {object} alarm_config
+ * @param {number} alarm_config.alarm_interval unit: minute, range: [1, 1080]
+ * @param {number} alarm_config.alarm_count range: [1, 1000]
+ * @param {number} alarm_config.alarm_release_enable values: (0: disable, 1: enable)
+ * @example { "alarm_config": { "alarm_interval": 10, "alarm_count": 10, "alarm_release_enable": 1 } }
+ */
+function setAlarmConfig(alarm_config) {
+    var alarm_interval = alarm_config.alarm_interval;
+    var alarm_count = alarm_config.alarm_count;
+    var alarm_release_enable = alarm_config.alarm_release_enable;
+
+    var enable_map = { 0: "disable", 1: "enable" };
+    var enable_values = getValues(enable_map);
+    if (enable_values.indexOf(alarm_release_enable) === -1) {
+        throw new Error("alarm_config.alarm_release_enable must be one of " + enable_values.join(", "));
+    }
+
+    var buffer = new Buffer(7);
+    buffer.writeUInt8(0xf9);
+    buffer.writeUInt8(0xb6);
+    buffer.writeUInt16LE(alarm_interval);
+    buffer.writeUInt16LE(alarm_count);
+    buffer.writeUInt8(getValue(enable_map, alarm_release_enable));
+    return buffer.toBytes();
+}
+
+/**
+ * set magnet alarm config
+ * @odm 2809
+ * @param {object} magnet_alarm_config
+ * @param {number} magnet_alarm_config.mode values: (1: close, 2: open)
+ * @param {number} magnet_alarm_config.enable values: (0: disable, 1: enable)
+ * @param {number} magnet_alarm_config.duration unit: second, range: [1, 65535]
+ * @example { "magnet_alarm_config": { "mode": 1, "enable": 1, "duration": 10 } }
+ */
+function setMagnetAlarmConfig(magnet_alarm_config) {
+    var mode = magnet_alarm_config.mode;
+    var enable = magnet_alarm_config.enable;
+    var duration = magnet_alarm_config.duration;
+
+    var mode_map = { 1: "close", 2: "open" };
+    var mode_values = getValues(mode_map);
+    if (mode_values.indexOf(mode) === -1) {
+        throw new Error("magnet_alarm_config.mode must be one of " + mode_values.join(", "));
+    }
+    var enable_map = { 0: "disable", 1: "enable" };
+    var enable_values = getValues(enable_map);
+    if (enable_values.indexOf(enable) === -1) {
+        throw new Error("magnet_alarm_config.enable must be one of " + enable_values.join(", "));
+    }
+
+    var buffer = new Buffer(6);
+    buffer.writeUInt8(0xf9);
+    buffer.writeUInt8(0xb0);
+    buffer.writeUInt8(getValue(mode_map, mode));
+    buffer.writeUInt8(getValue(enable_map, enable));
+    buffer.writeUInt16LE(duration);
     return buffer.toBytes();
 }
 

@@ -3,7 +3,7 @@
  *
  * Copyright 2025 Milesight IoT
  *
- * @product WS301
+ * @product WS301 (ODM: 2809)
  */
 var RAW_VALUE = 0x00;
 
@@ -29,7 +29,7 @@ function Decoder(bytes, port) {
 function milesightDeviceDecode(bytes) {
     var decoded = {};
 
-    for (var i = 0; i < bytes.length;) {
+    for (var i = 0; i < bytes.length; ) {
         var channel_id = bytes[i++];
         var channel_type = bytes[i++];
 
@@ -89,9 +89,20 @@ function milesightDeviceDecode(bytes) {
             decoded.tamper_status = readTamperStatus(bytes[i]);
             i += 1;
         }
+        // MAGNET ALARM (ODM: 2809)
+        else if (channel_id === 0x83 && channel_type === 0x00) {
+            decoded.magnet_status = readMagnetStatus(bytes[i]);
+            decoded.duration = readUInt32LE(bytes.slice(i + 1, i + 5));
+            decoded.magnet_alarm = readAlarmType(bytes[i + 5]);
+            i += 6;
+        }
         // DOWNLINK RESPONSE
         else if (channel_id === 0xfe || channel_id === 0xff) {
             var result = handle_downlink_response(channel_type, bytes, i);
+            decoded = Object.assign(decoded, result.data);
+            i = result.offset;
+        } else if (channel_id === 0xf8 || channel_id === 0xf9) {
+            var result = handle_downlink_response_ext(channel_id, channel_type, bytes, i);
             decoded = Object.assign(decoded, result.data);
             i = result.offset;
         } else {
@@ -123,6 +134,54 @@ function handle_downlink_response(channel_type, bytes, offset) {
     }
 
     return { data: decoded, offset: offset };
+}
+
+function handle_downlink_response_ext(code, channel_type, bytes, offset) {
+    var decoded = {};
+
+    switch (channel_type) {
+        case 0xb0:
+            decoded.magnet_alarm_config = {};
+            decoded.magnet_alarm_config.mode = readMagnetAlarmMode(bytes[offset]);
+            decoded.magnet_alarm_config.enable = readEnableStatus(bytes[offset + 1]);
+            decoded.magnet_alarm_config.duration = readUInt16LE(bytes.slice(offset + 2, offset + 4));
+            offset += 4;
+            break;
+        case 0xb6:
+            decoded.alarm_config = {};
+            decoded.alarm_config.alarm_interval = readUInt16LE(bytes.slice(offset, offset + 2));
+            decoded.alarm_config.alarm_count = readUInt16LE(bytes.slice(offset + 2, offset + 4));
+            decoded.alarm_config.alarm_release_enable = readEnableStatus(bytes[offset + 4]);
+            offset += 5;
+            break;
+        default:
+            throw new Error("unknown downlink response");
+    }
+
+    if (hasResultFlag(code)) {
+        var result_value = readUInt8(bytes[offset]);
+        offset += 1;
+
+        if (result_value !== 0) {
+            var request = decoded;
+            decoded = {};
+            decoded.device_response_result = {};
+            decoded.device_response_result.channel_type = channel_type;
+            decoded.device_response_result.result = readResultStatus(result_value);
+            decoded.device_response_result.request = request;
+        }
+    }
+
+    return { data: decoded, offset: offset };
+}
+
+function hasResultFlag(code) {
+    return code === 0xf8;
+}
+
+function readResultStatus(status) {
+    var status_map = { 0: "success", 1: "forbidden", 2: "invalid parameter" };
+    return getValue(status_map, status);
 }
 
 function readProtocolVersion(bytes) {
@@ -189,6 +248,21 @@ function readTamperStatus(status) {
 
 function readYesNoStatus(status) {
     var status_map = { 0: "no", 1: "yes" };
+    return getValue(status_map, status);
+}
+
+function readEnableStatus(status) {
+    var status_map = { 0: "disable", 1: "enable" };
+    return getValue(status_map, status);
+}
+
+function readAlarmType(type) {
+    var type_map = { 0: "alarm release", 1: "alarm" };
+    return getValue(type_map, type);
+}
+
+function readMagnetAlarmMode(status) {
+    var status_map = { 1: "close", 2: "open" };
     return getValue(status_map, status);
 }
 
