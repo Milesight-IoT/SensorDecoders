@@ -4,7 +4,7 @@ The payload decoder function is applicable to WT201.
 
 For more detailed information, please visit Milesight Official Website(https://www.milesight.com/iot/product/lorawan-sensor/wt201).
 
-![WT201](WT201.png)
+![WT201](wt201.png)
 
 ## Payload Definition
 
