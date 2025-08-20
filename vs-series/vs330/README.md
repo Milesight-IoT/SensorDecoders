@@ -4,7 +4,7 @@ The payload decoder function is applicable to VS330.
 
 For more detailed information, please visit [Milesight Official Website](https://www.milesight.com/iot/product/lorawan-sensor/vs330).
 
-![VS330](VS330.png)
+![VS330](vs330.png)
 
 ## Payload Definition
 
