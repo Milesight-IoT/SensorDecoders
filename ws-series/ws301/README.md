@@ -4,7 +4,7 @@ The payload decoder function is applicable to WS301.
 
 For more detailed information, please visit [milesight official website](https://www.milesight-iot.com).
 
-![WS301](WS301.png)
+![WS301](ws301.png)
 
 ## Payload Definition
 
