@@ -4,7 +4,7 @@ The payload decoder function is applicable to GS301.
 
 For more detailed information, please visit [milesight official website](https://www.milesight-iot.com).
 
-![GS301](GS301.png)
+![GS301](gs301.png)
 
 ## Payload Definition
 
