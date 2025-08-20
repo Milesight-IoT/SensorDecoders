@@ -4,7 +4,7 @@ The payload decoder function is applicable to WT201.
 
 For more detailed information, please visit Milesight official website(https://www.milesight-iot.com).
 
-![WT201](WT201.png)
+![WT201](wt201.png)
 
 ## Payload Definition
 
