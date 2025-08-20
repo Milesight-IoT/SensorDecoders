@@ -65,9 +65,6 @@ function milesightDeviceEncode(payload) {
     if ("release_alarm" in payload) {
         encoded = encoded.concat(releaseAlarm(payload.release_alarm));
     }
-    if ("radar_settings" in payload) {
-        encoded = encoded.concat(setRadarSettings(payload.radar_settings));
-    }
     if ("existence_detection_settings" in payload) {
         encoded = encoded.concat(setExistenceDetectionSettings(payload.existence_detection_settings));
     }
@@ -217,11 +214,11 @@ function setDigitalOutput(digital_output) {
 /**
  * set detection region
  * @param {object} detection_region_settings
- * @param {number} detection_region_settings.x_min unit: mm
- * @param {number} detection_region_settings.x_max unit: mm
- * @param {number} detection_region_settings.y_min unit: mm
- * @param {number} detection_region_settings.y_max unit: mm
- * @param {number} detection_region_settings.z_max unit: mm
+ * @param {number} detection_region_settings.x_min
+ * @param {number} detection_region_settings.x_max
+ * @param {number} detection_region_settings.y_min
+ * @param {number} detection_region_settings.y_max
+ * @param {number} detection_region_settings.z_max
  * @param {number} detection_region_settings.install_height unit: mm
  * @example { "detection_region_settings": { "x_min": 0, "x_max": 100, "y_min": 0, "y_max": 100, "z_max": 100, "install_height": 100 } }
  */
@@ -236,10 +233,10 @@ function setDetectionRegion(detection_region_settings) {
     var buffer = new Buffer(14);
     buffer.writeUInt8(0xf9);
     buffer.writeUInt8(0x4f);
-    buffer.writeUInt16LE(x_min);
-    buffer.writeUInt16LE(x_max);
-    buffer.writeUInt16LE(y_min);
-    buffer.writeUInt16LE(y_max);
+    buffer.writeInt16LE(x_min);
+    buffer.writeInt16LE(x_max);
+    buffer.writeInt16LE(y_min);
+    buffer.writeInt16LE(y_max);
     buffer.writeUInt16LE(z_max);
     buffer.writeUInt16LE(install_height);
     return buffer.toBytes();
@@ -353,7 +350,8 @@ function setMotionDetectionSettings(motion_detection_settings) {
     buffer.writeUInt8(0xf9);
     buffer.writeUInt8(0x53);
     buffer.writeUInt8(getValue(enable_map, enable));
-    buffer.writeUInt16LE(motionless_time);
+    buffer.writeUInt8(0x00);
+    buffer.writeUInt8(motionless_time);
     return buffer.toBytes();
 }
 
@@ -407,48 +405,29 @@ function releaseAlarm(release_alarm) {
         throw new Error("release_alarm must be in " + yes_no_values.join(", "));
     }
 
-    var buffer = new Buffer(3);
-    buffer.writeUInt8(0xf9);
-    buffer.writeUInt8(0x64);
-    buffer.writeUInt8(getValue(yes_no_map, release_alarm));
-    return buffer.toBytes();
-}
-
-/**
- * set radar settings
- * @param {object} radar_settings
- * @param {number} radar_settings.mode values: (0: const, 1: free)
- * @param {number} radar_settings.frame_rate unit: fps
- * @example { "radar_settings": { "mode": 0, "frame_rate": 1 } }
- */
-function setRadarSettings(radar_settings) {
-    var mode = radar_settings.mode;
-    var frame_rate = radar_settings.frame_rate;
-
-    var mode_map = { 0: "const", 1: "free" };
-    var mode_values = getValues(mode_map);
-    if (mode_values.indexOf(mode) === -1) {
-        throw new Error("radar_settings.mode must be in " + mode_values.join(", "));
+    if (getValue(yes_no_map, release_alarm) === 0) {
+        return [];
     }
-
-    var buffer = new Buffer(4);
-    buffer.writeUInt8(0xf9);
-    buffer.writeUInt8(0x54);
-    buffer.writeUInt8(getValue(mode_map, mode));
-    buffer.writeUInt8(frame_rate);
-    return buffer.toBytes();
+    return [0xff, 0x64, 0xff];
 }
 
 /**
  * set existence detection settings
  * @param {object} existence_detection_settings
- * @param {number} existence_detection_settings.exist_confirm_time unit: s
- * @param {number} existence_detection_settings.leaved_confirm_time unit: s
+ * @param {number} existence_detection_settings.exist_confirm_time unit: s, range: [0, 60]
+ * @param {number} existence_detection_settings.leaved_confirm_time unit: s, range: [0, 60]
  * @example { "existence_detection_settings": { "exist_confirm_time": 10, "leaved_confirm_time": 10 } }
  */
 function setExistenceDetectionSettings(existence_detection_settings) {
     var exist_confirm_time = existence_detection_settings.exist_confirm_time;
     var leaved_confirm_time = existence_detection_settings.leaved_confirm_time;
+
+    if (exist_confirm_time < 0 || exist_confirm_time > 60) {
+        throw new Error("existence_detection_settings.exist_confirm_time must be in [0, 60]");
+    }
+    if (leaved_confirm_time < 0 || leaved_confirm_time > 60) {
+        throw new Error("existence_detection_settings.leaved_confirm_time must be in [0, 60]");
+    }
 
     var buffer = new Buffer(4);
     buffer.writeUInt8(0xf9);
@@ -462,10 +441,10 @@ function setExistenceDetectionSettings(existence_detection_settings) {
  * set region settings
  * @param {object} region_settings
  * @param {number} region_settings._item.region_id range: [1, 4]
- * @param {number} region_settings._item.x_min unit: mm
- * @param {number} region_settings._item.x_max unit: mm
- * @param {number} region_settings._item.y_min unit: mm
- * @param {number} region_settings._item.y_max unit: mm
+ * @param {number} region_settings._item.x_min
+ * @param {number} region_settings._item.x_max
+ * @param {number} region_settings._item.y_min
+ * @param {number} region_settings._item.y_max
  * @example { "region_settings": [{ "region_id": 1, "x_min": 0, "x_max": 100, "y_min": 0, "y_max": 100 }] }
  */
 function setRegionSettings(region_settings) {
@@ -483,10 +462,10 @@ function setRegionSettings(region_settings) {
     buffer.writeUInt8(0xf9);
     buffer.writeUInt8(0x49);
     buffer.writeUInt8(region_id - 1);
-    buffer.writeUInt16LE(x_min);
-    buffer.writeUInt16LE(x_max);
-    buffer.writeUInt16LE(y_min);
-    buffer.writeUInt16LE(y_max);
+    buffer.writeInt16LE(x_min);
+    buffer.writeInt16LE(x_max);
+    buffer.writeInt16LE(y_min);
+    buffer.writeInt16LE(y_max);
     return buffer.toBytes();
 }
 
@@ -819,17 +798,17 @@ function setD2DMasterConfig(d2d_master_config) {
 /**
  * d2d slave configuration
  * @param {object} d2d_slave_config
- * @param {number} d2d_slave_config._item.mode values: (0: occupied, 1: vacant, 2: fall, 3: out of bed, 4: motionless, 5: dwell)
+ * @param {number} d2d_slave_config._item.mode values: (0: occupied, 1: vacant, 2: fall, 3: out_of_bed, 4: motionless, 5: dwell)
  * @param {string} d2d_slave_config._item.d2d_cmd
  * @param {number} d2d_slave_config._item.control_type values: (1: button)
- * @param {number} d2d_slave_config._item.alarm_type values: (1: alarm deactivate, 2: wifi on, 3: wifi off)
- * @example { "d2d_slave_config": [{ "mode": 0, "d2d_cmd": "0000", "control_type": 1, "alarm_type": 1 }] }
+ * @param {number} d2d_slave_config._item.action_type values: (1: alarm_deactivate, 2: wifi_on, 3: wifi_off)
+ * @example { "d2d_slave_config": [{ "mode": 0, "d2d_cmd": "0000", "control_type": 1, "action_type": 1 }] }
  */
 function setD2DSlaveConfig(d2d_slave_config) {
     var mode = d2d_slave_config.mode;
     var d2d_cmd = d2d_slave_config.d2d_cmd;
     var control_type = d2d_slave_config.control_type;
-    var alarm_type = d2d_slave_config.alarm_type;
+    var action_type = d2d_slave_config.action_type;
 
     var mode_map = { 0: "occupied", 1: "vacant", 2: "fall", 3: "out_of_bed", 4: "motionless", 5: "dwell" };
     var mode_values = getValues(mode_map);
@@ -841,10 +820,10 @@ function setD2DSlaveConfig(d2d_slave_config) {
     if (control_type_values.indexOf(control_type) === -1) {
         throw new Error("d2d_slave_config._item.control_type must be one of " + control_type_values.join(", "));
     }
-    var alarm_type_map = { 1: "alarm_deactivate", 2: "wifi_on", 3: "wifi_off" };
-    var alarm_type_values = getValues(alarm_type_map);
-    if (alarm_type_values.indexOf(alarm_type) === -1) {
-        throw new Error("d2d_slave_config._item.alarm_type must be one of " + alarm_type_values.join(", "));
+    var action_type_map = { 1: "alarm_deactivate", 2: "wifi_on", 3: "wifi_off" };
+    var action_type_values = getValues(action_type_map);
+    if (action_type_values.indexOf(action_type) === -1) {
+        throw new Error("d2d_slave_config._item.action_type must be one of " + action_type_values.join(", "));
     }
 
     var buffer = new Buffer(7);
@@ -853,7 +832,7 @@ function setD2DSlaveConfig(d2d_slave_config) {
     buffer.writeUInt8(getValue(mode_map, mode));
     buffer.writeD2DCommand(d2d_cmd, "0000");
     buffer.writeUInt8(getValue(control_type_map, control_type));
-    buffer.writeUInt8(getValue(alarm_type_map, alarm_type));
+    buffer.writeUInt8(getValue(action_type_map, action_type));
     return buffer.toBytes();
 }
 
