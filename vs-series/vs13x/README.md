@@ -6,7 +6,7 @@ For more detailed information, please visit [Milesight official website](https:/
 
 |        VS133        |        VS135        |
 | :-----------------: | :-----------------: |
-| ![VS133](VS133.png) | ![VS135](VS135.png) |
+| ![VS133](vs133.png) | ![VS135](vs135.png) |
 
 ## Payload Definition
 
