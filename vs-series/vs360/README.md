@@ -4,7 +4,7 @@ The payload decoder function is applicable to VS360.
 
 For more detailed information, please visit Milesight official website(https://www.milesight-iot.com).
 
-![VS360](VS360.png)
+![VS360](vs360.png)
 
 ## Payload Definition
 
