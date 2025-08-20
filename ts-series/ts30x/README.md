@@ -6,7 +6,7 @@ For more detailed information, please visit [milesight official website](https:/
 
 |        TS301        |        TS302        |
 | :-----------------: | :-----------------: |
-| ![TS301](TS301.png) | ![TS302](TS302.png) |
+| ![TS301](ts301.png) | ![TS302](ts302.png) |
 
 ## Payload Definition
 
