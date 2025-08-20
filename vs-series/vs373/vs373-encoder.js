@@ -233,10 +233,10 @@ function setDetectionRegion(detection_region_settings) {
     var buffer = new Buffer(14);
     buffer.writeUInt8(0xf9);
     buffer.writeUInt8(0x4f);
-    buffer.writeUInt16LE(x_min);
-    buffer.writeUInt16LE(x_max);
-    buffer.writeUInt16LE(y_min);
-    buffer.writeUInt16LE(y_max);
+    buffer.writeInt16LE(x_min);
+    buffer.writeInt16LE(x_max);
+    buffer.writeInt16LE(y_min);
+    buffer.writeInt16LE(y_max);
     buffer.writeUInt16LE(z_max);
     buffer.writeUInt16LE(install_height);
     return buffer.toBytes();
@@ -462,10 +462,10 @@ function setRegionSettings(region_settings) {
     buffer.writeUInt8(0xf9);
     buffer.writeUInt8(0x49);
     buffer.writeUInt8(region_id - 1);
-    buffer.writeUInt16LE(x_min);
-    buffer.writeUInt16LE(x_max);
-    buffer.writeUInt16LE(y_min);
-    buffer.writeUInt16LE(y_max);
+    buffer.writeInt16LE(x_min);
+    buffer.writeInt16LE(x_max);
+    buffer.writeInt16LE(y_min);
+    buffer.writeInt16LE(y_max);
     return buffer.toBytes();
 }
 
@@ -801,14 +801,14 @@ function setD2DMasterConfig(d2d_master_config) {
  * @param {number} d2d_slave_config._item.mode values: (0: occupied, 1: vacant, 2: fall, 3: out_of_bed, 4: motionless, 5: dwell)
  * @param {string} d2d_slave_config._item.d2d_cmd
  * @param {number} d2d_slave_config._item.control_type values: (1: button)
- * @param {number} d2d_slave_config._item.alarm_type values: (1: alarm_deactivate, 2: wifi_on, 3: wifi_off)
- * @example { "d2d_slave_config": [{ "mode": 0, "d2d_cmd": "0000", "control_type": 1, "alarm_type": 1 }] }
+ * @param {number} d2d_slave_config._item.action_type values: (1: alarm_deactivate, 2: wifi_on, 3: wifi_off)
+ * @example { "d2d_slave_config": [{ "mode": 0, "d2d_cmd": "0000", "control_type": 1, "action_type": 1 }] }
  */
 function setD2DSlaveConfig(d2d_slave_config) {
     var mode = d2d_slave_config.mode;
     var d2d_cmd = d2d_slave_config.d2d_cmd;
     var control_type = d2d_slave_config.control_type;
-    var alarm_type = d2d_slave_config.alarm_type;
+    var action_type = d2d_slave_config.action_type;
 
     var mode_map = { 0: "occupied", 1: "vacant", 2: "fall", 3: "out_of_bed", 4: "motionless", 5: "dwell" };
     var mode_values = getValues(mode_map);
@@ -820,10 +820,10 @@ function setD2DSlaveConfig(d2d_slave_config) {
     if (control_type_values.indexOf(control_type) === -1) {
         throw new Error("d2d_slave_config._item.control_type must be one of " + control_type_values.join(", "));
     }
-    var alarm_type_map = { 1: "alarm_deactivate", 2: "wifi_on", 3: "wifi_off" };
-    var alarm_type_values = getValues(alarm_type_map);
-    if (alarm_type_values.indexOf(alarm_type) === -1) {
-        throw new Error("d2d_slave_config._item.alarm_type must be one of " + alarm_type_values.join(", "));
+    var action_type_map = { 1: "alarm_deactivate", 2: "wifi_on", 3: "wifi_off" };
+    var action_type_values = getValues(action_type_map);
+    if (action_type_values.indexOf(action_type) === -1) {
+        throw new Error("d2d_slave_config._item.action_type must be one of " + action_type_values.join(", "));
     }
 
     var buffer = new Buffer(7);
@@ -832,7 +832,7 @@ function setD2DSlaveConfig(d2d_slave_config) {
     buffer.writeUInt8(getValue(mode_map, mode));
     buffer.writeD2DCommand(d2d_cmd, "0000");
     buffer.writeUInt8(getValue(control_type_map, control_type));
-    buffer.writeUInt8(getValue(alarm_type_map, alarm_type));
+    buffer.writeUInt8(getValue(action_type_map, action_type));
     return buffer.toBytes();
 }
 
