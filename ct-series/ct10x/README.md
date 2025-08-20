@@ -6,7 +6,7 @@ For more detailed information, please visit [Milesight Official Website](https:/
 
 |          CT101 / CT103          |        CT105        |
 | :-----------------------------: | :-----------------: |
-| ![CT101_CT103](CT101_CT103.png) | ![CT105](CT105.png) |
+| ![CT101_CT103](ct101-ct103.png) | ![CT105](ct105.png) |
 
 ## Payload Definition
 
