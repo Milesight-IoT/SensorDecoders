@@ -6,7 +6,7 @@ For more detailed information, please visit [Milesight official website](https:/
 
 |        UC501 v3        |        UC502 v3        |
 | :--------------------: | :--------------------: |
-| ![UC501](UC501_v3.png) | ![UC502](UC502_v3.png) |
+| ![UC501](uc501-v3.png) | ![UC502](uc502-v3.png) |
 
 ## Payload Definition
 
