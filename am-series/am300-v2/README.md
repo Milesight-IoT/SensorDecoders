@@ -6,7 +6,7 @@ For more detailed information, please visit [Milesight Official Website](https:/
 
 |        AM307        |
 | :-----------------: |
-| ![AM307](AM307.png) |
+| ![AM307](am307.png) |
 
 ## Payload Definition
 
