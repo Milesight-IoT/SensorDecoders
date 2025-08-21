@@ -1,6 +1,6 @@
 # Controller - UC100
 
-![UC100](UC100.png)
+![UC100](uc100.png)
 
 For more detailed information, please visit [Milesight Official Website](https://www.milesight.com/iot/product/iot-controller/uc100)
 
