@@ -1,6 +1,6 @@
 # Temperature Sensor - TS201
 
-![TS201](TS201.png)
+![TS201](ts201.png)
 
 For more detailed information, please visit [Milesight Official Website](https://www.milesight.com)
 
