@@ -1,6 +1,6 @@
 # Smoke Detection Sensor - GS524N
 
-![GS524N](GS524N.png)
+![GS524N](gs524n.png)
 
 For more detailed information, please visit [Milesight Official Website](https://www.milesight.cn/lorawan/sensor/gs524n)
 

@@ -1,6 +1,6 @@
 # Outdoor Asset Tracker - AT101
 
-![AT101](AT101.png)
+![AT101](at101.png)
 
 For more detailed information, please visit [Milesight Official Website](https://www.milesight.com/iot/product/lorawan-sensor/at101)
 

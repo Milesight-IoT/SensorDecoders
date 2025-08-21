@@ -1,6 +1,6 @@
 # Smart Thermostat - WT201
 
-![WT201 v2](WT201-v2.png)
+![WT201 v2](wt201-v2.png)
 
 For more detailed information, please visit [Milesight Official Website](https://www.milesight.com/iot/product/lorawan-sensor/wt201)
 

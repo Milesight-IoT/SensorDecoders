@@ -1,6 +1,6 @@
 # Pulse Counter - EM300-DI
 
-![EM300-DI](EM300-DI.png)
+![EM300-DI](em300-di.png)
 
 For more detailed information, please visit [Milesight Official Website](https://www.milesight.com)
 

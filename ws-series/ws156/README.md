@@ -1,6 +1,6 @@
 # Smart Scene Panel - WS156
 
-![WS156](WS156.png)
+![WS156](ws156.png)
 
 For more detailed information, please visit [Milesight Official Website](https://www.milesight.com/iot/product/lorawan-sensor/ws156)
 

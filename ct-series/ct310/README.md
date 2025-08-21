@@ -1,6 +1,6 @@
 # Smart Current Transformer - CT310
 
-![CT310](CT310.png)
+![CT310](ct310.png)
 
 For more detailed information, please visit [Milesight Official Website](https://www.milesight.com/iot/product/lorawan-sensor/ct3xx)
 
