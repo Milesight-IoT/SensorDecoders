@@ -218,60 +218,6 @@
             "bacnet_unit_type": "UNITS_NO_UNITS"
         },
         {
-            "id": "wifi._item.group",
-            "name": "WiFi Scan (Group)",
-            "value": "",
-            "unit": "",
-            "access_mode": "R",
-            "data_type": "NUMBER",
-            "value_type": "UINT8",
-            "bacnet_type": "analog_input_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS"
-        },
-        {
-            "id": "wifi._item.mac",
-            "name": "WiFi Scan (MAC)",
-            "value": "",
-            "unit": "",
-            "access_mode": "R",
-            "data_type": "TEXT",
-            "value_type": "STRING",
-            "bacnet_type": "character_string_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS"
-        },
-        {
-            "id": "wifi._item.rssi",
-            "name": "WiFi Scan (RSSI)",
-            "value": "",
-            "unit": "",
-            "access_mode": "R",
-            "data_type": "NUMBER",
-            "value_type": "INT8",
-            "bacnet_type": "analog_input_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS"
-        },
-        {
-            "id": "wifi._item.motion_status",
-            "name": "WiFi Scan (Motion Status)",
-            "value": "",
-            "unit": "",
-            "access_mode": "R",
-            "data_type": "ENUM",
-            "value_type": "UINT8",
-            "values": [
-                { "value": 0, "name": "unknown" },
-                { "value": 1, "name": "start" },
-                { "value": 2, "name": "moving" },
-                { "value": 3, "name": "stop" }
-            ],
-            "bacnet_type": "multistate_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS"
-        },
-        {
             "id": "tamper_status",
             "name": "Tamper Status",
             "value": "0",
@@ -316,42 +262,6 @@
                 { "value": 1, "name": "timeout" }
             ],
             "bacnet_type": "binary_input_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS"
-        },
-        {
-            "id": "history._item.timestamp",
-            "name": "Timestamp",
-            "value": "",
-            "unit": "s",
-            "access_mode": "R",
-            "data_type": "NUMBER",
-            "value_type": "UINT32",
-            "bacnet_type": "analog_input_object",
-            "bacnet_unit_type_id": 73,
-            "bacnet_unit_type": "UNITS_SECONDS"
-        },
-        {
-            "id": "history._item.longitude",
-            "name": "Longitude",
-            "value": "",
-            "unit": "",
-            "access_mode": "R",
-            "data_type": "NUMBER",
-            "value_type": "FLOAT",
-            "bacnet_type": "analog_input_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS"
-        },
-        {
-            "id": "history._item.latitude",
-            "name": "Latitude",
-            "value": "",
-            "unit": "",
-            "access_mode": "R",
-            "data_type": "NUMBER",
-            "value_type": "FLOAT",
-            "bacnet_type": "analog_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS"
         },
@@ -746,32 +656,6 @@
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": ["geofence_alarm_config.enable", "geofence_alarm_config.interval", "geofence_alarm_config.counts"]
-        },
-        {
-            "id": "timed_report_config._item.index",
-            "name": "Timed Report (Index)",
-            "value": "",
-            "unit": "",
-            "access_mode": "RW",
-            "data_type": "NUMBER",
-            "value_type": "UINT8",
-            "bacnet_type": "analog_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": ["timed_report_config._item.index", "timed_report_config._item.time"]
-        },
-        {
-            "id": "timed_report_config._item.time",
-            "name": "Timed Report (Time)",
-            "value": "",
-            "unit": "min",
-            "access_mode": "RW",
-            "data_type": "NUMBER",
-            "value_type": "UINT8",
-            "bacnet_type": "analog_value_object",
-            "bacnet_unit_type_id": 72,
-            "bacnet_unit_type": "UNITS_MINUTES",
-            "reference": ["timed_report_config._item.index", "timed_report_config._item.time"]
         },
         {
             "id": "bluetooth_enable",
