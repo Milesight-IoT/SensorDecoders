@@ -56,6 +56,15 @@ function milesightDeviceEncode(payload) {
     if ("motion_detection_settings" in payload) {
         encoded = encoded.concat(setMotionDetectionSettings(payload.motion_detection_settings));
     }
+    if ("sleep_detection_config" in payload) {
+        encoded = encoded.concat(setSleepDetectionConfig(payload.sleep_detection_config));
+    }
+    if ("respiratory_detection_config" in payload) {
+        encoded = encoded.concat(setRespiratoryDetectionConfig(payload.respiratory_detection_config));
+    }
+    if ("ai_fall_detection_enable" in payload) {
+        encoded = encoded.concat(setAIFallDetectionEnable(payload.ai_fall_detection_enable));
+    }
     if ("led_indicator_enable" in payload) {
         encoded = encoded.concat(setLedIndicatorEnable(payload.led_indicator_enable));
     }
@@ -64,6 +73,9 @@ function milesightDeviceEncode(payload) {
     }
     if ("release_alarm" in payload) {
         encoded = encoded.concat(releaseAlarm(payload.release_alarm));
+    }
+    if ("confirm_fall_alarm" in payload) {
+        encoded = encoded.concat(confirmFallAlarm(payload.confirm_fall_alarm));
     }
     if ("existence_detection_settings" in payload) {
         encoded = encoded.concat(setExistenceDetectionSettings(payload.existence_detection_settings));
@@ -133,6 +145,21 @@ function milesightDeviceEncode(payload) {
     }
     if ("fetch_history" in payload) {
         encoded = encoded.concat(fetchHistory(payload.fetch_history));
+    }
+    if ("time_sync_config" in payload) {
+        encoded = encoded.concat(setTimeSyncConfig(payload.time_sync_config));
+    }
+    if ("rejoin_config" in payload) {
+        encoded = encoded.concat(setRejoinConfig(payload.rejoin_config));
+    }
+    if ("data_rate" in payload) {
+        encoded = encoded.concat(setDataRate(payload.data_rate));
+    }
+    if ("tx_power_level" in payload) {
+        encoded = encoded.concat(setTxPowerLevel(payload.tx_power_level));
+    }
+    if ("trigger_digital_output_config" in payload) {
+        encoded = encoded.concat(setTriggerDigitalOutputConfig(payload.trigger_digital_output_config));
     }
 
     return encoded;
@@ -246,7 +273,7 @@ function setDetectionRegion(detection_region_settings) {
  * set detection mode and sensitivity
  * @param {object} detection_settings
  * @param {number} detection_settings.mode values: (0: default, 1: bedroom, 2: bathroom, 3: public)
- * @param {number} detection_settings.sensitivity values: (0: low, 1: high)
+ * @param {number} detection_settings.sensitivity values: (0: low, 1: high, 2: medium, 3: custom)
  * @example { "detection_settings": { "mode": 0, "sensitivity": 1 } }
  */
 function setDetectionModeAndSensitivity(detection_settings) {
@@ -258,7 +285,7 @@ function setDetectionModeAndSensitivity(detection_settings) {
     if (mode_values.indexOf(mode) === -1) {
         throw new Error("detection_settings.mode must be in " + mode_values.join(", "));
     }
-    var sensitivity_map = { 0: "low", 1: "high" };
+    var sensitivity_map = { 0: "low", 1: "high", 2: "medium", 3: "custom" };
     var sensitivity_values = getValues(sensitivity_map);
     if (sensitivity_values.indexOf(sensitivity) === -1) {
         throw new Error("detection_settings.sensitivity must be in " + sensitivity_values.join(", "));
@@ -356,6 +383,90 @@ function setMotionDetectionSettings(motion_detection_settings) {
 }
 
 /**
+ * set sleep detection config
+ * @since v1.0.2
+ * @param {object} sleep_detection_config
+ * @param {number} sleep_detection_config.enable values: (0: disable, 1: enable)
+ * @param {number} sleep_detection_config.start_time unit: min
+ * @param {number} sleep_detection_config.end_time unit: min
+ * @param {number} sleep_detection_config.out_of_bed_enable values: (0: disable, 1: enable)
+ * @param {number} sleep_detection_config.out_of_bed_time unit: min
+ * @example { "sleep_detection_config": { "enable": 1, "start_time": 10, "end_time": 10, "out_of_bed_enable": 1, "out_of_bed_time": 10 } }
+ */
+function setSleepDetectionConfig(sleep_detection_config) {
+    var enable = sleep_detection_config.enable;
+    var start_time = sleep_detection_config.start_time;
+    var end_time = sleep_detection_config.end_time;
+    var out_of_bed_enable = sleep_detection_config.out_of_bed_enable;
+    var out_of_bed_time = sleep_detection_config.out_of_bed_time;
+
+    var enable_map = { 0: "disable", 1: "enable" };
+    var enable_values = getValues(enable_map);
+    if (enable_values.indexOf(enable) === -1) {
+        throw new Error("sleep_detection_config.enable must be in " + enable_values.join(", "));
+    }
+
+    var buffer = new Buffer(9);
+    buffer.writeUInt8(0xf9);
+    buffer.writeUInt8(0xb1);
+    buffer.writeUInt8(getValue(enable_map, enable));
+    buffer.writeUInt16LE(start_time);
+    buffer.writeUInt16LE(end_time);
+    buffer.writeUInt8(getValue(enable_map, out_of_bed_enable));
+    buffer.writeUInt8(out_of_bed_time);
+    return buffer.toBytes();
+}
+
+/**
+ * set respiratory detection config
+ * @since v1.0.2
+ * @param {object} respiratory_detection_config
+ * @param {number} respiratory_detection_config.enable values: (0: disable, 1: enable)
+ * @param {number} respiratory_detection_config.min
+ * @param {number} respiratory_detection_config.max
+ * @example { "respiratory_detection_config": { "enable": 1, "min": 10, "max": 20 } }
+ */
+function setRespiratoryDetectionConfig(respiratory_detection_config) {
+    var enable = respiratory_detection_config.enable;
+    var min = respiratory_detection_config.min;
+    var max = respiratory_detection_config.max;
+
+    var enable_map = { 0: "disable", 1: "enable" };
+    var enable_values = getValues(enable_map);
+    if (enable_values.indexOf(enable) === -1) {
+        throw new Error("respiratory_detection_config.enable must be in " + enable_values.join(", "));
+    }
+
+    var buffer = new Buffer(5);
+    buffer.writeUInt8(0xf9);
+    buffer.writeUInt8(0xb2);
+    buffer.writeUInt8(getValue(enable_map, enable));
+    buffer.writeUInt8(min);
+    buffer.writeUInt8(max);
+    return buffer.toBytes();
+}
+
+/**
+ * set AI fall detection enable
+ * @since v1.0.2
+ * @param {number} ai_fall_detection_enable values: (0: disable, 1: enable)
+ * @example { "ai_fall_detection_enable": 1 } }
+ */
+function setAIFallDetectionEnable(ai_fall_detection_enable) {
+    var enable_map = { 0: "disable", 1: "enable" };
+    var enable_values = getValues(enable_map);
+    if (enable_values.indexOf(ai_fall_detection_enable) === -1) {
+        throw new Error("ai_fall_detection_enable must be in " + enable_values.join(", "));
+    }
+
+    var buffer = new Buffer(3);
+    buffer.writeUInt8(0xf9);
+    buffer.writeUInt8(0xb3);
+    buffer.writeUInt8(getValue(enable_map, ai_fall_detection_enable));
+    return buffer.toBytes();
+}
+
+/**
  * set led indicator enable
  * @param {number} led_indicator_enable values: (0: disable, 1: enable)
  * @example { "led_indicator_enable": 1 } }
@@ -409,6 +520,32 @@ function releaseAlarm(release_alarm) {
         return [];
     }
     return [0xff, 0x64, 0xff];
+}
+
+/**
+ * confirm fall alarm
+ * @since v1.0.2
+ * @param {object} confirm_fall_alarm
+ * @param {number} confirm_fall_alarm.alarm_id
+ * @param {number} confirm_fall_alarm.action values: (2: dismiss, 3: ignore)
+ * @example { "confirm_fall_alarm": { "alarm_id": 1, "action": 2 } }
+ */
+function confirmFallAlarm(confirm_fall_alarm) {
+    var alarm_id = confirm_fall_alarm.alarm_id;
+    var action = confirm_fall_alarm.action;
+
+    var action_mode = { 2: "dismiss", 3: "ignore" };
+    var action_values = getValues(action_mode);
+    if (action_values.indexOf(action) === -1) {
+        throw new Error("confirm_fall_alarm.action must be in " + action_values.join(", "));
+    }
+
+    var buffer = new Buffer(5);
+    buffer.writeUInt8(0xf9);
+    buffer.writeUInt8(0xb4);
+    buffer.writeUInt16LE(alarm_id);
+    buffer.writeUInt8(getValue(action_mode, action));
+    return buffer.toBytes();
 }
 
 /**
@@ -511,7 +648,7 @@ function deleteRegion(delete_region) {
  * @param {number} region_detection_settings._item.fall_detection_enable values: (0: disable, 1: enable)
  * @param {number} region_detection_settings._item.dwell_detection_enable values: (0: disable, 1: enable)
  * @param {number} region_detection_settings._item.motion_detection_enable values: (0: disable, 1: enable)
- * @param {number} region_detection_settings._item.region_type values: (0: default, 1: bed, 2: door)
+ * @param {number} region_detection_settings._item.region_type values: (0: custom, 1: bed, 2: door, 3: ignore)
  * @example { "region_detection_settings": [{ "region_id": 1, "fall_detection_enable": 1, "dwell_detection_enable": 1, "motion_detection_enable": 1, "region_type": 0 }] }
  */
 function setRegionDetectionSettings(region_detection_settings) {
@@ -532,7 +669,7 @@ function setRegionDetectionSettings(region_detection_settings) {
     if (enable_values.indexOf(motion_detection_enable) === -1) {
         throw new Error("region_detection_settings._item.motion_detection_enable must be in " + enable_values.join(", "));
     }
-    var region_type_map = { 0: "default", 1: "bed", 2: "door" };
+    var region_type_map = { 0: "custom", 1: "bed", 2: "door", 3: "ignore" };
     var region_type_values = getValues(region_type_map);
     if (region_type_values.indexOf(region_type) === -1) {
         throw new Error("region_detection_settings._item.region_type must be in " + region_type_values.join(", "));
@@ -551,6 +688,8 @@ function setRegionDetectionSettings(region_detection_settings) {
 
 /**
  * set bed detection settings
+ * @deprecated
+ * @since v1.0.1
  * @param {object} bed_detection_settings
  * @param {number} bed_detection_settings._item.bed_id range: [1, 4]
  * @param {number} bed_detection_settings._item.enable values: (0: disable, 1: enable)
@@ -876,6 +1015,7 @@ function setWiFiSSIDHidden(wifi_ssid_hidden) {
 
 /**
  * set device time
+ * @since v1.0.2
  * @param {number} timestamp unit: second, UTC time
  * @example payload: { "timestamp": 1628832309 }, output: FF1135021661
  */
@@ -887,6 +1027,147 @@ function setTime(timestamp) {
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0x11);
     buffer.writeUInt32LE(timestamp);
+    return buffer.toBytes();
+}
+
+/**
+ * set time sync config
+ * @since v1.0.2
+ * @param {object} time_sync_config
+ * @param {number} time_sync_config.mode values: (0: sync_from_gateway, 1: manual_sync)
+ * @param {number} time_sync_config.timestamp unit: second, UTC time
+ * @example { "time_sync_config": { "mode": 0, "timestamp": 1628832309 } }
+ */
+function setTimeSyncConfig(time_sync_config) {
+    var mode = time_sync_config.mode;
+    var timestamp = time_sync_config.timestamp || 0;
+
+    var mode_map = { 0: "sync_from_gateway", 1: "manual_sync" };
+    var mode_values = getValues(mode_map);
+    if (mode_values.indexOf(mode) === -1) {
+        throw new Error("time_sync_config.mode must be in " + mode_values.join(", "));
+    }
+
+    var buffer = new Buffer(7);
+    buffer.writeUInt8(0xf9);
+    buffer.writeUInt8(0x91);
+    buffer.writeUInt8(getValue(mode_map, mode));
+    buffer.writeUInt32LE(timestamp);
+    return buffer.toBytes();
+}
+
+/**
+ * set rejoin config
+ * @since v1.0.2
+ * @param {object} rejoin_config
+ * @param {number} rejoin_config.enable values: (0: disable, 1: enable)
+ * @param {number} rejoin_config.max_count
+ * @example { "rejoin_config": { "enable": 1, "max_count": 10 } }
+ */
+function setRejoinConfig(rejoin_config) {
+    var enable = rejoin_config.enable;
+    var max_count = rejoin_config.max_count;
+
+    var enable_map = { 0: "disable", 1: "enable" };
+    var enable_values = getValues(enable_map);
+    if (enable_values.indexOf(enable) === -1) {
+        throw new Error("enable must be one of " + enable_values.join(", "));
+    }
+
+    var buffer = new Buffer(4);
+    buffer.writeUInt8(0xf9);
+    buffer.writeUInt8(0x85);
+    buffer.writeUInt8(getValue(enable_map, enable));
+    buffer.writeUInt8(max_count);
+    return buffer.toBytes();
+}
+
+/**
+ * set data rate
+ * @since v1.0.2
+ * @param {number} data_rate
+ * @example { "data_rate": 0 }
+ */
+function setDataRate(data_rate) {
+    var buffer = new Buffer(3);
+    buffer.writeUInt8(0xf9);
+    buffer.writeUInt8(0x86);
+    buffer.writeUInt8(data_rate);
+    return buffer.toBytes();
+}
+
+/**
+ * set tx power
+ * @since v1.0.2
+ * @param {number} tx_power_level
+ *  EU868, values: (0:-16dBm, 1:-14dBm, 2:-12dBm, 3:-10dBm, 4:-8dBm, 5:-6dBm, 6:-4dBm, 7:-2dBm)
+ *  IN865, values: (0:-22dBm, 1:-22dBm, 2:-22dBm, 3:-22dBm, 4:-22dBm, 5:-20dBm, 6:-18dBm, 7:-16dBm, 8:-14dBm, 9:-12dBm, 10:-10dBm)
+ *  RU864, values: (0:-16dBm, 1:-14dBm, 2:-12dBm, 3:-10dBm, 4:-8dBm, 5:-6dBm, 6:-4dBm, 7:-2dBm)
+ *  AU915, values: (0:-22dBm, 1:-22dBm, 2:-22dBm, 3:-22dBm, 4:-22dBm, 5:-20dBm, 6:-18dBm, 7:-16dBm, 8:-14dBm, 9:-12dBm, 10:-10dBm, 11:-8dBm, 12:-6dBm, 13:-4dBm, 14:-2dBm)
+ *  KR920, values: (0:-14dBm, 1:-12dBm, 2:-10dBm, 3:-8dBm, 4:-6dBm, 5:-4dBm, 6:-2dBm, 7:0dBm)
+ *  AS923, values: (0:-16dBm, 1:-14dBm, 2:-12dBm, 3:-10dBm, 4:-8dBm, 5:-6dBm, 6:-4dBm, 7:-2dBm)
+ *  US915, values: (0:-22dBm, 1:-22dBm, 2:-22dBm, 3:-22dBm, 4:-22dBm, 5:-20dBm, 6:-18dBm, 7:-16dBm, 8:-14dBm, 9:-12dBm, 10:-10dBm, 11:-8dBm, 12:-6dBm, 13:-4dBm, 14:-2dBm)
+ *  CN470, values: (0:-19.15dBm, 1:-17.15dBm, 2:-15.15dBm, 3:-13.15dBm, 4:-11.15dBm, 5:-9.15dBm, 6:-7.15dBm, 7:-5.15dBm)
+ * @example { "tx_power_level": 0 }
+ */
+function setTxPowerLevel(tx_power_level) {
+    var buffer = new Buffer(3);
+    buffer.writeUInt8(0xf9);
+    buffer.writeUInt8(0x87);
+    buffer.writeUInt8(tx_power_level);
+    return buffer.toBytes();
+}
+
+/**
+ * set trigger digital output config
+ * @since v1.0.2
+ * @param {object} trigger_digital_output_config
+ * @param {number} trigger_digital_output_config.enable values: (0: disable, 1: enable)
+ * @param {number} trigger_digital_output_config.fall values: (0: disable, 1: enable)
+ * @param {number} trigger_digital_output_config.lying values: (0: disable, 1: enable)
+ * @param {number} trigger_digital_output_config.out_of_bed values: (0: disable, 1: enable)
+ * @param {number} trigger_digital_output_config.dwell values: (0: disable, 1: enable)
+ * @param {number} trigger_digital_output_config.motionless values: (0: disable, 1: enable)
+ * @example { "trigger_digital_output_config": { "enable": 1, "fall": 1, "lying": 1, "out_of_bed": 1, "dwell": 1, "motionless": 1 } }
+ */
+function setTriggerDigitalOutputConfig(trigger_digital_output_config) {
+    var enable = trigger_digital_output_config.enable;
+    var fall = trigger_digital_output_config.fall;
+    var lying = trigger_digital_output_config.lying;
+    var out_of_bed = trigger_digital_output_config.out_of_bed;
+    var dwell = trigger_digital_output_config.dwell;
+    var motionless = trigger_digital_output_config.motionless;
+
+    var enable_map = { 0: "disable", 1: "enable" };
+    var enable_values = getValues(enable_map);
+    if (enable_values.indexOf(enable) === -1) {
+        throw new Error("enable must be one of " + enable_values.join(", "));
+    }
+    if (enable_values.indexOf(fall) === -1) {
+        throw new Error("fall must be one of " + enable_values.join(", "));
+    }
+    if (enable_values.indexOf(lying) === -1) {
+        throw new Error("lying must be one of " + enable_values.join(", "));
+    }
+    if (enable_values.indexOf(out_of_bed) === -1) {
+        throw new Error("out_of_bed must be one of " + enable_values.join(", "));
+    }
+    if (enable_values.indexOf(dwell) === -1) {
+        throw new Error("dwell must be one of " + enable_values.join(", "));
+    }
+    if (enable_values.indexOf(motionless) === -1) {
+        throw new Error("motionless must be one of " + enable_values.join(", "));
+    }
+
+    var buffer = new Buffer(8);
+    buffer.writeUInt8(0xf9);
+    buffer.writeUInt8(0xb5);
+    buffer.writeUInt8(getValue(enable_map, enable));
+    buffer.writeUInt8(getValue(enable_map, fall));
+    buffer.writeUInt8(getValue(enable_map, lying));
+    buffer.writeUInt8(getValue(enable_map, out_of_bed));
+    buffer.writeUInt8(getValue(enable_map, dwell));
+    buffer.writeUInt8(getValue(enable_map, motionless));
     return buffer.toBytes();
 }
 
