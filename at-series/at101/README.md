@@ -41,6 +41,7 @@ For more detailed information, please visit [Milesight Official Website](https:/
 |       Position       | 0x05 | 0x00 |   1    | position(1B)<br/>position, values: (0: normal, 1: tilt)                 |
 |      Wifi Scan       | 0x06 | 0xD9 |   9    | ID(1B) + MAC(6B) + RSSI(1B) + motion_status(1B)                         |
 |    Tamper Status     | 0x07 | 0x00 |   1    | tamper_status(1B)<br/>tamper_status, values: (0: install, 1: uninstall) |
+|        Angle         | 0x08 | 0x9b |   6    | datum_plane_angle_x(1B) + datum_plane_angle_y(1B) + datum_plane_angle_z(1B) + current_angle_x(1B) + current_angle_y(1B) + current_angle_z(1B) |
 | Temperature Abnormal | 0x83 | 0x67 |   3    | temperature(2B) + temperature_abnormal(1B)                              |
 |     History Data     | 0x20 | 0xCE |   12   | timestamp(4B) + longitude(4B) + latitude(4B)                            |
 

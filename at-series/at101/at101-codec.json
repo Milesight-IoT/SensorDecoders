@@ -235,6 +235,78 @@
             "bacnet_unit_type": "UNITS_NO_UNITS"
         },
         {
+            "id": "datum_plane_angle_x",
+            "name": "Datum Plane Angle X",
+            "value": "0",
+            "unit": "°",
+            "access_mode": "R",
+            "data_type": "NUMBER",
+            "value_type": "INT8",
+            "bacnet_type": "analog_input_object",
+            "bacnet_unit_type_id": 90,
+            "bacnet_unit_type": "UNITS_DEGREES_ANGULAR"
+        },
+        {
+            "id": "datum_plane_angle_y",
+            "name": "Datum Plane Angle Y",
+            "value": "0",
+            "unit": "°",
+            "access_mode": "R",
+            "data_type": "NUMBER",
+            "value_type": "INT8",
+            "bacnet_type": "analog_input_object",
+            "bacnet_unit_type_id": 90,
+            "bacnet_unit_type": "UNITS_DEGREES_ANGULAR"
+        },
+        {
+            "id": "datum_plane_angle_z",
+            "name": "Datum Plane Angle Z",
+            "value": "0",
+            "unit": "°",
+            "access_mode": "R",
+            "data_type": "NUMBER",
+            "value_type": "INT8",
+            "bacnet_type": "analog_input_object",
+            "bacnet_unit_type_id": 90,
+            "bacnet_unit_type": "UNITS_DEGREES_ANGULAR"
+        },
+        {
+            "id": "current_angle_x",
+            "name": "Current Angle X",
+            "value": "0",
+            "unit": "°",
+            "access_mode": "R",
+            "data_type": "NUMBER",
+            "value_type": "INT8",
+            "bacnet_type": "analog_input_object",
+            "bacnet_unit_type_id": 90,
+            "bacnet_unit_type": "UNITS_DEGREES_ANGULAR"
+        },
+        {
+            "id": "current_angle_y",
+            "name": "Current Angle Y",
+            "value": "0",
+            "unit": "°",
+            "access_mode": "R",
+            "data_type": "NUMBER",
+            "value_type": "INT8",
+            "bacnet_type": "analog_input_object",
+            "bacnet_unit_type_id": 90,
+            "bacnet_unit_type": "UNITS_DEGREES_ANGULAR"
+        },
+        {
+            "id": "current_angle_z",
+            "name": "Current Angle Z",
+            "value": "0",
+            "unit": "°",
+            "access_mode": "R",
+            "data_type": "NUMBER",
+            "value_type": "INT8",
+            "bacnet_type": "analog_input_object",
+            "bacnet_unit_type_id": 90,
+            "bacnet_unit_type": "UNITS_DEGREES_ANGULAR"
+        },
+        {
             "id": "tamper_status",
             "name": "Tamper Status",
             "value": "0",
