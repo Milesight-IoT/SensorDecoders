@@ -133,6 +133,16 @@ function milesightDeviceDecode(bytes) {
             decoded.tamper_status = readTamperStatus(bytes[i]);
             i += 1;
         }
+        // ANGLE
+        else if (channel_id === 0x08 && channel_type === 0x9b) {
+            decoded.datum_plane_angle_x = readInt8(bytes[i]);
+            decoded.datum_plane_angle_y = readInt8(bytes[i + 1]);
+            decoded.datum_plane_angle_z = readInt8(bytes[i + 2]);
+            decoded.current_angle_x = readInt8(bytes[i + 3]);
+            decoded.current_angle_y = readInt8(bytes[i + 4]);
+            decoded.current_angle_z = readInt8(bytes[i + 5]);
+            i += 6;
+        }
         // TEMPERATURE WITH ABNORMAL
         else if (channel_id === 0x83 && channel_type === 0x67) {
             decoded.temperature = readInt16LE(bytes.slice(i, i + 2)) / 10;
