@@ -68,7 +68,7 @@ function milesightDeviceDecode(bytes) {
             decoded.tsl_version = readTslVersion(bytes.slice(i, i + 2));
             i += 2;
         }
-        // DETECTION TARGET
+        // DETECTION TARGET (v1.0.1)
         else if (channel_id === 0x03 && channel_type === 0xf8) {
             decoded.detection_status = readDetectionStatus(bytes[i]);
             decoded.target_status = readTargetStatus(bytes[i + 1]);
@@ -76,21 +76,63 @@ function milesightDeviceDecode(bytes) {
             decoded.use_time_today = readUInt16LE(bytes.slice(i + 4, i + 6));
             i += 6;
         }
-        // REGION OCCUPANCY
+        // DETECTION TARGET (v1.0.2)
+        else if (channel_id === 0x07 && channel_type === 0xb0) {
+            decoded.detection_status = readDetectionStatus(bytes[i]);
+            decoded.target_status = readTargetStatus(bytes[i + 1]);
+            decoded.use_time_now = readUInt24LE(bytes.slice(i + 2, i + 5));
+            decoded.use_time_today = readUInt24LE(bytes.slice(i + 5, i + 8));
+            i += 8;
+        }
+        // REGION OCCUPANCY (v1.0.1)
         else if (channel_id === 0x04 && channel_type === 0xf9) {
-            decoded.region_1_occupancy = readRegionStatus(bytes[i]);
-            decoded.region_2_occupancy = readRegionStatus(bytes[i + 1]);
-            decoded.region_3_occupancy = readRegionStatus(bytes[i + 2]);
-            decoded.region_4_occupancy = readRegionStatus(bytes[i + 3]);
+            // for the old firmware, the occupancy status is 0: occupied, 1: vacant
+            // for the new firmware, the occupancy status is 0: vacant, 1: occupied
+            decoded.region_1_occupancy = readOccupancyStatus(bytes[i] === 1 ? 0 : 1);
+            decoded.region_2_occupancy = readOccupancyStatus(bytes[i + 1] === 1 ? 0 : 1);
+            decoded.region_3_occupancy = readOccupancyStatus(bytes[i + 2] === 1 ? 0 : 1);
+            decoded.region_4_occupancy = readOccupancyStatus(bytes[i + 3] === 1 ? 0 : 1);
             i += 4;
         }
-        // OUT OF BED
+        // REGION TYPE (v1.0.2)
+        else if (channel_id === 0x09 && channel_type === 0xb2) {
+            for (var j = 0; j <= 5; j++) {
+                var region_chn_name = "region_" + (j + 1) + "_type";
+                decoded[region_chn_name] = readRegionType(bytes[i + j]);
+            }
+            i += 6;
+        }
+        // REGION OCCUPY(v1.0.2)
+        else if (channel_id === 0x0a && channel_type === 0xb3) {
+            var region_count = readUInt8(bytes[i]);
+            var data = readUInt32LE(bytes.slice(i + 1, i + 5));
+            for (var j = 0; j < region_count; j++) {
+                var region_chn_name = "region_" + (j + 1) + "_occupancy";
+                decoded[region_chn_name] = readOccupancyStatus((data >>> j) & 0x01);
+            }
+            i += 5;
+        }
+        // OUT OF BED (v1.0.1)
         else if (channel_id === 0x05 && channel_type === 0xfa) {
             decoded.region_1_out_of_bed_time = readUInt16LE(bytes.slice(i, i + 2));
             decoded.region_2_out_of_bed_time = readUInt16LE(bytes.slice(i + 2, i + 4));
             decoded.region_3_out_of_bed_time = readUInt16LE(bytes.slice(i + 4, i + 6));
             decoded.region_4_out_of_bed_time = readUInt16LE(bytes.slice(i + 6, i + 8));
             i += 8;
+        }
+        // OUT OF BED (v1.0.2) - REGION 1-3
+        else if (channel_id === 0x0b && channel_type === 0xb4) {
+            decoded.region_1_out_of_bed_time = readUInt24LE(bytes.slice(i, i + 3));
+            decoded.region_2_out_of_bed_time = readUInt24LE(bytes.slice(i + 3, i + 6));
+            decoded.region_3_out_of_bed_time = readUInt24LE(bytes.slice(i + 6, i + 9));
+            i += 9;
+        }
+        // OUT OF BED (v1.0.2) - REGION 4-6
+        else if (channel_id === 0x0c && channel_type === 0xb4) {
+            decoded.region_4_out_of_bed_time = readUInt24LE(bytes.slice(i, i + 3));
+            decoded.region_5_out_of_bed_time = readUInt24LE(bytes.slice(i + 3, i + 6));
+            decoded.region_6_out_of_bed_time = readUInt24LE(bytes.slice(i + 6, i + 9));
+            i += 9;
         }
         // ALARM
         else if (channel_id === 0x06 && channel_type === 0xfb) {
@@ -99,13 +141,20 @@ function milesightDeviceDecode(bytes) {
             event.alarm_type = readAlarmType(bytes[i + 2]);
             event.alarm_status = readAlarmStatus(bytes[i + 3]);
             // EVENT TYPE: OUT OF BED
-            var event_type = bytes[i + 2];
-            if (event_type === 3) {
+            var alarm_type = readUInt8(bytes[i + 2]);
+            // out_of_bed, bradynea, tachypnea
+            if (alarm_type === 3 || alarm_type === 6 || alarm_type === 7) {
                 event.region_id = readUInt8(bytes[i + 4]);
             }
             i += 5;
             decoded.events = decoded.events || [];
             decoded.events.push(event);
+        }
+        // BREATHING DETECTION
+        else if (channel_id === 0x08 && channel_type === 0xb1) {
+            decoded.respiratory_status = readBreathStatus(bytes[i]);
+            decoded.respiratory_rate = readUInt16LE(bytes.slice(i + 1, i + 3)) / 100;
+            i += 3;
         }
         // HISTORY DATA
         else if (channel_id === 0x20 && channel_type === 0xce) {
@@ -114,9 +163,9 @@ function milesightDeviceDecode(bytes) {
             data.alarm_id = readUInt16LE(bytes.slice(i + 4, i + 6));
             data.alarm_type = readAlarmType(bytes[i + 6]);
             data.alarm_status = readAlarmStatus(bytes[i + 7]);
-            var event_type = bytes[i + 6];
+            var alarm_type = readUInt8(bytes[i + 6]);
             // EVENT TYPE: OUT OF BED
-            if (event_type === 3) {
+            if (alarm_type === 3 || alarm_type === 6 || alarm_type === 7) {
                 data.region_id = readUInt8(bytes[i + 8]);
             }
             i += 9;
@@ -290,6 +339,62 @@ function handle_downlink_response_ext(code, channel_type, bytes, offset) {
             decoded.existence_detection_settings = readExistenceDetectionSettings(bytes.slice(offset, offset + 2));
             offset += 2;
             break;
+        case 0x85:
+            decoded.rejoin_config = {};
+            decoded.rejoin_config.enable = readEnableStatus(bytes[offset]);
+            decoded.rejoin_config.max_count = readUInt8(bytes[offset + 1]);
+            offset += 2;
+            break;
+        case 0x86:
+            decoded.data_rate = readUInt8(bytes[offset]);
+            offset += 1;
+            break;
+        case 0x87:
+            decoded.tx_power_level = readUInt8(bytes[offset]);
+            offset += 1;
+            break;
+        case 0x91:
+            decoded.time_sync_config = {};
+            decoded.time_sync_config.mode = readTimeSyncMode(bytes[offset]);
+            decoded.time_sync_config.timestamp = readUInt32LE(bytes.slice(offset + 1, offset + 5));
+            offset += 5;
+            break;
+        case 0xb1:
+            decoded.sleep_detection_config = {};
+            decoded.sleep_detection_config.enable = readEnableStatus(bytes[offset]);
+            decoded.sleep_detection_config.start_time = readUInt16LE(bytes.slice(offset + 1, offset + 3));
+            decoded.sleep_detection_config.end_time = readUInt16LE(bytes.slice(offset + 3, offset + 5));
+            decoded.sleep_detection_config.out_of_bed_enable = readEnableStatus(bytes[offset + 5]);
+            decoded.sleep_detection_config.out_of_bed_time = readUInt8(bytes[offset + 6]);
+            offset += 7;
+            break;
+        case 0xb2:
+            decoded.respiratory_detection_config = {};
+            decoded.respiratory_detection_config.enable = readEnableStatus(bytes[offset]);
+            decoded.respiratory_detection_config.min = readUInt8(bytes[offset + 1]);
+            decoded.respiratory_detection_config.max = readUInt8(bytes[offset + 2]);
+            offset += 3;
+            break;
+        case 0xb3:
+            decoded.ai_fall_detection_enable = readEnableStatus(bytes[offset]);
+            offset += 1;
+            break;
+        case 0xb4:
+            decoded.confirm_fall_alarm = {};
+            decoded.confirm_fall_alarm.alarm_id = readUInt16LE(bytes.slice(offset, offset + 2));
+            decoded.confirm_fall_alarm.action = readConfirmAlarmType(bytes[offset + 2]);
+            offset += 3;
+            break;
+        case 0xb5:
+            decoded.trigger_digital_output_config = {};
+            decoded.trigger_digital_output_config.enable = readEnableStatus(bytes[offset]);
+            decoded.trigger_digital_output_config.fall = readEnableStatus(bytes[offset + 1]);
+            decoded.trigger_digital_output_config.lying = readEnableStatus(bytes[offset + 2]);
+            decoded.trigger_digital_output_config.out_of_bed = readEnableStatus(bytes[offset + 3]);
+            decoded.trigger_digital_output_config.dwell = readEnableStatus(bytes[offset + 4]);
+            decoded.trigger_digital_output_config.motionless = readEnableStatus(bytes[offset + 5]);
+            offset += 6;
+            break;
         default:
             throw new Error("unknown downlink response");
     }
@@ -378,21 +483,33 @@ function readDetectionStatus(status) {
     return getValue(detection_status_map, status);
 }
 
+function readBreathStatus(status) {
+    var breath_status_map = {
+        1: "no_data_input",
+        2: "normal",
+        3: "tachypnea",
+        4: "bradypnea",
+        5: "undetectable",
+    };
+    return getValue(breath_status_map, status);
+}
+
 function readTargetStatus(status) {
     var target_status_map = {
         0: "normal",
         1: "motionless",
         2: "abnormal",
+        3: "lying_down",
     };
     return getValue(target_status_map, status);
 }
 
-function readRegionStatus(status) {
-    var region_status_map = {
-        0: "occupied",
-        1: "vacant",
+function readOccupancyStatus(status) {
+    var occupancy_status_map = {
+        0: "vacant",
+        1: "occupied",
     };
-    return getValue(region_status_map, status);
+    return getValue(occupancy_status_map, status);
 }
 
 function readAlarmType(type) {
@@ -403,6 +520,9 @@ function readAlarmType(type) {
         3: "out_of_bed",
         4: "occupied",
         5: "vacant",
+        6: "bradynea",
+        7: "tachypnea",
+        8: "lying_down",
     };
     return getValue(alarm_type_map, type);
 }
@@ -412,6 +532,7 @@ function readAlarmStatus(status) {
         1: "alarm_triggered",
         2: "alarm_deactivated",
         3: "alarm_ignored",
+        4: "respiratory_status",
     };
     return getValue(alarm_status_map, status);
 }
@@ -455,7 +576,7 @@ function readDetectionMode(type) {
 }
 
 function readDetectionSensitivity(type) {
-    var detection_sensitivity_map = { 0: "low", 1: "high" };
+    var detection_sensitivity_map = { 0: "low", 1: "high", 2: "medium", 3: "custom" };
     return getValue(detection_sensitivity_map, type);
 }
 
@@ -509,7 +630,7 @@ function readRegionDetectionSettings(bytes) {
 }
 
 function readRegionType(type) {
-    var region_type_map = { 0: "default", 1: "bed", 2: "door" };
+    var region_type_map = { 0: "custom", 1: "bed", 2: "door", 3: "ignore", 255: "unset" };
     return getValue(region_type_map, type);
 }
 
@@ -564,6 +685,16 @@ function readD2DActionType(type) {
     return getValue(d2d_action_type_map, type);
 }
 
+function readConfirmAlarmType(type) {
+    var confirm_alarm_type_map = { 2: "dismiss", 3: "ignore" };
+    return getValue(confirm_alarm_type_map, type);
+}
+
+function readTimeSyncMode(type) {
+    var time_sync_mode_map = { 0: "sync_from_gateway", 1: "manual_sync" };
+    return getValue(time_sync_mode_map, type);
+}
+
 /* eslint-disable */
 function readUInt8(bytes) {
     return bytes & 0xff;
@@ -582,6 +713,16 @@ function readUInt16LE(bytes) {
 function readInt16LE(bytes) {
     var ref = readUInt16LE(bytes);
     return ref > 0x7fff ? ref - 0x10000 : ref;
+}
+
+function readUInt24LE(bytes) {
+    var value = (bytes[2] << 16) + (bytes[1] << 8) + bytes[0];
+    return value & 0xffffff;
+}
+
+function readInt24LE(bytes) {
+    var ref = readUInt24LE(bytes);
+    return ref > 0x7fffff ? ref - 0x1000000 : ref;
 }
 
 function readUInt32LE(bytes) {

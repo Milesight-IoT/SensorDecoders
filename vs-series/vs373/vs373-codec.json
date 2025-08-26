@@ -147,7 +147,8 @@
             "values": [
                 { "value": 0, "name": "normal" },
                 { "value": 1, "name": "motionless" },
-                { "value": 2, "name": "abnormal" }
+                { "value": 2, "name": "abnormal" },
+                { "value": 3, "name": "lying_down" }
             ],
             "bacnet_type": "multistate_value_object",
             "bacnet_unit_type_id": 95,
@@ -157,25 +158,25 @@
             "id": "use_time_now",
             "name": "Use Time Now",
             "value": "",
-            "unit": "",
+            "unit": "s",
             "access_mode": "R",
             "data_type": "NUMBER",
-            "value_type": "UINT16",
+            "value_type": "UINT32",
             "bacnet_type": "analog_input_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS"
+            "bacnet_unit_type_id": 73,
+            "bacnet_unit_type": "UNITS_SECONDS"
         },
         {
             "id": "use_time_today",
             "name": "Use Time Today",
             "value": "",
-            "unit": "",
+            "unit": "s",
             "access_mode": "R",
             "data_type": "NUMBER",
-            "value_type": "UINT16",
+            "value_type": "UINT32",
             "bacnet_type": "analog_input_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS"
+            "bacnet_unit_type_id": 73,
+            "bacnet_unit_type": "UNITS_SECONDS"
         },
         {
             "id": "region_1_occupancy",
@@ -186,8 +187,8 @@
             "data_type": "BOOL",
             "value_type": "UINT8",
             "values": [
-                { "value": 0, "name": "occupied" },
-                { "value": 1, "name": "vacant" }
+                { "value": 0, "name": "vacant" },
+                { "value": 1, "name": "occupied" }
             ],
             "bacnet_type": "binary_input_object",
             "bacnet_unit_type_id": 95,
@@ -202,8 +203,8 @@
             "data_type": "BOOL",
             "value_type": "UINT8",
             "values": [
-                { "value": 0, "name": "occupied" },
-                { "value": 1, "name": "vacant" }
+                { "value": 0, "name": "vacant" },
+                { "value": 1, "name": "occupied" }
             ],
             "bacnet_type": "binary_input_object",
             "bacnet_unit_type_id": 95,
@@ -218,8 +219,8 @@
             "data_type": "BOOL",
             "value_type": "UINT8",
             "values": [
-                { "value": 0, "name": "occupied" },
-                { "value": 1, "name": "vacant" }
+                { "value": 0, "name": "vacant" },
+                { "value": 1, "name": "occupied" }
             ],
             "bacnet_type": "binary_input_object",
             "bacnet_unit_type_id": 95,
@@ -234,10 +235,156 @@
             "data_type": "BOOL",
             "value_type": "UINT8",
             "values": [
-                { "value": 0, "name": "occupied" },
-                { "value": 1, "name": "vacant" }
+                { "value": 0, "name": "vacant" },
+                { "value": 1, "name": "occupied" }
             ],
             "bacnet_type": "binary_input_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS"
+        },
+        {
+            "id": "region_5_occupancy",
+            "name": "Region 5 Occupancy",
+            "value": "",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                { "value": 0, "name": "vacant" },
+                { "value": 1, "name": "occupied" }
+            ],
+            "bacnet_type": "binary_input_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS"
+        },
+        {
+            "id": "region_6_occupancy",
+            "name": "Region 6 Occupancy",
+            "value": "",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                { "value": 0, "name": "vacant" },
+                { "value": 1, "name": "occupied" }
+            ],
+            "bacnet_type": "binary_input_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS"
+        },
+        {
+            "id": "region_1_type",
+            "name": "Region 1 Type",
+            "value": "",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [
+                { "value": 0, "name": "custom" },
+                { "value": 1, "name": "bed" },
+                { "value": 2, "name": "door" },
+                { "value": 3, "name": "ignore" },
+                { "value": 255, "name": "unset" }
+            ],
+            "bacnet_type": "multistate_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS"
+        },
+        {
+            "id": "region_2_type",
+            "name": "Region 2 Type",
+            "value": "",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [
+                { "value": 0, "name": "custom" },
+                { "value": 1, "name": "bed" },
+                { "value": 2, "name": "door" },
+                { "value": 3, "name": "ignore" },
+                { "value": 255, "name": "unset" }
+            ],
+            "bacnet_type": "multistate_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS"
+        },
+        {
+            "id": "region_3_type",
+            "name": "Region 3 Type",
+            "value": "",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [
+                { "value": 0, "name": "custom" },
+                { "value": 1, "name": "bed" },
+                { "value": 2, "name": "door" },
+                { "value": 3, "name": "ignore" },
+                { "value": 255, "name": "unset" }
+            ],
+            "bacnet_type": "multistate_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS"
+        },
+        {
+            "id": "region_4_type",
+            "name": "Region 4 Type",
+            "value": "",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [
+                { "value": 0, "name": "custom" },
+                { "value": 1, "name": "bed" },
+                { "value": 2, "name": "door" },
+                { "value": 3, "name": "ignore" },
+                { "value": 255, "name": "unset" }
+            ],
+            "bacnet_type": "multistate_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS"
+        },
+        {
+            "id": "region_5_type",
+            "name": "Region 5 Type",
+            "value": "",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [
+                { "value": 0, "name": "custom" },
+                { "value": 1, "name": "bed" },
+                { "value": 2, "name": "door" },
+                { "value": 3, "name": "ignore" },
+                { "value": 255, "name": "unset" }
+            ],
+            "bacnet_type": "multistate_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS"
+        },
+        {
+            "id": "region_6_type",
+            "name": "Region 6 Type",
+            "value": "",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [
+                { "value": 0, "name": "custom" },
+                { "value": 1, "name": "bed" },
+                { "value": 2, "name": "door" },
+                { "value": 3, "name": "ignore" },
+                { "value": 255, "name": "unset" }
+            ],
+            "bacnet_type": "multistate_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS"
         },
@@ -248,7 +395,7 @@
             "unit": "",
             "access_mode": "R",
             "data_type": "NUMBER",
-            "value_type": "UINT16",
+            "value_type": "UINT32",
             "bacnet_type": "analog_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS"
@@ -260,7 +407,7 @@
             "unit": "",
             "access_mode": "R",
             "data_type": "NUMBER",
-            "value_type": "UINT16",
+            "value_type": "UINT32",
             "bacnet_type": "analog_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS"
@@ -272,7 +419,7 @@
             "unit": "",
             "access_mode": "R",
             "data_type": "NUMBER",
-            "value_type": "UINT16",
+            "value_type": "UINT32",
             "bacnet_type": "analog_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS"
@@ -284,7 +431,62 @@
             "unit": "",
             "access_mode": "R",
             "data_type": "NUMBER",
-            "value_type": "UINT16",
+            "value_type": "UINT32",
+            "bacnet_type": "analog_input_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS"
+        },
+        {
+            "id": "region_5_out_of_bed_time",
+            "name": "Region 5 Out of Bed Time",
+            "value": "",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "NUMBER",
+            "value_type": "UINT32",
+            "bacnet_type": "analog_input_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS"
+        },
+        {
+            "id": "region_6_out_of_bed_time",
+            "name": "Region 6 Out of Bed Time",
+            "value": "",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "NUMBER",
+            "value_type": "UINT32",
+            "bacnet_type": "analog_input_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS"
+        },
+        {
+            "id": "respiratory_status",
+            "name": "Respiratory Status",
+            "value": "",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [
+                { "value": 1, "name": "no_data_input" },
+                { "value": 2, "name": "normal" },
+                { "value": 3, "name": "tachypnea" },
+                { "value": 4, "name": "bradypnea" },
+                { "value": 5, "name": "undetectable" }
+            ],
+            "bacnet_type": "multistate_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS"
+        },
+        {
+            "id": "respiratory_rate",
+            "name": "Respiratory Rate",
+            "value": "",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
             "bacnet_type": "analog_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS"
@@ -456,7 +658,9 @@
             "value_type": "UINT8",
             "values": [
                 { "value": 0, "name": "low" },
-                { "value": 1, "name": "high" }
+                { "value": 1, "name": "high" },
+                { "value": 2, "name": "medium" },
+                { "value": 3, "name": "custom" }
             ],
             "bacnet_type": "multistate_value_object",
             "bacnet_unit_type_id": 95,
@@ -563,6 +767,138 @@
             "reference": ["motion_detection_settings.enable"]
         },
         {
+            "id": "sleep_detection_config.enable",
+            "name": "Sleep Detection (Enable)",
+            "value": "",
+            "unit": "",
+            "access_mode": "RW",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                { "value": 0, "name": "disable" },
+                { "value": 1, "name": "enable" }
+            ],
+            "bacnet_type": "binary_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": ["sleep_detection_config.enable", "sleep_detection_config.start_time", "sleep_detection_config.end_time", "sleep_detection_config.out_of_bed_enable", "sleep_detection_config.out_of_bed_time"]
+        },
+        {
+            "id": "sleep_detection_config.start_time",
+            "name": "Sleep Detection (Start Time)",
+            "value": "",
+            "unit": "min",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "UINT16",
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 72,
+            "bacnet_unit_type": "UNITS_MINUTES",
+            "reference": ["sleep_detection_config.enable", "sleep_detection_config.start_time", "sleep_detection_config.end_time", "sleep_detection_config.out_of_bed_enable", "sleep_detection_config.out_of_bed_time"]
+        },
+        {
+            "id": "sleep_detection_config.end_time",
+            "name": "Sleep Detection (End Time)",
+            "value": "",
+            "unit": "min",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "UINT16",
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 72,
+            "bacnet_unit_type": "UNITS_MINUTES",
+            "reference": ["sleep_detection_config.enable", "sleep_detection_config.start_time", "sleep_detection_config.end_time", "sleep_detection_config.out_of_bed_enable", "sleep_detection_config.out_of_bed_time"]
+        },
+        {
+            "id": "sleep_detection_config.out_of_bed_enable",
+            "name": "Sleep Detection (Out of Bed Enable)",
+            "value": "",
+            "unit": "",
+            "access_mode": "RW",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                { "value": 0, "name": "disable" },
+                { "value": 1, "name": "enable" }
+            ],
+            "bacnet_type": "binary_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": ["sleep_detection_config.enable", "sleep_detection_config.start_time", "sleep_detection_config.end_time", "sleep_detection_config.out_of_bed_enable", "sleep_detection_config.out_of_bed_time"]
+        },
+        {
+            "id": "sleep_detection_config.out_of_bed_time",
+            "name": "Sleep Detection (Out of Bed Time)",
+            "value": "",
+            "unit": "min",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "UINT8",
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 72,
+            "bacnet_unit_type": "UNITS_MINUTES",
+            "reference": ["sleep_detection_config.enable", "sleep_detection_config.start_time", "sleep_detection_config.end_time", "sleep_detection_config.out_of_bed_enable", "sleep_detection_config.out_of_bed_time"]
+        },
+        {
+            "id": "respiratory_detection_config.enable",
+            "name": "Respiratory Detection (Enable)",
+            "value": "",
+            "unit": "",
+            "access_mode": "RW",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                { "value": 0, "name": "disable" },
+                { "value": 1, "name": "enable" }
+            ],
+            "bacnet_type": "binary_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": ["respiratory_detection_config.enable", "respiratory_detection_config.min", "respiratory_detection_config.max"]
+        },
+        {
+            "id": "respiratory_detection_config.min",
+            "name": "Respiratory Detection (Min)",
+            "value": "",
+            "unit": "",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "UINT8",
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": ["respiratory_detection_config.enable", "respiratory_detection_config.min", "respiratory_detection_config.max"]
+        },
+        {
+            "id": "respiratory_detection_config.max",
+            "name": "Respiratory Detection (Max)",
+            "value": "",
+            "unit": "",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "UINT8",
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": ["respiratory_detection_config.enable", "respiratory_detection_config.min", "respiratory_detection_config.max"]
+        },
+        {
+            "id": "ai_fall_detection_enable",
+            "name": "AI Fall Detection Enable",
+            "value": "",
+            "unit": "",
+            "access_mode": "RW",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                { "value": 0, "name": "disable" },
+                { "value": 1, "name": "enable" }
+            ],
+            "bacnet_type": "binary_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS"
+        },
+        {
             "id": "led_indicator_enable",
             "name": "LED Indicator Enable",
             "value": "",
@@ -609,6 +945,36 @@
             "bacnet_type": "binary_output_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS"
+        },
+        {
+            "id": "confirm_fall_alarm.alarm_id",
+            "name": "Confirm Fall Alarm (Alarm ID)",
+            "value": "",
+            "unit": "",
+            "access_mode": "W",
+            "data_type": "NUMBER",
+            "value_type": "UINT16",
+            "bacnet_type": "analog_output_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": ["confirm_fall_alarm.alarm_id", "confirm_fall_alarm.action"]
+        },
+        {
+            "id": "confirm_fall_alarm.action",
+            "name": "Confirm Fall Alarm (Action)",
+            "value": "",
+            "unit": "",
+            "access_mode": "W",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [
+                { "value": 2, "name": "dismiss" },
+                { "value": 3, "name": "ignore" }
+            ],
+            "bacnet_type": "multistate_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": ["confirm_fall_alarm.alarm_id", "confirm_fall_alarm.action"]
         },
         {
             "id": "existence_detection_settings.exist_confirm_time",
@@ -872,6 +1238,191 @@
             "bacnet_type": "analog_output_object",
             "bacnet_unit_type_id": 73,
             "bacnet_unit_type": "UNITS_SECONDS"
+        },
+        {
+            "id": "time_sync_config.mode",
+            "name": "Time Sync Config (Mode)",
+            "value": "",
+            "unit": "",
+            "access_mode": "W",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [
+                { "value": 0, "name": "sync_from_gateway" },
+                { "value": 1, "name": "manual_sync" }
+            ],
+            "bacnet_type": "multistate_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS"
+        },
+        {
+            "id": "time_sync_config.timestamp",
+            "name": "Time Sync Config (Timestamp)",
+            "value": "",
+            "unit": "s",
+            "access_mode": "W",
+            "data_type": "NUMBER",
+            "value_type": "UINT32",
+            "bacnet_type": "analog_output_object",
+            "bacnet_unit_type_id": 73,
+            "bacnet_unit_type": "UNITS_SECONDS",
+            "reference": ["time_sync_config.mode", "time_sync_config.timestamp"]
+        },
+        {
+            "id": "rejoin_config.enable",
+            "name": "Rejoin Config (Enable)",
+            "value": "",
+            "unit": "",
+            "access_mode": "RW",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                { "value": 0, "name": "disable" },
+                { "value": 1, "name": "enable" }
+            ],
+            "bacnet_type": "binary_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": ["rejoin_config.enable", "rejoin_config.max_count"]
+        },
+        {
+            "id": "rejoin_config.max_count",
+            "name": "Rejoin Config (Max Count)",
+            "value": "",
+            "unit": "",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "UINT8",
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": ["rejoin_config.enable", "rejoin_config.max_count"]
+        },
+        {
+            "id": "data_rate",
+            "name": "Data Rate",
+            "value": "",
+            "unit": "",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "UINT8",
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS"
+        },
+        {
+            "id": "tx_power_level",
+            "name": "TX Power Level",
+            "value": "",
+            "unit": "",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "UINT8",
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS"
+        },
+        {
+            "id": "trigger_digital_output_config.enable",
+            "name": "Trigger Digital Output Config (Enable)",
+            "value": "",
+            "unit": "",
+            "access_mode": "RW",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                { "value": 0, "name": "disable" },
+                { "value": 1, "name": "enable" }
+            ],
+            "bacnet_type": "binary_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": ["trigger_digital_output_config.enable", "trigger_digital_output_config.fall", "trigger_digital_output_config.lying", "trigger_digital_output_config.out_of_bed", "trigger_digital_output_config.dwell", "trigger_digital_output_config.motionless"]
+        },
+        {
+            "id": "trigger_digital_output_config.fall",
+            "name": "Trigger Digital Output Config (Fall)",
+            "value": "",
+            "unit": "",
+            "access_mode": "RW",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                { "value": 0, "name": "disable" },
+                { "value": 1, "name": "enable" }
+            ],
+            "bacnet_type": "binary_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": ["trigger_digital_output_config.enable", "trigger_digital_output_config.fall", "trigger_digital_output_config.lying", "trigger_digital_output_config.out_of_bed", "trigger_digital_output_config.dwell", "trigger_digital_output_config.motionless"]
+        },
+        {
+            "id": "trigger_digital_output_config.lying",
+            "name": "Trigger Digital Output Config (Lying)",
+            "value": "",
+            "unit": "",
+            "access_mode": "RW",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                { "value": 0, "name": "disable" },
+                { "value": 1, "name": "enable" }
+            ],
+            "bacnet_type": "binary_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": ["trigger_digital_output_config.enable", "trigger_digital_output_config.fall", "trigger_digital_output_config.lying", "trigger_digital_output_config.out_of_bed", "trigger_digital_output_config.dwell", "trigger_digital_output_config.motionless"]
+        },
+        {
+            "id": "trigger_digital_output_config.out_of_bed",
+            "name": "Trigger Digital Output Config (Out of Bed)",
+            "value": "",
+            "unit": "",
+            "access_mode": "RW",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                { "value": 0, "name": "disable" },
+                { "value": 1, "name": "enable" }
+            ],
+            "bacnet_type": "binary_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": ["trigger_digital_output_config.enable", "trigger_digital_output_config.fall", "trigger_digital_output_config.lying", "trigger_digital_output_config.out_of_bed", "trigger_digital_output_config.dwell", "trigger_digital_output_config.motionless"]
+        },
+        {
+            "id": "trigger_digital_output_config.dwell",
+            "name": "Trigger Digital Output Config (Dwell)",
+            "value": "",
+            "unit": "",
+            "access_mode": "RW",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                { "value": 0, "name": "disable" },
+                { "value": 1, "name": "enable" }
+            ],
+            "bacnet_type": "binary_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": ["trigger_digital_output_config.enable", "trigger_digital_output_config.fall", "trigger_digital_output_config.lying", "trigger_digital_output_config.out_of_bed", "trigger_digital_output_config.dwell", "trigger_digital_output_config.motionless"]
+        },
+        {
+            "id": "trigger_digital_output_config.motionless",
+            "name": "Trigger Digital Output Config (Motionless)",
+            "value": "",
+            "unit": "",
+            "access_mode": "RW",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                { "value": 0, "name": "disable" },
+                { "value": 1, "name": "enable" }
+            ],
+            "bacnet_type": "binary_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": ["trigger_digital_output_config.enable", "trigger_digital_output_config.fall", "trigger_digital_output_config.lying", "trigger_digital_output_config.out_of_bed", "trigger_digital_output_config.dwell", "trigger_digital_output_config.motionless"]
         }
     ]
 }
