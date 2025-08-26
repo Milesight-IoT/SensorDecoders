@@ -414,6 +414,7 @@ function setSleepDetectionConfig(sleep_detection_config) {
     buffer.writeUInt16LE(end_time);
     buffer.writeUInt8(getValue(enable_map, out_of_bed_enable));
     buffer.writeUInt8(out_of_bed_time);
+    return buffer.toBytes();
 }
 
 /**
@@ -526,24 +527,24 @@ function releaseAlarm(release_alarm) {
  * @since v1.0.2
  * @param {object} confirm_fall_alarm
  * @param {number} confirm_fall_alarm.alarm_id
- * @param {number} confirm_fall_alarm.confirm_type values: (2: dismiss, 3: ignore)
- * @example { "confirm_fall_alarm": { "alarm_id": 1, "confirm_type": 2 } }
+ * @param {number} confirm_fall_alarm.action values: (2: dismiss, 3: ignore)
+ * @example { "confirm_fall_alarm": { "alarm_id": 1, "action": 2 } }
  */
 function confirmFallAlarm(confirm_fall_alarm) {
     var alarm_id = confirm_fall_alarm.alarm_id;
-    var confirm_type = confirm_fall_alarm.confirm_type;
+    var action = confirm_fall_alarm.action;
 
-    var confirm_type_mode = { 2: "dismiss", 3: "ignore" };
-    var confirm_type_values = getValues(confirm_type_mode);
-    if (confirm_type_values.indexOf(confirm_type) === -1) {
-        throw new Error("confirm_fall_alarm.confirm_type must be in " + confirm_type_values.join(", "));
+    var action_mode = { 2: "dismiss", 3: "ignore" };
+    var action_values = getValues(action_mode);
+    if (action_values.indexOf(action) === -1) {
+        throw new Error("confirm_fall_alarm.action must be in " + action_values.join(", "));
     }
 
     var buffer = new Buffer(5);
     buffer.writeUInt8(0xf9);
     buffer.writeUInt8(0xb4);
     buffer.writeUInt16LE(alarm_id);
-    buffer.writeUInt8(getValue(confirm_type_mode, confirm_type));
+    buffer.writeUInt8(getValue(action_mode, action));
     return buffer.toBytes();
 }
 

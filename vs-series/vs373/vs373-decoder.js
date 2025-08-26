@@ -137,8 +137,9 @@ function milesightDeviceDecode(bytes) {
             event.alarm_type = readAlarmType(bytes[i + 2]);
             event.alarm_status = readAlarmStatus(bytes[i + 3]);
             // EVENT TYPE: OUT OF BED
-            var event_type = bytes[i + 2];
-            if (event_type === 3) {
+            var alarm_type = readUInt8(bytes[i + 2]);
+            // out_of_bed, bradynea, tachypnea
+            if (alarm_type === 3 || alarm_type === 6 || alarm_type === 7) {
                 event.region_id = readUInt8(bytes[i + 4]);
             }
             i += 5;
@@ -158,9 +159,9 @@ function milesightDeviceDecode(bytes) {
             data.alarm_id = readUInt16LE(bytes.slice(i + 4, i + 6));
             data.alarm_type = readAlarmType(bytes[i + 6]);
             data.alarm_status = readAlarmStatus(bytes[i + 7]);
-            var event_type = bytes[i + 6];
+            var alarm_type = readUInt8(bytes[i + 6]);
             // EVENT TYPE: OUT OF BED
-            if (event_type === 3) {
+            if (alarm_type === 3 || alarm_type === 6 || alarm_type === 7) {
                 data.region_id = readUInt8(bytes[i + 8]);
             }
             i += 9;
@@ -351,7 +352,7 @@ function handle_downlink_response_ext(code, channel_type, bytes, offset) {
         case 0x91:
             decoded.time_sync_config = {};
             decoded.time_sync_config.mode = readTimeSyncMode(bytes[offset]);
-            decoded.time_sync_config.time = readUInt32LE(bytes.slice(offset + 1, offset + 5));
+            decoded.time_sync_config.timestamp = readUInt32LE(bytes.slice(offset + 1, offset + 5));
             offset += 5;
             break;
         case 0xb1:
@@ -377,7 +378,7 @@ function handle_downlink_response_ext(code, channel_type, bytes, offset) {
         case 0xb4:
             decoded.confirm_fall_alarm = {};
             decoded.confirm_fall_alarm.alarm_id = readUInt16LE(bytes.slice(offset, offset + 2));
-            decoded.confirm_fall_alarm.alarm_type = readConfirmAlarmType(bytes[offset + 2]);
+            decoded.confirm_fall_alarm.action = readConfirmAlarmType(bytes[offset + 2]);
             offset += 3;
             break;
         case 0xb5:
@@ -494,6 +495,7 @@ function readTargetStatus(status) {
         0: "normal",
         1: "motionless",
         2: "abnormal",
+        3: "lying_down",
     };
     return getValue(target_status_map, status);
 }

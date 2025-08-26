@@ -147,7 +147,8 @@
             "values": [
                 { "value": 0, "name": "normal" },
                 { "value": 1, "name": "motionless" },
-                { "value": 2, "name": "abnormal" }
+                { "value": 2, "name": "abnormal" },
+                { "value": 3, "name": "lying_down" }
             ],
             "bacnet_type": "multistate_value_object",
             "bacnet_unit_type_id": 95,
@@ -657,7 +658,9 @@
             "value_type": "UINT8",
             "values": [
                 { "value": 0, "name": "low" },
-                { "value": 1, "name": "high" }
+                { "value": 1, "name": "high" },
+                { "value": 2, "name": "medium" },
+                { "value": 3, "name": "custom" }
             ],
             "bacnet_type": "multistate_value_object",
             "bacnet_unit_type_id": 95,
@@ -954,11 +957,11 @@
             "bacnet_type": "analog_output_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": ["confirm_fall_alarm.alarm_id", "confirm_fall_alarm.confirm_type"]
+            "reference": ["confirm_fall_alarm.alarm_id", "confirm_fall_alarm.action"]
         },
         {
-            "id": "confirm_fall_alarm.confirm_type",
-            "name": "Confirm Fall Alarm (Confirm Type)",
+            "id": "confirm_fall_alarm.action",
+            "name": "Confirm Fall Alarm (Action)",
             "value": "",
             "unit": "",
             "access_mode": "W",
@@ -971,7 +974,7 @@
             "bacnet_type": "multistate_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": ["confirm_fall_alarm.alarm_id", "confirm_fall_alarm.confirm_type"]
+            "reference": ["confirm_fall_alarm.alarm_id", "confirm_fall_alarm.action"]
         },
         {
             "id": "existence_detection_settings.exist_confirm_time",
