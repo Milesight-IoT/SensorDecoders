@@ -20,7 +20,7 @@ For more detailed information, please visit [Milesight Official Website](https:/
 
 ### Attribute
 
-|    CHANNEL    |  ID  | TYPE | LENGTH | DESCRIPTION                                                                                       |
+|    CHANNEL    |  ID  | TYPE | LENGTH | DESCRIPTION                                                                                      |
 | :-----------: | :--: | :--: | :----: | ------------------------------------------------------------------------------------------------ |
 |     IPSO      | 0xFF | 0x01 |   1    | ipso_version(1B)                                                                                 |
 |   Hardware    | 0xFF | 0x09 |   2    | hardware_version(2B)<br/>hardware_version, e.g. 0110 -> v1.1                                     |
@@ -33,7 +33,7 @@ For more detailed information, please visit [Milesight Official Website](https:/
 
 ### Telemetry
 
-|       CHANNEL        |  ID  | TYPE | LENGTH | DESCRIPTION                                                              |
+|       CHANNEL        |  ID  | TYPE | LENGTH | DESCRIPTION                                                             |
 | :------------------: | :--: | :--: | :----: | ----------------------------------------------------------------------- |
 |       Battery        | 0x01 | 0x75 |   1    | battery(1B)<br/>battery, unit: %, read: uint8                           |
 |     Temperature      | 0x03 | 0x67 |   2    | temperature(2B)<br/>temperature, unit: °C, read: int16/10               |
@@ -49,6 +49,7 @@ motion_status
 |    BITS     | 7 - 4                                                          | 3 - 0                                                                   |
 | :---------: | :------------------------------------------------------------- | :---------------------------------------------------------------------- |
 | DESCRIPTION | Geofence Status, (0: inside, 1: outside, 2: unset, 3: unknown) | Motion Status, (0: unknown, 1: start moving, 2: moving, 3: stop moving) |
+|             |                                                                | Tilt Status, (4: normal, 5: tilt)                                       |
 
 ## Example
 

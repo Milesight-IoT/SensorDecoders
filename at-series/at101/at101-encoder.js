@@ -47,6 +47,9 @@ function milesightDeviceEncode(payload) {
     if ("motion_report_interval" in payload) {
         encoded = encoded.concat(setMotionReportInterval(payload.motion_report_interval));
     }
+    if ("location_report_interval" in payload) {
+        encoded = encoded.concat(setLocationReportInterval(payload.location_report_interval));
+    }
     if ("report_strategy" in payload) {
         encoded = encoded.concat(setReportStrategy(payload.report_strategy));
     }
@@ -198,6 +201,25 @@ function setMotionReportInterval(motion_report_interval) {
     buffer.writeUInt8(0x8e);
     buffer.writeUInt8(0x01);
     buffer.writeUInt16LE(motion_report_interval);
+    return buffer.toBytes();
+}
+
+/**
+ * set location report interval
+ * @odm 2802
+ * @param {number} location_report_interval unit: minute, range: [1, 1440]
+ * @example { "location_report_interval": 20 }
+ */
+function setLocationReportInterval(location_report_interval) {
+    if (location_report_interval < 1 || location_report_interval > 1440) {
+        throw new Error("location_report_interval must be between 1 and 1440");
+    }
+
+    var buffer = new Buffer(5);
+    buffer.writeUInt8(0xff);
+    buffer.writeUInt8(0x8e);
+    buffer.writeUInt8(0x02);
+    buffer.writeUInt16LE(location_report_interval);
     return buffer.toBytes();
 }
 

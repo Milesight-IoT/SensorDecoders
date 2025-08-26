@@ -87,8 +87,13 @@ function milesightDeviceDecode(bytes) {
         else if ((channel_id === 0x04 || channel_id == 0x84) && channel_type === 0x88) {
             decoded.latitude = readInt32LE(bytes.slice(i, i + 4)) / 1000000;
             decoded.longitude = readInt32LE(bytes.slice(i + 4, i + 8)) / 1000000;
-            var status = bytes[i + 8];
-            decoded.motion_status = readMotionStatus(status & 0x0f);
+            var status = readUInt8(bytes[i + 8]);
+            var status_value = status & 0x0f;
+            if (status_value === 0x03 || status_value === 0x04) {
+                decoded.tilt_status = readTiltStatus(status_value);
+            } else {
+                decoded.motion_status = readMotionStatus(status_value);
+            }
             decoded.geofence_status = readGeofenceStatus(status >> 4);
             i += 9;
         }
@@ -103,7 +108,15 @@ function milesightDeviceDecode(bytes) {
             wifi.group = readUInt8(bytes[i]);
             wifi.mac = readMAC(bytes.slice(i + 1, i + 7));
             wifi.rssi = readInt8(bytes[i + 7]);
-            wifi.motion_status = readMotionStatus(bytes[i + 8] & 0x0f);
+            var status = readUInt8(bytes[i + 8]);
+            var status_value = status & 0x0f;
+            if (status_value === 0x03 || status_value === 0x04) {
+                wifi.tilt_status = readTiltStatus(status_value);
+                decoded.tilt_status = wifi.tilt_status;
+            } else {
+                wifi.motion_status = readMotionStatus(status_value);
+                decoded.motion_status = wifi.motion_status;
+            }
             i += 9;
 
             decoded.wifi_scan_result = "finish";
@@ -111,7 +124,6 @@ function milesightDeviceDecode(bytes) {
                 decoded.wifi_scan_result = "timeout";
                 continue;
             }
-            decoded.motion_status = wifi.motion_status;
 
             decoded.wifi = decoded.wifi || [];
             decoded.wifi.push(wifi);
@@ -254,6 +266,8 @@ function handle_downlink_response(channel_type, bytes, offset) {
                 decoded.report_interval = readUInt16LE(bytes.slice(offset + 1, offset + 3));
             } else if (report_type_value === 0x01) {
                 decoded.motion_report_interval = readUInt16LE(bytes.slice(offset + 1, offset + 3));
+            } else if (report_type_value === 0x02) {
+                decoded.location_report_interval = readUInt16LE(bytes.slice(offset + 1, offset + 3));
             }
             offset += 3;
             break;
@@ -332,6 +346,14 @@ function readMotionStatus(type) {
         3: "stop",
     };
     return getValue(motion_status_map, type);
+}
+
+function readTiltStatus(type) {
+    var tilt_status_map = {
+        4: "normal",
+        5: "tilt",
+    };
+    return getValue(tilt_status_map, type);
 }
 
 function readGeofenceStatus(type) {

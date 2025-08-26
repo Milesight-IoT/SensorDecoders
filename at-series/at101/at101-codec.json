@@ -184,6 +184,23 @@
             "bacnet_unit_type": "UNITS_NO_UNITS"
         },
         {
+            "id": "tilt_status",
+            "name": "Tilt Status",
+            "value": "0",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [
+                { "value": 4, "name": "normal" },
+                { "value": 5, "name": "tilt" }
+            ],
+            "bacnet_type": "multistate_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS"
+        },
+        
+        {
             "id": "geofence_status",
             "name": "Geofence Status",
             "value": "0",
@@ -379,6 +396,18 @@
         {
             "id": "motion_report_interval",
             "name": "Motion Report Interval",
+            "value": "",
+            "unit": "min",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "UINT16",
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 72,
+            "bacnet_unit_type": "UNITS_MINUTES"
+        },
+        {
+            "id": "location_report_interval",
+            "name": "Location Report Interval",
             "value": "",
             "unit": "min",
             "access_mode": "RW",
