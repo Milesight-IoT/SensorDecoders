@@ -26,8 +26,8 @@ function Decoder(bytes, port) {
 }
 /* eslint-enable */
 
-var gpio_in_chns = [0x03, 0x04, 0x05, 0x06];
-var gpio_out_chns = [0x07, 0x08];
+var gpio_input_chns = [0x03, 0x04, 0x05, 0x06];
+var gpio_output_chns = [0x07, 0x08];
 var pt100_chns = [0x09, 0x0a];
 var ai_chns = [0x0b, 0x0c];
 var av_chns = [0x0d, 0x0e];
@@ -80,23 +80,23 @@ function milesightDeviceDecode(bytes) {
             i += 1;
         }
         // GPIO INPUT
-        else if (includes(gpio_in_chns, channel_id) && channel_type === 0x00) {
-            var id = channel_id - gpio_in_chns[0] + 1;
-            var gpio_in_name = "gpio_in_" + id;
-            decoded[gpio_in_name] = readOnOffStatus(bytes[i]);
+        else if (includes(gpio_input_chns, channel_id) && channel_type === 0x00) {
+            var id = channel_id - gpio_input_chns[0] + 1;
+            var gpio_input_name = "gpio_input_" + id;
+            decoded[gpio_input_name] = readOnOffStatus(bytes[i]);
             i += 1;
         }
         // GPIO OUTPUT
-        else if (includes(gpio_out_chns, channel_id) && channel_type === 0x01) {
-            var id = channel_id - gpio_out_chns[0] + 1;
-            var gpio_out_name = "gpio_out_" + id;
-            decoded[gpio_out_name] = readOnOffStatus(bytes[i]);
+        else if (includes(gpio_output_chns, channel_id) && channel_type === 0x01) {
+            var id = channel_id - gpio_output_chns[0] + 1;
+            var gpio_output_name = "gpio_output_" + id;
+            decoded[gpio_output_name] = readOnOffStatus(bytes[i]);
             i += 1;
         }
         // GPIO AS COUNTER
-        else if (includes(gpio_in_chns, channel_id) && channel_type === 0xc8) {
-            var id = channel_id - gpio_in_chns[0] + 1;
-            var counter_name = "counter_" + id;
+        else if (includes(gpio_input_chns, channel_id) && channel_type === 0xc8) {
+            var id = channel_id - gpio_input_chns[0] + 1;
+            var counter_name = "gpio_counter_" + id;
             decoded[counter_name] = readUInt32LE(bytes.slice(i, i + 4));
             i += 4;
         }
@@ -220,20 +220,20 @@ function milesightDeviceDecode(bytes) {
                     var type = bytes[i++];
                     // AS GPIO INPUT
                     if (type === 0) {
-                        var name = "gpio_in_" + (j + 1);
+                        var name = "gpio_input_" + (j + 1);
                         data[name] = readOnOffStatus(readUInt32LE(bytes.slice(i, i + 4)));
                         i += 4;
                     }
                     // AS COUNTER
                     else {
-                        var name = "counter_" + (j + 1);
+                        var name = "gpio_counter_" + (j + 1);
                         data[name] = readUInt32LE(bytes.slice(i, i + 4));
                         i += 4;
                     }
                 }
                 // GPIO OUTPUT
                 else if (j < 6) {
-                    var name = "gpio_out_" + (j - 4 + 1);
+                    var name = "gpio_output_" + (j - 4 + 1);
                     data[name] = readOnOffStatus(bytes[i]);
                     i += 1;
                 }
@@ -357,15 +357,15 @@ function handle_downlink_response(channel_type, bytes, offset) {
             break;
         case 0x91:
             decoded.jitter_config = decoded.jitter_config || {};
-            var channel_map = { all: 0, gpio_in_1: 1, gpio_in_2: 2, gpio_in_3: 3, gpio_in_4: 4, gpio_out_1: 5, gpio_out_2: 6 };
+            var channel_map = { all: 0, gpio_input_1: 1, gpio_input_2: 2, gpio_input_3: 3, gpio_input_4: 4, gpio_output_1: 5, gpio_output_2: 6 };
             var channel_id = readUInt8(bytes[offset]);
             decoded.jitter_config[channel_map[channel_id]] = readUInt32LE(bytes.slice(offset + 1, offset + 5));
             offset += 5;
             break;
         case 0x92:
             var gpio_index = readUInt8(bytes[offset]);
-            var gpio_out_chn_name = "gpio_out_" + gpio_index + "_control";
-            decoded[gpio_out_chn_name] = {
+            var gpio_output_chn_name = "gpio_output_" + gpio_index + "_control";
+            decoded[gpio_output_chn_name] = {
                 status: readOnOffStatus(bytes[offset + 1]),
                 duration: readUInt32LE(bytes.slice(offset + 2, offset + 6)),
             };

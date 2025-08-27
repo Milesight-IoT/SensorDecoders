@@ -56,17 +56,17 @@ function milesightDeviceEncode(payload) {
     if ("jitter_config" in payload) {
         encoded = encoded.concat(setJitterConfig(payload.jitter_config));
     }
-    if ("gpio_out_1_control" in payload) {
-        encoded = encoded.concat(controlOutputStatusWithDuration(1, payload.gpio_out_1_control));
+    if ("gpio_output_1_control" in payload) {
+        encoded = encoded.concat(controlOutputStatusWithDuration(1, payload.gpio_output_1_control));
     }
-    if ("gpio_out_2_control" in payload) {
-        encoded = encoded.concat(controlOutputStatusWithDuration(2, payload.gpio_out_2_control));
+    if ("gpio_output_2_control" in payload) {
+        encoded = encoded.concat(controlOutputStatusWithDuration(2, payload.gpio_output_2_control));
     }
-    if ("gpio_out_1" in payload) {
-        encoded = encoded.concat(controlOutputStatus(1, payload.gpio_out_1));
+    if ("gpio_output_1" in payload) {
+        encoded = encoded.concat(controlOutputStatus(1, payload.gpio_output_1));
     }
-    if ("gpio_out_2" in payload) {
-        encoded = encoded.concat(controlOutputStatus(2, payload.gpio_out_2));
+    if ("gpio_output_2" in payload) {
+        encoded = encoded.concat(controlOutputStatus(2, payload.gpio_output_2));
     }
 
     return encoded;
@@ -225,16 +225,17 @@ function reportStatus(report_status) {
  * Set jitter config
  * @param {object} jitter_config
  * @param {number} jitter_config.all unit: millisecond
- * @param {number} jitter_config.gpio_in_2 unit: millisecond
- * @param {number} jitter_config.gpio_in_3 unit: millisecond
- * @param {number} jitter_config.gpio_in_4 unit: millisecond
- * @param {number} jitter_config.gpio_out_1 unit: millisecond
- * @param {number} jitter_config.gpio_out_2 unit: millisecond
+ * @param {number} jitter_config.gpio_input_1 unit: millisecond
+ * @param {number} jitter_config.gpio_input_2 unit: millisecond
+ * @param {number} jitter_config.gpio_input_3 unit: millisecond
+ * @param {number} jitter_config.gpio_input_4 unit: millisecond
+ * @param {number} jitter_config.gpio_output_1 unit: millisecond
+ * @param {number} jitter_config.gpio_output_2 unit: millisecond
  * @example { "jitter_config": { "all": 100 } }
- * @example { "jitter_config": { "gpio_in_1": 1000, "gpio_in_2": 1000 } }
+ * @example { "jitter_config": { "gpio_input_1": 1000, "gpio_input_2": 1000 } }
  */
 function setJitterConfig(jitter_config) {
-    var channel_map = { all: 0, gpio_in_1: 1, gpio_in_2: 2, gpio_in_3: 3, gpio_in_4: 4, gpio_out_1: 5, gpio_out_2: 6 };
+    var channel_map = { all: 0, gpio_input_1: 1, gpio_input_2: 2, gpio_input_3: 3, gpio_input_4: 4, gpio_output_1: 5, gpio_output_2: 6 };
 
     var data = [];
     for (var key in channel_map) {
@@ -252,23 +253,23 @@ function setJitterConfig(jitter_config) {
 
 /**
  * Control output with time
- * @param {object} gpio_out_x_control
- * @param {number} gpio_out_x_control.duration unit: millisecond
- * @param {number} gpio_out_x_control.status values: (0: off, 1: on)
- * @example { "gpio_out_1_control": { "duration": 1000, "status": 1 } }
- * @example { "gpio_out_2_control": { "duration": 1000, "status": 0 } }
+ * @param {object} gpio_output_x_control
+ * @param {number} gpio_output_x_control.duration unit: millisecond
+ * @param {number} gpio_output_x_control.status values: (0: off, 1: on)
+ * @example { "gpio_output_1_control": { "duration": 1000, "status": 1 } }
+ * @example { "gpio_output_2_control": { "duration": 1000, "status": 0 } }
  */
-function controlOutputStatusWithDuration(gpio_index, gpio_out_x_control) {
-    var duration = gpio_out_x_control.duration;
-    var status = gpio_out_x_control.status;
+function controlOutputStatusWithDuration(gpio_index, gpio_output_x_control) {
+    var duration = gpio_output_x_control.duration;
+    var status = gpio_output_x_control.status;
     var gpio_chns = [1, 2];
     if (gpio_chns.indexOf(gpio_index) === -1) {
-        throw new Error("gpio_out_x_control must be one of " + gpio_chns.join(", "));
+        throw new Error("gpio_output_x_control must be one of " + gpio_chns.join(", "));
     }
     var on_off_map = { 0: "off", 1: "on" };
     var on_off_values = getValues(on_off_map);
     if (on_off_values.indexOf(status) === -1) {
-        throw new Error("gpio_out_" + gpio_index + "_control.status must be one of " + on_off_values.join(", "));
+        throw new Error("gpio_output_" + gpio_index + "_control.status must be one of " + on_off_values.join(", "));
     }
 
     var buffer = new Buffer(7);
@@ -282,10 +283,10 @@ function controlOutputStatusWithDuration(gpio_index, gpio_out_x_control) {
 
 /**
  * Control output status
- * @param {number} gpio_index values: (1: gpio_out_1, 2: gpio_out_2)
+ * @param {number} gpio_index values: (1: gpio_output_1, 2: gpio_output_2)
  * @param {number} status values: (0: off, 1: on)
- * @example { "gpio_out_1": 1 }
- * @example { "gpio_out_2": 0 }
+ * @example { "gpio_output_1": 1 }
+ * @example { "gpio_output_2": 0 }
  */
 function controlOutputStatus(gpio_index, status) {
     var gpio_chns = [1, 2];
@@ -295,7 +296,7 @@ function controlOutputStatus(gpio_index, status) {
     var on_off_map = { 0: "off", 1: "on" };
     var on_off_values = getValues(on_off_map);
     if (on_off_values.indexOf(status) === -1) {
-        throw new Error("gpio_out_" + gpio_index + "_control.status must be one of " + on_off_values.join(", "));
+        throw new Error("gpio_output_" + gpio_index + "_control.status must be one of " + on_off_values.join(", "));
     }
 
     var channel_ids = [0x07, 0x08];

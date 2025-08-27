@@ -360,10 +360,10 @@ function stopTransmit(stop_transmit) {
 
 /**
  * Control output status
- * @param {number} gpio_index values: (1: gpio_out_1, 2: gpio_out_2)
+ * @param {number} gpio_index values: (1: gpio_output_1, 2: gpio_output_2)
  * @param {number} status values: (0: off, 1: on)
- * @example { "gpio_out_1": 1 }
- * @example { "gpio_out_2": 0 }
+ * @example { "gpio_output_1": 1 }
+ * @example { "gpio_output_2": 0 }
  */
 function controlOutputStatus(gpio_index, status) {
     var gpio_chns = [1, 2];

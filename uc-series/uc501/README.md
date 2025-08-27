@@ -20,7 +20,7 @@ For more detailed information, please visit [Milesight Official Website](https:/
 
 ### Attribute
 
-|    CHANNEL    |  ID  | TYPE | LENGTH | DESCRIPTION                                                                                       |
+|    CHANNEL    |  ID  | TYPE | LENGTH | DESCRIPTION                                                                                      |
 | :-----------: | :--: | :--: | :----: | ------------------------------------------------------------------------------------------------ |
 |     IPSO      | 0xFF | 0x01 |   1    | ipso_version(1B)                                                                                 |
 |   Hardware    | 0xFF | 0x09 |   2    | hardware_version(2B)<br/>hardware_version, e.g. 0110 -> v1.1                                     |
@@ -40,8 +40,8 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | GPIO 2<br/>(digital input)  | 0x04 | 0x00 |   1    | gpio_2(1B)<br/>gpio_2, values: (0: low, 1: high)                                                                                                                                                                                                             |
 | GPIO 1<br/>(digital output) | 0x03 | 0x01 |   1    | gpio_1(1B)<br/>gpio_1, values: (0: low, 1: high)                                                                                                                                                                                                             |
 | GPIO 2<br/>(digital output) | 0x04 | 0x01 |   1    | gpio_1(1B)<br/>gpio_1, values: (0: low, 1: high)                                                                                                                                                                                                             |
-|    GPIO 1<br/>(counter)     | 0x03 | 0xC8 |   4    | counter_1(4B)                                                                                                                                                                                                                                                |
-|    GPIO 2<br/>(counter)     | 0x04 | 0xC8 |   4    | counter_2(4B)                                                                                                                                                                                                                                                |
+|    GPIO 1<br/>(counter)     | 0x03 | 0xC8 |   4    | gpio_counter_1(4B)                                                                                                                                                                                                                                           |
+|    GPIO 2<br/>(counter)     | 0x04 | 0xC8 |   4    | gpio_counter_2(4B)                                                                                                                                                                                                                                           |
 |      Analog Input Type      | 0xFF | 0x14 |   1    | adc_id(7..4) + adc_id_type(3..0)<br/>adc_id_type, values: (0: current, 1: voltage)                                                                                                                                                                           |
 |   ADC 1<br/>(version: v2)   | 0x05 | 0x02 |   8    | adc_1(2B) + adc_1_min(2B) + adc_1_max(2B) + adc_1_avg(2B)<br/>adc_1, read: int16 /1000                                                                                                                                                                       |
 |   ADC 2<br/>(version: v2)   | 0x06 | 0x02 |   8    | adc_2(2B) + adc_2_min(2B) + adc_2_max(2B) + adc_2_avg(2B)<br/>adc_2, read: int16 /1000                                                                                                                                                                       |
@@ -72,7 +72,7 @@ For more detailed information, please visit [Milesight Official Website](https:/
 
 // 03C870170000
 {
-    "counter_1": 6000
+    "gpio_counter_1": 6000
 }
 
 // 0502983A000000000000

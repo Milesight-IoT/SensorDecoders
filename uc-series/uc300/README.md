@@ -20,7 +20,7 @@ For more detailed information, please visit [Milesight Official Website](https:/
 
 ### Attribute
 
-|    CHANNEL    |  ID  | TYPE | LENGTH | DESCRIPTION                                                                                       |
+|    CHANNEL    |  ID  | TYPE | LENGTH | DESCRIPTION                                                                                      |
 | :-----------: | :--: | :--: | :----: | ------------------------------------------------------------------------------------------------ |
 |     IPSO      | 0xFF | 0x01 |   1    | ipso_version(1B)                                                                                 |
 |   Hardware    | 0xFF | 0x09 |   2    | hardware_version(2B)<br/>hardware_version, e.g. 0110 -> v1.1                                     |
@@ -40,16 +40,16 @@ For more detailed information, please visit [Milesight Official Website](https:/
 |            Serial Number             | 0xFF | 0x16 |   8    | sn(8B)                                                                |
 |           Hardware Version           | 0xFF | 0x09 |   2    | hardware_version(8B)                                                  |
 |           Firmware Version           | 0xFF | 0x0A |   2    | firmware_version(8B)                                                  |
-|           Digital Input 1            | 0x03 | 0x00 |   1    | gpio_in_1(1B)                                                         |
-|           Digital Input 2            | 0x04 | 0x00 |   1    | gpio_in_2(1B)                                                         |
-|           Digital Input 3            | 0x05 | 0x00 |   1    | gpio_in_3(1B)                                                         |
-|           Digital Input 4            | 0x06 | 0x00 |   1    | gpio_in_4(1B)                                                         |
-|      Digital Input as Counter 1      | 0x03 | 0xC8 |   4    | counter_1(4B)                                                         |
-|      Digital Input as Counter 2      | 0x04 | 0xC8 |   4    | counter_2(4B)                                                         |
-|      Digital Input as Counter 3      | 0x05 | 0xC8 |   4    | counter_3(4B)                                                         |
-|      Digital Input as Counter 4      | 0x06 | 0xC8 |   4    | counter_4(4B)                                                         |
-|           Digital Output 1           | 0x07 | 0x01 |   1    | gpio_out_1(1B)                                                        |
-|           Digital Output 2           | 0x08 | 0x01 |   1    | gpio_out_2(1B)                                                        |
+|           Digital Input 1            | 0x03 | 0x00 |   1    | gpio_input_1(1B)                                                      |
+|           Digital Input 2            | 0x04 | 0x00 |   1    | gpio_input_2(1B)                                                      |
+|           Digital Input 3            | 0x05 | 0x00 |   1    | gpio_input_3(1B)                                                      |
+|           Digital Input 4            | 0x06 | 0x00 |   1    | gpio_input_4(1B)                                                      |
+|      Digital Input as Counter 1      | 0x03 | 0xC8 |   4    | gpio_counter_1(4B)                                                    |
+|      Digital Input as Counter 2      | 0x04 | 0xC8 |   4    | gpio_counter_2(4B)                                                    |
+|      Digital Input as Counter 3      | 0x05 | 0xC8 |   4    | gpio_counter_3(4B)                                                    |
+|      Digital Input as Counter 4      | 0x06 | 0xC8 |   4    | gpio_counter_4(4B)                                                    |
+|           Digital Output 1           | 0x07 | 0x01 |   1    | gpio_output_1(1B)                                                     |
+|           Digital Output 2           | 0x08 | 0x01 |   1    | gpio_output_2(1B)                                                     |
 |               PT100 1                | 0x09 | 0x67 |   2    | pt100_1(2B)                                                           |
 |               PT100 2                | 0x0A | 0x67 |   2    | pt100_2(2B)                                                           |
 |    Analog to Digital (current) 1     | 0x0B | 0x02 |   4    | adc_1(4B)                                                             |
@@ -76,12 +76,12 @@ For more detailed information, please visit [Milesight Official Website](https:/
 ```JSON
 // 03C80A000000 04C814000000 050000 060000 070101 080101
 {
-    "counter_1": 10,
-    "counter_2": 20,
-    "gpio_in_3": "off",
-    "gpio_in_4": "off",
-    "gpio_out_1": "on",
-    "gpio_out_2": "on"
+    "gpio_counter_1": 10,
+    "gpio_counter_2": 20,
+    "gpio_input_3": "off",
+    "gpio_input_4": "off",
+    "gpio_output_1": "on",
+    "gpio_output_2": "on"
 }
 
 // 0B0290010000 0C0290010000
