@@ -5,6 +5,8 @@
  *
  * @product UC50x
  */
+/* eslint no-redeclare: "off" */
+/* eslint-disable */
 // Chirpstack v4
 function decodeUplink(input) {
     var decoded = milesightDeviceDecode(input.bytes);
@@ -20,14 +22,15 @@ function Decode(fPort, bytes) {
 function Decoder(bytes, port) {
     return milesightDeviceDecode(bytes);
 }
+/* eslint-enable */
 
-gpio_chns = [0x03, 0x04];
-gpio_alarm_chns = [0x83, 0x84];
-gpio_change_alarm_chns = [0x93, 0x94];
+var gpio_chns = [0x03, 0x04];
+var gpio_alarm_chns = [0x83, 0x84];
+var gpio_change_alarm_chns = [0x93, 0x94];
 
-adc_chns = [0x05, 0x06];
-adc_alarm_chns = [0x85, 0x86];
-adc_change_alarm_chns = [0x95, 0x96];
+var adc_chns = [0x05, 0x06];
+var adc_alarm_chns = [0x85, 0x86];
+var adc_change_alarm_chns = [0x95, 0x96];
 
 function milesightDeviceDecode(bytes) {
     var decoded = {};
@@ -49,20 +52,20 @@ function milesightDeviceDecode(bytes) {
         }
         //  GPIO (GPIO as PULSE COUNTER)
         else if (includes(gpio_chns, channel_id) && channel_type === 0xc8) {
-            var gpio_channel_name = "counter_" + (channel_id - gpio_chns[0] + 1);
+            var gpio_channel_name = "gpio_counter_" + (channel_id - gpio_chns[0] + 1);
             decoded[gpio_channel_name] = readUInt32LE(bytes.slice(i, i + 4));
             i += 4;
         }
         // GPIO Alarm (GPIO as PULSE COUNTER)
         else if (includes(gpio_alarm_chns, channel_id) && channel_type === 0xc8) {
-            var gpio_channel_name = "counter_" + (channel_id - gpio_alarm_chns[0] + 1);
+            var gpio_channel_name = "gpio_counter_" + (channel_id - gpio_alarm_chns[0] + 1);
             decoded[gpio_channel_name] = readUInt32LE(bytes.slice(i, i + 4));
             decoded[gpio_channel_name + "_alarm"] = readAlarm(bytes[i + 4]);
             i += 5;
         }
         // COUNTER CHANGE ALARM (GPIO as PULSE COUNTER)
         else if (includes(gpio_change_alarm_chns, channel_id) && channel_type === 0xc8) {
-            var gpio_channel_name = "counter_" + (channel_id - gpio_change_alarm_chns[0] + 1);
+            var gpio_channel_name = "gpio_counter_" + (channel_id - gpio_change_alarm_chns[0] + 1);
             decoded[gpio_channel_name] = readUInt32LE(bytes.slice(i, i + 4));
             decoded[gpio_channel_name + "_change"] = readUInt32LE(bytes.slice(i + 4, i + 8));
             decoded[gpio_channel_name + "_alarm"] = readAlarm(bytes[i + 8]);
@@ -89,7 +92,6 @@ function milesightDeviceDecode(bytes) {
         // ADC (UC50x v3)
         else if (includes(adc_chns, channel_id) && channel_type === 0xe2) {
             var adc_channel_name = "adc_" + (channel_id - adc_chns[0] + 1);
-            var value = readFloat16LE(bytes.slice(i, i + 2));
             decoded[adc_channel_name] = readFloat16LE(bytes.slice(i, i + 2));
             decoded[adc_channel_name + "_min"] = readFloat16LE(bytes.slice(i + 2, i + 4));
             decoded[adc_channel_name + "_max"] = readFloat16LE(bytes.slice(i + 4, i + 6));
@@ -329,7 +331,7 @@ function milesightDeviceDecode(bytes) {
                         break;
                     case 4:
                     case 6:
-                        data[modbus_chn_name] = sign ? readInt32LE(bytes.slice(i, i + 4)) : readUInt32LE(bytes.slice(i, i + 4));  
+                        data[modbus_chn_name] = sign ? readInt32LE(bytes.slice(i, i + 4)) : readUInt32LE(bytes.slice(i, i + 4));
                         break;
                     case 5:
                     case 7:
@@ -350,9 +352,7 @@ function milesightDeviceDecode(bytes) {
     return decoded;
 }
 
-/* ******************************************
- * bytes to number
- ********************************************/
+/* eslint-disable */
 function numToBits(num, bit_count) {
     var bits = [];
     for (var i = 0; i < bit_count; i++) {
