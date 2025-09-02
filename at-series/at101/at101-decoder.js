@@ -89,7 +89,7 @@ function milesightDeviceDecode(bytes) {
             decoded.longitude = readInt32LE(bytes.slice(i + 4, i + 8)) / 1000000;
             var status = readUInt8(bytes[i + 8]);
             var status_value = status & 0x0f;
-            if (status_value === 0x03 || status_value === 0x04) {
+            if (status_value === 0x04 || status_value === 0x05) {
                 decoded.tilt_status = readTiltStatus(status_value);
             } else {
                 decoded.motion_status = readMotionStatus(status_value);
@@ -110,7 +110,7 @@ function milesightDeviceDecode(bytes) {
             wifi.rssi = readInt8(bytes[i + 7]);
             var status = readUInt8(bytes[i + 8]);
             var status_value = status & 0x0f;
-            if (status_value === 0x03 || status_value === 0x04) {
+            if (status_value === 0x04 || status_value === 0x05) {
                 wifi.tilt_status = readTiltStatus(status_value);
                 decoded.tilt_status = wifi.tilt_status;
             } else {
@@ -135,12 +135,12 @@ function milesightDeviceDecode(bytes) {
         }
         // ANGLE
         else if (channel_id === 0x08 && channel_type === 0x9b) {
-            decoded.datum_plane_angle_x = readInt8(bytes[i]);
-            decoded.datum_plane_angle_y = readInt8(bytes[i + 1]);
-            decoded.datum_plane_angle_z = readInt8(bytes[i + 2]);
-            decoded.current_angle_x = readInt8(bytes[i + 3]);
-            decoded.current_angle_y = readInt8(bytes[i + 4]);
-            decoded.current_angle_z = readInt8(bytes[i + 5]);
+            decoded.initial_angle_x = readInt8(bytes[i]);
+            decoded.initial_angle_y = readInt8(bytes[i + 1]);
+            decoded.initial_angle_z = readInt8(bytes[i + 2]);
+            decoded.inclination_angle_x = readInt8(bytes[i + 3]);
+            decoded.inclination_angle_y = readInt8(bytes[i + 4]);
+            decoded.inclination_angle_z = readInt8(bytes[i + 5]);
             i += 6;
         }
         // TEMPERATURE WITH ABNORMAL
@@ -151,14 +151,19 @@ function milesightDeviceDecode(bytes) {
         }
         // HISTORICAL DATA
         else if (channel_id === 0x20 && channel_type === 0xce) {
-            var location = {};
-            location.timestamp = readUInt32LE(bytes.slice(i, i + 4));
-            location.longitude = readInt32LE(bytes.slice(i + 4, i + 8)) / 1000000;
-            location.latitude = readInt32LE(bytes.slice(i + 8, i + 12)) / 1000000;
-            i += 12;
-
+            var data = {};
+            data.timestamp = readUInt32LE(bytes.slice(i, i + 4));
+            data.longitude = readInt32LE(bytes.slice(i + 4, i + 8)) / 1000000;
+            data.latitude = readInt32LE(bytes.slice(i + 8, i + 12)) / 1000000;
+            data.initial_angle_x = readInt8(bytes[i + 12]);
+            data.initial_angle_y = readInt8(bytes[i + 13]);
+            data.initial_angle_z = readInt8(bytes[i + 14]);
+            data.inclination_angle_x = readInt8(bytes[i + 15]);
+            data.inclination_angle_y = readInt8(bytes[i + 16]);
+            data.inclination_angle_z = readInt8(bytes[i + 17]);
+            i += 18;
             decoded.history = decoded.history || [];
-            decoded.history.push(location);
+            decoded.history.push(data);
         }
         // DOWNLINK RESPONSE
         else if (channel_id === 0xfe || channel_id === 0xff) {
@@ -295,14 +300,14 @@ function readProtocolVersion(bytes) {
 }
 
 function readHardwareVersion(bytes) {
-    var major = bytes[0] & 0xff;
+    var major = (bytes[0] & 0xff).toString(16);
     var minor = (bytes[1] & 0xff) >> 4;
     return "v" + major + "." + minor;
 }
 
 function readFirmwareVersion(bytes) {
-    var major = bytes[0] & 0xff;
-    var minor = bytes[1] & 0xff;
+    var major = (bytes[0] & 0xff).toString(16);
+    var minor = (bytes[1] & 0xff).toString(16);
     return "v" + major + "." + minor;
 }
 

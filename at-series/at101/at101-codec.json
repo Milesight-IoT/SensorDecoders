@@ -199,7 +199,7 @@
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS"
         },
-        
+
         {
             "id": "geofence_status",
             "name": "Geofence Status",
@@ -235,8 +235,8 @@
             "bacnet_unit_type": "UNITS_NO_UNITS"
         },
         {
-            "id": "datum_plane_angle_x",
-            "name": "Datum Plane Angle X",
+            "id": "initial_angle_x",
+            "name": "Initial Angle X",
             "value": "0",
             "unit": "°",
             "access_mode": "R",
@@ -247,8 +247,8 @@
             "bacnet_unit_type": "UNITS_DEGREES_ANGULAR"
         },
         {
-            "id": "datum_plane_angle_y",
-            "name": "Datum Plane Angle Y",
+            "id": "initial_angle_y",
+            "name": "Initial Angle Y",
             "value": "0",
             "unit": "°",
             "access_mode": "R",
@@ -259,8 +259,8 @@
             "bacnet_unit_type": "UNITS_DEGREES_ANGULAR"
         },
         {
-            "id": "datum_plane_angle_z",
-            "name": "Datum Plane Angle Z",
+            "id": "initial_angle_z",
+            "name": "Initial Angle Z",
             "value": "0",
             "unit": "°",
             "access_mode": "R",
@@ -271,8 +271,8 @@
             "bacnet_unit_type": "UNITS_DEGREES_ANGULAR"
         },
         {
-            "id": "current_angle_x",
-            "name": "Current Angle X",
+            "id": "inclination_angle_x",
+            "name": "Inclination Angle X",
             "value": "0",
             "unit": "°",
             "access_mode": "R",
@@ -283,8 +283,8 @@
             "bacnet_unit_type": "UNITS_DEGREES_ANGULAR"
         },
         {
-            "id": "current_angle_y",
-            "name": "Current Angle Y",
+            "id": "inclination_angle_y",
+            "name": "Inclination Angle Y",
             "value": "0",
             "unit": "°",
             "access_mode": "R",
@@ -295,8 +295,8 @@
             "bacnet_unit_type": "UNITS_DEGREES_ANGULAR"
         },
         {
-            "id": "current_angle_z",
-            "name": "Current Angle Z",
+            "id": "inclination_angle_z",
+            "name": "Inclination Angle Z",
             "value": "0",
             "unit": "°",
             "access_mode": "R",
