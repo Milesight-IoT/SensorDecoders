@@ -307,14 +307,14 @@ function readProtocolVersion(bytes) {
 }
 
 function readHardwareVersion(bytes) {
-    var major = bytes[0] & 0xff;
+    var major = (bytes[0] & 0xff).toString(16);
     var minor = (bytes[1] & 0xff) >> 4;
     return "v" + major + "." + minor;
 }
 
 function readFirmwareVersion(bytes) {
-    var major = bytes[0] & 0xff;
-    var minor = bytes[1] & 0xff;
+    var major = (bytes[0] & 0xff).toString(16);
+    var minor = (bytes[1] & 0xff).toString(16);
     return "v" + major + "." + minor;
 }
 
