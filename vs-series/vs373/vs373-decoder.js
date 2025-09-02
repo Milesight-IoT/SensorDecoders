@@ -86,10 +86,12 @@ function milesightDeviceDecode(bytes) {
         }
         // REGION OCCUPANCY (v1.0.1)
         else if (channel_id === 0x04 && channel_type === 0xf9) {
-            decoded.region_1_occupancy = readOccupancyStatus(bytes[i]);
-            decoded.region_2_occupancy = readOccupancyStatus(bytes[i + 1]);
-            decoded.region_3_occupancy = readOccupancyStatus(bytes[i + 2]);
-            decoded.region_4_occupancy = readOccupancyStatus(bytes[i + 3]);
+            // for the old firmware, the occupancy status is 0: occupied, 1: vacant
+            // for the new firmware, the occupancy status is 0: vacant, 1: occupied
+            decoded.region_1_occupancy = readOccupancyStatus(bytes[i] === 1 ? 0 : 1);
+            decoded.region_2_occupancy = readOccupancyStatus(bytes[i + 1] === 1 ? 0 : 1);
+            decoded.region_3_occupancy = readOccupancyStatus(bytes[i + 2] === 1 ? 0 : 1);
+            decoded.region_4_occupancy = readOccupancyStatus(bytes[i + 3] === 1 ? 0 : 1);
             i += 4;
         }
         // REGION TYPE (v1.0.2)
@@ -102,11 +104,13 @@ function milesightDeviceDecode(bytes) {
         }
         // REGION OCCUPY(v1.0.2)
         else if (channel_id === 0x0a && channel_type === 0xb3) {
-            for (var j = 0; j <= 5; j++) {
+            var region_count = readUInt8(bytes[i]);
+            var data = readUInt32LE(bytes.slice(i + 1, i + 5));
+            for (var j = 0; j < region_count; j++) {
                 var region_chn_name = "region_" + (j + 1) + "_occupancy";
-                decoded[region_chn_name] = readOccupancyStatus(bytes[i + j]);
+                decoded[region_chn_name] = readOccupancyStatus((data >>> j) & 0x01);
             }
-            i += 6;
+            i += 5;
         }
         // OUT OF BED (v1.0.1)
         else if (channel_id === 0x05 && channel_type === 0xfa) {
@@ -502,8 +506,8 @@ function readTargetStatus(status) {
 
 function readOccupancyStatus(status) {
     var occupancy_status_map = {
-        0: "occupied",
-        1: "vacant",
+        0: "vacant",
+        1: "occupied",
     };
     return getValue(occupancy_status_map, status);
 }
