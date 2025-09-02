@@ -71,11 +71,11 @@ function milesightDeviceEncode(payload) {
     if ("stop_transmit" in payload) {
         encoded = encoded.concat(stopTransmit(payload.stop_transmit));
     }
-    if ("gpio_out_1" in payload) {
-        encoded = encoded.concat(controlOutputStatus(1, payload.gpio_out_1));
+    if ("gpio_output_1" in payload) {
+        encoded = encoded.concat(controlOutputStatus(1, payload.gpio_output_1));
     }
-    if ("gpio_out_2" in payload) {
-        encoded = encoded.concat(controlOutputStatus(2, payload.gpio_out_2));
+    if ("gpio_output_2" in payload) {
+        encoded = encoded.concat(controlOutputStatus(2, payload.gpio_output_2));
     }
 
     return encoded;
@@ -359,10 +359,10 @@ function stopTransmit(stop_transmit) {
 
 /**
  * Control output status
- * @param {number} gpio_index values: (1: gpio_out_1, 2: gpio_out_2)
+ * @param {number} gpio_index values: (1: gpio_output_1, 2: gpio_output_2)
  * @param {number} status values: (0: off, 1: on)
- * @example { "gpio_out_1": 1 }
- * @example { "gpio_out_2": 0 }
+ * @example { "gpio_output_1": 1 }
+ * @example { "gpio_output_2": 0 }
  */
 function controlOutputStatus(gpio_index, status) {
     var gpio_chns = [1, 2];
@@ -372,7 +372,7 @@ function controlOutputStatus(gpio_index, status) {
     var on_off_map = { 0: "off", 1: "on" };
     var on_off_values = getValues(on_off_map);
     if (on_off_values.indexOf(status) === -1) {
-        throw new Error("gpio_out_" + gpio_index + "_control.status must be one of " + on_off_values.join(", "));
+        throw new Error("gpio_output_" + gpio_index + "_control.status must be one of " + on_off_values.join(", "));
     }
 
     var channel_ids = [0x03, 0x04];
