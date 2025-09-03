@@ -583,7 +583,7 @@
         {
             "id": "led_status",
             "name": "LED Indicator",
-            "value": 1,
+            "value": "1",
             "unit": "",
             "access_mode": "RW",
             "data_type": "BOOL",
@@ -599,7 +599,7 @@
         {
             "id": "buzzer_enable",
             "name": "Buzzer Enable",
-            "value": 0,
+            "value": "0",
             "unit": "",
             "access_mode": "RW",
             "data_type": "BOOL",
@@ -615,7 +615,7 @@
         {
             "id": "buzzer_sleep.item_1.enable",
             "name": "Hibernate Period 1 (Enable)",
-            "value": 0,
+            "value": "0",
             "unit": "",
             "access_mode": "RW",
             "data_type": "BOOL",
@@ -660,7 +660,7 @@
         {
             "id": "buzzer_sleep.item_2.enable",
             "name": "Hibernate Period 2",
-            "value": 0,
+            "value": "0",
             "unit": "",
             "access_mode": "RW",
             "data_type": "BOOL",
@@ -705,7 +705,7 @@
         {
             "id": "buzzer_button_stop_enable",
             "name": "Stop Buzzer",
-            "value": 0,
+            "value": "0",
             "unit": "",
             "access_mode": "RW",
             "data_type": "BOOL",
@@ -734,7 +734,7 @@
         {
             "id": "tamper_alarm_enable",
             "name": "Tampering Alarm Enable",
-            "value": 1,
+            "value": "1",
             "unit": "",
             "access_mode": "RW",
             "data_type": "BOOL",
@@ -815,7 +815,7 @@
         {
             "id": "pm1_0_alarm_settings.enable",
             "name": "PM1.0 Alarm Settings (Enable)",
-            "value": 0,
+            "value": "0",
             "unit": "",
             "access_mode": "RW",
             "data_type": "BOOL",
@@ -846,7 +846,7 @@
         {
             "id": "pm2_5_alarm_settings.enable",
             "name": "PM2.5 Threshold Alarm",
-            "value": 0,
+            "value": "0",
             "unit": "",
             "access_mode": "RW",
             "data_type": "BOOL",
@@ -877,7 +877,7 @@
         {
             "id": "pm10_alarm_settings.enable",
             "name": "PM10 Threshold Alarm",
-            "value": 0,
+            "value": "0",
             "unit": "",
             "access_mode": "RW",
             "data_type": "BOOL",
@@ -908,7 +908,7 @@
         {
             "id": "tvoc_alarm_settings.enable",
             "name": "TVOC Threshold Alarm",
-            "value": 0,
+            "value": "0",
             "unit": "",
             "access_mode": "RW",
             "data_type": "BOOL",
@@ -939,7 +939,7 @@
         {
             "id": "vaping_index_alarm_settings.enable",
             "name": "Vaping Index Alarm Settings (Enable)",
-            "value": 1,
+            "value": "1",
             "unit": "",
             "access_mode": "RW",
             "data_type": "BOOL",
@@ -983,7 +983,7 @@
         {
             "id": "alarm_deactivation_enable",
             "name": "Threshold Alarm Release",
-            "value": 1,
+            "value": "1",
             "unit": "",
             "access_mode": "RW",
             "data_type": "BOOL",
@@ -999,7 +999,7 @@
         {
             "id": "temperature_calibration_settings.enable",
             "name": "Temperature Calibration Settings (Enable)",
-            "value": 0,
+            "value": "0",
             "unit": "",
             "access_mode": "RW",
             "data_type": "BOOL",
@@ -1030,7 +1030,7 @@
         {
             "id": "humidity_calibration_settings.enable",
             "name": "Humidity Calibration Settings (Enable)",
-            "value": 0,
+            "value": "0",
             "unit": "",
             "access_mode": "RW",
             "data_type": "BOOL",
@@ -1061,7 +1061,7 @@
         {
             "id": "pm1_0_calibration_settings.enable",
             "name": "PM1.0 Calibration Settings (Enable)",
-            "value": 0,
+            "value": "0",
             "unit": "",
             "access_mode": "RW",
             "data_type": "BOOL",
@@ -1092,7 +1092,7 @@
         {
             "id": "pm2_5_calibration_settings.enable",
             "name": "PM2.5 Calibration",
-            "value": 0,
+            "value": "0",
             "unit": "",
             "access_mode": "RW",
             "data_type": "BOOL",
@@ -1123,7 +1123,7 @@
         {
             "id": "pm10_calibration_settings.enable",
             "name": "PM10 Calibration Settings (Enable)",
-            "value": 0,
+            "value": "0",
             "unit": "",
             "access_mode": "RW",
             "data_type": "BOOL",
@@ -1154,7 +1154,7 @@
         {
             "id": "tvoc_calibration_settings.enable",
             "name": "TVOC Calibration",
-            "value": 0,
+            "value": "0",
             "unit": "",
             "access_mode": "RW",
             "data_type": "BOOL",
@@ -1185,7 +1185,7 @@
         {
             "id": "vaping_index_calibration_settings.enable",
             "name": "Vaping Index Calibration Settings (Enable)",
-            "value": 0,
+            "value": "0",
             "unit": "",
             "access_mode": "RW",
             "data_type": "BOOL",
@@ -1267,7 +1267,7 @@
         {
             "id": "daylight_saving_time.daylight_saving_time_enable",
             "name": "Daylight Saving Time",
-            "value": 0,
+            "value": "0",
             "unit": "",
             "access_mode": "RW",
             "data_type": "BOOL",
