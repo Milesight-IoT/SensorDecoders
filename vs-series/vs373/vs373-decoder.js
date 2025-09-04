@@ -686,7 +686,7 @@ function readD2DActionType(type) {
 }
 
 function readConfirmAlarmType(type) {
-    var confirm_alarm_type_map = { 2: "dismiss", 1: "ignore" };
+    var confirm_alarm_type_map = { 2: "dismiss", 3: "ignore" };
     return getValue(confirm_alarm_type_map, type);
 }
 
