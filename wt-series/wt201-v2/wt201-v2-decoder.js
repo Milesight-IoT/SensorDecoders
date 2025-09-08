@@ -554,11 +554,22 @@ function handle_downlink_response_ext(code, channel_type, bytes, offset) {
             decoded.temperature_dead_band = readInt16LE(bytes.slice(offset, offset + 2)) / 10;
             offset += 2;
             break;
-        case 0x9d:
-            decoded.system_protection_config = {};
-            decoded.system_protection_config.mode = readSystemProtectionConfigMode(bytes[offset]);
-            decoded.system_protection_config.enable = readEnableStatus(bytes[offset + 1]);
-            decoded.system_protection_config.duration = readUInt16LE(bytes.slice(offset + 2, offset + 4));
+        case 0x9d: // odm: 7048
+            var mode_value = readUInt8(bytes[offset]);
+            // system protection config for heat pump protection
+            if (mode_value === 0x00) {
+                decoded.system_protection_config = decoded.system_protection_config || {};
+                decoded.system_protection_config.heat_pump_protection = {};
+                decoded.system_protection_config.heat_pump_protection.enable = readEnableStatus(bytes[offset + 1]);
+                decoded.system_protection_config.heat_pump_protection.duration = readUInt16LE(bytes.slice(offset + 2, offset + 4));
+            }
+            // system protection config for compressor delay
+            else if (mode_value === 0x01) {
+                decoded.system_protection_config = decoded.system_protection_config || {};
+                decoded.system_protection_config.compressor_delay = {};
+                decoded.system_protection_config.compressor_delay.enable = readEnableStatus(bytes[offset + 1]);
+                decoded.system_protection_config.compressor_delay.duration = readUInt16LE(bytes.slice(offset + 2, offset + 4));
+            }
             offset += 4;
             break;
         case 0x9e:
@@ -966,11 +977,6 @@ function readTemperatureBandConfigMode(value) {
     return getValue(mode_map, value);
 }
 
-function readSystemProtectionConfigMode(value) {
-    var mode_map = { 0: "heat_pump_protection", 1: "compressor_delay" };
-    return getValue(mode_map, value);
-}
-
 function readBandType(value) {
     var band_type_map = { 0: "heat_band_1", 1: "heat_band_2", 2: "cool_band_1", 3: "cool_band_2", 4: "fan_band" };
     return getValue(band_type_map, value);
@@ -1027,7 +1033,6 @@ function getValue(map, key) {
     return value;
 }
 
-// if (!Object.assign) {
 Object.defineProperty(Object, "assign", {
     enumerable: false,
     configurable: true,
@@ -1054,7 +1059,14 @@ Object.defineProperty(Object, "assign", {
                     // concat array
                     if (Array.isArray(to[nextKey]) && Array.isArray(nextSource[nextKey])) {
                         to[nextKey] = to[nextKey].concat(nextSource[nextKey]);
-                    } else {
+                    }
+                    // merge objects (NEW: deep merge for nested objects)
+                    else if (to[nextKey] && typeof to[nextKey] === 'object' && 
+                            nextSource[nextKey] && typeof nextSource[nextKey] === 'object' &&
+                            !Array.isArray(to[nextKey]) && !Array.isArray(nextSource[nextKey])) {
+                        to[nextKey] = Object.assign({}, to[nextKey], nextSource[nextKey]);
+                    }
+                    else {
                         to[nextKey] = nextSource[nextKey];
                     }
                 }
@@ -1063,4 +1075,3 @@ Object.defineProperty(Object, "assign", {
         return to;
     },
 });
-// }

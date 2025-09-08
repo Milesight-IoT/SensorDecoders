@@ -660,7 +660,7 @@ function setOutsideTemperature(temperature) {
     }
 
     var buffer = new Buffer(4);
-    buffer.writeUInt8(0x03);
+    buffer.writeUInt8(0x0c);
     buffer.writeInt16LE(temperature * 10);
     buffer.writeUInt8(0xff);
     return buffer.toBytes();
@@ -1633,35 +1633,59 @@ function setTemperatureControlForbiddenConfig(temperature_control_forbidden_conf
  * set system protection config
  * @odm 7048
  * @param {object} system_protection_config
- * @param {number} system_protection_config.mode values: (0: heat_pump_protection, 1: compressor_delay)
- * @param {number} system_protection_config.enable values: (0: disable, 1: enable)
- * @param {number} system_protection_config.duration unit: second, range: [120, 3600]
- * @example { "system_protection_config": { "mode": 0, "enable": 1, "duration": 0 } }
+ * @param {object} system_protection_config.heat_pump_protection
+ * @param {number} system_protection_config.heat_pump_protection.enable values: (0: disable, 1: enable)
+ * @param {number} system_protection_config.heat_pump_protection.duration unit: second, range: [120, 3600]
+ * @param {object} system_protection_config.compressor_delay
+ * @param {number} system_protection_config.compressor_delay.enable values: (0: disable, 1: enable)
+ * @param {number} system_protection_config.compressor_delay.duration unit: second, range: [120, 3600]
+ * @example { "system_protection_config": { "heat_pump_protection": { "enable": 1, "duration": 120 }, "compressor_delay": { "enable": 1, "duration": 120 } } }
  */
 function setSystemProtectionConfig(system_protection_config) {
-    var mode = system_protection_config.mode;
-    var enable = system_protection_config.enable;
-    var duration = system_protection_config.duration;
-
-    var mode_map = { 0: "heat_pump_protection", 1: "compressor_delay" };
-    var mode_values = getValues(mode_map);
-    if (mode_values.indexOf(mode) === -1) {
-        throw new Error("system_protection_config.mode must be one of " + mode_values.join(", "));
-    }
-
     var enable_map = { 0: "disable", 1: "enable" };
     var enable_values = getValues(enable_map);
-    if (enable_values.indexOf(enable) === -1) {
-        throw new Error("system_protection_config.enable must be one of " + enable_values.join(", "));
+
+    var data = [];
+    if ("heat_pump_protection" in system_protection_config) {
+        var enable = system_protection_config.heat_pump_protection.enable;
+        var duration = system_protection_config.heat_pump_protection.duration;
+
+        if (enable_values.indexOf(enable) === -1) {
+            throw new Error("system_protection_config.heat_pump_protection.enable must be one of " + enable_values.join(", "));
+        }
+        if (duration < 120 || duration > 3600) {
+            throw new Error("system_protection_config.heat_pump_protection.duration must be between 120 and 3600");
+        }
+
+        var buffer = new Buffer(6);
+        buffer.writeUInt8(0xf9);
+        buffer.writeUInt8(0x9d);
+        buffer.writeUInt8(0x00); // heat_pump_protection
+        buffer.writeUInt8(getValue(enable_map, enable));
+        buffer.writeUInt16LE(duration);
+        data = data.concat(buffer.toBytes());
+    }
+    if ("compressor_delay" in system_protection_config) {
+        var enable = system_protection_config.compressor_delay.enable;
+        var duration = system_protection_config.compressor_delay.duration;
+
+        if (enable_values.indexOf(enable) === -1) {
+            throw new Error("system_protection_config.compressor_delay.enable must be one of " + enable_values.join(", "));
+        }
+        if (duration < 120 || duration > 3600) {
+            throw new Error("system_protection_config.compressor_delay.duration must be between 120 and 3600");
+        }
+
+        var buffer = new Buffer(6);
+        buffer.writeUInt8(0xf9);
+        buffer.writeUInt8(0x9d);
+        buffer.writeUInt8(0x01); // compressor_delay
+        buffer.writeUInt8(getValue(enable_map, enable));
+        buffer.writeUInt16LE(duration);
+        data = data.concat(buffer.toBytes());
     }
 
-    var buffer = new Buffer(6);
-    buffer.writeUInt8(0xf9);
-    buffer.writeUInt8(0x9d);
-    buffer.writeUInt8(getValue(mode_map, mode));
-    buffer.writeUInt8(getValue(enable_map, enable));
-    buffer.writeUInt16LE(duration);
-    return buffer.toBytes();
+    return data;
 }
 
 /**
