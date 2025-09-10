@@ -68,15 +68,20 @@ function milesightDeviceEncode(payload) {
         encoded = encoded.concat(cmd_buffer);
         encoded = WITH_QUERY_CMD ? encoded.concat(setQueryCmd(cmd_buffer)) : encoded;
     }
-    if ("system_status" in payload) {
-        var cmd_buffer = setSystemStatus(payload.system_status);
-        encoded = encoded.concat(cmd_buffer);
-        encoded = WITH_QUERY_CMD ? encoded.concat(setQueryCmd(cmd_buffer)) : encoded;
-    }
-    if ("temperature_control_mode" in payload) {
-        var cmd_buffer = setTemperatureControlMode(payload.temperature_control_mode);
-        encoded = encoded.concat(cmd_buffer);
-        encoded = WITH_QUERY_CMD ? encoded.concat(setQueryCmd(cmd_buffer)) : encoded;
+    if ("system_status" in payload || "temperature_control_mode" in payload) {
+        if ("system_status" in payload && "temperature_control_mode" in payload) {
+            var cmd_buffer = setCombinedCommand(payload);
+            encoded = encoded.concat(cmd_buffer);
+            encoded = WITH_QUERY_CMD ? encoded.concat(setQueryCmd(cmd_buffer)) : encoded;
+        } else if ("system_status" in payload) {
+            var cmd_buffer = setSystemStatus(payload.system_status);
+            encoded = encoded.concat(cmd_buffer);
+            encoded = WITH_QUERY_CMD ? encoded.concat(setQueryCmd(cmd_buffer)) : encoded;
+        } else if ("temperature_control_mode" in payload) {
+            var cmd_buffer = setTemperatureControlMode(payload.temperature_control_mode);
+            encoded = encoded.concat(cmd_buffer);
+            encoded = WITH_QUERY_CMD ? encoded.concat(setQueryCmd(cmd_buffer)) : encoded;
+        }
     }
     if ("temperature_control_mode_in_plan_enable" in payload) {
         var cmd_buffer = setTemperatureControlModeInPlanEnable(payload.temperature_control_mode_in_plan_enable);
@@ -98,8 +103,8 @@ function milesightDeviceEncode(payload) {
         encoded = encoded.concat(cmd_buffer);
         encoded = WITH_QUERY_CMD ? encoded.concat(setQueryCmd(cmd_buffer)) : encoded;
     }
-    if ("transfer_interval" in payload) {
-        var cmd_buffer = setTransferInterval(payload.transfer_interval);
+    if ("communicate_interval" in payload) {
+        var cmd_buffer = setCommunicateInterval(payload.communicate_interval);
         encoded = encoded.concat(cmd_buffer);
         encoded = WITH_QUERY_CMD ? encoded.concat(setQueryCmd(cmd_buffer)) : encoded;
     }
@@ -258,8 +263,8 @@ function milesightDeviceEncode(payload) {
         var cmd_buffer = releaseFilterAlarm(payload.release_filter_alarm);
         encoded = encoded.concat(cmd_buffer);
     }
-    if ("insert_plan_id" in payload) {
-        var cmd_buffer = insertPlanId(payload.insert_plan_id);
+    if ("insert_plan" in payload) {
+        var cmd_buffer = insertPlan(payload.insert_plan);
         encoded = encoded.concat(cmd_buffer);
     }
     if ("trigger_ble_pair" in payload) {
@@ -501,6 +506,50 @@ function setTemperatureControlMode(temperature_control_mode) {
 }
 
 /**
+ * Set combined command
+ * @param {object} payload
+ * @param {number} payload.system_status values: (0: off, 1: on)
+ * @param {number} payload.temperature_control_mode values: (0: heat, 1: em_heat, 2: cool, 3: auto)
+ * @param {number} payload.target_temperature_1 unit: celsius, range: [5, 35]
+ * @param {number} payload.target_temperature_2 unit: celsius, range: [5, 35]
+ * @example { "system_status": 1, "temperature_control_mode": 3, "target_temperature_1": 20, "target_temperature_2": 20 }
+ */
+function setCombinedCommand(payload) {
+    var system_status = payload.system_status;
+
+    var status_map = { 0: "off", 1: "on" };
+    var status_values = getValues(status_map);
+    if (status_values.indexOf(system_status) === -1) {
+        throw new Error("system_status must be one of " + status_values.join(", "));
+    }
+
+    var buffer = new Buffer(7);
+    buffer.writeUInt8(0x59);
+    buffer.writeUInt8(getValue(status_map, system_status));
+    if ("temperature_control_mode" in payload) {
+        var mode_map = { 0: "heat", 1: "em_heat", 2: "cool", 3: "auto" };
+        var mode_values = getValues(mode_map);
+        if (mode_values.indexOf(payload.temperature_control_mode) === -1) {
+            throw new Error("temperature_control_mode must be one of " + mode_values.join(", "));
+        }
+        buffer.writeUInt8(getValue(mode_map, payload.temperature_control_mode));
+    } else {
+        buffer.writeUInt8(0xff);
+    }
+    if ("target_temperature_1" in payload) {
+        buffer.writeInt16LE(payload.target_temperature_1 * 100);
+    } else {
+        buffer.writeInt16LE(0xffff);
+    }
+    if ("target_temperature_2" in payload) {
+        buffer.writeInt16LE(payload.target_temperature_2 * 100);
+    } else {
+        buffer.writeInt16LE(0xffff);
+    }
+    return buffer.toBytes();
+}
+
+/**
  * Set temperature control mode in plan enable
  * @param {number} temperature_control_mode_in_plan_enable values: (0: disable, 1: enable)
  * @example { "temperature_control_mode_in_plan_enable": 0 }
@@ -691,23 +740,23 @@ function setTargetTemperatureRange(target_temperature_range) {
 }
 
 /**
- * Set transfer interval
- * @param {object} transfer_interval
- * @param {object} transfer_interval.mode values: (0: ble, 1: lora, 2: ble_and_lora, 3: power_bus_and_lora)
- * @param {number} transfer_interval.minutes_of_time unit: minute, range: [1, 30]
- * @example { "transfer_interval": { "mode": 0, "minutes_of_time": 10 } }
+ * Set communicate interval
+ * @param {object} communicate_interval
+ * @param {object} communicate_interval.mode values: (0: ble, 1: lora, 2: ble_and_lora, 3: power_bus_and_lora)
+ * @param {number} communicate_interval.minutes_of_time unit: minute, range: [1, 30]
+ * @example { "communicate_interval": { "mode": 0, "minutes_of_time": 10 } }
  */
-function setTransferInterval(transfer_interval) {
-    var mode = transfer_interval.mode;
-    var minutes_of_time = transfer_interval.minutes_of_time || 0;
+function setCommunicateInterval(communicate_interval) {
+    var mode = communicate_interval.mode;
+    var minutes_of_time = communicate_interval.minutes_of_time || 0;
 
     var mode_map = { 0: "ble", 1: "lora", 2: "ble_and_lora", 3: "power_bus_and_lora" };
     var mode_values = getValues(mode_map);
     if (mode_values.indexOf(mode) === -1) {
-        throw new Error("transfer_interval.mode must be one of " + mode_values.join(", "));
+        throw new Error("communicate_interval.mode must be one of " + mode_values.join(", "));
     }
     if (minutes_of_time < 1 || minutes_of_time > 30) {
-        throw new Error("transfer_interval.minutes_of_time must be between 1 and 30");
+        throw new Error("communicate_interval.minutes_of_time must be between 1 and 30");
     }
 
     var buffer = new Buffer(5);
@@ -766,15 +815,17 @@ function setButtonCustomFunction(button_custom_function) {
         buffer.writeUInt8(getValue(function_map, button_custom_function.button_2));
         data = data.concat(buffer.toBytes());
     }
+    var function_2_map = { 0: "system_status", 3: "plan_switch", 4: "status_report", 5: "release_filter_alarm", 6: "button_value", 7: "temperature_unit_switch" };
+    var function_2_values = getValues(function_2_map);
     if ("button_3" in button_custom_function) {
-        if (function_values.indexOf(button_custom_function.button_3) === -1) {
-            throw new Error("button_custom_function.button_3 must be one of " + function_values.join(", "));
+        if (function_2_values.indexOf(button_custom_function.button_3) === -1) {
+            throw new Error("button_custom_function.button_3 must be one of " + function_2_values.join(", "));
         }
 
         var buffer = new Buffer(3);
         buffer.writeUInt8(0x71);
         buffer.writeUInt8(0x03); // button 3s
-        buffer.writeUInt8(getValue(function_map, button_custom_function.button_3));
+        buffer.writeUInt8(getValue(function_2_map, button_custom_function.button_3));
         data = data.concat(buffer.toBytes());
     }
     return data;
@@ -998,15 +1049,16 @@ function setPlanEnable(plan_id, enable) {
  * @param {string} name_first range: [0, 10]
  */
 function setPlanNameFirst(plan_id, name_first) {
-    if (name_first.length > 10) {
-        throw new Error("plan_config._item.name_first must be less than 10 characters");
+    var name = encodeUtf8(name_first);
+    if (name.length > 12) {
+        throw new Error("plan_config._item.name_first must be less than 12 characters");
     }
 
-    var buffer = new Buffer(8);
+    var buffer = new Buffer(9);
     buffer.writeUInt8(0x7b);
     buffer.writeUInt8(plan_id);
     buffer.writeUInt8(0x01); // name1 sub-command
-    buffer.writeBytes(encodeUtf8(name_first));
+    buffer.writeBytes(name);
     return buffer.toBytes();
 }
 
@@ -1016,15 +1068,16 @@ function setPlanNameFirst(plan_id, name_first) {
  * @param {string} name_last range: [0, 10]
  */
 function setPlanNameLast(plan_id, name_last) {
-    if (name_last.length > 10) {
-        throw new Error("plan_config._item.name_last must be less than 10 characters");
+    var name = encodeUtf8(name_last);
+    if (name.length > 8) {
+        throw new Error("plan_config._item.name_last must be less than 8 characters");
     }
 
-    var buffer = new Buffer(8);
+    var buffer = new Buffer(7);
     buffer.writeUInt8(0x7b);
     buffer.writeUInt8(plan_id);
     buffer.writeUInt8(0x02); // name2 sub-command
-    buffer.writeBytes(encodeUtf8(name_last));
+    buffer.writeBytes(name);
     return buffer.toBytes();
 }
 
@@ -1412,7 +1465,7 @@ function setPirNightMode(pir_config) {
     if ("start_time" in pir_config.night_mode && "end_time" in pir_config.night_mode) {
         data = data.concat(setPirNightModeStartTimeAndEndTime(pir_config));
     }
-    if ("occupied_plan" in pir_config.night_mode && "vacant_plan" in pir_config.night_mode) {
+    if ("occupied_plan" in pir_config.night_mode) {
         data = data.concat(setPirNightModeOccupiedPlan(pir_config));
     }
     return data;
@@ -1508,11 +1561,11 @@ function setPirNightModeStartTimeAndEndTime(pir_config) {
         throw new Error("pir_config.night_mode.end_time must be between 0 and 1439");
     }
 
-    var buffer = new Buffer(5);
+    var buffer = new Buffer(6);
     buffer.writeUInt8(0x84);
     buffer.writeUInt8(0x04); // start and end time
-    buffer.writeUInt8(start_time);
-    buffer.writeUInt8(end_time);
+    buffer.writeUInt16LE(start_time);
+    buffer.writeUInt16LE(end_time);
     return buffer.toBytes();
 }
 
@@ -2003,19 +2056,19 @@ function releaseFilterAlarm(release_filter_alarm) {
 
 /**
  * Insert plan id
- * @param {number} insert_plan_id values: (0: plan_1, 1: plan_2, 2: plan_3, 3: plan_4, 4: plan_5, 5: plan_6, 6: plan_7, 7: plan_8, 8: plan_9, 9: plan_10, 10: plan_11, 11: plan_12, 12: plan_13, 13: plan_14, 14: plan_15, 15: plan_16)
- * @example { "insert_plan_id": 0 }
+ * @param {number} insert_plan values: (0: plan_1, 1: plan_2, 2: plan_3, 3: plan_4, 4: plan_5, 5: plan_6, 6: plan_7, 7: plan_8, 8: plan_9, 9: plan_10, 10: plan_11, 11: plan_12, 12: plan_13, 13: plan_14, 14: plan_15, 15: plan_16)
+ * @example { "insert_plan": 0 }
  */
-function insertPlanId(insert_plan_id) {
+function insertPlan(insert_plan) {
     var plan_id_map = { 0: "plan_1", 1: "plan_2", 2: "plan_3", 3: "plan_4", 4: "plan_5", 5: "plan_6", 6: "plan_7", 7: "plan_8", 8: "plan_9", 9: "plan_10", 10: "plan_11", 11: "plan_12", 12: "plan_13", 13: "plan_14", 14: "plan_15", 15: "plan_16" };
     var plan_id_values = getValues(plan_id_map);
-    if (plan_id_values.indexOf(insert_plan_id) === -1) {
-        throw new Error("insert_plan_id must be one of " + plan_id_values.join(", "));
+    if (plan_id_values.indexOf(insert_plan) === -1) {
+        throw new Error("insert_plan must be one of " + plan_id_values.join(", "));
     }
 
     var buffer = new Buffer(2);
     buffer.writeUInt8(0x5c);
-    buffer.writeUInt8(getValue(plan_id_map, insert_plan_id));
+    buffer.writeUInt8(getValue(plan_id_map, insert_plan));
     return buffer.toBytes();
 }
 
@@ -2173,38 +2226,39 @@ function reboot(reboot) {
 
 function setQueryCmd(bytes) {
     var name_map = {
-        60: { level: 1, name: "collection_interval" },
-        61: { level: 1, name: "reporting_interval" },
-        62: { level: 1, name: "intelligent_display_enable" },
-        63: { level: 1, name: "temperature_unit" },
-        64: { level: 1, name: "temperature_control_mode_support" },
-        65: { level: 1, name: "target_temperature_mode" },
-        66: { level: 1, name: "target_temperature_resolution" },
-        67: { level: 1, name: "system_status" },
-        68: { level: 2, name: "temperature_control_mode" },
-        69: { level: 2, name: "target_temperature_settings" },
+        "56": { level: 1, name: "combine_command" },
+        "60": { level: 1, name: "collection_interval" },
+        "61": { level: 1, name: "reporting_interval" },
+        "62": { level: 1, name: "intelligent_display_enable" },
+        "63": { level: 1, name: "temperature_unit" },
+        "64": { level: 1, name: "temperature_control_mode_support" },
+        "65": { level: 1, name: "target_temperature_mode" },
+        "66": { level: 1, name: "target_temperature_resolution" },
+        "67": { level: 1, name: "system_status" },
+        "68": { level: 2, name: "temperature_control_mode" },
+        "69": { level: 2, name: "target_temperature_settings" },
         "6a": { level: 1, name: "dead_band" },
         "6b": { level: 2, name: "target_temperature_range" },
-        71: { level: 2, name: "button_custom_function" },
-        72: { level: 1, name: "child_lock_settings" },
-        74: { level: 1, name: "fan_mode" },
-        75: { level: 1, name: "screen_display_settings" },
-        76: { level: 1, name: "temperature_calibration_settings" },
-        77: { level: 1, name: "humidity_calibration_settings" },
+        "71": { level: 2, name: "button_custom_function" },
+        "72": { level: 1, name: "child_lock_settings" },
+        "74": { level: 1, name: "fan_mode" },
+        "75": { level: 1, name: "screen_display_settings" },
+        "76": { level: 1, name: "temperature_calibration_settings" },
+        "77": { level: 1, name: "humidity_calibration_settings" },
         "7d": { level: 1, name: "data_sync_to_peer" },
         "7e": { level: 1, name: "data_sync_timeout" },
-        80: { level: 1, name: "unlock_combination_button_settings" },
-        81: { level: 1, name: "temporary_unlock_settings" },
-        82: { level: 2, name: "pir_config" },
-        85: { level: 1, name: "ble_enable" },
-        86: { level: 1, name: "external_temperature" },
-        87: { level: 1, name: "external_humidity" },
-        88: { level: 1, name: "fan_support_mode" },
+        "80": { level: 1, name: "unlock_combination_button_settings" },
+        "81": { level: 1, name: "temporary_unlock_settings" },
+        "82": { level: 2, name: "pir_config" },
+        "85": { level: 1, name: "ble_enable" },
+        "86": { level: 1, name: "external_temperature" },
+        "87": { level: 1, name: "external_humidity" },
+        "88": { level: 1, name: "fan_support_mode" },
         "8b": { level: 1, name: "ble_name" },
         "8c": { level: 1, name: "ble_pair_info" },
         "8d": { level: 1, name: "communication_mode" },
-        c6: { level: 1, name: "daylight_saving_time" },
-        c7: { level: 1, name: "time_zone" },
+        "c6": { level: 1, name: "daylight_saving_time" },
+        "c7": { level: 1, name: "time_zone" },
     };
 
     var cmd = readHexString(bytes.slice(0, 1));

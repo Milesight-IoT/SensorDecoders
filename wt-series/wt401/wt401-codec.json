@@ -219,8 +219,8 @@
             "bacnet_unit_type": "UNITS_NO_UNITS"
         },
         {
-            "id": "execution_plan_id",
-            "name": "Schedule",
+            "id": "execution_plan",
+            "name": "Execution Plan",
             "value": "0",
             "unit": "",
             "access_mode": "R",
@@ -834,7 +834,50 @@
             "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
             "reference": ["target_temperature_range.auto.min", "target_temperature_range.auto.max"]
         },
-
+        {
+            "id": "communicate_interval.unit",
+            "name": "Communicate Interval (Unit)",
+            "value": "",
+            "unit": "",
+            "access_mode": "RW",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [{ "value": 1, "name": "minute" }],
+            "bacnet_type": "multistate_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS"
+        },
+        {
+            "id": "communicate_interval.mode",
+            "name": "Communicate Interval (Mode)",
+            "value": "",
+            "unit": "",
+            "access_mode": "RW",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [
+                { "value": 0, "name": "ble" },
+                { "value": 1, "name": "lora" },
+                { "value": 2, "name": "ble_and_lora" },
+                { "value": 3, "name": "power_bus_and_lora" }
+            ],
+            "bacnet_type": "multistate_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS"
+        },
+        {
+            "id": "communicate_interval.minutes_of_time",
+            "name": "Communicate Interval (Minutes)",
+            "value": "30",
+            "unit": "min",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "UINT16",
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 72,
+            "bacnet_unit_type": "UNITS_MINUTES",
+            "reference": ["communicate_interval.unit", "communicate_interval.mode", "communicate_interval.minutes_of_time"]
+        },
         {
             "id": "button_custom_function.enable",
             "name": "Button Custom Function (Enable)",
@@ -902,8 +945,7 @@
             "data_type": "ENUM",
             "value_type": "UINT8",
             "values": [
-                { "value": 1, "name": "temperature_control_mode" },
-                { "value": 2, "name": "fan_mode" },
+                { "value": 0, "name": "system_status" },
                 { "value": 3, "name": "plan_switch" },
                 { "value": 4, "name": "status_report" },
                 { "value": 5, "name": "filter_alarm_clean" },
@@ -1677,11 +1719,11 @@
             "bacnet_type": "analog_value_object",
             "bacnet_unit_type_id": 72,
             "bacnet_unit_type": "UNITS_MINUTES",
-            "reference": ["pir_config.night_mode.start_time", "pir_config.night_mode.stop_time"]
+            "reference": ["pir_config.night_mode.start_time", "pir_config.night_mode.end_time"]
         },
         {
-            "id": "pir_config.night_mode.stop_time",
-            "name": "PIR Detection Settings (Night Mode (Stop Time))",
+            "id": "pir_config.night_mode.end_time",
+            "name": "PIR Detection Settings (Night Mode (End Time))",
             "value": "480",
             "unit": "min",
             "access_mode": "RW",
@@ -1690,7 +1732,7 @@
             "bacnet_type": "analog_value_object",
             "bacnet_unit_type_id": 72,
             "bacnet_unit_type": "UNITS_MINUTES",
-            "reference": ["pir_config.night_mode.start_time", "pir_config.night_mode.stop_time"]
+            "reference": ["pir_config.night_mode.start_time", "pir_config.night_mode.end_time"]
         },
         {
             "id": "pir_config.night_mode.occupied_plan",
@@ -1721,7 +1763,7 @@
             "bacnet_type": "multistate_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": ["pir_config.night_mode.enable", "pir_config.night_mode.start_time", "pir_config.night_mode.stop_time"]
+            "reference": ["pir_config.night_mode.enable", "pir_config.night_mode.start_time", "pir_config.night_mode.end_time"]
         },
         {
             "id": "ble_enable",
@@ -1922,6 +1964,51 @@
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": ["ble_pair_info.address_type", "ble_pair_info.address", "ble_pair_info.name"]
+        },
+        {
+            "id": "peer_ble_pair_info.address_type",
+            "name": "Peer Bluetooth Pair Info (Address Type)",
+            "value": "0",
+            "unit": "",
+            "access_mode": "RW",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [
+                { "value": 0, "name": "public" },
+                { "value": 1, "name": "random" }
+            ],
+            "bacnet_type": "multistate_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": ["peer_ble_pair_info.address_type", "peer_ble_pair_info.address", "peer_ble_pair_info.name"]
+        },
+        {
+            "id": "peer_ble_pair_info.address",
+            "name": "Peer Bluetooth Pair Info (Address)",
+            "value": "",
+            "unit": "",
+            "access_mode": "RW",
+            "data_type": "TEXT",
+            "value_type": "STRING",
+            "max_length": 12,
+            "bacnet_type": "character_string_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": ["peer_ble_pair_info.address_type", "peer_ble_pair_info.address", "peer_ble_pair_info.name"]
+        },
+        {
+            "id": "peer_ble_pair_info.name",
+            "name": "Peer Bluetooth Pair Info (Name)",
+            "value": "",
+            "unit": "",
+            "access_mode": "RW",
+            "data_type": "TEXT",
+            "value_type": "STRING",
+            "max_length": 32,
+            "bacnet_type": "character_string_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": ["peer_ble_pair_info.address_type", "peer_ble_pair_info.address", "peer_ble_pair_info.name"]
         },
         {
             "id": "communication_mode",
@@ -2303,8 +2390,8 @@
             "bacnet_unit_type": "UNITS_NO_UNITS"
         },
         {
-            "id": "insert_plan_id",
-            "name": "Insert Plan ID",
+            "id": "insert_plan",
+            "name": "Insert Plan",
             "value": "",
             "unit": "",
             "access_mode": "W",
@@ -2607,6 +2694,22 @@
         {
             "id": "remove_plan.plan_16",
             "name": "Remove Plan 16",
+            "value": "",
+            "unit": "",
+            "access_mode": "W",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                { "value": 0, "name": "no" },
+                { "value": 1, "name": "yes" }
+            ],
+            "bacnet_type": "binary_output_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS"
+        },
+        {
+            "id": "remove_plan.all",
+            "name": "Remove Plan (All)",
             "value": "",
             "unit": "",
             "access_mode": "W",

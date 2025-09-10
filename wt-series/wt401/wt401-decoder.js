@@ -101,7 +101,7 @@ function milesightDeviceDecode(bytes) {
                 i += 1;
                 break;
             case 0x05:
-                decoded.execution_plan_id = readPlanID(readUInt8(bytes[i]));
+                decoded.execution_plan = readPlan(readUInt8(bytes[i]));
                 i += 1;
                 break;
             case 0x06:
@@ -270,14 +270,14 @@ function milesightDeviceDecode(bytes) {
                 }
                 break;
             case 0x6c:
-                decoded.transfer_interval = {};
-                decoded.transfer_interval.mode = readReportingMode(bytes[i]);
-                decoded.transfer_interval.unit = readTimeUnitType(bytes[i + 1]);
+                decoded.communicate_interval = {};
+                decoded.communicate_interval.mode = readReportingMode(bytes[i]);
+                decoded.communicate_interval.unit = readTimeUnitType(bytes[i + 1]);
                 var time_unit = readUInt8(bytes[i + 1]);
                 if (time_unit === 0) {
-                    decoded.transfer_interval.seconds_of_time = readUInt16LE(bytes.slice(i + 2, i + 4));
+                    decoded.communicate_interval.seconds_of_time = readUInt16LE(bytes.slice(i + 2, i + 4));
                 } else if (time_unit === 1) {
-                    decoded.transfer_interval.minutes_of_time = readUInt16LE(bytes.slice(i + 2, i + 4));
+                    decoded.communicate_interval.minutes_of_time = readUInt16LE(bytes.slice(i + 2, i + 4));
                 }
                 i += 4;
                 break;
@@ -338,11 +338,11 @@ function milesightDeviceDecode(bytes) {
                     plan_config.enable = readEnableStatus(bytes[i + 2]);
                     i += 3;
                 } else if (data === 0x01) {
-                    plan_config.name_first = readString(bytes.slice(i + 2, i + 7));
-                    i += 7;
+                    plan_config.name_first = readString(bytes.slice(i + 2, i + 8));
+                    i += 8;
                 } else if (data === 0x02) {
-                    plan_config.name_last = readString(bytes.slice(i + 2, i + 7));
-                    i += 7;
+                    plan_config.name_last = readString(bytes.slice(i + 2, i + 6));
+                    i += 6;
                 } else if (data === 0x03) {
                     plan_config.temperature_control_mode = readTemperatureControlMode(bytes[i + 2]);
                     plan_config.heat_target_temperature = readInt16LE(bytes.slice(i + 3, i + 5)) / 100;
@@ -411,8 +411,8 @@ function milesightDeviceDecode(bytes) {
                     i += 2;
                 } else if (data === 0x02) {
                     decoded.pir_config.eco_mode = decoded.pir_config.eco_mode || {};
-                    decoded.pir_config.eco_mode.occupied_plan = readPlanID(readUInt8(bytes[i + 1]));
-                    decoded.pir_config.eco_mode.vacant_plan = readPlanID(readUInt8(bytes[i + 2]));
+                    decoded.pir_config.eco_mode.occupied_plan = readPlan(readUInt8(bytes[i + 1]));
+                    decoded.pir_config.eco_mode.vacant_plan = readPlan(readUInt8(bytes[i + 2]));
                     i += 3;
                 }
                 break;
@@ -439,7 +439,7 @@ function milesightDeviceDecode(bytes) {
                     i += 5;
                 } else if (data === 0x05) {
                     decoded.pir_config.night_mode = decoded.pir_config.night_mode || {};
-                    decoded.pir_config.night_mode.occupied_plan = readPlanID(readUInt8(bytes[i + 1]));
+                    decoded.pir_config.night_mode.occupied_plan = readPlan(readUInt8(bytes[i + 1]));
                     i += 2;
                 }
                 break;
@@ -566,7 +566,7 @@ function milesightDeviceDecode(bytes) {
                 i += 1;
                 break;
             case 0x5c:
-                decoded.insert_plan_id = readPlanID(readUInt8(bytes[i]));
+                decoded.insert_plan = readPlan(readUInt8(bytes[i]));
                 i += 1;
                 break;
             case 0x5e:
@@ -761,7 +761,7 @@ function readTargetTemperatureResolution(type) {
 }
 
 function readButtonFunction(type) {
-    var function_map = { 1: "temperature_control_mode", 2: "fan_mode", 3: "plan_switch", 4: "status_report", 5: "release_filter_alarm", 6: "button_value", 7: "temperature_unit_switch" };
+    var function_map = { 0: "system_status", 1: "temperature_control_mode", 2: "fan_mode", 3: "plan_switch", 4: "status_report", 5: "release_filter_alarm", 6: "button_value", 7: "temperature_unit_switch" };
     return getValue(function_map, type);
 }
 
@@ -790,7 +790,7 @@ function readPIRDetectionMode(mode) {
     return getValue(mode_map, mode);
 }
 
-function readPlanID(id) {
+function readPlan(id) {
     var id_map = { 0: "plan_1", 1: "plan_2", 2: "plan_3", 3: "plan_4", 4: "plan_5", 5: "plan_6", 6: "plan_7", 7: "plan_8", 8: "plan_9", 9: "plan_10", 10: "plan_11", 11: "plan_12", 12: "plan_13", 13: "plan_14", 14: "plan_15", 15: "plan_16", 255: "none" };
     return getValue(id_map, id);
 }
@@ -807,38 +807,39 @@ function readCmdResult(type) {
 
 function readCmdName(type) {
     var name_map = {
-        60: { level: 1, name: "collection_interval" },
-        61: { level: 1, name: "reporting_interval" },
-        62: { level: 1, name: "intelligent_display_enable" },
-        63: { level: 1, name: "temperature_unit" },
-        64: { level: 1, name: "temperature_control_mode_support" },
-        65: { level: 1, name: "target_temperature_mode" },
-        66: { level: 1, name: "target_temperature_resolution" },
-        67: { level: 1, name: "system_status" },
-        68: { level: 2, name: "temperature_control_mode" },
-        69: { level: 2, name: "target_temperature_settings" },
+        "56": { level: 1, name: "combine_command" },
+        "60": { level: 1, name: "collection_interval" },
+        "61": { level: 1, name: "reporting_interval" },
+        "62": { level: 1, name: "intelligent_display_enable" },
+        "63": { level: 1, name: "temperature_unit" },
+        "64": { level: 1, name: "temperature_control_mode_support" },
+        "65": { level: 1, name: "target_temperature_mode" },
+        "66": { level: 1, name: "target_temperature_resolution" },
+        "67": { level: 1, name: "system_status" },
+        "68": { level: 2, name: "temperature_control_mode" },
+        "69": { level: 2, name: "target_temperature_settings" },
         "6a": { level: 1, name: "dead_band" },
         "6b": { level: 2, name: "target_temperature_range" },
-        71: { level: 2, name: "button_custom_function" },
-        72: { level: 1, name: "child_lock_settings" },
-        74: { level: 1, name: "fan_mode" },
-        75: { level: 1, name: "screen_display_settings" },
-        76: { level: 1, name: "temperature_calibration_settings" },
-        77: { level: 1, name: "humidity_calibration_settings" },
+        "71": { level: 2, name: "button_custom_function" },
+        "72": { level: 1, name: "child_lock_settings" },
+        "74": { level: 1, name: "fan_mode" },
+        "75": { level: 1, name: "screen_display_settings" },
+        "76": { level: 1, name: "temperature_calibration_settings" },
+        "77": { level: 1, name: "humidity_calibration_settings" },
         "7d": { level: 1, name: "data_sync_to_peer" },
         "7e": { level: 1, name: "data_sync_timeout" },
-        80: { level: 1, name: "unlock_combination_button_settings" },
-        81: { level: 1, name: "temporary_unlock_settings" },
-        82: { level: 2, name: "pir_config" },
-        85: { level: 1, name: "ble_enable" },
-        86: { level: 1, name: "external_temperature" },
-        87: { level: 1, name: "external_humidity" },
-        88: { level: 1, name: "fan_support_mode" },
+        "80": { level: 1, name: "unlock_combination_button_settings" },
+        "81": { level: 1, name: "temporary_unlock_settings" },
+        "82": { level: 2, name: "pir_config" },
+        "85": { level: 1, name: "ble_enable" },
+        "86": { level: 1, name: "external_temperature" },
+        "87": { level: 1, name: "external_humidity" },
+        "88": { level: 1, name: "fan_support_mode" },
         "8b": { level: 1, name: "ble_name" },
         "8c": { level: 1, name: "ble_pair_info" },
         "8d": { level: 1, name: "communication_mode" },
-        c6: { level: 1, name: "daylight_saving_time" },
-        c7: { level: 1, name: "time_zone" },
+        "c6": { level: 1, name: "daylight_saving_time" },
+        "c7": { level: 1, name: "time_zone" },  
     };
 
     var data = name_map[type];
@@ -946,5 +947,3 @@ function getValue(map, key) {
     if (!value) value = "unknown";
     return value;
 }
-
-milesightDeviceDecode([0x61, 0x02, 0x01, 0x01, 0x01]);
