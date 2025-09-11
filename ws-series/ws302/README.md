@@ -20,7 +20,7 @@ For more detailed information, please visit [Milesight Official Website](https:/
 
 ### Attribute
 
-|    CHANNEL    |  ID  | TYPE | LENGTH | DESCRIPTION                                                                                       |
+|    CHANNEL    |  ID  | TYPE | LENGTH | DESCRIPTION                                                                                      |
 | :-----------: | :--: | :--: | :----: | ------------------------------------------------------------------------------------------------ |
 |     IPSO      | 0xFF | 0x01 |   1    | ipso_version(1B)                                                                                 |
 |   Hardware    | 0xFF | 0x09 |   2    | hardware_version(2B)<br/>hardware_version, e.g. 0110 -> v1.1                                     |
@@ -33,10 +33,10 @@ For more detailed information, please visit [Milesight Official Website](https:/
 
 ### Telemetry
 
-|   CHANNEL   |  ID  | TYPE | LENGTH | DESCRIPTION                            |
-| :---------: | :--: | :--: | :----: | -------------------------------------- |
-|   Battery   | 0x01 | 0x75 |   1    | battery(1B)<br/>battery, unit: %       |
-| Sound Level | 0x05 | 0x5B |   7    | wight(1B) + l(2B) + leq(2B) + lmax(2B) |
+|   CHANNEL   |  ID  | TYPE | LENGTH | DESCRIPTION                             |
+| :---------: | :--: | :--: | :----: | --------------------------------------- |
+|   Battery   | 0x01 | 0x75 |   1    | battery(1B)<br/>battery, unit: %        |
+| Sound Level | 0x05 | 0x5B |   7    | weight(1B) + l(2B) + leq(2B) + lmax(2B) |
 
 ## Example
 
