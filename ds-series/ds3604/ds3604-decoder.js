@@ -286,9 +286,8 @@ function handle_downlink_response(channel_type, bytes, offset) {
             offset += 1;
             break;
         case 0x89:
-            // skip 1 byte
-            decoded.block_visible = readBlockVisibleStatus(bytes.slice(offset + 1, offset + 3));
-            offset += 3;
+            decoded.block_visible = readBlockVisibleStatus(bytes.slice(offset + 1, offset + 5));
+            offset += 5;
             break;
         case 0x90:
             decoded.switch_template_button_enable = readEnableStatus(bytes[offset]);
@@ -369,19 +368,24 @@ function readButtonVisibleStatus(status) {
 }
 
 function readBlockVisibleStatus(bytes) {
-    var masked = readUInt8(bytes[0]);
-    var data = readUInt8(bytes[1]);
+    var masked = readUInt16LE(bytes.slice(0, 2));
+    var data = readUInt16LE(bytes.slice(2, 4));
 
     var block_visible = {};
     var block_offset = { text_1: 0, text_2: 1, text_3: 2, text_4: 3, text_5: 4, text_6: 5, text_7: 6, text_8: 7, text_9: 8, text_10: 9, qrcode: 10, image_1: 11, image_2: 12, battery_status: 13, connect_status: 14 };
 
     for (var key in block_offset) {
-        if ((masked << block_offset[key]) & 0x01) {
-            block_visible[key] = readEnableStatus(data & (1 << block_offset[key]));
+        if ((masked >>> block_offset[key]) & 0x01) {
+            block_visible[key] = readBlockVisible((data >>> block_offset[key]) & 0x01);
         }
     }
 
     return block_visible;
+}
+
+function readBlockVisible(status) {
+    var block_visible_map = { 0: "hide", 1: "show" };
+    return getValue(block_visible_map, status);
 }
 
 function readMulticastConfig(data) {

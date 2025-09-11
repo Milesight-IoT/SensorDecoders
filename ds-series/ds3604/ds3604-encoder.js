@@ -380,12 +380,12 @@ function setBlockVisible(block_visible) {
         }
     }
 
-    var buffer = new Buffer(5);
+    var buffer = new Buffer(7);
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0x89);
     buffer.writeUInt8(0x02);
-    buffer.writeUInt8(masked);
-    buffer.writeUInt8(data);
+    buffer.writeUInt16LE(masked);
+    buffer.writeUInt16LE(data);
     return buffer.toBytes();
 }
 
@@ -542,26 +542,26 @@ function setTemplateConfig(template_id, template_config) {
         ctl |= text_block_offset[key];
 
         if (key in text_block_offset) {
-            data = data.concat([0xFB, 0x03, ctl, 25]);
+            data = data.concat([0xfb, 0x03, ctl, 25]);
             data = data.concat(encodedBasicBlock(template_id, text_block_offset[key], key, template_config[key]));
             data = data.concat(encodeFont(template_config[key].font_type, template_config[key].font_size, template_config[key].wrap, template_config[key].font_style));
         }
         if (key in qrcode_offset) {
-            data = data.concat([0xFB, 0x03, ctl, 22]);
+            data = data.concat([0xfb, 0x03, ctl, 22]);
             data = data.concat(encodedBasicBlock(template_id, qrcode_offset[key], key, template_config[key]));
             data = data.concat([0x00]); // default qrcode codec
         }
         if (key in image_block_offset) {
-            data = data.concat([0xFB, 0x03, ctl, 22]);
+            data = data.concat([0xfb, 0x03, ctl, 22]);
             data = data.concat(encodedBasicBlock(template_id, image_block_offset[key], key, template_config[key]));
             data = data.concat([0x00]); // default image codec (lzss)
         }
         if (key in battery_status_offset) {
-            data = data.concat([0xFB, 0x03, ctl, 21]);
+            data = data.concat([0xfb, 0x03, ctl, 21]);
             data = data.concat(encodedBasicBlock(template_id, battery_status_offset[key], key, template_config[key]));
         }
         if (key in connect_status_offset) {
-            data = data.concat([0xFB, 0x03, ctl, 21]);
+            data = data.concat([0xfb, 0x03, ctl, 21]);
             data = data.concat(encodedBasicBlock(template_id, connect_status_offset[key], key, template_config[key]));
         }
     }
