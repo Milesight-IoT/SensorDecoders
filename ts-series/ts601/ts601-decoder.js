@@ -365,7 +365,7 @@ function milesightDeviceDecode(bytes) {
             case 0x7c:
                 decoded.humidity_calibration_settings = {};
                 decoded.humidity_calibration_settings.enable = readEnableStatus(bytes[i]);
-                decoded.humidity_calibration_settings.calibration_value = readUInt16LE(bytes.slice(i + 1, i + 3)) / 10;
+                decoded.humidity_calibration_settings.calibration_value = readInt16LE(bytes.slice(i + 1, i + 3)) / 10;
                 i += 3;
                 break;
             case 0x7d:
@@ -484,6 +484,28 @@ function milesightDeviceDecode(bytes) {
                 break;
             case 0xbf:
                 decoded.reset = readYesNoStatus(1);
+                break;
+
+            // control frame
+            case 0xef:
+                var cmd_data = readUInt8(bytes[i]);
+                var cmd_result = (cmd_data >>> 4) & 0x0f;
+                var cmd_length = cmd_data & 0x0f;
+                var cmd_id = readHexString(bytes.slice(i + 1, i + 1 + cmd_length));
+                var cmd_header = readHexString(bytes.slice(i + 1, i + 2));
+                i += 1 + cmd_length;
+
+                var response = {};
+                response.result = readCmdResult(cmd_result);
+                response.cmd_id = cmd_id;
+                response.cmd_name = readCmdName(cmd_header);
+
+                decoded.request_result = decoded.request_result || [];
+                decoded.request_result.push(response);
+                break;
+            case 0xfe:
+                decoded.frame = readUInt8(bytes[i]);
+                i += 1;
                 break;
             default:
                 unknown_command = 1;
@@ -759,9 +781,8 @@ function readFreeFallLevel(level) {
         3: "free_fall_level_312",
         4: "free_fall_level_344",
         5: "free_fall_level_406",
-        6: "free_fall_level_406",
-        7: "free_fall_level_469",
-        8: "free_fall_level_500",
+        6: "free_fall_level_469",
+        7: "free_fall_level_500",
     };
     return getValue(level_map, level);
 }
@@ -774,6 +795,49 @@ function readZeroCalibrateMode(mode) {
 function readInitialSurfaceMode(mode) {
     var mode_map = { 0: "reset_to_horizontal_plan", 1: "set_current_surface_as_horizontal_plan" };
     return getValue(mode_map, mode);
+}
+
+function readCmdResult(type) {
+    var result_map = { 0: "success", 1: "parsing error", 2: "order error", 3: "password error", 4: "read params error", 5: "write params error", 6: "read execution error", 7: "write execution error", 8: "read apply error", 9: "write apply error", 10: "associative error" };
+    return getValue(result_map, type);
+}
+
+function readCmdName(type) {
+    var name_map = {
+        60: { level: 1, name: "collection_interval" },
+        61: { level: 1, name: "recollection_counts" },
+        62: { level: 1, name: "reporting_interval" },
+        63: { level: 1, name: "alarm_counts" },
+        64: { level: 1, name: "light_collection_interval" },
+        65: { level: 1, name: "temperature_unit" },
+        70: { level: 1, name: "airplane_enable" },
+        71: { level: 1, name: "base_station_position_enable" },
+        72: { level: 1, name: "base_station_position_auth_token" },
+        73: { level: 2, name: "airplane_mode_time_period_settings" },
+        74: { level: 1, name: "temperature_humidity_display_mode" },
+        75: { level: 1, name: "alarm_release_enable" },
+        76: { level: 1, name: "child_lock_settings" },
+        77: { level: 1, name: "temperature_alarm_settings" },
+        78: { level: 1, name: "temperature_mutation_alarm_settings" },
+        79: { level: 1, name: "humidity_alarm_settings" },
+        "7a": { level: 1, name: "humidity_mutation_alarm_settings" },
+        "7b": { level: 1, name: "temperature_calibration_settings" },
+        "7c": { level: 1, name: "humidity_calibration_settings" },
+        "7d": { level: 1, name: "light_alarm_settings" },
+        "7e": { level: 1, name: "light_tolerance" },
+        "7f": { level: 1, name: "tilt_alarm_settings" },
+        80: { level: 1, name: "fall_down_alarm_settings.enable" },
+        81: { level: 1, name: "fall_down_alarm_settings.free_fall_level" },
+        82: { level: 1, name: "probe_id_retransmit_count" },
+        c4: { level: 1, name: "auto_provisioning_enable" },
+        c5: { level: 2, name: "data_storage_settings" },
+        c6: { level: 1, name: "daylight_saving_time" },
+        c7: { level: 1, name: "time_zone" },
+    };
+
+    var data = name_map[type];
+    if (data === undefined) return "unknown";
+    return data.name;
 }
 
 /* eslint-disable */

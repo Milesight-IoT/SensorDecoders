@@ -29,6 +29,9 @@ function Encoder(obj, port) {
 function milesightDeviceEncode(payload) {
     var encoded = [];
 
+    if ("frame" in payload) {
+        encoded = encoded.concat(setFrame(payload.frame));
+    }
     if ("time_zone" in payload) {
         encoded = encoded.concat(setTimeZone(payload.time_zone));
     }
@@ -151,6 +154,18 @@ function milesightDeviceEncode(payload) {
     }
 
     return encoded;
+}
+
+/**
+ * Set frame
+ * @param {number} frame values: (0: normal, 1: debug)
+ * @example { "frame": 0 }
+ */
+function setFrame(frame) {
+    var buffer = new Buffer(2);
+    buffer.writeUInt8(0xfe);
+    buffer.writeUInt8(frame);
+    return buffer.toBytes();
 }
 
 /**
@@ -520,19 +535,63 @@ function setLocationToken(base_station_position_auth_token) {
 /**
  * airplane enable time settings
  * @param {object} airplane_mode_time_period_settings
- * @param {number} airplane_mode_time_period_settings.start_time
- * @param {number} airplane_mode_time_period_settings.end_time
+ * @param {object} airplane_mode_time_period_settings.start_time
+ * @param {number} airplane_mode_time_period_settings.start_time.year range: [0, 99]
+ * @param {number} airplane_mode_time_period_settings.start_time.month range: [1, 12]
+ * @param {number} airplane_mode_time_period_settings.start_time.day range: [1, 31]
+ * @param {number} airplane_mode_time_period_settings.start_time.hour range: [0, 23]
+ * @param {number} airplane_mode_time_period_settings.start_time.minute range: [0, 59]
+ * @param {number} airplane_mode_time_period_settings.start_time.second range: [0, 59]
+ * @param {object} airplane_mode_time_period_settings.end_time
+ * @param {number} airplane_mode_time_period_settings.end_time.year range: [0, 99]
+ * @param {number} airplane_mode_time_period_settings.end_time.month range: [1, 12]
+ * @param {number} airplane_mode_time_period_settings.end_time.day range: [1, 31]
+ * @param {number} airplane_mode_time_period_settings.end_time.hour range: [0, 23]
+ * @param {number} airplane_mode_time_period_settings.end_time.minute range: [0, 59]
+ * @param {number} airplane_mode_time_period_settings.end_time.second range: [0, 59]
  * @example { "airplane_mode_time_period_settings": { "start_time": 1620000000, "end_time": 1620000000 } }
  */
 function setAirplaneEnableTimeSettings(airplane_mode_time_period_settings) {
-    var start_time = airplane_mode_time_period_settings.start_time;
-    var end_time = airplane_mode_time_period_settings.end_time;
+    var data = [];
 
-    var buffer = new Buffer(9);
-    buffer.writeUInt8(0x73);
-    buffer.writeUInt32LE(start_time);
-    buffer.writeUInt32LE(end_time);
-    return buffer.toBytes();
+    if ("start_time" in airplane_mode_time_period_settings) {
+        var year = airplane_mode_time_period_settings.start_time.year;
+        var month = airplane_mode_time_period_settings.start_time.month;
+        var day = airplane_mode_time_period_settings.start_time.day;
+        var hour = airplane_mode_time_period_settings.start_time.hour;
+        var minute = airplane_mode_time_period_settings.start_time.minute;
+        var second = airplane_mode_time_period_settings.start_time.second;
+
+        var buffer = new Buffer(8);
+        buffer.writeUInt8(0x73);
+        buffer.writeUInt8(0); // start_time
+        buffer.writeUInt8(year);
+        buffer.writeUInt8(month);
+        buffer.writeUInt8(day);
+        buffer.writeUInt8(hour);
+        buffer.writeUInt8(minute);
+        buffer.writeUInt8(second);
+        data = data.concat(buffer.toBytes());
+    }
+    if ("end_time" in airplane_mode_time_period_settings) {
+        var year = airplane_mode_time_period_settings.end_time.year;
+        var month = airplane_mode_time_period_settings.end_time.month;
+        var day = airplane_mode_time_period_settings.end_time.day;
+        var hour = airplane_mode_time_period_settings.end_time.hour;
+        var minute = airplane_mode_time_period_settings.end_time.minute;
+        var second = airplane_mode_time_period_settings.end_time.second;
+        var buffer = new Buffer(8);
+        buffer.writeUInt8(0x73);
+        buffer.writeUInt8(1); // end_time
+        buffer.writeUInt8(year);
+        buffer.writeUInt8(month);
+        buffer.writeUInt8(day);
+        buffer.writeUInt8(hour);
+        buffer.writeUInt8(minute);
+        buffer.writeUInt8(second);
+        data = data.concat(buffer.toBytes());
+    }
+    return data;
 }
 
 /**
@@ -617,8 +676,8 @@ function setChildLockSettings(child_lock_settings) {
 function setTemperatureAlarmSettings(temperature_alarm_settings) {
     var enable = temperature_alarm_settings.enable;
     var condition = temperature_alarm_settings.condition;
-    var threshold_min = temperature_alarm_settings.threshold_min || 0;
-    var threshold_max = temperature_alarm_settings.threshold_max || 0;
+    var threshold_min = temperature_alarm_settings.threshold_min;
+    var threshold_max = temperature_alarm_settings.threshold_max;
 
     var enable_map = { 0: "disable", 1: "enable" };
     var enable_values = getValues(enable_map);
@@ -727,14 +786,14 @@ function setHumidityMutationAlarmSettings(humidity_mutation_alarm_settings) {
  * temperature calibration settings
  * @param {object} temperature_calibration_settings
  * @param {number} temperature_calibration_settings.enable values: (0: disable, 1: enable)
- * @param {number} temperature_calibration_settings.calibration_value unit: celsius, range: [-200, 200]
+ * @param {number} temperature_calibration_settings.calibration_value unit: celsius, range: [-1000, 1000]
  * @example { "temperature_calibration_settings": { "enable": 1, "calibration_value": 25 } }
  */
 function setTemperatureCalibrationSettings(temperature_calibration_settings) {
     var enable = temperature_calibration_settings.enable;
     var calibration_value = temperature_calibration_settings.calibration_value;
-    if (calibration_value < -200 || calibration_value > 200) {
-        throw new Error("temperature_calibration_settings.calibration_value must be between -200 and 200");
+    if (calibration_value < -1000 || calibration_value > 1000) {
+        throw new Error("temperature_calibration_settings.calibration_value must be between -1000 and 1000");
     }
 
     var enable_map = { 0: "disable", 1: "enable" };
@@ -754,7 +813,7 @@ function setTemperatureCalibrationSettings(temperature_calibration_settings) {
  * humidity calibration settings
  * @param {object} humidity_calibration_settings
  * @param {number} humidity_calibration_settings.enable values: (0: disable, 1: enable)
- * @param {number} humidity_calibration_settings.calibration_value unit: %, range: [0, 100]
+ * @param {number} humidity_calibration_settings.calibration_value unit: %, range: [-100, 100]
  * @example { "humidity_calibration_settings": { "enable": 1, "calibration_value": 25 } }
  */
 function setHumidityCalibrationSettings(humidity_calibration_settings) {
@@ -766,11 +825,14 @@ function setHumidityCalibrationSettings(humidity_calibration_settings) {
     if (enable_values.indexOf(enable) === -1) {
         throw new Error("humidity_calibration_settings.enable must be one of " + enable_values.join(", "));
     }
+    if (calibration_value < -100 || calibration_value > 100) {
+        throw new Error("humidity_calibration_settings.calibration_value must be between -100 and 100");
+    }
 
     var buffer = new Buffer(4);
     buffer.writeUInt8(0x7c);
     buffer.writeUInt8(getValue(enable_map, enable));
-    buffer.writeUInt16LE(calibration_value * 10);
+    buffer.writeInt16LE(calibration_value * 10);
     return buffer.toBytes();
 }
 
@@ -812,14 +874,13 @@ function setLightAlarmSettings(light_alarm_settings) {
  * @example { "light_tolerance": { "tolerance": 10 } }
  */
 function setLightTolerance(light_tolerance) {
-    var tolerance = light_tolerance.tolerance;
-    if (tolerance < 0 || tolerance > 100) {
-        throw new Error("light_tolerance.tolerance must be between 0 and 100");
+    if (light_tolerance < 0 || light_tolerance > 100) {
+        throw new Error("light_tolerance must be between 0 and 100");
     }
 
     var buffer = new Buffer(2);
     buffer.writeUInt8(0x7e);
-    buffer.writeUInt8(tolerance);
+    buffer.writeUInt8(light_tolerance);
     return buffer.toBytes();
 }
 
@@ -829,14 +890,14 @@ function setLightTolerance(light_tolerance) {
  * @param {number} tilt_alarm_settings.enable values: (0: disable, 1: enable)
  * @param {number} tilt_alarm_settings.condition values: (0: disable, 2: above)
  * @param {number} tilt_alarm_settings.threshold_max unit: degree, range: [1, 90], default: 10
- * @param {number} tilt_alarm_settings.continue_time unit: second, range: [1, 60], default: 2s
- * @example { "tilt_alarm_settings": { "enable": 1, "condition": 2, "threshold_max": 25, "continue_time": 10 } }
+ * @param {number} tilt_alarm_settings.duration unit: second, range: [1, 60], default: 2s
+ * @example { "tilt_alarm_settings": { "enable": 1, "condition": 2, "threshold_max": 25, "duration": 10 } }
  */
 function setTiltAlarmSettings(tilt_alarm_settings) {
     var enable = tilt_alarm_settings.enable;
     var condition = tilt_alarm_settings.condition;
     var threshold_max = tilt_alarm_settings.threshold_max;
-    var continue_time = tilt_alarm_settings.continue_time;
+    var duration = tilt_alarm_settings.duration;
 
     var enable_map = { 0: "disable", 1: "enable" };
     var enable_values = getValues(enable_map);
@@ -854,15 +915,15 @@ function setTiltAlarmSettings(tilt_alarm_settings) {
     buffer.writeUInt8(getValue(enable_map, enable));
     buffer.writeUInt8(getValue(condition_map, condition));
     buffer.writeUInt8(threshold_max);
-    buffer.writeUInt8(continue_time);
+    buffer.writeUInt8(duration);
     return buffer.toBytes();
 }
 
 /**
- * fall down alarm settings
+ * free fall alarm settings
  * @param {object} fall_down_alarm_settings
  * @param {number} fall_down_alarm_settings.enable values: (0: disable, 1: enable)
- * @param {number} fall_down_alarm_settings.free_fall_level
+ * @param {number} fall_down_alarm_settings.free_fall_level values: (0: free_fall_level_156, 1: free_fall_level_219, 2: free_fall_level_250, 3: free_fall_level_312, 4: free_fall_level_344, 5: free_fall_level_406, 6: free_fall_level_469, 7: free_fall_level_500)
  * @param {number} fall_down_alarm_settings.continue_level range: [1, 32]
  * @example { "fall_down_alarm_settings": { "enable": 1, "free_fall_level": 1, "continue_level": 10 } }
  */
@@ -879,6 +940,12 @@ function setFallDownAlarmSettings(fall_down_alarm_settings) {
     return data;
 }
 
+/**
+ * free fall alarm enable
+ * @param {object} fall_down_alarm_settings
+ * @param {number} fall_down_alarm_settings.enable values: (0: disable, 1: enable)
+ * @example { "fall_down_alarm_settings": { "enable": 1 } }
+ */
 function setFreeFallAlarmEnable(fall_down_alarm_settings) {
     var enable = fall_down_alarm_settings.enable;
 
@@ -894,11 +961,18 @@ function setFreeFallAlarmEnable(fall_down_alarm_settings) {
     return buffer.toBytes();
 }
 
+/**
+ * free fall alarm level
+ * @param {object} fall_down_alarm_settings
+ * @param {number} fall_down_alarm_settings.free_fall_level values: (0: free_fall_level_156, 1: free_fall_level_219, 2: free_fall_level_250, 3: free_fall_level_312, 4: free_fall_level_344, 5: free_fall_level_406, 6: free_fall_level_469, 7: free_fall_level_500)
+ * @param {number} fall_down_alarm_settings.continue_level range: [1, 32]
+ * @example { "fall_down_alarm_settings": { "free_fall_level": 1, "continue_level": 10 } }
+ */
 function setFreeFallAlarmLevel(fall_down_alarm_settings) {
     var free_fall_level = fall_down_alarm_settings.free_fall_level;
     var continue_level = fall_down_alarm_settings.continue_level;
 
-    var level_map = { 0: "free_fall_level_156", 1: "free_fall_level_219", 2: "free_fall_level_250", 3: "free_fall_level_312", 4: "free_fall_level_344", 5: "free_fall_level_406", 6: "free_fall_level_406", 7: "free_fall_level_469", 8: "free_fall_level_500" };
+    var level_map = { 0: "free_fall_level_156", 1: "free_fall_level_219", 2: "free_fall_level_250", 3: "free_fall_level_312", 4: "free_fall_level_344", 5: "free_fall_level_406", 6: "free_fall_level_469", 7: "free_fall_level_500" };
     var level_values = getValues(level_map);
     if (level_values.indexOf(free_fall_level) === -1) {
         throw new Error("fall_down_alarm_settings.free_fall_level must be one of " + level_values.join(", "));
