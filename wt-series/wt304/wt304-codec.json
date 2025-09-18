@@ -2768,8 +2768,8 @@
             "bacnet_unit_type": "UNITS_NO_UNITS"
         },
         {
-            "id": "clear_plan.all",
-            "name": "Clear Plan (all)",
+            "id": "clear_plan.reset",
+            "name": "Clear Plan (reset to default)",
             "value": "",
             "unit": "",
             "access_mode": "W",

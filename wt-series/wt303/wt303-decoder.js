@@ -643,7 +643,7 @@ function milesightDeviceDecode(bytes) {
             case 0x5f:
                 decoded.clear_plan = decoded.clear_plan || {};
                 var plan_data = readUInt8(bytes[i]);
-                var plan_offset = { 0: "plan_1", 1: "plan_2", 2: "plan_3", 3: "plan_4", 4: "plan_5", 5: "plan_6", 6: "plan_7", 7: "plan_8", 8: "plan_9", 9: "plan_10", 10: "plan_11", 11: "plan_12", 12: "plan_13", 13: "plan_14", 14: "plan_15", 15: "plan_16", 255: "all" };
+                var plan_offset = { 0: "plan_1", 1: "plan_2", 2: "plan_3", 3: "plan_4", 4: "plan_5", 5: "plan_6", 6: "plan_7", 7: "plan_8", 8: "plan_9", 9: "plan_10", 10: "plan_11", 11: "plan_12", 12: "plan_13", 13: "plan_14", 14: "plan_15", 15: "plan_16", 255: "reset" };
                 decoded.clear_plan[plan_offset[plan_data]] = readYesNoStatus(1);
                 i += 1;
                 break;

@@ -2313,11 +2313,11 @@ function setPlan(insert_plan_id) {
  * @param {number} clear_plan.plan_14 values: (0: no, 1: yes)
  * @param {number} clear_plan.plan_15 values: (0: no, 1: yes)
  * @param {number} clear_plan.plan_16 values: (0: no, 1: yes)
- * @param {number} clear_plan.all values: (0: no, 1: yes)
+ * @param {number} clear_plan.reset values: (0: no, 1: yes)
  * @example { "clear_plan": { "plan_1": 1, "plan_2": 1, "plan_3": 1, "plan_4": 1, "plan_5": 1, "plan_6": 1, "plan_7": 1, "plan_8": 1, "plan_9": 1, "plan_10": 1 } }
  */
 function clearPlan(clear_plan) {
-    var plan_index_map = { plan_1: 0, plan_2: 1, plan_3: 2, plan_4: 3, plan_5: 4, plan_6: 5, plan_7: 6, plan_8: 7, plan_9: 8, plan_10: 9, plan_11: 10, plan_12: 11, plan_13: 12, plan_14: 13, plan_15: 14, plan_16: 15, all: 255 };
+    var plan_index_map = { plan_1: 0, plan_2: 1, plan_3: 2, plan_4: 3, plan_5: 4, plan_6: 5, plan_7: 6, plan_8: 7, plan_9: 8, plan_10: 9, plan_11: 10, plan_12: 11, plan_13: 12, plan_14: 13, plan_15: 14, plan_16: 15, reset: 255 };
     var yes_no_map = { 0: "no", 1: "yes" };
     var yes_no_values = getValues(yes_no_map);
 
