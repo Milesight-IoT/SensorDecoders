@@ -153,14 +153,14 @@
             "name": "Switch 1",
             "value": "1",
             "unit": "",
-            "access_mode": "R",
+            "access_mode": "RW",
             "data_type": "BOOL",
             "value_type": "UINT8",
             "values": [
                 { "value": 0, "name": "off" },
                 { "value": 1, "name": "on" }
             ],
-            "bacnet_type": "binary_input_object",
+            "bacnet_type": "binary_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS"
         },
@@ -169,14 +169,14 @@
             "name": "Switch 2",
             "value": "0",
             "unit": "",
-            "access_mode": "R",
+            "access_mode": "RW",
             "data_type": "BOOL",
             "value_type": "UINT8",
             "values": [
                 { "value": 0, "name": "off" },
                 { "value": 1, "name": "on" }
             ],
-            "bacnet_type": "binary_input_object",
+            "bacnet_type": "binary_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS"
         },
@@ -185,14 +185,14 @@
             "name": "Switch 3",
             "value": "0",
             "unit": "",
-            "access_mode": "R",
+            "access_mode": "RW",
             "data_type": "BOOL",
             "value_type": "UINT8",
             "values": [
                 { "value": 0, "name": "off" },
                 { "value": 1, "name": "on" }
             ],
-            "bacnet_type": "binary_input_object",
+            "bacnet_type": "binary_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS"
         },
@@ -201,14 +201,14 @@
             "name": "Switch 4",
             "value": "0",
             "unit": "",
-            "access_mode": "R",
+            "access_mode": "RW",
             "data_type": "BOOL",
             "value_type": "UINT8",
             "values": [
                 { "value": 0, "name": "off" },
                 { "value": 1, "name": "on" }
             ],
-            "bacnet_type": "binary_input_object",
+            "bacnet_type": "binary_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS"
         },
@@ -217,14 +217,14 @@
             "name": "Switch 5",
             "value": "0",
             "unit": "",
-            "access_mode": "R",
+            "access_mode": "RW",
             "data_type": "BOOL",
             "value_type": "UINT8",
             "values": [
                 { "value": 0, "name": "off" },
                 { "value": 1, "name": "on" }
             ],
-            "bacnet_type": "binary_input_object",
+            "bacnet_type": "binary_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS"
         },
@@ -233,14 +233,14 @@
             "name": "Switch 6",
             "value": "0",
             "unit": "",
-            "access_mode": "R",
+            "access_mode": "RW",
             "data_type": "BOOL",
             "value_type": "UINT8",
             "values": [
                 { "value": 0, "name": "off" },
                 { "value": 1, "name": "on" }
             ],
-            "bacnet_type": "binary_input_object",
+            "bacnet_type": "binary_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS"
         },
@@ -249,14 +249,14 @@
             "name": "Switch 7",
             "value": "0",
             "unit": "",
-            "access_mode": "R",
+            "access_mode": "RW",
             "data_type": "BOOL",
             "value_type": "UINT8",
             "values": [
                 { "value": 0, "name": "off" },
                 { "value": 1, "name": "on" }
             ],
-            "bacnet_type": "binary_input_object",
+            "bacnet_type": "binary_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS"
         },
@@ -265,14 +265,14 @@
             "name": "Switch 8",
             "value": "0",
             "unit": "",
-            "access_mode": "R",
+            "access_mode": "RW",
             "data_type": "BOOL",
             "value_type": "UINT8",
             "values": [
                 { "value": 0, "name": "off" },
                 { "value": 1, "name": "on" }
             ],
-            "bacnet_type": "binary_input_object",
+            "bacnet_type": "binary_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS"
         },
@@ -488,13 +488,9 @@
             "value": "",
             "unit": "",
             "access_mode": "W",
-            "data_type": "BOOL",
+            "data_type": "NUMBER",
             "value_type": "UINT8",
-            "values": [
-                { "value": 0, "name": "no" },
-                { "value": 1, "name": "yes" }
-            ],
-            "bacnet_type": "binary_output_object",
+            "bacnet_type": "analog_output_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS"
         },
