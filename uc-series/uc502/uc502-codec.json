@@ -718,22 +718,6 @@
             "bacnet_unit_type": "UNITS_NO_UNITS"
         },
         {
-            "id": "clear_history",
-            "name": "Clear History",
-            "value": "",
-            "unit": "",
-            "access_mode": "W",
-            "data_type": "BOOL",
-            "value_type": "UINT8",
-            "values": [
-                { "value": 0, "name": "no" },
-                { "value": 1, "name": "yes" }
-            ],
-            "bacnet_type": "binary_output_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS"
-        },
-        {
             "id": "history_enable",
             "name": "History Enable",
             "value": "",

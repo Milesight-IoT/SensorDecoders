@@ -625,19 +625,6 @@
             "reference": ["temperature_alarm_config.condition", "temperature_alarm_config.threshold_min", "temperature_alarm_config.threshold_max"]
         },
         {
-            "id": "temperature_alarm_config.threshold_min",
-            "name": "Temperature Alarm Config (Threshold Min)",
-            "value": "",
-            "unit": "°C",
-            "access_mode": "RW",
-            "data_type": "NUMBER",
-            "value_type": "INT16",
-            "bacnet_type": "analog_value_object",
-            "bacnet_unit_type_id": 62,
-            "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
-            "reference": ["temperature_alarm_config.condition", "temperature_alarm_config.threshold_min", "temperature_alarm_config.threshold_max"]
-        },
-        {
             "id": "hibernate_config.enable",
             "name": "Hibernate Config (Enable)",
             "value": "",

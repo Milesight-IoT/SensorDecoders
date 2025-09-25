@@ -200,22 +200,6 @@
         {
             "id": "sensor_enable.co2",
             "name": "Sensor Enable (CO2)",
-            "value": "1",
-            "unit": "",
-            "access_mode": "R",
-            "data_type": "BOOL",
-            "value_type": "UINT8",
-            "values": [
-                { "value": 0, "name": "disable" },
-                { "value": 1, "name": "enable" }
-            ],
-            "bacnet_type": "binary_input_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS"
-        },
-        {
-            "id": "sensor_enable.co2",
-            "name": "Sensor Enable (CO2)",
             "value": "",
             "unit": "",
             "access_mode": "R",
