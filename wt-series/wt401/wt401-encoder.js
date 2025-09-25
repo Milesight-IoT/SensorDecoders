@@ -3,7 +3,7 @@
  *
  * Copyright 2025 Milesight IoT
  *
- * @product WT303
+ * @product WT401
  */
 var RAW_VALUE = 0x00;
 var WITH_QUERY_CMD = 0x00;
@@ -68,20 +68,15 @@ function milesightDeviceEncode(payload) {
         encoded = encoded.concat(cmd_buffer);
         encoded = WITH_QUERY_CMD ? encoded.concat(setQueryCmd(cmd_buffer)) : encoded;
     }
-    if ("system_status" in payload || "temperature_control_mode" in payload) {
-        if ("system_status" in payload && "temperature_control_mode" in payload) {
-            var cmd_buffer = setCombinedCommand(payload);
-            encoded = encoded.concat(cmd_buffer);
-            encoded = WITH_QUERY_CMD ? encoded.concat(setQueryCmd(cmd_buffer)) : encoded;
-        } else if ("system_status" in payload) {
-            var cmd_buffer = setSystemStatus(payload.system_status);
-            encoded = encoded.concat(cmd_buffer);
-            encoded = WITH_QUERY_CMD ? encoded.concat(setQueryCmd(cmd_buffer)) : encoded;
-        } else if ("temperature_control_mode" in payload) {
-            var cmd_buffer = setTemperatureControlMode(payload.temperature_control_mode);
-            encoded = encoded.concat(cmd_buffer);
-            encoded = WITH_QUERY_CMD ? encoded.concat(setQueryCmd(cmd_buffer)) : encoded;
-        }
+    if ("system_status" in payload) {
+        var cmd_buffer = setSystemStatus(payload.system_status);
+        encoded = encoded.concat(cmd_buffer);
+        encoded = WITH_QUERY_CMD ? encoded.concat(setQueryCmd(cmd_buffer)) : encoded;
+    }
+    if ("temperature_control_mode" in payload) {
+        var cmd_buffer = setTemperatureControlMode(payload.temperature_control_mode);
+        encoded = encoded.concat(cmd_buffer);
+        encoded = WITH_QUERY_CMD ? encoded.concat(setQueryCmd(cmd_buffer)) : encoded;
     }
     if ("temperature_control_mode_in_plan_enable" in payload) {
         var cmd_buffer = setTemperatureControlModeInPlanEnable(payload.temperature_control_mode_in_plan_enable);
@@ -502,50 +497,6 @@ function setTemperatureControlMode(temperature_control_mode) {
     buffer.writeUInt8(0x68);
     buffer.writeUInt8(0x00);
     buffer.writeUInt8(getValue(mode_map, temperature_control_mode));
-    return buffer.toBytes();
-}
-
-/**
- * Set combined command
- * @param {object} payload
- * @param {number} payload.system_status values: (0: off, 1: on)
- * @param {number} payload.temperature_control_mode values: (0: heat, 1: em_heat, 2: cool, 3: auto)
- * @param {number} payload.target_temperature_1 unit: celsius, range: [5, 35]
- * @param {number} payload.target_temperature_2 unit: celsius, range: [5, 35]
- * @example { "system_status": 1, "temperature_control_mode": 3, "target_temperature_1": 20, "target_temperature_2": 20 }
- */
-function setCombinedCommand(payload) {
-    var system_status = payload.system_status;
-
-    var status_map = { 0: "off", 1: "on" };
-    var status_values = getValues(status_map);
-    if (status_values.indexOf(system_status) === -1) {
-        throw new Error("system_status must be one of " + status_values.join(", "));
-    }
-
-    var buffer = new Buffer(7);
-    buffer.writeUInt8(0x59);
-    buffer.writeUInt8(getValue(status_map, system_status));
-    if ("temperature_control_mode" in payload) {
-        var mode_map = { 0: "heat", 1: "em_heat", 2: "cool", 3: "auto" };
-        var mode_values = getValues(mode_map);
-        if (mode_values.indexOf(payload.temperature_control_mode) === -1) {
-            throw new Error("temperature_control_mode must be one of " + mode_values.join(", "));
-        }
-        buffer.writeUInt8(getValue(mode_map, payload.temperature_control_mode));
-    } else {
-        buffer.writeUInt8(0xff);
-    }
-    if ("target_temperature_1" in payload) {
-        buffer.writeInt16LE(payload.target_temperature_1 * 100);
-    } else {
-        buffer.writeInt16LE(0xffff);
-    }
-    if ("target_temperature_2" in payload) {
-        buffer.writeInt16LE(payload.target_temperature_2 * 100);
-    } else {
-        buffer.writeInt16LE(0xffff);
-    }
     return buffer.toBytes();
 }
 
@@ -2302,6 +2253,7 @@ function Buffer(size) {
 }
 
 Buffer.prototype._write = function (value, byteLength, isLittleEndian) {
+    value = Math.round(value);
     var offset = 0;
     for (var index = 0; index < byteLength; index++) {
         offset = isLittleEndian ? index << 3 : (byteLength - 1 - index) << 3;

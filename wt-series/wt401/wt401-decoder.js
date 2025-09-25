@@ -633,30 +633,30 @@ function milesightDeviceDecode(bytes) {
 }
 
 function readProtocolVersion(bytes) {
-    var major = bytes[0] & 0xff;
-    var minor = bytes[1] & 0xff;
+    var major = (bytes[0] & 0xff).toString(16);
+    var minor = (bytes[1] & 0xff).toString(16);
     return "v" + major + "." + minor;
 }
 
 function readHardwareVersion(bytes) {
-    var major = bytes[0] & 0xff;
-    var minor = bytes[1] & 0xff;
+    var major = (bytes[0] & 0xff).toString(16);
+    var minor = (bytes[1] & 0xff).toString(16);
     return "v" + major + "." + minor;
 }
 
 function readFirmwareVersion(bytes) {
-    var major = bytes[0] & 0xff;
-    var minor = bytes[1] & 0xff;
-    var release = bytes[2] & 0xff;
-    var alpha = bytes[3] & 0xff;
-    var unit_test = bytes[4] & 0xff;
-    var test = bytes[5] & 0xff;
+    var major = (bytes[0] & 0xff).toString(16);
+    var minor = (bytes[1] & 0xff).toString(16);
+    var release = (bytes[2] & 0xff).toString(16);
+    var alpha = (bytes[3] & 0xff).toString(16);
+    var unit_test = (bytes[4] & 0xff).toString(16);
+    var test = (bytes[5] & 0xff).toString(16);
 
     var version = "v" + major + "." + minor;
-    if (release !== 0) version += "-r" + release;
-    if (alpha !== 0) version += "-a" + alpha;
-    if (unit_test !== 0) version += "-u" + unit_test;
-    if (test !== 0) version += "-t" + test;
+    if (release !== "0") version += "-r" + release;
+    if (alpha !== "0") version += "-a" + alpha;
+    if (unit_test !== "0") version += "-u" + unit_test;
+    if (test !== "0") version += "-t" + test;
     return version;
 }
 
@@ -807,39 +807,39 @@ function readCmdResult(type) {
 
 function readCmdName(type) {
     var name_map = {
-        "56": { level: 1, name: "combine_command" },
-        "60": { level: 1, name: "collection_interval" },
-        "61": { level: 1, name: "reporting_interval" },
-        "62": { level: 1, name: "intelligent_display_enable" },
-        "63": { level: 1, name: "temperature_unit" },
-        "64": { level: 1, name: "temperature_control_mode_support" },
-        "65": { level: 1, name: "target_temperature_mode" },
-        "66": { level: 1, name: "target_temperature_resolution" },
-        "67": { level: 1, name: "system_status" },
-        "68": { level: 2, name: "temperature_control_mode" },
-        "69": { level: 2, name: "target_temperature_settings" },
+        56: { level: 1, name: "combine_command" },
+        60: { level: 1, name: "collection_interval" },
+        61: { level: 1, name: "reporting_interval" },
+        62: { level: 1, name: "intelligent_display_enable" },
+        63: { level: 1, name: "temperature_unit" },
+        64: { level: 1, name: "temperature_control_mode_support" },
+        65: { level: 1, name: "target_temperature_mode" },
+        66: { level: 1, name: "target_temperature_resolution" },
+        67: { level: 1, name: "system_status" },
+        68: { level: 2, name: "temperature_control_mode" },
+        69: { level: 2, name: "target_temperature_settings" },
         "6a": { level: 1, name: "dead_band" },
         "6b": { level: 2, name: "target_temperature_range" },
-        "71": { level: 2, name: "button_custom_function" },
-        "72": { level: 1, name: "child_lock_settings" },
-        "74": { level: 1, name: "fan_mode" },
-        "75": { level: 1, name: "screen_display_settings" },
-        "76": { level: 1, name: "temperature_calibration_settings" },
-        "77": { level: 1, name: "humidity_calibration_settings" },
+        71: { level: 2, name: "button_custom_function" },
+        72: { level: 1, name: "child_lock_settings" },
+        74: { level: 1, name: "fan_mode" },
+        75: { level: 1, name: "screen_display_settings" },
+        76: { level: 1, name: "temperature_calibration_settings" },
+        77: { level: 1, name: "humidity_calibration_settings" },
         "7d": { level: 1, name: "data_sync_to_peer" },
         "7e": { level: 1, name: "data_sync_timeout" },
-        "80": { level: 1, name: "unlock_combination_button_settings" },
-        "81": { level: 1, name: "temporary_unlock_settings" },
-        "82": { level: 2, name: "pir_config" },
-        "85": { level: 1, name: "ble_enable" },
-        "86": { level: 1, name: "external_temperature" },
-        "87": { level: 1, name: "external_humidity" },
-        "88": { level: 1, name: "fan_support_mode" },
+        80: { level: 1, name: "unlock_combination_button_settings" },
+        81: { level: 1, name: "temporary_unlock_settings" },
+        82: { level: 2, name: "pir_config" },
+        85: { level: 1, name: "ble_enable" },
+        86: { level: 1, name: "external_temperature" },
+        87: { level: 1, name: "external_humidity" },
+        88: { level: 1, name: "fan_support_mode" },
         "8b": { level: 1, name: "ble_name" },
         "8c": { level: 1, name: "ble_pair_info" },
         "8d": { level: 1, name: "communication_mode" },
-        "c6": { level: 1, name: "daylight_saving_time" },
-        "c7": { level: 1, name: "time_zone" },  
+        c6: { level: 1, name: "daylight_saving_time" },
+        c7: { level: 1, name: "time_zone" },
     };
 
     var data = name_map[type];
