@@ -1,0 +1,2047 @@
+{
+  "version": "1.0.0",
+  "object": [
+    {
+      "id": "active_power",
+      "name": "Electric Power",
+      "value": "",
+      "unit": "W",
+      "access_mode": "R",
+      "data_type": "NUMBER",
+      "value_type": "UINT8",
+      "bacnet_type": "analog_input_object",
+      "bacnet_unit_type_id": 47,
+      "bacnet_unit_type": "UNITS_WATTS"
+    },
+    {
+      "id": "power_consumption",
+      "name": "Power Consumption",
+      "value": "",
+      "unit": "Wh",
+      "access_mode": "R",
+      "data_type": "NUMBER",
+      "value_type": "UINT8",
+      "bacnet_type": "analog_input_object",
+      "bacnet_unit_type_id": 18,
+      "bacnet_unit_type": "UNITS_WATT_HOURS"
+    },
+    {
+      "id": "socket_read.status_1",
+      "name": "Switch 1",
+      "value": "",
+      "unit": "",
+      "access_mode": "R",
+      "data_type": "BOOL",
+      "value_type": "UINT8",
+      "values": [
+        {
+          "name": "off",
+          "value": 0
+        },
+        {
+          "name": "on",
+          "value": 1
+        }
+      ],
+      "bacnet_type": "binary_input_object",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS",
+      "reference": [
+        "socket_read.status_2",
+        "socket_read.status_3"
+      ]
+    },
+    {
+      "id": "socket_read.status_2",
+      "name": "Switch 2",
+      "value": "",
+      "unit": "",
+      "access_mode": "R",
+      "data_type": "BOOL",
+      "value_type": "UINT8",
+      "values": [
+        {
+          "name": "off",
+          "value": 0
+        },
+        {
+          "name": "on",
+          "value": 1
+        }
+      ],
+      "bacnet_type": "binary_input_object",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS",
+      "reference": [
+        "socket_read.status_1",
+        "socket_read.status_3"
+      ]
+    },
+    {
+      "id": "socket_read.status_3",
+      "name": "Switch 3",
+      "value": "",
+      "unit": "",
+      "access_mode": "R",
+      "data_type": "BOOL",
+      "value_type": "UINT8",
+      "values": [
+        {
+          "name": "off",
+          "value": 0
+        },
+        {
+          "name": "on",
+          "value": 1
+        }
+      ],
+      "bacnet_type": "binary_input_object",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS",
+      "reference": [
+        "socket_read.status_1",
+        "socket_read.status_2"
+      ]
+    },
+    {
+      "id": "reporting_interval",
+      "name": "Reporting Interval",
+      "value": "1200",
+      "unit": "s",
+      "access_mode": "W",
+      "data_type": "NUMBER",
+      "value_type": "UINT16",
+      "range": [
+        60,
+        64800
+      ],
+      "bacnet_type": "analog_output_object",
+      "bacnet_unit_type_id": 73,
+      "bacnet_unit_type": "UNITS_SECONDS"
+    },
+    {
+      "id": "power_consumption_enable",
+      "name": "Power Consumption Enable",
+      "value": 1,
+      "unit": "",
+      "access_mode": "W",
+      "data_type": "BOOL",
+      "value_type": "UINT8",
+      "values": [
+        {
+          "name": "disable",
+          "value": 0
+        },
+        {
+          "name": "enable",
+          "value": 1
+        }
+      ],
+      "bacnet_type": "binary_output_object",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS"
+    },
+    {
+      "id": "led_mode",
+      "name": "LED Indicator",
+      "value": "1",
+      "unit": "",
+      "access_mode": "W",
+      "data_type": "ENUM",
+      "value_type": "UINT8",
+      "values": [
+        {
+          "name": "disable",
+          "value": 0
+        },
+        {
+          "name": "Enable (relay closed indicator off)",
+          "value": 1
+        },
+        {
+          "name": "Enable (relay closed indicator on)",
+          "value": 2
+        }
+      ],
+      "bacnet_type": "multistate_value_object",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS"
+    },
+    {
+      "id": "button_reset_config",
+      "name": "Reset Lock Enable",
+      "value": 0,
+      "unit": "",
+      "access_mode": "W",
+      "data_type": "BOOL",
+      "value_type": "UINT8",
+      "values": [
+        {
+          "name": "disable",
+          "value": 0
+        },
+        {
+          "name": "enable",
+          "value": 1
+        }
+      ],
+      "bacnet_type": "binary_output_object",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS"
+    },
+    {
+      "id": "button_lock_config.enable",
+      "name": "Switch Lock Enable",
+      "value": 0,
+      "unit": "",
+      "access_mode": "W",
+      "data_type": "BOOL",
+      "value_type": "UINT8",
+      "values": [
+        {
+          "name": "disable",
+          "value": 0
+        },
+        {
+          "name": "enable",
+          "value": 1
+        }
+      ],
+      "bacnet_type": "binary_output_object",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS",
+      "reference": []
+    },
+    {
+      "id": "anti_flash_mode.enable",
+      "name": "Anti-flash Mode Enable",
+      "value": 0,
+      "unit": "",
+      "access_mode": "W",
+      "data_type": "BOOL",
+      "value_type": "UINT8",
+      "values": [
+        {
+          "name": "disable",
+          "value": 0
+        },
+        {
+          "name": "enable",
+          "value": 1
+        }
+      ],
+      "bacnet_type": "binary_output_object",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS",
+      "reference": []
+    },
+    {
+      "id": "load_power.power_1",
+      "name": "power1",
+      "value": "0",
+      "unit": "W",
+      "access_mode": "W",
+      "data_type": "NUMBER",
+      "value_type": "UINT16",
+      "range": [
+        0,
+        1100
+      ],
+      "bacnet_type": "analog_output_object",
+      "bacnet_unit_type_id": 47,
+      "bacnet_unit_type": "UNITS_WATTS",
+      "reference": [
+        "load_power.power_2",
+        "load_power.power_3"
+      ]
+    },
+    {
+      "id": "load_power.power_2",
+      "name": "power2",
+      "value": "0",
+      "unit": "W",
+      "access_mode": "W",
+      "data_type": "NUMBER",
+      "value_type": "UINT16",
+      "range": [
+        0,
+        1100
+      ],
+      "bacnet_type": "analog_output_object",
+      "bacnet_unit_type_id": 47,
+      "bacnet_unit_type": "UNITS_WATTS",
+      "reference": [
+        "load_power.power_1",
+        "load_power.power_3"
+      ]
+    },
+    {
+      "id": "load_power.power_3",
+      "name": "power3",
+      "value": "0",
+      "unit": "W",
+      "access_mode": "W",
+      "data_type": "NUMBER",
+      "value_type": "UINT16",
+      "range": [
+        0,
+        1100
+      ],
+      "bacnet_type": "analog_output_object",
+      "bacnet_unit_type_id": 47,
+      "bacnet_unit_type": "UNITS_WATTS",
+      "reference": [
+        "load_power.power_1",
+        "load_power.power_2"
+      ]
+    },
+    {
+      "id": "socket_control.status_1",
+      "name": "Switch 1",
+      "value": "0",
+      "unit": "",
+      "access_mode": "W",
+      "data_type": "ENUM",
+      "value_type": "UINT8",
+      "values": [
+        {
+          "name": "off",
+          "value": 0
+        },
+        {
+          "name": "on",
+          "value": 1
+        }
+      ],
+      "bacnet_type": "multistate_value_object",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS",
+      "reference": [
+        "socket_control.status_2",
+        "socket_control.status_3"
+      ]
+    },
+    {
+      "id": "socket_control.status_2",
+      "name": "Switch 2",
+      "value": "0",
+      "unit": "",
+      "access_mode": "W",
+      "data_type": "ENUM",
+      "value_type": "UINT8",
+      "values": [
+        {
+          "name": "off",
+          "value": 0
+        },
+        {
+          "name": "on",
+          "value": 1
+        }
+      ],
+      "bacnet_type": "multistate_value_object",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS",
+      "reference": [
+        "socket_control.status_1",
+        "socket_control.status_3"
+      ]
+    },
+    {
+      "id": "socket_control.status_3",
+      "name": "Switch 3",
+      "value": "0",
+      "unit": "",
+      "access_mode": "W",
+      "data_type": "ENUM",
+      "value_type": "UINT8",
+      "values": [
+        {
+          "name": "off",
+          "value": 0
+        },
+        {
+          "name": "on",
+          "value": 1
+        }
+      ],
+      "bacnet_type": "multistate_value_object",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS",
+      "reference": [
+        "socket_control.status_1",
+        "socket_control.status_2"
+      ]
+    },
+    {
+      "id": "power_switch_mode",
+      "name": "Power Switch Mode",
+      "value": "0",
+      "unit": "",
+      "access_mode": "W",
+      "data_type": "ENUM",
+      "value_type": "UINT8",
+      "values": [
+        {
+          "name": "off",
+          "value": 0
+        },
+        {
+          "name": "on",
+          "value": 1
+        },
+        {
+          "name": "keep",
+          "value": 2
+        }
+      ],
+      "bacnet_type": "multistate_value_object",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS"
+    },
+    {
+      "id": "schedule_settings._item.enable",
+      "name": "Schedule Operation",
+      "value": "1",
+      "unit": "",
+      "access_mode": "RW",
+      "data_type": "ENUM",
+      "value_type": "UINT8",
+      "values": [
+        {
+          "name": "enable",
+          "value": 1
+        },
+        {
+          "name": "disable",
+          "value": 2
+        }
+      ],
+      "bacnet_type": "multistate_value_object",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS",
+      "reference": [
+        "schedule_settings._item.monday",
+        "schedule_settings._item.tuesday",
+        "schedule_settings._item.wednesday",
+        "schedule_settings._item.thursday",
+        "schedule_settings._item.friday",
+        "schedule_settings._item.saturday",
+        "schedule_settings._item.sunday",
+        "schedule_settings._item.execut_hour",
+        "schedule_settings._item.execut_min",
+        "schedule_settings._item.switch_1_state",
+        "schedule_settings._item.switch_2_state",
+        "schedule_settings._item.switch_3_state",
+        "schedule_settings._item.lock_state"
+      ]
+    },
+    {
+      "id": "schedule_settings._item.monday",
+      "name": "Monday",
+      "value": 0,
+      "unit": "",
+      "access_mode": "RW",
+      "data_type": "BOOL",
+      "value_type": "UINT8",
+      "values": [
+        {
+          "name": "disable",
+          "value": 0
+        },
+        {
+          "name": "enable",
+          "value": 1
+        }
+      ],
+      "bacnet_type": "binary_value_object",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS",
+      "reference": [
+        "schedule_settings._item.enable",
+        "schedule_settings._item.tuesday",
+        "schedule_settings._item.wednesday",
+        "schedule_settings._item.thursday",
+        "schedule_settings._item.friday",
+        "schedule_settings._item.saturday",
+        "schedule_settings._item.sunday",
+        "schedule_settings._item.execut_hour",
+        "schedule_settings._item.execut_min",
+        "schedule_settings._item.switch_1_state",
+        "schedule_settings._item.switch_2_state",
+        "schedule_settings._item.switch_3_state",
+        "schedule_settings._item.lock_state"
+      ]
+    },
+    {
+      "id": "schedule_settings._item.tuesday",
+      "name": "Tuesday",
+      "value": 0,
+      "unit": "",
+      "access_mode": "RW",
+      "data_type": "BOOL",
+      "value_type": "UINT8",
+      "values": [
+        {
+          "name": "disable",
+          "value": 0
+        },
+        {
+          "name": "enable",
+          "value": 1
+        }
+      ],
+      "bacnet_type": "binary_value_object",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS",
+      "reference": [
+        "schedule_settings._item.enable",
+        "schedule_settings._item.monday",
+        "schedule_settings._item.wednesday",
+        "schedule_settings._item.thursday",
+        "schedule_settings._item.friday",
+        "schedule_settings._item.saturday",
+        "schedule_settings._item.sunday",
+        "schedule_settings._item.execut_hour",
+        "schedule_settings._item.execut_min",
+        "schedule_settings._item.switch_1_state",
+        "schedule_settings._item.switch_2_state",
+        "schedule_settings._item.switch_3_state",
+        "schedule_settings._item.lock_state"
+      ]
+    },
+    {
+      "id": "schedule_settings._item.wednesday",
+      "name": "Wednesday",
+      "value": 0,
+      "unit": "",
+      "access_mode": "RW",
+      "data_type": "BOOL",
+      "value_type": "UINT8",
+      "values": [
+        {
+          "name": "disable",
+          "value": 0
+        },
+        {
+          "name": "enable",
+          "value": 1
+        }
+      ],
+      "bacnet_type": "binary_value_object",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS",
+      "reference": [
+        "schedule_settings._item.enable",
+        "schedule_settings._item.monday",
+        "schedule_settings._item.tuesday",
+        "schedule_settings._item.thursday",
+        "schedule_settings._item.friday",
+        "schedule_settings._item.saturday",
+        "schedule_settings._item.sunday",
+        "schedule_settings._item.execut_hour",
+        "schedule_settings._item.execut_min",
+        "schedule_settings._item.switch_1_state",
+        "schedule_settings._item.switch_2_state",
+        "schedule_settings._item.switch_3_state",
+        "schedule_settings._item.lock_state"
+      ]
+    },
+    {
+      "id": "schedule_settings._item.thursday",
+      "name": "Thursday",
+      "value": 0,
+      "unit": "",
+      "access_mode": "RW",
+      "data_type": "BOOL",
+      "value_type": "UINT8",
+      "values": [
+        {
+          "name": "disable",
+          "value": 0
+        },
+        {
+          "name": "enable",
+          "value": 1
+        }
+      ],
+      "bacnet_type": "binary_value_object",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS",
+      "reference": [
+        "schedule_settings._item.enable",
+        "schedule_settings._item.monday",
+        "schedule_settings._item.tuesday",
+        "schedule_settings._item.wednesday",
+        "schedule_settings._item.friday",
+        "schedule_settings._item.saturday",
+        "schedule_settings._item.sunday",
+        "schedule_settings._item.execut_hour",
+        "schedule_settings._item.execut_min",
+        "schedule_settings._item.switch_1_state",
+        "schedule_settings._item.switch_2_state",
+        "schedule_settings._item.switch_3_state",
+        "schedule_settings._item.lock_state"
+      ]
+    },
+    {
+      "id": "schedule_settings._item.friday",
+      "name": "Friday",
+      "value": 0,
+      "unit": "",
+      "access_mode": "RW",
+      "data_type": "BOOL",
+      "value_type": "UINT8",
+      "values": [
+        {
+          "name": "disable",
+          "value": 0
+        },
+        {
+          "name": "enable",
+          "value": 1
+        }
+      ],
+      "bacnet_type": "binary_value_object",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS",
+      "reference": [
+        "schedule_settings._item.enable",
+        "schedule_settings._item.monday",
+        "schedule_settings._item.tuesday",
+        "schedule_settings._item.wednesday",
+        "schedule_settings._item.thursday",
+        "schedule_settings._item.saturday",
+        "schedule_settings._item.sunday",
+        "schedule_settings._item.execut_hour",
+        "schedule_settings._item.execut_min",
+        "schedule_settings._item.switch_1_state",
+        "schedule_settings._item.switch_2_state",
+        "schedule_settings._item.switch_3_state",
+        "schedule_settings._item.lock_state"
+      ]
+    },
+    {
+      "id": "schedule_settings._item.saturday",
+      "name": "Saturday",
+      "value": 0,
+      "unit": "",
+      "access_mode": "RW",
+      "data_type": "BOOL",
+      "value_type": "UINT8",
+      "values": [
+        {
+          "name": "disable",
+          "value": 0
+        },
+        {
+          "name": "enable",
+          "value": 1
+        }
+      ],
+      "bacnet_type": "binary_value_object",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS",
+      "reference": [
+        "schedule_settings._item.enable",
+        "schedule_settings._item.monday",
+        "schedule_settings._item.tuesday",
+        "schedule_settings._item.wednesday",
+        "schedule_settings._item.thursday",
+        "schedule_settings._item.friday",
+        "schedule_settings._item.sunday",
+        "schedule_settings._item.execut_hour",
+        "schedule_settings._item.execut_min",
+        "schedule_settings._item.switch_1_state",
+        "schedule_settings._item.switch_2_state",
+        "schedule_settings._item.switch_3_state",
+        "schedule_settings._item.lock_state"
+      ]
+    },
+    {
+      "id": "schedule_settings._item.sunday",
+      "name": "Sunday",
+      "value": 0,
+      "unit": "",
+      "access_mode": "RW",
+      "data_type": "BOOL",
+      "value_type": "UINT8",
+      "values": [
+        {
+          "name": "disable",
+          "value": 0
+        },
+        {
+          "name": "enable",
+          "value": 1
+        }
+      ],
+      "bacnet_type": "binary_value_object",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS",
+      "reference": [
+        "schedule_settings._item.enable",
+        "schedule_settings._item.monday",
+        "schedule_settings._item.tuesday",
+        "schedule_settings._item.wednesday",
+        "schedule_settings._item.thursday",
+        "schedule_settings._item.friday",
+        "schedule_settings._item.saturday",
+        "schedule_settings._item.execut_hour",
+        "schedule_settings._item.execut_min",
+        "schedule_settings._item.switch_1_state",
+        "schedule_settings._item.switch_2_state",
+        "schedule_settings._item.switch_3_state",
+        "schedule_settings._item.lock_state"
+      ]
+    },
+    {
+      "id": "schedule_settings._item.execut_hour",
+      "name": "Execut Hour",
+      "value": "0",
+      "unit": "",
+      "access_mode": "RW",
+      "data_type": "NUMBER",
+      "value_type": "UINT8",
+      "range": [
+        0,
+        23
+      ],
+      "bacnet_type": "analog_value_object",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS",
+      "reference": [
+        "schedule_settings._item.enable",
+        "schedule_settings._item.monday",
+        "schedule_settings._item.tuesday",
+        "schedule_settings._item.wednesday",
+        "schedule_settings._item.thursday",
+        "schedule_settings._item.friday",
+        "schedule_settings._item.saturday",
+        "schedule_settings._item.sunday",
+        "schedule_settings._item.execut_min",
+        "schedule_settings._item.switch_1_state",
+        "schedule_settings._item.switch_2_state",
+        "schedule_settings._item.switch_3_state",
+        "schedule_settings._item.lock_state"
+      ]
+    },
+    {
+      "id": "schedule_settings._item.execut_min",
+      "name": "Execut Minute",
+      "value": "0",
+      "unit": "",
+      "access_mode": "RW",
+      "data_type": "NUMBER",
+      "value_type": "UINT8",
+      "range": [
+        0,
+        59
+      ],
+      "bacnet_type": "analog_value_object",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS",
+      "reference": [
+        "schedule_settings._item.enable",
+        "schedule_settings._item.monday",
+        "schedule_settings._item.tuesday",
+        "schedule_settings._item.wednesday",
+        "schedule_settings._item.thursday",
+        "schedule_settings._item.friday",
+        "schedule_settings._item.saturday",
+        "schedule_settings._item.sunday",
+        "schedule_settings._item.execut_hour",
+        "schedule_settings._item.switch_1_state",
+        "schedule_settings._item.switch_2_state",
+        "schedule_settings._item.switch_3_state",
+        "schedule_settings._item.lock_state"
+      ]
+    },
+    {
+      "id": "schedule_settings._item.switch_1_state",
+      "name": "Switch 1",
+      "value": "0",
+      "unit": "",
+      "access_mode": "RW",
+      "data_type": "ENUM",
+      "value_type": "UINT8",
+      "values": [
+        {
+          "name": "keep",
+          "value": 0
+        },
+        {
+          "name": "on",
+          "value": 1
+        },
+        {
+          "name": "off",
+          "value": 2
+        },
+        {
+          "name": "reversal",
+          "value": 3
+        }
+      ],
+      "bacnet_type": "multistate_value_object",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS",
+      "reference": [
+        "schedule_settings._item.enable",
+        "schedule_settings._item.monday",
+        "schedule_settings._item.tuesday",
+        "schedule_settings._item.wednesday",
+        "schedule_settings._item.thursday",
+        "schedule_settings._item.friday",
+        "schedule_settings._item.saturday",
+        "schedule_settings._item.sunday",
+        "schedule_settings._item.execut_hour",
+        "schedule_settings._item.execut_min",
+        "schedule_settings._item.switch_2_state",
+        "schedule_settings._item.switch_3_state",
+        "schedule_settings._item.lock_state"
+      ]
+    },
+    {
+      "id": "schedule_settings._item.switch_2_state",
+      "name": "Switch 2",
+      "value": "0",
+      "unit": "",
+      "access_mode": "RW",
+      "data_type": "ENUM",
+      "value_type": "UINT8",
+      "values": [
+        {
+          "name": "keep",
+          "value": 0
+        },
+        {
+          "name": "on",
+          "value": 1
+        },
+        {
+          "name": "off",
+          "value": 2
+        },
+        {
+          "name": "reversal",
+          "value": 3
+        }
+      ],
+      "bacnet_type": "multistate_value_object",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS",
+      "reference": [
+        "schedule_settings._item.enable",
+        "schedule_settings._item.monday",
+        "schedule_settings._item.tuesday",
+        "schedule_settings._item.wednesday",
+        "schedule_settings._item.thursday",
+        "schedule_settings._item.friday",
+        "schedule_settings._item.saturday",
+        "schedule_settings._item.sunday",
+        "schedule_settings._item.execut_hour",
+        "schedule_settings._item.execut_min",
+        "schedule_settings._item.switch_1_state",
+        "schedule_settings._item.switch_3_state",
+        "schedule_settings._item.lock_state"
+      ]
+    },
+    {
+      "id": "schedule_settings._item.switch_3_state",
+      "name": "Switch 3",
+      "value": "0",
+      "unit": "",
+      "access_mode": "RW",
+      "data_type": "ENUM",
+      "value_type": "UINT8",
+      "values": [
+        {
+          "name": "keep",
+          "value": 0
+        },
+        {
+          "name": "on",
+          "value": 1
+        },
+        {
+          "name": "off",
+          "value": 2
+        },
+        {
+          "name": "reversal",
+          "value": 3
+        }
+      ],
+      "bacnet_type": "multistate_value_object",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS",
+      "reference": [
+        "schedule_settings._item.enable",
+        "schedule_settings._item.monday",
+        "schedule_settings._item.tuesday",
+        "schedule_settings._item.wednesday",
+        "schedule_settings._item.thursday",
+        "schedule_settings._item.friday",
+        "schedule_settings._item.saturday",
+        "schedule_settings._item.sunday",
+        "schedule_settings._item.execut_hour",
+        "schedule_settings._item.execut_min",
+        "schedule_settings._item.switch_1_state",
+        "schedule_settings._item.switch_2_state",
+        "schedule_settings._item.lock_state"
+      ]
+    },
+    {
+      "id": "schedule_settings._item.lock_state",
+      "name": "Button Lock",
+      "value": "0",
+      "unit": "",
+      "access_mode": "RW",
+      "data_type": "ENUM",
+      "value_type": "UINT8",
+      "values": [
+        {
+          "name": "keep",
+          "value": 0
+        },
+        {
+          "name": "lock",
+          "value": 1
+        },
+        {
+          "name": "unlock",
+          "value": 2
+        }
+      ],
+      "bacnet_type": "multistate_value_object",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS",
+      "reference": [
+        "schedule_settings._item.enable",
+        "schedule_settings._item.monday",
+        "schedule_settings._item.tuesday",
+        "schedule_settings._item.wednesday",
+        "schedule_settings._item.thursday",
+        "schedule_settings._item.friday",
+        "schedule_settings._item.saturday",
+        "schedule_settings._item.sunday",
+        "schedule_settings._item.execut_hour",
+        "schedule_settings._item.execut_min",
+        "schedule_settings._item.switch_1_state",
+        "schedule_settings._item.switch_2_state",
+        "schedule_settings._item.switch_3_state"
+      ]
+    },
+    {
+      "id": "d2d_global_enable.master_enable",
+      "name": "D2D Controller Enable",
+      "value": "0",
+      "unit": "",
+      "access_mode": "W",
+      "data_type": "ENUM",
+      "value_type": "UINT8",
+      "values": [
+        {
+          "name": "disable",
+          "value": 0
+        },
+        {
+          "name": "enable",
+          "value": 1
+        }
+      ],
+      "bacnet_type": "multistate_value_object",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS",
+      "reference": [
+        "d2d_global_enable.agent_enable"
+      ]
+    },
+    {
+      "id": "d2d_global_enable.agent_enable",
+      "name": "D2D Agent Enable",
+      "value": "0",
+      "unit": "",
+      "access_mode": "W",
+      "data_type": "ENUM",
+      "value_type": "UINT8",
+      "values": [
+        {
+          "name": "disable",
+          "value": 0
+        },
+        {
+          "name": "enable",
+          "value": 1
+        }
+      ],
+      "bacnet_type": "multistate_value_object",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS",
+      "reference": [
+        "d2d_global_enable.master_enable"
+      ]
+    },
+    {
+      "id": "d2d_agent_settings_array._item.d2d_agent_enable",
+      "name": "Enable",
+      "value": 0,
+      "unit": "",
+      "access_mode": "W",
+      "data_type": "BOOL",
+      "value_type": "UINT8",
+      "values": [
+        {
+          "name": "disable",
+          "value": 0
+        },
+        {
+          "name": "enable",
+          "value": 1
+        }
+      ],
+      "bacnet_type": "binary_output_object",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS",
+      "reference": [
+        "d2d_agent_settings_array._item.d2d_agent_command",
+        "d2d_agent_settings_array._item.d2d_agent_action"
+      ]
+    },
+    {
+      "id": "d2d_agent_settings_array._item.d2d_agent_command",
+      "name": "Control Command",
+      "value": "0",
+      "unit": "",
+      "access_mode": "W",
+      "data_type": "NUMBER",
+      "value_type": "UINT8",
+      "bacnet_type": "analog_output_object",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS",
+      "reference": [
+        "d2d_agent_settings_array._item.d2d_agent_enable",
+        "d2d_agent_settings_array._item.d2d_agent_action"
+      ]
+    },
+    {
+      "id": "d2d_agent_settings_array._item.d2d_agent_action.switch_object",
+      "name": "Switch",
+      "value": "1",
+      "unit": "",
+      "access_mode": "W",
+      "data_type": "ENUM",
+      "value_type": "UINT8",
+      "values": [
+        {
+          "name": "switch1",
+          "value": 1
+        },
+        {
+          "name": "switch2",
+          "value": 2
+        },
+        {
+          "name": "switch1，switch2",
+          "value": 3
+        },
+        {
+          "name": "switch3",
+          "value": 4
+        },
+        {
+          "name": "switch1，switch3",
+          "value": 5
+        },
+        {
+          "name": "switch2，switch3",
+          "value": 6
+        },
+        {
+          "name": "switch1，switch2，switch3",
+          "value": 7
+        }
+      ],
+      "bacnet_type": "multistate_value_object",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS",
+      "reference": [
+        "d2d_agent_settings_array._item.d2d_agent_action.switch_status"
+      ]
+    },
+    {
+      "id": "d2d_agent_settings_array._item.d2d_agent_action.switch_status",
+      "name": "Switch  Status",
+      "value": "0",
+      "unit": "",
+      "access_mode": "W",
+      "data_type": "ENUM",
+      "value_type": "UINT8",
+      "values": [
+        {
+          "name": "off",
+          "value": 0
+        },
+        {
+          "name": "on",
+          "value": 1
+        },
+        {
+          "name": "reversel",
+          "value": 2
+        }
+      ],
+      "bacnet_type": "multistate_value_object",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS",
+      "reference": [
+        "d2d_agent_settings_array._item.d2d_agent_action.switch_object"
+      ]
+    },
+    {
+      "id": "key1_d2d_controller_settings.key_contrl_enable",
+      "name": "Key Controller Enable",
+      "value": 0,
+      "unit": "",
+      "access_mode": "W",
+      "data_type": "BOOL",
+      "value_type": "UINT8",
+      "values": [
+        {
+          "name": "disable",
+          "value": 0
+        },
+        {
+          "name": "enable",
+          "value": 1
+        }
+      ],
+      "bacnet_type": "binary_output_object",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS",
+      "reference": [
+        "key1_d2d_controller_settings.uplink",
+        "key1_d2d_controller_settings.contrl_cmd"
+      ]
+    },
+    {
+      "id": "key1_d2d_controller_settings.uplink.lora_enable",
+      "name": "Controller Lora Uplink Enable",
+      "value": 0,
+      "unit": "",
+      "access_mode": "W",
+      "data_type": "BOOL",
+      "value_type": "UINT8",
+      "values": [
+        {
+          "name": "disable",
+          "value": 0
+        },
+        {
+          "name": "enable",
+          "value": 1
+        }
+      ],
+      "bacnet_type": "binary_output_object",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS",
+      "reference": [
+        "key1_d2d_controller_settings.uplink.key_enable"
+      ]
+    },
+    {
+      "id": "key1_d2d_controller_settings.uplink.key_enable",
+      "name": "Controller Key Status Uplink Enable",
+      "value": 0,
+      "unit": "",
+      "access_mode": "W",
+      "data_type": "BOOL",
+      "value_type": "UINT8",
+      "values": [
+        {
+          "name": "disable",
+          "value": 0
+        },
+        {
+          "name": "enable",
+          "value": 1
+        }
+      ],
+      "bacnet_type": "binary_output_object",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS",
+      "reference": [
+        "key1_d2d_controller_settings.uplink.lora_enable"
+      ]
+    },
+    {
+      "id": "key1_d2d_controller_settings.contrl_cmd",
+      "name": "Control Command",
+      "value": "0",
+      "unit": "",
+      "access_mode": "W",
+      "data_type": "NUMBER",
+      "value_type": "UINT8",
+      "bacnet_type": "analog_output_object",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS",
+      "reference": [
+        "key1_d2d_controller_settings.key_contrl_enable",
+        "key1_d2d_controller_settings.uplink"
+      ]
+    },
+    {
+      "id": "key2_d2d_controller_settings.key_contrl_enable",
+      "name": "Key Controller Enable",
+      "value": 0,
+      "unit": "",
+      "access_mode": "W",
+      "data_type": "BOOL",
+      "value_type": "UINT8",
+      "values": [
+        {
+          "name": "disable",
+          "value": 0
+        },
+        {
+          "name": "enable",
+          "value": 1
+        }
+      ],
+      "bacnet_type": "binary_output_object",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS",
+      "reference": [
+        "key2_d2d_controller_settings.uplink",
+        "key2_d2d_controller_settings.lora_enable",
+        "key2_d2d_controller_settings.contrl_cmd"
+      ]
+    },
+    {
+      "id": "key2_d2d_controller_settings.lora_enable",
+      "name": "Controller Lora Uplink Enable",
+      "value": 0,
+      "unit": "",
+      "access_mode": "W",
+      "data_type": "BOOL",
+      "value_type": "UINT8",
+      "values": [
+        {
+          "name": "disable",
+          "value": 0
+        },
+        {
+          "name": "enable",
+          "value": 1
+        }
+      ],
+      "bacnet_type": "binary_output_object",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS",
+      "reference": [
+        "key2_d2d_controller_settings.key_contrl_enable",
+        "key2_d2d_controller_settings.uplink",
+        "key2_d2d_controller_settings.contrl_cmd"
+      ]
+    },
+    {
+      "id": "key2_d2d_controller_settings.uplink.key_enable",
+      "name": "Controller Key Status Uplink Enable",
+      "value": 0,
+      "unit": "",
+      "access_mode": "W",
+      "data_type": "BOOL",
+      "value_type": "UINT8",
+      "values": [
+        {
+          "name": "disable",
+          "value": 0
+        },
+        {
+          "name": "enable",
+          "value": 1
+        }
+      ],
+      "bacnet_type": "binary_output_object",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS",
+      "reference": []
+    },
+    {
+      "id": "key2_d2d_controller_settings.contrl_cmd",
+      "name": "Control Command",
+      "value": "0",
+      "unit": "",
+      "access_mode": "W",
+      "data_type": "NUMBER",
+      "value_type": "UINT8",
+      "bacnet_type": "analog_output_object",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS",
+      "reference": [
+        "key2_d2d_controller_settings.key_contrl_enable",
+        "key2_d2d_controller_settings.uplink",
+        "key2_d2d_controller_settings.lora_enable"
+      ]
+    },
+    {
+      "id": "key3_d2d_controller_settings.key_contrl_enable",
+      "name": "Key Controller Enable",
+      "value": 0,
+      "unit": "",
+      "access_mode": "W",
+      "data_type": "BOOL",
+      "value_type": "UINT8",
+      "values": [
+        {
+          "name": "disable",
+          "value": 0
+        },
+        {
+          "name": "enable",
+          "value": 1
+        }
+      ],
+      "bacnet_type": "binary_output_object",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS",
+      "reference": [
+        "key3_d2d_controller_settings.uplink",
+        "key3_d2d_controller_settings.lora_enable",
+        "key3_d2d_controller_settings.contrl_cmd"
+      ]
+    },
+    {
+      "id": "key3_d2d_controller_settings.lora_enable",
+      "name": "Controller Lora Uplink Enable",
+      "value": 0,
+      "unit": "",
+      "access_mode": "W",
+      "data_type": "BOOL",
+      "value_type": "UINT8",
+      "values": [
+        {
+          "name": "disable",
+          "value": 0
+        },
+        {
+          "name": "enable",
+          "value": 1
+        }
+      ],
+      "bacnet_type": "binary_output_object",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS",
+      "reference": [
+        "key3_d2d_controller_settings.key_contrl_enable",
+        "key3_d2d_controller_settings.uplink",
+        "key3_d2d_controller_settings.contrl_cmd"
+      ]
+    },
+    {
+      "id": "key3_d2d_controller_settings.uplink.key_enable",
+      "name": "Controller Key Status Uplink Enable",
+      "value": 0,
+      "unit": "",
+      "access_mode": "W",
+      "data_type": "BOOL",
+      "value_type": "UINT8",
+      "values": [
+        {
+          "name": "disable",
+          "value": 0
+        },
+        {
+          "name": "enable",
+          "value": 1
+        }
+      ],
+      "bacnet_type": "binary_output_object",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS",
+      "reference": []
+    },
+    {
+      "id": "key3_d2d_controller_settings.contrl_cmd",
+      "name": "Control Command",
+      "value": "0",
+      "unit": "",
+      "access_mode": "W",
+      "data_type": "NUMBER",
+      "value_type": "UINT8",
+      "bacnet_type": "analog_output_object",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS",
+      "reference": [
+        "key3_d2d_controller_settings.key_contrl_enable",
+        "key3_d2d_controller_settings.uplink",
+        "key3_d2d_controller_settings.lora_enable"
+      ]
+    },
+    {
+      "id": "time_zone",
+      "name": "Time Zone",
+      "value": "0",
+      "unit": "min",
+      "access_mode": "W",
+      "data_type": "ENUM",
+      "value_type": "INT16",
+      "values": [
+        {
+          "name": "UTC-12(IDLW)",
+          "value": -720
+        },
+        {
+          "name": "UTC-11(SST)",
+          "value": -660
+        },
+        {
+          "name": "UTC-10(HST)",
+          "value": -600
+        },
+        {
+          "name": "UTC-9:30(MIT)",
+          "value": -570
+        },
+        {
+          "name": "UTC-9(AKST)",
+          "value": -540
+        },
+        {
+          "name": "UTC-8(PST)",
+          "value": -480
+        },
+        {
+          "name": "UTC-7(MST)",
+          "value": -420
+        },
+        {
+          "name": "UTC-6(CST)",
+          "value": -360
+        },
+        {
+          "name": "UTC-5(EST)",
+          "value": -300
+        },
+        {
+          "name": "UTC-4(AST)",
+          "value": -240
+        },
+        {
+          "name": "UTC-3:30(NST)",
+          "value": -210
+        },
+        {
+          "name": "UTC-3(BRT)",
+          "value": -180
+        },
+        {
+          "name": "UTC-2(FNT)",
+          "value": -120
+        },
+        {
+          "name": "UTC-1(CVT)",
+          "value": -60
+        },
+        {
+          "name": "UTC(WET)",
+          "value": 0
+        },
+        {
+          "name": "UTC+1(CET)",
+          "value": 60
+        },
+        {
+          "name": "UTC+2(EET)",
+          "value": 120
+        },
+        {
+          "name": "UTC+3(MSK)",
+          "value": 180
+        },
+        {
+          "name": "UTC+3:30(IRST)",
+          "value": 210
+        },
+        {
+          "name": "UTC+4(GST)",
+          "value": 240
+        },
+        {
+          "name": "UTC+4:30(AFT)",
+          "value": 270
+        },
+        {
+          "name": "UTC+5(PKT)",
+          "value": 300
+        },
+        {
+          "name": "UTC+5:30(IST)",
+          "value": 330
+        },
+        {
+          "name": "UTC+5:45(NPT)",
+          "value": 345
+        },
+        {
+          "name": "UTC+6(BHT)",
+          "value": 360
+        },
+        {
+          "name": "UTC+6:30(MMT)",
+          "value": 390
+        },
+        {
+          "name": "UTC+7(ICT)",
+          "value": 420
+        },
+        {
+          "name": "UTC+8(CT/CST)",
+          "value": 480
+        },
+        {
+          "name": "UTC+9(JST)",
+          "value": 540
+        },
+        {
+          "name": "UTC+9:30(ACST)",
+          "value": 570
+        },
+        {
+          "name": "UTC+10(AEST)",
+          "value": 600
+        },
+        {
+          "name": "UTC+10:30(LHST)",
+          "value": 630
+        },
+        {
+          "name": "UTC+11(VUT)",
+          "value": 660
+        },
+        {
+          "name": "UTC+12(NZST)",
+          "value": 720
+        },
+        {
+          "name": "UTC+12:45(CHAST)",
+          "value": 765
+        },
+        {
+          "name": "UTC+13(PHOT)",
+          "value": 780
+        },
+        {
+          "name": "UTC+14(LINT)",
+          "value": 840
+        }
+      ],
+      "bacnet_type": "multistate_value_object",
+      "bacnet_unit_type_id": 72,
+      "bacnet_unit_type": "UNITS_MINUTES"
+    },
+    {
+      "id": "daylight_saving_time_settings.enable",
+      "name": "DST Enable",
+      "value": 0,
+      "unit": "",
+      "access_mode": "W",
+      "data_type": "BOOL",
+      "value_type": "UINT8",
+      "values": [
+        {
+          "name": "disable",
+          "value": 0
+        },
+        {
+          "name": "enable",
+          "value": 1
+        }
+      ],
+      "bacnet_type": "binary_output_object",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS",
+      "reference": [
+        "daylight_saving_time_settings.offset",
+        "daylight_saving_time_settings.start_month",
+        "daylight_saving_time_settings.start_week_num",
+        "daylight_saving_time_settings.start_week_day",
+        "daylight_saving_time_settings.start_time",
+        "daylight_saving_time_settings.end_month",
+        "daylight_saving_time_settings.end_week_num",
+        "daylight_saving_time_settings.end_week_day",
+        "daylight_saving_time_settings.end_time"
+      ]
+    },
+    {
+      "id": "daylight_saving_time_settings.offset",
+      "name": "DST Bias",
+      "value": "1",
+      "unit": "min",
+      "access_mode": "W",
+      "data_type": "NUMBER",
+      "value_type": "UINT8",
+      "range": [
+        1,
+        120
+      ],
+      "bacnet_type": "analog_output_object",
+      "bacnet_unit_type_id": 72,
+      "bacnet_unit_type": "UNITS_MINUTES",
+      "reference": [
+        "daylight_saving_time_settings.enable",
+        "daylight_saving_time_settings.start_month",
+        "daylight_saving_time_settings.start_week_num",
+        "daylight_saving_time_settings.start_week_day",
+        "daylight_saving_time_settings.start_time",
+        "daylight_saving_time_settings.end_month",
+        "daylight_saving_time_settings.end_week_num",
+        "daylight_saving_time_settings.end_week_day",
+        "daylight_saving_time_settings.end_time"
+      ]
+    },
+    {
+      "id": "daylight_saving_time_settings.start_month",
+      "name": "Month",
+      "value": "1",
+      "unit": "",
+      "access_mode": "W",
+      "data_type": "ENUM",
+      "value_type": "UINT8",
+      "values": [
+        {
+          "name": "Jan.",
+          "value": 1
+        },
+        {
+          "name": "Feb.",
+          "value": 2
+        },
+        {
+          "name": "Mar.",
+          "value": 3
+        },
+        {
+          "name": "Apr.",
+          "value": 4
+        },
+        {
+          "name": "May",
+          "value": 5
+        },
+        {
+          "name": "Jun.",
+          "value": 6
+        },
+        {
+          "name": "Jul.",
+          "value": 7
+        },
+        {
+          "name": "Aug.",
+          "value": 8
+        },
+        {
+          "name": "Sep.",
+          "value": 9
+        },
+        {
+          "name": "Oct.",
+          "value": 10
+        },
+        {
+          "name": "Nov.",
+          "value": 11
+        },
+        {
+          "name": "Dec.",
+          "value": 12
+        }
+      ],
+      "bacnet_type": "multistate_value_object",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS",
+      "reference": [
+        "daylight_saving_time_settings.enable",
+        "daylight_saving_time_settings.offset",
+        "daylight_saving_time_settings.start_week_num",
+        "daylight_saving_time_settings.start_week_day",
+        "daylight_saving_time_settings.start_time",
+        "daylight_saving_time_settings.end_month",
+        "daylight_saving_time_settings.end_week_num",
+        "daylight_saving_time_settings.end_week_day",
+        "daylight_saving_time_settings.end_time"
+      ]
+    },
+    {
+      "id": "daylight_saving_time_settings.start_week_num",
+      "name": "Number of Week",
+      "value": "1",
+      "unit": "",
+      "access_mode": "W",
+      "data_type": "ENUM",
+      "value_type": "UINT8",
+      "values": [
+        {
+          "name": "1st",
+          "value": 1
+        },
+        {
+          "name": "2nd",
+          "value": 2
+        },
+        {
+          "name": "3rd",
+          "value": 3
+        },
+        {
+          "name": "4th",
+          "value": 4
+        },
+        {
+          "name": "last",
+          "value": 5
+        }
+      ],
+      "bacnet_type": "multistate_value_object",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS",
+      "reference": [
+        "daylight_saving_time_settings.enable",
+        "daylight_saving_time_settings.offset",
+        "daylight_saving_time_settings.start_month",
+        "daylight_saving_time_settings.start_week_day",
+        "daylight_saving_time_settings.start_time",
+        "daylight_saving_time_settings.end_month",
+        "daylight_saving_time_settings.end_week_num",
+        "daylight_saving_time_settings.end_week_day",
+        "daylight_saving_time_settings.end_time"
+      ]
+    },
+    {
+      "id": "daylight_saving_time_settings.start_week_day",
+      "name": "Week",
+      "value": "7",
+      "unit": "",
+      "access_mode": "W",
+      "data_type": "ENUM",
+      "value_type": "UINT8",
+      "values": [
+        {
+          "name": "Mon.",
+          "value": 1
+        },
+        {
+          "name": "Tues.",
+          "value": 2
+        },
+        {
+          "name": "Wed.",
+          "value": 3
+        },
+        {
+          "name": "Thurs.",
+          "value": 4
+        },
+        {
+          "name": "Fri.",
+          "value": 5
+        },
+        {
+          "name": "Sat.",
+          "value": 6
+        },
+        {
+          "name": "Sun.",
+          "value": 7
+        }
+      ],
+      "bacnet_type": "multistate_value_object",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS",
+      "reference": [
+        "daylight_saving_time_settings.enable",
+        "daylight_saving_time_settings.offset",
+        "daylight_saving_time_settings.start_month",
+        "daylight_saving_time_settings.start_week_num",
+        "daylight_saving_time_settings.start_time",
+        "daylight_saving_time_settings.end_month",
+        "daylight_saving_time_settings.end_week_num",
+        "daylight_saving_time_settings.end_week_day",
+        "daylight_saving_time_settings.end_time"
+      ]
+    },
+    {
+      "id": "daylight_saving_time_settings.start_time",
+      "name": "Time",
+      "value": "0",
+      "unit": "min",
+      "access_mode": "W",
+      "data_type": "NUMBER",
+      "value_type": "UINT16",
+      "range": [
+        0,
+        1440
+      ],
+      "bacnet_type": "analog_output_object",
+      "bacnet_unit_type_id": 72,
+      "bacnet_unit_type": "UNITS_MINUTES",
+      "reference": [
+        "daylight_saving_time_settings.enable",
+        "daylight_saving_time_settings.offset",
+        "daylight_saving_time_settings.start_month",
+        "daylight_saving_time_settings.start_week_num",
+        "daylight_saving_time_settings.start_week_day",
+        "daylight_saving_time_settings.end_month",
+        "daylight_saving_time_settings.end_week_num",
+        "daylight_saving_time_settings.end_week_day",
+        "daylight_saving_time_settings.end_time"
+      ]
+    },
+    {
+      "id": "daylight_saving_time_settings.end_month",
+      "name": "Month",
+      "value": "1",
+      "unit": "",
+      "access_mode": "W",
+      "data_type": "ENUM",
+      "value_type": "UINT8",
+      "values": [
+        {
+          "name": "Jan.",
+          "value": 1
+        },
+        {
+          "name": "Feb.",
+          "value": 2
+        },
+        {
+          "name": "Mar.",
+          "value": 3
+        },
+        {
+          "name": "Apr.",
+          "value": 4
+        },
+        {
+          "name": "May",
+          "value": 5
+        },
+        {
+          "name": "Jun.",
+          "value": 6
+        },
+        {
+          "name": "Jul.",
+          "value": 7
+        },
+        {
+          "name": "Aug.",
+          "value": 8
+        },
+        {
+          "name": "Sep.",
+          "value": 9
+        },
+        {
+          "name": "Oct.",
+          "value": 10
+        },
+        {
+          "name": "Nov.",
+          "value": 11
+        },
+        {
+          "name": "Dec.",
+          "value": 12
+        }
+      ],
+      "bacnet_type": "multistate_value_object",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS",
+      "reference": [
+        "daylight_saving_time_settings.enable",
+        "daylight_saving_time_settings.offset",
+        "daylight_saving_time_settings.start_month",
+        "daylight_saving_time_settings.start_week_num",
+        "daylight_saving_time_settings.start_week_day",
+        "daylight_saving_time_settings.start_time",
+        "daylight_saving_time_settings.end_week_num",
+        "daylight_saving_time_settings.end_week_day",
+        "daylight_saving_time_settings.end_time"
+      ]
+    },
+    {
+      "id": "daylight_saving_time_settings.end_week_num",
+      "name": "Number of Week",
+      "value": "1",
+      "unit": "",
+      "access_mode": "W",
+      "data_type": "ENUM",
+      "value_type": "UINT8",
+      "values": [
+        {
+          "name": "1st",
+          "value": 1
+        },
+        {
+          "name": "2nd",
+          "value": 2
+        },
+        {
+          "name": "3rd",
+          "value": 3
+        },
+        {
+          "name": "4th",
+          "value": 4
+        },
+        {
+          "name": "last",
+          "value": 5
+        }
+      ],
+      "bacnet_type": "multistate_value_object",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS",
+      "reference": [
+        "daylight_saving_time_settings.enable",
+        "daylight_saving_time_settings.offset",
+        "daylight_saving_time_settings.start_month",
+        "daylight_saving_time_settings.start_week_num",
+        "daylight_saving_time_settings.start_week_day",
+        "daylight_saving_time_settings.start_time",
+        "daylight_saving_time_settings.end_month",
+        "daylight_saving_time_settings.end_week_day",
+        "daylight_saving_time_settings.end_time"
+      ]
+    },
+    {
+      "id": "daylight_saving_time_settings.end_week_day",
+      "name": "Week",
+      "value": "7",
+      "unit": "",
+      "access_mode": "W",
+      "data_type": "ENUM",
+      "value_type": "UINT8",
+      "values": [
+        {
+          "name": "Mon.",
+          "value": 1
+        },
+        {
+          "name": "Tues.",
+          "value": 2
+        },
+        {
+          "name": "Wed.",
+          "value": 3
+        },
+        {
+          "name": "Thurs.",
+          "value": 4
+        },
+        {
+          "name": "Fri.",
+          "value": 5
+        },
+        {
+          "name": "Sat.",
+          "value": 6
+        },
+        {
+          "name": "Sun.",
+          "value": 7
+        }
+      ],
+      "bacnet_type": "multistate_value_object",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS",
+      "reference": [
+        "daylight_saving_time_settings.enable",
+        "daylight_saving_time_settings.offset",
+        "daylight_saving_time_settings.start_month",
+        "daylight_saving_time_settings.start_week_num",
+        "daylight_saving_time_settings.start_week_day",
+        "daylight_saving_time_settings.start_time",
+        "daylight_saving_time_settings.end_month",
+        "daylight_saving_time_settings.end_week_num",
+        "daylight_saving_time_settings.end_time"
+      ]
+    },
+    {
+      "id": "daylight_saving_time_settings.end_time",
+      "name": "Time",
+      "value": "0",
+      "unit": "min",
+      "access_mode": "W",
+      "data_type": "NUMBER",
+      "value_type": "UINT16",
+      "range": [
+        0,
+        1440
+      ],
+      "bacnet_type": "analog_output_object",
+      "bacnet_unit_type_id": 72,
+      "bacnet_unit_type": "UNITS_MINUTES",
+      "reference": [
+        "daylight_saving_time_settings.enable",
+        "daylight_saving_time_settings.offset",
+        "daylight_saving_time_settings.start_month",
+        "daylight_saving_time_settings.start_week_num",
+        "daylight_saving_time_settings.start_week_day",
+        "daylight_saving_time_settings.start_time",
+        "daylight_saving_time_settings.end_month",
+        "daylight_saving_time_settings.end_week_num",
+        "daylight_saving_time_settings.end_week_day"
+      ]
+    },
+    {
+      "id": "lorawan_class_cfg.class_mode",
+      "name": "Class Mode",
+      "value": "2",
+      "unit": "",
+      "access_mode": "W",
+      "data_type": "ENUM",
+      "value_type": "UINT8",
+      "values": [
+        {
+          "name": "CLASS_B",
+          "value": 1
+        },
+        {
+          "name": "CLASS_C",
+          "value": 2
+        }
+      ],
+      "bacnet_type": "multistate_value_object",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS",
+      "reference": []
+    },
+    {
+      "id": "temperature_alarm.status",
+      "name": "Alarm Status",
+      "value": "",
+      "unit": "",
+      "access_mode": "R",
+      "data_type": "BOOL",
+      "value_type": "UINT8",
+      "values": [
+        {
+          "name": "normal",
+          "value": 0
+        },
+        {
+          "name": "overtemperature",
+          "value": 1
+        }
+      ],
+      "bacnet_type": "binary_input_object",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS",
+      "reference": []
+    }
+  ]
+}
