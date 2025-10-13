@@ -1,0 +1,5688 @@
+/**
+ * Payload Decoder
+ *
+ * Copyright 2025 Milesight IoT
+ *
+ * @product GS601
+ */
+// Chirpstack v4
+function decodeUplink(input) {
+    var decoded = milesightDeviceDecode(input.bytes);
+    return { data: decoded };
+}
+
+// Chirpstack v3
+function Decode(fPort, bytes) {
+    return milesightDeviceDecode(bytes);
+}
+
+// The Things Network
+function Decoder(bytes, port) {
+    return milesightDeviceDecode(bytes);
+}
+
+function milesightDeviceDecode(bytes) {
+    var server = new IpsoProtocolServer();
+    server.setResource([common, device]);
+    var decoded = server.read(bytes);
+    // decoded.sensor = LoRaObject.devEUI;
+    // decoded.raw = bytes;
+    return decoded;
+}
+
+var __extends =
+        (this && this.__extends) ||
+        (function () {
+            var r = function (e, o) {
+                return (r =
+                    Object.setPrototypeOf ||
+                    ({ __proto__: [] } instanceof Array
+                        ? function (e, o) {
+                              e.__proto__ = o;
+                          }
+                        : function (e, o) {
+                              for (var t in o) Object.prototype.hasOwnProperty.call(o, t) && (e[t] = o[t]);
+                          }))(e, o);
+            };
+            return function (e, o) {
+                if ("function" != typeof o && null !== o) throw new TypeError("Class extends value " + String(o) + " is not a constructor or null");
+                function t() {
+                    this.constructor = e;
+                }
+                (r(e, o), (e.prototype = null === o ? Object.create(o) : ((t.prototype = o.prototype), new t())));
+            };
+        })(),
+    __assign =
+        (this && this.__assign) ||
+        function () {
+            return (__assign =
+                Object.assign ||
+                function (e) {
+                    for (var o, t = 1, r = arguments.length; t < r; t++) for (var s in (o = arguments[t])) Object.prototype.hasOwnProperty.call(o, s) && (e[s] = o[s]);
+                    return e;
+                }).apply(this, arguments);
+        },
+    __spreadArray =
+        (this && this.__spreadArray) ||
+        function (e, o, t) {
+            if (t || 2 === arguments.length) for (var r, s = 0, n = o.length; s < n; s++) (!r && s in o) || ((r = r || Array.prototype.slice.call(o, 0, s))[s] = o[s]);
+            return e.concat(r || Array.prototype.slice.call(o));
+        };
+function flattenArray(e, t) {
+    return t < 1
+        ? e.slice()
+        : e.reduce(function (e, o) {
+              return (Array.isArray(o) ? e.push.apply(e, flattenArray(o, t - 1)) : e.push(o), e);
+          }, []);
+}
+("function" != typeof Object.setPrototypeOf &&
+    (Object.setPrototypeOf = function (e, o) {
+        return ((e.__proto__ = o), e);
+    }),
+    Array.prototype.includes ||
+        (Array.prototype.includes = function (e) {
+            return -1 !== this.indexOf(e);
+        }),
+    String.prototype.includes ||
+        (String.prototype.includes = function (e) {
+            return -1 !== this.indexOf(e);
+        }),
+    Array.prototype.flat ||
+        (Array.prototype.flat = function (e) {
+            return flattenArray(this, (e = void 0 === e ? 1 : e));
+        }),
+    Array.prototype.find ||
+        (Array.prototype.find = function (e) {
+            if (null == this) throw new TypeError("Array.prototype.find called on null or undefined");
+            if ("function" != typeof e) throw new TypeError("predicate must be a function");
+            for (var o, t = Object(this), r = t.length >>> 0, s = arguments[1], n = 0; n < r; n++) if (((o = t[n]), e.call(s, o, n, t))) return o;
+        }),
+    String.prototype.startsWith ||
+        (String.prototype.startsWith = function (e, o) {
+            return this.substring((o = o || 0), o + e.length) === e;
+        }),
+    Object.values ||
+        (Object.values = function (e) {
+            if (e !== Object(e)) throw new TypeError("Object.values called on a non-object");
+            var o,
+                t = [];
+            for (o in e) Object.prototype.hasOwnProperty.call(e, o) && t.push(e[o]);
+            return t;
+        }),
+    String.prototype.padStart ||
+        (String.prototype.padStart = function (e, o) {
+            return ((e >>= 0), (o = String(void 0 !== o ? o : " ")), this.length >= e ? String(this) : ((e -= this.length) > o.length && (o += o.repeat(e / o.length)), o.slice(0, e) + String(this)));
+        }),
+    Array.prototype.fill ||
+        (Array.prototype.fill = function (e, o, t) {
+            if ((void 0 === o && (o = 0), null == this)) throw new TypeError("this is null or not defined");
+            for (var r = Object(this), s = r.length >>> 0, o = o >> 0, n = o < 0 ? Math.max(s + o, 0) : Math.min(o, s), o = void 0 === t ? s : t >> 0, c = o < 0 ? Math.max(s + o, 0) : Math.min(o, s); n < c; ) ((r[n] = e), n++);
+            return r;
+        }));
+var IpsoProtocolErrorType,
+    Codec = (function () {
+        function e() {}
+        return (
+            (e.processBytes = function (e, o, t) {
+                var r,
+                    s,
+                    n = e;
+                switch ((((t === CodecEndianness.LITTLE_ENDING && o === ResourceValueType.BIN) || (t === CodecEndianness.BIG_ENDING && o !== ResourceValueType.BIN)) && (n = e.slice().reverse()), o)) {
+                    case ResourceValueType.INT_8:
+                        return 127 < n[0] ? n[0] - 256 : n[0];
+                    case ResourceValueType.INT_16:
+                        return 32767 < (n[1] << 8) + n[0] ? (n[1] << 8) + n[0] - 65536 : (n[1] << 8) + n[0];
+                    case ResourceValueType.INT_32:
+                        return 2147483647 < (n[3] << 24) + (n[2] << 16) + (n[1] << 8) + n[0] ? (n[3] << 24) + (n[2] << 16) + (n[1] << 8) + n[0] - 4294967296 : (n[3] << 24) + (n[2] << 16) + (n[1] << 8) + n[0];
+                    case ResourceValueType.U_INT_8:
+                        return 255 & n[0];
+                    case ResourceValueType.U_INT_16:
+                        return ((n[1] << 8) + n[0]) & 65535;
+                    case ResourceValueType.U_INT_32:
+                        return ((n[3] << 24) | (n[2] << 16) | (n[1] << 8) | n[0]) >>> 0;
+                    case ResourceValueType.FLOAT_16:
+                        return ((r = (n[1] << 8) | n[0]) >>> 15 == 0 ? 1 : -1) * (0 === (s = (r >>> 10) & 31) ? (1023 & r) << 1 : (1023 & r) | 1024) * Math.pow(2, s - 25);
+                    case ResourceValueType.FLOAT:
+                        return ((r = (n[3] << 24) | (n[2] << 16) | (n[1] << 8) | n[0]) >>> 31 == 0 ? 1 : -1) * (0 === (s = (r >>> 23) & 255) ? (8388607 & r) << 1 : (8388607 & r) | 8388608) * Math.pow(2, s - 150);
+                    case ResourceValueType.BIN:
+                        return n;
+                    default:
+                        throw new IpsoProtocolError(IpsoProtocolErrorType.INVALID_DECODE_TYPE, "Unknown encode type: ".concat(o));
+                }
+            }),
+            (e.processData = function (e, o, t) {
+                var r, s, n, c, a;
+                switch (o) {
+                    case ResourceValueType.INT_8:
+                        (assertIsType(e, "number"), (a = [255 & e]));
+                        break;
+                    case ResourceValueType.INT_16:
+                        (assertIsType(e, "number"), (a = [255 & e, (e >> 8) & 255]));
+                        break;
+                    case ResourceValueType.INT_32:
+                        (assertIsType(e, "number"), (a = [255 & e, (e >> 8) & 255, (e >> 16) & 255, (e >> 24) & 255]));
+                        break;
+                    case ResourceValueType.U_INT_8:
+                        (assertIsType(e, "number"), (a = [255 & e]));
+                        break;
+                    case ResourceValueType.U_INT_16:
+                        (assertIsType(e, "number"), (a = [255 & e, (e >> 8) & 255]));
+                        break;
+                    case ResourceValueType.U_INT_32:
+                        (assertIsType(e, "number"), (a = [255 & e, (e >> 8) & 255, (e >> 16) & 255, (e >> 24) & 255]));
+                        break;
+                    case ResourceValueType.FLOAT_16:
+                        (assertIsType(e, "number"), (s = e < (r = 0) ? 1 : 0), (c = n = 0) !== e && ((n = Math.floor(Math.log2(Math.abs(e))) + 25), (c = Math.round((Math.abs(e) / Math.pow(2, n - 25)) * 1024))), (a = [255 & (r = (s << 15) | (n << 10) | c), (r >> 8) & 255]));
+                        break;
+                    case ResourceValueType.FLOAT:
+                        (assertIsType(e, "number"), (s = e < (r = 0) ? 1 : 0), (c = n = 0) !== e && ((n = Math.floor(Math.log2(Math.abs(e))) + 150), (c = Math.round((Math.abs(e) / Math.pow(2, n - 150)) * 8388608))), (a = [255 & (r = (s << 31) | (n << 23) | c), (r >> 8) & 255, (r >> 16) & 255, (r >> 24) & 255]));
+                        break;
+                    case ResourceValueType.BIN:
+                        a = e;
+                        break;
+                    default:
+                        throw new IpsoProtocolError(IpsoProtocolErrorType.INVALID_ENCODE_TYPE, "Unknown encode type: ".concat(o));
+                }
+                return (((t === CodecEndianness.LITTLE_ENDING && o === ResourceValueType.BIN) || (t === CodecEndianness.BIG_ENDING && o !== ResourceValueType.BIN)) && a.reverse(), a);
+            }),
+            (e.predictLength = function (e) {
+                switch (e) {
+                    case ResourceValueType.INT_8:
+                    case ResourceValueType.U_INT_8:
+                        return "1";
+                    case ResourceValueType.INT_16:
+                    case ResourceValueType.U_INT_16:
+                    case ResourceValueType.FLOAT_16:
+                        return "2";
+                    case ResourceValueType.INT_32:
+                    case ResourceValueType.U_INT_32:
+                    case ResourceValueType.FLOAT:
+                        return "4";
+                    default:
+                        throw new IpsoProtocolError(IpsoProtocolErrorType.UNSUPPORTED_PREDICT_LENGTH_FOR_VALUE_TYPE, "Cannot predict: ".concat(e));
+                }
+            }),
+            e
+        );
+    })(),
+    IpsoProtocolError = (function (t) {
+        function r(e, o) {
+            o = t.call(this, "[".concat(e, "] ").concat(o)) || this;
+            return ((o.type = e), Object.setPrototypeOf(o, r.prototype), o);
+        }
+        return (__extends(r, t), r);
+    })(Error),
+    DownlinkProcessor =
+        (!(function (e) {
+            ((e.INVALID_DECODE_TYPE = "INVALID_DECODE_TYPE"), (e.INVALID_ENCODE_TYPE = "INVALID_ENCODE_TYPE"), (e.INVALID_ENDIANNESS = "INVALID_ENDIANNESS"), (e.UNSUPPORTED_PREDICT_LENGTH_FOR_VALUE_TYPE = "UNSUPPORTED_PREDICT_LENGTH_FOR_VALUE_TYPE"), (e.RESOURCE_DATA_NOT_FOUND = "RESOURCE_DATA_NOT_FOUND"), (e.SCHEMA_ERROR = "SCHEMA_ERROR"), (e.RESOURCE_ID_NOT_FOUND = "RESOURCE_ID_NOT_FOUND"), (e.CMD_RESOURCE_NOT_FOUND = "CMD_RESOURCE_NOT_FOUND"), (e.DETACHED_SUB_RESOURCE_NOT_FOUND = "DETACHED_SUB_RESOURCE_NOT_FOUND"), (e.SUB_RESOURCE_NOT_FOUND = "SUB_RESOURCE_NOT_FOUND"), (e.ARRAY_LENGTH_ERROR = "ARRAY_LENGTH_ERROR"), (e.DETACHED_SUB_RESOURCE_MUST_BE_OBJECT = "DETACHED_SUB_RESOURCE_MUST_BE_OBJECT"), (e.DOWNLINK_BYTES_ERROR = "DOWNLINK_BYTES_ERROR"), (e.DELETE_VALUE_ERROR = "DELETE_OBJECT_ERROR"), (e.REFERENCE_ERROR = "REFERENCE_ERROR"), (e.TARGET_ERROR = "TARGET_ERROR"), (e.PROCESS_UPLINK_BYTES_ERROR = "PROCESS_UPLINK_BYTES_ERROR"), (e.REFLECT_RELATION_ERROR = "REFLECT_RELATION_ERROR"), (e.SET_VALUE_ERROR = "SET_VALUE_ERROR"), (e.VALUE_TYPE_ASSERT_ERROR = "VALUE_TYPE_ASSERT_ERROR"), (e.PARAMETER_ERROR = "PARAMETER_ERROR"), (e.ATTRIBUTE_CONVERT_ERROR = "ATTRIBUTE_CONVERT_ERROR"));
+        })((IpsoProtocolErrorType = IpsoProtocolErrorType || {})),
+        (function () {
+            function e(e, o, t) {
+                ((this.server = e), (this.nowBytes = []), (this.curObjPath = []), (this.idCache = o), (this.ctx = t), (this.result = []));
+            }
+            return (
+                Object.defineProperty(e.prototype, "byteOffset", {
+                    get: function () {
+                        return this.nowBytes.length;
+                    },
+                    enumerable: !1,
+                    configurable: !0,
+                }),
+                Object.defineProperty(e.prototype, "bitRead", {
+                    get: function () {
+                        return this.ctx[BIT_READ];
+                    },
+                    set: function (e) {
+                        this.ctx[BIT_READ] = e;
+                    },
+                    enumerable: !1,
+                    configurable: !0,
+                }),
+                (e.prototype.reset = function (e) {
+                    ((this.ctx = e), (this.result = []));
+                }),
+                (e.prototype.flushNowBytes = function () {
+                    var e;
+                    (null != (e = this.nowBytes) && e.length && this.result.push(this.nowBytes), (this.nowBytes = []));
+                }),
+                (e.prototype.process = function (e) {
+                    var t = this,
+                        r = ((this.bitRead = 0), __assign({}, e)),
+                        s =
+                            (delete r.req,
+                            delete r.ans,
+                            Object.keys(r).forEach(function (e) {
+                                var o = t.idCache[ResourceDataDirection.DOWNLINK][e];
+                                if (!o) throw new IpsoProtocolError(IpsoProtocolErrorType.RESOURCE_ID_NOT_FOUND, "Resource not found: ".concat(e));
+                                e = r[e];
+                                (t.processObj(o, e), t.flushNowBytes());
+                            }),
+                            null != (e = e.req) &&
+                                e.forEach(function (e) {
+                                    return t.processReq(e);
+                                }),
+                            this.ctx[COMMON_RANGE]);
+                    return (
+                        this.result.sort(function (e, o) {
+                            return s && s[0] <= e[0] ? o[0] - e[0] : e[0] - o[0];
+                        }),
+                        this.result
+                    );
+                }),
+                (e.prototype.processReq = function (e) {
+                    for (
+                        var t, e = e.split("."), r = [], s = __spreadArray([], e, !0), n = this.idCache[ResourceDataDirection.UPLINK][s.shift()];
+                        n &&
+                        "break" !==
+                            (function () {
+                                if ((r.push(deepGet(n, "cmd")), !s.length)) return "break";
+                                var o = s.shift();
+                                if (n.valueType === ResourceValueType.ARRAY) (r.push(Number(o)), (n = null == (t = n.subObjs) ? void 0 : t[0]));
+                                else {
+                                    if (!n.detachedSubObjs || !o) return "break";
+                                    var e =
+                                        null == (t = n.detachedSubObjs)
+                                            ? void 0
+                                            : t.find(function (e) {
+                                                  return e.id === o;
+                                              });
+                                    if (!e) throw new IpsoProtocolError(IpsoProtocolErrorType.DETACHED_SUB_RESOURCE_NOT_FOUND, "Detached SubObj not found: ".concat(o));
+                                    n = e;
+                                }
+                            })();
+
+                    );
+                    r.length && this.result.push(__spreadArray([239, 15 & e.length], r, !0));
+                }),
+                (e.prototype.processObj = function (r, s, e) {
+                    var n = this,
+                        o = (void 0 === e && (e = []), deepGet(r, "cmd")),
+                        c =
+                            (void 0 !== o && this.nowBytes.push(o),
+                            __spreadArray(
+                                __spreadArray([], e, !0),
+                                [
+                                    {
+                                        subId: r.id.slice(r.id.lastIndexOf(".") + 1),
+                                        cmd: o,
+                                    },
+                                ],
+                                !1,
+                            )),
+                        t =
+                            ((this.curObjPath = c),
+                            r.processors.forEach(function (e) {
+                                return n.runProcessor(r, s, e);
+                            }),
+                            r.subObjs);
+                    if (t)
+                        if (r.valueType === ResourceValueType.ARRAY) {
+                            e = this.parseArgValue(this.ctx[ARRAY_LENGTH]);
+                            if (Number(e) !== s.length) throw new IpsoProtocolError(IpsoProtocolErrorType.ARRAY_LENGTH_ERROR, "Wrong array length: ".concat(e, ": ").concat(s.length));
+                            if (1 !== t.length) throw new IpsoProtocolError(IpsoProtocolErrorType.SCHEMA_ERROR, "Array subObj length must be 1: ".concat(t.length));
+                            s.forEach(function (e, o) {
+                                n.processObj(t[0], e, __spreadArray(__spreadArray([], c, !0), [{ subId: o.toString() }], !1));
+                            });
+                        } else
+                            t.forEach(function (e) {
+                                if (void 0 === s[e.id]) throw new IpsoProtocolError(IpsoProtocolErrorType.SUB_RESOURCE_NOT_FOUND, "SubObj not found: ".concat(e.id, " for ").concat(r.id));
+                                n.processObj(e, s[e.id], c);
+                            });
+                    else if (r.detachedSubObjs) {
+                        if ("object" != typeof s) throw new IpsoProtocolError(IpsoProtocolErrorType.DETACHED_SUB_RESOURCE_MUST_BE_OBJECT, "Downlink Detached subObj must be object: ".concat(s));
+                        if (r.valueType === ResourceValueType.ARRAY) {
+                            var a = null == (o = r.detachedCmdDest) ? void 0 : o.subProperty;
+                            if (!a) throw new IpsoProtocolError(IpsoProtocolErrorType.SCHEMA_ERROR, "Array subProperty not found");
+                            if (1 !== r.detachedSubObjs.length) throw new IpsoProtocolError(IpsoProtocolErrorType.SCHEMA_ERROR, "Array subObj length must be 1: ".concat(r.detachedSubObjs.length));
+                            var i = r.detachedSubObjs[0],
+                                e = i.subObjs;
+                            if (!e) throw new IpsoProtocolError(IpsoProtocolErrorType.SCHEMA_ERROR, "Detached Array item should have subObjs");
+                            if (!Array.isArray(s) || 0 === s.length) throw new IpsoProtocolError(IpsoProtocolErrorType.PARAMETER_ERROR, "Detached Array should be array and not empty: ".concat(s));
+                            if (
+                                !e.find(function (e) {
+                                    return e.id === a;
+                                })
+                            )
+                                throw new IpsoProtocolError(IpsoProtocolErrorType.SCHEMA_ERROR, "Detached Array subObj not found: ".concat(a));
+                            s.forEach(function (e, o) {
+                                o &&
+                                    c.forEach(function (e) {
+                                        e = e.cmd;
+                                        return e && n.nowBytes.push(e);
+                                    });
+                                var t = e[a];
+                                if ("number" != typeof t) throw new IpsoProtocolError(IpsoProtocolErrorType.PARAMETER_ERROR, "Detached sub property not valid: ".concat(t));
+                                (n.nowBytes.push(t), n.processObj(i, e, __spreadArray(__spreadArray([], c, !0), [{ subId: o.toString() }], !1)), n.flushNowBytes());
+                            });
+                        } else
+                            Object.keys(s).forEach(function (o, e) {
+                                var t =
+                                    null == (t = r.detachedSubObjs)
+                                        ? void 0
+                                        : t.find(function (e) {
+                                              return e.id === o;
+                                          });
+                                if (!t) throw new IpsoProtocolError(IpsoProtocolErrorType.DETACHED_SUB_RESOURCE_NOT_FOUND, "Detached subObj not found: ".concat(o));
+                                (void 0 === t.cmd
+                                    ? n.nowBytes.pop()
+                                    : e &&
+                                      c.forEach(function (e) {
+                                          e = e.cmd;
+                                          return e && n.nowBytes.push(e);
+                                      }),
+                                    n.processObj(t, s[o], c),
+                                    n.flushNowBytes());
+                            });
+                    }
+                    null != (o = r.afterProcessors) &&
+                        o.forEach(function (e) {
+                            return n.runProcessor(r, s, e);
+                        });
+                }),
+                (e.prototype.runProcessor = function (e, o, t) {
+                    switch (t.fn) {
+                        case ParserFnType.SET:
+                            this.processSet(e, t);
+                            break;
+                        case ParserFnType.READ:
+                            this.processRead(e, o, t);
+                            break;
+                        case ParserFnType.DEL:
+                            this.processDel(e, t);
+                            break;
+                        default:
+                            throw new IpsoProtocolError(IpsoProtocolErrorType.SCHEMA_ERROR, "Unknown processor: ".concat(t.fn));
+                    }
+                }),
+                (e.prototype.getCurObjId = function () {
+                    return this.curObjPath
+                        .map(function (e) {
+                            return e.subId;
+                        })
+                        .join(".");
+                }),
+                (e.prototype.processSet = function (e, o) {
+                    var t,
+                        r = this,
+                        o = o.args || [];
+                    "result" === this.resolveTarget(o[0])
+                        ? void 0 === this.ctx[LAST_VALUE] || this.bitRead || ((t = this.nowBytes).push.apply(t, this.ctx[LAST_VALUE]), delete this.ctx[LAST_VALUE])
+                        : ((o = (t = o.slice(1).map(function (e) {
+                              return r.parseArgValue(e);
+                          }))[0]),
+                          (t = t[1]),
+                          void 0 === o && (o = this.getCurObjId()),
+                          void 0 === t && (t = this.ctx[LAST_VALUE]),
+                          deepSet(this.ctx, o, t));
+                }),
+                (e.prototype.processRead = function (o, e, t) {
+                    var t = t.args || [],
+                        r = t[1] ? this.parseArgValue(t[1]) : o.valueType;
+                    if (r in [ResourceValueType.NONE, ResourceValueType.ARRAY, ResourceValueType.STRUCT]) a = void 0;
+                    else if (r === ResourceValueType.RAW) a = e;
+                    else {
+                        t = t[0] ? this.parseArgValue(t[0]) : Codec.predictLength(r);
+                        if (t.toString().includes("~")) {
+                            if (![ResourceValueType.U_INT_8, ResourceValueType.INT_8].includes(r)) throw new IpsoProtocolError(IpsoProtocolErrorType.SCHEMA_ERROR, "Invalid bit offset type: ".concat(r, " for ").concat(o.id));
+                            var s = t.toString().split("~"),
+                                n = Number(s[0] || 0),
+                                s = Number(s[1] || 0);
+                            if (n < 0 || 8 < s || s <= n) throw new IpsoProtocolError(IpsoProtocolErrorType.SCHEMA_ERROR, "Wrong bit range: ".concat(n, " ~ ").concat(s));
+                            var c = (null == (c = this.ctx[LAST_VALUE]) ? void 0 : c[0]) || 0,
+                                a = [(Codec.processData(this.processValueWithAttrs(e, o.attributes), r)[0] << n) + c];
+                            ((this.bitRead += s - n), 8 <= this.bitRead && (this.bitRead = 0));
+                        } else {
+                            c = Number(t);
+                            try {
+                                a = this.processValueWithAttrs(e, o.attributes, c);
+                            } catch (e) {
+                                throw new IpsoProtocolError(IpsoProtocolErrorType.DOWNLINK_BYTES_ERROR, "Process attributes error: ".concat(e.message, " for [").concat(o.id, "]"));
+                            }
+                            if ((a = Codec.processData(a, r, o.endianness)).length !== c) throw new IpsoProtocolError(IpsoProtocolErrorType.DOWNLINK_BYTES_ERROR, "Length not match: ".concat(a.length, ": ").concat(r, "[").concat(c, "] for ").concat(o.id));
+                        }
+                    }
+                    this.ctx[LAST_VALUE] = a;
+                }),
+                (e.prototype.processDel = function (e, o) {
+                    o = o.args || [];
+                    if (2 !== o.length) throw new IpsoProtocolError(IpsoProtocolErrorType.SCHEMA_ERROR, "Del processor must have 2 params");
+                    var t = o[0],
+                        o = o[1];
+                    if ("context" !== t) throw new IpsoProtocolError(IpsoProtocolErrorType.SCHEMA_ERROR, "Cannot del namespace ".concat(t));
+                    deepDel(this.ctx, o);
+                }),
+                (e.prototype.parseArgValue = function (e) {
+                    if ("string" == typeof e && e.startsWith("$")) {
+                        var o = "$context.";
+                        if (e.startsWith(o)) return deepGet(this.ctx, e.slice(o.length));
+                        throw new IpsoProtocolError(IpsoProtocolErrorType.REFERENCE_ERROR, "Downlink ref only support $context, but got: ".concat(e));
+                    }
+                    return e;
+                }),
+                (e.prototype.resolveTarget = function (e) {
+                    if (["result", "context"].includes(e)) return e;
+                    throw new IpsoProtocolError(IpsoProtocolErrorType.TARGET_ERROR, "Unknown target: ".concat(e));
+                }),
+                (e.prototype.processValueWithAttrs = function (e, o, t) {
+                    var r = e;
+                    if (o && ("number" == typeof r && ("number" == typeof o.coefficient && (r /= o.coefficient), "number" == typeof o.fractionDigits) && (r = Number(r.toFixed(o.fractionDigits))), "string" == typeof o.format)) {
+                        if ("string" != typeof e) throw new IpsoProtocolError(IpsoProtocolErrorType.PARAMETER_ERROR, "Invalid value type: ".concat(typeof e));
+                        switch (o.format) {
+                            case ResourceDataFormat.HEX:
+                                r = fromHexString(e);
+                                break;
+                            case ResourceDataFormat.SHORT_VERSION:
+                                r = shortVersionToBytes(e);
+                                break;
+                            case ResourceDataFormat.FULL_VERSION:
+                                r = fullVersionToBytes(e);
+                                break;
+                            case ResourceDataFormat.ASCII:
+                            case ResourceDataFormat.UTF8:
+                                ((r = new Array(t || e.length).fill(0)),
+                                    IpsoTextUtil.encode(e).forEach(function (e, o) {
+                                        r[o] = e;
+                                    }));
+                                break;
+                            default:
+                                throw new IpsoProtocolError(IpsoProtocolErrorType.SCHEMA_ERROR, "Unknown resource format: ".concat(o.format));
+                        }
+                    }
+                    return r;
+                }),
+                e
+            );
+        })());
+function bytesToShortVersion(e) {
+    if (2 !== e.length) throw new IpsoProtocolError(IpsoProtocolErrorType.PARAMETER_ERROR, "Invalid version bytes: ".concat(e));
+    return "V".concat(Number(toHexString(e.slice(0, 1))), ".").concat(Number(toHexString(e.slice(1, 2))));
+}
+function shortVersionToBytes(e) {
+    var o, t;
+    if (/^V\d+(\.\d+)?$/.test(e))
+        return (
+            (o = (t = e
+                .substring(1)
+                .split(".")
+                .map(function (e) {
+                    return e.padStart(2, "0");
+                }))[0]),
+            (t = t[1]),
+            [fromHexString(o)[0], fromHexString(t || "00")[0]]
+        );
+    throw new IpsoProtocolError(IpsoProtocolErrorType.PARAMETER_ERROR, "Invalid version format: ".concat(e));
+}
+function bytesToFullVersion(t) {
+    if (6 !== t.length) throw new IpsoProtocolError(IpsoProtocolErrorType.PARAMETER_ERROR, "Invalid version bytes: ".concat(t));
+    var e = ["", "", "r", "a", "u", "t"].map(function (e, o) {
+            return t[o] || o < 2 ? "".concat(e).concat(Number(toHexString([t[o]]))) : "";
+        }),
+        o = e.slice(0, 2).filter(Boolean),
+        e = e.slice(2).filter(Boolean);
+    return "V"
+        .concat(o.join("."))
+        .concat(e.length ? "-" : "")
+        .concat(e.join("-"));
+}
+function fullVersionToBytes(e) {
+    var r;
+    if (/^V\d+(\.\d+)?(-r\d+)?(-a\d+)?(-u\d+)?(-t\d+)?$/.test(e))
+        return (
+            (r = [0, 0, 0, 0, 0, 0]),
+            e.split("-").forEach(function (e, o) {
+                var t;
+                o
+                    ? ((o = e[0]), (t = e.substring(1).padStart(2, "0")), (r[{ r: 2, a: 3, u: 4, t: 5 }[o]] = fromHexString(t)[0]))
+                    : ((t = (o = e
+                          .substring(1)
+                          .split(".")
+                          .map(function (e) {
+                              return e.padStart(2, "0");
+                          }))[0]),
+                      (e = o[1]),
+                      (r[0] = fromHexString(t || "00")[0]),
+                      (r[1] = fromHexString(e || "00")[0]));
+            }),
+            r
+        );
+    throw new IpsoProtocolError(IpsoProtocolErrorType.PARAMETER_ERROR, "Invalid version format: ".concat(e));
+}
+var ResourceValueType,
+    ResourceObjectType,
+    ParserFnType,
+    ResourceDataDirection,
+    ResourceDataFormat,
+    CodecEndianness,
+    LAST_VALUE = "[lVal]",
+    RESULT_TO_CONTEXT = "[r2c]",
+    ARRAY_LENGTH = "[aLen]",
+    BYTE_OFFSET = "[byteOffset]",
+    BIT_READ = "[readBits]",
+    SN_UPDATED = "[SNUpdated]",
+    TSL_VER_UPDATED = "[TslVerUpdated]",
+    CURRENT_SN = "[currentSN]",
+    CURRENT_TSL_VER = "[currentTslVer]",
+    HISTORY_ITEM = "[historyItem]",
+    COMMON_RANGE = "[commonRange]",
+    UplinkProcessor = (function () {
+        function e(e, o, t) {
+            ((this.server = e), (this.curObjPath = []), (this.uplinkCmdCache = o[ResourceDataDirection.UPLINK]), (this.downlinkCmdCache = o[ResourceDataDirection.DOWNLINK]), (this.ctx = t), (this.result = {}), (this.namespace = { "#context": t, "#result": this.result }));
+        }
+        return (
+            Object.defineProperty(e.prototype, "byteOffset", {
+                get: function () {
+                    return this.ctx[BYTE_OFFSET];
+                },
+                set: function (e) {
+                    this.ctx[BYTE_OFFSET] = e;
+                },
+                enumerable: !1,
+                configurable: !0,
+            }),
+            Object.defineProperty(e.prototype, "bitRead", {
+                get: function () {
+                    return this.ctx[BIT_READ];
+                },
+                set: function (e) {
+                    this.ctx[BIT_READ] = e;
+                },
+                enumerable: !1,
+                configurable: !0,
+            }),
+            (e.prototype.reset = function (e) {
+                ((this.result = {}),
+                    (this.namespace = {
+                        "#context": e,
+                        "#result": this.result,
+                    }));
+            }),
+            (e.prototype.process = function (e) {
+                for (this.byteOffset = 0, this.bitRead = 0, this.nowBytes = e; this.byteOffset < this.nowBytes.length; ) {
+                    if (this.bitRead) throw new IpsoProtocolError(IpsoProtocolErrorType.PROCESS_UPLINK_BYTES_ERROR, "New resource must start from 0 bit: ".concat(this.bitRead));
+                    var o = e[this.byteOffset],
+                        t = this.uplinkCmdCache[o];
+                    if (!t) throw new IpsoProtocolError(IpsoProtocolErrorType.CMD_RESOURCE_NOT_FOUND, "Cannot find resource for: ".concat(o, " at ").concat(this.byteOffset));
+                    (this.walk(1), this.processObj(t), this.processResource());
+                }
+                return (this.ctx[HISTORY_ITEM] && (this.result.history.push(this.ctx[HISTORY_ITEM]), delete this.ctx[HISTORY_ITEM]), delete this.ctx[RESULT_TO_CONTEXT], this.result);
+            }),
+            (e.prototype.processObj = function (o, e) {
+                var t = this,
+                    r = __spreadArray(__spreadArray([], (e = void 0 === e ? [] : e), !0), [{ subId: o.id, cmd: deepGet(o, "cmd") }], !1);
+                if (
+                    ((this.curObjPath = r),
+                    o.processors.forEach(function (e) {
+                        return t.runProcessor(o, e);
+                    }),
+                    o.subObjs)
+                )
+                    if (o.valueType === ResourceValueType.ARRAY) {
+                        var s = this.parseArgValue(this.ctx[ARRAY_LENGTH]);
+                        if ("number" != typeof s)
+                            throw new IpsoProtocolError(
+                                IpsoProtocolErrorType.ARRAY_LENGTH_ERROR,
+                                "Wrong array length: "
+                                    .concat(typeof s, ": ")
+                                    .concat(s, " for ")
+                                    .concat(o.id),
+                            );
+                        if (1 !== o.subObjs.length) throw new IpsoProtocolError(IpsoProtocolErrorType.SCHEMA_ERROR, "Array subObj length must be 1: ".concat(o.subObjs.length, " for ").concat(o.id));
+                        for (var n = 0; n < s; n += 1) this.processObj(o.subObjs[0], r.concat({ subId: n.toString() }));
+                    } else
+                        o.subObjs.forEach(function (e) {
+                            return t.processObj(e, r);
+                        });
+                else if (o.detachedSubObjs) {
+                    var c = this.nowBytes[this.byteOffset],
+                        e =
+                            (this.walk(1),
+                            function (e, o) {
+                                return "#".concat(t.resolveTarget(e), ".").concat(o);
+                            });
+                    if (o.valueType === ResourceValueType.ARRAY) {
+                        if (1 !== o.detachedSubObjs.length) throw new IpsoProtocolError(IpsoProtocolErrorType.SCHEMA_ERROR, "Array detachedSubObjs length must be 1: ".concat(o.detachedSubObjs.length, " for ").concat(o.id));
+                        var a = deepGet(this.namespace, e("result", this.getCurObjId())) || [],
+                            a = r.concat({ subId: a.length });
+                        (this.processObj(o.detachedSubObjs[0], a),
+                            null != (i = o.detachedCmdDest) &&
+                                i.subProperty &&
+                                deepSet(
+                                    this.namespace,
+                                    e(
+                                        "result",
+                                        ""
+                                            .concat(
+                                                a
+                                                    .map(function (e) {
+                                                        return e.subId;
+                                                    })
+                                                    .join("."),
+                                                ".",
+                                            )
+                                            .concat(o.detachedCmdDest.subProperty),
+                                    ),
+                                    c,
+                                ));
+                    } else {
+                        var i = o.detachedSubObjs.find(function (e) {
+                            return e.cmd === c;
+                        });
+                        if (null != (a = o.detachedCmdDest) && a.subProperty) deepSet(this.namespace, e("result", "".concat(this.getCurObjId(), ".").concat(o.detachedCmdDest.subProperty)), c);
+                        else if (!i) throw new IpsoProtocolError(IpsoProtocolErrorType.DETACHED_SUB_RESOURCE_MUST_BE_OBJECT, "Cannot find detached sub obj for: ".concat(c, " at ").concat(this.byteOffset));
+                        i && this.processObj(i, r);
+                    }
+                }
+                null != (a = null == o ? void 0 : o.afterProcessors) &&
+                    a.forEach(function (e) {
+                        return t.runProcessor(o, e);
+                    });
+            }),
+            (e.prototype.getCurObjId = function () {
+                return this.curObjPath
+                    .map(function (e) {
+                        return e.subId;
+                    })
+                    .join(".");
+            }),
+            (e.prototype.runProcessor = function (e, o) {
+                switch (o.fn) {
+                    case ParserFnType.SET:
+                        this.processSet(o);
+                        break;
+                    case ParserFnType.ALLOC:
+                        this.processAlloc(e, o);
+                        break;
+                    case ParserFnType.READ:
+                        this.processRead(e, o);
+                        break;
+                    case ParserFnType.DEL:
+                        this.processDel(e, o);
+                        break;
+                    case ParserFnType.PUSH:
+                        this.processPush(o);
+                        break;
+                    case ParserFnType.REFLECT:
+                        this.processReflect();
+                        break;
+                    default:
+                        throw new IpsoProtocolError(IpsoProtocolErrorType.SCHEMA_ERROR, "Unknown processor: ".concat(o.fn));
+                }
+            }),
+            (e.prototype.walk = function (e) {
+                if (this.bitRead) throw new IpsoProtocolError(IpsoProtocolErrorType.PROCESS_UPLINK_BYTES_ERROR, "Walk must start from 0 bit: ".concat(this.bitRead, " at ").concat(this.byteOffset));
+                if (((this.byteOffset += e), this.byteOffset > this.nowBytes.length)) throw new IpsoProtocolError(IpsoProtocolErrorType.PROCESS_UPLINK_BYTES_ERROR, "Byte offset overflow: ".concat(this.byteOffset, " / ").concat(this.nowBytes.length));
+            }),
+            (e.prototype.processRead = function (o, e) {
+                var t = this,
+                    r = ((null == (r = e.args)
+                        ? void 0
+                        : r.map(function (e) {
+                              return t.parseArgValue(e);
+                          })) || [])[0],
+                    s = o.valueType;
+                if ((s = void 0 !== (null == (n = e.args) ? void 0 : n[1]) ? e.args[1] : s) === ResourceValueType.NONE) this.ctx[LAST_VALUE] = null;
+                else if (s !== ResourceValueType.RAW)
+                    if (s === ResourceValueType.ARRAY) this.ctx[LAST_VALUE] = [];
+                    else if (s === ResourceValueType.STRUCT) this.ctx[LAST_VALUE] = {};
+                    else {
+                        var n = void 0;
+                        (r = null == r ? Codec.predictLength(o.valueType) : r).toString().includes("~") ? ((e = r.toString().split("~")), (s = Number(e[0] || 0)), (e = Number(e[1] || 0)), (n = this.readByBits(s, e, o.valueType)), (this.bitRead += e - s), 8 <= this.bitRead && ((this.bitRead = 0), this.walk(1))) : ((e = Number(r)), (n = this.readByBytes(e, o.valueType, o.endianness)), this.walk(e));
+                        try {
+                            this.ctx[LAST_VALUE] = this.processValueWithAttrs(n, o.attributes);
+                        } catch (e) {
+                            throw new IpsoProtocolError(IpsoProtocolErrorType.ATTRIBUTE_CONVERT_ERROR, "[ ".concat(o.id, " ] at ").concat(this.byteOffset, ": ").concat(n, " attributes error: ").concat(e.message));
+                        }
+                    }
+            }),
+            (e.prototype.processSet = function (e) {
+                var o = this,
+                    e = e.args || [],
+                    t = this.resolveTarget(e[0]),
+                    e = e.slice(1).map(function (e) {
+                        return o.parseArgValue(e);
+                    }),
+                    r = e[0],
+                    e = e[1];
+                (void 0 === r && (r = this.getCurObjId()), void 0 === e && (e = this.ctx[LAST_VALUE]), deepSet(this.namespace, "#".concat(t, ".").concat(r), e));
+            }),
+            (e.prototype.processAlloc = function (e, o) {
+                var t = this,
+                    o = o.args || [],
+                    r = this.resolveTarget(o[0]),
+                    o = o.slice(1).map(function (e) {
+                        return t.parseArgValue(e);
+                    }),
+                    s = o[0],
+                    o = o[1],
+                    r = (void 0 === s && (s = this.getCurObjId()), void 0 === o && (o = e.valueType), "#".concat(r, ".").concat(s));
+                if (!deepExists(this.namespace, r))
+                    if (o === ResourceValueType.ARRAY) deepSet(this.namespace, r, []);
+                    else {
+                        if (o !== ResourceValueType.STRUCT) throw new IpsoProtocolError(IpsoProtocolErrorType.SET_VALUE_ERROR, "Cannot alloc non-array/struct: ".concat(o, " for ").concat(e.id));
+                        deepSet(this.namespace, r, {});
+                    }
+            }),
+            (e.prototype.processDel = function (e, o) {
+                o = o.args || [];
+                if (2 !== o.length) throw new IpsoProtocolError(IpsoProtocolErrorType.SCHEMA_ERROR, "Del processor must have 2 params");
+                var t = o[1];
+                deepDel(this.namespace, "#".concat(o[0], ".").concat(t));
+            }),
+            (e.prototype.processReflect = function () {
+                var t,
+                    e = deepGet(this.ctx, "ans.length");
+                if ("number" != typeof e) throw new IpsoProtocolError(IpsoProtocolErrorType.REFLECT_RELATION_ERROR, "Cannot get reflect cmd length at ".concat(this.byteOffset));
+                if (e < 1) delete this.ctx[LAST_VALUE];
+                else {
+                    var r = this.nowBytes[this.byteOffset],
+                        s = this.downlinkCmdCache[r];
+                    if (!s) throw new IpsoProtocolError(IpsoProtocolErrorType.REFLECT_RELATION_ERROR, "Cannot reflect detached resource for: ".concat(r, " at ").concat(this.byteOffset));
+                    this.walk(1);
+                    for (var n = [s.id], c = 1, a = this; c < e; )
+                        !(function () {
+                            var e,
+                                o = a.nowBytes[a.byteOffset];
+                            if (!s.detachedSubObjs) throw new IpsoProtocolError(IpsoProtocolErrorType.PARAMETER_ERROR, "Cannot reflect detached resource for: ".concat(r, " -> ").concat(o, " at ").concat(a.byteOffset));
+                            if (s.valueType === ResourceValueType.ARRAY) {
+                                if ((n.push(o.toString()), !(e = null == (t = s.detachedSubObjs) ? void 0 : t[0]))) throw new IpsoProtocolError(IpsoProtocolErrorType.REFLECT_RELATION_ERROR, "Cannot reflect array resource for: ".concat(r, " -> ").concat(o, " at ").concat(a.byteOffset));
+                                s = e;
+                            } else {
+                                if (
+                                    !(e =
+                                        null == (t = s.detachedSubObjs)
+                                            ? void 0
+                                            : t.find(function (e) {
+                                                  return e.cmd === o;
+                                              }))
+                                )
+                                    throw new IpsoProtocolError(IpsoProtocolErrorType.REFLECT_RELATION_ERROR, "Cannot reflect detached resource for: ".concat(r, " -> ").concat(o, " at ").concat(a.byteOffset));
+                                ((s = e), n.push(s.id));
+                            }
+                            (a.walk(1), (c += 1), (r = a.nowBytes[a.byteOffset]));
+                        })();
+                    this.ctx[LAST_VALUE] = n.join(".");
+                }
+            }),
+            (e.prototype.parseArgValue = function (e) {
+                return "string" == typeof e && e.startsWith("$") ? deepGet(this.namespace, e.replace("$", "#")) : e;
+            }),
+            (e.prototype.processPush = function (e) {
+                var e = e.args || [],
+                    o = this.resolveTarget(e[0]),
+                    t = this.parseArgValue(e[1]),
+                    r = (void 0 === t && (t = this.getCurObjId()), deepGet(this.namespace, "#".concat(o, ".").concat(t)));
+                if (!Array.isArray(r)) throw new IpsoProtocolError(IpsoProtocolErrorType.SET_VALUE_ERROR, "Cannot push to non-array: ".concat(o, ".").concat(t));
+                o = this.ctx[LAST_VALUE];
+                void 0 !== (o = e[2] ? this.parseArgValue(e[2]) : o) && r.push(o);
+            }),
+            (e.prototype.resolveTarget = function (e) {
+                if (["result", "context"].includes(e)) return "result" === e && this.ctx[RESULT_TO_CONTEXT] ? this.ctx[RESULT_TO_CONTEXT] : e;
+                throw new IpsoProtocolError(IpsoProtocolErrorType.TARGET_ERROR, "Unknown target: ".concat(e));
+            }),
+            (e.prototype.readByBytes = function (e, o, t) {
+                e = this.nowBytes.slice(this.byteOffset, this.byteOffset + e);
+                return Codec.processBytes(e, o, t);
+            }),
+            (e.prototype.readByBits = function (e, o, t) {
+                if (![ResourceValueType.INT_8, ResourceValueType.U_INT_8].includes(t)) throw new IpsoProtocolError(IpsoProtocolErrorType.SCHEMA_ERROR, "non-int8 cannot have bit offset");
+                if (e < 0 || 8 < o || o <= e) throw new IpsoProtocolError(IpsoProtocolErrorType.SCHEMA_ERROR, "Wrong bit range: ".concat(e, " ~ ").concat(o));
+                var r = this.nowBytes[this.byteOffset],
+                    r = [this.extractBits(r, e, o - e)];
+                return Codec.processBytes(r, t);
+            }),
+            (e.prototype.extractBits = function (e, o, t) {
+                return (e >> o) & ((1 << t) - 1);
+            }),
+            (e.prototype.processResource = function () {
+                var e, o, t;
+                this.ctx[TSL_VER_UPDATED] &&
+                    this.ctx[SN_UPDATED] &&
+                    ((o = this.ctx[CURRENT_SN]), (e = this.ctx[CURRENT_TSL_VER]), o) &&
+                    e &&
+                    ((t = o.substring(0, 4)),
+                    (o = o.substring(12, 15)),
+                    (t = {
+                        model: t.toLowerCase(),
+                        pn: o.toLowerCase(),
+                        tslVer: e.toLowerCase(),
+                        schemaVer: RESOURCE_SCHEMA_VERSION,
+                    }),
+                    this.server.loadResource([t]),
+                    delete this.ctx[TSL_VER_UPDATED],
+                    delete this.ctx[SN_UPDATED]);
+            }),
+            (e.prototype.processValueWithAttrs = function (e, o) {
+                var t = e;
+                if (o)
+                    if ("number" == typeof t) ("number" == typeof o.coefficient && (t *= o.coefficient), "number" == typeof o.fractionDigits && (t = Number(t.toFixed(o.fractionDigits))));
+                    else if (Array.isArray(e) && "string" == typeof o.format)
+                        switch (o.format) {
+                            case ResourceDataFormat.HEX:
+                                t = toHexString(e);
+                                break;
+                            case ResourceDataFormat.SHORT_VERSION:
+                                t = bytesToShortVersion(e);
+                                break;
+                            case ResourceDataFormat.FULL_VERSION:
+                                t = bytesToFullVersion(e);
+                                break;
+                            case ResourceDataFormat.ASCII:
+                            case ResourceDataFormat.UTF8:
+                                t = IpsoTextUtil.decode(e);
+                                break;
+                            default:
+                                throw new IpsoProtocolError(IpsoProtocolErrorType.SCHEMA_ERROR, "Unknown resource format: ".concat(o.format));
+                        }
+                return t;
+            }),
+            e
+        );
+    })(),
+    IpsoProtocolServer = (function () {
+        function e(e) {
+            ((this.context = {}), (this.loadedResourceIds = {}), (this.uplinkCmdCache = {}), (this.downlinkCmdCache = {}), (this.downlinkIdCache = {}), (this.uplinkIdCache = {}), (this.resourceLoader = e) && this.loadResource(), (this.upLinkProcessor = new UplinkProcessor(this, (((e = {})[ResourceDataDirection.DOWNLINK] = this.downlinkCmdCache), (e[ResourceDataDirection.UPLINK] = this.uplinkCmdCache), e), this.context)), (this.downLinkProcessor = new DownlinkProcessor(this, (((e = {})[ResourceDataDirection.DOWNLINK] = this.downlinkIdCache), (e[ResourceDataDirection.UPLINK] = this.uplinkIdCache), e), this.context)));
+        }
+        return (
+            (e.prototype.getResourceIdString = function (e) {
+                return [e.model, e.pn, e.tslVer, e.schemaVer].filter(Boolean).join("|");
+            }),
+            (e.prototype.clearResourceCache = function () {
+                var o = this;
+                (Object.keys(this.downlinkIdCache).forEach(function (e) {
+                    return delete o.downlinkIdCache[e];
+                }),
+                    Object.keys(this.downlinkCmdCache).forEach(function (e) {
+                        return delete o.downlinkCmdCache[e];
+                    }),
+                    Object.keys(this.uplinkIdCache).forEach(function (e) {
+                        return delete o.uplinkIdCache[e];
+                    }),
+                    Object.keys(this.uplinkCmdCache).forEach(function (e) {
+                        return delete o.uplinkCmdCache[e];
+                    }),
+                    (this.loadedResourceIds = {}));
+            }),
+            (e.prototype.setResource = function (e) {
+                var t = this;
+                (this.clearResourceCache(),
+                    e.forEach(function (e) {
+                        var o = t.cacheResource(
+                            {
+                                model: e.meta.model,
+                                pn: e.meta.pn,
+                                tslVer: e.meta.tslVer,
+                                schemaVer: e.meta.schemaVer,
+                            },
+                            e,
+                        );
+                        "common" === e.meta.model && (t.context[COMMON_RANGE] = o);
+                    }));
+            }),
+            (e.prototype.loadResource = function (e) {
+                var o,
+                    t = this,
+                    r = (void 0 === e && (e = []), this.resourceLoader);
+                r &&
+                    (this.clearResourceCache(),
+                    (this.context[COMMON_RANGE] = this.cacheResource(
+                        (o = {
+                            model: "common",
+                            tslVer: "v1.0",
+                            schemaVer: RESOURCE_SCHEMA_VERSION,
+                        }),
+                        r(o),
+                    )),
+                    e.forEach(function (e) {
+                        t.cacheResource(e, r(e));
+                    }));
+            }),
+            (e.prototype.getResourceIdList = function () {
+                return Object.values(this.loadedResourceIds);
+            }),
+            (e.prototype.cacheResource = function (e, o) {
+                var t = this;
+                if (!o) throw new IpsoProtocolError(IpsoProtocolErrorType.RESOURCE_DATA_NOT_FOUND, "Resource not found: ".concat(JSON.stringify(e)));
+                this.loadedResourceIds[this.getResourceIdString(e)] = e;
+                var r = [255, 0];
+                return (
+                    o.obj.forEach(function (e) {
+                        if (e.direction === ResourceDataDirection.DOWNLINK) {
+                            if (t.downlinkIdCache[e.id]) throw new IpsoProtocolError(IpsoProtocolErrorType.SCHEMA_ERROR, "Downlink Resource id conflict: ".concat(e.id));
+                            if (((t.downlinkIdCache[e.id] = e), t.downlinkCmdCache[e.cmd])) throw new IpsoProtocolError(IpsoProtocolErrorType.SCHEMA_ERROR, "Downlink Resource cmd conflict: ".concat(e.cmd));
+                            t.downlinkCmdCache[e.cmd] = e;
+                        } else {
+                            if (e.direction !== ResourceDataDirection.UPLINK) throw new IpsoProtocolError(IpsoProtocolErrorType.SCHEMA_ERROR, "Invalid direction: ".concat(e.direction));
+                            if (t.uplinkCmdCache[e.cmd]) throw new IpsoProtocolError(IpsoProtocolErrorType.SCHEMA_ERROR, "Uplink Resource cmd conflict: ".concat(e.cmd));
+                            if (((t.uplinkCmdCache[e.cmd] = e), t.uplinkIdCache[e.id])) throw new IpsoProtocolError(IpsoProtocolErrorType.SCHEMA_ERROR, "Uplink Resource id conflict: ".concat(e.id));
+                            t.uplinkIdCache[e.id] = e;
+                        }
+                        (r[1] < e.cmd && (r[1] = e.cmd), e.cmd < r[0] && (r[0] = e.cmd));
+                    }),
+                    r
+                );
+            }),
+            (e.prototype.read = function (e) {
+                return (this.upLinkProcessor.reset(this.context), this.upLinkProcessor.process(e));
+            }),
+            (e.prototype.writeChunk = function (e) {
+                return (this.downLinkProcessor.reset(this.context), this.downLinkProcessor.process(e));
+            }),
+            (e.prototype.write = function (e) {
+                return this.writeChunk(e).flat();
+            }),
+            e
+        );
+    })(),
+    RESOURCE_SCHEMA_VERSION =
+        (!(function (e) {
+            ((e.INT_8 = "int8"), (e.INT_16 = "int16"), (e.INT_32 = "int32"), (e.U_INT_8 = "uint8"), (e.U_INT_16 = "uint16"), (e.U_INT_32 = "uint32"), (e.FLOAT_16 = "float16"), (e.FLOAT = "float"), (e.STRING = "string"), (e.BIN = "bin"), (e.NONE = "none"), (e.RAW = "raw"), (e.STRUCT = "struct"), (e.ARRAY = "array"));
+        })((ResourceValueType = ResourceValueType || {})),
+        !(function (e) {
+            ((e.EVENT = "event"), (e.SERVICE = "service"), (e.PROPERTY = "property"));
+        })((ResourceObjectType = ResourceObjectType || {})),
+        !(function (e) {
+            ((e.READ = "read"), (e.SET = "set"), (e.ALLOC = "alloc"), (e.DEL = "del"), (e.PUSH = "push"), (e.REFLECT = "reflect"));
+        })((ParserFnType = ParserFnType || {})),
+        !(function (e) {
+            ((e.UPLINK = "uplink"), (e.DOWNLINK = "downlink"));
+        })((ResourceDataDirection = ResourceDataDirection || {})),
+        !(function (e) {
+            ((e.HEX = "hex"), (e.SHORT_VERSION = "short_version"), (e.FULL_VERSION = "full_version"), (e.ASCII = "ascii"), (e.UTF8 = "utf8"));
+        })((ResourceDataFormat = ResourceDataFormat || {})),
+        !(function (e) {
+            ((e.LITTLE_ENDING = "little-ending"), (e.BIG_ENDING = "big-ending"));
+        })((CodecEndianness = CodecEndianness || {})),
+        "v1.0"),
+    RESOURCE_FILE_SUFFIX = ".resource.json";
+function deepGet(e, o) {
+    return o.split(".").reduce(function (e, o) {
+        return e[o];
+    }, e);
+}
+function deepSet(e, t, o) {
+    var r = t.split("."),
+        s = r.pop();
+    if (!s) throw new IpsoProtocolError(IpsoProtocolErrorType.SET_VALUE_ERROR, "Invalid path: ".concat(t));
+    r = r.reduce(function (e, o) {
+        if (e[o]) return e[o];
+        throw new IpsoProtocolError(IpsoProtocolErrorType.SET_VALUE_ERROR, "Cannot set value to non-exist key: ".concat(o, " in path: ").concat(t));
+    }, e);
+    if ("object" != typeof r) throw new IpsoProtocolError(IpsoProtocolErrorType.SET_VALUE_ERROR, "Cannot set value to non-object: ".concat(t, ": ").concat(r));
+    r[s] = o;
+}
+function deepDel(e, t) {
+    var o = t.split("."),
+        r = o.pop();
+    if (!r) throw new IpsoProtocolError(IpsoProtocolErrorType.DELETE_VALUE_ERROR, "Invalid path: ".concat(t));
+    delete o.reduce(function (e, o) {
+        if (e[o]) return e[o];
+        throw new IpsoProtocolError(IpsoProtocolErrorType.DELETE_VALUE_ERROR, "Cannot delete when find path ".concat(t));
+    }, e)[r];
+}
+function deepExists(e, o) {
+    try {
+        return void 0 !== deepGet(e, o);
+    } catch (e) {
+        return !1;
+    }
+}
+function isNil(e) {
+    return null == e;
+}
+function assertIsType(e, o) {
+    if (typeof e !== o) throw new IpsoProtocolError(IpsoProtocolErrorType.VALUE_TYPE_ASSERT_ERROR, "Expect ".concat(o, " but got ").concat(typeof e));
+}
+var toHexString = function (e) {
+        return e.reduce(function (e, o) {
+            return e + o.toString(16).padStart(2, "0");
+        }, "");
+    },
+    fromHexString = function (e) {
+        if (!/^[0-9A-Fa-f]+$/.test(e)) throw new IpsoProtocolError(IpsoProtocolErrorType.PARAMETER_ERROR, "Invalid hex string: ".concat(e));
+        if (e.length % 2 != 0) throw new IpsoProtocolError(IpsoProtocolErrorType.PARAMETER_ERROR, "Invalid hex string length: ".concat(e.length));
+        for (var o = [], t = 0; t < e.length; t += 2) {
+            var r = e.substring(t, t + 2),
+                r = parseInt(r, 16);
+            o.push(r);
+        }
+        return o;
+    },
+    IpsoTextUtil = (function () {
+        function e() {}
+        return (
+            (e.decode = function (e) {
+                for (var o = "", t = 0; t < e.length; t += 1) {
+                    var r = e[t];
+                    if (0 === r) break;
+                    o += String.fromCharCode(r);
+                }
+                return decodeURIComponent(escape(o)).replace(/\u0000+$/, "");
+            }),
+            (e.encode = function (e) {
+                for (var o = [], t = 0; t < e.length; t += 1) {
+                    var r = e.charCodeAt(t);
+                    r < 128 ? o.push(r) : (r < 2048 ? o.push(192 | (r >> 6)) : (r < 55296 || 57344 <= r ? o.push(224 | (r >> 12)) : ((t += 1), (r = 65536 + (((1023 & r) << 10) | (1023 & e.charCodeAt(t)))), o.push(240 | (r >> 18)), o.push(128 | ((r >> 12) & 63))), o.push(128 | ((r >> 6) & 63))), o.push(128 | (63 & r)));
+                }
+                return o;
+            }),
+            e
+        );
+    })();
+var common = {
+    id: "",
+    meta: { model: "common" },
+    obj: [
+        {
+            id: "request_check_sequence_number",
+            type: "service",
+            valueType: "struct",
+            cmd: 255,
+            direction: "downlink",
+            processors: [],
+            subObjs: [
+                {
+                    id: "sequence_number",
+                    valueType: "uint8",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                    attributes: { min: 0, max: 255 },
+                },
+            ],
+        },
+        {
+            id: "check_sequence_number_reply",
+            type: "event",
+            valueType: "struct",
+            cmd: 255,
+            direction: "uplink",
+            processors: [{ fn: "alloc", args: ["result"] }],
+            subObjs: [
+                {
+                    id: "sequence_number",
+                    valueType: "uint8",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                    attributes: { min: 0, max: 255 },
+                },
+            ],
+        },
+        {
+            id: "request_check_order",
+            type: "service",
+            valueType: "struct",
+            cmd: 254,
+            direction: "downlink",
+            processors: [],
+            subObjs: [
+                {
+                    id: "order",
+                    valueType: "uint8",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                    attributes: { min: 0, max: 255 },
+                },
+            ],
+        },
+        {
+            id: "check_order_reply",
+            type: "event",
+            valueType: "struct",
+            cmd: 254,
+            direction: "uplink",
+            processors: [{ fn: "alloc", args: ["result"] }],
+            subObjs: [
+                {
+                    id: "order",
+                    valueType: "uint8",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                    attributes: { min: 0, max: 255 },
+                },
+            ],
+        },
+        {
+            id: "request_check_password",
+            type: "service",
+            valueType: "struct",
+            cmd: 251,
+            direction: "downlink",
+            processors: [],
+            subObjs: [
+                {
+                    id: "password",
+                    valueType: "bin",
+                    processors: [
+                        { fn: "read", args: ["6"] },
+                        { fn: "set", args: ["result"] },
+                    ],
+                    attributes: { format: "ascii" },
+                },
+            ],
+        },
+        {
+            id: "check_password_reply",
+            type: "event",
+            valueType: "struct",
+            cmd: 251,
+            direction: "uplink",
+            processors: [{ fn: "alloc", args: ["result"] }],
+            subObjs: [
+                {
+                    id: "result",
+                    valueType: "uint8",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                },
+            ],
+        },
+        {
+            id: "request_change_password",
+            type: "service",
+            valueType: "struct",
+            cmd: 250,
+            direction: "downlink",
+            processors: [],
+            subObjs: [
+                {
+                    id: "new_password",
+                    valueType: "bin",
+                    processors: [
+                        { fn: "read", args: ["6"] },
+                        { fn: "set", args: ["result"] },
+                    ],
+                    attributes: { format: "ascii" },
+                },
+            ],
+        },
+        {
+            id: "change_password_reply",
+            type: "event",
+            valueType: "struct",
+            cmd: 250,
+            direction: "uplink",
+            processors: [{ fn: "alloc", args: ["result"] }],
+            subObjs: [
+                {
+                    id: "result",
+                    valueType: "uint8",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                },
+            ],
+        },
+        {
+            id: "request_firmware_upgrade",
+            type: "service",
+            valueType: "struct",
+            cmd: 247,
+            direction: "downlink",
+            processors: [],
+            detachedSubObjs: [
+                { id: "command", valueType: "uint8", processors: [] },
+                {
+                    cmd: 0,
+                    id: "start_upgrade",
+                    valueType: "struct",
+                    processors: [],
+                    subObjs: [
+                        {
+                            id: "type",
+                            valueType: "uint8",
+                            processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                        },
+                        {
+                            id: "length",
+                            valueType: "uint8",
+                            processors: [
+                                { fn: "read", args: [null, "raw"] },
+                                {
+                                    fn: "set",
+                                    args: ["context", "request_firmware_upgrade_start_upgrade_length"],
+                                },
+                                { fn: "read" },
+                                { fn: "set", args: ["result"] },
+                            ],
+                            attributes: { min: 0, max: 255 },
+                        },
+                        {
+                            id: "check_data",
+                            valueType: "array",
+                            processors: [
+                                {
+                                    fn: "set",
+                                    args: ["context", "[aLen]", "$context.request_firmware_upgrade_start_upgrade_length"],
+                                },
+                            ],
+                            afterProcessors: [{ fn: "del", args: ["context", "[aLen]"] }],
+                            subObjs: [
+                                {
+                                    id: "_item",
+                                    valueType: "uint8",
+                                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                                },
+                            ],
+                        },
+                    ],
+                },
+                {
+                    cmd: 1,
+                    id: "transmission",
+                    valueType: "struct",
+                    processors: [],
+                    subObjs: [
+                        {
+                            id: "length",
+                            valueType: "uint16",
+                            processors: [
+                                { fn: "read", args: [null, "raw"] },
+                                {
+                                    fn: "set",
+                                    args: ["context", "request_firmware_upgrade_transmission_length"],
+                                },
+                                { fn: "read" },
+                                { fn: "set", args: ["result"] },
+                            ],
+                            attributes: { min: 1, max: 1024 },
+                        },
+                        {
+                            id: "data",
+                            valueType: "array",
+                            processors: [
+                                {
+                                    fn: "set",
+                                    args: ["context", "[aLen]", "$context.request_firmware_upgrade_transmission_length"],
+                                },
+                            ],
+                            afterProcessors: [{ fn: "del", args: ["context", "[aLen]"] }],
+                            subObjs: [
+                                {
+                                    id: "_item",
+                                    valueType: "uint8",
+                                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                                },
+                            ],
+                        },
+                    ],
+                },
+                {
+                    cmd: 2,
+                    id: "end_upgrade",
+                    valueType: "struct",
+                    processors: [],
+                },
+            ],
+        },
+        {
+            id: "firmware_upgrade_reply",
+            type: "event",
+            valueType: "struct",
+            cmd: 247,
+            direction: "uplink",
+            processors: [{ fn: "alloc", args: ["result"] }],
+            detachedSubObjs: [
+                { id: "command", valueType: "uint8", processors: [] },
+                {
+                    cmd: 0,
+                    id: "start_upgrade",
+                    valueType: "struct",
+                    processors: [{ fn: "alloc", args: ["result"] }],
+                    subObjs: [
+                        {
+                            id: "result",
+                            valueType: "uint8",
+                            processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                        },
+                        {
+                            id: "length",
+                            valueType: "uint16",
+                            processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                            attributes: { min: 1, max: 65535 },
+                        },
+                    ],
+                },
+                {
+                    cmd: 1,
+                    id: "transmission",
+                    valueType: "struct",
+                    processors: [{ fn: "alloc", args: ["result"] }],
+                    subObjs: [
+                        {
+                            id: "result",
+                            valueType: "uint8",
+                            processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                        },
+                    ],
+                },
+                {
+                    cmd: 2,
+                    id: "end_upgrade",
+                    valueType: "struct",
+                    processors: [{ fn: "alloc", args: ["result"] }],
+                    subObjs: [
+                        {
+                            id: "result",
+                            valueType: "uint8",
+                            processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                        },
+                    ],
+                },
+            ],
+        },
+        {
+            id: "request_preconfiguration",
+            type: "service",
+            valueType: "struct",
+            cmd: 246,
+            direction: "downlink",
+            processors: [],
+            detachedSubObjs: [
+                { id: "command", valueType: "uint8", processors: [] },
+                {
+                    cmd: 0,
+                    id: "start_writing",
+                    valueType: "array",
+                    processors: [{ fn: "set", args: ["context", "[aLen]", 8] }],
+                    afterProcessors: [{ fn: "del", args: ["context", "[aLen]"] }],
+                    subObjs: [
+                        {
+                            id: "_item",
+                            valueType: "uint8",
+                            processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                        },
+                    ],
+                },
+                {
+                    cmd: 1,
+                    id: "configuration_writing",
+                    valueType: "struct",
+                    processors: [],
+                    subObjs: [
+                        {
+                            id: "length",
+                            valueType: "uint16",
+                            processors: [
+                                { fn: "read", args: [null, "raw"] },
+                                {
+                                    fn: "set",
+                                    args: ["context", "request_preconfiguration_configuration_writing_length"],
+                                },
+                                { fn: "read" },
+                                { fn: "set", args: ["result"] },
+                            ],
+                            attributes: { min: 1, max: 65535 },
+                        },
+                        {
+                            id: "data",
+                            valueType: "array",
+                            processors: [
+                                {
+                                    fn: "set",
+                                    args: ["context", "[aLen]", "$context.request_preconfiguration_configuration_writing_length"],
+                                },
+                            ],
+                            afterProcessors: [{ fn: "del", args: ["context", "[aLen]"] }],
+                            subObjs: [
+                                {
+                                    id: "_item",
+                                    valueType: "uint8",
+                                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                                },
+                            ],
+                        },
+                    ],
+                },
+                {
+                    cmd: 2,
+                    id: "end_writing",
+                    valueType: "struct",
+                    processors: [],
+                },
+                {
+                    cmd: 16,
+                    id: "start_reading",
+                    valueType: "struct",
+                    processors: [],
+                },
+                {
+                    cmd: 17,
+                    id: "configuration_reading",
+                    valueType: "struct",
+                    processors: [],
+                },
+                {
+                    cmd: 18,
+                    id: "end_reading",
+                    valueType: "struct",
+                    processors: [],
+                },
+            ],
+        },
+        {
+            id: "preconfiguration_reply",
+            type: "event",
+            valueType: "struct",
+            cmd: 246,
+            direction: "uplink",
+            processors: [{ fn: "alloc", args: ["result"] }],
+            detachedSubObjs: [
+                { id: "command", valueType: "uint8", processors: [] },
+                {
+                    cmd: 0,
+                    id: "start_writing",
+                    valueType: "struct",
+                    processors: [{ fn: "alloc", args: ["result"] }],
+                    subObjs: [
+                        {
+                            id: "result",
+                            valueType: "uint8",
+                            processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                        },
+                        {
+                            id: "length",
+                            valueType: "uint16",
+                            processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                            attributes: { min: 1, max: 65535 },
+                        },
+                    ],
+                },
+                {
+                    cmd: 1,
+                    id: "configuration_writing",
+                    valueType: "struct",
+                    processors: [{ fn: "alloc", args: ["result"] }],
+                    subObjs: [
+                        {
+                            id: "result",
+                            valueType: "uint8",
+                            processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                        },
+                    ],
+                },
+                {
+                    cmd: 2,
+                    id: "end_writing",
+                    valueType: "struct",
+                    processors: [{ fn: "alloc", args: ["result"] }],
+                    subObjs: [
+                        {
+                            id: "result",
+                            valueType: "uint8",
+                            processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                        },
+                    ],
+                },
+                {
+                    cmd: 16,
+                    id: "start_reading",
+                    valueType: "struct",
+                    processors: [{ fn: "alloc", args: ["result"] }],
+                    subObjs: [
+                        {
+                            id: "data",
+                            valueType: "array",
+                            processors: [
+                                { fn: "alloc", args: ["result"] },
+                                { fn: "set", args: ["context", "[aLen]", 8] },
+                            ],
+                            afterProcessors: [{ fn: "del", args: ["context", "[aLen]"] }],
+                            subObjs: [
+                                {
+                                    id: "_item",
+                                    valueType: "uint8",
+                                    processors: [
+                                        { fn: "read" },
+                                        {
+                                            fn: "push",
+                                            args: ["result", "preconfiguration_reply.start_reading.data"],
+                                        },
+                                    ],
+                                },
+                            ],
+                        },
+                        {
+                            id: "length",
+                            valueType: "uint16",
+                            processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                            attributes: { min: 1, max: 65535 },
+                        },
+                    ],
+                },
+                {
+                    cmd: 17,
+                    id: "configuration_read",
+                    valueType: "struct",
+                    processors: [{ fn: "alloc", args: ["result"] }],
+                    subObjs: [
+                        {
+                            id: "length",
+                            valueType: "uint16",
+                            processors: [
+                                { fn: "read", args: [null, "raw"] },
+                                {
+                                    fn: "set",
+                                    args: ["context", "preconfiguration_reply_configuration_read_length"],
+                                },
+                                { fn: "read" },
+                                { fn: "set", args: ["result"] },
+                            ],
+                            attributes: { min: 1, max: 65535 },
+                        },
+                        {
+                            id: "data",
+                            valueType: "array",
+                            processors: [
+                                { fn: "alloc", args: ["result"] },
+                                {
+                                    fn: "set",
+                                    args: ["context", "[aLen]", "$context.preconfiguration_reply_configuration_read_length"],
+                                },
+                            ],
+                            afterProcessors: [{ fn: "del", args: ["context", "[aLen]"] }],
+                            subObjs: [
+                                {
+                                    id: "_item",
+                                    valueType: "uint8",
+                                    processors: [
+                                        { fn: "read" },
+                                        {
+                                            fn: "push",
+                                            args: ["result", "preconfiguration_reply.configuration_read.data"],
+                                        },
+                                    ],
+                                },
+                            ],
+                        },
+                    ],
+                },
+                {
+                    cmd: 18,
+                    id: "end_reading",
+                    valueType: "struct",
+                    processors: [{ fn: "alloc", args: ["result"] }],
+                    subObjs: [
+                        {
+                            id: "result",
+                            valueType: "uint8",
+                            processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                        },
+                    ],
+                },
+            ],
+        },
+        {
+            id: "request_historical_data_export",
+            type: "service",
+            valueType: "struct",
+            cmd: 245,
+            direction: "downlink",
+            processors: [],
+            detachedSubObjs: [
+                { id: "command", valueType: "uint8", processors: [] },
+                {
+                    cmd: 16,
+                    id: "start_exporting",
+                    valueType: "struct",
+                    processors: [],
+                    subObjs: [
+                        {
+                            id: "start_timestamp",
+                            valueType: "uint32",
+                            processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                        },
+                        {
+                            id: "end_timestamp",
+                            valueType: "uint32",
+                            processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                        },
+                        {
+                            id: "current_timestamp",
+                            valueType: "uint32",
+                            processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                        },
+                    ],
+                },
+                {
+                    cmd: 17,
+                    id: "exported_data",
+                    valueType: "struct",
+                    processors: [],
+                },
+                {
+                    cmd: 18,
+                    id: "end_exporting",
+                    valueType: "struct",
+                    processors: [],
+                },
+            ],
+        },
+        {
+            id: "historical_data_export_reply",
+            type: "event",
+            valueType: "struct",
+            cmd: 245,
+            direction: "uplink",
+            processors: [{ fn: "alloc", args: ["result"] }],
+            detachedSubObjs: [
+                { id: "command", valueType: "uint8", processors: [] },
+                {
+                    cmd: 16,
+                    id: "start_exporting",
+                    valueType: "struct",
+                    processors: [{ fn: "alloc", args: ["result"] }],
+                    subObjs: [
+                        {
+                            id: "quantity_of_data",
+                            valueType: "uint16",
+                            processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                            attributes: { min: 1, max: 65535 },
+                        },
+                        {
+                            id: "length",
+                            valueType: "uint16",
+                            processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                            attributes: { min: 1, max: 65535 },
+                        },
+                        {
+                            id: "max_length",
+                            valueType: "uint16",
+                            processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                            attributes: { min: 1, max: 65535 },
+                        },
+                    ],
+                },
+                {
+                    cmd: 17,
+                    id: "exported_data",
+                    valueType: "struct",
+                    processors: [{ fn: "alloc", args: ["result"] }],
+                    subObjs: [
+                        {
+                            id: "length",
+                            valueType: "uint16",
+                            processors: [
+                                { fn: "read", args: [null, "raw"] },
+                                {
+                                    fn: "set",
+                                    args: ["context", "historical_data_export_reply_exported_data_length"],
+                                },
+                                { fn: "read" },
+                                { fn: "set", args: ["result"] },
+                            ],
+                            attributes: { min: 1, max: 65535 },
+                        },
+                        {
+                            id: "data",
+                            valueType: "array",
+                            processors: [
+                                { fn: "alloc", args: ["result"] },
+                                {
+                                    fn: "set",
+                                    args: ["context", "[aLen]", "$context.historical_data_export_reply_exported_data_length"],
+                                },
+                            ],
+                            afterProcessors: [{ fn: "del", args: ["context", "[aLen]"] }],
+                            subObjs: [
+                                {
+                                    id: "_item",
+                                    valueType: "uint8",
+                                    processors: [
+                                        { fn: "read" },
+                                        {
+                                            fn: "push",
+                                            args: ["result", "historical_data_export_reply.exported_data.data"],
+                                        },
+                                    ],
+                                },
+                            ],
+                        },
+                    ],
+                },
+                {
+                    cmd: 18,
+                    id: "end_exporting",
+                    valueType: "struct",
+                    processors: [{ fn: "alloc", args: ["result"] }],
+                    subObjs: [
+                        {
+                            id: "result",
+                            valueType: "uint8",
+                            processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                        },
+                    ],
+                },
+            ],
+        },
+        {
+            id: "request_full_inspection",
+            type: "service",
+            valueType: "struct",
+            cmd: 244,
+            direction: "downlink",
+            processors: [],
+            detachedSubObjs: [
+                { id: "command", valueType: "uint8", processors: [] },
+                {
+                    cmd: 0,
+                    id: "start_inspection",
+                    valueType: "struct",
+                    processors: [],
+                },
+                {
+                    cmd: 1,
+                    id: "control",
+                    valueType: "struct",
+                    processors: [],
+                    subObjs: [
+                        {
+                            id: "length",
+                            valueType: "uint16",
+                            processors: [
+                                { fn: "read", args: [null, "raw"] },
+                                {
+                                    fn: "set",
+                                    args: ["context", "request_full_inspection_control_length"],
+                                },
+                                { fn: "read" },
+                                { fn: "set", args: ["result"] },
+                            ],
+                            attributes: { min: 0, max: 65535 },
+                        },
+                        {
+                            id: "data",
+                            valueType: "array",
+                            processors: [
+                                {
+                                    fn: "set",
+                                    args: ["context", "[aLen]", "$context.request_full_inspection_control_length"],
+                                },
+                            ],
+                            afterProcessors: [{ fn: "del", args: ["context", "[aLen]"] }],
+                            subObjs: [
+                                {
+                                    id: "_item",
+                                    valueType: "uint8",
+                                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                                },
+                            ],
+                        },
+                    ],
+                },
+                {
+                    cmd: 2,
+                    id: "reading",
+                    valueType: "struct",
+                    processors: [],
+                    subObjs: [
+                        {
+                            id: "length",
+                            valueType: "uint16",
+                            processors: [
+                                { fn: "read", args: [null, "raw"] },
+                                {
+                                    fn: "set",
+                                    args: ["context", "request_full_inspection_reading_length"],
+                                },
+                                { fn: "read" },
+                                { fn: "set", args: ["result"] },
+                            ],
+                        },
+                        {
+                            id: "data",
+                            valueType: "array",
+                            processors: [
+                                {
+                                    fn: "set",
+                                    args: ["context", "[aLen]", "$context.request_full_inspection_reading_length"],
+                                },
+                            ],
+                            attributes: { min: 0, max: 65535 },
+                            afterProcessors: [{ fn: "del", args: ["context", "[aLen]"] }],
+                            subObjs: [
+                                {
+                                    id: "_item",
+                                    valueType: "uint8",
+                                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                                },
+                            ],
+                        },
+                    ],
+                },
+                {
+                    cmd: 3,
+                    id: "end_inspection",
+                    valueType: "struct",
+                    processors: [],
+                },
+            ],
+        },
+        {
+            id: "full_inspection_reply",
+            type: "event",
+            valueType: "struct",
+            cmd: 244,
+            direction: "uplink",
+            processors: [{ fn: "alloc", args: ["result"] }],
+            detachedSubObjs: [
+                { id: "command", valueType: "uint8", processors: [] },
+                {
+                    cmd: 0,
+                    id: "start_inspection",
+                    valueType: "struct",
+                    processors: [{ fn: "alloc", args: ["result"] }],
+                    subObjs: [
+                        {
+                            id: "result",
+                            valueType: "uint8",
+                            processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                        },
+                    ],
+                },
+                {
+                    cmd: 1,
+                    id: "control",
+                    valueType: "struct",
+                    processors: [{ fn: "alloc", args: ["result"] }],
+                    subObjs: [
+                        {
+                            id: "result",
+                            valueType: "uint8",
+                            processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                        },
+                    ],
+                },
+                {
+                    cmd: 2,
+                    id: "reading",
+                    valueType: "struct",
+                    processors: [{ fn: "alloc", args: ["result"] }],
+                    subObjs: [
+                        {
+                            id: "length",
+                            valueType: "uint16",
+                            processors: [
+                                { fn: "read", args: [null, "raw"] },
+                                {
+                                    fn: "set",
+                                    args: ["context", "full_inspection_reply_reading_length"],
+                                },
+                                { fn: "read" },
+                                { fn: "set", args: ["result"] },
+                            ],
+                            attributes: { min: 0, max: 65535 },
+                        },
+                        {
+                            id: "data",
+                            valueType: "array",
+                            processors: [
+                                { fn: "alloc", args: ["result"] },
+                                {
+                                    fn: "set",
+                                    args: ["context", "[aLen]", "$context.full_inspection_reply_reading_length"],
+                                },
+                            ],
+                            afterProcessors: [{ fn: "del", args: ["context", "[aLen]"] }],
+                            subObjs: [
+                                {
+                                    id: "_item",
+                                    valueType: "uint8",
+                                    processors: [
+                                        { fn: "read" },
+                                        {
+                                            fn: "push",
+                                            args: ["result", "full_inspection_reply.reading.data"],
+                                        },
+                                    ],
+                                },
+                            ],
+                        },
+                    ],
+                },
+                {
+                    cmd: 3,
+                    id: "end_inspection",
+                    valueType: "struct",
+                    processors: [{ fn: "alloc", args: ["result"] }],
+                    subObjs: [
+                        {
+                            id: "result",
+                            valueType: "uint8",
+                            processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                        },
+                    ],
+                },
+            ],
+        },
+        {
+            id: "request_command_queries",
+            type: "service",
+            valueType: "struct",
+            cmd: 239,
+            direction: "downlink",
+            processors: [],
+            subObjs: [
+                {
+                    id: "query_information",
+                    valueType: "uint8",
+                    processors: [
+                        { fn: "read", args: ["4~8"] },
+                        { fn: "set", args: ["result"] },
+                    ],
+                },
+                {
+                    id: "length",
+                    valueType: "uint8",
+                    processors: [
+                        { fn: "read", args: [null, "raw"] },
+                        {
+                            fn: "set",
+                            args: ["context", "request_command_queries_length"],
+                        },
+                        { fn: "read", args: ["0~4"] },
+                        { fn: "set", args: ["result"] },
+                    ],
+                    attributes: { min: 1, max: 15 },
+                },
+                {
+                    id: "object_command",
+                    valueType: "array",
+                    processors: [
+                        {
+                            fn: "set",
+                            args: ["context", "[aLen]", "$context.request_command_queries_length"],
+                        },
+                    ],
+                    afterProcessors: [{ fn: "del", args: ["context", "[aLen]"] }],
+                    subObjs: [
+                        {
+                            id: "_item",
+                            valueType: "uint8",
+                            processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                        },
+                    ],
+                },
+            ],
+        },
+        {
+            id: "command_queries_reply",
+            type: "service",
+            valueType: "struct",
+            cmd: 239,
+            direction: "uplink",
+            processors: [{ fn: "alloc", args: ["context", "ans"] }],
+            subObjs: [
+                {
+                    id: "length",
+                    valueType: "uint8",
+                    processors: [
+                        { fn: "read", args: ["0~4"] },
+                        { fn: "set", args: ["context", "ans.length"] },
+                    ],
+                },
+                {
+                    id: "ans",
+                    valueType: "uint8",
+                    processors: [
+                        { fn: "read", args: ["4~8"] },
+                        { fn: "set", args: ["context", "ans.res"] },
+                    ],
+                },
+                {
+                    id: "cmd",
+                    valueType: "bin",
+                    processors: [{ fn: "alloc", args: ["result", "ans", "array"] }, { fn: "reflect" }, { fn: "set", args: ["context", "ans.id"] }, { fn: "push", args: ["result", "ans", "$context.ans"] }, { fn: "del", args: ["context", "ans"] }],
+                },
+            ],
+        },
+        {
+            id: "request_query_all_configurations",
+            type: "service",
+            valueType: "struct",
+            cmd: 238,
+            direction: "downlink",
+            processors: [],
+        },
+        {
+            id: "all_configurations_request_by_device",
+            type: "event",
+            valueType: "struct",
+            cmd: 238,
+            direction: "uplink",
+            processors: [{ fn: "alloc", args: ["result"] }],
+        },
+        {
+            id: "historical_data_report",
+            type: "event",
+            valueType: "struct",
+            cmd: 237,
+            direction: "uplink",
+            processors: [
+                { fn: "del", args: ["context", "[r2c]"] },
+                { fn: "alloc", args: ["result", "history", "array"] },
+                {
+                    fn: "push",
+                    args: ["result", "history", "$context.[historyItem]"],
+                },
+                { fn: "del", args: ["context", "[historyItem]"] },
+                { fn: "alloc", args: ["context", "[historyItem]", "struct"] },
+                {
+                    fn: "set",
+                    args: ["context", "[r2c]", "context.[historyItem]"],
+                },
+            ],
+            subObjs: [
+                {
+                    id: "timestamp",
+                    valueType: "uint32",
+                    processors: [
+                        { fn: "read" },
+                        {
+                            fn: "set",
+                            args: ["context", "[historyItem].timestamp"],
+                        },
+                    ],
+                },
+            ],
+        },
+        {
+            id: "lorawan_configuration_settings",
+            type: "property",
+            valueType: "struct",
+            cmd: 207,
+            direction: "uplink",
+            processors: [{ fn: "alloc", args: ["result"] }],
+            detachedSubObjs: [
+                { id: "command", valueType: "uint8", processors: [] },
+                {
+                    cmd: 11,
+                    id: "deveui",
+                    valueType: "bin",
+                    processors: [
+                        { fn: "read", args: ["8"] },
+                        { fn: "set", args: ["result"] },
+                    ],
+                    attributes: { format: "hex" },
+                },
+                {
+                    cmd: 19,
+                    id: "appeui",
+                    valueType: "bin",
+                    processors: [
+                        { fn: "read", args: ["8"] },
+                        { fn: "set", args: ["result"] },
+                    ],
+                    attributes: { format: "hex" },
+                },
+                {
+                    cmd: 3,
+                    id: "netid",
+                    valueType: "bin",
+                    processors: [
+                        { fn: "read", args: ["3"] },
+                        { fn: "set", args: ["result"] },
+                    ],
+                    attributes: { format: "hex" },
+                },
+                {
+                    cmd: 92,
+                    id: "app_port",
+                    valueType: "uint8",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                    attributes: { min: 1, max: 223 },
+                },
+                {
+                    cmd: 216,
+                    id: "version",
+                    valueType: "uint8",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                },
+                {
+                    cmd: 0,
+                    id: "mode",
+                    valueType: "uint8",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                },
+                {
+                    cmd: 93,
+                    id: "confirmed_mode",
+                    valueType: "uint8",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                },
+                {
+                    cmd: 198,
+                    id: "ack_retry_times",
+                    valueType: "uint8",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                    attributes: { min: 1, max: 15 },
+                },
+                {
+                    cmd: 1,
+                    id: "join_type",
+                    valueType: "uint8",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                },
+                {
+                    cmd: 7,
+                    id: "devaddr",
+                    valueType: "bin",
+                    endianness: "little-ending",
+                    processors: [
+                        { fn: "read", args: ["4"] },
+                        { fn: "set", args: ["result"] },
+                    ],
+                    attributes: { format: "hex" },
+                },
+                {
+                    cmd: 218,
+                    id: "rejoin_mode_enable",
+                    valueType: "uint8",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                },
+                {
+                    cmd: 217,
+                    id: "number_of_link_detection_signals",
+                    valueType: "uint8",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                    attributes: { min: 4, max: 32 },
+                },
+                {
+                    cmd: 205,
+                    id: "frequency_band",
+                    valueType: "uint8",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                },
+                {
+                    cmd: 220,
+                    id: "AS923_frequency_band_in_use",
+                    valueType: "uint8",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                },
+                {
+                    cmd: 94,
+                    id: "channel_mask",
+                    valueType: "bin",
+                    endianness: "little-ending",
+                    processors: [
+                        { fn: "read", args: ["12"] },
+                        { fn: "set", args: ["result"] },
+                    ],
+                    attributes: { format: "hex" },
+                },
+                {
+                    cmd: 106,
+                    id: "channels_settings",
+                    valueType: "array",
+                    processors: [{ fn: "alloc", args: ["result"] }],
+                    detachedCmdDest: { subProperty: "index" },
+                    detachedSubObjs: [
+                        {
+                            id: "_item",
+                            valueType: "struct",
+                            processors: [
+                                {
+                                    fn: "alloc",
+                                    args: ["context", "lorawan_configuration_settings_channels_settings_item"],
+                                },
+                            ],
+                            afterProcessors: [
+                                {
+                                    fn: "push",
+                                    args: ["result", "lorawan_configuration_settings.channels_settings", "$context.lorawan_configuration_settings_channels_settings_item"],
+                                },
+                                {
+                                    fn: "del",
+                                    args: ["context", "lorawan_configuration_settings_channels_settings_item"],
+                                },
+                            ],
+                            subObjs: [
+                                {
+                                    id: "index",
+                                    valueType: "uint8",
+                                    processors: [],
+                                    attributes: { min: 1, max: 8 },
+                                },
+                                {
+                                    id: "enable",
+                                    valueType: "uint8",
+                                    processors: [
+                                        { fn: "read" },
+                                        {
+                                            fn: "set",
+                                            args: ["context", "lorawan_configuration_settings_channels_settings_item.enable"],
+                                        },
+                                    ],
+                                },
+                                {
+                                    id: "frequency",
+                                    valueType: "uint32",
+                                    processors: [
+                                        { fn: "read" },
+                                        {
+                                            fn: "set",
+                                            args: ["context", "lorawan_configuration_settings_channels_settings_item.frequency"],
+                                        },
+                                    ],
+                                    attributes: {
+                                        unit: "MHz",
+                                        fractionDigits: 6,
+                                        coefficient: 0.000001,
+                                    },
+                                },
+                                {
+                                    id: "data_rate_max",
+                                    valueType: "uint8",
+                                    processors: [
+                                        { fn: "read", args: ["4~8"] },
+                                        {
+                                            fn: "set",
+                                            args: ["context", "lorawan_configuration_settings_channels_settings_item.data_rate_max"],
+                                        },
+                                    ],
+                                },
+                                {
+                                    id: "data_rate_min",
+                                    valueType: "uint8",
+                                    processors: [
+                                        { fn: "read", args: ["0~4"] },
+                                        {
+                                            fn: "set",
+                                            args: ["context", "lorawan_configuration_settings_channels_settings_item.data_rate_min"],
+                                        },
+                                    ],
+                                },
+                            ],
+                        },
+                    ],
+                },
+                {
+                    cmd: 2,
+                    id: "adr_mode",
+                    valueType: "uint8",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                },
+                {
+                    cmd: 186,
+                    id: "tx_data_rate",
+                    valueType: "uint8",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                },
+                {
+                    cmd: 91,
+                    id: "tx_power",
+                    valueType: "uint8",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                },
+                {
+                    cmd: 191,
+                    id: "rx2_data_rate",
+                    valueType: "uint8",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                },
+                {
+                    cmd: 187,
+                    id: "rx2_frequency",
+                    valueType: "uint32",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                    attributes: {
+                        unit: "MHz",
+                        fractionDigits: 6,
+                        coefficient: 0.000001,
+                    },
+                },
+                {
+                    cmd: 221,
+                    id: "pingslot_periodicity",
+                    valueType: "uint8",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                },
+                {
+                    cmd: 75,
+                    id: "rx1_open_delay",
+                    valueType: "uint32",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                    attributes: {
+                        min: 1,
+                        max: 60,
+                        unit: "s",
+                        coefficient: 0.001,
+                    },
+                },
+                {
+                    cmd: 79,
+                    id: "rx2_open_delay",
+                    valueType: "uint32",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                    attributes: {
+                        min: 1,
+                        max: 60,
+                        unit: "s",
+                        coefficient: 0.001,
+                    },
+                },
+                {
+                    cmd: 83,
+                    id: "join_rx1_open_delay",
+                    valueType: "uint32",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                    attributes: {
+                        min: 1,
+                        max: 60,
+                        unit: "s",
+                        coefficient: 0.001,
+                    },
+                },
+                {
+                    cmd: 87,
+                    id: "join_rx2_open_delay",
+                    valueType: "uint32",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                    attributes: {
+                        min: 1,
+                        max: 60,
+                        unit: "s",
+                        coefficient: 0.001,
+                    },
+                },
+                {
+                    cmd: 249,
+                    id: "multicast_group_settings",
+                    valueType: "struct",
+                    processors: [{ fn: "alloc", args: ["result"] }],
+                    detachedSubObjs: [
+                        { id: "command", valueType: "uint8", processors: [] },
+                        {
+                            cmd: 13,
+                            id: "group_1_enable",
+                            valueType: "uint8",
+                            processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                        },
+                        {
+                            cmd: 20,
+                            id: "group_1_devaddr",
+                            valueType: "bin",
+                            endianness: "little-ending",
+                            processors: [
+                                { fn: "read", args: ["4"] },
+                                { fn: "set", args: ["result"] },
+                            ],
+                            attributes: { format: "hex" },
+                        },
+                        {
+                            cmd: 14,
+                            id: "group_1_pingslot_periodicity",
+                            valueType: "uint8",
+                            processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                        },
+                        {
+                            cmd: 15,
+                            id: "group_1_data_rate",
+                            valueType: "uint8",
+                            processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                        },
+                        {
+                            cmd: 16,
+                            id: "group_1_frequency",
+                            valueType: "uint32",
+                            processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                            attributes: {
+                                unit: "MHz",
+                                fractionDigits: 6,
+                                coefficient: 0.000001,
+                            },
+                        },
+                        {
+                            cmd: 58,
+                            id: "group_2_enable",
+                            valueType: "uint8",
+                            processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                        },
+                        {
+                            cmd: 65,
+                            id: "group_2_devaddr",
+                            valueType: "bin",
+                            endianness: "little-ending",
+                            processors: [
+                                { fn: "read", args: ["4"] },
+                                { fn: "set", args: ["result"] },
+                            ],
+                            attributes: { format: "hex" },
+                        },
+                        {
+                            cmd: 59,
+                            id: "group_2_pingslot_periodicity",
+                            valueType: "uint8",
+                            processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                        },
+                        {
+                            cmd: 60,
+                            id: "group_2_data_rate",
+                            valueType: "uint8",
+                            processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                        },
+                        {
+                            cmd: 61,
+                            id: "group_2_frequency",
+                            valueType: "uint32",
+                            processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                            attributes: {
+                                unit: "MHz",
+                                fractionDigits: 6,
+                                coefficient: 0.000001,
+                            },
+                        },
+                        {
+                            cmd: 103,
+                            id: "group_3_enable",
+                            valueType: "uint8",
+                            processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                        },
+                        {
+                            cmd: 110,
+                            id: "group_3_devaddr",
+                            valueType: "bin",
+                            endianness: "little-ending",
+                            processors: [
+                                { fn: "read", args: ["4"] },
+                                { fn: "set", args: ["result"] },
+                            ],
+                            attributes: { format: "hex" },
+                        },
+                        {
+                            cmd: 104,
+                            id: "group_3_pingslot_periodicity",
+                            valueType: "uint8",
+                            processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                        },
+                        {
+                            cmd: 105,
+                            id: "group_3_data_rate",
+                            valueType: "uint8",
+                            processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                        },
+                        {
+                            cmd: 106,
+                            id: "group_3_frequency",
+                            valueType: "uint32",
+                            processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                            attributes: {
+                                unit: "MHz",
+                                fractionDigits: 6,
+                                coefficient: 0.000001,
+                            },
+                        },
+                        {
+                            cmd: 148,
+                            id: "group_4_enable",
+                            valueType: "uint8",
+                            processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                        },
+                        {
+                            cmd: 155,
+                            id: "group_4_devaddr",
+                            valueType: "bin",
+                            endianness: "little-ending",
+                            processors: [
+                                { fn: "read", args: ["4"] },
+                                { fn: "set", args: ["result"] },
+                            ],
+                            attributes: { format: "hex" },
+                        },
+                        {
+                            cmd: 149,
+                            id: "group_4_pingslot_periodicity",
+                            valueType: "uint8",
+                            processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                        },
+                        {
+                            cmd: 150,
+                            id: "group_4_data_rate",
+                            valueType: "uint8",
+                            processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                        },
+                        {
+                            cmd: 151,
+                            id: "group_4_frequency",
+                            valueType: "uint32",
+                            processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                            attributes: {
+                                unit: "MHz",
+                                fractionDigits: 6,
+                                coefficient: 0.000001,
+                            },
+                        },
+                    ],
+                },
+                {
+                    cmd: 246,
+                    id: "d2d_master_enable",
+                    valueType: "uint8",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                },
+                {
+                    cmd: 245,
+                    id: "d2d_slave_enable",
+                    valueType: "uint8",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                },
+                {
+                    cmd: 196,
+                    id: "duty_cycle_enable",
+                    valueType: "uint8",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                },
+                {
+                    cmd: 192,
+                    id: "duty_cycle",
+                    valueType: "uint32",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                },
+            ],
+        },
+        {
+            id: "lorawan_configuration_settings",
+            type: "property",
+            valueType: "struct",
+            cmd: 207,
+            direction: "downlink",
+            processors: [],
+            detachedSubObjs: [
+                { id: "command", valueType: "uint8", processors: [] },
+                {
+                    cmd: 19,
+                    id: "appeui",
+                    valueType: "bin",
+                    processors: [
+                        { fn: "read", args: ["8"] },
+                        { fn: "set", args: ["result"] },
+                    ],
+                    attributes: { format: "hex" },
+                },
+                {
+                    cmd: 3,
+                    id: "netid",
+                    valueType: "bin",
+                    processors: [
+                        { fn: "read", args: ["3"] },
+                        { fn: "set", args: ["result"] },
+                    ],
+                    attributes: { format: "hex" },
+                },
+                {
+                    cmd: 92,
+                    id: "app_port",
+                    valueType: "uint8",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                    attributes: { min: 1, max: 223 },
+                },
+                {
+                    cmd: 216,
+                    id: "version",
+                    valueType: "uint8",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                },
+                {
+                    cmd: 0,
+                    id: "mode",
+                    valueType: "uint8",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                },
+                {
+                    cmd: 93,
+                    id: "confirmed_mode",
+                    valueType: "uint8",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                },
+                {
+                    cmd: 198,
+                    id: "ack_retry_times",
+                    valueType: "uint8",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                    attributes: { min: 1, max: 15 },
+                },
+                {
+                    cmd: 1,
+                    id: "join_type",
+                    valueType: "uint8",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                },
+                {
+                    cmd: 59,
+                    id: "appkey",
+                    valueType: "bin",
+                    processors: [
+                        { fn: "read", args: ["16"] },
+                        { fn: "set", args: ["result"] },
+                    ],
+                    attributes: { format: "hex" },
+                },
+                {
+                    cmd: 27,
+                    id: "nwkskey",
+                    valueType: "bin",
+                    processors: [
+                        { fn: "read", args: ["16"] },
+                        { fn: "set", args: ["result"] },
+                    ],
+                    attributes: { format: "hex" },
+                },
+                {
+                    cmd: 43,
+                    id: "appskey",
+                    valueType: "bin",
+                    processors: [
+                        { fn: "read", args: ["16"] },
+                        { fn: "set", args: ["result"] },
+                    ],
+                    attributes: { format: "hex" },
+                },
+                {
+                    cmd: 7,
+                    id: "devaddr",
+                    valueType: "bin",
+                    endianness: "little-ending",
+                    processors: [
+                        { fn: "read", args: ["4"] },
+                        { fn: "set", args: ["result"] },
+                    ],
+                    attributes: { format: "hex" },
+                },
+                {
+                    cmd: 218,
+                    id: "rejoin_mode_enable",
+                    valueType: "uint8",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                },
+                {
+                    cmd: 217,
+                    id: "number_of_link_detection_signals",
+                    valueType: "uint8",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                    attributes: { min: 4, max: 32 },
+                },
+                {
+                    cmd: 205,
+                    id: "frequency_band",
+                    valueType: "uint8",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                },
+                {
+                    cmd: 220,
+                    id: "AS923_frequency_band_in_use",
+                    valueType: "uint8",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                },
+                {
+                    cmd: 94,
+                    id: "channel_mask",
+                    valueType: "bin",
+                    endianness: "little-ending",
+                    processors: [
+                        { fn: "read", args: ["12"] },
+                        { fn: "set", args: ["result"] },
+                    ],
+                    attributes: { format: "hex" },
+                },
+                {
+                    cmd: 106,
+                    id: "channels_settings",
+                    valueType: "array",
+                    processors: [],
+                    detachedCmdDest: { subProperty: "index" },
+                    detachedSubObjs: [
+                        {
+                            id: "_item",
+                            valueType: "struct",
+                            processors: [],
+                            subObjs: [
+                                {
+                                    id: "index",
+                                    valueType: "uint8",
+                                    processors: [],
+                                    attributes: { min: 1, max: 8 },
+                                },
+                                {
+                                    id: "enable",
+                                    valueType: "uint8",
+                                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                                },
+                                {
+                                    id: "frequency",
+                                    valueType: "uint32",
+                                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                                    attributes: {
+                                        unit: "MHz",
+                                        fractionDigits: 6,
+                                        coefficient: 0.000001,
+                                    },
+                                },
+                                {
+                                    id: "data_rate_max",
+                                    valueType: "uint8",
+                                    processors: [
+                                        { fn: "read", args: ["4~8"] },
+                                        { fn: "set", args: ["result"] },
+                                    ],
+                                },
+                                {
+                                    id: "data_rate_min",
+                                    valueType: "uint8",
+                                    processors: [
+                                        { fn: "read", args: ["0~4"] },
+                                        { fn: "set", args: ["result"] },
+                                    ],
+                                },
+                            ],
+                        },
+                    ],
+                },
+                {
+                    cmd: 2,
+                    id: "adr_mode",
+                    valueType: "uint8",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                },
+                {
+                    cmd: 186,
+                    id: "tx_data_rate",
+                    valueType: "uint8",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                },
+                {
+                    cmd: 91,
+                    id: "tx_power",
+                    valueType: "uint8",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                },
+                {
+                    cmd: 191,
+                    id: "rx2_data_rate",
+                    valueType: "uint8",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                },
+                {
+                    cmd: 187,
+                    id: "rx2_frequency",
+                    valueType: "uint32",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                    attributes: {
+                        unit: "MHz",
+                        fractionDigits: 6,
+                        coefficient: 0.000001,
+                    },
+                },
+                {
+                    cmd: 221,
+                    id: "pingslot_periodicity",
+                    valueType: "uint8",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                },
+                {
+                    cmd: 75,
+                    id: "rx1_open_delay",
+                    valueType: "uint32",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                    attributes: {
+                        min: 1,
+                        max: 60,
+                        unit: "s",
+                        coefficient: 0.001,
+                    },
+                },
+                {
+                    cmd: 79,
+                    id: "rx2_open_delay",
+                    valueType: "uint32",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                    attributes: {
+                        min: 1,
+                        max: 60,
+                        unit: "s",
+                        coefficient: 0.001,
+                    },
+                },
+                {
+                    cmd: 83,
+                    id: "join_rx1_open_delay",
+                    valueType: "uint32",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                    attributes: {
+                        min: 1,
+                        max: 60,
+                        unit: "s",
+                        coefficient: 0.001,
+                    },
+                },
+                {
+                    cmd: 87,
+                    id: "join_rx2_open_delay",
+                    valueType: "uint32",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                    attributes: {
+                        min: 1,
+                        max: 60,
+                        unit: "s",
+                        coefficient: 0.001,
+                    },
+                },
+                {
+                    cmd: 249,
+                    id: "multicast_group_settings",
+                    valueType: "struct",
+                    processors: [],
+                    detachedSubObjs: [
+                        { id: "command", valueType: "uint8", processors: [] },
+                        {
+                            cmd: 13,
+                            id: "group_1_enable",
+                            valueType: "uint8",
+                            processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                        },
+                        {
+                            cmd: 20,
+                            id: "group_1_devaddr",
+                            valueType: "bin",
+                            endianness: "little-ending",
+                            processors: [
+                                { fn: "read", args: ["4"] },
+                                { fn: "set", args: ["result"] },
+                            ],
+                            attributes: { format: "hex" },
+                        },
+                        {
+                            cmd: 40,
+                            id: "group_1_appskey",
+                            valueType: "bin",
+                            processors: [
+                                { fn: "read", args: ["16"] },
+                                { fn: "set", args: ["result"] },
+                            ],
+                            attributes: { format: "hex" },
+                        },
+                        {
+                            cmd: 24,
+                            id: "group_1_nwkskey",
+                            valueType: "bin",
+                            processors: [
+                                { fn: "read", args: ["16"] },
+                                { fn: "set", args: ["result"] },
+                            ],
+                            attributes: { format: "hex" },
+                        },
+                        {
+                            cmd: 14,
+                            id: "group_1_pingslot_periodicity",
+                            valueType: "uint8",
+                            processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                        },
+                        {
+                            cmd: 15,
+                            id: "group_1_data_rate",
+                            valueType: "uint8",
+                            processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                        },
+                        {
+                            cmd: 16,
+                            id: "group_1_frequency",
+                            valueType: "uint32",
+                            processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                            attributes: {
+                                unit: "MHz",
+                                fractionDigits: 6,
+                                coefficient: 0.000001,
+                            },
+                        },
+                        {
+                            cmd: 58,
+                            id: "group_2_enable",
+                            valueType: "uint8",
+                            processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                        },
+                        {
+                            cmd: 65,
+                            id: "group_2_devaddr",
+                            valueType: "bin",
+                            endianness: "little-ending",
+                            processors: [
+                                { fn: "read", args: ["4"] },
+                                { fn: "set", args: ["result"] },
+                            ],
+                            attributes: { format: "hex" },
+                        },
+                        {
+                            cmd: 85,
+                            id: "group_2_appskey",
+                            valueType: "bin",
+                            processors: [
+                                { fn: "read", args: ["16"] },
+                                { fn: "set", args: ["result"] },
+                            ],
+                            attributes: { format: "hex" },
+                        },
+                        {
+                            cmd: 69,
+                            id: "group_2_nwkskey",
+                            valueType: "bin",
+                            processors: [
+                                { fn: "read", args: ["16"] },
+                                { fn: "set", args: ["result"] },
+                            ],
+                            attributes: { format: "hex" },
+                        },
+                        {
+                            cmd: 59,
+                            id: "group_2_pingslot_periodicity",
+                            valueType: "uint8",
+                            processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                        },
+                        {
+                            cmd: 60,
+                            id: "group_2_data_rate",
+                            valueType: "uint8",
+                            processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                        },
+                        {
+                            cmd: 61,
+                            id: "group_2_frequency",
+                            valueType: "uint32",
+                            processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                            attributes: {
+                                unit: "MHz",
+                                fractionDigits: 6,
+                                coefficient: 0.000001,
+                            },
+                        },
+                        {
+                            cmd: 103,
+                            id: "group_3_enable",
+                            valueType: "uint8",
+                            processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                        },
+                        {
+                            cmd: 110,
+                            id: "group_3_devaddr",
+                            valueType: "bin",
+                            endianness: "little-ending",
+                            processors: [
+                                { fn: "read", args: ["4"] },
+                                { fn: "set", args: ["result"] },
+                            ],
+                            attributes: { format: "hex" },
+                        },
+                        {
+                            cmd: 130,
+                            id: "group_3_appskey",
+                            valueType: "bin",
+                            processors: [
+                                { fn: "read", args: ["16"] },
+                                { fn: "set", args: ["result"] },
+                            ],
+                            attributes: { format: "hex" },
+                        },
+                        {
+                            cmd: 114,
+                            id: "group_3_nwkskey",
+                            valueType: "bin",
+                            processors: [
+                                { fn: "read", args: ["16"] },
+                                { fn: "set", args: ["result"] },
+                            ],
+                            attributes: { format: "hex" },
+                        },
+                        {
+                            cmd: 104,
+                            id: "group_3_pingslot_periodicity",
+                            valueType: "uint8",
+                            processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                        },
+                        {
+                            cmd: 105,
+                            id: "group_3_data_rate",
+                            valueType: "uint8",
+                            processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                        },
+                        {
+                            cmd: 106,
+                            id: "group_3_frequency",
+                            valueType: "uint32",
+                            processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                            attributes: {
+                                unit: "MHz",
+                                fractionDigits: 6,
+                                coefficient: 0.000001,
+                            },
+                        },
+                        {
+                            cmd: 148,
+                            id: "group_4_enable",
+                            valueType: "uint8",
+                            processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                        },
+                        {
+                            cmd: 155,
+                            id: "group_4_devaddr",
+                            valueType: "bin",
+                            endianness: "little-ending",
+                            processors: [
+                                { fn: "read", args: ["4"] },
+                                { fn: "set", args: ["result"] },
+                            ],
+                            attributes: { format: "hex" },
+                        },
+                        {
+                            cmd: 175,
+                            id: "group_4_appskey",
+                            valueType: "bin",
+                            processors: [
+                                { fn: "read", args: ["16"] },
+                                { fn: "set", args: ["result"] },
+                            ],
+                            attributes: { format: "hex" },
+                        },
+                        {
+                            cmd: 159,
+                            id: "group_4_nwkskey",
+                            valueType: "bin",
+                            processors: [
+                                { fn: "read", args: ["16"] },
+                                { fn: "set", args: ["result"] },
+                            ],
+                            attributes: { format: "hex" },
+                        },
+                        {
+                            cmd: 149,
+                            id: "group_4_pingslot_periodicity",
+                            valueType: "uint8",
+                            processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                        },
+                        {
+                            cmd: 150,
+                            id: "group_4_data_rate",
+                            valueType: "uint8",
+                            processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                        },
+                        {
+                            cmd: 151,
+                            id: "group_4_frequency",
+                            valueType: "uint32",
+                            processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                            attributes: {
+                                unit: "MHz",
+                                fractionDigits: 6,
+                                coefficient: 0.000001,
+                            },
+                        },
+                    ],
+                },
+                {
+                    cmd: 224,
+                    id: "d2d_key",
+                    valueType: "bin",
+                    processors: [
+                        { fn: "read", args: ["16"] },
+                        { fn: "set", args: ["result"] },
+                    ],
+                    attributes: { format: "hex" },
+                },
+                {
+                    cmd: 246,
+                    id: "d2d_master_enable",
+                    valueType: "uint8",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                },
+                {
+                    cmd: 245,
+                    id: "d2d_slave_enable",
+                    valueType: "uint8",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                },
+                {
+                    cmd: 196,
+                    id: "duty_cycle_enable",
+                    valueType: "uint8",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                },
+                {
+                    cmd: 192,
+                    id: "duty_cycle",
+                    valueType: "uint32",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                },
+            ],
+        },
+        {
+            id: "tsl_version",
+            type: "property",
+            valueType: "bin",
+            cmd: 223,
+            direction: "uplink",
+            processors: [
+                { fn: "read", args: ["2"] },
+                { fn: "set", args: ["result"] },
+                { fn: "set", args: ["context", "[currentTslVer]"] },
+                { fn: "set", args: ["context", "[TslVerUpdated]", true] },
+            ],
+            attributes: { format: "short_version" },
+        },
+        {
+            id: "product_name",
+            type: "property",
+            valueType: "bin",
+            cmd: 222,
+            direction: "uplink",
+            processors: [
+                { fn: "read", args: ["32"] },
+                { fn: "set", args: ["result"] },
+            ],
+            attributes: { format: "ascii" },
+        },
+        {
+            id: "product_name",
+            type: "property",
+            valueType: "bin",
+            cmd: 222,
+            direction: "downlink",
+            processors: [
+                { fn: "read", args: ["32"] },
+                { fn: "set", args: ["result"] },
+            ],
+            attributes: { format: "ascii" },
+        },
+        {
+            id: "product_pn",
+            type: "property",
+            valueType: "bin",
+            cmd: 221,
+            direction: "uplink",
+            processors: [
+                { fn: "read", args: ["32"] },
+                { fn: "set", args: ["result"] },
+            ],
+            attributes: { format: "ascii" },
+        },
+        {
+            id: "product_pn",
+            type: "property",
+            valueType: "bin",
+            cmd: 221,
+            direction: "downlink",
+            processors: [
+                { fn: "read", args: ["32"] },
+                { fn: "set", args: ["result"] },
+            ],
+            attributes: { format: "ascii" },
+        },
+        {
+            id: "product_sn",
+            type: "property",
+            valueType: "bin",
+            cmd: 219,
+            direction: "uplink",
+            processors: [
+                { fn: "read", args: ["8"] },
+                { fn: "set", args: ["result"] },
+                { fn: "set", args: ["context", "[currentSN]"] },
+                { fn: "set", args: ["context", "[SNUpdated]", true] },
+            ],
+            attributes: { format: "hex" },
+        },
+        {
+            id: "version",
+            type: "property",
+            valueType: "struct",
+            cmd: 218,
+            direction: "uplink",
+            processors: [{ fn: "alloc", args: ["result"] }],
+            subObjs: [
+                {
+                    id: "hardware_version",
+                    valueType: "bin",
+                    processors: [
+                        { fn: "read", args: ["2"] },
+                        { fn: "set", args: ["result"] },
+                    ],
+                    attributes: { format: "short_version" },
+                },
+                {
+                    id: "firmware_version",
+                    valueType: "bin",
+                    processors: [
+                        { fn: "read", args: ["6"] },
+                        { fn: "set", args: ["result"] },
+                    ],
+                    attributes: { format: "full_version" },
+                },
+            ],
+        },
+        {
+            id: "oem_id",
+            type: "property",
+            valueType: "bin",
+            cmd: 217,
+            direction: "uplink",
+            processors: [
+                { fn: "read", args: ["2"] },
+                { fn: "set", args: ["result"] },
+            ],
+            attributes: { format: "hex" },
+        },
+        {
+            id: "oem_id",
+            type: "property",
+            valueType: "bin",
+            cmd: 217,
+            direction: "downlink",
+            processors: [
+                { fn: "read", args: ["2"] },
+                { fn: "set", args: ["result"] },
+            ],
+            attributes: { format: "hex" },
+        },
+        {
+            id: "product_frequency_band",
+            type: "property",
+            valueType: "bin",
+            cmd: 216,
+            direction: "uplink",
+            processors: [
+                { fn: "read", args: ["16"] },
+                { fn: "set", args: ["result"] },
+            ],
+            attributes: { format: "ascii" },
+        },
+        {
+            id: "lorawan_status",
+            type: "event",
+            valueType: "struct",
+            cmd: 191,
+            direction: "uplink",
+            processors: [{ fn: "alloc", args: ["result"] }],
+            detachedSubObjs: [
+                { id: "command", valueType: "uint8", processors: [] },
+                {
+                    cmd: 0,
+                    id: "join_status",
+                    valueType: "uint8",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                },
+                {
+                    cmd: 1,
+                    id: "eui",
+                    valueType: "bin",
+                    processors: [
+                        { fn: "read", args: ["8"] },
+                        { fn: "set", args: ["result"] },
+                    ],
+                    attributes: { format: "hex" },
+                },
+                {
+                    cmd: 2,
+                    id: "signal",
+                    valueType: "struct",
+                    processors: [{ fn: "alloc", args: ["result"] }],
+                    subObjs: [
+                        {
+                            id: "rssi",
+                            valueType: "int16",
+                            processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                        },
+                        {
+                            id: "snr",
+                            valueType: "int8",
+                            processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                        },
+                    ],
+                },
+                {
+                    cmd: 3,
+                    id: "channel_mask",
+                    valueType: "bin",
+                    endianness: "little-ending",
+                    processors: [
+                        { fn: "read", args: ["12"] },
+                        { fn: "set", args: ["result"] },
+                    ],
+                    attributes: { format: "hex" },
+                },
+                {
+                    cmd: 4,
+                    id: "frame_counter",
+                    valueType: "struct",
+                    processors: [{ fn: "alloc", args: ["result"] }],
+                    subObjs: [
+                        {
+                            id: "uplink",
+                            valueType: "uint32",
+                            processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                            attributes: { min: 0, max: 4294967295 },
+                        },
+                        {
+                            id: "downlink",
+                            valueType: "uint32",
+                            processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                            attributes: { min: 0, max: 4294967295 },
+                        },
+                    ],
+                },
+            ],
+        },
+        {
+            id: "device_time",
+            type: "event",
+            valueType: "struct",
+            cmd: 185,
+            direction: "uplink",
+            processors: [{ fn: "alloc", args: ["result"] }],
+            subObjs: [
+                {
+                    id: "current_time",
+                    valueType: "uint32",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                    attributes: { unit: "s" },
+                },
+                {
+                    id: "running_time",
+                    valueType: "uint32",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                    attributes: { unit: "s" },
+                },
+                {
+                    id: "power_on_time",
+                    valueType: "uint32",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                    attributes: { unit: "s" },
+                },
+            ],
+        },
+        {
+            id: "battery_info",
+            type: "event",
+            valueType: "struct",
+            cmd: 184,
+            direction: "uplink",
+            processors: [{ fn: "alloc", args: ["result"] }],
+            subObjs: [
+                {
+                    id: "battery_capacity",
+                    valueType: "uint32",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                    attributes: {
+                        unit: "ma*h",
+                        fractionDigits: 3,
+                        coefficient: 0.001,
+                    },
+                },
+                {
+                    id: "battery_consumption",
+                    valueType: "uint32",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                    attributes: {
+                        unit: "ma*h",
+                        fractionDigits: 3,
+                        coefficient: 0.001,
+                    },
+                },
+                {
+                    id: "battery_left",
+                    valueType: "uint32",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                    attributes: {
+                        unit: "ma*h",
+                        fractionDigits: 3,
+                        coefficient: 0.001,
+                    },
+                },
+                {
+                    id: "battery_voltage",
+                    valueType: "uint16",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                    attributes: {
+                        unit: "v",
+                        fractionDigits: 3,
+                        coefficient: 0.001,
+                    },
+                },
+                {
+                    id: "current_battery_status",
+                    valueType: "bin",
+                    processors: [
+                        { fn: "read", args: ["2"] },
+                        { fn: "set", args: ["result"] },
+                    ],
+                    attributes: { format: "hex" },
+                },
+            ],
+        },
+        {
+            id: "random_key",
+            type: "property",
+            valueType: "uint8",
+            cmd: 201,
+            direction: "uplink",
+            processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+        },
+        {
+            id: "random_key",
+            type: "property",
+            valueType: "uint8",
+            cmd: 201,
+            direction: "downlink",
+            processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+        },
+        {
+            id: "device_status",
+            type: "property",
+            valueType: "uint8",
+            cmd: 200,
+            direction: "uplink",
+            processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+        },
+        {
+            id: "device_status",
+            type: "property",
+            valueType: "uint8",
+            cmd: 200,
+            direction: "downlink",
+            processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+        },
+        {
+            id: "time_zone",
+            type: "property",
+            valueType: "int16",
+            cmd: 199,
+            direction: "uplink",
+            processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+            attributes: { unit: "min" },
+        },
+        {
+            id: "time_zone",
+            type: "property",
+            valueType: "int16",
+            cmd: 199,
+            direction: "downlink",
+            processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+            attributes: { unit: "min" },
+        },
+        {
+            id: "daylight_saving_time",
+            type: "property",
+            valueType: "struct",
+            cmd: 198,
+            direction: "uplink",
+            processors: [{ fn: "alloc", args: ["result"] }],
+            subObjs: [
+                {
+                    id: "daylight_saving_time_enable",
+                    valueType: "uint8",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                },
+                {
+                    id: "daylight_saving_time_offset",
+                    valueType: "uint8",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                    attributes: { min: 0, max: 120, unit: "min" },
+                },
+                {
+                    id: "start_month",
+                    valueType: "uint8",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                },
+                {
+                    id: "start_week_num",
+                    valueType: "uint8",
+                    processors: [
+                        { fn: "read", args: ["4~8"] },
+                        { fn: "set", args: ["result"] },
+                    ],
+                },
+                {
+                    id: "start_week_day",
+                    valueType: "uint8",
+                    processors: [
+                        { fn: "read", args: ["0~4"] },
+                        { fn: "set", args: ["result"] },
+                    ],
+                },
+                {
+                    id: "start_hour_min",
+                    valueType: "uint16",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                    attributes: { unit: "min" },
+                },
+                {
+                    id: "end_month",
+                    valueType: "uint8",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                },
+                {
+                    id: "end_week_num",
+                    valueType: "uint8",
+                    processors: [
+                        { fn: "read", args: ["4~8"] },
+                        { fn: "set", args: ["result"] },
+                    ],
+                },
+                {
+                    id: "end_week_day",
+                    valueType: "uint8",
+                    processors: [
+                        { fn: "read", args: ["0~4"] },
+                        { fn: "set", args: ["result"] },
+                    ],
+                },
+                {
+                    id: "end_hour_min",
+                    valueType: "uint16",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                    attributes: { unit: "min" },
+                },
+            ],
+        },
+        {
+            id: "daylight_saving_time",
+            type: "property",
+            valueType: "struct",
+            cmd: 198,
+            direction: "downlink",
+            processors: [],
+            subObjs: [
+                {
+                    id: "daylight_saving_time_enable",
+                    valueType: "uint8",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                },
+                {
+                    id: "daylight_saving_time_offset",
+                    valueType: "uint8",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                    attributes: { min: 0, max: 120, unit: "min" },
+                },
+                {
+                    id: "start_month",
+                    valueType: "uint8",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                },
+                {
+                    id: "start_week_num",
+                    valueType: "uint8",
+                    processors: [
+                        { fn: "read", args: ["4~8"] },
+                        { fn: "set", args: ["result"] },
+                    ],
+                },
+                {
+                    id: "start_week_day",
+                    valueType: "uint8",
+                    processors: [
+                        { fn: "read", args: ["0~4"] },
+                        { fn: "set", args: ["result"] },
+                    ],
+                },
+                {
+                    id: "start_hour_min",
+                    valueType: "uint16",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                    attributes: { unit: "min" },
+                },
+                {
+                    id: "end_month",
+                    valueType: "uint8",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                },
+                {
+                    id: "end_week_num",
+                    valueType: "uint8",
+                    processors: [
+                        { fn: "read", args: ["4~8"] },
+                        { fn: "set", args: ["result"] },
+                    ],
+                },
+                {
+                    id: "end_week_day",
+                    valueType: "uint8",
+                    processors: [
+                        { fn: "read", args: ["0~4"] },
+                        { fn: "set", args: ["result"] },
+                    ],
+                },
+                {
+                    id: "end_hour_min",
+                    valueType: "uint16",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                    attributes: { unit: "min" },
+                },
+            ],
+        },
+        {
+            id: "reset",
+            type: "service",
+            valueType: "struct",
+            cmd: 191,
+            direction: "downlink",
+            processors: [],
+        },
+        {
+            id: "reboot",
+            type: "service",
+            valueType: "struct",
+            cmd: 190,
+            direction: "downlink",
+            processors: [],
+        },
+        {
+            id: "clear_historical_data",
+            type: "service",
+            valueType: "struct",
+            cmd: 189,
+            direction: "downlink",
+            processors: [],
+        },
+        {
+            id: "stop_historical_data_retrieval",
+            type: "service",
+            valueType: "struct",
+            cmd: 188,
+            direction: "downlink",
+            processors: [],
+        },
+        {
+            id: "retrieve_historical_data_by_time",
+            type: "service",
+            valueType: "struct",
+            cmd: 187,
+            direction: "downlink",
+            processors: [],
+            subObjs: [
+                {
+                    id: "time",
+                    valueType: "uint32",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                },
+            ],
+        },
+        {
+            id: "retrieve_historical_data_by_time_range",
+            type: "service",
+            valueType: "struct",
+            cmd: 186,
+            direction: "downlink",
+            processors: [],
+            subObjs: [
+                {
+                    id: "start_time",
+                    valueType: "uint32",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                },
+                {
+                    id: "end_time",
+                    valueType: "uint32",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                },
+            ],
+        },
+        {
+            id: "query_device_status",
+            type: "service",
+            valueType: "struct",
+            cmd: 185,
+            direction: "downlink",
+            processors: [],
+        },
+        {
+            id: "synchronize_time",
+            type: "service",
+            valueType: "struct",
+            cmd: 184,
+            direction: "downlink",
+            processors: [],
+        },
+        {
+            id: "set_time",
+            type: "service",
+            valueType: "struct",
+            cmd: 183,
+            direction: "downlink",
+            processors: [],
+            subObjs: [
+                {
+                    id: "timestamp",
+                    valueType: "uint32",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                },
+            ],
+        },
+        {
+            id: "reconnect",
+            type: "service",
+            valueType: "struct",
+            cmd: 182,
+            direction: "downlink",
+            processors: [],
+        },
+        {
+            id: "test_fix_array",
+            type: "property",
+            valueType: "array",
+            cmd: 204,
+            direction: "uplink",
+            processors: [
+                { fn: "alloc", args: ["result"] },
+                { fn: "set", args: ["context", "[aLen]", 2] },
+            ],
+            afterProcessors: [{ fn: "del", args: ["context", "[aLen]"] }],
+            subObjs: [
+                {
+                    id: "_item",
+                    valueType: "struct",
+                    processors: [
+                        {
+                            fn: "alloc",
+                            args: ["context", "test_fix_array_item"],
+                        },
+                    ],
+                    afterProcessors: [
+                        {
+                            fn: "push",
+                            args: ["result", "test_fix_array", "$context.test_fix_array_item"],
+                        },
+                        { fn: "del", args: ["context", "test_fix_array_item"] },
+                    ],
+                    subObjs: [
+                        {
+                            id: "p1",
+                            valueType: "uint8",
+                            processors: [
+                                { fn: "read" },
+                                {
+                                    fn: "set",
+                                    args: ["context", "test_fix_array_item.p1"],
+                                },
+                            ],
+                        },
+                        {
+                            id: "p2",
+                            valueType: "uint8",
+                            processors: [
+                                { fn: "read" },
+                                {
+                                    fn: "set",
+                                    args: ["context", "test_fix_array_item.p2"],
+                                },
+                            ],
+                        },
+                    ],
+                },
+            ],
+        },
+        {
+            id: "test_fix_array",
+            type: "property",
+            valueType: "array",
+            cmd: 204,
+            direction: "downlink",
+            processors: [{ fn: "set", args: ["context", "[aLen]", 2] }],
+            afterProcessors: [{ fn: "del", args: ["context", "[aLen]"] }],
+            subObjs: [
+                {
+                    id: "_item",
+                    valueType: "struct",
+                    processors: [],
+                    subObjs: [
+                        {
+                            id: "p1",
+                            valueType: "uint8",
+                            processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                        },
+                        {
+                            id: "p2",
+                            valueType: "uint8",
+                            processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                        },
+                    ],
+                },
+            ],
+        },
+    ],
+};
+var device = {
+    id: "",
+    meta: {},
+    obj: [
+        {
+            id: "battery",
+            type: "property",
+            valueType: "uint8",
+            cmd: 0,
+            direction: "uplink",
+            processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+            attributes: { min: 0, max: 100, unit: "%" },
+        },
+        {
+            id: "vaping_index",
+            type: "property",
+            valueType: "uint8",
+            cmd: 1,
+            direction: "uplink",
+            processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+            attributes: { min: 0, max: 100 },
+        },
+        {
+            id: "vaping_index_alarm",
+            type: "event",
+            valueType: "struct",
+            cmd: 2,
+            direction: "uplink",
+            processors: [{ fn: "alloc", args: ["result"] }],
+            detachedSubObjs: [
+                { id: "type", valueType: "uint8", processors: [] },
+                {
+                    cmd: 0,
+                    id: "collection_error",
+                    valueType: "struct",
+                    processors: [{ fn: "alloc", args: ["result"] }],
+                },
+                {
+                    cmd: 1,
+                    id: "lower_range_error",
+                    valueType: "struct",
+                    processors: [{ fn: "alloc", args: ["result"] }],
+                },
+                {
+                    cmd: 2,
+                    id: "over_range_error",
+                    valueType: "struct",
+                    processors: [{ fn: "alloc", args: ["result"] }],
+                },
+                {
+                    cmd: 16,
+                    id: "alarm_deactivation",
+                    valueType: "struct",
+                    processors: [{ fn: "alloc", args: ["result"] }],
+                    subObjs: [
+                        {
+                            id: "vaping_index",
+                            valueType: "uint8",
+                            processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                            attributes: { min: 0, max: 100 },
+                        },
+                    ],
+                },
+                {
+                    cmd: 17,
+                    id: "alarm_trigger",
+                    valueType: "struct",
+                    processors: [{ fn: "alloc", args: ["result"] }],
+                    subObjs: [
+                        {
+                            id: "vaping_index",
+                            valueType: "uint8",
+                            processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                            attributes: { min: 0, max: 100 },
+                        },
+                    ],
+                },
+                {
+                    cmd: 32,
+                    id: "interference_alarm_deactivation",
+                    valueType: "struct",
+                    processors: [{ fn: "alloc", args: ["result"] }],
+                },
+                {
+                    cmd: 33,
+                    id: "interference_alarm_trigger",
+                    valueType: "struct",
+                    processors: [{ fn: "alloc", args: ["result"] }],
+                },
+            ],
+        },
+        {
+            id: "pm1_0",
+            type: "property",
+            valueType: "uint16",
+            cmd: 3,
+            direction: "uplink",
+            processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+            attributes: { min: 0, max: 1000, unit: "ug/m3" },
+        },
+        {
+            id: "pm1_0_alarm",
+            type: "event",
+            valueType: "struct",
+            cmd: 4,
+            direction: "uplink",
+            processors: [{ fn: "alloc", args: ["result"] }],
+            detachedSubObjs: [
+                { id: "type", valueType: "uint8", processors: [] },
+                {
+                    cmd: 0,
+                    id: "collection_error",
+                    valueType: "struct",
+                    processors: [{ fn: "alloc", args: ["result"] }],
+                },
+                {
+                    cmd: 1,
+                    id: "lower_range_error",
+                    valueType: "struct",
+                    processors: [{ fn: "alloc", args: ["result"] }],
+                },
+                {
+                    cmd: 2,
+                    id: "over_range_error",
+                    valueType: "struct",
+                    processors: [{ fn: "alloc", args: ["result"] }],
+                },
+                {
+                    cmd: 16,
+                    id: "alarm_deactivation",
+                    valueType: "struct",
+                    processors: [{ fn: "alloc", args: ["result"] }],
+                    subObjs: [
+                        {
+                            id: "pm1_0",
+                            valueType: "uint16",
+                            processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                            attributes: { min: 0, max: 1000, unit: "ug/m3" },
+                        },
+                    ],
+                },
+                {
+                    cmd: 17,
+                    id: "alarm_trigger",
+                    valueType: "struct",
+                    processors: [{ fn: "alloc", args: ["result"] }],
+                    subObjs: [
+                        {
+                            id: "pm1_0",
+                            valueType: "uint16",
+                            processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                            attributes: { min: 0, max: 1000, unit: "ug/m3" },
+                        },
+                    ],
+                },
+            ],
+        },
+        {
+            id: "pm2_5",
+            type: "property",
+            valueType: "uint16",
+            cmd: 5,
+            direction: "uplink",
+            processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+            attributes: { min: 0, max: 1000, unit: "ug/m3" },
+        },
+        {
+            id: "pm2_5_alarm",
+            type: "event",
+            valueType: "struct",
+            cmd: 6,
+            direction: "uplink",
+            processors: [{ fn: "alloc", args: ["result"] }],
+            detachedSubObjs: [
+                { id: "type", valueType: "uint8", processors: [] },
+                {
+                    cmd: 0,
+                    id: "collection_error",
+                    valueType: "struct",
+                    processors: [{ fn: "alloc", args: ["result"] }],
+                },
+                {
+                    cmd: 1,
+                    id: "lower_range_error",
+                    valueType: "struct",
+                    processors: [{ fn: "alloc", args: ["result"] }],
+                },
+                {
+                    cmd: 2,
+                    id: "over_range_error",
+                    valueType: "struct",
+                    processors: [{ fn: "alloc", args: ["result"] }],
+                },
+                {
+                    cmd: 16,
+                    id: "alarm_deactivation",
+                    valueType: "struct",
+                    processors: [{ fn: "alloc", args: ["result"] }],
+                    subObjs: [
+                        {
+                            id: "pm2_5",
+                            valueType: "uint16",
+                            processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                            attributes: { min: 0, max: 1000, unit: "ug/m3" },
+                        },
+                    ],
+                },
+                {
+                    cmd: 17,
+                    id: "alarm_trigger",
+                    valueType: "struct",
+                    processors: [{ fn: "alloc", args: ["result"] }],
+                    subObjs: [
+                        {
+                            id: "pm2_5",
+                            valueType: "uint16",
+                            processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                            attributes: { min: 0, max: 1000, unit: "ug/m3" },
+                        },
+                    ],
+                },
+            ],
+        },
+        {
+            id: "pm10",
+            type: "property",
+            valueType: "uint16",
+            cmd: 7,
+            direction: "uplink",
+            processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+            attributes: { min: 0, max: 1000, unit: "ug/m3" },
+        },
+        {
+            id: "pm10_alarm",
+            type: "event",
+            valueType: "struct",
+            cmd: 8,
+            direction: "uplink",
+            processors: [{ fn: "alloc", args: ["result"] }],
+            detachedSubObjs: [
+                { id: "type", valueType: "uint8", processors: [] },
+                {
+                    cmd: 0,
+                    id: "collection_error",
+                    valueType: "struct",
+                    processors: [{ fn: "alloc", args: ["result"] }],
+                },
+                {
+                    cmd: 1,
+                    id: "lower_range_error",
+                    valueType: "struct",
+                    processors: [{ fn: "alloc", args: ["result"] }],
+                },
+                {
+                    cmd: 2,
+                    id: "over_range_error",
+                    valueType: "struct",
+                    processors: [{ fn: "alloc", args: ["result"] }],
+                },
+                {
+                    cmd: 16,
+                    id: "alarm_deactivation",
+                    valueType: "struct",
+                    processors: [{ fn: "alloc", args: ["result"] }],
+                    subObjs: [
+                        {
+                            id: "pm10",
+                            valueType: "uint16",
+                            processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                            attributes: { min: 0, max: 1000, unit: "ug/m3" },
+                        },
+                    ],
+                },
+                {
+                    cmd: 17,
+                    id: "alarm_trigger",
+                    valueType: "struct",
+                    processors: [{ fn: "alloc", args: ["result"] }],
+                    subObjs: [
+                        {
+                            id: "pm10",
+                            valueType: "uint16",
+                            processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                            attributes: { min: 0, max: 1000, unit: "ug/m3" },
+                        },
+                    ],
+                },
+            ],
+        },
+        {
+            id: "temperature",
+            type: "property",
+            valueType: "int16",
+            cmd: 9,
+            direction: "uplink",
+            processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+            attributes: {
+                min: -20,
+                max: 60,
+                unit: "°C",
+                fractionDigits: 1,
+                coefficient: 0.1,
+            },
+        },
+        {
+            id: "temperature_alarm",
+            type: "event",
+            valueType: "struct",
+            cmd: 10,
+            direction: "uplink",
+            processors: [{ fn: "alloc", args: ["result"] }],
+            detachedSubObjs: [
+                { id: "type", valueType: "uint8", processors: [] },
+                {
+                    cmd: 0,
+                    id: "collection_error",
+                    valueType: "struct",
+                    processors: [{ fn: "alloc", args: ["result"] }],
+                },
+                {
+                    cmd: 1,
+                    id: "lower_range_error",
+                    valueType: "struct",
+                    processors: [{ fn: "alloc", args: ["result"] }],
+                },
+                {
+                    cmd: 2,
+                    id: "over_range_error",
+                    valueType: "struct",
+                    processors: [{ fn: "alloc", args: ["result"] }],
+                },
+                {
+                    cmd: 16,
+                    id: "alarm_deactivation",
+                    valueType: "struct",
+                    processors: [{ fn: "alloc", args: ["result"] }],
+                    subObjs: [
+                        {
+                            id: "temperature",
+                            valueType: "int16",
+                            processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                            attributes: {
+                                min: -20,
+                                max: 60,
+                                unit: "°C",
+                                fractionDigits: 1,
+                                coefficient: 0.1,
+                            },
+                        },
+                    ],
+                },
+                {
+                    cmd: 17,
+                    id: "alarm_trigger",
+                    valueType: "struct",
+                    processors: [{ fn: "alloc", args: ["result"] }],
+                    subObjs: [
+                        {
+                            id: "temperature",
+                            valueType: "int16",
+                            processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                            attributes: {
+                                min: -20,
+                                max: 60,
+                                unit: "°C",
+                                fractionDigits: 1,
+                                coefficient: 0.1,
+                            },
+                        },
+                    ],
+                },
+                {
+                    cmd: 32,
+                    id: "burning_alarm_deactivation",
+                    valueType: "struct",
+                    processors: [{ fn: "alloc", args: ["result"] }],
+                },
+                {
+                    cmd: 33,
+                    id: "burning_alarm_trigger",
+                    valueType: "struct",
+                    processors: [{ fn: "alloc", args: ["result"] }],
+                },
+            ],
+        },
+        {
+            id: "humidity",
+            type: "property",
+            valueType: "uint16",
+            cmd: 11,
+            direction: "uplink",
+            processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+            attributes: {
+                min: 0,
+                max: 100,
+                unit: "%",
+                fractionDigits: 1,
+                coefficient: 0.1,
+            },
+        },
+        {
+            id: "humidity_alarm",
+            type: "event",
+            valueType: "struct",
+            cmd: 12,
+            direction: "uplink",
+            processors: [{ fn: "alloc", args: ["result"] }],
+            detachedSubObjs: [
+                { id: "type", valueType: "uint8", processors: [] },
+                {
+                    cmd: 0,
+                    id: "collection_error",
+                    valueType: "struct",
+                    processors: [{ fn: "alloc", args: ["result"] }],
+                },
+                {
+                    cmd: 1,
+                    id: "lower_range_error",
+                    valueType: "struct",
+                    processors: [{ fn: "alloc", args: ["result"] }],
+                },
+                {
+                    cmd: 2,
+                    id: "over_range_error",
+                    valueType: "struct",
+                    processors: [{ fn: "alloc", args: ["result"] }],
+                },
+            ],
+        },
+        {
+            id: "tvoc",
+            type: "property",
+            valueType: "uint16",
+            cmd: 13,
+            direction: "uplink",
+            processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+            attributes: { min: 0, max: 2000, unit: "ug/m3" },
+        },
+        {
+            id: "tvoc_alarm",
+            type: "event",
+            valueType: "struct",
+            cmd: 14,
+            direction: "uplink",
+            processors: [{ fn: "alloc", args: ["result"] }],
+            detachedSubObjs: [
+                { id: "type", valueType: "uint8", processors: [] },
+                {
+                    cmd: 0,
+                    id: "collection_error",
+                    valueType: "struct",
+                    processors: [{ fn: "alloc", args: ["result"] }],
+                },
+                {
+                    cmd: 1,
+                    id: "lower_range_error",
+                    valueType: "struct",
+                    processors: [{ fn: "alloc", args: ["result"] }],
+                },
+                {
+                    cmd: 2,
+                    id: "over_range_error",
+                    valueType: "struct",
+                    processors: [{ fn: "alloc", args: ["result"] }],
+                },
+                {
+                    cmd: 16,
+                    id: "alarm_deactivation",
+                    valueType: "struct",
+                    processors: [{ fn: "alloc", args: ["result"] }],
+                    subObjs: [
+                        {
+                            id: "tvoc",
+                            valueType: "uint16",
+                            processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                            attributes: { min: 0, max: 2000, unit: "ug/m3" },
+                        },
+                    ],
+                },
+                {
+                    cmd: 17,
+                    id: "alarm_trigger",
+                    valueType: "struct",
+                    processors: [{ fn: "alloc", args: ["result"] }],
+                    subObjs: [
+                        {
+                            id: "tvoc",
+                            valueType: "uint16",
+                            processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                            attributes: { min: 0, max: 2000, unit: "ug/m3" },
+                        },
+                    ],
+                },
+            ],
+        },
+        {
+            id: "tamper_status",
+            type: "property",
+            valueType: "uint8",
+            cmd: 15,
+            direction: "uplink",
+            processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+        },
+        {
+            id: "tamper_status_alarm",
+            type: "event",
+            valueType: "struct",
+            cmd: 16,
+            direction: "uplink",
+            processors: [{ fn: "alloc", args: ["result"] }],
+            detachedSubObjs: [
+                { id: "type", valueType: "uint8", processors: [] },
+                {
+                    cmd: 32,
+                    id: "normal",
+                    valueType: "struct",
+                    processors: [{ fn: "alloc", args: ["result"] }],
+                },
+                {
+                    cmd: 33,
+                    id: "trigger",
+                    valueType: "struct",
+                    processors: [{ fn: "alloc", args: ["result"] }],
+                },
+            ],
+        },
+        {
+            id: "buzzer",
+            type: "property",
+            valueType: "uint8",
+            cmd: 17,
+            direction: "uplink",
+            processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+        },
+        {
+            id: "occupancy_status",
+            type: "property",
+            valueType: "uint8",
+            cmd: 18,
+            direction: "uplink",
+            processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+        },
+        {
+            id: "tvoc_raw_data_1",
+            type: "property",
+            valueType: "struct",
+            cmd: 32,
+            direction: "uplink",
+            processors: [{ fn: "alloc", args: ["result"] }],
+            subObjs: [
+                {
+                    id: "rmox_0",
+                    valueType: "float",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                    attributes: { fractionDigits: 3 },
+                },
+                {
+                    id: "rmox_1",
+                    valueType: "float",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                    attributes: { fractionDigits: 3 },
+                },
+            ],
+        },
+        {
+            id: "tvoc_raw_data_2",
+            type: "property",
+            valueType: "struct",
+            cmd: 33,
+            direction: "uplink",
+            processors: [{ fn: "alloc", args: ["result"] }],
+            subObjs: [
+                {
+                    id: "rmox_2",
+                    valueType: "float",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                    attributes: { fractionDigits: 3 },
+                },
+                {
+                    id: "rmox_3",
+                    valueType: "float",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                    attributes: { fractionDigits: 3 },
+                },
+            ],
+        },
+        {
+            id: "tvoc_raw_data_3",
+            type: "property",
+            valueType: "struct",
+            cmd: 34,
+            direction: "uplink",
+            processors: [{ fn: "alloc", args: ["result"] }],
+            subObjs: [
+                {
+                    id: "rmox_4",
+                    valueType: "float",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                    attributes: { fractionDigits: 3 },
+                },
+                {
+                    id: "rmox_5",
+                    valueType: "float",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                    attributes: { fractionDigits: 3 },
+                },
+            ],
+        },
+        {
+            id: "tvoc_raw_data_4",
+            type: "property",
+            valueType: "struct",
+            cmd: 35,
+            direction: "uplink",
+            processors: [{ fn: "alloc", args: ["result"] }],
+            subObjs: [
+                {
+                    id: "rmox_6",
+                    valueType: "float",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                    attributes: { fractionDigits: 3 },
+                },
+                {
+                    id: "rmox_7",
+                    valueType: "float",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                    attributes: { fractionDigits: 3 },
+                },
+            ],
+        },
+        {
+            id: "tvoc_raw_data_5",
+            type: "property",
+            valueType: "struct",
+            cmd: 36,
+            direction: "uplink",
+            processors: [{ fn: "alloc", args: ["result"] }],
+            subObjs: [
+                {
+                    id: "rmox_8",
+                    valueType: "float",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                    attributes: { fractionDigits: 3 },
+                },
+                {
+                    id: "rmox_9",
+                    valueType: "float",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                    attributes: { fractionDigits: 3 },
+                },
+            ],
+        },
+        {
+            id: "tvoc_raw_data_6",
+            type: "property",
+            valueType: "struct",
+            cmd: 37,
+            direction: "uplink",
+            processors: [{ fn: "alloc", args: ["result"] }],
+            subObjs: [
+                {
+                    id: "rmox_10",
+                    valueType: "float",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                    attributes: { fractionDigits: 3 },
+                },
+                {
+                    id: "rmox_11",
+                    valueType: "float",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                    attributes: { fractionDigits: 3 },
+                },
+            ],
+        },
+        {
+            id: "tvoc_raw_data_7",
+            type: "property",
+            valueType: "struct",
+            cmd: 38,
+            direction: "uplink",
+            processors: [{ fn: "alloc", args: ["result"] }],
+            subObjs: [
+                {
+                    id: "rmox_12",
+                    valueType: "float",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                    attributes: { fractionDigits: 3 },
+                },
+                {
+                    id: "zmod4510_rmox3",
+                    valueType: "float",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                    attributes: { fractionDigits: 3 },
+                },
+            ],
+        },
+        {
+            id: "tvoc_raw_data_8",
+            type: "property",
+            valueType: "struct",
+            cmd: 39,
+            direction: "uplink",
+            processors: [{ fn: "alloc", args: ["result"] }],
+            subObjs: [
+                {
+                    id: "log_rcda",
+                    valueType: "float",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                    attributes: { fractionDigits: 3 },
+                },
+                {
+                    id: "rhtr",
+                    valueType: "float",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                    attributes: { fractionDigits: 3 },
+                },
+            ],
+        },
+        {
+            id: "tvoc_raw_data_9",
+            type: "property",
+            valueType: "struct",
+            cmd: 40,
+            direction: "uplink",
+            processors: [{ fn: "alloc", args: ["result"] }],
+            subObjs: [
+                {
+                    id: "temperature",
+                    valueType: "float",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                    attributes: { fractionDigits: 3 },
+                },
+                {
+                    id: "iaq",
+                    valueType: "float",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                    attributes: { fractionDigits: 3 },
+                },
+            ],
+        },
+        {
+            id: "tvoc_raw_data_10",
+            type: "property",
+            valueType: "struct",
+            cmd: 41,
+            direction: "uplink",
+            processors: [{ fn: "alloc", args: ["result"] }],
+            subObjs: [
+                {
+                    id: "tvoc",
+                    valueType: "float",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                    attributes: { fractionDigits: 3 },
+                },
+                {
+                    id: "etoh",
+                    valueType: "float",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                    attributes: { fractionDigits: 3 },
+                },
+            ],
+        },
+        {
+            id: "tvoc_raw_data_11",
+            type: "property",
+            valueType: "struct",
+            cmd: 42,
+            direction: "uplink",
+            processors: [{ fn: "alloc", args: ["result"] }],
+            subObjs: [
+                {
+                    id: "co2",
+                    valueType: "float",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                    attributes: { fractionDigits: 3 },
+                },
+                {
+                    id: "rel_iaq",
+                    valueType: "float",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                    attributes: { fractionDigits: 3 },
+                },
+            ],
+        },
+        {
+            id: "reporting_interval",
+            type: "property",
+            valueType: "struct",
+            cmd: 96,
+            direction: "uplink",
+            processors: [{ fn: "alloc", args: ["result"] }],
+            detachedCmdDest: { subProperty: "unit" },
+            detachedSubObjs: [
+                { id: "unit", valueType: "uint8", processors: [] },
+                {
+                    cmd: 0,
+                    id: "seconds_of_time",
+                    valueType: "uint16",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                    attributes: { min: 10, max: 64800, unit: "s" },
+                },
+                {
+                    cmd: 1,
+                    id: "minutes_of_time",
+                    valueType: "uint16",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                    attributes: { min: 1, max: 1440, unit: "min" },
+                },
+            ],
+        },
+        {
+            id: "reporting_interval",
+            type: "property",
+            valueType: "struct",
+            cmd: 96,
+            direction: "downlink",
+            processors: [],
+            detachedCmdDest: { subProperty: "unit" },
+            detachedSubObjs: [
+                { id: "unit", valueType: "uint8", processors: [] },
+                {
+                    cmd: 0,
+                    id: "seconds_of_time",
+                    valueType: "uint16",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                    attributes: { min: 10, max: 64800, unit: "s" },
+                },
+                {
+                    cmd: 1,
+                    id: "minutes_of_time",
+                    valueType: "uint16",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                    attributes: { min: 1, max: 1440, unit: "min" },
+                },
+            ],
+        },
+        {
+            id: "temperature_unit",
+            type: "property",
+            valueType: "uint8",
+            cmd: 97,
+            direction: "uplink",
+            processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+        },
+        {
+            id: "temperature_unit",
+            type: "property",
+            valueType: "uint8",
+            cmd: 97,
+            direction: "downlink",
+            processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+        },
+        {
+            id: "tamper_alarm_enable",
+            type: "property",
+            valueType: "uint8",
+            cmd: 103,
+            direction: "uplink",
+            processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+        },
+        {
+            id: "tamper_alarm_enable",
+            type: "property",
+            valueType: "uint8",
+            cmd: 103,
+            direction: "downlink",
+            processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+        },
+        {
+            id: "led_status",
+            type: "property",
+            valueType: "uint8",
+            cmd: 98,
+            direction: "uplink",
+            processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+        },
+        {
+            id: "led_status",
+            type: "property",
+            valueType: "uint8",
+            cmd: 98,
+            direction: "downlink",
+            processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+        },
+        {
+            id: "buzzer_enable",
+            type: "property",
+            valueType: "uint8",
+            cmd: 99,
+            direction: "uplink",
+            processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+        },
+        {
+            id: "buzzer_enable",
+            type: "property",
+            valueType: "uint8",
+            cmd: 99,
+            direction: "downlink",
+            processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+        },
+        {
+            id: "buzzer_sleep",
+            type: "property",
+            valueType: "struct",
+            cmd: 100,
+            direction: "uplink",
+            processors: [{ fn: "alloc", args: ["result"] }],
+            detachedSubObjs: [
+                { id: "type", valueType: "uint8", processors: [] },
+                {
+                    cmd: 1,
+                    id: "item_1",
+                    valueType: "struct",
+                    processors: [{ fn: "alloc", args: ["result"] }],
+                    subObjs: [
+                        {
+                            id: "enable",
+                            valueType: "uint8",
+                            processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                        },
+                        {
+                            id: "start_time",
+                            valueType: "uint16",
+                            processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                            attributes: { unit: "min" },
+                        },
+                        {
+                            id: "end_time",
+                            valueType: "uint16",
+                            processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                            attributes: { unit: "min" },
+                        },
+                    ],
+                },
+                {
+                    cmd: 2,
+                    id: "item_2",
+                    valueType: "struct",
+                    processors: [{ fn: "alloc", args: ["result"] }],
+                    subObjs: [
+                        {
+                            id: "enable",
+                            valueType: "uint8",
+                            processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                        },
+                        {
+                            id: "start_time",
+                            valueType: "uint16",
+                            processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                            attributes: { unit: "min" },
+                        },
+                        {
+                            id: "end_time",
+                            valueType: "uint16",
+                            processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                            attributes: { unit: "min" },
+                        },
+                    ],
+                },
+            ],
+        },
+        {
+            id: "buzzer_sleep",
+            type: "property",
+            valueType: "struct",
+            cmd: 100,
+            direction: "downlink",
+            processors: [],
+            detachedSubObjs: [
+                { id: "type", valueType: "uint8", processors: [] },
+                {
+                    cmd: 1,
+                    id: "item_1",
+                    valueType: "struct",
+                    processors: [],
+                    subObjs: [
+                        {
+                            id: "enable",
+                            valueType: "uint8",
+                            processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                        },
+                        {
+                            id: "start_time",
+                            valueType: "uint16",
+                            processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                            attributes: { unit: "min" },
+                        },
+                        {
+                            id: "end_time",
+                            valueType: "uint16",
+                            processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                            attributes: { unit: "min" },
+                        },
+                    ],
+                },
+                {
+                    cmd: 2,
+                    id: "item_2",
+                    valueType: "struct",
+                    processors: [],
+                    subObjs: [
+                        {
+                            id: "enable",
+                            valueType: "uint8",
+                            processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                        },
+                        {
+                            id: "start_time",
+                            valueType: "uint16",
+                            processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                            attributes: { unit: "min" },
+                        },
+                        {
+                            id: "end_time",
+                            valueType: "uint16",
+                            processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                            attributes: { unit: "min" },
+                        },
+                    ],
+                },
+            ],
+        },
+        {
+            id: "buzzer_button_stop_enable",
+            type: "property",
+            valueType: "uint8",
+            cmd: 101,
+            direction: "uplink",
+            processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+        },
+        {
+            id: "buzzer_button_stop_enable",
+            type: "property",
+            valueType: "uint8",
+            cmd: 101,
+            direction: "downlink",
+            processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+        },
+        {
+            id: "buzzer_silent_time",
+            type: "property",
+            valueType: "uint16",
+            cmd: 102,
+            direction: "uplink",
+            processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+            attributes: { min: 0, max: 1440, unit: "min" },
+        },
+        {
+            id: "buzzer_silent_time",
+            type: "property",
+            valueType: "uint16",
+            cmd: 102,
+            direction: "downlink",
+            processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+            attributes: { min: 0, max: 1440, unit: "min" },
+        },
+        {
+            id: "tvoc_raw_reporting_enable",
+            type: "property",
+            valueType: "uint8",
+            cmd: 104,
+            direction: "uplink",
+            processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+        },
+        {
+            id: "tvoc_raw_reporting_enable",
+            type: "property",
+            valueType: "uint8",
+            cmd: 104,
+            direction: "downlink",
+            processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+        },
+        {
+            id: "temperature_alarm_settings",
+            type: "property",
+            valueType: "struct",
+            cmd: 105,
+            direction: "uplink",
+            processors: [{ fn: "alloc", args: ["result"] }],
+            subObjs: [
+                {
+                    id: "enable",
+                    valueType: "uint8",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                },
+                {
+                    id: "threshold_condition",
+                    valueType: "uint8",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                },
+                {
+                    id: "threshold_min",
+                    valueType: "int16",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                    attributes: {
+                        min: -20,
+                        max: 60,
+                        unit: "°C",
+                        fractionDigits: 1,
+                        coefficient: 0.1,
+                    },
+                },
+                {
+                    id: "threshold_max",
+                    valueType: "int16",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                    attributes: {
+                        min: -20,
+                        max: 60,
+                        unit: "°C",
+                        fractionDigits: 1,
+                        coefficient: 0.1,
+                    },
+                },
+            ],
+        },
+        {
+            id: "temperature_alarm_settings",
+            type: "property",
+            valueType: "struct",
+            cmd: 105,
+            direction: "downlink",
+            processors: [],
+            subObjs: [
+                {
+                    id: "enable",
+                    valueType: "uint8",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                },
+                {
+                    id: "threshold_condition",
+                    valueType: "uint8",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                },
+                {
+                    id: "threshold_min",
+                    valueType: "int16",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                    attributes: {
+                        min: -20,
+                        max: 60,
+                        unit: "°C",
+                        fractionDigits: 1,
+                        coefficient: 0.1,
+                    },
+                },
+                {
+                    id: "threshold_max",
+                    valueType: "int16",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                    attributes: {
+                        min: -20,
+                        max: 60,
+                        unit: "°C",
+                        fractionDigits: 1,
+                        coefficient: 0.1,
+                    },
+                },
+            ],
+        },
+        {
+            id: "pm1_0_alarm_settings",
+            type: "property",
+            valueType: "struct",
+            cmd: 106,
+            direction: "uplink",
+            processors: [{ fn: "alloc", args: ["result"] }],
+            subObjs: [
+                {
+                    id: "enable",
+                    valueType: "uint8",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                },
+                {
+                    id: "threshold_condition",
+                    valueType: "uint8",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                },
+                {
+                    id: "threshold_min",
+                    valueType: "int16",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                    attributes: { min: 0, max: 1000, unit: "ug/m3" },
+                },
+                {
+                    id: "threshold_max",
+                    valueType: "int16",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                    attributes: { min: 0, max: 1000, unit: "ug/m3" },
+                },
+            ],
+        },
+        {
+            id: "pm1_0_alarm_settings",
+            type: "property",
+            valueType: "struct",
+            cmd: 106,
+            direction: "downlink",
+            processors: [],
+            subObjs: [
+                {
+                    id: "enable",
+                    valueType: "uint8",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                },
+                {
+                    id: "threshold_condition",
+                    valueType: "uint8",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                },
+                {
+                    id: "threshold_min",
+                    valueType: "int16",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                    attributes: { min: 0, max: 1000, unit: "ug/m3" },
+                },
+                {
+                    id: "threshold_max",
+                    valueType: "int16",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                    attributes: { min: 0, max: 1000, unit: "ug/m3" },
+                },
+            ],
+        },
+        {
+            id: "pm2_5_alarm_settings",
+            type: "property",
+            valueType: "struct",
+            cmd: 107,
+            direction: "uplink",
+            processors: [{ fn: "alloc", args: ["result"] }],
+            subObjs: [
+                {
+                    id: "enable",
+                    valueType: "uint8",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                },
+                {
+                    id: "threshold_condition",
+                    valueType: "uint8",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                },
+                {
+                    id: "threshold_min",
+                    valueType: "int16",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                    attributes: { min: 0, max: 1000, unit: "ug/m3" },
+                },
+                {
+                    id: "threshold_max",
+                    valueType: "int16",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                    attributes: { min: 0, max: 1000, unit: "ug/m3" },
+                },
+            ],
+        },
+        {
+            id: "pm2_5_alarm_settings",
+            type: "property",
+            valueType: "struct",
+            cmd: 107,
+            direction: "downlink",
+            processors: [],
+            subObjs: [
+                {
+                    id: "enable",
+                    valueType: "uint8",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                },
+                {
+                    id: "threshold_condition",
+                    valueType: "uint8",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                },
+                {
+                    id: "threshold_min",
+                    valueType: "int16",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                    attributes: { min: 0, max: 1000, unit: "ug/m3" },
+                },
+                {
+                    id: "threshold_max",
+                    valueType: "int16",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                    attributes: { min: 0, max: 1000, unit: "ug/m3" },
+                },
+            ],
+        },
+        {
+            id: "pm10_alarm_settings",
+            type: "property",
+            valueType: "struct",
+            cmd: 108,
+            direction: "uplink",
+            processors: [{ fn: "alloc", args: ["result"] }],
+            subObjs: [
+                {
+                    id: "enable",
+                    valueType: "uint8",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                },
+                {
+                    id: "threshold_condition",
+                    valueType: "uint8",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                },
+                {
+                    id: "threshold_min",
+                    valueType: "int16",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                    attributes: { min: 0, max: 1000, unit: "ug/m3" },
+                },
+                {
+                    id: "threshold_max",
+                    valueType: "int16",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                    attributes: { min: 0, max: 1000, unit: "ug/m3" },
+                },
+            ],
+        },
+        {
+            id: "pm10_alarm_settings",
+            type: "property",
+            valueType: "struct",
+            cmd: 108,
+            direction: "downlink",
+            processors: [],
+            subObjs: [
+                {
+                    id: "enable",
+                    valueType: "uint8",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                },
+                {
+                    id: "threshold_condition",
+                    valueType: "uint8",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                },
+                {
+                    id: "threshold_min",
+                    valueType: "int16",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                    attributes: { min: 0, max: 1000, unit: "ug/m3" },
+                },
+                {
+                    id: "threshold_max",
+                    valueType: "int16",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                    attributes: { min: 0, max: 1000, unit: "ug/m3" },
+                },
+            ],
+        },
+        {
+            id: "tvoc_alarm_settings",
+            type: "property",
+            valueType: "struct",
+            cmd: 109,
+            direction: "uplink",
+            processors: [{ fn: "alloc", args: ["result"] }],
+            subObjs: [
+                {
+                    id: "enable",
+                    valueType: "uint8",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                },
+                {
+                    id: "threshold_condition",
+                    valueType: "uint8",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                },
+                {
+                    id: "threshold_min",
+                    valueType: "int16",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                    attributes: { min: 0, max: 2000, unit: "ug/m3" },
+                },
+                {
+                    id: "threshold_max",
+                    valueType: "int16",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                    attributes: { min: 0, max: 2000, unit: "ug/m3" },
+                },
+            ],
+        },
+        {
+            id: "tvoc_alarm_settings",
+            type: "property",
+            valueType: "struct",
+            cmd: 109,
+            direction: "downlink",
+            processors: [],
+            subObjs: [
+                {
+                    id: "enable",
+                    valueType: "uint8",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                },
+                {
+                    id: "threshold_condition",
+                    valueType: "uint8",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                },
+                {
+                    id: "threshold_min",
+                    valueType: "int16",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                    attributes: { min: 0, max: 2000, unit: "ug/m3" },
+                },
+                {
+                    id: "threshold_max",
+                    valueType: "int16",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                    attributes: { min: 0, max: 2000, unit: "ug/m3" },
+                },
+            ],
+        },
+        {
+            id: "vaping_index_alarm_settings",
+            type: "property",
+            valueType: "struct",
+            cmd: 110,
+            direction: "uplink",
+            processors: [{ fn: "alloc", args: ["result"] }],
+            subObjs: [
+                {
+                    id: "enable",
+                    valueType: "uint8",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                },
+                {
+                    id: "threshold_condition",
+                    valueType: "uint8",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                },
+                {
+                    id: "threshold_min",
+                    valueType: "uint8",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                    attributes: { min: 0, max: 100 },
+                },
+                {
+                    id: "threshold_max",
+                    valueType: "uint8",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                    attributes: { min: 0, max: 100 },
+                },
+            ],
+        },
+        {
+            id: "vaping_index_alarm_settings",
+            type: "property",
+            valueType: "struct",
+            cmd: 110,
+            direction: "downlink",
+            processors: [],
+            subObjs: [
+                {
+                    id: "enable",
+                    valueType: "uint8",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                },
+                {
+                    id: "threshold_condition",
+                    valueType: "uint8",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                },
+                {
+                    id: "threshold_min",
+                    valueType: "uint8",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                    attributes: { min: 0, max: 100 },
+                },
+                {
+                    id: "threshold_max",
+                    valueType: "uint8",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                    attributes: { min: 0, max: 100 },
+                },
+            ],
+        },
+        {
+            id: "alarm_reporting_times",
+            type: "property",
+            valueType: "uint16",
+            cmd: 111,
+            direction: "uplink",
+            processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+            attributes: { min: 1, max: 1000 },
+        },
+        {
+            id: "alarm_reporting_times",
+            type: "property",
+            valueType: "uint16",
+            cmd: 111,
+            direction: "downlink",
+            processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+            attributes: { min: 1, max: 1000 },
+        },
+        {
+            id: "alarm_deactivation_enable",
+            type: "property",
+            valueType: "uint8",
+            cmd: 112,
+            direction: "uplink",
+            processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+        },
+        {
+            id: "alarm_deactivation_enable",
+            type: "property",
+            valueType: "uint8",
+            cmd: 112,
+            direction: "downlink",
+            processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+        },
+        {
+            id: "temperature_calibration_settings",
+            type: "property",
+            valueType: "struct",
+            cmd: 113,
+            direction: "uplink",
+            processors: [{ fn: "alloc", args: ["result"] }],
+            subObjs: [
+                {
+                    id: "enable",
+                    valueType: "uint8",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                },
+                {
+                    id: "calibration_value",
+                    valueType: "int16",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                    attributes: {
+                        min: -80,
+                        max: 80,
+                        unit: "°C",
+                        fractionDigits: 1,
+                        coefficient: 0.1,
+                    },
+                },
+            ],
+        },
+        {
+            id: "temperature_calibration_settings",
+            type: "property",
+            valueType: "struct",
+            cmd: 113,
+            direction: "downlink",
+            processors: [],
+            subObjs: [
+                {
+                    id: "enable",
+                    valueType: "uint8",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                },
+                {
+                    id: "calibration_value",
+                    valueType: "int16",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                    attributes: {
+                        min: -80,
+                        max: 80,
+                        unit: "°C",
+                        fractionDigits: 1,
+                        coefficient: 0.1,
+                    },
+                },
+            ],
+        },
+        {
+            id: "humidity_calibration_settings",
+            type: "property",
+            valueType: "struct",
+            cmd: 114,
+            direction: "uplink",
+            processors: [{ fn: "alloc", args: ["result"] }],
+            subObjs: [
+                {
+                    id: "enable",
+                    valueType: "uint8",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                },
+                {
+                    id: "calibration_value",
+                    valueType: "int16",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                    attributes: {
+                        min: -100,
+                        max: 100,
+                        unit: "%",
+                        fractionDigits: 1,
+                        coefficient: 0.1,
+                    },
+                },
+            ],
+        },
+        {
+            id: "humidity_calibration_settings",
+            type: "property",
+            valueType: "struct",
+            cmd: 114,
+            direction: "downlink",
+            processors: [],
+            subObjs: [
+                {
+                    id: "enable",
+                    valueType: "uint8",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                },
+                {
+                    id: "calibration_value",
+                    valueType: "int16",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                    attributes: {
+                        min: -100,
+                        max: 100,
+                        unit: "%",
+                        fractionDigits: 1,
+                        coefficient: 0.1,
+                    },
+                },
+            ],
+        },
+        {
+            id: "pm1_0_calibration_settings",
+            type: "property",
+            valueType: "struct",
+            cmd: 115,
+            direction: "uplink",
+            processors: [{ fn: "alloc", args: ["result"] }],
+            subObjs: [
+                {
+                    id: "enable",
+                    valueType: "uint8",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                },
+                {
+                    id: "calibration_value",
+                    valueType: "int16",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                    attributes: { min: -1000, max: 1000, unit: "ug/m3" },
+                },
+            ],
+        },
+        {
+            id: "pm1_0_calibration_settings",
+            type: "property",
+            valueType: "struct",
+            cmd: 115,
+            direction: "downlink",
+            processors: [],
+            subObjs: [
+                {
+                    id: "enable",
+                    valueType: "uint8",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                },
+                {
+                    id: "calibration_value",
+                    valueType: "int16",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                    attributes: { min: -1000, max: 1000, unit: "ug/m3" },
+                },
+            ],
+        },
+        {
+            id: "pm2_5_calibration_settings",
+            type: "property",
+            valueType: "struct",
+            cmd: 116,
+            direction: "uplink",
+            processors: [{ fn: "alloc", args: ["result"] }],
+            subObjs: [
+                {
+                    id: "enable",
+                    valueType: "uint8",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                },
+                {
+                    id: "calibration_value",
+                    valueType: "int16",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                    attributes: { min: -1000, max: 1000, unit: "ug/m3" },
+                },
+            ],
+        },
+        {
+            id: "pm2_5_calibration_settings",
+            type: "property",
+            valueType: "struct",
+            cmd: 116,
+            direction: "downlink",
+            processors: [],
+            subObjs: [
+                {
+                    id: "enable",
+                    valueType: "uint8",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                },
+                {
+                    id: "calibration_value",
+                    valueType: "int16",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                    attributes: { min: -1000, max: 1000, unit: "ug/m3" },
+                },
+            ],
+        },
+        {
+            id: "pm10_calibration_settings",
+            type: "property",
+            valueType: "struct",
+            cmd: 117,
+            direction: "uplink",
+            processors: [{ fn: "alloc", args: ["result"] }],
+            subObjs: [
+                {
+                    id: "enable",
+                    valueType: "uint8",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                },
+                {
+                    id: "calibration_value",
+                    valueType: "int16",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                    attributes: { min: -1000, max: 1000, unit: "ug/m3" },
+                },
+            ],
+        },
+        {
+            id: "pm10_calibration_settings",
+            type: "property",
+            valueType: "struct",
+            cmd: 117,
+            direction: "downlink",
+            processors: [],
+            subObjs: [
+                {
+                    id: "enable",
+                    valueType: "uint8",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                },
+                {
+                    id: "calibration_value",
+                    valueType: "int16",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                    attributes: { min: -1000, max: 1000, unit: "ug/m3" },
+                },
+            ],
+        },
+        {
+            id: "tvoc_calibration_settings",
+            type: "property",
+            valueType: "struct",
+            cmd: 118,
+            direction: "uplink",
+            processors: [{ fn: "alloc", args: ["result"] }],
+            subObjs: [
+                {
+                    id: "enable",
+                    valueType: "uint8",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                },
+                {
+                    id: "calibration_value",
+                    valueType: "int16",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                    attributes: { min: -2000, max: 2000, unit: "ug/m3" },
+                },
+            ],
+        },
+        {
+            id: "tvoc_calibration_settings",
+            type: "property",
+            valueType: "struct",
+            cmd: 118,
+            direction: "downlink",
+            processors: [],
+            subObjs: [
+                {
+                    id: "enable",
+                    valueType: "uint8",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                },
+                {
+                    id: "calibration_value",
+                    valueType: "int16",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                    attributes: { min: -2000, max: 2000, unit: "ug/m3" },
+                },
+            ],
+        },
+        {
+            id: "vaping_index_calibration_settings",
+            type: "property",
+            valueType: "struct",
+            cmd: 119,
+            direction: "uplink",
+            processors: [{ fn: "alloc", args: ["result"] }],
+            subObjs: [
+                {
+                    id: "enable",
+                    valueType: "uint8",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                },
+                {
+                    id: "calibration_value",
+                    valueType: "int8",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                    attributes: { min: -100, max: 100 },
+                },
+            ],
+        },
+        {
+            id: "vaping_index_calibration_settings",
+            type: "property",
+            valueType: "struct",
+            cmd: 119,
+            direction: "downlink",
+            processors: [],
+            subObjs: [
+                {
+                    id: "enable",
+                    valueType: "uint8",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                },
+                {
+                    id: "calibration_value",
+                    valueType: "int8",
+                    processors: [{ fn: "read" }, { fn: "set", args: ["result"] }],
+                    attributes: { min: -100, max: 100 },
+                },
+            ],
+        },
+        {
+            id: "stop_buzzer_alarm",
+            type: "service",
+            valueType: "struct",
+            cmd: 95,
+            direction: "downlink",
+            processors: [],
+        },
+        {
+            id: "execute_tvoc_self_clean",
+            type: "service",
+            valueType: "struct",
+            cmd: 94,
+            direction: "downlink",
+            processors: [],
+        },
+    ],
+};

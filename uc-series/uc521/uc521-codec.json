@@ -1,0 +1,1890 @@
+{
+    "version": "1.0.0",
+    "bytes": "01755C03010004C805000000",
+    "object": [
+        {
+            "id": "ipso_version",
+            "name": "IPSO Version",
+            "value": "",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "TEXT",
+            "value_type": "STRING",
+            "max_length": 6,
+            "bacnet_type": "character_string_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS"
+        },
+        {
+            "id": "hardware_version",
+            "name": "Hardware Version",
+            "value": "",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "TEXT",
+            "value_type": "STRING",
+            "max_length": 6,
+            "bacnet_type": "character_string_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS"
+        },
+        {
+            "id": "firmware_version",
+            "name": "Firmware Version",
+            "value": "",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "TEXT",
+            "value_type": "STRING",
+            "max_length": 6,
+            "bacnet_type": "character_string_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS"
+        },
+        {
+            "id": "tsl_version",
+            "name": "TSL Version",
+            "value": "",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "TEXT",
+            "value_type": "STRING",
+            "max_length": 6,
+            "bacnet_type": "character_string_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS"
+        },
+        {
+            "id": "sn",
+            "name": "SN",
+            "value": "",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "TEXT",
+            "value_type": "STRING",
+            "max_length": 16,
+            "bacnet_type": "character_string_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS"
+        },
+        {
+            "id": "lorawan_class",
+            "name": "LoRaWAN Class Type",
+            "value": "",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [
+                { "value": 0, "name": "Class A" },
+                { "value": 1, "name": "Class B" },
+                { "value": 2, "name": "Class C" },
+                { "value": 3, "name": "Class CtoB" }
+            ],
+            "bacnet_type": "multistate_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS"
+        },
+        {
+            "id": "reset_event",
+            "name": "Reset Event",
+            "value": "",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                { "value": 0, "name": "normal" },
+                { "value": 1, "name": "reset" }
+            ],
+            "bacnet_type": "binary_input_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS"
+        },
+        {
+            "id": "device_status",
+            "name": "Device Status",
+            "value": "1",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                { "value": 0, "name": "off" },
+                { "value": 1, "name": "on" }
+            ],
+            "bacnet_type": "binary_input_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS"
+        },
+        {
+            "id": "battery",
+            "name": "Battery",
+            "value": "92",
+            "unit": "%",
+            "access_mode": "R",
+            "data_type": "NUMBER",
+            "value_type": "UINT8",
+            "bacnet_type": "analog_input_object",
+            "bacnet_unit_type_id": 98,
+            "bacnet_unit_type": "UNITS_PERCENT"
+        },
+        {
+            "id": "valve_1_type",
+            "name": "Valve 1 Type",
+            "value": "",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [
+                { "value": 0, "name": "2_way_ball_valve" },
+                { "value": 1, "name": "3_way_ball_valve" }
+            ],
+            "bacnet_type": "multistate_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS"
+        },
+        {
+            "id": "valve_1_opening",
+            "name": "Valve 1 Opening",
+            "value": "",
+            "unit": "%",
+            "access_mode": "R",
+            "data_type": "NUMBER",
+            "value_type": "UINT8",
+            "bacnet_type": "analog_input_object",
+            "bacnet_unit_type_id": 98,
+            "bacnet_unit_type": "UNITS_PERCENT"
+        },
+        {
+            "id": "valve_1_direction",
+            "name": "Valve 1 Direction",
+            "value": "",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [
+                { "value": 0, "name": "left" },
+                { "value": 1, "name": "right" }
+            ],
+            "bacnet_type": "multistate_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS"
+        },
+        {
+            "id": "valve_2_type",
+            "name": "Valve 2 Type",
+            "value": "",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [
+                { "value": 0, "name": "2_way_ball_valve" },
+                { "value": 1, "name": "3_way_ball_valve" }
+            ],
+            "bacnet_type": "multistate_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS"
+        },
+        {
+            "id": "valve_2_opening",
+            "name": "Valve 2 Opening",
+            "value": "",
+            "unit": "%",
+            "access_mode": "R",
+            "data_type": "NUMBER",
+            "value_type": "UINT8",
+            "bacnet_type": "analog_input_object",
+            "bacnet_unit_type_id": 98,
+            "bacnet_unit_type": "UNITS_PERCENT"
+        },
+        {
+            "id": "valve_2_direction",
+            "name": "Valve 2 Direction",
+            "value": "",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [
+                { "value": 0, "name": "left" },
+                { "value": 1, "name": "right" }
+            ],
+            "bacnet_type": "multistate_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS"
+        },
+        {
+            "id": "valve_1_pulse",
+            "name": "Valve 1 Pulse",
+            "value": "",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "NUMBER",
+            "value_type": "UINT32",
+            "bacnet_type": "analog_input_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS"
+        },
+        {
+            "id": "valve_2_pulse",
+            "name": "Valve 2 Pulse",
+            "value": "",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "NUMBER",
+            "value_type": "UINT32",
+            "bacnet_type": "analog_input_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS"
+        },
+        {
+            "id": "gpio_1",
+            "name": "GPIO 1",
+            "value": "",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                { "value": 0, "name": "low" },
+                { "value": 1, "name": "high" }
+            ],
+            "bacnet_type": "binary_input_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS"
+        },
+        {
+            "id": "gpio_2",
+            "name": "GPIO 2",
+            "value": "",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                { "value": 0, "name": "low" },
+                { "value": 1, "name": "high" }
+            ],
+            "bacnet_type": "binary_input_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS"
+        },
+        {
+            "id": "pressure_1",
+            "name": "Pressure 1",
+            "value": "",
+            "unit": "kPa",
+            "access_mode": "R",
+            "data_type": "NUMBER",
+            "value_type": "UINT16",
+            "bacnet_type": "analog_input_object",
+            "bacnet_unit_type_id": 54,
+            "bacnet_unit_type": "UNITS_KILOPASCALS"
+        },
+        {
+            "id": "pressure_2",
+            "name": "Pressure 2",
+            "value": "",
+            "unit": "kPa",
+            "access_mode": "R",
+            "data_type": "NUMBER",
+            "value_type": "UINT16",
+            "bacnet_type": "analog_input_object",
+            "bacnet_unit_type_id": 54,
+            "bacnet_unit_type": "UNITS_KILOPASCALS"
+        },
+        {
+            "id": "pressure_1_alarm_event.source",
+            "name": "Pressure 1 Alarm Event (Source)",
+            "value": "",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [
+                { "value": 0, "name": "every change" },
+                { "value": 1, "name": "valve 1 opening" },
+                { "value": 2, "name": "valve 2 opening" },
+                { "value": 3, "name": "valve 1 opening or valve 2 opening" }
+            ],
+            "bacnet_type": "multistate_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS"
+        },
+        {
+            "id": "pressure_1_alarm_event.condition",
+            "name": "Pressure 1 Alarm Event (Condition)",
+            "value": "",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [
+                { "value": 0, "name": "none" },
+                { "value": 1, "name": "below" },
+                { "value": 2, "name": "above" },
+                { "value": 3, "name": "between" },
+                { "value": 4, "name": "outside" }
+            ],
+            "bacnet_type": "multistate_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS"
+        },
+        {
+            "id": "pressure_1_alarm_event.threshold_min",
+            "name": "Pressure 1 Alarm Event (Min Threshold)",
+            "value": "",
+            "unit": "kPa",
+            "access_mode": "R",
+            "data_type": "NUMBER",
+            "value_type": "UINT16",
+            "bacnet_type": "analog_input_object",
+            "bacnet_unit_type_id": 54,
+            "bacnet_unit_type": "UNITS_KILOPASCALS"
+        },
+        {
+            "id": "pressure_1_alarm_event.threshold_max",
+            "name": "Pressure 1 Alarm Event (Max Threshold)",
+            "value": "",
+            "unit": "kPa",
+            "access_mode": "R",
+            "data_type": "NUMBER",
+            "value_type": "UINT16",
+            "bacnet_type": "analog_input_object",
+            "bacnet_unit_type_id": 54,
+            "bacnet_unit_type": "UNITS_KILOPASCALS"
+        },
+        {
+            "id": "pressure_1_alarm_event.pressure",
+            "name": "Pressure 1 Alarm Event (Pressure)",
+            "value": "",
+            "unit": "kPa",
+            "access_mode": "R",
+            "data_type": "NUMBER",
+            "value_type": "UINT16",
+            "bacnet_type": "analog_input_object",
+            "bacnet_unit_type_id": 54,
+            "bacnet_unit_type": "UNITS_KILOPASCALS"
+        },
+        {
+            "id": "pressure_1_alarm_event.alarm",
+            "name": "Pressure 1 Alarm Event (Alarm)",
+            "value": "",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [
+                { "value": 0, "name": "pipe pressure threshold alarm release" },
+                { "value": 1, "name": "pipe pressure threshold alarm" }
+            ],
+            "bacnet_type": "multistate_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS"
+        },
+        {
+            "id": "pressure_2_alarm_event.source",
+            "name": "Pressure 2 Alarm Event (Source)",
+            "value": "",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [
+                { "value": 0, "name": "every change" },
+                { "value": 1, "name": "valve 1 opening" },
+                { "value": 2, "name": "valve 2 opening" },
+                { "value": 3, "name": "valve 1 opening or valve 2 opening" }
+            ],
+            "bacnet_type": "multistate_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS"
+        },
+        {
+            "id": "pressure_2_alarm_event.condition",
+            "name": "Pressure 2 Alarm Event (Condition)",
+            "value": "",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [
+                { "value": 0, "name": "none" },
+                { "value": 1, "name": "below" },
+                { "value": 2, "name": "above" },
+                { "value": 3, "name": "between" },
+                { "value": 4, "name": "outside" }
+            ],
+            "bacnet_type": "multistate_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS"
+        },
+        {
+            "id": "pressure_2_alarm_event.threshold_min",
+            "name": "Pressure 2 Alarm Event (Min Threshold)",
+            "value": "",
+            "unit": "kPa",
+            "access_mode": "R",
+            "data_type": "NUMBER",
+            "value_type": "UINT16",
+            "bacnet_type": "analog_input_object",
+            "bacnet_unit_type_id": 54,
+            "bacnet_unit_type": "UNITS_KILOPASCALS"
+        },
+        {
+            "id": "pressure_2_alarm_event.threshold_max",
+            "name": "Pressure 2 Alarm Event (Max Threshold)",
+            "value": "",
+            "unit": "kPa",
+            "access_mode": "R",
+            "data_type": "NUMBER",
+            "value_type": "UINT16",
+            "bacnet_type": "analog_input_object",
+            "bacnet_unit_type_id": 54,
+            "bacnet_unit_type": "UNITS_KILOPASCALS"
+        },
+        {
+            "id": "pressure_2_alarm_event.pressure",
+            "name": "Pressure 2 Alarm Event (Pressure)",
+            "value": "",
+            "unit": "kPa",
+            "access_mode": "R",
+            "data_type": "NUMBER",
+            "value_type": "UINT16",
+            "bacnet_type": "analog_input_object",
+            "bacnet_unit_type_id": 54,
+            "bacnet_unit_type": "UNITS_KILOPASCALS"
+        },
+        {
+            "id": "pressure_2_alarm_event.alarm",
+            "name": "Pressure 2 Alarm Event (Alarm)",
+            "value": "",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [
+                { "value": 0, "name": "pipe pressure threshold alarm release" },
+                { "value": 1, "name": "pipe pressure threshold alarm" }
+            ],
+            "bacnet_type": "multistate_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS"
+        },
+        {
+            "id": "valve_1_calibration_event.source_value",
+            "name": "Valve 1 Calibration Event (Source Value)",
+            "value": "",
+            "unit": "%",
+            "access_mode": "R",
+            "data_type": "NUMBER",
+            "value_type": "UINT8",
+            "bacnet_type": "analog_input_object",
+            "bacnet_unit_type_id": 98,
+            "bacnet_unit_type": "UNITS_PERCENT"
+        },
+        {
+            "id": "valve_1_calibration_event.target_value",
+            "name": "Valve 1 Calibration Event (Target Value)",
+            "value": "",
+            "unit": "%",
+            "access_mode": "R",
+            "data_type": "NUMBER",
+            "value_type": "UINT8",
+            "bacnet_type": "analog_input_object",
+            "bacnet_unit_type_id": 98,
+            "bacnet_unit_type": "UNITS_PERCENT"
+        },
+        {
+            "id": "valve_1_calibration_event.result",
+            "name": "Valve 1 Calibration Event (Result)",
+            "value": "",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [
+                { "value": 0, "name": "success" },
+                { "value": 1, "name": "failed" }
+            ],
+            "bacnet_type": "multistate_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS"
+        },
+        {
+            "id": "valve_1_sensor_status",
+            "name": "Valve 1 Sensor Status",
+            "value": "",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [
+                { "value": 0, "name": "low battery power" },
+                { "value": 1, "name": "shutdown after getting io feedback" },
+                { "value": 2, "name": "incorrect opening time" },
+                { "value": 3, "name": "timeout" },
+                { "value": 4, "name": "valve stall" }
+            ],
+            "bacnet_type": "multistate_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS"
+        },
+        {
+            "id": "valve_2_sensor_status",
+            "name": "Valve 2 Sensor Status",
+            "value": "",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [
+                { "value": 0, "name": "low battery power" },
+                { "value": 1, "name": "shutdown after getting io feedback" },
+                { "value": 2, "name": "incorrect opening time" },
+                { "value": 3, "name": "timeout" },
+                { "value": 4, "name": "valve stall" }
+            ],
+            "bacnet_type": "multistate_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS"
+        },
+        {
+            "id": "pressure_1_sensor_status",
+            "name": "Pressure 1 Sensor Status",
+            "value": "",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [{ "value": 1, "name": "read error" }],
+            "bacnet_type": "multistate_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS"
+        },
+        {
+            "id": "pressure_2_sensor_status",
+            "name": "Pressure 2 Sensor Status",
+            "value": "",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [{ "value": 1, "name": "read error" }],
+            "bacnet_type": "multistate_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS"
+        },
+        {
+            "id": "valve_1_opening_duration",
+            "name": "Valve 1 Opening Duration",
+            "value": "",
+            "unit": "s",
+            "access_mode": "R",
+            "data_type": "NUMBER",
+            "value_type": "UINT8",
+            "bacnet_type": "analog_input_object",
+            "bacnet_unit_type_id": 73,
+            "bacnet_unit_type": "UNITS_SECONDS"
+        },
+        {
+            "id": "valve_2_opening_duration",
+            "name": "Valve 2 Opening Duration",
+            "value": "",
+            "unit": "s",
+            "access_mode": "R",
+            "data_type": "NUMBER",
+            "value_type": "UINT8",
+            "bacnet_type": "analog_input_object",
+            "bacnet_unit_type_id": 73,
+            "bacnet_unit_type": "UNITS_SECONDS"
+        },
+        {
+            "id": "custom_message",
+            "name": "Custom Message",
+            "value": "",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "TEXT",
+            "value_type": "STRING",
+            "max_length": 8,
+            "bacnet_type": "character_string_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS"
+        },
+        {
+            "id": "reboot",
+            "name": "Reboot",
+            "value": "",
+            "unit": "",
+            "access_mode": "W",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                { "value": 0, "name": "no" },
+                { "value": 1, "name": "yes" }
+            ],
+            "bacnet_type": "binary_output_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS"
+        },
+        {
+            "id": "report_status",
+            "name": "Report Status",
+            "value": "",
+            "unit": "",
+            "access_mode": "W",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                { "value": 0, "name": "no" },
+                { "value": 1, "name": "yes" }
+            ],
+            "bacnet_type": "binary_output_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS"
+        },
+        {
+            "id": "report_interval",
+            "name": "Report Interval",
+            "value": "",
+            "unit": "min",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "UINT16",
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 72,
+            "bacnet_unit_type": "UNITS_MINUTES"
+        },
+        {
+            "id": "sync_time",
+            "name": "Sync Time",
+            "value": "",
+            "unit": "",
+            "access_mode": "W",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                { "value": 0, "name": "no" },
+                { "value": 1, "name": "yes" }
+            ],
+            "bacnet_type": "binary_output_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS"
+        },
+        {
+            "id": "pressure_1_collection_interval.enable",
+            "name": "Pressure 1 Collection Interval (Enable)",
+            "value": "",
+            "unit": "",
+            "access_mode": "RW",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                { "value": 0, "name": "disable" },
+                { "value": 1, "name": "enable" }
+            ],
+            "bacnet_type": "binary_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": ["pressure_1_collection_interval.collection_interval"]
+        },
+        {
+            "id": "pressure_1_collection_interval.collection_interval",
+            "name": "Pressure 1 Collection Interval (Collection Interval)",
+            "value": "",
+            "unit": "s",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "UINT16",
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 73,
+            "bacnet_unit_type": "UNITS_SECONDS",
+            "reference": ["pressure_1_collection_interval.enable"]
+        },
+        {
+            "id": "pressure_2_collection_interval.enable",
+            "name": "Pressure 2 Collection Interval (Enable)",
+            "value": "",
+            "unit": "",
+            "access_mode": "RW",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                { "value": 0, "name": "disable" },
+                { "value": 1, "name": "enable" }
+            ],
+            "bacnet_type": "binary_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": ["pressure_2_collection_interval.collection_interval"]
+        },
+        {
+            "id": "pressure_2_collection_interval.collection_interval",
+            "name": "Pressure 2 Collection Interval (Collection Interval)",
+            "value": "",
+            "unit": "s",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "UINT16",
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 73,
+            "bacnet_unit_type": "UNITS_SECONDS",
+            "reference": ["pressure_2_collection_interval.enable"]
+        },
+        {
+            "id": "time_zone",
+            "name": "Time Zone",
+            "value": "",
+            "unit": "",
+            "access_mode": "RW",
+            "data_type": "ENUM",
+            "value_type": "INT16",
+            "values": [
+                { "value": -720, "name": "UTC-12" },
+                { "value": -660, "name": "UTC-11" },
+                { "value": -600, "name": "UTC-10" },
+                { "value": -570, "name": "UTC-9:30" },
+                { "value": -540, "name": "UTC-9" },
+                { "value": -480, "name": "UTC-8" },
+                { "value": -420, "name": "UTC-7" },
+                { "value": -360, "name": "UTC-6" },
+                { "value": -300, "name": "UTC-5" },
+                { "value": -240, "name": "UTC-4" },
+                { "value": -210, "name": "UTC-3:30" },
+                { "value": -180, "name": "UTC-3" },
+                { "value": -120, "name": "UTC-2" },
+                { "value": -60, "name": "UTC-1" },
+                { "value": 0, "name": "UTC" },
+                { "value": 60, "name": "UTC+1" },
+                { "value": 120, "name": "UTC+2" },
+                { "value": 180, "name": "UTC+3" },
+                { "value": 210, "name": "UTC+3:30" },
+                { "value": 240, "name": "UTC+4" },
+                { "value": 270, "name": "UTC+4:30" },
+                { "value": 300, "name": "UTC+5" },
+                { "value": 330, "name": "UTC+5:30" },
+                { "value": 345, "name": "UTC+5:45" },
+                { "value": 360, "name": "UTC+6" },
+                { "value": 390, "name": "UTC+6:30" },
+                { "value": 420, "name": "UTC+7" },
+                { "value": 480, "name": "UTC+8" },
+                { "value": 540, "name": "UTC+9" },
+                { "value": 570, "name": "UTC+9:30" },
+                { "value": 600, "name": "UTC+10" },
+                { "value": 630, "name": "UTC+10:30" },
+                { "value": 660, "name": "UTC+11" },
+                { "value": 720, "name": "UTC+12" },
+                { "value": 765, "name": "UTC+12:45" },
+                { "value": 780, "name": "UTC+13" },
+                { "value": 840, "name": "UTC+14" }
+            ],
+            "bacnet_type": "multistate_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS"
+        },
+        {
+            "id": "valve_1_task.task_id",
+            "name": "Valve 1 Task (Task ID)",
+            "value": "",
+            "unit": "",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "UINT8",
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": ["valve_1_task.valve_opening", "valve_1_task.time", "valve_1_task.pulse"]
+        },
+        {
+            "id": "valve_1_task.valve_opening",
+            "name": "Valve 1 Task (Valve Opening)",
+            "value": "",
+            "unit": "",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "UINT8",
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": ["valve_1_task.task_id", "valve_1_task.time", "valve_1_task.pulse"]
+        },
+        {
+            "id": "valve_1_task.time",
+            "name": "Valve 1 Task (Time)",
+            "value": "",
+            "unit": "min",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "UINT16",
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 72,
+            "bacnet_unit_type": "UNITS_MINUTES",
+            "reference": ["valve_1_task.task_id", "valve_1_task.valve_opening", "valve_1_task.pulse"]
+        },
+        {
+            "id": "valve_1_task.pulse",
+            "name": "Valve 1 Task (Pulse)",
+            "value": "",
+            "unit": "",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "UINT32",
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": ["valve_1_task.task_id", "valve_1_task.valve_opening", "valve_1_task.time"]
+        },
+        {
+            "id": "valve_2_task.task_id",
+            "name": "Valve 2 Task (Task ID)",
+            "value": "",
+            "unit": "",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "UINT8",
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": ["valve_2_task.valve_opening", "valve_2_task.time", "valve_2_task.pulse"]
+        },
+        {
+            "id": "valve_2_task.valve_opening",
+            "name": "Valve 2 Task (Valve Opening)",
+            "value": "",
+            "unit": "",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "UINT8",
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": ["valve_2_task.task_id", "valve_2_task.time", "valve_2_task.pulse"]
+        },
+        {
+            "id": "valve_2_task.time",
+            "name": "Valve 2 Task (Time)",
+            "value": "",
+            "unit": "min",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "UINT16",
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 72,
+            "bacnet_unit_type": "UNITS_MINUTES",
+            "reference": ["valve_2_task.task_id", "valve_2_task.valve_opening", "valve_2_task.pulse"]
+        },
+        {
+            "id": "valve_2_task.pulse",
+            "name": "Valve 2 Task (Pulse)",
+            "value": "",
+            "unit": "",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "UINT32",
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": ["valve_2_task.task_id", "valve_2_task.valve_opening", "valve_2_task.time"]
+        },
+        {
+            "id": "clear_valve_1_pulse",
+            "name": "Clear Valve 1 Pulse",
+            "value": "",
+            "unit": "",
+            "access_mode": "W",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                { "value": 0, "name": "no" },
+                { "value": 1, "name": "yes" }
+            ],
+            "bacnet_type": "binary_output_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS"
+        },
+        {
+            "id": "clear_valve_2_pulse",
+            "name": "Clear Valve 2 Pulse",
+            "value": "",
+            "unit": "",
+            "access_mode": "W",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                { "value": 0, "name": "no" },
+                { "value": 1, "name": "yes" }
+            ],
+            "bacnet_type": "binary_output_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS"
+        },
+        {
+            "id": "valve_1_config.valve_type",
+            "name": "Valve 1 Config (Valve Type)",
+            "value": "",
+            "unit": "",
+            "access_mode": "RW",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [
+                { "value": 0, "name": "2_way_ball_valve" },
+                { "value": 1, "name": "3_way_ball_valve" }
+            ],
+            "bacnet_type": "multistate_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": ["valve_1_config.auto_calibration_enable", "valve_1_config.report_after_calibration_enable", "valve_1_config.stall_strategy", "valve_1_config.open_time_1", "valve_1_config.open_time_2", "valve_1_config.stall_current", "valve_1_config.stall_time", "valve_1_config.protect_time", "valve_1_config.close_delay_time", "valve_1_config.open_delay_time"]
+        },
+        {
+            "id": "valve_1_config.auto_calibration_enable",
+            "name": "Valve 1 Config (Auto Calibration Enable)",
+            "value": "",
+            "unit": "",
+            "access_mode": "RW",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                { "value": 0, "name": "disable" },
+                { "value": 1, "name": "enable" }
+            ],
+            "bacnet_type": "binary_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": ["valve_1_config.valve_type", "valve_1_config.report_after_calibration_enable", "valve_1_config.stall_strategy", "valve_1_config.open_time_1", "valve_1_config.open_time_2", "valve_1_config.stall_current", "valve_1_config.stall_time", "valve_1_config.protect_time", "valve_1_config.close_delay_time", "valve_1_config.open_delay_time"]
+        },
+        {
+            "id": "valve_1_config.report_after_calibration_enable",
+            "name": "Valve 1 Config (Report After Calibration Enable)",
+            "value": "",
+            "unit": "",
+            "access_mode": "RW",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                { "value": 0, "name": "disable" },
+                { "value": 1, "name": "enable" }
+            ],
+            "bacnet_type": "binary_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": ["valve_1_config.valve_type", "valve_1_config.auto_calibration_enable", "valve_1_config.stall_strategy", "valve_1_config.open_time_1", "valve_1_config.open_time_2", "valve_1_config.stall_current", "valve_1_config.stall_time", "valve_1_config.protect_time", "valve_1_config.close_delay_time", "valve_1_config.open_delay_time"]
+        },
+        {
+            "id": "valve_1_config.stall_strategy",
+            "name": "Valve 1 Config (Stall Strategy)",
+            "value": "",
+            "unit": "",
+            "access_mode": "RW",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [
+                { "value": 0, "name": "close" },
+                { "value": 1, "name": "keep" }
+            ],
+            "bacnet_type": "multistate_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": ["valve_1_config.valve_type", "valve_1_config.auto_calibration_enable", "valve_1_config.report_after_calibration_enable", "valve_1_config.open_time_1", "valve_1_config.open_time_2", "valve_1_config.stall_current", "valve_1_config.stall_time", "valve_1_config.protect_time", "valve_1_config.close_delay_time", "valve_1_config.open_delay_time"]
+        },
+        {
+            "id": "valve_1_config.open_time_1",
+            "name": "Valve 1 Config (Open Time 1)",
+            "value": "",
+            "unit": "s",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "UINT8",
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 73,
+            "bacnet_unit_type": "UNITS_SECONDS",
+            "reference": ["valve_1_config.valve_type", "valve_1_config.auto_calibration_enable", "valve_1_config.report_after_calibration_enable", "valve_1_config.stall_strategy", "valve_1_config.open_time_2", "valve_1_config.stall_current", "valve_1_config.stall_time", "valve_1_config.protect_time", "valve_1_config.close_delay_time", "valve_1_config.open_delay_time"]
+        },
+        {
+            "id": "valve_1_config.open_time_2",
+            "name": "Valve 1 Config (Open Time 2)",
+            "value": "",
+            "unit": "s",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "UINT8",
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 73,
+            "bacnet_unit_type": "UNITS_SECONDS",
+            "reference": ["valve_1_config.valve_type", "valve_1_config.auto_calibration_enable", "valve_1_config.report_after_calibration_enable", "valve_1_config.stall_strategy", "valve_1_config.open_time_1", "valve_1_config.stall_current", "valve_1_config.stall_time", "valve_1_config.protect_time", "valve_1_config.close_delay_time", "valve_1_config.open_delay_time"]
+        },
+        {
+            "id": "valve_1_config.stall_current",
+            "name": "Valve 1 Config (Stall Current)",
+            "value": "",
+            "unit": "mA",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "UINT16",
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 2,
+            "bacnet_unit_type": "UNITS_MILLIAMPERES",
+            "reference": ["valve_1_config.valve_type", "valve_1_config.auto_calibration_enable", "valve_1_config.report_after_calibration_enable", "valve_1_config.stall_strategy", "valve_1_config.open_time_1", "valve_1_config.open_time_2", "valve_1_config.stall_time", "valve_1_config.protect_time", "valve_1_config.close_delay_time", "valve_1_config.open_delay_time"]
+        },
+        {
+            "id": "valve_1_config.stall_time",
+            "name": "Valve 1 Config (Stall Time)",
+            "value": "",
+            "unit": "ms",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "UINT16",
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 159,
+            "bacnet_unit_type": "UNITS_MILLISECONDS",
+            "reference": ["valve_1_config.valve_type", "valve_1_config.auto_calibration_enable", "valve_1_config.report_after_calibration_enable", "valve_1_config.stall_strategy", "valve_1_config.open_time_1", "valve_1_config.open_time_2", "valve_1_config.stall_current", "valve_1_config.protect_time", "valve_1_config.open_delay_time"]
+        },
+        {
+            "id": "valve_1_config.protect_time",
+            "name": "Valve 1 Config (Protect Time)",
+            "value": "",
+            "unit": "s",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "UINT8",
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 73,
+            "bacnet_unit_type": "UNITS_SECONDS",
+            "reference": ["valve_1_config.valve_type", "valve_1_config.auto_calibration_enable", "valve_1_config.report_after_calibration_enable", "valve_1_config.stall_strategy", "valve_1_config.open_time_1", "valve_1_config.open_time_2", "valve_1_config.stall_current", "valve_1_config.stall_time", "valve_1_config.open_delay_time"]
+        },
+        {
+            "id": "valve_1_config.close_delay_time",
+            "name": "Valve 1 Config (Close Delay Time)",
+            "value": "",
+            "unit": "s",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "UINT8",
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 73,
+            "bacnet_unit_type": "UNITS_SECONDS",
+            "reference": ["valve_1_config.valve_type", "valve_1_config.auto_calibration_enable", "valve_1_config.report_after_calibration_enable", "valve_1_config.stall_strategy", "valve_1_config.open_time_1", "valve_1_config.open_time_2", "valve_1_config.stall_current", "valve_1_config.stall_time", "valve_1_config.protect_time", "valve_1_config.open_delay_time"]
+        },
+        {
+            "id": "valve_1_config.open_delay_time",
+            "name": "Valve 1 Config (Open Delay Time)",
+            "value": "",
+            "unit": "s",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "UINT8",
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 73,
+            "bacnet_unit_type": "UNITS_SECONDS",
+            "reference": ["valve_1_config.valve_type", "valve_1_config.auto_calibration_enable", "valve_1_config.report_after_calibration_enable", "valve_1_config.stall_strategy", "valve_1_config.open_time_1", "valve_1_config.open_time_2", "valve_1_config.stall_current", "valve_1_config.stall_time", "valve_1_config.protect_time", "valve_1_config.close_delay_time"]
+        },
+        {
+            "id": "valve_2_config.valve_type",
+            "name": "Valve 2 Config (Valve Type)",
+            "value": "",
+            "unit": "",
+            "access_mode": "RW",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [
+                { "value": 0, "name": "2_way_ball_valve" },
+                { "value": 1, "name": "3_way_ball_valve" }
+            ],
+            "bacnet_type": "multistate_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": ["valve_2_config.auto_calibration_enable", "valve_2_config.report_after_calibration_enable", "valve_2_config.stall_strategy", "valve_2_config.open_time_1", "valve_2_config.open_time_2", "valve_2_config.stall_current", "valve_2_config.stall_time", "valve_2_config.protect_time", "valve_2_config.close_delay_time", "valve_2_config.open_delay_time"]
+        },
+        {
+            "id": "valve_2_config.auto_calibration_enable",
+            "name": "Valve 2 Config (Auto Calibration Enable)",
+            "value": "",
+            "unit": "",
+            "access_mode": "RW",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                { "value": 0, "name": "disable" },
+                { "value": 1, "name": "enable" }
+            ],
+            "bacnet_type": "binary_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": ["valve_2_config.valve_type", "valve_2_config.report_after_calibration_enable", "valve_2_config.stall_strategy", "valve_2_config.open_time_1", "valve_2_config.open_time_2", "valve_2_config.stall_current", "valve_2_config.stall_time", "valve_2_config.protect_time", "valve_2_config.close_delay_time", "valve_2_config.open_delay_time"]
+        },
+        {
+            "id": "valve_2_config.report_after_calibration_enable",
+            "name": "Valve 2 Config (Report After Calibration Enable)",
+            "value": "",
+            "unit": "",
+            "access_mode": "RW",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                { "value": 0, "name": "disable" },
+                { "value": 1, "name": "enable" }
+            ],
+            "bacnet_type": "binary_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": ["valve_2_config.valve_type", "valve_2_config.auto_calibration_enable", "valve_2_config.stall_strategy", "valve_2_config.open_time_1", "valve_2_config.open_time_2", "valve_2_config.stall_current", "valve_2_config.stall_time", "valve_2_config.protect_time", "valve_2_config.close_delay_time", "valve_2_config.open_delay_time"]
+        },
+        {
+            "id": "valve_2_config.stall_strategy",
+            "name": "Valve 2 Config (Stall Strategy)",
+            "value": "",
+            "unit": "",
+            "access_mode": "RW",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [
+                { "value": 0, "name": "close" },
+                { "value": 1, "name": "keep" }
+            ],
+            "bacnet_type": "multistate_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": ["valve_2_config.valve_type", "valve_2_config.auto_calibration_enable", "valve_2_config.report_after_calibration_enable", "valve_2_config.open_time_1", "valve_2_config.open_time_2", "valve_2_config.stall_current", "valve_2_config.stall_time", "valve_2_config.protect_time", "valve_2_config.close_delay_time", "valve_2_config.open_delay_time"]
+        },
+        {
+            "id": "valve_2_config.open_time_1",
+            "name": "Valve 2 Config (Open Time 1)",
+            "value": "",
+            "unit": "s",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "UINT8",
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 73,
+            "bacnet_unit_type": "UNITS_SECONDS",
+            "reference": ["valve_2_config.valve_type", "valve_2_config.auto_calibration_enable", "valve_2_config.report_after_calibration_enable", "valve_2_config.stall_strategy", "valve_2_config.open_time_2", "valve_2_config.stall_current", "valve_2_config.stall_time", "valve_2_config.protect_time", "valve_2_config.close_delay_time", "valve_2_config.open_delay_time"]
+        },
+        {
+            "id": "valve_2_config.open_time_2",
+            "name": "Valve 2 Config (Open Time 2)",
+            "value": "",
+            "unit": "s",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "UINT8",
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 73,
+            "bacnet_unit_type": "UNITS_SECONDS",
+            "reference": ["valve_2_config.valve_type", "valve_2_config.auto_calibration_enable", "valve_2_config.report_after_calibration_enable", "valve_2_config.stall_strategy", "valve_2_config.open_time_1", "valve_2_config.stall_current", "valve_2_config.stall_time", "valve_2_config.protect_time", "valve_2_config.close_delay_time", "valve_2_config.open_delay_time"]
+        },
+        {
+            "id": "valve_2_config.stall_current",
+            "name": "Valve 2 Config (Stall Current)",
+            "value": "",
+            "unit": "mA",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "UINT16",
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 2,
+            "bacnet_unit_type": "UNITS_MILLIAMPERES",
+            "reference": ["valve_2_config.valve_type", "valve_2_config.auto_calibration_enable", "valve_2_config.report_after_calibration_enable", "valve_2_config.stall_strategy", "valve_2_config.open_time_1", "valve_2_config.open_time_2", "valve_2_config.stall_time", "valve_2_config.protect_time", "valve_2_config.close_delay_time", "valve_2_config.open_delay_time"]
+        },
+        {
+            "id": "valve_2_config.stall_time",
+            "name": "Valve 2 Config (Stall Time)",
+            "value": "",
+            "unit": "ms",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "UINT16",
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 159,
+            "bacnet_unit_type": "UNITS_MILLISECONDS",
+            "reference": ["valve_2_config.valve_type", "valve_2_config.auto_calibration_enable", "valve_2_config.report_after_calibration_enable", "valve_2_config.stall_strategy", "valve_2_config.open_time_1", "valve_2_config.open_time_2", "valve_2_config.stall_current", "valve_2_config.protect_time", "valve_2_config.close_delay_time", "valve_2_config.open_delay_time"]
+        },
+        {
+            "id": "valve_2_config.protect_time",
+            "name": "Valve 2 Config (Protect Time)",
+            "value": "",
+            "unit": "s",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "UINT8",
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 73,
+            "bacnet_unit_type": "UNITS_SECONDS",
+            "reference": ["valve_2_config.valve_type", "valve_2_config.auto_calibration_enable", "valve_2_config.report_after_calibration_enable", "valve_2_config.stall_strategy", "valve_2_config.open_time_1", "valve_2_config.open_time_2", "valve_2_config.stall_current", "valve_2_config.stall_time", "valve_2_config.close_delay_time", "valve_2_config.open_delay_time"]
+        },
+        {
+            "id": "valve_2_config.close_delay_time",
+            "name": "Valve 2 Config (Close Delay Time)",
+            "value": "",
+            "unit": "s",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "UINT8",
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 73,
+            "bacnet_unit_type": "UNITS_SECONDS",
+            "reference": ["valve_2_config.valve_type", "valve_2_config.auto_calibration_enable", "valve_2_config.report_after_calibration_enable", "valve_2_config.stall_strategy", "valve_2_config.open_time_1", "valve_2_config.open_time_2", "valve_2_config.stall_current", "valve_2_config.stall_time", "valve_2_config.protect_time", "valve_2_config.open_delay_time"]
+        },
+        {
+            "id": "valve_2_config.open_delay_time",
+            "name": "Valve 2 Config (Open Delay Time)",
+            "value": "",
+            "unit": "s",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "UINT8",
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 73,
+            "bacnet_unit_type": "UNITS_SECONDS",
+            "reference": ["valve_2_config.valve_type", "valve_2_config.auto_calibration_enable", "valve_2_config.report_after_calibration_enable", "valve_2_config.stall_strategy", "valve_2_config.open_time_1", "valve_2_config.open_time_2", "valve_2_config.stall_current", "valve_2_config.stall_time", "valve_2_config.protect_time", "valve_2_config.close_delay_time"]
+        },
+        {
+            "id": "valve_filter_config.mode",
+            "name": "Valve Filter Config (Mode)",
+            "value": "",
+            "unit": "",
+            "access_mode": "RW",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [
+                { "value": 1, "name": "hardware" },
+                { "value": 2, "name": "software" }
+            ],
+            "bacnet_type": "multistate_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": ["valve_filter_config.time"]
+        },
+        {
+            "id": "valve_filter_config.time",
+            "name": "Valve Filter Config (Time)",
+            "value": "",
+            "unit": "s",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "UINT16",
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 73,
+            "bacnet_unit_type": "UNITS_SECONDS",
+            "reference": ["valve_filter_config.mode"]
+        },
+        {
+            "id": "pressure_1_calibration_settings.enable",
+            "name": "Pressure 1 Calibration (Enable)",
+            "value": "",
+            "unit": "",
+            "access_mode": "RW",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                { "value": 0, "name": "disable" },
+                { "value": 1, "name": "enable" }
+            ],
+            "bacnet_type": "binary_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": ["pressure_1_calibration_settings.calibration_value"]
+        },
+        {
+            "id": "pressure_1_calibration_settings.calibration_value",
+            "name": "Pressure 1 Calibration (Calibration)",
+            "value": "",
+            "unit": "kPa",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "UINT16",
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 54,
+            "bacnet_unit_type": "UNITS_KILOPASCALS",
+            "reference": ["pressure_1_calibration_settings.enable"]
+        },
+        {
+            "id": "pressure_2_calibration_settings.enable",
+            "name": "Pressure 2 Calibration (Enable)",
+            "value": "",
+            "unit": "",
+            "access_mode": "RW",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                { "value": 0, "name": "disable" },
+                { "value": 1, "name": "enable" }
+            ],
+            "bacnet_type": "binary_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": ["pressure_2_calibration_settings.calibration_value"]
+        },
+        {
+            "id": "pressure_2_calibration_settings.calibration_value",
+            "name": "Pressure 2 Calibration (Calibration)",
+            "value": "",
+            "unit": "kPa",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "UINT16",
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 54,
+            "bacnet_unit_type": "UNITS_KILOPASCALS",
+            "reference": ["pressure_2_calibration_settings.enable"]
+        },
+        {
+            "id": "wiring_switch_enable",
+            "name": "Wiring Switch Enable",
+            "value": "",
+            "unit": "",
+            "access_mode": "RW",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                { "value": 0, "name": "disable" },
+                { "value": 1, "name": "enable" }
+            ],
+            "bacnet_type": "binary_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS"
+        },
+        {
+            "id": "valve_change_report_enable",
+            "name": "Valve Change Report Enable",
+            "value": "",
+            "unit": "",
+            "access_mode": "RW",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                { "value": 0, "name": "disable" },
+                { "value": 1, "name": "enable" }
+            ],
+            "bacnet_type": "binary_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS"
+        },
+        {
+            "id": "query_valve_opening_duration.valve_1",
+            "name": "Query Valve Opening Duration (Valve 1)",
+            "value": "",
+            "unit": "",
+            "access_mode": "W",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                { "value": 0, "name": "no" },
+                { "value": 1, "name": "yes" }
+            ],
+            "bacnet_type": "binary_output_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS"
+        },
+        {
+            "id": "query_valve_opening_duration.valve_2",
+            "name": "Query Valve Opening Duration (Valve 2)",
+            "value": "",
+            "unit": "",
+            "access_mode": "W",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                { "value": 0, "name": "no" },
+                { "value": 1, "name": "yes" }
+            ],
+            "bacnet_type": "binary_output_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS"
+        },
+        {
+            "id": "gpio_1_type",
+            "name": "GPIO 1 Type",
+            "value": "",
+            "unit": "",
+            "access_mode": "RW",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [
+                { "value": 0, "name": "counter" },
+                { "value": 1, "name": "feedback" }
+            ],
+            "bacnet_type": "multistate_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS"
+        },
+        {
+            "id": "gpio_2_type",
+            "name": "GPIO 2 Type",
+            "value": "",
+            "unit": "",
+            "access_mode": "RW",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [
+                { "value": 0, "name": "counter" },
+                { "value": 1, "name": "feedback" }
+            ],
+            "bacnet_type": "multistate_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS"
+        },
+        {
+            "id": "query_device_config",
+            "name": "Query Device Config",
+            "value": "",
+            "unit": "",
+            "access_mode": "W",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                { "value": 0, "name": "no" },
+                { "value": 1, "name": "yes" }
+            ],
+            "bacnet_type": "binary_output_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS"
+        },
+        {
+            "id": "query_pressure_calibration_settings",
+            "name": "Query Pressure Calibration Config",
+            "value": "",
+            "unit": "",
+            "access_mode": "W",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                { "value": 0, "name": "no" },
+                { "value": 1, "name": "yes" }
+            ],
+            "bacnet_type": "binary_output_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS"
+        },
+        {
+            "id": "query_gpio_type",
+            "name": "Query GPIO Type",
+            "value": "",
+            "unit": "",
+            "access_mode": "W",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                { "value": 0, "name": "no" },
+                { "value": 1, "name": "yes" }
+            ],
+            "bacnet_type": "binary_output_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS"
+        },
+        {
+            "id": "query_valve_config",
+            "name": "Query Valve Config",
+            "value": "",
+            "unit": "",
+            "access_mode": "W",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                { "value": 0, "name": "no" },
+                { "value": 1, "name": "yes" }
+            ],
+            "bacnet_type": "binary_output_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS"
+        },
+        {
+            "id": "query_pressure_config",
+            "name": "Query Pressure Config",
+            "value": "",
+            "unit": "",
+            "access_mode": "W",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                { "value": 0, "name": "no" },
+                { "value": 1, "name": "yes" }
+            ],
+            "bacnet_type": "binary_output_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS"
+        },
+        {
+            "id": "query_rule_config",
+            "name": "Query Rule Config",
+            "value": "",
+            "unit": "",
+            "access_mode": "W",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                { "value": 0, "name": "no" },
+                { "value": 1, "name": "yes" }
+            ],
+            "bacnet_type": "binary_output_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS"
+        },
+        {
+            "id": "pressure_1_config.enable",
+            "name": "Pressure 1 Config (Enable)",
+            "value": "",
+            "unit": "",
+            "access_mode": "RW",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                { "value": 0, "name": "disable" },
+                { "value": 1, "name": "enable" }
+            ],
+            "bacnet_type": "binary_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": ["pressure_1_config.collection_interval", "pressure_1_config.display_unit", "pressure_1_config.mode", "pressure_1_config.signal_type", "pressure_1_config.osl", "pressure_1_config.osh", "pressure_1_config.power_supply_time", "pressure_1_config.range_min", "pressure_1_config.range_max"]
+        },
+        {
+            "id": "pressure_1_config.collection_interval",
+            "name": "Pressure 1 Config (Collection Interval)",
+            "value": "",
+            "unit": "ms",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "UINT16",
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 159,
+            "bacnet_unit_type": "UNITS_MILLISECONDS",
+            "reference": ["pressure_1_config.enable", "pressure_1_config.display_unit", "pressure_1_config.mode", "pressure_1_config.signal_type", "pressure_1_config.osl", "pressure_1_config.osh", "pressure_1_config.power_supply_time", "pressure_1_config.range_min", "pressure_1_config.range_max"]
+        },
+        {
+            "id": "pressure_1_config.display_unit",
+            "name": "Pressure 1 Config (Display Unit)",
+            "value": "",
+            "unit": "",
+            "access_mode": "RW",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [
+                { "value": 0, "name": "kPa" },
+                { "value": 1, "name": "Bar" },
+                { "value": 2, "name": "MPa" }
+            ],
+            "bacnet_type": "multistate_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": ["pressure_1_config.enable", "pressure_1_config.collection_interval", "pressure_1_config.mode", "pressure_1_config.signal_type", "pressure_1_config.osl", "pressure_1_config.osh", "pressure_1_config.power_supply_time", "pressure_1_config.range_min", "pressure_1_config.range_max"]
+        },
+        {
+            "id": "pressure_1_config.mode",
+            "name": "Pressure 1 Config (Mode)",
+            "value": "",
+            "unit": "",
+            "access_mode": "RW",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [
+                { "value": 0, "name": "standard" },
+                { "value": 1, "name": "custom" }
+            ],
+            "bacnet_type": "multistate_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": ["pressure_1_config.enable", "pressure_1_config.collection_interval", "pressure_1_config.display_unit", "pressure_1_config.signal_type", "pressure_1_config.osl", "pressure_1_config.osh", "pressure_1_config.power_supply_time", "pressure_1_config.range_min", "pressure_1_config.range_max"]
+        },
+        {
+            "id": "pressure_1_config.signal_type",
+            "name": "Pressure 1 Config (Signal Type)",
+            "value": "",
+            "unit": "",
+            "access_mode": "RW",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [
+                { "value": 0, "name": "voltage" },
+                { "value": 1, "name": "current" }
+            ],
+            "bacnet_type": "multistate_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": ["pressure_1_config.enable", "pressure_1_config.collection_interval", "pressure_1_config.display_unit", "pressure_1_config.mode", "pressure_1_config.osl", "pressure_1_config.osh", "pressure_1_config.power_supply_time", "pressure_1_config.range_min", "pressure_1_config.range_max"]
+        },
+        {
+            "id": "pressure_1_config.osl",
+            "name": "Pressure 1 Config (OSL)",
+            "value": "",
+            "unit": "",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "UINT16",
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": ["pressure_1_config.enable", "pressure_1_config.collection_interval", "pressure_1_config.display_unit", "pressure_1_config.mode", "pressure_1_config.signal_type", "pressure_1_config.osh", "pressure_1_config.power_supply_time", "pressure_1_config.range_min", "pressure_1_config.range_max"]
+        },
+        {
+            "id": "pressure_1_config.osh",
+            "name": "Pressure 1 Config (OSH)",
+            "value": "",
+            "unit": "",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "UINT16",
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": ["pressure_1_config.enable", "pressure_1_config.collection_interval", "pressure_1_config.display_unit", "pressure_1_config.mode", "pressure_1_config.signal_type", "pressure_1_config.osl", "pressure_1_config.power_supply_time", "pressure_1_config.range_min", "pressure_1_config.range_max"]
+        },
+        {
+            "id": "pressure_1_config.power_supply_time",
+            "name": "Pressure 1 Config (Power Supply Time)",
+            "value": "",
+            "unit": "ms",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "UINT16",
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 159,
+            "bacnet_unit_type": "UNITS_MILLISECONDS",
+            "reference": ["pressure_1_config.enable", "pressure_1_config.collection_interval", "pressure_1_config.display_unit", "pressure_1_config.mode", "pressure_1_config.signal_type", "pressure_1_config.osl", "pressure_1_config.osh", "pressure_1_config.range_min", "pressure_1_config.range_max"]
+        },
+        {
+            "id": "pressure_1_config.range_min",
+            "name": "Pressure 1 Config (Range Min)",
+            "value": "",
+            "unit": "",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "UINT16",
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": ["pressure_1_config.enable", "pressure_1_config.collection_interval", "pressure_1_config.display_unit", "pressure_1_config.mode", "pressure_1_config.signal_type", "pressure_1_config.osl", "pressure_1_config.osh", "pressure_1_config.power_supply_time", "pressure_1_config.range_max"]
+        },
+        {
+            "id": "pressure_1_config.range_max",
+            "name": "Pressure 1 Config (Range Max)",
+            "value": "",
+            "unit": "",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "UINT16",
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": ["pressure_1_config.enable", "pressure_1_config.collection_interval", "pressure_1_config.display_unit", "pressure_1_config.mode", "pressure_1_config.signal_type", "pressure_1_config.osl", "pressure_1_config.osh", "pressure_1_config.power_supply_time", "pressure_1_config.range_min"]
+        },
+        {
+            "id": "pressure_2_config.enable",
+            "name": "Pressure 2 Config (Enable)",
+            "value": "",
+            "unit": "",
+            "access_mode": "RW",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                { "value": 0, "name": "disable" },
+                { "value": 1, "name": "enable" }
+            ],
+            "bacnet_type": "binary_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": ["pressure_2_config.collection_interval", "pressure_2_config.display_unit", "pressure_2_config.mode", "pressure_2_config.signal_type", "pressure_2_config.osl", "pressure_2_config.osh", "pressure_2_config.power_supply_time", "pressure_2_config.range_min", "pressure_2_config.range_max"]
+        },
+        {
+            "id": "pressure_2_config.collection_interval",
+            "name": "Pressure 2 Config (Collection Interval)",
+            "value": "",
+            "unit": "ms",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "UINT16",
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 159,
+            "bacnet_unit_type": "UNITS_MILLISECONDS",
+            "reference": ["pressure_2_config.enable", "pressure_2_config.display_unit", "pressure_2_config.mode", "pressure_2_config.signal_type", "pressure_2_config.osl", "pressure_2_config.osh", "pressure_2_config.power_supply_time", "pressure_2_config.range_min", "pressure_2_config.range_max"]
+        },
+        {
+            "id": "pressure_2_config.display_unit",
+            "name": "Pressure 2 Config (Display Unit)",
+            "value": "",
+            "unit": "",
+            "access_mode": "RW",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [
+                { "value": 0, "name": "kPa" },
+                { "value": 1, "name": "Bar" },
+                { "value": 2, "name": "MPa" }
+            ],
+            "bacnet_type": "multistate_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": ["pressure_2_config.enable", "pressure_2_config.collection_interval", "pressure_2_config.mode", "pressure_2_config.signal_type", "pressure_2_config.osl", "pressure_2_config.osh", "pressure_2_config.power_supply_time", "pressure_2_config.range_min", "pressure_2_config.range_max"]
+        },
+        {
+            "id": "pressure_2_config.mode",
+            "name": "Pressure 2 Config (Mode)",
+            "value": "",
+            "unit": "",
+            "access_mode": "RW",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [
+                { "value": 0, "name": "standard" },
+                { "value": 1, "name": "custom" }
+            ],
+            "bacnet_type": "multistate_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": ["pressure_2_config.enable", "pressure_2_config.collection_interval", "pressure_2_config.display_unit", "pressure_2_config.signal_type", "pressure_2_config.osl", "pressure_2_config.osh", "pressure_2_config.power_supply_time", "pressure_2_config.range_min", "pressure_2_config.range_max"]
+        },
+        {
+            "id": "pressure_2_config.signal_type",
+            "name": "Pressure 2 Config (Signal Type)",
+            "value": "",
+            "unit": "",
+            "access_mode": "RW",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [
+                { "value": 0, "name": "voltage" },
+                { "value": 1, "name": "current" }
+            ],
+            "bacnet_type": "multistate_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": ["pressure_2_config.enable", "pressure_2_config.collection_interval", "pressure_2_config.display_unit", "pressure_2_config.mode", "pressure_2_config.osl", "pressure_2_config.osh", "pressure_2_config.power_supply_time", "pressure_2_config.range_min", "pressure_2_config.range_max"]
+        },
+        {
+            "id": "pressure_2_config.osl",
+            "name": "Pressure 2 Config (OSL)",
+            "value": "",
+            "unit": "",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "UINT16",
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": ["pressure_2_config.enable", "pressure_2_config.collection_interval", "pressure_2_config.display_unit", "pressure_2_config.mode", "pressure_2_config.signal_type", "pressure_2_config.osh", "pressure_2_config.power_supply_time", "pressure_2_config.range_min", "pressure_2_config.range_max"]
+        },
+        {
+            "id": "pressure_2_config.osh",
+            "name": "Pressure 2 Config (OSH)",
+            "value": "",
+            "unit": "",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "UINT16",
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": ["pressure_2_config.enable", "pressure_2_config.collection_interval", "pressure_2_config.display_unit", "pressure_2_config.mode", "pressure_2_config.signal_type", "pressure_2_config.osl", "pressure_2_config.power_supply_time", "pressure_2_config.range_min", "pressure_2_config.range_max"]
+        },
+        {
+            "id": "pressure_2_config.power_supply_time",
+            "name": "Pressure 2 Config (Power Supply Time)",
+            "value": "",
+            "unit": "ms",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "UINT16",
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 159,
+            "bacnet_unit_type": "UNITS_MILLISECONDS",
+            "reference": ["pressure_2_config.enable", "pressure_2_config.collection_interval", "pressure_2_config.display_unit", "pressure_2_config.mode", "pressure_2_config.signal_type", "pressure_2_config.osl", "pressure_2_config.osh", "pressure_2_config.range_min", "pressure_2_config.range_max"]
+        },
+        {
+            "id": "pressure_2_config.range_min",
+            "name": "Pressure 2 Config (Range Min)",
+            "value": "",
+            "unit": "",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "UINT16",
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": ["pressure_2_config.enable", "pressure_2_config.collection_interval", "pressure_2_config.display_unit", "pressure_2_config.mode", "pressure_2_config.signal_type", "pressure_2_config.osl", "pressure_2_config.osh", "pressure_2_config.power_supply_time", "pressure_2_config.range_max"]
+        },
+        {
+            "id": "pressure_2_config.range_max",
+            "name": "Pressure 2 Config (Range Max)",
+            "value": "",
+            "unit": "",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "UINT16",
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": ["pressure_2_config.enable", "pressure_2_config.collection_interval", "pressure_2_config.display_unit", "pressure_2_config.mode", "pressure_2_config.signal_type", "pressure_2_config.osl", "pressure_2_config.osh", "pressure_2_config.power_supply_time", "pressure_2_config.range_min"]
+        },
+        {
+            "id": "d2d_key",
+            "name": "D2D Key",
+            "value": "",
+            "unit": "",
+            "access_mode": "RW",
+            "data_type": "TEXT",
+            "value_type": "STRING",
+            "max_length": 16,
+            "bacnet_type": "character_string_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS"
+        },
+        {
+            "id": "d2d_enable",
+            "name": "D2D Enable",
+            "value": "",
+            "unit": "",
+            "access_mode": "RW",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                { "value": 0, "name": "disable" },
+                { "value": 1, "name": "enable" }
+            ],
+            "bacnet_type": "binary_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS"
+        },
+        {
+            "id": "response_enable",
+            "name": "Response Enable",
+            "value": "",
+            "unit": "",
+            "access_mode": "RW",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                { "value": 0, "name": "disable" },
+                { "value": 1, "name": "enable" }
+            ],
+            "bacnet_type": "binary_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS"
+        },
+        {
+            "id": "class_a_response_time",
+            "name": "Class A Response Time",
+            "value": "",
+            "unit": "s",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "UINT8",
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 73,
+            "bacnet_unit_type": "UNITS_SECONDS"
+        },
+        {
+            "id": "gpio_jitter_time",
+            "name": "GPIO Jitter Time",
+            "value": "",
+            "unit": "s",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "UINT8",
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 73,
+            "bacnet_unit_type": "UNITS_SECONDS"
+        }
+    ]
+}
