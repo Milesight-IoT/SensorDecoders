@@ -531,22 +531,6 @@ function milesightDeviceDecode(bytes) {
                 }
                 i += 1;
                 break;
-            case 0x59:
-                decoded.system_status = readSystemStatus(bytes[i]);
-                var temperature_control_mode = readUInt8(bytes[i + 1]);
-                var temperature_1 = readUInt16LE(bytes.slice(i + 2, i + 4));
-                var temperature_2 = readUInt16LE(bytes.slice(i + 4, i + 6));
-                if (temperature_control_mode !== 0xff) {
-                    decoded.temperature_control_mode = readTemperatureControlMode(temperature_control_mode);
-                }
-                if (temperature_1 !== 0xffff) {
-                    decoded.target_temperature_1 = readInt16LE(bytes.slice(i + 2, i + 4)) / 100;
-                }
-                if (temperature_2 !== 0xffff) {
-                    decoded.target_temperature_2 = readInt16LE(bytes.slice(i + 4, i + 6)) / 100;
-                }
-                i += 6;
-                break;
             case 0x5a:
                 var data = readUInt8(bytes[i]);
                 if (data === 0x00) {
