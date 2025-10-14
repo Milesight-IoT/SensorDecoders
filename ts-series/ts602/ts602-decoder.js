@@ -1065,7 +1065,7 @@ function extractBits(byte, startBit, endBit) {
 	  throw new Error("invalid bit range");
 	}
   
-	const width = endBit - startBit;
-	const mask = (1 << width) - 1;
+	var width = endBit - startBit;
+	var mask = (1 << width) - 1;
 	return (byte >>> startBit) & mask;
 }
