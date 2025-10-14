@@ -2667,8 +2667,8 @@
             "bacnet_unit_type": "UNITS_NO_UNITS"
         },
         {
-            "id": "remove_plan.all",
-            "name": "Remove Plan (All)",
+            "id": "remove_plan.reset",
+            "name": "Remove Plan (reset to default)",
             "value": "",
             "unit": "",
             "access_mode": "W",

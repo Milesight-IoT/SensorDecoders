@@ -2079,7 +2079,7 @@ function cancelBlePair(cancel_ble_pair) {
  * @param {number} remove_plan.plan_15 values: (0: no, 1: yes)
  * @param {number} remove_plan.plan_16 values: (0: no, 1: yes)
  * @param {number} remove_plan.all values: (0: no, 1: yes)
- * @example { "remove_plan": { "plan_1": 1, "plan_2": 0, "plan_3": 1, "plan_4": 0, "plan_5": 1, "plan_6": 0, "plan_7": 1, "plan_8": 0, "plan_9": 1, "plan_10": 0, "plan_11": 1, "plan_12": 0, "plan_13": 1, "plan_14": 0, "plan_15": 1, "plan_16": 0, "all": 1 } }
+ * @example { "remove_plan": { "plan_1": 1, "plan_2": 0, "plan_3": 1, "plan_4": 0, "plan_5": 1, "plan_6": 0, "plan_7": 1, "plan_8": 0, "plan_9": 1, "plan_10": 0, "plan_11": 1, "plan_12": 0, "plan_13": 1, "plan_14": 0, "plan_15": 1, "plan_16": 0, "reset": 1 } }
  * @example { "remove_plan": { "all": 1 } }
  */
 function removePlan(remove_plan) {
@@ -2087,7 +2087,7 @@ function removePlan(remove_plan) {
     var yes_no_values = getValues(yes_no_map);
 
     var data = [];
-    var plan_offset = { plan_1: 0, plan_2: 1, plan_3: 2, plan_4: 3, plan_5: 4, plan_6: 5, plan_7: 6, plan_8: 7, plan_9: 8, plan_10: 9, plan_11: 10, plan_12: 11, plan_13: 12, plan_14: 13, plan_15: 14, plan_16: 15, all: 255 };
+    var plan_offset = { plan_1: 0, plan_2: 1, plan_3: 2, plan_4: 3, plan_5: 4, plan_6: 5, plan_7: 6, plan_8: 7, plan_9: 8, plan_10: 9, plan_11: 10, plan_12: 11, plan_13: 12, plan_14: 13, plan_15: 14, plan_16: 15, reset: 255 };
     for (var plan in plan_offset) {
         if (plan in remove_plan) {
             if (yes_no_values.indexOf(remove_plan[plan]) === -1) {
