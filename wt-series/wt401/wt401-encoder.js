@@ -797,9 +797,9 @@ function setButtonCustomFunction(button_custom_function) {
  * @param {number} child_lock_settings.plan_switch values: (0: disable, 1: enable)
  * @param {number} child_lock_settings.status_report values: (0: disable, 1: enable)
  * @param {number} child_lock_settings.release_filter_alarm values: (0: disable, 1: enable)
- * @param {number} child_lock_settings.button_1 values: (0: disable, 1: enable)
- * @param {number} child_lock_settings.button_2 values: (0: disable, 1: enable)
- * @param {number} child_lock_settings.button_3 values: (0: disable, 1: enable)
+ * @param {number} child_lock_settings.button_report_1 values: (0: disable, 1: enable)
+ * @param {number} child_lock_settings.button_report_2 values: (0: disable, 1: enable)
+ * @param {number} child_lock_settings.button_report_3 values: (0: disable, 1: enable)
  * @param {number} child_lock_settings.temperature_unit_switch values: (0: disable, 1: enable)
  * @example { "child_lock_settings": { "enable": 0, "button_1": 0, "button_2": 0, "button_3": 0 } }
  */
@@ -813,7 +813,7 @@ function setChildLockSettings(child_lock_settings) {
     }
 
     var data = 0x00;
-    var button_bit_offset = { temperature_up: 0, temperature_down: 1, system_on_off: 2, fan_mode: 3, temperature_control_mode: 4, reboot_reset: 5, power_on_off: 6, cancel_pair: 7, plan_switch: 8, status_report: 9, release_filter_alarm: 10, button_1: 11, button_2: 12, button_3: 13, temperature_unit_switch: 14 };
+    var button_bit_offset = { temperature_up: 0, temperature_down: 1, system_on_off: 2, fan_mode: 3, temperature_control_mode: 4, reboot_reset: 5, power_on_off: 6, cancel_pair: 7, plan_switch: 8, status_report: 9, release_filter_alarm: 10, button_report_1: 11, button_report_2: 12, button_report_3: 13, temperature_unit_switch: 14 };
     for (var button in button_bit_offset) {
         if (button in child_lock_settings) {
             if (enable_values.indexOf(child_lock_settings[button]) === -1) {
