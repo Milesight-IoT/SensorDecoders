@@ -140,8 +140,12 @@ function milesightDeviceDecode(bytes) {
             data.temperature = readInt16LE(bytes.slice(i + 4, i + 6)) / 10;
             data.humidity = readUInt16LE(bytes.slice(i + 6, i + 8)) / 2;
             data.pir = readPIRStatus(bytes[i + 8]);
-            data.light_unit = readUInt8(bytes[i + 9]);
-            data.light_value = readUInt16LE(bytes.slice(i + 10, i + 12));
+            var light_unit = readUInt8(bytes[i + 9]);
+            if(light_unit === 0) {
+                data.light_level = readUInt16LE(bytes.slice(i + 10, i + 12));
+            } else {
+                data.light_value = readUInt16LE(bytes.slice(i + 10, i + 12));
+            }
             data.co2 = readUInt16LE(bytes.slice(i + 12, i + 14));
             // unit: iaq
             data.tvoc = readUInt16LE(bytes.slice(i + 14, i + 16)) / 100;
