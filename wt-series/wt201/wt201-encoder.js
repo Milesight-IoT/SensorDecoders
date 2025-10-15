@@ -51,16 +51,25 @@ function milesightDeviceEncode(payload) {
     if ("dst_config" in payload) {
         encoded = encoded.concat(setDaylightSavingTime(payload.dst_config));
     }
-    if ("temperature_control_mode" in payload) {
-        if ("target_temperature" in payload) {
-            if ("temperature_unit" in payload) {
-                encoded = encoded.concat(setTemperatureControl(payload.temperature_control_mode, payload.target_temperature, payload.temperature_unit));
-            } else {
-                encoded = encoded.concat(setTemperatureTarget(payload.temperature_control_mode, payload.target_temperature));
-            }
-        } else {
-            encoded = encoded.concat(setTemperatureControlMode(payload.temperature_control_mode));
-        }
+    if("temperature_control_mode" in payload) {
+        encoded = encoded.concat(setTemperatureControl(payload.temperature_control_mode, payload.target_temperature, payload.temperature_unit));
+    }
+    if (
+        "heat_target_temperature_settings" in payload || 
+        "em_target_temperature_settings" in payload || 
+        "cool_target_temperature_settings" in payload || 
+        "auto_target_temperature_settings" in payload
+    ) {
+        var target_temperature_settings = 
+            payload.heat_target_temperature_settings || 
+            payload.em_target_temperature_settings || 
+            payload.cool_target_temperature_settings || 
+            payload.auto_target_temperature_settings;
+
+        encoded = encoded.concat(setTemperatureTarget(target_temperature_settings.temperature_control_mode, target_temperature_settings.target_temperature_value));
+    }
+    if ('current_temperature_control_mode' in payload) {
+        encoded = encoded.concat(setTemperatureControlMode(payload.current_temperature_control_mode));
     }
     if ("temperature_control_enable" in payload) {
         encoded = encoded.concat(setTemperatureControlEnable(payload.temperature_control_enable));

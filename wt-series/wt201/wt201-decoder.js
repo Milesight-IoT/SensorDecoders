@@ -469,12 +469,35 @@ function handle_downlink_response(channel_type, bytes, offset) {
             offset += 3;
             break;
         case 0xfa:
-            decoded.temperature_control_mode = readTemperatureControlMode(readUInt8(bytes[offset]));
-            decoded.target_temperature = readInt16LE(bytes.slice(offset + 1, offset + 3)) / 10;
+            var mode = readUInt8(bytes[offset]);
+            switch(mode) {
+                case 0x00: 
+                    decoded.heat_target_temperature_settings = {};
+                    decoded.heat_target_temperature_settings.temperature_control_mode = readTemperatureControlMode(mode);
+                    decoded.heat_target_temperature_settings.target_temperature_value = readInt16LE(bytes.slice(offset + 1, offset + 3)) / 10;
+                    break;
+                case 0x01:
+                    decoded.em_target_temperature_settings = {};
+                    decoded.em_target_temperature_settings.temperature_control_mode = readTemperatureControlMode(mode);
+                    decoded.em_target_temperature_settings.target_temperature_value = readInt16LE(bytes.slice(offset + 1, offset + 3)) / 10;
+                    break;
+                case 0x02:
+                    decoded.cool_target_temperature_settings = {};
+                    decoded.cool_target_temperature_settings.temperature_control_mode = readTemperatureControlMode(mode);
+                    decoded.cool_target_temperature_settings.target_temperature_value = readInt16LE(bytes.slice(offset + 1, offset + 3)) / 10;
+                    break;
+                case 0x03:
+                case 0x04:
+                case 0x05:
+                    decoded.auto_target_temperature_settings = {};
+                    decoded.auto_target_temperature_settings.temperature_control_mode = readTemperatureControlMode(mode);
+                    decoded.auto_target_temperature_settings.target_temperature_value = readInt16LE(bytes.slice(offset + 1, offset + 3)) / 10;
+                    break;
+            }
             offset += 3;
             break;
         case 0xfb:
-            decoded.temperature_control_mode = readTemperatureControlMode(readUInt8(bytes[offset]));
+            decoded.current_temperature_control_mode = readTemperatureControlMode(readUInt8(bytes[offset]));
             offset += 1;
             break;
         default:
