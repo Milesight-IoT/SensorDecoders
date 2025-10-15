@@ -65,6 +65,9 @@ function milesightDeviceEncode(payload) {
             encoded = encoded.concat(setTemperatureControlMode(payload.temperature_control_mode));
         }
     }
+    if ('current_temperature_control_mode' in payload) {
+        encoded = encoded.concat(setTemperatureControlMode(payload.current_temperature_control_mode));
+    }
     if ("system_status" in payload) {
         encoded = encoded.concat(setSystemStatus(payload.system_status));
     }

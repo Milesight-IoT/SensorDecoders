@@ -2452,6 +2452,36 @@
             "bacnet_type": "binary_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS"
+        },
+        {
+            "id": "current_temperature_control_mode",
+            "name": "Temperature Control Mode",
+            "value": "0",
+            "unit": "",
+            "access_mode": "W",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [
+              {
+                "name": "heat",
+                "value": 0
+              },
+              {
+                "name": "em heat",
+                "value": 1
+              },
+              {
+                "name": "cool",
+                "value": 2
+              },
+              {
+                "name": "auto",
+                "value": 3
+              }
+            ],
+            "bacnet_type": "multistate_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS"
         }
     ]
 }
