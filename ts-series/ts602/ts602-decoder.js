@@ -35,12 +35,15 @@ function milesightDeviceDecode(bytes) {
 		var command_id = bytes[counterObj.i++];
 		switch (command_id) {
 			case 0xfe:
+				decoded.request_check_order = decoded.request_check_order || {};
+				decoded.request_check_order.order = readUInt8(bytes, counterObj, 1);
 				decoded.check_order_reply = decoded.check_order_reply || {};
 				decoded.check_order_reply.order = readUInt8(bytes, counterObj, 1);
 
 				break;
 			case 0xee:
-				decoded.all_configurations_request_by_device = readOnlyCommand(bytes, counterObj, 0);
+				decoded.request_query_all_configurations = decoded.request_query_all_configurations || {};
+				decoded.all_configurations_request_by_device = decoded.all_configurations_request_by_device || {};
 
 				break;
 			case 0xed:
@@ -103,22 +106,6 @@ function milesightDeviceDecode(bytes) {
 				decoded.device_info.pn_4 = readString(bytes, counterObj, 8);
 
 				break;
-			case 0xb9:
-				decoded.device_time = decoded.device_time || {};
-				decoded.device_time.current_time = readUInt32LE(bytes, counterObj, 4);
-				decoded.device_time.running_time = readUInt32LE(bytes, counterObj, 4);
-				decoded.device_time.power_on_time = readUInt32LE(bytes, counterObj, 4);
-
-				break;
-			case 0xb8:
-				decoded.battery_info = decoded.battery_info || {};
-				decoded.battery_info.battery_capacity = readUInt32LE(bytes, counterObj, 4) / 1000;
-				decoded.battery_info.battery_consumption = readUInt32LE(bytes, counterObj, 4) / 1000;
-				decoded.battery_info.battery_left = readUInt32LE(bytes, counterObj, 4) / 1000;
-				decoded.battery_info.battery_voltage = readUInt16LE(bytes, counterObj, 2) / 1000;
-				decoded.battery_info.current_battery_status = readHexString(bytes, counterObj, 2);
-
-				break;
 			case 0x01:
 				decoded.battery = readUInt8(bytes, counterObj, 1);
 
@@ -131,7 +118,6 @@ function milesightDeviceDecode(bytes) {
 
 				break;
 			case 0x04:
-				decoded.temperature = readInt32LE(bytes, counterObj, 4) / 100;
 				decoded.temperature = readInt32LE(bytes, counterObj, 4) / 100;
 
 				break;
@@ -153,61 +139,6 @@ function milesightDeviceDecode(bytes) {
 			case 0x08:
 				decoded.temperature_alarm = decoded.temperature_alarm || {};
 				decoded.temperature_alarm.type = readUInt8(bytes, counterObj, 1);
-				if (decoded.temperature_alarm.type == 0x00) {
-					decoded.temperature_alarm.collection_error = decoded.temperature_alarm.collection_error || {};
-				}
-				if (decoded.temperature_alarm.type == 0x01) {
-					decoded.temperature_alarm.lower_range_error = decoded.temperature_alarm.lower_range_error || {};
-				}
-				if (decoded.temperature_alarm.type == 0x02) {
-					decoded.temperature_alarm.over_range_error = decoded.temperature_alarm.over_range_error || {};
-				}
-				if (decoded.temperature_alarm.type == 0x03) {
-					decoded.temperature_alarm.no_data = decoded.temperature_alarm.no_data || {};
-				}
-				if (decoded.temperature_alarm.type == 0x10) {
-					decoded.temperature_alarm.lower_range_alarm_deactivation = decoded.temperature_alarm.lower_range_alarm_deactivation || {};
-					decoded.temperature_alarm.lower_range_alarm_deactivation.temperature = readInt32LE(bytes, counterObj, 4) / 100;
-				}
-				if (decoded.temperature_alarm.type == 0x11) {
-					decoded.temperature_alarm.lower_range_alarm_trigger = decoded.temperature_alarm.lower_range_alarm_trigger || {};
-					decoded.temperature_alarm.lower_range_alarm_trigger.temperature = readInt32LE(bytes, counterObj, 4) / 100;
-				}
-				if (decoded.temperature_alarm.type == 0x12) {
-					decoded.temperature_alarm.over_range_alarm_deactivation = decoded.temperature_alarm.over_range_alarm_deactivation || {};
-					decoded.temperature_alarm.over_range_alarm_deactivation.temperature = readInt32LE(bytes, counterObj, 4) / 100;
-				}
-				if (decoded.temperature_alarm.type == 0x13) {
-					decoded.temperature_alarm.over_range_alarm_trigger = decoded.temperature_alarm.over_range_alarm_trigger || {};
-					decoded.temperature_alarm.over_range_alarm_trigger.temperature = readInt32LE(bytes, counterObj, 4) / 100;
-				}
-				if (decoded.temperature_alarm.type == 0x14) {
-					decoded.temperature_alarm.within_range_alarm_deactivation = decoded.temperature_alarm.within_range_alarm_deactivation || {};
-					decoded.temperature_alarm.within_range_alarm_deactivation.temperature = readInt32LE(bytes, counterObj, 4) / 100;
-				}
-				if (decoded.temperature_alarm.type == 0x15) {
-					decoded.temperature_alarm.within_range_alarm_trigger = decoded.temperature_alarm.within_range_alarm_trigger || {};
-					decoded.temperature_alarm.within_range_alarm_trigger.temperature = readInt32LE(bytes, counterObj, 4) / 100;
-				}
-				if (decoded.temperature_alarm.type == 0x16) {
-					decoded.temperature_alarm.exceed_range_alarm_deactivation = decoded.temperature_alarm.exceed_range_alarm_deactivation || {};
-					decoded.temperature_alarm.exceed_range_alarm_deactivation.temperature = readInt32LE(bytes, counterObj, 4) / 100;
-				}
-				if (decoded.temperature_alarm.type == 0x17) {
-					decoded.temperature_alarm.exceed_range_alarm_trigger = decoded.temperature_alarm.exceed_range_alarm_trigger || {};
-					decoded.temperature_alarm.exceed_range_alarm_trigger.temperature = readInt32LE(bytes, counterObj, 4) / 100;
-				}
-				if (decoded.temperature_alarm.type == 0x30) {
-					decoded.temperature_alarm.mutation_alarm_trigger_no_mutation = decoded.temperature_alarm.mutation_alarm_trigger_no_mutation || {};
-					decoded.temperature_alarm.mutation_alarm_trigger_no_mutation.temperature = readInt32LE(bytes, counterObj, 4) / 100;
-				}
-				if (decoded.temperature_alarm.type == 0x20) {
-					decoded.temperature_alarm.mutation_alarm_trigger = decoded.temperature_alarm.mutation_alarm_trigger || {};
-					decoded.temperature_alarm.mutation_alarm_trigger.temperature = readInt32LE(bytes, counterObj, 4) / 100;
-					decoded.temperature_alarm.mutation_alarm_trigger.saltation = readInt32LE(bytes, counterObj, 4) / 100;
-					decoded.temperature_alarm = decoded.temperature_alarm || {};
-					decoded.temperature_alarm.type = readUInt8(bytes, counterObj, 1);
-				}
 				if (decoded.temperature_alarm.type == 0x00) {
 					decoded.temperature_alarm.collection_error = decoded.temperature_alarm.collection_error || {};
 				}
@@ -561,13 +492,6 @@ function milesightDeviceDecode(bytes) {
 				decoded.temperature_alarm_settings.threshold_condition = readUInt8(bytes, counterObj, 1);
 				decoded.temperature_alarm_settings.threshold_min = readInt32LE(bytes, counterObj, 4) / 100;
 				decoded.temperature_alarm_settings.threshold_max = readInt32LE(bytes, counterObj, 4) / 100;
-				decoded.temperature_alarm_settings = decoded.temperature_alarm_settings || {};
-				// 0: disable, 1:enable
-				decoded.temperature_alarm_settings.enable = readUInt8(bytes, counterObj, 1);
-				// 0:disable, 1:condition: x<A, 2:condition: x>B, 3:condition: A<x<B, 4:condition: x<A or x>B
-				decoded.temperature_alarm_settings.threshold_condition = readUInt8(bytes, counterObj, 1);
-				decoded.temperature_alarm_settings.threshold_min = readInt32LE(bytes, counterObj, 4) / 100;
-				decoded.temperature_alarm_settings.threshold_max = readInt32LE(bytes, counterObj, 4) / 100;
 
 				break;
 			case 0x78:
@@ -648,7 +572,12 @@ function milesightDeviceDecode(bytes) {
 				decoded.probe_id_retransmit_count = readUInt8(bytes, counterObj, 1);
 
 				break;
+			case 0xbf:
+				decoded.reset = readOnlyCommand(bytes, counterObj, 0);
+
+				break;
 			case 0xbe:
+				decoded.reboot = decoded.reboot || {};
 				decoded.cellular_status = decoded.cellular_status || {};
 				var cellular_status_command = readUInt8(bytes, counterObj, 1);
 				if (cellular_status_command == 0x00) {
@@ -679,233 +608,66 @@ function milesightDeviceDecode(bytes) {
 					// 0:Connect Failed, 1:Connect Success
 					decoded.cellular_status.milesight_mqtt_status = readUInt8(bytes, counterObj, 1);
 				}
+				if (cellular_status_command == 0x15) {
+					// 0:Connect Failed, 1:Connect Success
+					decoded.cellular_status.milesight_dtls_status = readUInt8(bytes, counterObj, 1);
+				}
+
+				break;
+			case 0xbd:
+				decoded.clear_historical_data = readOnlyCommand(bytes, counterObj, 0);
+
+				break;
+			case 0xbc:
+				decoded.stop_historical_data_retrieval = readOnlyCommand(bytes, counterObj, 0);
+
+				break;
+			case 0xba:
+				decoded.retrieve_historical_data_by_time = decoded.retrieve_historical_data_by_time || {};
+				decoded.retrieve_historical_data_by_time.time = readUInt32LE(bytes, counterObj, 4);
+
+				break;
+			case 0xbb:
+				decoded.retrieve_historical_data_by_time_range = decoded.retrieve_historical_data_by_time_range || {};
+				decoded.retrieve_historical_data_by_time_range.start_time = readUInt32LE(bytes, counterObj, 4);
+				decoded.retrieve_historical_data_by_time_range.end_time = readUInt32LE(bytes, counterObj, 4);
+
+				break;
+			case 0xb9:
+				decoded.query_device_status = readOnlyCommand(bytes, counterObj, 0);
+
+				break;
+			case 0xb8:
+				decoded.synchronize_time = readOnlyCommand(bytes, counterObj, 0);
+
+				break;
+			case 0xb7:
+				decoded.set_time = decoded.set_time || {};
+				decoded.set_time.timestamp = readUInt32LE(bytes, counterObj, 4);
+
+				break;
+			case 0x50:
+				decoded.clear_alarm_item = readOnlyCommand(bytes, counterObj, 0);
+
+				break;
+			case 0x51:
+				decoded.set_zero_calibration = decoded.set_zero_calibration || {};
+				// 0:Clear zero calibration, 1:Start zero calibration
+				decoded.set_zero_calibration.operation_item = readUInt8(bytes, counterObj, 1);
+
+				break;
+			case 0x52:
+				decoded.set_retrieval_initial_surface = decoded.set_retrieval_initial_surface || {};
+				// 0:Reset the zero reference point to the horizontal plane, 1:Set the current plane as the new zero reference point
+				decoded.set_retrieval_initial_surface.operation_item = readUInt8(bytes, counterObj, 1);
+
+				break;
+			case 0x53:
+				decoded.get_sensor_id = readOnlyCommand(bytes, counterObj, 0);
 
 				break;
 			case 0xce:
-				decoded.cellular_settings = decoded.cellular_settings || {};
-				var cellular_settings_command = readUInt8(bytes, counterObj, 1);
-				if (cellular_settings_command == 0x3F) {
-					// 0: Low Power Mode, 3: Low Latency Mode
-					decoded.cellular_settings.work_mode = readUInt8(bytes, counterObj, 1);
-				}
-				if (cellular_settings_command == 0x42) {
-					// 1:UDP, 2:TCP, 3:AWS, 4:MQTT, 6:Developer-MQTT, 7:Developer-DTLS
-					decoded.cellular_settings.transport_type = readUInt8(bytes, counterObj, 1);
-				}
-				if (cellular_settings_command == 0x41) {
-					decoded.cellular_settings.network = decoded.cellular_settings.network || {};
-					var cellular_settings_network_command = readUInt8(bytes, counterObj, 1);
-					if (cellular_settings_network_command == 0x00) {
-						decoded.cellular_settings.network.apn = readString(bytes, counterObj, 31);
-					}
-					if (cellular_settings_network_command == 0x01) {
-						// 0：None, 1：PAP, 3：CHAP
-						decoded.cellular_settings.network.auth_mode = readUInt8(bytes, counterObj, 1);
-					}
-					if (cellular_settings_network_command == 0x02) {
-						decoded.cellular_settings.network.auth_username = readString(bytes, counterObj, 63);
-					}
-					if (cellular_settings_network_command == 0x03) {
-						decoded.cellular_settings.network.password = readString(bytes, counterObj, 63);
-					}
-					if (cellular_settings_network_command == 0x04) {
-						decoded.cellular_settings.network.pin = readString(bytes, counterObj, 8);
-					}
-					if (cellular_settings_network_command == 0x05) {
-						// 0：Auto, 1：Cat-N, 3：NB-IOT
-						decoded.cellular_settings.network.type = readUInt8(bytes, counterObj, 1);
-					}
-				}
-				if (cellular_settings_command == 0x00) {
-					decoded.cellular_settings.mqtt_settings = decoded.cellular_settings.mqtt_settings || {};
-					var cellular_settings_mqtt_settings_command = readUInt8(bytes, counterObj, 1);
-					if (cellular_settings_mqtt_settings_command == 0x00) {
-						decoded.cellular_settings.mqtt_settings.server_address = readString(bytes, counterObj, 127);
-					}
-					if (cellular_settings_mqtt_settings_command == 0x01) {
-						decoded.cellular_settings.mqtt_settings.server_port = readUInt16LE(bytes, counterObj, 2);
-					}
-					if (cellular_settings_mqtt_settings_command == 0x02) {
-						decoded.cellular_settings.mqtt_settings.keepalive_interval = readUInt16LE(bytes, counterObj, 2);
-					}
-					if (cellular_settings_mqtt_settings_command == 0x03) {
-						decoded.cellular_settings.mqtt_settings.client_id = readString(bytes, counterObj, 63);
-					}
-					if (cellular_settings_mqtt_settings_command == 0x04) {
-						// 0：disable, 1：enable
-						decoded.cellular_settings.mqtt_settings.auth_enable = readUInt8(bytes, counterObj, 1);
-					}
-					if (cellular_settings_mqtt_settings_command == 0x05) {
-						decoded.cellular_settings.mqtt_settings.auth_username = readString(bytes, counterObj, 127);
-					}
-					if (cellular_settings_mqtt_settings_command == 0x06) {
-						decoded.cellular_settings.mqtt_settings.auth_password = readString(bytes, counterObj, 127);
-					}
-					if (cellular_settings_mqtt_settings_command == 0x07) {
-						// 0：disable, 1：enable
-						decoded.cellular_settings.mqtt_settings.enable_tls = readUInt8(bytes, counterObj, 1);
-					}
-					if (cellular_settings_mqtt_settings_command == 0x08) {
-						// 0：disable, 1：enable
-						decoded.cellular_settings.mqtt_settings.enable_ca_certificate = readUInt8(bytes, counterObj, 1);
-					}
-					if (cellular_settings_mqtt_settings_command == 0x09) {
-						decoded.cellular_settings.mqtt_settings.ca_certificate_length = readUInt16LE(bytes, counterObj, 2);
-					}
-					if (cellular_settings_mqtt_settings_command == 0x0A) {
-						decoded.cellular_settings.mqtt_settings.ca_certificate = readString(bytes, counterObj, 160);
-					}
-					if (cellular_settings_mqtt_settings_command == 0x0B) {
-						// 0：disable, 1：enable
-						decoded.cellular_settings.mqtt_settings.enable_client_certificate = readUInt8(bytes, counterObj, 1);
-					}
-					if (cellular_settings_mqtt_settings_command == 0x0C) {
-						decoded.cellular_settings.mqtt_settings.client_certificate_length = readUInt16LE(bytes, counterObj, 2);
-					}
-					if (cellular_settings_mqtt_settings_command == 0x0D) {
-						decoded.cellular_settings.mqtt_settings.client_certificate = readString(bytes, counterObj, 160);
-					}
-					if (cellular_settings_mqtt_settings_command == 0x0E) {
-						// 0：disable, 1：enable
-						decoded.cellular_settings.mqtt_settings.enable_key_certificate = readUInt8(bytes, counterObj, 1);
-					}
-					if (cellular_settings_mqtt_settings_command == 0x0F) {
-						decoded.cellular_settings.mqtt_settings.key_certificate_length = readUInt16LE(bytes, counterObj, 2);
-					}
-					if (cellular_settings_mqtt_settings_command == 0x10) {
-						decoded.cellular_settings.mqtt_settings.key_certificate = readString(bytes, counterObj, 160);
-					}
-					if (cellular_settings_mqtt_settings_command == 0x11) {
-						decoded.cellular_settings.mqtt_settings.uplink_topic = readString(bytes, counterObj, 127);
-					}
-					if (cellular_settings_mqtt_settings_command == 0x12) {
-						// 0：QoS0, 1：QoS1, 2：QoS2
-						decoded.cellular_settings.mqtt_settings.uplink_qos = readUInt8(bytes, counterObj, 1);
-					}
-					if (cellular_settings_mqtt_settings_command == 0x13) {
-						decoded.cellular_settings.mqtt_settings.downlink_topic = readString(bytes, counterObj, 127);
-					}
-					if (cellular_settings_mqtt_settings_command == 0x14) {
-						// 0：QoS0, 1：QoS1, 2：QoS2
-						decoded.cellular_settings.mqtt_settings.downlink_qos = readUInt8(bytes, counterObj, 1);
-					}
-					if (cellular_settings_mqtt_settings_command == 0x21) {
-						// 0：Connect Failed, 1：Connect Success
-						decoded.cellular_settings.mqtt_settings.mqtt_status = readUInt8(bytes, counterObj, 1);
-					}
-				}
-				if (cellular_settings_command == 0x02) {
-					decoded.cellular_settings.aws_settings = decoded.cellular_settings.aws_settings || {};
-					var cellular_settings_aws_settings_command = readUInt8(bytes, counterObj, 1);
-					if (cellular_settings_aws_settings_command == 0x00) {
-						decoded.cellular_settings.aws_settings.server_address = readString(bytes, counterObj, 127);
-					}
-					if (cellular_settings_aws_settings_command == 0x01) {
-						decoded.cellular_settings.aws_settings.server_port = readUInt16LE(bytes, counterObj, 2);
-					}
-					if (cellular_settings_aws_settings_command == 0x02) {
-						decoded.cellular_settings.aws_settings.keepalive_interval = readUInt16LE(bytes, counterObj, 2);
-					}
-					if (cellular_settings_aws_settings_command == 0x08) {
-						// 0：disable, 1：enable
-						decoded.cellular_settings.aws_settings.enable_ca_certificate = readUInt8(bytes, counterObj, 1);
-					}
-					if (cellular_settings_aws_settings_command == 0x09) {
-						decoded.cellular_settings.aws_settings.ca_certificate_length = readUInt16LE(bytes, counterObj, 2);
-					}
-					if (cellular_settings_aws_settings_command == 0x0A) {
-						decoded.cellular_settings.aws_settings.ca_certificate = readString(bytes, counterObj, 160);
-					}
-					if (cellular_settings_aws_settings_command == 0x0B) {
-						// 0：disable, 1：enable
-						decoded.cellular_settings.aws_settings.enable_client_certificate = readUInt8(bytes, counterObj, 1);
-					}
-					if (cellular_settings_aws_settings_command == 0x0C) {
-						decoded.cellular_settings.aws_settings.client_certificate_length = readUInt16LE(bytes, counterObj, 2);
-					}
-					if (cellular_settings_aws_settings_command == 0x0D) {
-						decoded.cellular_settings.aws_settings.client_certificate = readString(bytes, counterObj, 160);
-					}
-					if (cellular_settings_aws_settings_command == 0x0E) {
-						// 0：disable, 1：enable
-						decoded.cellular_settings.aws_settings.enable_key_certificate = readUInt8(bytes, counterObj, 1);
-					}
-					if (cellular_settings_aws_settings_command == 0x0F) {
-						decoded.cellular_settings.aws_settings.key_certificate_length = readUInt16LE(bytes, counterObj, 2);
-					}
-					if (cellular_settings_aws_settings_command == 0x10) {
-						decoded.cellular_settings.aws_settings.key_certificate = readString(bytes, counterObj, 160);
-					}
-					if (cellular_settings_aws_settings_command == 0x21) {
-						// 0：Connect Failed, 1：Connect Success
-						decoded.cellular_settings.aws_settings.aws_status = readUInt8(bytes, counterObj, 1);
-					}
-				}
-				if (cellular_settings_command == 0x05) {
-					decoded.cellular_settings.tcp_settings = read(bytes, counterObj, 0);
-					decoded.cellular_settings.tcp_settings._item = decoded.cellular_settings.tcp_settings._item || {};
-					decoded.cellular_settings.tcp_settings._item.id = readUInt8(bytes, counterObj, 1);
-					var cellular_settings_tcp_settings__item_command = readUInt8(bytes, counterObj, 1);
-					if (cellular_settings_tcp_settings__item_command == 0x00) {
-						// 0：disable, 1：enable
-						decoded.cellular_settings.tcp_settings._item.enable = readUInt8(bytes, counterObj, 1);
-					}
-					if (cellular_settings_tcp_settings__item_command == 0x01) {
-						decoded.cellular_settings.tcp_settings._item.server_address = readString(bytes, counterObj, 127);
-					}
-					if (cellular_settings_tcp_settings__item_command == 0x02) {
-						decoded.cellular_settings.tcp_settings._item.server_port = readUInt16LE(bytes, counterObj, 2);
-					}
-					if (cellular_settings_tcp_settings__item_command == 0x03) {
-						decoded.cellular_settings.tcp_settings._item.retry_count = readUInt8(bytes, counterObj, 1);
-					}
-					if (cellular_settings_tcp_settings__item_command == 0x04) {
-						decoded.cellular_settings.tcp_settings._item.retry_interval = readUInt8(bytes, counterObj, 1);
-					}
-					if (cellular_settings_tcp_settings__item_command == 0x05) {
-						decoded.cellular_settings.tcp_settings._item.keepalive_interval = readUInt16LE(bytes, counterObj, 2);
-					}
-					if (cellular_settings_tcp_settings__item_command == 0x06) {
-						// 0：Connect Failed, 1：Connect Success
-						decoded.cellular_settings.tcp_settings._item.tcp_status = readUInt8(bytes, counterObj, 1);
-					}
-				}
-				if (cellular_settings_command == 0x0F) {
-					decoded.cellular_settings.udp_settings = read(bytes, counterObj, 0);
-					decoded.cellular_settings.udp_settings._item = decoded.cellular_settings.udp_settings._item || {};
-					decoded.cellular_settings.udp_settings._item.id = readUInt8(bytes, counterObj, 1);
-					var cellular_settings_udp_settings__item_command = readUInt8(bytes, counterObj, 1);
-					if (cellular_settings_udp_settings__item_command == 0x00) {
-						// 0：disable, 1：enable
-						decoded.cellular_settings.udp_settings._item.enable = readUInt8(bytes, counterObj, 1);
-					}
-					if (cellular_settings_udp_settings__item_command == 0x01) {
-						decoded.cellular_settings.udp_settings._item.server_address = readString(bytes, counterObj, 127);
-					}
-					if (cellular_settings_udp_settings__item_command == 0x02) {
-						decoded.cellular_settings.udp_settings._item.server_port = readUInt16LE(bytes, counterObj, 2);
-					}
-					if (cellular_settings_udp_settings__item_command == 0x03) {
-						// 0：Connect Failed, 1：Connect Success
-						decoded.cellular_settings.udp_settings._item.udp_status = readUInt8(bytes, counterObj, 1);
-					}
-				}
-				if (cellular_settings_command == 0x01) {
-					decoded.cellular_settings.milesight_mqtt_settings = decoded.cellular_settings.milesight_mqtt_settings || {};
-					var cellular_settings_milesight_mqtt_settings_command = readUInt8(bytes, counterObj, 1);
-					if (cellular_settings_milesight_mqtt_settings_command == 0x21) {
-						// 0：Connect Failed, 1：Connect Success
-						decoded.cellular_settings.milesight_mqtt_settings.status = readUInt8(bytes, counterObj, 1);
-					}
-				}
-				if (cellular_settings_command == 0x19) {
-					decoded.cellular_settings.milesight_dtls_settings = decoded.cellular_settings.milesight_dtls_settings || {};
-					var cellular_settings_milesight_dtls_settings_command = readUInt8(bytes, counterObj, 1);
-					if (cellular_settings_milesight_dtls_settings_command == 0x00) {
-						// 0：Connect Failed, 1：Connect Success
-						decoded.cellular_settings.milesight_dtls_settings.status = readUInt8(bytes, counterObj, 1);
-					}
-				}
+
 
 				break;
 		}
@@ -919,6 +681,10 @@ function milesightDeviceDecode(bytes) {
 
 function readOnlyCommand(bytes) {
 	return 1;
+}
+
+function readUnknownDataType(allBytes, counterObj, end) {
+	throw new Error('Unknown data type encountered. Please Contact Developer.');
 }
 
 function readBytes(allBytes, counterObj, end) {
@@ -1068,4 +834,24 @@ function extractBits(byte, startBit, endBit) {
 	var width = endBit - startBit;
 	var mask = (1 << width) - 1;
 	return (byte >>> startBit) & mask;
+}
+
+function pickArrayItem(array, index) {
+    for (var i = 0; i < array.length; i++) { 
+        if (array[i].id === index) {
+            return array[i];
+        }
+    }
+
+	return {};
+}
+
+function insertArrayItem(array, item) {
+    for (var i = 0; i < array.length; i++) { 
+        if (array[i].id === item.id) {
+            array[i] = item;
+            return;
+        }
+    }
+    array.push(item);
 }

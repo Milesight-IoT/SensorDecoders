@@ -35,7 +35,6 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Sensor ID | 0x03 | 10 | r |  |  |  |
 | Sensor Type | 0x03 | 2 | r | 0 |  | 0：none<br>1:PT100<br>2: SHT41<br>3: DS18B20 |
 | Sensor ID | 0x03 | 9 | r |  |  |  |
-| Temperature | 0x04 | 5 | r |  | -35 - 70 |  |
 | Temperature | 0x04 | 5 | r |  | -200 - 800 |  |
 | Humidity | 0x05 | 3 | r |  | 0 - 100 |  |
 | Base station positioning | 0x06 | 9 | r |  |  |  |
@@ -114,11 +113,6 @@ Lock Enable | 0x76 | 2 | rw | 0 |  | 0: disable<br>1:enable |
 | Temperature Threshold Alarm | 0x77 | 2 | rw | 0 |  | 0: disable<br>1:enable |
 | Threshold Condition | 0x77 | 2 | rw | 0 |  | 0:disable<br>1:condition: x<A<br>2:condition: x>B<br>3:condition: A<x<B<br>4:condition: x<A or x>B |
 | Value A | 0x77 | 5 | rw | 0 | -200 - 800 |  |
-| Value B | 0x77 | 5 | rw | 0 | -35 - 70 |  |
-| Temperature Threshold Alarm Config | 0x77 | M | rw |  |  |  |
-| Temperature Threshold Alarm | 0x77 | 2 | rw | 0 |  | 0: disable<br>1:enable |
-| Threshold Condition | 0x77 | 2 | rw | 0 |  | 0:disable<br>1:condition: x<A<br>2:condition: x>B<br>3:condition: A<x<B<br>4:condition: x<A or x>B |
-| Value A | 0x77 | 5 | rw | 0 | -200 - 800 |  |
 | Value B | 0x77 | 5 | rw | 0 | -200 - 800 |  |
 | Temperature Shift Threshold | 0x78 | 6 | rw |  |  |  |
 | Temperature Shift Threshold | 0x78 | 2 | rw | 0 |  | 0: disable<br>1:enable |
@@ -163,6 +157,7 @@ Lock Enable | 0x76 | 2 | rw | 0 |  | 0: disable<br>1:enable |
 | Signal Strength | 0xBE | 3 | r |  |  |  |
 | Server Status | 0xBE | 2 | r |  |  | 0:Connect Failed<br>1:Connect Success |
 | Milesight MQTT Status | 0xBE | 2 | r |  |  | 0:Connect Failed<br>1:Connect Success |
+| Milesight DTLS Status | 0xBE | 2 | r |  |  | 0:Connect Failed<br>1:Connect Success |
 | Cellular Settings | 0xCE | 1 | rw |  |  |  |
 | Cellular Command | 0xCE | 2 | rw | 0 |  |  |
 | Work Mode | 0xCE | 2 | rw | 0 |  | 0: Low Power Mode<br>3: Low Latency Mode |
@@ -247,9 +242,6 @@ Lock Enable | 0x76 | 2 | rw | 0 |  | 0: disable<br>1:enable |
 | Order Check Response | 0xFE | 2 | r |  |  |  |
 | Request to Push All Configurations | 0xEE | 1 | r |  |  |  |
 | Historical Data | 0xED | 6 | r |  |  |  |
-| Device Time | 0xB9 | M | r |  |  |  |
-| Battery Status | 0xB8 | M | r |  |  |  |
-| Temperature  Alarm | 0x08 | 1 | r |  |  |  |
 | Temperature  Alarm | 0x08 | 1 | r |  |  |  |
 | Humidity  Alarm | 0x09 | 1 | r |  |  |  |
 | Tilt  Alarm | 0x0A | 1 | r |  |  |  |
@@ -265,42 +257,6 @@ Lock Enable | 0x76 | 2 | rw | 0 |  | 0: disable<br>1:enable |
 | Request to Query All Configurations | 0xEE | 1 | w |  |  |  |
 | Historical Data Mode | 0xED | 2 | r |  |  | 0：target time<br>1：historical time |
 | Historical Data Timestamps | 0xED | 5 | r |  |  |  |
-| Current Time | 0xB9 | 5 | r |  |  |  |
-| Operation Time | 0xB9 | 5 | r |  |  |  |
-| Power-On Time | 0xB9 | 5 | r |  |  |  |
-| Query Device Status | 0xB9 | 1 | w |  |  |  |
-| Battery Capacity | 0xB8 | 5 | r |  |  |  |
-| Battery Drain | 0xB8 | 5 | r |  |  |  |
-| Current Battery | 0xB8 | 5 | r |  |  |  |
-| Battery Voltage | 0xB8 | 3 | r |  |  |  |
-| Current Battery Status | 0xB8 | 3 | r |  |  |  |
-| Time Synchronize | 0xB8 | 1 | w |  |  |  |
-| Alarm Type | 0x08 | 2 | r |  |  |  |
-| Collection Error | 0x08 | 1 | r |  |  |  |
-| Exceed the Range Lower Limit | 0x08 | 1 | r |  |  |  |
-| Exceed the Range Upper Limit | 0x08 | 1 | r |  |  |  |
-| No Data | 0x08 | 1 | r |  |  |  |
-| Temperature Below Alarm Released | 0x08 | 5 | r |  |  |  |
-| Temperature | 0x08 | 5 | r |  | -35 - 70 |  |
-| Temperature Below Alarm | 0x08 | 5 | r |  |  |  |
-| Temperature | 0x08 | 5 | r |  | -35 - 70 |  |
-| Temperature Above Alarm Released | 0x08 | 5 | r |  |  |  |
-| Temperature | 0x08 | 5 | r |  | -35 - 70 |  |
-| Temperature Above Alarm | 0x08 | 5 | r |  |  |  |
-| Temperature | 0x08 | 5 | r |  | -35 - 70 |  |
-| Temperature Between Alarm Released | 0x08 | 5 | r |  |  |  |
-| Temperature | 0x08 | 5 | r |  | -35 - 70 |  |
-| Temperature Between Alarm | 0x08 | 5 | r |  |  |  |
-| Temperature | 0x08 | 5 | r |  | -35 - 70 |  |
-| Temperature Exceed Tolerance Alarm Released | 0x08 | 5 | r |  |  |  |
-| Temperature | 0x08 | 5 | r |  | -35 - 70 |  |
-| Temperature Exceed Tolerance Alarm | 0x08 | 5 | r |  |  |  |
-| Temperature | 0x08 | 5 | r |  | -35 - 70 |  |
-| Temperature Shift Threshold | 0x08 | 5 | r |  |  |  |
-| Temperature | 0x08 | 5 | r |  | -35 - 70 |  |
-| Temperature Shift Threshold | 0x08 | 9 | r |  |  |  |
-| Temperature | 0x08 | 5 | r |  | -35 - 70 |  |
-|  Shift Temperature | 0x08 | 5 | r |  | -35 - 70 |  |
 | Alarm Type | 0x08 | 2 | r |  |  |  |
 | Collection Error | 0x08 | 1 | r |  |  |  |
 | Out of The Low Range | 0x08 | 1 | r |  |  |  |
@@ -380,6 +336,8 @@ Lock Enable | 0x76 | 2 | rw | 0 |  | 0: disable<br>1:enable |
 | Retrieval(Time Period) | 0xBB | 9 | w |  |  |  |
 | Start Time | 0xBB | 5 | w |  |  |  |
 | End Time | 0xBB | 5 | w |  |  |  |
+| Query Device Status | 0xB9 | 1 | w |  |  |  |
+| Time Synchronize | 0xB8 | 1 | w |  |  |  |
 | Time Synchronize | 0xB7 | 5 | w |  |  |  |
 | Timestamp | 0xB7 | 5 | w |  |  |  |
 | Clear Alarm Item | 0x50 | 1 | w |  |  |  |
