@@ -2348,3 +2348,7 @@ function readHexString(bytes) {
     }
     return temp.join("");
 }
+
+module.exports = {
+   milesightDeviceEncode,
+};

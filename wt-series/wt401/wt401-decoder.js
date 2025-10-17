@@ -299,7 +299,7 @@ function milesightDeviceDecode(bytes) {
                 var data = readUInt16LE(bytes.slice(i + 1, i + 3));
                 decoded.child_lock_settings = {};
                 decoded.child_lock_settings.enable = enable;
-                var button_bit_offset = { temperature_up: 0, temperature_down: 1, system_on_off: 2, fan_mode: 3, temperature_control_mode: 4, reboot_reset: 5, power_on_off: 6, cancel_pair: 7, plan_switch: 8, status_report: 9, release_filter_alarm: 10, button_1: 11, button_2: 12, button_3: 13, temperature_unit_switch: 14 };
+                var button_bit_offset = { temperature_up: 0, temperature_down: 1, system_on_off: 2, fan_mode: 3, temperature_control_mode: 4, reboot_reset: 5, power_on_off: 6, cancel_pair: 7, plan_switch: 8, status_report: 9, release_filter_alarm: 10, button_report_1: 11, button_report_2: 12, button_report_3: 13, temperature_unit_switch: 14 };
                 for (var button in button_bit_offset) {
                     decoded.child_lock_settings[button] = readEnableStatus((data >> button_bit_offset[button]) & 0x01);
                 }
@@ -931,3 +931,7 @@ function getValue(map, key) {
     if (!value) value = "unknown";
     return value;
 }
+
+module.exports = {
+   milesightDeviceDecode,
+};
