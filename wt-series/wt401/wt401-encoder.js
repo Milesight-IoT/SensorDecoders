@@ -140,6 +140,18 @@ function milesightDeviceEncode(payload) {
             encoded = WITH_QUERY_CMD ? encoded.concat(setQueryCmd(cmd_buffer)) : encoded;
         }
     }
+    if ('system_status_control' in payload) {
+		var buffer = new Buffer(7);
+		buffer.writeUInt8(0x59);
+		// 0：system close, 1：system open
+		buffer.writeUInt8(payload.system_status_control.on_off);
+		// 0：heat, 1：em heat, 2：cool, 3：auto
+		buffer.writeUInt8(payload.system_status_control.mode);
+		buffer.writeInt16LE(payload.system_status_control.temperature1 * 100);
+		buffer.writeInt16LE(payload.system_status_control.temperature2 * 100);
+        encoded = encoded.concat(buffer.toBytes());
+		encoded = WITH_QUERY_CMD ? encoded.concat(setQueryCmd(buffer.toBytes())) : encoded;
+	}
     if ("data_sync_to_peer" in payload) {
         var cmd_buffer = setDataSyncToPeer(payload.data_sync_to_peer);
         encoded = encoded.concat(cmd_buffer);
