@@ -1195,24 +1195,6 @@ function milesightDeviceEncode(payload) {
 	return encoded;
 }
 
-function getValues(map) {
-	var values = [];
-	for (var key in map) {
-		values.push(RAW_VALUE ? parseInt(key) : map[key]);
-	}
-	return values;
-}
-
-function getValue(map, value) {
-	if (RAW_VALUE) return value;
-	for (var key in map) {
-		if (map[key] === value) {
-			return parseInt(key);
-		}
-	}
-	throw new Error('not match in ' + JSON.stringify(map));
-}
-
 function Buffer() {
 	this.buffer = new Array();
 }
