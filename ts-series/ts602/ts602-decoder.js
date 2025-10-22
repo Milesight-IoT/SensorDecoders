@@ -1028,7 +1028,7 @@ function readString(allBytes, counterObj, end) {
 			str += String.fromCharCode((codepoint & 0x3ff) + 0xdc00);
 		}
 	}
-	return str;
+	return str.replace(/\u0000+$/g, '');
 }
 
 function readHexString(allBytes, counterObj, end) {
@@ -1037,7 +1037,7 @@ function readHexString(allBytes, counterObj, end) {
 	for (var idx = 0; idx < bytes.length; idx++) {
 		temp.push(("0" + (bytes[idx] & 0xff).toString(16)).slice(-2));
 	}
-	return temp.join("");
+	return temp.join("").replace(/\u0000+$/g, '');
 }
 
 function readHexStringLE(allBytes, counterObj, end) {
@@ -1046,7 +1046,7 @@ function readHexStringLE(allBytes, counterObj, end) {
 	for (var idx = bytes.length - 1; idx >= 0; idx--) {
 		temp.push(("0" + (bytes[idx] & 0xff).toString(16)).slice(-2));
 	}
-	return temp.join("");
+	return temp.join("").replace(/\u0000+$/g, '');
 }
 
 function extractBits(byte, startBit, endBit) {
