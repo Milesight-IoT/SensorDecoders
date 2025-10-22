@@ -82,8 +82,8 @@ function milesightDeviceDecode(bytes) {
         // SOUND
         else if (channel_id === 0x05 && channel_type === 0x5b) {
             var weight = bytes[i];
-            var freq_weight = readFrequencyWeightType(weight & 0x03);
-            var time_weight = readTimeWeightType((weight >> 2) & 0x03);
+            var freq_weight = readFrequencyWeight(weight & 0x03);
+            var time_weight = readTimeWeight((weight >> 2) & 0x03);
 
             var sound_level_name = "L" + freq_weight + time_weight;
             var sound_level_eq_name = "L" + freq_weight + "eq";
@@ -195,9 +195,23 @@ function readDeviceStatus(status) {
     return getValue(status_map, status);
 }
 
+function readFrequencyWeight(type) {
+    var frequency_weight_map = { 0: "Z", 1: "A", 2: "C" };
+    return frequency_weight_map[type];
+}
+
 function readFrequencyWeightType(type) {
     var frequency_weight_map = { 0: "Z", 1: "A", 2: "C" };
     return getValue(frequency_weight_map, type);
+}
+
+function readTimeWeight(type) {
+    var time_weight_map = {
+        0: "I",  // impulse time weighting
+        1: "F",  // fast time weighting
+        2: "S"   // slow time weighting
+    };
+    return time_weight_map[type];
 }
 
 function readTimeWeightType(type) {
