@@ -47,8 +47,8 @@ function milesightDeviceEncode(payload) {
     if ("button_lock_config" in payload) {
         encoded = encoded.concat(setButtonLockConfig(payload.button_lock_config));
     }
-    if("socket_control" in payload) {
-        encoded = encoded.concat(setSocketControl(payload.socket_control));
+    if("switch_control" in payload) {
+        encoded = encoded.concat(setSwitchControl(payload.switch_control));
     }
     if("button_reset_config" in payload) {
         encoded = encoded.concat(setButtonResetConfig(payload.button_reset_config));
@@ -101,14 +101,20 @@ function milesightDeviceEncode(payload) {
             encoded = encoded.concat(setD2DAgentSettings(agent));
         }
     }
-    if("key1_d2d_controller_settings" in payload || "key2_d2d_controller_settings" in payload || "key3_d2d_controller_settings" in payload) {
-        encoded = encoded.concat(setD2DControllerSettings(payload.key1_d2d_controller_settings || payload.key2_d2d_controller_settings || payload.key3_d2d_controller_settings));
+    if("key1_d2d_controller_settings" in payload) {
+        encoded = encoded.concat(setD2DControllerSettings(payload.key1_d2d_controller_settings, 0x00));
+    }
+    if("key2_d2d_controller_settings" in payload) {
+        encoded = encoded.concat(setD2DControllerSettings(payload.key2_d2d_controller_settings, 0x01));
+    }
+    if("key3_d2d_controller_settings" in payload) {
+        encoded = encoded.concat(setD2DControllerSettings(payload.key3_d2d_controller_settings, 0x02));
     }
     if("time_zone" in payload) {
         encoded = encoded.concat(setTimeZone(payload.time_zone));
     }
-    if("daylight_saving_time_settings" in payload) {
-        encoded = encoded.concat(setDaylightSavingTime(payload.daylight_saving_time_settings));
+    if("daylight_saving_time" in payload) {
+        encoded = encoded.concat(setDaylightSavingTime(payload.daylight_saving_time));
     }
 
     return encoded;
@@ -190,11 +196,11 @@ function reportAttribute(report_attribute) {
 
 /**
  * set led mode
- * @param {number} led_mode, values: (0: "disable", 1: "Enable (relay closed indicator off)", 2: "Enable (relay closed indicator on)")
+ * @param {number} led_mode, values: (0: "disable", 1: "Enable (relay closed indicator off)")
  * @example { "led_mode": 1 }
  */
 function setLedMode(led_mode) {
-    var led_mode_map = { 0: "disable", 1: "Enable (relay closed indicator off)", 2: "Enable (relay closed indicator on)" };
+    var led_mode_map = { 0: "disable", 1: "Enable (relay closed indicator off)" };
     var led_mode_values = getValues(led_mode_map);
     if (led_mode_values.indexOf(led_mode) === -1) {
         throw new Error("led_mode must be one of: " + led_mode_values.join(", "));
@@ -232,27 +238,27 @@ function setButtonLockConfig(button_lock_config) {
 }
 
 /**
- * socket control
- * @param {object} socket_control
- * @param {number} socket_control.status_1 values: (0: "off", 1: "on")
- * @param {number} socket_control.status_2 values: (0: "off", 1: "on")
- * @param {number} socket_control.status_3 values: (0: "off", 1: "on")
- * @example { "socket_control": { "status_1": 1, "status_2": 1, "status_3": 1 } }
+ * switch control
+ * @param {object} switch_control
+ * @param {number} switch_control.status_1 values: (0: "off", 1: "on")
+ * @param {number} switch_control.status_2 values: (0: "off", 1: "on")
+ * @param {number} switch_control.status_3 values: (0: "off", 1: "on")
+ * @example { "switch_control": { "status_1": 1, "status_2": 1, "status_3": 1 } }
  */
-function setSocketControl(socket_control) {
+function setSwitchControl(switch_control) {
     var status_map = {0: "off", 1: "on"};
     var status_values = getValues(status_map);
 
     var data = 0x00;
-    var switch_bit_offset = { switch_1: 0, switch_2: 1, switch_3: 2 };
+    var switch_bit_offset = { status_1: 0, status_2: 1, status_3: 2 };
     for (var key in switch_bit_offset) {
-        if (key in socket_control) {
-            if (status_values.indexOf(socket_control[key]) === -1) {
-                throw new Error("socket_control." + key + " must be one of: " + status_values.join(", "));
+        if (key in switch_control) {
+            if (status_values.indexOf(switch_control[key]) === -1) {
+                throw new Error("switch_control." + key + " must be one of: " + status_values.join(", "));
             }
 
             data |= 1 << (switch_bit_offset[key] + 4);
-            data |= getValue(status_map, socket_control[key]) << switch_bit_offset[key];
+            data |= getValue(status_map, switch_control[key]) << switch_bit_offset[key];
         }
     }
 
@@ -342,8 +348,8 @@ function setPowerConsumptionClear(power_consumption_clear) {
  * set schedule settings
  * @param {object} schedule_settings
  * @param {number} schedule_settings.channel range: [1, 16]
- * @param {number} schedule_settings.enable values: (0: "disable", 1: "enable")
- * @param {object} schedule_settings.use_config
+ * @param {number} schedule_settings.enable values: (1: "enable", 2: "disable")
+ * @param {number} schedule_settings.use_config values: (0: "no", 1: "yes")
  * @param {number} schedule_settings.monday values: (0: "disable", 1: "enable")
  * @param {number} schedule_settings.tuesday values: (0: "disable", 1: "enable")
  * @param {number} schedule_settings.wednesday values: (0: "disable", 1: "enable")
@@ -351,17 +357,21 @@ function setPowerConsumptionClear(power_consumption_clear) {
  * @param {number} schedule_settings.friday values: (0: "disable", 1: "enable")
  * @param {number} schedule_settings.saturday values: (0: "disable", 1: "enable")
  * @param {number} schedule_settings.sunday values: (0: "disable", 1: "enable")
- * @param {number} schedule_settings.execut_hour
- * @param {number} schedule_settings.execut_min
+ * @param {number} schedule_settings.execut_hour range: [0, 23]
+ * @param {number} schedule_settings.execut_min range: [0, 59]
  * @param {number} schedule_settings.switch_1_state values: (0: "keep", 1: "on", 2: "off", 3: "reversal")
+ * @param {number} schedule_settings.switch_2_state values: (0: "keep", 1: "on", 2: "off", 3: "reversal")
+ * @param {number} schedule_settings.switch_3_state values: (0: "keep", 1: "on", 2: "off", 3: "reversal")
  * @param {number} schedule_settings.lock_state values: (0: "keep", 1: "lock", 2: "unlock")
- * @example { "schedule_settings": [{ "channel": 1, "enable": 1, "use_config": 1, "monday": 1, "tuesday": 0, "wednesday": 1, "thursday": 0, "friday": 1, "saturday": 0, "sunday": 1, "execut_hour": 10, "execut_min": 5, "swtich_1_state": 1, "lock_state": 1 }] }
+ * @example { "schedule_settings": [{ "channel": 1, "enable": 1, "use_config": 1, "monday": 1, "tuesday": 0, "wednesday": 1, "thursday": 0, "friday": 1, "saturday": 0, "sunday": 1, "execut_hour": 10, "execut_min": 5, "switch_1_state": 1, "switch_2_state": 1, "switch_3_state": 1, "lock_state": 1 }] }
  */
 function setScheduleSettings(schedule) {
     var channel = schedule.channel;
     var enable = schedule.enable;
     var use_config = schedule.use_config;
     var lock_state = schedule.lock_state;
+    var execut_hour = schedule.execut_hour;
+    var execut_min = schedule.execut_min;
 
     if (typeof channel !== "number") {
         throw new Error("schedule_settings._item.channel must be a number");
@@ -369,23 +379,27 @@ function setScheduleSettings(schedule) {
     if (channel < 1 || channel > 16) {
         throw new Error("schedule_settings._item.channel must be in range [1, 16]");
     }
-    var enable_map = { 0: "disable", 1: "enable" };
+    var enable_map = { 1: "enable", 2: "disable" };
     var enable_values = getValues(enable_map);
     if (enable_values.indexOf(enable) === -1) {
         throw new Error("schedule_settings._item.enable must be one of " + enable_values.join(", "));
     }
-    if (typeof use_config !== "number") {
-        throw new Error("use_config must be a number");
+    var yes_no_map = { 0: "no", 1: "yes" };
+    var yes_no_values = getValues(yes_no_map);
+    if (yes_no_values.indexOf(use_config) === -1) {
+        throw new Error("schedule_settings._item.use_config must be one of " + yes_no_values.join(", "));
     }
     var week_day_bits_offset = { monday: 0, tuesday: 1, wednesday: 2, thursday: 3, friday: 4, saturday: 5, sunday: 6 };
     var days = 0x00;
+    var enable_map_2 = { 0: "disable", 1: "enable" };
+    var enable_values_2 = getValues(enable_map_2);
     for (var day in week_day_bits_offset) {
-        if (enable_values.indexOf(schedule[day]) === -1) {
-            throw new Error("schedule_settings._item." + day + " must be one of " + enable_values.join(", "));
+        if (enable_values_2.indexOf(schedule[day]) === -1) {
+            throw new Error("schedule_settings._item." + day + " must be one of " + enable_values_2.join(", "));
         }
-        days |= getValue(enable_map, schedule[day]) << week_day_bits_offset[day];
+        days |= getValue(enable_map_2, schedule[day]) << week_day_bits_offset[day];
     }
-    var switch_bits_offset = { switch_1_state: 0 };
+    var switch_bits_offset = { switch_1_state: 0, switch_2_state: 2, switch_3_state: 4 };
     var switch_state_map = {0: "keep", 1: "on", 2: "off", 3: "reversal"};
     var switch_state_values = getValues(switch_state_map);
     var switchs = 0x00;
@@ -400,18 +414,30 @@ function setScheduleSettings(schedule) {
     if (lock_state_values.indexOf(lock_state) === -1) {
         throw new Error("schedule_settings._item.lock_state must be one of: " + lock_state_values.join(", "));
     }
+    if(typeof execut_hour !== "number") {
+        throw new Error("schedule_settings._item.execut_hour must be a number");
+    }
+    if(execut_hour < 0 || execut_hour > 23) {
+        throw new Error("schedule_settings._item.execut_hour must be in range [0, 23]");
+    }
+    if(typeof execut_min !== "number") {
+        throw new Error("schedule_settings._item.execut_min must be a number");
+    }
+    if(execut_min < 0 || execut_min > 59) {
+        throw new Error("schedule_settings._item.execut_min must be in range [0, 59]");
+    }
 
     var buffer = new Buffer(7);
     buffer.writeUInt8(0xf9);
     buffer.writeUInt8(0x64);
-    buffer.writeUInt8(channel - 1);
+    buffer.writeUInt8(channel);
     var schedule_option = 0x00;
     schedule_option |= getValue(enable_map, enable);
-    schedule_option |= use_config << 4;
+    schedule_option |= getValue(yes_no_map, use_config) << 4;
     buffer.writeUInt8(schedule_option);
     buffer.writeUInt8(days);
-    buffer.writeUInt8(schedule.execut_hour);
-    buffer.writeUInt8(schedule.execut_min);
+    buffer.writeUInt8(execut_hour);
+    buffer.writeUInt8(execut_min);
     buffer.writeUInt8(switchs);
     buffer.writeUInt8(getValue(lock_state_map, lock_state));
     return buffer.toBytes();
@@ -460,7 +486,7 @@ function setAntiFlashMode(anti_flash_mode) {
  * overcurrent alarm configuration
  * @param {object} overcurrent_alarm_config
  * @param {number} overcurrent_alarm_config.enable values: (0: "disable", 1: "enable")
- * @param {number} overcurrent_alarm_config.threshold
+ * @param {number} overcurrent_alarm_config.threshold range: [1, 10]
  * @example { "overcurrent_alarm_config": {"enable": 1, "threshold": 10} }
  */
 function setOvercurrentAlarmConfig(overcurrent_alarm_config) {
@@ -475,6 +501,9 @@ function setOvercurrentAlarmConfig(overcurrent_alarm_config) {
     if(typeof threshold !== "number") {
         throw new Error("overcurrent_alarm_config.threshold must be a number");
     }
+    if(threshold < 1 || threshold > 10) {
+        throw new Error("overcurrent_alarm_config.threshold must be in range [1, 10]");
+    }
 
     var buffer = new Buffer(4);
     buffer.writeUInt8(0xff);
@@ -488,7 +517,7 @@ function setOvercurrentAlarmConfig(overcurrent_alarm_config) {
  * overcurrent protection
  * @param {object} overcurrent_protection
  * @param {number} overcurrent_protection.enable values: (0: "disable", 1: "enable")
- * @param {number} overcurrent_protection.threshold
+ * @param {number} overcurrent_protection.threshold range: [1, 10]
  * @example { "overcurrent_protection": {"enable": 1, "threshold": 10} }
  */
 function setOvercurrentProtection(overcurrent_protection) {
@@ -502,6 +531,9 @@ function setOvercurrentProtection(overcurrent_protection) {
     }
     if(typeof threshold !== "number") {
         throw new Error("overcurrent_protection.threshold must be a number");
+    }
+    if(threshold < 1 || threshold > 10) {
+        throw new Error("overcurrent_protection.threshold must be in range [1, 10]");
     }
 
     var buffer = new Buffer(4);
@@ -586,6 +618,9 @@ function setTimeSynchronize(time_synchronize) {
     if (yes_no_values.indexOf(time_synchronize) === -1) {
         throw new Error("time_synchronize must be one of: " + yes_no_values.join(", "));
     }
+    if (getValue(yes_no_map, time_synchronize) === 0) {
+        return [];
+    }
 
     return [0xff, 0x4a, 0x00];
 }
@@ -594,43 +629,43 @@ function setTimeSynchronize(time_synchronize) {
  * D2D Settings
  * @param {object, object} d2d_global_enable
  * @param {number} d2d_global_enable.master_enable values: (0: "disable", 1: "enable")
- * @param {number} d2d_global_enable.master_enable_mask values: (0: "keep", 1: "set")
+ * @param {number} d2d_global_enable.master_enable_change values: (0: "no", 1: "yes")
  * @param {number} d2d_global_enable.agent_enable values: (0: "disable", 1: "enable")
- * @param {number} d2d_global_enable.agent_mask values: (0: "keep", 1: "set")
- * @example { "d2d_global_enable": {"master_enable": 0, "master_enable_mask": 0, "agent_enable": 0, "agent_mask": 0} }
+ * @param {number} d2d_global_enable.agent_enable_change values: (0: "no", 1: "yes")
+ * @example { "d2d_global_enable": {"master_enable": 0, "master_enable_change": 0, "agent_enable": 0, "agent_enable_change": 0} }
  */
 function setD2DGlobalEnable(d2d_global_enable) {
-    var master_enable = d2d_global_enable.master_enable;
-    var master_enable_mask = d2d_global_enable.master_enable_mask;
-    var agent_enable = d2d_global_enable.agent_enable;
-    var agent_mask = d2d_global_enable.agent_mask;
-
     var enable_map = { 0: "disable", 1: "enable" };
     var enable_values = getValues(enable_map);
+    var yes_no_map = { 0: "no", 1: "yes" };
+    var yes_no_values = getValues(yes_no_map);
+    var master_enable = d2d_global_enable.master_enable;
+    var agent_enable = d2d_global_enable.agent_enable;
+    var master_enable_change = d2d_global_enable.master_enable_change;
+    var agent_enable_change = d2d_global_enable.agent_enable_change;
+
     if (enable_values.indexOf(master_enable) === -1) {
         throw new Error("d2d_global_enable.master_enable must be one of " + enable_values.join(", "));
     }
     if (enable_values.indexOf(agent_enable) === -1) {
         throw new Error("d2d_global_enable.agent_enable must be one of " + enable_values.join(", "));
     }
+    if (yes_no_values.indexOf(master_enable_change) === -1) {
+        throw new Error("d2d_global_enable.master_enable_change must be one of " + yes_no_values.join(", "));
+    }
+    if (yes_no_values.indexOf(agent_enable_change) === -1) {
+        throw new Error("d2d_global_enable.agent_enable_change must be one of " + yes_no_values.join(", "));
+    }
 
-    var mask_map = { 0: "keep", 1: "set" };
-    var mask_values = getValues(mask_map);
-    if (mask_values.indexOf(master_enable_mask) === -1) {
-        throw new Error("d2d_global_enable.master_enable_mask must be one of " + mask_values.join(", "));
-    }
-    if (mask_values.indexOf(agent_mask) === -1) {
-        throw new Error("d2d_global_enable.agent_mask must be one of " + mask_values.join(", "));
-    }
-    
     var buffer = new Buffer(3);
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0xc7);
     var data = 0x00;
     data |= getValue(enable_map, master_enable);
+    data |= getValue(yes_no_map, master_enable_change) << 4;
     data |= getValue(enable_map, agent_enable) << 1;
-    data |= getValue(mask_map, master_enable_mask) << 4;
-    data |= getValue(mask_map, agent_mask) << 5;
+    data |= getValue(yes_no_map, agent_enable_change) << 5;
+    
     buffer.writeUInt8(data);
     return buffer.toBytes(); 
 }
@@ -681,8 +716,8 @@ function setD2DAgentSettings(d2d_agent_settings) {
     buffer.writeUInt8(getValue(enable_map, d2d_agent_enable));
     buffer.writeD2DCommand(d2d_agent_command, "0000");
     var data = 0x00;
-    data |= getValue(switch_map, switch_object);
-    data |= getValue(switch_status_map, switch_status) << 4;
+    data |= getValue(switch_status_map, switch_status);
+    data |= getValue(switch_map, switch_object) << 4;
     buffer.writeUInt8(data);
     return buffer.toBytes();
 }
@@ -690,25 +725,19 @@ function setD2DAgentSettings(d2d_agent_settings) {
 /**
  *  D2D Controller Settings
  * @param {object} d2d_controller_settings
- * @param {number} d2d_controller_settings.keyid
  * @param {number} d2d_controller_settings.key_contrl_enable values: (0: "disable", 1: "enable")
  * @param {number} d2d_controller_settings.uplink.lora_enable values: (0: "disable", 1: "enable")
  * @param {number} d2d_controller_settings.uplink.key_enable values: (0: "disable", 1: "enable")
  * @param {string} d2d_controller_settings.contrl_cmd
- * @example { "d2d_controller_settings": [{"keyid": 0, "key_contrl_enable": 1, "uplink": { "lora_enable": 1, "key_enable": 1 }, "contrl_cmd": "0000"}] }
+ * @param {number} id values: (0x00, 0x01, 0x02)
+ * @example { "d2d_controller_settings": [{"key_contrl_enable": 1, "uplink": { "lora_enable": 1, "key_enable": 1 }, "contrl_cmd": "0000"}] }
  */
-function setD2DControllerSettings(d2d_controller_settings) {
-    var keyid = d2d_controller_settings.keyid;
+function setD2DControllerSettings(d2d_controller_settings, id) {
     var enable = d2d_controller_settings.key_contrl_enable;
     var lora_enable = d2d_controller_settings.uplink.lora_enable;
     var key_enable = d2d_controller_settings.uplink.key_enable;
     var contrl_cmd = d2d_controller_settings.contrl_cmd;
 
-    var key_map = { 0: "key1", 1: "key2", 2: "key3" };
-    var key_values = getValues(key_map);
-    if (key_values.indexOf(keyid) === -1) {
-        throw new Error("d2d_controller_settings.keyid must be one of " + key_values.join(", "));
-    }
     var enable_map = { 0: "disable", 1: "enable" };
     var enable_values = getValues(enable_map);
     if (enable_values.indexOf(enable) === -1) {
@@ -724,7 +753,7 @@ function setD2DControllerSettings(d2d_controller_settings) {
     var buffer = new Buffer(7);
     buffer.writeUInt8(0xf9);
     buffer.writeUInt8(0xb8);
-    buffer.writeUInt8(keyid);
+    buffer.writeUInt8(id);
     buffer.writeUInt8(getValue(enable_map, enable));
     var data = 0x00;
     data |= getValue(enable_map, lora_enable);
@@ -757,51 +786,57 @@ function setTimeZone(time_zone) {
 /**
  * set daylight saving time
  * @since v2.0
- * @param {object} daylight_saving_time_settings
- * @param {number} daylight_saving_time_settings.enable values: (0: disable, 1: enable)
- * @param {number} daylight_saving_time_settings.offset, unit: minute
- * @param {number} daylight_saving_time_settings.start_month, values: (1: January, 2: February, 3: March, 4: April, 5: May, 6: June, 7: July, 8: August, 9: September, 10: October, 11: November, 12: December)
- * @param {number} daylight_saving_time_settings.start_week_num, range: [1, 5]
- * @param {number} daylight_saving_time_settings.start_week_day, range: [1, 7]
- * @param {number} daylight_saving_time_settings.start_time, unit: minute, convert: "hh:mm" -> "hh * 60 + mm"
- * @param {number} daylight_saving_time_settings.end_month, values: (1: January, 2: February, 3: March, 4: April, 5: May, 6: June, 7: July, 8: August, 9: September, 10: October, 11: November, 12: December)
- * @param {number} daylight_saving_time_settings.end_week_num, range: [1, 5]
- * @param {number} daylight_saving_time_settings.end_week_day, range: [1, 7]
- * @param {number} daylight_saving_time_settings.end_time, unit: minute, convert: "hh:mm" -> "hh * 60 + mm"
- * @example { "daylight_saving_time_settings": { "enable": 1, "offset": 60, "start_month": 3, "start_week_num": 2, "start_week_day": 7, "start_time": 120, "end_month": 1, "end_week_num": 4, "end_week_day": 1, "end_time": 180 } } output: FFBA013C032778000141B400
+ * @param {object} daylight_saving_time
+ * @param {number} daylight_saving_time.daylight_saving_time_enable values: (0: disable, 1: enable)
+ * @param {number} daylight_saving_time.daylight_saving_time_offset, unit: minute range: [1, 120]
+ * @param {number} daylight_saving_time.start_month, values: (1: January, 2: February, 3: March, 4: April, 5: May, 6: June, 7: July, 8: August, 9: September, 10: October, 11: November, 12: December)
+ * @param {number} daylight_saving_time.start_week_num, range: [1, 5]
+ * @param {number} daylight_saving_time.start_week_day, range: [1, 7]
+ * @param {number} daylight_saving_time.start_hour_min, unit: minute, convert: "hh:mm" -> "hh * 60 + mm"
+ * @param {number} daylight_saving_time.end_month, values: (1: January, 2: February, 3: March, 4: April, 5: May, 6: June, 7: July, 8: August, 9: September, 10: October, 11: November, 12: December)
+ * @param {number} daylight_saving_time.end_week_num, range: [1, 5]
+ * @param {number} daylight_saving_time.end_week_day, range: [1, 7]
+ * @param {number} daylight_saving_time.end_hour_min, unit: minute, convert: "hh:mm" -> "hh * 60 + mm"
+ * @example { "daylight_saving_time": { "daylight_saving_time_enable": 1, "daylight_saving_time_offset": 60, "start_month": 3, "start_week_num": 2, "start_week_day": 7, "start_hour_min": 120, "end_month": 1, "end_week_num": 4, "end_week_day": 1, "end_hour_min": 180 } } output: FFBA013C032778000141B400
  */
-function setDaylightSavingTime(daylight_saving_time_settings) {
-    var enable = daylight_saving_time_settings.enable;
-    var offset = daylight_saving_time_settings.offset;
-    var start_month = daylight_saving_time_settings.start_month;
-    var start_week_num = daylight_saving_time_settings.start_week_num;
-    var start_week_day = daylight_saving_time_settings.start_week_day;
-    var start_time = daylight_saving_time_settings.start_time;
-    var end_month = daylight_saving_time_settings.end_month;
-    var end_week_num = daylight_saving_time_settings.end_week_num;
-    var end_week_day = daylight_saving_time_settings.end_week_day;
-    var end_time = daylight_saving_time_settings.end_time;
+function setDaylightSavingTime(daylight_saving_time) {
+    var enable = daylight_saving_time.daylight_saving_time_enable;
+    var offset = daylight_saving_time.daylight_saving_time_offset;
+    var start_month = daylight_saving_time.start_month;
+    var start_week_num = daylight_saving_time.start_week_num;
+    var start_week_day = daylight_saving_time.start_week_day;
+    var start_hour_min = daylight_saving_time.start_hour_min;
+    var end_month = daylight_saving_time.end_month;
+    var end_week_num = daylight_saving_time.end_week_num;
+    var end_week_day = daylight_saving_time.end_week_day;
+    var end_hour_min = daylight_saving_time.end_hour_min;
 
     var enable_map = { 0: "disable", 1: "enable" };
     var enable_values = getValues(enable_map);
     if (enable_values.indexOf(enable) === -1) {
-        throw new Error("daylight_saving_time_settings.enable must be one of " + enable_values.join(", "));
+        throw new Error("daylight_saving_time.daylight_saving_time_enable must be one of " + enable_values.join(", "));
+    }
+    if (typeof offset !== "number") {
+        throw new Error("daylight_saving_time.daylight_saving_time_offset must be a number");
+    }
+    if (offset < 1 || offset > 120) {
+        throw new Error("daylight_saving_time.daylight_saving_time_offset must be in range [1, 120]");
     }
 
     var week_values = [1, 2, 3, 4, 5, 6, 7];
     var month_values = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
     var enable_value = getValue(enable_map, enable);
     if (enable_value && month_values.indexOf(start_month) === -1) {
-        throw new Error("daylight_saving_time_settings.start_month must be one of " + month_values.join(", "));
+        throw new Error("daylight_saving_time.start_month must be one of " + month_values.join(", "));
     }
     if (enable_value && month_values.indexOf(end_month) === -1) {
-        throw new Error("daylight_saving_time_settings.end_month must be one of " + month_values.join(", "));
+        throw new Error("daylight_saving_time.end_month must be one of " + month_values.join(", "));
     }
     if (enable_value && week_values.indexOf(start_week_day) === -1) {
-        throw new Error("daylight_saving_time_settings.start_week_day must be one of " + week_values.join(", "));
+        throw new Error("daylight_saving_time.start_week_day must be one of " + week_values.join(", "));
     }
     if (enable_value && week_values.indexOf(end_week_day) === -1) {
-        throw new Error("daylight_saving_time_settings.end_week_day must be one of " + week_values.join(", "));
+        throw new Error("daylight_saving_time.end_week_day must be one of " + week_values.join(", "));
     }
 
     var data = 0x00;
@@ -814,10 +849,10 @@ function setDaylightSavingTime(daylight_saving_time_settings) {
     buffer.writeUInt8(data);
     buffer.writeUInt8(start_month);
     buffer.writeUInt8((start_week_num << 4) | start_week_day);
-    buffer.writeUInt16LE(start_time);
+    buffer.writeUInt16LE(start_hour_min);
     buffer.writeUInt8(end_month);
     buffer.writeUInt8((end_week_num << 4) | end_week_day);
-    buffer.writeUInt16LE(end_time);
+    buffer.writeUInt16LE(end_hour_min);
     return buffer.toBytes();
 }
 
