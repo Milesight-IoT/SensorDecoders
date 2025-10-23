@@ -5,8 +5,6 @@
  *
  * @product TS602
  */
-var RAW_VALUE = 0x00;
-var WITH_QUERY_CMD = 0x00;
 
 /* eslint no-redeclare: "off" */
 /* eslint-disable */
@@ -27,8 +25,11 @@ function Encoder(obj, port) {
 }
 /* eslint-enable */
 
-function milesightDeviceEncode(payload) {
+function milesightDeviceEncode(payload, writeQuery = true) {
 	var encoded = [];
+	if (writeQuery) {
+		encoded = encoded.concat(writeQueryCommand(payload));
+	}
 	//0xFE
 	if ('request_check_order' in payload) {
 		var buffer = new Buffer();
@@ -661,7 +662,7 @@ function milesightDeviceEncode(payload) {
 	if ('falling_threshold_alarm_settings' in payload) {
 		var buffer = new Buffer();
 		buffer.writeUInt8(0x81);
-		// 0: FREE_FALL_LEVEL_156, 1: FREE_FALL_LEVEL_219, 2: FREE_FALL_LEVEL_250, 3: FREE_FALL_LEVEL_312, 4: FREE_FALL_LEVEL_344, 5: FREE_FALL_LEVEL_406, 6: FREE_FALL_LEVEL_469, 7: FREE_FALL_LEVEL_500
+		// 0: FREE_FALL_LEVEL_156, 1: FREE_FALL_LEVEL_219, 2: FREE_FALL_LEVEL_250, 3: FREE_FALL_LEVEL_312, 4: FREE_FALL_LEVEL_344, 5: FREE_FALL_LEVEL_406, 6: FREE_FALL_LEVEL_469, 7: FREE_FALL_LEVEL_500 
 		buffer.writeUInt8(payload.falling_threshold_alarm_settings.threshold_level);
 		buffer.writeUInt8(payload.falling_threshold_alarm_settings.time_level);
 		encoded = encoded.concat(buffer.toBytes());
@@ -765,7 +766,7 @@ function milesightDeviceEncode(payload) {
 		if (isValid(payload.cellular_settings.work_mode)) {
 			buffer.writeUInt8(0xce);
 			// 0: Low Power Mode, 3: Low Latency Mode
-			buffer.writeUInt8(0x3f);
+			buffer.writeUInt8(0x3F);
 			// 0: Low Power Mode, 3: Low Latency Mode
 			buffer.writeUInt8(payload.cellular_settings.work_mode);
 		}
@@ -893,7 +894,7 @@ function milesightDeviceEncode(payload) {
 			if (isValid(payload.cellular_settings.mqtt_settings.ca_certificate)) {
 				buffer.writeUInt8(0xce);
 				buffer.writeUInt8(0x00);
-				buffer.writeUInt8(0x0a);
+				buffer.writeUInt8(0x0A);
 				buffer.writeString(payload.cellular_settings.mqtt_settings.ca_certificate, 160);
 			}
 			if (isValid(payload.cellular_settings.mqtt_settings.enable_client_certificate)) {
@@ -901,20 +902,20 @@ function milesightDeviceEncode(payload) {
 				// 0：disable, 1：enable
 				buffer.writeUInt8(0x00);
 				// 0：disable, 1：enable
-				buffer.writeUInt8(0x0b);
+				buffer.writeUInt8(0x0B);
 				// 0：disable, 1：enable
 				buffer.writeUInt8(payload.cellular_settings.mqtt_settings.enable_client_certificate);
 			}
 			if (isValid(payload.cellular_settings.mqtt_settings.client_certificate_length)) {
 				buffer.writeUInt8(0xce);
 				buffer.writeUInt8(0x00);
-				buffer.writeUInt8(0x0c);
+				buffer.writeUInt8(0x0C);
 				buffer.writeUInt16LE(payload.cellular_settings.mqtt_settings.client_certificate_length);
 			}
 			if (isValid(payload.cellular_settings.mqtt_settings.client_certificate)) {
 				buffer.writeUInt8(0xce);
 				buffer.writeUInt8(0x00);
-				buffer.writeUInt8(0x0d);
+				buffer.writeUInt8(0x0D);
 				buffer.writeString(payload.cellular_settings.mqtt_settings.client_certificate, 160);
 			}
 			if (isValid(payload.cellular_settings.mqtt_settings.enable_key_certificate)) {
@@ -922,14 +923,14 @@ function milesightDeviceEncode(payload) {
 				// 0：disable, 1：enable
 				buffer.writeUInt8(0x00);
 				// 0：disable, 1：enable
-				buffer.writeUInt8(0x0e);
+				buffer.writeUInt8(0x0E);
 				// 0：disable, 1：enable
 				buffer.writeUInt8(payload.cellular_settings.mqtt_settings.enable_key_certificate);
 			}
 			if (isValid(payload.cellular_settings.mqtt_settings.key_certificate_length)) {
 				buffer.writeUInt8(0xce);
 				buffer.writeUInt8(0x00);
-				buffer.writeUInt8(0x0f);
+				buffer.writeUInt8(0x0F);
 				buffer.writeUInt16LE(payload.cellular_settings.mqtt_settings.key_certificate_length);
 			}
 			if (isValid(payload.cellular_settings.mqtt_settings.key_certificate)) {
@@ -1015,7 +1016,7 @@ function milesightDeviceEncode(payload) {
 			if (isValid(payload.cellular_settings.aws_settings.ca_certificate)) {
 				buffer.writeUInt8(0xce);
 				buffer.writeUInt8(0x02);
-				buffer.writeUInt8(0x0a);
+				buffer.writeUInt8(0x0A);
 				buffer.writeString(payload.cellular_settings.aws_settings.ca_certificate, 160);
 			}
 			if (isValid(payload.cellular_settings.aws_settings.enable_client_certificate)) {
@@ -1023,20 +1024,20 @@ function milesightDeviceEncode(payload) {
 				// 0：disable, 1：enable
 				buffer.writeUInt8(0x02);
 				// 0：disable, 1：enable
-				buffer.writeUInt8(0x0b);
+				buffer.writeUInt8(0x0B);
 				// 0：disable, 1：enable
 				buffer.writeUInt8(payload.cellular_settings.aws_settings.enable_client_certificate);
 			}
 			if (isValid(payload.cellular_settings.aws_settings.client_certificate_length)) {
 				buffer.writeUInt8(0xce);
 				buffer.writeUInt8(0x02);
-				buffer.writeUInt8(0x0c);
+				buffer.writeUInt8(0x0C);
 				buffer.writeUInt16LE(payload.cellular_settings.aws_settings.client_certificate_length);
 			}
 			if (isValid(payload.cellular_settings.aws_settings.client_certificate)) {
 				buffer.writeUInt8(0xce);
 				buffer.writeUInt8(0x02);
-				buffer.writeUInt8(0x0d);
+				buffer.writeUInt8(0x0D);
 				buffer.writeString(payload.cellular_settings.aws_settings.client_certificate, 160);
 			}
 			if (isValid(payload.cellular_settings.aws_settings.enable_key_certificate)) {
@@ -1044,14 +1045,14 @@ function milesightDeviceEncode(payload) {
 				// 0：disable, 1：enable
 				buffer.writeUInt8(0x02);
 				// 0：disable, 1：enable
-				buffer.writeUInt8(0x0e);
+				buffer.writeUInt8(0x0E);
 				// 0：disable, 1：enable
 				buffer.writeUInt8(payload.cellular_settings.aws_settings.enable_key_certificate);
 			}
 			if (isValid(payload.cellular_settings.aws_settings.key_certificate_length)) {
 				buffer.writeUInt8(0xce);
 				buffer.writeUInt8(0x02);
-				buffer.writeUInt8(0x0f);
+				buffer.writeUInt8(0x0F);
 				buffer.writeUInt16LE(payload.cellular_settings.aws_settings.key_certificate_length);
 			}
 			if (isValid(payload.cellular_settings.aws_settings.key_certificate)) {
@@ -1135,7 +1136,7 @@ function milesightDeviceEncode(payload) {
 			if (isValid(udp_settings_item.enable)) {
 				buffer.writeUInt8(0xce);
 				// 0：disable, 1：enable
-				buffer.writeUInt8(0x0f);
+				buffer.writeUInt8(0x0F);
 				buffer.writeUInt8(udp_settings_item_id);
 				// 0：disable, 1：enable
 				buffer.writeUInt8(0x00);
@@ -1144,14 +1145,14 @@ function milesightDeviceEncode(payload) {
 			}
 			if (isValid(udp_settings_item.server_address)) {
 				buffer.writeUInt8(0xce);
-				buffer.writeUInt8(0x0f);
+				buffer.writeUInt8(0x0F);
 				buffer.writeUInt8(udp_settings_item_id);
 				buffer.writeUInt8(0x01);
 				buffer.writeString(udp_settings_item.server_address, 127);
 			}
 			if (isValid(udp_settings_item.server_port)) {
 				buffer.writeUInt8(0xce);
-				buffer.writeUInt8(0x0f);
+				buffer.writeUInt8(0x0F);
 				buffer.writeUInt8(udp_settings_item_id);
 				buffer.writeUInt8(0x02);
 				buffer.writeUInt16LE(udp_settings_item.server_port);
@@ -1159,7 +1160,7 @@ function milesightDeviceEncode(payload) {
 			if (isValid(udp_settings_item.udp_status)) {
 				buffer.writeUInt8(0xce);
 				// 0：Connect Failed, 1：Connect Success
-				buffer.writeUInt8(0x0f);
+				buffer.writeUInt8(0x0F);
 				buffer.writeUInt8(udp_settings_item_id);
 				// 0：Connect Failed, 1：Connect Success
 				buffer.writeUInt8(0x03);
@@ -1311,14 +1312,225 @@ function encodeUtf8(str) {
 	return byteArray;
 }
 
-function readHexString(bytes) {
-	var temp = [];
-	for (var idx = 0; idx < bytes.length; idx++) {
-		temp.push(('0' + (bytes[idx] & 0xff).toString(16)).slice(-2));
-	}
-	return temp.join('');
-}
-
 function isValid(value) {
 	return value !== undefined && value !== null && value !== '';
 }
+
+function isSuperPath(fullPath, path) {
+	const fullPathArray = fullPath.split('.');
+	const pathArray = path.split('.');
+
+	if (pathArray.length > fullPathArray.length) {
+		return false;
+	}
+
+	return pathArray.every((value, index) => value == fullPathArray[index]);
+}
+
+function writeQueryCommand(payload) {
+	var cmds = [];
+	var keys = flattenObjectKeys(payload);
+	var cacheKeys = [];
+	for (var key of keys) {
+		var exist = false;
+		for (var cacheKey of cacheKeys) {
+			if (isSuperPath(cacheKey, key)) {
+				console.log(`${cacheKey} includes ${key}`);
+				exist = true;
+				break;
+			}
+		}
+		if (exist) {
+			continue;
+		}
+		var cmd = cmdMap()[key];
+		if (cmd) {
+			cacheKeys.push(key);
+			cmds.push(cmd);
+		}
+	}
+
+	var encoded = [];
+	for (var cmd of cmds) {
+		if (cmd.length % 2 == 0) {
+			var buffer = new Buffer();
+			buffer.writeUInt8(0xef);
+			var length = Math.trunc(cmd.length / 2);
+			buffer.writeUInt8(length);
+			buffer.writeBytes(hexToBytes(cmd), length, true);
+			encoded = encoded.concat(buffer.toBytes());
+		}
+	}
+
+	return encoded;
+}
+
+function hexToBytes(hex) {
+	// remove "0x" if present
+	hex = hex.startsWith('0x') ? hex.slice(2) : hex;
+
+	// pad with leading zero if odd length
+	if (hex.length % 2 !== 0) {
+		hex = '0' + hex;
+	}
+
+	const bytes = [];
+	for (let i = 0; i < hex.length; i += 2) {
+		bytes.push(parseInt(hex.slice(i, i + 2), 16));
+	}
+	return bytes;
+}
+
+function flattenObjectKeys(obj, prefix = '') {
+	const keys = [];
+
+	for (const key of Object.keys(obj)) {
+		const path = prefix ? `${prefix}.${key}` : key;
+		const value = obj[key];
+
+		if (value && typeof value === 'object' && !Array.isArray(value)) {
+			// 递归展开
+			keys.push(...flattenObjectKeys(value, path));
+			keys.push(path);
+		} else {
+			keys.push(path);
+		}
+	}
+
+	return keys;
+}
+
+function cmdMap() {
+	return {
+		  "request_check_order": "fe",
+		  "request_command_queries": "ef",
+		  "request_query_all_configurations": "ee",
+		  "historical_data_report": "ed",
+		  "tsl_version": "df",
+		  "product_name": "de",
+		  "product_pn": "dd",
+		  "product_sn": "db",
+		  "version": "da",
+		  "oem_id": "d9",
+		  "random_key": "c9",
+		  "device_status": "c8",
+		  "product_frequency_band": "d8",
+		  "device_info": "d7",
+		  "battery": "01",
+		  "sensor_id": "03",
+		  "temperature": "04",
+		  "humidity": "05",
+		  "base_station_position": "06",
+		  "airplane_mode_state": "07",
+		  "temperature_alarm": "08",
+		  "humidity_alarm": "09",
+		  "tilt_alarm": "0a",
+		  "light_alarm": "0b",
+		  "probe_connect_status": "0c",
+		  "relative_surface_info": "0d",
+		  "report_package_type": "0e",
+		  "debugging_commands": "eb",
+		  "auto_p_enable": "c4",
+		  "reporting_interval": "60",
+		  "cumulative_times": "61",
+		  "collection_interval": "62",
+		  "alarm_reporting_times": "63",
+		  "light_collection_interval": "64",
+		  "temperature_unit": "65",
+		  "airplane_mode_enable": "70",
+		  "time_zone": "c7",
+		  "daylight_saving_time": "c6",
+		  "data_storage_settings": "c5",
+		  "data_storage_settings.enable": "c500",
+		  "data_storage_settings.retransmission_enable": "c501",
+		  "data_storage_settings.retransmission_interval": "c502",
+		  "data_storage_settings.retrieval_interval": "c503",
+		  "base_station_position_enable": "71",
+		  "base_station_position_auth_token": "72",
+		  "airplane_mode_time_period_settings": "73",
+		  "airplane_mode_time_period_settings.start_timestamp": "7300",
+		  "airplane_mode_time_period_settings.end_timestamp": "7301",
+		  "temperature_humidity_display_switch": "74",
+		  "alarm_deactivation_enable": "75",
+		  "button_lock": "76",
+		  "temperature_alarm_settings": "77",
+		  "temperature_mutation_alarm_settings": "78",
+		  "humidity_alarm_settings": "79",
+		  "humidity_mutation_alarm_settings": "7a",
+		  "temperature_calibration_settings": "7b",
+		  "humidity_calibration_settings": "7c",
+		  "light_alarm_settings": "7d",
+		  "light_tolerance_value": "7e",
+		  "tilt_alarm_settings": "7f",
+		  "falling_alarm_settings": "80",
+		  "falling_threshold_alarm_settings": "81",
+		  "probe_id_retransmit_count": "82",
+		  "reset": "bf",
+		  "reboot": "be",
+		  "clear_historical_data": "bd",
+		  "stop_historical_data_retrieval": "bc",
+		  "retrieve_historical_data_by_time": "ba",
+		  "retrieve_historical_data_by_time_range": "bb",
+		  "query_device_status": "b9",
+		  "synchronize_time": "b8",
+		  "set_time": "b7",
+		  "clear_alarm_item": "50",
+		  "set_zero_calibration": "51",
+		  "set_retrieval_initial_surface": "52",
+		  "get_sensor_id": "53",
+		  "cellular_settings": "ce",
+		  "cellular_settings.work_mode": "ce3f",
+		  "cellular_settings.transport_type": "ce42",
+		  "cellular_settings.network": "ce41",
+		  "cellular_settings.network.apn": "ce4100",
+		  "cellular_settings.network.auth_mode": "ce4101",
+		  "cellular_settings.network.auth_username": "ce4102",
+		  "cellular_settings.network.password": "ce4103",
+		  "cellular_settings.network.pin": "ce4104",
+		  "cellular_settings.network.type": "ce4105",
+		  "cellular_settings.mqtt_settings": "ce00",
+		  "cellular_settings.mqtt_settings.server_address": "ce0000",
+		  "cellular_settings.mqtt_settings.server_port": "ce0001",
+		  "cellular_settings.mqtt_settings.keepalive_interval": "ce0002",
+		  "cellular_settings.mqtt_settings.client_id": "ce0003",
+		  "cellular_settings.mqtt_settings.auth_enable": "ce0004",
+		  "cellular_settings.mqtt_settings.auth_username": "ce0005",
+		  "cellular_settings.mqtt_settings.auth_password": "ce0006",
+		  "cellular_settings.mqtt_settings.enable_tls": "ce0007",
+		  "cellular_settings.mqtt_settings.enable_ca_certificate": "ce0008",
+		  "cellular_settings.mqtt_settings.ca_certificate_length": "ce0009",
+		  "cellular_settings.mqtt_settings.ca_certificate": "ce000a",
+		  "cellular_settings.mqtt_settings.enable_client_certificate": "ce000b",
+		  "cellular_settings.mqtt_settings.client_certificate_length": "ce000c",
+		  "cellular_settings.mqtt_settings.client_certificate": "ce000d",
+		  "cellular_settings.mqtt_settings.enable_key_certificate": "ce000e",
+		  "cellular_settings.mqtt_settings.key_certificate_length": "ce000f",
+		  "cellular_settings.mqtt_settings.key_certificate": "ce0010",
+		  "cellular_settings.mqtt_settings.uplink_topic": "ce0011",
+		  "cellular_settings.mqtt_settings.uplink_qos": "ce0012",
+		  "cellular_settings.mqtt_settings.downlink_topic": "ce0013",
+		  "cellular_settings.mqtt_settings.downlink_qos": "ce0014",
+		  "cellular_settings.mqtt_settings.mqtt_status": "ce0021",
+		  "cellular_settings.aws_settings": "ce02",
+		  "cellular_settings.aws_settings.server_address": "ce0200",
+		  "cellular_settings.aws_settings.server_port": "ce0201",
+		  "cellular_settings.aws_settings.keepalive_interval": "ce0202",
+		  "cellular_settings.aws_settings.enable_ca_certificate": "ce0208",
+		  "cellular_settings.aws_settings.ca_certificate_length": "ce0209",
+		  "cellular_settings.aws_settings.ca_certificate": "ce020a",
+		  "cellular_settings.aws_settings.enable_client_certificate": "ce020b",
+		  "cellular_settings.aws_settings.client_certificate_length": "ce020c",
+		  "cellular_settings.aws_settings.client_certificate": "ce020d",
+		  "cellular_settings.aws_settings.enable_key_certificate": "ce020e",
+		  "cellular_settings.aws_settings.key_certificate_length": "ce020f",
+		  "cellular_settings.aws_settings.key_certificate": "ce0210",
+		  "cellular_settings.aws_settings.aws_status": "ce0221",
+		  "cellular_settings.tcp_settings": "ce05",
+		  "cellular_settings.udp_settings": "ce0f",
+		  "cellular_settings.milesight_mqtt_settings": "ce01",
+		  "cellular_settings.milesight_mqtt_settings.status": "ce0121",
+		  "cellular_settings.milesight_dtls_settings": "ce19",
+		  "cellular_settings.milesight_dtls_settings.status": "ce1900"
+	};
+}
+

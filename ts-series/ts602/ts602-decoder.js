@@ -5,7 +5,6 @@
  *
  * @product TS602
  */
-var RAW_VALUE = 0x00;
 
 /* eslint no-redeclare: "off" */
 /* eslint-disable */
@@ -37,6 +36,17 @@ function milesightDeviceDecode(bytes) {
 			case 0xfe:
 				decoded.check_order_reply = decoded.check_order_reply || {};
 				decoded.check_order_reply.order = readUInt8(bytes, counterObj, 1);
+				break;
+
+			case 0xef:
+				decoded.ans = decoded.ans || [];
+				var ans_item = {};
+				var bitOptions = readUInt8(bytes, counterObj, 1);
+				// 0：success, 1：unknow, 2：error order, 3：error passwd, 4：error read params, 5：error write params, 6：error read, 7：error write, 8：error read apply, 9：error write apply
+				ans_item.result = extractBits(bitOptions, 4, 8);
+				ans_item.length = extractBits(bitOptions, 0, 4);
+				ans_item.id = readCommand(bytes, counterObj, ans_item.length);
+				decoded.ans.push(ans_item);
 				break;
 
 			case 0xee:
@@ -1076,4 +1086,147 @@ function insertArrayItem(array, item) {
         }
     }
     array.push(item);
+}
+
+function readCommand(allBytes, counterObj, end) {
+	var bytes = readBytes(allBytes, counterObj, end);
+	var cmd = bytes
+		.map(b => b.toString(16).padStart(2, '0'))
+		.join('')
+		.toLowerCase();
+	return cmdMap()[cmd];
+}
+
+function cmdMap() {
+	return {
+		  "50": "clear_alarm_item",
+		  "51": "set_zero_calibration",
+		  "52": "set_retrieval_initial_surface",
+		  "53": "get_sensor_id",
+		  "60": "reporting_interval",
+		  "61": "cumulative_times",
+		  "62": "collection_interval",
+		  "63": "alarm_reporting_times",
+		  "64": "light_collection_interval",
+		  "65": "temperature_unit",
+		  "70": "airplane_mode_enable",
+		  "71": "base_station_position_enable",
+		  "72": "base_station_position_auth_token",
+		  "73": "airplane_mode_time_period_settings",
+		  "74": "temperature_humidity_display_switch",
+		  "75": "alarm_deactivation_enable",
+		  "76": "button_lock",
+		  "77": "temperature_alarm_settings",
+		  "78": "temperature_mutation_alarm_settings",
+		  "79": "humidity_alarm_settings",
+		  "80": "falling_alarm_settings",
+		  "81": "falling_threshold_alarm_settings",
+		  "82": "probe_id_retransmit_count",
+		  "7300": "airplane_mode_time_period_settings.start_timestamp",
+		  "7301": "airplane_mode_time_period_settings.end_timestamp",
+		  "fe": "request_check_order",
+		  "ef": "request_command_queries",
+		  "ee": "request_query_all_configurations",
+		  "ed": "historical_data_report",
+		  "df": "tsl_version",
+		  "de": "product_name",
+		  "dd": "product_pn",
+		  "db": "product_sn",
+		  "da": "version",
+		  "d9": "oem_id",
+		  "c9": "random_key",
+		  "c8": "device_status",
+		  "d8": "product_frequency_band",
+		  "d7": "device_info",
+		  "01": "battery",
+		  "03": "sensor_id",
+		  "04": "temperature",
+		  "05": "humidity",
+		  "06": "base_station_position",
+		  "07": "airplane_mode_state",
+		  "08": "temperature_alarm",
+		  "09": "humidity_alarm",
+		  "0a": "tilt_alarm",
+		  "0b": "light_alarm",
+		  "0c": "probe_connect_status",
+		  "0d": "relative_surface_info",
+		  "0e": "report_package_type",
+		  "eb": "debugging_commands",
+		  "c4": "auto_p_enable",
+		  "c7": "time_zone",
+		  "c6": "daylight_saving_time",
+		  "c5": "data_storage_settings",
+		  "c500": "data_storage_settings.enable",
+		  "c501": "data_storage_settings.retransmission_enable",
+		  "c502": "data_storage_settings.retransmission_interval",
+		  "c503": "data_storage_settings.retrieval_interval",
+		  "7a": "humidity_mutation_alarm_settings",
+		  "7b": "temperature_calibration_settings",
+		  "7c": "humidity_calibration_settings",
+		  "7d": "light_alarm_settings",
+		  "7e": "light_tolerance_value",
+		  "7f": "tilt_alarm_settings",
+		  "bf": "reset",
+		  "be": "reboot",
+		  "bd": "clear_historical_data",
+		  "bc": "stop_historical_data_retrieval",
+		  "ba": "retrieve_historical_data_by_time",
+		  "bb": "retrieve_historical_data_by_time_range",
+		  "b9": "query_device_status",
+		  "b8": "synchronize_time",
+		  "b7": "set_time",
+		  "ce": "cellular_settings",
+		  "ce3f": "cellular_settings.work_mode",
+		  "ce42": "cellular_settings.transport_type",
+		  "ce41": "cellular_settings.network",
+		  "ce4100": "cellular_settings.network.apn",
+		  "ce4101": "cellular_settings.network.auth_mode",
+		  "ce4102": "cellular_settings.network.auth_username",
+		  "ce4103": "cellular_settings.network.password",
+		  "ce4104": "cellular_settings.network.pin",
+		  "ce4105": "cellular_settings.network.type",
+		  "ce00": "cellular_settings.mqtt_settings",
+		  "ce0000": "cellular_settings.mqtt_settings.server_address",
+		  "ce0001": "cellular_settings.mqtt_settings.server_port",
+		  "ce0002": "cellular_settings.mqtt_settings.keepalive_interval",
+		  "ce0003": "cellular_settings.mqtt_settings.client_id",
+		  "ce0004": "cellular_settings.mqtt_settings.auth_enable",
+		  "ce0005": "cellular_settings.mqtt_settings.auth_username",
+		  "ce0006": "cellular_settings.mqtt_settings.auth_password",
+		  "ce0007": "cellular_settings.mqtt_settings.enable_tls",
+		  "ce0008": "cellular_settings.mqtt_settings.enable_ca_certificate",
+		  "ce0009": "cellular_settings.mqtt_settings.ca_certificate_length",
+		  "ce000a": "cellular_settings.mqtt_settings.ca_certificate",
+		  "ce000b": "cellular_settings.mqtt_settings.enable_client_certificate",
+		  "ce000c": "cellular_settings.mqtt_settings.client_certificate_length",
+		  "ce000d": "cellular_settings.mqtt_settings.client_certificate",
+		  "ce000e": "cellular_settings.mqtt_settings.enable_key_certificate",
+		  "ce000f": "cellular_settings.mqtt_settings.key_certificate_length",
+		  "ce0010": "cellular_settings.mqtt_settings.key_certificate",
+		  "ce0011": "cellular_settings.mqtt_settings.uplink_topic",
+		  "ce0012": "cellular_settings.mqtt_settings.uplink_qos",
+		  "ce0013": "cellular_settings.mqtt_settings.downlink_topic",
+		  "ce0014": "cellular_settings.mqtt_settings.downlink_qos",
+		  "ce0021": "cellular_settings.mqtt_settings.mqtt_status",
+		  "ce02": "cellular_settings.aws_settings",
+		  "ce0200": "cellular_settings.aws_settings.server_address",
+		  "ce0201": "cellular_settings.aws_settings.server_port",
+		  "ce0202": "cellular_settings.aws_settings.keepalive_interval",
+		  "ce0208": "cellular_settings.aws_settings.enable_ca_certificate",
+		  "ce0209": "cellular_settings.aws_settings.ca_certificate_length",
+		  "ce020a": "cellular_settings.aws_settings.ca_certificate",
+		  "ce020b": "cellular_settings.aws_settings.enable_client_certificate",
+		  "ce020c": "cellular_settings.aws_settings.client_certificate_length",
+		  "ce020d": "cellular_settings.aws_settings.client_certificate",
+		  "ce020e": "cellular_settings.aws_settings.enable_key_certificate",
+		  "ce020f": "cellular_settings.aws_settings.key_certificate_length",
+		  "ce0210": "cellular_settings.aws_settings.key_certificate",
+		  "ce0221": "cellular_settings.aws_settings.aws_status",
+		  "ce05": "cellular_settings.tcp_settings",
+		  "ce0f": "cellular_settings.udp_settings",
+		  "ce01": "cellular_settings.milesight_mqtt_settings",
+		  "ce0121": "cellular_settings.milesight_mqtt_settings.status",
+		  "ce19": "cellular_settings.milesight_dtls_settings",
+		  "ce1900": "cellular_settings.milesight_dtls_settings.status"
+	};
 }
