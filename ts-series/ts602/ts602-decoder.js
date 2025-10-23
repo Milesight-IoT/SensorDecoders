@@ -570,7 +570,7 @@ function milesightDeviceDecode(bytes) {
 
 			case 0x81:
 				decoded.falling_threshold_alarm_settings = decoded.falling_threshold_alarm_settings || {};
-				// 0: FREE_FALL_LEVEL_156, 1: FREE_FALL_LEVEL_219, 2: FREE_FALL_LEVEL_250, 3: FREE_FALL_LEVEL_312, 4: FREE_FALL_LEVEL_344, 5: FREE_FALL_LEVEL_406, 6: FREE_FALL_LEVEL_469, 7: FREE_FALL_LEVEL_500
+				// 0: FREE_FALL_LEVEL_156, 1: FREE_FALL_LEVEL_219, 2: FREE_FALL_LEVEL_250, 3: FREE_FALL_LEVEL_312, 4: FREE_FALL_LEVEL_344, 5: FREE_FALL_LEVEL_406, 6: FREE_FALL_LEVEL_469, 7: FREE_FALL_LEVEL_500 
 				decoded.falling_threshold_alarm_settings.threshold_level = readUInt8(bytes, counterObj, 1);
 				decoded.falling_threshold_alarm_settings.time_level = readUInt8(bytes, counterObj, 1);
 				break;
@@ -675,7 +675,7 @@ function milesightDeviceDecode(bytes) {
 			case 0xce:
 				decoded.cellular_settings = decoded.cellular_settings || {};
 				var cellular_settings_command = readUInt8(bytes, counterObj, 1);
-				if (cellular_settings_command == 0x3f) {
+				if (cellular_settings_command == 0x3F) {
 					// 0: Low Power Mode, 3: Low Latency Mode
 					decoded.cellular_settings.work_mode = readUInt8(bytes, counterObj, 1);
 				}
@@ -743,24 +743,24 @@ function milesightDeviceDecode(bytes) {
 					if (cellular_settings_mqtt_settings_command == 0x09) {
 						decoded.cellular_settings.mqtt_settings.ca_certificate_length = readUInt16LE(bytes, counterObj, 2);
 					}
-					if (cellular_settings_mqtt_settings_command == 0x0a) {
+					if (cellular_settings_mqtt_settings_command == 0x0A) {
 						decoded.cellular_settings.mqtt_settings.ca_certificate = readString(bytes, counterObj, 160);
 					}
-					if (cellular_settings_mqtt_settings_command == 0x0b) {
+					if (cellular_settings_mqtt_settings_command == 0x0B) {
 						// 0：disable, 1：enable
 						decoded.cellular_settings.mqtt_settings.enable_client_certificate = readUInt8(bytes, counterObj, 1);
 					}
-					if (cellular_settings_mqtt_settings_command == 0x0c) {
+					if (cellular_settings_mqtt_settings_command == 0x0C) {
 						decoded.cellular_settings.mqtt_settings.client_certificate_length = readUInt16LE(bytes, counterObj, 2);
 					}
-					if (cellular_settings_mqtt_settings_command == 0x0d) {
+					if (cellular_settings_mqtt_settings_command == 0x0D) {
 						decoded.cellular_settings.mqtt_settings.client_certificate = readString(bytes, counterObj, 160);
 					}
-					if (cellular_settings_mqtt_settings_command == 0x0e) {
+					if (cellular_settings_mqtt_settings_command == 0x0E) {
 						// 0：disable, 1：enable
 						decoded.cellular_settings.mqtt_settings.enable_key_certificate = readUInt8(bytes, counterObj, 1);
 					}
-					if (cellular_settings_mqtt_settings_command == 0x0f) {
+					if (cellular_settings_mqtt_settings_command == 0x0F) {
 						decoded.cellular_settings.mqtt_settings.key_certificate_length = readUInt16LE(bytes, counterObj, 2);
 					}
 					if (cellular_settings_mqtt_settings_command == 0x10) {
@@ -804,24 +804,24 @@ function milesightDeviceDecode(bytes) {
 					if (cellular_settings_aws_settings_command == 0x09) {
 						decoded.cellular_settings.aws_settings.ca_certificate_length = readUInt16LE(bytes, counterObj, 2);
 					}
-					if (cellular_settings_aws_settings_command == 0x0a) {
+					if (cellular_settings_aws_settings_command == 0x0A) {
 						decoded.cellular_settings.aws_settings.ca_certificate = readString(bytes, counterObj, 160);
 					}
-					if (cellular_settings_aws_settings_command == 0x0b) {
+					if (cellular_settings_aws_settings_command == 0x0B) {
 						// 0：disable, 1：enable
 						decoded.cellular_settings.aws_settings.enable_client_certificate = readUInt8(bytes, counterObj, 1);
 					}
-					if (cellular_settings_aws_settings_command == 0x0c) {
+					if (cellular_settings_aws_settings_command == 0x0C) {
 						decoded.cellular_settings.aws_settings.client_certificate_length = readUInt16LE(bytes, counterObj, 2);
 					}
-					if (cellular_settings_aws_settings_command == 0x0d) {
+					if (cellular_settings_aws_settings_command == 0x0D) {
 						decoded.cellular_settings.aws_settings.client_certificate = readString(bytes, counterObj, 160);
 					}
-					if (cellular_settings_aws_settings_command == 0x0e) {
+					if (cellular_settings_aws_settings_command == 0x0E) {
 						// 0：disable, 1：enable
 						decoded.cellular_settings.aws_settings.enable_key_certificate = readUInt8(bytes, counterObj, 1);
 					}
-					if (cellular_settings_aws_settings_command == 0x0f) {
+					if (cellular_settings_aws_settings_command == 0x0F) {
 						decoded.cellular_settings.aws_settings.key_certificate_length = readUInt16LE(bytes, counterObj, 2);
 					}
 					if (cellular_settings_aws_settings_command == 0x10) {
@@ -863,7 +863,7 @@ function milesightDeviceDecode(bytes) {
 						tcp_settings_item.tcp_status = readUInt8(bytes, counterObj, 1);
 					}
 				}
-				if (cellular_settings_command == 0x0f) {
+				if (cellular_settings_command == 0x0F) {
 					decoded.cellular_settings.udp_settings = decoded.cellular_settings.udp_settings || [];
 					var id = readUInt8(bytes, counterObj, 1);
 					var udp_settings_item = pickArrayItem(decoded.cellular_settings.udp_settings, id);
@@ -902,6 +902,7 @@ function milesightDeviceDecode(bytes) {
 					}
 				}
 				break;
+
 		}
 		if (unknown_command) {
 			throw new Error('unknown command: ' + command_id);
@@ -1056,10 +1057,10 @@ function readHexStringLE(allBytes, counterObj, end) {
 }
 
 function extractBits(byte, startBit, endBit) {
-	if (byte < 0 || byte > 0xff) {
-	  throw new Error("byte must be in range 0..255");
+	if (byte < 0 || byte > 0xffff) {
+	  throw new Error("byte must be in range 0..65535");
 	}
-	if (startBit < 0 || endBit > 8 || startBit >= endBit) {
+	if (startBit < 0 || endBit > 16 || startBit >= endBit) {
 	  throw new Error("invalid bit range");
 	}
   

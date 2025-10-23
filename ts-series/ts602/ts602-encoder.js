@@ -53,13 +53,6 @@ function milesightDeviceEncode(payload, writeQuery) {
 		buffer.writeUInt32LE(payload.historical_data_report.timestamp);
 		encoded = encoded.concat(buffer.toBytes());
 	}
-	//0xDF
-	if ('tsl_version' in payload) {
-		var buffer = new Buffer();
-		buffer.writeUInt8(0xdf);
-		buffer.writeHexString(payload.tsl_version, 2);
-		encoded = encoded.concat(buffer.toBytes());
-	}
 	//0xDE
 	if ('product_name' in payload) {
 		var buffer = new Buffer();
@@ -79,14 +72,6 @@ function milesightDeviceEncode(payload, writeQuery) {
 		var buffer = new Buffer();
 		buffer.writeUInt8(0xdb);
 		buffer.writeHexString(payload.product_sn, 8);
-		encoded = encoded.concat(buffer.toBytes());
-	}
-	//0xDA
-	if ('version' in payload) {
-		var buffer = new Buffer();
-		buffer.writeUInt8(0xda);
-		buffer.writeHexString(payload.version.hardware_version, 2);
-		buffer.writeHexString(payload.version.firmware_version, 6);
 		encoded = encoded.concat(buffer.toBytes());
 	}
 	//0xD9
@@ -1368,7 +1353,7 @@ function writeQueryCommand(payload) {
 		if (cmd.length % 2 == 0) {
 			var buffer = new Buffer();
 			buffer.writeUInt8(0xef);
-			var length = Math.trunc(cmd.length / 2);
+			var length = (cmd.length / 2) | 0;
 			buffer.writeUInt8(length);
 			buffer.writeBytes(hexToBytes(cmd), length, true);
 			encoded = encoded.concat(buffer.toBytes());
@@ -1552,4 +1537,3 @@ function cmdMap() {
 		  "cellular_settings.milesight_dtls_settings.status": "ce1900"
 	};
 }
-
