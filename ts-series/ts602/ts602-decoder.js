@@ -31,19 +31,16 @@ function milesightDeviceDecode(bytes) {
 
 	var unknown_command = 0;
 	var counterObj = {};
-	for (counterObj.i = 0; counterObj.i < bytes.length;) {
+	for (counterObj.i = 0; counterObj.i < bytes.length; ) {
 		var command_id = bytes[counterObj.i++];
 		switch (command_id) {
 			case 0xfe:
-				decoded.request_check_order = decoded.request_check_order || {};
-				decoded.request_check_order.order = readUInt8(bytes, counterObj, 1);
 				decoded.check_order_reply = decoded.check_order_reply || {};
 				decoded.check_order_reply.order = readUInt8(bytes, counterObj, 1);
 				break;
 
 			case 0xee:
-				decoded.request_query_all_configurations = decoded.request_query_all_configurations || {};
-				decoded.all_configurations_request_by_device = decoded.all_configurations_request_by_device || {};
+				decoded.all_configurations_request_by_device = readOnlyCommand(bytes, counterObj, 0);
 				break;
 
 			case 0xed:
@@ -321,7 +318,7 @@ function milesightDeviceDecode(bytes) {
 			case 0xeb:
 				decoded.debugging_commands = decoded.debugging_commands || {};
 				decoded.debugging_commands.length = readUInt16LE(bytes, counterObj, 2);
-				decoded.debugging_commands.content = readString(bytes, counterObj, 0);
+				decoded.debugging_commands.content = readString(bytes, counterObj, decoded.debugging_commands.length);
 				break;
 
 			case 0xc4:
@@ -577,7 +574,6 @@ function milesightDeviceDecode(bytes) {
 				break;
 
 			case 0xbe:
-				decoded.reboot = decoded.reboot || {};
 				decoded.cellular_status = decoded.cellular_status || {};
 				var cellular_status_command = readUInt8(bytes, counterObj, 1);
 				if (cellular_status_command == 0x00) {
@@ -1051,33 +1047,33 @@ function readHexStringLE(allBytes, counterObj, end) {
 
 function extractBits(byte, startBit, endBit) {
 	if (byte < 0 || byte > 0xff) {
-		throw new Error("byte must be in range 0..255");
+	  throw new Error("byte must be in range 0..255");
 	}
 	if (startBit < 0 || endBit > 8 || startBit >= endBit) {
-		throw new Error("invalid bit range");
+	  throw new Error("invalid bit range");
 	}
-
+  
 	var width = endBit - startBit;
 	var mask = (1 << width) - 1;
 	return (byte >>> startBit) & mask;
 }
 
 function pickArrayItem(array, index) {
-	for (var i = 0; i < array.length; i++) {
-		if (array[i].id === index) {
-			return array[i];
-		}
-	}
+    for (var i = 0; i < array.length; i++) { 
+        if (array[i].id === index) {
+            return array[i];
+        }
+    }
 
 	return {};
 }
 
 function insertArrayItem(array, item) {
-	for (var i = 0; i < array.length; i++) {
-		if (array[i].id === item.id) {
-			array[i] = item;
-			return;
-		}
-	}
-	array.push(item);
+    for (var i = 0; i < array.length; i++) { 
+        if (array[i].id === item.id) {
+            array[i] = item;
+            return;
+        }
+    }
+    array.push(item);
 }

@@ -34,7 +34,6 @@ function milesightDeviceEncode(payload) {
 		var buffer = new Buffer();
 		buffer.writeUInt8(0xfe);
 		buffer.writeUInt8(payload.request_check_order.order);
-		buffer.writeUInt8(payload.check_order_reply.order);
 		encoded = encoded.concat(buffer.toBytes());
 	}
 	//0xEE
@@ -341,7 +340,7 @@ function milesightDeviceEncode(payload) {
 		var buffer = new Buffer();
 		buffer.writeUInt8(0xeb);
 		buffer.writeUInt16LE(payload.debugging_commands.length);
-		buffer.writeString(payload.debugging_commands.content, 0);
+		buffer.writeString(payload.debugging_commands.content, payload.debugging_commands.length, true);
 		encoded = encoded.concat(buffer.toBytes());
 	}
 	//0xC4
@@ -1232,9 +1231,12 @@ Buffer.prototype.writeInt32LE = function(value) {
 	this._write(value < 0 ? value + 0x100000000 : value, 4, true);
 };
 
-Buffer.prototype.writeBytes = function(bytes, length) {
+Buffer.prototype.writeBytes = function(bytes, length, mustEqual = false) {
 	if (length < bytes.length) {
 		throw new Error('bytes length is greater than length');
+	}
+	if (mustEqual && bytes.length != length) {
+		throw new Error('bytes length is not equal to length');
 	}
 
 	for (var i = 0; i < bytes.length; i++) {
@@ -1248,16 +1250,22 @@ Buffer.prototype.writeBytes = function(bytes, length) {
 	}
 };
 
-Buffer.prototype.writeHexString = function(hexString, length) {
+Buffer.prototype.writeHexString = function(hexString, length, mustEqual = false) {
 	var bytes = [];
 	for (var i = 0; i < hexString.length; i += 2) {
 		bytes.push(parseInt(hexString.substr(i, 2), 16));
 	}
+	if (mustEqual && bytes.length != length) {
+		throw new Error('hex string length is not equal to length');
+	}
 	this.writeBytes(bytes, length);
 };
 
-Buffer.prototype.writeString = function(str, length) {
+Buffer.prototype.writeString = function(str, length, mustEqual = false) {
 	var bytes = encodeUtf8(str);
+	if (mustEqual && bytes.length != length) {
+		throw new Error('string length is not equal to length');
+	}
 	this.writeBytes(bytes, length);
 };
 
@@ -1265,10 +1273,13 @@ Buffer.prototype.writeUnknownDataType = function(val) {
 	throw new Error('Unknown data type encountered. Please Contact Developer.');
 };
 
-Buffer.prototype.writeHexStringReverse = function(hexString, length) {
+Buffer.prototype.writeHexStringReverse = function(hexString, length, mustEqual = false) {
 	var bytes = [];
 	for (var i = hexString.length - 2; i >= 0; i -= 2) {
 		bytes.push(parseInt(hexString.substr(i, 2), 16));
+	}
+	if (mustEqual && bytes.length != length) {
+		throw new Error('hex string length is not equal to length');
 	}
 	this.writeBytes(bytes, length);
 };
