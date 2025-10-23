@@ -80,9 +80,12 @@ function milesightDeviceDecode(bytes) {
             //          ------- -------
             // bit mask  change   state
             var value = bytes[i];
-            decoded.socket_read = {};
-            decoded.socket_read.status_1 = readOnOffStatus((value >>> 0) & 1);
-            decoded.socket_read.mask = (value >> 4) & 1;
+            decoded.switch_reading = {};
+            for (var key in switch_bit_offset) {
+                if ((data >>> (switch_bit_offset[key] + 4)) & 0x01) {
+                    decoded.switch_reading[key] = readOnOffStatus((data >>> switch_bit_offset[key]) & 0x01);
+                }
+            }
             i += 1;
         }
         // Voltage
@@ -92,7 +95,7 @@ function milesightDeviceDecode(bytes) {
         }
         // Electric Power
         else if (channel_id === 0x04 && channel_type === 0x80) {
-            decoded.active_power = readUInt32LE(bytes.slice(i, i + 32));
+            decoded.electric_power = readUInt32LE(bytes.slice(i, i + 32));
             i += 32;
         }
         // Power Factor
@@ -120,13 +123,13 @@ function milesightDeviceDecode(bytes) {
         // Device Abnormal Alarm
         else if (channel_id === 0x88 && channel_type === 0x29) {
             decoded.device_abnormal_alarm = {};
-            decoded.device_abnormal_alarm.status = readUInt8(bytes.slice(i, i + 8));
-            i += 8;
+            decoded.device_abnormal_alarm.status = readAlarmStatus(bytes[i]);
+            i += 1;
         }
         // Temperature Alarm
         else if (channel_id === 0x89 && channel_type === 0xdf) {
             decoded.temperature_alarm  = {};
-            decoded.temperature_alarm.status = readTemperatureAlarmStatus(bytes.slice(i, i + 1));
+            decoded.temperature_alarm.status = readTemperatureAlarmStatus(bytes[i]);
             i += 1;
         }
         // RULE CONFIG
@@ -179,10 +182,10 @@ function handle_downlink_response(channel_type, bytes, offset) {
         case 0x29:
             var data = readUInt8(bytes[offset]);
             var switch_bit_offset = { status_1: 0 };
-            decoded.socket_control = {};
+            decoded.switch_control = {};
             for (var key in switch_bit_offset) {
                 if ((data >>> (switch_bit_offset[key] + 4)) & 0x01) {
-                    decoded.socket_control[key] = readOnOffStatus((data >> switch_bit_offset[key]) & 0x01);
+                    decoded.switch_control[key] = readOnOffStatus((data >>> (switch_bit_offset[key])) & 0x01);
                 }
             }
             offset += 1;
@@ -306,7 +309,7 @@ function handle_downlink_response_ext(code, channel_type, bytes, offset) {
             offset += 5;
             break;
         case 0x72:
-            decoded.daylight_saving_time_settings = readDstConfig(bytes.slice(offset, offset + 9));
+            decoded.daylight_saving_time = readDstConfig(bytes.slice(offset, offset + 9));
             offset += 9;
             break;
         default:
@@ -337,22 +340,22 @@ function readDstConfig(bytes) {
     var enable_value = (data >> 7) & 0x01;
     var offset_value = data & 0x7f;
 
-    var daylight_saving_time_settings = {};
-    daylight_saving_time_settings.enable = readEnableStatus(enable_value);
-    daylight_saving_time_settings.offset = offset_value;
-    daylight_saving_time_settings.start_month = readUInt8(bytes[offset + 1]);
+    var daylight_saving_time = {};
+    daylight_saving_time.daylight_saving_time_enable = readEnableStatus(enable_value);
+    daylight_saving_time.daylight_saving_time_offset = offset_value;
+    daylight_saving_time.start_month = readUInt8(bytes[offset + 1]);
     var start_week_value = readUInt8(bytes[offset + 2]);
-    daylight_saving_time_settings.start_week_num = start_week_value >> 4;
-    daylight_saving_time_settings.start_week_day = start_week_value & 0x0f;
-    daylight_saving_time_settings.start_time = readUInt16LE(bytes.slice(offset + 3, offset + 5));
-    daylight_saving_time_settings.end_month = readUInt8(bytes[offset + 5]);
+    daylight_saving_time.start_week_num = start_week_value >> 4;
+    daylight_saving_time.start_week_day = start_week_value & 0x0f;
+    daylight_saving_time.start_hour_min = readUInt16LE(bytes.slice(offset + 3, offset + 5));
+    daylight_saving_time.end_month = readUInt8(bytes[offset + 5]);
     var end_week_value = readUInt8(bytes[offset + 6]);
-    daylight_saving_time_settings.end_week_num = end_week_value >> 4;
-    daylight_saving_time_settings.end_week_day = end_week_value & 0x0f;
-    daylight_saving_time_settings.end_time = readUInt16LE(bytes.slice(offset + 7, offset + 9));
+    daylight_saving_time.end_week_num = end_week_value >> 4;
+    daylight_saving_time.end_week_day = end_week_value & 0x0f;
+    daylight_saving_time.end_hour_min = readUInt16LE(bytes.slice(offset + 7, offset + 9));
     offset += 9;
 
-    return daylight_saving_time_settings;
+    return daylight_saving_time;
 }
 
 function hasResultFlag(code) {
@@ -432,7 +435,7 @@ function readYesNoStatus(status) {
 }
 
 function readLedMode(type) {
-    var led_mode_map = { 0: "disable", 1: "Enable (relay closed indicator off)", 2: "Enable (relay closed indicator on)" };
+    var led_mode_map = { 0: "disable", 1: "Enable (relay closed indicator off)" };
     return getValue(led_mode_map, type);
 }
 
@@ -441,13 +444,17 @@ function readTemperatureAlarmStatus(status) {
     return getValue(status_map, status);
 }
 
+function readAlarmStatus(status) {
+    var status_map = { 0: "normal", 1: "abnormal" };
+    return getValue(status_map, status);
+}
+
 function readScheduleSettings(bytes) {
     var offset = 0;
 
     var schedule_settings = {};
     schedule_settings.channel = readUInt8(bytes[offset]) + 1;
-    schedule_settings.enable = readEnableStatus(bytes[offset + 1] & 0x01);
-    schedule_settings.use_config = (bytes[offset + 1] >> 4) & 0x01;
+    schedule_settings.enable = readEnableStatus2(bytes[offset + 1] & 0x03);
     // condition
     var day_bit_offset = { monday: 0, tuesday: 1, wednesday: 2, thursday: 3, friday: 4, saturday: 5, sunday: 6 };
     var day = readUInt8(bytes[offset + 2]);
@@ -561,7 +568,10 @@ function readD2DControllerSettings(bytes) {
     var offset = 0;
 
     var d2d_controller_settings = {};
-    d2d_controller_settings.keyid = readKeyNum(bytes[offset]);
+    var keyid = readUInt8(bytes[offset]);
+    if(keyid !== 0) {
+        return d2d_controller_settings;
+    }
     d2d_controller_settings.key_contrl_enable = readEnableStatus(bytes[offset + 1] & 0x01);
     d2d_controller_settings.uplink = {};
     d2d_controller_settings.uplink.lora_enable = readEnableStatus(bytes[offset + 2] & 0x01);
@@ -588,6 +598,11 @@ function readTimeZone(time_zone) {
 
 function readEnableStatus(status) {
     var status_map = { 0: "disable", 1: "enable" };
+    return getValue(status_map, status);
+}
+
+function readEnableStatus2(status) {
+    var status_map = { 1: "enable", 2: "disable" };
     return getValue(status_map, status);
 }
 
