@@ -3,7 +3,7 @@
  *
  * Copyright 2025 Milesight IoT
  *
- * @product TS601
+ * @product TS601 
  */
 
 /* eslint no-redeclare: "off" */
@@ -26,7 +26,7 @@ function Encoder(obj, port) {
 /* eslint-enable */
 
 function milesightDeviceEncode(payload, writeQuery) {
-	if (writeQuery === undefined) writeQuery = true;
+	if (writeQuery === undefined) writeQuery = false;
 	var encoded = [];
 	if (writeQuery) {
 		encoded = encoded.concat(writeQueryCommand(payload));
