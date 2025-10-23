@@ -349,6 +349,7 @@ function setPowerConsumptionClear(power_consumption_clear) {
  * @param {object} schedule_settings
  * @param {number} schedule_settings.channel range: [1, 16]
  * @param {number} schedule_settings.enable values: (1: "enable", 2: "disable")
+ * @param {number} schedule_settings.use_config values: (0: "no", 1: "yes")
  * @param {number} schedule_settings.monday values: (0: "disable", 1: "enable")
  * @param {number} schedule_settings.tuesday values: (0: "disable", 1: "enable")
  * @param {number} schedule_settings.wednesday values: (0: "disable", 1: "enable")
@@ -356,16 +357,21 @@ function setPowerConsumptionClear(power_consumption_clear) {
  * @param {number} schedule_settings.friday values: (0: "disable", 1: "enable")
  * @param {number} schedule_settings.saturday values: (0: "disable", 1: "enable")
  * @param {number} schedule_settings.sunday values: (0: "disable", 1: "enable")
- * @param {number} schedule_settings.execut_hour
- * @param {number} schedule_settings.execut_min
+ * @param {number} schedule_settings.execut_hour range: [0, 23]
+ * @param {number} schedule_settings.execut_min range: [0, 59]
  * @param {number} schedule_settings.switch_1_state values: (0: "keep", 1: "on", 2: "off", 3: "reversal")
+ * @param {number} schedule_settings.switch_2_state values: (0: "keep", 1: "on", 2: "off", 3: "reversal")
+ * @param {number} schedule_settings.switch_3_state values: (0: "keep", 1: "on", 2: "off", 3: "reversal")
  * @param {number} schedule_settings.lock_state values: (0: "keep", 1: "lock", 2: "unlock")
- * @example { "schedule_settings": [{ "channel": 1, "enable": 1, "monday": 1, "tuesday": 0, "wednesday": 1, "thursday": 0, "friday": 1, "saturday": 0, "sunday": 1, "execut_hour": 10, "execut_min": 5, "swtich_1_state": 1, "lock_state": 1 }] }
+ * @example { "schedule_settings": [{ "channel": 1, "enable": 1, "use_config": 1, "monday": 1, "tuesday": 0, "wednesday": 1, "thursday": 0, "friday": 1, "saturday": 0, "sunday": 1, "execut_hour": 10, "execut_min": 5, "switch_1_state": 1, "switch_2_state": 1, "switch_3_state": 1, "lock_state": 1 }] }
  */
 function setScheduleSettings(schedule) {
     var channel = schedule.channel;
     var enable = schedule.enable;
+    var use_config = schedule.use_config;
     var lock_state = schedule.lock_state;
+    var execut_hour = schedule.execut_hour;
+    var execut_min = schedule.execut_min;
 
     if (typeof channel !== "number") {
         throw new Error("schedule_settings._item.channel must be a number");
@@ -377,6 +383,11 @@ function setScheduleSettings(schedule) {
     var enable_values = getValues(enable_map);
     if (enable_values.indexOf(enable) === -1) {
         throw new Error("schedule_settings._item.enable must be one of " + enable_values.join(", "));
+    }
+    var yes_no_map = { 0: "no", 1: "yes" };
+    var yes_no_values = getValues(yes_no_map);
+    if (yes_no_values.indexOf(use_config) === -1) {
+        throw new Error("schedule_settings._item.use_config must be one of " + yes_no_values.join(", "));
     }
     var week_day_bits_offset = { monday: 0, tuesday: 1, wednesday: 2, thursday: 3, friday: 4, saturday: 5, sunday: 6 };
     var days = 0x00;
@@ -403,17 +414,30 @@ function setScheduleSettings(schedule) {
     if (lock_state_values.indexOf(lock_state) === -1) {
         throw new Error("schedule_settings._item.lock_state must be one of: " + lock_state_values.join(", "));
     }
+    if(typeof execut_hour !== "number") {
+        throw new Error("schedule_settings._item.execut_hour must be a number");
+    }
+    if(execut_hour < 0 || execut_hour > 23) {
+        throw new Error("schedule_settings._item.execut_hour must be in range [0, 23]");
+    }
+    if(typeof execut_min !== "number") {
+        throw new Error("schedule_settings._item.execut_min must be a number");
+    }
+    if(execut_min < 0 || execut_min > 59) {
+        throw new Error("schedule_settings._item.execut_min must be in range [0, 59]");
+    }
 
     var buffer = new Buffer(7);
     buffer.writeUInt8(0xf9);
     buffer.writeUInt8(0x64);
-    buffer.writeUInt8(channel - 1);
-    var schedule_option = 0x10;
+    buffer.writeUInt8(channel);
+    var schedule_option = 0x00;
     schedule_option |= getValue(enable_map, enable);
+    schedule_option |= getValue(yes_no_map, use_config) << 4;
     buffer.writeUInt8(schedule_option);
     buffer.writeUInt8(days);
-    buffer.writeUInt8(schedule.execut_hour);
-    buffer.writeUInt8(schedule.execut_min);
+    buffer.writeUInt8(execut_hour);
+    buffer.writeUInt8(execut_min);
     buffer.writeUInt8(switchs);
     buffer.writeUInt8(getValue(lock_state_map, lock_state));
     return buffer.toBytes();
@@ -462,7 +486,7 @@ function setAntiFlashMode(anti_flash_mode) {
  * overcurrent alarm configuration
  * @param {object} overcurrent_alarm_config
  * @param {number} overcurrent_alarm_config.enable values: (0: "disable", 1: "enable")
- * @param {number} overcurrent_alarm_config.threshold
+ * @param {number} overcurrent_alarm_config.threshold range: [1, 10]
  * @example { "overcurrent_alarm_config": {"enable": 1, "threshold": 10} }
  */
 function setOvercurrentAlarmConfig(overcurrent_alarm_config) {
@@ -477,6 +501,9 @@ function setOvercurrentAlarmConfig(overcurrent_alarm_config) {
     if(typeof threshold !== "number") {
         throw new Error("overcurrent_alarm_config.threshold must be a number");
     }
+    if(threshold < 1 || threshold > 10) {
+        throw new Error("overcurrent_alarm_config.threshold must be in range [1, 10]");
+    }
 
     var buffer = new Buffer(4);
     buffer.writeUInt8(0xff);
@@ -490,7 +517,7 @@ function setOvercurrentAlarmConfig(overcurrent_alarm_config) {
  * overcurrent protection
  * @param {object} overcurrent_protection
  * @param {number} overcurrent_protection.enable values: (0: "disable", 1: "enable")
- * @param {number} overcurrent_protection.threshold
+ * @param {number} overcurrent_protection.threshold range: [1, 10]
  * @example { "overcurrent_protection": {"enable": 1, "threshold": 10} }
  */
 function setOvercurrentProtection(overcurrent_protection) {
@@ -504,6 +531,9 @@ function setOvercurrentProtection(overcurrent_protection) {
     }
     if(typeof threshold !== "number") {
         throw new Error("overcurrent_protection.threshold must be a number");
+    }
+    if(threshold < 1 || threshold > 10) {
+        throw new Error("overcurrent_protection.threshold must be in range [1, 10]");
     }
 
     var buffer = new Buffer(4);
@@ -588,6 +618,9 @@ function setTimeSynchronize(time_synchronize) {
     if (yes_no_values.indexOf(time_synchronize) === -1) {
         throw new Error("time_synchronize must be one of: " + yes_no_values.join(", "));
     }
+    if (getValue(yes_no_map, time_synchronize) === 0) {
+        return [];
+    }
 
     return [0xff, 0x4a, 0x00];
 }
@@ -596,43 +629,43 @@ function setTimeSynchronize(time_synchronize) {
  * D2D Settings
  * @param {object, object} d2d_global_enable
  * @param {number} d2d_global_enable.master_enable values: (0: "disable", 1: "enable")
- * @param {number} d2d_global_enable.master_enable_mask values: (0: "keep", 1: "set")
+ * @param {number} d2d_global_enable.master_enable_change values: (0: "no", 1: "yes")
  * @param {number} d2d_global_enable.agent_enable values: (0: "disable", 1: "enable")
- * @param {number} d2d_global_enable.agent_mask values: (0: "keep", 1: "set")
- * @example { "d2d_global_enable": {"master_enable": 0, "master_enable_mask": 0, "agent_enable": 0, "agent_mask": 0} }
+ * @param {number} d2d_global_enable.agent_enable_change values: (0: "no", 1: "yes")
+ * @example { "d2d_global_enable": {"master_enable": 0, "master_enable_change": 0, "agent_enable": 0, "agent_enable_change": 0} }
  */
 function setD2DGlobalEnable(d2d_global_enable) {
-    var master_enable = d2d_global_enable.master_enable;
-    var master_enable_mask = d2d_global_enable.master_enable_mask;
-    var agent_enable = d2d_global_enable.agent_enable;
-    var agent_mask = d2d_global_enable.agent_mask;
-
     var enable_map = { 0: "disable", 1: "enable" };
     var enable_values = getValues(enable_map);
+    var yes_no_map = { 0: "no", 1: "yes" };
+    var yes_no_values = getValues(yes_no_map);
+    var master_enable = d2d_global_enable.master_enable;
+    var agent_enable = d2d_global_enable.agent_enable;
+    var master_enable_change = d2d_global_enable.master_enable_change;
+    var agent_enable_change = d2d_global_enable.agent_enable_change;
+
     if (enable_values.indexOf(master_enable) === -1) {
         throw new Error("d2d_global_enable.master_enable must be one of " + enable_values.join(", "));
     }
     if (enable_values.indexOf(agent_enable) === -1) {
         throw new Error("d2d_global_enable.agent_enable must be one of " + enable_values.join(", "));
     }
+    if (yes_no_values.indexOf(master_enable_change) === -1) {
+        throw new Error("d2d_global_enable.master_enable_change must be one of " + yes_no_values.join(", "));
+    }
+    if (yes_no_values.indexOf(agent_enable_change) === -1) {
+        throw new Error("d2d_global_enable.agent_enable_change must be one of " + yes_no_values.join(", "));
+    }
 
-    var mask_map = { 0: "keep", 1: "set" };
-    var mask_values = getValues(mask_map);
-    if (mask_values.indexOf(master_enable_mask) === -1) {
-        throw new Error("d2d_global_enable.master_enable_mask must be one of " + mask_values.join(", "));
-    }
-    if (mask_values.indexOf(agent_mask) === -1) {
-        throw new Error("d2d_global_enable.agent_mask must be one of " + mask_values.join(", "));
-    }
-    
     var buffer = new Buffer(3);
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0xc7);
     var data = 0x00;
     data |= getValue(enable_map, master_enable);
+    data |= getValue(yes_no_map, master_enable_change) << 4;
     data |= getValue(enable_map, agent_enable) << 1;
-    data |= getValue(mask_map, master_enable_mask) << 4;
-    data |= getValue(mask_map, agent_mask) << 5;
+    data |= getValue(yes_no_map, agent_enable_change) << 5;
+    
     buffer.writeUInt8(data);
     return buffer.toBytes(); 
 }
@@ -683,8 +716,8 @@ function setD2DAgentSettings(d2d_agent_settings) {
     buffer.writeUInt8(getValue(enable_map, d2d_agent_enable));
     buffer.writeD2DCommand(d2d_agent_command, "0000");
     var data = 0x00;
-    data |= getValue(switch_map, switch_object);
-    data |= getValue(switch_status_map, switch_status) << 4;
+    data |= getValue(switch_status_map, switch_status);
+    data |= getValue(switch_map, switch_object) << 4;
     buffer.writeUInt8(data);
     return buffer.toBytes();
 }
@@ -755,7 +788,7 @@ function setTimeZone(time_zone) {
  * @since v2.0
  * @param {object} daylight_saving_time
  * @param {number} daylight_saving_time.daylight_saving_time_enable values: (0: disable, 1: enable)
- * @param {number} daylight_saving_time.daylight_saving_time_offset, unit: minute
+ * @param {number} daylight_saving_time.daylight_saving_time_offset, unit: minute range: [1, 120]
  * @param {number} daylight_saving_time.start_month, values: (1: January, 2: February, 3: March, 4: April, 5: May, 6: June, 7: July, 8: August, 9: September, 10: October, 11: November, 12: December)
  * @param {number} daylight_saving_time.start_week_num, range: [1, 5]
  * @param {number} daylight_saving_time.start_week_day, range: [1, 7]
@@ -782,6 +815,12 @@ function setDaylightSavingTime(daylight_saving_time) {
     var enable_values = getValues(enable_map);
     if (enable_values.indexOf(enable) === -1) {
         throw new Error("daylight_saving_time.daylight_saving_time_enable must be one of " + enable_values.join(", "));
+    }
+    if (typeof offset !== "number") {
+        throw new Error("daylight_saving_time.daylight_saving_time_offset must be a number");
+    }
+    if (offset < 1 || offset > 120) {
+        throw new Error("daylight_saving_time.daylight_saving_time_offset must be in range [1, 120]");
     }
 
     var week_values = [1, 2, 3, 4, 5, 6, 7];

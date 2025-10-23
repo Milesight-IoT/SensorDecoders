@@ -50,7 +50,7 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | High Current Config      | 0xFF | 0x8D |   1    | highcurrent_config(1B)<br/>highcurrent_config, values(0: disable, 1: enable)                                                           |
 | Power Switch Mode        | 0xFF | 0x67 |   1    | power_switch_mode(1B)<br/>power_switch_mode, values(0: off, 1: on, 2: keep)                                                            |
 | Time Synchronize         | 0xFF | 0x4A |   1    | time_synchronize(1B)                                                                                                                   |
-| D2D Enable               | 0xFF | 0xC7 |   1    | master_enable(0..1)+agent_enable(1..2)+master_enable_mask(4..5)+agent_mask(5..6)<br/>master_enable, values(0: disable, 1: enable)<br/>agent_enable, values(0: disable, 1: enable)<br/>master_enable_mask, values(0: keep, 1: set)<br/>agent_mask, values(0: keep, 1: set)                                                                      |
+| D2D Enable               | 0xFF | 0xC7 |   1    | master_enable(0..1)+agent_enable(1..2)+master_enable_change(4..5)+agent_enable_change(5..6)<br/>master_enable, values(0: disable, 1: enable)<br/>agent_enable, values(0: disable, 1: enable)<br/>master_enable_change, values(0: no, 1: yes)<br/>agent_enable_change, values(0: no, 1: yes)                                                |
 | D2D Agent Settings       | 0xFF | 0x83 |   5    | d2d_agent_id(1B)+d2d_agent_enable(1B)+d2d_agent_command(2B)+d2d_agent_action(1B)<br/>d2d_agent_id, range[0, 15]<br/>d2d_agent_enable, values(0: disable, 1: enable)<br/>d2d_agent_action.switch_object, values(1: switch1, 2: switch2, 3: switch1,switch2, 4: switch3, 5: switch1,switch3, 6: switch2,switch3, 7: switch1,switch2,switch3)<br/>d2d_agent_action.switch_status, values(0: off, 1: on, 2: reversal)                                                                                                                                          |
 | Time Zone                | 0xFF | 0xBD |   2    | time_zone(2B)                                                                                                                          |
 | Schedule Settings        | 0xF9 | 0x64 |   7    | channel(1B), range[1, 16]<br/>enable(0..4), values(1: enable, 2: disable), use_config(4..8), values(0, no, 1: yes)<br/>read: bits, (bit1: monday, bit2: tuesday, bit3: wednesday, bit4: thursday, bit5: friday, bit6: saturday, bit7: sunday)<br/>execut_hour(1B)<br/>execut_min(1B)<br/>switch_1_state(0..2),switch_2_state(2..4),switch_3_state(4..6), values(0: keep, 1: on, 2: off, 3: reversal)<br/>lock_state(1B), values(0: keep, 1: lock, 2: unlock)                                                                                                  |
@@ -59,7 +59,7 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Load Power               | 0xF9 | 0xAB |   6    | power_1(2B)+power_2(2B)+power_3(2B)<br/>power_1,power_2,power_3, range[0, 1100]                                                        |
 | LoRaWAN Class Config     | 0xF9 | 0xA4 |   8    | timestamp(4B)+continue(2B)+class_mode(1B)<br/>class_mode, values(1: CLASS_B, 2: CLASS_C)                                               |
 | D2D Controller Settings  | 0xF9 | 0xB8 |   5    | keyid(1B)+key_contrl_enable(1B)+uplink(1B)+contrl_cmd(2B)<br/>keyid, values(0: key1)<br/>key_contrl_enable, values(0: disable, 1: enable)<br/>uplink.lora_enable(0..1), values(0: disable, 1: enable), uplink.key_enable(1..2), values(0: disable, 1: enable)                                                                                   |
-| Daylight Saving Time     | 0xF9 | 0x72 |   9    | daylight_saving_time_offset(0..6)+daylight_saving_time_enable(6..7)+start_month(1B)+start_week_num(0..3)+start_week_day(4..7)+start_hour_min(2B)+end_month(1B)+end_week_num(0..3)+end_week_day(4..7)+end_hour_min(2B)<br/>enable, values(0: disable, 1: enable)<br/>start_month,end_month, values(1: Jan., 2: Feb., 3: Mar., 4: Apr., 5: May, 6: Jun., 7: Jul., 8: Aug. 9: Sep., 10: Oct., 11: Nov., 12: Dec.)<br/>start_week_num,end_week_num, values(1: 1st, 2: 2nd, 3: 3rd, 4: 4th, 5: last)<br/>start_week_day,end_week_day, values(1：Mon., 2：Tues., 3：Wed., 4：Thurs., 5：Fri., 6：Sat., 7：Sun.)<br/>start_hour_min,end_hour_min, range[0, 1440]                                                                                                          |
+| Daylight Saving Time     | 0xF9 | 0x72 |   9    | daylight_saving_time_offset(0..6)+daylight_saving_time_enable(6..7)+start_month(1B)+start_week_num(0..3)+start_week_day(4..7)+start_hour_min(2B)+end_month(1B)+end_week_num(0..3)+end_week_day(4..7)+end_hour_min(2B)<br/>daylight_saving_time_offset, range[1, 120]<br/>daylight_saving_time_enable, values(0: disable, 1: enable)<br/>start_month,end_month, values(1: Jan., 2: Feb., 3: Mar., 4: Apr., 5: May, 6: Jun., 7: Jul., 8: Aug. 9: Sep., 10: Oct., 11: Nov., 12: Dec.)<br/>start_week_num,end_week_num, values(1: 1st, 2: 2nd, 3: 3rd, 4: 4th, 5: last)<br/>start_week_day,end_week_day, values(1：Mon., 2：Tues., 3：Wed., 4：Thurs., 5：Fri., 6：Sat., 7：Sun.)<br/>start_hour_min,end_hour_min, range[0, 1440]                                                        |
 
 ### Status Definition
 
@@ -147,7 +147,7 @@ For more detailed information, please visit [Milesight Official Website](https:/
     "highcurrent_config": "enable"
 }
 
-// Schedule Settings (F96400117F01011502)
+// Schedule Settings (F96401117F01011502)
 {
     "schedule_settings": [
         {
@@ -165,7 +165,23 @@ For more detailed information, please visit [Milesight Official Website](https:/
             "switch_3_state": "on",
             "thursday": "enable",
             "tuesday": "enable",
+            "use_config": "yes",
             "wednesday": "enable"
+        }
+    ]
+}
+
+// D2D Agent Settings (FF830201AAAA72)
+{
+    "d2d_agent_settings_array": [
+        {
+            "d2d_agent_action": {
+                "switch_object": "switch1, switch2, switch3",
+                "switch_status": "reversel"
+            },
+            "d2d_agent_command": "aaaa",
+            "d2d_agent_enable": "enable",
+            "d2d_agent_id": 2
         }
     ]
 }

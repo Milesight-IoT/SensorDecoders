@@ -2,6 +2,18 @@
   "version": "1.0.0",
   "object": [
     {
+      "id": "voltage",
+      "name": "Voltage",
+      "value": "",
+      "unit": "V",
+      "access_mode": "R",
+      "data_type": "NUMBER",
+      "value_type": "FLOAT",
+      "bacnet_type": "analog_input_object",
+      "bacnet_unit_type_id": 5,
+      "bacnet_unit_type": "UNITS_VOLTS"
+    },
+    {
       "id": "electric_power",
       "name": "Electric Power",
       "value": "",
@@ -14,6 +26,22 @@
       "bacnet_unit_type": "UNITS_WATTS"
     },
     {
+      "id": "power_factor",
+      "name": "Power Factor",
+      "value": "",
+      "unit": "%",
+      "access_mode": "R",
+      "data_type": "NUMBER",
+      "value_type": "UINT8",
+      "range": [
+        0,
+        100
+      ],
+      "bacnet_type": "analog_input_object",
+      "bacnet_unit_type_id": 98,
+      "bacnet_unit_type": "UNITS_PERCENT"
+    },
+    {
       "id": "power_consumption",
       "name": "Power Consumption",
       "value": "",
@@ -24,6 +52,18 @@
       "bacnet_type": "analog_input_object",
       "bacnet_unit_type_id": 18,
       "bacnet_unit_type": "UNITS_WATT_HOURS"
+    },
+    {
+      "id": "current",
+      "name": "Current Rating",
+      "value": "",
+      "unit": "mA",
+      "access_mode": "R",
+      "data_type": "NUMBER",
+      "value_type": "UINT8",
+      "bacnet_type": "analog_input_object",
+      "bacnet_unit_type_id": 2,
+      "bacnet_unit_type": "UNITS_MILLIAMPERES"
     },
     {
       "id": "switch_reading.status_1",
@@ -209,8 +249,8 @@
       "reference": []
     },
     {
-      "id": "anti_flash_mode.enable",
-      "name": "Anti-flash Mode Enable",
+      "id": "overcurrent_alarm_config.enable",
+      "name": "Overcurrent Alarm Enable",
       "value": "0",
       "unit": "",
       "access_mode": "W",
@@ -229,67 +269,94 @@
       "bacnet_type": "binary_output_object",
       "bacnet_unit_type_id": 95,
       "bacnet_unit_type": "UNITS_NO_UNITS",
-      "reference": []
-    },
-    {
-      "id": "load_power.power_1",
-      "name": "power1",
-      "value": "0",
-      "unit": "W",
-      "access_mode": "W",
-      "data_type": "NUMBER",
-      "value_type": "UINT16",
-      "range": [
-        0,
-        1100
-      ],
-      "bacnet_type": "analog_output_object",
-      "bacnet_unit_type_id": 47,
-      "bacnet_unit_type": "UNITS_WATTS",
       "reference": [
-        "load_power.power_2",
-        "load_power.power_3"
+        "overcurrent_alarm_config.threshold"
       ]
     },
     {
-      "id": "load_power.power_2",
-      "name": "power2",
-      "value": "0",
-      "unit": "W",
+      "id": "overcurrent_alarm_config.threshold",
+      "name": "Overcurrent Alarm Value",
+      "value": "10",
+      "unit": "A",
       "access_mode": "W",
       "data_type": "NUMBER",
-      "value_type": "UINT16",
+      "value_type": "UINT8",
       "range": [
-        0,
-        1100
+        1,
+        10
       ],
       "bacnet_type": "analog_output_object",
-      "bacnet_unit_type_id": 47,
-      "bacnet_unit_type": "UNITS_WATTS",
+      "bacnet_unit_type_id": 3,
+      "bacnet_unit_type": "UNITS_AMPERES",
       "reference": [
-        "load_power.power_1",
-        "load_power.power_3"
+        "overcurrent_alarm_config.enable"
       ]
     },
     {
-      "id": "load_power.power_3",
-      "name": "power3",
+      "id": "overcurrent_protection.enable",
+      "name": "Overcurrent Protection Enable",
       "value": "0",
-      "unit": "W",
+      "unit": "",
+      "access_mode": "W",
+      "data_type": "BOOL",
+      "value_type": "UINT8",
+      "values": [
+        {
+          "name": "disable",
+          "value": 0
+        },
+        {
+          "name": "enable",
+          "value": 1
+        }
+      ],
+      "bacnet_type": "binary_output_object",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS",
+      "reference": [
+        "overcurrent_protection.threshold"
+      ]
+    },
+    {
+      "id": "overcurrent_protection.threshold",
+      "name": "Overcurrent Protection Value",
+      "value": "10",
+      "unit": "A",
       "access_mode": "W",
       "data_type": "NUMBER",
-      "value_type": "UINT16",
+      "value_type": "UINT8",
       "range": [
-        0,
-        1100
+        1,
+        10
       ],
       "bacnet_type": "analog_output_object",
-      "bacnet_unit_type_id": 47,
-      "bacnet_unit_type": "UNITS_WATTS",
+      "bacnet_unit_type_id": 3,
+      "bacnet_unit_type": "UNITS_AMPERES",
       "reference": [
-        "load_power.power_1",
-        "load_power.power_2"
+        "overcurrent_protection.enable"
       ]
+    },
+    {
+      "id": "highcurrent_config",
+      "name": "Highcurrent Protection",
+      "value": "1",
+      "unit": "",
+      "access_mode": "W",
+      "data_type": "BOOL",
+      "value_type": "UINT8",
+      "values": [
+        {
+          "name": "disable",
+          "value": 0
+        },
+        {
+          "name": "enable",
+          "value": 1
+        }
+      ],
+      "bacnet_type": "binary_output_object",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS"
     },
     {
       "id": "switch_control.status_1",
@@ -448,7 +515,7 @@
     {
       "id": "key1_d2d_controller_settings.key_contrl_enable",
       "name": "Key Controller Enable",
-      "value": 0,
+      "value": "0",
       "unit": "",
       "access_mode": "W",
       "data_type": "BOOL",
@@ -540,7 +607,7 @@
     {
       "id": "key2_d2d_controller_settings.key_contrl_enable",
       "name": "Key Controller Enable",
-      "value": 0,
+      "value": "0",
       "unit": "",
       "access_mode": "W",
       "data_type": "BOOL",
@@ -566,7 +633,7 @@
     {
       "id": "key2_d2d_controller_settings.uplink.lora_enable",
       "name": "Controller Lora Uplink Enable",
-      "value": 0,
+      "value": "0",
       "unit": "",
       "access_mode": "W",
       "data_type": "BOOL",
@@ -632,7 +699,7 @@
     {
       "id": "key3_d2d_controller_settings.key_contrl_enable",
       "name": "Key Controller Enable",
-      "value": 0,
+      "value": "0",
       "unit": "",
       "access_mode": "W",
       "data_type": "BOOL",
@@ -658,7 +725,7 @@
     {
       "id": "key3_d2d_controller_settings.uplink.lora_enable",
       "name": "Controller Lora Uplink Enable",
-      "value": 0,
+      "value": "0",
       "unit": "",
       "access_mode": "W",
       "data_type": "BOOL",
@@ -1340,24 +1407,64 @@
       ]
     },
     {
-      "id": "lorawan_class_cfg.class_mode",
-      "name": "Class Mode",
-      "value": "2",
+      "id": "overcurrent_alarm.current",
+      "name": "Current",
+      "value": "",
+      "unit": "mA",
+      "access_mode": "R",
+      "data_type": "NUMBER",
+      "value_type": "UINT8",
+      "bacnet_type": "analog_input_object",
+      "bacnet_unit_type_id": 2,
+      "bacnet_unit_type": "UNITS_MILLIAMPERES",
+      "reference": [
+        "overcurrent_alarm.status"
+      ]
+    },
+    {
+      "id": "overcurrent_alarm.status",
+      "name": "Alarm Status",
+      "value": "",
       "unit": "",
-      "access_mode": "W",
-      "data_type": "ENUM",
+      "access_mode": "R",
+      "data_type": "BOOL",
       "value_type": "UINT8",
       "values": [
         {
-          "name": "CLASS_B",
-          "value": 1
+          "name": "normal",
+          "value": 0
         },
         {
-          "name": "CLASS_C",
-          "value": 2
+          "name": "overcurrent",
+          "value": 1
         }
       ],
-      "bacnet_type": "multistate_value_object",
+      "bacnet_type": "binary_input_object",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS",
+      "reference": [
+        "overcurrent_alarm.current"
+      ]
+    },
+    {
+      "id": "device_abnormal_alarm.status",
+      "name": "Alarm Status",
+      "value": "",
+      "unit": "",
+      "access_mode": "R",
+      "data_type": "BOOL",
+      "value_type": "UINT8",
+      "values": [
+        {
+          "name": "normal",
+          "value": 0
+        },
+        {
+          "name": "abnormal",
+          "value": 1
+        }
+      ],
+      "bacnet_type": "binary_input_object",
       "bacnet_unit_type_id": 95,
       "bacnet_unit_type": "UNITS_NO_UNITS",
       "reference": []

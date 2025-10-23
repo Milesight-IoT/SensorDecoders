@@ -83,43 +83,42 @@ function milesightDeviceDecode(bytes) {
             var switch_bit_offset = { status_1: 0, status_2: 1, status_3: 2 };
             decoded.switch_reading = {};
             for (var key in switch_bit_offset) {
-                if ((data >>> (switch_bit_offset[key] + 4)) & 0x01) {
-                    decoded.switch_reading[key] = readOnOffStatus((data >>> switch_bit_offset[key]) & 0x01);
-                }
+                decoded.switch_reading[key] = readOnOffStatus(value >>> switch_bit_offset[key] & 0x01);
+                decoded.switch_reading[key + '_change'] = readYesNoStatus((value >>> (switch_bit_offset[key] + 4)) & 0x01);
             }
             i += 1;
         }
         // Voltage
         else if (channel_id === 0x03 && channel_type === 0x74) {
-            decoded.voltage = readUInt16LE(bytes.slice(i, i + 16));
-            i += 16;
+            decoded.voltage = readUInt16LE(bytes.slice(i, i + 2)) / 10;
+            i += 2;
         }
         // Electric Power
         else if (channel_id === 0x04 && channel_type === 0x80) {
-            decoded.electric_power = readUInt32LE(bytes.slice(i, i + 32));
-            i += 32;
+            decoded.electric_power = readUInt32LE(bytes.slice(i, i + 4));
+            i += 4;
         }
         // Power Factor
         else if (channel_id === 0x05 && channel_type === 0x81) {
-            decoded.power_factor = readUInt8(bytes.slice(i, i + 8));
-            i += 8;
+            decoded.power_factor = readUInt8(bytes.slice(i, i + 1));
+            i += 1;
         }
         // Power Consumption
         else if (channel_id === 0x06 && channel_type === 0x83) {
-            decoded.power_consumption = readUInt32LE(bytes.slice(i, i + 32));
-            i += 32;
+            decoded.power_consumption = readUInt32LE(bytes.slice(i, i + 4));
+            i += 4;
         }
         // Current Rating
         else if (channel_id === 0x07 && channel_type === 0xc9) {
-            decoded.current = readUInt16LE(bytes.slice(i, i + 16));
-            i += 16;
+            decoded.current = readUInt16LE(bytes.slice(i, i + 2));
+            i += 2;
         }
         // Over Current Alarm
         else if (channel_id === 0x87 && channel_type === 0xc9) {
             decoded.overcurrent_alarm = {};
-            decoded.overcurrent_alarm.current = readUInt16LE(bytes.slice(i, i + 16));
-            decoded.overcurrent_alarm.status = readUInt8(bytes.slice(i + 16, i + 24))
-            i += 24;
+            decoded.overcurrent_alarm.current = readUInt16LE(bytes.slice(i, i + 2));
+            decoded.overcurrent_alarm.status = readOverCurrentStatus(bytes.slice(i + 2, i + 3))
+            i += 3;
         }
         // Device Abnormal Alarm
         else if (channel_id === 0x88 && channel_type === 0x29) {
@@ -241,10 +240,9 @@ function handle_downlink_response(channel_type, bytes, offset) {
 
             decoded.d2d_global_enable = {};
             decoded.d2d_global_enable.master_enable = readEnableStatus((d2d_enable_data >>> 0) & 1);
+            decoded.d2d_global_enable.master_enable_change = readYesNoStatus((d2d_enable_data >>> 4) & 1);
             decoded.d2d_global_enable.agent_enable = readEnableStatus((d2d_enable_data >>> 1) & 1);
-            decoded.d2d_global_enable.master_enable_mask = readEnableMask((d2d_enable_data >>> 4) & 1);
-            decoded.d2d_global_enable.agent_mask = readEnableMask((d2d_enable_data >>> 5) & 1);
-
+            decoded.d2d_global_enable.agent_enable_change = readYesNoStatus((d2d_enable_data >>> 5) & 1);
             break;
         case 0x83: 
             var d2d_agent_settings = readD2DAgentSettings(bytes.slice(offset, offset + 5));
@@ -463,12 +461,18 @@ function readAlarmStatus(status) {
     return getValue(status_map, status);
 }
 
+function readOverCurrentStatus(status) {
+    var status_map = { 0: "normal", 1: "overcurrent" };
+    return getValue(status_map, status);
+}
+
 function readScheduleSettings(bytes) {
     var offset = 0;
 
     var schedule_settings = {};
-    schedule_settings.channel = readUInt8(bytes[offset]) + 1;
+    schedule_settings.channel = readUInt8(bytes[offset]);
     schedule_settings.enable = readEnableStatus2(bytes[offset + 1] & 0x03);
+    schedule_settings.use_config = readYesNoStatus(bytes[offset + 1] >> 4 & 0x01);
     // condition
     var day_bit_offset = { monday: 0, tuesday: 1, wednesday: 2, thursday: 3, friday: 4, saturday: 5, sunday: 6 };
     var day = readUInt8(bytes[offset + 2]);
@@ -565,8 +569,8 @@ function readD2DAgentSettings(bytes) {
     d2d_agent_settings.d2d_agent_command = readD2DCommand(bytes.slice(offset + 2, offset + 4));
 
     d2d_agent_settings.d2d_agent_action = {};
-    var switchs = bytes[offset + 4] & 0x0f;
-    var status = bytes[offset + 4] >> 4;
+    var switchs = bytes[offset + 4] >> 4;
+    var status = bytes[offset + 4] & 0x0f;
     d2d_agent_settings.d2d_agent_action.switch_object = readSwitchObject(switchs);
     d2d_agent_settings.d2d_agent_action.switch_status = readActionSwitchStatus(status);
 
@@ -592,10 +596,10 @@ function readD2DControllerSettings(bytes) {
     if(keyid !== 0 && keyid !== 1 && keyid !== 2) {
         return d2d_controller_settings;
     }
-    d2d_controller_settings.key_contrl_enable = readEnableStatus(bytes[offset + 1] & 0x01);
+    d2d_controller_settings.key_contrl_enable = readEnableStatus(bytes[offset + 1]);
     d2d_controller_settings.uplink = {};
     d2d_controller_settings.uplink.lora_enable = readEnableStatus(bytes[offset + 2] & 0x01);
-    d2d_controller_settings.uplink.key_enable = readEnableStatus((bytes[offset + 2] >> 1) & 0x01);
+    d2d_controller_settings.uplink.key_enable = readEnableStatus(bytes[offset + 2] >> 1 & 0x01);
     d2d_controller_settings.contrl_cmd = readD2DCommand(bytes.slice(offset + 3, offset + 5));
 
     return d2d_controller_settings;
