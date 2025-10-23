@@ -251,7 +251,7 @@
         },
         {
             "id": "LAI",
-            "name": "LI",
+            "name": "LAI",
             "value": "",
             "unit": "dBA",
             "access_mode": "R",
