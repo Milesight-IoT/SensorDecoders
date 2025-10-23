@@ -1091,7 +1091,10 @@ function insertArrayItem(array, item) {
 function readCommand(allBytes, counterObj, end) {
 	var bytes = readBytes(allBytes, counterObj, end);
 	var cmd = bytes
-		.map(b => b.toString(16).padStart(2, '0'))
+		.map(function(b) {
+			var hex = b.toString(16);
+			return hex.length === 1 ? '0' + hex : hex;
+		})
 		.join('')
 		.toLowerCase();
 	return cmdMap()[cmd];

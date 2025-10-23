@@ -25,7 +25,8 @@ function Encoder(obj, port) {
 }
 /* eslint-enable */
 
-function milesightDeviceEncode(payload, writeQuery = true) {
+function milesightDeviceEncode(payload, writeQuery) {
+	if (writeQuery === undefined) writeQuery = false;
 	var encoded = [];
 	if (writeQuery) {
 		encoded = encoded.concat(writeQueryCommand(payload));
@@ -1232,7 +1233,8 @@ Buffer.prototype.writeInt32LE = function(value) {
 	this._write(value < 0 ? value + 0x100000000 : value, 4, true);
 };
 
-Buffer.prototype.writeBytes = function(bytes, length, mustEqual = false) {
+Buffer.prototype.writeBytes = function(bytes, length, mustEqual) {
+	if (mustEqual === undefined) mustEqual = false;
 	if (length < bytes.length) {
 		throw new Error('bytes length is greater than length');
 	}
@@ -1251,7 +1253,8 @@ Buffer.prototype.writeBytes = function(bytes, length, mustEqual = false) {
 	}
 };
 
-Buffer.prototype.writeHexString = function(hexString, length, mustEqual = false) {
+Buffer.prototype.writeHexString = function(hexString, length, mustEqual) {
+	if (mustEqual === undefined) mustEqual = false;
 	var bytes = [];
 	for (var i = 0; i < hexString.length; i += 2) {
 		bytes.push(parseInt(hexString.substr(i, 2), 16));
@@ -1262,7 +1265,8 @@ Buffer.prototype.writeHexString = function(hexString, length, mustEqual = false)
 	this.writeBytes(bytes, length);
 };
 
-Buffer.prototype.writeString = function(str, length, mustEqual = false) {
+Buffer.prototype.writeString = function(str, length, mustEqual) {
+	if (mustEqual === undefined) mustEqual = false;
 	var bytes = encodeUtf8(str);
 	if (mustEqual && bytes.length != length) {
 		throw new Error('string length is not equal to length');
@@ -1274,7 +1278,8 @@ Buffer.prototype.writeUnknownDataType = function(val) {
 	throw new Error('Unknown data type encountered. Please Contact Developer.');
 };
 
-Buffer.prototype.writeHexStringReverse = function(hexString, length, mustEqual = false) {
+Buffer.prototype.writeHexStringReverse = function(hexString, length, mustEqual) {
+	if (mustEqual === undefined) mustEqual = false;
 	var bytes = [];
 	for (var i = hexString.length - 2; i >= 0; i -= 2) {
 		bytes.push(parseInt(hexString.substr(i, 2), 16));
@@ -1317,25 +1322,32 @@ function isValid(value) {
 }
 
 function isSuperPath(fullPath, path) {
-	const fullPathArray = fullPath.split('.');
-	const pathArray = path.split('.');
+	var fullPathArray = fullPath.split('.');
+	var pathArray = path.split('.');
 
 	if (pathArray.length > fullPathArray.length) {
 		return false;
 	}
 
-	return pathArray.every((value, index) => value == fullPathArray[index]);
+	for (var i = 0; i < pathArray.length; i++) {
+		if (pathArray[i] != fullPathArray[i]) {
+			return false;
+		}
+	}
+	return true;
 }
 
 function writeQueryCommand(payload) {
 	var cmds = [];
 	var keys = flattenObjectKeys(payload);
 	var cacheKeys = [];
-	for (var key of keys) {
+	for (var i = 0; i < keys.length; i++) {
+		var key = keys[i];
 		var exist = false;
-		for (var cacheKey of cacheKeys) {
+		for (var j = 0; j < cacheKeys.length; j++) {
+			var cacheKey = cacheKeys[j];
 			if (isSuperPath(cacheKey, key)) {
-				console.log(`${cacheKey} includes ${key}`);
+				console.log(cacheKey + ' includes ' + key);
 				exist = true;
 				break;
 			}
@@ -1351,7 +1363,8 @@ function writeQueryCommand(payload) {
 	}
 
 	var encoded = [];
-	for (var cmd of cmds) {
+	for (var i = 0; i < cmds.length; i++) {
+		var cmd = cmds[i];
 		if (cmd.length % 2 == 0) {
 			var buffer = new Buffer();
 			buffer.writeUInt8(0xef);
@@ -1367,33 +1380,39 @@ function writeQueryCommand(payload) {
 
 function hexToBytes(hex) {
 	// remove "0x" if present
-	hex = hex.startsWith('0x') ? hex.slice(2) : hex;
+	hex = hex.indexOf('0x') === 0 ? hex.substring(2) : hex;
 
 	// pad with leading zero if odd length
 	if (hex.length % 2 !== 0) {
 		hex = '0' + hex;
 	}
 
-	const bytes = [];
-	for (let i = 0; i < hex.length; i += 2) {
-		bytes.push(parseInt(hex.slice(i, i + 2), 16));
+	var bytes = [];
+	for (var i = 0; i < hex.length; i += 2) {
+		bytes.push(parseInt(hex.substring(i, i + 2), 16));
 	}
 	return bytes;
 }
 
-function flattenObjectKeys(obj, prefix = '') {
-	const keys = [];
+function flattenObjectKeys(obj, prefix) {
+	if (prefix === undefined) prefix = '';
+	var keys = [];
 
-	for (const key of Object.keys(obj)) {
-		const path = prefix ? `${prefix}.${key}` : key;
-		const value = obj[key];
+	for (var key in obj) {
+		if (obj.hasOwnProperty(key)) {
+			var path = prefix ? prefix + '.' + key : key;
+			var value = obj[key];
 
-		if (value && typeof value === 'object' && !Array.isArray(value)) {
-			// 递归展开
-			keys.push(...flattenObjectKeys(value, path));
-			keys.push(path);
-		} else {
-			keys.push(path);
+			if (value && typeof value === 'object' && !Array.isArray(value)) {
+				// 递归展开
+				var subKeys = flattenObjectKeys(value, path);
+				for (var i = 0; i < subKeys.length; i++) {
+					keys.push(subKeys[i]);
+				}
+				keys.push(path);
+			} else {
+				keys.push(path);
+			}
 		}
 	}
 
