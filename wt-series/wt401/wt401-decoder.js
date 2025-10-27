@@ -941,7 +941,3 @@ function getValue(map, key) {
     if (!value) value = "unknown";
     return value;
 }
-
-module.exports = {
-   milesightDeviceDecode,
-};
