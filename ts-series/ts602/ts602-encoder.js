@@ -1053,7 +1053,7 @@ function milesightDeviceEncode(payload) {
 				buffer.writeUInt8(payload.cellular_settings.aws_settings.aws_status);
 			}
 		}
-		for (var tcp_settings_id = 0; tcp_settings_id < payload.cellular_settings.tcp_settings.length; tcp_settings_id++) {
+		for (var tcp_settings_id = 0; tcp_settings_id < (payload.cellular_settings.tcp_settings && payload.cellular_settings.tcp_settings.length); tcp_settings_id++) {
 			var tcp_settings_item = payload.cellular_settings.tcp_settings[tcp_settings_id];
 			var tcp_settings_item_id = tcp_settings_item.id;
 			if (isValid(tcp_settings_item.enable)) {
@@ -1112,7 +1112,7 @@ function milesightDeviceEncode(payload) {
 				buffer.writeUInt8(tcp_settings_item.tcp_status);
 			}
 		}
-		for (var udp_settings_id = 0; udp_settings_id < payload.cellular_settings.udp_settings.length; udp_settings_id++) {
+		for (var udp_settings_id = 0; udp_settings_id < (payload.cellular_settings.udp_settings && payload.cellular_settings.udp_settings.length); udp_settings_id++) {
 			var udp_settings_item = payload.cellular_settings.udp_settings[udp_settings_id];
 			var udp_settings_item_id = udp_settings_item.id;
 			if (isValid(udp_settings_item.enable)) {
