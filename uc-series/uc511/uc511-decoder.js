@@ -173,12 +173,207 @@ function milesightDeviceDecode(bytes) {
             var result = handle_downlink_response(channel_type, bytes, i);
             decoded = Object.assign(decoded, result.data);
             i = result.offset;
+        }
+        // PRESSURE THRESHOLD ALARM
+        // hardware_version >= v4.0
+        else if (channel_id === 0x0b && channel_type === 0xf5) {
+            decoded.pressure_threshold_alarm = readPressureThresholdAlarm(bytes.slice(i, i + 9));
+            i += 9;
+        }
+        // LORAWAN CLASS SWITCH RESPONSE
+        // hardware_version >= v4.0
+        else if (channel_id === 0xf8 && channel_type === 0xa4) {
+            decoded.lorawan_class_switch_response = readLoRaWANClassSwitchResponse(bytes.slice(i, i + 10));
+            i += 10;
+        }
+        // QUERY VALVE TASK STATUS RESPONSE
+        // hardware_version >= v4.0
+        else if (channel_id === 0xf8 && channel_type === 0xa5) {
+            decoded.query_valve_task_status_response = readQueryValveTaskStatusResponse(bytes.slice(i, i + 3));
+            i += 3;
+        }
+        // SCHEDULE DEVICE CONFIG RESPONSE
+        // hardware_version >= v4.0
+        else if (channel_id === 0xf9 && channel_type === 0xa7) {
+            decoded.schedule_device_config_response = readScheduleDeviceConfigResponse(bytes.slice(i, i + 3));
+            i += 3;
+        }
+        // VALVE 1 TASK STATUS
+        // hardware_version >= v4.0
+        else if (channel_id === 0x0e && channel_type === 0xaf) {
+            decoded.valve_1_task_status = readValveTaskStatus(bytes.slice(i, i + 3));
+            i += 3;
+        }
+        // VALVE 2 TASK STATUS
+        // hardware_version >= v4.0
+        else if (channel_id === 0x0f && channel_type === 0xaf) {
+            decoded.valve_2_task_status = readValveTaskStatus(bytes.slice(i, i + 3));
+            i += 3;
+        }
+        // READ SCHEDULE CONFIG RESPONSE
+        else if (channel_id === 0xf8 && channel_type === 0xaf) {
+            decoded.read_schedule_config_response = readReadScheduleConfigResponse(bytes.slice(i, i + 2));
+            i += 2;
+        }
+        // MULTICAST COMMAND RESPONSE
+        else if (channel_id === 0xf0) {
+            decoded.multicast_command_response = readMulticastCommandResponse(bytes.slice(i + 1, i + 10));
+            i += 10;
         } else {
             break;
         }
     }
 
     return decoded;
+}
+
+function readPressureAlarmType(bytes) {
+    var alarm_map = {
+        0: "release alarm",
+        1: "trigger alarm",
+    };
+    return getValue(alarm_map, bytes);
+}
+
+function readPressureThresholdAlarm(bytes) {
+    var alarm = {};
+    alarm.pressure_type = readValveStrategy(readUInt8(bytes[0]));
+    alarm.threshold_type = readMathConditionType(readUInt8(bytes[1]));
+    alarm.threshold_min = readUInt16LE(bytes.slice(2, 4));
+    alarm.threshold_max = readUInt16LE(bytes.slice(4, 6));
+    alarm.current_pressure = readUInt16LE(bytes.slice(6, 8));
+    alarm.alarm_status = readPressureAlarmType(readUInt8(bytes[8]));
+    return alarm;
+}
+
+function readLoRaWANClassSwitchResponseCode(code) {
+    var code_map = {
+        0: "success",
+        1: "not allowed",
+        2: "invalid parameter",
+        16: "continuous is 0, the device does not support", 
+        17: "continuous is greater than the maximum allowed by the device",
+        18: "instruction expired (start time + continuous <= current time)",
+        255: "other error",
+    };
+    return getValue(code_map, code);
+}
+
+function readLoRaWANClassSwitchResponse(bytes) {
+    var response = {};
+    response.timestamp = readUInt32LE(bytes.slice(0, 4));
+    response.continuous = readUInt16LE(bytes.slice(4, 6));
+    response.class_type = readLoRaWANClassType(readUInt8(bytes[6]));
+    response.reserved = readUInt8(bytes[7]);
+    response.code = readLoRaWANClassSwitchResponseCode(readUInt8(bytes[8]));
+    return response;
+}
+
+function readQueryValveTaskStatusResponseCode(code) {
+    var code_map = {
+        0: "success",
+        1: "not allowed",
+        2: "valve index out of range",
+    };
+    return getValue(code_map, code);
+}
+
+function readValveIndex(index) {
+    var index_map = {
+        0: "valve 1",
+        1: "valve 2",
+    };
+    return getValue(index_map, index);
+}
+
+function readQueryValveTaskStatusResponse(bytes) {
+    var response = {};
+    response.index = readValveIndex(readUInt8(bytes[0]));
+    response.code = readQueryValveTaskStatusResponseCode(readUInt8(bytes[1]));
+    return response;
+}
+
+function readScheduleDeviceConfigResponseCode(code) {
+    var code_map = {
+        0: "schedule command executed successfully",
+        1: "schedule task not found",
+        2: "schedule command expired",
+        3: "schedule command time invalid",
+        4: "Lora channel parameter invalid",
+        5: "Lora frequency parameter invalid",
+        6: "unsupported parameter",
+        7: "schedule time not reached",
+        8: "task storage memory not enough",
+        9: "schedule task already exists",
+        255: "other error",
+    };
+    return getValue(code_map, code);
+}
+function readScheduleDeviceConfigResponse(bytes) {
+    var response = {};
+    response.id = readUInt8(bytes[0]);
+    response.type = readUInt8(bytes[1]);
+    response.code = readScheduleDeviceConfigResponseCode(readUInt8(bytes[2]));
+    return response;
+}
+
+function readTaskStatus(status) {
+    var status_map = {
+        0: "free task",
+        1: "normal local plan",
+        2: "force local plan",
+        3: "rain stop plan",
+        4: "IPSO temporary control plan"
+    };
+    return getValue(status_map, status);
+}
+
+function readRealStatus(status) {
+    var status_map = {
+        0: "valve is currently closed",
+        1: "valve is currently open",
+    };
+    return getValue(status_map, status);
+}
+
+function readCommandStatus(status) {
+    var status_map = {
+        0: "valve is currently commanded to close",
+        1: "valve is currently commanded to open",
+    };
+    return getValue(status_map, status);
+}
+
+function readValveTaskStatus(bytes) {
+    var status = {};
+    status.task_status = readTaskStatus(readUInt8(bytes[0]));
+    status.real_status = readRealStatus(readUInt8(bytes[1]));
+    status.cmd_status = readCommandStatus(readUInt16LE(bytes[2]));
+    return status;
+}
+
+function readReadScheduleConfigResponse(bytes) {
+    var response = {};
+    response.id = readUInt8(bytes[0]);
+    response.type = readUInt8(bytes[1]);
+    return response;
+}
+
+function readMulticastCommandResponseCode(code) {
+    var code_map = {
+        0: "execute successfully",
+        1: "not allowed",
+        2: "service not supported",
+        255: "other error",
+    };
+    return getValue(code_map, code);
+}
+
+function readMulticastCommandResponse(bytes) {
+    var response = {};
+    response.EUI = bytesToHexString(bytes.slice(0, 8));
+    response.code = readMulticastCommandResponseCode(readUInt8(bytes[9]));
+    return response;
 }
 
 // 0xFE
@@ -434,6 +629,17 @@ function readLoRaWANClass(type) {
     return getValue(class_map, type);
 }
 
+function readLoRaWANClassType(type) {
+    var class_map = {
+        0: "Class A",
+        1: "Class B",
+        2: "Class C",
+        3: "Class CtoB",
+        255: "cancel",
+    };
+    return getValue(class_map, type);
+}
+
 function readResetEvent(status) {
     var status_map = { 0: "normal", 1: "reset" };
     return getValue(status_map, status);
@@ -527,6 +733,12 @@ function readRuleCondition(bytes) {
             condition.valve_index = readUInt8(bytes[offset + 1]);
             condition.pulse_threshold = readUInt32LE(bytes.slice(offset + 2, offset + 6));
             break;
+        case 0x05:
+            condition.source = readValveStrategy(readUInt8(bytes[offset + 1]));
+            condition.mode = readMathConditionType(readUInt8(bytes[offset + 2]));
+            condition.threshold_min = readUInt16LE(bytes.slice(offset + 3, offset + 5));
+            condition.threshold_max = readUInt16LE(bytes.slice(offset + 5, offset + 7));
+            break;
     }
     return condition;
 }
@@ -548,6 +760,16 @@ function readWeekday(weekday_value) {
 
 function readNewConditionType(condition_type_value) {
     var condition_type_map = { 0: "none", 1: "time", 2: "d2d", 3: "time_or_pulse_threshold", 4: "pulse_threshold", 5: "pressure_threshold" };
+    return getValue(condition_type_map, condition_type_value);
+}
+
+function readValveStrategy(strategy_value) {
+    var valve_strategy_map = { 0: "always", 1: "valve 1 open", 2: "valve 2 open", 3: "valve 1 open or valve 2 open" };
+    return getValue(valve_strategy_map, strategy_value);
+}
+
+function readMathConditionType(condition_type_value) {
+    var condition_type_map = { 0: "none", 1: "below", 2: "above", 3: "between", 4: "outside" };
     return getValue(condition_type_map, condition_type_value);
 }
 
@@ -581,13 +803,16 @@ function readRuleAction(bytes) {
         case 0x03:
             action.report_type = readReportType(readUInt8(bytes[offset + 1]));
             action.report_content = readAscii(bytes.slice(offset + 2, offset + 10));
+            action.reserved = readUInt8(bytes[offset + 10]);
+            action.continue_count = readUInt8(bytes[offset + 11]);
+            action.release_enable = readEnableStatus(bytes[offset + 12]);
             break;
     }
     return action;
 }
 
 function readReportType(report_type_value) {
-    var report_type_map = { 1: "valve_1", 2: "valve_2", 3: "custom_message" };
+    var report_type_map = { 1: "valve_1", 2: "valve_2", 3: "custom_message", 4: "threshold_alarm" };
     return getValue(report_type_map, report_type_value);
 }
 
