@@ -161,42 +161,52 @@ function milesightDeviceDecode(bytes) {
 				if (decoded.temperature_alarm.type == 0x10) {
 					decoded.temperature_alarm.lower_range_alarm_deactivation = decoded.temperature_alarm.lower_range_alarm_deactivation || {};
 					decoded.temperature_alarm.lower_range_alarm_deactivation.temperature = readInt32LE(bytes, counterObj, 4) / 100;
+					decoded.temperature = decoded.temperature_alarm.lower_range_alarm_deactivation.temperature;
 				}
 				if (decoded.temperature_alarm.type == 0x11) {
 					decoded.temperature_alarm.lower_range_alarm_trigger = decoded.temperature_alarm.lower_range_alarm_trigger || {};
 					decoded.temperature_alarm.lower_range_alarm_trigger.temperature = readInt32LE(bytes, counterObj, 4) / 100;
+					decoded.temperature = decoded.temperature_alarm.lower_range_alarm_trigger.temperature;
 				}
 				if (decoded.temperature_alarm.type == 0x12) {
 					decoded.temperature_alarm.over_range_alarm_deactivation = decoded.temperature_alarm.over_range_alarm_deactivation || {};
 					decoded.temperature_alarm.over_range_alarm_deactivation.temperature = readInt32LE(bytes, counterObj, 4) / 100;
+					decoded.temperature = decoded.temperature_alarm.over_range_alarm_deactivation.temperature;
 				}
 				if (decoded.temperature_alarm.type == 0x13) {
 					decoded.temperature_alarm.over_range_alarm_trigger = decoded.temperature_alarm.over_range_alarm_trigger || {};
 					decoded.temperature_alarm.over_range_alarm_trigger.temperature = readInt32LE(bytes, counterObj, 4) / 100;
+					decoded.temperature = decoded.temperature_alarm.over_range_alarm_trigger.temperature;
 				}
 				if (decoded.temperature_alarm.type == 0x14) {
 					decoded.temperature_alarm.within_range_alarm_deactivation = decoded.temperature_alarm.within_range_alarm_deactivation || {};
 					decoded.temperature_alarm.within_range_alarm_deactivation.temperature = readInt32LE(bytes, counterObj, 4) / 100;
+					decoded.temperature = decoded.temperature_alarm.within_range_alarm_deactivation.temperature;
 				}
 				if (decoded.temperature_alarm.type == 0x15) {
 					decoded.temperature_alarm.within_range_alarm_trigger = decoded.temperature_alarm.within_range_alarm_trigger || {};
 					decoded.temperature_alarm.within_range_alarm_trigger.temperature = readInt32LE(bytes, counterObj, 4) / 100;
+					decoded.temperature = decoded.temperature_alarm.within_range_alarm_trigger.temperature;
 				}
 				if (decoded.temperature_alarm.type == 0x16) {
 					decoded.temperature_alarm.exceed_range_alarm_deactivation = decoded.temperature_alarm.exceed_range_alarm_deactivation || {};
 					decoded.temperature_alarm.exceed_range_alarm_deactivation.temperature = readInt32LE(bytes, counterObj, 4) / 100;
+					decoded.temperature = decoded.temperature_alarm.exceed_range_alarm_deactivation.temperature;
 				}
 				if (decoded.temperature_alarm.type == 0x17) {
 					decoded.temperature_alarm.exceed_range_alarm_trigger = decoded.temperature_alarm.exceed_range_alarm_trigger || {};
 					decoded.temperature_alarm.exceed_range_alarm_trigger.temperature = readInt32LE(bytes, counterObj, 4) / 100;
+					decoded.temperature = decoded.temperature_alarm.exceed_range_alarm_trigger.temperature;
 				}
 				if (decoded.temperature_alarm.type == 0x30) {
 					decoded.temperature_alarm.mutation_alarm_trigger_no_mutation = decoded.temperature_alarm.mutation_alarm_trigger_no_mutation || {};
 					decoded.temperature_alarm.mutation_alarm_trigger_no_mutation.temperature = readInt32LE(bytes, counterObj, 4) / 100;
+					decoded.temperature = decoded.temperature_alarm.mutation_alarm_trigger_no_mutation.temperature;
 				}
 				if (decoded.temperature_alarm.type == 0x20) {
 					decoded.temperature_alarm.mutation_alarm_trigger = decoded.temperature_alarm.mutation_alarm_trigger || {};
 					decoded.temperature_alarm.mutation_alarm_trigger.temperature = readInt32LE(bytes, counterObj, 4) / 100;
+					decoded.temperature = decoded.temperature_alarm.mutation_alarm_trigger.temperature;
 					decoded.temperature_alarm.mutation_alarm_trigger.saltation = readInt32LE(bytes, counterObj, 4) / 100;
 				}
 				break;
@@ -219,42 +229,52 @@ function milesightDeviceDecode(bytes) {
 				if (decoded.humidity_alarm.type == 0x10) {
 					decoded.humidity_alarm.lower_range_alarm_deactivation = decoded.humidity_alarm.lower_range_alarm_deactivation || {};
 					decoded.humidity_alarm.lower_range_alarm_deactivation.humidity = readUInt16LE(bytes, counterObj, 2) / 10;
+					decoded.humidity = decoded.humidity_alarm.lower_range_alarm_deactivation.humidity;
 				}
 				if (decoded.humidity_alarm.type == 0x11) {
 					decoded.humidity_alarm.lower_range_alarm_trigger = decoded.humidity_alarm.lower_range_alarm_trigger || {};
 					decoded.humidity_alarm.lower_range_alarm_trigger.humidity = readUInt16LE(bytes, counterObj, 2) / 10;
+					decoded.humidity = decoded.humidity_alarm.lower_range_alarm_trigger.humidity;
 				}
 				if (decoded.humidity_alarm.type == 0x12) {
 					decoded.humidity_alarm.over_range_alarm_deactivation = decoded.humidity_alarm.over_range_alarm_deactivation || {};
 					decoded.humidity_alarm.over_range_alarm_deactivation.humidity = readUInt16LE(bytes, counterObj, 2) / 10;
+					decoded.humidity = decoded.humidity_alarm.over_range_alarm_deactivation.humidity;
 				}
 				if (decoded.humidity_alarm.type == 0x13) {
 					decoded.humidity_alarm.over_range_alarm_trigger = decoded.humidity_alarm.over_range_alarm_trigger || {};
 					decoded.humidity_alarm.over_range_alarm_trigger.humidity = readUInt16LE(bytes, counterObj, 2) / 10;
+					decoded.humidity = decoded.humidity_alarm.over_range_alarm_trigger.humidity;
 				}
 				if (decoded.humidity_alarm.type == 0x14) {
 					decoded.humidity_alarm.within_range_alarm_deactivation = decoded.humidity_alarm.within_range_alarm_deactivation || {};
 					decoded.humidity_alarm.within_range_alarm_deactivation.humidity = readUInt16LE(bytes, counterObj, 2) / 10;
+					decoded.humidity = decoded.humidity_alarm.within_range_alarm_deactivation.humidity;
 				}
 				if (decoded.humidity_alarm.type == 0x15) {
 					decoded.humidity_alarm.within_range_alarm_trigger = decoded.humidity_alarm.within_range_alarm_trigger || {};
 					decoded.humidity_alarm.within_range_alarm_trigger.humidity = readUInt16LE(bytes, counterObj, 2) / 10;
+					decoded.humidity = decoded.humidity_alarm.within_range_alarm_trigger.humidity;
 				}
 				if (decoded.humidity_alarm.type == 0x16) {
 					decoded.humidity_alarm.exceed_range_alarm_deactivation = decoded.humidity_alarm.exceed_range_alarm_deactivation || {};
 					decoded.humidity_alarm.exceed_range_alarm_deactivation.humidity = readUInt16LE(bytes, counterObj, 2) / 10;
+					decoded.humidity = decoded.humidity_alarm.exceed_range_alarm_deactivation.humidity;
 				}
 				if (decoded.humidity_alarm.type == 0x17) {
 					decoded.humidity_alarm.exceed_range_alarm_trigger = decoded.humidity_alarm.exceed_range_alarm_trigger || {};
 					decoded.humidity_alarm.exceed_range_alarm_trigger.humidity = readUInt16LE(bytes, counterObj, 2) / 10;
+					decoded.humidity = decoded.humidity_alarm.exceed_range_alarm_trigger.humidity;
 				}
 				if (decoded.humidity_alarm.type == 0x30) {
 					decoded.humidity_alarm.mutation_alarm_trigger_no_mutation = decoded.humidity_alarm.mutation_alarm_trigger_no_mutation || {};
 					decoded.humidity_alarm.mutation_alarm_trigger_no_mutation.humidity = readUInt16LE(bytes, counterObj, 2) / 10;
+					decoded.humidity = decoded.humidity_alarm.mutation_alarm_trigger_no_mutation.humidity;
 				}
 				if (decoded.humidity_alarm.type == 0x20) {
 					decoded.humidity_alarm.mutation_alarm_trigger = decoded.humidity_alarm.mutation_alarm_trigger || {};
 					decoded.humidity_alarm.mutation_alarm_trigger.humidity = readUInt16LE(bytes, counterObj, 2) / 10;
+					decoded.humidity = decoded.humidity_alarm.mutation_alarm_trigger.humidity;
 					decoded.humidity_alarm.mutation_alarm_trigger.saltation = readUInt16LE(bytes, counterObj, 2) / 10;
 				}
 				break;
@@ -570,7 +590,7 @@ function milesightDeviceDecode(bytes) {
 
 			case 0x81:
 				decoded.falling_threshold_alarm_settings = decoded.falling_threshold_alarm_settings || {};
-				// 0: FREE_FALL_LEVEL_156, 1: FREE_FALL_LEVEL_219, 2: FREE_FALL_LEVEL_250, 3: FREE_FALL_LEVEL_312, 4: FREE_FALL_LEVEL_344, 5: FREE_FALL_LEVEL_406, 6: FREE_FALL_LEVEL_469, 7: FREE_FALL_LEVEL_500
+				// 0: FREE_FALL_LEVEL_156, 1: FREE_FALL_LEVEL_219, 2: FREE_FALL_LEVEL_250, 3: FREE_FALL_LEVEL_312, 4: FREE_FALL_LEVEL_344, 5: FREE_FALL_LEVEL_406, 6: FREE_FALL_LEVEL_469, 7: FREE_FALL_LEVEL_500 
 				decoded.falling_threshold_alarm_settings.threshold_level = readUInt8(bytes, counterObj, 1);
 				decoded.falling_threshold_alarm_settings.time_level = readUInt8(bytes, counterObj, 1);
 				break;
@@ -675,7 +695,7 @@ function milesightDeviceDecode(bytes) {
 			case 0xce:
 				decoded.cellular_settings = decoded.cellular_settings || {};
 				var cellular_settings_command = readUInt8(bytes, counterObj, 1);
-				if (cellular_settings_command == 0x3f) {
+				if (cellular_settings_command == 0x3F) {
 					// 0: Low Power Mode, 3: Low Latency Mode
 					decoded.cellular_settings.work_mode = readUInt8(bytes, counterObj, 1);
 				}
@@ -743,24 +763,24 @@ function milesightDeviceDecode(bytes) {
 					if (cellular_settings_mqtt_settings_command == 0x09) {
 						decoded.cellular_settings.mqtt_settings.ca_certificate_length = readUInt16LE(bytes, counterObj, 2);
 					}
-					if (cellular_settings_mqtt_settings_command == 0x0a) {
+					if (cellular_settings_mqtt_settings_command == 0x0A) {
 						decoded.cellular_settings.mqtt_settings.ca_certificate = readString(bytes, counterObj, 160);
 					}
-					if (cellular_settings_mqtt_settings_command == 0x0b) {
+					if (cellular_settings_mqtt_settings_command == 0x0B) {
 						// 0：disable, 1：enable
 						decoded.cellular_settings.mqtt_settings.enable_client_certificate = readUInt8(bytes, counterObj, 1);
 					}
-					if (cellular_settings_mqtt_settings_command == 0x0c) {
+					if (cellular_settings_mqtt_settings_command == 0x0C) {
 						decoded.cellular_settings.mqtt_settings.client_certificate_length = readUInt16LE(bytes, counterObj, 2);
 					}
-					if (cellular_settings_mqtt_settings_command == 0x0d) {
+					if (cellular_settings_mqtt_settings_command == 0x0D) {
 						decoded.cellular_settings.mqtt_settings.client_certificate = readString(bytes, counterObj, 160);
 					}
-					if (cellular_settings_mqtt_settings_command == 0x0e) {
+					if (cellular_settings_mqtt_settings_command == 0x0E) {
 						// 0：disable, 1：enable
 						decoded.cellular_settings.mqtt_settings.enable_key_certificate = readUInt8(bytes, counterObj, 1);
 					}
-					if (cellular_settings_mqtt_settings_command == 0x0f) {
+					if (cellular_settings_mqtt_settings_command == 0x0F) {
 						decoded.cellular_settings.mqtt_settings.key_certificate_length = readUInt16LE(bytes, counterObj, 2);
 					}
 					if (cellular_settings_mqtt_settings_command == 0x10) {
@@ -804,24 +824,24 @@ function milesightDeviceDecode(bytes) {
 					if (cellular_settings_aws_settings_command == 0x09) {
 						decoded.cellular_settings.aws_settings.ca_certificate_length = readUInt16LE(bytes, counterObj, 2);
 					}
-					if (cellular_settings_aws_settings_command == 0x0a) {
+					if (cellular_settings_aws_settings_command == 0x0A) {
 						decoded.cellular_settings.aws_settings.ca_certificate = readString(bytes, counterObj, 160);
 					}
-					if (cellular_settings_aws_settings_command == 0x0b) {
+					if (cellular_settings_aws_settings_command == 0x0B) {
 						// 0：disable, 1：enable
 						decoded.cellular_settings.aws_settings.enable_client_certificate = readUInt8(bytes, counterObj, 1);
 					}
-					if (cellular_settings_aws_settings_command == 0x0c) {
+					if (cellular_settings_aws_settings_command == 0x0C) {
 						decoded.cellular_settings.aws_settings.client_certificate_length = readUInt16LE(bytes, counterObj, 2);
 					}
-					if (cellular_settings_aws_settings_command == 0x0d) {
+					if (cellular_settings_aws_settings_command == 0x0D) {
 						decoded.cellular_settings.aws_settings.client_certificate = readString(bytes, counterObj, 160);
 					}
-					if (cellular_settings_aws_settings_command == 0x0e) {
+					if (cellular_settings_aws_settings_command == 0x0E) {
 						// 0：disable, 1：enable
 						decoded.cellular_settings.aws_settings.enable_key_certificate = readUInt8(bytes, counterObj, 1);
 					}
-					if (cellular_settings_aws_settings_command == 0x0f) {
+					if (cellular_settings_aws_settings_command == 0x0F) {
 						decoded.cellular_settings.aws_settings.key_certificate_length = readUInt16LE(bytes, counterObj, 2);
 					}
 					if (cellular_settings_aws_settings_command == 0x10) {
@@ -863,7 +883,7 @@ function milesightDeviceDecode(bytes) {
 						tcp_settings_item.tcp_status = readUInt8(bytes, counterObj, 1);
 					}
 				}
-				if (cellular_settings_command == 0x0f) {
+				if (cellular_settings_command == 0x0F) {
 					decoded.cellular_settings.udp_settings = decoded.cellular_settings.udp_settings || [];
 					var id = readUInt8(bytes, counterObj, 1);
 					var udp_settings_item = pickArrayItem(decoded.cellular_settings.udp_settings, id);
@@ -902,6 +922,7 @@ function milesightDeviceDecode(bytes) {
 					}
 				}
 				break;
+
 		}
 		if (unknown_command) {
 			throw new Error('unknown command: ' + command_id);

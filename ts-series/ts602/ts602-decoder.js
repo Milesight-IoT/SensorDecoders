@@ -161,42 +161,52 @@ function milesightDeviceDecode(bytes) {
 				if (decoded.temperature_alarm.type == 0x10) {
 					decoded.temperature_alarm.lower_range_alarm_deactivation = decoded.temperature_alarm.lower_range_alarm_deactivation || {};
 					decoded.temperature_alarm.lower_range_alarm_deactivation.temperature = readInt32LE(bytes, counterObj, 4) / 100;
+					decoded.temperature = decoded.temperature_alarm.lower_range_alarm_deactivation.temperature;
 				}
 				if (decoded.temperature_alarm.type == 0x11) {
 					decoded.temperature_alarm.lower_range_alarm_trigger = decoded.temperature_alarm.lower_range_alarm_trigger || {};
 					decoded.temperature_alarm.lower_range_alarm_trigger.temperature = readInt32LE(bytes, counterObj, 4) / 100;
+					decoded.temperature = decoded.temperature_alarm.lower_range_alarm_trigger.temperature;
 				}
 				if (decoded.temperature_alarm.type == 0x12) {
 					decoded.temperature_alarm.over_range_alarm_deactivation = decoded.temperature_alarm.over_range_alarm_deactivation || {};
 					decoded.temperature_alarm.over_range_alarm_deactivation.temperature = readInt32LE(bytes, counterObj, 4) / 100;
+					decoded.temperature = decoded.temperature_alarm.over_range_alarm_deactivation.temperature;
 				}
 				if (decoded.temperature_alarm.type == 0x13) {
 					decoded.temperature_alarm.over_range_alarm_trigger = decoded.temperature_alarm.over_range_alarm_trigger || {};
 					decoded.temperature_alarm.over_range_alarm_trigger.temperature = readInt32LE(bytes, counterObj, 4) / 100;
+					decoded.temperature = decoded.temperature_alarm.over_range_alarm_trigger.temperature;
 				}
 				if (decoded.temperature_alarm.type == 0x14) {
 					decoded.temperature_alarm.within_range_alarm_deactivation = decoded.temperature_alarm.within_range_alarm_deactivation || {};
 					decoded.temperature_alarm.within_range_alarm_deactivation.temperature = readInt32LE(bytes, counterObj, 4) / 100;
+					decoded.temperature = decoded.temperature_alarm.within_range_alarm_deactivation.temperature;
 				}
 				if (decoded.temperature_alarm.type == 0x15) {
 					decoded.temperature_alarm.within_range_alarm_trigger = decoded.temperature_alarm.within_range_alarm_trigger || {};
 					decoded.temperature_alarm.within_range_alarm_trigger.temperature = readInt32LE(bytes, counterObj, 4) / 100;
+					decoded.temperature = decoded.temperature_alarm.within_range_alarm_trigger.temperature;
 				}
 				if (decoded.temperature_alarm.type == 0x16) {
 					decoded.temperature_alarm.exceed_range_alarm_deactivation = decoded.temperature_alarm.exceed_range_alarm_deactivation || {};
 					decoded.temperature_alarm.exceed_range_alarm_deactivation.temperature = readInt32LE(bytes, counterObj, 4) / 100;
+					decoded.temperature = decoded.temperature_alarm.exceed_range_alarm_deactivation.temperature;
 				}
 				if (decoded.temperature_alarm.type == 0x17) {
 					decoded.temperature_alarm.exceed_range_alarm_trigger = decoded.temperature_alarm.exceed_range_alarm_trigger || {};
 					decoded.temperature_alarm.exceed_range_alarm_trigger.temperature = readInt32LE(bytes, counterObj, 4) / 100;
+					decoded.temperature = decoded.temperature_alarm.exceed_range_alarm_trigger.temperature;
 				}
 				if (decoded.temperature_alarm.type == 0x30) {
 					decoded.temperature_alarm.mutation_alarm_trigger_no_mutation = decoded.temperature_alarm.mutation_alarm_trigger_no_mutation || {};
 					decoded.temperature_alarm.mutation_alarm_trigger_no_mutation.temperature = readInt32LE(bytes, counterObj, 4) / 100;
+					decoded.temperature = decoded.temperature_alarm.mutation_alarm_trigger_no_mutation.temperature;
 				}
 				if (decoded.temperature_alarm.type == 0x20) {
 					decoded.temperature_alarm.mutation_alarm_trigger = decoded.temperature_alarm.mutation_alarm_trigger || {};
 					decoded.temperature_alarm.mutation_alarm_trigger.temperature = readInt32LE(bytes, counterObj, 4) / 100;
+					decoded.temperature = decoded.temperature_alarm.mutation_alarm_trigger.temperature;
 					decoded.temperature_alarm.mutation_alarm_trigger.saltation = readInt32LE(bytes, counterObj, 4) / 100;
 				}
 				break;
@@ -219,42 +229,52 @@ function milesightDeviceDecode(bytes) {
 				if (decoded.humidity_alarm.type == 0x10) {
 					decoded.humidity_alarm.lower_range_alarm_deactivation = decoded.humidity_alarm.lower_range_alarm_deactivation || {};
 					decoded.humidity_alarm.lower_range_alarm_deactivation.humidity = readUInt16LE(bytes, counterObj, 2) / 10;
+					decoded.humidity = decoded.humidity_alarm.lower_range_alarm_deactivation.humidity;
 				}
 				if (decoded.humidity_alarm.type == 0x11) {
 					decoded.humidity_alarm.lower_range_alarm_trigger = decoded.humidity_alarm.lower_range_alarm_trigger || {};
 					decoded.humidity_alarm.lower_range_alarm_trigger.humidity = readUInt16LE(bytes, counterObj, 2) / 10;
+					decoded.humidity = decoded.humidity_alarm.lower_range_alarm_trigger.humidity;
 				}
 				if (decoded.humidity_alarm.type == 0x12) {
 					decoded.humidity_alarm.over_range_alarm_deactivation = decoded.humidity_alarm.over_range_alarm_deactivation || {};
 					decoded.humidity_alarm.over_range_alarm_deactivation.humidity = readUInt16LE(bytes, counterObj, 2) / 10;
+					decoded.humidity = decoded.humidity_alarm.over_range_alarm_deactivation.humidity;
 				}
 				if (decoded.humidity_alarm.type == 0x13) {
 					decoded.humidity_alarm.over_range_alarm_trigger = decoded.humidity_alarm.over_range_alarm_trigger || {};
 					decoded.humidity_alarm.over_range_alarm_trigger.humidity = readUInt16LE(bytes, counterObj, 2) / 10;
+					decoded.humidity = decoded.humidity_alarm.over_range_alarm_trigger.humidity;
 				}
 				if (decoded.humidity_alarm.type == 0x14) {
 					decoded.humidity_alarm.within_range_alarm_deactivation = decoded.humidity_alarm.within_range_alarm_deactivation || {};
 					decoded.humidity_alarm.within_range_alarm_deactivation.humidity = readUInt16LE(bytes, counterObj, 2) / 10;
+					decoded.humidity = decoded.humidity_alarm.within_range_alarm_deactivation.humidity;
 				}
 				if (decoded.humidity_alarm.type == 0x15) {
 					decoded.humidity_alarm.within_range_alarm_trigger = decoded.humidity_alarm.within_range_alarm_trigger || {};
 					decoded.humidity_alarm.within_range_alarm_trigger.humidity = readUInt16LE(bytes, counterObj, 2) / 10;
+					decoded.humidity = decoded.humidity_alarm.within_range_alarm_trigger.humidity;
 				}
 				if (decoded.humidity_alarm.type == 0x16) {
 					decoded.humidity_alarm.exceed_range_alarm_deactivation = decoded.humidity_alarm.exceed_range_alarm_deactivation || {};
 					decoded.humidity_alarm.exceed_range_alarm_deactivation.humidity = readUInt16LE(bytes, counterObj, 2) / 10;
+					decoded.humidity = decoded.humidity_alarm.exceed_range_alarm_deactivation.humidity;
 				}
 				if (decoded.humidity_alarm.type == 0x17) {
 					decoded.humidity_alarm.exceed_range_alarm_trigger = decoded.humidity_alarm.exceed_range_alarm_trigger || {};
 					decoded.humidity_alarm.exceed_range_alarm_trigger.humidity = readUInt16LE(bytes, counterObj, 2) / 10;
+					decoded.humidity = decoded.humidity_alarm.exceed_range_alarm_trigger.humidity;
 				}
 				if (decoded.humidity_alarm.type == 0x30) {
 					decoded.humidity_alarm.mutation_alarm_trigger_no_mutation = decoded.humidity_alarm.mutation_alarm_trigger_no_mutation || {};
 					decoded.humidity_alarm.mutation_alarm_trigger_no_mutation.humidity = readUInt16LE(bytes, counterObj, 2) / 10;
+					decoded.humidity = decoded.humidity_alarm.mutation_alarm_trigger_no_mutation.humidity;
 				}
 				if (decoded.humidity_alarm.type == 0x20) {
 					decoded.humidity_alarm.mutation_alarm_trigger = decoded.humidity_alarm.mutation_alarm_trigger || {};
 					decoded.humidity_alarm.mutation_alarm_trigger.humidity = readUInt16LE(bytes, counterObj, 2) / 10;
+					decoded.humidity = decoded.humidity_alarm.mutation_alarm_trigger.humidity;
 					decoded.humidity_alarm.mutation_alarm_trigger.saltation = readUInt16LE(bytes, counterObj, 2) / 10;
 				}
 				break;

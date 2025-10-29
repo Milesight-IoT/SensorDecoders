@@ -644,7 +644,7 @@ function milesightDeviceEncode(payload) {
 	if ('falling_threshold_alarm_settings' in payload) {
 		var buffer = new Buffer();
 		buffer.writeUInt8(0x81);
-		// 0: FREE_FALL_LEVEL_156, 1: FREE_FALL_LEVEL_219, 2: FREE_FALL_LEVEL_250, 3: FREE_FALL_LEVEL_312, 4: FREE_FALL_LEVEL_344, 5: FREE_FALL_LEVEL_406, 6: FREE_FALL_LEVEL_469, 7: FREE_FALL_LEVEL_500
+		// 0: FREE_FALL_LEVEL_156, 1: FREE_FALL_LEVEL_219, 2: FREE_FALL_LEVEL_250, 3: FREE_FALL_LEVEL_312, 4: FREE_FALL_LEVEL_344, 5: FREE_FALL_LEVEL_406, 6: FREE_FALL_LEVEL_469, 7: FREE_FALL_LEVEL_500 
 		buffer.writeUInt8(payload.falling_threshold_alarm_settings.threshold_level);
 		buffer.writeUInt8(payload.falling_threshold_alarm_settings.time_level);
 		encoded = encoded.concat(buffer.toBytes());
@@ -748,7 +748,7 @@ function milesightDeviceEncode(payload) {
 		if (isValid(payload.cellular_settings.work_mode)) {
 			buffer.writeUInt8(0xce);
 			// 0: Low Power Mode, 3: Low Latency Mode
-			buffer.writeUInt8(0x3f);
+			buffer.writeUInt8(0x3F);
 			// 0: Low Power Mode, 3: Low Latency Mode
 			buffer.writeUInt8(payload.cellular_settings.work_mode);
 		}
@@ -876,7 +876,7 @@ function milesightDeviceEncode(payload) {
 			if (isValid(payload.cellular_settings.mqtt_settings.ca_certificate)) {
 				buffer.writeUInt8(0xce);
 				buffer.writeUInt8(0x00);
-				buffer.writeUInt8(0x0a);
+				buffer.writeUInt8(0x0A);
 				buffer.writeString(payload.cellular_settings.mqtt_settings.ca_certificate, 160);
 			}
 			if (isValid(payload.cellular_settings.mqtt_settings.enable_client_certificate)) {
@@ -884,20 +884,20 @@ function milesightDeviceEncode(payload) {
 				// 0：disable, 1：enable
 				buffer.writeUInt8(0x00);
 				// 0：disable, 1：enable
-				buffer.writeUInt8(0x0b);
+				buffer.writeUInt8(0x0B);
 				// 0：disable, 1：enable
 				buffer.writeUInt8(payload.cellular_settings.mqtt_settings.enable_client_certificate);
 			}
 			if (isValid(payload.cellular_settings.mqtt_settings.client_certificate_length)) {
 				buffer.writeUInt8(0xce);
 				buffer.writeUInt8(0x00);
-				buffer.writeUInt8(0x0c);
+				buffer.writeUInt8(0x0C);
 				buffer.writeUInt16LE(payload.cellular_settings.mqtt_settings.client_certificate_length);
 			}
 			if (isValid(payload.cellular_settings.mqtt_settings.client_certificate)) {
 				buffer.writeUInt8(0xce);
 				buffer.writeUInt8(0x00);
-				buffer.writeUInt8(0x0d);
+				buffer.writeUInt8(0x0D);
 				buffer.writeString(payload.cellular_settings.mqtt_settings.client_certificate, 160);
 			}
 			if (isValid(payload.cellular_settings.mqtt_settings.enable_key_certificate)) {
@@ -905,14 +905,14 @@ function milesightDeviceEncode(payload) {
 				// 0：disable, 1：enable
 				buffer.writeUInt8(0x00);
 				// 0：disable, 1：enable
-				buffer.writeUInt8(0x0e);
+				buffer.writeUInt8(0x0E);
 				// 0：disable, 1：enable
 				buffer.writeUInt8(payload.cellular_settings.mqtt_settings.enable_key_certificate);
 			}
 			if (isValid(payload.cellular_settings.mqtt_settings.key_certificate_length)) {
 				buffer.writeUInt8(0xce);
 				buffer.writeUInt8(0x00);
-				buffer.writeUInt8(0x0f);
+				buffer.writeUInt8(0x0F);
 				buffer.writeUInt16LE(payload.cellular_settings.mqtt_settings.key_certificate_length);
 			}
 			if (isValid(payload.cellular_settings.mqtt_settings.key_certificate)) {
@@ -998,7 +998,7 @@ function milesightDeviceEncode(payload) {
 			if (isValid(payload.cellular_settings.aws_settings.ca_certificate)) {
 				buffer.writeUInt8(0xce);
 				buffer.writeUInt8(0x02);
-				buffer.writeUInt8(0x0a);
+				buffer.writeUInt8(0x0A);
 				buffer.writeString(payload.cellular_settings.aws_settings.ca_certificate, 160);
 			}
 			if (isValid(payload.cellular_settings.aws_settings.enable_client_certificate)) {
@@ -1006,20 +1006,20 @@ function milesightDeviceEncode(payload) {
 				// 0：disable, 1：enable
 				buffer.writeUInt8(0x02);
 				// 0：disable, 1：enable
-				buffer.writeUInt8(0x0b);
+				buffer.writeUInt8(0x0B);
 				// 0：disable, 1：enable
 				buffer.writeUInt8(payload.cellular_settings.aws_settings.enable_client_certificate);
 			}
 			if (isValid(payload.cellular_settings.aws_settings.client_certificate_length)) {
 				buffer.writeUInt8(0xce);
 				buffer.writeUInt8(0x02);
-				buffer.writeUInt8(0x0c);
+				buffer.writeUInt8(0x0C);
 				buffer.writeUInt16LE(payload.cellular_settings.aws_settings.client_certificate_length);
 			}
 			if (isValid(payload.cellular_settings.aws_settings.client_certificate)) {
 				buffer.writeUInt8(0xce);
 				buffer.writeUInt8(0x02);
-				buffer.writeUInt8(0x0d);
+				buffer.writeUInt8(0x0D);
 				buffer.writeString(payload.cellular_settings.aws_settings.client_certificate, 160);
 			}
 			if (isValid(payload.cellular_settings.aws_settings.enable_key_certificate)) {
@@ -1027,14 +1027,14 @@ function milesightDeviceEncode(payload) {
 				// 0：disable, 1：enable
 				buffer.writeUInt8(0x02);
 				// 0：disable, 1：enable
-				buffer.writeUInt8(0x0e);
+				buffer.writeUInt8(0x0E);
 				// 0：disable, 1：enable
 				buffer.writeUInt8(payload.cellular_settings.aws_settings.enable_key_certificate);
 			}
 			if (isValid(payload.cellular_settings.aws_settings.key_certificate_length)) {
 				buffer.writeUInt8(0xce);
 				buffer.writeUInt8(0x02);
-				buffer.writeUInt8(0x0f);
+				buffer.writeUInt8(0x0F);
 				buffer.writeUInt16LE(payload.cellular_settings.aws_settings.key_certificate_length);
 			}
 			if (isValid(payload.cellular_settings.aws_settings.key_certificate)) {
@@ -1118,7 +1118,7 @@ function milesightDeviceEncode(payload) {
 			if (isValid(udp_settings_item.enable)) {
 				buffer.writeUInt8(0xce);
 				// 0：disable, 1：enable
-				buffer.writeUInt8(0x0f);
+				buffer.writeUInt8(0x0F);
 				buffer.writeUInt8(udp_settings_item_id);
 				// 0：disable, 1：enable
 				buffer.writeUInt8(0x00);
@@ -1127,14 +1127,14 @@ function milesightDeviceEncode(payload) {
 			}
 			if (isValid(udp_settings_item.server_address)) {
 				buffer.writeUInt8(0xce);
-				buffer.writeUInt8(0x0f);
+				buffer.writeUInt8(0x0F);
 				buffer.writeUInt8(udp_settings_item_id);
 				buffer.writeUInt8(0x01);
 				buffer.writeString(udp_settings_item.server_address, 127);
 			}
 			if (isValid(udp_settings_item.server_port)) {
 				buffer.writeUInt8(0xce);
-				buffer.writeUInt8(0x0f);
+				buffer.writeUInt8(0x0F);
 				buffer.writeUInt8(udp_settings_item_id);
 				buffer.writeUInt8(0x02);
 				buffer.writeUInt16LE(udp_settings_item.server_port);
@@ -1142,7 +1142,7 @@ function milesightDeviceEncode(payload) {
 			if (isValid(udp_settings_item.udp_status)) {
 				buffer.writeUInt8(0xce);
 				// 0：Connect Failed, 1：Connect Success
-				buffer.writeUInt8(0x0f);
+				buffer.writeUInt8(0x0F);
 				buffer.writeUInt8(udp_settings_item_id);
 				// 0：Connect Failed, 1：Connect Success
 				buffer.writeUInt8(0x03);
@@ -1181,7 +1181,7 @@ function Buffer() {
 	this.buffer = new Array();
 }
 
-Buffer.prototype._write = function(value, byteLength, isLittleEndian) {
+Buffer.prototype._write = function (value, byteLength, isLittleEndian) {
 	value = Math.round(value);
 	var offset = 0;
 	for (var index = 0; index < byteLength; index++) {
@@ -1190,31 +1190,31 @@ Buffer.prototype._write = function(value, byteLength, isLittleEndian) {
 	}
 };
 
-Buffer.prototype.writeUInt8 = function(value) {
+Buffer.prototype.writeUInt8 = function (value) {
 	this._write(value, 1, true);
 };
 
-Buffer.prototype.writeInt8 = function(value) {
+Buffer.prototype.writeInt8 = function (value) {
 	this._write(value < 0 ? value + 0x100 : value, 1, true);
 };
 
-Buffer.prototype.writeUInt16LE = function(value) {
+Buffer.prototype.writeUInt16LE = function (value) {
 	this._write(value, 2, true);
 };
 
-Buffer.prototype.writeInt16LE = function(value) {
+Buffer.prototype.writeInt16LE = function (value) {
 	this._write(value < 0 ? value + 0x10000 : value, 2, true);
 };
 
-Buffer.prototype.writeUInt32LE = function(value) {
+Buffer.prototype.writeUInt32LE = function (value) {
 	this._write(value, 4, true);
 };
 
-Buffer.prototype.writeInt32LE = function(value) {
+Buffer.prototype.writeInt32LE = function (value) {
 	this._write(value < 0 ? value + 0x100000000 : value, 4, true);
 };
 
-Buffer.prototype.writeBytes = function(bytes, length, mustEqual) {
+Buffer.prototype.writeBytes = function (bytes, length, mustEqual) {
 	if (mustEqual === undefined) mustEqual = false;
 	if (length < bytes.length) {
 		throw new Error('bytes length is greater than length');
@@ -1234,7 +1234,7 @@ Buffer.prototype.writeBytes = function(bytes, length, mustEqual) {
 	}
 };
 
-Buffer.prototype.writeHexString = function(hexString, length, mustEqual) {
+Buffer.prototype.writeHexString = function (hexString, length, mustEqual) {
 	if (mustEqual === undefined) mustEqual = false;
 	var bytes = [];
 	for (var i = 0; i < hexString.length; i += 2) {
@@ -1246,7 +1246,7 @@ Buffer.prototype.writeHexString = function(hexString, length, mustEqual) {
 	this.writeBytes(bytes, length);
 };
 
-Buffer.prototype.writeString = function(str, length, mustEqual) {
+Buffer.prototype.writeString = function (str, length, mustEqual) {
 	if (mustEqual === undefined) mustEqual = false;
 	var bytes = encodeUtf8(str);
 	if (mustEqual && bytes.length != length) {
@@ -1255,11 +1255,11 @@ Buffer.prototype.writeString = function(str, length, mustEqual) {
 	this.writeBytes(bytes, length);
 };
 
-Buffer.prototype.writeUnknownDataType = function(val) {
+Buffer.prototype.writeUnknownDataType = function (val) {
 	throw new Error('Unknown data type encountered. Please Contact Developer.');
 };
 
-Buffer.prototype.writeHexStringReverse = function(hexString, length, mustEqual) {
+Buffer.prototype.writeHexStringReverse = function (hexString, length, mustEqual) {
 	if (mustEqual === undefined) mustEqual = false;
 	var bytes = [];
 	for (var i = hexString.length - 2; i >= 0; i -= 2) {
@@ -1271,7 +1271,7 @@ Buffer.prototype.writeHexStringReverse = function(hexString, length, mustEqual) 
 	this.writeBytes(bytes, length);
 };
 
-Buffer.prototype.toBytes = function() {
+Buffer.prototype.toBytes = function () {
 	return this.buffer;
 };
 
