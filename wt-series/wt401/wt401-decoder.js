@@ -581,6 +581,16 @@ function milesightDeviceDecode(bytes) {
             case 0xbe:
                 decoded.reboot = readYesNoStatus(1);
                 break;
+            case 0x59:
+                decoded.system_status_control = decoded.system_status_control || {};
+                // 0：system close, 1：system open
+                decoded.system_status_control.on_off = readUInt8(bytes[i]);
+                // 0：heat, 1：em heat, 2：cool, 3：auto
+                decoded.system_status_control.mode = readUInt8(bytes.slice(i + 1, i + 2));
+                decoded.system_status_control.temperature1 = readInt16LE(bytes.slice(i + 2, i + 4)) / 100;
+                decoded.system_status_control.temperature2 = readInt16LE(bytes.slice(i + 4, i + 6)) / 100;
+                i += 6;
+                break;
 
             // control frame
             case 0xef:
@@ -931,7 +941,3 @@ function getValue(map, key) {
     if (!value) value = "unknown";
     return value;
 }
-
-module.exports = {
-   milesightDeviceDecode,
-};
