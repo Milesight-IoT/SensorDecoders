@@ -355,6 +355,10 @@ function setReportingInterval(reporting_interval) {
         throw new Error("reporting_interval.mode must be one of " + mode_values.join(", "));
     }
 
+    if ((minutes_of_time < 1 || minutes_of_time > 1440)) {
+        throw new Error("reporting_interval.minutes_of_time must be between 1 and 1440 when reporting_interval.mode is ble");
+    }
+
     var buffer = new Buffer(5);
     buffer.writeUInt8(0x61);
     buffer.writeUInt8(getValue(mode_map, mode));
