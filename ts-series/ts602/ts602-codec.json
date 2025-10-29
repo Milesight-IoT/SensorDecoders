@@ -2,119 +2,6 @@
   "version": "1.0.0",
   "object": [
     {
-      "id": "tsl_version",
-      "name": "TSL Version",
-      "value": "",
-      "unit": "",
-      "access_mode": "R",
-      "data_type": "TEXT",
-      "value_type": "STRING",
-      "max_length": 6,
-      "bacnet_type": "character_string_value_object",
-      "bacnet_unit_type_id": 95,
-      "bacnet_unit_type": "UNITS_NO_UNITS"
-    },
-    {
-      "id": "product_name",
-      "name": "Product Name",
-      "value": "",
-      "unit": "",
-      "access_mode": "R",
-      "data_type": "TEXT",
-      "value_type": "STRING",
-      "max_length": 32,
-      "bacnet_type": "character_string_value_object",
-      "bacnet_unit_type_id": 95,
-      "bacnet_unit_type": "UNITS_NO_UNITS"
-    },
-    {
-      "id": "product_pn",
-      "name": "Product PN",
-      "value": "",
-      "unit": "",
-      "access_mode": "R",
-      "data_type": "TEXT",
-      "value_type": "STRING",
-      "max_length": 32,
-      "bacnet_type": "character_string_value_object",
-      "bacnet_unit_type_id": 95,
-      "bacnet_unit_type": "UNITS_NO_UNITS"
-    },
-    {
-      "id": "product_sn",
-      "name": "Product SN",
-      "value": "",
-      "unit": "",
-      "access_mode": "R",
-      "data_type": "TEXT",
-      "value_type": "STRING",
-      "max_length": 16,
-      "bacnet_type": "character_string_value_object",
-      "bacnet_unit_type_id": 95,
-      "bacnet_unit_type": "UNITS_NO_UNITS"
-    },
-    {
-      "id": "version.hardware_version",
-      "name": "Hardware Version",
-      "value": "",
-      "unit": "",
-      "access_mode": "R",
-      "data_type": "TEXT",
-      "value_type": "STRING",
-      "max_length": 6,
-      "bacnet_type": "character_string_value_object",
-      "bacnet_unit_type_id": 95,
-      "bacnet_unit_type": "UNITS_NO_UNITS"
-    },
-    {
-      "id": "version.firmware_version",
-      "name": "Firmware Version",
-      "value": "",
-      "unit": "",
-      "access_mode": "R",
-      "data_type": "TEXT",
-      "value_type": "STRING",
-      "max_length": 16,
-      "bacnet_type": "character_string_value_object",
-      "bacnet_unit_type_id": 95,
-      "bacnet_unit_type": "UNITS_NO_UNITS"
-    },
-    {
-      "id": "oem_id",
-      "name": "OEM ID",
-      "value": "",
-      "unit": "",
-      "access_mode": "R",
-      "data_type": "TEXT",
-      "value_type": "STRING",
-      "max_length": 2,
-      "bacnet_type": "character_string_value_object",
-      "bacnet_unit_type_id": 95,
-      "bacnet_unit_type": "UNITS_NO_UNITS"
-    },
-    {
-      "id": "device_status",
-      "name": "Device Status",
-      "value": "",
-      "unit": "",
-      "access_mode": "R",
-      "data_type": "ENUM",
-      "value_type": "UINT8",
-      "values": [
-        {
-          "value": 0,
-          "name": "off"
-        },
-        {
-          "value": 1,
-          "name": "on"
-        }
-      ],
-      "bacnet_type": "multistate_value_object",
-      "bacnet_unit_type_id": 95,
-      "bacnet_unit_type": "UNITS_NO_UNITS"
-    },
-    {
       "id": "battery",
       "name": "Battery",
       "value": "",
@@ -188,8 +75,8 @@
       "data_type": "NUMBER",
       "value_type": "FLOAT",
       "range": [
-        -200,
-        800
+        -35.0,
+        70.0
       ],
       "bacnet_type": "analog_input_object",
       "bacnet_unit_type_id": 62,
@@ -204,8 +91,8 @@
       "data_type": "NUMBER",
       "value_type": "FLOAT",
       "range": [
-        0,
-        100
+        0.0,
+        100.0
       ],
       "bacnet_type": "analog_input_object",
       "bacnet_unit_type_id": 29,
@@ -220,8 +107,8 @@
       "data_type": "NUMBER",
       "value_type": "FLOAT",
       "range": [
-        -90,
-        90
+        -90.0,
+        90.0
       ],
       "bacnet_type": "analog_input_object",
       "bacnet_unit_type_id": 90,
@@ -239,8 +126,8 @@
       "data_type": "NUMBER",
       "value_type": "FLOAT",
       "range": [
-        -180,
-        180
+        -180.0,
+        180.0
       ],
       "bacnet_type": "analog_input_object",
       "bacnet_unit_type_id": 90,
@@ -375,8 +262,7 @@
       "bacnet_unit_type_id": 95,
       "bacnet_unit_type": "UNITS_NO_UNITS",
       "reference": [
-        "reporting_interval.unit",
-        "reporting_interval.minutes_of_time"
+        "reporting_interval.unit"
       ]
     },
     {
@@ -391,8 +277,7 @@
       "bacnet_unit_type_id": 95,
       "bacnet_unit_type": "UNITS_NO_UNITS",
       "reference": [
-        "reporting_interval.unit",
-        "reporting_interval.seconds_of_time"
+        "reporting_interval.unit"
       ]
     },
     {
@@ -453,8 +338,7 @@
       "bacnet_unit_type_id": 73,
       "bacnet_unit_type": "UNITS_SECONDS",
       "reference": [
-        "collection_interval.unit",
-        "collection_interval.minutes_of_time"
+        "collection_interval.unit"
       ]
     },
     {
@@ -473,8 +357,7 @@
       "bacnet_unit_type_id": 72,
       "bacnet_unit_type": "UNITS_MINUTES",
       "reference": [
-        "collection_interval.unit",
-        "collection_interval.seconds_of_time"
+        "collection_interval.unit"
       ]
     },
     {
@@ -557,8 +440,7 @@
       "bacnet_unit_type_id": 73,
       "bacnet_unit_type": "UNITS_SECONDS",
       "reference": [
-        "light_collection_interval.unit",
-        "light_collection_interval.minutes_of_time"
+        "light_collection_interval.unit"
       ]
     },
     {
@@ -577,8 +459,7 @@
       "bacnet_unit_type_id": 72,
       "bacnet_unit_type": "UNITS_MINUTES",
       "reference": [
-        "light_collection_interval.unit",
-        "light_collection_interval.seconds_of_time"
+        "light_collection_interval.unit"
       ]
     },
     {
@@ -1451,7 +1332,8 @@
       ],
       "bacnet_type": "binary_value_object",
       "bacnet_unit_type_id": 95,
-      "bacnet_unit_type": "UNITS_NO_UNITS"
+      "bacnet_unit_type": "UNITS_NO_UNITS",
+      "reference": []
     },
     {
       "id": "data_storage_settings.retransmission_enable",
@@ -1473,7 +1355,8 @@
       ],
       "bacnet_type": "binary_value_object",
       "bacnet_unit_type_id": 95,
-      "bacnet_unit_type": "UNITS_NO_UNITS"
+      "bacnet_unit_type": "UNITS_NO_UNITS",
+      "reference": []
     },
     {
       "id": "data_storage_settings.retransmission_interval",
@@ -1489,7 +1372,8 @@
       ],
       "bacnet_type": "analog_value_object",
       "bacnet_unit_type_id": 73,
-      "bacnet_unit_type": "UNITS_SECONDS"
+      "bacnet_unit_type": "UNITS_SECONDS",
+      "reference": []
     },
     {
       "id": "data_storage_settings.retrieval_interval",
@@ -1505,7 +1389,8 @@
       ],
       "bacnet_type": "analog_value_object",
       "bacnet_unit_type_id": 73,
-      "bacnet_unit_type": "UNITS_SECONDS"
+      "bacnet_unit_type": "UNITS_SECONDS",
+      "reference": []
     },
     {
       "id": "base_station_position_enable",
@@ -1526,22 +1411,6 @@
         }
       ],
       "bacnet_type": "binary_value_object",
-      "bacnet_unit_type_id": 95,
-      "bacnet_unit_type": "UNITS_NO_UNITS"
-    },
-    {
-      "id": "base_station_position_auth_token",
-      "name": "Base Station Positioning Authentication Token",
-      "value": "",
-      "unit": "",
-      "access_mode": "RW",
-      "data_type": "STRING",
-      "value_type": "STRING",
-      "range": [
-        16,
-        16
-      ],
-      "bacnet_type": "character_string_value_object",
       "bacnet_unit_type_id": 95,
       "bacnet_unit_type": "UNITS_NO_UNITS"
     },
@@ -1996,8 +1865,8 @@
       "data_type": "NUMBER",
       "value_type": "FLOAT",
       "range": [
-        -200,
-        800
+        -200.0,
+        800.0
       ],
       "bacnet_type": "analog_value_object",
       "bacnet_unit_type_id": 62,
@@ -2017,8 +1886,8 @@
       "data_type": "NUMBER",
       "value_type": "FLOAT",
       "range": [
-        -200,
-        800
+        -35.0,
+        70.0
       ],
       "bacnet_type": "analog_value_object",
       "bacnet_unit_type_id": 62,
@@ -2064,7 +1933,7 @@
       "value_type": "FLOAT",
       "range": [
         0.1,
-        60
+        60.0
       ],
       "bacnet_type": "analog_value_object",
       "bacnet_unit_type_id": 62,
@@ -2149,7 +2018,7 @@
       "value_type": "FLOAT",
       "range": [
         0.1,
-        100
+        100.0
       ],
       "bacnet_type": "analog_value_object",
       "bacnet_unit_type_id": 29,
@@ -2170,7 +2039,7 @@
       "value_type": "FLOAT",
       "range": [
         0.1,
-        100
+        100.0
       ],
       "bacnet_type": "analog_value_object",
       "bacnet_unit_type_id": 29,
@@ -2216,7 +2085,7 @@
       "value_type": "FLOAT",
       "range": [
         0.1,
-        100
+        100.0
       ],
       "bacnet_type": "analog_value_object",
       "bacnet_unit_type_id": 29,
@@ -2259,8 +2128,8 @@
       "data_type": "NUMBER",
       "value_type": "FLOAT",
       "range": [
-        -100000,
-        100000
+        -100000.0,
+        100000.0
       ],
       "bacnet_type": "analog_value_object",
       "bacnet_unit_type_id": 62,
@@ -2303,8 +2172,8 @@
       "data_type": "NUMBER",
       "value_type": "FLOAT",
       "range": [
-        -100,
-        100
+        -100.0,
+        100.0
       ],
       "bacnet_type": "analog_value_object",
       "bacnet_unit_type_id": 29,
@@ -2312,44 +2181,6 @@
       "reference": [
         "humidity_calibration_settings.enable"
       ]
-    },
-    {
-      "id": "light_alarm.type",
-      "name": "Light Alarm (Type)",
-      "value": "",
-      "unit": "",
-      "access_mode": "R",
-      "data_type": "ENUM",
-      "value_type": "UINT8",
-      "values": [
-        {
-          "value": 0,
-          "name": "collection error"
-        },
-        {
-          "value": 1,
-          "name": "out of the low range"
-        },
-        {
-          "value": 2,
-          "name": "out of the high range"
-        },
-        {
-          "value": 3,
-          "name": "no data"
-        },
-        {
-          "value": 16,
-          "name": "bright to dark"
-        },
-        {
-          "value": 17,
-          "name": "dark to bright"
-        }
-      ],
-      "bacnet_type": "multistate_value_object",
-      "bacnet_unit_type_id": 95,
-      "bacnet_unit_type": "UNITS_NO_UNITS"
     },
     {
       "id": "light_alarm_settings.enable",
@@ -2418,8 +2249,8 @@
     {
       "id": "light_alarm_settings.threshold_max",
       "name": "Threshold Value",
-      "value": "50",
-      "unit": "lux",
+      "value": "1",
+      "unit": "lx",
       "access_mode": "RW",
       "data_type": "NUMBER",
       "value_type": "UINT16",
@@ -2438,8 +2269,8 @@
     {
       "id": "light_tolerance_value",
       "name": "Light Tolerance Value",
-      "value": "50",
-      "unit": "lux",
+      "value": "1",
+      "unit": "lx",
       "access_mode": "RW",
       "data_type": "NUMBER",
       "value_type": "UINT8",
@@ -2450,48 +2281,6 @@
       "bacnet_type": "analog_value_object",
       "bacnet_unit_type_id": 37,
       "bacnet_unit_type": "UNITS_LUXES"
-    },
-    {
-      "id": "tilt_alarm.type",
-      "name": "Tilt Alarm (Type)",
-      "value": "",
-      "unit": "",
-      "access_mode": "R",
-      "data_type": "ENUM",
-      "value_type": "UINT8",
-      "values": [
-        {
-          "value": 0,
-          "name": "collection error"
-        },
-        {
-          "value": 1,
-          "name": "exceed the range lower limit"
-        },
-        {
-          "value": 2,
-          "name": "exceed the range upper limit"
-        },
-        {
-          "value": 3,
-          "name": "no data"
-        },
-        {
-          "value": 16,
-          "name": "tilt alarm release"
-        },
-        {
-          "value": 17,
-          "name": "tilt alarm"
-        },
-        {
-          "value": 33,
-          "name": "falling alarm"
-        }
-      ],
-      "bacnet_type": "multistate_value_object",
-      "bacnet_unit_type_id": 95,
-      "bacnet_unit_type": "UNITS_NO_UNITS"
     },
     {
       "id": "tilt_alarm_settings.enable",
@@ -2590,74 +2379,6 @@
       ]
     },
     {
-      "id": "falling_threshold_alarm_settings.threshold_level",
-      "name": "Free Fall Level",
-      "value": "7",
-      "unit": "",
-      "access_mode": "RW",
-      "data_type": "ENUM",
-      "value_type": "UINT8",
-      "values": [
-        {
-          "name": "FREE_FALL_LEVEL_156",
-          "value": 0
-        },
-        {
-          "name": "FREE_FALL_LEVEL_219",
-          "value": 1
-        },
-        {
-          "name": "FREE_FALL_LEVEL_250",
-          "value": 2
-        },
-        {
-          "name": "FREE_FALL_LEVEL_312",
-          "value": 3
-        },
-        {
-          "name": "FREE_FALL_LEVEL_344",
-          "value": 4
-        },
-        {
-          "name": "FREE_FALL_LEVEL_406",
-          "value": 5
-        },
-        {
-          "name": "FREE_FALL_LEVEL_469",
-          "value": 6
-        },
-        {
-          "name": "FREE_FALL_LEVEL_500",
-          "value": 7
-        }
-      ],
-      "bacnet_type": "multistate_value_object",
-      "bacnet_unit_type_id": 95,
-      "bacnet_unit_type": "UNITS_NO_UNITS",
-      "reference": [
-        "falling_threshold_alarm_settings.time_level"
-      ]
-    },
-    {
-      "id": "falling_threshold_alarm_settings.time_level",
-      "name": "Continue Level",
-      "value": "32",
-      "unit": "",
-      "access_mode": "RW",
-      "data_type": "NUMBER",
-      "value_type": "UINT8",
-      "range": [
-        1,
-        32
-      ],
-      "bacnet_type": "analog_value_object",
-      "bacnet_unit_type_id": 95,
-      "bacnet_unit_type": "UNITS_NO_UNITS",
-      "reference": [
-        "falling_threshold_alarm_settings.threshold_level"
-      ]
-    },
-    {
       "id": "falling_alarm_settings.enable",
       "name": "Falling Alarm Enable",
       "value": "0",
@@ -2681,140 +2402,6 @@
       "reference": []
     },
     {
-      "id": "probe_id_retransmit_count",
-      "name": "Probe ID Retransmit Count",
-      "value": "1",
-      "unit": "",
-      "access_mode": "RW",
-      "data_type": "NUMBER",
-      "value_type": "UINT8",
-      "range": [
-        1,
-        10
-      ],
-      "bacnet_type": "analog_value_object",
-      "bacnet_unit_type_id": 95,
-      "bacnet_unit_type": "UNITS_NO_UNITS",
-      "reference": []
-    },
-    {
-      "id": "cellular_status.register_status",
-      "name": "Register Status",
-      "value": "",
-      "unit": "",
-      "access_mode": "R",
-      "data_type": "ENUM",
-      "value_type": "UINT8",
-      "values": [
-        {
-          "name": "Register Failed",
-          "value": 0
-        },
-        {
-          "name": "Register Success",
-          "value": 1
-        }
-      ],
-      "bacnet_type": "multistate_value_object",
-      "bacnet_unit_type_id": 95,
-      "bacnet_unit_type": "UNITS_NO_UNITS"
-    },
-    {
-      "id": "cellular_status.imei",
-      "name": "IMEI",
-      "value": "",
-      "unit": "",
-      "access_mode": "R",
-      "data_type": "TEXT",
-      "value_type": "STRING",
-      "max_length": 15,
-      "bacnet_type": "character_string_value_object",
-      "bacnet_unit_type_id": 95,
-      "bacnet_unit_type": "UNITS_NO_UNITS"
-    },
-    {
-      "id": "cellular_status.imsi",
-      "name": "IMSI",
-      "value": "",
-      "unit": "",
-      "access_mode": "R",
-      "data_type": "TEXT",
-      "value_type": "STRING",
-      "max_length": 15,
-      "bacnet_type": "character_string_value_object",
-      "bacnet_unit_type_id": 95,
-      "bacnet_unit_type": "UNITS_NO_UNITS"
-    },
-    {
-      "id": "cellular_status.iccid",
-      "name": "ICCID",
-      "value": "",
-      "unit": "",
-      "access_mode": "R",
-      "data_type": "TEXT",
-      "value_type": "STRING",
-      "max_length": 20,
-      "bacnet_type": "character_string_value_object",
-      "bacnet_unit_type_id": 95,
-      "bacnet_unit_type": "UNITS_NO_UNITS"
-    },
-    {
-      "id": "cellular_status.csq",
-      "name": "Signal Strength",
-      "value": "",
-      "unit": "",
-      "access_mode": "R",
-      "data_type": "NUMBER",
-      "value_type": "UINT8",
-      "bacnet_type": "analog_input_object",
-      "bacnet_unit_type_id": 95,
-      "bacnet_unit_type": "UNITS_NO_UNITS"
-    },
-    {
-      "id": "cellular_status.milesight_mqtt_status",
-      "name": "Milesight MQTT Status",
-      "value": "",
-      "unit": "",
-      "access_mode": "R",
-      "data_type": "ENUM",
-      "value_type": "UINT8",
-      "values": [
-        {
-          "name": "Connect Failed",
-          "value": 0
-        },
-        {
-          "name": "Connect Success",
-          "value": 1
-        }
-      ],
-      "bacnet_type": "multistate_value_object",
-      "bacnet_unit_type_id": 95,
-      "bacnet_unit_type": "UNITS_NO_UNITS"
-    },
-    {
-      "id": "cellular_status.milesight_dtls_status",
-      "name": "Milesight DTLS Status",
-      "value": "",
-      "unit": "",
-      "access_mode": "R",
-      "data_type": "ENUM",
-      "value_type": "UINT8",
-      "values": [
-        {
-          "name": "Connect Failed",
-          "value": 0
-        },
-        {
-          "name": "Connect Success",
-          "value": 1
-        }
-      ],
-      "bacnet_type": "multistate_value_object",
-      "bacnet_unit_type_id": 95,
-      "bacnet_unit_type": "UNITS_NO_UNITS"
-    },
-    {
       "id": "cellular_settings.work_mode",
       "name": "Work Mode",
       "value": "0",
@@ -2830,7 +2417,8 @@
       ],
       "bacnet_type": "multistate_value_object",
       "bacnet_unit_type_id": 95,
-      "bacnet_unit_type": "UNITS_NO_UNITS"
+      "bacnet_unit_type": "UNITS_NO_UNITS",
+      "reference": []
     },
     {
       "id": "cellular_settings.transport_type",
@@ -2868,7 +2456,8 @@
       ],
       "bacnet_type": "multistate_value_object",
       "bacnet_unit_type_id": 95,
-      "bacnet_unit_type": "UNITS_NO_UNITS"
+      "bacnet_unit_type": "UNITS_NO_UNITS",
+      "reference": []
     },
     {
       "id": "cellular_settings.network.apn",
@@ -2882,12 +2471,7 @@
       "bacnet_type": "character_string_value_object",
       "bacnet_unit_type_id": 95,
       "bacnet_unit_type": "UNITS_NO_UNITS",
-      "reference": [
-        "cellular_settings.network.auth_mode",
-        "cellular_settings.network.auth_username",
-        "cellular_settings.network.password",
-        "cellular_settings.network.pin"
-      ]
+      "reference": []
     },
     {
       "id": "cellular_settings.network.auth_mode",
@@ -2914,12 +2498,7 @@
       "bacnet_type": "multistate_value_object",
       "bacnet_unit_type_id": 95,
       "bacnet_unit_type": "UNITS_NO_UNITS",
-      "reference": [
-        "cellular_settings.network.apn",
-        "cellular_settings.network.auth_username",
-        "cellular_settings.network.password",
-        "cellular_settings.network.pin"
-      ]
+      "reference": []
     },
     {
       "id": "cellular_settings.network.auth_username",
@@ -2933,12 +2512,7 @@
       "bacnet_type": "character_string_value_object",
       "bacnet_unit_type_id": 95,
       "bacnet_unit_type": "UNITS_NO_UNITS",
-      "reference": [
-        "cellular_settings.network.apn",
-        "cellular_settings.network.auth_mode",
-        "cellular_settings.network.password",
-        "cellular_settings.network.pin"
-      ]
+      "reference": []
     },
     {
       "id": "cellular_settings.network.password",
@@ -2952,12 +2526,7 @@
       "bacnet_type": "character_string_value_object",
       "bacnet_unit_type_id": 95,
       "bacnet_unit_type": "UNITS_NO_UNITS",
-      "reference": [
-        "cellular_settings.network.apn",
-        "cellular_settings.network.auth_mode",
-        "cellular_settings.network.auth_username",
-        "cellular_settings.network.pin"
-      ]
+      "reference": []
     },
     {
       "id": "cellular_settings.network.pin",
@@ -2971,12 +2540,7 @@
       "bacnet_type": "character_string_value_object",
       "bacnet_unit_type_id": 95,
       "bacnet_unit_type": "UNITS_NO_UNITS",
-      "reference": [
-        "cellular_settings.network.apn",
-        "cellular_settings.network.auth_mode",
-        "cellular_settings.network.auth_username",
-        "cellular_settings.network.password"
-      ]
+      "reference": []
     },
     {
       "id": "cellular_settings.mqtt_settings.server_address",
@@ -2990,24 +2554,7 @@
       "bacnet_type": "character_string_value_object",
       "bacnet_unit_type_id": 95,
       "bacnet_unit_type": "UNITS_NO_UNITS",
-      "reference": [
-        "cellular_settings.mqtt_settings.server_port",
-        "cellular_settings.mqtt_settings.client_id",
-        "cellular_settings.mqtt_settings.auth_enable",
-        "cellular_settings.mqtt_settings.auth_username",
-        "cellular_settings.mqtt_settings.auth_password",
-        "cellular_settings.mqtt_settings.enable_tls",
-        "cellular_settings.mqtt_settings.enable_ca_certificate",
-        "cellular_settings.mqtt_settings.ca_certificate",
-        "cellular_settings.mqtt_settings.enable_client_certificate",
-        "cellular_settings.mqtt_settings.client_certificate",
-        "cellular_settings.mqtt_settings.enable_key_certificate",
-        "cellular_settings.mqtt_settings.key_certificate",
-        "cellular_settings.mqtt_settings.uplink_topic",
-        "cellular_settings.mqtt_settings.uplink_qos",
-        "cellular_settings.mqtt_settings.downlink_topic",
-        "cellular_settings.mqtt_settings.downlink_qos"
-      ]
+      "reference": []
     },
     {
       "id": "cellular_settings.mqtt_settings.server_port",
@@ -3024,24 +2571,7 @@
       "bacnet_type": "analog_value_object",
       "bacnet_unit_type_id": 95,
       "bacnet_unit_type": "UNITS_NO_UNITS",
-      "reference": [
-        "cellular_settings.mqtt_settings.server_address",
-        "cellular_settings.mqtt_settings.client_id",
-        "cellular_settings.mqtt_settings.auth_enable",
-        "cellular_settings.mqtt_settings.auth_username",
-        "cellular_settings.mqtt_settings.auth_password",
-        "cellular_settings.mqtt_settings.enable_tls",
-        "cellular_settings.mqtt_settings.enable_ca_certificate",
-        "cellular_settings.mqtt_settings.ca_certificate",
-        "cellular_settings.mqtt_settings.enable_client_certificate",
-        "cellular_settings.mqtt_settings.client_certificate",
-        "cellular_settings.mqtt_settings.enable_key_certificate",
-        "cellular_settings.mqtt_settings.key_certificate",
-        "cellular_settings.mqtt_settings.uplink_topic",
-        "cellular_settings.mqtt_settings.uplink_qos",
-        "cellular_settings.mqtt_settings.downlink_topic",
-        "cellular_settings.mqtt_settings.downlink_qos"
-      ]
+      "reference": []
     },
     {
       "id": "cellular_settings.mqtt_settings.client_id",
@@ -3055,24 +2585,7 @@
       "bacnet_type": "character_string_value_object",
       "bacnet_unit_type_id": 95,
       "bacnet_unit_type": "UNITS_NO_UNITS",
-      "reference": [
-        "cellular_settings.mqtt_settings.server_address",
-        "cellular_settings.mqtt_settings.server_port",
-        "cellular_settings.mqtt_settings.auth_enable",
-        "cellular_settings.mqtt_settings.auth_username",
-        "cellular_settings.mqtt_settings.auth_password",
-        "cellular_settings.mqtt_settings.enable_tls",
-        "cellular_settings.mqtt_settings.enable_ca_certificate",
-        "cellular_settings.mqtt_settings.ca_certificate",
-        "cellular_settings.mqtt_settings.enable_client_certificate",
-        "cellular_settings.mqtt_settings.client_certificate",
-        "cellular_settings.mqtt_settings.enable_key_certificate",
-        "cellular_settings.mqtt_settings.key_certificate",
-        "cellular_settings.mqtt_settings.uplink_topic",
-        "cellular_settings.mqtt_settings.uplink_qos",
-        "cellular_settings.mqtt_settings.downlink_topic",
-        "cellular_settings.mqtt_settings.downlink_qos"
-      ]
+      "reference": []
     },
     {
       "id": "cellular_settings.mqtt_settings.auth_enable",
@@ -3095,24 +2608,7 @@
       "bacnet_type": "binary_value_object",
       "bacnet_unit_type_id": 95,
       "bacnet_unit_type": "UNITS_NO_UNITS",
-      "reference": [
-        "cellular_settings.mqtt_settings.server_address",
-        "cellular_settings.mqtt_settings.server_port",
-        "cellular_settings.mqtt_settings.client_id",
-        "cellular_settings.mqtt_settings.auth_username",
-        "cellular_settings.mqtt_settings.auth_password",
-        "cellular_settings.mqtt_settings.enable_tls",
-        "cellular_settings.mqtt_settings.enable_ca_certificate",
-        "cellular_settings.mqtt_settings.ca_certificate",
-        "cellular_settings.mqtt_settings.enable_client_certificate",
-        "cellular_settings.mqtt_settings.client_certificate",
-        "cellular_settings.mqtt_settings.enable_key_certificate",
-        "cellular_settings.mqtt_settings.key_certificate",
-        "cellular_settings.mqtt_settings.uplink_topic",
-        "cellular_settings.mqtt_settings.uplink_qos",
-        "cellular_settings.mqtt_settings.downlink_topic",
-        "cellular_settings.mqtt_settings.downlink_qos"
-      ]
+      "reference": []
     },
     {
       "id": "cellular_settings.mqtt_settings.auth_username",
@@ -3126,24 +2622,7 @@
       "bacnet_type": "character_string_value_object",
       "bacnet_unit_type_id": 95,
       "bacnet_unit_type": "UNITS_NO_UNITS",
-      "reference": [
-        "cellular_settings.mqtt_settings.server_address",
-        "cellular_settings.mqtt_settings.server_port",
-        "cellular_settings.mqtt_settings.client_id",
-        "cellular_settings.mqtt_settings.auth_enable",
-        "cellular_settings.mqtt_settings.auth_password",
-        "cellular_settings.mqtt_settings.enable_tls",
-        "cellular_settings.mqtt_settings.enable_ca_certificate",
-        "cellular_settings.mqtt_settings.ca_certificate",
-        "cellular_settings.mqtt_settings.enable_client_certificate",
-        "cellular_settings.mqtt_settings.client_certificate",
-        "cellular_settings.mqtt_settings.enable_key_certificate",
-        "cellular_settings.mqtt_settings.key_certificate",
-        "cellular_settings.mqtt_settings.uplink_topic",
-        "cellular_settings.mqtt_settings.uplink_qos",
-        "cellular_settings.mqtt_settings.downlink_topic",
-        "cellular_settings.mqtt_settings.downlink_qos"
-      ]
+      "reference": []
     },
     {
       "id": "cellular_settings.mqtt_settings.auth_password",
@@ -3157,24 +2636,7 @@
       "bacnet_type": "character_string_value_object",
       "bacnet_unit_type_id": 95,
       "bacnet_unit_type": "UNITS_NO_UNITS",
-      "reference": [
-        "cellular_settings.mqtt_settings.server_address",
-        "cellular_settings.mqtt_settings.server_port",
-        "cellular_settings.mqtt_settings.client_id",
-        "cellular_settings.mqtt_settings.auth_enable",
-        "cellular_settings.mqtt_settings.auth_username",
-        "cellular_settings.mqtt_settings.enable_tls",
-        "cellular_settings.mqtt_settings.enable_ca_certificate",
-        "cellular_settings.mqtt_settings.ca_certificate",
-        "cellular_settings.mqtt_settings.enable_client_certificate",
-        "cellular_settings.mqtt_settings.client_certificate",
-        "cellular_settings.mqtt_settings.enable_key_certificate",
-        "cellular_settings.mqtt_settings.key_certificate",
-        "cellular_settings.mqtt_settings.uplink_topic",
-        "cellular_settings.mqtt_settings.uplink_qos",
-        "cellular_settings.mqtt_settings.downlink_topic",
-        "cellular_settings.mqtt_settings.downlink_qos"
-      ]
+      "reference": []
     },
     {
       "id": "cellular_settings.mqtt_settings.enable_tls",
@@ -3197,24 +2659,7 @@
       "bacnet_type": "binary_value_object",
       "bacnet_unit_type_id": 95,
       "bacnet_unit_type": "UNITS_NO_UNITS",
-      "reference": [
-        "cellular_settings.mqtt_settings.server_address",
-        "cellular_settings.mqtt_settings.server_port",
-        "cellular_settings.mqtt_settings.client_id",
-        "cellular_settings.mqtt_settings.auth_enable",
-        "cellular_settings.mqtt_settings.auth_username",
-        "cellular_settings.mqtt_settings.auth_password",
-        "cellular_settings.mqtt_settings.enable_ca_certificate",
-        "cellular_settings.mqtt_settings.ca_certificate",
-        "cellular_settings.mqtt_settings.enable_client_certificate",
-        "cellular_settings.mqtt_settings.client_certificate",
-        "cellular_settings.mqtt_settings.enable_key_certificate",
-        "cellular_settings.mqtt_settings.key_certificate",
-        "cellular_settings.mqtt_settings.uplink_topic",
-        "cellular_settings.mqtt_settings.uplink_qos",
-        "cellular_settings.mqtt_settings.downlink_topic",
-        "cellular_settings.mqtt_settings.downlink_qos"
-      ]
+      "reference": []
     },
     {
       "id": "cellular_settings.mqtt_settings.enable_ca_certificate",
@@ -3237,24 +2682,7 @@
       "bacnet_type": "binary_value_object",
       "bacnet_unit_type_id": 95,
       "bacnet_unit_type": "UNITS_NO_UNITS",
-      "reference": [
-        "cellular_settings.mqtt_settings.server_address",
-        "cellular_settings.mqtt_settings.server_port",
-        "cellular_settings.mqtt_settings.client_id",
-        "cellular_settings.mqtt_settings.auth_enable",
-        "cellular_settings.mqtt_settings.auth_username",
-        "cellular_settings.mqtt_settings.auth_password",
-        "cellular_settings.mqtt_settings.enable_tls",
-        "cellular_settings.mqtt_settings.ca_certificate",
-        "cellular_settings.mqtt_settings.enable_client_certificate",
-        "cellular_settings.mqtt_settings.client_certificate",
-        "cellular_settings.mqtt_settings.enable_key_certificate",
-        "cellular_settings.mqtt_settings.key_certificate",
-        "cellular_settings.mqtt_settings.uplink_topic",
-        "cellular_settings.mqtt_settings.uplink_qos",
-        "cellular_settings.mqtt_settings.downlink_topic",
-        "cellular_settings.mqtt_settings.downlink_qos"
-      ]
+      "reference": []
     },
     {
       "id": "cellular_settings.mqtt_settings.ca_certificate",
@@ -3268,24 +2696,7 @@
       "bacnet_type": "character_string_value_object",
       "bacnet_unit_type_id": 95,
       "bacnet_unit_type": "UNITS_NO_UNITS",
-      "reference": [
-        "cellular_settings.mqtt_settings.server_address",
-        "cellular_settings.mqtt_settings.server_port",
-        "cellular_settings.mqtt_settings.client_id",
-        "cellular_settings.mqtt_settings.auth_enable",
-        "cellular_settings.mqtt_settings.auth_username",
-        "cellular_settings.mqtt_settings.auth_password",
-        "cellular_settings.mqtt_settings.enable_tls",
-        "cellular_settings.mqtt_settings.enable_ca_certificate",
-        "cellular_settings.mqtt_settings.enable_client_certificate",
-        "cellular_settings.mqtt_settings.client_certificate",
-        "cellular_settings.mqtt_settings.enable_key_certificate",
-        "cellular_settings.mqtt_settings.key_certificate",
-        "cellular_settings.mqtt_settings.uplink_topic",
-        "cellular_settings.mqtt_settings.uplink_qos",
-        "cellular_settings.mqtt_settings.downlink_topic",
-        "cellular_settings.mqtt_settings.downlink_qos"
-      ]
+      "reference": []
     },
     {
       "id": "cellular_settings.mqtt_settings.enable_client_certificate",
@@ -3308,24 +2719,7 @@
       "bacnet_type": "binary_value_object",
       "bacnet_unit_type_id": 95,
       "bacnet_unit_type": "UNITS_NO_UNITS",
-      "reference": [
-        "cellular_settings.mqtt_settings.server_address",
-        "cellular_settings.mqtt_settings.server_port",
-        "cellular_settings.mqtt_settings.client_id",
-        "cellular_settings.mqtt_settings.auth_enable",
-        "cellular_settings.mqtt_settings.auth_username",
-        "cellular_settings.mqtt_settings.auth_password",
-        "cellular_settings.mqtt_settings.enable_tls",
-        "cellular_settings.mqtt_settings.enable_ca_certificate",
-        "cellular_settings.mqtt_settings.ca_certificate",
-        "cellular_settings.mqtt_settings.client_certificate",
-        "cellular_settings.mqtt_settings.enable_key_certificate",
-        "cellular_settings.mqtt_settings.key_certificate",
-        "cellular_settings.mqtt_settings.uplink_topic",
-        "cellular_settings.mqtt_settings.uplink_qos",
-        "cellular_settings.mqtt_settings.downlink_topic",
-        "cellular_settings.mqtt_settings.downlink_qos"
-      ]
+      "reference": []
     },
     {
       "id": "cellular_settings.mqtt_settings.client_certificate",
@@ -3339,24 +2733,7 @@
       "bacnet_type": "character_string_value_object",
       "bacnet_unit_type_id": 95,
       "bacnet_unit_type": "UNITS_NO_UNITS",
-      "reference": [
-        "cellular_settings.mqtt_settings.server_address",
-        "cellular_settings.mqtt_settings.server_port",
-        "cellular_settings.mqtt_settings.client_id",
-        "cellular_settings.mqtt_settings.auth_enable",
-        "cellular_settings.mqtt_settings.auth_username",
-        "cellular_settings.mqtt_settings.auth_password",
-        "cellular_settings.mqtt_settings.enable_tls",
-        "cellular_settings.mqtt_settings.enable_ca_certificate",
-        "cellular_settings.mqtt_settings.ca_certificate",
-        "cellular_settings.mqtt_settings.enable_client_certificate",
-        "cellular_settings.mqtt_settings.enable_key_certificate",
-        "cellular_settings.mqtt_settings.key_certificate",
-        "cellular_settings.mqtt_settings.uplink_topic",
-        "cellular_settings.mqtt_settings.uplink_qos",
-        "cellular_settings.mqtt_settings.downlink_topic",
-        "cellular_settings.mqtt_settings.downlink_qos"
-      ]
+      "reference": []
     },
     {
       "id": "cellular_settings.mqtt_settings.enable_key_certificate",
@@ -3379,24 +2756,7 @@
       "bacnet_type": "binary_value_object",
       "bacnet_unit_type_id": 95,
       "bacnet_unit_type": "UNITS_NO_UNITS",
-      "reference": [
-        "cellular_settings.mqtt_settings.server_address",
-        "cellular_settings.mqtt_settings.server_port",
-        "cellular_settings.mqtt_settings.client_id",
-        "cellular_settings.mqtt_settings.auth_enable",
-        "cellular_settings.mqtt_settings.auth_username",
-        "cellular_settings.mqtt_settings.auth_password",
-        "cellular_settings.mqtt_settings.enable_tls",
-        "cellular_settings.mqtt_settings.enable_ca_certificate",
-        "cellular_settings.mqtt_settings.ca_certificate",
-        "cellular_settings.mqtt_settings.enable_client_certificate",
-        "cellular_settings.mqtt_settings.client_certificate",
-        "cellular_settings.mqtt_settings.key_certificate",
-        "cellular_settings.mqtt_settings.uplink_topic",
-        "cellular_settings.mqtt_settings.uplink_qos",
-        "cellular_settings.mqtt_settings.downlink_topic",
-        "cellular_settings.mqtt_settings.downlink_qos"
-      ]
+      "reference": []
     },
     {
       "id": "cellular_settings.mqtt_settings.key_certificate",
@@ -3410,24 +2770,7 @@
       "bacnet_type": "character_string_value_object",
       "bacnet_unit_type_id": 95,
       "bacnet_unit_type": "UNITS_NO_UNITS",
-      "reference": [
-        "cellular_settings.mqtt_settings.server_address",
-        "cellular_settings.mqtt_settings.server_port",
-        "cellular_settings.mqtt_settings.client_id",
-        "cellular_settings.mqtt_settings.auth_enable",
-        "cellular_settings.mqtt_settings.auth_username",
-        "cellular_settings.mqtt_settings.auth_password",
-        "cellular_settings.mqtt_settings.enable_tls",
-        "cellular_settings.mqtt_settings.enable_ca_certificate",
-        "cellular_settings.mqtt_settings.ca_certificate",
-        "cellular_settings.mqtt_settings.enable_client_certificate",
-        "cellular_settings.mqtt_settings.client_certificate",
-        "cellular_settings.mqtt_settings.enable_key_certificate",
-        "cellular_settings.mqtt_settings.uplink_topic",
-        "cellular_settings.mqtt_settings.uplink_qos",
-        "cellular_settings.mqtt_settings.downlink_topic",
-        "cellular_settings.mqtt_settings.downlink_qos"
-      ]
+      "reference": []
     },
     {
       "id": "cellular_settings.mqtt_settings.uplink_topic",
@@ -3441,24 +2784,7 @@
       "bacnet_type": "character_string_value_object",
       "bacnet_unit_type_id": 95,
       "bacnet_unit_type": "UNITS_NO_UNITS",
-      "reference": [
-        "cellular_settings.mqtt_settings.server_address",
-        "cellular_settings.mqtt_settings.server_port",
-        "cellular_settings.mqtt_settings.client_id",
-        "cellular_settings.mqtt_settings.auth_enable",
-        "cellular_settings.mqtt_settings.auth_username",
-        "cellular_settings.mqtt_settings.auth_password",
-        "cellular_settings.mqtt_settings.enable_tls",
-        "cellular_settings.mqtt_settings.enable_ca_certificate",
-        "cellular_settings.mqtt_settings.ca_certificate",
-        "cellular_settings.mqtt_settings.enable_client_certificate",
-        "cellular_settings.mqtt_settings.client_certificate",
-        "cellular_settings.mqtt_settings.enable_key_certificate",
-        "cellular_settings.mqtt_settings.key_certificate",
-        "cellular_settings.mqtt_settings.uplink_qos",
-        "cellular_settings.mqtt_settings.downlink_topic",
-        "cellular_settings.mqtt_settings.downlink_qos"
-      ]
+      "reference": []
     },
     {
       "id": "cellular_settings.mqtt_settings.uplink_qos",
@@ -3485,24 +2811,7 @@
       "bacnet_type": "multistate_value_object",
       "bacnet_unit_type_id": 95,
       "bacnet_unit_type": "UNITS_NO_UNITS",
-      "reference": [
-        "cellular_settings.mqtt_settings.server_address",
-        "cellular_settings.mqtt_settings.server_port",
-        "cellular_settings.mqtt_settings.client_id",
-        "cellular_settings.mqtt_settings.auth_enable",
-        "cellular_settings.mqtt_settings.auth_username",
-        "cellular_settings.mqtt_settings.auth_password",
-        "cellular_settings.mqtt_settings.enable_tls",
-        "cellular_settings.mqtt_settings.enable_ca_certificate",
-        "cellular_settings.mqtt_settings.ca_certificate",
-        "cellular_settings.mqtt_settings.enable_client_certificate",
-        "cellular_settings.mqtt_settings.client_certificate",
-        "cellular_settings.mqtt_settings.enable_key_certificate",
-        "cellular_settings.mqtt_settings.key_certificate",
-        "cellular_settings.mqtt_settings.uplink_topic",
-        "cellular_settings.mqtt_settings.downlink_topic",
-        "cellular_settings.mqtt_settings.downlink_qos"
-      ]
+      "reference": []
     },
     {
       "id": "cellular_settings.mqtt_settings.downlink_topic",
@@ -3516,24 +2825,7 @@
       "bacnet_type": "character_string_value_object",
       "bacnet_unit_type_id": 95,
       "bacnet_unit_type": "UNITS_NO_UNITS",
-      "reference": [
-        "cellular_settings.mqtt_settings.server_address",
-        "cellular_settings.mqtt_settings.server_port",
-        "cellular_settings.mqtt_settings.client_id",
-        "cellular_settings.mqtt_settings.auth_enable",
-        "cellular_settings.mqtt_settings.auth_username",
-        "cellular_settings.mqtt_settings.auth_password",
-        "cellular_settings.mqtt_settings.enable_tls",
-        "cellular_settings.mqtt_settings.enable_ca_certificate",
-        "cellular_settings.mqtt_settings.ca_certificate",
-        "cellular_settings.mqtt_settings.enable_client_certificate",
-        "cellular_settings.mqtt_settings.client_certificate",
-        "cellular_settings.mqtt_settings.enable_key_certificate",
-        "cellular_settings.mqtt_settings.key_certificate",
-        "cellular_settings.mqtt_settings.uplink_topic",
-        "cellular_settings.mqtt_settings.uplink_qos",
-        "cellular_settings.mqtt_settings.downlink_qos"
-      ]
+      "reference": []
     },
     {
       "id": "cellular_settings.mqtt_settings.downlink_qos",
@@ -3560,24 +2852,7 @@
       "bacnet_type": "multistate_value_object",
       "bacnet_unit_type_id": 95,
       "bacnet_unit_type": "UNITS_NO_UNITS",
-      "reference": [
-        "cellular_settings.mqtt_settings.server_address",
-        "cellular_settings.mqtt_settings.server_port",
-        "cellular_settings.mqtt_settings.client_id",
-        "cellular_settings.mqtt_settings.auth_enable",
-        "cellular_settings.mqtt_settings.auth_username",
-        "cellular_settings.mqtt_settings.auth_password",
-        "cellular_settings.mqtt_settings.enable_tls",
-        "cellular_settings.mqtt_settings.enable_ca_certificate",
-        "cellular_settings.mqtt_settings.ca_certificate",
-        "cellular_settings.mqtt_settings.enable_client_certificate",
-        "cellular_settings.mqtt_settings.client_certificate",
-        "cellular_settings.mqtt_settings.enable_key_certificate",
-        "cellular_settings.mqtt_settings.key_certificate",
-        "cellular_settings.mqtt_settings.uplink_topic",
-        "cellular_settings.mqtt_settings.uplink_qos",
-        "cellular_settings.mqtt_settings.downlink_topic"
-      ]
+      "reference": []
     },
     {
       "id": "cellular_settings.aws_settings.server_address",
@@ -3591,15 +2866,7 @@
       "bacnet_type": "character_string_value_object",
       "bacnet_unit_type_id": 95,
       "bacnet_unit_type": "UNITS_NO_UNITS",
-      "reference": [
-        "cellular_settings.aws_settings.server_port",
-        "cellular_settings.aws_settings.enable_ca_certificate",
-        "cellular_settings.aws_settings.ca_certificate",
-        "cellular_settings.aws_settings.enable_client_certificate",
-        "cellular_settings.aws_settings.client_certificate",
-        "cellular_settings.aws_settings.enable_key_certificate",
-        "cellular_settings.aws_settings.key_certificate"
-      ]
+      "reference": []
     },
     {
       "id": "cellular_settings.aws_settings.server_port",
@@ -3616,15 +2883,7 @@
       "bacnet_type": "analog_value_object",
       "bacnet_unit_type_id": 95,
       "bacnet_unit_type": "UNITS_NO_UNITS",
-      "reference": [
-        "cellular_settings.aws_settings.server_address",
-        "cellular_settings.aws_settings.enable_ca_certificate",
-        "cellular_settings.aws_settings.ca_certificate",
-        "cellular_settings.aws_settings.enable_client_certificate",
-        "cellular_settings.aws_settings.client_certificate",
-        "cellular_settings.aws_settings.enable_key_certificate",
-        "cellular_settings.aws_settings.key_certificate"
-      ]
+      "reference": []
     },
     {
       "id": "cellular_settings.aws_settings.enable_ca_certificate",
@@ -3647,15 +2906,7 @@
       "bacnet_type": "binary_value_object",
       "bacnet_unit_type_id": 95,
       "bacnet_unit_type": "UNITS_NO_UNITS",
-      "reference": [
-        "cellular_settings.aws_settings.server_address",
-        "cellular_settings.aws_settings.server_port",
-        "cellular_settings.aws_settings.ca_certificate",
-        "cellular_settings.aws_settings.enable_client_certificate",
-        "cellular_settings.aws_settings.client_certificate",
-        "cellular_settings.aws_settings.enable_key_certificate",
-        "cellular_settings.aws_settings.key_certificate"
-      ]
+      "reference": []
     },
     {
       "id": "cellular_settings.aws_settings.ca_certificate",
@@ -3669,15 +2920,7 @@
       "bacnet_type": "character_string_value_object",
       "bacnet_unit_type_id": 95,
       "bacnet_unit_type": "UNITS_NO_UNITS",
-      "reference": [
-        "cellular_settings.aws_settings.server_address",
-        "cellular_settings.aws_settings.server_port",
-        "cellular_settings.aws_settings.enable_ca_certificate",
-        "cellular_settings.aws_settings.enable_client_certificate",
-        "cellular_settings.aws_settings.client_certificate",
-        "cellular_settings.aws_settings.enable_key_certificate",
-        "cellular_settings.aws_settings.key_certificate"
-      ]
+      "reference": []
     },
     {
       "id": "cellular_settings.aws_settings.enable_client_certificate",
@@ -3700,15 +2943,7 @@
       "bacnet_type": "binary_value_object",
       "bacnet_unit_type_id": 95,
       "bacnet_unit_type": "UNITS_NO_UNITS",
-      "reference": [
-        "cellular_settings.aws_settings.server_address",
-        "cellular_settings.aws_settings.server_port",
-        "cellular_settings.aws_settings.enable_ca_certificate",
-        "cellular_settings.aws_settings.ca_certificate",
-        "cellular_settings.aws_settings.client_certificate",
-        "cellular_settings.aws_settings.enable_key_certificate",
-        "cellular_settings.aws_settings.key_certificate"
-      ]
+      "reference": []
     },
     {
       "id": "cellular_settings.aws_settings.client_certificate",
@@ -3722,15 +2957,7 @@
       "bacnet_type": "character_string_value_object",
       "bacnet_unit_type_id": 95,
       "bacnet_unit_type": "UNITS_NO_UNITS",
-      "reference": [
-        "cellular_settings.aws_settings.server_address",
-        "cellular_settings.aws_settings.server_port",
-        "cellular_settings.aws_settings.enable_ca_certificate",
-        "cellular_settings.aws_settings.ca_certificate",
-        "cellular_settings.aws_settings.enable_client_certificate",
-        "cellular_settings.aws_settings.enable_key_certificate",
-        "cellular_settings.aws_settings.key_certificate"
-      ]
+      "reference": []
     },
     {
       "id": "cellular_settings.aws_settings.enable_key_certificate",
@@ -3753,15 +2980,7 @@
       "bacnet_type": "binary_value_object",
       "bacnet_unit_type_id": 95,
       "bacnet_unit_type": "UNITS_NO_UNITS",
-      "reference": [
-        "cellular_settings.aws_settings.server_address",
-        "cellular_settings.aws_settings.server_port",
-        "cellular_settings.aws_settings.enable_ca_certificate",
-        "cellular_settings.aws_settings.ca_certificate",
-        "cellular_settings.aws_settings.enable_client_certificate",
-        "cellular_settings.aws_settings.client_certificate",
-        "cellular_settings.aws_settings.key_certificate"
-      ]
+      "reference": []
     },
     {
       "id": "cellular_settings.aws_settings.key_certificate",
@@ -3775,85 +2994,7 @@
       "bacnet_type": "character_string_value_object",
       "bacnet_unit_type_id": 95,
       "bacnet_unit_type": "UNITS_NO_UNITS",
-      "reference": [
-        "cellular_settings.aws_settings.server_address",
-        "cellular_settings.aws_settings.server_port",
-        "cellular_settings.aws_settings.enable_ca_certificate",
-        "cellular_settings.aws_settings.ca_certificate",
-        "cellular_settings.aws_settings.enable_client_certificate",
-        "cellular_settings.aws_settings.client_certificate",
-        "cellular_settings.aws_settings.enable_key_certificate"
-      ]
-    },
-    {
-      "id": "temperature_alarm.type",
-      "name": "Temperature Alarm (Type)",
-      "value": "",
-      "unit": "",
-      "access_mode": "R",
-      "data_type": "ENUM",
-      "value_type": "UINT8",
-      "values": [
-        {
-          "value": 0,
-          "name": "collection error"
-        },
-        {
-          "value": 1,
-          "name": "lower range error"
-        },
-        {
-          "value": 2,
-          "name": "over range error"
-        },
-        {
-          "value": 3,
-          "name": "no data"
-        },
-        {
-          "value": 16,
-          "name": "temperature below alarm released"
-        },
-        {
-          "value": 17,
-          "name": "temperature below alarm"
-        },
-        {
-          "value": 18,
-          "name": "temperature above alarm released"
-        },
-        {
-          "value": 19,
-          "name": "temperature above alarm"
-        },
-        {
-          "value": 20,
-          "name": "temperature between alarm released"
-        },
-        {
-          "value": 21,
-          "name": "temperature between alarm"
-        },
-        {
-          "value": 22,
-          "name": "temperature exceed tolerance alarm released"
-        },
-        {
-          "value": 23,
-          "name": "temperature exceed tolerance alarm"
-        },
-        {
-          "value": 32,
-          "name": "temperature shift threshold"
-        },
-        {
-          "value": 48,
-          "name": "temperature shift threshold"
-        }
-      ],
-      "bacnet_type": "multistate_value_object",
-      "bacnet_unit_type_id": 95,
-      "bacnet_unit_type": "UNITS_NO_UNITS"
+      "reference": []
     },
     {
       "id": "temperature_alarm.lower_range_alarm_deactivation.temperature",
@@ -3864,8 +3005,8 @@
       "data_type": "NUMBER",
       "value_type": "FLOAT",
       "range": [
-        -200,
-        800
+        -35.0,
+        70.0
       ],
       "bacnet_type": "analog_input_object",
       "bacnet_unit_type_id": 62,
@@ -3881,8 +3022,8 @@
       "data_type": "NUMBER",
       "value_type": "FLOAT",
       "range": [
-        -200,
-        800
+        -35.0,
+        70.0
       ],
       "bacnet_type": "analog_input_object",
       "bacnet_unit_type_id": 62,
@@ -3898,8 +3039,8 @@
       "data_type": "NUMBER",
       "value_type": "FLOAT",
       "range": [
-        -200,
-        800
+        -35.0,
+        70.0
       ],
       "bacnet_type": "analog_input_object",
       "bacnet_unit_type_id": 62,
@@ -3915,8 +3056,8 @@
       "data_type": "NUMBER",
       "value_type": "FLOAT",
       "range": [
-        -200,
-        800
+        -35.0,
+        70.0
       ],
       "bacnet_type": "analog_input_object",
       "bacnet_unit_type_id": 62,
@@ -3932,8 +3073,8 @@
       "data_type": "NUMBER",
       "value_type": "FLOAT",
       "range": [
-        -200,
-        800
+        -35.0,
+        70.0
       ],
       "bacnet_type": "analog_input_object",
       "bacnet_unit_type_id": 62,
@@ -3949,8 +3090,8 @@
       "data_type": "NUMBER",
       "value_type": "FLOAT",
       "range": [
-        -200,
-        800
+        -35.0,
+        70.0
       ],
       "bacnet_type": "analog_input_object",
       "bacnet_unit_type_id": 62,
@@ -3966,8 +3107,8 @@
       "data_type": "NUMBER",
       "value_type": "FLOAT",
       "range": [
-        -200,
-        800
+        -35.0,
+        70.0
       ],
       "bacnet_type": "analog_input_object",
       "bacnet_unit_type_id": 62,
@@ -3983,8 +3124,8 @@
       "data_type": "NUMBER",
       "value_type": "FLOAT",
       "range": [
-        -200,
-        800
+        -35.0,
+        70.0
       ],
       "bacnet_type": "analog_input_object",
       "bacnet_unit_type_id": 62,
@@ -4000,8 +3141,8 @@
       "data_type": "NUMBER",
       "value_type": "FLOAT",
       "range": [
-        -200,
-        800
+        -35.0,
+        70.0
       ],
       "bacnet_type": "analog_input_object",
       "bacnet_unit_type_id": 62,
@@ -4017,8 +3158,8 @@
       "data_type": "NUMBER",
       "value_type": "FLOAT",
       "range": [
-        -200,
-        800
+        -35.0,
+        70.0
       ],
       "bacnet_type": "analog_input_object",
       "bacnet_unit_type_id": 62,
@@ -4036,8 +3177,8 @@
       "data_type": "NUMBER",
       "value_type": "FLOAT",
       "range": [
-        -200,
-        800
+        -35.0,
+        70.0
       ],
       "bacnet_type": "analog_input_object",
       "bacnet_unit_type_id": 62,
@@ -4045,76 +3186,6 @@
       "reference": [
         "temperature_alarm.mutation_alarm_trigger.temperature"
       ]
-    },
-    {
-      "id": "humidity_alarm.type",
-      "name": "Humidity Alarm (Type)",
-      "value": "",
-      "unit": "",
-      "access_mode": "R",
-      "data_type": "ENUM",
-      "value_type": "UINT8",
-      "values": [
-        {
-          "value": 0,
-          "name": "collection error"
-        },
-        {
-          "value": 1,
-          "name": "lower range error"
-        },
-        {
-          "value": 2,
-          "name": "over range error"
-        },
-        {
-          "value": 3,
-          "name": "no data"
-        },
-        {
-          "value": 16,
-          "name": "humidity below alarm released"
-        },
-        {
-          "value": 17,
-          "name": "humidity below alarm"
-        },
-        {
-          "value": 18,
-          "name": "humidity above alarm released"
-        },
-        {
-          "value": 19,
-          "name": "humidity above alarm"
-        },
-        {
-          "value": 20,
-          "name": "humidity between alarm released"
-        },
-        {
-          "value": 21,
-          "name": "humidity between alarm"
-        },
-        {
-          "value": 22,
-          "name": "humidity exceed tolerance alarm released"
-        },
-        {
-          "value": 23,
-          "name": "humidity exceed tolerance alarm"
-        },
-        {
-          "value": 32,
-          "name": "humidity shift threshold"
-        },
-        {
-          "value": 48,
-          "name": "humidity shift threshold"
-        }
-      ],
-      "bacnet_type": "multistate_value_object",
-      "bacnet_unit_type_id": 95,
-      "bacnet_unit_type": "UNITS_NO_UNITS"
     },
     {
       "id": "humidity_alarm.lower_range_alarm_deactivation.humidity",
@@ -4125,8 +3196,8 @@
       "data_type": "NUMBER",
       "value_type": "FLOAT",
       "range": [
-        0,
-        100
+        0.0,
+        100.0
       ],
       "bacnet_type": "analog_input_object",
       "bacnet_unit_type_id": 29,
@@ -4142,8 +3213,8 @@
       "data_type": "NUMBER",
       "value_type": "FLOAT",
       "range": [
-        0,
-        100
+        0.0,
+        100.0
       ],
       "bacnet_type": "analog_input_object",
       "bacnet_unit_type_id": 29,
@@ -4159,8 +3230,8 @@
       "data_type": "NUMBER",
       "value_type": "FLOAT",
       "range": [
-        0,
-        100
+        0.0,
+        100.0
       ],
       "bacnet_type": "analog_input_object",
       "bacnet_unit_type_id": 29,
@@ -4176,8 +3247,8 @@
       "data_type": "NUMBER",
       "value_type": "FLOAT",
       "range": [
-        0,
-        100
+        0.0,
+        100.0
       ],
       "bacnet_type": "analog_input_object",
       "bacnet_unit_type_id": 29,
@@ -4193,8 +3264,8 @@
       "data_type": "NUMBER",
       "value_type": "FLOAT",
       "range": [
-        0,
-        100
+        0.0,
+        100.0
       ],
       "bacnet_type": "analog_input_object",
       "bacnet_unit_type_id": 29,
@@ -4210,8 +3281,8 @@
       "data_type": "NUMBER",
       "value_type": "FLOAT",
       "range": [
-        0,
-        100
+        0.0,
+        100.0
       ],
       "bacnet_type": "analog_input_object",
       "bacnet_unit_type_id": 29,
@@ -4227,8 +3298,8 @@
       "data_type": "NUMBER",
       "value_type": "FLOAT",
       "range": [
-        0,
-        100
+        0.0,
+        100.0
       ],
       "bacnet_type": "analog_input_object",
       "bacnet_unit_type_id": 29,
@@ -4244,8 +3315,8 @@
       "data_type": "NUMBER",
       "value_type": "FLOAT",
       "range": [
-        0,
-        100
+        0.0,
+        100.0
       ],
       "bacnet_type": "analog_input_object",
       "bacnet_unit_type_id": 29,
@@ -4261,8 +3332,8 @@
       "data_type": "NUMBER",
       "value_type": "FLOAT",
       "range": [
-        0,
-        100
+        0.0,
+        100.0
       ],
       "bacnet_type": "analog_input_object",
       "bacnet_unit_type_id": 29,
@@ -4278,8 +3349,8 @@
       "data_type": "NUMBER",
       "value_type": "FLOAT",
       "range": [
-        0,
-        100
+        0.0,
+        100.0
       ],
       "bacnet_type": "analog_input_object",
       "bacnet_unit_type_id": 29,
@@ -4297,8 +3368,8 @@
       "data_type": "NUMBER",
       "value_type": "FLOAT",
       "range": [
-        0,
-        100
+        0.0,
+        100.0
       ],
       "bacnet_type": "analog_input_object",
       "bacnet_unit_type_id": 29,
@@ -4365,96 +3436,6 @@
       "bacnet_unit_type_id": 95,
       "bacnet_unit_type": "UNITS_NO_UNITS",
       "reference": []
-    },
-    {
-      "id": "set_zero_calibration.operation_item",
-      "name": "Zero Calibration",
-      "value": "1",
-      "unit": "",
-      "access_mode": "W",
-      "data_type": "ENUM",
-      "value_type": "UINT8",
-      "values": [
-        {
-          "name": "clear zero calibration",
-          "value": 0
-        },
-        {
-          "name": "start zero calibration",
-          "value": 1
-        }
-      ],
-      "bacnet_type": "multistate_value_object",
-      "bacnet_unit_type_id": 95,
-      "bacnet_unit_type": "UNITS_NO_UNITS",
-      "reference": []
-    },
-    {
-      "id": "set_retrieval_initial_surface.operation_item",
-      "name": "Set Relative Initial Surface",
-      "value": "1",
-      "unit": "",
-      "access_mode": "W",
-      "data_type": "ENUM",
-      "value_type": "UINT8",
-      "values": [
-        {
-          "name": "reset the zero reference point to the horizontal plane",
-          "value": 0
-        },
-        {
-          "name": "set the current plane as the new zero reference point",
-          "value": 1
-        }
-      ],
-      "bacnet_type": "multistate_value_object",
-      "bacnet_unit_type_id": 95,
-      "bacnet_unit_type": "UNITS_NO_UNITS",
-      "reference": []
-    },
-    {
-      "id": "synchronize_time",
-      "name": "Synchronize Time",
-      "value": "",
-      "unit": "",
-      "access_mode": "W",
-      "data_type": "BOOL",
-      "value_type": "UINT8",
-      "values": [
-        {
-          "value": 0,
-          "name": "no"
-        },
-        {
-          "value": 1,
-          "name": "yes"
-        }
-      ],
-      "bacnet_type": "binary_output_object",
-      "bacnet_unit_type_id": 95,
-      "bacnet_unit_type": "UNITS_NO_UNITS"
-    },
-    {
-      "id": "query_device_status",
-      "name": "Query Device Status",
-      "value": "",
-      "unit": "",
-      "access_mode": "W",
-      "data_type": "BOOL",
-      "value_type": "UINT8",
-      "values": [
-        {
-          "value": 0,
-          "name": "no"
-        },
-        {
-          "value": 1,
-          "name": "yes"
-        }
-      ],
-      "bacnet_type": "binary_output_object",
-      "bacnet_unit_type_id": 95,
-      "bacnet_unit_type": "UNITS_NO_UNITS"
     }
   ]
 }
