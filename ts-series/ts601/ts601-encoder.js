@@ -31,6 +31,9 @@ function milesightDeviceEncode(payload) {
 	if ('request_check_order' in payload) {
 		var buffer = new Buffer();
 		buffer.writeUInt8(0xfe);
+		if (payload.request_check_order.order < 0 || payload.request_check_order.order > 255) {
+			throw new Error('request_check_order.order must be between 0 and 255');
+		}
 		buffer.writeUInt8(payload.request_check_order.order);
 		encoded = encoded.concat(buffer.toBytes());
 	}
@@ -119,6 +122,9 @@ function milesightDeviceEncode(payload) {
 	if ('battery' in payload) {
 		var buffer = new Buffer();
 		buffer.writeUInt8(0x01);
+		if (payload.battery < 0 || payload.battery > 100) {
+			throw new Error('battery must be between 0 and 100');
+		}
 		buffer.writeUInt8(payload.battery);
 		encoded = encoded.concat(buffer.toBytes());
 	}
@@ -135,6 +141,9 @@ function milesightDeviceEncode(payload) {
 	if ('temperature' in payload) {
 		var buffer = new Buffer();
 		buffer.writeUInt8(0x04);
+		if (payload.temperature < -35 || payload.temperature > 70) {
+			throw new Error('temperature must be between -35 and 70');
+		}
 		buffer.writeInt32LE(payload.temperature * 100);
 		encoded = encoded.concat(buffer.toBytes());
 	}
@@ -142,6 +151,9 @@ function milesightDeviceEncode(payload) {
 	if ('humidity' in payload) {
 		var buffer = new Buffer();
 		buffer.writeUInt8(0x05);
+		if (payload.humidity < 0 || payload.humidity > 100) {
+			throw new Error('humidity must be between 0 and 100');
+		}
 		buffer.writeUInt16LE(payload.humidity * 10);
 		encoded = encoded.concat(buffer.toBytes());
 	}
@@ -149,7 +161,13 @@ function milesightDeviceEncode(payload) {
 	if ('base_station_position' in payload) {
 		var buffer = new Buffer();
 		buffer.writeUInt8(0x06);
+		if (payload.base_station_position.latitude < -90 || payload.base_station_position.latitude > 90) {
+			throw new Error('base_station_position.latitude must be between -90 and 90');
+		}
 		buffer.writeInt32LE(payload.base_station_position.latitude * 1000000);
+		if (payload.base_station_position.longitude < -180 || payload.base_station_position.longitude > 180) {
+			throw new Error('base_station_position.longitude must be between -180 and 180');
+		}
 		buffer.writeInt32LE(payload.base_station_position.longitude * 1000000);
 		encoded = encoded.concat(buffer.toBytes());
 	}
@@ -175,34 +193,67 @@ function milesightDeviceEncode(payload) {
 		if (payload.temperature_alarm.type == 0x03) {
 		}
 		if (payload.temperature_alarm.type == 0x10) {
+			if (payload.temperature_alarm.lower_range_alarm_deactivation.temperature < -35 || payload.temperature_alarm.lower_range_alarm_deactivation.temperature > 70) {
+				throw new Error('temperature_alarm.lower_range_alarm_deactivation.temperature must be between -35 and 70');
+			}
 			buffer.writeInt32LE(payload.temperature_alarm.lower_range_alarm_deactivation.temperature * 100);
 		}
 		if (payload.temperature_alarm.type == 0x11) {
+			if (payload.temperature_alarm.lower_range_alarm_trigger.temperature < -35 || payload.temperature_alarm.lower_range_alarm_trigger.temperature > 70) {
+				throw new Error('temperature_alarm.lower_range_alarm_trigger.temperature must be between -35 and 70');
+			}
 			buffer.writeInt32LE(payload.temperature_alarm.lower_range_alarm_trigger.temperature * 100);
 		}
 		if (payload.temperature_alarm.type == 0x12) {
+			if (payload.temperature_alarm.over_range_alarm_deactivation.temperature < -35 || payload.temperature_alarm.over_range_alarm_deactivation.temperature > 70) {
+				throw new Error('temperature_alarm.over_range_alarm_deactivation.temperature must be between -35 and 70');
+			}
 			buffer.writeInt32LE(payload.temperature_alarm.over_range_alarm_deactivation.temperature * 100);
 		}
 		if (payload.temperature_alarm.type == 0x13) {
+			if (payload.temperature_alarm.over_range_alarm_trigger.temperature < -35 || payload.temperature_alarm.over_range_alarm_trigger.temperature > 70) {
+				throw new Error('temperature_alarm.over_range_alarm_trigger.temperature must be between -35 and 70');
+			}
 			buffer.writeInt32LE(payload.temperature_alarm.over_range_alarm_trigger.temperature * 100);
 		}
 		if (payload.temperature_alarm.type == 0x14) {
+			if (payload.temperature_alarm.within_range_alarm_deactivation.temperature < -35 || payload.temperature_alarm.within_range_alarm_deactivation.temperature > 70) {
+				throw new Error('temperature_alarm.within_range_alarm_deactivation.temperature must be between -35 and 70');
+			}
 			buffer.writeInt32LE(payload.temperature_alarm.within_range_alarm_deactivation.temperature * 100);
 		}
 		if (payload.temperature_alarm.type == 0x15) {
+			if (payload.temperature_alarm.within_range_alarm_trigger.temperature < -35 || payload.temperature_alarm.within_range_alarm_trigger.temperature > 70) {
+				throw new Error('temperature_alarm.within_range_alarm_trigger.temperature must be between -35 and 70');
+			}
 			buffer.writeInt32LE(payload.temperature_alarm.within_range_alarm_trigger.temperature * 100);
 		}
 		if (payload.temperature_alarm.type == 0x16) {
+			if (payload.temperature_alarm.exceed_range_alarm_deactivation.temperature < -35 || payload.temperature_alarm.exceed_range_alarm_deactivation.temperature > 70) {
+				throw new Error('temperature_alarm.exceed_range_alarm_deactivation.temperature must be between -35 and 70');
+			}
 			buffer.writeInt32LE(payload.temperature_alarm.exceed_range_alarm_deactivation.temperature * 100);
 		}
 		if (payload.temperature_alarm.type == 0x17) {
+			if (payload.temperature_alarm.exceed_range_alarm_trigger.temperature < -35 || payload.temperature_alarm.exceed_range_alarm_trigger.temperature > 70) {
+				throw new Error('temperature_alarm.exceed_range_alarm_trigger.temperature must be between -35 and 70');
+			}
 			buffer.writeInt32LE(payload.temperature_alarm.exceed_range_alarm_trigger.temperature * 100);
 		}
 		if (payload.temperature_alarm.type == 0x30) {
+			if (payload.temperature_alarm.mutation_alarm_trigger_no_mutation.temperature < -35 || payload.temperature_alarm.mutation_alarm_trigger_no_mutation.temperature > 70) {
+				throw new Error('temperature_alarm.mutation_alarm_trigger_no_mutation.temperature must be between -35 and 70');
+			}
 			buffer.writeInt32LE(payload.temperature_alarm.mutation_alarm_trigger_no_mutation.temperature * 100);
 		}
 		if (payload.temperature_alarm.type == 0x20) {
+			if (payload.temperature_alarm.mutation_alarm_trigger.temperature < -35 || payload.temperature_alarm.mutation_alarm_trigger.temperature > 70) {
+				throw new Error('temperature_alarm.mutation_alarm_trigger.temperature must be between -35 and 70');
+			}
 			buffer.writeInt32LE(payload.temperature_alarm.mutation_alarm_trigger.temperature * 100);
+			if (payload.temperature_alarm.mutation_alarm_trigger.saltation < -35 || payload.temperature_alarm.mutation_alarm_trigger.saltation > 70) {
+				throw new Error('temperature_alarm.mutation_alarm_trigger.saltation must be between -35 and 70');
+			}
 			buffer.writeInt32LE(payload.temperature_alarm.mutation_alarm_trigger.saltation * 100);
 		}
 		encoded = encoded.concat(buffer.toBytes());
@@ -221,34 +272,67 @@ function milesightDeviceEncode(payload) {
 		if (payload.humidity_alarm.type == 0x03) {
 		}
 		if (payload.humidity_alarm.type == 0x10) {
+			if (payload.humidity_alarm.lower_range_alarm_deactivation.humidity < 0 || payload.humidity_alarm.lower_range_alarm_deactivation.humidity > 100) {
+				throw new Error('humidity_alarm.lower_range_alarm_deactivation.humidity must be between 0 and 100');
+			}
 			buffer.writeUInt16LE(payload.humidity_alarm.lower_range_alarm_deactivation.humidity * 10);
 		}
 		if (payload.humidity_alarm.type == 0x11) {
+			if (payload.humidity_alarm.lower_range_alarm_trigger.humidity < 0 || payload.humidity_alarm.lower_range_alarm_trigger.humidity > 100) {
+				throw new Error('humidity_alarm.lower_range_alarm_trigger.humidity must be between 0 and 100');
+			}
 			buffer.writeUInt16LE(payload.humidity_alarm.lower_range_alarm_trigger.humidity * 10);
 		}
 		if (payload.humidity_alarm.type == 0x12) {
+			if (payload.humidity_alarm.over_range_alarm_deactivation.humidity < 0 || payload.humidity_alarm.over_range_alarm_deactivation.humidity > 100) {
+				throw new Error('humidity_alarm.over_range_alarm_deactivation.humidity must be between 0 and 100');
+			}
 			buffer.writeUInt16LE(payload.humidity_alarm.over_range_alarm_deactivation.humidity * 10);
 		}
 		if (payload.humidity_alarm.type == 0x13) {
+			if (payload.humidity_alarm.over_range_alarm_trigger.humidity < 0 || payload.humidity_alarm.over_range_alarm_trigger.humidity > 100) {
+				throw new Error('humidity_alarm.over_range_alarm_trigger.humidity must be between 0 and 100');
+			}
 			buffer.writeUInt16LE(payload.humidity_alarm.over_range_alarm_trigger.humidity * 10);
 		}
 		if (payload.humidity_alarm.type == 0x14) {
+			if (payload.humidity_alarm.within_range_alarm_deactivation.humidity < 0 || payload.humidity_alarm.within_range_alarm_deactivation.humidity > 100) {
+				throw new Error('humidity_alarm.within_range_alarm_deactivation.humidity must be between 0 and 100');
+			}
 			buffer.writeUInt16LE(payload.humidity_alarm.within_range_alarm_deactivation.humidity * 10);
 		}
 		if (payload.humidity_alarm.type == 0x15) {
+			if (payload.humidity_alarm.within_range_alarm_trigger.humidity < 0 || payload.humidity_alarm.within_range_alarm_trigger.humidity > 100) {
+				throw new Error('humidity_alarm.within_range_alarm_trigger.humidity must be between 0 and 100');
+			}
 			buffer.writeUInt16LE(payload.humidity_alarm.within_range_alarm_trigger.humidity * 10);
 		}
 		if (payload.humidity_alarm.type == 0x16) {
+			if (payload.humidity_alarm.exceed_range_alarm_deactivation.humidity < 0 || payload.humidity_alarm.exceed_range_alarm_deactivation.humidity > 100) {
+				throw new Error('humidity_alarm.exceed_range_alarm_deactivation.humidity must be between 0 and 100');
+			}
 			buffer.writeUInt16LE(payload.humidity_alarm.exceed_range_alarm_deactivation.humidity * 10);
 		}
 		if (payload.humidity_alarm.type == 0x17) {
+			if (payload.humidity_alarm.exceed_range_alarm_trigger.humidity < 0 || payload.humidity_alarm.exceed_range_alarm_trigger.humidity > 100) {
+				throw new Error('humidity_alarm.exceed_range_alarm_trigger.humidity must be between 0 and 100');
+			}
 			buffer.writeUInt16LE(payload.humidity_alarm.exceed_range_alarm_trigger.humidity * 10);
 		}
 		if (payload.humidity_alarm.type == 0x30) {
+			if (payload.humidity_alarm.mutation_alarm_trigger_no_mutation.humidity < 0 || payload.humidity_alarm.mutation_alarm_trigger_no_mutation.humidity > 100) {
+				throw new Error('humidity_alarm.mutation_alarm_trigger_no_mutation.humidity must be between 0 and 100');
+			}
 			buffer.writeUInt16LE(payload.humidity_alarm.mutation_alarm_trigger_no_mutation.humidity * 10);
 		}
 		if (payload.humidity_alarm.type == 0x20) {
+			if (payload.humidity_alarm.mutation_alarm_trigger.humidity < 0 || payload.humidity_alarm.mutation_alarm_trigger.humidity > 100) {
+				throw new Error('humidity_alarm.mutation_alarm_trigger.humidity must be between 0 and 100');
+			}
 			buffer.writeUInt16LE(payload.humidity_alarm.mutation_alarm_trigger.humidity * 10);
+			if (payload.humidity_alarm.mutation_alarm_trigger.saltation < 0 || payload.humidity_alarm.mutation_alarm_trigger.saltation > 100) {
+				throw new Error('humidity_alarm.mutation_alarm_trigger.saltation must be between 0 and 100');
+			}
 			buffer.writeUInt16LE(payload.humidity_alarm.mutation_alarm_trigger.saltation * 10);
 		}
 		encoded = encoded.concat(buffer.toBytes());
@@ -305,8 +389,17 @@ function milesightDeviceEncode(payload) {
 	if ('relative_surface_info' in payload) {
 		var buffer = new Buffer();
 		buffer.writeUInt8(0x0d);
+		if (payload.relative_surface_info.angle_x < -90 || payload.relative_surface_info.angle_x > 90) {
+			throw new Error('relative_surface_info.angle_x must be between -90 and 90');
+		}
 		buffer.writeInt16LE(payload.relative_surface_info.angle_x * 100);
+		if (payload.relative_surface_info.angle_y < -90 || payload.relative_surface_info.angle_y > 90) {
+			throw new Error('relative_surface_info.angle_y must be between -90 and 90');
+		}
 		buffer.writeInt16LE(payload.relative_surface_info.angle_y * 100);
+		if (payload.relative_surface_info.angle_z < -90 || payload.relative_surface_info.angle_z > 90) {
+			throw new Error('relative_surface_info.angle_z must be between -90 and 90');
+		}
 		buffer.writeInt16LE(payload.relative_surface_info.angle_z * 100);
 		encoded = encoded.concat(buffer.toBytes());
 	}
@@ -322,6 +415,9 @@ function milesightDeviceEncode(payload) {
 	if ('debugging_commands' in payload) {
 		var buffer = new Buffer();
 		buffer.writeUInt8(0xeb);
+		if (payload.debugging_commands.length < 1 || payload.debugging_commands.length > 65535) {
+			throw new Error('debugging_commands.length must be between 1 and 65535');
+		}
 		buffer.writeUInt16LE(payload.debugging_commands.length);
 		buffer.writeString(payload.debugging_commands.content, payload.debugging_commands.length, true);
 		encoded = encoded.concat(buffer.toBytes());
@@ -352,6 +448,9 @@ function milesightDeviceEncode(payload) {
 	if ('cumulative_times' in payload) {
 		var buffer = new Buffer();
 		buffer.writeUInt8(0x61);
+		if (payload.cumulative_times < 1 || payload.cumulative_times > 20) {
+			throw new Error('cumulative_times must be between 1 and 20');
+		}
 		buffer.writeUInt8(payload.cumulative_times);
 		encoded = encoded.concat(buffer.toBytes());
 	}
@@ -362,9 +461,15 @@ function milesightDeviceEncode(payload) {
 		// 0：second, 1：min
 		buffer.writeUInt8(payload.collection_interval.unit);
 		if (payload.collection_interval.unit == 0x00) {
+			if (payload.collection_interval.seconds_of_time < 10 || payload.collection_interval.seconds_of_time > 64800) {
+				throw new Error('collection_interval.seconds_of_time must be between 10 and 64800');
+			}
 			buffer.writeUInt16LE(payload.collection_interval.seconds_of_time);
 		}
 		if (payload.collection_interval.unit == 0x01) {
+			if (payload.collection_interval.minutes_of_time < 1 || payload.collection_interval.minutes_of_time > 1440) {
+				throw new Error('collection_interval.minutes_of_time must be between 1 and 1440');
+			}
 			buffer.writeUInt16LE(payload.collection_interval.minutes_of_time);
 		}
 		encoded = encoded.concat(buffer.toBytes());
@@ -373,6 +478,9 @@ function milesightDeviceEncode(payload) {
 	if ('alarm_reporting_times' in payload) {
 		var buffer = new Buffer();
 		buffer.writeUInt8(0x63);
+		if (payload.alarm_reporting_times < 1 || payload.alarm_reporting_times > 1000) {
+			throw new Error('alarm_reporting_times must be between 1 and 1000');
+		}
 		buffer.writeUInt16LE(payload.alarm_reporting_times);
 		encoded = encoded.concat(buffer.toBytes());
 	}
@@ -383,9 +491,15 @@ function milesightDeviceEncode(payload) {
 		// 0：second, 1：min
 		buffer.writeUInt8(payload.light_collection_interval.unit);
 		if (payload.light_collection_interval.unit == 0x00) {
+			if (payload.light_collection_interval.seconds_of_time < 10 || payload.light_collection_interval.seconds_of_time > 64800) {
+				throw new Error('light_collection_interval.seconds_of_time must be between 10 and 64800');
+			}
 			buffer.writeUInt16LE(payload.light_collection_interval.seconds_of_time);
 		}
 		if (payload.light_collection_interval.unit == 0x01) {
+			if (payload.light_collection_interval.minutes_of_time < 1 || payload.light_collection_interval.minutes_of_time > 1440) {
+				throw new Error('light_collection_interval.minutes_of_time must be between 1 and 1440');
+			}
 			buffer.writeUInt16LE(payload.light_collection_interval.minutes_of_time);
 		}
 		encoded = encoded.concat(buffer.toBytes());
@@ -419,6 +533,9 @@ function milesightDeviceEncode(payload) {
 		buffer.writeUInt8(0xc6);
 		// 0：disable, 1：enable
 		buffer.writeUInt8(payload.daylight_saving_time.daylight_saving_time_enable);
+		if (payload.daylight_saving_time.daylight_saving_time_offset < 0 || payload.daylight_saving_time.daylight_saving_time_offset > 120) {
+			throw new Error('daylight_saving_time.daylight_saving_time_offset must be between 0 and 120');
+		}
 		buffer.writeUInt8(payload.daylight_saving_time.daylight_saving_time_offset);
 		// 1:Jan., 2:Feb., 3:Mar., 4:Apr., 5:May, 6:Jun., 7:Jul., 8:Aug., 9:Sep., 10:Oct., 11:Nov., 12:Dec.
 		buffer.writeUInt8(payload.daylight_saving_time.start_month);
@@ -460,11 +577,17 @@ function milesightDeviceEncode(payload) {
 		if (isValid(payload.data_storage_settings.retransmission_interval)) {
 			buffer.writeUInt8(0xc5);
 			buffer.writeUInt8(0x02);
+			if (payload.data_storage_settings.retransmission_interval < 30 || payload.data_storage_settings.retransmission_interval > 1200) {
+				throw new Error('data_storage_settings.retransmission_interval must be between 30 and 1200');
+			}
 			buffer.writeUInt16LE(payload.data_storage_settings.retransmission_interval);
 		}
 		if (isValid(payload.data_storage_settings.retrieval_interval)) {
 			buffer.writeUInt8(0xc5);
 			buffer.writeUInt8(0x03);
+			if (payload.data_storage_settings.retrieval_interval < 30 || payload.data_storage_settings.retrieval_interval > 1200) {
+				throw new Error('data_storage_settings.retrieval_interval must be between 30 and 1200');
+			}
 			buffer.writeUInt16LE(payload.data_storage_settings.retrieval_interval);
 		}
 		encoded = encoded.concat(buffer.toBytes());
@@ -490,21 +613,57 @@ function milesightDeviceEncode(payload) {
 		if (isValid(payload.airplane_mode_time_period_settings.start_timestamp)) {
 			buffer.writeUInt8(0x73);
 			buffer.writeUInt8(0x00);
+			if (payload.airplane_mode_time_period_settings.start_timestamp.year < 0 || payload.airplane_mode_time_period_settings.start_timestamp.year > 255) {
+				throw new Error('airplane_mode_time_period_settings.start_timestamp.year must be between 0 and 255');
+			}
 			buffer.writeUInt8(payload.airplane_mode_time_period_settings.start_timestamp.year);
+			if (payload.airplane_mode_time_period_settings.start_timestamp.month < 1 || payload.airplane_mode_time_period_settings.start_timestamp.month > 12) {
+				throw new Error('airplane_mode_time_period_settings.start_timestamp.month must be between 1 and 12');
+			}
 			buffer.writeUInt8(payload.airplane_mode_time_period_settings.start_timestamp.month);
+			if (payload.airplane_mode_time_period_settings.start_timestamp.day < 1 || payload.airplane_mode_time_period_settings.start_timestamp.day > 31) {
+				throw new Error('airplane_mode_time_period_settings.start_timestamp.day must be between 1 and 31');
+			}
 			buffer.writeUInt8(payload.airplane_mode_time_period_settings.start_timestamp.day);
+			if (payload.airplane_mode_time_period_settings.start_timestamp.hour < 0 || payload.airplane_mode_time_period_settings.start_timestamp.hour > 23) {
+				throw new Error('airplane_mode_time_period_settings.start_timestamp.hour must be between 0 and 23');
+			}
 			buffer.writeUInt8(payload.airplane_mode_time_period_settings.start_timestamp.hour);
+			if (payload.airplane_mode_time_period_settings.start_timestamp.minute < 0 || payload.airplane_mode_time_period_settings.start_timestamp.minute > 59) {
+				throw new Error('airplane_mode_time_period_settings.start_timestamp.minute must be between 0 and 59');
+			}
 			buffer.writeUInt8(payload.airplane_mode_time_period_settings.start_timestamp.minute);
+			if (payload.airplane_mode_time_period_settings.start_timestamp.second < 0 || payload.airplane_mode_time_period_settings.start_timestamp.second > 59) {
+				throw new Error('airplane_mode_time_period_settings.start_timestamp.second must be between 0 and 59');
+			}
 			buffer.writeUInt8(payload.airplane_mode_time_period_settings.start_timestamp.second);
 		}
 		if (isValid(payload.airplane_mode_time_period_settings.end_timestamp)) {
 			buffer.writeUInt8(0x73);
 			buffer.writeUInt8(0x01);
+			if (payload.airplane_mode_time_period_settings.end_timestamp.year < 0 || payload.airplane_mode_time_period_settings.end_timestamp.year > 255) {
+				throw new Error('airplane_mode_time_period_settings.end_timestamp.year must be between 0 and 255');
+			}
 			buffer.writeUInt8(payload.airplane_mode_time_period_settings.end_timestamp.year);
+			if (payload.airplane_mode_time_period_settings.end_timestamp.month < 1 || payload.airplane_mode_time_period_settings.end_timestamp.month > 12) {
+				throw new Error('airplane_mode_time_period_settings.end_timestamp.month must be between 1 and 12');
+			}
 			buffer.writeUInt8(payload.airplane_mode_time_period_settings.end_timestamp.month);
+			if (payload.airplane_mode_time_period_settings.end_timestamp.day < 1 || payload.airplane_mode_time_period_settings.end_timestamp.day > 31) {
+				throw new Error('airplane_mode_time_period_settings.end_timestamp.day must be between 1 and 31');
+			}
 			buffer.writeUInt8(payload.airplane_mode_time_period_settings.end_timestamp.day);
+			if (payload.airplane_mode_time_period_settings.end_timestamp.hour < 0 || payload.airplane_mode_time_period_settings.end_timestamp.hour > 23) {
+				throw new Error('airplane_mode_time_period_settings.end_timestamp.hour must be between 0 and 23');
+			}
 			buffer.writeUInt8(payload.airplane_mode_time_period_settings.end_timestamp.hour);
+			if (payload.airplane_mode_time_period_settings.end_timestamp.minute < 0 || payload.airplane_mode_time_period_settings.end_timestamp.minute > 59) {
+				throw new Error('airplane_mode_time_period_settings.end_timestamp.minute must be between 0 and 59');
+			}
 			buffer.writeUInt8(payload.airplane_mode_time_period_settings.end_timestamp.minute);
+			if (payload.airplane_mode_time_period_settings.end_timestamp.second < 0 || payload.airplane_mode_time_period_settings.end_timestamp.second > 59) {
+				throw new Error('airplane_mode_time_period_settings.end_timestamp.second must be between 0 and 59');
+			}
 			buffer.writeUInt8(payload.airplane_mode_time_period_settings.end_timestamp.second);
 		}
 		encoded = encoded.concat(buffer.toBytes());
@@ -550,7 +709,13 @@ function milesightDeviceEncode(payload) {
 		buffer.writeUInt8(payload.temperature_alarm_settings.enable);
 		// 0:disable, 1:condition: x<A, 2:condition: x>B, 3:condition: A<x<B, 4:condition: x<A or x>B
 		buffer.writeUInt8(payload.temperature_alarm_settings.threshold_condition);
+		if (payload.temperature_alarm_settings.threshold_min < -200 || payload.temperature_alarm_settings.threshold_min > 800) {
+			throw new Error('temperature_alarm_settings.threshold_min must be between -200 and 800');
+		}
 		buffer.writeInt32LE(payload.temperature_alarm_settings.threshold_min * 100);
+		if (payload.temperature_alarm_settings.threshold_max < -35 || payload.temperature_alarm_settings.threshold_max > 70) {
+			throw new Error('temperature_alarm_settings.threshold_max must be between -35 and 70');
+		}
 		buffer.writeInt32LE(payload.temperature_alarm_settings.threshold_max * 100);
 		encoded = encoded.concat(buffer.toBytes());
 	}
@@ -560,6 +725,9 @@ function milesightDeviceEncode(payload) {
 		buffer.writeUInt8(0x78);
 		// 0: disable, 1:enable
 		buffer.writeUInt8(payload.temperature_mutation_alarm_settings.enable);
+		if (payload.temperature_mutation_alarm_settings.mutation_max < 0.1 || payload.temperature_mutation_alarm_settings.mutation_max > 60) {
+			throw new Error('temperature_mutation_alarm_settings.mutation_max must be between 0.1 and 60');
+		}
 		buffer.writeInt32LE(payload.temperature_mutation_alarm_settings.mutation_max * 100);
 		encoded = encoded.concat(buffer.toBytes());
 	}
@@ -571,7 +739,13 @@ function milesightDeviceEncode(payload) {
 		buffer.writeUInt8(payload.humidity_alarm_settings.enable);
 		// 0:disable, 1:condition: x<A, 2:condition: x>B, 3:condition: A<x<B, 4:condition: x<A or x>B
 		buffer.writeUInt8(payload.humidity_alarm_settings.threshold_condition);
+		if (payload.humidity_alarm_settings.threshold_min < 0.1 || payload.humidity_alarm_settings.threshold_min > 100) {
+			throw new Error('humidity_alarm_settings.threshold_min must be between 0.1 and 100');
+		}
 		buffer.writeUInt16LE(payload.humidity_alarm_settings.threshold_min * 10);
+		if (payload.humidity_alarm_settings.threshold_max < 0.1 || payload.humidity_alarm_settings.threshold_max > 100) {
+			throw new Error('humidity_alarm_settings.threshold_max must be between 0.1 and 100');
+		}
 		buffer.writeUInt16LE(payload.humidity_alarm_settings.threshold_max * 10);
 		encoded = encoded.concat(buffer.toBytes());
 	}
@@ -581,6 +755,9 @@ function milesightDeviceEncode(payload) {
 		buffer.writeUInt8(0x7a);
 		// 0: disable, 1:enable
 		buffer.writeUInt8(payload.humidity_mutation_alarm_settings.enable);
+		if (payload.humidity_mutation_alarm_settings.mutation_max < 0.1 || payload.humidity_mutation_alarm_settings.mutation_max > 100) {
+			throw new Error('humidity_mutation_alarm_settings.mutation_max must be between 0.1 and 100');
+		}
 		buffer.writeUInt16LE(payload.humidity_mutation_alarm_settings.mutation_max * 10);
 		encoded = encoded.concat(buffer.toBytes());
 	}
@@ -590,6 +767,9 @@ function milesightDeviceEncode(payload) {
 		buffer.writeUInt8(0x7b);
 		// 0: disable, 1:enable
 		buffer.writeUInt8(payload.temperature_calibration_settings.enable);
+		if (payload.temperature_calibration_settings.calibration_value < -100000 || payload.temperature_calibration_settings.calibration_value > 100000) {
+			throw new Error('temperature_calibration_settings.calibration_value must be between -100000 and 100000');
+		}
 		buffer.writeInt32LE(payload.temperature_calibration_settings.calibration_value * 100);
 		encoded = encoded.concat(buffer.toBytes());
 	}
@@ -599,6 +779,9 @@ function milesightDeviceEncode(payload) {
 		buffer.writeUInt8(0x7c);
 		// 0: disable, 1:enable
 		buffer.writeUInt8(payload.humidity_calibration_settings.enable);
+		if (payload.humidity_calibration_settings.calibration_value < -100 || payload.humidity_calibration_settings.calibration_value > 100) {
+			throw new Error('humidity_calibration_settings.calibration_value must be between -100 and 100');
+		}
 		buffer.writeInt16LE(payload.humidity_calibration_settings.calibration_value * 10);
 		encoded = encoded.concat(buffer.toBytes());
 	}
@@ -610,6 +793,9 @@ function milesightDeviceEncode(payload) {
 		buffer.writeUInt8(payload.light_alarm_settings.enable);
 		// 0:disable, 1:condition: x<A, 2:condition: x>B, 3:condition: A<x<B, 4:condition: x<A or x>B
 		buffer.writeUInt8(payload.light_alarm_settings.threshold_condition);
+		if (payload.light_alarm_settings.threshold_max < 0 || payload.light_alarm_settings.threshold_max > 600) {
+			throw new Error('light_alarm_settings.threshold_max must be between 0 and 600');
+		}
 		buffer.writeUInt16LE(payload.light_alarm_settings.threshold_max);
 		encoded = encoded.concat(buffer.toBytes());
 	}
@@ -617,6 +803,9 @@ function milesightDeviceEncode(payload) {
 	if ('light_tolerance_value' in payload) {
 		var buffer = new Buffer();
 		buffer.writeUInt8(0x7e);
+		if (payload.light_tolerance_value < 0 || payload.light_tolerance_value > 100) {
+			throw new Error('light_tolerance_value must be between 0 and 100');
+		}
 		buffer.writeUInt8(payload.light_tolerance_value);
 		encoded = encoded.concat(buffer.toBytes());
 	}
@@ -628,7 +817,13 @@ function milesightDeviceEncode(payload) {
 		buffer.writeUInt8(payload.tilt_alarm_settings.enable);
 		// 0:disable, 1:condition: x<A, 2:condition: x>B, 3:condition: A<x<B, 4:condition: x<A or x>B
 		buffer.writeUInt8(payload.tilt_alarm_settings.threshold_condition);
+		if (payload.tilt_alarm_settings.threshold_max < 1 || payload.tilt_alarm_settings.threshold_max > 90) {
+			throw new Error('tilt_alarm_settings.threshold_max must be between 1 and 90');
+		}
 		buffer.writeUInt8(payload.tilt_alarm_settings.threshold_max);
+		if (payload.tilt_alarm_settings.duration < 1 || payload.tilt_alarm_settings.duration > 60) {
+			throw new Error('tilt_alarm_settings.duration must be between 1 and 60');
+		}
 		buffer.writeUInt8(payload.tilt_alarm_settings.duration);
 		encoded = encoded.concat(buffer.toBytes());
 	}
@@ -646,6 +841,9 @@ function milesightDeviceEncode(payload) {
 		buffer.writeUInt8(0x81);
 		// 0: FREE_FALL_LEVEL_156, 1: FREE_FALL_LEVEL_219, 2: FREE_FALL_LEVEL_250, 3: FREE_FALL_LEVEL_312, 4: FREE_FALL_LEVEL_344, 5: FREE_FALL_LEVEL_406, 6: FREE_FALL_LEVEL_469, 7: FREE_FALL_LEVEL_500 
 		buffer.writeUInt8(payload.falling_threshold_alarm_settings.threshold_level);
+		if (payload.falling_threshold_alarm_settings.time_level < 1 || payload.falling_threshold_alarm_settings.time_level > 32) {
+			throw new Error('falling_threshold_alarm_settings.time_level must be between 1 and 32');
+		}
 		buffer.writeUInt8(payload.falling_threshold_alarm_settings.time_level);
 		encoded = encoded.concat(buffer.toBytes());
 	}
@@ -653,6 +851,9 @@ function milesightDeviceEncode(payload) {
 	if ('probe_id_retransmit_count' in payload) {
 		var buffer = new Buffer();
 		buffer.writeUInt8(0x82);
+		if (payload.probe_id_retransmit_count < 1 || payload.probe_id_retransmit_count > 10) {
+			throw new Error('probe_id_retransmit_count must be between 1 and 10');
+		}
 		buffer.writeUInt8(payload.probe_id_retransmit_count);
 		encoded = encoded.concat(buffer.toBytes());
 	}
@@ -814,12 +1015,18 @@ function milesightDeviceEncode(payload) {
 				buffer.writeUInt8(0xce);
 				buffer.writeUInt8(0x00);
 				buffer.writeUInt8(0x01);
+				if (payload.cellular_settings.mqtt_settings.server_port < 1 || payload.cellular_settings.mqtt_settings.server_port > 65535) {
+					throw new Error('cellular_settings.mqtt_settings.server_port must be between 1 and 65535');
+				}
 				buffer.writeUInt16LE(payload.cellular_settings.mqtt_settings.server_port);
 			}
 			if (isValid(payload.cellular_settings.mqtt_settings.keepalive_interval)) {
 				buffer.writeUInt8(0xce);
 				buffer.writeUInt8(0x00);
 				buffer.writeUInt8(0x02);
+				if (payload.cellular_settings.mqtt_settings.keepalive_interval < 10 || payload.cellular_settings.mqtt_settings.keepalive_interval > 65535) {
+					throw new Error('cellular_settings.mqtt_settings.keepalive_interval must be between 10 and 65535');
+				}
 				buffer.writeUInt16LE(payload.cellular_settings.mqtt_settings.keepalive_interval);
 			}
 			if (isValid(payload.cellular_settings.mqtt_settings.client_id)) {
@@ -972,12 +1179,18 @@ function milesightDeviceEncode(payload) {
 				buffer.writeUInt8(0xce);
 				buffer.writeUInt8(0x02);
 				buffer.writeUInt8(0x01);
+				if (payload.cellular_settings.aws_settings.server_port < 1 || payload.cellular_settings.aws_settings.server_port > 65535) {
+					throw new Error('cellular_settings.aws_settings.server_port must be between 1 and 65535');
+				}
 				buffer.writeUInt16LE(payload.cellular_settings.aws_settings.server_port);
 			}
 			if (isValid(payload.cellular_settings.aws_settings.keepalive_interval)) {
 				buffer.writeUInt8(0xce);
 				buffer.writeUInt8(0x02);
 				buffer.writeUInt8(0x02);
+				if (payload.cellular_settings.aws_settings.keepalive_interval < 10 || payload.cellular_settings.aws_settings.keepalive_interval > 65535) {
+					throw new Error('cellular_settings.aws_settings.keepalive_interval must be between 10 and 65535');
+				}
 				buffer.writeUInt16LE(payload.cellular_settings.aws_settings.keepalive_interval);
 			}
 			if (isValid(payload.cellular_settings.aws_settings.enable_ca_certificate)) {
@@ -1078,6 +1291,9 @@ function milesightDeviceEncode(payload) {
 				buffer.writeUInt8(0x05);
 				buffer.writeUInt8(tcp_settings_item_id);
 				buffer.writeUInt8(0x02);
+				if (tcp_settings_item.server_port < 1 || tcp_settings_item.server_port > 65535) {
+					throw new Error('server_port must be between 1 and 65535');
+				}
 				buffer.writeUInt16LE(tcp_settings_item.server_port);
 			}
 			if (isValid(tcp_settings_item.retry_count)) {
@@ -1085,6 +1301,9 @@ function milesightDeviceEncode(payload) {
 				buffer.writeUInt8(0x05);
 				buffer.writeUInt8(tcp_settings_item_id);
 				buffer.writeUInt8(0x03);
+				if (tcp_settings_item.retry_count < 0 || tcp_settings_item.retry_count > 3) {
+					throw new Error('retry_count must be between 0 and 3');
+				}
 				buffer.writeUInt8(tcp_settings_item.retry_count);
 			}
 			if (isValid(tcp_settings_item.retry_interval)) {
@@ -1092,6 +1311,9 @@ function milesightDeviceEncode(payload) {
 				buffer.writeUInt8(0x05);
 				buffer.writeUInt8(tcp_settings_item_id);
 				buffer.writeUInt8(0x04);
+				if (tcp_settings_item.retry_interval < 1 || tcp_settings_item.retry_interval > 60) {
+					throw new Error('retry_interval must be between 1 and 60');
+				}
 				buffer.writeUInt8(tcp_settings_item.retry_interval);
 			}
 			if (isValid(tcp_settings_item.keepalive_interval)) {
@@ -1099,6 +1321,9 @@ function milesightDeviceEncode(payload) {
 				buffer.writeUInt8(0x05);
 				buffer.writeUInt8(tcp_settings_item_id);
 				buffer.writeUInt8(0x05);
+				if (tcp_settings_item.keepalive_interval < 10 || tcp_settings_item.keepalive_interval > 65535) {
+					throw new Error('keepalive_interval must be between 10 and 65535');
+				}
 				buffer.writeUInt16LE(tcp_settings_item.keepalive_interval);
 			}
 			if (isValid(tcp_settings_item.tcp_status)) {
@@ -1137,6 +1362,9 @@ function milesightDeviceEncode(payload) {
 				buffer.writeUInt8(0x0F);
 				buffer.writeUInt8(udp_settings_item_id);
 				buffer.writeUInt8(0x02);
+				if (udp_settings_item.server_port < 1 || udp_settings_item.server_port > 65535) {
+					throw new Error('server_port must be between 1 and 65535');
+				}
 				buffer.writeUInt16LE(udp_settings_item.server_port);
 			}
 			if (isValid(udp_settings_item.udp_status)) {
