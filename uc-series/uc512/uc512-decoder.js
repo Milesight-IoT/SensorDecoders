@@ -399,19 +399,31 @@ function handle_downlink_response(channel_type, bytes, offset) {
             var valve_status_value = (data >> 5) & 0x01;
             var time_rule_enable_value = (data >> 7) & 0x01;
             var pulse_rule_enable_value = (data >> 6) & 0x01;
+            var special_task_mode_value = (data >> 3) & 0x03;
             var valve_name = "valve_" + index + "_task";
 
             decoded[valve_name] = {};
             decoded[valve_name].time_rule_enable = readEnableStatus(time_rule_enable_value);
             decoded[valve_name].pulse_rule_enable = readEnableStatus(pulse_rule_enable_value);
             decoded[valve_name].valve_status = readValveStatus(valve_status_value);
+            decoded[valve_name].special_task_mode = readSpecialTaskMode(special_task_mode_value);
             decoded[valve_name].sequence_id = readUInt8(bytes[offset + 1]);
             offset += 2;
-
-            if (time_rule_enable_value === 1) {
-                decoded[valve_name].duration = readUInt24LE(bytes.slice(offset, offset + 4));
+    
+            if (special_task_mode_value === 1) {
+                // special_task_mode === 1: enable_rain_stop
+                if (time_rule_enable_value === 1) {
+                    decoded[valve_name].duration = readUInt24LE(bytes.slice(offset, offset + 3));
+                    offset += 3;
+                }
+                decoded[valve_name].start_time = readUInt32LE(bytes.slice(offset, offset + 4));
+                offset += 4;
+            } else if (time_rule_enable_value === 1) {
+                // special_task_mode !== 1 && time_rule_enable_value === 1
+                decoded[valve_name].duration = readUInt24LE(bytes.slice(offset, offset + 3));
                 offset += 3;
             }
+            
             if (pulse_rule_enable_value === 1) {
                 decoded[valve_name].valve_pulse = readUInt32LE(bytes.slice(offset, offset + 4));
                 offset += 4;

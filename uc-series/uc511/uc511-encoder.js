@@ -1204,7 +1204,7 @@ function setNewRuleConfig(rule_config) {
  * @param {number} condition.repeat_week.sunday values: (0: disable, 1: enable)
  * @param {number} condition.d2d_command
  * @param {number} condition.source values: (0: always, 1: valve 1 open, 2: valve 2 open, 3: valve 1 open or valve 2 open)
- * @param {number} condition.mode values: (0: none, 1: below, 2: above, 3: between, 4: outside)
+ * @param {number} condition.mode values: (0: none, 1: less than, 2: greater than, 3: between, 4: outside)
  * @param {number} condition.threshold_min
  * @param {number} condition.threshold_max
  * @param {number} condition.valve_index values: (1: valve_1, 2: valve_2)
@@ -1221,7 +1221,7 @@ function encodedRuleCondition(condition) {
     var weekday_bit_offset = { monday: 0, tuesday: 1, wednesday: 2, thursday: 3, friday: 4, saturday: 5, sunday: 6 };
     var condition_source_map = { 0: "always", 1: "valve 1 open", 2: "valve 2 open", 3: "valve 1 open or valve 2 open" };
     var condition_source_values = getValues(condition_source_map);
-    var condition_mode_map = { 0: "none", 1: "below", 2: "above", 3: "between", 4: "outside" };
+    var condition_mode_map = { 0: "none", 1: "less than", 2: "greater than", 3: "between", 4: "outside" };
     var condition_mode_values = getValues(condition_mode_map);
 
     if (condition_type_values.indexOf(condition.type) === -1) {
