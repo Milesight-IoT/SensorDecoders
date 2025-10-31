@@ -198,6 +198,12 @@ function milesightDeviceDecode(bytes) {
             decoded.schedule_device_config_response = readScheduleDeviceConfigResponse(bytes.slice(i, i + 3));
             i += 3;
         }
+        // SET AI COLLECTION CONFIG
+        // hardware_version >= v4.0
+        else if (channel_id === 0xf9 && channel_type === 0xa8) {
+            decoded.set_ai_collection_config = readSetAICollectionConfig(bytes.slice(i, i + 8));
+            i += 8;
+        }
         // VALVE 1 TASK STATUS
         // hardware_version >= v4.0
         else if (channel_id === 0x0e && channel_type === 0xaf) {
@@ -317,6 +323,16 @@ function readScheduleDeviceConfigResponse(bytes) {
     return response;
 }
 
+function readSetAICollectionConfig(bytes) {
+    var response = {};
+    response.id = readUInt8(bytes[0]);
+    response.enable = readEnableStatus(readUInt8(bytes[1]));
+    response.collect = readUInt16LE(bytes.slice(2, 4));
+    response.collect_irrigation = readUInt16LE(bytes.slice(4, 6));
+    response.open_delay_collect_time = readUInt8(bytes[6]);
+    return response;
+}
+
 function readTaskStatus(status) {
     var status_map = {
         0: "free task",
@@ -348,7 +364,7 @@ function readValveTaskStatus(bytes) {
     var status = {};
     status.task_status = readTaskStatus(readUInt8(bytes[0]));
     status.real_status = readRealStatus(readUInt8(bytes[1]));
-    status.cmd_status = readCommandStatus(readUInt16LE(bytes[2]));
+    status.cmd_status = readCommandStatus(readUInt8(bytes[2]));
     return status;
 }
 
