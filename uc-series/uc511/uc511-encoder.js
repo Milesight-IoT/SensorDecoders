@@ -83,6 +83,21 @@ function milesightDeviceEncode(payload) {
     if ("valve_2_task" in payload) {
         encoded = encoded.concat(setValveTask(2, payload.valve_2_task));
     }
+    if ("valve_3_task" in payload) {
+        encoded = encoded.concat(setValveTask(3, payload.valve_3_task));
+    }
+    if ("valve_4_task" in payload) {
+        encoded = encoded.concat(setValveTask(4, payload.valve_4_task));
+    }
+    if ("valve_5_task" in payload) {
+        encoded = encoded.concat(setValveTask(5, payload.valve_5_task));
+    }
+    if ("valve_6_task" in payload) {
+        encoded = encoded.concat(setValveTask(6, payload.valve_6_task));
+    }
+    if ("valve_all_task" in payload) {
+        encoded = encoded.concat(setValveTask(7, payload.valve_all_task));
+    }
     if ("batch_read_rules" in payload) {
         encoded = encoded.concat(batchReadRules(payload.batch_read_rules));
     }
@@ -839,11 +854,12 @@ function setValveTask(index, valve_task) {
     data |= pulse_rule_enable_value << 6;
     data |= valve_status_value << 5;
     
-    // special_task_mode_value: 0=normal(00), 1=enable_rain_stop(01), 2=disable_rain_stop(10)
-    var special_task_bits = special_task_mode_value;
-    data |= (special_task_bits & 0x03) << 3;
+    data |= (special_task_mode_value === 1 ? 0x00 : 0x01) << 3;
+    data |= (special_task_mode_value === 2 ? 0x01 : 0x00) << 4;
     
-    data |= (index - 1) << 0;
+    data |= ((index >> 0) & 0x01) << 0;
+    data |= ((index >> 1) & 0x01) << 1;
+    data |= ((index >> 2) & 0x01) << 2;
 
     var length = 4;
     

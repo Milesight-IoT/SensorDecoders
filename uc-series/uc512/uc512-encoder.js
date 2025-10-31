@@ -839,11 +839,12 @@ function setValveTask(index, valve_task) {
     data |= pulse_rule_enable_value << 6;
     data |= valve_status_value << 5;
     
-    // special_task_mode_value: 0=normal(00), 1=enable_rain_stop(01), 2=disable_rain_stop(10)
-    var special_task_bits = special_task_mode_value;
-    data |= (special_task_bits & 0x03) << 3;
+    data |= (special_task_mode_value === 1 ? 0x00 : 0x01) << 3;
+    data |= (special_task_mode_value === 2 ? 0x01 : 0x00) << 4;
     
-    data |= (index - 1) << 0;
+    data |= ((index >> 0) & 0x01) << 0;
+    data |= ((index >> 1) & 0x01) << 1;
+    data |= ((index >> 2) & 0x01) << 2;
 
     var length = 4;
     

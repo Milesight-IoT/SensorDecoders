@@ -411,12 +411,17 @@ function handle_downlink_response(channel_type, bytes, offset) {
             break;
         case 0x1d:
             var data = readUInt8(bytes[offset]);
-            var index = ((data >> 0) & 0x01) + 1;
+            var bit0 = ((data >> 0) & 0x01);
+            var bit1 = ((data >> 1) & 0x01);
+            var bit2 = ((data >> 2) & 0x01);
+            var bit3 = ((data >> 3) & 0x01);
+            var bit4 = ((data >> 4) & 0x01);
+            var index = bit0 + bit1 * 2 + bit2 * 4;
             var valve_status_value = (data >> 5) & 0x01;
             var time_rule_enable_value = (data >> 7) & 0x01;
             var pulse_rule_enable_value = (data >> 6) & 0x01;
-            var special_task_mode_value = (data >> 3) & 0x03;
-            var valve_name = "valve_" + index + "_task";
+            var special_task_mode_value = bit3 ^ bit4;
+            var valve_name = index === 7 ? "valve_all_task" : "valve_" + (index + 1) + "_task";
 
             decoded[valve_name] = {};
             decoded[valve_name].time_rule_enable = readEnableStatus(time_rule_enable_value);
