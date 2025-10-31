@@ -786,7 +786,7 @@ function readValveStrategy(strategy_value) {
 }
 
 function readMathConditionType(condition_type_value) {
-    var condition_type_map = { 0: "none", 1: "below", 2: "above", 3: "between", 4: "outside" };
+    var condition_type_map = { 0: "none", 1: "less than", 2: "greater than", 3: "between", 4: "outside" };
     return getValue(condition_type_map, condition_type_value);
 }
 
