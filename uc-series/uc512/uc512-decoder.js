@@ -189,8 +189,8 @@ function milesightDeviceDecode(bytes) {
         // QUERY VALVE TASK STATUS RESPONSE
         // hardware_version >= v4.0
         else if (channel_id === 0xf8 && channel_type === 0xa5) {
-            decoded.query_valve_task_status_response = readQueryValveTaskStatusResponse(bytes.slice(i, i + 3));
-            i += 3;
+            decoded.query_valve_task_status_response = readQueryValveTaskStatusResponse(bytes.slice(i, i + 2));
+            i += 2;
         }
         // SCHEDULE DEVICE CONFIG RESPONSE
         // hardware_version >= v4.0
