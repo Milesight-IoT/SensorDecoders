@@ -1737,6 +1737,10 @@ function setDaylightSavingTimeSettings(daylight_saving_time) {
     var end_week_day = daylight_saving_time.end_week_day;
     var end_hour_min = daylight_saving_time.end_hour_min;
 
+    if (offset < 1 || offset > 120) {
+        throw new Error('daylight_saving_time.offset must be between 1 and 120');
+    }
+
     var enable_map = { 0: "disable", 1: "enable" };
     var enable_values = getValues(enable_map);
     if (enable_values.indexOf(enable) === -1) {
@@ -1753,6 +1757,18 @@ function setDaylightSavingTimeSettings(daylight_saving_time) {
     var day_values = [1, 2, 3, 4, 5, 6, 7];
     if (day_values.indexOf(start_week_day) === -1 || day_values.indexOf(end_week_day) === -1) {
         throw new Error("daylight_saving_time.start_week_day and end_week_day must be one of " + day_values.join(", "));
+    }
+
+    if (start_hour_min < 0 || start_hour_min > 1380) {
+        throw new Error('daylight_saving_time.start_hour_min must be between 0 and 1380');
+    }
+
+    if (end_month < 1 || end_month > 12) {
+        throw new Error('daylight_saving_time.end_month must be between 1 and 12');
+    }
+
+    if (end_hour_min < 0 || end_hour_min > 1380) {
+        throw new Error('daylight_saving_time.end_hour_min must be between 0 and 1380');
     }
 
     var start_day_value = (start_week_num << 4) | start_week_day;
