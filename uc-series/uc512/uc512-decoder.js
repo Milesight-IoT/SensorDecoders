@@ -192,6 +192,10 @@ function milesightDeviceDecode(bytes) {
             decoded.query_valve_task_status_response = readQueryValveTaskStatusResponse(bytes.slice(i, i + 2));
             i += 2;
         }
+        else if (channel_id === 0xf8 && channel_type === 0xa8) { 
+            decoded.set_ai_collection_config_response = readSetAICollectionConfigResponse(bytes.slice(i, i + 9));
+            i += 9;
+        }
         // SCHEDULE DEVICE CONFIG RESPONSE
         // hardware_version >= v4.0
         else if (channel_id === 0xf9 && channel_type === 0xa7) {
@@ -320,6 +324,22 @@ function readScheduleDeviceConfigResponse(bytes) {
     response.id = readUInt8(bytes[0]);
     response.type = readUInt8(bytes[1]);
     response.code = readScheduleDeviceConfigResponseCode(readUInt8(bytes[2]));
+    return response;
+}
+
+function readSetAICollectionConfigResponseCode(code) {
+    var code_map = { 0: "success", 1: "failed" };
+    return getValue(code_map, code);
+}
+
+function readSetAICollectionConfigResponse(bytes) {
+    var response = {};
+    response.id = readUInt8(bytes[0]);
+    response.enable = readEnableStatus(readUInt8(bytes[1]));
+    response.collect = readUInt16LE(bytes.slice(2, 4));
+    response.collect_irrigation = readUInt16LE(bytes.slice(4, 6));
+    response.open_delay_collect_time = readUInt8(bytes[6]);
+    response.code = readSetAICollectionConfigResponseCode(readUInt8(bytes[7]));
     return response;
 }
 
