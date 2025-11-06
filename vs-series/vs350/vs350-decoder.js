@@ -101,6 +101,25 @@ function milesightDeviceDecode(bytes) {
             decoded.timestamp = readUInt32LE(bytes.slice(i, i + 4));
             i += 4;
         }
+        // INSTALL CONFIG (DOWNLINK RESPONSE)
+        else if (channel_id === 0xff && channel_type === 0xac) {
+            decoded.install_config = {};
+            decoded.install_config.install_method = readInstallMethod(bytes[i]);
+            decoded.install_config.install_height = readUInt8(bytes[i + 1]);
+            decoded.install_config.compensation = readUInt8(bytes[i + 2]);
+            decoded.install_config.sensitivity_report_enable = readEnableStatus(bytes[i + 3]);
+            i += 4;
+        }
+        // PEOPLE THRESHOLD TRIGGER MODE (DOWNLINK RESPONSE)
+        else if (channel_id === 0xff && channel_type === 0xad) {
+            decoded.people_threshold_trigger_mode = readPeopleTriggerMode(bytes[i]);
+            i += 1;
+        }
+        // CURRENT SENSITIVITY (V3 version)
+        else if (channel_id === 0x81 && channel_type === 0xee) {
+            decoded.current_sensitivity = readUInt8(bytes[i]);
+            i += 1;
+        }
         // TEMPERATURE ALARM
         else if (channel_id === 0x83 && channel_type === 0x67) {
             decoded.temperature = readInt16LE(bytes.slice(i, i + 2)) / 10;
@@ -411,6 +430,16 @@ function readAlarmType(type) {
 function readReportType(type) {
     var report_type_map = { 0: "period", 1: "immediately" };
     return getValue(report_type_map, type);
+}
+
+function readInstallMethod(type) {
+    var method_map = { 0: "side", 1: "top" };
+    return getValue(method_map, type);
+}
+
+function readPeopleTriggerMode(type) {
+    var mode_map = { 0: "threshold", 1: "multiple" };
+    return getValue(mode_map, type);
 }
 
 function readTimeZone(time_zone) {
