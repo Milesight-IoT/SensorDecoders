@@ -462,8 +462,9 @@ function handle_downlink_response(channel_type, bytes, offset) {
             offset += 2;
     
             if (special_task_mode_value === 1) {
-                decoded[valve_name].start_time = readUInt32LE(bytes.slice(offset, offset + 4));
-                offset += 4;
+                decoded[valve_name].duration = readUInt32LE(bytes.slice(offset, offset + 4));
+                decoded[valve_name].start_time = readUInt32LE(bytes.slice(offset + 4, offset + 8));
+                offset += 8;
             } else if (time_rule_enable_value === 1) {
                 decoded[valve_name].duration = readUInt32LE(bytes.slice(offset, offset + 4));
                 offset += 4;

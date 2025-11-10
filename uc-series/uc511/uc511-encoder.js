@@ -864,10 +864,19 @@ function setValveTask(index, valve_task) {
     data |= ((index >> 1) & 0x01) << 1;
     data |= ((index >> 2) & 0x01) << 2;
 
-    var length = 8;
+    var length = 4;
+    if (special_task_mode === 1) {
+        length += 4;
+    }
     
-    if (special_task_mode === 1 && start_time !== undefined) {
-        throw new Error("special_task_mode is 1, start_time must be undefined");
+    if (special_task_mode === 1 && (start_time === undefined || duration === undefined)) {
+        throw new Error("special_task_mode is 1, start_time and duration must be defined");
+    }
+    if (time_rule_enable_value === 1 && duration === undefined) {
+        throw new Error("time_rule_enable is 1, duration must be defined");
+    }
+    if (pulse_rule_enable_value === 1 && valve_pulse === undefined) {
+        throw new Error("pulse_rule_enable is 1, valve_pulse must be defined");
     }
 
     var buffer = new Buffer(length);
@@ -877,6 +886,7 @@ function setValveTask(index, valve_task) {
     buffer.writeUInt8(sequence_id);
     
     if (special_task_mode === 1) {
+        buffer.writeUInt32LE(duration);
         buffer.writeUInt32LE(start_time);
     } else if (time_rule_enable_value === 1) {
         buffer.writeUInt32LE(duration);
