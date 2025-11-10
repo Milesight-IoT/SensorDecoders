@@ -659,7 +659,7 @@ function getValue(map, key) {
     return value;
 }
 
-if (!Object.assign) {
+//if (!Object.assign) {
     Object.defineProperty(Object, "assign", {
         enumerable: false,
         configurable: true,
@@ -694,5 +694,5 @@ if (!Object.assign) {
             }
             return to;
         },
-    });
+    //});
 }
