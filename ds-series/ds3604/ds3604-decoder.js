@@ -587,5 +587,5 @@ function decodeUtf8(bytes) {
             }
             return to;
         },
-    //});
-}
+    });
+//}

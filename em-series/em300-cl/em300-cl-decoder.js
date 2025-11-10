@@ -329,5 +329,5 @@ function getValue(map, key) {
             }
             return to;
         },
-    //});
-}
+    });
+//}
