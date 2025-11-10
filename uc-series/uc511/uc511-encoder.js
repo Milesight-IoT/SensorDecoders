@@ -192,7 +192,7 @@ function milesightDeviceEncode(payload) {
  * @param {object} lorawan_class_switch
  * @param {number} lorawan_class_switch.timestamp Timestamp (UTC seconds)
  * @param {number} lorawan_class_switch.continuous Continuous time (minutes)
- * @param {number} lorawan_class_switch.class_type Class Type (0: normal, 1: class A, 2: class B, 3: class C, 255: cancel)
+ * @param {number} lorawan_class_switch.class_type Class Type (0: class A, 1: class B, 2: class C, 3: class CtoB, 255: cancel)
  * @param {number} lorawan_class_switch.reserved Reserved (0: normal, 1: reserved)
  */
 function setLoRaWANClassSwitch(lorawan_class_switch) {
@@ -201,7 +201,7 @@ function setLoRaWANClassSwitch(lorawan_class_switch) {
     var class_type = lorawan_class_switch.class_type;
     var reserved = lorawan_class_switch.reserved || 0;
 
-    var class_type_map = { 0: "normal", 1: "class A", 2: "class B", 3: "class C", 255: "cancel" };
+    var class_type_map = { 0: "class A", 1: "class B", 2: "class C", 3: "class CtoB", 255: "cancel" };
     var class_type_values = getValues(class_type_map);
     if (class_type_values.indexOf(class_type) === -1) {
         throw new Error("lorawan_class_switch.class_type must be one of " + class_type_values.join(", "));
@@ -248,6 +248,7 @@ function queryValveTaskStatus(query_valve_task_status) {
  * @param {object} schedule_device_config.data data
  * @example { "schedule_device_config": { "id": 3, "type": 0, "data": { "timestamp": 1751864986, "continuous": 100 } } }
  * @example { "schedule_device_config": { "id": 3, "type": 1, "data": { "channels": [1, 2, 3, 4] } } }
+ * @example { "schedule_device_config": { "id": 3, "type": 2, "data": { "channels": [49, 50, 51, 52] } } }
  * @example { "schedule_device_config": { "id": 3, "type": 3, "data": { "channel_index": 2, "frequency": 868300000 } } }
  * @example { "schedule_device_config": { "id": 3, "type": 241 } }
  * @example { "schedule_device_config": { "id": 3, "type": 242 } }
@@ -807,6 +808,7 @@ function setValvePulse2(valve_2_pulse) {
  * @param {number} valve_task.valve_status values: (0: close, 1: open)
  * @param {number} valve_task.duration
  * @param {number} valve_task.valve_pulse
+ * @param {number} valve_task.start_time
  * @param {number} valve_task.special_task_mode values: (0: normal, 1: enable rain stop, 2: disable rain stop)
  * @example { "valve_1_task": { "time_rule_enable": 1, "pulse_rule_enable": 1, "sequence_id": 0, "valve_status": 0, "duration": 100, "pulse": 100, "special_task_mode": 0 } }
  */
@@ -817,6 +819,7 @@ function setValveTask(index, valve_task) {
     var valve_status = valve_task.valve_status;
     var duration = valve_task.duration;
     var valve_pulse = valve_task.valve_pulse;
+    var start_time = valve_task.start_time;
     var special_task_mode = valve_task.special_task_mode || 0;
 
     var enable_map = { 0: "disable", 1: "enable" };
@@ -854,24 +857,17 @@ function setValveTask(index, valve_task) {
     data |= pulse_rule_enable_value << 6;
     data |= valve_status_value << 5;
     
-    data |= (special_task_mode_value === 1 ? 0x00 : 0x01) << 3;
-    data |= (special_task_mode_value === 2 ? 0x01 : 0x00) << 4;
+    data |= (special_task_mode_value === 0 ? 0x00 : special_task_mode === 1 ? 0x00 : 0x01) << 3;
+    data |= (special_task_mode_value === 0 ? 0x00: special_task_mode === 1 ? 0x01 : 0x00) << 4;
     
     data |= ((index >> 0) & 0x01) << 0;
     data |= ((index >> 1) & 0x01) << 1;
     data |= ((index >> 2) & 0x01) << 2;
 
-    var length = 4;
+    var length = 8;
     
-    if (time_rule_enable_value === 1 || special_task_mode === 1) {
-        length += 3;
-    }
-    if (pulse_rule_enable_value === 1) {
-        length += 4;
-    }
-    
-    if (special_task_mode === 1 && duration !== undefined) {
-        throw new Error("special_task_mode is 1, duration must be undefined");
+    if (special_task_mode === 1 && start_time !== undefined) {
+        throw new Error("special_task_mode is 1, start_time must be undefined");
     }
 
     var buffer = new Buffer(length);
@@ -881,16 +877,10 @@ function setValveTask(index, valve_task) {
     buffer.writeUInt8(sequence_id);
     
     if (special_task_mode === 1) {
-        if (time_rule_enable_value === 1 && duration !== undefined) {
-            buffer.writeUInt24LE(duration);
-        }
-        var start_time = valve_task.start_time || 0;
         buffer.writeUInt32LE(start_time);
     } else if (time_rule_enable_value === 1) {
-        buffer.writeUInt24LE(duration);
-    }
-    
-    if (pulse_rule_enable_value === 1) {
+        buffer.writeUInt32LE(duration);
+    } else if (pulse_rule_enable_value === 1) {
         buffer.writeUInt32LE(valve_pulse);
     }
     return buffer.toBytes();

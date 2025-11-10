@@ -767,6 +767,127 @@
             "reference": ["valve_2_task.special_task_mode", "valve_2_task.time_rule_enable", "valve_2_task.pulse_rule_enable", "valve_2_task.valve_status", "valve_2_task.duration", "valve_2_task.valve_pulse"]
         },
         {
+            "id": "valve_all_task.time_rule_enable",
+            "name": "Valve All Task (Time Rule Enable)",
+            "value": "",
+            "unit": "",
+            "access_mode": "RW",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                { "value": 0, "name": "disable" },
+                { "value": 1, "name": "enable" }
+            ],
+            "bacnet_type": "binary_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": ["valve_all_task.pulse_rule_enable", "valve_all_task.valve_status", "valve_all_task.duration", "valve_all_task.valve_pulse"]
+        },
+        {
+            "id": "valve_all_task.pulse_rule_enable",
+            "name": "Valve All Task (Pulse Rule Enable)",
+            "value": "",
+            "unit": "",
+            "access_mode": "RW",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                { "value": 0, "name": "disable" },
+                { "value": 1, "name": "enable" }
+            ],
+            "bacnet_type": "binary_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": ["valve_all_task.time_rule_enable", "valve_all_task.valve_status", "valve_all_task.duration", "valve_all_task.valve_pulse"]
+        },
+        {
+            "id": "valve_all_task.sequence_id",
+            "name": "Valve All Task (Sequence ID)",
+            "value": "",
+            "unit": "",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "UINT8",
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": ["valve_all_task.time_rule_enable", "valve_all_task.pulse_rule_enable", "valve_all_task.valve_status", "valve_all_task.duration", "valve_all_task.valve_pulse"]
+        },
+        {
+            "id": "valve_all_task.duration",
+            "name": "Valve All Task (Duration)",
+            "value": "",
+            "unit": "s",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "UINT32",
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 73,
+            "bacnet_unit_type": "UNITS_SECONDS",
+            "reference": ["valve_all_task.time_rule_enable", "valve_all_task.pulse_rule_enable", "valve_all_task.valve_status", "valve_all_task.valve_pulse"]
+        },
+        {
+            "id": "valve_all_task.valve_status",
+            "name": "Valve All Task (Valve Status)",
+            "value": "",
+            "unit": "",
+            "access_mode": "RW",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                { "value": 0, "name": "close" },
+                { "value": 1, "name": "open" }
+            ],
+            "bacnet_type": "binary_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": ["valve_all_task.time_rule_enable", "valve_all_task.pulse_rule_enable", "valve_all_task.duration", "valve_all_task.valve_pulse"]
+        },
+        {
+            "id": "valve_all_task.valve_pulse",
+            "name": "Valve All Task (Valve Pulse)",
+            "value": "",
+            "unit": "",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "UINT32",
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": ["valve_all_task.time_rule_enable", "valve_all_task.pulse_rule_enable", "valve_all_task.valve_status", "valve_all_task.duration"]
+        },
+        {
+            "id": "valve_all_task.special_task_mode",
+            "name": "Valve All Task (Special Task Mode)",
+            "value": "",
+            "unit": "",
+            "access_mode": "RW",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [
+                { "value": 0, "name": "normal" },
+                { "value": 1, "name": "enable_rain_stop" },
+                { "value": 2, "name": "disable_rain_stop" }
+            ],
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": ["valve_all_task.time_rule_enable", "valve_all_task.pulse_rule_enable", "valve_all_task.valve_status", "valve_all_task.duration", "valve_all_task.valve_pulse", "valve_all_task.start_time"]
+        },
+        {
+            "id": "valve_all_task.start_time",
+            "name": "Valve All Task (Start Time)",
+            "value": "",
+            "unit": "",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "UINT32",
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": ["valve_all_task.special_task_mode", "valve_all_task.time_rule_enable", "valve_all_task.pulse_rule_enable", "valve_all_task.valve_status", "valve_all_task.duration", "valve_all_task.valve_pulse"]
+        },
+        {
             "id": "clear_valve_1_pulse",
             "name": "Clear Valve 1 Pulse",
             "value": "",
@@ -991,8 +1112,10 @@
             "data_type": "ENUM",
             "value_type": "UINT8",
             "values": [
-                { "value": 0, "name": "pipe pressure threshold alarm release" },
-                { "value": 1, "name": "pipe pressure threshold alarm" }
+                { "value": 0, "name": "always" },
+                { "value": 1, "name": "valve 1 open" },
+                { "value": 2, "name": "valve 2 open" },
+                { "value": 3, "name": "valve 1 open or valve 2 open" }
             ],
             "bacnet_type": "multistate_value_object",
             "bacnet_unit_type_id": 95,
@@ -1068,7 +1191,6 @@
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS"
         },
-        
         {
             "id": "lorawan_class_switch.timestamp",
             "name": "LoRaWAN Class Switch (Timestamp)",
@@ -1090,8 +1212,8 @@
             "data_type": "NUMBER",
             "value_type": "UINT16",
             "bacnet_type": "analog_output_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS"
+            "bacnet_unit_type_id": 72,
+            "bacnet_unit_type": "UNITS_MINUTES"
         },
         {
             "id": "lorawan_class_switch.class_type",
@@ -1102,29 +1224,16 @@
             "data_type": "ENUM",
             "value_type": "UINT8",
             "values": [
-                { "value": 0, "name": "normal" },
-                { "value": 1, "name": "class A" },
-                { "value": 2, "name": "class B" },
-                { "value": 3, "name": "class C" },
+                { "value": 0, "name": "class A" },
+                { "value": 1, "name": "class B" },
+                { "value": 2, "name": "class C" },
+                { "value": 3, "name": "class CtoB" },
                 { "value": 255, "name": "cancel" }
             ],
             "bacnet_type": "multistate_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS"
         },
-        {
-            "id": "lorawan_class_switch.reserved",
-            "name": "LoRaWAN Class Switch (Reserved)",
-            "value": "",
-            "unit": "",
-            "access_mode": "W",
-            "data_type": "NUMBER",
-            "value_type": "UINT8",
-            "bacnet_type": "analog_output_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS"
-        },
-        
         {
             "id": "lorawan_class_switch_response.timestamp",
             "name": "LoRaWAN Class Switch Response (Timestamp)",
@@ -1146,8 +1255,8 @@
             "data_type": "NUMBER",
             "value_type": "UINT16",
             "bacnet_type": "analog_input_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS"
+            "bacnet_unit_type_id": 72,
+            "bacnet_unit_type": "UNITS_MINUTES"
         },
         {
             "id": "lorawan_class_switch_response.class_type",
@@ -1158,25 +1267,13 @@
             "data_type": "ENUM",
             "value_type": "UINT8",
             "values": [
-                { "value": 0, "name": "normal" },
-                { "value": 1, "name": "class A" },
-                { "value": 2, "name": "class B" },
-                { "value": 3, "name": "class C" },
+                { "value": 0, "name": "class A" },
+                { "value": 1, "name": "class B" },
+                { "value": 2, "name": "class C" },
+                { "value": 3, "name": "class CtoB" },
                 { "value": 255, "name": "cancel" }
             ],
             "bacnet_type": "multistate_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS"
-        },
-        {
-            "id": "lorawan_class_switch_response.reserved",
-            "name": "LoRaWAN Class Switch Response (Reserved)",
-            "value": "",
-            "unit": "",
-            "access_mode": "R",
-            "data_type": "NUMBER",
-            "value_type": "UINT8",
-            "bacnet_type": "analog_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS"
         },
@@ -1201,7 +1298,6 @@
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS"
         },
-        
         {
             "id": "query_valve_task_status.index",
             "name": "Query Valve Task Status (Valve Index)",
@@ -1214,7 +1310,9 @@
                 { "value": 0, "name": "valve 1" },
                 { "value": 1, "name": "valve 2" }
             ],
-            "bacnet_type": "multistate_value_object"
+            "bacnet_type": "multistate_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS"
         },
         {
             "id": "query_valve_task_status_response.index",
@@ -1295,8 +1393,8 @@
             "data_type": "NUMBER",
             "value_type": "UINT16",
             "bacnet_type": "analog_output_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS"
+            "bacnet_unit_type_id": 72,
+            "bacnet_unit_type": "UNITS_MINUTES"
         },
         {
             "id": "schedule_device_config.channel_index",
@@ -1335,6 +1433,18 @@
             "bacnet_unit_type": "UNITS_NO_UNITS"
         },
         {
+            "id": "schedule_device_config_response.type",
+            "name": "Schedule Device Config Response (Config Type)",
+            "value": "",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "NUMBER",
+            "value_type": "UINT8",
+            "bacnet_type": "analog_input_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS"
+        },
+        {
             "id": "schedule_device_config_response.code",
             "name": "Schedule Device Config Response (Response Code)",
             "value": "",
@@ -1359,7 +1469,6 @@
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS"
         },
-        
         {
             "id": "ai_collection_config.id",
             "name": "AI Collection Config (Collection ID)",
@@ -1368,7 +1477,7 @@
             "access_mode": "W",
             "data_type": "NUMBER",
             "value_type": "UINT8",
-            "bacnet_type": "analog_value_object",
+            "bacnet_type": "analog_output_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS"
         },
@@ -1378,9 +1487,13 @@
             "value": "",
             "unit": "",
             "access_mode": "W",
-            "data_type": "NUMBER",
+            "data_type": "ENUM",
             "value_type": "UINT8",
-            "bacnet_type": "analog_value_object",
+            "values": [
+                { "value": 0, "name": "disable" },
+                { "value": 1, "name": "enable" }
+            ],
+            "bacnet_type": "multistate_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS"
         },
@@ -1392,7 +1505,7 @@
             "access_mode": "W",
             "data_type": "NUMBER",
             "value_type": "UINT16",
-            "bacnet_type": "analog_value_object",
+            "bacnet_type": "analog_output_object",
             "bacnet_unit_type_id": 73,
             "bacnet_unit_type": "UNITS_SECONDS"
         },
@@ -1404,7 +1517,7 @@
             "access_mode": "W",
             "data_type": "NUMBER",
             "value_type": "UINT16",
-            "bacnet_type": "analog_value_object",
+            "bacnet_type": "analog_output_object",
             "bacnet_unit_type_id": 73,
             "bacnet_unit_type": "UNITS_SECONDS"
         },
@@ -1416,11 +1529,10 @@
             "access_mode": "W",
             "data_type": "NUMBER",
             "value_type": "UINT8",
-            "bacnet_type": "analog_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS"
+            "bacnet_type": "analog_output_object",
+            "bacnet_unit_type_id": 72,
+            "bacnet_unit_type": "UNITS_MINUTES"
         },
-        
         {
             "id": "valve_1_task_status.task_status",
             "name": "Valve 1 Task Status (Task Status)",
@@ -1472,7 +1584,6 @@
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS"
         },
-        
         {
             "id": "valve_2_task_status.task_status",
             "name": "Valve 2 Task Status (Task Status)",
@@ -1524,7 +1635,6 @@
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS"
         },
-        
         {
             "id": "read_schedule_config.id",
             "name": "Read Schedule Config (Schedule ID)",
@@ -1573,7 +1683,23 @@
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS"
         },
-        
+        {
+            "id": "read_schedule_config_response.code",
+            "name": "Read Schedule Config Response (Response Code)",
+            "value": "",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [
+                { "value": 0, "name": "success" },
+                { "value": 1, "name": "not allowed" },
+                { "value": 2, "name": "schedule task not found" }
+            ],
+            "bacnet_type": "multistate_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS"
+        },
         {
             "id": "multicast_command.channel",
             "name": "Multicast Command (Channel)",
@@ -1653,6 +1779,6 @@
             "bacnet_type": "multistate_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS"
-        } 
+        }
     ]
 }

@@ -183,8 +183,8 @@ function milesightDeviceDecode(bytes) {
         // LORAWAN CLASS SWITCH RESPONSE
         // hardware_version >= v4.0
         else if (channel_id === 0xf8 && channel_type === 0xa4) {
-            decoded.lorawan_class_switch_response = readLoRaWANClassSwitchResponse(bytes.slice(i, i + 10));
-            i += 10;
+            decoded.lorawan_class_switch_response = readLoRaWANClassSwitchResponse(bytes.slice(i, i + 8));
+            i += 8;
         }
         // QUERY VALVE TASK STATUS RESPONSE
         // hardware_version >= v4.0
@@ -222,8 +222,8 @@ function milesightDeviceDecode(bytes) {
         }
         // READ SCHEDULE CONFIG RESPONSE
         else if (channel_id === 0xf8 && channel_type === 0xaf) {
-            decoded.read_schedule_config_response = readReadScheduleConfigResponse(bytes.slice(i, i + 2));
-            i += 2;
+            decoded.read_schedule_config_response = readReadScheduleConfigResponse(bytes.slice(i, i + 3));
+            i += 3;
         }
         // MULTICAST COMMAND RESPONSE
         else if (channel_id === 0xf0) {
@@ -388,10 +388,20 @@ function readValveTaskStatus(bytes) {
     return status;
 }
 
+function readReadScheduleConfigResponseCode(code) {
+    var code_map = {
+        0: "success",
+        1: "not allowed",
+        2: "schedule task not found",
+    };
+    return getValue(code_map, code);
+}
+
 function readReadScheduleConfigResponse(bytes) {
     var response = {};
     response.id = readUInt8(bytes[0]);
     response.type = readUInt8(bytes[1]);
+    response.code = readReadScheduleConfigResponseCode(readUInt8(bytes[2]));
     return response;
 }
 
@@ -452,20 +462,12 @@ function handle_downlink_response(channel_type, bytes, offset) {
             offset += 2;
     
             if (special_task_mode_value === 1) {
-                // special_task_mode === 1: enable_rain_stop
-                if (time_rule_enable_value === 1) {
-                    decoded[valve_name].duration = readUInt24LE(bytes.slice(offset, offset + 3));
-                    offset += 3;
-                }
                 decoded[valve_name].start_time = readUInt32LE(bytes.slice(offset, offset + 4));
                 offset += 4;
             } else if (time_rule_enable_value === 1) {
-                // special_task_mode !== 1 && time_rule_enable_value === 1
-                decoded[valve_name].duration = readUInt24LE(bytes.slice(offset, offset + 3));
-                offset += 3;
-            }
-            
-            if (pulse_rule_enable_value === 1) {
+                decoded[valve_name].duration = readUInt32LE(bytes.slice(offset, offset + 4));
+                offset += 4;
+            } else if (pulse_rule_enable_value === 1) {
                 decoded[valve_name].valve_pulse = readUInt32LE(bytes.slice(offset, offset + 4));
                 offset += 4;
             }
