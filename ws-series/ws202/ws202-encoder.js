@@ -101,7 +101,7 @@ function setLightThreshold(light_alarm_config) {
     var buffer = new Buffer(11);
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0x06);
-    buffer.writeUInt8(0x08);
+    buffer.writeUInt8(0x4c);
     buffer.writeUInt16LE(threshold_min);
     buffer.writeUInt16LE(threshold_max);
     buffer.writeUInt16LE(0x00);
