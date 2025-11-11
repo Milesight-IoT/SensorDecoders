@@ -56,6 +56,9 @@ function milesightDeviceEncode(payload) {
     if ("time_zone" in payload) {
         encoded = encoded.concat(setTimeZone(payload.time_zone));
     }
+    if ("buzzer_config" in payload) {
+        encoded = encoded.concat(setBuzzerConfig(payload.buzzer_config));
+    }
     if ("button_lock_config" in payload) {
         encoded = encoded.concat(setButtonLockConfig(payload.button_lock_config));
     }
@@ -315,6 +318,29 @@ function setAlarmConfig(alarm_config) {
     buffer.writeUInt8(0x00);
     buffer.writeUInt16LE(alarm_interval);
     buffer.writeUInt16LE(alarm_counts);
+    return buffer.toBytes();
+}
+
+/**
+ * set buzzer config
+ * @param {object} buzzer_config
+ * @param {number} buzzer_config.enable values: (0: disable, 1: enable)
+ * @param {number} buzzer_config.mode values: 0, 1, 2, 3, 4
+ * @example { "buzzer_config": { "enable": 1, "mode": 2 } }
+ */
+function setBuzzerConfig(buzzer_config) {
+    var enable = buzzer_config.enable;
+    var mode = buzzer_config.mode;
+
+    if (mode < 0 || mode > 4) {
+        throw new Error("buzzer_config.mode must be in range [0, 4]");
+    }
+
+    var buffer = new Buffer(3);
+    buffer.writeUInt8(0xf9);
+    buffer.writeUInt8(0xbd);
+    buffer.writeUInt8((enable << 0) & 0x01);
+    buffer.writeUInt8(mode);
     return buffer.toBytes();
 }
 
@@ -1030,6 +1056,7 @@ function queryDeviceConfig(query_config) {
         time_display: 43,
         magnet_throttle: 44,
         display_mode: 45,
+        buzzer_config: 46
     };
 
     var yes_no_map = { 0: "no", 1: "yes" };

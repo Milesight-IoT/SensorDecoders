@@ -477,6 +477,10 @@ function handle_downlink_response_ext(code, channel_type, bytes, offset) {
             decoded.magnet_delay_time = readUInt16LE(bytes.slice(offset, offset + 2));
             offset += 2;
             break;
+        case 0xbd:
+            decoded.buzzer_config = readBuzzerConfig(bytes.slice(offset, offset + 2));
+            offset += 2;
+            break;
         default:
             throw new Error("unknown downlink response");
     }
@@ -719,6 +723,13 @@ function readDstConfig(bytes) {
     return dst_config;
 }
 
+function readBuzzerConfig(bytes) {
+    var ctrl = readUInt8(bytes[0]);
+    var enable = (ctrl >> 0) & 0x01;
+    var mode = readUInt8(bytes[1]);
+    return { enable: readEnableStatus(enable), mode: mode };
+}
+
 function readQueryConfig(value) {
     var config_map = {
         report_interval: 1,
@@ -764,6 +775,7 @@ function readQueryConfig(value) {
         time_display: 43,
         magnet_throttle: 44,
         display_mode: 45,
+        buzzer_config: 46
     };
     var query_config = {};
     for (var key in config_map) {
