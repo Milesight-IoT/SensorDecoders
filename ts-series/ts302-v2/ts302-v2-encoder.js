@@ -324,14 +324,18 @@ function setAlarmConfig(alarm_config) {
 /**
  * set buzzer config
  * @param {object} buzzer_config
- * @param {number} buzzer_config.enable values: (0: disable, 1: enable)
+ * @param {string} buzzer_config.enable values: "disable", "enable"
  * @param {number} buzzer_config.mode values: 0, 1, 2, 3, 4
- * @example { "buzzer_config": { "enable": 1, "mode": 2 } }
+ * @example { "buzzer_config": { "enable": "enable", "mode": 2 } }
  */
 function setBuzzerConfig(buzzer_config) {
-    var enable = buzzer_config.enable;
+    var enable_map = { 0: "disable", 1: "enable" };
+    var enable_values = getValues(enable_map);
+    if (enable_values.indexOf(buzzer_config.enable) === -1) {
+        throw new Error("buzzer_config.enable must be one of " + enable_values.join(", "));
+    }
+    var enable = getValue(enable_map, buzzer_config.enable);
     var mode = buzzer_config.mode;
-
     if (mode < 0 || mode > 4) {
         throw new Error("buzzer_config.mode must be in range [0, 4]");
     }
@@ -339,7 +343,7 @@ function setBuzzerConfig(buzzer_config) {
     var buffer = new Buffer(3);
     buffer.writeUInt8(0xf9);
     buffer.writeUInt8(0xbd);
-    buffer.writeUInt8((enable << 0) & 0x01);
+    buffer.writeUInt8(enable & 0x01);
     buffer.writeUInt8(mode);
     return buffer.toBytes();
 }
