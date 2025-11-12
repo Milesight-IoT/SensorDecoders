@@ -89,6 +89,18 @@
             "bacnet_unit_type": "UNITS_NO_UNITS"
         },
         {
+            "id": "timestamp",
+            "name": "Timestamp",
+            "value": "",
+            "unit": "s",
+            "access_mode": "W",
+            "data_type": "NUMBER",
+            "value_type": "UINT32",
+            "bacnet_type": "analog_output_object",
+            "bacnet_unit_type_id": 73,
+            "bacnet_unit_type": "UNITS_SECONDS"
+        },
+        {
             "id": "people_count_all",
             "name": "People Count All",
             "value": "3",
@@ -223,6 +235,30 @@
         {
             "id": "people_out",
             "name": "People OUT",
+            "value": "",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "NUMBER",
+            "value_type": "UINT16",
+            "bacnet_type": "analog_input_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS"
+        },
+        {
+            "id": "people_total_in",
+            "name": "People Total IN",
+            "value": "",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "NUMBER",
+            "value_type": "UINT16",
+            "bacnet_type": "analog_input_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS"
+        },
+        {
+            "id": "people_total_out",
+            "name": "People Total OUT",
             "value": "",
             "unit": "",
             "access_mode": "R",
