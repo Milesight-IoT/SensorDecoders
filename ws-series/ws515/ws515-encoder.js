@@ -14,6 +14,7 @@ function encodeDownlink(input) {
     var encoded = milesightDeviceEncode(input.data);
     return { bytes: encoded };
 }
+
 // Chirpstack v3
 function Encode(fPort, obj, variables) {
     return milesightDeviceEncode(obj);
