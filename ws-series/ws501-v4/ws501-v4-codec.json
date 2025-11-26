@@ -8,7 +8,7 @@
       "unit": "V",
       "access_mode": "R",
       "data_type": "NUMBER",
-      "value_type": "FLOAT",
+      "value_type": "UINT8",
       "bacnet_type": "analog_input_object",
       "bacnet_unit_type_id": 5,
       "bacnet_unit_type": "UNITS_VOLTS"
@@ -45,33 +45,44 @@
       "id": "power_consumption",
       "name": "Power Consumption",
       "value": "",
-      "unit": "Wh",
+      "unit": "kWh",
       "access_mode": "R",
       "data_type": "NUMBER",
-      "value_type": "UINT8",
+      "value_type": "FLOAT",
       "bacnet_type": "analog_input_object",
-      "bacnet_unit_type_id": 18,
-      "bacnet_unit_type": "UNITS_WATT_HOURS"
+      "bacnet_unit_type_id": 19,
+      "bacnet_unit_type": "UNITS_KILOWATT_HOURS"
     },
     {
       "id": "current",
-      "name": "Current Rating",
+      "name": "Current",
       "value": "",
-      "unit": "mA",
+      "unit": "A",
       "access_mode": "R",
       "data_type": "NUMBER",
-      "value_type": "UINT8",
+      "value_type": "FLOAT",
       "bacnet_type": "analog_input_object",
-      "bacnet_unit_type_id": 2,
-      "bacnet_unit_type": "UNITS_MILLIAMPERES"
+      "bacnet_unit_type_id": 3,
+      "bacnet_unit_type": "UNITS_AMPERES"
     },
     {
-      "id": "switch_reading.status_1",
-      "name": "Switch 1",
+      "id": "switch_status",
+      "name": "Switch Status",
       "value": "",
       "unit": "",
       "access_mode": "R",
-      "data_type": "BOOL",
+      "data_type": "OBJECT",
+      "value_type": "STRUCT",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS"
+    },
+    {
+      "id": "switch_status.status1",
+      "name": "Switch Status 1",
+      "value": "",
+      "unit": "",
+      "access_mode": "R",
+      "data_type": "ENUM",
       "value_type": "UINT8",
       "values": [
         {
@@ -83,7 +94,7 @@
           "value": 1
         }
       ],
-      "bacnet_type": "binary_input_object",
+      "bacnet_type": "multistate_value_object",
       "bacnet_unit_type_id": 95,
       "bacnet_unit_type": "UNITS_NO_UNITS",
       "reference": []
@@ -330,7 +341,7 @@
       "bacnet_unit_type": "UNITS_NO_UNITS"
     },
     {
-      "id": "d2d_global_enable.master_enable",
+      "id": "d2d_settings.d2d_controller_enable",
       "name": "D2D Controller Enable",
       "value": "0",
       "unit": "",
@@ -351,11 +362,11 @@
       "bacnet_unit_type_id": 95,
       "bacnet_unit_type": "UNITS_NO_UNITS",
       "reference": [
-        "d2d_global_enable.agent_enable"
+        "d2d_settings.d2d_agent_enable"
       ]
     },
     {
-      "id": "d2d_global_enable.agent_enable",
+      "id": "d2d_settings.d2d_agent_enable",
       "name": "D2D Agent Enable",
       "value": "0",
       "unit": "",
@@ -376,7 +387,7 @@
       "bacnet_unit_type_id": 95,
       "bacnet_unit_type": "UNITS_NO_UNITS",
       "reference": [
-        "d2d_global_enable.master_enable"
+        "d2d_settings.d2d_controller_enable"
       ]
     },
     {
@@ -461,9 +472,10 @@
       "value": "0",
       "unit": "",
       "access_mode": "W",
-      "data_type": "NUMBER",
-      "value_type": "UINT8",
-      "bacnet_type": "analog_output_object",
+      "data_type": "TEXT",
+      "value_type": "STRING",
+      "max_length": 4,
+      "bacnet_type": "character_string_value_object",
       "bacnet_unit_type_id": 95,
       "bacnet_unit_type": "UNITS_NO_UNITS",
       "reference": [
@@ -634,7 +646,7 @@
       "bacnet_unit_type": "UNITS_MINUTES"
     },
     {
-      "id": "daylight_saving_time.daylight_saving_time_enable",
+      "id": "daylight_saving_time.enable",
       "name": "DST Enable",
       "value": "0",
       "unit": "",
@@ -655,7 +667,7 @@
       "bacnet_unit_type_id": 95,
       "bacnet_unit_type": "UNITS_NO_UNITS",
       "reference": [
-        "daylight_saving_time.daylight_saving_time_offset",
+        "daylight_saving_time.dst_bias",
         "daylight_saving_time.start_month",
         "daylight_saving_time.start_week_num",
         "daylight_saving_time.start_week_day",
@@ -667,9 +679,9 @@
       ]
     },
     {
-      "id": "daylight_saving_time.daylight_saving_time_offset",
+      "id": "daylight_saving_time.dst_bias",
       "name": "DST Bias",
-      "value": "1",
+      "value": "60",
       "unit": "min",
       "access_mode": "W",
       "data_type": "NUMBER",
@@ -682,7 +694,7 @@
       "bacnet_unit_type_id": 72,
       "bacnet_unit_type": "UNITS_MINUTES",
       "reference": [
-        "daylight_saving_time.daylight_saving_time_enable",
+        "daylight_saving_time.enable",
         "daylight_saving_time.start_month",
         "daylight_saving_time.start_week_num",
         "daylight_saving_time.start_week_day",
@@ -755,8 +767,8 @@
       "bacnet_unit_type_id": 95,
       "bacnet_unit_type": "UNITS_NO_UNITS",
       "reference": [
-        "daylight_saving_time.daylight_saving_time_enable",
-        "daylight_saving_time.daylight_saving_time_offset",
+        "daylight_saving_time.enable",
+        "daylight_saving_time.dst_bias",
         "daylight_saving_time.start_week_num",
         "daylight_saving_time.start_week_day",
         "daylight_saving_time.start_hour_min",
@@ -800,8 +812,8 @@
       "bacnet_unit_type_id": 95,
       "bacnet_unit_type": "UNITS_NO_UNITS",
       "reference": [
-        "daylight_saving_time.daylight_saving_time_enable",
-        "daylight_saving_time.daylight_saving_time_offset",
+        "daylight_saving_time.enable",
+        "daylight_saving_time.dst_bias",
         "daylight_saving_time.start_month",
         "daylight_saving_time.start_week_day",
         "daylight_saving_time.start_hour_min",
@@ -853,8 +865,8 @@
       "bacnet_unit_type_id": 95,
       "bacnet_unit_type": "UNITS_NO_UNITS",
       "reference": [
-        "daylight_saving_time.daylight_saving_time_enable",
-        "daylight_saving_time.daylight_saving_time_offset",
+        "daylight_saving_time.enable",
+        "daylight_saving_time.dst_bias",
         "daylight_saving_time.start_month",
         "daylight_saving_time.start_week_num",
         "daylight_saving_time.start_hour_min",
@@ -880,8 +892,8 @@
       "bacnet_unit_type_id": 72,
       "bacnet_unit_type": "UNITS_MINUTES",
       "reference": [
-        "daylight_saving_time.daylight_saving_time_enable",
-        "daylight_saving_time.daylight_saving_time_offset",
+        "daylight_saving_time.enable",
+        "daylight_saving_time.dst_bias",
         "daylight_saving_time.start_month",
         "daylight_saving_time.start_week_num",
         "daylight_saving_time.start_week_day",
@@ -953,8 +965,8 @@
       "bacnet_unit_type_id": 95,
       "bacnet_unit_type": "UNITS_NO_UNITS",
       "reference": [
-        "daylight_saving_time.daylight_saving_time_enable",
-        "daylight_saving_time.daylight_saving_time_offset",
+        "daylight_saving_time.enable",
+        "daylight_saving_time.dst_bias",
         "daylight_saving_time.start_month",
         "daylight_saving_time.start_week_num",
         "daylight_saving_time.start_week_day",
@@ -998,8 +1010,8 @@
       "bacnet_unit_type_id": 95,
       "bacnet_unit_type": "UNITS_NO_UNITS",
       "reference": [
-        "daylight_saving_time.daylight_saving_time_enable",
-        "daylight_saving_time.daylight_saving_time_offset",
+        "daylight_saving_time.enable",
+        "daylight_saving_time.dst_bias",
         "daylight_saving_time.start_month",
         "daylight_saving_time.start_week_num",
         "daylight_saving_time.start_week_day",
@@ -1051,8 +1063,8 @@
       "bacnet_unit_type_id": 95,
       "bacnet_unit_type": "UNITS_NO_UNITS",
       "reference": [
-        "daylight_saving_time.daylight_saving_time_enable",
-        "daylight_saving_time.daylight_saving_time_offset",
+        "daylight_saving_time.enable",
+        "daylight_saving_time.dst_bias",
         "daylight_saving_time.start_month",
         "daylight_saving_time.start_week_num",
         "daylight_saving_time.start_week_day",
@@ -1078,8 +1090,8 @@
       "bacnet_unit_type_id": 72,
       "bacnet_unit_type": "UNITS_MINUTES",
       "reference": [
-        "daylight_saving_time.daylight_saving_time_enable",
-        "daylight_saving_time.daylight_saving_time_offset",
+        "daylight_saving_time.enable",
+        "daylight_saving_time.dst_bias",
         "daylight_saving_time.start_month",
         "daylight_saving_time.start_week_num",
         "daylight_saving_time.start_week_day",
@@ -1093,36 +1105,32 @@
       "id": "overcurrent_alarm.current",
       "name": "Current",
       "value": "",
-      "unit": "mA",
+      "unit": "A",
       "access_mode": "R",
       "data_type": "NUMBER",
-      "value_type": "UINT8",
+      "value_type": "FLOAT",
       "bacnet_type": "analog_input_object",
-      "bacnet_unit_type_id": 2,
-      "bacnet_unit_type": "UNITS_MILLIAMPERES",
+      "bacnet_unit_type_id": 3,
+      "bacnet_unit_type": "UNITS_AMPERES",
       "reference": [
         "overcurrent_alarm.status"
       ]
     },
     {
       "id": "overcurrent_alarm.status",
-      "name": "Alarm Status",
+      "name": "Status",
       "value": "",
       "unit": "",
       "access_mode": "R",
-      "data_type": "BOOL",
+      "data_type": "ENUM",
       "value_type": "UINT8",
       "values": [
-        {
-          "name": "normal",
-          "value": 0
-        },
         {
           "name": "overcurrent",
           "value": 1
         }
       ],
-      "bacnet_type": "binary_input_object",
+      "bacnet_type": "multistate_value_object",
       "bacnet_unit_type_id": 95,
       "bacnet_unit_type": "UNITS_NO_UNITS",
       "reference": [
@@ -1131,48 +1139,152 @@
     },
     {
       "id": "device_abnormal_alarm.status",
-      "name": "Alarm Status",
+      "name": "Status",
       "value": "",
       "unit": "",
       "access_mode": "R",
-      "data_type": "BOOL",
+      "data_type": "ENUM",
       "value_type": "UINT8",
       "values": [
-        {
-          "name": "normal",
-          "value": 0
-        },
         {
           "name": "abnormal",
           "value": 1
         }
       ],
-      "bacnet_type": "binary_input_object",
+      "bacnet_type": "multistate_value_object",
       "bacnet_unit_type_id": 95,
       "bacnet_unit_type": "UNITS_NO_UNITS",
       "reference": []
     },
     {
       "id": "temperature_alarm.status",
-      "name": "Alarm Status",
+      "name": "Status",
       "value": "",
       "unit": "",
       "access_mode": "R",
-      "data_type": "BOOL",
+      "data_type": "ENUM",
       "value_type": "UINT8",
       "values": [
-        {
-          "name": "normal",
-          "value": 0
-        },
         {
           "name": "overtemperature",
           "value": 1
         }
       ],
-      "bacnet_type": "binary_input_object",
+      "bacnet_type": "multistate_value_object",
       "bacnet_unit_type_id": 95,
       "bacnet_unit_type": "UNITS_NO_UNITS",
+      "reference": []
+    },
+    {
+      "id": "voltage_collect_error.type",
+      "name": "Type",
+      "value": "",
+      "unit": "",
+      "access_mode": "R",
+      "data_type": "ENUM",
+      "value_type": "UINT8",
+      "values": [
+        {
+          "name": "collect_error",
+          "value": 1
+        }
+      ],
+      "bacnet_type": "multistate_value_object",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS",
+      "reference": []
+    },
+    {
+      "id": "electric_power_collect_error.type",
+      "name": "Type",
+      "value": "",
+      "unit": "",
+      "access_mode": "R",
+      "data_type": "ENUM",
+      "value_type": "UINT8",
+      "values": [
+        {
+          "name": "collect_error",
+          "value": 1
+        }
+      ],
+      "bacnet_type": "multistate_value_object",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS",
+      "reference": []
+    },
+    {
+      "id": "power_factor_collect_error.type",
+      "name": "Type",
+      "value": "",
+      "unit": "",
+      "access_mode": "R",
+      "data_type": "ENUM",
+      "value_type": "UINT8",
+      "values": [
+        {
+          "name": "collect_error",
+          "value": 1
+        }
+      ],
+      "bacnet_type": "multistate_value_object",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS",
+      "reference": []
+    },
+    {
+      "id": "power_consumption_collect_error.type",
+      "name": "Type",
+      "value": "",
+      "unit": "",
+      "access_mode": "R",
+      "data_type": "ENUM",
+      "value_type": "UINT8",
+      "values": [
+        {
+          "name": "collect_error",
+          "value": 1
+        }
+      ],
+      "bacnet_type": "multistate_value_object",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS",
+      "reference": []
+    },
+    {
+      "id": "current_collect_error.type",
+      "name": "Type",
+      "value": "",
+      "unit": "",
+      "access_mode": "R",
+      "data_type": "ENUM",
+      "value_type": "UINT8",
+      "values": [
+        {
+          "name": "collect_error",
+          "value": 1
+        }
+      ],
+      "bacnet_type": "multistate_value_object",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS",
+      "reference": []
+    },
+    {
+      "id": "load_power.switch_power1",
+      "name": "Switch Power1",
+      "value": "0",
+      "unit": "W",
+      "access_mode": "W",
+      "data_type": "NUMBER",
+      "value_type": "UINT16",
+      "range": [
+        0,
+        1100
+      ],
+      "bacnet_type": "analog_output_object",
+      "bacnet_unit_type_id": 47,
+      "bacnet_unit_type": "UNITS_WATTS",
       "reference": []
     }
   ]
