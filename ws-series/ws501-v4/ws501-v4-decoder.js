@@ -81,10 +81,10 @@ function milesightDeviceDecode(bytes) {
             // bit mask  change   state
             var value = bytes[i];
             var switch_bit_offset = { status_1: 0 };
-            decoded.switch_reading = {};
+            decoded.switch_status = {};
             for (var key in switch_bit_offset) {
-                decoded.switch_reading[key] = readOnOffStatus((value >>> switch_bit_offset[key]) & 0x01);
-                decoded.switch_reading[key + '_change'] = readYesNoStatus((value >>> (switch_bit_offset[key] + 4)) & 0x01);
+                decoded.switch_status[key] = readOnOffStatus((value >>> switch_bit_offset[key]) & 0x01);
+                decoded.switch_status[key + '_change'] = readYesNoStatus((value >>> (switch_bit_offset[key] + 4)) & 0x01);
             }
             i += 1;
         }
@@ -105,18 +105,18 @@ function milesightDeviceDecode(bytes) {
         }
         // Power Consumption
         else if (channel_id === 0x06 && channel_type === 0x83) {
-            decoded.power_consumption = readUInt32LE(bytes.slice(i, i + 4));
+            decoded.power_consumption = readUInt32LE(bytes.slice(i, i + 4)) / 1000;
             i += 4;
         }
         // Current Rating
         else if (channel_id === 0x07 && channel_type === 0xc9) {
-            decoded.current = readUInt16LE(bytes.slice(i, i + 2));
+            decoded.current = readUInt16LE(bytes.slice(i, i + 2)) / 1000;
             i += 2;
         }
         // Over Current Alarm
         else if (channel_id === 0x87 && channel_type === 0xc9) {
             decoded.overcurrent_alarm = {};
-            decoded.overcurrent_alarm.current = readUInt16LE(bytes.slice(i, i + 2));
+            decoded.overcurrent_alarm.current = readUInt16LE(bytes.slice(i, i + 2)) / 1000;
             decoded.overcurrent_alarm.status = readOverCurrentStatus(bytes.slice(i + 2, i + 3));
             i += 3;
         }
@@ -181,11 +181,11 @@ function handle_downlink_response(channel_type, bytes, offset) {
             break;
         case 0x29:
             var data = readUInt8(bytes[offset]);
-            var switch_bit_offset = { status_1: 0 };
-            decoded.switch_control = {};
+            var switch_bit_offset = { switch_status1: 0 };
+            decoded.switch_status_control = {};
             for (var key in switch_bit_offset) {
                 if ((data >>> (switch_bit_offset[key] + 4)) & 0x01) {
-                    decoded.switch_control[key] = readOnOffStatus((data >>> (switch_bit_offset[key])) & 0x01);
+                    decoded.switch_status_control[key] = readOnOffStatus((data >>> (switch_bit_offset[key])) & 0x01);
                 }
             }
             offset += 1;
@@ -238,11 +238,11 @@ function handle_downlink_response(channel_type, bytes, offset) {
             var d2d_enable_data = readUInt8(bytes[offset]);
             offset += 1;
 
-            decoded.d2d_global_enable = {};
-            decoded.d2d_global_enable.master_enable = readEnableStatus((d2d_enable_data >>> 0) & 1);
-            decoded.d2d_global_enable.master_enable_change = readYesNoStatus((d2d_enable_data >>> 4) & 1);
-            decoded.d2d_global_enable.agent_enable = readEnableStatus((d2d_enable_data >>> 1) & 1);
-            decoded.d2d_global_enable.agent_enable_change = readYesNoStatus((d2d_enable_data >>> 5) & 1);
+            decoded.d2d_settings = {};
+            decoded.d2d_settings.d2d_controller_enable = readEnableStatus((d2d_enable_data >>> 0) & 1);
+            decoded.d2d_settings.d2d_controller_enable_change = readYesNoStatus((d2d_enable_data >>> 4) & 1);
+            decoded.d2d_settings.d2d_agent_enable = readEnableStatus((d2d_enable_data >>> 1) & 1);
+            decoded.d2d_settings.d2d_agent_enable_change = readYesNoStatus((d2d_enable_data >>> 5) & 1);
             break;
         case 0x83: 
             var d2d_agent_settings = readD2DAgentSettings(bytes.slice(offset, offset + 5));
@@ -278,30 +278,21 @@ function handle_downlink_response_ext(code, channel_type, bytes, offset) {
             break;
         case 0x65:
             var data = readUInt8(bytes[offset]);
-            decoded.get_local_rule = {};
+            decoded.get_schedule = {};
             if (data === 0xff) {
-                decoded.get_local_rule.task_id = 'all schedules';
+                decoded.get_schedule.schedule_id = 'all schedules';
             } else {
-                decoded.get_local_rule.task_id = data;
+                decoded.get_schedule.schedule_id = data;
             }
-            offset += 1;
-            break;
-        case 0xaa:
-            decoded.anti_flash_mode = {};
-            decoded.anti_flash_mode.enable = readEnableStatus(bytes[offset]);
             offset += 1;
             break;
         case 0xab:
             decoded.load_power = {};
-            var power_bit_offset = [ "power_1" ];
+            var power_bit_offset = [ "switch_power1" ];
             for(var i= 0; i < power_bit_offset.length; i++) {
                 decoded.load_power[power_bit_offset[i]] = readUInt16LE(bytes.slice(offset + i * 2, offset + (i + 1) * 2));
             }
             offset += 6;
-            break;
-        case 0xa4: 
-            decoded.lorawan_class_cfg = readLorawanClassCfg(bytes.slice(offset, offset + 8));
-            offset += 8;
             break;
         case 0xb8:
             decoded.key1_d2d_controller_settings = readD2DControllerSettings(bytes.slice(offset, offset + 5));
@@ -340,8 +331,8 @@ function readDstConfig(bytes) {
     var offset_value = data & 0x7f;
 
     var daylight_saving_time = {};
-    daylight_saving_time.daylight_saving_time_enable = readEnableStatus(enable_value);
-    daylight_saving_time.daylight_saving_time_offset = offset_value;
+    daylight_saving_time.enable = readEnableStatus(enable_value);
+    daylight_saving_time.dst_bias = offset_value;
     daylight_saving_time.start_month = readUInt8(bytes[offset + 1]);
     var start_week_value = readUInt8(bytes[offset + 2]);
     daylight_saving_time.start_week_num = start_week_value >> 4;
@@ -407,7 +398,6 @@ function readSerialNumber(bytes) {
 
 function readLoRaWANClass(type) {
     var class_map = {
-        1: "Class B",
         2: "Class C",
     };
     return getValue(class_map, type);
@@ -457,7 +447,7 @@ function readScheduleSettings(bytes) {
     var offset = 0;
 
     var schedule_settings = {};
-    schedule_settings.channel = readUInt8(bytes[offset]);
+    schedule_settings.schedule_id = readUInt8(bytes[offset]);
     schedule_settings.enable = readEnableStatus2(bytes[offset + 1] & 0x03);
     schedule_settings.use_config = readYesNoStatus(bytes[offset + 1] >> 4 & 0x01);
     // condition
@@ -470,12 +460,12 @@ function readScheduleSettings(bytes) {
     schedule_settings.execut_min = readUInt8(bytes[offset + 4]);
 
     // action
-    var switch_bit_offset = { switch_1_state: 0 };
+    var switch_bit_offset = { switch_status1: 0 };
     var switch_raw_data = readUInt8(bytes[offset + 5]);
     for (var key in switch_bit_offset) {
         schedule_settings[key] = readSwitchStatus((switch_raw_data >> switch_bit_offset[key]) & 0x03);
     }
-    schedule_settings.lock_state = readChildLockStatus(bytes[offset + 6]);
+    schedule_settings.lock_status = readChildLockStatus(bytes[offset + 6]);
 
     return schedule_settings;
 }
@@ -545,28 +535,17 @@ function readD2DAgentSettings(bytes) {
     var offset = 0;
 
     var d2d_agent_settings = {};
-    d2d_agent_settings.d2d_agent_id = readUInt8(bytes[offset]);
-    d2d_agent_settings.d2d_agent_enable = readEnableStatus(bytes[offset + 1] & 0x01);
-    d2d_agent_settings.d2d_agent_command = readD2DCommand(bytes.slice(offset + 2, offset + 4));
+    d2d_agent_settings.number = readUInt8(bytes[offset]);
+    d2d_agent_settings.enable = readEnableStatus(bytes[offset + 1] & 0x01);
+    d2d_agent_settings.control_command = readD2DCommand(bytes.slice(offset + 2, offset + 4));
 
-    d2d_agent_settings.d2d_agent_action = {};
+    d2d_agent_settings.action_status = {};
     var switchs = bytes[offset + 4] >> 4;
     var status = bytes[offset + 4] & 0x0f;
-    d2d_agent_settings.d2d_agent_action.switch_object = readSwitchObject(switchs);
-    d2d_agent_settings.d2d_agent_action.switch_status = readActionSwitchStatus(status);
+    d2d_agent_settings.action_status.switch = readSwitchObject(switchs);
+    d2d_agent_settings.action_status.switch_status = readActionSwitchStatus(status);
 
     return d2d_agent_settings;
-}
-
-function readLorawanClassCfg(bytes) {
-    var offset = 0;
-
-    var lorawan_class_cfg = {};
-    lorawan_class_cfg.timestamp = readUInt32LE(bytes.slice(offset, offset + 4));
-    lorawan_class_cfg.continue = readUInt16LE(bytes.slice(offset + 4, offset + 6));
-    lorawan_class_cfg.class_mode = readClassMode(readUInt8(bytes.slice(offset + 6, offset + 7)));
-
-    return lorawan_class_cfg;
 }
 
 function readD2DControllerSettings(bytes) {
@@ -607,7 +586,7 @@ function readEnableStatus(status) {
 }
 
 function readEnableStatus2(status) {
-    var status_map = { 1: "enable", 2: "disable" };
+    var status_map = { 0: "not config", 1: "enable", 2: "disable" };
     return getValue(status_map, status);
 }
 
@@ -619,11 +598,6 @@ function readPowerSwitchMode(mode) {
 function readEnableMask(mask) {
     var mask_map = { 0: "keep", 1: "set" };
     return getValue(mask_map, mask);
-}
-
-function readClassMode(mode) {
-    var mode_map = { 1: "CLASS_B", 2: "CLASS_C" };
-    return getValue(mode_map, mode);
 }
 
 function readMonth(month) {
