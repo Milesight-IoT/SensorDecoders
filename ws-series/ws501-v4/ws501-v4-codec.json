@@ -8,7 +8,7 @@
       "unit": "V",
       "access_mode": "R",
       "data_type": "NUMBER",
-      "value_type": "FLOAT",
+      "value_type": "UINT8",
       "bacnet_type": "analog_input_object",
       "bacnet_unit_type_id": 5,
       "bacnet_unit_type": "UNITS_VOLTS"
@@ -45,45 +45,45 @@
       "id": "power_consumption",
       "name": "Power Consumption",
       "value": "",
-      "unit": "Wh",
+      "unit": "kWh",
       "access_mode": "R",
       "data_type": "NUMBER",
-      "value_type": "UINT8",
+      "value_type": "FLOAT",
       "bacnet_type": "analog_input_object",
-      "bacnet_unit_type_id": 18,
-      "bacnet_unit_type": "UNITS_WATT_HOURS"
+      "bacnet_unit_type_id": 19,
+      "bacnet_unit_type": "UNITS_KILOWATT_HOURS"
     },
     {
-      "id": "current",
+      "id": "current_rating",
       "name": "Current Rating",
       "value": "",
-      "unit": "mA",
+      "unit": "A",
       "access_mode": "R",
       "data_type": "NUMBER",
-      "value_type": "UINT8",
+      "value_type": "FLOAT",
       "bacnet_type": "analog_input_object",
-      "bacnet_unit_type_id": 2,
-      "bacnet_unit_type": "UNITS_MILLIAMPERES"
+      "bacnet_unit_type_id": 3,
+      "bacnet_unit_type": "UNITS_AMPERES"
     },
     {
-      "id": "switch_reading.status_1",
-      "name": "Switch 1",
+      "id": "button_status.button1",
+      "name": "Button1",
       "value": "",
       "unit": "",
       "access_mode": "R",
-      "data_type": "BOOL",
+      "data_type": "ENUM",
       "value_type": "UINT8",
       "values": [
         {
-          "name": "off",
+          "name": "Off",
           "value": 0
         },
         {
-          "name": "on",
+          "name": "On",
           "value": 1
         }
       ],
-      "bacnet_type": "binary_input_object",
+      "bacnet_type": "multistate_value_object",
       "bacnet_unit_type_id": 95,
       "bacnet_unit_type": "UNITS_NO_UNITS",
       "reference": []
@@ -114,11 +114,11 @@
       "value_type": "UINT8",
       "values": [
         {
-          "name": "disable",
+          "name": "Disable",
           "value": 0
         },
         {
-          "name": "enable",
+          "name": "Enable",
           "value": 1
         }
       ],
@@ -136,11 +136,11 @@
       "value_type": "UINT8",
       "values": [
         {
-          "name": "disable",
+          "name": "Disable",
           "value": 0
         },
         {
-          "name": "Enable (relay closed indicator off)",
+          "name": "Enable (Relay closed indicator off)",
           "value": 1
         }
       ],
@@ -158,11 +158,11 @@
       "value_type": "UINT8",
       "values": [
         {
-          "name": "disable",
+          "name": "Disable",
           "value": 0
         },
         {
-          "name": "enable",
+          "name": "Enable",
           "value": 1
         }
       ],
@@ -172,7 +172,7 @@
     },
     {
       "id": "button_lock_config.enable",
-      "name": "Switch Lock Enable",
+      "name": "On/Off Lock Enable",
       "value": "0",
       "unit": "",
       "access_mode": "W",
@@ -180,11 +180,11 @@
       "value_type": "UINT8",
       "values": [
         {
-          "name": "disable",
+          "name": "Disable",
           "value": 0
         },
         {
-          "name": "enable",
+          "name": "Enable",
           "value": 1
         }
       ],
@@ -203,11 +203,11 @@
       "value_type": "UINT8",
       "values": [
         {
-          "name": "disable",
+          "name": "Disable",
           "value": 0
         },
         {
-          "name": "enable",
+          "name": "Enable",
           "value": 1
         }
       ],
@@ -247,11 +247,11 @@
       "value_type": "UINT8",
       "values": [
         {
-          "name": "disable",
+          "name": "Disable",
           "value": 0
         },
         {
-          "name": "enable",
+          "name": "Enable",
           "value": 1
         }
       ],
@@ -291,11 +291,11 @@
       "value_type": "UINT8",
       "values": [
         {
-          "name": "disable",
+          "name": "Disable",
           "value": 0
         },
         {
-          "name": "enable",
+          "name": "Enable",
           "value": 1
         }
       ],
@@ -304,8 +304,8 @@
       "bacnet_unit_type": "UNITS_NO_UNITS"
     },
     {
-      "id": "power_switch_mode",
-      "name": "Power Switch Mode",
+      "id": "button_status_control.button_status1",
+      "name": "Button1",
       "value": "0",
       "unit": "",
       "access_mode": "W",
@@ -313,15 +313,38 @@
       "value_type": "UINT8",
       "values": [
         {
-          "name": "off",
+          "name": "Off",
           "value": 0
         },
         {
-          "name": "on",
+          "name": "On",
+          "value": 1
+        }
+      ],
+      "bacnet_type": "multistate_value_object",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS",
+      "reference": []
+    },
+    {
+      "id": "power_switch_mode",
+      "name": "When Power is Restored",
+      "value": "2",
+      "unit": "",
+      "access_mode": "W",
+      "data_type": "ENUM",
+      "value_type": "UINT8",
+      "values": [
+        {
+          "name": "Turn to off",
+          "value": 0
+        },
+        {
+          "name": "Turn to on",
           "value": 1
         },
         {
-          "name": "keep",
+          "name": "Return to previous working state",
           "value": 2
         }
       ],
@@ -330,7 +353,7 @@
       "bacnet_unit_type": "UNITS_NO_UNITS"
     },
     {
-      "id": "d2d_global_enable.master_enable",
+      "id": "d2d_settings.d2d_controller_enable",
       "name": "D2D Controller Enable",
       "value": "0",
       "unit": "",
@@ -339,11 +362,11 @@
       "value_type": "UINT8",
       "values": [
         {
-          "name": "disable",
+          "name": "Disable",
           "value": 0
         },
         {
-          "name": "enable",
+          "name": "Enable",
           "value": 1
         }
       ],
@@ -351,11 +374,11 @@
       "bacnet_unit_type_id": 95,
       "bacnet_unit_type": "UNITS_NO_UNITS",
       "reference": [
-        "d2d_global_enable.agent_enable"
+        "d2d_settings.d2d_agent_enable"
       ]
     },
     {
-      "id": "d2d_global_enable.agent_enable",
+      "id": "d2d_settings.d2d_agent_enable",
       "name": "D2D Agent Enable",
       "value": "0",
       "unit": "",
@@ -364,11 +387,11 @@
       "value_type": "UINT8",
       "values": [
         {
-          "name": "disable",
+          "name": "Disable",
           "value": 0
         },
         {
-          "name": "enable",
+          "name": "Enable",
           "value": 1
         }
       ],
@@ -376,99 +399,7 @@
       "bacnet_unit_type_id": 95,
       "bacnet_unit_type": "UNITS_NO_UNITS",
       "reference": [
-        "d2d_global_enable.master_enable"
-      ]
-    },
-    {
-      "id": "key1_d2d_controller_settings.key_contrl_enable",
-      "name": "Key Controller Enable",
-      "value": "0",
-      "unit": "",
-      "access_mode": "W",
-      "data_type": "BOOL",
-      "value_type": "UINT8",
-      "values": [
-        {
-          "name": "disable",
-          "value": 0
-        },
-        {
-          "name": "enable",
-          "value": 1
-        }
-      ],
-      "bacnet_type": "binary_output_object",
-      "bacnet_unit_type_id": 95,
-      "bacnet_unit_type": "UNITS_NO_UNITS",
-      "reference": [
-        "key1_d2d_controller_settings.uplink",
-        "key1_d2d_controller_settings.contrl_cmd"
-      ]
-    },
-    {
-      "id": "key1_d2d_controller_settings.uplink.lora_enable",
-      "name": "Controller Lora Uplink Enable",
-      "value": "0",
-      "unit": "",
-      "access_mode": "W",
-      "data_type": "BOOL",
-      "value_type": "UINT8",
-      "values": [
-        {
-          "name": "disable",
-          "value": 0
-        },
-        {
-          "name": "enable",
-          "value": 1
-        }
-      ],
-      "bacnet_type": "binary_output_object",
-      "bacnet_unit_type_id": 95,
-      "bacnet_unit_type": "UNITS_NO_UNITS",
-      "reference": [
-        "key1_d2d_controller_settings.uplink.key_enable"
-      ]
-    },
-    {
-      "id": "key1_d2d_controller_settings.uplink.key_enable",
-      "name": "Controller Key Status Uplink Enable",
-      "value": "0",
-      "unit": "",
-      "access_mode": "W",
-      "data_type": "BOOL",
-      "value_type": "UINT8",
-      "values": [
-        {
-          "name": "disable",
-          "value": 0
-        },
-        {
-          "name": "enable",
-          "value": 1
-        }
-      ],
-      "bacnet_type": "binary_output_object",
-      "bacnet_unit_type_id": 95,
-      "bacnet_unit_type": "UNITS_NO_UNITS",
-      "reference": [
-        "key1_d2d_controller_settings.uplink.lora_enable"
-      ]
-    },
-    {
-      "id": "key1_d2d_controller_settings.contrl_cmd",
-      "name": "Control Command",
-      "value": "0",
-      "unit": "",
-      "access_mode": "W",
-      "data_type": "NUMBER",
-      "value_type": "UINT8",
-      "bacnet_type": "analog_output_object",
-      "bacnet_unit_type_id": 95,
-      "bacnet_unit_type": "UNITS_NO_UNITS",
-      "reference": [
-        "key1_d2d_controller_settings.key_contrl_enable",
-        "key1_d2d_controller_settings.uplink"
+        "d2d_settings.d2d_controller_enable"
       ]
     },
     {
@@ -634,8 +565,8 @@
       "bacnet_unit_type": "UNITS_MINUTES"
     },
     {
-      "id": "daylight_saving_time.daylight_saving_time_enable",
-      "name": "DST Enable",
+      "id": "daylight_saving_time.enable",
+      "name": "Enable",
       "value": "0",
       "unit": "",
       "access_mode": "W",
@@ -643,11 +574,11 @@
       "value_type": "UINT8",
       "values": [
         {
-          "name": "disable",
+          "name": "Disable",
           "value": 0
         },
         {
-          "name": "enable",
+          "name": "Enable",
           "value": 1
         }
       ],
@@ -655,7 +586,7 @@
       "bacnet_unit_type_id": 95,
       "bacnet_unit_type": "UNITS_NO_UNITS",
       "reference": [
-        "daylight_saving_time.daylight_saving_time_offset",
+        "daylight_saving_time.dst_bias",
         "daylight_saving_time.start_month",
         "daylight_saving_time.start_week_num",
         "daylight_saving_time.start_week_day",
@@ -667,9 +598,9 @@
       ]
     },
     {
-      "id": "daylight_saving_time.daylight_saving_time_offset",
+      "id": "daylight_saving_time.dst_bias",
       "name": "DST Bias",
-      "value": "1",
+      "value": "60",
       "unit": "min",
       "access_mode": "W",
       "data_type": "NUMBER",
@@ -682,7 +613,7 @@
       "bacnet_unit_type_id": 72,
       "bacnet_unit_type": "UNITS_MINUTES",
       "reference": [
-        "daylight_saving_time.daylight_saving_time_enable",
+        "daylight_saving_time.enable",
         "daylight_saving_time.start_month",
         "daylight_saving_time.start_week_num",
         "daylight_saving_time.start_week_day",
@@ -755,8 +686,8 @@
       "bacnet_unit_type_id": 95,
       "bacnet_unit_type": "UNITS_NO_UNITS",
       "reference": [
-        "daylight_saving_time.daylight_saving_time_enable",
-        "daylight_saving_time.daylight_saving_time_offset",
+        "daylight_saving_time.enable",
+        "daylight_saving_time.dst_bias",
         "daylight_saving_time.start_week_num",
         "daylight_saving_time.start_week_day",
         "daylight_saving_time.start_hour_min",
@@ -800,8 +731,8 @@
       "bacnet_unit_type_id": 95,
       "bacnet_unit_type": "UNITS_NO_UNITS",
       "reference": [
-        "daylight_saving_time.daylight_saving_time_enable",
-        "daylight_saving_time.daylight_saving_time_offset",
+        "daylight_saving_time.enable",
+        "daylight_saving_time.dst_bias",
         "daylight_saving_time.start_month",
         "daylight_saving_time.start_week_day",
         "daylight_saving_time.start_hour_min",
@@ -853,8 +784,8 @@
       "bacnet_unit_type_id": 95,
       "bacnet_unit_type": "UNITS_NO_UNITS",
       "reference": [
-        "daylight_saving_time.daylight_saving_time_enable",
-        "daylight_saving_time.daylight_saving_time_offset",
+        "daylight_saving_time.enable",
+        "daylight_saving_time.dst_bias",
         "daylight_saving_time.start_month",
         "daylight_saving_time.start_week_num",
         "daylight_saving_time.start_hour_min",
@@ -880,8 +811,8 @@
       "bacnet_unit_type_id": 72,
       "bacnet_unit_type": "UNITS_MINUTES",
       "reference": [
-        "daylight_saving_time.daylight_saving_time_enable",
-        "daylight_saving_time.daylight_saving_time_offset",
+        "daylight_saving_time.enable",
+        "daylight_saving_time.dst_bias",
         "daylight_saving_time.start_month",
         "daylight_saving_time.start_week_num",
         "daylight_saving_time.start_week_day",
@@ -953,8 +884,8 @@
       "bacnet_unit_type_id": 95,
       "bacnet_unit_type": "UNITS_NO_UNITS",
       "reference": [
-        "daylight_saving_time.daylight_saving_time_enable",
-        "daylight_saving_time.daylight_saving_time_offset",
+        "daylight_saving_time.enable",
+        "daylight_saving_time.dst_bias",
         "daylight_saving_time.start_month",
         "daylight_saving_time.start_week_num",
         "daylight_saving_time.start_week_day",
@@ -998,8 +929,8 @@
       "bacnet_unit_type_id": 95,
       "bacnet_unit_type": "UNITS_NO_UNITS",
       "reference": [
-        "daylight_saving_time.daylight_saving_time_enable",
-        "daylight_saving_time.daylight_saving_time_offset",
+        "daylight_saving_time.enable",
+        "daylight_saving_time.dst_bias",
         "daylight_saving_time.start_month",
         "daylight_saving_time.start_week_num",
         "daylight_saving_time.start_week_day",
@@ -1051,8 +982,8 @@
       "bacnet_unit_type_id": 95,
       "bacnet_unit_type": "UNITS_NO_UNITS",
       "reference": [
-        "daylight_saving_time.daylight_saving_time_enable",
-        "daylight_saving_time.daylight_saving_time_offset",
+        "daylight_saving_time.enable",
+        "daylight_saving_time.dst_bias",
         "daylight_saving_time.start_month",
         "daylight_saving_time.start_week_num",
         "daylight_saving_time.start_week_day",
@@ -1078,8 +1009,8 @@
       "bacnet_unit_type_id": 72,
       "bacnet_unit_type": "UNITS_MINUTES",
       "reference": [
-        "daylight_saving_time.daylight_saving_time_enable",
-        "daylight_saving_time.daylight_saving_time_offset",
+        "daylight_saving_time.enable",
+        "daylight_saving_time.dst_bias",
         "daylight_saving_time.start_month",
         "daylight_saving_time.start_week_num",
         "daylight_saving_time.start_week_day",
@@ -1093,36 +1024,32 @@
       "id": "overcurrent_alarm.current",
       "name": "Current",
       "value": "",
-      "unit": "mA",
+      "unit": "A",
       "access_mode": "R",
       "data_type": "NUMBER",
-      "value_type": "UINT8",
+      "value_type": "FLOAT",
       "bacnet_type": "analog_input_object",
-      "bacnet_unit_type_id": 2,
-      "bacnet_unit_type": "UNITS_MILLIAMPERES",
+      "bacnet_unit_type_id": 3,
+      "bacnet_unit_type": "UNITS_AMPERES",
       "reference": [
         "overcurrent_alarm.status"
       ]
     },
     {
       "id": "overcurrent_alarm.status",
-      "name": "Alarm Status",
+      "name": "Status",
       "value": "",
       "unit": "",
       "access_mode": "R",
-      "data_type": "BOOL",
+      "data_type": "ENUM",
       "value_type": "UINT8",
       "values": [
         {
-          "name": "normal",
-          "value": 0
-        },
-        {
-          "name": "overcurrent",
+          "name": "Overcurrent",
           "value": 1
         }
       ],
-      "bacnet_type": "binary_input_object",
+      "bacnet_type": "multistate_value_object",
       "bacnet_unit_type_id": 95,
       "bacnet_unit_type": "UNITS_NO_UNITS",
       "reference": [
@@ -1131,46 +1058,133 @@
     },
     {
       "id": "device_abnormal_alarm.status",
-      "name": "Alarm Status",
+      "name": "Status",
       "value": "",
       "unit": "",
       "access_mode": "R",
-      "data_type": "BOOL",
+      "data_type": "ENUM",
       "value_type": "UINT8",
       "values": [
         {
-          "name": "normal",
-          "value": 0
-        },
-        {
-          "name": "abnormal",
+          "name": "Abnormal",
           "value": 1
         }
       ],
-      "bacnet_type": "binary_input_object",
+      "bacnet_type": "multistate_value_object",
       "bacnet_unit_type_id": 95,
       "bacnet_unit_type": "UNITS_NO_UNITS",
       "reference": []
     },
     {
       "id": "temperature_alarm.status",
-      "name": "Alarm Status",
+      "name": "Status",
       "value": "",
       "unit": "",
       "access_mode": "R",
-      "data_type": "BOOL",
+      "data_type": "ENUM",
       "value_type": "UINT8",
       "values": [
         {
-          "name": "normal",
-          "value": 0
-        },
-        {
-          "name": "overtemperature",
+          "name": "Overtemperature",
           "value": 1
         }
       ],
-      "bacnet_type": "binary_input_object",
+      "bacnet_type": "multistate_value_object",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS",
+      "reference": []
+    },
+    {
+      "id": "voltage_collect_error.type",
+      "name": "Type",
+      "value": "",
+      "unit": "",
+      "access_mode": "R",
+      "data_type": "ENUM",
+      "value_type": "UINT8",
+      "values": [
+        {
+          "name": "Collect_error",
+          "value": 1
+        }
+      ],
+      "bacnet_type": "multistate_value_object",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS",
+      "reference": []
+    },
+    {
+      "id": "electric_power_collect_error.type",
+      "name": "Type",
+      "value": "",
+      "unit": "",
+      "access_mode": "R",
+      "data_type": "ENUM",
+      "value_type": "UINT8",
+      "values": [
+        {
+          "name": "Collect_error",
+          "value": 1
+        }
+      ],
+      "bacnet_type": "multistate_value_object",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS",
+      "reference": []
+    },
+    {
+      "id": "power_factor_collect_error.type",
+      "name": "Type",
+      "value": "",
+      "unit": "",
+      "access_mode": "R",
+      "data_type": "ENUM",
+      "value_type": "UINT8",
+      "values": [
+        {
+          "name": "Collect_error",
+          "value": 1
+        }
+      ],
+      "bacnet_type": "multistate_value_object",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS",
+      "reference": []
+    },
+    {
+      "id": "power_consumption_collect_error.type",
+      "name": "Type",
+      "value": "",
+      "unit": "",
+      "access_mode": "R",
+      "data_type": "ENUM",
+      "value_type": "UINT8",
+      "values": [
+        {
+          "name": "Collect_error",
+          "value": 1
+        }
+      ],
+      "bacnet_type": "multistate_value_object",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS",
+      "reference": []
+    },
+    {
+      "id": "current_collect_error.type",
+      "name": "Type",
+      "value": "",
+      "unit": "",
+      "access_mode": "R",
+      "data_type": "ENUM",
+      "value_type": "UINT8",
+      "values": [
+        {
+          "name": "Collect_error",
+          "value": 1
+        }
+      ],
+      "bacnet_type": "multistate_value_object",
       "bacnet_unit_type_id": 95,
       "bacnet_unit_type": "UNITS_NO_UNITS",
       "reference": []
