@@ -417,7 +417,7 @@ function milesightDeviceDecode(bytes) {
 			case 0xc6:
 				decoded.daylight_saving_time = decoded.daylight_saving_time || {};
 				// 0：disable, 1：enable
-				decoded.daylight_saving_time.daylight_saving_time_enable = readUInt8(bytes, counterObj, 1);
+				decoded.daylight_saving_time.enable = readUInt8(bytes, counterObj, 1);
 				decoded.daylight_saving_time.daylight_saving_time_offset = readUInt8(bytes, counterObj, 1);
 				// 1:Jan., 2:Feb., 3:Mar., 4:Apr., 5:May, 6:Jun., 7:Jul., 8:Aug., 9:Sep., 10:Oct., 11:Nov., 12:Dec.
 				decoded.daylight_saving_time.start_month = readUInt8(bytes, counterObj, 1);

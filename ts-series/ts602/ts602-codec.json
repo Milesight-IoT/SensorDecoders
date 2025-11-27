@@ -669,7 +669,7 @@
       "bacnet_unit_type": "UNITS_MINUTES"
     },
     {
-      "id": "daylight_saving_time.daylight_saving_time_enable",
+      "id": "daylight_saving_time.enable",
       "name": "Daylight Saving Time",
       "value": "0",
       "unit": "",
@@ -717,7 +717,7 @@
       "bacnet_unit_type_id": 72,
       "bacnet_unit_type": "UNITS_MINUTES",
       "reference": [
-        "daylight_saving_time.daylight_saving_time_enable",
+        "daylight_saving_time.enable",
         "daylight_saving_time.start_month",
         "daylight_saving_time.start_week_num",
         "daylight_saving_time.start_week_day",
@@ -790,7 +790,7 @@
       "bacnet_unit_type_id": 95,
       "bacnet_unit_type": "UNITS_NO_UNITS",
       "reference": [
-        "daylight_saving_time.daylight_saving_time_enable",
+        "daylight_saving_time.enable",
         "daylight_saving_time.daylight_saving_time_offset",
         "daylight_saving_time.start_week_num",
         "daylight_saving_time.start_week_day",
@@ -835,7 +835,7 @@
       "bacnet_unit_type_id": 95,
       "bacnet_unit_type": "UNITS_NO_UNITS",
       "reference": [
-        "daylight_saving_time.daylight_saving_time_enable",
+        "daylight_saving_time.enable",
         "daylight_saving_time.daylight_saving_time_offset",
         "daylight_saving_time.start_month",
         "daylight_saving_time.start_week_day",
@@ -888,7 +888,7 @@
       "bacnet_unit_type_id": 95,
       "bacnet_unit_type": "UNITS_NO_UNITS",
       "reference": [
-        "daylight_saving_time.daylight_saving_time_enable",
+        "daylight_saving_time.enable",
         "daylight_saving_time.daylight_saving_time_offset",
         "daylight_saving_time.start_month",
         "daylight_saving_time.start_week_num",
@@ -1009,7 +1009,7 @@
       "bacnet_unit_type_id": 72,
       "bacnet_unit_type": "UNITS_MINUTES",
       "reference": [
-        "daylight_saving_time.daylight_saving_time_enable",
+        "daylight_saving_time.enable",
         "daylight_saving_time.daylight_saving_time_offset",
         "daylight_saving_time.start_month",
         "daylight_saving_time.start_week_num",
@@ -1082,7 +1082,7 @@
       "bacnet_unit_type_id": 95,
       "bacnet_unit_type": "UNITS_NO_UNITS",
       "reference": [
-        "daylight_saving_time.daylight_saving_time_enable",
+        "daylight_saving_time.enable",
         "daylight_saving_time.daylight_saving_time_offset",
         "daylight_saving_time.start_month",
         "daylight_saving_time.start_week_num",
@@ -1127,7 +1127,7 @@
       "bacnet_unit_type_id": 95,
       "bacnet_unit_type": "UNITS_NO_UNITS",
       "reference": [
-        "daylight_saving_time.daylight_saving_time_enable",
+        "daylight_saving_time.enable",
         "daylight_saving_time.daylight_saving_time_offset",
         "daylight_saving_time.start_month",
         "daylight_saving_time.start_week_num",
@@ -1180,7 +1180,7 @@
       "bacnet_unit_type_id": 95,
       "bacnet_unit_type": "UNITS_NO_UNITS",
       "reference": [
-        "daylight_saving_time.daylight_saving_time_enable",
+        "daylight_saving_time.enable",
         "daylight_saving_time.daylight_saving_time_offset",
         "daylight_saving_time.start_month",
         "daylight_saving_time.start_week_num",
@@ -1301,7 +1301,7 @@
       "bacnet_unit_type_id": 72,
       "bacnet_unit_type": "UNITS_MINUTES",
       "reference": [
-        "daylight_saving_time.daylight_saving_time_enable",
+        "daylight_saving_time.enable",
         "daylight_saving_time.daylight_saving_time_offset",
         "daylight_saving_time.start_month",
         "daylight_saving_time.start_week_num",

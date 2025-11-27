@@ -532,7 +532,7 @@ function milesightDeviceEncode(payload) {
 		var buffer = new Buffer();
 		buffer.writeUInt8(0xc6);
 		// 0：disable, 1：enable
-		buffer.writeUInt8(payload.daylight_saving_time.daylight_saving_time_enable);
+		buffer.writeUInt8(payload.daylight_saving_time.enable);
 		if (payload.daylight_saving_time.daylight_saving_time_offset < 0 || payload.daylight_saving_time.daylight_saving_time_offset > 120) {
 			throw new Error('daylight_saving_time.daylight_saving_time_offset must be between 0 and 120');
 		}
