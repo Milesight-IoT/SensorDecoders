@@ -275,6 +275,9 @@ function milesightDeviceDecode(bytes) {
 					decoded.heating_period_settings.heating_period_reporting_interval = decoded.heating_period_settings.heating_period_reporting_interval || {};
 					// 0：second, 1：min
 					decoded.heating_period_settings.heating_period_reporting_interval.unit = readUInt8(bytes, counterObj, 1);
+					if (decoded.heating_period_settings.heating_period_reporting_interval.unit < 0x00 || decoded.heating_period_settings.heating_period_reporting_interval.unit > 0x01) {
+						throw new Error('heating_period_settings.heating_period_reporting_interval.unit must be between 0 and 1');
+					}
 					if (decoded.heating_period_settings.heating_period_reporting_interval.unit == 0x00) {
 						decoded.heating_period_settings.heating_period_reporting_interval.seconds_of_time = readUInt16LE(bytes, counterObj, 2);
 					}
@@ -286,6 +289,9 @@ function milesightDeviceDecode(bytes) {
 					decoded.heating_period_settings.non_heating_period_reporting_interval = decoded.heating_period_settings.non_heating_period_reporting_interval || {};
 					// 0：second, 1：min
 					decoded.heating_period_settings.non_heating_period_reporting_interval.unit = readUInt8(bytes, counterObj, 1);
+					if (decoded.heating_period_settings.non_heating_period_reporting_interval.unit < 0x00 || decoded.heating_period_settings.non_heating_period_reporting_interval.unit > 0x01) {
+						throw new Error('heating_period_settings.non_heating_period_reporting_interval.unit must be between 0 and 1');
+					}
 					if (decoded.heating_period_settings.non_heating_period_reporting_interval.unit == 0x00) {
 						decoded.heating_period_settings.non_heating_period_reporting_interval.seconds_of_time = readUInt16LE(bytes, counterObj, 2);
 					}
