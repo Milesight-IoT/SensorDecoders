@@ -188,8 +188,8 @@ function milesightDeviceDecode(bytes) {
 
             var data = {};
             data.timestamp = timestamp;
-            var temperature_chn_event = (mask >>> 0) & 0x0f;
-            var humidity_chn_event = (mask >>> 4) & 0x0f;
+            var humidity_chn_event = (mask >>> 0) & 0x0f;
+            var temperature_chn_event = (mask >>> 4) & 0x0f;
             data.temperature_chn1 = readInt16LE(bytes.slice(i + 2, i + 4)) / 10;
             data.humidity_chn1 = readInt16LE(bytes.slice(i, i + 2)) / 10;
             data.temperature_chn1_event = readHistoryEvent(temperature_chn_event);
@@ -206,8 +206,8 @@ function milesightDeviceDecode(bytes) {
 
             var data = {};
             data.timestamp = timestamp;
-            var temperature_chn_event = (mask >>> 0) & 0x0f;
-            var humidity_chn_event = (mask >>> 4) & 0x0f;
+            var humidity_chn_event = (mask >>> 0) & 0x0f;
+            var temperature_chn_event = (mask >>> 4) & 0x0f;
             data.temperature_chn2 = readInt16LE(bytes.slice(i + 2, i + 4)) / 10;
             data.humidity_chn2 = readInt16LE(bytes.slice(i, i + 2)) / 10;
             data.temperature_chn2_event = readHistoryEvent(temperature_chn_event);
