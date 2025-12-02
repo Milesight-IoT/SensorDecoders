@@ -247,7 +247,7 @@ function readPressureAlarmType(bytes) {
 
 function readPressureThresholdAlarm(bytes) {
     var alarm = {};
-    alarm.pressure_type = readValveStrategy(readUInt8(bytes[0]));
+    alarm.valve_strategy = readValveStrategy(readUInt8(bytes[0]));
     alarm.threshold_type = readMathConditionType(readUInt8(bytes[1]));
     alarm.threshold_min = readUInt16LE(bytes.slice(2, 4));
     alarm.threshold_max = readUInt16LE(bytes.slice(4, 6));
@@ -275,7 +275,7 @@ function readLoRaWANClassSwitchResponse(bytes) {
     response.continuous = readUInt16LE(bytes.slice(4, 6));
     response.class_type = readLoRaWANClassType(readUInt8(bytes[6]));
     response.reserved = readUInt8(bytes[7]);
-    response.code = readLoRaWANClassSwitchResponseCode(readUInt8(bytes[8]));
+    response.response_status = readLoRaWANClassSwitchResponseCode(readUInt8(bytes[8]));
     return response;
 }
 
@@ -298,7 +298,7 @@ function readValveIndex(index) {
 
 function readQueryValveTaskStatusResponse(bytes) {
     var response = {};
-    response.index = readValveIndex(readUInt8(bytes[0]));
+    response.valve_index = readValveIndex(readUInt8(bytes[0]));
     response.code = readQueryValveTaskStatusResponseCode(readUInt8(bytes[1]));
     return response;
 }
@@ -331,7 +331,7 @@ function readSetAICollectionConfig(bytes) {
     var response = {};
     response.id = readUInt8(bytes[0]);
     response.enable = readEnableStatus(readUInt8(bytes[1]));
-    response.collect = readUInt16LE(bytes.slice(2, 4));
+    response.collect_nonirrigation = readUInt16LE(bytes.slice(2, 4));
     response.collect_irrigation = readUInt16LE(bytes.slice(4, 6));
     response.open_delay_collect_time = readUInt8(bytes[6]);
     return response;
@@ -346,7 +346,7 @@ function readSetAICollectionConfigResponse(bytes) {
     var response = {};
     response.id = readUInt8(bytes[0]);
     response.enable = readEnableStatus(readUInt8(bytes[1]));
-    response.collect = readUInt16LE(bytes.slice(2, 4));
+    response.collect_nonirrigation = readUInt16LE(bytes.slice(2, 4));
     response.collect_irrigation = readUInt16LE(bytes.slice(4, 6));
     response.open_delay_collect_time = readUInt8(bytes[6]);
     response.code = readSetAICollectionConfigResponseCode(readUInt8(bytes[7]));
