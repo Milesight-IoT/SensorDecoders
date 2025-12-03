@@ -1060,7 +1060,8 @@ function queryDeviceConfig(query_config) {
         time_display: 43,
         magnet_throttle: 44,
         display_mode: 45,
-        buzzer_config: 46
+        retransmit_enable: 46,
+        buzzer_config: 100
     };
 
     var yes_no_map = { 0: "no", 1: "yes" };
