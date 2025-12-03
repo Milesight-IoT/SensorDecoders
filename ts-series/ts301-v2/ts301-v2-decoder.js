@@ -643,6 +643,7 @@ function readQueryConfig(value) {
         time_display: 43,
         magnet_throttle: 44,
         display_mode: 45,
+        retransmit_enable: 46,
     };
     var query_config = {};
     for (var key in config_map) {
