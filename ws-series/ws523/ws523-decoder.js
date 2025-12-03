@@ -73,6 +73,11 @@ function milesightDeviceDecode(bytes) {
             decoded.device_status = readDeviceStatus(1);
             i += 1;
         }
+        // POWER OUTAGE ALARM
+        else if (channel_id === 0xff && channel_type === 0x3f) {
+            decoded.power_outage_alarm = readPowerOutageAlarm(bytes[i]);
+            i += 1;
+        }
         // VOLTAGE
         else if (channel_id === 0x03 && channel_type === 0x74) {
             decoded.voltage = readUInt16LE(bytes.slice(i, i + 2)) / 10;
@@ -234,6 +239,12 @@ function readResetEvent(status) {
 function readDeviceStatus(status) {
     var status_map = { 0: "off", 1: "on" };
     return getValue(status_map, status);
+}
+
+function readPowerOutageAlarm(status) {
+    if (RAW_VALUE) return status;
+    // 0xff: power outage alarm triggered, other values reserved
+    return status === 0xff ? "power_outage" : "normal";
 }
 
 function readSocketStatus(status) {
