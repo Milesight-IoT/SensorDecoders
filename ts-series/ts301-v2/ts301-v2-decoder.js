@@ -137,12 +137,37 @@ function milesightDeviceDecode(bytes) {
 
             var data = {};
             data.timestamp = timestamp;
-            var temperature_chn_event = (mask >>> 0) & 0x0f;
-            var humidity_chn_event = (mask >>> 4) & 0x0f;
-            data.temperature = readInt16LE(bytes.slice(i + 2, i + 4)) / 10;
-            data.humidity = readInt16LE(bytes.slice(i, i + 2)) / 10;
-            data.temperature_event = readHistoryEvent(temperature_chn_event);
-            data.humidity_event = readHistoryEvent(humidity_chn_event);
+            var humidity_chn_event = (mask >>> 0) & 0x0f;
+            var temperature_chn_event = (mask >>> 4) & 0x0f;
+            var temperature = readInt16LE(bytes.slice(i + 2, i + 4));
+            var humidity = readInt16LE(bytes.slice(i, i + 2));
+            // -999 is not valid temperature, skip it
+            if (temperature !== -999) {
+                if (temperature === -1000 || temperature === -1001) {
+                    data.magnet = readMagnetEvent(temperature);
+                    data.event = readHistoryEvent(temperature_chn_event);
+                } else {
+                    if (temperature === -1002) {
+                        data.temperature = 'over_range';
+                    } else {
+                        data.temperature = temperature / 10;
+                    }
+                    data.temperature_event = readHistoryEvent(temperature_chn_event);
+                }
+            }
+            if (humidity !== -999) {
+                if (humidity === -1000 || humidity === -1001) {
+                    data.magnet = readMagnetEvent(humidity);
+                    data.event = readHistoryEvent(humidity_chn_event);
+                } else {
+                    if (humidity === -1002) {
+                        data.humidity = 'over_range';
+                    } else {
+                        data.humidity = humidity / 10;
+                    }
+                    data.humidity_event = readHistoryEvent(humidity_chn_event);
+                }
+            }
             i += 4;
             decoded.history = decoded.history || [];
             decoded.history.push(data);
