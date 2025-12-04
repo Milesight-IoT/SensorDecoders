@@ -499,6 +499,16 @@ function readMagnetStatus(status) {
     return getValue(status_map, status);
 }
 
+function readMagnetEvent(status) {
+    if (status === -1000) {
+        return 'close';
+    } else if (status === -1001) {
+        return 'open';
+    } else {
+        return 'unknown';
+    }
+}
+
 function readConditionType(type) {
     var condition_map = { 0: "disable", 1: "below", 2: "above", 3: "between", 4: "outside", 5: "mutation" };
     return getValue(condition_map, type);
