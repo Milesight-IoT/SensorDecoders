@@ -102,13 +102,15 @@ function milesightDeviceDecode(bytes) {
             i += 4;
         }
         // INSTALL CONFIG (DOWNLINK RESPONSE)
+        // Note: when manual_gain != 0, compensation is ineffective (device uses manual_gain instead)
         else if (channel_id === 0xff && channel_type === 0xac) {
             decoded.install_config = {};
             decoded.install_config.install_method = readInstallMethod(bytes[i]);
-            decoded.install_config.install_height = readUInt8(bytes[i + 1]);
-            decoded.install_config.compensation = readUInt8(bytes[i + 2]);
+            decoded.install_config.install_height = readUInt8(bytes[i + 1]) / 10; // unit: m, precision: 0.1m
+            decoded.install_config.compensation = readInt8(bytes[i + 2]); // range: -2 ~ 2
             decoded.install_config.sensitivity_report_enable = readEnableStatus(bytes[i + 3]);
-            i += 4;
+            decoded.install_config.manual_gain = readUInt8(bytes[i + 4]); // 0: not applied, 60-75: manual gain in db
+            i += 5;
         }
         // PEOPLE THRESHOLD TRIGGER MODE (DOWNLINK RESPONSE)
         else if (channel_id === 0xff && channel_type === 0xad) {

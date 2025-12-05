@@ -699,18 +699,21 @@ function stopTransmit(stop_transmit) {
 
 /**
  * set install config (0xac)
+ * Note: when manual_gain != 0, compensation is ineffective (device uses manual_gain instead)
  * @param {object} install_config
  * @param {number} install_config.install_method values: (0: side, 1: top)
- * @param {number} install_config.install_height unit: cm, range: [0, 255]
- * @param {number} install_config.compensation range: [0, 255]
+ * @param {number} install_config.install_height unit: m, precision: 0.1m, range: [2.0, 3.0]
+ * @param {number} install_config.compensation range: [-2, 2], ineffective when manual_gain != 0
  * @param {number} install_config.sensitivity_report_enable values: (0: disable, 1: enable)
- * @example { "install_config": { "install_method": 1, "install_height": 50, "compensation": 0, "sensitivity_report_enable": 1 } }
+ * @param {number} install_config.manual_gain unit: db, range: [0, 60-75], 0 means not applied
+ * @example { "install_config": { "install_method": 1, "install_height": 2.0, "compensation": 1, "sensitivity_report_enable": 1, "manual_gain": 0 } }
  */
 function setInstallConfig(install_config) {
     var install_method = install_config.install_method;
     var install_height = install_config.install_height;
     var compensation = install_config.compensation;
     var sensitivity_report_enable = install_config.sensitivity_report_enable;
+    var manual_gain = install_config.manual_gain;
 
     var method_map = { 0: "side", 1: "top" };
     var method_values = getValues(method_map);
@@ -718,11 +721,11 @@ function setInstallConfig(install_config) {
         throw new Error("install_config.install_method must be one of " + method_values.join(", "));
     }
 
-    if (typeof install_height !== "number" || install_height < 0 || install_height > 255) {
-        throw new Error("install_config.install_height must be a number in [0, 255]");
+    if (typeof install_height !== "number" || install_height < 2 || install_height > 3) {
+        throw new Error("install_config.install_height must be a number in [2, 3] (unit: m)");
     }
-    if (typeof compensation !== "number" || compensation < 0 || compensation > 255) {
-        throw new Error("install_config.compensation must be a number in [0, 255]");
+    if (typeof compensation !== "number" || compensation < -2 || compensation > 2) {
+        throw new Error("install_config.compensation must be a number in [-2, 2]");
     }
 
     var enable_map = { 0: "disable", 1: "enable" };
@@ -731,13 +734,18 @@ function setInstallConfig(install_config) {
         throw new Error("install_config.sensitivity_report_enable must be one of " + enable_values.join(", "));
     }
 
-    var buffer = new Buffer(6);
+    if (typeof manual_gain !== "number" || (manual_gain !== 0 && (manual_gain < 60 || manual_gain > 75))) {
+        throw new Error("install_config.manual_gain must be 0 (not applied) or in range [60, 75] (db)");
+    }
+
+    var buffer = new Buffer(7);
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0xac);
     buffer.writeUInt8(getValue(method_map, install_method));
-    buffer.writeUInt8(install_height);
-    buffer.writeUInt8(compensation);
+    buffer.writeUInt8(Math.round(install_height * 10)); // precision: 0.1m
+    buffer.writeInt8(compensation);
     buffer.writeUInt8(getValue(enable_map, sensitivity_report_enable));
+    buffer.writeUInt8(manual_gain);
     return buffer.toBytes();
 }
 
