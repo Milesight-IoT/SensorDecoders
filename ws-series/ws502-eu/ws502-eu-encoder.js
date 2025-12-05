@@ -41,11 +41,8 @@ function milesightDeviceEncode(payload) {
     if ("report_attribute" in payload) {
         encoded = encoded.concat(reportAttribute(payload.report_attribute));
     }
-    if ("switch_1" in payload) {
-        encoded = encoded.concat(updateSwitch(1, payload.switch_1));
-    }
-    if ("switch_2" in payload) {
-        encoded = encoded.concat(updateSwitch(2, payload.switch_2));
+    if ("switch_1" in payload || "switch_2" in payload) {
+        encoded = encoded.concat(updateSwitch(payload));
     }
     if ("delay_task" in payload) {
         encoded = encoded.concat(setDelayTask(payload.delay_task));
@@ -148,21 +145,27 @@ function reportAttribute(report_attribute) {
 
 /**
  * button control
- * @param {number} id, values: (1: switch_1, 2: switch_2)
- * @param {number} state, values: (0: off, 1: on)
- * @example { "switch_1": 1 }
+ * @param {number} switch_1 values: (0: off, 1: on)
+ * @param {number} switch_2 values: (0: off, 1: on)
+ * @example { "switch_1": 1, "switch_2": 1 }
  */
-function updateSwitch(id, state) {
+function updateSwitch(switch_data) {
     var on_off_map = { 0: "off", 1: "on" };
     var on_off_values = getValues(on_off_map);
-    if (on_off_values.indexOf(state) === -1) {
-        throw new Error("switch_" + id + " must be one of: " + on_off_values.join(", "));
+
+    var data = 0x00;
+    var switch_bit_offset = { switch_1: 0, switch_2: 1 };
+    for (var key in switch_bit_offset) {
+        if (key in switch_data) {
+            if (on_off_values.indexOf(switch_data[key]) === -1) {
+                throw new Error(key + " must be one of: " + on_off_values.join(", "));
+            }
+
+            data |= 1 << (switch_bit_offset[key] + 4);
+            data |= getValue(on_off_map, switch_data[key]) << switch_bit_offset[key];
+        }
     }
 
-    var on_off = on_off_values.indexOf(state);
-    var mask = 0x01 << (id - 1);
-    var ctrl = on_off << (id - 1);
-    var data = (mask << 4) + ctrl;
     var buffer = new Buffer(3);
     buffer.writeUInt8(0x08);
     buffer.writeUInt8(data);
