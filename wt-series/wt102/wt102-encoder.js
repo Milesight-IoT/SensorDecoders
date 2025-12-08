@@ -346,10 +346,10 @@ function milesightDeviceEncode(payload) {
 				throw new Error('window_opening_alarm.release.environment_temperature must be between -20 and 60');
 			}
 			buffer.writeInt16LE(payload.window_opening_alarm.release.environment_temperature * 100);
-			// 0：Normal, 1：Open
-			// buffer.writeUInt8(payload.window_opening_alarm.release.state);
 		}
 		if (payload.window_opening_alarm.type == 0x21) {
+			// 0：Normal, 1：Open
+			buffer.writeUInt8(payload.window_opening_alarm.trigger.state);
 			if (payload.window_opening_alarm.trigger.environment_temperature < -20 || payload.window_opening_alarm.trigger.environment_temperature > 60) {
 				throw new Error('window_opening_alarm.trigger.environment_temperature must be between -20 and 60');
 			}

@@ -227,11 +227,11 @@ function milesightDeviceDecode(bytes) {
 					decoded.window_opening_alarm.release.state = readUInt8(bytes, counterObj, 1);
 					decoded.window_opening_alarm.release.environment_temperature = readInt16LE(bytes, counterObj, 2) / 100;
 					// decoded.temperature = decoded.window_opening_alarm.release.environment_temperature;
-					// 0：Normal, 1：Open
-					decoded.window_opening_alarm.release.state = readUInt8(bytes, counterObj, 1);
 				}
 				if (decoded.window_opening_alarm.type == 0x21) {
 					decoded.window_opening_alarm.trigger = decoded.window_opening_alarm.trigger || {};
+					// 0：Normal, 1：Open
+					decoded.window_opening_alarm.trigger.state = readUInt8(bytes, counterObj, 1);
 					decoded.window_opening_alarm.trigger.environment_temperature = readInt16LE(bytes, counterObj, 2) / 100;
 					// decoded.temperature = decoded.window_opening_alarm.trigger.environment_temperature;
 				}
