@@ -149,8 +149,329 @@ function milesightDeviceEncode(payload) {
     if ("stop_transmit" in payload) {
         encoded = encoded.concat(stopTransmit(payload.stop_transmit));
     }
-
+    // hardware_version>=v4.0
+    if ("lorawan_class_switch" in payload) {
+        encoded = encoded.concat(setLoRaWANClassSwitch(payload.lorawan_class_switch));
+    }
+    if ("query_valve_task_status" in payload) {
+        encoded = encoded.concat(queryValveTaskStatus(payload.query_valve_task_status));
+    }
+    if ("schedule_device_config" in payload) {
+        encoded = encoded.concat(setScheduleDeviceConfig(payload.schedule_device_config));
+    }
+    if ("ai_collection_config" in payload) {
+        encoded = encoded.concat(setAICollectionConfig(payload.ai_collection_config));
+    }
+    if ("read_schedule_config" in payload) {
+        encoded = encoded.concat(readScheduleConfig(payload.read_schedule_config));
+    }
+    if ("multicast_command" in payload) {
+        encoded = encoded.concat(setMulticastCommand(payload.multicast_command));
+    }
     return encoded;
+}
+
+/**
+ * Set LoRaWAN Class Switch
+ * @since hardware_version>=v4.0
+ * @param {object} lorawan_class_switch
+ * @param {number} lorawan_class_switch.timestamp Timestamp (UTC seconds)
+ * @param {number} lorawan_class_switch.continuous Continuous time (minutes)
+ * @param {number} lorawan_class_switch.class_type Class Type (0: class A, 1: class B, 2: class C, 3: class CtoB, 255: cancel)
+ * @param {number} lorawan_class_switch.reserved Reserved (0: normal, 1: reserved)
+ */
+function setLoRaWANClassSwitch(lorawan_class_switch) {
+    var timestamp = lorawan_class_switch.timestamp;
+    var continuous = lorawan_class_switch.continuous;
+    var class_type = lorawan_class_switch.class_type;
+    var reserved = lorawan_class_switch.reserved || 0;
+
+    var class_type_map = { 0: "class A", 1: "class B", 2: "class C", 3: "class CtoB", 255: "cancel" };
+    var class_type_values = getValues(class_type_map);
+    if (class_type_values.indexOf(class_type) === -1) {
+        throw new Error("lorawan_class_switch.class_type must be one of " + class_type_values.join(", "));
+    }
+
+    var buffer = new Buffer(10);
+    buffer.writeUInt8(0xf9);
+    buffer.writeUInt8(0xa4);
+    buffer.writeUInt32LE(timestamp);
+    buffer.writeUInt16LE(continuous);
+    buffer.writeUInt8(class_type);
+    buffer.writeUInt8(reserved);
+    return buffer.toBytes();
+}
+
+/**
+ * Query Valve Task Status
+ * @since hardware_version>=v4.0
+ * @param {object} query_valve_task_status
+ * @param {number} query_valve_task_status.index values: (0: valve 1, 1: valve 2)
+ * @example { "query_valve_task_status": { "index": 0 } }
+ */
+function queryValveTaskStatus(query_valve_task_status) {
+    var index = query_valve_task_status.index;
+    var index_map = { 0: "valve 1", 1: "valve 2" };
+    var index_values = getValues(index_map);
+    if (index_values.indexOf(index) === -1) {
+        throw new Error("query_valve_task_status.index must be one of " + index_values.join(", "));
+    }
+    var index_value = getValue(index_map, index);
+    var buffer = new Buffer(3);
+    buffer.writeUInt8(0xf9);
+    buffer.writeUInt8(0xa5);
+    buffer.writeUInt8(index_value);
+    return buffer.toBytes();
+}
+
+/**
+ * Set Schedule Device Config
+ * @since hardware_version>=v4.0, firmware_version>=v1.1
+ * @param {object} schedule_device_config
+ * @param {number} schedule_device_config.id id
+ * @param {number} schedule_device_config.type type
+ * @param {object} schedule_device_config.data data
+ * @example { "schedule_device_config": { "id": 3, "type": 0, "data": { "timestamp": 1751864986, "continuous": 100 } } }
+ * @example { "schedule_device_config": { "id": 3, "type": 1, "data": { "channels": [1, 2, 3, 4] } } }
+ * @example { "schedule_device_config": { "id": 3, "type": 2, "data": { "channels": [49, 50, 51, 52] } } }
+ * @example { "schedule_device_config": { "id": 3, "type": 3, "data": { "channel_index": 2, "frequency": 868300000 } } }
+ * @example { "schedule_device_config": { "id": 3, "type": 241 } }
+ * @example { "schedule_device_config": { "id": 3, "type": 242 } }
+ * @example { "schedule_device_config": { "id": 3, "type": 243 } }
+ */
+function setScheduleDeviceConfig(schedule_device_config) {
+    var id = schedule_device_config.id;
+    var type = schedule_device_config.type;
+    var data = schedule_device_config.data;
+
+    if (id < 0 || id > 255) {
+        throw new Error("schedule_device_config.id must be in the range of 0 to 255");
+    }
+
+    var buffer;
+    var dataLength = 0;
+    var dataBytes = [];
+
+    switch (type) {
+        case 0x00:
+            dataLength = 6;
+            dataBytes = [];
+            dataBytes.push((data.timestamp >> 0) & 0xFF);
+            dataBytes.push((data.timestamp >> 8) & 0xFF);
+            dataBytes.push((data.timestamp >> 16) & 0xFF);
+            dataBytes.push((data.timestamp >> 24) & 0xFF);
+            dataBytes.push((data.continuous >> 0) & 0xFF);
+            dataBytes.push((data.continuous >> 8) & 0xFF);
+            break;
+
+        case 0x01:
+            if (!data || !data.channels) {
+                throw new Error("schedule_device_config.data must contain channels array for type 1");
+            }
+            dataLength = 6;
+            dataBytes = encodeChannelBits(data.channels, 1, 48);
+            break;
+
+        case 0x02:
+            if (!data || !data.channels) {
+                throw new Error("schedule_device_config.data must contain channels array for type 2");
+            }
+            dataLength = 6;
+            dataBytes = encodeChannelBits(data.channels, 49, 96);
+            break;
+
+        case 0x03:
+            if (!data || data.channel_index === undefined || data.frequency === undefined) {
+                throw new Error("schedule_device_config.data must contain channel_index and frequency for type 3");
+            }
+            dataLength = 5;
+            dataBytes = [];
+            dataBytes.push(data.channel_index);
+            dataBytes.push((data.frequency >> 0) & 0xFF);
+            dataBytes.push((data.frequency >> 8) & 0xFF);
+            dataBytes.push((data.frequency >> 16) & 0xFF);
+            dataBytes.push((data.frequency >> 24) & 0xFF);
+            break;
+
+        case 0xf1:
+            dataLength = 0;
+            dataBytes = [];
+            break;
+
+        case 0xf2:
+            dataLength = 0;
+            dataBytes = [];
+            break;
+
+        case 0xf3:
+            dataLength = 0;
+            dataBytes = [];
+            break;
+
+        default:
+            throw new Error("schedule_device_config.type must be one of 0, 1, 2, 3, 241, 242, 243");
+    }
+
+    buffer = new Buffer(3 + dataLength);
+    buffer.writeUInt8(0xf9);
+    buffer.writeUInt8(0xa6);
+    buffer.writeUInt8(id);
+    buffer.writeUInt8(type);
+    if (dataBytes.length > 0) {
+        buffer.writeBytes(dataBytes);
+    }
+    return buffer.toBytes();
+}
+
+/**
+ * encode channel bits
+ * @param {Array} channels channels
+ * @param {number} startChannel startChannel
+ * @param {number} endChannel endChannel
+ * @returns {Array} encoded bytes
+ */
+function encodeChannelBits(channels, startChannel, endChannel) {
+    var bytes = [0, 0, 0, 0, 0, 0];
+
+    for (var i = 0; i < channels.length; i++) {
+        var channel = channels[i];
+        if (channel >= startChannel && channel <= endChannel) {
+            var bitIndex = channel - startChannel;
+            var byteIndex = Math.floor(bitIndex / 8);
+            var bitInByte = bitIndex % 8;
+            bytes[byteIndex] |= (1 << bitInByte);
+        }
+    }
+
+    return bytes;
+}
+
+/**
+ * Set AI Collection Config
+ * @since hardware_version>=v4.0
+ * @param {object} ai_collection_config
+ * @param {number} ai_collection_config.id Collection ID (1 or 2)
+ * @param {number} ai_collection_config.enable Enable collection (0: disable, 1: enable)
+ * @param {number} ai_collection_config.collect Non-irrigation collection interval (10-64800 seconds)
+ * @param {number} ai_collection_config.collect_irrigation Irrigation collection interval (10-64800 seconds)
+ * @param {number} ai_collection_config.open_delay_collect_time Valve open delay collection time (0-60 minutes)
+ * @example { "ai_collection_config": { "id": 1, "enable": 1, "collect": 60, "collect_irrigation": 10, "open_delay_collect_time": 5 } }
+ */
+function setAICollectionConfig(ai_collection_config) {
+    var id = ai_collection_config.id;
+    var enable = ai_collection_config.enable;
+    var collect = ai_collection_config.collect;
+    var collect_irrigation = ai_collection_config.collect_irrigation;
+    var open_delay_collect_time = ai_collection_config.open_delay_collect_time;
+
+    // Validate parameters
+    if (id !== 1 && id !== 2) {
+        throw new Error("ai_collection_config.id must be 1 or 2");
+    }
+    if (enable !== 0 && enable !== 1) {
+        throw new Error("ai_collection_config.enable must be 0 or 1");
+    }
+    if (collect < 10 || collect > 64800) {
+        throw new Error("ai_collection_config.collect must be in range 10-64800");
+    }
+    if (collect_irrigation < 10 || collect_irrigation > 64800) {
+        throw new Error("ai_collection_config.collect_irrigation must be in range 10-64800");
+    }
+    if (open_delay_collect_time < 0 || open_delay_collect_time > 60) {
+        throw new Error("ai_collection_config.open_delay_collect_time must be in range 0-60");
+    }
+
+    var buffer = new Buffer(8);
+    buffer.writeUInt8(0xf9);
+    buffer.writeUInt8(0xa8);
+    buffer.writeUInt8(id);
+    buffer.writeUInt8(enable);
+    buffer.writeUInt16LE(collect);
+    buffer.writeUInt16LE(collect_irrigation);
+    buffer.writeUInt8(open_delay_collect_time);
+    return buffer.toBytes();
+}
+
+/**
+ * Read Schedule Config
+ * @since hardware_version>=v4.0, firmware_version>=v1.1
+ * @param {object} read_schedule_config
+ * @param {number} read_schedule_config.id Schedule ID (0-255)
+ * @param {number} read_schedule_config.type Parameter type (0: time, 1: channels 1-48, 2: channels 49-96, 3: frequency)
+ * @example { "read_schedule_config": { "id": 1, "type": 0 } }
+ */
+function readScheduleConfig(read_schedule_config) {
+    var id = read_schedule_config.id;
+    var type = read_schedule_config.type;
+
+    if (id < 0 || id > 255) {
+        throw new Error("read_schedule_config.id must be in range 0-255");
+    }
+    
+    var valid_types = [0, 1, 2, 3];
+    if (valid_types.indexOf(type) === -1) {
+        throw new Error("read_schedule_config.type must be one of " + valid_types.join(", "));
+    }
+
+    var buffer = new Buffer(4);
+    buffer.writeUInt8(0xf9);
+    buffer.writeUInt8(0xaf);
+    buffer.writeUInt8(id);
+    buffer.writeUInt8(type);
+    return buffer.toBytes();
+}
+
+/**
+ * Set Multicast Command
+ * @since hardware_version>=v4.0, firmware_version>=v1.1
+ * @param {object} multicast_command
+ * @param {number} multicast_command.time Random response time range in seconds (1-200)
+ * @param {Array} multicast_command.data Data payload
+ * @example { "multicast_command": { "channel": 1, "time": 36, "len": 4, "data": "00000000" } }
+ */
+function setMulticastCommand(multicast_command) {
+    var channel = multicast_command.channel;
+    var time = multicast_command.time;
+    var len = multicast_command.len;
+    var data = multicast_command.data;
+    var data_bytes = hexStringToBytes(data);
+    if (data_bytes.length !== len) {
+        throw new Error("data length must be equal to len: " + len);
+    }
+    if (channel < 1 || channel > 200) {
+        throw new Error("multicast_command.channel must be in range 1-200");
+    }
+    
+    var buffer = new Buffer(5 + len);
+    buffer.writeUInt8(0xf0);
+    buffer.writeUInt8(channel);
+    buffer.writeUInt16LE(time);
+    buffer.writeUInt8(len);
+    buffer.writeBytes(data_bytes);
+    return buffer.toBytes();
+}
+
+/**
+ * Set Need Response Multicast Command
+ * @param {object} need_response_multicast_command
+ * @param {number} need_response_multicast_command.time Random response time range in seconds (1-200)
+ * @param {number} need_response_multicast_command.length Data length
+ * @param {string} need_response_multicast_command.data Data payload
+ * @example { "need_response_multicast_command": { "time": 36, "length": 2, "data": "He" } }
+ */
+function setNeedResponseMulticastCommand(need_response_multicast_command) {
+    var time = need_response_multicast_command.time;
+    var data = need_response_multicast_command.data;
+    var bytes = encodeUtf8(data);
+    if (time < 1 || time > 200) {
+        throw new Error("need_response_multicast_command.time must be in range 1-200");
+    }
+    buffer.writeUInt8(0xfb);
+    buffer.writeUInt8(0x01);
+    buffer.writeUInt16LE(time);
+    buffer.writeUInt8(bytes.length);
+    buffer.writeBytes(bytes);
+    return buffer.toBytes();
 }
 
 /**
@@ -472,7 +793,9 @@ function setValvePulse2(valve_2_pulse) {
  * @param {number} valve_task.valve_status values: (0: close, 1: open)
  * @param {number} valve_task.duration
  * @param {number} valve_task.valve_pulse
- * @example { "valve_1_task": { "time_rule_enable": 1, "pulse_rule_enable": 1, "sequence_id": 0, "valve_status": 0, "duration": 100, "pulse": 100 } }
+ * @param {number} valve_task.start_time
+ * @param {number} valve_task.special_task_mode values: (0: normal, 1: enable rain stop, 2: disable rain stop)
+ * @example { "valve_1_task": { "time_rule_enable": 1, "pulse_rule_enable": 1, "sequence_id": 0, "valve_status": 0, "duration": 100, "pulse": 100, "special_task_mode": 0 } }
  */
 function setValveTask(index, valve_task) {
     var time_rule_enable = valve_task.time_rule_enable;
@@ -481,11 +804,17 @@ function setValveTask(index, valve_task) {
     var valve_status = valve_task.valve_status;
     var duration = valve_task.duration;
     var valve_pulse = valve_task.valve_pulse;
+    var start_time = valve_task.start_time;
+    var special_task_mode = valve_task.special_task_mode || 0;
 
     var enable_map = { 0: "disable", 1: "enable" };
     var enable_values = getValues(enable_map);
     var status_map = { 0: "close", 1: "open" };
     var status_values = getValues(status_map);
+    
+    var special_task_map = { 0: "normal", 1: "enable_rain_stop", 2: "disable_rain_stop" };
+    var special_task_values = getValues(special_task_map);
+    
     if (sequence_id === undefined) {
         sequence_id = 0x00;
     }
@@ -498,23 +827,42 @@ function setValveTask(index, valve_task) {
     if (status_values.indexOf(valve_status) === -1) {
         throw new Error("valve_" + index + "_task.valve_status must be one of " + status_values.join(", "));
     }
+    
+    if (special_task_values.indexOf(special_task_mode) === -1) {
+        throw new Error("valve_" + index + "_task.special_task_mode must be one of " + special_task_values.join(", "));
+    }
 
     var time_rule_enable_value = getValue(enable_map, time_rule_enable);
     var pulse_rule_enable_value = getValue(enable_map, pulse_rule_enable);
     var valve_status_value = getValue(status_map, valve_status);
+    var special_task_mode_value = getValue(special_task_map, special_task_mode);
 
     var data = 0x00;
     data |= time_rule_enable_value << 7;
     data |= pulse_rule_enable_value << 6;
     data |= valve_status_value << 5;
-    data |= (index - 1) << 0;
+    
+    data |= (special_task_mode_value === 0 ? 0x00 : special_task_mode === 1 ? 0x00 : 0x01) << 3;
+    data |= (special_task_mode_value === 0 ? 0x00: special_task_mode === 1 ? 0x01 : 0x00) << 4;
+    
+    data |= ((index >> 0) & 0x01) << 0;
+    data |= ((index >> 1) & 0x01) << 1;
+    data |= ((index >> 2) & 0x01) << 2;
 
     var length = 4;
-    if (time_rule_enable_value === 1) {
-        length += 3;
-    }
-    if (pulse_rule_enable_value === 1) {
+    if (special_task_mode === 1) {
         length += 4;
+    }
+    
+    if (special_task_mode === 1 && (start_time === undefined || duration === undefined)) {
+        throw new Error("special_task_mode is 1, start_time and duration must be defined");
+    }
+
+    if (time_rule_enable_value === 1 && duration === undefined) {
+        throw new Error("time_rule_enable is 1, duration must be defined");
+    }
+    if (pulse_rule_enable_value === 1 && valve_pulse === undefined) {
+        throw new Error("pulse_rule_enable is 1, valve_pulse must be defined");
     }
 
     var buffer = new Buffer(length);
@@ -522,10 +870,13 @@ function setValveTask(index, valve_task) {
     buffer.writeUInt8(0x1d);
     buffer.writeUInt8(data);
     buffer.writeUInt8(sequence_id);
-    if (time_rule_enable_value === 1) {
-        buffer.writeUInt24LE(duration);
-    }
-    if (pulse_rule_enable_value === 1) {
+    
+    if (special_task_mode === 1) {
+        buffer.writeUInt32LE(duration);
+        buffer.writeUInt32LE(start_time);
+    } else if (time_rule_enable_value === 1) {
+        buffer.writeUInt32LE(duration);
+    } else if (pulse_rule_enable_value === 1) {
         buffer.writeUInt32LE(valve_pulse);
     }
     return buffer.toBytes();
@@ -854,6 +1205,10 @@ function setNewRuleConfig(rule_config) {
  * @param {number} condition.repeat_week.saturday values: (0: disable, 1: enable)
  * @param {number} condition.repeat_week.sunday values: (0: disable, 1: enable)
  * @param {number} condition.d2d_command
+ * @param {number} condition.source values: (0: always, 1: valve 1 open, 2: valve 2 open, 3: valve 1 open or valve 2 open)
+ * @param {number} condition.mode values: (0: none, 1: less than, 2: greater than, 3: between, 4: outside)
+ * @param {number} condition.threshold_min
+ * @param {number} condition.threshold_max
  * @param {number} condition.valve_index values: (1: valve_1, 2: valve_2)
  * @param {number} condition.duration unit: min
  * @param {number} condition.pulse_threshold
@@ -866,6 +1221,10 @@ function encodedRuleCondition(condition) {
     var repeat_mode_map = { 0: "monthly", 1: "daily", 2: "weekly" };
     var repeat_mode_values = getValues(repeat_mode_map);
     var weekday_bit_offset = { monday: 0, tuesday: 1, wednesday: 2, thursday: 3, friday: 4, saturday: 5, sunday: 6 };
+    var condition_source_map = { 0: "always", 1: "valve 1 open", 2: "valve 2 open", 3: "valve 1 open or valve 2 open" };
+    var condition_source_values = getValues(condition_source_map);
+    var condition_mode_map = { 0: "none", 1: "less than", 2: "greater than", 3: "between", 4: "outside" };
+    var condition_mode_values = getValues(condition_mode_map);
 
     if (condition_type_values.indexOf(condition.type) === -1) {
         throw new Error("rules_config._item.condition.type must be one of " + condition_type_values.join(", "));
@@ -918,6 +1277,18 @@ function encodedRuleCondition(condition) {
             buffer.writeUInt8(condition.valve_index);
             buffer.writeUInt32LE(condition.pulse_threshold);
             break;
+        case 0x05: // math condition (source, mode, threshold_min, threshold_max)
+            if (condition_source_values.indexOf(condition.source) === -1) {
+                throw new Error("rules_config._item.condition.source must be one of " + condition_source_values.join(", "));
+            }
+            if (condition_mode_values.indexOf(condition.mode) === -1) {
+                throw new Error("rules_config._item.condition.mode must be one of " + condition_mode_values.join(", "));
+            }
+            buffer.writeUInt8(getValue(condition_source_map, condition.source));
+            buffer.writeUInt8(getValue(condition_mode_map, condition.mode));
+            buffer.writeUInt16LE(condition.threshold_min);
+            buffer.writeUInt16LE(condition.threshold_max);
+            break;
     }
 
     return buffer.toBytes();
@@ -934,9 +1305,10 @@ function encodedRuleCondition(condition) {
  * @param {number} action.pulse_enable values: (0: disable, 1: enable)
  * @param {number} action.pulse_threshold
  * @param {number} action.report_type values: (1: valve_1, 2: valve_2, 3: custom_message)
+ * @param {number} action.continue_count: the number of times to continue the report (0-255)
+ * @param {number} action.release_enable: 0=disable, 1=enable release the report
+ * @param {number} action.reserved: reserved for future use
  * @param {string} action.report_content
- * @param {number} action.report_counts
- * @param {number} action.threshold_release_enable values: (0: disable, 1: enable)
  * @example { "rules_config": [ { "index": 1, "enable": 1, "condition": { "type": 0 }, "action": { "type": 1, "valve_index": 1, "valve_opening": 1, "time_enable": 1, "duration": 1, "pulse_enable": 1, "pulse_threshold": 1 } }]}
  */
 function encodedAction(action) {
@@ -990,6 +1362,9 @@ function encodedAction(action) {
             }
             buffer.writeUInt8(getValue(report_type_map, action.report_type));
             buffer.writeAscii(action.report_content, 8);
+            buffer.writeUInt8(0); // reserved for future use
+            buffer.writeUInt8(action.continue_count || 0);
+            buffer.writeUInt8(getValue(enable_map, action.release_enable));
             break;
     }
     return buffer.toBytes();
@@ -1331,4 +1706,27 @@ function hexStringToBytes(hex) {
         bytes.push(parseInt(hex.substr(c, 2), 16));
     }
     return bytes;
+}
+
+function encodeUtf8(str) {
+    var byteArray = [];
+    for (var i = 0; i < str.length; i++) {
+        var charCode = str.charCodeAt(i);
+        if (charCode < 0x80) {
+            byteArray.push(charCode);
+        } else if (charCode < 0x800) {
+            byteArray.push(0xc0 | (charCode >> 6));
+            byteArray.push(0x80 | (charCode & 0x3f));
+        } else if (charCode < 0x10000) {
+            byteArray.push(0xe0 | (charCode >> 12));
+            byteArray.push(0x80 | ((charCode >> 6) & 0x3f));
+            byteArray.push(0x80 | (charCode & 0x3f));
+        } else if (charCode < 0x200000) {
+            byteArray.push(0xf0 | (charCode >> 18));
+            byteArray.push(0x80 | ((charCode >> 12) & 0x3f));
+            byteArray.push(0x80 | ((charCode >> 6) & 0x3f));
+            byteArray.push(0x80 | (charCode & 0x3f));
+        }
+    }
+    return byteArray;
 }
