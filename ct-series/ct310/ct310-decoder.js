@@ -105,6 +105,28 @@ function milesightDeviceDecode(bytes) {
             }
             i += 2;
         }
+
+        // firmware_version v2
+        // POWER CONSUMPTION 
+        else if (channel_id === 0x10 && channel_type === 0x63) {
+            decoded.ch1_sumkwh = readInt32LE(bytes.slice(i, i + 4)) / 100;
+            i += 4;
+        }
+        else if (channel_id === 0x11 && channel_type === 0x63) {
+            decoded.ch2_sumkwh = readInt32LE(bytes.slice(i, i + 4)) / 100;
+            i += 4;
+        }
+        else if (channel_id === 0x12 && channel_type === 0x63) {
+            decoded.ch3_sumkwh = readInt32LE(bytes.slice(i, i + 4)) / 100;
+            i += 4;
+        }
+        // BATTERY
+        else if (channel_id === 0x13 && channel_type === 0x75) {
+            decoded.low_voltage_alarm = {};
+            decoded.low_voltage_alarm.alarm_type = readLowVoltageAlarm(bytes[i]);
+            i += 1;
+        }
+
         // CURRENT ALARM
         else if (includes(current_alarm_chns, channel_id) && channel_type === 0x99) {
             var current_alarm_chn_name = "current_chn" + (current_alarm_chns.indexOf(channel_id) + 1);
@@ -250,6 +272,11 @@ function readYesNoStatus(status) {
 
 function readSensorStatus(status) {
     var status_map = { 0: "normal", 1: "over range alarm", 2: "read failed" };
+    return getValue(status_map, status);
+}
+
+function readLowVoltageAlarm(status) {
+    var status_map = { 1: "low voltage alarm" };
     return getValue(status_map, status);
 }
 
