@@ -176,8 +176,8 @@ function setCurrentThresholdAlarmConfig(index, current_alarm_config) {
     buffer.writeUInt8(data);
     buffer.writeUInt16LE(threshold_min);
     buffer.writeUInt16LE(threshold_max);
-    buffer.writeUInt16LE(alarm_interval);
     buffer.writeUInt16LE(alarm_counts);
+    buffer.writeUInt16LE(alarm_interval);
     return buffer.toBytes();
 }
 
