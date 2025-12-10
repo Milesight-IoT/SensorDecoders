@@ -497,37 +497,13 @@
             "id": "ch1_sumkwh",
             "name": "Phase A Sum Kwh",
             "value": "",
-            "unit": "Kwh",
+            "unit": "kWh",
             "access_mode": "R",
             "data_type": "NUMBER",
             "value_type": "FLOAT",
             "bacnet_type": "analog_input_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS"
-        },
-        {
-            "id": "ch2_sumkwh",
-            "name": "Phase B Sum Kwh",
-            "value": "",
-            "unit": "Kwh",
-            "access_mode": "R",
-            "data_type": "NUMBER",
-            "value_type": "FLOAT",
-            "bacnet_type": "analog_input_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS"
-        },
-        {
-            "id": "ch3_sumkwh",
-            "name": "Phase C Sum Kwh",
-            "value": "",
-            "unit": "Kwh",
-            "access_mode": "R",
-            "data_type": "NUMBER",
-            "value_type": "FLOAT",
-            "bacnet_type": "analog_input_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS"
+            "bacnet_unit_type_id": 19,
+            "bacnet_unit_type": "UNITS_KILOWATT_HOURS"
         },
         {
             "id": "low_voltage_alarm.alarm_type",
@@ -541,12 +517,70 @@
                 {
                     "name": "low voltage alarm",
                     "value": 0
+                },
+                {
+                    "name": "low voltage alarm",
+                    "value": 0
                 }
             ],
             "bacnet_type": "multistate_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": []
+        },
+        {
+            "id": "reporting_type",
+            "name": "Reporting Type",
+            "value": "0",
+            "unit": "",
+            "access_mode": "W",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "name": "Cumulative Ah",
+                    "value": 0
+                },
+                {
+                    "name": "Cumulative Kwh",
+                    "value": 1
+                }
+            ],
+            "bacnet_type": "multistate_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS"
+        },
+        {
+            "id": "voltage",
+            "name": "Voltage",
+            "value": "1",
+            "unit": "V",
+            "access_mode": "W",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "range": [
+                0.01,
+                600
+            ],
+            "bacnet_type": "analog_output_object",
+            "bacnet_unit_type_id": 5,
+            "bacnet_unit_type": "UNITS_VOLTS"
+        },
+        {
+            "id": "power_factor",
+            "name": "Power Factor",
+            "value": "1",
+            "unit": "",
+            "access_mode": "W",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "range": [
+                0.01,
+                1
+            ],
+            "bacnet_type": "analog_output_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS"
         }
     ]
 }

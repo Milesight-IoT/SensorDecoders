@@ -103,15 +103,7 @@ function milesightDeviceDecode(bytes) {
         // firmware_version v2
         // POWER CONSUMPTION 
         else if (channel_id === 0x10 && channel_type === 0x63) {
-            decoded.ch1_sumkwh = readInt32LE(bytes.slice(i, i + 4)) / 100;
-            i += 4;
-        }
-        else if (channel_id === 0x11 && channel_type === 0x63) {
-            decoded.ch2_sumkwh = readInt32LE(bytes.slice(i, i + 4)) / 100;
-            i += 4;
-        }
-        else if (channel_id === 0x12 && channel_type === 0x63) {
-            decoded.ch3_sumkwh = readInt32LE(bytes.slice(i, i + 4)) / 100;
+            decoded.ch1_sumkwh = readUInt32LE(bytes.slice(i, i + 4)) / 100;
             i += 4;
         }
         // BATTERY
@@ -194,6 +186,18 @@ function handle_downlink_response(channel_type, bytes, offset) {
         case 0xf2:
             decoded.alarm_report_counts = readUInt16LE(bytes.slice(offset, offset + 2));
             offset += 2;
+            break;
+        case 0xce: 
+            decoded.voltage = readUInt16LE(bytes.slice(offset, offset + 2)) / 100;
+            offset += 2;
+            break;
+        case 0xcf: 
+            decoded.power_factor = readUInt8(bytes[offset]) / 100;
+            offset += 1;
+            break;
+        case 0xd0: 
+            decoded.reporting_type = readReportingType(bytes[offset]);
+            offset += 1;
             break;
         default:
             throw new Error("unknown downlink response");
@@ -287,6 +291,11 @@ function readTemperatureAlarm(type) {
 function readConditionType(type) {
     var condition_map = { 0: "disable", 1: "below", 2: "above", 3: "between", 4: "outside" };
     return getValue(condition_map, type);
+}
+
+function readReportingType(type) {
+    var reporting_map = { 0: "cumulative Ah", 1: "cumulative Kwh" };
+    return getValue(reporting_map, type);
 }
 
 /* eslint-disable */

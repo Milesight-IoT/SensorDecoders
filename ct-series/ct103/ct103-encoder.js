@@ -53,6 +53,15 @@ function milesightDeviceEncode(payload) {
     if ("temperature_alarm_config" in payload) {
         encoded = encoded.concat(setTemperatureThresholdAlarmConfig(payload.temperature_alarm_config));
     }
+    if ("voltage" in payload) {
+        encoded = encoded.concat(setVoltage(payload.voltage));
+    }
+    if ("power_factor" in payload) {
+        encoded = encoded.concat(setPowerFactor(payload.power_factor));
+    }
+    if ("reporting_type" in payload) {
+        encoded = encoded.concat(setReportingType(payload.reporting_type));
+    }
 
     return encoded;
 }
@@ -240,6 +249,45 @@ function alarmReportInterval(alarm_report_interval) {
     buffer.writeUInt8(0x02);
     buffer.writeUInt16LE(alarm_report_interval);
     return buffer.toBytes();
+}
+
+function setVoltage(voltage) {
+    if (typeof voltage !== "number") {
+        throw new Error("voltage must be a number");
+    }
+    if (voltage < 0 || voltage > 600) {
+        throw new Error("voltage must be between 0 and 600");
+    }
+
+    var buffer = new Buffer(4);
+    buffer.writeUInt8(0xff);
+    buffer.writeUInt8(0xce);
+    buffer.writeUInt16LE(voltage * 100);
+    return buffer.toBytes();
+}
+
+function setPowerFactor(power_factor) {
+    if (typeof power_factor !== "number") {
+        throw new Error("power_factor must be a number");
+    }
+    if (power_factor < 0 || power_factor > 1) {
+        throw new Error("power_factor must be between 0 and 1");
+    }
+
+    var buffer = new Buffer(3);
+    buffer.writeUInt8(0xff);
+    buffer.writeUInt8(0xcf);
+    buffer.writeUInt8(power_factor * 100);
+    return buffer.toBytes();
+}
+
+function setReportingType(reporting_type) {
+    var reporting_type_map = { 0: "cumulative Ah", 1: "cumulative Kwh" };
+    var reporting_type_values = getValues(reporting_type_map);
+    if (reporting_type_values.indexOf(reporting_type) === -1) {
+        throw new Error("reporting_type must be one of " + reporting_type_values.join(", "));
+    }
+    return [0xff, 0xd0, getValue(reporting_type_map, reporting_type)];
 }
 
 function getValues(map) {
