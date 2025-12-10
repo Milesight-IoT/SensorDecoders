@@ -506,30 +506,6 @@
             "bacnet_unit_type": "UNITS_NO_UNITS"
         },
         {
-            "id": "ch2_sumkwh",
-            "name": "Phase B Sum Kwh",
-            "value": "",
-            "unit": "Kwh",
-            "access_mode": "R",
-            "data_type": "NUMBER",
-            "value_type": "FLOAT",
-            "bacnet_type": "analog_input_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS"
-        },
-        {
-            "id": "ch3_sumkwh",
-            "name": "Phase C Sum Kwh",
-            "value": "",
-            "unit": "Kwh",
-            "access_mode": "R",
-            "data_type": "NUMBER",
-            "value_type": "FLOAT",
-            "bacnet_type": "analog_input_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS"
-        },
-        {
             "id": "low_voltage_alarm.alarm_type",
             "name": "Alarm Type",
             "value": "",

@@ -103,15 +103,7 @@ function milesightDeviceDecode(bytes) {
         // firmware_version v2
         // POWER CONSUMPTION 
         else if (channel_id === 0x10 && channel_type === 0x63) {
-            decoded.ch1_sumkwh = readInt32LE(bytes.slice(i, i + 4)) / 100;
-            i += 4;
-        }
-        else if (channel_id === 0x11 && channel_type === 0x63) {
-            decoded.ch2_sumkwh = readInt32LE(bytes.slice(i, i + 4)) / 100;
-            i += 4;
-        }
-        else if (channel_id === 0x12 && channel_type === 0x63) {
-            decoded.ch3_sumkwh = readInt32LE(bytes.slice(i, i + 4)) / 100;
+            decoded.ch1_sumkwh = readUInt32LE(bytes.slice(i, i + 4)) / 100;
             i += 4;
         }
         // BATTERY
