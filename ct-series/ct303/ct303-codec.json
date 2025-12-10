@@ -76,10 +76,22 @@
             "data_type": "ENUM",
             "value_type": "UINT8",
             "values": [
-                { "value": 0, "name": "Class A" },
-                { "value": 1, "name": "Class B" },
-                { "value": 2, "name": "Class C" },
-                { "value": 3, "name": "Class CtoB" }
+                {
+                    "value": 0,
+                    "name": "Class A"
+                },
+                {
+                    "value": 1,
+                    "name": "Class B"
+                },
+                {
+                    "value": 2,
+                    "name": "Class C"
+                },
+                {
+                    "value": 3,
+                    "name": "Class CtoB"
+                }
             ],
             "bacnet_type": "multistate_value_object",
             "bacnet_unit_type_id": 95,
@@ -94,8 +106,14 @@
             "data_type": "BOOL",
             "value_type": "UINT8",
             "values": [
-                { "value": 0, "name": "normal" },
-                { "value": 1, "name": "reset" }
+                {
+                    "value": 0,
+                    "name": "normal"
+                },
+                {
+                    "value": 1,
+                    "name": "reset"
+                }
             ],
             "bacnet_type": "binary_input_object",
             "bacnet_unit_type_id": 95,
@@ -110,8 +128,14 @@
             "data_type": "BOOL",
             "value_type": "UINT8",
             "values": [
-                { "value": 0, "name": "off" },
-                { "value": 1, "name": "on" }
+                {
+                    "value": 0,
+                    "name": "off"
+                },
+                {
+                    "value": 1,
+                    "name": "on"
+                }
             ],
             "bacnet_type": "binary_input_object",
             "bacnet_unit_type_id": 95,
@@ -198,9 +222,18 @@
             "data_type": "ENUM",
             "value_type": "UINT8",
             "values": [
-                { "value": 0, "name": "normal" },
-                { "value": 1, "name": "over range alarm" },
-                { "value": 2, "name": "read failed" }
+                {
+                    "value": 0,
+                    "name": "normal"
+                },
+                {
+                    "value": 1,
+                    "name": "over range alarm"
+                },
+                {
+                    "value": 2,
+                    "name": "read failed"
+                }
             ],
             "bacnet_type": "multistate_value_object",
             "bacnet_unit_type_id": 95,
@@ -215,9 +248,18 @@
             "data_type": "ENUM",
             "value_type": "UINT8",
             "values": [
-                { "value": 0, "name": "normal" },
-                { "value": 1, "name": "over range alarm" },
-                { "value": 2, "name": "read failed" }
+                {
+                    "value": 0,
+                    "name": "normal"
+                },
+                {
+                    "value": 1,
+                    "name": "over range alarm"
+                },
+                {
+                    "value": 2,
+                    "name": "read failed"
+                }
             ],
             "bacnet_type": "multistate_value_object",
             "bacnet_unit_type_id": 95,
@@ -232,9 +274,18 @@
             "data_type": "ENUM",
             "value_type": "UINT8",
             "values": [
-                { "value": 0, "name": "normal" },
-                { "value": 1, "name": "over range alarm" },
-                { "value": 2, "name": "read failed" }
+                {
+                    "value": 0,
+                    "name": "normal"
+                },
+                {
+                    "value": 1,
+                    "name": "over range alarm"
+                },
+                {
+                    "value": 2,
+                    "name": "read failed"
+                }
             ],
             "bacnet_type": "multistate_value_object",
             "bacnet_unit_type_id": 95,
@@ -321,8 +372,14 @@
             "data_type": "BOOL",
             "value_type": "UINT8",
             "values": [
-                { "value": 0, "name": "no" },
-                { "value": 1, "name": "yes" }
+                {
+                    "value": 0,
+                    "name": "no"
+                },
+                {
+                    "value": 1,
+                    "name": "yes"
+                }
             ],
             "bacnet_type": "binary_input_object",
             "bacnet_unit_type_id": 95,
@@ -337,8 +394,14 @@
             "data_type": "BOOL",
             "value_type": "UINT8",
             "values": [
-                { "value": 0, "name": "no" },
-                { "value": 1, "name": "yes" }
+                {
+                    "value": 0,
+                    "name": "no"
+                },
+                {
+                    "value": 1,
+                    "name": "yes"
+                }
             ],
             "bacnet_type": "binary_input_object",
             "bacnet_unit_type_id": 95,
@@ -353,8 +416,14 @@
             "data_type": "BOOL",
             "value_type": "UINT8",
             "values": [
-                { "value": 0, "name": "no" },
-                { "value": 1, "name": "yes" }
+                {
+                    "value": 0,
+                    "name": "no"
+                },
+                {
+                    "value": 1,
+                    "name": "yes"
+                }
             ],
             "bacnet_type": "binary_input_object",
             "bacnet_unit_type_id": 95,
@@ -369,8 +438,14 @@
             "data_type": "BOOL",
             "value_type": "UINT8",
             "values": [
-                { "value": 0, "name": "no" },
-                { "value": 1, "name": "yes" }
+                {
+                    "value": 0,
+                    "name": "no"
+                },
+                {
+                    "value": 1,
+                    "name": "yes"
+                }
             ],
             "bacnet_type": "binary_input_object",
             "bacnet_unit_type_id": 95,
@@ -385,8 +460,14 @@
             "data_type": "BOOL",
             "value_type": "UINT8",
             "values": [
-                { "value": 0, "name": "no" },
-                { "value": 1, "name": "yes" }
+                {
+                    "value": 0,
+                    "name": "no"
+                },
+                {
+                    "value": 1,
+                    "name": "yes"
+                }
             ],
             "bacnet_type": "binary_input_object",
             "bacnet_unit_type_id": 95,
@@ -401,8 +482,14 @@
             "data_type": "BOOL",
             "value_type": "UINT8",
             "values": [
-                { "value": 0, "name": "no" },
-                { "value": 1, "name": "yes" }
+                {
+                    "value": 0,
+                    "name": "no"
+                },
+                {
+                    "value": 1,
+                    "name": "yes"
+                }
             ],
             "bacnet_type": "binary_input_object",
             "bacnet_unit_type_id": 95,
@@ -417,8 +504,14 @@
             "data_type": "BOOL",
             "value_type": "UINT8",
             "values": [
-                { "value": 0, "name": "no" },
-                { "value": 1, "name": "yes" }
+                {
+                    "value": 0,
+                    "name": "no"
+                },
+                {
+                    "value": 1,
+                    "name": "yes"
+                }
             ],
             "bacnet_type": "binary_input_object",
             "bacnet_unit_type_id": 95,
@@ -433,8 +526,14 @@
             "data_type": "BOOL",
             "value_type": "UINT8",
             "values": [
-                { "value": 0, "name": "no" },
-                { "value": 1, "name": "yes" }
+                {
+                    "value": 0,
+                    "name": "no"
+                },
+                {
+                    "value": 1,
+                    "name": "yes"
+                }
             ],
             "bacnet_type": "binary_input_object",
             "bacnet_unit_type_id": 95,
@@ -449,8 +548,14 @@
             "data_type": "BOOL",
             "value_type": "UINT8",
             "values": [
-                { "value": 0, "name": "no" },
-                { "value": 1, "name": "yes" }
+                {
+                    "value": 0,
+                    "name": "no"
+                },
+                {
+                    "value": 1,
+                    "name": "yes"
+                }
             ],
             "bacnet_type": "binary_input_object",
             "bacnet_unit_type_id": 95,
@@ -465,8 +570,14 @@
             "data_type": "BOOL",
             "value_type": "UINT8",
             "values": [
-                { "value": 0, "name": "no" },
-                { "value": 1, "name": "yes" }
+                {
+                    "value": 0,
+                    "name": "no"
+                },
+                {
+                    "value": 1,
+                    "name": "yes"
+                }
             ],
             "bacnet_type": "binary_input_object",
             "bacnet_unit_type_id": 95,
@@ -481,8 +592,14 @@
             "data_type": "BOOL",
             "value_type": "UINT8",
             "values": [
-                { "value": 0, "name": "no" },
-                { "value": 1, "name": "yes" }
+                {
+                    "value": 0,
+                    "name": "no"
+                },
+                {
+                    "value": 1,
+                    "name": "yes"
+                }
             ],
             "bacnet_type": "binary_input_object",
             "bacnet_unit_type_id": 95,
@@ -497,8 +614,14 @@
             "data_type": "BOOL",
             "value_type": "UINT8",
             "values": [
-                { "value": 0, "name": "no" },
-                { "value": 1, "name": "yes" }
+                {
+                    "value": 0,
+                    "name": "no"
+                },
+                {
+                    "value": 1,
+                    "name": "yes"
+                }
             ],
             "bacnet_type": "binary_input_object",
             "bacnet_unit_type_id": 95,
@@ -525,9 +648,18 @@
             "data_type": "ENUM",
             "value_type": "UINT8",
             "values": [
-                { "value": 0, "name": "normal" },
-                { "value": 1, "name": "over range alarm" },
-                { "value": 2, "name": "read failed" }
+                {
+                    "value": 0,
+                    "name": "normal"
+                },
+                {
+                    "value": 1,
+                    "name": "over range alarm"
+                },
+                {
+                    "value": 2,
+                    "name": "read failed"
+                }
             ],
             "bacnet_type": "multistate_value_object",
             "bacnet_unit_type_id": 95,
@@ -542,8 +674,14 @@
             "data_type": "ENUM",
             "value_type": "UINT8",
             "values": [
-                { "value": 0, "name": "temperature threshold alarm release" },
-                { "value": 1, "name": "temperature threshold alarm" }
+                {
+                    "value": 0,
+                    "name": "temperature threshold alarm release"
+                },
+                {
+                    "value": 1,
+                    "name": "temperature threshold alarm"
+                }
             ],
             "bacnet_type": "multistate_value_object",
             "bacnet_unit_type_id": 95,
@@ -558,8 +696,14 @@
             "data_type": "BOOL",
             "value_type": "UINT8",
             "values": [
-                { "value": 0, "name": "no" },
-                { "value": 1, "name": "yes" }
+                {
+                    "value": 0,
+                    "name": "no"
+                },
+                {
+                    "value": 1,
+                    "name": "yes"
+                }
             ],
             "bacnet_type": "binary_output_object",
             "bacnet_unit_type_id": 95,
@@ -586,8 +730,14 @@
             "data_type": "BOOL",
             "value_type": "UINT8",
             "values": [
-                { "value": 0, "name": "no" },
-                { "value": 1, "name": "yes" }
+                {
+                    "value": 0,
+                    "name": "no"
+                },
+                {
+                    "value": 1,
+                    "name": "yes"
+                }
             ],
             "bacnet_type": "binary_output_object",
             "bacnet_unit_type_id": 95,
@@ -602,8 +752,14 @@
             "data_type": "BOOL",
             "value_type": "UINT8",
             "values": [
-                { "value": 0, "name": "no" },
-                { "value": 1, "name": "yes" }
+                {
+                    "value": 0,
+                    "name": "no"
+                },
+                {
+                    "value": 1,
+                    "name": "yes"
+                }
             ],
             "bacnet_type": "binary_output_object",
             "bacnet_unit_type_id": 95,
@@ -618,8 +774,14 @@
             "data_type": "BOOL",
             "value_type": "UINT8",
             "values": [
-                { "value": 0, "name": "no" },
-                { "value": 1, "name": "yes" }
+                {
+                    "value": 0,
+                    "name": "no"
+                },
+                {
+                    "value": 1,
+                    "name": "yes"
+                }
             ],
             "bacnet_type": "binary_output_object",
             "bacnet_unit_type_id": 95,
@@ -634,8 +796,14 @@
             "data_type": "BOOL",
             "value_type": "UINT8",
             "values": [
-                { "value": 0, "name": "no" },
-                { "value": 1, "name": "yes" }
+                {
+                    "value": 0,
+                    "name": "no"
+                },
+                {
+                    "value": 1,
+                    "name": "yes"
+                }
             ],
             "bacnet_type": "binary_output_object",
             "bacnet_unit_type_id": 95,
@@ -650,16 +818,37 @@
             "data_type": "ENUM",
             "value_type": "UINT8",
             "values": [
-                { "value": 0, "name": "disable" },
-                { "value": 1, "name": "below" },
-                { "value": 2, "name": "above" },
-                { "value": 3, "name": "between" },
-                { "value": 4, "name": "outside" }
+                {
+                    "value": 0,
+                    "name": "disable"
+                },
+                {
+                    "value": 1,
+                    "name": "below"
+                },
+                {
+                    "value": 2,
+                    "name": "above"
+                },
+                {
+                    "value": 3,
+                    "name": "between"
+                },
+                {
+                    "value": 4,
+                    "name": "outside"
+                }
             ],
             "bacnet_type": "multistate_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": ["current_chn1_alarm_config.condition", "current_chn1_alarm_config.threshold_min", "current_chn1_alarm_config.threshold_max", "current_chn1_alarm_config.alarm_interval", "current_chn1_alarm_config.alarm_counts"]
+            "reference": [
+                "current_chn1_alarm_config.condition",
+                "current_chn1_alarm_config.threshold_min",
+                "current_chn1_alarm_config.threshold_max",
+                "current_chn1_alarm_config.alarm_interval",
+                "current_chn1_alarm_config.alarm_counts"
+            ]
         },
         {
             "id": "current_chn1_alarm_config.threshold_min",
@@ -672,7 +861,13 @@
             "bacnet_type": "analog_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": ["current_chn1_alarm_config.condition", "current_chn1_alarm_config.threshold_max", "current_chn1_alarm_config.threshold_min", "current_chn1_alarm_config.alarm_interval", "current_chn1_alarm_config.alarm_counts"]
+            "reference": [
+                "current_chn1_alarm_config.condition",
+                "current_chn1_alarm_config.threshold_max",
+                "current_chn1_alarm_config.threshold_min",
+                "current_chn1_alarm_config.alarm_interval",
+                "current_chn1_alarm_config.alarm_counts"
+            ]
         },
         {
             "id": "current_chn1_alarm_config.threshold_max",
@@ -685,7 +880,13 @@
             "bacnet_type": "analog_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": ["current_chn1_alarm_config.condition", "current_chn1_alarm_config.threshold_min", "current_chn1_alarm_config.threshold_max", "current_chn1_alarm_config.alarm_interval", "current_chn1_alarm_config.alarm_counts"]
+            "reference": [
+                "current_chn1_alarm_config.condition",
+                "current_chn1_alarm_config.threshold_min",
+                "current_chn1_alarm_config.threshold_max",
+                "current_chn1_alarm_config.alarm_interval",
+                "current_chn1_alarm_config.alarm_counts"
+            ]
         },
         {
             "id": "current_chn1_alarm_config.alarm_interval",
@@ -698,7 +899,13 @@
             "bacnet_type": "analog_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": ["current_chn1_alarm_config.condition", "current_chn1_alarm_config.threshold_min", "current_chn1_alarm_config.threshold_max", "current_chn1_alarm_config.alarm_interval", "current_chn1_alarm_config.alarm_counts"]
+            "reference": [
+                "current_chn1_alarm_config.condition",
+                "current_chn1_alarm_config.threshold_min",
+                "current_chn1_alarm_config.threshold_max",
+                "current_chn1_alarm_config.alarm_interval",
+                "current_chn1_alarm_config.alarm_counts"
+            ]
         },
         {
             "id": "current_chn1_alarm_config.alarm_counts",
@@ -711,7 +918,13 @@
             "bacnet_type": "analog_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": ["current_chn1_alarm_config.condition", "current_chn1_alarm_config.threshold_min", "current_chn1_alarm_config.threshold_max", "current_chn1_alarm_config.alarm_interval", "current_chn1_alarm_config.alarm_counts"]
+            "reference": [
+                "current_chn1_alarm_config.condition",
+                "current_chn1_alarm_config.threshold_min",
+                "current_chn1_alarm_config.threshold_max",
+                "current_chn1_alarm_config.alarm_interval",
+                "current_chn1_alarm_config.alarm_counts"
+            ]
         },
         {
             "id": "current_chn2_alarm_config.condition",
@@ -722,16 +935,37 @@
             "data_type": "ENUM",
             "value_type": "UINT8",
             "values": [
-                { "value": 0, "name": "disable" },
-                { "value": 1, "name": "below" },
-                { "value": 2, "name": "above" },
-                { "value": 3, "name": "between" },
-                { "value": 4, "name": "outside" }
+                {
+                    "value": 0,
+                    "name": "disable"
+                },
+                {
+                    "value": 1,
+                    "name": "below"
+                },
+                {
+                    "value": 2,
+                    "name": "above"
+                },
+                {
+                    "value": 3,
+                    "name": "between"
+                },
+                {
+                    "value": 4,
+                    "name": "outside"
+                }
             ],
             "bacnet_type": "multistate_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": ["current_chn2_alarm_config.condition", "current_chn2_alarm_config.threshold_min", "current_chn2_alarm_config.threshold_max", "current_chn2_alarm_config.alarm_interval", "current_chn2_alarm_config.alarm_counts"]
+            "reference": [
+                "current_chn2_alarm_config.condition",
+                "current_chn2_alarm_config.threshold_min",
+                "current_chn2_alarm_config.threshold_max",
+                "current_chn2_alarm_config.alarm_interval",
+                "current_chn2_alarm_config.alarm_counts"
+            ]
         },
         {
             "id": "current_chn2_alarm_config.threshold_min",
@@ -744,7 +978,13 @@
             "bacnet_type": "analog_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": ["current_chn2_alarm_config.condition", "current_chn2_alarm_config.threshold_max", "current_chn2_alarm_config.threshold_min", "current_chn2_alarm_config.alarm_interval", "current_chn2_alarm_config.alarm_counts"]
+            "reference": [
+                "current_chn2_alarm_config.condition",
+                "current_chn2_alarm_config.threshold_max",
+                "current_chn2_alarm_config.threshold_min",
+                "current_chn2_alarm_config.alarm_interval",
+                "current_chn2_alarm_config.alarm_counts"
+            ]
         },
         {
             "id": "current_chn2_alarm_config.threshold_max",
@@ -757,7 +997,13 @@
             "bacnet_type": "analog_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": ["current_chn2_alarm_config.condition", "current_chn2_alarm_config.threshold_min", "current_chn2_alarm_config.threshold_max", "current_chn2_alarm_config.alarm_interval", "current_chn2_alarm_config.alarm_counts"]
+            "reference": [
+                "current_chn2_alarm_config.condition",
+                "current_chn2_alarm_config.threshold_min",
+                "current_chn2_alarm_config.threshold_max",
+                "current_chn2_alarm_config.alarm_interval",
+                "current_chn2_alarm_config.alarm_counts"
+            ]
         },
         {
             "id": "current_chn2_alarm_config.alarm_interval",
@@ -770,7 +1016,13 @@
             "bacnet_type": "analog_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": ["current_chn2_alarm_config.condition", "current_chn2_alarm_config.threshold_min", "current_chn2_alarm_config.threshold_max", "current_chn2_alarm_config.alarm_interval", "current_chn2_alarm_config.alarm_counts"]
+            "reference": [
+                "current_chn2_alarm_config.condition",
+                "current_chn2_alarm_config.threshold_min",
+                "current_chn2_alarm_config.threshold_max",
+                "current_chn2_alarm_config.alarm_interval",
+                "current_chn2_alarm_config.alarm_counts"
+            ]
         },
         {
             "id": "current_chn2_alarm_config.alarm_counts",
@@ -783,7 +1035,13 @@
             "bacnet_type": "analog_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": ["current_chn2_alarm_config.condition", "current_chn2_alarm_config.threshold_min", "current_chn2_alarm_config.threshold_max", "current_chn2_alarm_config.alarm_interval", "current_chn2_alarm_config.alarm_counts"]
+            "reference": [
+                "current_chn2_alarm_config.condition",
+                "current_chn2_alarm_config.threshold_min",
+                "current_chn2_alarm_config.threshold_max",
+                "current_chn2_alarm_config.alarm_interval",
+                "current_chn2_alarm_config.alarm_counts"
+            ]
         },
         {
             "id": "current_chn3_alarm_config.condition",
@@ -794,16 +1052,37 @@
             "data_type": "ENUM",
             "value_type": "UINT8",
             "values": [
-                { "value": 0, "name": "disable" },
-                { "value": 1, "name": "below" },
-                { "value": 2, "name": "above" },
-                { "value": 3, "name": "between" },
-                { "value": 4, "name": "outside" }
+                {
+                    "value": 0,
+                    "name": "disable"
+                },
+                {
+                    "value": 1,
+                    "name": "below"
+                },
+                {
+                    "value": 2,
+                    "name": "above"
+                },
+                {
+                    "value": 3,
+                    "name": "between"
+                },
+                {
+                    "value": 4,
+                    "name": "outside"
+                }
             ],
             "bacnet_type": "multistate_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": ["current_chn3_alarm_config.condition", "current_chn3_alarm_config.threshold_min", "current_chn3_alarm_config.threshold_max", "current_chn3_alarm_config.alarm_interval", "current_chn3_alarm_config.alarm_counts"]
+            "reference": [
+                "current_chn3_alarm_config.condition",
+                "current_chn3_alarm_config.threshold_min",
+                "current_chn3_alarm_config.threshold_max",
+                "current_chn3_alarm_config.alarm_interval",
+                "current_chn3_alarm_config.alarm_counts"
+            ]
         },
         {
             "id": "current_chn3_alarm_config.threshold_min",
@@ -816,7 +1095,13 @@
             "bacnet_type": "analog_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": ["current_chn3_alarm_config.condition", "current_chn3_alarm_config.threshold_max", "current_chn3_alarm_config.threshold_min", "current_chn3_alarm_config.alarm_interval", "current_chn3_alarm_config.alarm_counts"]
+            "reference": [
+                "current_chn3_alarm_config.condition",
+                "current_chn3_alarm_config.threshold_max",
+                "current_chn3_alarm_config.threshold_min",
+                "current_chn3_alarm_config.alarm_interval",
+                "current_chn3_alarm_config.alarm_counts"
+            ]
         },
         {
             "id": "current_chn3_alarm_config.threshold_max",
@@ -829,7 +1114,13 @@
             "bacnet_type": "analog_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": ["current_chn3_alarm_config.condition", "current_chn3_alarm_config.threshold_min", "current_chn3_alarm_config.threshold_max", "current_chn3_alarm_config.alarm_interval", "current_chn3_alarm_config.alarm_counts"]
+            "reference": [
+                "current_chn3_alarm_config.condition",
+                "current_chn3_alarm_config.threshold_min",
+                "current_chn3_alarm_config.threshold_max",
+                "current_chn3_alarm_config.alarm_interval",
+                "current_chn3_alarm_config.alarm_counts"
+            ]
         },
         {
             "id": "current_chn3_alarm_config.alarm_interval",
@@ -842,7 +1133,13 @@
             "bacnet_type": "analog_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": ["current_chn3_alarm_config.condition", "current_chn3_alarm_config.threshold_min", "current_chn3_alarm_config.threshold_max", "current_chn3_alarm_config.alarm_interval", "current_chn3_alarm_config.alarm_counts"]
+            "reference": [
+                "current_chn3_alarm_config.condition",
+                "current_chn3_alarm_config.threshold_min",
+                "current_chn3_alarm_config.threshold_max",
+                "current_chn3_alarm_config.alarm_interval",
+                "current_chn3_alarm_config.alarm_counts"
+            ]
         },
         {
             "id": "current_chn3_alarm_config.alarm_counts",
@@ -855,7 +1152,13 @@
             "bacnet_type": "analog_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": ["current_chn3_alarm_config.condition", "current_chn3_alarm_config.threshold_min", "current_chn3_alarm_config.threshold_max", "current_chn3_alarm_config.alarm_interval", "current_chn3_alarm_config.alarm_counts"]
+            "reference": [
+                "current_chn3_alarm_config.condition",
+                "current_chn3_alarm_config.threshold_min",
+                "current_chn3_alarm_config.threshold_max",
+                "current_chn3_alarm_config.alarm_interval",
+                "current_chn3_alarm_config.alarm_counts"
+            ]
         },
         {
             "id": "temperature_alarm_config.condition",
@@ -866,16 +1169,35 @@
             "data_type": "ENUM",
             "value_type": "UINT8",
             "values": [
-                { "value": 0, "name": "disable" },
-                { "value": 1, "name": "below" },
-                { "value": 2, "name": "above" },
-                { "value": 3, "name": "between" },
-                { "value": 4, "name": "outside" }
+                {
+                    "value": 0,
+                    "name": "disable"
+                },
+                {
+                    "value": 1,
+                    "name": "below"
+                },
+                {
+                    "value": 2,
+                    "name": "above"
+                },
+                {
+                    "value": 3,
+                    "name": "between"
+                },
+                {
+                    "value": 4,
+                    "name": "outside"
+                }
             ],
             "bacnet_type": "multistate_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": ["temperature_alarm_config.condition", "temperature_alarm_config.threshold_min", "temperature_alarm_config.threshold_max"]
+            "reference": [
+                "temperature_alarm_config.condition",
+                "temperature_alarm_config.threshold_min",
+                "temperature_alarm_config.threshold_max"
+            ]
         },
         {
             "id": "temperature_alarm_config.threshold_min",
@@ -888,7 +1210,11 @@
             "bacnet_type": "analog_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": ["temperature_alarm_config.condition", "temperature_alarm_config.threshold_min", "temperature_alarm_config.threshold_max"]
+            "reference": [
+                "temperature_alarm_config.condition",
+                "temperature_alarm_config.threshold_min",
+                "temperature_alarm_config.threshold_max"
+            ]
         },
         {
             "id": "temperature_alarm_config.threshold_max",
@@ -901,7 +1227,11 @@
             "bacnet_type": "analog_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": ["temperature_alarm_config.condition", "temperature_alarm_config.threshold_min", "temperature_alarm_config.threshold_max"]
+            "reference": [
+                "temperature_alarm_config.condition",
+                "temperature_alarm_config.threshold_min",
+                "temperature_alarm_config.threshold_max"
+            ]
         },
         {
             "id": "alarm_report_counts",
@@ -931,37 +1261,37 @@
             "id": "ch1_sumkwh",
             "name": "Phase A Sum Kwh",
             "value": "",
-            "unit": "Kwh",
+            "unit": "kWh",
             "access_mode": "R",
             "data_type": "NUMBER",
             "value_type": "FLOAT",
             "bacnet_type": "analog_input_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS"
+            "bacnet_unit_type_id": 19,
+            "bacnet_unit_type": "UNITS_KILOWATT_HOURS"
         },
         {
             "id": "ch2_sumkwh",
             "name": "Phase B Sum Kwh",
             "value": "",
-            "unit": "Kwh",
+            "unit": "kWh",
             "access_mode": "R",
             "data_type": "NUMBER",
             "value_type": "FLOAT",
             "bacnet_type": "analog_input_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS"
+            "bacnet_unit_type_id": 19,
+            "bacnet_unit_type": "UNITS_KILOWATT_HOURS"
         },
         {
             "id": "ch3_sumkwh",
             "name": "Phase C Sum Kwh",
             "value": "",
-            "unit": "Kwh",
+            "unit": "kWh",
             "access_mode": "R",
             "data_type": "NUMBER",
             "value_type": "FLOAT",
             "bacnet_type": "analog_input_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS"
+            "bacnet_unit_type_id": 19,
+            "bacnet_unit_type": "UNITS_KILOWATT_HOURS"
         },
         {
             "id": "low_voltage_alarm.alarm_type",
@@ -975,12 +1305,70 @@
                 {
                     "name": "low voltage alarm",
                     "value": 0
+                },
+                {
+                    "name": "low voltage alarm",
+                    "value": 0
                 }
             ],
             "bacnet_type": "multistate_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": []
+        },
+        {
+            "id": "reporting_type",
+            "name": "Reporting Type",
+            "value": "0",
+            "unit": "",
+            "access_mode": "W",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "name": "Cumulative Ah",
+                    "value": 0
+                },
+                {
+                    "name": "Cumulative Kwh",
+                    "value": 1
+                }
+            ],
+            "bacnet_type": "multistate_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS"
+        },
+        {
+            "id": "voltage",
+            "name": "Voltage",
+            "value": "1",
+            "unit": "V",
+            "access_mode": "W",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "range": [
+                0.01,
+                600
+            ],
+            "bacnet_type": "analog_output_object",
+            "bacnet_unit_type_id": 5,
+            "bacnet_unit_type": "UNITS_VOLTS"
+        },
+        {
+            "id": "power_factor",
+            "name": "Power Factor",
+            "value": "1",
+            "unit": "",
+            "access_mode": "W",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "range": [
+                0.01,
+                1
+            ],
+            "bacnet_type": "analog_output_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS"
         }
     ]
 }
