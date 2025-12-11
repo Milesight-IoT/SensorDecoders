@@ -237,7 +237,7 @@ function retrievalHistoricalDataByTime(timestamp) {
         throw new Error("timestamp is required");
     }
     var buffer = new Buffer(6);
-    buffer.writeUInt8(0xff);
+    buffer.writeUInt8(0xfd);
     buffer.writeUInt8(0x6b);
     buffer.writeUInt32LE(timestamp);
     return buffer.toBytes();
@@ -264,7 +264,7 @@ function retrievalHistoricalDataByTimeRange(retrieval_historical_data_by_time_ra
     }
 
     var buffer = new Buffer(10);
-    buffer.writeUInt8(0xff);
+    buffer.writeUInt8(0xfd);
     buffer.writeUInt8(0x6c);
     buffer.writeUInt32LE(start_time);
     buffer.writeUInt32LE(end_time);
@@ -286,7 +286,7 @@ function stopHistoricalDataRetrieval(stop_historical_data_retrieval) {
         return [];
     }
 
-    return [0xff, 0x6d, 0xff];
+    return [0xfd, 0x6d, 0xff];
 }
 
 /**
