@@ -50,6 +50,15 @@ function milesightDeviceEncode(payload) {
     if ("report_status" in payload) {
         encoded = encoded.concat(reportStatus(payload.report_status));
     }
+    if ("retrieval_historical_data_by_time" in payload) {
+        encoded = encoded.concat(retrievalHistoricalDataByTime(payload.retrieval_historical_data_by_time.timestamp));
+    }
+    if ("retrieval_historical_data_by_time_range" in payload) {
+        encoded = encoded.concat(retrievalHistoricalDataByTimeRange(payload.retrieval_historical_data_by_time_range));
+    }
+    if ("stop_historical_data_retrieval" in payload) {
+        encoded = encoded.concat(stopHistoricalDataRetrieval(payload.stop_historical_data_retrieval));
+    }
     if ("sync_time" in payload) {
         encoded = encoded.concat(syncTime(payload.sync_time));
     }
@@ -198,6 +207,68 @@ function reportStatus(report_status) {
         return [];
     }
     return [0xff, 0x28, 0xff];
+}
+
+/**
+ * retrieval historical data by time
+ * @param {number} timestamp
+ * @example { "retrieval_historical_data_by_time": 1718188800 }
+ */
+function retrievalHistoricalDataByTime(timestamp) {
+    if (timestamp === undefined || timestamp === null) {
+        throw new Error("timestamp is required");
+    }
+    var buffer = new Buffer(6);
+    buffer.writeUInt8(0xff);
+    buffer.writeUInt8(0x6b);
+    buffer.writeUInt32LE(timestamp);
+    return buffer.toBytes();
+}
+
+/**
+ * retrieval historical data by time range
+ * @param {object} retrieval_historical_data_by_time_range
+ * @param {number} retrieval_historical_data_by_time_range.start_time
+ * @param {number} retrieval_historical_data_by_time_range.end_time
+ * @example { "retrieval_historical_data_by_time_range": { "start_time": 1718188800, "end_time": 1718275200 } }
+ */
+function retrievalHistoricalDataByTimeRange(retrieval_historical_data_by_time_range) {
+    var start_time = retrieval_historical_data_by_time_range.start_time;
+    var end_time = retrieval_historical_data_by_time_range.end_time;
+    if (start_time === undefined || start_time === null) {
+        throw new Error("start_time is required");
+    }
+    if (end_time === undefined || end_time === null) {
+        throw new Error("end_time is required");
+    }
+    if (start_time > end_time) {
+        throw new Error("start_time must be less than end_time");
+    }
+
+    var buffer = new Buffer(10);
+    buffer.writeUInt8(0xff);
+    buffer.writeUInt8(0x6c);
+    buffer.writeUInt32LE(start_time);
+    buffer.writeUInt32LE(end_time);
+    return buffer.toBytes();
+}
+
+/**
+ * stop historical data retrieval
+ * @param {number} stop_historical_data_retrieval values: (0: no, 1: yes)
+ * @example { "stop_historical_data_retrieval": 1 }
+ */
+function stopHistoricalDataRetrieval(stop_historical_data_retrieval) {
+    var yes_no_map = { 0: "no", 1: "yes" };
+    var yes_no_values = getValues(yes_no_map);
+    if (yes_no_values.indexOf(stop_historical_data_retrieval) === -1) {
+        throw new Error("stop_historical_data_retrieval must be one of " + yes_no_values.join(", "));
+    }
+    if (getValue(yes_no_map, stop_historical_data_retrieval) === 0) {
+        return [];
+    }
+
+    return [0xff, 0x6d, 0xff];
 }
 
 /**
@@ -1009,6 +1080,9 @@ function queryDeviceConfig(query_config) {
             buffer.writeUInt8(config_map[key]);
             data = data.concat(buffer.toBytes());
         }
+    }
+    if (data.length === 0) {
+        throw new Error("query_config is empty, please check the query_config");
     }
     return data;
 }

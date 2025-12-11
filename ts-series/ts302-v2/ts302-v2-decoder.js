@@ -280,6 +280,26 @@ function milesightDeviceDecode(bytes) {
             decoded.history = decoded.history || [];
             decoded.history.push(data);
         }
+        // POST BACK TIMESTAMP
+        else if (channel_id === 0xfd && channel_type === 0x6b) {
+            var retrieval_historical_data_by_time = {};
+            retrieval_historical_data_by_time.timestamp = readUInt32LE(bytes.slice(i, i + 4));
+            decoded.retrieval_historical_data_by_time = retrieval_historical_data_by_time;
+            i += 4;
+        }
+        // POST BACK TIME RANGE
+        else if (channel_id === 0xfd && channel_type === 0x6c) {
+            var retrieval_historical_data_by_time_range = {};
+            retrieval_historical_data_by_time_range.start_time = readUInt32LE(bytes.slice(i, i + 4));
+            retrieval_historical_data_by_time_range.end_time = readUInt32LE(bytes.slice(i + 4, i + 8));
+            decoded.retrieval_historical_data_by_time_range = retrieval_historical_data_by_time_range;
+            i += 8;
+        }
+        // STOP POST BACK
+        else if (channel_id === 0xfd && channel_type === 0x6d) {
+            decoded.stop_historical_data_retrieval = readYesNoStatus(1);
+            i += 1;
+        }
         // SENSOR ID
         else if (channel_id === 0xff && channel_type === 0xa0) {
             var data = readUInt8(bytes[i]);
@@ -842,8 +862,10 @@ function readQueryConfig(value) {
         retransmit_interval: 35,
         magnet_delay_time: 36,
         resend_interval: 37,
-        temperature_calibration_settings: 38,
-        humidity_calibration_settings: 39,
+        chn1_temperature_calibration_settings: 38,
+        chn1_humidity_calibration_settings: 39,
+        chn2_temperature_calibration_settings: 40,
+        chn2_humidity_calibration_settings: 41,
         dst_config: 42,
         time_display: 43,
         magnet_throttle: 44,

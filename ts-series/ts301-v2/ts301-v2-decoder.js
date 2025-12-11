@@ -172,6 +172,26 @@ function milesightDeviceDecode(bytes) {
             decoded.history = decoded.history || [];
             decoded.history.push(data);
         }
+        // POST BACK TIMESTAMP
+        else if (channel_id === 0xfd && channel_type === 0x6b) {
+            var retrieval_historical_data_by_time = {};
+            retrieval_historical_data_by_time.timestamp = readUInt32LE(bytes.slice(i, i + 4));
+            decoded.retrieval_historical_data_by_time = retrieval_historical_data_by_time;
+            i += 4;
+        }
+        // POST BACK TIME RANGE
+        else if (channel_id === 0xfd && channel_type === 0x6c) {
+            var retrieval_historical_data_by_time_range = {};
+            retrieval_historical_data_by_time_range.start_time = readUInt32LE(bytes.slice(i, i + 4));
+            retrieval_historical_data_by_time_range.end_time = readUInt32LE(bytes.slice(i + 4, i + 8));
+            decoded.retrieval_historical_data_by_time_range = retrieval_historical_data_by_time_range;
+            i += 8;
+        }
+        // STOP POST BACK
+        else if (channel_id === 0xfd && channel_type === 0x6d) {
+            decoded.stop_historical_data_retrieval = readYesNoStatus(1);
+            i += 1;
+        }
         // SENSOR ID
         else if (channel_id === 0xff && channel_type === 0xa0) {
             var data = readUInt8(bytes[i]);
