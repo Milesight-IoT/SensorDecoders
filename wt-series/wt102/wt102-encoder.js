@@ -122,8 +122,8 @@ function milesightDeviceEncode(payload) {
 	if ('motor_total_stroke' in payload) {
 		var buffer = new Buffer();
 		buffer.writeUInt8(0x02);
-		if (payload.motor_total_stroke < 0 || payload.motor_total_stroke > 650) {
-			throw new Error('motor_total_stroke must be between 0 and 650');
+		if (payload.motor_total_stroke < 0 || payload.motor_total_stroke > 3028) {
+			throw new Error('motor_total_stroke must be between 0 and 3028');
 		}
 		buffer.writeUInt16LE(payload.motor_total_stroke);
 		encoded = encoded.concat(buffer.toBytes());
@@ -132,8 +132,8 @@ function milesightDeviceEncode(payload) {
 	if ('motor_position' in payload) {
 		var buffer = new Buffer();
 		buffer.writeUInt8(0x03);
-		if (payload.motor_position < 0 || payload.motor_position > 650) {
-			throw new Error('motor_position must be between 0 and 650');
+		if (payload.motor_position < 0 || payload.motor_position > 3028) {
+			throw new Error('motor_position must be between 0 and 3028');
 		}
 		buffer.writeUInt16LE(payload.motor_position);
 		encoded = encoded.concat(buffer.toBytes());
