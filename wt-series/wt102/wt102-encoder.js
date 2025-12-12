@@ -925,6 +925,21 @@ function milesightDeviceEncode(payload) {
 		buffer.writeUInt8(0xbc);
 		encoded = encoded.concat(buffer.toBytes());
 	}
+	//0xbb
+	if ('retrieve_historical_data_by_time_range' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0xbb);
+		buffer.writeUInt32LE(payload.retrieve_historical_data_by_time_range.start_time);
+		buffer.writeUInt32LE(payload.retrieve_historical_data_by_time_range.end_time);
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0xba
+	if ('retrieve_historical_data_by_time' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0xba);
+		buffer.writeUInt32LE(payload.retrieve_historical_data_by_time.time);
+		encoded = encoded.concat(buffer.toBytes());
+	}
 	//0x57
 	if ('query_motor_stroke_position' in payload) {
 		var buffer = new Buffer();

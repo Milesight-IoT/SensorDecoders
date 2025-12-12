@@ -549,6 +549,15 @@ function milesightDeviceDecode(bytes) {
 			case 0xbc:
 				decoded.stop_historical_data_retrieval = readOnlyCommand(bytes, counterObj, 0);
 				break;
+			case 0xbb:
+				decoded.retrieve_historical_data_by_time_range = decoded.retrieve_historical_data_by_time_range || {};
+				decoded.retrieve_historical_data_by_time_range.start_time = readUInt32LE(bytes, counterObj, 4);
+				decoded.retrieve_historical_data_by_time_range.end_time = readUInt32LE(bytes, counterObj, 4);
+				break;
+			case 0xba:
+				decoded.retrieve_historical_data_by_time = decoded.retrieve_historical_data_by_time || {};
+				decoded.retrieve_historical_data_by_time.time = readUInt32LE(bytes, counterObj, 4);
+				break;
 			case 0x57:
 				decoded.query_motor_stroke_position = readOnlyCommand(bytes, counterObj, 0);
 				break;
@@ -857,6 +866,8 @@ function cmdMap() {
 		  "b7": "set_time",
 		  "bd": "clear_historical_data",
 		  "bc": "stop_historical_data_retrieval",
+		  "bb": "retrieve_historical_data_by_time_range",
+		  "ba": "retrieve_historical_data_by_time",
 		  "5a": "set_target_temperature",
 		  "5b": "set_temperature",
 		  "5c": "set_occupancy_state",
