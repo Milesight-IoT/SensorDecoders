@@ -1003,45 +1003,49 @@ function insertArrayItem(array, item, idName) {
 }
 
 function readCommand(allBytes, counterObj, end) {
-	var bytes = readBytes(allBytes, counterObj, end);
-	var cmd = bytes
-		.map(function(b) {
-			var hex = b.toString(16);
-			return hex.length === 1 ? '0' + hex : hex;
-		})
-		.join('')
-		.toLowerCase();
-	for (const key in cmdMap()) {
-		const xxs = [];
-		let isMatch = false;
-		if (key.length != cmd.length) {
-			continue;
-		}
-		for (let i = 0; i < key.length; i+= 2) {
-			const hexString = key.slice(i, i + 2);
-			const cmdString = cmd.slice(i, i + 2);
-			if (hexString == cmdString || hexString == 'xx') {
-				if (hexString == 'xx') {
-					xxs.push('.' +parseInt(cmdString, 16));
-				}
-				isMatch = true;                
-				continue;
-			} else {
-				isMatch = false;
-				break;
-			}
-		}
-		if (isMatch) {
-			const propertyId = cmdMap()[key];
-			if (!propertyId.includes('._item')) {
-				return propertyId;
-			}
-			let i = 0;
-			const result = propertyId.replace(/\._item/g, () =>  xxs[i++] );
-			return result;
-		}
-	}
-	return null;
+    var bytes = readBytes(allBytes, counterObj, end);
+    var cmd = bytes
+        .map(function(b) {
+            var hex = b.toString(16);
+            return hex.length === 1 ? '0' + hex : hex;
+        })
+        .join('')
+        .toLowerCase();
+
+    var map = cmdMap();
+    for (var key in map) {
+        var xxs = [];
+        var isMatch = false;
+        if (key.length !== cmd.length) {
+            continue;
+        }
+        for (var i = 0; i < key.length; i += 2) {
+            var hexString = key.slice(i, i + 2);
+            var cmdString = cmd.slice(i, i + 2);
+            if (hexString === cmdString || hexString === 'xx') {
+                if (hexString === 'xx') {
+                    xxs.push('.' + parseInt(cmdString, 16));
+                }
+                isMatch = true;
+                continue;
+            } else {
+                isMatch = false;
+                break;
+            }
+        }
+        if (isMatch) {
+            var propertyId = map[key];
+            if (propertyId.indexOf('._item') === -1) {
+                return propertyId;
+            }
+            var j = 0;
+            var result = propertyId.replace(/\._item/g, function() {
+                return xxs[j++];
+            });
+            return result;
+        }
+    }
+    return null;
 }
 
 function cmdMap() {

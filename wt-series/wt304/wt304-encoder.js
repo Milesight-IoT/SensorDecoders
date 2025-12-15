@@ -68,30 +68,41 @@ function milesightDeviceEncode(payload) {
 	//0xef
 	if ('req' in payload) {
 		var buffer = new Buffer();
-		for (var req_command of payload.req) {
-			const pureNumber = [];
-			const formateStrParts = [];            
-			req_command.split('.').forEach(part => {
-				if (part.match(/^[0-9]+$/)) {
-					pureNumber.push(Number(part).toString(16).padStart(2, "0"))
+		var reqList = payload.req;
+		for (var idx = 0; idx < reqList.length; idx++) {
+			var req_command = reqList[idx];
+			var pureNumber = [];
+			var formateStrParts = [];
+		
+			req_command.split('.').forEach(function(part) {
+				if (/^[0-9]+$/.test(part)) {
+					// padStart ES5 兼容
+					var hex = Number(part).toString(16);
+					while (hex.length < 2) { hex = '0' + hex; }
+					pureNumber.push(hex);
 					console.log(pureNumber);
 					formateStrParts.push('_item');
 				} else {
 					formateStrParts.push(part);
 				}
-			})
-			const formateStr = formateStrParts.join('.');
-			let hexString = cmdMap()[formateStr];
-			if (hexString.includes('xx')) {
-				let i = 0;
-				hexString = hexString.replace(/xx/g, () => pureNumber[i++]);
+			});
+		
+			var formateStr = formateStrParts.join('.');
+			var hexString = cmdMap()[formateStr];
+		
+			if (hexString && hexString.indexOf('xx') !== -1) {
+				var i = 0;
+				hexString = hexString.replace(/xx/g, function() {
+					return pureNumber[i++];
+				});
 			}
+		
 			if (hexString) {
-				const length = hexString.length / 2;
+				var length = hexString.length / 2;
 				buffer.writeUInt8(0xef);
 				buffer.writeUInt8(length);
 				buffer.writeHexString(hexString, length, true);
-			}            
+			}
 		}
 		encoded = encoded.concat(buffer.toBytes());
 	}
