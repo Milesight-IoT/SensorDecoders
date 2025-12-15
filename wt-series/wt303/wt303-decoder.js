@@ -1158,21 +1158,3 @@ function cmdMap() {
 		  "be": "reboot"
 	};
 }
-
-function hexToBytes(hex) {
-	// remove "0x" if present
-	hex = hex.startsWith('0x') ? hex.slice(2) : hex;
-
-	// pad with leading zero if odd length
-	if (hex.length % 2 !== 0) {
-		hex = '0' + hex;
-	}
-
-	const bytes = [];
-	for (let i = 0; i < hex.length; i += 2) {
-		bytes.push(parseInt(hex.slice(i, i + 2), 16));
-	}
-	return bytes;
-}
-
-console.log(milesightDeviceDecode(hexToBytes("ef01760915330b")));
