@@ -21,7 +21,7 @@
       "id": "temperature",
       "name": "Temperature",
       "value": "",
-      "unit": "°C",
+      "unit": "℃",
       "access_mode": "R",
       "data_type": "NUMBER",
       "value_type": "FLOAT",
@@ -37,13 +37,13 @@
       "id": "motor_total_stroke",
       "name": "Motor Stroke",
       "value": "",
-      "unit": "",
+      "unit": "steps",
       "access_mode": "R",
       "data_type": "NUMBER",
       "value_type": "UINT16",
       "range": [
         0,
-        650
+        3028
       ],
       "bacnet_type": "analog_input_object",
       "bacnet_unit_type_id": 95,
@@ -53,7 +53,7 @@
       "id": "target_temperature",
       "name": "Target Temperature",
       "value": "",
-      "unit": "°C",
+      "unit": "℃",
       "access_mode": "R",
       "data_type": "NUMBER",
       "value_type": "FLOAT",
@@ -91,7 +91,7 @@
       "value_type": "UINT8",
       "values": [
         {
-          "name": "°C",
+          "name": "℃",
           "value": 0
         },
         {
@@ -105,7 +105,7 @@
     },
     {
       "id": "temperature_source_settings.type",
-      "name": "Temperature Source",
+      "name": "Ambient Temperature Source",
       "value": "0",
       "unit": "",
       "access_mode": "RW",
@@ -113,7 +113,7 @@
       "value_type": "UINT8",
       "values": [
         {
-          "name": "Embedded NTC",
+          "name": "Internal NTC",
           "value": 0
         },
         {
@@ -129,10 +129,8 @@
       "bacnet_unit_type_id": 95,
       "bacnet_unit_type": "UNITS_NO_UNITS",
       "reference": [
-        "temperature_source_settings.external_ntc_reception.timeout",
-        "temperature_source_settings.external_ntc_reception.timeout_response",
-        "temperature_source_settings.lorawan_reception.timeout",
-        "temperature_source_settings.lorawan_reception.timeout_response"
+        "temperature_source_settings.external_ntc_reception",
+        "temperature_source_settings.lorawan_reception"
       ]
     },
     {
@@ -172,7 +170,7 @@
           "value": 1
         },
         {
-          "name": "Switch to Embedded NTC Control",
+          "name": "Switch to Internal NTC Control",
           "value": 2
         }
       ],
@@ -220,7 +218,7 @@
           "value": 1
         },
         {
-          "name": "Switch to Embedded NTC Control",
+          "name": "Switch to Internal NTC Control",
           "value": 2
         }
       ],
@@ -232,7 +230,7 @@
       ]
     },
     {
-      "id": "env_temperature_display_enable",
+      "id": "environment_temperature_display_enable",
       "name": "Ambient Temperature Display Enable",
       "value": "1",
       "unit": "",
@@ -415,11 +413,11 @@
       "value_type": "UINT8",
       "values": [
         {
-          "name": "Completely Close",
+          "name": "Fully Close",
           "value": 0
         },
         {
-          "name": "Completely Open",
+          "name": "Fully Open",
           "value": 1
         }
       ],
@@ -455,7 +453,7 @@
       "id": "target_temperature_control_settings.target_temperature_resolution",
       "name": "Target Temperature Resolution",
       "value": "0",
-      "unit": "°C",
+      "unit": "℃",
       "access_mode": "RW",
       "data_type": "ENUM",
       "value_type": "UINT8",
@@ -478,7 +476,7 @@
       "id": "target_temperature_control_settings.target_temperature_adjustment_range_min",
       "name": "Minimum of Target Temperature Adjustment Range",
       "value": "5",
-      "unit": "°C",
+      "unit": "℃",
       "access_mode": "RW",
       "data_type": "NUMBER",
       "value_type": "FLOAT",
@@ -495,7 +493,7 @@
       "id": "target_temperature_control_settings.target_temperature_adjustment_range_max",
       "name": "Maximum of Target Temperature Adjustment Range",
       "value": "35",
-      "unit": "°C",
+      "unit": "℃",
       "access_mode": "RW",
       "data_type": "NUMBER",
       "value_type": "FLOAT",
@@ -526,7 +524,7 @@
           "value": 1
         },
         {
-          "name": "Comprehensive Control",
+          "name": "Integrated Control",
           "value": 2
         }
       ],
@@ -534,16 +532,16 @@
       "bacnet_unit_type_id": 95,
       "bacnet_unit_type": "UNITS_NO_UNITS",
       "reference": [
-        "target_temperature_control_settings.mode_settings.auto_control.target_temperature",
-        "target_temperature_control_settings.mode_settings.valve_control.target_valve_status",
-        "target_temperature_control_settings.mode_settings.intergrated_control.target_temperature"
+        "target_temperature_control_settings.mode_settings.auto_control",
+        "target_temperature_control_settings.mode_settings.valve_control",
+        "target_temperature_control_settings.mode_settings.intergrated_control"
       ]
     },
     {
       "id": "target_temperature_control_settings.mode_settings.auto_control.target_temperature",
       "name": "Target Temperature",
       "value": "19",
-      "unit": "°C",
+      "unit": "℃",
       "access_mode": "RW",
       "data_type": "NUMBER",
       "value_type": "FLOAT",
@@ -577,7 +575,7 @@
       "id": "target_temperature_control_settings.mode_settings.intergrated_control.target_temperature",
       "name": "Target Temperature",
       "value": "19",
-      "unit": "°C",
+      "unit": "℃",
       "access_mode": "RW",
       "data_type": "NUMBER",
       "value_type": "FLOAT",
@@ -621,7 +619,7 @@
       "id": "window_opening_detection_settings.cooling_rate",
       "name": "Rate of Temperature Fall",
       "value": "3",
-      "unit": "°C",
+      "unit": "℃",
       "access_mode": "RW",
       "data_type": "NUMBER",
       "value_type": "FLOAT",
@@ -648,7 +646,7 @@
       "value_type": "UINT8",
       "values": [
         {
-          "name": "Stay the Same",
+          "name": "Remains Unchanged",
           "value": 0
         },
         {
@@ -717,9 +715,7 @@
         "auto_away_settings.cycle_time_thur",
         "auto_away_settings.cycle_time_fri",
         "auto_away_settings.cycle_time_sat",
-        "auto_away_settings.energy_saving_settings.mode",
-        "auto_away_settings.energy_saving_settings.energy_saving_temperature",
-        "auto_away_settings.energy_saving_settings.energy_saving_valve_opening_degree"
+        "auto_away_settings.energy_saving_settings"
       ]
     },
     {
@@ -747,9 +743,7 @@
         "auto_away_settings.cycle_time_thur",
         "auto_away_settings.cycle_time_fri",
         "auto_away_settings.cycle_time_sat",
-        "auto_away_settings.energy_saving_settings.mode",
-        "auto_away_settings.energy_saving_settings.energy_saving_temperature",
-        "auto_away_settings.energy_saving_settings.energy_saving_valve_opening_degree"
+        "auto_away_settings.energy_saving_settings"
       ]
     },
     {
@@ -777,9 +771,7 @@
         "auto_away_settings.cycle_time_thur",
         "auto_away_settings.cycle_time_fri",
         "auto_away_settings.cycle_time_sat",
-        "auto_away_settings.energy_saving_settings.mode",
-        "auto_away_settings.energy_saving_settings.energy_saving_temperature",
-        "auto_away_settings.energy_saving_settings.energy_saving_valve_opening_degree"
+        "auto_away_settings.energy_saving_settings"
       ]
     },
     {
@@ -813,9 +805,7 @@
         "auto_away_settings.cycle_time_thur",
         "auto_away_settings.cycle_time_fri",
         "auto_away_settings.cycle_time_sat",
-        "auto_away_settings.energy_saving_settings.mode",
-        "auto_away_settings.energy_saving_settings.energy_saving_temperature",
-        "auto_away_settings.energy_saving_settings.energy_saving_valve_opening_degree"
+        "auto_away_settings.energy_saving_settings"
       ]
     },
     {
@@ -849,9 +839,7 @@
         "auto_away_settings.cycle_time_thur",
         "auto_away_settings.cycle_time_fri",
         "auto_away_settings.cycle_time_sat",
-        "auto_away_settings.energy_saving_settings.mode",
-        "auto_away_settings.energy_saving_settings.energy_saving_temperature",
-        "auto_away_settings.energy_saving_settings.energy_saving_valve_opening_degree"
+        "auto_away_settings.energy_saving_settings"
       ]
     },
     {
@@ -885,9 +873,7 @@
         "auto_away_settings.cycle_time_thur",
         "auto_away_settings.cycle_time_fri",
         "auto_away_settings.cycle_time_sat",
-        "auto_away_settings.energy_saving_settings.mode",
-        "auto_away_settings.energy_saving_settings.energy_saving_temperature",
-        "auto_away_settings.energy_saving_settings.energy_saving_valve_opening_degree"
+        "auto_away_settings.energy_saving_settings"
       ]
     },
     {
@@ -921,9 +907,7 @@
         "auto_away_settings.cycle_time_thur",
         "auto_away_settings.cycle_time_fri",
         "auto_away_settings.cycle_time_sat",
-        "auto_away_settings.energy_saving_settings.mode",
-        "auto_away_settings.energy_saving_settings.energy_saving_temperature",
-        "auto_away_settings.energy_saving_settings.energy_saving_valve_opening_degree"
+        "auto_away_settings.energy_saving_settings"
       ]
     },
     {
@@ -957,9 +941,7 @@
         "auto_away_settings.cycle_time_wed",
         "auto_away_settings.cycle_time_fri",
         "auto_away_settings.cycle_time_sat",
-        "auto_away_settings.energy_saving_settings.mode",
-        "auto_away_settings.energy_saving_settings.energy_saving_temperature",
-        "auto_away_settings.energy_saving_settings.energy_saving_valve_opening_degree"
+        "auto_away_settings.energy_saving_settings"
       ]
     },
     {
@@ -993,9 +975,7 @@
         "auto_away_settings.cycle_time_wed",
         "auto_away_settings.cycle_time_thur",
         "auto_away_settings.cycle_time_sat",
-        "auto_away_settings.energy_saving_settings.mode",
-        "auto_away_settings.energy_saving_settings.energy_saving_temperature",
-        "auto_away_settings.energy_saving_settings.energy_saving_valve_opening_degree"
+        "auto_away_settings.energy_saving_settings"
       ]
     },
     {
@@ -1029,9 +1009,7 @@
         "auto_away_settings.cycle_time_wed",
         "auto_away_settings.cycle_time_thur",
         "auto_away_settings.cycle_time_fri",
-        "auto_away_settings.energy_saving_settings.mode",
-        "auto_away_settings.energy_saving_settings.energy_saving_temperature",
-        "auto_away_settings.energy_saving_settings.energy_saving_valve_opening_degree"
+        "auto_away_settings.energy_saving_settings"
       ]
     },
     {
@@ -1064,7 +1042,7 @@
       "id": "auto_away_settings.energy_saving_settings.energy_saving_temperature",
       "name": "Energy Saving Temperature",
       "value": "19",
-      "unit": "°C",
+      "unit": "℃",
       "access_mode": "RW",
       "data_type": "NUMBER",
       "value_type": "FLOAT",
@@ -1127,7 +1105,7 @@
       "id": "anti_freeze_protection_setting.temperature_value",
       "name": "Freeze Temperature",
       "value": "3",
-      "unit": "°C",
+      "unit": "℃",
       "access_mode": "RW",
       "data_type": "NUMBER",
       "value_type": "FLOAT",
@@ -1244,7 +1222,7 @@
     },
     {
       "id": "motor_stroke_limit",
-      "name": "Motor Stroke Limit",
+      "name": "Effective Stroke",
       "value": "100",
       "unit": "%",
       "access_mode": "RW",
@@ -1287,7 +1265,7 @@
       "id": "temperature_calibration_settings.calibration_value",
       "name": "Calibration Value",
       "value": "0",
-      "unit": "°C",
+      "unit": "℃",
       "access_mode": "RW",
       "data_type": "NUMBER",
       "value_type": "FLOAT",
@@ -1368,7 +1346,7 @@
       "id": "temperature_alarm_settings.threshold_min",
       "name": "​Low Temperature Threshold",
       "value": "0",
-      "unit": "°C",
+      "unit": "℃",
       "access_mode": "RW",
       "data_type": "NUMBER",
       "value_type": "FLOAT",
@@ -1389,7 +1367,7 @@
       "id": "temperature_alarm_settings.threshold_max",
       "name": "High Temperature Threshold",
       "value": "0",
-      "unit": "°C",
+      "unit": "℃",
       "access_mode": "RW",
       "data_type": "NUMBER",
       "value_type": "FLOAT",
@@ -1569,7 +1547,7 @@
       "bacnet_unit_type": "UNITS_MINUTES"
     },
     {
-      "id": "daylight_saving_time.daylight_saving_time_enable",
+      "id": "daylight_saving_time.enable",
       "name": "Enable",
       "value": "0",
       "unit": "",
@@ -1617,7 +1595,7 @@
       "bacnet_unit_type_id": 72,
       "bacnet_unit_type": "UNITS_MINUTES",
       "reference": [
-        "daylight_saving_time.daylight_saving_time_enable",
+        "daylight_saving_time.enable",
         "daylight_saving_time.start_month",
         "daylight_saving_time.start_week_num",
         "daylight_saving_time.start_week_day",
@@ -1690,7 +1668,7 @@
       "bacnet_unit_type_id": 95,
       "bacnet_unit_type": "UNITS_NO_UNITS",
       "reference": [
-        "daylight_saving_time.daylight_saving_time_enable",
+        "daylight_saving_time.enable",
         "daylight_saving_time.daylight_saving_time_offset",
         "daylight_saving_time.start_week_num",
         "daylight_saving_time.start_week_day",
@@ -1735,7 +1713,7 @@
       "bacnet_unit_type_id": 95,
       "bacnet_unit_type": "UNITS_NO_UNITS",
       "reference": [
-        "daylight_saving_time.daylight_saving_time_enable",
+        "daylight_saving_time.enable",
         "daylight_saving_time.daylight_saving_time_offset",
         "daylight_saving_time.start_month",
         "daylight_saving_time.start_week_day",
@@ -1788,7 +1766,7 @@
       "bacnet_unit_type_id": 95,
       "bacnet_unit_type": "UNITS_NO_UNITS",
       "reference": [
-        "daylight_saving_time.daylight_saving_time_enable",
+        "daylight_saving_time.enable",
         "daylight_saving_time.daylight_saving_time_offset",
         "daylight_saving_time.start_month",
         "daylight_saving_time.start_week_num",
@@ -1909,7 +1887,7 @@
       "bacnet_unit_type_id": 72,
       "bacnet_unit_type": "UNITS_MINUTES",
       "reference": [
-        "daylight_saving_time.daylight_saving_time_enable",
+        "daylight_saving_time.enable",
         "daylight_saving_time.daylight_saving_time_offset",
         "daylight_saving_time.start_month",
         "daylight_saving_time.start_week_num",
@@ -1982,7 +1960,7 @@
       "bacnet_unit_type_id": 95,
       "bacnet_unit_type": "UNITS_NO_UNITS",
       "reference": [
-        "daylight_saving_time.daylight_saving_time_enable",
+        "daylight_saving_time.enable",
         "daylight_saving_time.daylight_saving_time_offset",
         "daylight_saving_time.start_month",
         "daylight_saving_time.start_week_num",
@@ -2027,7 +2005,7 @@
       "bacnet_unit_type_id": 95,
       "bacnet_unit_type": "UNITS_NO_UNITS",
       "reference": [
-        "daylight_saving_time.daylight_saving_time_enable",
+        "daylight_saving_time.enable",
         "daylight_saving_time.daylight_saving_time_offset",
         "daylight_saving_time.start_month",
         "daylight_saving_time.start_week_num",
@@ -2080,7 +2058,7 @@
       "bacnet_unit_type_id": 95,
       "bacnet_unit_type": "UNITS_NO_UNITS",
       "reference": [
-        "daylight_saving_time.daylight_saving_time_enable",
+        "daylight_saving_time.enable",
         "daylight_saving_time.daylight_saving_time_offset",
         "daylight_saving_time.start_month",
         "daylight_saving_time.start_week_num",
@@ -2201,7 +2179,7 @@
       "bacnet_unit_type_id": 72,
       "bacnet_unit_type": "UNITS_MINUTES",
       "reference": [
-        "daylight_saving_time.daylight_saving_time_enable",
+        "daylight_saving_time.enable",
         "daylight_saving_time.daylight_saving_time_offset",
         "daylight_saving_time.start_month",
         "daylight_saving_time.start_week_num",
@@ -2268,7 +2246,7 @@
       "id": "temperature_alarm.lower_range_alarm_deactivation.temperature",
       "name": "Temperature",
       "value": "",
-      "unit": "°C",
+      "unit": "℃",
       "access_mode": "R",
       "data_type": "NUMBER",
       "value_type": "FLOAT",
@@ -2285,7 +2263,7 @@
       "id": "temperature_alarm.lower_range_alarm_trigger.temperature",
       "name": "Temperature",
       "value": "",
-      "unit": "°C",
+      "unit": "℃",
       "access_mode": "R",
       "data_type": "NUMBER",
       "value_type": "FLOAT",
@@ -2302,7 +2280,7 @@
       "id": "temperature_alarm.over_range_alarm_deactivation.temperature",
       "name": "Temperature",
       "value": "",
-      "unit": "°C",
+      "unit": "℃",
       "access_mode": "R",
       "data_type": "NUMBER",
       "value_type": "FLOAT",
@@ -2319,7 +2297,7 @@
       "id": "temperature_alarm.over_range_alarm_trigger.temperature",
       "name": "Temperature",
       "value": "",
-      "unit": "°C",
+      "unit": "℃",
       "access_mode": "R",
       "data_type": "NUMBER",
       "value_type": "FLOAT",
@@ -2336,7 +2314,7 @@
       "id": "anti_freeze_protection_alarm.lifted.environment_temperature",
       "name": "Ambient Temperature",
       "value": "",
-      "unit": "°C",
+      "unit": "℃",
       "access_mode": "R",
       "data_type": "NUMBER",
       "value_type": "FLOAT",
@@ -2374,7 +2352,7 @@
       "id": "anti_freeze_protection_alarm.trigger.environment_temperature",
       "name": "Ambient Temperature",
       "value": "",
-      "unit": "°C",
+      "unit": "℃",
       "access_mode": "R",
       "data_type": "NUMBER",
       "value_type": "FLOAT",
@@ -2412,7 +2390,7 @@
       "id": "mandatory_heating_alarm.exit.environment_temperature",
       "name": "Ambient Temperature",
       "value": "",
-      "unit": "°C",
+      "unit": "℃",
       "access_mode": "R",
       "data_type": "NUMBER",
       "value_type": "FLOAT",
@@ -2472,7 +2450,7 @@
       "id": "mandatory_heating_alarm.enter.environment_temperature",
       "name": "Ambient Temperature",
       "value": "",
-      "unit": "°C",
+      "unit": "℃",
       "access_mode": "R",
       "data_type": "NUMBER",
       "value_type": "FLOAT",
@@ -2530,7 +2508,7 @@
     },
     {
       "id": "auto_away_report.inactive_by_target_temperature.state",
-      "name": "occupancy status",
+      "name": "Occupancy status",
       "value": "",
       "unit": "",
       "access_mode": "R",
@@ -2558,7 +2536,7 @@
       "id": "auto_away_report.inactive_by_target_temperature.environment_temperature",
       "name": "Ambient Temperature",
       "value": "",
-      "unit": "°C",
+      "unit": "℃",
       "access_mode": "R",
       "data_type": "NUMBER",
       "value_type": "FLOAT",
@@ -2578,7 +2556,7 @@
       "id": "auto_away_report.inactive_by_target_temperature.target_temperature",
       "name": "Target Temperature",
       "value": "",
-      "unit": "°C",
+      "unit": "℃",
       "access_mode": "R",
       "data_type": "NUMBER",
       "value_type": "FLOAT",
@@ -2596,7 +2574,7 @@
     },
     {
       "id": "auto_away_report.active_by_target_temperature.state",
-      "name": "occupancy status",
+      "name": "Occupancy status",
       "value": "",
       "unit": "",
       "access_mode": "R",
@@ -2624,7 +2602,7 @@
       "id": "auto_away_report.active_by_target_temperature.environment_temperature",
       "name": "Ambient Temperature",
       "value": "",
-      "unit": "°C",
+      "unit": "℃",
       "access_mode": "R",
       "data_type": "NUMBER",
       "value_type": "FLOAT",
@@ -2644,7 +2622,7 @@
       "id": "auto_away_report.active_by_target_temperature.target_temperature",
       "name": "Energy Saving Temperature",
       "value": "",
-      "unit": "°C",
+      "unit": "℃",
       "access_mode": "R",
       "data_type": "NUMBER",
       "value_type": "FLOAT",
@@ -2661,8 +2639,8 @@
       ]
     },
     {
-      "id": "auto_away_report.inactive_by_target_valve_state.state",
-      "name": "occupancy status",
+      "id": "auto_away_report.inactive_by_target_valve_opening.state",
+      "name": "Occupancy status",
       "value": "",
       "unit": "",
       "access_mode": "R",
@@ -2682,15 +2660,15 @@
       "bacnet_unit_type_id": 95,
       "bacnet_unit_type": "UNITS_NO_UNITS",
       "reference": [
-        "auto_away_report.inactive_by_target_valve_state.environment_temperature",
-        "auto_away_report.inactive_by_target_valve_state.target_valve_state"
+        "auto_away_report.inactive_by_target_valve_opening.environment_temperature",
+        "auto_away_report.inactive_by_target_valve_opening.target_valve_opening"
       ]
     },
     {
-      "id": "auto_away_report.inactive_by_target_valve_state.environment_temperature",
+      "id": "auto_away_report.inactive_by_target_valve_opening.environment_temperature",
       "name": "Ambient Temperature",
       "value": "",
-      "unit": "°C",
+      "unit": "℃",
       "access_mode": "R",
       "data_type": "NUMBER",
       "value_type": "FLOAT",
@@ -2702,12 +2680,12 @@
       "bacnet_unit_type_id": 62,
       "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
       "reference": [
-        "auto_away_report.inactive_by_target_valve_state.state",
-        "auto_away_report.inactive_by_target_valve_state.target_valve_state"
+        "auto_away_report.inactive_by_target_valve_opening.state",
+        "auto_away_report.inactive_by_target_valve_opening.target_valve_opening"
       ]
     },
     {
-      "id": "auto_away_report.inactive_by_target_valve_state.target_valve_state",
+      "id": "auto_away_report.inactive_by_target_valve_opening.target_valve_opening",
       "name": "Target Valve Opening",
       "value": "",
       "unit": "%",
@@ -2722,13 +2700,13 @@
       "bacnet_unit_type_id": 98,
       "bacnet_unit_type": "UNITS_PERCENT",
       "reference": [
-        "auto_away_report.inactive_by_target_valve_state.state",
-        "auto_away_report.inactive_by_target_valve_state.environment_temperature"
+        "auto_away_report.inactive_by_target_valve_opening.state",
+        "auto_away_report.inactive_by_target_valve_opening.environment_temperature"
       ]
     },
     {
-      "id": "auto_away_report.active_by_target_valve_state.state",
-      "name": "occupancy status",
+      "id": "auto_away_report.active_by_target_valve_opening.state",
+      "name": "Occupancy status",
       "value": "",
       "unit": "",
       "access_mode": "R",
@@ -2748,15 +2726,15 @@
       "bacnet_unit_type_id": 95,
       "bacnet_unit_type": "UNITS_NO_UNITS",
       "reference": [
-        "auto_away_report.active_by_target_valve_state.environment_temperature",
-        "auto_away_report.active_by_target_valve_state.target_valve_state"
+        "auto_away_report.active_by_target_valve_opening.environment_temperature",
+        "auto_away_report.active_by_target_valve_opening.target_valve_opening"
       ]
     },
     {
-      "id": "auto_away_report.active_by_target_valve_state.environment_temperature",
+      "id": "auto_away_report.active_by_target_valve_opening.environment_temperature",
       "name": "Ambient Temperature",
       "value": "",
-      "unit": "°C",
+      "unit": "℃",
       "access_mode": "R",
       "data_type": "NUMBER",
       "value_type": "FLOAT",
@@ -2768,12 +2746,12 @@
       "bacnet_unit_type_id": 62,
       "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
       "reference": [
-        "auto_away_report.active_by_target_valve_state.state",
-        "auto_away_report.active_by_target_valve_state.target_valve_state"
+        "auto_away_report.active_by_target_valve_opening.state",
+        "auto_away_report.active_by_target_valve_opening.target_valve_opening"
       ]
     },
     {
-      "id": "auto_away_report.active_by_target_valve_state.target_valve_state",
+      "id": "auto_away_report.active_by_target_valve_opening.target_valve_opening",
       "name": "Energy Saving Valve Opening",
       "value": "",
       "unit": "%",
@@ -2788,8 +2766,8 @@
       "bacnet_unit_type_id": 98,
       "bacnet_unit_type": "UNITS_PERCENT",
       "reference": [
-        "auto_away_report.active_by_target_valve_state.state",
-        "auto_away_report.active_by_target_valve_state.environment_temperature"
+        "auto_away_report.active_by_target_valve_opening.state",
+        "auto_away_report.active_by_target_valve_opening.environment_temperature"
       ]
     },
     {
@@ -2821,7 +2799,7 @@
       "id": "window_opening_alarm.release.environment_temperature",
       "name": "Ambient Temperature",
       "value": "",
-      "unit": "°C",
+      "unit": "℃",
       "access_mode": "R",
       "data_type": "NUMBER",
       "value_type": "FLOAT",
@@ -2837,10 +2815,35 @@
       ]
     },
     {
+      "id": "window_opening_alarm.trigger.state",
+      "name": "Open Window Status",
+      "value": "",
+      "unit": "",
+      "access_mode": "R",
+      "data_type": "ENUM",
+      "value_type": "UINT8",
+      "values": [
+        {
+          "name": "Normal",
+          "value": 0
+        },
+        {
+          "name": "Open",
+          "value": 1
+        }
+      ],
+      "bacnet_type": "multistate_value_object",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS",
+      "reference": [
+        "window_opening_alarm.trigger.environment_temperature"
+      ]
+    },
+    {
       "id": "window_opening_alarm.trigger.environment_temperature",
       "name": "Ambient Temperature",
       "value": "",
-      "unit": "°C",
+      "unit": "℃",
       "access_mode": "R",
       "data_type": "NUMBER",
       "value_type": "FLOAT",
@@ -2851,7 +2854,325 @@
       "bacnet_type": "analog_input_object",
       "bacnet_unit_type_id": 62,
       "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
-      "reference": []
+      "reference": [
+        "window_opening_alarm.trigger.state"
+      ]
+    },
+    {
+      "id": "periodic_reporting.non_heating_season.target_valve_opening",
+      "name": "Target Valve Opening",
+      "value": "",
+      "unit": "%",
+      "access_mode": "R",
+      "data_type": "NUMBER",
+      "value_type": "UINT8",
+      "range": [
+        0,
+        100
+      ],
+      "bacnet_type": "analog_input_object",
+      "bacnet_unit_type_id": 98,
+      "bacnet_unit_type": "UNITS_PERCENT",
+      "reference": [
+        "periodic_reporting.non_heating_season.battery_level"
+      ]
+    },
+    {
+      "id": "periodic_reporting.non_heating_season.battery_level",
+      "name": "Battery",
+      "value": "",
+      "unit": "%",
+      "access_mode": "R",
+      "data_type": "NUMBER",
+      "value_type": "UINT8",
+      "range": [
+        0,
+        100
+      ],
+      "bacnet_type": "analog_input_object",
+      "bacnet_unit_type_id": 98,
+      "bacnet_unit_type": "UNITS_PERCENT",
+      "reference": [
+        "periodic_reporting.non_heating_season.target_valve_opening"
+      ]
+    },
+    {
+      "id": "periodic_reporting.target_temperature_for_heating.environment_temperature",
+      "name": "Ambient Temperature",
+      "value": "",
+      "unit": "℃",
+      "access_mode": "R",
+      "data_type": "NUMBER",
+      "value_type": "FLOAT",
+      "range": [
+        -20,
+        60
+      ],
+      "bacnet_type": "analog_input_object",
+      "bacnet_unit_type_id": 62,
+      "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
+      "reference": [
+        "periodic_reporting.target_temperature_for_heating.current_valve_opening",
+        "periodic_reporting.target_temperature_for_heating.target_valve_opening",
+        "periodic_reporting.target_temperature_for_heating.battery_level"
+      ]
+    },
+    {
+      "id": "periodic_reporting.target_temperature_for_heating.current_valve_opening",
+      "name": "Current Valve Opening",
+      "value": "",
+      "unit": "%",
+      "access_mode": "R",
+      "data_type": "NUMBER",
+      "value_type": "UINT8",
+      "range": [
+        0,
+        100
+      ],
+      "bacnet_type": "analog_input_object",
+      "bacnet_unit_type_id": 98,
+      "bacnet_unit_type": "UNITS_PERCENT",
+      "reference": [
+        "periodic_reporting.target_temperature_for_heating.environment_temperature",
+        "periodic_reporting.target_temperature_for_heating.target_valve_opening",
+        "periodic_reporting.target_temperature_for_heating.battery_level"
+      ]
+    },
+    {
+      "id": "periodic_reporting.target_temperature_for_heating.target_valve_opening",
+      "name": "Target Temperature",
+      "value": "",
+      "unit": "℃",
+      "access_mode": "R",
+      "data_type": "NUMBER",
+      "value_type": "FLOAT",
+      "range": [
+        5,
+        35
+      ],
+      "bacnet_type": "analog_input_object",
+      "bacnet_unit_type_id": 62,
+      "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
+      "reference": [
+        "periodic_reporting.target_temperature_for_heating.environment_temperature",
+        "periodic_reporting.target_temperature_for_heating.current_valve_opening",
+        "periodic_reporting.target_temperature_for_heating.battery_level"
+      ]
+    },
+    {
+      "id": "periodic_reporting.target_temperature_for_heating.battery_level",
+      "name": "Battery",
+      "value": "",
+      "unit": "%",
+      "access_mode": "R",
+      "data_type": "NUMBER",
+      "value_type": "UINT8",
+      "range": [
+        0,
+        100
+      ],
+      "bacnet_type": "analog_input_object",
+      "bacnet_unit_type_id": 98,
+      "bacnet_unit_type": "UNITS_PERCENT",
+      "reference": [
+        "periodic_reporting.target_temperature_for_heating.environment_temperature",
+        "periodic_reporting.target_temperature_for_heating.current_valve_opening",
+        "periodic_reporting.target_temperature_for_heating.target_valve_opening"
+      ]
+    },
+    {
+      "id": "periodic_reporting.target_valve_opening_for_heating.environment_temperature",
+      "name": "Ambient Temperature",
+      "value": "",
+      "unit": "℃",
+      "access_mode": "R",
+      "data_type": "NUMBER",
+      "value_type": "FLOAT",
+      "range": [
+        -20,
+        60
+      ],
+      "bacnet_type": "analog_input_object",
+      "bacnet_unit_type_id": 62,
+      "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
+      "reference": [
+        "periodic_reporting.target_valve_opening_for_heating.current_valve_opening",
+        "periodic_reporting.target_valve_opening_for_heating.target_valve_opening",
+        "periodic_reporting.target_valve_opening_for_heating.battery_level"
+      ]
+    },
+    {
+      "id": "periodic_reporting.target_valve_opening_for_heating.current_valve_opening",
+      "name": "Current Valve Opening",
+      "value": "",
+      "unit": "%",
+      "access_mode": "R",
+      "data_type": "NUMBER",
+      "value_type": "UINT8",
+      "range": [
+        0,
+        100
+      ],
+      "bacnet_type": "analog_input_object",
+      "bacnet_unit_type_id": 98,
+      "bacnet_unit_type": "UNITS_PERCENT",
+      "reference": [
+        "periodic_reporting.target_valve_opening_for_heating.environment_temperature",
+        "periodic_reporting.target_valve_opening_for_heating.target_valve_opening",
+        "periodic_reporting.target_valve_opening_for_heating.battery_level"
+      ]
+    },
+    {
+      "id": "periodic_reporting.target_valve_opening_for_heating.target_valve_opening",
+      "name": "Target Valve Opening",
+      "value": "",
+      "unit": "%",
+      "access_mode": "R",
+      "data_type": "NUMBER",
+      "value_type": "UINT8",
+      "range": [
+        0,
+        100
+      ],
+      "bacnet_type": "analog_input_object",
+      "bacnet_unit_type_id": 98,
+      "bacnet_unit_type": "UNITS_PERCENT",
+      "reference": [
+        "periodic_reporting.target_valve_opening_for_heating.environment_temperature",
+        "periodic_reporting.target_valve_opening_for_heating.current_valve_opening",
+        "periodic_reporting.target_valve_opening_for_heating.battery_level"
+      ]
+    },
+    {
+      "id": "periodic_reporting.target_valve_opening_for_heating.battery_level",
+      "name": "Battery",
+      "value": "",
+      "unit": "%",
+      "access_mode": "R",
+      "data_type": "NUMBER",
+      "value_type": "UINT8",
+      "range": [
+        0,
+        100
+      ],
+      "bacnet_type": "analog_input_object",
+      "bacnet_unit_type_id": 98,
+      "bacnet_unit_type": "UNITS_PERCENT",
+      "reference": [
+        "periodic_reporting.target_valve_opening_for_heating.environment_temperature",
+        "periodic_reporting.target_valve_opening_for_heating.current_valve_opening",
+        "periodic_reporting.target_valve_opening_for_heating.target_valve_opening"
+      ]
+    },
+    {
+      "id": "periodic_reporting.integrated_control_for_heating.environment_temperature",
+      "name": "Ambient Temperature",
+      "value": "",
+      "unit": "℃",
+      "access_mode": "R",
+      "data_type": "NUMBER",
+      "value_type": "FLOAT",
+      "range": [
+        -20,
+        60
+      ],
+      "bacnet_type": "analog_input_object",
+      "bacnet_unit_type_id": 62,
+      "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
+      "reference": [
+        "periodic_reporting.integrated_control_for_heating.current_valve_opening",
+        "periodic_reporting.integrated_control_for_heating.target_temperature",
+        "periodic_reporting.integrated_control_for_heating.target_valve_opening",
+        "periodic_reporting.integrated_control_for_heating.battery_level"
+      ]
+    },
+    {
+      "id": "periodic_reporting.integrated_control_for_heating.current_valve_opening",
+      "name": "Current Valve Opening",
+      "value": "",
+      "unit": "%",
+      "access_mode": "R",
+      "data_type": "NUMBER",
+      "value_type": "UINT8",
+      "range": [
+        0,
+        100
+      ],
+      "bacnet_type": "analog_input_object",
+      "bacnet_unit_type_id": 98,
+      "bacnet_unit_type": "UNITS_PERCENT",
+      "reference": [
+        "periodic_reporting.integrated_control_for_heating.environment_temperature",
+        "periodic_reporting.integrated_control_for_heating.target_temperature",
+        "periodic_reporting.integrated_control_for_heating.target_valve_opening",
+        "periodic_reporting.integrated_control_for_heating.battery_level"
+      ]
+    },
+    {
+      "id": "periodic_reporting.integrated_control_for_heating.target_temperature",
+      "name": "Target Temperature",
+      "value": "",
+      "unit": "℃",
+      "access_mode": "R",
+      "data_type": "NUMBER",
+      "value_type": "FLOAT",
+      "range": [
+        5,
+        35
+      ],
+      "bacnet_type": "analog_input_object",
+      "bacnet_unit_type_id": 62,
+      "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
+      "reference": [
+        "periodic_reporting.integrated_control_for_heating.environment_temperature",
+        "periodic_reporting.integrated_control_for_heating.current_valve_opening",
+        "periodic_reporting.integrated_control_for_heating.target_valve_opening",
+        "periodic_reporting.integrated_control_for_heating.battery_level"
+      ]
+    },
+    {
+      "id": "periodic_reporting.integrated_control_for_heating.target_valve_opening",
+      "name": "Target Valve Opening",
+      "value": "",
+      "unit": "%",
+      "access_mode": "R",
+      "data_type": "NUMBER",
+      "value_type": "UINT8",
+      "range": [
+        0,
+        100
+      ],
+      "bacnet_type": "analog_input_object",
+      "bacnet_unit_type_id": 98,
+      "bacnet_unit_type": "UNITS_PERCENT",
+      "reference": [
+        "periodic_reporting.integrated_control_for_heating.environment_temperature",
+        "periodic_reporting.integrated_control_for_heating.current_valve_opening",
+        "periodic_reporting.integrated_control_for_heating.target_temperature",
+        "periodic_reporting.integrated_control_for_heating.battery_level"
+      ]
+    },
+    {
+      "id": "periodic_reporting.integrated_control_for_heating.battery_level",
+      "name": "Battery",
+      "value": "",
+      "unit": "%",
+      "access_mode": "R",
+      "data_type": "NUMBER",
+      "value_type": "UINT8",
+      "range": [
+        0,
+        100
+      ],
+      "bacnet_type": "analog_input_object",
+      "bacnet_unit_type_id": 98,
+      "bacnet_unit_type": "UNITS_PERCENT",
+      "reference": [
+        "periodic_reporting.integrated_control_for_heating.environment_temperature",
+        "periodic_reporting.integrated_control_for_heating.current_valve_opening",
+        "periodic_reporting.integrated_control_for_heating.target_temperature",
+        "periodic_reporting.integrated_control_for_heating.target_valve_opening"
+      ]
     }
   ]
 }

@@ -33,9 +33,12 @@ function milesightDeviceDecode(bytes) {
 	for (counterObj.i = 0; counterObj.i < bytes.length; ) {
 		var command_id = bytes[counterObj.i++];
 		switch (command_id) {
+			case 0xff:
+				decoded.check_sequence_number_reply = decoded.check_sequence_number_reply || {};
+				decoded.check_sequence_number_reply.sequence_number = readUInt8(bytes, counterObj, 1);
+				break;
 			case 0xfe:
-				decoded.check_order_reply = decoded.check_order_reply || {};
-				decoded.check_order_reply.order = readUInt8(bytes, counterObj, 1);
+				decoded.check_order_reply = readOnlyCommand(bytes, counterObj, 1);
 				break;
 			case 0xef:
 				decoded.ans = decoded.ans || [];
@@ -48,14 +51,14 @@ function milesightDeviceDecode(bytes) {
 				decoded.ans.push(ans_item);
 				break;
 			case 0xee:
-				decoded.request_query_all_configurations = readOnlyCommand(bytes, counterObj, 0);
+				decoded.all_configurations_request_by_device = readOnlyCommand(bytes, counterObj, 0);
 				break;
 			case 0xcf:
 				decoded.lorawan_configuration_settings = decoded.lorawan_configuration_settings || {};
 				var lorawan_configuration_settings_command = readUInt8(bytes, counterObj, 1);
-				if (lorawan_configuration_settings_command == 0x00) {
-					// 0:ClassA, 1:ClassB, 2:ClassC, 3:ClassC to B
-					decoded.lorawan_configuration_settings.mode = readUInt8(bytes, counterObj, 1);
+				if (lorawan_configuration_settings_command == 0xd8) {
+					// 1：1.0.2, 2：1.0.3, 3：1.0.3, 4：1.0.4
+					decoded.lorawan_configuration_settings.version = readUInt8(bytes, counterObj, 1);
 				}
 				break;
 			case 0xdf:
@@ -201,21 +204,21 @@ function milesightDeviceDecode(bytes) {
 					decoded.auto_away_report.active_by_target_temperature.target_temperature = readInt16LE(bytes, counterObj, 2) / 100;
 				}
 				if (decoded.auto_away_report.event_type == 0x22) {
-					decoded.auto_away_report.inactive_by_target_valve_state = decoded.auto_away_report.inactive_by_target_valve_state || {};
+					decoded.auto_away_report.inactive_by_target_valve_opening = decoded.auto_away_report.inactive_by_target_valve_opening || {};
 					// 0：Unoccupied, 1：Occupied
-					decoded.auto_away_report.inactive_by_target_valve_state.state = readUInt8(bytes, counterObj, 1);
-					decoded.auto_away_report.inactive_by_target_valve_state.environment_temperature = readInt16LE(bytes, counterObj, 2) / 100;
-					decoded.temperature = decoded.auto_away_report.inactive_by_target_valve_state.environment_temperature;
-					decoded.auto_away_report.inactive_by_target_valve_state.target_valve_state = readUInt8(bytes, counterObj, 1);
-					decoded.target_valve_opening_degree = decoded.auto_away_report.inactive_by_target_valve_state.target_valve_state;
+					decoded.auto_away_report.inactive_by_target_valve_opening.state = readUInt8(bytes, counterObj, 1);
+					decoded.auto_away_report.inactive_by_target_valve_opening.environment_temperature = readInt16LE(bytes, counterObj, 2) / 100;
+					decoded.temperature = decoded.auto_away_report.inactive_by_target_valve_opening.environment_temperature;
+					decoded.auto_away_report.inactive_by_target_valve_opening.target_valve_opening = readUInt8(bytes, counterObj, 1);
+					decoded.target_valve_opening_degree = decoded.auto_away_report.inactive_by_target_valve_opening.target_valve_opening;
 				}
 				if (decoded.auto_away_report.event_type == 0x23) {
-					decoded.auto_away_report.active_by_target_valve_state = decoded.auto_away_report.active_by_target_valve_state || {};
+					decoded.auto_away_report.active_by_target_valve_opening = decoded.auto_away_report.active_by_target_valve_opening || {};
 					// 0：Unoccupied, 1：Occupied
-					decoded.auto_away_report.active_by_target_valve_state.state = readUInt8(bytes, counterObj, 1);
-					decoded.auto_away_report.active_by_target_valve_state.environment_temperature = readInt16LE(bytes, counterObj, 2) / 100;
-					decoded.temperature = decoded.auto_away_report.active_by_target_valve_state.environment_temperature;
-					decoded.auto_away_report.active_by_target_valve_state.target_valve_state = readUInt8(bytes, counterObj, 1);
+					decoded.auto_away_report.active_by_target_valve_opening.state = readUInt8(bytes, counterObj, 1);
+					decoded.auto_away_report.active_by_target_valve_opening.environment_temperature = readInt16LE(bytes, counterObj, 2) / 100;
+					decoded.temperature = decoded.auto_away_report.active_by_target_valve_opening.environment_temperature;
+					decoded.auto_away_report.active_by_target_valve_opening.target_valve_opening = readUInt8(bytes, counterObj, 1);
 				}
 				break;
 			case 0x0d:
@@ -236,30 +239,80 @@ function milesightDeviceDecode(bytes) {
 					// decoded.temperature = decoded.window_opening_alarm.trigger.environment_temperature;
 				}
 				break;
+			case 0x0e:
+				decoded.periodic_reporting = decoded.periodic_reporting || {};
+				decoded.periodic_reporting.report_type = readUInt8(bytes, counterObj, 1);
+				if (decoded.periodic_reporting.report_type == 0x00) {
+					decoded.periodic_reporting.non_heating_season = decoded.periodic_reporting.non_heating_season || {};
+					decoded.periodic_reporting.non_heating_season.target_valve_opening = readUInt8(bytes, counterObj, 1);
+					decoded.target_valve_opening_degree = decoded.periodic_reporting.non_heating_season.target_valve_opening;
+					decoded.periodic_reporting.non_heating_season.battery_level = readUInt8(bytes, counterObj, 1);
+					decoded.battery = decoded.periodic_reporting.non_heating_season.battery_level;
+				}
+				if (decoded.periodic_reporting.report_type == 0x01) {
+					decoded.periodic_reporting.target_temperature_for_heating = decoded.periodic_reporting.target_temperature_for_heating || {};
+					decoded.periodic_reporting.target_temperature_for_heating.environment_temperature = readInt16LE(bytes, counterObj, 2) / 100;
+					decoded.temperature = decoded.periodic_reporting.target_temperature_for_heating.environment_temperature;
+					decoded.periodic_reporting.target_temperature_for_heating.current_valve_opening = readUInt8(bytes, counterObj, 1);
+					decoded.valve_opening_degree = decoded.periodic_reporting.target_temperature_for_heating.current_valve_opening;
+					decoded.periodic_reporting.target_temperature_for_heating.target_valve_opening = readInt16LE(bytes, counterObj, 2) / 100;
+					decoded.target_temperature = decoded.periodic_reporting.target_temperature_for_heating.target_valve_opening;
+					decoded.periodic_reporting.target_temperature_for_heating.battery_level = readUInt8(bytes, counterObj, 1);
+					decoded.battery = decoded.periodic_reporting.target_temperature_for_heating.battery_level;
+				}
+				if (decoded.periodic_reporting.report_type == 0x02) {
+					decoded.periodic_reporting.target_valve_opening_for_heating = decoded.periodic_reporting.target_valve_opening_for_heating || {};
+					decoded.periodic_reporting.target_valve_opening_for_heating.environment_temperature = readInt16LE(bytes, counterObj, 2) / 100;
+					decoded.temperature = decoded.periodic_reporting.target_valve_opening_for_heating.environment_temperature;
+					decoded.periodic_reporting.target_valve_opening_for_heating.current_valve_opening = readUInt8(bytes, counterObj, 1);
+					decoded.valve_opening_degree = decoded.periodic_reporting.target_valve_opening_for_heating.current_valve_opening;
+					decoded.periodic_reporting.target_valve_opening_for_heating.target_valve_opening = readUInt8(bytes, counterObj, 1);
+					decoded.target_valve_opening_degree = decoded.periodic_reporting.target_valve_opening_for_heating.target_valve_opening;
+					decoded.periodic_reporting.target_valve_opening_for_heating.battery_level = readUInt8(bytes, counterObj, 1);
+					decoded.battery = decoded.periodic_reporting.target_valve_opening_for_heating.battery_level;
+				}
+				if (decoded.periodic_reporting.report_type == 0x03) {
+					decoded.periodic_reporting.integrated_control_for_heating = decoded.periodic_reporting.integrated_control_for_heating || {};
+					decoded.periodic_reporting.integrated_control_for_heating.environment_temperature = readInt16LE(bytes, counterObj, 2) / 100;
+					decoded.temperature = decoded.periodic_reporting.integrated_control_for_heating.environment_temperature;
+					decoded.periodic_reporting.integrated_control_for_heating.current_valve_opening = readUInt8(bytes, counterObj, 1);
+					decoded.valve_opening_degree = decoded.periodic_reporting.integrated_control_for_heating.current_valve_opening;
+					decoded.periodic_reporting.integrated_control_for_heating.target_temperature = readInt16LE(bytes, counterObj, 2) / 100;
+					decoded.target_temperature = decoded.periodic_reporting.integrated_control_for_heating.target_temperature;
+					decoded.periodic_reporting.integrated_control_for_heating.target_valve_opening = readUInt8(bytes, counterObj, 1);
+					decoded.target_valve_opening_degree = decoded.periodic_reporting.integrated_control_for_heating.target_valve_opening;
+					decoded.periodic_reporting.integrated_control_for_heating.battery_level = readUInt8(bytes, counterObj, 1);
+					decoded.battery = decoded.periodic_reporting.integrated_control_for_heating.battery_level;
+				}
+				break;
+			case 0xc4:
+				// 0：Disable, 1：Enable
+				decoded.auto_p_enable = readUInt8(bytes, counterObj, 1);
+				break;
 			case 0x60:
 				// 0：℃, 1：℉
 				decoded.temperature_unit = readUInt8(bytes, counterObj, 1);
 				break;
 			case 0x61:
 				decoded.temperature_source_settings = decoded.temperature_source_settings || {};
-				// 0：Embedded NTC, 1：External NTC, 2：LoRa Receive
+				// 0：Internal NTC, 1：External NTC, 2：LoRa Receive
 				decoded.temperature_source_settings.type = readUInt8(bytes, counterObj, 1);
 				if (decoded.temperature_source_settings.type == 0x01) {
 					decoded.temperature_source_settings.external_ntc_reception = decoded.temperature_source_settings.external_ntc_reception || {};
 					decoded.temperature_source_settings.external_ntc_reception.timeout = readUInt16LE(bytes, counterObj, 2);
-					// 0: Maintaining State Control, 1: Close the Valve, 2: Switch to Embedded NTC Control
+					// 0: Maintaining State Control, 1: Close the Valve, 2: Switch to Internal NTC Control
 					decoded.temperature_source_settings.external_ntc_reception.timeout_response = readUInt8(bytes, counterObj, 1);
 				}
 				if (decoded.temperature_source_settings.type == 0x02) {
 					decoded.temperature_source_settings.lorawan_reception = decoded.temperature_source_settings.lorawan_reception || {};
 					decoded.temperature_source_settings.lorawan_reception.timeout = readUInt16LE(bytes, counterObj, 2);
-					// 0: Maintaining State Control, 1: Close the Valve, 2: Switch to Embedded NTC Control
+					// 0: Maintaining State Control, 1: Close the Valve, 2: Switch to Internal NTC Control
 					decoded.temperature_source_settings.lorawan_reception.timeout_response = readUInt8(bytes, counterObj, 1);
 				}
 				break;
 			case 0x62:
 				// 0：Disable, 1：Enable
-				decoded.env_temperature_display_enable = readUInt8(bytes, counterObj, 1);
+				decoded.environment_temperature_display_enable = readUInt8(bytes, counterObj, 1);
 				break;
 			case 0x63:
 				decoded.heating_period_settings = decoded.heating_period_settings || {};
@@ -275,9 +328,6 @@ function milesightDeviceDecode(bytes) {
 					decoded.heating_period_settings.heating_period_reporting_interval = decoded.heating_period_settings.heating_period_reporting_interval || {};
 					// 0：second, 1：min
 					decoded.heating_period_settings.heating_period_reporting_interval.unit = readUInt8(bytes, counterObj, 1);
-					if (decoded.heating_period_settings.heating_period_reporting_interval.unit < 0x00 || decoded.heating_period_settings.heating_period_reporting_interval.unit > 0x01) {
-						throw new Error('heating_period_settings.heating_period_reporting_interval.unit must be between 0 and 1');
-					}
 					if (decoded.heating_period_settings.heating_period_reporting_interval.unit == 0x00) {
 						decoded.heating_period_settings.heating_period_reporting_interval.seconds_of_time = readUInt16LE(bytes, counterObj, 2);
 					}
@@ -289,9 +339,6 @@ function milesightDeviceDecode(bytes) {
 					decoded.heating_period_settings.non_heating_period_reporting_interval = decoded.heating_period_settings.non_heating_period_reporting_interval || {};
 					// 0：second, 1：min
 					decoded.heating_period_settings.non_heating_period_reporting_interval.unit = readUInt8(bytes, counterObj, 1);
-					if (decoded.heating_period_settings.non_heating_period_reporting_interval.unit < 0x00 || decoded.heating_period_settings.non_heating_period_reporting_interval.unit > 0x01) {
-						throw new Error('heating_period_settings.non_heating_period_reporting_interval.unit must be between 0 and 1');
-					}
 					if (decoded.heating_period_settings.non_heating_period_reporting_interval.unit == 0x00) {
 						decoded.heating_period_settings.non_heating_period_reporting_interval.seconds_of_time = readUInt16LE(bytes, counterObj, 2);
 					}
@@ -300,7 +347,7 @@ function milesightDeviceDecode(bytes) {
 					}
 				}
 				if (heating_period_settings_command == 0x03) {
-					// 0：Completely Close, 1：Completely Open
+					// 0：Fully Close, 1：Fully Open
 					decoded.heating_period_settings.valve_status_control = readUInt8(bytes, counterObj, 1);
 				}
 				break;
@@ -329,7 +376,7 @@ function milesightDeviceDecode(bytes) {
 				}
 				if (target_temperature_control_settings_command == 0x06) {
 					decoded.target_temperature_control_settings.mode_settings = decoded.target_temperature_control_settings.mode_settings || {};
-					// 0：Automatic Temperature Control, 1：Valve Opening Control, 2：Comprehensive Control
+					// 0：Automatic Temperature Control, 1：Valve Opening Control, 2：Integrated Control
 					decoded.target_temperature_control_settings.mode_settings.mode = readUInt8(bytes, counterObj, 1);
 					if (decoded.target_temperature_control_settings.mode_settings.mode == 0x00) {
 						decoded.target_temperature_control_settings.mode_settings.auto_control = decoded.target_temperature_control_settings.mode_settings.auto_control || {};
@@ -350,7 +397,7 @@ function milesightDeviceDecode(bytes) {
 				// 0：Disable, 1：Enable
 				decoded.window_opening_detection_settings.enable = readUInt8(bytes, counterObj, 1);
 				decoded.window_opening_detection_settings.cooling_rate = readInt16LE(bytes, counterObj, 2) / 100;
-				// 0：Stay the Same, 1：Close the Valve
+				// 0：Remains Unchanged, 1：Close the Valve
 				decoded.window_opening_detection_settings.valve_status = readUInt8(bytes, counterObj, 1);
 				decoded.window_opening_detection_settings.stop_temperature_control_time = readUInt16LE(bytes, counterObj, 2);
 				break;
@@ -459,7 +506,7 @@ function milesightDeviceDecode(bytes) {
 					schedule_settings_item.cycle_settings.reserved = extractBits(bitOptions, 7, 8);
 				}
 				if (schedule_settings_item_command == 0x03) {
-					// 0：Automatic Temperature Control, 1：Valve Opening Control, 2：Comprehensive Control
+					// 0：Automatic Temperature Control, 1：Valve Opening Control, 2：Integrated Control
 					schedule_settings_item.temperature_control_mode = readUInt8(bytes, counterObj, 1);
 				}
 				if (schedule_settings_item_command == 0x04) {
@@ -542,6 +589,9 @@ function milesightDeviceDecode(bytes) {
 			case 0xb7:
 				decoded.set_time = decoded.set_time || {};
 				decoded.set_time.timestamp = readUInt32LE(bytes, counterObj, 4);
+				break;
+			case 0xb5:
+				decoded.collect_data = readOnlyCommand(bytes, counterObj, 0);
 				break;
 			case 0xbd:
 				decoded.clear_historical_data = readOnlyCommand(bytes, counterObj, 0);
@@ -802,7 +852,7 @@ function cmdMap() {
 		  "59": "set_target_valve_opening_degree",
 		  "60": "temperature_unit",
 		  "61": "temperature_source_settings",
-		  "62": "env_temperature_display_enable",
+		  "62": "environment_temperature_display_enable",
 		  "63": "heating_period_settings",
 		  "65": "target_temperature_control_settings",
 		  "66": "window_opening_detection_settings",
@@ -820,11 +870,12 @@ function cmdMap() {
 		  "6504": "target_temperature_control_settings.target_temperature_adjustment_range_min",
 		  "6505": "target_temperature_control_settings.target_temperature_adjustment_range_max",
 		  "6506": "target_temperature_control_settings.mode_settings",
+		  "ff": "request_check_sequence_number",
 		  "fe": "request_check_order",
 		  "ef": "request_command_queries",
 		  "ee": "request_query_all_configurations",
 		  "cf": "lorawan_configuration_settings",
-		  "cf00": "lorawan_configuration_settings.mode",
+		  "cfd8": "lorawan_configuration_settings.version",
 		  "df": "tsl_version",
 		  "de": "product_name",
 		  "dd": "product_pn",
@@ -847,6 +898,9 @@ function cmdMap() {
 		  "0b": "mandatory_heating_alarm",
 		  "0c": "auto_away_report",
 		  "0d": "window_opening_alarm",
+		  "0e": "periodic_reporting",
+		  "c9": "random_key",
+		  "c4": "auto_p_enable",
 		  "6a": "child_lock",
 		  "6b": "motor_stroke_limit",
 		  "6c": "temperature_calibration_settings",
@@ -864,6 +918,7 @@ function cmdMap() {
 		  "b9": "query_device_status",
 		  "b8": "synchronize_time",
 		  "b7": "set_time",
+		  "b5": "collect_data",
 		  "bd": "clear_historical_data",
 		  "bc": "stop_historical_data_retrieval",
 		  "bb": "retrieve_historical_data_by_time_range",

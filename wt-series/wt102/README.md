@@ -12,7 +12,7 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | :------ | :--: | :----: | :--------: | :-----: | :---: | :--: |
 | LoRaWAN  Settings | 0xCF | 1 | rw |  |  |  |
 | LoRaWAN Comand | 0xCF | 2 | rw |  |  |  |
-| LoRaWAN Work Mode | 0xCF | 2 | rw | 0 |  | 0:ClassA<br>1:ClassB<br>2:ClassC<br>3:ClassC to B |
+| LoRaWAN Version | 0xCF | 2 | rw | 2 |  | 1：1.0.2<br>2：1.0.3<br>3：1.0.3<br>4：1.0.4 |
 | TSL Version | 0xDF | 3 | r |  |  |  |
 | Product Name | 0xDE | 33 | rw |  |  |  |
 | PN | 0xDD | 33 | rw |  |  |  |
@@ -25,20 +25,22 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Product Region | 0xD8 | 17 | r |  |  |  |
 | Battery | 0x00 | 2 | r |  | 0 - 100 |  |
 | Temperature | 0x01 | 3 | r |  | -20 - 60 |  |
-| Motor Stroke | 0x02 | 3 | r |  | 0 - 650 |  |
-| Motor Position | 0x03 | 3 | r |  | 0 - 650 |  |
+| Motor Stroke | 0x02 | 3 | r |  | 0 - 3028 |  |
+| Motor Position | 0x03 | 3 | r |  | 0 - 3028 |  |
 | Valve Opening | 0x04 | 2 | r |  | 0 - 100 |  |
 | Target Temperature | 0x06 | 3 | r |  | -20 - 60 |  |
 | Target Valve Opening | 0x07 | 2 | r |  | 0 - 100 |  |
+| Random key | 0xC9 | 2 | rw | 0 |  | 0：Disable<br>1：Enable |
+| Auto-P | 0xC4 | 2 | rw | 1 |  | 0：Disable<br>1：Enable |
 | Temperature Unit | 0x60 | 2 | rw | 0 |  | 0：℃<br>1：℉ |
-| Temperature Source Setting | 0x61 | 1 | rw |  |  |  |
-| Temperature Source | 0x61 | 2 | rw | 0 |  | 0：Embedded NTC<br>1：External NTC<br>2：LoRa Receive |
+| Ambient Temperature Source Setting | 0x61 | 1 | rw |  |  |  |
+| Ambient Temperature Source | 0x61 | 2 | rw | 0 |  | 0：Internal NTC<br>1：External NTC<br>2：LoRa Receive |
 | External NTC Receive Temperature | 0x61 | 4 | rw |  |  |  |
 | Timeout | 0x61 | 3 | rw | 30 | 1 - 1440 |  |
-| External NTC Dropout Settings | 0x61 | 2 | rw | 2 |  | 0: Maintaining State Control<br>1: Close the Valve<br>2: Switch to Embedded NTC Control |
+| External NTC Dropout Settings | 0x61 | 2 | rw | 2 |  | 0: Maintaining State Control<br>1: Close the Valve<br>2: Switch to Internal NTC Control |
 | LoRa Receive Temperature | 0x61 | 4 | rw |  |  |  |
 | Timeout | 0x61 | 3 | rw | 30 | 1 - 1440 |  |
-| LoRa Receive Dropout Settings | 0x61 | 2 | rw | 2 |  | 0: Maintaining State Control<br>1: Close the Valve<br>2: Switch to Embedded NTC Control |
+| LoRa Receive Dropout Settings | 0x61 | 2 | rw | 2 |  | 0: Maintaining State Control<br>1: Close the Valve<br>2: Switch to Internal NTC Control |
 | Ambient Temperature Display Enable | 0x62 | 2 | rw | 1 |  | 0：Disable<br>1：Enable |
 | Heating Period Configuration | 0x63 | 1 | rw |  |  |  |
 | Sub-command | 0x63 | 2 | rw | 0 |  |  |
@@ -55,7 +57,7 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Non-heating Period Reporting Interval Unit | 0x63 | 2 | rw | 1 |  | 0：second<br>1：min |
 | Non-heating Period Reporting Interval | 0x63 | 3 | rw | 64800 | 10 - 64800 |  |
 | Non-heating Period Reporting Interval | 0x63 | 3 | rw | 1440 | 1 - 1440 |  |
-| Non-heating Period Valve Status | 0x63 | 2 | rw | 1 |  | 0：Completely Close<br>1：Completely Open |
+| Non-heating Period Valve Status | 0x63 | 2 | rw | 1 |  | 0：Fully Close<br>1：Fully Open |
 | Temperature Control | 0x65 | 1 | rw |  |  |  |
 | Sub-command | 0x65 | 2 | rw | 0 |  |  |
 | Temperature Control Enable | 0x65 | 2 | rw | 1 |  | 0：Disable<br>1：Enable |
@@ -65,17 +67,17 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Minimum of Target Temperature Adjustment Range | 0x65 | 3 | rw | 5 | 5 - 35 |  |
 | Maximum of Target Temperature Adjustment Range | 0x65 | 3 | rw | 35 | 5 - 35 |  |
 | Temperature Control Mode Settings | 0x65 | 1 | rw |  |  |  |
-| Temperature Control Mode | 0x65 | 2 | rw | 0 |  | 0：Automatic Temperature Control<br>1：Valve Opening Control<br>2：Comprehensive Control |
+| Temperature Control Mode | 0x65 | 2 | rw | 0 |  | 0：Automatic Temperature Control<br>1：Valve Opening Control<br>2：Integrated Control |
 | Automatic Temperature Control | 0x65 | 3 | rw |  |  |  |
 | Target Temperature | 0x65 | 3 | rw | 19 | 5 - 35 |  |
 | Valve Opening Control | 0x65 | 2 | rw |  |  |  |
 | Target Valve Opening | 0x65 | 2 | rw | 50 | 0 - 100 |  |
-| Comprehensive Control | 0x65 | 3 | rw |  |  |  |
+| Integrated Control | 0x65 | 3 | rw |  |  |  |
 | Target Temperature | 0x65 | 3 | rw | 19 | 5 - 35 |  |
 | Open Window Detection | 0x66 | 7 | rw |  |  |  |
 | Enable | 0x66 | 2 | rw | 0 |  | 0：Disable<br>1：Enable |
 | Rate of Temperature Fall | 0x66 | 3 | rw | 3 | 2 - 10 |  |
-| Open Window Valve Status | 0x66 | 2 | rw | 0 |  | 0：Stay the Same<br>1：Close the Valve |
+| Open Window Valve Status | 0x66 | 2 | rw | 0 |  | 0：Remains Unchanged<br>1：Close the Valve |
 | Stop Temperature Control | 0x66 | 3 | rw | 30 | 1 - 1440 |  |
 | Auto-Away | 0x67 | 1 | rw |  |  |  |
 | Enable | 0x67 | 2 | rw | 0 |  | 0：Disable<br>1：Enable |
@@ -102,7 +104,7 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Power On/Off | 0x6A | 2 | rw | 0 |  | 0：Disable<br>1：Enable |
 | + /- | 0x6A | 2 | rw | 0 |  | 0：Disable<br>1：Enable |
 | Reserved | 0x6A | 2 | rw |  |  |  |
-| Motor Stroke Limit | 0x6B | 2 | rw | 100 | 0 - 100 |  |
+| Effective Stroke | 0x6B | 2 | rw | 100 | 0 - 100 |  |
 | Temperature Calibration Settings | 0x6C | 4 | rw |  |  |  |
 | Enable | 0x6C | 2 | rw | 0 |  | 0：Disable<br>1：Enable |
 | Calibration Value | 0x6C | 3 | rw | 0 | -60 - 60 |  |
@@ -117,7 +119,7 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Sub-command | 0x6E | 2 | rw | 0 |  |  |
 | Schedule Enable | 0x6E | 2 | rw | 0 |  | 0：Disable<br>1：Enable |
 | Time | 0x6E | 3 | rw | 0 |  |  |
-| Cycle | 0x6E | 2 | rw |  |  |  |
+| Schedule Repeat Day | 0x6E | 2 | rw |  |  |  |
 | Sun. | 0x6E | 2 | rw | 0 |  | 0：Disable<br>1：Enable |
 | Mon. | 0x6E | 2 | rw | 0 |  | 0：Disable<br>1：Enable |
 | Tues. | 0x6E | 2 | rw | 0 |  | 0：Disable<br>1：Enable |
@@ -126,12 +128,12 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Fri. | 0x6E | 2 | rw | 0 |  | 0：Disable<br>1：Enable |
 | Sat. | 0x6E | 2 | rw | 0 |  | 0：Disable<br>1：Enable |
 | Reserved | 0x6E | 2 | rw |  |  |  |
-| Temperature Control Mode | 0x6E | 2 | rw | 0 |  | 0：Automatic Temperature Control<br>1：Valve Opening Control<br>2：Comprehensive Control |
+| Temperature Control Mode | 0x6E | 2 | rw | 0 |  | 0：Automatic Temperature Control<br>1：Valve Opening Control<br>2：Integrated Control |
 | Target Temperature | 0x6E | 3 | rw | 19 | 5 - 35 |  |
 | Target Valve Opening | 0x6E | 2 | rw | 50 | 0 - 100 |  |
 | Preheating Enable | 0x6E | 2 | rw | 0 |  | 0：Disable<br>1：Enable |
 | Preheating Mode | 0x6E | 2 | rw | 0 |  | 0：Auto<br>1：Manual |
-| Manual Pre-heating Time | 0x6E | 3 | rw | 10 | 1 - 1440 |  |
+| Manual Preheating Time | 0x6E | 3 | rw | 10 | 1 - 1440 |  |
 | Reporting Interval | 0x6E | 3 | rw | 10 | 1 - 1440 |  |
 | Local Modification Report | 0x6F | 2 | rw | 0 |  | 0：Disable<br>1：Enable |
 | Time Zone | 0xC7 | 3 | rw | 0 |  | -720：UTC-12(IDLW)<br>-660：UTC-11(SST)<br>-600：UTC-10(HST)<br>-570：UTC-9:30(MIT)<br>-540：UTC-9(AKST)<br>-480：UTC-8(PST)<br>-420：UTC-7(MST)<br>-360：UTC-6(CST)<br>-300：UTC-5(EST)<br>-240：UTC-4(AST)<br>-210：UTC-3:30(NST)<br>-180：UTC-3(BRT)<br>-120：UTC-2(FNT)<br>-60：UTC-1(CVT)<br>0：UTC(WET)<br>60：UTC+1(CET)<br>120：UTC+2(EET)<br>180：UTC+3(MSK)<br>210：UTC+3:30(IRST)<br>240：UTC+4(GST)<br>270：UTC+4:30(AFT)<br>300：UTC+5(PKT)<br>330：UTC+5:30(IST)<br>345：UTC+5:45(NPT)<br>360：UTC+6(BHT)<br>390：UTC+6:30(MMT)<br>420：UTC+7(ICT)<br>480：UTC+8(CT/CST)<br>540：UTC+9(JST)<br>570：UTC+9:30(ACST)<br>600：UTC+10(AEST)<br>630：UTC+10:30(LHST)<br>660：UTC+11(VUT)<br>720：UTC+12(NZST)<br>765：UTC+12:45(CHAST)<br>780：UTC+13(PHOT)<br>840：UTC+14(LINT) |
@@ -157,8 +159,10 @@ For more detailed information, please visit [Milesight Official Website](https:/
 
 | CHANNEL |  ID  | LENGTH | READ/WRITE | DEFAULT | RANGE | ENUM |
 | :------ | :--: | :----: | :--------: | :-----: | :---: | :--: |
+| Sequence Number Check Response | 0xFF | 2 | r |  |  |  |
 | Order Check Response | 0xFE | 2 | r |  |  |  |
 | Command Response | 0xEF | 1 | r |  |  |  |
+| Request to Push All Configurations | 0xEE | 1 | r |  |  |  |
 | Motor Calibration Result | 0x05 | 2 | r |  |  |  |
 | Battery Low Alarm | 0x08 | 2 | r |  |  |  |
 | Temperature  Alarm | 0x09 | 1 | r |  |  |  |
@@ -166,14 +170,17 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Forced Heating Alarm | 0x0B | 1 | r |  |  |  |
 | Auto-Away | 0x0C | 1 | r |  |  |  |
 | Open Window Alarm | 0x0D | 1 | r |  |  |  |
+| Periodic Reporting | 0x0E | 1 | r |  |  |  |
 
 ### Service
 
 | CHANNEL |  ID  | LENGTH | READ/WRITE | DEFAULT | RANGE | ENUM |
 | :------ | :--: | :----: | :--------: | :-----: | :---: | :--: |
+| Sequence Number Check | 0xFF | 2 | w |  |  |  |
+| Sequence Number | 0xFF | 2 | w | 0 | 0 - 255 |  |
+| Sequence Number | 0xFF | 2 | r | 0 | 0 - 255 |  |
 | Order Check | 0xFE | 2 | w |  |  |  |
 | Order | 0xFE | 2 | w | 0 | 0 - 255 |  |
-| Order | 0xFE | 2 | r | 0 | 0 - 255 |  |
 | Command Queries | 0xEF | 1 | w |  |  |  |
 | Query Information | 0xEF | 2 | w |  |  |  |
 | Command Length | 0xEF | 2 | w | 1 | 1 - 15 |  |
@@ -211,19 +218,19 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Battery | 0x0B | 2 | r |  | 0 - 100 |  |
 | Event Type | 0x0C | 2 | r |  |  |  |
 | Auto-Away Exit | 0x0C | 6 | r |  |  |  |
-| occupancy status | 0x0C | 2 | r |  |  | 0：Unoccupied<br>1：Occupied |
+| Occupancy status | 0x0C | 2 | r |  |  | 0：Unoccupied<br>1：Occupied |
 | Ambient Temperature | 0x0C | 3 | r |  | -20 - 60 |  |
 | Target Temperature | 0x0C | 3 | r |  | 5 - 35 |  |
 | Auto-Away Trigger | 0x0C | 6 | r |  |  |  |
-| occupancy status | 0x0C | 2 | r |  |  | 0：Unoccupied<br>1：Occupied |
+| Occupancy status | 0x0C | 2 | r |  |  | 0：Unoccupied<br>1：Occupied |
 | Ambient Temperature | 0x0C | 3 | r |  | -20 - 60 |  |
 | Energy Saving Temperature | 0x0C | 3 | r |  | 5 - 35 |  |
 | Auto-Away Exit | 0x0C | 5 | r |  |  |  |
-| occupancy status | 0x0C | 2 | r |  |  | 0：Unoccupied<br>1：Occupied |
+| Occupancy status | 0x0C | 2 | r |  |  | 0：Unoccupied<br>1：Occupied |
 | Ambient Temperature | 0x0C | 3 | r |  | -20 - 60 |  |
 | Target Valve Opening | 0x0C | 2 | r |  | 0 - 100 |  |
 | Auto-Away Trigger | 0x0C | 4 | r |  |  |  |
-| occupancy status | 0x0C | 2 | r |  |  | 0：Unoccupied<br>1：Occupied |
+| Occupancy status | 0x0C | 2 | r |  |  | 0：Unoccupied<br>1：Occupied |
 | Ambient Temperature | 0x0C | 3 | r |  | -20 - 60 |  |
 | Energy Saving Valve Opening | 0x0C | 2 | r |  | 0 - 100 |  |
 | Alarm Type | 0x0D | 2 | r |  |  |  |
@@ -233,13 +240,39 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Open Window Trigger | 0x0D | 4 | r |  |  |  |
 | Open Window Status | 0x0D | 2 | r |  |  | 0：Normal<br>1：Open |
 | Ambient Temperature | 0x0D | 3 | r |  | -20 - 60 |  |
+| Reporting Type | 0x0E | 2 | r |  |  |  |
+| Non-heating Period Reporting | 0x0E | 3 | r |  |  |  |
+| Target Valve Opening | 0x0E | 2 | r |  | 0 - 100 |  |
+| Battery | 0x0E | 2 | r |  | 0 - 100 |  |
+| Heating Period Temperature Control Reporting | 0x0E | 7 | r |  |  |  |
+| Ambient Temperature | 0x0E | 3 | r |  | -20 - 60 |  |
+| Current Valve Opening | 0x0E | 2 | r |  | 0 - 100 |  |
+| Target Temperature | 0x0E | 3 | r |  | 5 - 35 |  |
+| Battery | 0x0E | 2 | r |  | 0 - 100 |  |
+| Heating Period Valve Opening Control Reporting | 0x0E | 6 | r |  |  |  |
+| Ambient Temperature | 0x0E | 3 | r |  | -20 - 60 |  |
+| Current Valve Opening | 0x0E | 2 | r |  | 0 - 100 |  |
+| Target Valve Opening | 0x0E | 2 | r |  | 0 - 100 |  |
+| Battery | 0x0E | 2 | r |  | 0 - 100 |  |
+| Heating Period Integrated Control Reporting | 0x0E | 8 | r |  |  |  |
+| Ambient Temperature | 0x0E | 3 | r |  | -20 - 60 |  |
+| Current Valve Opening | 0x0E | 2 | r |  | 0 - 100 |  |
+| Target Temperature | 0x0E | 3 | r |  | 5 - 35 |  |
+| Target Valve Opening | 0x0E | 2 | r |  | 0 - 100 |  |
+| Battery | 0x0E | 2 | r |  | 0 - 100 |  |
 | Network Reconnection | 0xB6 | 1 | w |  |  |  |
 | Device Status Query | 0xB9 | 1 | w |  |  |  |
 | Time Synchronize | 0xB8 | 1 | w |  |  |  |
 | Time Synchronize | 0xB7 | 5 | w |  |  |  |
 | Timestamp | 0xB7 | 5 | w |  |  |  |
+| Data Colloction | 0xB5 | 1 | w |  |  |  |
 | Clear Data | 0xBD | 1 | w |  |  |  |
 | Stop Retrieval | 0xBC | 1 | w |  |  |  |
+| Retrieval(Periods of Time) | 0xBB | 9 | w |  |  |  |
+| Start Time | 0xBB | 5 | w |  |  |  |
+| End Time | 0xBB | 5 | w |  |  |  |
+| Retrieval(Point-in-Time) | 0xBA | 5 | w |  |  |  |
+| Time Point | 0xBA | 5 | w |  |  |  |
 | Motor Stroke And Position Query | 0x57 | 1 | w |  |  |  |
 | Calibrate Motor | 0x58 | 1 | w |  |  |  |
 | Target Valve Opening Setting | 0x59 | 2 | w |  |  |  |
