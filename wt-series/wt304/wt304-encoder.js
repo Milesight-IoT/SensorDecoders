@@ -183,9 +183,7 @@ function milesightDeviceEncode(payload) {
 		var bitOptions = 0;
 		// 0：Ventilation, 1：Heat, 2：Cool
 		bitOptions |= payload.temperature_control_info.mode << 4;
-		buffer.writeUInt8(bitOptions);
 
-		var bitOptions = 0;
 		// 0：Standby, 1:Heat, 2:Cool
 		bitOptions |= payload.temperature_control_info.status << 0;
 		buffer.writeUInt8(bitOptions);
@@ -209,9 +207,7 @@ function milesightDeviceEncode(payload) {
 		var bitOptions = 0;
 		// 0: Auto, 1: Low, 2: Medium, 3: High
 		bitOptions |= payload.fan_control_info.mode << 4;
-		buffer.writeUInt8(bitOptions);
 
-		var bitOptions = 0;
 		// 0：Off, 1: Low, 2: Medium, 3: High
 		bitOptions |= payload.fan_control_info.status << 0;
 		buffer.writeUInt8(bitOptions);
@@ -819,26 +815,22 @@ function milesightDeviceEncode(payload) {
 		var bitOptions = 0;
 		// 1:1st, 2: 2nd, 3: 3rd, 4: 4th, 5: last
 		bitOptions |= payload.daylight_saving_time.start_week_num << 4;
-		buffer.writeUInt8(bitOptions);
 
-		var bitOptions = 0;
 		// 1：Mon., 2：Tues., 3：Wed., 4：Thurs., 5：Fri., 6：Sat., 7：Sun.
 		bitOptions |= payload.daylight_saving_time.start_week_day << 0;
-
 		buffer.writeUInt8(bitOptions);
+
 		buffer.writeUInt16LE(payload.daylight_saving_time.start_hour_min);
 		// 1:Jan., 2:Feb., 3:Mar., 4:Apr., 5:May, 6:Jun., 7:Jul., 8:Aug., 9:Sep., 10:Oct., 11:Nov., 12:Dec.
 		buffer.writeUInt8(payload.daylight_saving_time.end_month);
 		var bitOptions = 0;
 		// 1:1st, 2: 2nd, 3: 3rd, 4: 4th, 5: last
 		bitOptions |= payload.daylight_saving_time.end_week_num << 4;
-		buffer.writeUInt8(bitOptions);
 
-		var bitOptions = 0;
 		// 1：Mon., 2：Tues., 3：Wed., 4：Thurs., 5：Fri., 6：Sat., 7：Sun.
 		bitOptions |= payload.daylight_saving_time.end_week_day << 0;
-
 		buffer.writeUInt8(bitOptions);
+
 		buffer.writeUInt16LE(payload.daylight_saving_time.end_hour_min);
 		encoded = encoded.concat(buffer.toBytes());
 	}
