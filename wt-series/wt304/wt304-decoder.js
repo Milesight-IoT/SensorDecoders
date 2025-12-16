@@ -114,6 +114,7 @@ function milesightDeviceDecode(bytes) {
 				var bitOptions = readUInt8(bytes, counterObj, 1);
 				// 0：Ventilation, 1：Heat, 2：Cool
 				decoded.temperature_control_info.mode = extractBits(bitOptions, 4, 8);
+				var bitOptions = readUInt8(bytes, counterObj, 1);
 				// 0：Standby, 1:Heat, 2:Cool
 				decoded.temperature_control_info.status = extractBits(bitOptions, 0, 4);
 				break;
@@ -125,6 +126,7 @@ function milesightDeviceDecode(bytes) {
 				var bitOptions = readUInt8(bytes, counterObj, 1);
 				// 0: Auto, 1: Low, 2: Medium, 3: High
 				decoded.fan_control_info.mode = extractBits(bitOptions, 4, 8);
+				var bitOptions = readUInt8(bytes, counterObj, 1);
 				// 0：Off, 1: Low, 2: Medium, 3: High
 				decoded.fan_control_info.status = extractBits(bitOptions, 0, 4);
 				break;
@@ -504,6 +506,7 @@ function milesightDeviceDecode(bytes) {
 				var bitOptions = readUInt8(bytes, counterObj, 1);
 				// 1:1st, 2: 2nd, 3: 3rd, 4: 4th, 5: last
 				decoded.daylight_saving_time.start_week_num = extractBits(bitOptions, 4, 8);
+				var bitOptions = readUInt8(bytes, counterObj, 1);
 				// 1：Mon., 2：Tues., 3：Wed., 4：Thurs., 5：Fri., 6：Sat., 7：Sun.
 				decoded.daylight_saving_time.start_week_day = extractBits(bitOptions, 0, 4);
 				decoded.daylight_saving_time.start_hour_min = readUInt16LE(bytes, counterObj, 2);
@@ -512,6 +515,7 @@ function milesightDeviceDecode(bytes) {
 				var bitOptions = readUInt8(bytes, counterObj, 1);
 				// 1:1st, 2: 2nd, 3: 3rd, 4: 4th, 5: last
 				decoded.daylight_saving_time.end_week_num = extractBits(bitOptions, 4, 8);
+				var bitOptions = readUInt8(bytes, counterObj, 1);
 				// 1：Mon., 2：Tues., 3：Wed., 4：Thurs., 5：Fri., 6：Sat., 7：Sun.
 				decoded.daylight_saving_time.end_week_day = extractBits(bitOptions, 0, 4);
 				decoded.daylight_saving_time.end_hour_min = readUInt16LE(bytes, counterObj, 2);
@@ -592,11 +596,13 @@ function milesightDeviceDecode(bytes) {
 					schedule_settings_item.content.fan_mode = readUInt8(bytes, counterObj, 1);
 					var bitOptions = readUInt16LE(bytes, counterObj, 2);
 					schedule_settings_item.content.heat_target_temperature_enable = extractBits(bitOptions, 0, 1);
-					schedule_settings_item.content.heat_target_temperature = extractBits(bitOptions, 1, 16);
+					schedule_settings_item.content.heat_target_temperature = extractBits(bitOptions, 1, 16) / 100;
+					var bitOptions = readUInt16LE(bytes, counterObj, 2);
 					schedule_settings_item.content.cool_target_temperature_enable = extractBits(bitOptions, 0, 1);
-					schedule_settings_item.content.cool_target_temperature = extractBits(bitOptions, 1, 16);
+					schedule_settings_item.content.cool_target_temperature = extractBits(bitOptions, 1, 16) / 100;
+					var bitOptions = readUInt16LE(bytes, counterObj, 2);
 					schedule_settings_item.content.temperature_tolerance_enable = extractBits(bitOptions, 0, 1);
-					schedule_settings_item.content.temperature_tolerance = extractBits(bitOptions, 1, 16);
+					schedule_settings_item.content.temperature_tolerance = extractBits(bitOptions, 1, 16) / 100;
 				}
 				if (schedule_settings_item_command == 0x04) {
 					schedule_settings_item.cycle_settings = schedule_settings_item.cycle_settings || [];
@@ -694,6 +700,19 @@ function milesightDeviceDecode(bytes) {
 					decoded.valve_control_settings.opening_range = decoded.valve_control_settings.opening_range || {};
 					decoded.valve_control_settings.opening_range.min = readUInt8(bytes, counterObj, 1);
 					decoded.valve_control_settings.opening_range.max = readUInt8(bytes, counterObj, 1);
+				}
+				break;
+			case 0x7e:
+				decoded.fan_ec_control_settings = decoded.fan_ec_control_settings || {};
+				var fan_ec_control_settings_type = readUInt8(bytes, counterObj, 1);
+				if (fan_ec_control_settings_type == 0x00) {
+					decoded.fan_ec_control_settings.low_threshold = readUInt8(bytes, counterObj, 1);
+				}
+				if (fan_ec_control_settings_type == 0x01) {
+					decoded.fan_ec_control_settings.mid_threshold = readUInt8(bytes, counterObj, 1);
+				}
+				if (fan_ec_control_settings_type == 0x02) {
+					decoded.fan_ec_control_settings.high_threshold = readUInt8(bytes, counterObj, 1);
 				}
 				break;
 			case 0x8e:
@@ -1192,6 +1211,10 @@ function cmdMap() {
 		  "7d02": "valve_control_settings.control_interval",
 		  "7d00": "valve_control_settings.control_adjustment_range",
 		  "7d01": "valve_control_settings.opening_range",
+		  "7e": "fan_ec_control_settings",
+		  "7e00": "fan_ec_control_settings.low_threshold",
+		  "7e01": "fan_ec_control_settings.mid_threshold",
+		  "7e02": "fan_ec_control_settings.high_threshold",
 		  "8e": "fan_stop_enable",
 		  "8f": "valve_output_0v_enable",
 		  "87xx": "d2d_pairing_settings._item",

@@ -183,7 +183,9 @@ function milesightDeviceEncode(payload) {
 		var bitOptions = 0;
 		// 0：Ventilation, 1：Heat, 2：Cool
 		bitOptions |= payload.temperature_control_info.mode << 4;
+		buffer.writeUInt8(bitOptions);
 
+		var bitOptions = 0;
 		// 0：Standby, 1:Heat, 2:Cool
 		bitOptions |= payload.temperature_control_info.status << 0;
 		buffer.writeUInt8(bitOptions);
@@ -207,7 +209,9 @@ function milesightDeviceEncode(payload) {
 		var bitOptions = 0;
 		// 0: Auto, 1: Low, 2: Medium, 3: High
 		bitOptions |= payload.fan_control_info.mode << 4;
+		buffer.writeUInt8(bitOptions);
 
+		var bitOptions = 0;
 		// 0：Off, 1: Low, 2: Medium, 3: High
 		bitOptions |= payload.fan_control_info.status << 0;
 		buffer.writeUInt8(bitOptions);
@@ -785,8 +789,8 @@ function milesightDeviceEncode(payload) {
 		bitOptions |= payload.temporary_unlock_settings.temperature_control << 4;
 
 		bitOptions |= payload.temporary_unlock_settings.reserved << 5;
-
 		buffer.writeUInt8(bitOptions);
+
 		if (payload.temporary_unlock_settings.unlocking_duration < 1 || payload.temporary_unlock_settings.unlocking_duration > 3600) {
 			throw new Error('temporary_unlock_settings.unlocking_duration must be between 1 and 3600');
 		}
@@ -815,7 +819,9 @@ function milesightDeviceEncode(payload) {
 		var bitOptions = 0;
 		// 1:1st, 2: 2nd, 3: 3rd, 4: 4th, 5: last
 		bitOptions |= payload.daylight_saving_time.start_week_num << 4;
+		buffer.writeUInt8(bitOptions);
 
+		var bitOptions = 0;
 		// 1：Mon., 2：Tues., 3：Wed., 4：Thurs., 5：Fri., 6：Sat., 7：Sun.
 		bitOptions |= payload.daylight_saving_time.start_week_day << 0;
 
@@ -826,7 +832,9 @@ function milesightDeviceEncode(payload) {
 		var bitOptions = 0;
 		// 1:1st, 2: 2nd, 3: 3rd, 4: 4th, 5: last
 		bitOptions |= payload.daylight_saving_time.end_week_num << 4;
+		buffer.writeUInt8(bitOptions);
 
+		var bitOptions = 0;
 		// 1：Mon., 2：Tues., 3：Wed., 4：Thurs., 5：Fri., 6：Sat., 7：Sun.
 		bitOptions |= payload.daylight_saving_time.end_week_day << 0;
 
@@ -978,15 +986,19 @@ function milesightDeviceEncode(payload) {
 				var bitOptions = 0;
 				bitOptions |= schedule_settings_item.content.heat_target_temperature_enable << 0;
 
-				bitOptions |= schedule_settings_item.content.heat_target_temperature << 1;
+				bitOptions |= schedule_settings_item.content.heat_target_temperature * 100 << 1;
+				buffer.writeInt16LE(bitOptions);
 
+				var bitOptions = 0;
 				bitOptions |= schedule_settings_item.content.cool_target_temperature_enable << 0;
 
-				bitOptions |= schedule_settings_item.content.cool_target_temperature << 1;
+				bitOptions |= schedule_settings_item.content.cool_target_temperature * 100 << 1;
+				buffer.writeInt16LE(bitOptions);
 
+				var bitOptions = 0;
 				bitOptions |= schedule_settings_item.content.temperature_tolerance_enable << 0;
 
-				bitOptions |= schedule_settings_item.content.temperature_tolerance << 1;
+				bitOptions |= schedule_settings_item.content.temperature_tolerance * 100 << 1;
 				buffer.writeInt16LE(bitOptions);
 
 			}
@@ -1112,6 +1124,35 @@ function milesightDeviceEncode(payload) {
 				throw new Error('valve_control_settings.opening_range.max must be between 0 and 100');
 			}
 			buffer.writeUInt8(payload.valve_control_settings.opening_range.max);
+		}
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0x7e
+	if ('fan_ec_control_settings' in payload) {
+		var buffer = new Buffer();
+		if (isValid(payload.fan_ec_control_settings.low_threshold)) {
+			buffer.writeUInt8(0x7e);
+			buffer.writeUInt8(0x00);
+			if (payload.fan_ec_control_settings.low_threshold < 1 || payload.fan_ec_control_settings.low_threshold > 100) {
+				throw new Error('fan_ec_control_settings.low_threshold must be between 1 and 100');
+			}
+			buffer.writeUInt8(payload.fan_ec_control_settings.low_threshold);
+		}
+		if (isValid(payload.fan_ec_control_settings.mid_threshold)) {
+			buffer.writeUInt8(0x7e);
+			buffer.writeUInt8(0x01);
+			if (payload.fan_ec_control_settings.mid_threshold < 1 || payload.fan_ec_control_settings.mid_threshold > 100) {
+				throw new Error('fan_ec_control_settings.mid_threshold must be between 1 and 100');
+			}
+			buffer.writeUInt8(payload.fan_ec_control_settings.mid_threshold);
+		}
+		if (isValid(payload.fan_ec_control_settings.high_threshold)) {
+			buffer.writeUInt8(0x7e);
+			buffer.writeUInt8(0x02);
+			if (payload.fan_ec_control_settings.high_threshold < 1 || payload.fan_ec_control_settings.high_threshold > 100) {
+				throw new Error('fan_ec_control_settings.high_threshold must be between 1 and 100');
+			}
+			buffer.writeUInt8(payload.fan_ec_control_settings.high_threshold);
 		}
 		encoded = encoded.concat(buffer.toBytes());
 	}
@@ -1611,6 +1652,10 @@ function cmdMap() {
 		  "valve_control_settings.control_interval": "7d02",
 		  "valve_control_settings.control_adjustment_range": "7d00",
 		  "valve_control_settings.opening_range": "7d01",
+		  "fan_ec_control_settings": "7e",
+		  "fan_ec_control_settings.low_threshold": "7e00",
+		  "fan_ec_control_settings.mid_threshold": "7e01",
+		  "fan_ec_control_settings.high_threshold": "7e02",
 		  "fan_stop_enable": "8e",
 		  "valve_output_0v_enable": "8f",
 		  "di_enable": "80",

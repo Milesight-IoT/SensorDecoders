@@ -183,7 +183,9 @@ function milesightDeviceEncode(payload) {
 		var bitOptions = 0;
 		// 0：Ventilation, 1：Heat, 2：Cool
 		bitOptions |= payload.temperature_control_info.mode << 4;
+		buffer.writeUInt8(bitOptions);
 
+		var bitOptions = 0;
 		// 0：Standby, 1:Heat, 2:Cool
 		bitOptions |= payload.temperature_control_info.status << 0;
 		buffer.writeUInt8(bitOptions);
@@ -205,7 +207,9 @@ function milesightDeviceEncode(payload) {
 		var bitOptions = 0;
 		// 0: Auto, 1: Low, 2: Medium, 3: High
 		bitOptions |= payload.fan_control_info.mode << 4;
+		buffer.writeUInt8(bitOptions);
 
+		var bitOptions = 0;
 		// 0：Off, 1: Low, 2: Medium, 3: High
 		bitOptions |= payload.fan_control_info.status << 0;
 		buffer.writeUInt8(bitOptions);
@@ -783,8 +787,8 @@ function milesightDeviceEncode(payload) {
 		bitOptions |= payload.temporary_unlock_settings.temperature_control << 4;
 
 		bitOptions |= payload.temporary_unlock_settings.reserved << 5;
-
 		buffer.writeUInt8(bitOptions);
+
 		if (payload.temporary_unlock_settings.unlocking_duration < 1 || payload.temporary_unlock_settings.unlocking_duration > 3600) {
 			throw new Error('temporary_unlock_settings.unlocking_duration must be between 1 and 3600');
 		}
@@ -813,7 +817,9 @@ function milesightDeviceEncode(payload) {
 		var bitOptions = 0;
 		// 1:1st, 2: 2nd, 3: 3rd, 4: 4th, 5: last
 		bitOptions |= payload.daylight_saving_time.start_week_num << 4;
+		buffer.writeUInt8(bitOptions);
 
+		var bitOptions = 0;
 		// 1：Mon., 2：Tues., 3：Wed., 4：Thurs., 5：Fri., 6：Sat., 7：Sun.
 		bitOptions |= payload.daylight_saving_time.start_week_day << 0;
 
@@ -824,7 +830,9 @@ function milesightDeviceEncode(payload) {
 		var bitOptions = 0;
 		// 1:1st, 2: 2nd, 3: 3rd, 4: 4th, 5: last
 		bitOptions |= payload.daylight_saving_time.end_week_num << 4;
+		buffer.writeUInt8(bitOptions);
 
+		var bitOptions = 0;
 		// 1：Mon., 2：Tues., 3：Wed., 4：Thurs., 5：Fri., 6：Sat., 7：Sun.
 		bitOptions |= payload.daylight_saving_time.end_week_day << 0;
 
@@ -976,15 +984,19 @@ function milesightDeviceEncode(payload) {
 				var bitOptions = 0;
 				bitOptions |= schedule_settings_item.content.heat_target_temperature_enable << 0;
 
-				bitOptions |= schedule_settings_item.content.heat_target_temperature << 1;
+				bitOptions |= schedule_settings_item.content.heat_target_temperature * 100 << 1;
+				buffer.writeInt16LE(bitOptions);
 
+				var bitOptions = 0;
 				bitOptions |= schedule_settings_item.content.cool_target_temperature_enable << 0;
 
-				bitOptions |= schedule_settings_item.content.cool_target_temperature << 1;
+				bitOptions |= schedule_settings_item.content.cool_target_temperature * 100 << 1;
+				buffer.writeInt16LE(bitOptions);
 
+				var bitOptions = 0;
 				bitOptions |= schedule_settings_item.content.temperature_tolerance_enable << 0;
 
-				bitOptions |= schedule_settings_item.content.temperature_tolerance << 1;
+				bitOptions |= schedule_settings_item.content.temperature_tolerance * 100 << 1;
 				buffer.writeInt16LE(bitOptions);
 
 			}

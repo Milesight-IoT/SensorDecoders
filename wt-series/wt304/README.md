@@ -264,6 +264,11 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Valve Opening Range | 0x7D | 3 | rw |  |  |  |
 | Min Value | 0x7D | 2 | rw | 0 | 0 - 100 |  |
 | Max Value | 0x7D | 2 | rw | 100 | 0 - 100 |  |
+| EC Fan Speed Settings | 0x7E | 1 | rw |  |  |  |
+| Control Content | 0x7E | 2 | rw | 0 |  |  |
+| Low Speed | 0x7E | 2 | rw | 50 | 1 - 100 |  |
+| Medium Speed | 0x7E | 2 | rw | 80 | 1 - 100 |  |
+| High Speed | 0x7E | 2 | rw | 100 | 1 - 100 |  |
 | Fan Stop Settings | 0x8E | 2 | rw | 1 |  | 0：disable<br>1：enable |
 | Valve output 0% setting | 0x8F | 2 | rw | 1 |  | 0：disable<br>1：enable |
 | DI Enable | 0x80 | 2 | rw | 0 |  | 0：disable<br>1：enable |
