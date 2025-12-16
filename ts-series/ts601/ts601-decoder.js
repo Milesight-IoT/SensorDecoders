@@ -124,7 +124,7 @@ function milesightDeviceDecode(bytes) {
 				decoded.airplane_mode_state = readUInt8(bytes, counterObj, 1);
 				break;
 			case 0x1a:
-				// 3：No Data, 16：Temperature Below Alarm Released, 17：Temperature Below Alarm, 18：Temperature Above Alarm Released, 19：Temperature Above Alarm, 20：Temperature Between Alarm Released, 21：Temperature Between Alarm, 22：Temperature Exceed Tolerance Alarm Released, 23：Temperature Exceed Tolerance Alarm, 48：Temperature Shift Threshold, 32：Temperature Shift Threshold, 
+				// 3：No Data, 16：Temperature Below Alarm Released, 17：Temperature Below Alarm, 18：Temperature Above Alarm Released, 19：Temperature Above Alarm, 20：Temperature Between Alarm Released, 21：Temperature Between Alarm, 22：Temperature Exceed Tolerance Alarm Released, 23：Temperature Exceed Tolerance Alarm, 48：Temperature Shift Threshold, 32：Temperature Shift Threshold,
 				decoded.temperature_alarm_types = readUInt8(bytes, counterObj, 1);
 				break;
 			case 0x11:
@@ -560,7 +560,7 @@ function milesightDeviceDecode(bytes) {
 				break;
 			case 0x81:
 				decoded.falling_threshold_alarm_settings = decoded.falling_threshold_alarm_settings || {};
-				// 0: FREE_FALL_LEVEL_156, 1: FREE_FALL_LEVEL_219, 2: FREE_FALL_LEVEL_250, 3: FREE_FALL_LEVEL_312, 4: FREE_FALL_LEVEL_344, 5: FREE_FALL_LEVEL_406, 6: FREE_FALL_LEVEL_469, 7: FREE_FALL_LEVEL_500 
+				// 0: FREE_FALL_LEVEL_156, 1: FREE_FALL_LEVEL_219, 2: FREE_FALL_LEVEL_250, 3: FREE_FALL_LEVEL_312, 4: FREE_FALL_LEVEL_344, 5: FREE_FALL_LEVEL_406, 6: FREE_FALL_LEVEL_469, 7: FREE_FALL_LEVEL_500
 				decoded.falling_threshold_alarm_settings.threshold_level = readUInt8(bytes, counterObj, 1);
 				decoded.falling_threshold_alarm_settings.time_level = readUInt8(bytes, counterObj, 1);
 				break;
@@ -1044,35 +1044,69 @@ function extractBits(byte, startBit, endBit) {
 }
 
 function pickArrayItem(array, index, idName) {
-    for (var i = 0; i < array.length; i++) { 
-        if (array[i][idName] === index) {
-            return array[i];
-        }
-    }
+	for (var i = 0; i < array.length; i++) { 
+		if (array[i][idName] === index) {
+			return array[i];
+		}
+	}
 
 	return {};
 }
 
 function insertArrayItem(array, item, idName) {
-    for (var i = 0; i < array.length; i++) { 
-        if (array[i][idName] === item[idName]) {
-            array[i] = item;
-            return;
-        }
-    }
-    array.push(item);
+	for (var i = 0; i < array.length; i++) { 
+		if (array[i][idName] === item[idName]) {
+			array[i] = item;
+			return;
+		}
+	}
+	array.push(item);
 }
 
 function readCommand(allBytes, counterObj, end) {
-	var bytes = readBytes(allBytes, counterObj, end);
-	var cmd = bytes
-		.map(function(b) {
-			var hex = b.toString(16);
-			return hex.length === 1 ? '0' + hex : hex;
-		})
-		.join('')
-		.toLowerCase();
-	return cmdMap()[cmd];
+    var bytes = readBytes(allBytes, counterObj, end);
+    var cmd = bytes
+        .map(function(b) {
+            var hex = b.toString(16);
+            return hex.length === 1 ? '0' + hex : hex;
+        })
+        .join('')
+        .toLowerCase();
+
+    var map = cmdMap();
+    for (var key in map) {
+        var xxs = [];
+        var isMatch = false;
+        if (key.length !== cmd.length) {
+            continue;
+        }
+        for (var i = 0; i < key.length; i += 2) {
+            var hexString = key.slice(i, i + 2);
+            var cmdString = cmd.slice(i, i + 2);
+            if (hexString === cmdString || hexString === 'xx') {
+                if (hexString === 'xx') {
+                    xxs.push('.' + parseInt(cmdString, 16));
+                }
+                isMatch = true;
+                continue;
+            } else {
+                isMatch = false;
+                break;
+            }
+        }
+        if (isMatch) {
+            var propertyId = map[key];
+            if (propertyId.indexOf('._item') === -1) {
+                return propertyId;
+            }
+            var j = 0;
+            var result = propertyId.replace(/\._item/g, function() {
+                return xxs[j++];
+            });
+            return result;
+        }
+    }
+    return null;
 }
 
 function cmdMap() {
