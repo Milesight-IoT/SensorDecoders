@@ -129,8 +129,10 @@
       "bacnet_unit_type_id": 95,
       "bacnet_unit_type": "UNITS_NO_UNITS",
       "reference": [
-        "temperature_source_settings.external_ntc_reception",
-        "temperature_source_settings.lorawan_reception"
+        "temperature_source_settings.external_ntc_reception.timeout",
+        "temperature_source_settings.external_ntc_reception.timeout_response",
+        "temperature_source_settings.lorawan_reception.timeout",
+        "temperature_source_settings.lorawan_reception.timeout_response"
       ]
     },
     {
@@ -532,9 +534,9 @@
       "bacnet_unit_type_id": 95,
       "bacnet_unit_type": "UNITS_NO_UNITS",
       "reference": [
-        "target_temperature_control_settings.mode_settings.auto_control",
-        "target_temperature_control_settings.mode_settings.valve_control",
-        "target_temperature_control_settings.mode_settings.intergrated_control"
+        "target_temperature_control_settings.mode_settings.auto_control.target_temperature",
+        "target_temperature_control_settings.mode_settings.valve_control.target_valve_status",
+        "target_temperature_control_settings.mode_settings.intergrated_control.target_temperature"
       ]
     },
     {
@@ -715,7 +717,9 @@
         "auto_away_settings.cycle_time_thur",
         "auto_away_settings.cycle_time_fri",
         "auto_away_settings.cycle_time_sat",
-        "auto_away_settings.energy_saving_settings"
+        "auto_away_settings.energy_saving_settings.mode",
+        "auto_away_settings.energy_saving_settings.energy_saving_temperature",
+        "auto_away_settings.energy_saving_settings.energy_saving_valve_opening_degree"
       ]
     },
     {
@@ -743,7 +747,9 @@
         "auto_away_settings.cycle_time_thur",
         "auto_away_settings.cycle_time_fri",
         "auto_away_settings.cycle_time_sat",
-        "auto_away_settings.energy_saving_settings"
+        "auto_away_settings.energy_saving_settings.mode",
+        "auto_away_settings.energy_saving_settings.energy_saving_temperature",
+        "auto_away_settings.energy_saving_settings.energy_saving_valve_opening_degree"
       ]
     },
     {
@@ -771,7 +777,9 @@
         "auto_away_settings.cycle_time_thur",
         "auto_away_settings.cycle_time_fri",
         "auto_away_settings.cycle_time_sat",
-        "auto_away_settings.energy_saving_settings"
+        "auto_away_settings.energy_saving_settings.mode",
+        "auto_away_settings.energy_saving_settings.energy_saving_temperature",
+        "auto_away_settings.energy_saving_settings.energy_saving_valve_opening_degree"
       ]
     },
     {
@@ -805,7 +813,9 @@
         "auto_away_settings.cycle_time_thur",
         "auto_away_settings.cycle_time_fri",
         "auto_away_settings.cycle_time_sat",
-        "auto_away_settings.energy_saving_settings"
+        "auto_away_settings.energy_saving_settings.mode",
+        "auto_away_settings.energy_saving_settings.energy_saving_temperature",
+        "auto_away_settings.energy_saving_settings.energy_saving_valve_opening_degree"
       ]
     },
     {
@@ -839,7 +849,9 @@
         "auto_away_settings.cycle_time_thur",
         "auto_away_settings.cycle_time_fri",
         "auto_away_settings.cycle_time_sat",
-        "auto_away_settings.energy_saving_settings"
+        "auto_away_settings.energy_saving_settings.mode",
+        "auto_away_settings.energy_saving_settings.energy_saving_temperature",
+        "auto_away_settings.energy_saving_settings.energy_saving_valve_opening_degree"
       ]
     },
     {
@@ -873,7 +885,9 @@
         "auto_away_settings.cycle_time_thur",
         "auto_away_settings.cycle_time_fri",
         "auto_away_settings.cycle_time_sat",
-        "auto_away_settings.energy_saving_settings"
+        "auto_away_settings.energy_saving_settings.mode",
+        "auto_away_settings.energy_saving_settings.energy_saving_temperature",
+        "auto_away_settings.energy_saving_settings.energy_saving_valve_opening_degree"
       ]
     },
     {
@@ -907,7 +921,9 @@
         "auto_away_settings.cycle_time_thur",
         "auto_away_settings.cycle_time_fri",
         "auto_away_settings.cycle_time_sat",
-        "auto_away_settings.energy_saving_settings"
+        "auto_away_settings.energy_saving_settings.mode",
+        "auto_away_settings.energy_saving_settings.energy_saving_temperature",
+        "auto_away_settings.energy_saving_settings.energy_saving_valve_opening_degree"
       ]
     },
     {
@@ -941,7 +957,9 @@
         "auto_away_settings.cycle_time_wed",
         "auto_away_settings.cycle_time_fri",
         "auto_away_settings.cycle_time_sat",
-        "auto_away_settings.energy_saving_settings"
+        "auto_away_settings.energy_saving_settings.mode",
+        "auto_away_settings.energy_saving_settings.energy_saving_temperature",
+        "auto_away_settings.energy_saving_settings.energy_saving_valve_opening_degree"
       ]
     },
     {
@@ -975,7 +993,9 @@
         "auto_away_settings.cycle_time_wed",
         "auto_away_settings.cycle_time_thur",
         "auto_away_settings.cycle_time_sat",
-        "auto_away_settings.energy_saving_settings"
+        "auto_away_settings.energy_saving_settings.mode",
+        "auto_away_settings.energy_saving_settings.energy_saving_temperature",
+        "auto_away_settings.energy_saving_settings.energy_saving_valve_opening_degree"
       ]
     },
     {
@@ -1009,7 +1029,9 @@
         "auto_away_settings.cycle_time_wed",
         "auto_away_settings.cycle_time_thur",
         "auto_away_settings.cycle_time_fri",
-        "auto_away_settings.energy_saving_settings"
+        "auto_away_settings.energy_saving_settings.mode",
+        "auto_away_settings.energy_saving_settings.energy_saving_temperature",
+        "auto_away_settings.energy_saving_settings.energy_saving_valve_opening_degree"
       ]
     },
     {
