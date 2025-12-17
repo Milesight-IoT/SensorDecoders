@@ -932,6 +932,3 @@ function cmdMap() {
 		  "be": "reboot"
 	};
 }
-
-// Oe014e0900fc0864
-console.log(milesightDeviceDecode([0x0e, 0x01, 0x4e, 0x09, 0x00, 0xfc, 0x08, 0x64]));
