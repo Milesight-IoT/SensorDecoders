@@ -1101,7 +1101,7 @@
             "reference": ["gpio_output_2"]
         },
         {
-            "id": "gpio_output_1_time",
+            "id": "gpio_output_1_control",
             "name": "GPIO Output (Channel 1) Time",
             "value": "",
             "unit": "ms",
