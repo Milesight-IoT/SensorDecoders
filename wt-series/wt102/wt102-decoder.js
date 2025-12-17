@@ -255,8 +255,8 @@ function milesightDeviceDecode(bytes) {
 					// decoded.temperature = decoded.periodic_reporting.target_temperature_for_heating.environment_temperature;
 					decoded.periodic_reporting.target_temperature_for_heating.current_valve_opening = readUInt8(bytes, counterObj, 1);
 					// decoded.valve_opening_degree = decoded.periodic_reporting.target_temperature_for_heating.current_valve_opening;
-					decoded.periodic_reporting.target_temperature_for_heating.target_valve_opening = readInt16LE(bytes, counterObj, 2) / 100;
-					// decoded.target_temperature = decoded.periodic_reporting.target_temperature_for_heating.target_valve_opening;
+					decoded.periodic_reporting.target_temperature_for_heating.target_temperature = readInt16LE(bytes, counterObj, 2) / 100;
+					// decoded.target_temperature = decoded.periodic_reporting.target_temperature_for_heating.target_temperature;
 					decoded.periodic_reporting.target_temperature_for_heating.battery_level = readUInt8(bytes, counterObj, 1);
 					// decoded.battery = decoded.periodic_reporting.target_temperature_for_heating.battery_level;
 				}

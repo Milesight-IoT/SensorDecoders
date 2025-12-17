@@ -391,10 +391,10 @@ function milesightDeviceEncode(payload) {
 				throw new Error('periodic_reporting.target_temperature_for_heating.current_valve_opening must be between 0 and 100');
 			}
 			buffer.writeUInt8(payload.periodic_reporting.target_temperature_for_heating.current_valve_opening);
-			if (payload.periodic_reporting.target_temperature_for_heating.target_valve_opening < 5 || payload.periodic_reporting.target_temperature_for_heating.target_valve_opening > 35) {
-				throw new Error('periodic_reporting.target_temperature_for_heating.target_valve_opening must be between 5 and 35');
+			if (payload.periodic_reporting.target_temperature_for_heating.target_temperature < 5 || payload.periodic_reporting.target_temperature_for_heating.target_temperature > 35) {
+				throw new Error('periodic_reporting.target_temperature_for_heating.target_temperature must be between 5 and 35');
 			}
-			buffer.writeInt16LE(payload.periodic_reporting.target_temperature_for_heating.target_valve_opening * 100);
+			buffer.writeInt16LE(payload.periodic_reporting.target_temperature_for_heating.target_temperature * 100);
 			if (payload.periodic_reporting.target_temperature_for_heating.battery_level < 0 || payload.periodic_reporting.target_temperature_for_heating.battery_level > 100) {
 				throw new Error('periodic_reporting.target_temperature_for_heating.battery_level must be between 0 and 100');
 			}
