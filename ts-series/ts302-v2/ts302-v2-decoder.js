@@ -110,54 +110,90 @@ function milesightDeviceDecode(bytes) {
         }
         // TEMPERATURE(CHANNEL 1 SENSOR) ALARM
         else if (channel_id === 0x83 && channel_type === 0x67) {
-            decoded.temperature_chn1 = readInt16LE(bytes.slice(i, i + 2)) / 10;
-            decoded.temperature_chn1_alarm = readAlarmType(bytes[i + 2]);
+            var temp_value = readInt16LE(bytes.slice(i, i + 2)) / 10;
+            var alarm_type = readAlarmType(bytes[i + 2]);
+            decoded.temperature_chn1 = temp_value;
+            decoded.temperature_chn1_alarm = alarm_type;
+            decoded.event = decoded.event || [];
+            decoded.event.push({ temperature_chn1: temp_value, temperature_chn1_alarm: alarm_type });
             i += 3;
         }
         // HUMIDITY(CHANNEL 1 SENSOR) ALARM
         else if (channel_id === 0x83 && channel_type === 0x9a) {
-            decoded.humidity_chn1 = readInt16LE(bytes.slice(i, i + 2)) / 10;
-            decoded.humidity_chn1_alarm = readAlarmType(bytes[i + 2]);
+            var hum_value = readInt16LE(bytes.slice(i, i + 2)) / 10;
+            var alarm_type = readAlarmType(bytes[i + 2]);
+            decoded.humidity_chn1 = hum_value;
+            decoded.humidity_chn1_alarm = alarm_type;
+            decoded.event = decoded.event || [];
+            decoded.event.push({ humidity_chn1: hum_value, humidity_chn1_alarm: alarm_type });
             i += 3;
         }
         // TEMPERATURE(CHANNEL 2 SENSOR) ALARM
         else if (channel_id === 0x84 && channel_type === 0x67) {
-            decoded.temperature_chn2 = readInt16LE(bytes.slice(i, i + 2)) / 10;
-            decoded.temperature_chn2_alarm = readAlarmType(bytes[i + 2]);
+            var temp_value = readInt16LE(bytes.slice(i, i + 2)) / 10;
+            var alarm_type = readAlarmType(bytes[i + 2]);
+            decoded.temperature_chn2 = temp_value;
+            decoded.temperature_chn2_alarm = alarm_type;
+            decoded.event = decoded.event || [];
+            decoded.event.push({ temperature_chn2: temp_value, temperature_chn2_alarm: alarm_type });
             i += 3;
         }
         // HUMIDITY(CHANNEL 2 SENSOR) ALARM
         else if (channel_id === 0x84 && channel_type === 0x9a) {
-            decoded.humidity_chn2 = readInt16LE(bytes.slice(i, i + 2)) / 10;
-            decoded.humidity_chn2_alarm = readAlarmType(bytes[i + 2]);
+            var hum_value = readInt16LE(bytes.slice(i, i + 2)) / 10;
+            var alarm_type = readAlarmType(bytes[i + 2]);
+            decoded.humidity_chn2 = hum_value;
+            decoded.humidity_chn2_alarm = alarm_type;
+            decoded.event = decoded.event || [];
+            decoded.event.push({ humidity_chn2: hum_value, humidity_chn2_alarm: alarm_type });
             i += 3;
         }
-        // TEMPERATURE(CHANNEL 1 SENSOR) ALARM
+        // TEMPERATURE(CHANNEL 1 SENSOR) MUTATION ALARM
         else if (channel_id === 0x93 && channel_type === 0x67) {
-            decoded.temperature_chn1 = readInt16LE(bytes.slice(i, i + 2)) / 10;
-            decoded.temperature_chn1_mutation = readInt16LE(bytes.slice(i + 2, i + 4)) / 10;
-            decoded.temperature_chn1_alarm = readAlarmType(8);
+            var temp_value = readInt16LE(bytes.slice(i, i + 2)) / 10;
+            var mutation_value = readInt16LE(bytes.slice(i + 2, i + 4)) / 10;
+            var alarm_type = readAlarmType(8);
+            decoded.temperature_chn1 = temp_value;
+            decoded.temperature_chn1_mutation = mutation_value;
+            decoded.temperature_chn1_alarm = alarm_type;
+            decoded.event = decoded.event || [];
+            decoded.event.push({ temperature_chn1: temp_value, temperature_chn1_alarm: alarm_type, temperature_chn1_mutation: mutation_value });
             i += 5;
         }
-        // HUMIDITY(CHANNEL 1 SENSOR) ALARM
+        // HUMIDITY(CHANNEL 1 SENSOR) MUTATION ALARM
         else if (channel_id === 0x93 && channel_type === 0x9a) {
-            decoded.humidity_chn1 = readInt16LE(bytes.slice(i, i + 2)) / 10;
-            decoded.humidity_chn1_mutation = readInt16LE(bytes.slice(i + 2, i + 4)) / 10;
-            decoded.humidity_chn1_alarm = readAlarmType(8);
+            var hum_value = readInt16LE(bytes.slice(i, i + 2)) / 10;
+            var mutation_value = readInt16LE(bytes.slice(i + 2, i + 4)) / 10;
+            var alarm_type = readAlarmType(8);
+            decoded.humidity_chn1 = hum_value;
+            decoded.humidity_chn1_mutation = mutation_value;
+            decoded.humidity_chn1_alarm = alarm_type;
+            decoded.event = decoded.event || [];
+            decoded.event.push({ humidity_chn1: hum_value, humidity_chn1_alarm: alarm_type, humidity_chn1_mutation: mutation_value });
             i += 5;
         }
         // TEMPERATURE(CHANNEL 2 SENSOR) MUTATION ALARM
         else if (channel_id === 0x94 && channel_type === 0x67) {
-            decoded.temperature_chn2 = readInt16LE(bytes.slice(i, i + 2)) / 10;
-            decoded.temperature_chn2_mutation = readInt16LE(bytes.slice(i + 2, i + 4)) / 10;
-            decoded.temperature_chn2_alarm = readAlarmType(8);
+            var temp_value = readInt16LE(bytes.slice(i, i + 2)) / 10;
+            var mutation_value = readInt16LE(bytes.slice(i + 2, i + 4)) / 10;
+            var alarm_type = readAlarmType(8);
+            decoded.temperature_chn2 = temp_value;
+            decoded.temperature_chn2_mutation = mutation_value;
+            decoded.temperature_chn2_alarm = alarm_type;
+            decoded.event = decoded.event || [];
+            decoded.event.push({ temperature_chn2: temp_value, temperature_chn2_alarm: alarm_type, temperature_chn2_mutation: mutation_value });
             i += 5;
         }
         // HUMIDITY(CHANNEL 2 SENSOR) MUTATION ALARM
         else if (channel_id === 0x94 && channel_type === 0x9a) {
-            decoded.humidity_chn2 = readInt16LE(bytes.slice(i, i + 2)) / 10;
-            decoded.humidity_chn2_mutation = readInt16LE(bytes.slice(i + 2, i + 4)) / 10;
-            decoded.humidity_chn2_alarm = readAlarmType(8);
+            var hum_value = readInt16LE(bytes.slice(i, i + 2)) / 10;
+            var mutation_value = readInt16LE(bytes.slice(i + 2, i + 4)) / 10;
+            var alarm_type = readAlarmType(8);
+            decoded.humidity_chn2 = hum_value;
+            decoded.humidity_chn2_mutation = mutation_value;
+            decoded.humidity_chn2_alarm = alarm_type;
+            decoded.event = decoded.event || [];
+            decoded.event.push({ humidity_chn2: hum_value, humidity_chn2_alarm: alarm_type, humidity_chn2_mutation: mutation_value });
             i += 5;
         }
         // TEMPERATURE SENSOR STATUS (CHANNEL 1)
