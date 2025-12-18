@@ -711,6 +711,11 @@ function readValveStatus(status) {
     return getValue(status_map, status);
 }
 
+function readSpecialTaskMode(mode) {
+    var mode_map = { 0: "normal", 1: "special" };
+    return getValue(mode_map, mode);
+}
+
 function readDelayControlResult(value) {
     var result_map = { 0: "success", 1: "failed" };
     return getValue(result_map, value);
