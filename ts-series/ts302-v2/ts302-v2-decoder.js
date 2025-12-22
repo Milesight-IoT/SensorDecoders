@@ -328,6 +328,9 @@ function milesightDeviceDecode(bytes) {
             var retrieval_historical_data_by_time_range = {};
             retrieval_historical_data_by_time_range.start_time = readUInt32LE(bytes.slice(i, i + 4));
             retrieval_historical_data_by_time_range.end_time = readUInt32LE(bytes.slice(i + 4, i + 8));
+            if (retrieval_historical_data_by_time_range.start_time > retrieval_historical_data_by_time_range.end_time) {
+                throw new Error("start time is greater than end time");
+            }
             decoded.retrieval_historical_data_by_time_range = retrieval_historical_data_by_time_range;
             i += 8;
         }
