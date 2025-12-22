@@ -198,22 +198,34 @@ function milesightDeviceDecode(bytes) {
         }
         // TEMPERATURE SENSOR STATUS (CHANNEL 1)
         else if (channel_id === 0xb3 && channel_type === 0x67) {
-            decoded.temperature_chn1_sensor_status = readSensorStatus(bytes[i]);
+            var data = {};
+            data.temperature_chn1_sensor_status = readSensorStatus(bytes[i]);
+            decoded.event = decoded.event || [];
+            decoded.event.push(data);
             i += 1;
         }
         // HUMIDITY SENSOR STATUS (CHANNEL 1)
         else if (channel_id === 0xb3 && channel_type === 0x9a) {
-            decoded.humidity_chn1_sensor_status = readSensorStatus(bytes[i]);
+            var data = {};
+            data.humidity_chn1_sensor_status = readSensorStatus(bytes[i]);
+            decoded.event = decoded.event || [];
+            decoded.event.push(data);
             i += 1;
         }
         // TEMPERATURE SENSOR STATUS (CHANNEL 2)
         else if (channel_id === 0xb4 && channel_type === 0x67) {
-            decoded.temperature_chn2_sensor_status = readSensorStatus(bytes[i]);
+            var data = {};
+            data.temperature_chn2_sensor_status = readSensorStatus(bytes[i]);
+            decoded.event = decoded.event || [];
+            decoded.event.push(data);
             i += 1;
         }
         // HUMIDITY SENSOR STATUS (CHANNEL 2)
         else if (channel_id === 0xb4 && channel_type === 0x9a) {
-            decoded.humidity_chn2_sensor_status = readSensorStatus(bytes[i]);
+            var data = {};
+            data.humidity_chn2_sensor_status = readSensorStatus(bytes[i]);
+            decoded.event = decoded.event || [];
+            decoded.event.push(data);
             i += 1;
         }
         // HISTORY DATA (CHANNEL 1)
