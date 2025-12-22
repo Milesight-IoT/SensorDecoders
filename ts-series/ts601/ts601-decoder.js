@@ -124,7 +124,7 @@ function milesightDeviceDecode(bytes) {
 				decoded.airplane_mode_state = readUInt8(bytes, counterObj, 1);
 				break;
 			case 0x1a:
-				// 3：No Data, 16：Temperature Below Alarm Released, 17：Temperature Below Alarm, 18：Temperature Above Alarm Released, 19：Temperature Above Alarm, 20：Temperature Between Alarm Released, 21：Temperature Between Alarm, 22：Temperature Exceed Tolerance Alarm Released, 23：Temperature Exceed Tolerance Alarm, 48：Temperature Shift Threshold, 32：Temperature Shift Threshold,
+				// 3：No Data, 16：Temperature Below Alarm Released, 17：Temperature Below Alarm, 18：Temperature Above Alarm Released, 19：Temperature Above Alarm, 20：Temperature Between Alarm Released, 21：Temperature Between Alarm, 22：Temperature Exceed Tolerance Alarm Released, 23：Temperature Exceed Tolerance Alarm, 48：Temperature Shift Threshold, 32：Temperature Shift Threshold, 
 				decoded.temperature_alarm_types = readUInt8(bytes, counterObj, 1);
 				break;
 			case 0x11:
@@ -560,7 +560,7 @@ function milesightDeviceDecode(bytes) {
 				break;
 			case 0x81:
 				decoded.falling_threshold_alarm_settings = decoded.falling_threshold_alarm_settings || {};
-				// 0: FREE_FALL_LEVEL_156, 1: FREE_FALL_LEVEL_219, 2: FREE_FALL_LEVEL_250, 3: FREE_FALL_LEVEL_312, 4: FREE_FALL_LEVEL_344, 5: FREE_FALL_LEVEL_406, 6: FREE_FALL_LEVEL_469, 7: FREE_FALL_LEVEL_500
+				// 0: FREE_FALL_LEVEL_156, 1: FREE_FALL_LEVEL_219, 2: FREE_FALL_LEVEL_250, 3: FREE_FALL_LEVEL_312, 4: FREE_FALL_LEVEL_344, 5: FREE_FALL_LEVEL_406, 6: FREE_FALL_LEVEL_469, 7: FREE_FALL_LEVEL_500 
 				decoded.falling_threshold_alarm_settings.threshold_level = readUInt8(bytes, counterObj, 1);
 				decoded.falling_threshold_alarm_settings.time_level = readUInt8(bytes, counterObj, 1);
 				break;
@@ -1240,7 +1240,20 @@ function cmdMap() {
 		  "ce0210": "cellular_settings.aws_settings.key_certificate",
 		  "ce0221": "cellular_settings.aws_settings.aws_status",
 		  "ce05": "cellular_settings.tcp_settings",
+		  "ce05xx": "cellular_settings.tcp_settings._item",
+		  "ce05xx00": "cellular_settings.tcp_settings._item.enable",
+		  "ce05xx01": "cellular_settings.tcp_settings._item.server_address",
+		  "ce05xx02": "cellular_settings.tcp_settings._item.server_port",
+		  "ce05xx03": "cellular_settings.tcp_settings._item.retry_count",
+		  "ce05xx04": "cellular_settings.tcp_settings._item.retry_interval",
+		  "ce05xx05": "cellular_settings.tcp_settings._item.keepalive_interval",
+		  "ce05xx06": "cellular_settings.tcp_settings._item.tcp_status",
 		  "ce0f": "cellular_settings.udp_settings",
+		  "ce0fxx": "cellular_settings.udp_settings._item",
+		  "ce0fxx00": "cellular_settings.udp_settings._item.enable",
+		  "ce0fxx01": "cellular_settings.udp_settings._item.server_address",
+		  "ce0fxx02": "cellular_settings.udp_settings._item.server_port",
+		  "ce0fxx03": "cellular_settings.udp_settings._item.udp_status",
 		  "ce01": "cellular_settings.milesight_mqtt_settings",
 		  "ce0121": "cellular_settings.milesight_mqtt_settings.status",
 		  "ce19": "cellular_settings.milesight_dtls_settings",

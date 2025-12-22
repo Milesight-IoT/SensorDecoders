@@ -40,14 +40,41 @@ function milesightDeviceEncode(payload) {
 	//0xef
 	if ('req' in payload) {
 		var buffer = new Buffer();
-        for (var req_command of payload.req) {            
-			const hexString = cmdMap()[req_command];
+		var reqList = payload.req;
+		for (var idx = 0; idx < reqList.length; idx++) {
+			var req_command = reqList[idx];
+			var pureNumber = [];
+			var formateStrParts = [];
+		
+			req_command.split('.').forEach(function(part) {
+				if (/^[0-9]+$/.test(part)) {
+					// padStart ES5 兼容
+					var hex = Number(part).toString(16);
+					while (hex.length < 2) { hex = '0' + hex; }
+					pureNumber.push(hex);
+					console.log(pureNumber);
+					formateStrParts.push('_item');
+				} else {
+					formateStrParts.push(part);
+				}
+			});
+		
+			var formateStr = formateStrParts.join('.');
+			var hexString = cmdMap()[formateStr];
+		
+			if (hexString && hexString.indexOf('xx') !== -1) {
+				var i = 0;
+				hexString = hexString.replace(/xx/g, function() {
+					return pureNumber[i++];
+				});
+			}
+		
 			if (hexString) {
-				const length = hexString.length / 2;
+				var length = hexString.length / 2;
 				buffer.writeUInt8(0xef);
 				buffer.writeUInt8(length);
 				buffer.writeHexString(hexString, length, true);
-			}            
+			}
 		}
 		encoded = encoded.concat(buffer.toBytes());
 	}
@@ -664,8 +691,8 @@ function milesightDeviceEncode(payload) {
 
 		// 1：Mon., 2：Tues., 3：Wed., 4：Thurs., 5：Fri., 6：Sat., 7：Sun.
 		bitOptions |= payload.daylight_saving_time.start_week_day << 0;
-
 		buffer.writeUInt8(bitOptions);
+
 		buffer.writeUInt16LE(payload.daylight_saving_time.start_hour_min);
 		// 1:Jan., 2:Feb., 3:Mar., 4:Apr., 5:May, 6:Jun., 7:Jul., 8:Aug., 9:Sep., 10:Oct., 11:Nov., 12:Dec.
 		buffer.writeUInt8(payload.daylight_saving_time.end_month);
@@ -675,8 +702,8 @@ function milesightDeviceEncode(payload) {
 
 		// 1：Mon., 2：Tues., 3：Wed., 4：Thurs., 5：Fri., 6：Sat., 7：Sun.
 		bitOptions |= payload.daylight_saving_time.end_week_day << 0;
-
 		buffer.writeUInt8(bitOptions);
+
 		buffer.writeUInt16LE(payload.daylight_saving_time.end_hour_min);
 		encoded = encoded.concat(buffer.toBytes());
 	}
@@ -1715,7 +1742,20 @@ function cmdMap() {
 		  "cellular_settings.aws_settings.key_certificate": "ce0210",
 		  "cellular_settings.aws_settings.aws_status": "ce0221",
 		  "cellular_settings.tcp_settings": "ce05",
+		  "cellular_settings.tcp_settings._item": "ce05xx",
+		  "cellular_settings.tcp_settings._item.enable": "ce05xx00",
+		  "cellular_settings.tcp_settings._item.server_address": "ce05xx01",
+		  "cellular_settings.tcp_settings._item.server_port": "ce05xx02",
+		  "cellular_settings.tcp_settings._item.retry_count": "ce05xx03",
+		  "cellular_settings.tcp_settings._item.retry_interval": "ce05xx04",
+		  "cellular_settings.tcp_settings._item.keepalive_interval": "ce05xx05",
+		  "cellular_settings.tcp_settings._item.tcp_status": "ce05xx06",
 		  "cellular_settings.udp_settings": "ce0f",
+		  "cellular_settings.udp_settings._item": "ce0fxx",
+		  "cellular_settings.udp_settings._item.enable": "ce0fxx00",
+		  "cellular_settings.udp_settings._item.server_address": "ce0fxx01",
+		  "cellular_settings.udp_settings._item.server_port": "ce0fxx02",
+		  "cellular_settings.udp_settings._item.udp_status": "ce0fxx03",
 		  "cellular_settings.milesight_mqtt_settings": "ce01",
 		  "cellular_settings.milesight_mqtt_settings.status": "ce0121",
 		  "cellular_settings.milesight_dtls_settings": "ce19",

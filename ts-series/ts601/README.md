@@ -66,7 +66,6 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | AutoP Enable | 0xC4 | 2 | rw | 1 |  | 0：disable<br>1：enable |
 | Base Station Positioning | 0x71 | 2 | rw | 0 |  | 0：disable<br>1：enable |
 | Base Station Positioning Authentication Token | 0x72 | 17 | rw |  |  |  |
-| Temperature And Humidity Display Switch on Device Screen | 0x74 | 2 | rw | 0 |  | 0： temperature<br>1: humidity |
 | Airplane Mode Time Period | 0x73 | 1 | rw |  |  |  |
 | Data Type | 0x73 | 2 | rw |  |  |  |
 | Flight Mode Enable Mode | 0x73 | 2 | rw | 0 |  | 0：disable<br>1：enable |
