@@ -144,11 +144,7 @@ function milesightDeviceDecode(bytes) {
             var timestamp = readUInt32LE(bytes.slice(i, i + 4));
             var distance_raw_data = readUInt16LE(bytes.slice(i + 4, i + 6));
             var distance_value = readInt16LE(bytes.slice(i + 4, i + 6));
-            var temperature_raw_data = readUInt16LE(bytes.slice(i + 6, i + 8));
-            var temperature_value = readInt16LE(bytes.slice(i + 6, i + 8)) / 10;
-            var mutation = readInt16LE(bytes.slice(i + 8, i + 10));
-            var event_value = readUInt8(bytes[i + 10]);
-            i += 11;
+            i += 7;
 
             var data = {};
             data.timestamp = timestamp;
@@ -160,22 +156,6 @@ function milesightDeviceDecode(bytes) {
                 data.distance_sensor_status = "disabled";
             } else {
                 data.distance = distance_value;
-            }
-
-            if (temperature_raw_data === 0xfffe) {
-                data.temperature_sensor_status = "disabled";
-            } else if (temperature_raw_data === 0xffff) {
-                data.temperature_sensor_status = "sensor exception";
-            } else {
-                data.temperature = temperature_value;
-            }
-
-            var event = readHistoryEvent(event_value);
-            if (event.length > 0) {
-                data.event = event;
-            }
-            if (event.indexOf("mutation alarm") !== -1) {
-                data.distance_mutation = mutation;
             }
 
             decoded.history = decoded.history || [];
