@@ -31,6 +31,27 @@ function milesightDeviceDecode(bytes) {
 
     for (var i = 0; i < bytes.length; ) {
         var channel_id = bytes[i++];
+        if (channel_id === 0x07){
+            var id = readUInt16LE(bytes.slice(i, i + 2));
+            var distance_raw_data = readUInt16LE(bytes.slice(i + 2, i + 4));
+            var distance_value = readInt16LE(bytes.slice(i + 2, i + 4));
+            i += 4;
+            var data = {}
+            data.id = id;
+            if (distance_raw_data === 0xfffd) {
+                data.distance_sensor_status = "no target";
+            } else if (distance_raw_data === 0xffff) {
+                data.distance_sensor_status = "sensor exception";
+            } else if (distance_raw_data === 0xfffe) {
+                data.distance_sensor_status = "disabled";
+            } else {
+                data.distance = distance_value;
+            }
+            decoded.history_serial = decoded.history_serial || [];
+            decoded.history_serial.push(data);
+            continue;
+        }
+
         var channel_type = bytes[i++];
 
         // IPSO VERSION
@@ -144,11 +165,7 @@ function milesightDeviceDecode(bytes) {
             var timestamp = readUInt32LE(bytes.slice(i, i + 4));
             var distance_raw_data = readUInt16LE(bytes.slice(i + 4, i + 6));
             var distance_value = readInt16LE(bytes.slice(i + 4, i + 6));
-            var temperature_raw_data = readUInt16LE(bytes.slice(i + 6, i + 8));
-            var temperature_value = readInt16LE(bytes.slice(i + 6, i + 8)) / 10;
-            var mutation = readInt16LE(bytes.slice(i + 8, i + 10));
-            var event_value = readUInt8(bytes[i + 10]);
-            i += 11;
+            i += 6;
 
             var data = {};
             data.timestamp = timestamp;
@@ -160,22 +177,6 @@ function milesightDeviceDecode(bytes) {
                 data.distance_sensor_status = "disabled";
             } else {
                 data.distance = distance_value;
-            }
-
-            if (temperature_raw_data === 0xfffe) {
-                data.temperature_sensor_status = "disabled";
-            } else if (temperature_raw_data === 0xffff) {
-                data.temperature_sensor_status = "sensor exception";
-            } else {
-                data.temperature = temperature_value;
-            }
-
-            var event = readHistoryEvent(event_value);
-            if (event.length > 0) {
-                data.event = event;
-            }
-            if (event.indexOf("mutation alarm") !== -1) {
-                data.distance_mutation = mutation;
             }
 
             decoded.history = decoded.history || [];
@@ -368,6 +369,10 @@ function handle_downlink_response_ext(code, channel_type, bytes, offset) {
             decoded.collection_interval = readUInt16LE(bytes.slice(offset, offset + 2));
             offset += 2;
             break;
+        case 0xc8:
+            decoded.password = readString(bytes.slice(offset, offset + 6));
+            offset += 6;
+            break;
         default:
             throw new Error("unknown downlink response");
     }
@@ -557,6 +562,34 @@ function readUInt32LE(bytes) {
 function readInt32LE(bytes) {
     var ref = readUInt32LE(bytes);
     return ref > 0x7fffffff ? ref - 0x100000000 : ref;
+}
+
+function readString(bytes) {
+    var str = "";
+    var i = 0;
+    var byte1, byte2, byte3, byte4;
+    while (i < bytes.length) {
+        byte1 = bytes[i++];
+        if (byte1 <= 0x7f) {
+            str += String.fromCharCode(byte1);
+        } else if (byte1 <= 0xdf) {
+            byte2 = bytes[i++];
+            str += String.fromCharCode(((byte1 & 0x1f) << 6) | (byte2 & 0x3f));
+        } else if (byte1 <= 0xef) {
+            byte2 = bytes[i++];
+            byte3 = bytes[i++];
+            str += String.fromCharCode(((byte1 & 0x0f) << 12) | ((byte2 & 0x3f) << 6) | (byte3 & 0x3f));
+        } else if (byte1 <= 0xf7) {
+            byte2 = bytes[i++];
+            byte3 = bytes[i++];
+            byte4 = bytes[i++];
+            var codepoint = ((byte1 & 0x07) << 18) | ((byte2 & 0x3f) << 12) | ((byte3 & 0x3f) << 6) | (byte4 & 0x3f);
+            codepoint -= 0x10000;
+            str += String.fromCharCode((codepoint >> 10) + 0xd800);
+            str += String.fromCharCode((codepoint & 0x3ff) + 0xdc00);
+        }
+    }
+    return str;
 }
 
 function getValue(map, key) {

@@ -116,6 +116,9 @@ function milesightDeviceEncode(payload) {
     if ("tilt_distance_link" in payload) {
         encoded = encoded.concat(setTiltAndDistanceLink(payload.tilt_distance_link));
     }
+    if ("password" in payload) {
+        encoded = encoded.concat(setPassword(payload.password));
+    }
 
     return encoded;
 }
@@ -174,6 +177,26 @@ function setReportInterval(report_interval) {
     buffer.writeUInt8(0x8e);
     buffer.writeUInt8(0x00);
     buffer.writeUInt16LE(report_interval);
+    return buffer.toBytes();
+}
+
+/**
+ * set password
+ * @param {password} password string, must be 6 characters
+ */
+function setPassword(password) {
+    if (typeof password !== "string") {
+        throw new Error("password must be a string");
+    }
+
+    if (password.length !== 6) {
+        throw new Error("password must be 6 characters");
+    }
+
+    var buffer = new Buffer(8);
+    buffer.writeUInt8(0xf9);
+    buffer.writeUInt8(0xc8);
+    buffer.writeString(password);
     return buffer.toBytes();
 }
 
@@ -847,6 +870,7 @@ function Buffer(size) {
     }
 }
 
+
 Buffer.prototype._write = function (value, byteLength, isLittleEndian) {
     for (var index = 0; index < byteLength; index++) {
         var shift = isLittleEndian ? index << 3 : (byteLength - 1 - index) << 3;
@@ -882,6 +906,40 @@ Buffer.prototype.writeUInt32LE = function (value) {
 Buffer.prototype.writeInt32LE = function (value) {
     this._write(value < 0 ? value + 0x100000000 : value, 4, true);
     this.offset += 4;
+};
+
+function encodeUtf8(str) {
+    var byteArray = [];
+    for (var i = 0; i < str.length; i++) {
+        var charCode = str.charCodeAt(i);
+        if (charCode < 0x80) {
+            byteArray.push(charCode);
+        } else if (charCode < 0x800) {
+            byteArray.push(0xc0 | (charCode >> 6));
+            byteArray.push(0x80 | (charCode & 0x3f));
+        } else if (charCode < 0x10000) {
+            byteArray.push(0xe0 | (charCode >> 12));
+            byteArray.push(0x80 | ((charCode >> 6) & 0x3f));
+            byteArray.push(0x80 | (charCode & 0x3f));
+        } else if (charCode < 0x200000) {
+            byteArray.push(0xf0 | (charCode >> 18));
+            byteArray.push(0x80 | ((charCode >> 12) & 0x3f));
+            byteArray.push(0x80 | ((charCode >> 6) & 0x3f));
+            byteArray.push(0x80 | (charCode & 0x3f));
+        }
+    }
+    return byteArray;
+}
+
+Buffer.prototype.writeString = function(str) {
+    var bytes = encodeUtf8(str);
+    if (bytes.length != str.length) {
+        throw new Error('string length is not equal to length');
+    }
+    for (var i = 0; i < bytes.length; i++) {
+        this.buffer[this.offset] = (bytes[i]);
+        this.offset += 1;
+    }
 };
 
 Buffer.prototype.writeD2DCommand = function (value, defaultValue) {
