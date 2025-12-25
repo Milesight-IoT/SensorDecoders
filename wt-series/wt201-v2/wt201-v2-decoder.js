@@ -88,6 +88,30 @@ function milesightDeviceDecode(bytes) {
             decoded.target_temperature_2 = readInt16LE(bytes.slice(i, i + 2)) / 10;
             i += 2;
         }
+
+        // ODM：7340
+        // D2D
+        else if (channel_id === 0x0b && channel_type === 0x5d) {
+            decoded.device_eui = toHexString(bytes.slice(i, i + 8));
+            decoded.device_snr = readInt8(bytes.slice(i + 8, i + 9));
+            decoded.device_rssi = readInt8(bytes.slice(i + 9, i + 10));
+            i += 10;
+        }
+        // LORA
+        else if (channel_id === 0x0c && channel_type === 0x5e) {
+            decoded.tx_sf = readUInt8(bytes.slice(i, i + 1));
+            decoded.tx_dr = readUInt8(bytes.slice(i + 1, i + 2));
+            decoded.tx_power = readUInt8(bytes.slice(i + 2, i + 3));
+            decoded.win2_dr = readUInt8(bytes.slice(i + 3, i + 4));
+            decoded.win2_freq = readUInt32LE(bytes.slice(i + 4, i + 8));
+            i += 8;
+        }
+        // DEVICE TIME
+        else if (channel_id === 0x0d && channel_type === 0x5f) {
+            decoded.device_time = readUInt32LE(bytes.slice(i + 1, i + 5));
+            i += 5;
+        }
+
         // TEMPERATURE CONTROL
         else if (channel_id === 0x05 && channel_type === 0xe7) {
             var value = bytes[i];
@@ -250,7 +274,24 @@ function handle_downlink_response(channel_type, bytes, offset) {
             offset += 2;
             break;
         case 0x28:
-            var report_status_map = { 0: "plan", 1: "periodic", 2: "target_temperature_range" };
+            var report_status_map = { 
+                0: "plan", 
+                1: "periodic", 
+                2: "target_temperature_range",
+                // ODM: 7340
+                3: "attributes",
+                4: "lora",
+                5: "tempCtrl_tolerance",
+                6: "tempCtrl_level_condition",
+                7: "temperature_difference",
+                8: "wire_setting",
+                9: "fans_setting",
+                10: "yaux_setting",
+                11: "target_humidity_range",
+                12: "button_lock",
+                13: "time_setting",
+                14: "relay_status"
+            };
             decoded.report_status = getValue(report_status_map, readUInt8(bytes[offset]));
             offset += 1;
             break;
@@ -613,6 +654,31 @@ function handle_downlink_response_ext(code, channel_type, bytes, offset) {
             decoded.fan_control_during_heating = readFanControlDuringHeating(readUInt8(bytes[offset]));
             offset += 1;
             break;
+        
+        // ODM: 7340
+        // CHANNEL MASK
+        case 0x64:
+            decoded.device_status = {};
+            var mask = readUInt8(bytes[offset + 3]) + (readUInt8(bytes[offset + 2]) << 8) + (readUInt8(bytes[offset + 1]) << 16) + (readUInt8(bytes[offset]) << 24);
+            var bit_offset = { plan: 0, periodic: 1, target_temperature_range: 2, attributes: 3, lora: 4, tempCtrl_tolerance: 5, tempCtrl_level_condition: 6, temperature_difference: 7, wire_setting: 8, fans_setting: 9, yaux_setting: 10, target_humidity_range: 11, button_lock: 12, time_setting: 13, relay_status: 14 };
+            for (var key in bit_offset) {
+                decoded.device_status[key] = readEnableStatus((mask >>> bit_offset[key]) & 0x01);
+            }
+            offset += 4;
+            break;
+        case 0x65:
+            decoded.actively_report = readEnableStatus(readUInt8(bytes[offset]));
+            offset += 1;
+            break;
+        case 0x66:
+            decoded.up_time = readUInt16LE(bytes.slice(offset, offset + 2));
+            offset += 2;
+            break;
+        case 0x67:
+            decoded.up_counts = readUInt8(bytes[offset]);
+            offset += 1;
+            break;
+        
         case 0x8b:
             decoded.plan_schedule_enable_config = readPlanScheduleEnableConfig(bytes.slice(offset, offset + 2));
             offset += 2;

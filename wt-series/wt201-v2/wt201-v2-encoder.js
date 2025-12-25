@@ -225,6 +225,19 @@ function milesightDeviceEncode(payload) {
     if ("temperature_control_forbidden_config" in payload) {
         encoded = encoded.concat(setTemperatureControlForbiddenConfig(payload.temperature_control_forbidden_config));
     }
+    // ODM: 7340
+    if ("device_status" in payload) {
+        encoded = encoded.concat(setDeviceStatus(payload.device_status));
+    }
+    if ("actively_report" in payload) {
+        encoded = encoded.concat(setActivelyReport(payload.actively_report));
+    }
+    if ("up_time" in payload) {
+        encoded = encoded.concat(setUpTime(payload.up_time));
+    }
+    if ("up_counts" in payload) {
+        encoded = encoded.concat(setUpCounts(payload.up_counts));
+    }
 
     return encoded;
 }
@@ -1840,6 +1853,103 @@ function setTemperatureControlForbiddenConfig(temperature_control_forbidden_conf
     buffer.writeUInt8(0xf9);
     buffer.writeUInt8(0x5d);
     buffer.writeUInt8(data);
+    return buffer.toBytes();
+}
+
+/**
+ * set device status
+ * @param {object} device_status
+ * @param {number} device_status.plan values: (0: disable, 1: enable)
+ * @param {number} device_status.periodic values: (0: disable, 1: enable)
+ * @param {number} device_status.target_temperature_range values: (0: disable, 1: enable)
+ * @param {number} device_status.attributes values: (0: disable, 1: enable)
+ * @param {number} device_status.lora values: (0: disable, 1: enable)
+ * @param {number} device_status.tempCtrl_tolerance values: (0: disable, 1: enable)
+ * @param {number} device_status.tempCtrl_level_condition values: (0: disable, 1: enable)
+ * @param {number} device_status.temperature_difference values: (0: disable, 1: enable)
+ * @param {number} device_status.wire_setting values: (0: disable, 1: enable)
+ * @param {number} device_status.fans_setting values: (0: disable, 1: enable)
+ * @param {number} device_status.yaux_setting values: (0: disable, 1: enable)
+ * @param {number} device_status.target_humidity_range values: (0: disable, 1: enable)
+ * @param {number} device_status.button_lock values: (0: disable, 1: enable)
+ * @param {number} device_status.time_setting values: (0: disable, 1: enable)
+ * @param {number} device_status.relay_status values: (0: disable, 1: enable)
+ * @example { "device_status": { "plan": 1, "periodic": 1, "target_temperature_range": 1, "attributes": 1, "lora": 1, "tempCtrl_tolerance": 1, "tempCtrl_level_condition": 1, "temperature_difference": 1, "wire_setting": 1, "fans_setting": 1, "yaux_setting": 1, "target_humidity_range": 1, "button_lock": 1, "time_setting": 1, "relay_status": 1 } }
+ */
+function setDeviceStatus(device_status) {
+    var data = 0x00;
+    var enable_map = { 0: "disable", 1: "enable" };
+    var enable_values = getValues(enable_map);
+    var bit_offset = { plan: 0, periodic: 1, target_temperature_range: 2, attributes: 3, lora: 4, tempCtrl_tolerance: 5, tempCtrl_level_condition: 6, temperature_difference: 7, wire_setting: 8, fans_setting: 9, yaux_setting: 10, target_humidity_range: 11, button_lock: 12, time_setting: 13, relay_status: 14 };
+    for (var key in bit_offset) {
+        if (key in device_status) {
+            if (enable_values.indexOf(device_status[key]) === -1) {
+                throw new Error("device_status." + key + " must be one of " + enable_values.join(", "));
+            }
+            data |= getValue(enable_map, device_status[key]) << bit_offset[key];
+        }
+    }
+
+    return [ 0xf9, 0x64, (data >> 24) & 0xff, (data >> 16) & 0xff, (data >> 8) & 0xff, data & 0xff ];
+}
+
+/**
+ * set actively report
+ * @param {number} actively_report values: (0: disable, 1: enable)
+ * @example { "actively_report": 1 }
+ */
+function setActivelyReport(actively_report) {
+    var enable_map = { 0: "disable", 1: "enable" };
+    var enable_values = getValues(enable_map);
+    if (enable_values.indexOf(actively_report) === -1) {
+        throw new Error("actively_report must be one of " + enable_values.join(", "));
+    }
+
+    var data = getValue(enable_map, actively_report);
+    var buffer = new Buffer(3);
+    buffer.writeUInt8(0xf9);
+    buffer.writeUInt8(0x65);
+    buffer.writeUInt8(data);
+    return buffer.toBytes();
+}
+
+/**
+ * set up time
+ * @param {number} up_time range: [0, 1439] unit: minute
+ * @example { "up_time": 240 }
+ */
+function setUpTime(up_time) {
+    if (typeof up_time !== "number") {
+        throw new Error("up_time must be a number");
+    }
+    if (up_time < 0 || up_time > 1439) {
+        throw new Error("up_time must be between 0 and 1439");
+    }
+
+    var buffer = new Buffer(3);
+    buffer.writeUInt8(0xf9);
+    buffer.writeUInt8(0x66);
+    buffer.writeUInt16LE(up_time);
+    return buffer.toBytes();
+}
+
+/**
+ * set up counts
+ * @param {number} up_counts range: [1, 12]
+ * @example { "up_counts": 3 }
+ */
+function setUpCounts(up_counts) {
+    if (typeof up_counts !== "number") {
+        throw new Error("up_counts must be a number");
+    }
+    if (up_counts < 1 || up_counts > 12) {
+        throw new Error("up_counts must be between 1 and 12");
+    }
+
+    var buffer = new Buffer(3);
+    buffer.writeUInt8(0xf9);
+    buffer.writeUInt8(0x67);
+    buffer.writeUInt8(up_counts);
     return buffer.toBytes();
 }
 
