@@ -92,24 +92,49 @@ function milesightDeviceDecode(bytes) {
         // ODM：7340
         // D2D
         else if (channel_id === 0x0b && channel_type === 0x5d) {
-            decoded.device_eui = toHexString(bytes.slice(i, i + 8));
-            decoded.device_snr = readInt8(bytes.slice(i + 8, i + 9));
-            decoded.device_rssi = readInt8(bytes.slice(i + 9, i + 10));
-            i += 10;
+            decoded.d2d_info = {};
+            decoded.d2d_info.deveui = '24e124' + toHexString(bytes.slice(i, i + 5));
+            decoded.d2d_info.snr = readInt8(bytes.slice(i + 5, i + 6));
+            decoded.d2d_info.rssi = readInt8(bytes.slice(i + 6, i + 7));
+            i += 7;
         }
         // LORA
         else if (channel_id === 0x0c && channel_type === 0x5e) {
-            decoded.tx_sf = readUInt8(bytes.slice(i, i + 1));
-            decoded.tx_dr = readUInt8(bytes.slice(i + 1, i + 2));
-            decoded.tx_power = readUInt8(bytes.slice(i + 2, i + 3));
-            decoded.win2_dr = readUInt8(bytes.slice(i + 3, i + 4));
-            decoded.win2_freq = readUInt32LE(bytes.slice(i + 4, i + 8));
+            decoded.lora_info = {};
+            decoded.lora_info.tx_sf = readUInt8(bytes.slice(i, i + 1));
+            decoded.lora_info.tx_dr = readUInt8(bytes.slice(i + 1, i + 2));
+            decoded.lora_info.tx_power = readUInt8(bytes.slice(i + 2, i + 3));
+            decoded.lora_info.win2_dr = readUInt8(bytes.slice(i + 3, i + 4));
+            decoded.lora_info.win2_freq = readUInt32LE(bytes.slice(i + 4, i + 8));
             i += 8;
         }
         // DEVICE TIME
         else if (channel_id === 0x0d && channel_type === 0x5f) {
-            decoded.device_time = readUInt32LE(bytes.slice(i + 1, i + 5));
+            decoded.dev_time = {};
+            decoded.dev_time.time = readUInt32LE(bytes.slice(i + 1, i + 5));
             i += 5;
+        }
+        // daylight saving time
+        else if (channel_id === 0x0e && channel_type === 0x60) {
+            var data = bytes[i];
+            var enable_value = (data >> 7) & 0x01;
+            var offset_value = data & 0x7f;
+            decoded.dst_config = {};
+            decoded.dst_config.enable = readEnableStatus(enable_value);
+            if (enable_value) {
+                decoded.dst_config.offset = offset_value;
+                decoded.dst_config.start_month = readUInt8(bytes[i + 1]);
+                var start_day = readUInt8(bytes[i + 2]);
+                decoded.dst_config.start_week_num = (start_day >>> 4) & 0x0f;
+                decoded.dst_config.start_week_day = start_day & 0x0f;
+                decoded.dst_config.start_time = readUInt16LE(bytes.slice(i + 3, i + 5));
+                decoded.dst_config.end_month = readUInt8(bytes[i + 5]);
+                var end_day = readUInt8(bytes[i + 6]);
+                decoded.dst_config.end_week_num = (end_day >>> 4) & 0x0f;
+                decoded.dst_config.end_week_day = end_day & 0x0f;
+                decoded.dst_config.end_time = readUInt16LE(bytes.slice(i + 7, i + 9));
+            }
+            i += 9;
         }
 
         // TEMPERATURE CONTROL
@@ -274,7 +299,7 @@ function handle_downlink_response(channel_type, bytes, offset) {
             offset += 2;
             break;
         case 0x28:
-            var report_status_map = { 
+            var query_type_map = { 
                 0: "plan", 
                 1: "periodic", 
                 2: "target_temperature_range",
@@ -282,8 +307,8 @@ function handle_downlink_response(channel_type, bytes, offset) {
                 3: "attributes",
                 4: "lora",
                 5: "tempCtrl_tolerance",
-                6: "tempCtrl_level_condition",
-                7: "temperature_difference",
+                6: "level_switch_condition_settings",
+                7: "temperature_control_delta_settings",
                 8: "wire_setting",
                 9: "fans_setting",
                 10: "yaux_setting",
@@ -292,7 +317,7 @@ function handle_downlink_response(channel_type, bytes, offset) {
                 13: "time_setting",
                 14: "relay_status"
             };
-            decoded.report_status = getValue(report_status_map, readUInt8(bytes[offset]));
+            decoded.query_type = getValue(query_type_map, readUInt8(bytes[offset]));
             offset += 1;
             break;
         case 0x82:
@@ -364,11 +389,11 @@ function handle_downlink_response(channel_type, bytes, offset) {
             offset += 2;
             break;
         case 0xb9:
-            decoded.temperature_level_up_condition = {};
-            decoded.temperature_level_up_condition.type = readTemperatureLevelUpCondition(readUInt8(bytes[offset]));
-            decoded.temperature_level_up_condition.time = readUInt8(bytes[offset + 1]);
-            decoded.temperature_level_up_condition.temperature_control_tolerance = readInt16LE(bytes.slice(offset + 2, offset + 4)) / 10;
-            offset += 4;
+            var level_switch_settings = readLevelSwitchSettings(bytes.slice(offset, offset + 3));
+
+            decoded.level_switch_settings = decoded.level_switch_settings || [];
+            decoded.level_switch_settings.push(level_switch_settings);
+            offset += 3;
             break;
         case 0xba:
             var enable_value = bytes[offset];
@@ -615,14 +640,10 @@ function handle_downlink_response_ext(code, channel_type, bytes, offset) {
             offset += 9;
             break;
         case 0x5a:
-            decoded.dual_temperature_tolerance = decoded.dual_temperature_tolerance || {};
-            var tolerance_index = readUInt8(bytes[offset]);
-            var tolerance_value = readUInt8(bytes[offset + 1]) / 10;
-            if (tolerance_index === 0x00) {
-                decoded.dual_temperature_tolerance.heat_tolerance = tolerance_value;
-            } else if (tolerance_index === 0x01) {
-                decoded.dual_temperature_tolerance.cool_tolerance = tolerance_value;
-            }
+            var double_point_target_tolerance = readDoublePointTargetTolerance(bytes.slice(offset, offset + 2));
+
+            decoded.double_point_target_tolerance = decoded.double_point_target_tolerance || [];
+            decoded.double_point_target_tolerance.push(double_point_target_tolerance);
             offset += 2;
             break;
         case 0x5c:
@@ -660,7 +681,7 @@ function handle_downlink_response_ext(code, channel_type, bytes, offset) {
         case 0x64:
             decoded.device_status = {};
             var mask = readUInt8(bytes[offset + 3]) + (readUInt8(bytes[offset + 2]) << 8) + (readUInt8(bytes[offset + 1]) << 16) + (readUInt8(bytes[offset]) << 24);
-            var bit_offset = { plan: 0, periodic: 1, target_temperature_range: 2, attributes: 3, lora: 4, tempCtrl_tolerance: 5, tempCtrl_level_condition: 6, temperature_difference: 7, wire_setting: 8, fans_setting: 9, yaux_setting: 10, target_humidity_range: 11, button_lock: 12, time_setting: 13, relay_status: 14 };
+            var bit_offset = { plan: 0, periodic: 1, target_temperature_range: 2, attributes: 3, lora: 4, tempCtrl_tolerance: 5, level_switch_condition_settings: 6, temperature_control_delta_settings: 7, wire_setting: 8, fans_setting: 9, yaux_setting: 10, target_humidity_range: 11, button_lock: 12, time_setting: 13, relay_status: 14 };
             for (var key in bit_offset) {
                 decoded.device_status[key] = readEnableStatus((mask >>> bit_offset[key]) & 0x01);
             }
@@ -949,9 +970,17 @@ function readActionType(type) {
     return getValue(action_type_map, type);
 }
 
-function readTemperatureLevelUpCondition(type) {
-    var temperature_level_up_condition_map = { 0: "heat", 1: "cool" };
-    return getValue(temperature_level_up_condition_map, type);
+function readTemperatureControlType(type) {
+    var temperature_control_type_map = { 0: "heat", 1: "cool" };
+    return getValue(temperature_control_type_map, type);
+}
+
+function readLevelSwitchSettings(bytes) {
+    var level_switch_settings = {};
+    level_switch_settings.type = readTemperatureControlType(readUInt8(bytes[0]));
+    level_switch_settings.time = readUInt8(bytes[1]);
+    level_switch_settings.change_value = readUInt8(bytes[2]) / 10;
+    return level_switch_settings;
 }
 
 function readTemperatureControlSupportMode(value) {
@@ -1000,6 +1029,14 @@ function readSingleTemperaturePlanConfig(bytes) {
     config.target_temperature_tolerance = readUInt8(bytes[offset + 5]) / 10;
     config.temperature_control_tolerance = readUInt8(bytes[offset + 6]) / 10;
     return config;
+}
+
+function readDoublePointTargetTolerance(bytes) {
+    var double_point_target_tolerance = {};
+    var mode_map = { 0: "heat", 1: "cool" };
+    double_point_target_tolerance.mode = getValue(mode_map, readUInt8(bytes[0]));
+    double_point_target_tolerance.tolerance = readUInt8(bytes[1]) / 10;
+    return double_point_target_tolerance;
 }
 
 function readDualTemperaturePlanConfig(bytes) {
