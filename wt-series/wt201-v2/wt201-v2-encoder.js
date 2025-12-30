@@ -74,8 +74,11 @@ function milesightDeviceEncode(payload) {
     if ("humidity_calibration_settings" in payload) {
         encoded = encoded.concat(setHumidityCalibration(payload.humidity_calibration_settings));
     }
-    if ("temperature_level_up_condition" in payload) {
-        encoded = encoded.concat(setTemperatureLevelUpCondition(payload.temperature_level_up_condition));
+    if ("level_switch_settings" in payload) {
+        for (var index = 0; index < payload.level_switch_settings.length; index++) {
+            var level_switch_settings = payload.level_switch_settings[index];
+            encoded = encoded.concat(setLevelSwitchSettings(level_switch_settings));
+        }
     }
     if ("temperature_source_config" in payload) {
         encoded = encoded.concat(setTemperatureSourceConfig(payload.temperature_source_config));
@@ -198,8 +201,11 @@ function milesightDeviceEncode(payload) {
     if ("fan_control_during_heating" in payload) {
         encoded = encoded.concat(setFanControlDuringHeating(payload.fan_control_during_heating));
     }
-    if ("dual_temperature_tolerance" in payload) {
-        encoded = encoded.concat(setDualTemperatureTolerance(payload.dual_temperature_tolerance));
+    if ("double_point_target_tolerance" in payload) {
+        for (var index = 0; index < payload.double_point_target_tolerance.length; index++) {
+            var double_point_target_tolerance = payload.double_point_target_tolerance[index];
+            encoded = encoded.concat(setDoublePointTargetTolerance(double_point_target_tolerance));
+        }
     }
     if ("target_temperature_dual_enable" in payload) {
         encoded = encoded.concat(setTargetTemperatureDual(payload.target_temperature_dual_enable));
@@ -607,36 +613,42 @@ function setTargetTemperatureRangeConfig(target_temperature_range_config) {
     return buffer.toBytes();
 }
 /**
- * set temperature level up condition
- * @param {object} temperature_level_up_condition
- * @param {number} temperature_level_up_condition.type values: (0: heat, 1: cool)
- * @param {number} temperature_level_up_condition.time unit: minute
- * @param {number} temperature_level_up_condition.temperature_control_tolerance unit: celsius
- * @example { "temperature_level_up_condition": { "type": 0, "time": 10, "temperature_control_tolerance": 1 } }
+ * set level switch settings
+ * @param {object} decoded.level_switch_settings
+ * @param {number} decoded.level_switch_settings.type values: (0: heat, 1: cool)
+ * @param {number} decoded.level_switch_settings.time unit: minute range: [1, 30]
+ * @param {number} decoded.level_switch_settings.change_value unit: celsius range: [0.5, 5]
+ * @example { "decoded.level_switch_settings": { "type": 0, "time": 10, "change_value": 1 } }
  */
-function setTemperatureLevelUpCondition(temperature_level_up_condition) {
-    var type = temperature_level_up_condition.type;
-    var time = temperature_level_up_condition.time;
-    var temperature_control_tolerance = temperature_level_up_condition.temperature_control_tolerance;
+function setLevelSwitchSettings(level_switch_settings) {
+    var type = level_switch_settings.type;
+    var time = level_switch_settings.time;
+    var change_value = level_switch_settings.change_value;
 
-    var temperature_level_up_condition_type_map = { 0: "heat", 1: "cool" };
-    var temperature_level_up_condition_type_values = getValues(temperature_level_up_condition_type_map);
-    if (temperature_level_up_condition_type_values.indexOf(type) === -1) {
-        throw new Error("temperature_level_up_condition.type must be one of " + temperature_level_up_condition_type_values.join(", "));
+    var temperature_control_type_map = { 0: "heat", 1: "cool" };
+    var temperature_control_type_values = getValues(temperature_control_type_map);
+    if (temperature_control_type_values.indexOf(type) === -1) {
+        throw new Error("level_switch_settings._item.type must be one of " + temperature_control_type_values.join(", "));
     }
     if (typeof time !== "number") {
-        throw new Error("temperature_level_up_condition.time must be a number");
+        throw new Error("level_switch_settings._item.time must be a number");
     }
-    if (typeof temperature_control_tolerance !== "number") {
-        throw new Error("temperature_level_up_condition.temperature_control_tolerance must be a number");
+    if (time < 1 || time > 30) {
+        throw new Error("level_switch_settings._item.time must be a number, range: [1, 30]");
+    }
+    if (typeof change_value !== "number") {
+        throw new Error("level_switch_settings._item.change_value must be a number");
+    }
+    if (change_value < 0.5 || change_value > 5) {
+        throw new Error("level_switch_settings._item.change_value must be a number, range: [0.5, 5]");
     }
 
     var buffer = new Buffer(5);
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0xb9);
-    buffer.writeUInt8(getValue(temperature_level_up_condition_type_map, type));
+    buffer.writeUInt8(getValue(temperature_control_type_map, type));
     buffer.writeUInt8(time);
-    buffer.writeUInt8(temperature_control_tolerance * 10);
+    buffer.writeUInt8(change_value * 10);
     return buffer.toBytes();
 }
 
@@ -1973,45 +1985,34 @@ function setPlanConfigWithSingleTemperature(single_temperature_plan_config) {
 }
 
 /**
- * set dual temperature tolerance
- * @param {object} dual_temperature_tolerance
- * @param {number} dual_temperature_tolerance.heat_tolerance
- * @param {number} dual_temperature_tolerance.cool_tolerance
- * @example { "dual_temperature_tolerance": { "heat_tolerance": 1, "cool_tolerance": 1 } }
+ * set double point target tolerance
+ * @param {object} double_point_target_tolerance
+ * @param {number} double_point_target_tolerance.mode values: (0: heat, 1: cool)
+ * @param {number} double_point_target_tolerance.tolerance unit: celsius range: [0.1, 5]
+ * @example { "double_point_target_tolerance": { "mode": 0, "tolerance": 1 } }
  */
-function setDualTemperatureTolerance(dual_temperature_tolerance) {
-    var heat_tolerance = dual_temperature_tolerance.heat_tolerance;
-    var cool_tolerance = dual_temperature_tolerance.cool_tolerance;
+function setDoublePointTargetTolerance(double_point_target_tolerance) {
+    var mode = double_point_target_tolerance.mode;
+    var tolerance = double_point_target_tolerance.tolerance;
 
-    var heat_tolerance_buffer = [];
-    if ("heat_tolerance" in dual_temperature_tolerance) {
-        if (typeof heat_tolerance !== "number") {
-            throw new Error("dual_temperature_tolerance.heat_tolerance must be a number");
-        }
-
-        var heat_buffer = new Buffer(4);
-        heat_buffer.writeUInt8(0xf9);
-        heat_buffer.writeUInt8(0x5a);
-        heat_buffer.writeUInt8(0x00);
-        heat_buffer.writeUInt8(heat_tolerance * 10);
-        heat_tolerance_buffer = heat_buffer.toBytes();
+    var mode_map = { 0: "heat", 1: "cool" };
+    var mode_values = getValues(mode_map);
+    if (mode_values.indexOf(mode) === -1) {
+        throw new Error("double_point_target_tolerance._item.mode must be one of " + mode_values.join(", "));
+    }
+    if (typeof tolerance !== "number") {
+        throw new Error("double_point_target_tolerance._item.tolerance must be a number");
+    }
+    if (tolerance < 0.1 || tolerance > 5) {
+        throw new Error("double_point_target_tolerance._item.tolerance must be a number, range: [0.1, 5]");
     }
 
-    var cool_tolerance_buffer = [];
-    if ("cool_tolerance" in dual_temperature_tolerance) {
-        if (typeof cool_tolerance !== "number") {
-            throw new Error("dual_temperature_tolerance.cool_tolerance must be a number");
-        }
-
-        var cool_buffer = new Buffer(4);
-        cool_buffer.writeUInt8(0xf9);
-        cool_buffer.writeUInt8(0x5a);
-        cool_buffer.writeUInt8(0x01);
-        cool_buffer.writeUInt8(cool_tolerance * 10);
-        cool_tolerance_buffer = cool_buffer.toBytes();
-    }
-
-    return heat_tolerance_buffer.concat(cool_tolerance_buffer);
+    var buffer = new Buffer(3);
+    buffer.writeUInt8(0xf9);
+    buffer.writeUInt8(0x5a);
+    buffer.writeUInt8(getValue(mode_map, mode));
+    buffer.writeUInt8(tolerance * 10);
+    return buffer.toBytes();
 }
 
 /**

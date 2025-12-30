@@ -323,11 +323,11 @@ function handle_downlink_response(channel_type, bytes, offset) {
             offset += 2;
             break;
         case 0xb9:
-            decoded.temperature_level_up_condition = {};
-            decoded.temperature_level_up_condition.type = readTemperatureLevelUpCondition(readUInt8(bytes[offset]));
-            decoded.temperature_level_up_condition.time = readUInt8(bytes[offset + 1]);
-            decoded.temperature_level_up_condition.temperature_control_tolerance = readInt16LE(bytes.slice(offset + 2, offset + 4)) / 10;
-            offset += 4;
+            var level_switch_settings = readLevelSwitchSettings(bytes.slice(offset, offset + 3));
+
+            decoded.level_switch_settings = decoded.level_switch_settings || [];
+            decoded.level_switch_settings.push(level_switch_settings);
+            offset += 3;
             break;
         case 0xba:
             var enable_value = bytes[offset];
@@ -574,14 +574,10 @@ function handle_downlink_response_ext(code, channel_type, bytes, offset) {
             offset += 9;
             break;
         case 0x5a:
-            decoded.dual_temperature_tolerance = decoded.dual_temperature_tolerance || {};
-            var tolerance_index = readUInt8(bytes[offset]);
-            var tolerance_value = readUInt8(bytes[offset + 1]) / 10;
-            if (tolerance_index === 0x00) {
-                decoded.dual_temperature_tolerance.heat_tolerance = tolerance_value;
-            } else if (tolerance_index === 0x01) {
-                decoded.dual_temperature_tolerance.cool_tolerance = tolerance_value;
-            }
+            var double_point_target_tolerance = readDoublePointTargetTolerance(bytes.slice(offset, offset + 2));
+
+            decoded.double_point_target_tolerance = decoded.double_point_target_tolerance || [];
+            decoded.double_point_target_tolerance.push(double_point_target_tolerance);
             offset += 2;
             break;
         case 0x5c:
@@ -883,9 +879,17 @@ function readActionType(type) {
     return getValue(action_type_map, type);
 }
 
-function readTemperatureLevelUpCondition(type) {
-    var temperature_level_up_condition_map = { 0: "heat", 1: "cool" };
-    return getValue(temperature_level_up_condition_map, type);
+function readTemperatureControlType(type) {
+    var temperature_control_type_map = { 0: "heat", 1: "cool" };
+    return getValue(temperature_control_type_map, type);
+}
+
+function readLevelSwitchSettings(bytes) {
+    var level_switch_settings = {};
+    level_switch_settings.type = readTemperatureControlType(readUInt8(bytes[0]));
+    level_switch_settings.time = readUInt8(bytes[1]);
+    level_switch_settings.change_value = readUInt8(bytes[2]) / 10;
+    return level_switch_settings;
 }
 
 function readTemperatureControlSupportMode(value) {
@@ -934,6 +938,14 @@ function readSingleTemperaturePlanConfig(bytes) {
     config.target_temperature_tolerance = readUInt8(bytes[offset + 5]) / 10;
     config.temperature_control_tolerance = readUInt8(bytes[offset + 6]) / 10;
     return config;
+}
+
+function readDoublePointTargetTolerance(bytes) {
+    var double_point_target_tolerance = {};
+    var mode_map = { 0: "heat", 1: "cool" };
+    double_point_target_tolerance.mode = getValue(mode_map, readUInt8(bytes[0]));
+    double_point_target_tolerance.tolerance = readUInt8(bytes[1]) / 10;
+    return double_point_target_tolerance;
 }
 
 function readDualTemperaturePlanConfig(bytes) {
