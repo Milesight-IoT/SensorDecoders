@@ -27,34 +27,6 @@ function Encoder(obj, port) {
 
 function milesightDeviceEncode(payload) {
 	var encoded = [];
-	//0xf9_0xbd
-	if ('reporting_interval' in payload) {
-		var buffer = new Buffer();
-		buffer.writeUInt8(0xf9);
-		buffer.writeUInt8(0xbd);
-		// 0:second, 1:minute
-		buffer.writeUInt8(payload.reporting_interval.unit);
-		if (payload.reporting_interval.interval < 1 || payload.reporting_interval.interval > 1440) {
-			throw new Error('reporting_interval.interval must be between 1 and 1440');
-		}
-		buffer.writeUInt16LE(payload.reporting_interval.interval);
-		encoded = encoded.concat(buffer.toBytes());
-	}
-	//0xf9_0xbe
-	if ('collecting_interval' in payload) {
-		var buffer = new Buffer();
-		buffer.writeUInt8(0xf9);
-		buffer.writeUInt8(0xbe);
-		// 0:temperature,humidity,CO₂ collect interval, 1:illuminace collect interval
-		buffer.writeUInt8(payload.collecting_interval.id);
-		// 0:second, 1:minute
-		buffer.writeUInt8(payload.collecting_interval.unit);
-		if (payload.collecting_interval.interval < 1 || payload.collecting_interval.interval > 1440) {
-			throw new Error('collecting_interval.interval must be between 1 and 1440');
-		}
-		buffer.writeUInt16LE(payload.collecting_interval.interval);
-		encoded = encoded.concat(buffer.toBytes());
-	}
 	//0xff_0xf2
 	if ('alarm_reporting_times' in payload) {
 		var buffer = new Buffer();
@@ -73,17 +45,6 @@ function milesightDeviceEncode(payload) {
 		buffer.writeUInt8(0xf5);
 		// 0: disable, 1: enable
 		buffer.writeUInt8(payload.alarm_deactivation_enable);
-		encoded = encoded.concat(buffer.toBytes());
-	}
-	//0xf9_0xc0
-	if ('temperature_unit' in payload) {
-		var buffer = new Buffer();
-		buffer.writeUInt8(0xf9);
-		buffer.writeUInt8(0xc0);
-		// 0:temperature, 1:Illuminance
-		buffer.writeUInt8(payload.temperature_unit.sensor_id);
-		// 0:celsius, 1:fahrenheit
-		buffer.writeUInt8(payload.temperature_unit.unit);
 		encoded = encoded.concat(buffer.toBytes());
 	}
 	//0xff_0x2e
@@ -135,25 +96,6 @@ function milesightDeviceEncode(payload) {
 		buffer.writeInt16LE(payload.temperature_alarm_rule.threshold_min * 10);
 		encoded = encoded.concat(buffer.toBytes());
 	}
-	//0xf9_0xc4
-	if ('co2_alarm_rule' in payload) {
-		var buffer = new Buffer();
-		buffer.writeUInt8(0xf9);
-		buffer.writeUInt8(0xc4);
-		// 0：disable, 1：enable
-		buffer.writeUInt8(payload.co2_alarm_rule.enable);
-		// 0:enable 1-level only, 1:enable 2-levle only, 2:enable 1-level&2-levle
-		buffer.writeUInt8(payload.co2_alarm_rule.mode);
-		if (payload.co2_alarm_rule.level1_value < 400 || payload.co2_alarm_rule.level1_value > 5000) {
-			throw new Error('co2_alarm_rule.level1_value must be between 400 and 5000');
-		}
-		buffer.writeUInt16LE(payload.co2_alarm_rule.level1_value);
-		if (payload.co2_alarm_rule.level2_value < 400 || payload.co2_alarm_rule.level2_value > 5000) {
-			throw new Error('co2_alarm_rule.level2_value must be between 400 and 5000');
-		}
-		buffer.writeUInt16LE(payload.co2_alarm_rule.level2_value);
-		encoded = encoded.concat(buffer.toBytes());
-	}
 	//0xff_0x18
 	if ('pir_enable' in payload) {
 		var buffer = new Buffer();
@@ -182,49 +124,6 @@ function milesightDeviceEncode(payload) {
 		bitOptions |= payload.co2_collecting_enable.enable << 4;
 		buffer.writeUInt8(bitOptions);
 
-		encoded = encoded.concat(buffer.toBytes());
-	}
-	//0xf9_0xbc
-	if ('pir_trigger_report' in payload) {
-		var buffer = new Buffer();
-		buffer.writeUInt8(0xf9);
-		buffer.writeUInt8(0xbc);
-		// 0:trigger report, 1:vacant report
-		buffer.writeUInt8(payload.pir_trigger_report.type);
-		// 0：disable, 1：enable
-		buffer.writeUInt8(payload.pir_trigger_report.enable);
-		// 0:trigger report, 1:vacant report
-		buffer.writeUInt8(payload.pir_idle_report.type);
-		// 0：disable, 1：enable
-		buffer.writeUInt8(payload.pir_idle_report.enable);
-		encoded = encoded.concat(buffer.toBytes());
-	}
-	//0xff_0x95
-	if ('' in payload) {
-		var buffer = new Buffer();
-		buffer.writeUInt8(0xff);
-		buffer.writeUInt8(0x95);
-		if (payload.pir_idle_report.pir_idle_interval < 60 || payload.pir_idle_report.pir_idle_interval > 3600) {
-			throw new Error('pir_idle_report.pir_idle_interval must be between 60 and 3600');
-		}
-		buffer.writeUInt16LE(payload.pir_idle_report.pir_idle_interval);
-		encoded = encoded.concat(buffer.toBytes());
-	}
-	//0xf9_0xbf
-	if ('illuminance_alarm_rule' in payload) {
-		var buffer = new Buffer();
-		buffer.writeUInt8(0xf9);
-		buffer.writeUInt8(0xbf);
-		// 0：disable, 1：enable
-		buffer.writeUInt8(payload.illuminance_alarm_rule.enable);
-		if (payload.illuminance_alarm_rule.dim_value < 0 || payload.illuminance_alarm_rule.dim_value > 60000) {
-			throw new Error('illuminance_alarm_rule.dim_value must be between 0 and 60000');
-		}
-		buffer.writeUInt16LE(payload.illuminance_alarm_rule.dim_value);
-		if (payload.illuminance_alarm_rule.bright_value < 0 || payload.illuminance_alarm_rule.bright_value > 60000) {
-			throw new Error('illuminance_alarm_rule.bright_value must be between 0 and 60000');
-		}
-		buffer.writeUInt16LE(payload.illuminance_alarm_rule.bright_value);
 		encoded = encoded.concat(buffer.toBytes());
 	}
 	//0xff_0xea
@@ -292,32 +191,6 @@ function milesightDeviceEncode(payload) {
 		buffer.writeUInt16LE(payload.co2_altitude_calibration.value);
 		encoded = encoded.concat(buffer.toBytes());
 	}
-	//0xf9_0x63
-	if ('d2d_sending' in payload) {
-		var buffer = new Buffer();
-		buffer.writeUInt8(0xf9);
-		buffer.writeUInt8(0x63);
-		// 0：disable, 1：enable
-		buffer.writeUInt8(payload.d2d_sending.enable);
-		// 0：disable, 1：enable
-		buffer.writeUInt8(payload.d2d_sending.lora_uplink_enable);
-		var bitOptions = 0;
-		bitOptions |= payload.d2d_sending.temperature_enable << 0;
-
-		bitOptions |= payload.d2d_sending.humidity_enable << 1;
-		buffer.writeUInt16LE(bitOptions);
-
-		encoded = encoded.concat(buffer.toBytes());
-	}
-	//0xf9_0x66
-	if ('d2d_master_enable' in payload) {
-		var buffer = new Buffer();
-		buffer.writeUInt8(0xf9);
-		buffer.writeUInt8(0x66);
-		// 0：disable, 1：enable
-		buffer.writeUInt8(payload.d2d_master_enable);
-		encoded = encoded.concat(buffer.toBytes());
-	}
 	//0xff_0x96
 	if ('d2d_master_settings' in payload) {
 		var buffer = new Buffer();
@@ -366,6 +239,343 @@ function milesightDeviceEncode(payload) {
 		buffer.writeUInt8(0x1a);
 		buffer.writeUInt8(payload.co2_reset_calibration);
 		buffer.writeUInt8(payload.co2_background_calibration);
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0x01_0x75
+	if ('battery' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0x01);
+		buffer.writeUInt8(0x75);
+		if (payload.battery < 1 || payload.battery > 100) {
+			throw new Error('battery must be between 1 and 100');
+		}
+		buffer.writeUInt8(payload.battery);
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0x03_0x67
+	if ('temperature' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0x03);
+		buffer.writeUInt8(0x67);
+		if (payload.temperature < -20 || payload.temperature > 60) {
+			throw new Error('temperature must be between -20 and 60');
+		}
+		buffer.writeInt16LE(payload.temperature * 10);
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0x04_0x68
+	if ('humidity' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0x04);
+		buffer.writeUInt8(0x68);
+		if (payload.humidity < 0 || payload.humidity > 100) {
+			throw new Error('humidity must be between 0 and 100');
+		}
+		buffer.writeUInt8(payload.humidity * 2);
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0x05_0x9f
+	if ('pir' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0x05);
+		buffer.writeUInt8(0x9f);
+		var bitOptions = 0;
+		bitOptions |= payload.pir.pir_status << 15;
+
+		bitOptions |= payload.pir.pir_count << 0;
+		buffer.writeUInt16LE(bitOptions);
+
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0x05_0x00
+	if ('pir_status_change' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0x05);
+		buffer.writeUInt8(0x00);
+		// 0:vacant, 1:trigger
+		buffer.writeUInt8(payload.pir_status_change.status);
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0x06_0xcb
+	if ('als_level' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0x06);
+		buffer.writeUInt8(0xcb);
+		if (payload.als_level < 0 || payload.als_level > 5) {
+			throw new Error('als_level must be between 0 and 5');
+		}
+		buffer.writeUInt8(payload.als_level);
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0x06_0x9d
+	if ('Lux' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0x06);
+		buffer.writeUInt8(0x9d);
+		if (payload.Lux < 0 || payload.Lux > 60000) {
+			throw new Error('Lux must be between 0 and 60000');
+		}
+		buffer.writeUInt16LE(payload.Lux);
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0x07_0x7d
+	if ('co2' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0x07);
+		buffer.writeUInt8(0x7d);
+		if (payload.co2 < 400 || payload.co2 > 5000) {
+			throw new Error('co2 must be between 400 and 5000');
+		}
+		buffer.writeUInt16LE(payload.co2);
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0xb3_0x67
+	if ('temperature_collection_anomaly' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0xb3);
+		buffer.writeUInt8(0x67);
+		// 0:collect abnormal, 1:collect out of range
+		buffer.writeUInt8(payload.temperature_collection_anomaly.type);
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0xb4_0x68
+	if ('humidity_collection_anomaly' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0xb4);
+		buffer.writeUInt8(0x68);
+		// 0:collect abnormal
+		buffer.writeUInt8(payload.humidity_collection_anomaly.type);
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0xb6_0xcb
+	if ('illuminace_collection_anomaly' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0xb6);
+		buffer.writeUInt8(0xcb);
+		// 0:collect abnormal
+		buffer.writeUInt8(payload.illuminace_collection_anomaly.type);
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0xb6_0x9d
+	if ('Lux_collection_anomaly' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0xb6);
+		buffer.writeUInt8(0x9d);
+		// 0:collect abnormal, 1:collect out of range
+		buffer.writeUInt8(payload.Lux_collection_anomaly.type);
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0xb7_0x7d
+	if ('co2_collection_anomaly' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0xb7);
+		buffer.writeUInt8(0x7d);
+		// 0:collect abnormal, 1:collect out of range
+		buffer.writeUInt8(payload.co2_collection_anomaly.type);
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0x83_0x67
+	if ('temperature_alarm' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0x83);
+		buffer.writeUInt8(0x67);
+		buffer.writeInt16LE(payload.temperature_alarm.temperature * 10);
+		// 16:below alarm released, 17:below alarm, 18:above alarm released, 19:above alarm, 20:within alarm released, 21:within alarm, 22:exceed tolerance alarm released, 23:exceed tolerance alarm
+		buffer.writeUInt8(payload.temperature_alarm.alarm_type);
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0x86_0x9d
+	if ('Lux_alarm' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0x86);
+		buffer.writeUInt8(0x9d);
+		buffer.writeUInt16LE(payload.Lux_alarm.Lux);
+		// 16:dim, 17:bright
+		buffer.writeUInt8(payload.Lux_alarm.alarm_type);
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0x87_0x7d
+	if ('co2_alarm' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0x87);
+		buffer.writeUInt8(0x7d);
+		buffer.writeUInt16LE(payload.co2_alarm.co2);
+		// 16:Polluted,2-level alarm released, 17:Polluted,2-level alarm, 18:Bad,1-level alarm released, 19:Bad,1-level alarm
+		buffer.writeUInt8(payload.co2_alarm.alarm_type);
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0x20_0xce
+	if ('historical_data_retrieval' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0x20);
+		buffer.writeUInt8(0xce);
+		buffer.writeUInt32LE(payload.historical_data_retrieval.timestamp);
+		// 0:data invalid, 1:data valid, 2:data out of range, 3:data collect abnormal
+		buffer.writeUInt8(payload.historical_data_retrieval.temperature_type);
+		buffer.writeInt16LE(payload.historical_data_retrieval.temperature * 10);
+		// 0:data invalid, 1:data valid, 2:data out of range, 3:data collect abnormal
+		buffer.writeUInt8(payload.historical_data_retrieval.humidity_type);
+		buffer.writeUInt8(payload.historical_data_retrieval.humidity * 2);
+		var bitOptions = 0;
+		// 0:data invalid, 1:data valid
+		bitOptions |= payload.historical_data_retrieval.pir_type << 6;
+
+		// 0:vacant, 1:trigger
+		bitOptions |= payload.historical_data_retrieval.pir_status << 0;
+
+		buffer.writeUInt8(bitOptions);
+		buffer.writeUInt16LE(payload.historical_data_retrieval.pir_count);
+		// 0:data invalid, 1:data valid, 2:data out of range, 3:data collect abnormal
+		buffer.writeUInt8(payload.historical_data_retrieval.als_level_type);
+		buffer.writeUInt16LE(payload.historical_data_retrieval.als_level);
+		// 0:data invalid, 1:data valid, 2:data out of range, 3:data collect abnormal
+		buffer.writeUInt8(payload.historical_data_retrieval.co2_type);
+		buffer.writeUInt16LE(payload.historical_data_retrieval.co2);
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0x21_0xce
+	if ('historical_data_retrieval_Lux' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0x21);
+		buffer.writeUInt8(0xce);
+		buffer.writeUInt32LE(payload.historical_data_retrieval_Lux.timestamp);
+		// 0:data invalid, 1:data valid, 2:data out of range, 3:data collect abnormal
+		buffer.writeUInt8(payload.historical_data_retrieval_Lux.temperature_type);
+		buffer.writeInt16LE(payload.historical_data_retrieval_Lux.temperature * 10);
+		// 0:data invalid, 1:data valid, 2:data out of range, 3:data collect abnormal
+		buffer.writeUInt8(payload.historical_data_retrieval_Lux.humidity_type);
+		buffer.writeUInt8(payload.historical_data_retrieval_Lux.humidity * 2);
+		var bitOptions = 0;
+		// 0:data invalid, 1:data valid
+		bitOptions |= payload.historical_data_retrieval_Lux.pir_type << 6;
+
+		// 0:vacant, 1:trigger
+		bitOptions |= payload.historical_data_retrieval_Lux.pir_status << 0;
+
+		buffer.writeUInt8(bitOptions);
+		buffer.writeUInt16LE(payload.historical_data_retrieval_Lux.pir_count);
+		// 0:data invalid, 1:data valid, 2:data out of range, 3:data collect abnormal
+		buffer.writeUInt8(payload.historical_data_retrieval_Lux.Lux_type);
+		buffer.writeUInt16LE(payload.historical_data_retrieval_Lux.Lux);
+		// 0:data invalid, 1:data valid, 2:data out of range, 3:data collect abnormal
+		buffer.writeUInt8(payload.historical_data_retrieval_Lux.co2_type);
+		buffer.writeUInt16LE(payload.historical_data_retrieval_Lux.co2);
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0xf9_0xbd
+	if ('reporting_interval' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0xf9);
+		buffer.writeUInt8(0xbd);
+		// 0:second, 1:minute
+		buffer.writeUInt8(payload.reporting_interval.unit);
+		if (payload.reporting_interval.interval < 1 || payload.reporting_interval.interval > 1440) {
+			throw new Error('reporting_interval.interval must be between 1 and 1440');
+		}
+		buffer.writeUInt16LE(payload.reporting_interval.interval);
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0xf9_0xbe
+	if ('collecting_interval' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0xf9);
+		buffer.writeUInt8(0xbe);
+		// 0:temperature,humidity,CO₂ collect interval, 1:illuminace collect interval
+		buffer.writeUInt8(payload.collecting_interval.id);
+		// 0:second, 1:minute
+		buffer.writeUInt8(payload.collecting_interval.unit);
+		if (payload.collecting_interval.interval < 1 || payload.collecting_interval.interval > 1440) {
+			throw new Error('collecting_interval.interval must be between 1 and 1440');
+		}
+		buffer.writeUInt16LE(payload.collecting_interval.interval);
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0xf9_0xc0
+	if ('temperature_unit' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0xf9);
+		buffer.writeUInt8(0xc0);
+		// 0:temperature, 1:Illuminance
+		buffer.writeUInt8(payload.temperature_unit.sensor_id);
+		// 0:celsius, 1:fahrenheit
+		buffer.writeUInt8(payload.temperature_unit.unit);
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0xf9_0xc4
+	if ('co2_alarm_rule' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0xf9);
+		buffer.writeUInt8(0xc4);
+		// 0：disable, 1：enable
+		buffer.writeUInt8(payload.co2_alarm_rule.enable);
+		// 0:enable 1-level only, 1:enable 2-levle only, 2:enable 1-level&2-levle
+		buffer.writeUInt8(payload.co2_alarm_rule.mode);
+		if (payload.co2_alarm_rule.level1_value < 400 || payload.co2_alarm_rule.level1_value > 5000) {
+			throw new Error('co2_alarm_rule.level1_value must be between 400 and 5000');
+		}
+		buffer.writeUInt16LE(payload.co2_alarm_rule.level1_value);
+		if (payload.co2_alarm_rule.level2_value < 400 || payload.co2_alarm_rule.level2_value > 5000) {
+			throw new Error('co2_alarm_rule.level2_value must be between 400 and 5000');
+		}
+		buffer.writeUInt16LE(payload.co2_alarm_rule.level2_value);
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0xf9_0xbc
+	if ('pir_trigger_report' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0xf9);
+		buffer.writeUInt8(0xbc);
+		// 0:trigger report, 1:vacant report
+		buffer.writeUInt8(payload.pir_trigger_report.type);
+		// 0：disable, 1：enable
+		buffer.writeUInt8(payload.pir_trigger_report.enable);
+		// 0:trigger report, 1:vacant report
+		buffer.writeUInt8(payload.pir_idle_report.type);
+		// 0：disable, 1：enable
+		buffer.writeUInt8(payload.pir_idle_report.enable);
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0xf9_0xbf
+	if ('illuminance_alarm_rule' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0xf9);
+		buffer.writeUInt8(0xbf);
+		// 0：disable, 1：enable
+		buffer.writeUInt8(payload.illuminance_alarm_rule.enable);
+		if (payload.illuminance_alarm_rule.dim_value < 0 || payload.illuminance_alarm_rule.dim_value > 60000) {
+			throw new Error('illuminance_alarm_rule.dim_value must be between 0 and 60000');
+		}
+		buffer.writeUInt16LE(payload.illuminance_alarm_rule.dim_value);
+		if (payload.illuminance_alarm_rule.bright_value < 0 || payload.illuminance_alarm_rule.bright_value > 60000) {
+			throw new Error('illuminance_alarm_rule.bright_value must be between 0 and 60000');
+		}
+		buffer.writeUInt16LE(payload.illuminance_alarm_rule.bright_value);
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0xf9_0x63
+	if ('d2d_sending' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0xf9);
+		buffer.writeUInt8(0x63);
+		// 0：disable, 1：enable
+		buffer.writeUInt8(payload.d2d_sending.enable);
+		// 0：disable, 1：enable
+		buffer.writeUInt8(payload.d2d_sending.lora_uplink_enable);
+		var bitOptions = 0;
+		bitOptions |= payload.d2d_sending.temperature_enable << 0;
+
+		bitOptions |= payload.d2d_sending.humidity_enable << 1;
+		buffer.writeUInt16LE(bitOptions);
+
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0xf9_0x66
+	if ('d2d_master_enable' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0xf9);
+		buffer.writeUInt8(0x66);
+		// 0：disable, 1：enable
+		buffer.writeUInt8(payload.d2d_master_enable);
 		encoded = encoded.concat(buffer.toBytes());
 	}
 	return encoded;
