@@ -68,6 +68,129 @@ function milesightDeviceDecode(bytes) {
 						// 0: disable, 1: enable
 						decoded.alarm_deactivation_enable = readUInt8(bytes, counterObj, 1);
 						break;
+					case 0x2e:
+						// 0：disable, 2：enable
+						decoded.led_mode = readUInt8(bytes, counterObj, 1);
+						break;
+					case 0x25:
+						decoded.button_lock = decoded.button_lock || {};
+						var bitOptions = readUInt8(bytes, counterObj, 1);
+						// 0：disable, 1：enable
+						decoded.button_lock.power_off = extractBits(bitOptions, 0, 1);
+						// 0：disable, 1：enable
+						decoded.button_lock.power_on = extractBits(bitOptions, 1, 2);
+						break;
+					case 0x06:
+						decoded.temperature_alarm_rule = decoded.temperature_alarm_rule || {};
+						var bitOptions = readUInt8(bytes, counterObj, 1);
+						// 0：disable, 1：enable
+						decoded.temperature_alarm_rule.enable = extractBits(bitOptions, 6, 7);
+						// 1:condition: x<A, 2:condition: x>B, 3:condition: A<x<B, 4:condition: x<A or x>B
+						decoded.temperature_alarm_rule.condition = extractBits(bitOptions, 0, 2);
+						decoded.temperature_alarm_rule.id = extractBits(bitOptions, 3, 5);
+						decoded.temperature_alarm_rule.threshold_max = readInt16LE(bytes, counterObj, 2) / 10;
+						decoded.temperature_alarm_rule.threshold_min = readInt16LE(bytes, counterObj, 2) / 10;
+						break;
+					case 0x18:
+						var fixed_value = bytes[counterObj.i + 0];
+						switch (fixed_value) {
+							case 3: // pir_enable.sensor_id
+								decoded.pir_enable = decoded.pir_enable || {};
+								var bitOptions = readUInt8(bytes, counterObj, 1);
+								// 0：disable, 1：enable
+								decoded.pir_enable.enable = extractBits(bitOptions, 2, 3);
+								break;
+							case 4: // illuminance_collecting_enable.sensor_id
+								decoded.illuminance_collecting_enable = decoded.illuminance_collecting_enable || {};
+								var bitOptions = readUInt8(bytes, counterObj, 1);
+								// 0：disable, 1：enable
+								decoded.illuminance_collecting_enable.enable = extractBits(bitOptions, 3, 4);
+								break;
+							case 5: // co2_collecting_enable.sensor_id
+								decoded.co2_collecting_enable = decoded.co2_collecting_enable || {};
+								var bitOptions = readUInt8(bytes, counterObj, 1);
+								// 0：disable, 1：enable
+								decoded.co2_collecting_enable.enable = extractBits(bitOptions, 4, 5);
+								break;
+						}
+						break;
+					case 0x95:
+						decoded.pir_idle_interval = readUInt16LE(bytes, counterObj, 2);
+						break;
+					case 0xea:
+						var fixed_value = (bytes[counterObj.i + 0] >> 0) & 0x7f;
+						switch (fixed_value) {
+							case 0: // temperature_calibration_settings.id
+								decoded.temperature_calibration_settings = decoded.temperature_calibration_settings || {};
+								var bitOptions = readUInt8(bytes, counterObj, 1);
+								// 0: disable, 1: enable
+								decoded.temperature_calibration_settings.enable = extractBits(bitOptions, 7, 8);
+								decoded.temperature_calibration_settings.value = readInt16LE(bytes, counterObj, 2) / 10;
+								break;
+							case 1: // humidity_calibration_settings.id
+								decoded.humidity_calibration_settings = decoded.humidity_calibration_settings || {};
+								var bitOptions = readUInt8(bytes, counterObj, 1);
+								// 0: disable, 1: enable
+								decoded.humidity_calibration_settings.enable = extractBits(bitOptions, 7, 8);
+								decoded.humidity_calibration_settings.value = readInt16LE(bytes, counterObj, 2) / 2;
+								break;
+							case 2: // co2_calibration_settings.id
+								decoded.co2_calibration_settings = decoded.co2_calibration_settings || {};
+								var bitOptions = readUInt8(bytes, counterObj, 1);
+								// 0: disable, 1: enable
+								decoded.co2_calibration_settings.enable = extractBits(bitOptions, 7, 8);
+								decoded.co2_calibration_settings.value = readUInt16LE(bytes, counterObj, 2);
+								break;
+						}
+						break;
+					case 0x39:
+						decoded.co2_auto_background_calibration_settings = decoded.co2_auto_background_calibration_settings || {};
+						// 0: disable, 1: enable
+						decoded.co2_auto_background_calibration_settings.enable = readUInt8(bytes, counterObj, 1);
+						break;
+					case 0x87:
+						decoded.co2_altitude_calibration = decoded.co2_altitude_calibration || {};
+						// 0: disable, 1: enable
+						decoded.co2_altitude_calibration.enable = readUInt8(bytes, counterObj, 1);
+						decoded.co2_altitude_calibration.value = readUInt16LE(bytes, counterObj, 2);
+						break;
+					case 0x96:
+						decoded.d2d_master_settings = decoded.d2d_master_settings || [];
+						// 0:PIR Trigger, 1:PIR Vacant, 2:Illuminance Bright, 3:Illuminance Dim, 4:Trigger/Bright, 5:Trigger/Dim
+						var trigger_condition = readUInt8(bytes, counterObj, 1);
+						var d2d_master_settings_item = pickArrayItem(decoded.d2d_master_settings, trigger_condition, 'trigger_condition');
+						d2d_master_settings_item.trigger_condition = trigger_condition;
+						insertArrayItem(decoded.d2d_master_settings, d2d_master_settings_item, 'trigger_condition');
+						// 0：disable, 1：enable
+						d2d_master_settings_item.enable = readUInt8(bytes, counterObj, 1);
+						// 0：disable, 1：enable
+						d2d_master_settings_item.lora_uplink_enable = readUInt8(bytes, counterObj, 1);
+						d2d_master_settings_item.control_command = readHexString(bytes, counterObj, 2);
+						// 0：disable, 1：enable
+						d2d_master_settings_item.control_time_enable = readUInt8(bytes, counterObj, 1);
+						d2d_master_settings_item.control_time = readUInt16LE(bytes, counterObj, 2);
+						break;
+					case 0x68:
+						decoded.data_storage_enable = decoded.data_storage_enable || {};
+						// 0：disable, 1：enable
+						decoded.data_storage_enable.enable = readUInt8(bytes, counterObj, 1);
+						break;
+					case 0x69:
+						decoded.retransmission_enable = decoded.retransmission_enable || {};
+						// 0：disable, 1：enable
+						decoded.retransmission_enable.enable = readUInt8(bytes, counterObj, 1);
+						break;
+					case 0x1a:
+						var fixed_value = bytes[counterObj.i + 0];
+						switch (fixed_value) {
+							case 0: // co2_reset_calibration
+								decoded.co2_reset_calibration = readUInt8(bytes, counterObj, 1);
+								break;
+							case 3: // co2_background_calibration
+								decoded.co2_background_calibration = readUInt8(bytes, counterObj, 1);
+								break;
+						}
+						break;
 				}
 				break;
 			case 0x01:
@@ -300,16 +423,19 @@ function milesightDeviceDecode(bytes) {
 						decoded.co2_alarm_rule.level2_value = readUInt16LE(bytes, counterObj, 2);
 						break;
 					case 0xbc:
-						decoded.pir_trigger_report = decoded.pir_trigger_report || {};
-						// 0:trigger report, 1:vacant report
-						decoded.pir_trigger_report.type = readUInt8(bytes, counterObj, 1);
-						// 0：disable, 1：enable
-						decoded.pir_trigger_report.enable = readUInt8(bytes, counterObj, 1);
-						decoded.pir_idle_report = decoded.pir_idle_report || {};
-						// 0:trigger report, 1:vacant report
-						decoded.pir_idle_report.type = readUInt8(bytes, counterObj, 1);
-						// 0：disable, 1：enable
-						decoded.pir_idle_report.enable = readUInt8(bytes, counterObj, 1);
+						var fixed_value = bytes[counterObj.i + 0];
+						switch (fixed_value) {
+							case 0: // pir_trigger_report.type
+								decoded.pir_trigger_report = decoded.pir_trigger_report || {};
+								// 0：disable, 1：enable
+								decoded.pir_trigger_report.enable = readUInt8(bytes, counterObj, 1);
+								break;
+							case 1: // pir_idle_report.type
+								decoded.pir_idle_report = decoded.pir_idle_report || {};
+								// 0：disable, 1：enable
+								decoded.pir_idle_report.enable = readUInt8(bytes, counterObj, 1);
+								break;
+						}
 						break;
 					case 0xbf:
 						decoded.illuminance_alarm_rule = decoded.illuminance_alarm_rule || {};

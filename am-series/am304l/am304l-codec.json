@@ -711,8 +711,8 @@
       "data_type": "NUMBER",
       "value_type": "FLOAT",
       "range": [
-        -20,
-        60
+        -80,
+        80
       ],
       "bacnet_type": "analog_output_object",
       "bacnet_unit_type_id": 62,
@@ -755,7 +755,7 @@
       "data_type": "NUMBER",
       "value_type": "FLOAT",
       "range": [
-        0,
+        -100,
         100
       ],
       "bacnet_type": "analog_output_object",
@@ -797,10 +797,10 @@
       "unit": "ppm",
       "access_mode": "W",
       "data_type": "NUMBER",
-      "value_type": "UINT16",
+      "value_type": "INT16",
       "range": [
-        400,
-        5000
+        -4600,
+        4600
       ],
       "bacnet_type": "analog_output_object",
       "bacnet_unit_type_id": 96,

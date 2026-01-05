@@ -76,15 +76,15 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Temperature Calibration Settings | 0xFF | 0xEA | 4 | w |  |  |  |
 | Calibration ID | 0xFF | 0xEA | 2 | w |  |  | 1:temperature<br>2:humidity<br>3:CO₂ |
 | Calibration Enable | 0xFF | 0xEA | 2 | w | 0 |  | 0: disable<br>1: enable |
-| Calibration Value | 0xFF | 0xEA | 3 | w | 0 | -20 - 60 |  |
+| Calibration Value | 0xFF | 0xEA | 3 | w | 0 | -80 - 80 |  |
 | Humidity Calibration Settings | 0xFF | 0xEA | 4 | w |  |  |  |
 | Calibration ID | 0xFF | 0xEA | 2 | w |  |  | 1:temperature<br>2:humidity<br>3:CO₂ |
 | Calibration Enable | 0xFF | 0xEA | 2 | w | 0 |  | 0: disable<br>1: enable |
-| Calibration Value | 0xFF | 0xEA | 3 | w | 0 | 0 - 100 |  |
+| Calibration Value | 0xFF | 0xEA | 3 | w | 0 | -100 - 100 |  |
 | CO₂ Calibration Settings | 0xFF | 0xEA | 4 | w |  |  |  |
 | Calibration ID | 0xFF | 0xEA | 2 | w |  |  | 1:temperature<br>2:humidity<br>3:CO₂ |
 | Calibration Enable | 0xFF | 0xEA | 2 | w | 0 |  | 0: disable<br>1: enable |
-| Calibration Value | 0xFF | 0xEA | 3 | w | 400 | 400 - 5000 |  |
+| Calibration Value | 0xFF | 0xEA | 3 | w | 400 | -4600 - 4600 |  |
 | CO₂  Auto Background Calibration Settings | 0xFF | 0x39 | 6 | w |  |  |  |
 | CO₂  Auto Background Calibration Enable | 0xFF | 0x39 | 2 | w | 1 |  | 0: disable<br>1: enable |
 | CO₂ Altitude Compensation | 0xFF | 0x87 | 4 | w |  |  |  |

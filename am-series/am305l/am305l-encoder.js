@@ -27,6 +27,71 @@ function Encoder(obj, port) {
 
 function milesightDeviceEncode(payload) {
 	var encoded = [];
+	//0xff_0x0b
+	if ('device_status' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0xff);
+		buffer.writeUInt8(0x0b);
+		buffer.writeUInt8(0xff);
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0xff_0x01
+	if ('ipso_version' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0xff);
+		buffer.writeUInt8(0x01);
+		buffer.writeUInt8(payload.ipso_version);
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0xff_0x16
+	if ('sn' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0xff);
+		buffer.writeUInt8(0x16);
+		buffer.writeHexString(payload.sn, 8);
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0xff_0xff
+	if ('tsl_version' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0xff);
+		buffer.writeUInt8(0xff);
+		buffer.writeHexString(payload.tsl_version, 2);
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0xff_0xfe
+	if ('request_tsl_config' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0xff);
+		buffer.writeUInt8(0xfe);
+		buffer.writeUInt8(0xff);
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0xff_0x09
+	if ('hardware_version' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0xff);
+		buffer.writeUInt8(0x09);
+		buffer.writeHexString(payload.hardware_version, 2);
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0xff_0x0a
+	if ('firmware_version' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0xff);
+		buffer.writeUInt8(0x0a);
+		buffer.writeHexString(payload.firmware_version, 2);
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0xff_0x0f
+	if ('lorawan_class' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0xff);
+		buffer.writeUInt8(0x0f);
+		// 0:class_a
+		buffer.writeUInt8(payload.lorawan_class);
+		encoded = encoded.concat(buffer.toBytes());
+	}
 	//0xff_0xf2
 	if ('alarm_reporting_times' in payload) {
 		var buffer = new Buffer();
@@ -83,7 +148,7 @@ function milesightDeviceEncode(payload) {
 		// 1:condition: x<A, 2:condition: x>B, 3:condition: A<x<B, 4:condition: x<A or x>B
 		bitOptions |= payload.temperature_alarm_rule.condition << 0;
 
-		bitOptions |= payload.temperature_alarm_rule.id << 3;
+		bitOptions |= 1 << 3;
 
 		buffer.writeUInt8(bitOptions);
 		if (payload.temperature_alarm_rule.threshold_max < -20 || payload.temperature_alarm_rule.threshold_max > 60) {
@@ -96,29 +161,41 @@ function milesightDeviceEncode(payload) {
 		buffer.writeInt16LE(payload.temperature_alarm_rule.threshold_min * 10);
 		encoded = encoded.concat(buffer.toBytes());
 	}
-	//0xff_0x18
+	//0xff_0x18 // pir_enable.sensor_id
 	if ('pir_enable' in payload) {
 		var buffer = new Buffer();
 		buffer.writeUInt8(0xff);
 		buffer.writeUInt8(0x18);
 		// 1:temperature, 2:humidity, 3:PIR, 4:Illuminance, 5:CO₂
-		buffer.writeUInt8(payload.pir_enable.sensor_id);
+		buffer.writeUInt8(3);
 		var bitOptions = 0;
 		// 0：disable, 1：enable
 		bitOptions |= payload.pir_enable.enable << 2;
-
 		buffer.writeUInt8(bitOptions);
 
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0xff_0x18 // illuminance_collecting_enable.sensor_id
+	if ('illuminance_collecting_enable' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0xff);
+		buffer.writeUInt8(0x18);
 		// 1:temperature, 2:humidity, 3:PIR, 4:Illuminance, 5:CO₂
-		buffer.writeUInt8(payload.illuminance_collecting_enable.sensor_id);
+		buffer.writeUInt8(4);
 		var bitOptions = 0;
 		// 0：disable, 1：enable
 		bitOptions |= payload.illuminance_collecting_enable.enable << 3;
-
 		buffer.writeUInt8(bitOptions);
 
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0xff_0x18 // co2_collecting_enable.sensor_id
+	if ('co2_collecting_enable' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0xff);
+		buffer.writeUInt8(0x18);
 		// 1:temperature, 2:humidity, 3:PIR, 4:Illuminance, 5:CO₂
-		buffer.writeUInt8(payload.co2_collecting_enable.sensor_id);
+		buffer.writeUInt8(5);
 		var bitOptions = 0;
 		// 0：disable, 1：enable
 		bitOptions |= payload.co2_collecting_enable.enable << 4;
@@ -137,45 +214,59 @@ function milesightDeviceEncode(payload) {
 		buffer.writeUInt16LE(payload.pir_idle_interval);
 		encoded = encoded.concat(buffer.toBytes());
 	}
-	//0xff_0xea
+	//0xff_0xea // temperature_calibration_settings.id
 	if ('temperature_calibration_settings' in payload) {
 		var buffer = new Buffer();
 		buffer.writeUInt8(0xff);
 		buffer.writeUInt8(0xea);
 		var bitOptions = 0;
 		// 1:temperature, 2:humidity, 3:CO₂
-		bitOptions |= payload.temperature_calibration_settings.id << 0;
+		bitOptions |= 0 << 0;
 
 		// 0: disable, 1: enable
 		bitOptions |= payload.temperature_calibration_settings.enable << 7;
 		buffer.writeUInt8(bitOptions);
 
-		if (payload.temperature_calibration_settings.value < -20 || payload.temperature_calibration_settings.value > 60) {
-			throw new Error('temperature_calibration_settings.value must be between -20 and 60');
+		if (payload.temperature_calibration_settings.value < -80 || payload.temperature_calibration_settings.value > 80) {
+			throw new Error('temperature_calibration_settings.value must be between -80 and 80');
 		}
 		buffer.writeInt16LE(payload.temperature_calibration_settings.value * 10);
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0xff_0xea // humidity_calibration_settings.id
+	if ('humidity_calibration_settings' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0xff);
+		buffer.writeUInt8(0xea);
 		var bitOptions = 0;
 		// 1:temperature, 2:humidity, 3:CO₂
-		bitOptions |= payload.humidity_calibration_settings.id << 0;
+		bitOptions |= 1 << 0;
 
 		// 0: disable, 1: enable
 		bitOptions |= payload.humidity_calibration_settings.enable << 7;
 		buffer.writeUInt8(bitOptions);
 
-		if (payload.humidity_calibration_settings.value < 0 || payload.humidity_calibration_settings.value > 100) {
-			throw new Error('humidity_calibration_settings.value must be between 0 and 100');
+		if (payload.humidity_calibration_settings.value < -100 || payload.humidity_calibration_settings.value > 100) {
+			throw new Error('humidity_calibration_settings.value must be between -100 and 100');
 		}
 		buffer.writeInt16LE(payload.humidity_calibration_settings.value * 2);
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0xff_0xea // co2_calibration_settings.id
+	if ('co2_calibration_settings' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0xff);
+		buffer.writeUInt8(0xea);
 		var bitOptions = 0;
 		// 1:temperature, 2:humidity, 3:CO₂
-		bitOptions |= payload.co2_calibration_settings.id << 0;
+		bitOptions |= 2 << 0;
 
 		// 0: disable, 1: enable
 		bitOptions |= payload.co2_calibration_settings.enable << 7;
 		buffer.writeUInt8(bitOptions);
 
-		if (payload.co2_calibration_settings.value < 400 || payload.co2_calibration_settings.value > 5000) {
-			throw new Error('co2_calibration_settings.value must be between 400 and 5000');
+		if (payload.co2_calibration_settings.value < -4600 || payload.co2_calibration_settings.value > 4600) {
+			throw new Error('co2_calibration_settings.value must be between -4600 and 4600');
 		}
 		buffer.writeUInt16LE(payload.co2_calibration_settings.value);
 		encoded = encoded.concat(buffer.toBytes());
@@ -243,13 +334,20 @@ function milesightDeviceEncode(payload) {
 		buffer.writeUInt8(payload.retransmission_enable.enable);
 		encoded = encoded.concat(buffer.toBytes());
 	}
-	//0xff_0x1a
+	//0xff_0x1a // co2_reset_calibration
 	if ('co2_reset_calibration' in payload) {
 		var buffer = new Buffer();
 		buffer.writeUInt8(0xff);
 		buffer.writeUInt8(0x1a);
-		buffer.writeUInt8(payload.co2_reset_calibration);
-		buffer.writeUInt8(payload.co2_background_calibration);
+		buffer.writeUInt8(0);
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0xff_0x1a // co2_background_calibration
+	if ('co2_background_calibration' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0xff);
+		buffer.writeUInt8(0x1a);
+		buffer.writeUInt8(3);
 		encoded = encoded.concat(buffer.toBytes());
 	}
 	//0x01_0x75
@@ -479,7 +577,7 @@ function milesightDeviceEncode(payload) {
 		buffer.writeUInt8(0xf9);
 		buffer.writeUInt8(0xbd);
 		// 0:second, 1:minute
-		buffer.writeUInt8(payload.reporting_interval.unit);
+		buffer.writeUInt8(1);
 		if (payload.reporting_interval.interval < 1 || payload.reporting_interval.interval > 1440) {
 			throw new Error('reporting_interval.interval must be between 1 and 1440');
 		}
@@ -492,9 +590,9 @@ function milesightDeviceEncode(payload) {
 		buffer.writeUInt8(0xf9);
 		buffer.writeUInt8(0xbe);
 		// 0:temperature,humidity,CO₂ collect interval, 1:illuminace collect interval
-		buffer.writeUInt8(payload.collecting_interval.id);
+		buffer.writeUInt8(0);
 		// 0:second, 1:minute
-		buffer.writeUInt8(payload.collecting_interval.unit);
+		buffer.writeUInt8(1);
 		if (payload.collecting_interval.interval < 1 || payload.collecting_interval.interval > 1440) {
 			throw new Error('collecting_interval.interval must be between 1 and 1440');
 		}
@@ -507,7 +605,7 @@ function milesightDeviceEncode(payload) {
 		buffer.writeUInt8(0xf9);
 		buffer.writeUInt8(0xc0);
 		// 0:temperature, 1:Illuminance
-		buffer.writeUInt8(payload.temperature_unit.sensor_id);
+		buffer.writeUInt8(0);
 		// 0:celsius, 1:fahrenheit
 		buffer.writeUInt8(payload.temperature_unit.unit);
 		encoded = encoded.concat(buffer.toBytes());
@@ -531,17 +629,24 @@ function milesightDeviceEncode(payload) {
 		buffer.writeUInt16LE(payload.co2_alarm_rule.level2_value);
 		encoded = encoded.concat(buffer.toBytes());
 	}
-	//0xf9_0xbc
+	//0xf9_0xbc // pir_trigger_report.type
 	if ('pir_trigger_report' in payload) {
 		var buffer = new Buffer();
 		buffer.writeUInt8(0xf9);
 		buffer.writeUInt8(0xbc);
 		// 0:trigger report, 1:vacant report
-		buffer.writeUInt8(payload.pir_trigger_report.type);
+		buffer.writeUInt8(0);
 		// 0：disable, 1：enable
 		buffer.writeUInt8(payload.pir_trigger_report.enable);
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0xf9_0xbc // pir_idle_report.type
+	if ('pir_idle_report' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0xf9);
+		buffer.writeUInt8(0xbc);
 		// 0:trigger report, 1:vacant report
-		buffer.writeUInt8(payload.pir_idle_report.type);
+		buffer.writeUInt8(1);
 		// 0：disable, 1：enable
 		buffer.writeUInt8(payload.pir_idle_report.enable);
 		encoded = encoded.concat(buffer.toBytes());
