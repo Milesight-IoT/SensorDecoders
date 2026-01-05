@@ -3,7 +3,7 @@
   "object": [
     {
       "id": "battery",
-      "name": "Battery",
+      "name": "Electricity",
       "value": "",
       "unit": "%",
       "access_mode": "R",
@@ -50,6 +50,22 @@
       "bacnet_unit_type": "UNITS_NO_UNITS"
     },
     {
+      "id": "valve_opening_degree",
+      "name": "Current Valve Opening",
+      "value": "",
+      "unit": "%",
+      "access_mode": "R",
+      "data_type": "NUMBER",
+      "value_type": "UINT8",
+      "range": [
+        0,
+        100
+      ],
+      "bacnet_type": "analog_input_object",
+      "bacnet_unit_type_id": 98,
+      "bacnet_unit_type": "UNITS_PERCENT"
+    },
+    {
       "id": "target_temperature",
       "name": "Target Temperature",
       "value": "",
@@ -58,8 +74,8 @@
       "data_type": "NUMBER",
       "value_type": "FLOAT",
       "range": [
-        -20,
-        60
+        5,
+        35
       ],
       "bacnet_type": "analog_input_object",
       "bacnet_unit_type_id": 62,
@@ -338,23 +354,6 @@
       ]
     },
     {
-      "id": "heating_period_settings.heating_period_reporting_interval.seconds_of_time",
-      "name": "Heating Period Reporting Interval",
-      "value": "600",
-      "unit": "s",
-      "access_mode": "RW",
-      "data_type": "NUMBER",
-      "value_type": "UINT16",
-      "range": [
-        10,
-        64800
-      ],
-      "bacnet_type": "analog_value_object",
-      "bacnet_unit_type_id": 73,
-      "bacnet_unit_type": "UNITS_SECONDS",
-      "reference": []
-    },
-    {
       "id": "heating_period_settings.heating_period_reporting_interval.minutes_of_time",
       "name": "Heating Period Reporting Interval",
       "value": "10",
@@ -369,23 +368,6 @@
       "bacnet_type": "analog_value_object",
       "bacnet_unit_type_id": 72,
       "bacnet_unit_type": "UNITS_MINUTES",
-      "reference": []
-    },
-    {
-      "id": "heating_period_settings.non_heating_period_reporting_interval.seconds_of_time",
-      "name": "Non-heating Period Reporting Interval",
-      "value": "64800",
-      "unit": "s",
-      "access_mode": "RW",
-      "data_type": "NUMBER",
-      "value_type": "UINT16",
-      "range": [
-        10,
-        64800
-      ],
-      "bacnet_type": "analog_value_object",
-      "bacnet_unit_type_id": 73,
-      "bacnet_unit_type": "UNITS_SECONDS",
       "reference": []
     },
     {
@@ -684,418 +666,6 @@
         "window_opening_detection_settings.enable",
         "window_opening_detection_settings.cooling_rate",
         "window_opening_detection_settings.valve_status"
-      ]
-    },
-    {
-      "id": "auto_away_settings.enable",
-      "name": "Enable",
-      "value": "0",
-      "unit": "",
-      "access_mode": "RW",
-      "data_type": "BOOL",
-      "value_type": "UINT8",
-      "values": [
-        {
-          "name": "Disable",
-          "value": 0
-        },
-        {
-          "name": "Enable",
-          "value": 1
-        }
-      ],
-      "bacnet_type": "binary_value_object",
-      "bacnet_unit_type_id": 95,
-      "bacnet_unit_type": "UNITS_NO_UNITS",
-      "reference": [
-        "auto_away_settings.start_time",
-        "auto_away_settings.end_time",
-        "auto_away_settings.cycle_time_sun",
-        "auto_away_settings.cycle_time_mon",
-        "auto_away_settings.cycle_time_tues",
-        "auto_away_settings.cycle_time_wed",
-        "auto_away_settings.cycle_time_thur",
-        "auto_away_settings.cycle_time_fri",
-        "auto_away_settings.cycle_time_sat",
-        "auto_away_settings.energy_saving_settings.mode",
-        "auto_away_settings.energy_saving_settings.energy_saving_temperature",
-        "auto_away_settings.energy_saving_settings.energy_saving_valve_opening_degree"
-      ]
-    },
-    {
-      "id": "auto_away_settings.start_time",
-      "name": "Start Time",
-      "value": "0",
-      "unit": "min",
-      "access_mode": "RW",
-      "data_type": "NUMBER",
-      "value_type": "UINT16",
-      "range": [
-        0,
-        1439
-      ],
-      "bacnet_type": "analog_value_object",
-      "bacnet_unit_type_id": 72,
-      "bacnet_unit_type": "UNITS_MINUTES",
-      "reference": [
-        "auto_away_settings.enable",
-        "auto_away_settings.end_time",
-        "auto_away_settings.cycle_time_sun",
-        "auto_away_settings.cycle_time_mon",
-        "auto_away_settings.cycle_time_tues",
-        "auto_away_settings.cycle_time_wed",
-        "auto_away_settings.cycle_time_thur",
-        "auto_away_settings.cycle_time_fri",
-        "auto_away_settings.cycle_time_sat",
-        "auto_away_settings.energy_saving_settings.mode",
-        "auto_away_settings.energy_saving_settings.energy_saving_temperature",
-        "auto_away_settings.energy_saving_settings.energy_saving_valve_opening_degree"
-      ]
-    },
-    {
-      "id": "auto_away_settings.end_time",
-      "name": "End Time",
-      "value": "0",
-      "unit": "min",
-      "access_mode": "RW",
-      "data_type": "NUMBER",
-      "value_type": "UINT16",
-      "range": [
-        0,
-        1439
-      ],
-      "bacnet_type": "analog_value_object",
-      "bacnet_unit_type_id": 72,
-      "bacnet_unit_type": "UNITS_MINUTES",
-      "reference": [
-        "auto_away_settings.enable",
-        "auto_away_settings.start_time",
-        "auto_away_settings.cycle_time_sun",
-        "auto_away_settings.cycle_time_mon",
-        "auto_away_settings.cycle_time_tues",
-        "auto_away_settings.cycle_time_wed",
-        "auto_away_settings.cycle_time_thur",
-        "auto_away_settings.cycle_time_fri",
-        "auto_away_settings.cycle_time_sat",
-        "auto_away_settings.energy_saving_settings.mode",
-        "auto_away_settings.energy_saving_settings.energy_saving_temperature",
-        "auto_away_settings.energy_saving_settings.energy_saving_valve_opening_degree"
-      ]
-    },
-    {
-      "id": "auto_away_settings.cycle_time_sun",
-      "name": "Sun.",
-      "value": "0",
-      "unit": "",
-      "access_mode": "RW",
-      "data_type": "BOOL",
-      "value_type": "UINT8",
-      "values": [
-        {
-          "name": "Disable",
-          "value": 0
-        },
-        {
-          "name": "Enable",
-          "value": 1
-        }
-      ],
-      "bacnet_type": "binary_value_object",
-      "bacnet_unit_type_id": 95,
-      "bacnet_unit_type": "UNITS_NO_UNITS",
-      "reference": [
-        "auto_away_settings.enable",
-        "auto_away_settings.start_time",
-        "auto_away_settings.end_time",
-        "auto_away_settings.cycle_time_mon",
-        "auto_away_settings.cycle_time_tues",
-        "auto_away_settings.cycle_time_wed",
-        "auto_away_settings.cycle_time_thur",
-        "auto_away_settings.cycle_time_fri",
-        "auto_away_settings.cycle_time_sat",
-        "auto_away_settings.energy_saving_settings.mode",
-        "auto_away_settings.energy_saving_settings.energy_saving_temperature",
-        "auto_away_settings.energy_saving_settings.energy_saving_valve_opening_degree"
-      ]
-    },
-    {
-      "id": "auto_away_settings.cycle_time_mon",
-      "name": "Mon.",
-      "value": "0",
-      "unit": "",
-      "access_mode": "RW",
-      "data_type": "BOOL",
-      "value_type": "UINT8",
-      "values": [
-        {
-          "name": "Disable",
-          "value": 0
-        },
-        {
-          "name": "Enable",
-          "value": 1
-        }
-      ],
-      "bacnet_type": "binary_value_object",
-      "bacnet_unit_type_id": 95,
-      "bacnet_unit_type": "UNITS_NO_UNITS",
-      "reference": [
-        "auto_away_settings.enable",
-        "auto_away_settings.start_time",
-        "auto_away_settings.end_time",
-        "auto_away_settings.cycle_time_sun",
-        "auto_away_settings.cycle_time_tues",
-        "auto_away_settings.cycle_time_wed",
-        "auto_away_settings.cycle_time_thur",
-        "auto_away_settings.cycle_time_fri",
-        "auto_away_settings.cycle_time_sat",
-        "auto_away_settings.energy_saving_settings.mode",
-        "auto_away_settings.energy_saving_settings.energy_saving_temperature",
-        "auto_away_settings.energy_saving_settings.energy_saving_valve_opening_degree"
-      ]
-    },
-    {
-      "id": "auto_away_settings.cycle_time_tues",
-      "name": "Tues.",
-      "value": "0",
-      "unit": "",
-      "access_mode": "RW",
-      "data_type": "BOOL",
-      "value_type": "UINT8",
-      "values": [
-        {
-          "name": "Disable",
-          "value": 0
-        },
-        {
-          "name": "Enable",
-          "value": 1
-        }
-      ],
-      "bacnet_type": "binary_value_object",
-      "bacnet_unit_type_id": 95,
-      "bacnet_unit_type": "UNITS_NO_UNITS",
-      "reference": [
-        "auto_away_settings.enable",
-        "auto_away_settings.start_time",
-        "auto_away_settings.end_time",
-        "auto_away_settings.cycle_time_sun",
-        "auto_away_settings.cycle_time_mon",
-        "auto_away_settings.cycle_time_wed",
-        "auto_away_settings.cycle_time_thur",
-        "auto_away_settings.cycle_time_fri",
-        "auto_away_settings.cycle_time_sat",
-        "auto_away_settings.energy_saving_settings.mode",
-        "auto_away_settings.energy_saving_settings.energy_saving_temperature",
-        "auto_away_settings.energy_saving_settings.energy_saving_valve_opening_degree"
-      ]
-    },
-    {
-      "id": "auto_away_settings.cycle_time_wed",
-      "name": "Wed.",
-      "value": "0",
-      "unit": "",
-      "access_mode": "RW",
-      "data_type": "BOOL",
-      "value_type": "UINT8",
-      "values": [
-        {
-          "name": "Disable",
-          "value": 0
-        },
-        {
-          "name": "Enable",
-          "value": 1
-        }
-      ],
-      "bacnet_type": "binary_value_object",
-      "bacnet_unit_type_id": 95,
-      "bacnet_unit_type": "UNITS_NO_UNITS",
-      "reference": [
-        "auto_away_settings.enable",
-        "auto_away_settings.start_time",
-        "auto_away_settings.end_time",
-        "auto_away_settings.cycle_time_sun",
-        "auto_away_settings.cycle_time_mon",
-        "auto_away_settings.cycle_time_tues",
-        "auto_away_settings.cycle_time_thur",
-        "auto_away_settings.cycle_time_fri",
-        "auto_away_settings.cycle_time_sat",
-        "auto_away_settings.energy_saving_settings.mode",
-        "auto_away_settings.energy_saving_settings.energy_saving_temperature",
-        "auto_away_settings.energy_saving_settings.energy_saving_valve_opening_degree"
-      ]
-    },
-    {
-      "id": "auto_away_settings.cycle_time_thur",
-      "name": "Thur.",
-      "value": "0",
-      "unit": "",
-      "access_mode": "RW",
-      "data_type": "BOOL",
-      "value_type": "UINT8",
-      "values": [
-        {
-          "name": "Disable",
-          "value": 0
-        },
-        {
-          "name": "Enable",
-          "value": 1
-        }
-      ],
-      "bacnet_type": "binary_value_object",
-      "bacnet_unit_type_id": 95,
-      "bacnet_unit_type": "UNITS_NO_UNITS",
-      "reference": [
-        "auto_away_settings.enable",
-        "auto_away_settings.start_time",
-        "auto_away_settings.end_time",
-        "auto_away_settings.cycle_time_sun",
-        "auto_away_settings.cycle_time_mon",
-        "auto_away_settings.cycle_time_tues",
-        "auto_away_settings.cycle_time_wed",
-        "auto_away_settings.cycle_time_fri",
-        "auto_away_settings.cycle_time_sat",
-        "auto_away_settings.energy_saving_settings.mode",
-        "auto_away_settings.energy_saving_settings.energy_saving_temperature",
-        "auto_away_settings.energy_saving_settings.energy_saving_valve_opening_degree"
-      ]
-    },
-    {
-      "id": "auto_away_settings.cycle_time_fri",
-      "name": "Fri.",
-      "value": "0",
-      "unit": "",
-      "access_mode": "RW",
-      "data_type": "BOOL",
-      "value_type": "UINT8",
-      "values": [
-        {
-          "name": "Disable",
-          "value": 0
-        },
-        {
-          "name": "Enable",
-          "value": 1
-        }
-      ],
-      "bacnet_type": "binary_value_object",
-      "bacnet_unit_type_id": 95,
-      "bacnet_unit_type": "UNITS_NO_UNITS",
-      "reference": [
-        "auto_away_settings.enable",
-        "auto_away_settings.start_time",
-        "auto_away_settings.end_time",
-        "auto_away_settings.cycle_time_sun",
-        "auto_away_settings.cycle_time_mon",
-        "auto_away_settings.cycle_time_tues",
-        "auto_away_settings.cycle_time_wed",
-        "auto_away_settings.cycle_time_thur",
-        "auto_away_settings.cycle_time_sat",
-        "auto_away_settings.energy_saving_settings.mode",
-        "auto_away_settings.energy_saving_settings.energy_saving_temperature",
-        "auto_away_settings.energy_saving_settings.energy_saving_valve_opening_degree"
-      ]
-    },
-    {
-      "id": "auto_away_settings.cycle_time_sat",
-      "name": "Sat.",
-      "value": "0",
-      "unit": "",
-      "access_mode": "RW",
-      "data_type": "BOOL",
-      "value_type": "UINT8",
-      "values": [
-        {
-          "name": "Disable",
-          "value": 0
-        },
-        {
-          "name": "Enable",
-          "value": 1
-        }
-      ],
-      "bacnet_type": "binary_value_object",
-      "bacnet_unit_type_id": 95,
-      "bacnet_unit_type": "UNITS_NO_UNITS",
-      "reference": [
-        "auto_away_settings.enable",
-        "auto_away_settings.start_time",
-        "auto_away_settings.end_time",
-        "auto_away_settings.cycle_time_sun",
-        "auto_away_settings.cycle_time_mon",
-        "auto_away_settings.cycle_time_tues",
-        "auto_away_settings.cycle_time_wed",
-        "auto_away_settings.cycle_time_thur",
-        "auto_away_settings.cycle_time_fri",
-        "auto_away_settings.energy_saving_settings.mode",
-        "auto_away_settings.energy_saving_settings.energy_saving_temperature",
-        "auto_away_settings.energy_saving_settings.energy_saving_valve_opening_degree"
-      ]
-    },
-    {
-      "id": "auto_away_settings.energy_saving_settings.mode",
-      "name": "Energy Saving Settings",
-      "value": "0",
-      "unit": "",
-      "access_mode": "RW",
-      "data_type": "ENUM",
-      "value_type": "UINT8",
-      "values": [
-        {
-          "name": "Energy Saving Temperature",
-          "value": 0
-        },
-        {
-          "name": "Energy Saving Valve Opening",
-          "value": 1
-        }
-      ],
-      "bacnet_type": "multistate_value_object",
-      "bacnet_unit_type_id": 95,
-      "bacnet_unit_type": "UNITS_NO_UNITS",
-      "reference": [
-        "auto_away_settings.energy_saving_settings.energy_saving_temperature",
-        "auto_away_settings.energy_saving_settings.energy_saving_valve_opening_degree"
-      ]
-    },
-    {
-      "id": "auto_away_settings.energy_saving_settings.energy_saving_temperature",
-      "name": "Energy Saving Temperature",
-      "value": "19",
-      "unit": "°C",
-      "access_mode": "RW",
-      "data_type": "NUMBER",
-      "value_type": "FLOAT",
-      "range": [
-        5,
-        35
-      ],
-      "bacnet_type": "analog_value_object",
-      "bacnet_unit_type_id": 62,
-      "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
-      "reference": [
-        "auto_away_settings.energy_saving_settings.mode"
-      ]
-    },
-    {
-      "id": "auto_away_settings.energy_saving_settings.energy_saving_valve_opening_degree",
-      "name": "Energy Saving Valve Opening",
-      "value": "50",
-      "unit": "%",
-      "access_mode": "RW",
-      "data_type": "NUMBER",
-      "value_type": "UINT8",
-      "range": [
-        0,
-        100
-      ],
-      "bacnet_type": "analog_value_object",
-      "bacnet_unit_type_id": 98,
-      "bacnet_unit_type": "UNITS_PERCENT",
-      "reference": [
-        "auto_away_settings.energy_saving_settings.mode"
       ]
     },
     {
@@ -1410,7 +980,7 @@
       "id": "time_zone",
       "name": "Time Zone",
       "value": "0",
-      "unit": "min",
+      "unit": "",
       "access_mode": "RW",
       "data_type": "ENUM",
       "value_type": "INT16",
@@ -1565,8 +1135,8 @@
         }
       ],
       "bacnet_type": "multistate_value_object",
-      "bacnet_unit_type_id": 72,
-      "bacnet_unit_type": "UNITS_MINUTES"
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS"
     },
     {
       "id": "daylight_saving_time.enable",
@@ -2211,6 +1781,86 @@
         "daylight_saving_time.end_week_num",
         "daylight_saving_time.end_week_day"
       ]
+    },
+    {
+      "id": "data_storage_settings.enable",
+      "name": "Data Storage Enable",
+      "value": "0",
+      "unit": "",
+      "access_mode": "RW",
+      "data_type": "BOOL",
+      "value_type": "UINT8",
+      "values": [
+        {
+          "name": "Disable",
+          "value": 0
+        },
+        {
+          "name": "Enable",
+          "value": 1
+        }
+      ],
+      "bacnet_type": "binary_value_object",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS",
+      "reference": []
+    },
+    {
+      "id": "data_storage_settings.retransmission_enable",
+      "name": "Data Retransmission Enable",
+      "value": "0",
+      "unit": "",
+      "access_mode": "RW",
+      "data_type": "BOOL",
+      "value_type": "UINT8",
+      "values": [
+        {
+          "name": "Disable",
+          "value": 0
+        },
+        {
+          "name": "Enable",
+          "value": 1
+        }
+      ],
+      "bacnet_type": "binary_value_object",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS",
+      "reference": []
+    },
+    {
+      "id": "data_storage_settings.retransmission_interval",
+      "name": "Data Retransmission Interval",
+      "value": "600",
+      "unit": "s",
+      "access_mode": "RW",
+      "data_type": "NUMBER",
+      "value_type": "UINT16",
+      "range": [
+        30,
+        1200
+      ],
+      "bacnet_type": "analog_value_object",
+      "bacnet_unit_type_id": 73,
+      "bacnet_unit_type": "UNITS_SECONDS",
+      "reference": []
+    },
+    {
+      "id": "data_storage_settings.retrieval_interval",
+      "name": "Data Retrieval Interval",
+      "value": "60",
+      "unit": "s",
+      "access_mode": "RW",
+      "data_type": "NUMBER",
+      "value_type": "UINT16",
+      "range": [
+        30,
+        1200
+      ],
+      "bacnet_type": "analog_value_object",
+      "bacnet_unit_type_id": 73,
+      "bacnet_unit_type": "UNITS_SECONDS",
+      "reference": []
     },
     {
       "id": "motor_calibration_result_report.status",
@@ -2935,7 +2585,7 @@
       "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
       "reference": [
         "periodic_reporting.target_temperature_for_heating.current_valve_opening",
-        "periodic_reporting.target_temperature_for_heating.target_valve_opening",
+        "periodic_reporting.target_temperature_for_heating.target_temperature",
         "periodic_reporting.target_temperature_for_heating.battery_level"
       ]
     },
@@ -2956,12 +2606,12 @@
       "bacnet_unit_type": "UNITS_PERCENT",
       "reference": [
         "periodic_reporting.target_temperature_for_heating.environment_temperature",
-        "periodic_reporting.target_temperature_for_heating.target_valve_opening",
+        "periodic_reporting.target_temperature_for_heating.target_temperature",
         "periodic_reporting.target_temperature_for_heating.battery_level"
       ]
     },
     {
-      "id": "periodic_reporting.target_temperature_for_heating.target_valve_opening",
+      "id": "periodic_reporting.target_temperature_for_heating.target_temperature",
       "name": "Target Temperature",
       "value": "",
       "unit": "°C",
@@ -2999,7 +2649,7 @@
       "reference": [
         "periodic_reporting.target_temperature_for_heating.environment_temperature",
         "periodic_reporting.target_temperature_for_heating.current_valve_opening",
-        "periodic_reporting.target_temperature_for_heating.target_valve_opening"
+        "periodic_reporting.target_temperature_for_heating.target_temperature"
       ]
     },
     {
@@ -3195,6 +2845,212 @@
         "periodic_reporting.integrated_control_for_heating.target_temperature",
         "periodic_reporting.integrated_control_for_heating.target_valve_opening"
       ]
+    },
+    {
+      "id": "calibrate_motor",
+      "name": "Calibrate Motor",
+      "value": "",
+      "unit": "",
+      "access_mode": "W",
+      "data_type": "UNKNOWN",
+      "value_type": "UINT8",
+      "bacnet_type": "analog_output_object",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS"
+    },
+    {
+      "id": "set_target_valve_opening_degree.value",
+      "name": "Set Target Valve Opening",
+      "value": "",
+      "unit": "%",
+      "access_mode": "W",
+      "data_type": "NUMBER",
+      "value_type": "UINT8",
+      "range": [
+        0,
+        100
+      ],
+      "bacnet_type": "analog_output_object",
+      "bacnet_unit_type_id": 98,
+      "bacnet_unit_type": "UNITS_PERCENT"
+    },
+    {
+      "id": "set_target_temperature.value",
+      "name": "Set Target Temperature",
+      "value": "",
+      "unit": "°C",
+      "access_mode": "W",
+      "data_type": "NUMBER",
+      "value_type": "FLOAT",
+      "range": [
+        5,
+        35
+      ],
+      "bacnet_type": "analog_output_object",
+      "bacnet_unit_type_id": 62,
+      "bacnet_unit_type": "UNITS_DEGREES_CELSIUS"
+    },
+    {
+      "id": "set_temperature.value",
+      "name": "Set Temperature",
+      "value": "",
+      "unit": "°C",
+      "access_mode": "W",
+      "data_type": "NUMBER",
+      "value_type": "FLOAT",
+      "range": [
+        -20,
+        60
+      ],
+      "bacnet_type": "analog_output_object",
+      "bacnet_unit_type_id": 62,
+      "bacnet_unit_type": "UNITS_DEGREES_CELSIUS"
+    },
+    {
+      "id": "set_occupancy_state.state",
+      "name": "Set Occupancy State",
+      "value": "",
+      "unit": "",
+      "access_mode": "W",
+      "data_type": "ENUM",
+      "value_type": "UINT8",
+      "values": [
+        {
+          "name": "Unoccupied",
+          "value": 0
+        },
+        {
+          "name": "Occupied",
+          "value": 1
+        }
+      ],
+      "bacnet_type": "multistate_value_object",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS"
+    },
+    {
+      "id": "set_opening_window.state",
+      "name": "Set Opening Window",
+      "value": "",
+      "unit": "",
+      "access_mode": "W",
+      "data_type": "ENUM",
+      "value_type": "UINT8",
+      "values": [
+        {
+          "name": "Normal",
+          "value": 0
+        },
+        {
+          "name": "Open",
+          "value": 1
+        }
+      ],
+      "bacnet_type": "multistate_value_object",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS"
+    },
+    {
+      "id": "delete_schedule.type",
+      "name": "Delete Schedule",
+      "value": "",
+      "unit": "",
+      "access_mode": "W",
+      "data_type": "ENUM",
+      "value_type": "UINT8",
+      "values": [
+        {
+          "name": "Schedule1",
+          "value": 0
+        },
+        {
+          "name": "Schedule2",
+          "value": 1
+        },
+        {
+          "name": "Schedule3",
+          "value": 2
+        },
+        {
+          "name": "Schedule4",
+          "value": 3
+        },
+        {
+          "name": "Schedule5",
+          "value": 4
+        },
+        {
+          "name": "Schedule6",
+          "value": 5
+        },
+        {
+          "name": "Schedule7",
+          "value": 6
+        },
+        {
+          "name": "Schedule8",
+          "value": 7
+        },
+        {
+          "name": "Schedule9",
+          "value": 8
+        },
+        {
+          "name": "Schedule10",
+          "value": 9
+        },
+        {
+          "name": "Schedule11",
+          "value": 10
+        },
+        {
+          "name": "Schedule12",
+          "value": 11
+        },
+        {
+          "name": "Schedule13",
+          "value": 12
+        },
+        {
+          "name": "Reset All",
+          "value": 255
+        }
+      ],
+      "bacnet_type": "multistate_value_object",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS"
+    },
+    {
+      "id": "reset",
+      "name": "Reset",
+      "value": "",
+      "unit": "",
+      "access_mode": "W",
+      "data_type": "NUMBER",
+      "value_type": "UINT8",
+      "range": [
+        0,
+        1
+      ],
+      "bacnet_type": "analog_output_object",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS"
+    },
+    {
+      "id": "reboot",
+      "name": "Reboot",
+      "value": "",
+      "unit": "",
+      "access_mode": "W",
+      "data_type": "NUMBER",
+      "value_type": "UINT8",
+      "range": [
+        0,
+        1
+      ],
+      "bacnet_type": "analog_output_object",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS"
     }
   ]
 }
