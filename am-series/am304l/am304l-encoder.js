@@ -118,6 +118,17 @@ function milesightDeviceEncode(payload) {
 
 		encoded = encoded.concat(buffer.toBytes());
 	}
+	//0xff_0x95
+	if ('pir_idle_interval' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0xff);
+		buffer.writeUInt8(0x95);
+		if (payload.pir_idle_interval < 60 || payload.pir_idle_interval > 3600) {
+			throw new Error('pir_idle_interval must be between 60 and 3600');
+		}
+		buffer.writeUInt16LE(payload.pir_idle_interval);
+		encoded = encoded.concat(buffer.toBytes());
+	}
 	//0xff_0xea
 	if ('temperature_calibration_settings' in payload) {
 		var buffer = new Buffer();
@@ -699,7 +710,7 @@ function cmdMap() {
 		  "co2_alarm_rule": "f9_0xc4",
 		  "pir_enable": "ff_0x18",
 		  "pir_trigger_report": "f9_0xbc",
-		  "pir_idle_report.pir_idle_interval": "ff_0x95",
+		  "pir_idle_interval": "ff_0x95",
 		  "illuminance_alarm_rule": "f9_0xbf",
 		  "temperature_calibration_settings": "ff_0xea",
 		  "co2_auto_background_calibration_settings": "ff_0x39",

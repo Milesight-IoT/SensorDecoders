@@ -547,12 +547,10 @@
       "bacnet_type": "binary_output_object",
       "bacnet_unit_type_id": 95,
       "bacnet_unit_type": "UNITS_NO_UNITS",
-      "reference": [
-        "pir_idle_report.pir_idle_interval"
-      ]
+      "reference": []
     },
     {
-      "id": "pir_idle_report.pir_idle_interval",
+      "id": "pir_idle_interval",
       "name": "Time To Report Vacancy",
       "value": "120",
       "unit": "s",
@@ -565,10 +563,7 @@
       ],
       "bacnet_type": "analog_output_object",
       "bacnet_unit_type_id": 73,
-      "bacnet_unit_type": "UNITS_SECONDS",
-      "reference": [
-        "pir_idle_report.enable"
-      ]
+      "bacnet_unit_type": "UNITS_SECONDS"
     },
     {
       "id": "illuminance_collecting_enable.enable",

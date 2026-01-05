@@ -605,7 +605,7 @@ function cmdMap() {
 		  "f9_0xc4": "co2_alarm_rule",
 		  "ff_0x18": "pir_enable",
 		  "f9_0xbc": "pir_trigger_report",
-		  "ff_0x95": "pir_idle_report.pir_idle_interval",
+		  "ff_0x95": "pir_idle_interval",
 		  "f9_0xbf": "illuminance_alarm_rule",
 		  "ff_0xea": "temperature_calibration_settings",
 		  "ff_0x39": "co2_auto_background_calibration_settings",
