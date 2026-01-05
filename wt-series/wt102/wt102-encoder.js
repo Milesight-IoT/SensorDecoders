@@ -54,15 +54,18 @@ function milesightDeviceEncode(payload) {
 		encoded = encoded.concat(buffer.toBytes());
 	}
 	//0xcf
-	if ('lorawan_configuration_settings' in payload) {
+	if ('lorawan_class' in payload) {
 		var buffer = new Buffer();
-		if (isValid(payload.lorawan_configuration_settings.version)) {
-			buffer.writeUInt8(0xcf);
-			// 1：1.0.2, 2：1.0.3, 3：1.0.3, 4：1.0.4
-			buffer.writeUInt8(0xd8);
-			// 1：1.0.2, 2：1.0.3, 3：1.0.3, 4：1.0.4
-			buffer.writeUInt8(payload.lorawan_configuration_settings.version);
-		}
+		buffer.writeUInt8(0xcf);
+		buffer.writeUInt8(0x00);
+		// 0：Class A, 1：Class B, 2：Class C, 3：Class CtoB
+		var lorawan_class_map = {
+			"Class A": 0,
+			"Class B": 1,
+			"Class C": 2,
+			"Class CtoB": 3,
+		};
+		buffer.writeUInt8(lorawan_class_map[payload.lorawan_class]);
 		encoded = encoded.concat(buffer.toBytes());
 	}
 	//0xde

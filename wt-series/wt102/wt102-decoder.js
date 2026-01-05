@@ -54,12 +54,9 @@ function milesightDeviceDecode(bytes) {
 				decoded.all_configurations_request_by_device = readOnlyCommand(bytes, counterObj, 0);
 				break;
 			case 0xcf:
-				decoded.lorawan_configuration_settings = decoded.lorawan_configuration_settings || {};
-				var lorawan_configuration_settings_command = readUInt8(bytes, counterObj, 1);
-				if (lorawan_configuration_settings_command == 0xd8) {
-					// 1：1.0.2, 2：1.0.3, 3：1.0.3, 4：1.0.4
-					decoded.lorawan_configuration_settings.version = readUInt8(bytes, counterObj, 1);
-				}
+				// skip 1 byte
+				counterObj.i++;
+				decoded.lorawan_class = readLoRaWANClass(readUInt8(bytes, counterObj, 1));
 				break;
 			case 0xdf:
 				decoded.tsl_version = readProtocolVersion(readBytes(bytes, counterObj, 2));
@@ -674,6 +671,16 @@ function readProtocolVersion(bytes) {
 	var major = bytes[0] & 0xff;
 	var minor = bytes[1] & 0xff;
 	return 'v' + major + '.' + minor;
+}
+
+function readLoRaWANClass(type) {
+	var lorawan_class_map = {
+		0: "Class A",
+		1: "Class B",
+		2: "Class C",
+		3: "Class CtoB",
+	};
+	return lorawan_class_map[type] || "Unknown";
 }
 
 function readHardwareVersion(bytes) {
