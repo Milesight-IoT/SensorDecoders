@@ -2852,7 +2852,7 @@
       "value": "",
       "unit": "",
       "access_mode": "W",
-      "data_type": "UNKNOWN",
+      "data_type": "NUMBER",
       "value_type": "UINT8",
       "bacnet_type": "analog_output_object",
       "bacnet_unit_type_id": 95,
