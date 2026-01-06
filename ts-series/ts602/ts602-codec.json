@@ -2,6 +2,71 @@
   "version": "1.0.0",
   "object": [
     {
+      "id": "tsl_version",
+      "name": "TSL Version",
+      "value": "",
+      "unit": "",
+      "access_mode": "R",
+      "data_type": "TEXT",
+      "value_type": "STRING",
+      "max_length": 6,
+      "bacnet_type": "character_string_value_object",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS"
+    },
+    {
+      "id": "product_sn",
+      "name": "Product SN",
+      "value": "",
+      "unit": "",
+      "access_mode": "R",
+      "data_type": "TEXT",
+      "value_type": "STRING",
+      "max_length": 16,
+      "bacnet_type": "character_string_value_object",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS"
+    },
+    {
+      "id": "version.hardware_version",
+      "name": "Hardware Version",
+      "value": "",
+      "unit": "",
+      "access_mode": "R",
+      "data_type": "TEXT",
+      "value_type": "STRING",
+      "max_length": 6,
+      "bacnet_type": "character_string_value_object",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS"
+    },
+    {
+      "id": "version.firmware_version",
+      "name": "Firmware Version",
+      "value": "",
+      "unit": "",
+      "access_mode": "R",
+      "data_type": "TEXT",
+      "value_type": "STRING",
+      "max_length": 16,
+      "bacnet_type": "character_string_value_object",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS"
+    },
+    {
+      "id": "oem_id",
+      "name": "OEM ID",
+      "value": "",
+      "unit": "",
+      "access_mode": "R",
+      "data_type": "TEXT",
+      "value_type": "STRING",
+      "max_length": 2,
+      "bacnet_type": "character_string_value_object",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS"
+    },
+    {
       "id": "battery",
       "name": "Battery",
       "value": "",
@@ -27,20 +92,20 @@
       "value_type": "UINT8",
       "values": [
         {
-          "name": "none",
-          "value": 0
+          "value": 0,
+          "name": "none"
         },
         {
-          "name": "PT100",
-          "value": 1
+          "value": 1,
+          "name": "PT100"
         },
         {
-          "name": "SHT41",
-          "value": 2
+          "value": 2,
+          "name": "SHT41"
         },
         {
-          "name": "DS18B20",
-          "value": 3
+          "value": 3,
+          "name": "DS18B20"
         }
       ],
       "bacnet_type": "multistate_value_object",
@@ -75,8 +140,8 @@
       "data_type": "NUMBER",
       "value_type": "FLOAT",
       "range": [
-        -35.0,
-        70.0
+        -200,
+        800
       ],
       "bacnet_type": "analog_input_object",
       "bacnet_unit_type_id": 62,
@@ -91,8 +156,8 @@
       "data_type": "NUMBER",
       "value_type": "FLOAT",
       "range": [
-        0.0,
-        100.0
+        0,
+        100
       ],
       "bacnet_type": "analog_input_object",
       "bacnet_unit_type_id": 29,
@@ -107,8 +172,8 @@
       "data_type": "NUMBER",
       "value_type": "FLOAT",
       "range": [
-        -90.0,
-        90.0
+        -90,
+        90
       ],
       "bacnet_type": "analog_input_object",
       "bacnet_unit_type_id": 90,
@@ -126,8 +191,8 @@
       "data_type": "NUMBER",
       "value_type": "FLOAT",
       "range": [
-        -180.0,
-        180.0
+        -180,
+        180
       ],
       "bacnet_type": "analog_input_object",
       "bacnet_unit_type_id": 90,
@@ -146,12 +211,12 @@
       "value_type": "UINT8",
       "values": [
         {
-          "name": "enter airplane mode",
-          "value": 0
+          "value": 0,
+          "name": "enter airplane mode"
         },
         {
-          "name": "exit airplane mode",
-          "value": 1
+          "value": 1,
+          "name": "exit airplane mode"
         }
       ],
       "bacnet_type": "multistate_value_object",
@@ -159,21 +224,57 @@
       "bacnet_unit_type": "UNITS_NO_UNITS"
     },
     {
-      "id": "probe_connect_status",
-      "name": "Probe Connect Status Alarm",
-      "value": "",
+      "id": "temperature_alarm_types",
+      "name": "Temperature  Alarm Type",
+      "value": "3",
       "unit": "",
       "access_mode": "R",
       "data_type": "ENUM",
       "value_type": "UINT8",
       "values": [
         {
-          "name": "disconnect",
-          "value": 0
+          "value": 3,
+          "name": "No Data"
         },
         {
-          "name": "connect",
-          "value": 1
+          "value": 16,
+          "name": "Temperature Below Alarm Released"
+        },
+        {
+          "value": 17,
+          "name": "Temperature Below Alarm"
+        },
+        {
+          "value": 18,
+          "name": "Temperature Above Alarm Released"
+        },
+        {
+          "value": 19,
+          "name": "Temperature Above Alarm"
+        },
+        {
+          "value": 20,
+          "name": "Temperature Between Alarm Released"
+        },
+        {
+          "value": 21,
+          "name": "Temperature Between Alarm"
+        },
+        {
+          "value": 22,
+          "name": "Temperature Exceed Tolerance Alarm Released"
+        },
+        {
+          "value": 23,
+          "name": "Temperature Exceed Tolerance Alarm"
+        },
+        {
+          "value": 48,
+          "name": "Temperature Shift Threshold"
+        },
+        {
+          "value": 32,
+          "name": "Temperature Shift Threshold"
         }
       ],
       "bacnet_type": "multistate_value_object",
@@ -181,21 +282,57 @@
       "bacnet_unit_type": "UNITS_NO_UNITS"
     },
     {
-      "id": "report_package_type",
-      "name": "Report package type",
-      "value": "",
+      "id": "humidity_alarm_types",
+      "name": "Humidity  Alarm Type",
+      "value": "3",
       "unit": "",
       "access_mode": "R",
       "data_type": "ENUM",
       "value_type": "UINT8",
       "values": [
         {
-          "name": "Normal cycle package",
-          "value": 0
+          "value": 3,
+          "name": "No Data"
         },
         {
-          "name": "Key cycle package",
-          "value": 1
+          "value": 16,
+          "name": "humidity Below Alarm Released"
+        },
+        {
+          "value": 17,
+          "name": "humidity Below Alarm"
+        },
+        {
+          "value": 18,
+          "name": "humidity Above Alarm Released"
+        },
+        {
+          "value": 19,
+          "name": "humidity Above Alarm"
+        },
+        {
+          "value": 20,
+          "name": "humidity Between Alarm Released"
+        },
+        {
+          "value": 21,
+          "name": "humidity Between Alarm"
+        },
+        {
+          "value": 22,
+          "name": "humidity Exceed Tolerance Alarm Released"
+        },
+        {
+          "value": 23,
+          "name": "humidity Exceed Tolerance Alarm"
+        },
+        {
+          "value": 48,
+          "name": "humidity Shift Threshold"
+        },
+        {
+          "value": 32,
+          "name": "humidity Shift Threshold"
         }
       ],
       "bacnet_type": "multistate_value_object",
@@ -203,24 +340,74 @@
       "bacnet_unit_type": "UNITS_NO_UNITS"
     },
     {
-      "id": "auto_p_enable",
-      "name": "AutoP Enable",
-      "value": "1",
+      "id": "tilt_alarm_types",
+      "name": "Tilt  Alarm Type",
+      "value": "3",
       "unit": "",
-      "access_mode": "RW",
-      "data_type": "BOOL",
+      "access_mode": "R",
+      "data_type": "ENUM",
       "value_type": "UINT8",
       "values": [
         {
-          "name": "disable",
-          "value": 0
+          "value": 1,
+          "name": "Exceed the Range Lower Limit"
         },
         {
-          "name": "enable",
-          "value": 1
+          "value": 2,
+          "name": "Exceed the Range Upper Limit"
+        },
+        {
+          "value": 3,
+          "name": "No Data"
+        },
+        {
+          "value": 16,
+          "name": "Tilt  Alam Release"
+        },
+        {
+          "value": 17,
+          "name": "Tilt Alam"
+        },
+        {
+          "value": 33,
+          "name": "Falling  Alam"
         }
       ],
-      "bacnet_type": "binary_value_object",
+      "bacnet_type": "multistate_value_object",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS"
+    },
+    {
+      "id": "light_alarm_types",
+      "name": "Light  Alarm Type",
+      "value": "3",
+      "unit": "",
+      "access_mode": "R",
+      "data_type": "ENUM",
+      "value_type": "UINT8",
+      "values": [
+        {
+          "value": 1,
+          "name": "Exceed the Range Lower Limit"
+        },
+        {
+          "value": 2,
+          "name": "Exceed the Range Upper Limit"
+        },
+        {
+          "value": 3,
+          "name": "No Data"
+        },
+        {
+          "value": 16,
+          "name": "Bright to dark"
+        },
+        {
+          "value": 17,
+          "name": "Dark to bright"
+        }
+      ],
+      "bacnet_type": "multistate_value_object",
       "bacnet_unit_type_id": 95,
       "bacnet_unit_type": "UNITS_NO_UNITS"
     },
@@ -234,12 +421,12 @@
       "value_type": "UINT8",
       "values": [
         {
-          "name": "second",
-          "value": 0
+          "value": 0,
+          "name": "second"
         },
         {
-          "name": "min",
-          "value": 1
+          "value": 1,
+          "name": "min"
         }
       ],
       "bacnet_type": "multistate_value_object",
@@ -283,7 +470,7 @@
     {
       "id": "cumulative_times",
       "name": "Cumulative Numbers",
-      "value": "4",
+      "value": "8",
       "unit": "",
       "access_mode": "RW",
       "data_type": "NUMBER",
@@ -295,51 +482,6 @@
       "bacnet_type": "analog_value_object",
       "bacnet_unit_type_id": 95,
       "bacnet_unit_type": "UNITS_NO_UNITS"
-    },
-    {
-      "id": "collection_interval.unit",
-      "name": "Collecting Interval Unit",
-      "value": "1",
-      "unit": "",
-      "access_mode": "RW",
-      "data_type": "ENUM",
-      "value_type": "UINT8",
-      "values": [
-        {
-          "name": "second",
-          "value": 0
-        },
-        {
-          "name": "min",
-          "value": 1
-        }
-      ],
-      "bacnet_type": "multistate_value_object",
-      "bacnet_unit_type_id": 95,
-      "bacnet_unit_type": "UNITS_NO_UNITS",
-      "reference": [
-        "collection_interval.seconds_of_time",
-        "collection_interval.minutes_of_time"
-      ]
-    },
-    {
-      "id": "collection_interval.seconds_of_time",
-      "name": "Collecting Interval",
-      "value": "900",
-      "unit": "s",
-      "access_mode": "RW",
-      "data_type": "NUMBER",
-      "value_type": "UINT16",
-      "range": [
-        10,
-        64800
-      ],
-      "bacnet_type": "analog_value_object",
-      "bacnet_unit_type_id": 73,
-      "bacnet_unit_type": "UNITS_SECONDS",
-      "reference": [
-        "collection_interval.unit"
-      ]
     },
     {
       "id": "collection_interval.minutes_of_time",
@@ -356,9 +498,7 @@
       "bacnet_type": "analog_value_object",
       "bacnet_unit_type_id": 72,
       "bacnet_unit_type": "UNITS_MINUTES",
-      "reference": [
-        "collection_interval.unit"
-      ]
+      "reference": []
     },
     {
       "id": "alarm_reporting_times",
@@ -386,81 +526,17 @@
       "value_type": "UINT8",
       "values": [
         {
-          "name": "disable",
-          "value": 0
+          "value": 0,
+          "name": "disable"
         },
         {
-          "name": "enable",
-          "value": 1
+          "value": 1,
+          "name": "enable"
         }
       ],
       "bacnet_type": "binary_value_object",
       "bacnet_unit_type_id": 95,
       "bacnet_unit_type": "UNITS_NO_UNITS"
-    },
-    {
-      "id": "light_collection_interval.unit",
-      "name": "Light Collecting Interval Unit",
-      "value": "1",
-      "unit": "",
-      "access_mode": "RW",
-      "data_type": "ENUM",
-      "value_type": "UINT8",
-      "values": [
-        {
-          "name": "second",
-          "value": 0
-        },
-        {
-          "name": "min",
-          "value": 1
-        }
-      ],
-      "bacnet_type": "multistate_value_object",
-      "bacnet_unit_type_id": 95,
-      "bacnet_unit_type": "UNITS_NO_UNITS",
-      "reference": [
-        "light_collection_interval.seconds_of_time",
-        "light_collection_interval.minutes_of_time"
-      ]
-    },
-    {
-      "id": "light_collection_interval.seconds_of_time",
-      "name": "Light  Collecting Interval",
-      "value": "60",
-      "unit": "s",
-      "access_mode": "RW",
-      "data_type": "NUMBER",
-      "value_type": "UINT16",
-      "range": [
-        10,
-        64800
-      ],
-      "bacnet_type": "analog_value_object",
-      "bacnet_unit_type_id": 73,
-      "bacnet_unit_type": "UNITS_SECONDS",
-      "reference": [
-        "light_collection_interval.unit"
-      ]
-    },
-    {
-      "id": "light_collection_interval.minutes_of_time",
-      "name": "Light  Collecting Interval",
-      "value": "1",
-      "unit": "min",
-      "access_mode": "RW",
-      "data_type": "NUMBER",
-      "value_type": "UINT16",
-      "range": [
-        1,
-        1440
-      ],
-      "bacnet_type": "analog_value_object",
-      "bacnet_unit_type_id": 72,
-      "bacnet_unit_type": "UNITS_MINUTES",
-      "reference": [
-        "light_collection_interval.unit"
-      ]
     },
     {
       "id": "temperature_unit",
@@ -472,12 +548,12 @@
       "value_type": "UINT8",
       "values": [
         {
-          "name": "°C",
-          "value": 0
+          "value": 0,
+          "name": "℃"
         },
         {
-          "name": "℉",
-          "value": 1
+          "value": 1,
+          "name": "℉"
         }
       ],
       "bacnet_type": "multistate_value_object",
@@ -485,8 +561,30 @@
       "bacnet_unit_type": "UNITS_NO_UNITS"
     },
     {
-      "id": "airplane_mode_enable",
-      "name": "Airplane Mode",
+      "id": "auto_p_enable",
+      "name": "AutoP Enable",
+      "value": "1",
+      "unit": "",
+      "access_mode": "RW",
+      "data_type": "BOOL",
+      "value_type": "UINT8",
+      "values": [
+        {
+          "value": 0,
+          "name": "disable"
+        },
+        {
+          "value": 1,
+          "name": "enable"
+        }
+      ],
+      "bacnet_type": "binary_value_object",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS"
+    },
+    {
+      "id": "base_station_position_enable",
+      "name": "Base Station Positioning",
       "value": "0",
       "unit": "",
       "access_mode": "RW",
@@ -494,17 +592,316 @@
       "value_type": "UINT8",
       "values": [
         {
-          "name": "disable",
-          "value": 0
+          "value": 0,
+          "name": "disable"
         },
         {
-          "name": "enable",
-          "value": 1
+          "value": 1,
+          "name": "enable"
         }
       ],
       "bacnet_type": "binary_value_object",
       "bacnet_unit_type_id": 95,
       "bacnet_unit_type": "UNITS_NO_UNITS"
+    },
+    {
+      "id": "airplane_mode_time_period_settings.enable",
+      "name": "Flight Mode Enable Mode",
+      "value": "0",
+      "unit": "",
+      "access_mode": "RW",
+      "data_type": "BOOL",
+      "value_type": "UINT8",
+      "values": [
+        {
+          "value": 0,
+          "name": "disable"
+        },
+        {
+          "value": 1,
+          "name": "enable"
+        }
+      ],
+      "bacnet_type": "binary_value_object",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS",
+      "reference": []
+    },
+    {
+      "id": "airplane_mode_time_period_settings.start_timestamp.year",
+      "name": "Start Year",
+      "value": "0",
+      "unit": "",
+      "access_mode": "RW",
+      "data_type": "NUMBER",
+      "value_type": "UINT8",
+      "range": [
+        0,
+        255
+      ],
+      "bacnet_type": "analog_value_object",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS",
+      "reference": [
+        "airplane_mode_time_period_settings.start_timestamp.month",
+        "airplane_mode_time_period_settings.start_timestamp.day",
+        "airplane_mode_time_period_settings.start_timestamp.hour",
+        "airplane_mode_time_period_settings.start_timestamp.minute",
+        "airplane_mode_time_period_settings.start_timestamp.second"
+      ]
+    },
+    {
+      "id": "airplane_mode_time_period_settings.start_timestamp.month",
+      "name": "Start Month",
+      "value": "1",
+      "unit": "",
+      "access_mode": "RW",
+      "data_type": "NUMBER",
+      "value_type": "UINT8",
+      "range": [
+        1,
+        12
+      ],
+      "bacnet_type": "analog_value_object",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS",
+      "reference": [
+        "airplane_mode_time_period_settings.start_timestamp.year",
+        "airplane_mode_time_period_settings.start_timestamp.day",
+        "airplane_mode_time_period_settings.start_timestamp.hour",
+        "airplane_mode_time_period_settings.start_timestamp.minute",
+        "airplane_mode_time_period_settings.start_timestamp.second"
+      ]
+    },
+    {
+      "id": "airplane_mode_time_period_settings.start_timestamp.day",
+      "name": "Start  Day",
+      "value": "1",
+      "unit": "",
+      "access_mode": "RW",
+      "data_type": "NUMBER",
+      "value_type": "UINT8",
+      "range": [
+        1,
+        31
+      ],
+      "bacnet_type": "analog_value_object",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS",
+      "reference": [
+        "airplane_mode_time_period_settings.start_timestamp.year",
+        "airplane_mode_time_period_settings.start_timestamp.month",
+        "airplane_mode_time_period_settings.start_timestamp.hour",
+        "airplane_mode_time_period_settings.start_timestamp.minute",
+        "airplane_mode_time_period_settings.start_timestamp.second"
+      ]
+    },
+    {
+      "id": "airplane_mode_time_period_settings.start_timestamp.hour",
+      "name": "Start  Hour",
+      "value": "0",
+      "unit": "",
+      "access_mode": "RW",
+      "data_type": "NUMBER",
+      "value_type": "UINT8",
+      "range": [
+        0,
+        23
+      ],
+      "bacnet_type": "analog_value_object",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS",
+      "reference": [
+        "airplane_mode_time_period_settings.start_timestamp.year",
+        "airplane_mode_time_period_settings.start_timestamp.month",
+        "airplane_mode_time_period_settings.start_timestamp.day",
+        "airplane_mode_time_period_settings.start_timestamp.minute",
+        "airplane_mode_time_period_settings.start_timestamp.second"
+      ]
+    },
+    {
+      "id": "airplane_mode_time_period_settings.start_timestamp.minute",
+      "name": "Start  Minute",
+      "value": "0",
+      "unit": "",
+      "access_mode": "RW",
+      "data_type": "NUMBER",
+      "value_type": "UINT8",
+      "range": [
+        0,
+        59
+      ],
+      "bacnet_type": "analog_value_object",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS",
+      "reference": [
+        "airplane_mode_time_period_settings.start_timestamp.year",
+        "airplane_mode_time_period_settings.start_timestamp.month",
+        "airplane_mode_time_period_settings.start_timestamp.day",
+        "airplane_mode_time_period_settings.start_timestamp.hour",
+        "airplane_mode_time_period_settings.start_timestamp.second"
+      ]
+    },
+    {
+      "id": "airplane_mode_time_period_settings.start_timestamp.second",
+      "name": "Start Second",
+      "value": "0",
+      "unit": "",
+      "access_mode": "RW",
+      "data_type": "NUMBER",
+      "value_type": "UINT8",
+      "range": [
+        0,
+        59
+      ],
+      "bacnet_type": "analog_value_object",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS",
+      "reference": [
+        "airplane_mode_time_period_settings.start_timestamp.year",
+        "airplane_mode_time_period_settings.start_timestamp.month",
+        "airplane_mode_time_period_settings.start_timestamp.day",
+        "airplane_mode_time_period_settings.start_timestamp.hour",
+        "airplane_mode_time_period_settings.start_timestamp.minute"
+      ]
+    },
+    {
+      "id": "airplane_mode_time_period_settings.end_timestamp.year",
+      "name": "End Year",
+      "value": "0",
+      "unit": "",
+      "access_mode": "RW",
+      "data_type": "NUMBER",
+      "value_type": "UINT8",
+      "range": [
+        0,
+        255
+      ],
+      "bacnet_type": "analog_value_object",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS",
+      "reference": [
+        "airplane_mode_time_period_settings.end_timestamp.month",
+        "airplane_mode_time_period_settings.end_timestamp.day",
+        "airplane_mode_time_period_settings.end_timestamp.hour",
+        "airplane_mode_time_period_settings.end_timestamp.minute",
+        "airplane_mode_time_period_settings.end_timestamp.second"
+      ]
+    },
+    {
+      "id": "airplane_mode_time_period_settings.end_timestamp.month",
+      "name": "End Month",
+      "value": "1",
+      "unit": "",
+      "access_mode": "RW",
+      "data_type": "NUMBER",
+      "value_type": "UINT8",
+      "range": [
+        1,
+        12
+      ],
+      "bacnet_type": "analog_value_object",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS",
+      "reference": [
+        "airplane_mode_time_period_settings.end_timestamp.year",
+        "airplane_mode_time_period_settings.end_timestamp.day",
+        "airplane_mode_time_period_settings.end_timestamp.hour",
+        "airplane_mode_time_period_settings.end_timestamp.minute",
+        "airplane_mode_time_period_settings.end_timestamp.second"
+      ]
+    },
+    {
+      "id": "airplane_mode_time_period_settings.end_timestamp.day",
+      "name": "End Day",
+      "value": "1",
+      "unit": "",
+      "access_mode": "RW",
+      "data_type": "NUMBER",
+      "value_type": "UINT8",
+      "range": [
+        1,
+        31
+      ],
+      "bacnet_type": "analog_value_object",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS",
+      "reference": [
+        "airplane_mode_time_period_settings.end_timestamp.year",
+        "airplane_mode_time_period_settings.end_timestamp.month",
+        "airplane_mode_time_period_settings.end_timestamp.hour",
+        "airplane_mode_time_period_settings.end_timestamp.minute",
+        "airplane_mode_time_period_settings.end_timestamp.second"
+      ]
+    },
+    {
+      "id": "airplane_mode_time_period_settings.end_timestamp.hour",
+      "name": "End Hour",
+      "value": "0",
+      "unit": "",
+      "access_mode": "RW",
+      "data_type": "NUMBER",
+      "value_type": "UINT8",
+      "range": [
+        0,
+        23
+      ],
+      "bacnet_type": "analog_value_object",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS",
+      "reference": [
+        "airplane_mode_time_period_settings.end_timestamp.year",
+        "airplane_mode_time_period_settings.end_timestamp.month",
+        "airplane_mode_time_period_settings.end_timestamp.day",
+        "airplane_mode_time_period_settings.end_timestamp.minute",
+        "airplane_mode_time_period_settings.end_timestamp.second"
+      ]
+    },
+    {
+      "id": "airplane_mode_time_period_settings.end_timestamp.minute",
+      "name": "End Minute",
+      "value": "0",
+      "unit": "",
+      "access_mode": "RW",
+      "data_type": "NUMBER",
+      "value_type": "UINT8",
+      "range": [
+        0,
+        59
+      ],
+      "bacnet_type": "analog_value_object",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS",
+      "reference": [
+        "airplane_mode_time_period_settings.end_timestamp.year",
+        "airplane_mode_time_period_settings.end_timestamp.month",
+        "airplane_mode_time_period_settings.end_timestamp.day",
+        "airplane_mode_time_period_settings.end_timestamp.hour",
+        "airplane_mode_time_period_settings.end_timestamp.second"
+      ]
+    },
+    {
+      "id": "airplane_mode_time_period_settings.end_timestamp.second",
+      "name": "End Second",
+      "value": "0",
+      "unit": "",
+      "access_mode": "RW",
+      "data_type": "NUMBER",
+      "value_type": "UINT8",
+      "range": [
+        0,
+        59
+      ],
+      "bacnet_type": "analog_value_object",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS",
+      "reference": [
+        "airplane_mode_time_period_settings.end_timestamp.year",
+        "airplane_mode_time_period_settings.end_timestamp.month",
+        "airplane_mode_time_period_settings.end_timestamp.day",
+        "airplane_mode_time_period_settings.end_timestamp.hour",
+        "airplane_mode_time_period_settings.end_timestamp.minute"
+      ]
     },
     {
       "id": "time_zone",
@@ -516,152 +913,152 @@
       "value_type": "INT16",
       "values": [
         {
-          "name": "UTC-12(IDLW)",
-          "value": -720
+          "value": -720,
+          "name": "UTC-12(IDLW)"
         },
         {
-          "name": "UTC-11(SST)",
-          "value": -660
+          "value": -660,
+          "name": "UTC-11(SST)"
         },
         {
-          "name": "UTC-10(HST)",
-          "value": -600
+          "value": -600,
+          "name": "UTC-10(HST)"
         },
         {
-          "name": "UTC-9:30(MIT)",
-          "value": -570
+          "value": -570,
+          "name": "UTC-9:30(MIT)"
         },
         {
-          "name": "UTC-9(AKST)",
-          "value": -540
+          "value": -540,
+          "name": "UTC-9(AKST)"
         },
         {
-          "name": "UTC-8(PST)",
-          "value": -480
+          "value": -480,
+          "name": "UTC-8(PST)"
         },
         {
-          "name": "UTC-7(MST)",
-          "value": -420
+          "value": -420,
+          "name": "UTC-7(MST)"
         },
         {
-          "name": "UTC-6(CST)",
-          "value": -360
+          "value": -360,
+          "name": "UTC-6(CST)"
         },
         {
-          "name": "UTC-5(EST)",
-          "value": -300
+          "value": -300,
+          "name": "UTC-5(EST)"
         },
         {
-          "name": "UTC-4(AST)",
-          "value": -240
+          "value": -240,
+          "name": "UTC-4(AST)"
         },
         {
-          "name": "UTC-3:30(NST)",
-          "value": -210
+          "value": -210,
+          "name": "UTC-3:30(NST)"
         },
         {
-          "name": "UTC-3(BRT)",
-          "value": -180
+          "value": -180,
+          "name": "UTC-3(BRT)"
         },
         {
-          "name": "UTC-2(FNT)",
-          "value": -120
+          "value": -120,
+          "name": "UTC-2(FNT)"
         },
         {
-          "name": "UTC-1(CVT)",
-          "value": -60
+          "value": -60,
+          "name": "UTC-1(CVT)"
         },
         {
-          "name": "UTC(WET)",
-          "value": 0
+          "value": 0,
+          "name": "UTC(WET)"
         },
         {
-          "name": "UTC+1(CET)",
-          "value": 60
+          "value": 60,
+          "name": "UTC+1(CET)"
         },
         {
-          "name": "UTC+2(EET)",
-          "value": 120
+          "value": 120,
+          "name": "UTC+2(EET)"
         },
         {
-          "name": "UTC+3(MSK)",
-          "value": 180
+          "value": 180,
+          "name": "UTC+3(MSK)"
         },
         {
-          "name": "UTC+3:30(IRST)",
-          "value": 210
+          "value": 210,
+          "name": "UTC+3:30(IRST)"
         },
         {
-          "name": "UTC+4(GST)",
-          "value": 240
+          "value": 240,
+          "name": "UTC+4(GST)"
         },
         {
-          "name": "UTC+4:30(AFT)",
-          "value": 270
+          "value": 270,
+          "name": "UTC+4:30(AFT)"
         },
         {
-          "name": "UTC+5(PKT)",
-          "value": 300
+          "value": 300,
+          "name": "UTC+5(PKT)"
         },
         {
-          "name": "UTC+5:30(IST)",
-          "value": 330
+          "value": 330,
+          "name": "UTC+5:30(IST)"
         },
         {
-          "name": "UTC+5:45(NPT)",
-          "value": 345
+          "value": 345,
+          "name": "UTC+5:45(NPT)"
         },
         {
-          "name": "UTC+6(BHT)",
-          "value": 360
+          "value": 360,
+          "name": "UTC+6(BHT)"
         },
         {
-          "name": "UTC+6:30(MMT)",
-          "value": 390
+          "value": 390,
+          "name": "UTC+6:30(MMT)"
         },
         {
-          "name": "UTC+7(ICT)",
-          "value": 420
+          "value": 420,
+          "name": "UTC+7(ICT)"
         },
         {
-          "name": "UTC+8(CT/CST)",
-          "value": 480
+          "value": 480,
+          "name": "UTC+8(CT/CST)"
         },
         {
-          "name": "UTC+9(JST)",
-          "value": 540
+          "value": 540,
+          "name": "UTC+9(JST)"
         },
         {
-          "name": "UTC+9:30(ACST)",
-          "value": 570
+          "value": 570,
+          "name": "UTC+9:30(ACST)"
         },
         {
-          "name": "UTC+10(AEST)",
-          "value": 600
+          "value": 600,
+          "name": "UTC+10(AEST)"
         },
         {
-          "name": "UTC+10:30(LHST)",
-          "value": 630
+          "value": 630,
+          "name": "UTC+10:30(LHST)"
         },
         {
-          "name": "UTC+11(VUT)",
-          "value": 660
+          "value": 660,
+          "name": "UTC+11(VUT)"
         },
         {
-          "name": "UTC+12(NZST)",
-          "value": 720
+          "value": 720,
+          "name": "UTC+12(NZST)"
         },
         {
-          "name": "UTC+12:45(CHAST)",
-          "value": 765
+          "value": 765,
+          "name": "UTC+12:45(CHAST)"
         },
         {
-          "name": "UTC+13(PHOT)",
-          "value": 780
+          "value": 780,
+          "name": "UTC+13(PHOT)"
         },
         {
-          "name": "UTC+14(LINT)",
-          "value": 840
+          "value": 840,
+          "name": "UTC+14(LINT)"
         }
       ],
       "bacnet_type": "multistate_value_object",
@@ -678,12 +1075,12 @@
       "value_type": "UINT8",
       "values": [
         {
-          "name": "disable",
-          "value": 0
+          "value": 0,
+          "name": "disable"
         },
         {
-          "name": "enable",
-          "value": 1
+          "value": 1,
+          "name": "enable"
         }
       ],
       "bacnet_type": "binary_value_object",
@@ -710,7 +1107,7 @@
       "data_type": "NUMBER",
       "value_type": "UINT8",
       "range": [
-        0,
+        1,
         120
       ],
       "bacnet_type": "analog_value_object",
@@ -731,59 +1128,59 @@
     {
       "id": "daylight_saving_time.start_month",
       "name": "Month",
-      "value": "3",
+      "value": "1",
       "unit": "",
       "access_mode": "RW",
       "data_type": "ENUM",
       "value_type": "UINT8",
       "values": [
         {
-          "name": "Jan.",
-          "value": 1
+          "value": 1,
+          "name": "Jan."
         },
         {
-          "name": "Feb.",
-          "value": 2
+          "value": 2,
+          "name": "Feb."
         },
         {
-          "name": "Mar.",
-          "value": 3
+          "value": 3,
+          "name": "Mar."
         },
         {
-          "name": "Apr.",
-          "value": 4
+          "value": 4,
+          "name": "Apr."
         },
         {
-          "name": "May",
-          "value": 5
+          "value": 5,
+          "name": "May"
         },
         {
-          "name": "Jun.",
-          "value": 6
+          "value": 6,
+          "name": "Jun."
         },
         {
-          "name": "Jul.",
-          "value": 7
+          "value": 7,
+          "name": "Jul."
         },
         {
-          "name": "Aug.",
-          "value": 8
+          "value": 8,
+          "name": "Aug."
         },
         {
-          "name": "Sep.",
-          "value": 9
+          "value": 9,
+          "name": "Sep."
         },
         {
-          "name": "Oct.",
-          "value": 10
+          "value": 10,
+          "name": "Oct."
         },
         {
-          "name": "Nov.",
-          "value": 11
+          "value": 11,
+          "name": "Nov."
         },
         {
-          "name": "Dec.",
-          "value": 12
+          "value": 12,
+          "name": "Dec."
         }
       ],
       "bacnet_type": "multistate_value_object",
@@ -804,31 +1201,31 @@
     {
       "id": "daylight_saving_time.start_week_num",
       "name": "Number of Week",
-      "value": "2",
+      "value": "1",
       "unit": "",
       "access_mode": "RW",
       "data_type": "ENUM",
       "value_type": "UINT8",
       "values": [
         {
-          "name": "1st",
-          "value": 1
+          "value": 1,
+          "name": "1st"
         },
         {
-          "name": "2nd",
-          "value": 2
+          "value": 2,
+          "name": "2nd"
         },
         {
-          "name": "3rd",
-          "value": 3
+          "value": 3,
+          "name": "3rd"
         },
         {
-          "name": "4th",
-          "value": 4
+          "value": 4,
+          "name": "4th"
         },
         {
-          "name": "last",
-          "value": 5
+          "value": 5,
+          "name": "last"
         }
       ],
       "bacnet_type": "multistate_value_object",
@@ -849,39 +1246,39 @@
     {
       "id": "daylight_saving_time.start_week_day",
       "name": "Week",
-      "value": "7",
+      "value": "1",
       "unit": "",
       "access_mode": "RW",
       "data_type": "ENUM",
       "value_type": "UINT8",
       "values": [
         {
-          "name": "Mon.",
-          "value": 1
+          "value": 1,
+          "name": "Mon."
         },
         {
-          "name": "Tues.",
-          "value": 2
+          "value": 2,
+          "name": "Tues."
         },
         {
-          "name": "Wed.",
-          "value": 3
+          "value": 3,
+          "name": "Wed."
         },
         {
-          "name": "Thurs.",
-          "value": 4
+          "value": 4,
+          "name": "Thurs."
         },
         {
-          "name": "Fri.",
-          "value": 5
+          "value": 5,
+          "name": "Fri."
         },
         {
-          "name": "Sat.",
-          "value": 6
+          "value": 6,
+          "name": "Sat."
         },
         {
-          "name": "Sun.",
-          "value": 7
+          "value": 7,
+          "name": "Sun."
         }
       ],
       "bacnet_type": "multistate_value_object",
@@ -909,100 +1306,100 @@
       "value_type": "UINT16",
       "values": [
         {
-          "name": "00:00",
-          "value": 0
+          "value": 0,
+          "name": "00:00"
         },
         {
-          "name": "01:00",
-          "value": 60
+          "value": 60,
+          "name": "01:00"
         },
         {
-          "name": "02:00",
-          "value": 120
+          "value": 120,
+          "name": "02:00"
         },
         {
-          "name": "03:00",
-          "value": 180
+          "value": 180,
+          "name": "03:00"
         },
         {
-          "name": "04:00",
-          "value": 240
+          "value": 240,
+          "name": "04:00"
         },
         {
-          "name": "05:00",
-          "value": 300
+          "value": 300,
+          "name": "05:00"
         },
         {
-          "name": "06:00",
-          "value": 360
+          "value": 360,
+          "name": "06:00"
         },
         {
-          "name": "07:00",
-          "value": 420
+          "value": 420,
+          "name": "07:00"
         },
         {
-          "name": "08:00",
-          "value": 480
+          "value": 480,
+          "name": "08:00"
         },
         {
-          "name": "09:00",
-          "value": 540
+          "value": 540,
+          "name": "09:00"
         },
         {
-          "name": "10:00",
-          "value": 600
+          "value": 600,
+          "name": "10:00"
         },
         {
-          "name": "11:00",
-          "value": 660
+          "value": 660,
+          "name": "11:00"
         },
         {
-          "name": "12:00",
-          "value": 720
+          "value": 720,
+          "name": "12:00"
         },
         {
-          "name": "13:00",
-          "value": 780
+          "value": 780,
+          "name": "13:00"
         },
         {
-          "name": "14:00",
-          "value": 840
+          "value": 840,
+          "name": "14:00"
         },
         {
-          "name": "15:00",
-          "value": 900
+          "value": 900,
+          "name": "15:00"
         },
         {
-          "name": "16:00",
-          "value": 960
+          "value": 960,
+          "name": "16:00"
         },
         {
-          "name": "17:00",
-          "value": 1020
+          "value": 1020,
+          "name": "17:00"
         },
         {
-          "name": "18:00",
-          "value": 1080
+          "value": 1080,
+          "name": "18:00"
         },
         {
-          "name": "19:00",
-          "value": 1140
+          "value": 1140,
+          "name": "19:00"
         },
         {
-          "name": "20:00",
-          "value": 1200
+          "value": 1200,
+          "name": "20:00"
         },
         {
-          "name": "21:00",
-          "value": 1260
+          "value": 1260,
+          "name": "21:00"
         },
         {
-          "name": "22:00",
-          "value": 1320
+          "value": 1320,
+          "name": "22:00"
         },
         {
-          "name": "23:00",
-          "value": 1380
+          "value": 1380,
+          "name": "23:00"
         }
       ],
       "bacnet_type": "multistate_value_object",
@@ -1023,59 +1420,59 @@
     {
       "id": "daylight_saving_time.end_month",
       "name": "Month",
-      "value": "11",
+      "value": "2",
       "unit": "",
       "access_mode": "RW",
       "data_type": "ENUM",
       "value_type": "UINT8",
       "values": [
         {
-          "name": "Jan.",
-          "value": 1
+          "value": 1,
+          "name": "Jan."
         },
         {
-          "name": "Feb.",
-          "value": 2
+          "value": 2,
+          "name": "Feb."
         },
         {
-          "name": "Mar.",
-          "value": 3
+          "value": 3,
+          "name": "Mar."
         },
         {
-          "name": "Apr.",
-          "value": 4
+          "value": 4,
+          "name": "Apr."
         },
         {
-          "name": "May",
-          "value": 5
+          "value": 5,
+          "name": "May"
         },
         {
-          "name": "Jun.",
-          "value": 6
+          "value": 6,
+          "name": "Jun."
         },
         {
-          "name": "Jul.",
-          "value": 7
+          "value": 7,
+          "name": "Jul."
         },
         {
-          "name": "Aug.",
-          "value": 8
+          "value": 8,
+          "name": "Aug."
         },
         {
-          "name": "Sep.",
-          "value": 9
+          "value": 9,
+          "name": "Sep."
         },
         {
-          "name": "Oct.",
-          "value": 10
+          "value": 10,
+          "name": "Oct."
         },
         {
-          "name": "Nov.",
-          "value": 11
+          "value": 11,
+          "name": "Nov."
         },
         {
-          "name": "Dec.",
-          "value": 12
+          "value": 12,
+          "name": "Dec."
         }
       ],
       "bacnet_type": "multistate_value_object",
@@ -1103,24 +1500,24 @@
       "value_type": "UINT8",
       "values": [
         {
-          "name": "1st",
-          "value": 1
+          "value": 1,
+          "name": "1st"
         },
         {
-          "name": "2nd",
-          "value": 2
+          "value": 2,
+          "name": "2nd"
         },
         {
-          "name": "3rd",
-          "value": 3
+          "value": 3,
+          "name": "3rd"
         },
         {
-          "name": "4th",
-          "value": 4
+          "value": 4,
+          "name": "4th"
         },
         {
-          "name": "last",
-          "value": 5
+          "value": 5,
+          "name": "last"
         }
       ],
       "bacnet_type": "multistate_value_object",
@@ -1148,32 +1545,32 @@
       "value_type": "UINT8",
       "values": [
         {
-          "name": "Mon.",
-          "value": 1
+          "value": 1,
+          "name": "Mon."
         },
         {
-          "name": "Tues.",
-          "value": 2
+          "value": 2,
+          "name": "Tues."
         },
         {
-          "name": "Wed.",
-          "value": 3
+          "value": 3,
+          "name": "Wed."
         },
         {
-          "name": "Thurs.",
-          "value": 4
+          "value": 4,
+          "name": "Thurs."
         },
         {
-          "name": "Fri.",
-          "value": 5
+          "value": 5,
+          "name": "Fri."
         },
         {
-          "name": "Sat.",
-          "value": 6
+          "value": 6,
+          "name": "Sat."
         },
         {
-          "name": "Sun.",
-          "value": 7
+          "value": 7,
+          "name": "Sun."
         }
       ],
       "bacnet_type": "multistate_value_object",
@@ -1201,100 +1598,100 @@
       "value_type": "UINT16",
       "values": [
         {
-          "name": "00:00",
-          "value": 0
+          "value": 0,
+          "name": "00:00"
         },
         {
-          "name": "01:00",
-          "value": 60
+          "value": 60,
+          "name": "01:00"
         },
         {
-          "name": "02:00",
-          "value": 120
+          "value": 120,
+          "name": "02:00"
         },
         {
-          "name": "03:00",
-          "value": 180
+          "value": 180,
+          "name": "03:00"
         },
         {
-          "name": "04:00",
-          "value": 240
+          "value": 240,
+          "name": "04:00"
         },
         {
-          "name": "05:00",
-          "value": 300
+          "value": 300,
+          "name": "05:00"
         },
         {
-          "name": "06:00",
-          "value": 360
+          "value": 360,
+          "name": "06:00"
         },
         {
-          "name": "07:00",
-          "value": 420
+          "value": 420,
+          "name": "07:00"
         },
         {
-          "name": "08:00",
-          "value": 480
+          "value": 480,
+          "name": "08:00"
         },
         {
-          "name": "09:00",
-          "value": 540
+          "value": 540,
+          "name": "09:00"
         },
         {
-          "name": "10:00",
-          "value": 600
+          "value": 600,
+          "name": "10:00"
         },
         {
-          "name": "11:00",
-          "value": 660
+          "value": 660,
+          "name": "11:00"
         },
         {
-          "name": "12:00",
-          "value": 720
+          "value": 720,
+          "name": "12:00"
         },
         {
-          "name": "13:00",
-          "value": 780
+          "value": 780,
+          "name": "13:00"
         },
         {
-          "name": "14:00",
-          "value": 840
+          "value": 840,
+          "name": "14:00"
         },
         {
-          "name": "15:00",
-          "value": 900
+          "value": 900,
+          "name": "15:00"
         },
         {
-          "name": "16:00",
-          "value": 960
+          "value": 960,
+          "name": "16:00"
         },
         {
-          "name": "17:00",
-          "value": 1020
+          "value": 1020,
+          "name": "17:00"
         },
         {
-          "name": "18:00",
-          "value": 1080
+          "value": 1080,
+          "name": "18:00"
         },
         {
-          "name": "19:00",
-          "value": 1140
+          "value": 1140,
+          "name": "19:00"
         },
         {
-          "name": "20:00",
-          "value": 1200
+          "value": 1200,
+          "name": "20:00"
         },
         {
-          "name": "21:00",
-          "value": 1260
+          "value": 1260,
+          "name": "21:00"
         },
         {
-          "name": "22:00",
-          "value": 1320
+          "value": 1320,
+          "name": "22:00"
         },
         {
-          "name": "23:00",
-          "value": 1380
+          "value": 1380,
+          "name": "23:00"
         }
       ],
       "bacnet_type": "multistate_value_object",
@@ -1315,19 +1712,19 @@
     {
       "id": "data_storage_settings.enable",
       "name": "Data Storage Enable",
-      "value": "0",
+      "value": "1",
       "unit": "",
       "access_mode": "RW",
       "data_type": "BOOL",
       "value_type": "UINT8",
       "values": [
         {
-          "name": "disable",
-          "value": 0
+          "value": 0,
+          "name": "disable"
         },
         {
-          "name": "enable",
-          "value": 1
+          "value": 1,
+          "name": "enable"
         }
       ],
       "bacnet_type": "binary_value_object",
@@ -1338,396 +1735,42 @@
     {
       "id": "data_storage_settings.retransmission_enable",
       "name": "Data Retransmission Enable",
-      "value": "0",
+      "value": "1",
       "unit": "",
       "access_mode": "RW",
       "data_type": "BOOL",
       "value_type": "UINT8",
       "values": [
         {
-          "name": "disable",
-          "value": 0
+          "value": 0,
+          "name": "disable"
         },
         {
-          "name": "enable",
-          "value": 1
+          "value": 1,
+          "name": "enable"
         }
       ],
       "bacnet_type": "binary_value_object",
       "bacnet_unit_type_id": 95,
       "bacnet_unit_type": "UNITS_NO_UNITS",
       "reference": []
-    },
-    {
-      "id": "data_storage_settings.retransmission_interval",
-      "name": "Retransmission Interval",
-      "value": "600",
-      "unit": "s",
-      "access_mode": "RW",
-      "data_type": "NUMBER",
-      "value_type": "UINT16",
-      "range": [
-        30,
-        1200
-      ],
-      "bacnet_type": "analog_value_object",
-      "bacnet_unit_type_id": 73,
-      "bacnet_unit_type": "UNITS_SECONDS",
-      "reference": []
-    },
-    {
-      "id": "data_storage_settings.retrieval_interval",
-      "name": "Retrieval Interval",
-      "value": "60",
-      "unit": "s",
-      "access_mode": "RW",
-      "data_type": "NUMBER",
-      "value_type": "UINT16",
-      "range": [
-        30,
-        1200
-      ],
-      "bacnet_type": "analog_value_object",
-      "bacnet_unit_type_id": 73,
-      "bacnet_unit_type": "UNITS_SECONDS",
-      "reference": []
-    },
-    {
-      "id": "base_station_position_enable",
-      "name": "Base Station Positioning",
-      "value": "0",
-      "unit": "",
-      "access_mode": "RW",
-      "data_type": "BOOL",
-      "value_type": "UINT8",
-      "values": [
-        {
-          "name": "disable",
-          "value": 0
-        },
-        {
-          "name": "enable",
-          "value": 1
-        }
-      ],
-      "bacnet_type": "binary_value_object",
-      "bacnet_unit_type_id": 95,
-      "bacnet_unit_type": "UNITS_NO_UNITS"
-    },
-    {
-      "id": "airplane_mode_time_period_settings.start_timestamp.year",
-      "name": "Start Time Year",
-      "value": "1970",
-      "unit": "",
-      "access_mode": "RW",
-      "data_type": "NUMBER",
-      "value_type": "UINT16",
-      "range": [
-        0,
-        2099
-      ],
-      "bacnet_type": "analog_value_object",
-      "bacnet_unit_type_id": 95,
-      "bacnet_unit_type": "UNITS_NO_UNITS",
-      "reference": [
-        "airplane_mode_time_period_settings.start_timestamp.month",
-        "airplane_mode_time_period_settings.start_timestamp.day",
-        "airplane_mode_time_period_settings.start_timestamp.hour",
-        "airplane_mode_time_period_settings.start_timestamp.minute",
-        "airplane_mode_time_period_settings.start_timestamp.second"
-      ]
-    },
-    {
-      "id": "airplane_mode_time_period_settings.start_timestamp.month",
-      "name": "Start Time Month",
-      "value": "1",
-      "unit": "",
-      "access_mode": "RW",
-      "data_type": "NUMBER",
-      "value_type": "UINT8",
-      "range": [
-        1,
-        12
-      ],
-      "bacnet_type": "analog_value_object",
-      "bacnet_unit_type_id": 95,
-      "bacnet_unit_type": "UNITS_NO_UNITS",
-      "reference": [
-        "airplane_mode_time_period_settings.start_timestamp.year",
-        "airplane_mode_time_period_settings.start_timestamp.day",
-        "airplane_mode_time_period_settings.start_timestamp.hour",
-        "airplane_mode_time_period_settings.start_timestamp.minute",
-        "airplane_mode_time_period_settings.start_timestamp.second"
-      ]
-    },
-    {
-      "id": "airplane_mode_time_period_settings.start_timestamp.day",
-      "name": "Start Time Day",
-      "value": "1",
-      "unit": "",
-      "access_mode": "RW",
-      "data_type": "NUMBER",
-      "value_type": "UINT8",
-      "range": [
-        1,
-        31
-      ],
-      "bacnet_type": "analog_value_object",
-      "bacnet_unit_type_id": 95,
-      "bacnet_unit_type": "UNITS_NO_UNITS",
-      "reference": [
-        "airplane_mode_time_period_settings.start_timestamp.year",
-        "airplane_mode_time_period_settings.start_timestamp.month",
-        "airplane_mode_time_period_settings.start_timestamp.hour",
-        "airplane_mode_time_period_settings.start_timestamp.minute",
-        "airplane_mode_time_period_settings.start_timestamp.second"
-      ]
-    },
-    {
-      "id": "airplane_mode_time_period_settings.start_timestamp.hour",
-      "name": "Start Time Hour",
-      "value": "0",
-      "unit": "",
-      "access_mode": "RW",
-      "data_type": "NUMBER",
-      "value_type": "UINT8",
-      "range": [
-        0,
-        23
-      ],
-      "bacnet_type": "analog_value_object",
-      "bacnet_unit_type_id": 95,
-      "bacnet_unit_type": "UNITS_NO_UNITS",
-      "reference": [
-        "airplane_mode_time_period_settings.start_timestamp.year",
-        "airplane_mode_time_period_settings.start_timestamp.month",
-        "airplane_mode_time_period_settings.start_timestamp.day",
-        "airplane_mode_time_period_settings.start_timestamp.minute",
-        "airplane_mode_time_period_settings.start_timestamp.second"
-      ]
-    },
-    {
-      "id": "airplane_mode_time_period_settings.start_timestamp.minute",
-      "name": "Start Time Minute",
-      "value": "0",
-      "unit": "",
-      "access_mode": "RW",
-      "data_type": "NUMBER",
-      "value_type": "UINT8",
-      "range": [
-        0,
-        59
-      ],
-      "bacnet_type": "analog_value_object",
-      "bacnet_unit_type_id": 95,
-      "bacnet_unit_type": "UNITS_NO_UNITS",
-      "reference": [
-        "airplane_mode_time_period_settings.start_timestamp.year",
-        "airplane_mode_time_period_settings.start_timestamp.month",
-        "airplane_mode_time_period_settings.start_timestamp.day",
-        "airplane_mode_time_period_settings.start_timestamp.hour",
-        "airplane_mode_time_period_settings.start_timestamp.second"
-      ]
-    },
-    {
-      "id": "airplane_mode_time_period_settings.start_timestamp.second",
-      "name": "Start Time Second",
-      "value": "0",
-      "unit": "",
-      "access_mode": "RW",
-      "data_type": "NUMBER",
-      "value_type": "UINT8",
-      "range": [
-        0,
-        59
-      ],
-      "bacnet_type": "analog_value_object",
-      "bacnet_unit_type_id": 95,
-      "bacnet_unit_type": "UNITS_NO_UNITS",
-      "reference": [
-        "airplane_mode_time_period_settings.start_timestamp.year",
-        "airplane_mode_time_period_settings.start_timestamp.month",
-        "airplane_mode_time_period_settings.start_timestamp.day",
-        "airplane_mode_time_period_settings.start_timestamp.hour",
-        "airplane_mode_time_period_settings.start_timestamp.minute"
-      ]
-    },
-    {
-      "id": "airplane_mode_time_period_settings.end_timestamp.year",
-      "name": "End Time Year",
-      "value": "1970",
-      "unit": "",
-      "access_mode": "RW",
-      "data_type": "NUMBER",
-      "value_type": "UINT16",
-      "range": [
-        0,
-        2099
-      ],
-      "bacnet_type": "analog_value_object",
-      "bacnet_unit_type_id": 95,
-      "bacnet_unit_type": "UNITS_NO_UNITS",
-      "reference": [
-        "airplane_mode_time_period_settings.end_timestamp.month",
-        "airplane_mode_time_period_settings.end_timestamp.day",
-        "airplane_mode_time_period_settings.end_timestamp.hour",
-        "airplane_mode_time_period_settings.end_timestamp.minute",
-        "airplane_mode_time_period_settings.end_timestamp.second"
-      ]
-    },
-    {
-      "id": "airplane_mode_time_period_settings.end_timestamp.month",
-      "name": "End Time Month",
-      "value": "1",
-      "unit": "",
-      "access_mode": "RW",
-      "data_type": "NUMBER",
-      "value_type": "UINT8",
-      "range": [
-        1,
-        12
-      ],
-      "bacnet_type": "analog_value_object",
-      "bacnet_unit_type_id": 95,
-      "bacnet_unit_type": "UNITS_NO_UNITS",
-      "reference": [
-        "airplane_mode_time_period_settings.end_timestamp.year",
-        "airplane_mode_time_period_settings.end_timestamp.day",
-        "airplane_mode_time_period_settings.end_timestamp.hour",
-        "airplane_mode_time_period_settings.end_timestamp.minute",
-        "airplane_mode_time_period_settings.end_timestamp.second"
-      ]
-    },
-    {
-      "id": "airplane_mode_time_period_settings.end_timestamp.day",
-      "name": "End Time Day",
-      "value": "1",
-      "unit": "",
-      "access_mode": "RW",
-      "data_type": "NUMBER",
-      "value_type": "UINT8",
-      "range": [
-        1,
-        31
-      ],
-      "bacnet_type": "analog_value_object",
-      "bacnet_unit_type_id": 95,
-      "bacnet_unit_type": "UNITS_NO_UNITS",
-      "reference": [
-        "airplane_mode_time_period_settings.end_timestamp.year",
-        "airplane_mode_time_period_settings.end_timestamp.month",
-        "airplane_mode_time_period_settings.end_timestamp.hour",
-        "airplane_mode_time_period_settings.end_timestamp.minute",
-        "airplane_mode_time_period_settings.end_timestamp.second"
-      ]
-    },
-    {
-      "id": "airplane_mode_time_period_settings.end_timestamp.hour",
-      "name": "End Time Hour",
-      "value": "0",
-      "unit": "",
-      "access_mode": "RW",
-      "data_type": "NUMBER",
-      "value_type": "UINT8",
-      "range": [
-        0,
-        23
-      ],
-      "bacnet_type": "analog_value_object",
-      "bacnet_unit_type_id": 95,
-      "bacnet_unit_type": "UNITS_NO_UNITS",
-      "reference": [
-        "airplane_mode_time_period_settings.end_timestamp.year",
-        "airplane_mode_time_period_settings.end_timestamp.month",
-        "airplane_mode_time_period_settings.end_timestamp.day",
-        "airplane_mode_time_period_settings.end_timestamp.minute",
-        "airplane_mode_time_period_settings.end_timestamp.second"
-      ]
-    },
-    {
-      "id": "airplane_mode_time_period_settings.end_timestamp.minute",
-      "name": "End Time Minute",
-      "value": "0",
-      "unit": "",
-      "access_mode": "RW",
-      "data_type": "NUMBER",
-      "value_type": "UINT8",
-      "range": [
-        0,
-        59
-      ],
-      "bacnet_type": "analog_value_object",
-      "bacnet_unit_type_id": 95,
-      "bacnet_unit_type": "UNITS_NO_UNITS",
-      "reference": [
-        "airplane_mode_time_period_settings.end_timestamp.year",
-        "airplane_mode_time_period_settings.end_timestamp.month",
-        "airplane_mode_time_period_settings.end_timestamp.day",
-        "airplane_mode_time_period_settings.end_timestamp.hour",
-        "airplane_mode_time_period_settings.end_timestamp.second"
-      ]
-    },
-    {
-      "id": "airplane_mode_time_period_settings.end_timestamp.second",
-      "name": "End Time Second",
-      "value": "0",
-      "unit": "",
-      "access_mode": "RW",
-      "data_type": "NUMBER",
-      "value_type": "UINT8",
-      "range": [
-        0,
-        59
-      ],
-      "bacnet_type": "analog_value_object",
-      "bacnet_unit_type_id": 95,
-      "bacnet_unit_type": "UNITS_NO_UNITS",
-      "reference": [
-        "airplane_mode_time_period_settings.end_timestamp.year",
-        "airplane_mode_time_period_settings.end_timestamp.month",
-        "airplane_mode_time_period_settings.end_timestamp.day",
-        "airplane_mode_time_period_settings.end_timestamp.hour",
-        "airplane_mode_time_period_settings.end_timestamp.minute"
-      ]
-    },
-    {
-      "id": "temperature_humidity_display_switch",
-      "name": "Temperature And Humidity Display Switch",
-      "value": "0",
-      "unit": "",
-      "access_mode": "RW",
-      "data_type": "ENUM",
-      "value_type": "UINT8",
-      "values": [
-        {
-          "name": "temperature",
-          "value": 0
-        },
-        {
-          "name": "humidity",
-          "value": 1
-        }
-      ],
-      "bacnet_type": "multistate_value_object",
-      "bacnet_unit_type_id": 95,
-      "bacnet_unit_type": "UNITS_NO_UNITS"
     },
     {
       "id": "button_lock.enable",
       "name": "Button\nLock Enable",
-      "value": "0",
+      "value": "1",
       "unit": "",
       "access_mode": "RW",
       "data_type": "BOOL",
       "value_type": "UINT8",
       "values": [
         {
-          "name": "disable",
-          "value": 0
+          "value": 0,
+          "name": "disable"
         },
         {
-          "name": "enable",
-          "value": 1
+          "value": 1,
+          "name": "enable"
         }
       ],
       "bacnet_type": "binary_value_object",
@@ -1741,19 +1784,19 @@
     {
       "id": "button_lock.power_off_enable",
       "name": "Turn off",
-      "value": "0",
+      "value": "1",
       "unit": "",
       "access_mode": "RW",
       "data_type": "BOOL",
       "value_type": "UINT8",
       "values": [
         {
-          "name": "disable lock power off",
-          "value": 0
+          "value": 0,
+          "name": "disable lock power off"
         },
         {
-          "name": "enable lock collect",
-          "value": 1
+          "value": 1,
+          "name": "enable lock collect"
         }
       ],
       "bacnet_type": "binary_value_object",
@@ -1774,12 +1817,12 @@
       "value_type": "UINT8",
       "values": [
         {
-          "name": "enablecollect",
-          "value": 0
+          "value": 0,
+          "name": "enablecollect"
         },
         {
-          "name": "disable lock collect",
-          "value": 1
+          "value": 1,
+          "name": "disable lock collect"
         }
       ],
       "bacnet_type": "binary_value_object",
@@ -1800,12 +1843,12 @@
       "value_type": "UINT8",
       "values": [
         {
-          "name": "disable",
-          "value": 0
+          "value": 0,
+          "name": "disable"
         },
         {
-          "name": "enable",
-          "value": 1
+          "value": 1,
+          "name": "enable"
         }
       ],
       "bacnet_type": "binary_value_object",
@@ -1827,24 +1870,24 @@
       "value_type": "UINT8",
       "values": [
         {
-          "name": "disable",
-          "value": 0
+          "value": 0,
+          "name": "disable"
         },
         {
-          "name": "condition: x<A",
-          "value": 1
+          "value": 1,
+          "name": "condition: x<A"
         },
         {
-          "name": "condition: x>B",
-          "value": 2
+          "value": 2,
+          "name": "condition: x>B"
         },
         {
-          "name": "condition: A<x<B",
-          "value": 3
+          "value": 3,
+          "name": "condition: A<x<B"
         },
         {
-          "name": "condition: x<A or x>B",
-          "value": 4
+          "value": 4,
+          "name": "condition: x<A or x>B"
         }
       ],
       "bacnet_type": "multistate_value_object",
@@ -1865,8 +1908,8 @@
       "data_type": "NUMBER",
       "value_type": "FLOAT",
       "range": [
-        -200.0,
-        800.0
+        -200,
+        800
       ],
       "bacnet_type": "analog_value_object",
       "bacnet_unit_type_id": 62,
@@ -1886,8 +1929,8 @@
       "data_type": "NUMBER",
       "value_type": "FLOAT",
       "range": [
-        -35.0,
-        70.0
+        -200,
+        800
       ],
       "bacnet_type": "analog_value_object",
       "bacnet_unit_type_id": 62,
@@ -1908,12 +1951,12 @@
       "value_type": "UINT8",
       "values": [
         {
-          "name": "disable",
-          "value": 0
+          "value": 0,
+          "name": "disable"
         },
         {
-          "name": "enable",
-          "value": 1
+          "value": 1,
+          "name": "enable"
         }
       ],
       "bacnet_type": "binary_value_object",
@@ -1933,7 +1976,7 @@
       "value_type": "FLOAT",
       "range": [
         0.1,
-        60.0
+        100
       ],
       "bacnet_type": "analog_value_object",
       "bacnet_unit_type_id": 62,
@@ -1952,12 +1995,12 @@
       "value_type": "UINT8",
       "values": [
         {
-          "name": "disable",
-          "value": 0
+          "value": 0,
+          "name": "disable"
         },
         {
-          "name": "enable",
-          "value": 1
+          "value": 1,
+          "name": "enable"
         }
       ],
       "bacnet_type": "binary_value_object",
@@ -1979,24 +2022,24 @@
       "value_type": "UINT8",
       "values": [
         {
-          "name": "disable",
-          "value": 0
+          "value": 0,
+          "name": "disable"
         },
         {
-          "name": "condition: x<A",
-          "value": 1
+          "value": 1,
+          "name": "condition: x<A"
         },
         {
-          "name": "condition: x>B",
-          "value": 2
+          "value": 2,
+          "name": "condition: x>B"
         },
         {
-          "name": "condition: A<x<B",
-          "value": 3
+          "value": 3,
+          "name": "condition: A<x<B"
         },
         {
-          "name": "condition: x<A or x>B",
-          "value": 4
+          "value": 4,
+          "name": "condition: x<A or x>B"
         }
       ],
       "bacnet_type": "multistate_value_object",
@@ -2011,14 +2054,14 @@
     {
       "id": "humidity_alarm_settings.threshold_min",
       "name": "Value A",
-      "value": "10",
+      "value": "0",
       "unit": "%RH",
       "access_mode": "RW",
       "data_type": "NUMBER",
       "value_type": "FLOAT",
       "range": [
-        0.1,
-        100.0
+        0,
+        100
       ],
       "bacnet_type": "analog_value_object",
       "bacnet_unit_type_id": 29,
@@ -2032,14 +2075,14 @@
     {
       "id": "humidity_alarm_settings.threshold_max",
       "name": "Value B",
-      "value": "20",
+      "value": "0",
       "unit": "%RH",
       "access_mode": "RW",
       "data_type": "NUMBER",
       "value_type": "FLOAT",
       "range": [
-        0.1,
-        100.0
+        0,
+        100
       ],
       "bacnet_type": "analog_value_object",
       "bacnet_unit_type_id": 29,
@@ -2052,7 +2095,7 @@
     },
     {
       "id": "humidity_mutation_alarm_settings.enable",
-      "name": "Mutation Alarm Config Enable",
+      "name": "Humidity Shift Threshold",
       "value": "0",
       "unit": "",
       "access_mode": "RW",
@@ -2060,12 +2103,12 @@
       "value_type": "UINT8",
       "values": [
         {
-          "name": "disable",
-          "value": 0
+          "value": 0,
+          "name": "disable"
         },
         {
-          "name": "enable",
-          "value": 1
+          "value": 1,
+          "name": "enable"
         }
       ],
       "bacnet_type": "binary_value_object",
@@ -2077,7 +2120,7 @@
     },
     {
       "id": "humidity_mutation_alarm_settings.mutation_max",
-      "name": "Mutation Alarm Max Value",
+      "name": "Humidity change greater than",
       "value": "10",
       "unit": "%RH",
       "access_mode": "RW",
@@ -2085,7 +2128,7 @@
       "value_type": "FLOAT",
       "range": [
         0.1,
-        100.0
+        100
       ],
       "bacnet_type": "analog_value_object",
       "bacnet_unit_type_id": 29,
@@ -2104,12 +2147,12 @@
       "value_type": "UINT8",
       "values": [
         {
-          "name": "disable",
-          "value": 0
+          "value": 0,
+          "name": "disable"
         },
         {
-          "name": "enable",
-          "value": 1
+          "value": 1,
+          "name": "enable"
         }
       ],
       "bacnet_type": "binary_value_object",
@@ -2128,8 +2171,8 @@
       "data_type": "NUMBER",
       "value_type": "FLOAT",
       "range": [
-        -100000.0,
-        100000.0
+        -1000,
+        1000
       ],
       "bacnet_type": "analog_value_object",
       "bacnet_unit_type_id": 62,
@@ -2148,12 +2191,12 @@
       "value_type": "UINT8",
       "values": [
         {
-          "name": "disable",
-          "value": 0
+          "value": 0,
+          "name": "disable"
         },
         {
-          "name": "enable",
-          "value": 1
+          "value": 1,
+          "name": "enable"
         }
       ],
       "bacnet_type": "binary_value_object",
@@ -2172,8 +2215,8 @@
       "data_type": "NUMBER",
       "value_type": "FLOAT",
       "range": [
-        -100.0,
-        100.0
+        -100,
+        100
       ],
       "bacnet_type": "analog_value_object",
       "bacnet_unit_type_id": 29,
@@ -2192,64 +2235,25 @@
       "value_type": "UINT8",
       "values": [
         {
-          "name": "disable",
-          "value": 0
+          "value": 0,
+          "name": "disable"
         },
         {
-          "name": "enable",
-          "value": 1
+          "value": 1,
+          "name": "enable"
         }
       ],
       "bacnet_type": "binary_value_object",
       "bacnet_unit_type_id": 95,
       "bacnet_unit_type": "UNITS_NO_UNITS",
       "reference": [
-        "light_alarm_settings.threshold_condition",
-        "light_alarm_settings.threshold_max"
-      ]
-    },
-    {
-      "id": "light_alarm_settings.threshold_condition",
-      "name": "Threshold Condition",
-      "value": "2",
-      "unit": "",
-      "access_mode": "RW",
-      "data_type": "ENUM",
-      "value_type": "UINT8",
-      "values": [
-        {
-          "name": "disable",
-          "value": 0
-        },
-        {
-          "name": "condition: x<A",
-          "value": 1
-        },
-        {
-          "name": "condition: x>B",
-          "value": 2
-        },
-        {
-          "name": "condition: A<x<B",
-          "value": 3
-        },
-        {
-          "name": "condition: x<A or x>B",
-          "value": 4
-        }
-      ],
-      "bacnet_type": "multistate_value_object",
-      "bacnet_unit_type_id": 95,
-      "bacnet_unit_type": "UNITS_NO_UNITS",
-      "reference": [
-        "light_alarm_settings.enable",
         "light_alarm_settings.threshold_max"
       ]
     },
     {
       "id": "light_alarm_settings.threshold_max",
       "name": "Threshold Value",
-      "value": "1",
+      "value": "10",
       "unit": "lx",
       "access_mode": "RW",
       "data_type": "NUMBER",
@@ -2262,25 +2266,8 @@
       "bacnet_unit_type_id": 37,
       "bacnet_unit_type": "UNITS_LUXES",
       "reference": [
-        "light_alarm_settings.enable",
-        "light_alarm_settings.threshold_condition"
+        "light_alarm_settings.enable"
       ]
-    },
-    {
-      "id": "light_tolerance_value",
-      "name": "Light Tolerance Value",
-      "value": "1",
-      "unit": "lx",
-      "access_mode": "RW",
-      "data_type": "NUMBER",
-      "value_type": "UINT8",
-      "range": [
-        0,
-        100
-      ],
-      "bacnet_type": "analog_value_object",
-      "bacnet_unit_type_id": 37,
-      "bacnet_unit_type": "UNITS_LUXES"
     },
     {
       "id": "tilt_alarm_settings.enable",
@@ -2292,46 +2279,18 @@
       "value_type": "UINT8",
       "values": [
         {
-          "name": "disable",
-          "value": 0
+          "value": 0,
+          "name": "disable"
         },
         {
-          "name": "enable",
-          "value": 1
+          "value": 1,
+          "name": "enable"
         }
       ],
       "bacnet_type": "binary_value_object",
       "bacnet_unit_type_id": 95,
       "bacnet_unit_type": "UNITS_NO_UNITS",
       "reference": [
-        "tilt_alarm_settings.threshold_condition",
-        "tilt_alarm_settings.threshold_max",
-        "tilt_alarm_settings.duration"
-      ]
-    },
-    {
-      "id": "tilt_alarm_settings.threshold_condition",
-      "name": "Threshold Condition",
-      "value": "0",
-      "unit": "",
-      "access_mode": "RW",
-      "data_type": "ENUM",
-      "value_type": "UINT8",
-      "values": [
-        {
-          "name": "disable",
-          "value": 0
-        },
-        {
-          "name": "condition: x>B",
-          "value": 1
-        }
-      ],
-      "bacnet_type": "multistate_value_object",
-      "bacnet_unit_type_id": 95,
-      "bacnet_unit_type": "UNITS_NO_UNITS",
-      "reference": [
-        "tilt_alarm_settings.enable",
         "tilt_alarm_settings.threshold_max",
         "tilt_alarm_settings.duration"
       ]
@@ -2339,7 +2298,7 @@
     {
       "id": "tilt_alarm_settings.threshold_max",
       "name": "Threshold Value",
-      "value": "10",
+      "value": "20",
       "unit": "°",
       "access_mode": "RW",
       "data_type": "NUMBER",
@@ -2353,14 +2312,13 @@
       "bacnet_unit_type": "UNITS_DEGREES_ANGULAR",
       "reference": [
         "tilt_alarm_settings.enable",
-        "tilt_alarm_settings.threshold_condition",
         "tilt_alarm_settings.duration"
       ]
     },
     {
       "id": "tilt_alarm_settings.duration",
       "name": "Duration",
-      "value": "2",
+      "value": "10",
       "unit": "s",
       "access_mode": "RW",
       "data_type": "NUMBER",
@@ -2374,7 +2332,6 @@
       "bacnet_unit_type": "UNITS_SECONDS",
       "reference": [
         "tilt_alarm_settings.enable",
-        "tilt_alarm_settings.threshold_condition",
         "tilt_alarm_settings.threshold_max"
       ]
     },
@@ -2388,12 +2345,12 @@
       "value_type": "UINT8",
       "values": [
         {
-          "name": "disable",
-          "value": 0
+          "value": 0,
+          "name": "disable"
         },
         {
-          "name": "enable",
-          "value": 1
+          "value": 1,
+          "name": "enable"
         }
       ],
       "bacnet_type": "binary_value_object",
@@ -2411,8 +2368,12 @@
       "value_type": "UINT8",
       "values": [
         {
-          "name": "Low Power Mode",
-          "value": 0
+          "value": 0,
+          "name": "Low Power Mode"
+        },
+        {
+          "value": 0,
+          "name": "Low Power Mode"
         }
       ],
       "bacnet_type": "multistate_value_object",
@@ -2430,28 +2391,24 @@
       "value_type": "UINT8",
       "values": [
         {
-          "name": "UDP",
-          "value": 1
+          "value": 1,
+          "name": "UDP"
         },
         {
-          "name": "TCP",
-          "value": 2
+          "value": 2,
+          "name": "TCP"
         },
         {
-          "name": "AWS",
-          "value": 3
+          "value": 3,
+          "name": "AWS"
         },
         {
-          "name": "MQTT",
-          "value": 4
+          "value": 4,
+          "name": "MQTT"
         },
         {
-          "name": "Developer-MQTT",
-          "value": 6
-        },
-        {
-          "name": "Developer-DTLS",
-          "value": 7
+          "value": 7,
+          "name": "Developer-DTLS"
         }
       ],
       "bacnet_type": "multistate_value_object",
@@ -2483,16 +2440,16 @@
       "value_type": "UINT8",
       "values": [
         {
-          "name": "None",
-          "value": 0
+          "value": 0,
+          "name": "None"
         },
         {
-          "name": "PAP",
-          "value": 1
+          "value": 1,
+          "name": "PAP"
         },
         {
-          "name": "CHAP",
-          "value": 3
+          "value": 3,
+          "name": "CHAP"
         }
       ],
       "bacnet_type": "multistate_value_object",
@@ -2597,12 +2554,12 @@
       "value_type": "UINT8",
       "values": [
         {
-          "name": "disable",
-          "value": 0
+          "value": 0,
+          "name": "disable"
         },
         {
-          "name": "enable",
-          "value": 1
+          "value": 1,
+          "name": "enable"
         }
       ],
       "bacnet_type": "binary_value_object",
@@ -2648,35 +2605,12 @@
       "value_type": "UINT8",
       "values": [
         {
-          "name": "disable",
-          "value": 0
+          "value": 0,
+          "name": "disable"
         },
         {
-          "name": "enable",
-          "value": 1
-        }
-      ],
-      "bacnet_type": "binary_value_object",
-      "bacnet_unit_type_id": 95,
-      "bacnet_unit_type": "UNITS_NO_UNITS",
-      "reference": []
-    },
-    {
-      "id": "cellular_settings.mqtt_settings.enable_ca_certificate",
-      "name": "CA File Enable",
-      "value": "0",
-      "unit": "",
-      "access_mode": "RW",
-      "data_type": "BOOL",
-      "value_type": "UINT8",
-      "values": [
-        {
-          "name": "disable",
-          "value": 0
-        },
-        {
-          "name": "enable",
-          "value": 1
+          "value": 1,
+          "name": "enable"
         }
       ],
       "bacnet_type": "binary_value_object",
@@ -2699,29 +2633,6 @@
       "reference": []
     },
     {
-      "id": "cellular_settings.mqtt_settings.enable_client_certificate",
-      "name": "Client Certificate Enable",
-      "value": "0",
-      "unit": "",
-      "access_mode": "RW",
-      "data_type": "BOOL",
-      "value_type": "UINT8",
-      "values": [
-        {
-          "name": "disable",
-          "value": 0
-        },
-        {
-          "name": "enable",
-          "value": 1
-        }
-      ],
-      "bacnet_type": "binary_value_object",
-      "bacnet_unit_type_id": 95,
-      "bacnet_unit_type": "UNITS_NO_UNITS",
-      "reference": []
-    },
-    {
       "id": "cellular_settings.mqtt_settings.client_certificate",
       "name": "Client Certificate",
       "value": "",
@@ -2731,29 +2642,6 @@
       "value_type": "STRING",
       "max_length": 160,
       "bacnet_type": "character_string_value_object",
-      "bacnet_unit_type_id": 95,
-      "bacnet_unit_type": "UNITS_NO_UNITS",
-      "reference": []
-    },
-    {
-      "id": "cellular_settings.mqtt_settings.enable_key_certificate",
-      "name": "Client Key Enable",
-      "value": "0",
-      "unit": "",
-      "access_mode": "RW",
-      "data_type": "BOOL",
-      "value_type": "UINT8",
-      "values": [
-        {
-          "name": "disable",
-          "value": 0
-        },
-        {
-          "name": "enable",
-          "value": 1
-        }
-      ],
-      "bacnet_type": "binary_value_object",
       "bacnet_unit_type_id": 95,
       "bacnet_unit_type": "UNITS_NO_UNITS",
       "reference": []
@@ -2775,7 +2663,7 @@
     {
       "id": "cellular_settings.mqtt_settings.uplink_topic",
       "name": "Uplink Topic",
-      "value": "ts/[sn]/downlink",
+      "value": "ts/[sn]/uplink",
       "unit": "",
       "access_mode": "RW",
       "data_type": "TEXT",
@@ -2796,16 +2684,16 @@
       "value_type": "UINT8",
       "values": [
         {
-          "name": "QoS0",
-          "value": 0
+          "value": 0,
+          "name": "QoS0"
         },
         {
-          "name": "QoS1",
-          "value": 1
+          "value": 1,
+          "name": "QoS1"
         },
         {
-          "name": "QoS2",
-          "value": 2
+          "value": 2,
+          "name": "QoS2"
         }
       ],
       "bacnet_type": "multistate_value_object",
@@ -2816,7 +2704,7 @@
     {
       "id": "cellular_settings.mqtt_settings.downlink_topic",
       "name": "Downlink Topic",
-      "value": "ts/[sn]/uplink",
+      "value": "ts/[sn]/downlink",
       "unit": "",
       "access_mode": "RW",
       "data_type": "TEXT",
@@ -2837,16 +2725,16 @@
       "value_type": "UINT8",
       "values": [
         {
-          "name": "QoS0",
-          "value": 0
+          "value": 0,
+          "name": "QoS0"
         },
         {
-          "name": "QoS1",
-          "value": 1
+          "value": 1,
+          "name": "QoS1"
         },
         {
-          "name": "QoS2",
-          "value": 2
+          "value": 2,
+          "name": "QoS2"
         }
       ],
       "bacnet_type": "multistate_value_object",
@@ -2869,46 +2757,6 @@
       "reference": []
     },
     {
-      "id": "cellular_settings.aws_settings.server_port",
-      "name": "Port",
-      "value": "8883",
-      "unit": "",
-      "access_mode": "RW",
-      "data_type": "NUMBER",
-      "value_type": "UINT16",
-      "range": [
-        1,
-        65535
-      ],
-      "bacnet_type": "analog_value_object",
-      "bacnet_unit_type_id": 95,
-      "bacnet_unit_type": "UNITS_NO_UNITS",
-      "reference": []
-    },
-    {
-      "id": "cellular_settings.aws_settings.enable_ca_certificate",
-      "name": "CA File Enable",
-      "value": "0",
-      "unit": "",
-      "access_mode": "RW",
-      "data_type": "BOOL",
-      "value_type": "UINT8",
-      "values": [
-        {
-          "name": "disable",
-          "value": 0
-        },
-        {
-          "name": "enable",
-          "value": 1
-        }
-      ],
-      "bacnet_type": "binary_value_object",
-      "bacnet_unit_type_id": 95,
-      "bacnet_unit_type": "UNITS_NO_UNITS",
-      "reference": []
-    },
-    {
       "id": "cellular_settings.aws_settings.ca_certificate",
       "name": "CA Certificate",
       "value": "",
@@ -2918,29 +2766,6 @@
       "value_type": "STRING",
       "max_length": 160,
       "bacnet_type": "character_string_value_object",
-      "bacnet_unit_type_id": 95,
-      "bacnet_unit_type": "UNITS_NO_UNITS",
-      "reference": []
-    },
-    {
-      "id": "cellular_settings.aws_settings.enable_client_certificate",
-      "name": "Client Certificate Enable",
-      "value": "0",
-      "unit": "",
-      "access_mode": "RW",
-      "data_type": "BOOL",
-      "value_type": "UINT8",
-      "values": [
-        {
-          "name": "disable",
-          "value": 0
-        },
-        {
-          "name": "enable",
-          "value": 1
-        }
-      ],
-      "bacnet_type": "binary_value_object",
       "bacnet_unit_type_id": 95,
       "bacnet_unit_type": "UNITS_NO_UNITS",
       "reference": []
@@ -2960,29 +2785,6 @@
       "reference": []
     },
     {
-      "id": "cellular_settings.aws_settings.enable_key_certificate",
-      "name": "Client Key Enable",
-      "value": "0",
-      "unit": "",
-      "access_mode": "RW",
-      "data_type": "BOOL",
-      "value_type": "UINT8",
-      "values": [
-        {
-          "name": "disable",
-          "value": 0
-        },
-        {
-          "name": "enable",
-          "value": 1
-        }
-      ],
-      "bacnet_type": "binary_value_object",
-      "bacnet_unit_type_id": 95,
-      "bacnet_unit_type": "UNITS_NO_UNITS",
-      "reference": []
-    },
-    {
       "id": "cellular_settings.aws_settings.key_certificate",
       "name": "Client Key",
       "value": "",
@@ -2997,6 +2799,19 @@
       "reference": []
     },
     {
+      "id": "battery_alarm.lower_battery_alarm.battery",
+      "name": "Current Battery Left",
+      "value": "",
+      "unit": "",
+      "access_mode": "R",
+      "data_type": "NUMBER",
+      "value_type": "UINT8",
+      "bacnet_type": "analog_input_object",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS",
+      "reference": []
+    },
+    {
       "id": "temperature_alarm.lower_range_alarm_deactivation.temperature",
       "name": "Temperature",
       "value": "",
@@ -3005,8 +2820,8 @@
       "data_type": "NUMBER",
       "value_type": "FLOAT",
       "range": [
-        -35.0,
-        70.0
+        -200,
+        800
       ],
       "bacnet_type": "analog_input_object",
       "bacnet_unit_type_id": 62,
@@ -3022,8 +2837,8 @@
       "data_type": "NUMBER",
       "value_type": "FLOAT",
       "range": [
-        -35.0,
-        70.0
+        -200,
+        800
       ],
       "bacnet_type": "analog_input_object",
       "bacnet_unit_type_id": 62,
@@ -3039,8 +2854,8 @@
       "data_type": "NUMBER",
       "value_type": "FLOAT",
       "range": [
-        -35.0,
-        70.0
+        -200,
+        800
       ],
       "bacnet_type": "analog_input_object",
       "bacnet_unit_type_id": 62,
@@ -3056,8 +2871,8 @@
       "data_type": "NUMBER",
       "value_type": "FLOAT",
       "range": [
-        -35.0,
-        70.0
+        -200,
+        800
       ],
       "bacnet_type": "analog_input_object",
       "bacnet_unit_type_id": 62,
@@ -3073,8 +2888,8 @@
       "data_type": "NUMBER",
       "value_type": "FLOAT",
       "range": [
-        -35.0,
-        70.0
+        -200,
+        800
       ],
       "bacnet_type": "analog_input_object",
       "bacnet_unit_type_id": 62,
@@ -3090,8 +2905,8 @@
       "data_type": "NUMBER",
       "value_type": "FLOAT",
       "range": [
-        -35.0,
-        70.0
+        -200,
+        800
       ],
       "bacnet_type": "analog_input_object",
       "bacnet_unit_type_id": 62,
@@ -3107,8 +2922,8 @@
       "data_type": "NUMBER",
       "value_type": "FLOAT",
       "range": [
-        -35.0,
-        70.0
+        -200,
+        800
       ],
       "bacnet_type": "analog_input_object",
       "bacnet_unit_type_id": 62,
@@ -3124,8 +2939,8 @@
       "data_type": "NUMBER",
       "value_type": "FLOAT",
       "range": [
-        -35.0,
-        70.0
+        -200,
+        800
       ],
       "bacnet_type": "analog_input_object",
       "bacnet_unit_type_id": 62,
@@ -3141,8 +2956,8 @@
       "data_type": "NUMBER",
       "value_type": "FLOAT",
       "range": [
-        -35.0,
-        70.0
+        -200,
+        800
       ],
       "bacnet_type": "analog_input_object",
       "bacnet_unit_type_id": 62,
@@ -3158,8 +2973,8 @@
       "data_type": "NUMBER",
       "value_type": "FLOAT",
       "range": [
-        -35.0,
-        70.0
+        -200,
+        800
       ],
       "bacnet_type": "analog_input_object",
       "bacnet_unit_type_id": 62,
@@ -3177,8 +2992,8 @@
       "data_type": "NUMBER",
       "value_type": "FLOAT",
       "range": [
-        -35.0,
-        70.0
+        -200,
+        800
       ],
       "bacnet_type": "analog_input_object",
       "bacnet_unit_type_id": 62,
@@ -3196,8 +3011,8 @@
       "data_type": "NUMBER",
       "value_type": "FLOAT",
       "range": [
-        0.0,
-        100.0
+        0,
+        100
       ],
       "bacnet_type": "analog_input_object",
       "bacnet_unit_type_id": 29,
@@ -3213,8 +3028,8 @@
       "data_type": "NUMBER",
       "value_type": "FLOAT",
       "range": [
-        0.0,
-        100.0
+        0,
+        100
       ],
       "bacnet_type": "analog_input_object",
       "bacnet_unit_type_id": 29,
@@ -3230,8 +3045,8 @@
       "data_type": "NUMBER",
       "value_type": "FLOAT",
       "range": [
-        0.0,
-        100.0
+        0,
+        100
       ],
       "bacnet_type": "analog_input_object",
       "bacnet_unit_type_id": 29,
@@ -3247,8 +3062,8 @@
       "data_type": "NUMBER",
       "value_type": "FLOAT",
       "range": [
-        0.0,
-        100.0
+        0,
+        100
       ],
       "bacnet_type": "analog_input_object",
       "bacnet_unit_type_id": 29,
@@ -3264,8 +3079,8 @@
       "data_type": "NUMBER",
       "value_type": "FLOAT",
       "range": [
-        0.0,
-        100.0
+        0,
+        100
       ],
       "bacnet_type": "analog_input_object",
       "bacnet_unit_type_id": 29,
@@ -3281,8 +3096,8 @@
       "data_type": "NUMBER",
       "value_type": "FLOAT",
       "range": [
-        0.0,
-        100.0
+        0,
+        100
       ],
       "bacnet_type": "analog_input_object",
       "bacnet_unit_type_id": 29,
@@ -3298,8 +3113,8 @@
       "data_type": "NUMBER",
       "value_type": "FLOAT",
       "range": [
-        0.0,
-        100.0
+        0,
+        100
       ],
       "bacnet_type": "analog_input_object",
       "bacnet_unit_type_id": 29,
@@ -3315,8 +3130,8 @@
       "data_type": "NUMBER",
       "value_type": "FLOAT",
       "range": [
-        0.0,
-        100.0
+        0,
+        100
       ],
       "bacnet_type": "analog_input_object",
       "bacnet_unit_type_id": 29,
@@ -3332,8 +3147,8 @@
       "data_type": "NUMBER",
       "value_type": "FLOAT",
       "range": [
-        0.0,
-        100.0
+        0,
+        100
       ],
       "bacnet_type": "analog_input_object",
       "bacnet_unit_type_id": 29,
@@ -3349,8 +3164,8 @@
       "data_type": "NUMBER",
       "value_type": "FLOAT",
       "range": [
-        0.0,
-        100.0
+        0,
+        100
       ],
       "bacnet_type": "analog_input_object",
       "bacnet_unit_type_id": 29,
@@ -3368,8 +3183,8 @@
       "data_type": "NUMBER",
       "value_type": "FLOAT",
       "range": [
-        0.0,
-        100.0
+        0,
+        100
       ],
       "bacnet_type": "analog_input_object",
       "bacnet_unit_type_id": 29,
@@ -3388,48 +3203,48 @@
       "value_type": "UINT8",
       "values": [
         {
-          "name": "Upgrade Successfully",
-          "value": 0
+          "value": 0,
+          "name": "Upgrade Successfully"
         },
         {
-          "name": "URL Error",
-          "value": 1
+          "value": 1,
+          "name": "URL Error"
         },
         {
-          "name": "Download Failed",
-          "value": 2
+          "value": 2,
+          "name": "Download Failed"
         },
         {
-          "name": "Packet Too Big",
-          "value": 3
+          "value": 3,
+          "name": "Packet Too Big"
         },
         {
-          "name": "Version Error",
-          "value": 4
+          "value": 4,
+          "name": "Version Error"
         },
         {
-          "name": "Device Error",
-          "value": 5
+          "value": 5,
+          "name": "Device Error"
         },
         {
-          "name": "Patch Format Error",
-          "value": 6
+          "value": 6,
+          "name": "Patch Format Error"
         },
         {
-          "name": "CRC Check Failed",
-          "value": 7
+          "value": 7,
+          "name": "CRC Check Failed"
         },
         {
-          "name": "Product Error",
-          "value": 8
+          "value": 8,
+          "name": "Product Error"
         },
         {
-          "name": "Patch Upgrade Failed",
-          "value": 9
+          "value": 9,
+          "name": "Patch Upgrade Failed"
         },
         {
-          "name": "Upgrade Pending",
-          "value": 255
+          "value": 255,
+          "name": "Upgrade Pending"
         }
       ],
       "bacnet_type": "multistate_value_object",
