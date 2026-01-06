@@ -86,8 +86,8 @@ function milesightDeviceDecode(bytes) {
 						// 0：disable, 1：enable
 						decoded.temperature_alarm_rule.enable = extractBits(bitOptions, 6, 7);
 						// 1:condition: x<A, 2:condition: x>B, 3:condition: A<x<B, 4:condition: x<A or x>B
-						decoded.temperature_alarm_rule.condition = extractBits(bitOptions, 0, 2);
-						decoded.temperature_alarm_rule.id = extractBits(bitOptions, 3, 5);
+						decoded.temperature_alarm_rule.condition = extractBits(bitOptions, 0, 3);
+						decoded.temperature_alarm_rule.id = extractBits(bitOptions, 3, 6);
 						decoded.temperature_alarm_rule.threshold_max = readInt16LE(bytes, counterObj, 2) / 10;
 						decoded.temperature_alarm_rule.threshold_min = readInt16LE(bytes, counterObj, 2) / 10;
 						break;
@@ -96,15 +96,21 @@ function milesightDeviceDecode(bytes) {
 						switch (fixed_value) {
 							case 3: // pir_enable.sensor_id
 								decoded.pir_enable = decoded.pir_enable || {};
+								// 1:temperature, 2:humidity, 3:PIR, 4:Illuminance, 5:CO₂
+								decoded.pir_enable.sensor_id = readUInt8(bytes, counterObj, 1);
 								var bitOptions = readUInt8(bytes, counterObj, 1);
 								// 0：disable, 1：enable
 								decoded.pir_enable.enable = extractBits(bitOptions, 2, 3);
+								decoded.pir_enable.sensor_id = undefined;
 								break;
 							case 4: // illuminance_collecting_enable.sensor_id
 								decoded.illuminance_collecting_enable = decoded.illuminance_collecting_enable || {};
+								// 1:temperature, 2:humidity, 3:PIR, 4:Illuminance, 5:CO₂
+								decoded.illuminance_collecting_enable.sensor_id = readUInt8(bytes, counterObj, 1);
 								var bitOptions = readUInt8(bytes, counterObj, 1);
 								// 0：disable, 1：enable
 								decoded.illuminance_collecting_enable.enable = extractBits(bitOptions, 3, 4);
+								decoded.illuminance_collecting_enable.sensor_id = undefined;
 								break;
 						}
 						break;
@@ -117,23 +123,32 @@ function milesightDeviceDecode(bytes) {
 							case 0: // temperature_calibration_settings.id
 								decoded.temperature_calibration_settings = decoded.temperature_calibration_settings || {};
 								var bitOptions = readUInt8(bytes, counterObj, 1);
+								// 0:temperature, 1:humidity, 2:CO₂
+								decoded.temperature_calibration_settings.id = extractBits(bitOptions, 0, 7);
 								// 0: disable, 1: enable
 								decoded.temperature_calibration_settings.enable = extractBits(bitOptions, 7, 8);
 								decoded.temperature_calibration_settings.value = readInt16LE(bytes, counterObj, 2) / 10;
+								decoded.temperature_calibration_settings.id = undefined;
 								break;
 							case 1: // humidity_calibration_settings.id
 								decoded.humidity_calibration_settings = decoded.humidity_calibration_settings || {};
 								var bitOptions = readUInt8(bytes, counterObj, 1);
+								// 0:temperature, 1:humidity, 2:CO₂
+								decoded.humidity_calibration_settings.id = extractBits(bitOptions, 0, 7);
 								// 0: disable, 1: enable
 								decoded.humidity_calibration_settings.enable = extractBits(bitOptions, 7, 8);
 								decoded.humidity_calibration_settings.value = readInt16LE(bytes, counterObj, 2) / 2;
+								decoded.humidity_calibration_settings.id = undefined;
 								break;
 							case 2: // co2_calibration_settings.id
 								decoded.co2_calibration_settings = decoded.co2_calibration_settings || {};
 								var bitOptions = readUInt8(bytes, counterObj, 1);
+								// 0:temperature, 1:humidity, 2:CO₂
+								decoded.co2_calibration_settings.id = extractBits(bitOptions, 0, 7);
 								// 0: disable, 1: enable
 								decoded.co2_calibration_settings.enable = extractBits(bitOptions, 7, 8);
 								decoded.co2_calibration_settings.value = readUInt16LE(bytes, counterObj, 2);
+								decoded.co2_calibration_settings.id = undefined;
 								break;
 						}
 						break;
@@ -174,6 +189,25 @@ function milesightDeviceDecode(bytes) {
 						// 0：disable, 1：enable
 						decoded.retransmission_enable.enable = readUInt8(bytes, counterObj, 1);
 						break;
+					case 0x6a:
+						var fixed_value = bytes[counterObj.i + 0];
+						switch (fixed_value) {
+							case 0: // retransmission_interval.type
+								decoded.retransmission_interval = decoded.retransmission_interval || {};
+								// 0: retransmission interval, 1: retrival interval
+								decoded.retransmission_interval.type = readUInt8(bytes, counterObj, 1);
+								decoded.retransmission_interval.interval = readUInt16LE(bytes, counterObj, 2);
+								decoded.retransmission_interval.type = undefined;
+								break;
+							case 1: // retrival_interval.type
+								decoded.retrival_interval = decoded.retrival_interval || {};
+								// 0: retransmission interval, 1: retrival interval
+								decoded.retrival_interval.type = readUInt8(bytes, counterObj, 1);
+								decoded.retrival_interval.interval = readUInt16LE(bytes, counterObj, 2);
+								decoded.retrival_interval.type = undefined;
+								break;
+						}
+						break;
 					case 0x1a:
 						var fixed_value = bytes[counterObj.i + 0];
 						switch (fixed_value) {
@@ -184,6 +218,15 @@ function milesightDeviceDecode(bytes) {
 								decoded.co2_background_calibration = readUInt8(bytes, counterObj, 1);
 								break;
 						}
+						break;
+					case 0x27:
+						decoded.clear_historical_data = readUInt8(bytes, counterObj, 1);
+						break;
+					case 0x10:
+						decoded.reboot = readUInt8(bytes, counterObj, 1);
+						break;
+					case 0x4a:
+						decoded.synchronize_time = readUInt8(bytes, counterObj, 1);
 						break;
 				}
 				break;
@@ -365,11 +408,25 @@ function milesightDeviceDecode(bytes) {
 						decoded.collecting_interval.interval = readUInt16LE(bytes, counterObj, 2);
 						break;
 					case 0xc0:
-						decoded.temperature_unit = decoded.temperature_unit || {};
-						// 0:temperature, 1:Illuminance
-						decoded.temperature_unit.sensor_id = readUInt8(bytes, counterObj, 1);
-						// 0:celsius, 1:fahrenheit
-						decoded.temperature_unit.unit = readUInt8(bytes, counterObj, 1);
+						var fixed_value = bytes[counterObj.i + 0];
+						switch (fixed_value) {
+							case 0: // temperature_unit.sensor_id
+								decoded.temperature_unit = decoded.temperature_unit || {};
+								// 0:temperature, 1:Illuminance
+								decoded.temperature_unit.sensor_id = readUInt8(bytes, counterObj, 1);
+								// 0:celsius, 1:fahrenheit
+								decoded.temperature_unit.unit = readUInt8(bytes, counterObj, 1);
+								decoded.temperature_unit.sensor_id = undefined;
+								break;
+							case 1: // illuminance_mode.sensor_id
+								decoded.illuminance_mode = decoded.illuminance_mode || {};
+								// 0:temperature, 1:Illuminance
+								decoded.illuminance_mode.sensor_id = readUInt8(bytes, counterObj, 1);
+								// 0:illuminance level, 1:illuminance value
+								decoded.illuminance_mode.mode = readUInt8(bytes, counterObj, 1);
+								decoded.illuminance_mode.sensor_id = undefined;
+								break;
+						}
 						break;
 					case 0xc4:
 						decoded.co2_alarm_rule = decoded.co2_alarm_rule || {};
@@ -385,13 +442,19 @@ function milesightDeviceDecode(bytes) {
 						switch (fixed_value) {
 							case 0: // pir_trigger_report.type
 								decoded.pir_trigger_report = decoded.pir_trigger_report || {};
+								// 0:trigger report, 1:vacant report
+								decoded.pir_trigger_report.type = readUInt8(bytes, counterObj, 1);
 								// 0：disable, 1：enable
 								decoded.pir_trigger_report.enable = readUInt8(bytes, counterObj, 1);
+								decoded.pir_trigger_report.type = undefined;
 								break;
 							case 1: // pir_idle_report.type
 								decoded.pir_idle_report = decoded.pir_idle_report || {};
+								// 0:trigger report, 1:vacant report
+								decoded.pir_idle_report.type = readUInt8(bytes, counterObj, 1);
 								// 0：disable, 1：enable
 								decoded.pir_idle_report.enable = readUInt8(bytes, counterObj, 1);
+								decoded.pir_idle_report.type = undefined;
 								break;
 						}
 						break;
@@ -415,6 +478,23 @@ function milesightDeviceDecode(bytes) {
 					case 0x66:
 						// 0：disable, 1：enable
 						decoded.d2d_master_enable = readUInt8(bytes, counterObj, 1);
+						break;
+				}
+				break;
+			case 0xfd:
+				var ipso_type_v1 = bytes[counterObj.i++];
+				switch (ipso_type_v1) {
+					case 0x6b:
+						decoded.retrival_historical_data_by_time = decoded.retrival_historical_data_by_time || {};
+						decoded.retrival_historical_data_by_time.time = readUInt32LE(bytes, counterObj, 4);
+						break;
+					case 0x6c:
+						decoded.retrival_historical_data_by_time_range = decoded.retrival_historical_data_by_time_range || {};
+						decoded.retrival_historical_data_by_time_range.start_time = readUInt32LE(bytes, counterObj, 4);
+						decoded.retrival_historical_data_by_time_range.end_time = readUInt32LE(bytes, counterObj, 4);
+						break;
+					case 0x6d:
+						decoded.stop_historical_data_retrival = readUInt8(bytes, counterObj, 1);
 						break;
 				}
 				break;
@@ -573,19 +653,19 @@ function readHexStringLE(allBytes, counterObj, end) {
 
 function extractBits(byte, startBit, endBit) {
 	if (byte < 0 || byte > 0xffff) {
-	  throw new Error("byte must be in range 0..65535");
+		throw new Error("byte must be in range 0..65535");
 	}
 	if (startBit < 0 || endBit > 16 || startBit >= endBit) {
-	  throw new Error("invalid bit range");
+		throw new Error("invalid bit range");
 	}
-  
+
 	var width = endBit - startBit;
 	var mask = (1 << width) - 1;
 	return (byte >>> startBit) & mask;
 }
 
 function pickArrayItem(array, index, idName) {
-	for (var i = 0; i < array.length; i++) { 
+	for (var i = 0; i < array.length; i++) {
 		if (array[i][idName] === index) {
 			return array[i];
 		}
@@ -595,7 +675,7 @@ function pickArrayItem(array, index, idName) {
 }
 
 function insertArrayItem(array, item, idName) {
-	for (var i = 0; i < array.length; i++) { 
+	for (var i = 0; i < array.length; i++) {
 		if (array[i][idName] === item[idName]) {
 			array[i] = item;
 			return;
@@ -605,98 +685,105 @@ function insertArrayItem(array, item, idName) {
 }
 
 function readCommand(allBytes, counterObj, end) {
-    var bytes = readBytes(allBytes, counterObj, end);
-    var cmd = bytes
-        .map(function(b) {
-            var hex = b.toString(16);
-            return hex.length === 1 ? '0' + hex : hex;
-        })
-        .join('')
-        .toLowerCase();
+	var bytes = readBytes(allBytes, counterObj, end);
+	var cmd = bytes
+		.map(function(b) {
+			var hex = b.toString(16);
+			return hex.length === 1 ? '0' + hex : hex;
+		})
+		.join('')
+		.toLowerCase();
 
-    var map = cmdMap();
-    for (var key in map) {
-        var xxs = [];
-        var isMatch = false;
-        if (key.length !== cmd.length) {
-            continue;
-        }
-        for (var i = 0; i < key.length; i += 2) {
-            var hexString = key.slice(i, i + 2);
-            var cmdString = cmd.slice(i, i + 2);
-            if (hexString === cmdString || hexString === 'xx') {
-                if (hexString === 'xx') {
-                    xxs.push('.' + parseInt(cmdString, 16));
-                }
-                isMatch = true;
-                continue;
-            } else {
-                isMatch = false;
-                break;
-            }
-        }
-        if (isMatch) {
-            var propertyId = map[key];
-            if (propertyId.indexOf('._item') === -1) {
-                return propertyId;
-            }
-            var j = 0;
-            var result = propertyId.replace(/\._item/g, function() {
-                return xxs[j++];
-            });
-            return result;
-        }
-    }
-    return null;
+	var map = cmdMap();
+	for (var key in map) {
+		var xxs = [];
+		var isMatch = false;
+		if (key.length !== cmd.length) {
+			continue;
+		}
+		for (var i = 0; i < key.length; i += 2) {
+			var hexString = key.slice(i, i + 2);
+			var cmdString = cmd.slice(i, i + 2);
+			if (hexString === cmdString || hexString === 'xx') {
+				if (hexString === 'xx') {
+					xxs.push('.' + parseInt(cmdString, 16));
+				}
+				isMatch = true;
+				continue;
+			} else {
+				isMatch = false;
+				break;
+			}
+		}
+		if (isMatch) {
+			var propertyId = map[key];
+			if (propertyId.indexOf('._item') === -1) {
+				return propertyId;
+			}
+			var j = 0;
+			var result = propertyId.replace(/\._item/g, function() {
+				return xxs[j++];
+			});
+			return result;
+		}
+	}
+	return null;
 }
 
 function cmdMap() {
 	return {
-		  "ff_0x0b": "device_status",
-		  "ff_0x01": "ipso_version",
-		  "ff_0x16": "sn",
-		  "ff_0xff": "tsl_version",
-		  "ff_0xfe": "request_tsl_config",
-		  "ff_0x09": "hardware_version",
-		  "ff_0x0a": "firmware_version",
-		  "ff_0x0f": "lorawan_class",
-		  "01_0x75": "battery",
-		  "03_0x67": "temperature",
-		  "04_0x68": "humidity",
-		  "05_0x9f": "pir",
-		  "06_0xcb": "als_level",
-		  "06_0x9d": "Lux",
-		  "05_0x00": "pir_status_change",
-		  "b3_0x67": "temperature_collection_anomaly",
-		  "b4_0x68": "humidity_collection_anomaly",
-		  "b6_0xcb": "illuminace_collection_anomaly",
-		  "b6_0x9d": "Lux_collection_anomaly",
-		  "83_0x67": "temperature_alarm",
-		  "86_0x9d": "Lux_alarm",
-		  "20_0xce": "historical_data_retrieval",
-		  "21_0xce": "historical_data_retrieval_Lux",
-		  "f9_0xbd": "reporting_interval",
-		  "f9_0xbe": "collecting_interval",
-		  "ff_0xf2": "alarm_reporting_times",
-		  "ff_0xf5": "alarm_deactivation_enable",
-		  "f9_0xc0": "temperature_unit",
-		  "ff_0x2e": "led_mode",
-		  "ff_0x25": "button_lock",
-		  "ff_0x06": "temperature_alarm_rule",
-		  "f9_0xc4": "co2_alarm_rule",
-		  "ff_0x18": "pir_enable",
-		  "f9_0xbc": "pir_trigger_report",
-		  "ff_0x95": "pir_idle_interval",
-		  "f9_0xbf": "illuminance_alarm_rule",
-		  "ff_0xea": "temperature_calibration_settings",
-		  "ff_0x39": "co2_auto_background_calibration_settings",
-		  "ff_0x87": "co2_altitude_calibration",
-		  "f9_0x63": "d2d_sending",
-		  "f9_0x66": "d2d_master_enable",
-		  "ff_0x96": "d2d_master_settings",
-		  "ff_0x96xx": "d2d_master_settings._item",
-		  "ff_0x68": "data_storage_enable",
-		  "ff_0x69": "retransmission_enable",
-		  "ff_0x1a": "co2_reset_calibration"
+		"ff_0x0b": "device_status",
+		"ff_0x01": "ipso_version",
+		"ff_0x16": "sn",
+		"ff_0xff": "tsl_version",
+		"ff_0xfe": "request_tsl_config",
+		"ff_0x09": "hardware_version",
+		"ff_0x0a": "firmware_version",
+		"ff_0x0f": "lorawan_class",
+		"01_0x75": "battery",
+		"03_0x67": "temperature",
+		"04_0x68": "humidity",
+		"05_0x9f": "pir",
+		"06_0xcb": "als_level",
+		"06_0x9d": "Lux",
+		"05_0x00": "pir_status_change",
+		"b3_0x67": "temperature_collection_anomaly",
+		"b4_0x68": "humidity_collection_anomaly",
+		"b6_0xcb": "illuminace_collection_anomaly",
+		"b6_0x9d": "Lux_collection_anomaly",
+		"83_0x67": "temperature_alarm",
+		"86_0x9d": "Lux_alarm",
+		"20_0xce": "historical_data_retrieval",
+		"21_0xce": "historical_data_retrieval_Lux",
+		"f9_0xbd": "reporting_interval",
+		"f9_0xbe": "collecting_interval",
+		"ff_0xf2": "alarm_reporting_times",
+		"ff_0xf5": "alarm_deactivation_enable",
+		"f9_0xc0": "temperature_unit",
+		"ff_0x2e": "led_mode",
+		"ff_0x25": "button_lock",
+		"ff_0x06": "temperature_alarm_rule",
+		"f9_0xc4": "co2_alarm_rule",
+		"ff_0x18": "pir_enable",
+		"f9_0xbc": "pir_trigger_report",
+		"ff_0x95": "pir_idle_interval",
+		"f9_0xbf": "illuminance_alarm_rule",
+		"ff_0xea": "temperature_calibration_settings",
+		"ff_0x39": "co2_auto_background_calibration_settings",
+		"ff_0x87": "co2_altitude_calibration",
+		"f9_0x63": "d2d_sending",
+		"f9_0x66": "d2d_master_enable",
+		"ff_0x96": "d2d_master_settings",
+		"ff_0x96xx": "d2d_master_settings._item",
+		"ff_0x68": "data_storage_enable",
+		"ff_0x69": "retransmission_enable",
+		"ff_0x6a": "retransmission_interval",
+		"ff_0x1a": "co2_reset_calibration",
+		"ff_0x27": "clear_historical_data",
+		"fd_0x6b": "retrival_historical_data_by_time",
+		"fd_0x6c": "retrival_historical_data_by_time_range",
+		"fd_0x6d": "stop_historical_data_retrival",
+		"ff_0x10": "reboot",
+		"ff_0x4a": "synchronize_time"
 	};
 }

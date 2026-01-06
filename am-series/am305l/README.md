@@ -38,6 +38,9 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Temperature Unit | 0xF9 | 0xC0 | 3 | w |  |  |  |
 | Sensor Id | 0xF9 | 0xC0 | 2 | w |  |  | 0:temperature<br>1:Illuminance |
 | Temperature Unit | 0xF9 | 0xC0 | 2 | w | 0 |  | 0:celsius<br>1:fahrenheit |
+| Illuminance Mode | 0xF9 | 0xC0 | 3 | w |  |  |  |
+| Sensor Id | 0xF9 | 0xC0 | 2 | w |  |  | 0:temperature<br>1:Illuminance |
+| Illuminance Mode | 0xF9 | 0xC0 | 2 | w | 0 |  | 0:illuminance level<br>1:illuminance value |
 | LED Indicator | 0xFF | 0x2E | 2 | w | 2 |  | 0：disable<br>2：enable |
 | Button Lock | 0xFF | 0x25 | 2 | w |  |  |  |
 | Power Off Lock | 0xFF | 0x25 | 2 | w | 0 |  | 0：disable<br>1：enable |
@@ -51,8 +54,8 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | CO₂ Threshold Settings | 0xF9 | 0xC4 | 7 | w |  |  |  |
 | Threshold Enable | 0xF9 | 0xC4 | 2 | w | 0 |  | 0：disable<br>1：enable |
 | Threshold Mode | 0xF9 | 0xC4 | 2 | w | 2 |  | 0:enable 1-level only<br>1:enable 2-levle only<br>2:enable 1-level&2-levle |
-| Bad,1-level Alarm Value | 0xF9 | 0xC4 | 3 | w | 400 | 400 - 5000 |  |
-| Polluted,2-level Alarm Value | 0xF9 | 0xC4 | 3 | w | 5000 | 400 - 5000 |  |
+| Bad,1-level Alarm Value | 0xF9 | 0xC4 | 3 | w | 5000 | 400 - 5000 |  |
+| Polluted,2-level Alarm Value | 0xF9 | 0xC4 | 3 | w | 400 | 400 - 5000 |  |
 | PIR Collecting Enable | 0xFF | 0x18 | 3 | w |  |  |  |
 | Sensor Id | 0xFF | 0x18 | 2 | w |  |  | 1:temperature<br>2:humidity<br>3:PIR<br>4:Illuminance<br>5:CO₂ |
 | PIR Collecting Enable | 0xFF | 0x18 | 2 | w | 1 |  | 0：disable<br>1：enable |
@@ -74,15 +77,15 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Dim,Below | 0xF9 | 0xBF | 3 | w | 300 | 0 - 60000 |  |
 | Bright,Above | 0xF9 | 0xBF | 3 | w | 700 | 0 - 60000 |  |
 | Temperature Calibration Settings | 0xFF | 0xEA | 4 | w |  |  |  |
-| Calibration ID | 0xFF | 0xEA | 2 | w |  |  | 1:temperature<br>2:humidity<br>3:CO₂ |
+| Calibration ID | 0xFF | 0xEA | 2 | w |  |  | 0:temperature<br>1:humidity<br>2:CO₂ |
 | Calibration Enable | 0xFF | 0xEA | 2 | w | 0 |  | 0: disable<br>1: enable |
 | Calibration Value | 0xFF | 0xEA | 3 | w | 0 | -80 - 80 |  |
 | Humidity Calibration Settings | 0xFF | 0xEA | 4 | w |  |  |  |
-| Calibration ID | 0xFF | 0xEA | 2 | w |  |  | 1:temperature<br>2:humidity<br>3:CO₂ |
+| Calibration ID | 0xFF | 0xEA | 2 | w |  |  | 0:temperature<br>1:humidity<br>2:CO₂ |
 | Calibration Enable | 0xFF | 0xEA | 2 | w | 0 |  | 0: disable<br>1: enable |
 | Calibration Value | 0xFF | 0xEA | 3 | w | 0 | -100 - 100 |  |
 | CO₂ Calibration Settings | 0xFF | 0xEA | 4 | w |  |  |  |
-| Calibration ID | 0xFF | 0xEA | 2 | w |  |  | 1:temperature<br>2:humidity<br>3:CO₂ |
+| Calibration ID | 0xFF | 0xEA | 2 | w |  |  | 0:temperature<br>1:humidity<br>2:CO₂ |
 | Calibration Enable | 0xFF | 0xEA | 2 | w | 0 |  | 0: disable<br>1: enable |
 | Calibration Value | 0xFF | 0xEA | 3 | w | 400 | -4600 - 4600 |  |
 | CO₂  Auto Background Calibration Settings | 0xFF | 0x39 | 6 | w |  |  |  |
@@ -108,6 +111,12 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Data Storage Enable | 0xFF | 0x68 | 2 | w | 0 |  | 0：disable<br>1：enable |
 | Data Retransmission Enable | 0xFF | 0x69 | 2 | w |  |  |  |
 | Data Retransmission Enable | 0xFF | 0x69 | 2 | w | 0 |  | 0：disable<br>1：enable |
+| Retransmission Interval Settings | 0xFF | 0x6A | 4 | w |  |  |  |
+| Retransmission | 0xFF | 0x6A | 2 | w |  |  | 0: retransmission interval<br>1: retrival interval |
+| Retransmission Interval | 0xFF | 0x6A | 3 | w | 600 | 30 - 1200 |  |
+| Retrival Interval Settings | 0xFF | 0x6A | 4 | w |  |  |  |
+| Retrival | 0xFF | 0x6A | 2 | w |  |  | 0: retransmission interval<br>1: retrival interval |
+| Retrival Interval | 0xFF | 0x6A | 3 | w | 60 | 30 - 1200 |  |
 
 ### Event
 
@@ -168,4 +177,13 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | CO₂ | 0x21 | 0xCE | 3 | r |  |  |  |
 | CO₂ Restore Factory Calibration | 0xFF | 0x1A | 2 | w |  |  |  |
 | CO₂ Manual Calibration | 0xFF | 0x1A | 2 | w |  |  |  |
+| Clear Data | 0xFF | 0x27 | 2 | w |  |  |  |
+| Retrival(Time Point) | 0xFD | 0x6B | 5 | w |  |  |  |
+| Time Point | 0xFD | 0x6B | 5 | w |  |  |  |
+| Retrival(Time Period) | 0xFD | 0x6C | 9 | w |  |  |  |
+| Start Time | 0xFD | 0x6C | 5 | w |  |  |  |
+| End Time | 0xFD | 0x6C | 5 | w |  |  |  |
+| Stop Retrival | 0xFD | 0x6D | 2 | w |  |  |  |
+| Reboot | 0xFF | 0x10 | 2 | w |  |  |  |
+| Time Synchronize | 0xFF | 0x4A | 2 | w |  |  |  |
 
