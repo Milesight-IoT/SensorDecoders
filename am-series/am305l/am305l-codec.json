@@ -5,7 +5,7 @@
       "id": "temperature",
       "name": "Temperature",
       "value": "",
-      "unit": "℃",
+      "unit": "°C",
       "access_mode": "R",
       "data_type": "NUMBER",
       "value_type": "FLOAT",
@@ -43,12 +43,12 @@
       "value_type": "UINT8",
       "values": [
         {
-          "name": "vacant",
-          "value": 0
+          "value": 0,
+          "name": "vacant"
         },
         {
-          "name": "trigger",
-          "value": 1
+          "value": 1,
+          "name": "trigger"
         }
       ],
       "bacnet_type": "multistate_value_object",
@@ -97,7 +97,7 @@
       "id": "Lux",
       "name": "Illuminance Value",
       "value": "",
-      "unit": "Lux",
+      "unit": "lx",
       "access_mode": "R",
       "data_type": "NUMBER",
       "value_type": "UINT16",
@@ -106,8 +106,8 @@
         60000
       ],
       "bacnet_type": "analog_input_object",
-      "bacnet_unit_type_id": 95,
-      "bacnet_unit_type": "UNITS_NO_UNITS"
+      "bacnet_unit_type_id": 37,
+      "bacnet_unit_type": "UNITS_LUXES"
     },
     {
       "id": "co2",
@@ -185,12 +185,12 @@
       "value_type": "UINT8",
       "values": [
         {
-          "name": "disable",
-          "value": 0
+          "value": 0,
+          "name": "disable"
         },
         {
-          "name": "enable",
-          "value": 1
+          "value": 1,
+          "name": "enable"
         }
       ],
       "bacnet_type": "binary_value_object",
@@ -207,12 +207,12 @@
       "value_type": "UINT8",
       "values": [
         {
-          "name": "celsius",
-          "value": 0
+          "value": 0,
+          "name": "celsius"
         },
         {
-          "name": "fahrenheit",
-          "value": 1
+          "value": 1,
+          "name": "fahrenheit"
         }
       ],
       "bacnet_type": "multistate_value_object",
@@ -230,12 +230,12 @@
       "value_type": "UINT8",
       "values": [
         {
-          "name": "disable",
-          "value": 0
+          "value": 0,
+          "name": "disable"
         },
         {
-          "name": "enable",
-          "value": 2
+          "value": 2,
+          "name": "enable"
         }
       ],
       "bacnet_type": "multistate_value_object",
@@ -252,12 +252,12 @@
       "value_type": "UINT8",
       "values": [
         {
-          "name": "disable",
-          "value": 0
+          "value": 0,
+          "name": "disable"
         },
         {
-          "name": "enable",
-          "value": 1
+          "value": 1,
+          "name": "enable"
         }
       ],
       "bacnet_type": "binary_output_object",
@@ -277,12 +277,12 @@
       "value_type": "UINT8",
       "values": [
         {
-          "name": "disable",
-          "value": 0
+          "value": 0,
+          "name": "disable"
         },
         {
-          "name": "enable",
-          "value": 1
+          "value": 1,
+          "name": "enable"
         }
       ],
       "bacnet_type": "binary_output_object",
@@ -302,12 +302,12 @@
       "value_type": "UINT8",
       "values": [
         {
-          "name": "disable",
-          "value": 0
+          "value": 0,
+          "name": "disable"
         },
         {
-          "name": "enable",
-          "value": 1
+          "value": 1,
+          "name": "enable"
         }
       ],
       "bacnet_type": "binary_output_object",
@@ -329,20 +329,20 @@
       "value_type": "UINT8",
       "values": [
         {
-          "name": "condition: x<A",
-          "value": 1
+          "value": 1,
+          "name": "condition: x<A"
         },
         {
-          "name": "condition: x>B",
-          "value": 2
+          "value": 2,
+          "name": "condition: x>B"
         },
         {
-          "name": "condition: A<x<B",
-          "value": 3
+          "value": 3,
+          "name": "condition: A<x<B"
         },
         {
-          "name": "condition: x<A or x>B",
-          "value": 4
+          "value": 4,
+          "name": "condition: x<A or x>B"
         }
       ],
       "bacnet_type": "multistate_value_object",
@@ -358,7 +358,7 @@
       "id": "temperature_alarm_rule.threshold_max",
       "name": "Value B",
       "value": "0",
-      "unit": "℃",
+      "unit": "°C",
       "access_mode": "W",
       "data_type": "NUMBER",
       "value_type": "FLOAT",
@@ -379,7 +379,7 @@
       "id": "temperature_alarm_rule.threshold_min",
       "name": "Value A",
       "value": "0",
-      "unit": "℃",
+      "unit": "°C",
       "access_mode": "W",
       "data_type": "NUMBER",
       "value_type": "FLOAT",
@@ -406,12 +406,12 @@
       "value_type": "UINT8",
       "values": [
         {
-          "name": "disable",
-          "value": 0
+          "value": 0,
+          "name": "disable"
         },
         {
-          "name": "enable",
-          "value": 1
+          "value": 1,
+          "name": "enable"
         }
       ],
       "bacnet_type": "binary_output_object",
@@ -433,16 +433,16 @@
       "value_type": "UINT8",
       "values": [
         {
-          "name": "enable 1-level only",
-          "value": 0
+          "value": 0,
+          "name": "enable 1-level only"
         },
         {
-          "name": "enable 2-levle only",
-          "value": 1
+          "value": 1,
+          "name": "enable 2-levle only"
         },
         {
-          "name": "enable 1-level&2-levle",
-          "value": 2
+          "value": 2,
+          "name": "enable 1-level&2-levle"
         }
       ],
       "bacnet_type": "multistate_value_object",
@@ -457,7 +457,7 @@
     {
       "id": "co2_alarm_rule.level1_value",
       "name": "Bad,1-level Alarm Value",
-      "value": "400",
+      "value": "5000",
       "unit": "ppm",
       "access_mode": "W",
       "data_type": "NUMBER",
@@ -478,7 +478,7 @@
     {
       "id": "co2_alarm_rule.level2_value",
       "name": "Polluted,2-level Alarm Value",
-      "value": "5000",
+      "value": "400",
       "unit": "ppm",
       "access_mode": "W",
       "data_type": "NUMBER",
@@ -506,12 +506,12 @@
       "value_type": "UINT8",
       "values": [
         {
-          "name": "disable",
-          "value": 0
+          "value": 0,
+          "name": "disable"
         },
         {
-          "name": "enable",
-          "value": 1
+          "value": 1,
+          "name": "enable"
         }
       ],
       "bacnet_type": "binary_output_object",
@@ -529,12 +529,12 @@
       "value_type": "UINT8",
       "values": [
         {
-          "name": "disable",
-          "value": 0
+          "value": 0,
+          "name": "disable"
         },
         {
-          "name": "enable",
-          "value": 1
+          "value": 1,
+          "name": "enable"
         }
       ],
       "bacnet_type": "binary_output_object",
@@ -552,12 +552,12 @@
       "value_type": "UINT8",
       "values": [
         {
-          "name": "disable",
-          "value": 0
+          "value": 0,
+          "name": "disable"
         },
         {
-          "name": "enable",
-          "value": 1
+          "value": 1,
+          "name": "enable"
         }
       ],
       "bacnet_type": "binary_output_object",
@@ -591,12 +591,12 @@
       "value_type": "UINT8",
       "values": [
         {
-          "name": "disable",
-          "value": 0
+          "value": 0,
+          "name": "disable"
         },
         {
-          "name": "enable",
-          "value": 1
+          "value": 1,
+          "name": "enable"
         }
       ],
       "bacnet_type": "binary_output_object",
@@ -614,12 +614,12 @@
       "value_type": "UINT8",
       "values": [
         {
-          "name": "illuminance level",
-          "value": 0
+          "value": 0,
+          "name": "illuminance level"
         },
         {
-          "name": "illuminance value",
-          "value": 1
+          "value": 1,
+          "name": "illuminance value"
         }
       ],
       "bacnet_type": "multistate_value_object",
@@ -637,12 +637,12 @@
       "value_type": "UINT8",
       "values": [
         {
-          "name": "disable",
-          "value": 0
+          "value": 0,
+          "name": "disable"
         },
         {
-          "name": "enable",
-          "value": 1
+          "value": 1,
+          "name": "enable"
         }
       ],
       "bacnet_type": "binary_output_object",
@@ -657,7 +657,7 @@
       "id": "illuminance_alarm_rule.dim_value",
       "name": "Dim,Below",
       "value": "300",
-      "unit": "Lux",
+      "unit": "lx",
       "access_mode": "W",
       "data_type": "NUMBER",
       "value_type": "UINT16",
@@ -666,8 +666,8 @@
         60000
       ],
       "bacnet_type": "analog_output_object",
-      "bacnet_unit_type_id": 95,
-      "bacnet_unit_type": "UNITS_NO_UNITS",
+      "bacnet_unit_type_id": 37,
+      "bacnet_unit_type": "UNITS_LUXES",
       "reference": [
         "illuminance_alarm_rule.enable",
         "illuminance_alarm_rule.bright_value"
@@ -677,7 +677,7 @@
       "id": "illuminance_alarm_rule.bright_value",
       "name": "Bright,Above",
       "value": "700",
-      "unit": "Lux",
+      "unit": "lx",
       "access_mode": "W",
       "data_type": "NUMBER",
       "value_type": "UINT16",
@@ -686,8 +686,8 @@
         60000
       ],
       "bacnet_type": "analog_output_object",
-      "bacnet_unit_type_id": 95,
-      "bacnet_unit_type": "UNITS_NO_UNITS",
+      "bacnet_unit_type_id": 37,
+      "bacnet_unit_type": "UNITS_LUXES",
       "reference": [
         "illuminance_alarm_rule.enable",
         "illuminance_alarm_rule.dim_value"
@@ -703,12 +703,12 @@
       "value_type": "UINT8",
       "values": [
         {
-          "name": "disable",
-          "value": 0
+          "value": 0,
+          "name": "disable"
         },
         {
-          "name": "enable",
-          "value": 1
+          "value": 1,
+          "name": "enable"
         }
       ],
       "bacnet_type": "binary_output_object",
@@ -726,12 +726,12 @@
       "value_type": "UINT8",
       "values": [
         {
-          "name": "disable",
-          "value": 0
+          "value": 0,
+          "name": "disable"
         },
         {
-          "name": "enable",
-          "value": 1
+          "value": 1,
+          "name": "enable"
         }
       ],
       "bacnet_type": "binary_output_object",
@@ -745,7 +745,7 @@
       "id": "temperature_calibration_settings.value",
       "name": "Calibration Value",
       "value": "0",
-      "unit": "℃",
+      "unit": "°C",
       "access_mode": "W",
       "data_type": "NUMBER",
       "value_type": "FLOAT",
@@ -770,12 +770,12 @@
       "value_type": "UINT8",
       "values": [
         {
-          "name": "disable",
-          "value": 0
+          "value": 0,
+          "name": "disable"
         },
         {
-          "name": "enable",
-          "value": 1
+          "value": 1,
+          "name": "enable"
         }
       ],
       "bacnet_type": "binary_output_object",
@@ -814,12 +814,12 @@
       "value_type": "UINT8",
       "values": [
         {
-          "name": "disable",
-          "value": 0
+          "value": 0,
+          "name": "disable"
         },
         {
-          "name": "enable",
-          "value": 1
+          "value": 1,
+          "name": "enable"
         }
       ],
       "bacnet_type": "binary_output_object",
@@ -858,12 +858,12 @@
       "value_type": "UINT8",
       "values": [
         {
-          "name": "disable",
-          "value": 0
+          "value": 0,
+          "name": "disable"
         },
         {
-          "name": "enable",
-          "value": 1
+          "value": 1,
+          "name": "enable"
         }
       ],
       "bacnet_type": "binary_output_object",
@@ -881,12 +881,12 @@
       "value_type": "UINT8",
       "values": [
         {
-          "name": "disable",
-          "value": 0
+          "value": 0,
+          "name": "disable"
         },
         {
-          "name": "enable",
-          "value": 1
+          "value": 1,
+          "name": "enable"
         }
       ],
       "bacnet_type": "binary_output_object",
@@ -925,12 +925,12 @@
       "value_type": "UINT8",
       "values": [
         {
-          "name": "disable",
-          "value": 0
+          "value": 0,
+          "name": "disable"
         },
         {
-          "name": "enable",
-          "value": 1
+          "value": 1,
+          "name": "enable"
         }
       ],
       "bacnet_type": "binary_output_object",
@@ -952,12 +952,12 @@
       "value_type": "UINT8",
       "values": [
         {
-          "name": "disable",
-          "value": 0
+          "value": 0,
+          "name": "disable"
         },
         {
-          "name": "enable",
-          "value": 1
+          "value": 1,
+          "name": "enable"
         }
       ],
       "bacnet_type": "binary_output_object",
@@ -979,12 +979,12 @@
       "value_type": "UINT8",
       "values": [
         {
-          "name": "disable",
-          "value": 0
+          "value": 0,
+          "name": "disable"
         },
         {
-          "name": "enable",
-          "value": 1
+          "value": 1,
+          "name": "enable"
         }
       ],
       "bacnet_type": "binary_output_object",
@@ -1006,12 +1006,12 @@
       "value_type": "UINT8",
       "values": [
         {
-          "name": "disable",
-          "value": 0
+          "value": 0,
+          "name": "disable"
         },
         {
-          "name": "enable",
-          "value": 1
+          "value": 1,
+          "name": "enable"
         }
       ],
       "bacnet_type": "binary_output_object",
@@ -1024,19 +1024,6 @@
       ]
     },
     {
-      "id": "d2d_key",
-      "name": "D2D Key",
-      "value": "5572404c696e6b4c",
-      "unit": "",
-      "access_mode": "W",
-      "data_type": "TEXT",
-      "value_type": "STRING",
-      "max_length": 16,
-      "bacnet_type": "character_string_value_object",
-      "bacnet_unit_type_id": 95,
-      "bacnet_unit_type": "UNITS_NO_UNITS"
-    },
-    {
       "id": "d2d_master_enable",
       "name": "D2D Controller Enable",
       "value": "0",
@@ -1046,12 +1033,12 @@
       "value_type": "UINT8",
       "values": [
         {
-          "name": "disable",
-          "value": 0
+          "value": 0,
+          "name": "disable"
         },
         {
-          "name": "enable",
-          "value": 1
+          "value": 1,
+          "name": "enable"
         }
       ],
       "bacnet_type": "binary_output_object",
@@ -1068,12 +1055,12 @@
       "value_type": "UINT8",
       "values": [
         {
-          "name": "disable",
-          "value": 0
+          "value": 0,
+          "name": "disable"
         },
         {
-          "name": "enable",
-          "value": 1
+          "value": 1,
+          "name": "enable"
         }
       ],
       "bacnet_type": "binary_output_object",
@@ -1091,12 +1078,12 @@
       "value_type": "UINT8",
       "values": [
         {
-          "name": "disable",
-          "value": 0
+          "value": 0,
+          "name": "disable"
         },
         {
-          "name": "enable",
-          "value": 1
+          "value": 1,
+          "name": "enable"
         }
       ],
       "bacnet_type": "binary_output_object",
@@ -1148,12 +1135,12 @@
       "value_type": "UINT8",
       "values": [
         {
-          "name": "vacant",
-          "value": 0
+          "value": 0,
+          "name": "vacant"
         },
         {
-          "name": "trigger",
-          "value": 1
+          "value": 1,
+          "name": "trigger"
         }
       ],
       "bacnet_type": "multistate_value_object",
@@ -1171,12 +1158,12 @@
       "value_type": "UINT8",
       "values": [
         {
-          "name": "collect abnormal",
-          "value": 0
+          "value": 0,
+          "name": "collect abnormal"
         },
         {
-          "name": "collect out of range",
-          "value": 1
+          "value": 1,
+          "name": "collect out of range"
         }
       ],
       "bacnet_type": "multistate_value_object",
@@ -1194,8 +1181,12 @@
       "value_type": "UINT8",
       "values": [
         {
-          "name": "collect abnormal",
-          "value": 0
+          "value": 0,
+          "name": "collect abnormal"
+        },
+        {
+          "value": 0,
+          "name": "collect abnormal"
         }
       ],
       "bacnet_type": "multistate_value_object",
@@ -1213,8 +1204,12 @@
       "value_type": "UINT8",
       "values": [
         {
-          "name": "collect abnormal",
-          "value": 0
+          "value": 0,
+          "name": "collect abnormal"
+        },
+        {
+          "value": 0,
+          "name": "collect abnormal"
         }
       ],
       "bacnet_type": "multistate_value_object",
@@ -1232,12 +1227,12 @@
       "value_type": "UINT8",
       "values": [
         {
-          "name": "collect abnormal",
-          "value": 0
+          "value": 0,
+          "name": "collect abnormal"
         },
         {
-          "name": "collect out of range",
-          "value": 1
+          "value": 1,
+          "name": "collect out of range"
         }
       ],
       "bacnet_type": "multistate_value_object",
@@ -1255,12 +1250,12 @@
       "value_type": "UINT8",
       "values": [
         {
-          "name": "collect abnormal",
-          "value": 0
+          "value": 0,
+          "name": "collect abnormal"
         },
         {
-          "name": "collect out of range",
-          "value": 1
+          "value": 1,
+          "name": "collect out of range"
         }
       ],
       "bacnet_type": "multistate_value_object",
@@ -1272,7 +1267,7 @@
       "id": "temperature_alarm.temperature",
       "name": "Temperature",
       "value": "",
-      "unit": "℃",
+      "unit": "°C",
       "access_mode": "R",
       "data_type": "NUMBER",
       "value_type": "FLOAT",
@@ -1293,36 +1288,36 @@
       "value_type": "UINT8",
       "values": [
         {
-          "name": "below alarm released",
-          "value": 16
+          "value": 16,
+          "name": "below alarm released"
         },
         {
-          "name": "below alarm",
-          "value": 17
+          "value": 17,
+          "name": "below alarm"
         },
         {
-          "name": "above alarm released",
-          "value": 18
+          "value": 18,
+          "name": "above alarm released"
         },
         {
-          "name": "above alarm",
-          "value": 19
+          "value": 19,
+          "name": "above alarm"
         },
         {
-          "name": "within alarm released",
-          "value": 20
+          "value": 20,
+          "name": "within alarm released"
         },
         {
-          "name": "within alarm",
-          "value": 21
+          "value": 21,
+          "name": "within alarm"
         },
         {
-          "name": "exceed tolerance alarm released",
-          "value": 22
+          "value": 22,
+          "name": "exceed tolerance alarm released"
         },
         {
-          "name": "exceed tolerance alarm",
-          "value": 23
+          "value": 23,
+          "name": "exceed tolerance alarm"
         }
       ],
       "bacnet_type": "multistate_value_object",
@@ -1336,13 +1331,13 @@
       "id": "Lux_alarm.Lux",
       "name": "Illuminace Value",
       "value": "",
-      "unit": "Lux",
+      "unit": "lx",
       "access_mode": "R",
       "data_type": "NUMBER",
       "value_type": "UINT8",
       "bacnet_type": "analog_input_object",
-      "bacnet_unit_type_id": 95,
-      "bacnet_unit_type": "UNITS_NO_UNITS",
+      "bacnet_unit_type_id": 37,
+      "bacnet_unit_type": "UNITS_LUXES",
       "reference": [
         "Lux_alarm.alarm_type"
       ]
@@ -1357,12 +1352,12 @@
       "value_type": "UINT8",
       "values": [
         {
-          "name": "dim",
-          "value": 16
+          "value": 16,
+          "name": "dim"
         },
         {
-          "name": "bright",
-          "value": 17
+          "value": 17,
+          "name": "bright"
         }
       ],
       "bacnet_type": "multistate_value_object",
@@ -1397,20 +1392,20 @@
       "value_type": "UINT8",
       "values": [
         {
-          "name": "Polluted,2-level alarm released",
-          "value": 16
+          "value": 16,
+          "name": "Polluted,2-level alarm released"
         },
         {
-          "name": "Polluted,2-level alarm",
-          "value": 17
+          "value": 17,
+          "name": "Polluted,2-level alarm"
         },
         {
-          "name": "Bad,1-level alarm released",
-          "value": 18
+          "value": 18,
+          "name": "Bad,1-level alarm released"
         },
         {
-          "name": "Bad,1-level alarm",
-          "value": 19
+          "value": 19,
+          "name": "Bad,1-level alarm"
         }
       ],
       "bacnet_type": "multistate_value_object",
@@ -1455,20 +1450,20 @@
       "value_type": "UINT8",
       "values": [
         {
-          "name": "data invalid",
-          "value": 0
+          "value": 0,
+          "name": "data invalid"
         },
         {
-          "name": "data valid",
-          "value": 1
+          "value": 1,
+          "name": "data valid"
         },
         {
-          "name": "data out of range",
-          "value": 2
+          "value": 2,
+          "name": "data out of range"
         },
         {
-          "name": "data collect abnormal",
-          "value": 3
+          "value": 3,
+          "name": "data collect abnormal"
         }
       ],
       "bacnet_type": "multistate_value_object",
@@ -1492,7 +1487,7 @@
       "id": "historical_data_retrieval.temperature",
       "name": "Temperature",
       "value": "",
-      "unit": "℃",
+      "unit": "°C",
       "access_mode": "R",
       "data_type": "NUMBER",
       "value_type": "FLOAT",
@@ -1523,20 +1518,20 @@
       "value_type": "UINT8",
       "values": [
         {
-          "name": "data invalid",
-          "value": 0
+          "value": 0,
+          "name": "data invalid"
         },
         {
-          "name": "data valid",
-          "value": 1
+          "value": 1,
+          "name": "data valid"
         },
         {
-          "name": "data out of range",
-          "value": 2
+          "value": 2,
+          "name": "data out of range"
         },
         {
-          "name": "data collect abnormal",
-          "value": 3
+          "value": 3,
+          "name": "data collect abnormal"
         }
       ],
       "bacnet_type": "multistate_value_object",
@@ -1591,12 +1586,12 @@
       "value_type": "UINT8",
       "values": [
         {
-          "name": "data invalid",
-          "value": 0
+          "value": 0,
+          "name": "data invalid"
         },
         {
-          "name": "data valid",
-          "value": 1
+          "value": 1,
+          "name": "data valid"
         }
       ],
       "bacnet_type": "multistate_value_object",
@@ -1626,12 +1621,12 @@
       "value_type": "UINT8",
       "values": [
         {
-          "name": "vacant",
-          "value": 0
+          "value": 0,
+          "name": "vacant"
         },
         {
-          "name": "trigger",
-          "value": 1
+          "value": 1,
+          "name": "trigger"
         }
       ],
       "bacnet_type": "multistate_value_object",
@@ -1686,20 +1681,20 @@
       "value_type": "UINT8",
       "values": [
         {
-          "name": "data invalid",
-          "value": 0
+          "value": 0,
+          "name": "data invalid"
         },
         {
-          "name": "data valid",
-          "value": 1
+          "value": 1,
+          "name": "data valid"
         },
         {
-          "name": "data out of range",
-          "value": 2
+          "value": 2,
+          "name": "data out of range"
         },
         {
-          "name": "data collect abnormal",
-          "value": 3
+          "value": 3,
+          "name": "data collect abnormal"
         }
       ],
       "bacnet_type": "multistate_value_object",
@@ -1754,20 +1749,20 @@
       "value_type": "UINT8",
       "values": [
         {
-          "name": "data invalid",
-          "value": 0
+          "value": 0,
+          "name": "data invalid"
         },
         {
-          "name": "data valid",
-          "value": 1
+          "value": 1,
+          "name": "data valid"
         },
         {
-          "name": "data out of range",
-          "value": 2
+          "value": 2,
+          "name": "data out of range"
         },
         {
-          "name": "data collect abnormal",
-          "value": 3
+          "value": 3,
+          "name": "data collect abnormal"
         }
       ],
       "bacnet_type": "multistate_value_object",
@@ -1847,20 +1842,20 @@
       "value_type": "UINT8",
       "values": [
         {
-          "name": "data invalid",
-          "value": 0
+          "value": 0,
+          "name": "data invalid"
         },
         {
-          "name": "data valid",
-          "value": 1
+          "value": 1,
+          "name": "data valid"
         },
         {
-          "name": "data out of range",
-          "value": 2
+          "value": 2,
+          "name": "data out of range"
         },
         {
-          "name": "data collect abnormal",
-          "value": 3
+          "value": 3,
+          "name": "data collect abnormal"
         }
       ],
       "bacnet_type": "multistate_value_object",
@@ -1884,7 +1879,7 @@
       "id": "historical_data_retrieval_Lux.temperature",
       "name": "Temperature",
       "value": "",
-      "unit": "℃",
+      "unit": "°C",
       "access_mode": "R",
       "data_type": "NUMBER",
       "value_type": "FLOAT",
@@ -1915,20 +1910,20 @@
       "value_type": "UINT8",
       "values": [
         {
-          "name": "data invalid",
-          "value": 0
+          "value": 0,
+          "name": "data invalid"
         },
         {
-          "name": "data valid",
-          "value": 1
+          "value": 1,
+          "name": "data valid"
         },
         {
-          "name": "data out of range",
-          "value": 2
+          "value": 2,
+          "name": "data out of range"
         },
         {
-          "name": "data collect abnormal",
-          "value": 3
+          "value": 3,
+          "name": "data collect abnormal"
         }
       ],
       "bacnet_type": "multistate_value_object",
@@ -1983,12 +1978,12 @@
       "value_type": "UINT8",
       "values": [
         {
-          "name": "data invalid",
-          "value": 0
+          "value": 0,
+          "name": "data invalid"
         },
         {
-          "name": "data valid",
-          "value": 1
+          "value": 1,
+          "name": "data valid"
         }
       ],
       "bacnet_type": "multistate_value_object",
@@ -2018,12 +2013,12 @@
       "value_type": "UINT8",
       "values": [
         {
-          "name": "vacant",
-          "value": 0
+          "value": 0,
+          "name": "vacant"
         },
         {
-          "name": "trigger",
-          "value": 1
+          "value": 1,
+          "name": "trigger"
         }
       ],
       "bacnet_type": "multistate_value_object",
@@ -2078,20 +2073,20 @@
       "value_type": "UINT8",
       "values": [
         {
-          "name": "data invalid",
-          "value": 0
+          "value": 0,
+          "name": "data invalid"
         },
         {
-          "name": "data valid",
-          "value": 1
+          "value": 1,
+          "name": "data valid"
         },
         {
-          "name": "data out of range",
-          "value": 2
+          "value": 2,
+          "name": "data out of range"
         },
         {
-          "name": "data collect abnormal",
-          "value": 3
+          "value": 3,
+          "name": "data collect abnormal"
         }
       ],
       "bacnet_type": "multistate_value_object",
@@ -2115,13 +2110,13 @@
       "id": "historical_data_retrieval_Lux.Lux",
       "name": "Illuminace Value",
       "value": "",
-      "unit": "Lux",
+      "unit": "lx",
       "access_mode": "R",
       "data_type": "NUMBER",
       "value_type": "UINT8",
       "bacnet_type": "analog_input_object",
-      "bacnet_unit_type_id": 95,
-      "bacnet_unit_type": "UNITS_NO_UNITS",
+      "bacnet_unit_type_id": 37,
+      "bacnet_unit_type": "UNITS_LUXES",
       "reference": [
         "historical_data_retrieval_Lux.timestamp",
         "historical_data_retrieval_Lux.temperature_type",
@@ -2146,20 +2141,20 @@
       "value_type": "UINT8",
       "values": [
         {
-          "name": "data invalid",
-          "value": 0
+          "value": 0,
+          "name": "data invalid"
         },
         {
-          "name": "data valid",
-          "value": 1
+          "value": 1,
+          "name": "data valid"
         },
         {
-          "name": "data out of range",
-          "value": 2
+          "value": 2,
+          "name": "data out of range"
         },
         {
-          "name": "data collect abnormal",
-          "value": 3
+          "value": 3,
+          "name": "data collect abnormal"
         }
       ],
       "bacnet_type": "multistate_value_object",
