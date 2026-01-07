@@ -3062,6 +3062,52 @@
             ]
         },
         {
+            "id": "interface_settings.valve_2_pipe_2_wire.valve",
+            "name": "Valve",
+            "value": "2",
+            "unit": "",
+            "access_mode": "RW",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 1,
+                    "name": "V1"
+                },
+                {
+                    "value": 2,
+                    "name": "V2"
+                }
+            ],
+            "bacnet_type": "multistate_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": []
+        },
+        {
+            "id": "interface_settings.valve_2_pipe_2_wire.heat_vire",
+            "name": "Heat wire",
+            "value": "2",
+            "unit": "",
+            "access_mode": "RW",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 1,
+                    "name": "V1"
+                },
+                {
+                    "value": 2,
+                    "name": "V2"
+                }
+            ],
+            "bacnet_type": "multistate_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": []
+        },
+        {
             "id": "interface_settings.valve_2_pipe_2_wire_fan_ec.fan_power",
             "name": "Fan Power WIre",
             "value": "5",
@@ -3982,6 +4028,59 @@
             "bacnet_unit_type_id": 62,
             "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
             "reference": []
+        },
+        {
+            "id": "pipe_temp",
+            "name": "Pipe Temperature",
+            "value": "0",
+            "unit": "℃",
+            "access_mode": "R",
+            "data_type": "NUMBER",
+            "value_type": "INT16",
+            "range": [
+                -20,
+                60
+            ],
+            "bacnet_type": "analog_input_object",
+            "bacnet_unit_type_id": 62,
+            "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
+            "reference": []
+        },
+        {
+            "id": "pipe_temp_settings.temp_rise_time",
+            "name": "Pipe Heating Time",
+            "value": "5",
+            "unit": "min",
+            "access_mode": "W",
+            "data_type": "NUMBER",
+            "value_type": "UINT8",
+            "range": [
+                1, 60
+            ],
+            "bacnet_type": "analog_output_object",
+            "bacnet_unit_type_id": 72,
+            "bacnet_unit_type": "UNITS_MINUTES",
+            "reference": [
+                "pipe_temp_settings.pipe_work_temp"
+            ]
+        },
+        {
+            "id": "pipe_temp_settings.pipe_work_temp",
+            "name": "Pipe Heating Temperature",
+            "value": "60",
+            "unit": "℃",
+            "access_mode": "W",
+            "data_type": "NUMBER",
+            "value_type": "INT16",
+            "range": [
+                0, 60
+            ],
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 62,
+            "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
+            "reference": [
+                "pipe_temp_settings.temp_rise_time"
+            ]
         },
         {
             "id": "temperature_alarm.persistent_low_temperature_alarm_trigger.temperature",

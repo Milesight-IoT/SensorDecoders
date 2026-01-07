@@ -176,6 +176,7 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Persistent Low Temperature | 0x78 | 2 | rw | 0 |  | 0：disable<br>1：enable |
 | Difference in Temperature | 0x78 | 3 | rw | 3 | 1 - 10 |  |
 | Duration | 0x78 | 2 | rw | 5 | 0 - 60 |  |
+| pipe temperature | 0x11 | 3 | r |  | -20 - 60 |  |
 | Schedule Settings | 0x7B | 1 | rw |  |  |  |
 | Schedule Settings | 0x7B | 1 | rw |  |  |  |
 | Schedule ID | 0x7B | 2 | rw | 0 | 0 - 15 |  |
@@ -242,6 +243,9 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Two-pipe, Three-wire Valve+Three-speeds Fan | 0x7C | 3 | rw |  |  |  |
 | NO | 0x7C | 2 | rw | 1 |  | 1：V1/ NO<br>2：V2/ NC |
 | NC | 0x7C | 2 | rw | 2 |  | 1：V1/ NO<br>2：V2/ NC |
+| Two-way two-line valve + electric heating wire + three-speed fan | 0x7C | 3 | rw |  |  |  |
+| temp_rise_time | 0x7C | 2 | rw | 1 |  | 1: V1<br>2: V2 |
+| pipe_work_temp | 0x7C | 2 | rw | 2 |  | 1: V1<br>2: V2 |
 | Fan Stop Settings | 0x8E | 2 | rw | 1 |  | 0：disable<br>1：enable |
 | DI Enable | 0x80 | 2 | rw | 0 |  | 0：disable<br>1：enable |
 | DI Settings | 0x81 | 1 | rw |  |  |  |
@@ -301,6 +305,7 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Command Response | 0xEF | 1 | r |  |  |  |
 | Request to Push All Configurations | 0xEE | 1 | r |  |  |  |
 | Temperature  Alarm | 0x09 | 1 | r |  |  |  |
+| Pipe Temperature Alarm | 0x12 | 1 | r |  |  |  |
 | Humidity Alarm | 0x0A | 1 | r |  |  |  |
 | Target Temperature Alarm | 0x0B | 1 | r |  |  |  |
 
@@ -311,6 +316,9 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Order Check | 0xFE | 2 | w |  |  |  |
 | Order | 0xFE | 2 | w | 0 | 0 - 255 |  |
 | Order | 0xFE | 2 | r | 0 | 0 - 255 |  |
+| Pipe temperature setting | 0x93 | 4 | r |  |  |  |
+| Pipe heating time | 0x93 | 2 | w | 5 | 1 - 60 |  |
+| Pipe working temperature | 0x93 | 3 | w | 4500 | 20 - 60 |  |
 | Full Inspection Request | 0xF4 | 1 | w |  |  |  |
 | Full Inspection Request Subcommand | 0xF4 | 2 | w |  |  |  |
 | Full Inspection Start | 0xF4 | 1 | w |  |  |  |
@@ -375,6 +383,7 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Temperature | 0x09 | 3 | r |  | -20 - 60 |  |
 | Open Window Alarm | 0x09 | 3 | r |  |  |  |
 | Temperature | 0x09 | 3 | r |  | -20 - 60 |  |
+| Alarm Type | 0x12 | 2 | r |  |  | 0：collection error<br>1：lower range error<br>2：over range error<br>3：no data error |
 | Alarm Type | 0x0A | 2 | r |  |  |  |
 | Collection Error | 0x0A | 1 | r |  |  |  |
 | Exceed the Range Lower Limit | 0x0A | 1 | r |  |  |  |

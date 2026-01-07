@@ -37,6 +37,11 @@ function milesightDeviceDecode(bytes) {
 				decoded.check_order_reply = decoded.check_order_reply || {};
 				decoded.check_order_reply.order = readUInt8(bytes, counterObj, 1);
 				break;
+			case 0x93:
+				decoded.pipe_temp_settings = decoded.pipe_temp_settings || {};
+				decoded.pipe_temp_settings.temp_rise_time = readUInt8(bytes, counterObj, 1);
+				decoded.pipe_temp_settings.pipe_work_temp = readInt16LE(bytes, counterObj, 2) / 100;
+				break;
 			case 0xf4:
 				decoded.full_inspection_reply = decoded.full_inspection_reply || {};
 				var full_inspection_reply_command = readUInt8(bytes, counterObj, 1);
@@ -228,6 +233,11 @@ function milesightDeviceDecode(bytes) {
 					decoded.temperature_alarm.window_status_detection_trigger.temperature = readInt16LE(bytes, counterObj, 2) / 100;
 					decoded.temperature = decoded.temperature_alarm.window_status_detection_trigger.temperature;
 				}
+				break;
+			case 0x12:
+				decoded.pipe_temp_alarm = decoded.pipe_temp_alarm || {};
+				// 0：collection error, 1：lower range error, 2：over range error, 3：no data error
+				decoded.pipe_temp_alarm.type = readUInt8(bytes, counterObj, 1);
 				break;
 			case 0x0a:
 				decoded.humidity_alarm = decoded.humidity_alarm || {};
@@ -570,6 +580,9 @@ function milesightDeviceDecode(bytes) {
 				decoded.low_temperature_alarm_settings.difference_in_temperature = readInt16LE(bytes, counterObj, 2) / 100;
 				decoded.low_temperature_alarm_settings.duration = readUInt8(bytes, counterObj, 1);
 				break;
+			case 0x11:
+				decoded.pipe_temp = readInt16LE(bytes, counterObj, 2) / 100;
+				break;
 			case 0x7b:
 				decoded.schedule_settings = decoded.schedule_settings || [];
 				var id = readUInt8(bytes, counterObj, 1);
@@ -649,6 +662,13 @@ function milesightDeviceDecode(bytes) {
 					decoded.interface_settings.valve_2_pipe_3_wire.no = readUInt8(bytes, counterObj, 1);
 					// 1：V1/ NO, 2：V2/ NC
 					decoded.interface_settings.valve_2_pipe_3_wire.nc = readUInt8(bytes, counterObj, 1);
+				}
+				if (decoded.interface_settings.object == 0x03) {
+					decoded.interface_settings.valve_2_pipe_2_wire = decoded.interface_settings.valve_2_pipe_2_wire || {};
+					// 1: V1, 2: V2
+					decoded.interface_settings.valve_2_pipe_2_wire.valve = readUInt8(bytes, counterObj, 1);
+					// 1: V1, 2: V2
+					decoded.interface_settings.valve_2_pipe_2_wire.heat_vire = readUInt8(bytes, counterObj, 1);
 				}
 				break;
 			case 0x8e:
@@ -1053,6 +1073,8 @@ function readCommand(allBytes, counterObj, end) {
 function cmdMap() {
 	return {
 		  "10": "relay_status",
+		  "11": "pipe_temp",
+		  "12": "pipe_temp_alarm",
 		  "60": "collection_interval",
 		  "62": "reporting_interval",
 		  "63": "temperature_unit",
@@ -1082,6 +1104,7 @@ function cmdMap() {
 		  "88": "d2d_master_enable",
 		  "89": "d2d_master_settings",
 		  "90": "relay_changes_report_enable",
+		  "93": "pipe_temp_settings",
 		  "fe": "request_check_order",
 		  "f4": "request_full_inspection",
 		  "f400": "request_full_inspection.start_inspection",
