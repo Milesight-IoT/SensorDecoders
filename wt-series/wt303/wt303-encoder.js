@@ -349,6 +349,9 @@ function milesightDeviceEncode(payload) {
 	if ('pipe_temp_alarm' in payload) {
 		var buffer = new Buffer();
 		buffer.writeUInt8(0x12);
+		if (payload.pipe_temp_alarm.type < 0 || payload.pipe_temp_alarm.type > 3) {
+			throw new Error('pipe_temp_alarm.type must be between 0 and 3');
+		}
 		// 0：collection error, 1：lower range error, 2：over range error, 3：no data error
 		buffer.writeUInt8(payload.pipe_temp_alarm.type);
 		encoded = encoded.concat(buffer.toBytes());
@@ -1069,24 +1072,45 @@ function milesightDeviceEncode(payload) {
 		buffer.writeUInt8(0x7c);
 		buffer.writeUInt8(payload.interface_settings.object);
 		if (payload.interface_settings.object == 0x00) {
+			if (payload.interface_settings.valve_4_pipe_2_wire.cooling < 1 || payload.interface_settings.valve_4_pipe_2_wire.cooling > 2) {
+				throw new Error('interface_settings.valve_4_pipe_2_wire.cooling must be between 1 and 2');
+			}
 			// 1：V1/ NO, 2：V2/ NC
 			buffer.writeUInt8(payload.interface_settings.valve_4_pipe_2_wire.cooling);
+			if (payload.interface_settings.valve_4_pipe_2_wire.heating < 1 || payload.interface_settings.valve_4_pipe_2_wire.heating > 2) {
+				throw new Error('interface_settings.valve_4_pipe_2_wire.heating must be between 1 and 2');
+			}
 			// 1：V1/ NO, 2：V2/ NC
 			buffer.writeUInt8(payload.interface_settings.valve_4_pipe_2_wire.heating);
 		}
 		if (payload.interface_settings.object == 0x01) {
+			if (payload.interface_settings.valve_2_pipe_2_wire.control < 1 || payload.interface_settings.valve_2_pipe_2_wire.control > 2) {
+				throw new Error('interface_settings.valve_2_pipe_2_wire.control must be between 1 and 2');
+			}
 			// 1：V1/ NO, 2：V2/ NC
 			buffer.writeUInt8(payload.interface_settings.valve_2_pipe_2_wire.control);
 		}
 		if (payload.interface_settings.object == 0x02) {
+			if (payload.interface_settings.valve_2_pipe_3_wire.no < 1 || payload.interface_settings.valve_2_pipe_3_wire.no > 2) {
+				throw new Error('interface_settings.valve_2_pipe_3_wire.no must be between 1 and 2');
+			}
 			// 1：V1/ NO, 2：V2/ NC
 			buffer.writeUInt8(payload.interface_settings.valve_2_pipe_3_wire.no);
+			if (payload.interface_settings.valve_2_pipe_3_wire.nc < 1 || payload.interface_settings.valve_2_pipe_3_wire.nc > 2) {
+				throw new Error('interface_settings.valve_2_pipe_3_wire.nc must be between 1 and 2');
+			}
 			// 1：V1/ NO, 2：V2/ NC
 			buffer.writeUInt8(payload.interface_settings.valve_2_pipe_3_wire.nc);
 		}
 		if (payload.interface_settings.object == 0x03) {
+			if (payload.interface_settings.valve_2_pipe_2_wire.valve < 1 || payload.interface_settings.valve_2_pipe_2_wire.valve > 2) {
+				throw new Error('interface_settings.valve_2_pipe_2_wire.valve must be between 1 and 2');
+			}
 			// 1: V1, 2: V2
 			buffer.writeUInt8(payload.interface_settings.valve_2_pipe_2_wire.valve);
+			if (payload.interface_settings.valve_2_pipe_2_wire.heat_vire < 1 || payload.interface_settings.valve_2_pipe_2_wire.heat_vire > 2) {
+				throw new Error('interface_settings.valve_2_pipe_2_wire.heat_vire must be between 1 and 2');
+			}
 			// 1: V1, 2: V2
 			buffer.writeUInt8(payload.interface_settings.valve_2_pipe_2_wire.heat_vire);
 		}

@@ -4047,17 +4047,52 @@
             "reference": []
         },
         {
+            "id": "pipe_temp_alarm.type",
+            "name": "Pipe Temperature Alarm Type",
+            "value": "0",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "None"
+                },
+                {
+                    "value": 1,
+                    "name": "Collection Error"
+                },
+                {
+                    "value": 2,
+                    "name": "Lower Range Error"
+                },
+                {
+                    "value": 3,
+                    "name": "Over Range Error"
+                },
+                {
+                    "value": 4,
+                    "name": "No Data Error"
+                }
+            ],
+            "bacnet_type": "multistate_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": []
+        },
+        {
             "id": "pipe_temp_settings.temp_rise_time",
             "name": "Pipe Heating Time",
             "value": "5",
             "unit": "min",
-            "access_mode": "W",
+            "access_mode": "RW",
             "data_type": "NUMBER",
             "value_type": "UINT8",
             "range": [
                 1, 60
             ],
-            "bacnet_type": "analog_output_object",
+            "bacnet_type": "analog_value_object",
             "bacnet_unit_type_id": 72,
             "bacnet_unit_type": "UNITS_MINUTES",
             "reference": [
@@ -4069,7 +4104,7 @@
             "name": "Pipe Heating Temperature",
             "value": "60",
             "unit": "℃",
-            "access_mode": "W",
+            "access_mode": "RW",
             "data_type": "NUMBER",
             "value_type": "INT16",
             "range": [
