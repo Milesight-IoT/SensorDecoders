@@ -53,6 +53,12 @@ function milesightDeviceDecode(bytes) {
 			case 0xee:
 				decoded.all_configurations_request_by_device = readOnlyCommand(bytes, counterObj, 0);
 				break;
+			case 0xed:
+				decoded.historical_data_report = decoded.historical_data_report || {};
+				// 0：target time, 1：historical time
+				decoded.historical_data_report.mode = readUInt8(bytes, counterObj, 1);
+				decoded.historical_data_report.timestamp = readUInt32LE(bytes, counterObj, 4);
+				break;
 			case 0xcf:
 				// skip 1 byte
 				counterObj.i++;
@@ -89,7 +95,8 @@ function milesightDeviceDecode(bytes) {
 				decoded.battery = readUInt8(bytes, counterObj, 1);
 				break;
 			case 0x01:
-				decoded.temperature = readInt16LE(bytes, counterObj, 2) / 100;
+				// decoded.temperature = readInt16LE(bytes, counterObj, 2) / 100;
+				decoded.temperature = Math.round(readInt16LE(bytes, counterObj, 2) / 100 * 10) / 10;
 				break;
 			case 0x02:
 				decoded.motor_total_stroke = readUInt16LE(bytes, counterObj, 2);

@@ -53,6 +53,15 @@ function milesightDeviceEncode(payload) {
 		buffer.writeUInt8(0xee);
 		encoded = encoded.concat(buffer.toBytes());
 	}
+	//0xed
+	if ('historical_data_report' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0xed);
+		// 0：target time, 1：historical time
+		buffer.writeUInt8(payload.historical_data_report.mode);
+		buffer.writeUInt32LE(payload.historical_data_report.timestamp);
+		encoded = encoded.concat(buffer.toBytes());
+	}
 	//0xcf
 	if ('lorawan_class' in payload) {
 		var buffer = new Buffer();
