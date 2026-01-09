@@ -159,6 +159,8 @@ function milesightDeviceEncode(payload) {
 			throw new Error('temperature_alarm_rule.threshold_min must be between -20 and 60');
 		}
 		buffer.writeInt16LE(payload.temperature_alarm_rule.threshold_min * 10);
+		buffer.writeUInt16LE(0);
+		buffer.writeUInt16LE(0);
 		encoded = encoded.concat(buffer.toBytes());
 	}
 	//0xff_0x18 // pir_enable.sensor_id
@@ -238,47 +240,6 @@ function milesightDeviceEncode(payload) {
 		buffer.writeInt16LE(payload.humidity_calibration_settings.value * 2);
 		encoded = encoded.concat(buffer.toBytes());
 	}
-	//0xff_0xea // co2_calibration_settings.id
-	if ('co2_calibration_settings' in payload) {
-		var buffer = new Buffer();
-		buffer.writeUInt8(0xff);
-		buffer.writeUInt8(0xea);
-		var bitOptions = 0;
-		// 0:temperature, 1:humidity, 2:CO₂
-		bitOptions |= 2 << 0;
-
-		// 0: disable, 1: enable
-		bitOptions |= payload.co2_calibration_settings.enable << 7;
-		buffer.writeUInt8(bitOptions);
-
-		if (payload.co2_calibration_settings.value < -4600 || payload.co2_calibration_settings.value > 4600) {
-			throw new Error('co2_calibration_settings.value must be between -4600 and 4600');
-		}
-		buffer.writeUInt16LE(payload.co2_calibration_settings.value);
-		encoded = encoded.concat(buffer.toBytes());
-	}
-	//0xff_0x39
-	if ('co2_auto_background_calibration_settings' in payload) {
-		var buffer = new Buffer();
-		buffer.writeUInt8(0xff);
-		buffer.writeUInt8(0x39);
-		// 0: disable, 1: enable
-		buffer.writeUInt8(payload.co2_auto_background_calibration_settings.enable);
-		encoded = encoded.concat(buffer.toBytes());
-	}
-	//0xff_0x87
-	if ('co2_altitude_calibration' in payload) {
-		var buffer = new Buffer();
-		buffer.writeUInt8(0xff);
-		buffer.writeUInt8(0x87);
-		// 0: disable, 1: enable
-		buffer.writeUInt8(payload.co2_altitude_calibration.enable);
-		if (payload.co2_altitude_calibration.value < 0 || payload.co2_altitude_calibration.value > 5000) {
-			throw new Error('co2_altitude_calibration.value must be between 0 and 5000');
-		}
-		buffer.writeUInt16LE(payload.co2_altitude_calibration.value);
-		encoded = encoded.concat(buffer.toBytes());
-	}
 	//0xff_0x96
 	if ('d2d_master_settings' in payload) {
 		var buffer = new Buffer();
@@ -344,22 +305,6 @@ function milesightDeviceEncode(payload) {
 			throw new Error('retrival_interval.interval must be between 30 and 1200');
 		}
 		buffer.writeUInt16LE(payload.retrival_interval.interval);
-		encoded = encoded.concat(buffer.toBytes());
-	}
-	//0xff_0x1a // co2_reset_calibration
-	if ('co2_reset_calibration' in payload) {
-		var buffer = new Buffer();
-		buffer.writeUInt8(0xff);
-		buffer.writeUInt8(0x1a);
-		buffer.writeUInt8(0);
-		encoded = encoded.concat(buffer.toBytes());
-	}
-	//0xff_0x1a // co2_background_calibration
-	if ('co2_background_calibration' in payload) {
-		var buffer = new Buffer();
-		buffer.writeUInt8(0xff);
-		buffer.writeUInt8(0x1a);
-		buffer.writeUInt8(3);
 		encoded = encoded.concat(buffer.toBytes());
 	}
 	//0xff_0x27
@@ -621,25 +566,6 @@ function milesightDeviceEncode(payload) {
 		buffer.writeUInt8(payload.illuminance_mode.mode);
 		encoded = encoded.concat(buffer.toBytes());
 	}
-	//0xf9_0xc4
-	if ('co2_alarm_rule' in payload) {
-		var buffer = new Buffer();
-		buffer.writeUInt8(0xf9);
-		buffer.writeUInt8(0xc4);
-		// 0：disable, 1：enable
-		buffer.writeUInt8(payload.co2_alarm_rule.enable);
-		// 0:enable 1-level only, 1:enable 2-levle only, 2:enable 1-level&2-levle
-		buffer.writeUInt8(payload.co2_alarm_rule.mode);
-		if (payload.co2_alarm_rule.level1_value < 400 || payload.co2_alarm_rule.level1_value > 5000) {
-			throw new Error('co2_alarm_rule.level1_value must be between 400 and 5000');
-		}
-		buffer.writeUInt16LE(payload.co2_alarm_rule.level1_value);
-		if (payload.co2_alarm_rule.level2_value < 400 || payload.co2_alarm_rule.level2_value > 5000) {
-			throw new Error('co2_alarm_rule.level2_value must be between 400 and 5000');
-		}
-		buffer.writeUInt16LE(payload.co2_alarm_rule.level2_value);
-		encoded = encoded.concat(buffer.toBytes());
-	}
 	//0xf9_0xbc // pir_trigger_report.type
 	if ('pir_trigger_report' in payload) {
 		var buffer = new Buffer();
@@ -892,14 +818,11 @@ function cmdMap() {
 		"led_mode": "ff_0x2e",
 		"button_lock": "ff_0x25",
 		"temperature_alarm_rule": "ff_0x06",
-		"co2_alarm_rule": "f9_0xc4",
 		"pir_enable": "ff_0x18",
 		"pir_trigger_report": "f9_0xbc",
 		"pir_idle_interval": "ff_0x95",
 		"illuminance_alarm_rule": "f9_0xbf",
 		"temperature_calibration_settings": "ff_0xea",
-		"co2_auto_background_calibration_settings": "ff_0x39",
-		"co2_altitude_calibration": "ff_0x87",
 		"d2d_sending": "f9_0x63",
 		"d2d_master_enable": "f9_0x66",
 		"d2d_master_settings": "ff_0x96",
@@ -907,7 +830,6 @@ function cmdMap() {
 		"data_storage_enable": "ff_0x68",
 		"retransmission_enable": "ff_0x69",
 		"retransmission_interval": "ff_0x6a",
-		"co2_reset_calibration": "ff_0x1a",
 		"clear_historical_data": "ff_0x27",
 		"retrival_historical_data_by_time": "fd_0x6b",
 		"retrival_historical_data_by_time_range": "fd_0x6c",

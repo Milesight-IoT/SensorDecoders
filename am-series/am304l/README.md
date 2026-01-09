@@ -50,11 +50,8 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Threshold ID | 0xFF | 0x06 | 2 | w |  |  |  |
 | Value B | 0xFF | 0x06 | 3 | w | 0 | -20 - 60 |  |
 | Value A | 0xFF | 0x06 | 3 | w | 0 | -20 - 60 |  |
-| CO₂ Threshold Settings | 0xF9 | 0xC4 | 7 | w |  |  |  |
-| Threshold Enable | 0xF9 | 0xC4 | 2 | w | 0 |  | 0：disable<br>1：enable |
-| Threshold Mode | 0xF9 | 0xC4 | 2 | w | 2 |  | 0:enable 1-level only<br>1:enable 2-levle only<br>2:enable 1-level&2-levle |
-| Bad,1-level Alarm Value | 0xF9 | 0xC4 | 3 | w | 5000 | 400 - 5000 |  |
-| Polluted,2-level Alarm Value | 0xF9 | 0xC4 | 3 | w | 400 | 400 - 5000 |  |
+| Threshold Lock Time | 0xFF | 0x06 | 3 | w |  |  |  |
+| Threshold Duration | 0xFF | 0x06 | 3 | w |  |  |  |
 | PIR Collecting Enable | 0xFF | 0x18 | 3 | w |  |  |  |
 | Sensor Id | 0xFF | 0x18 | 2 | w |  |  | 1:temperature<br>2:humidity<br>3:PIR<br>4:Illuminance<br>5:CO₂ |
 | PIR Collecting Enable | 0xFF | 0x18 | 2 | w | 1 |  | 0：disable<br>1：enable |
@@ -80,15 +77,6 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Calibration ID | 0xFF | 0xEA | 2 | w |  |  | 0:temperature<br>1:humidity<br>2:CO₂ |
 | Calibration Enable | 0xFF | 0xEA | 2 | w | 0 |  | 0: disable<br>1: enable |
 | Calibration Value | 0xFF | 0xEA | 3 | w | 0 | -100 - 100 |  |
-| CO₂ Calibration Settings | 0xFF | 0xEA | 4 | w |  |  |  |
-| Calibration ID | 0xFF | 0xEA | 2 | w |  |  | 0:temperature<br>1:humidity<br>2:CO₂ |
-| Calibration Enable | 0xFF | 0xEA | 2 | w | 0 |  | 0: disable<br>1: enable |
-| Calibration Value | 0xFF | 0xEA | 3 | w | 400 | -4600 - 4600 |  |
-| CO₂  Auto Background Calibration Settings | 0xFF | 0x39 | 6 | w |  |  |  |
-| CO₂  Auto Background Calibration Enable | 0xFF | 0x39 | 2 | w | 1 |  | 0: disable<br>1: enable |
-| CO₂ Altitude Compensation | 0xFF | 0x87 | 4 | w |  |  |  |
-| CO₂ Altitude Compensation | 0xFF | 0x87 | 2 | w | 0 |  | 0: disable<br>1: enable |
-| Compensation Value | 0xFF | 0x87 | 3 | w | 0 | 0 - 5000 |  |
 | D2D Data Transmission Settings | 0xF9 | 0x63 | 5 | w |  |  |  |
 | D2D Data Transmission Enalbe | 0xF9 | 0x63 | 2 | w | 0 |  | 0：disable<br>1：enable |
 | LoRa Uplink | 0xF9 | 0x63 | 2 | w | 0 |  | 0：disable<br>1：enable |
@@ -162,8 +150,6 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | PIR Count | 0x21 | 0xCE | 3 | r |  |  |  |
 | Illuminace Value Type | 0x21 | 0xCE | 2 | r |  |  | 0:data invalid<br>1:data valid<br>2:data out of range<br>3:data collect abnormal |
 | Illuminace Value | 0x21 | 0xCE | 3 | r |  |  |  |
-| CO₂ Restore Factory Calibration | 0xFF | 0x1A | 2 | w |  |  |  |
-| CO₂ Manual Calibration | 0xFF | 0x1A | 2 | w |  |  |  |
 | Clear Data | 0xFF | 0x27 | 2 | w |  |  |  |
 | Retrival(Time Point) | 0xFD | 0x6B | 5 | w |  |  |  |
 | Time Point | 0xFD | 0x6B | 5 | w |  |  |  |

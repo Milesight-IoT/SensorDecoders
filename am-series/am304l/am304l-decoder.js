@@ -90,6 +90,8 @@ function milesightDeviceDecode(bytes) {
 						decoded.temperature_alarm_rule.id = extractBits(bitOptions, 3, 6);
 						decoded.temperature_alarm_rule.threshold_max = readInt16LE(bytes, counterObj, 2) / 10;
 						decoded.temperature_alarm_rule.threshold_min = readInt16LE(bytes, counterObj, 2) / 10;
+						decoded.temperature_alarm_rule.threshold_lock_time = readUInt16LE(bytes, counterObj, 2);
+						decoded.temperature_alarm_rule.threshold_continue_time = readUInt16LE(bytes, counterObj, 2);
 						break;
 					case 0x18:
 						var fixed_value = bytes[counterObj.i + 0];
@@ -140,28 +142,7 @@ function milesightDeviceDecode(bytes) {
 								decoded.humidity_calibration_settings.value = readInt16LE(bytes, counterObj, 2) / 2;
 								decoded.humidity_calibration_settings.id = undefined;
 								break;
-							case 2: // co2_calibration_settings.id
-								decoded.co2_calibration_settings = decoded.co2_calibration_settings || {};
-								var bitOptions = readUInt8(bytes, counterObj, 1);
-								// 0:temperature, 1:humidity, 2:CO₂
-								decoded.co2_calibration_settings.id = extractBits(bitOptions, 0, 7);
-								// 0: disable, 1: enable
-								decoded.co2_calibration_settings.enable = extractBits(bitOptions, 7, 8);
-								decoded.co2_calibration_settings.value = readUInt16LE(bytes, counterObj, 2);
-								decoded.co2_calibration_settings.id = undefined;
-								break;
 						}
-						break;
-					case 0x39:
-						decoded.co2_auto_background_calibration_settings = decoded.co2_auto_background_calibration_settings || {};
-						// 0: disable, 1: enable
-						decoded.co2_auto_background_calibration_settings.enable = readUInt8(bytes, counterObj, 1);
-						break;
-					case 0x87:
-						decoded.co2_altitude_calibration = decoded.co2_altitude_calibration || {};
-						// 0: disable, 1: enable
-						decoded.co2_altitude_calibration.enable = readUInt8(bytes, counterObj, 1);
-						decoded.co2_altitude_calibration.value = readUInt16LE(bytes, counterObj, 2);
 						break;
 					case 0x96:
 						decoded.d2d_master_settings = decoded.d2d_master_settings || [];
@@ -205,17 +186,6 @@ function milesightDeviceDecode(bytes) {
 								decoded.retrival_interval.type = readUInt8(bytes, counterObj, 1);
 								decoded.retrival_interval.interval = readUInt16LE(bytes, counterObj, 2);
 								decoded.retrival_interval.type = undefined;
-								break;
-						}
-						break;
-					case 0x1a:
-						var fixed_value = bytes[counterObj.i + 0];
-						switch (fixed_value) {
-							case 0: // co2_reset_calibration
-								decoded.co2_reset_calibration = readUInt8(bytes, counterObj, 1);
-								break;
-							case 3: // co2_background_calibration
-								decoded.co2_background_calibration = readUInt8(bytes, counterObj, 1);
 								break;
 						}
 						break;
@@ -427,15 +397,6 @@ function milesightDeviceDecode(bytes) {
 								decoded.illuminance_mode.sensor_id = undefined;
 								break;
 						}
-						break;
-					case 0xc4:
-						decoded.co2_alarm_rule = decoded.co2_alarm_rule || {};
-						// 0：disable, 1：enable
-						decoded.co2_alarm_rule.enable = readUInt8(bytes, counterObj, 1);
-						// 0:enable 1-level only, 1:enable 2-levle only, 2:enable 1-level&2-levle
-						decoded.co2_alarm_rule.mode = readUInt8(bytes, counterObj, 1);
-						decoded.co2_alarm_rule.level1_value = readUInt16LE(bytes, counterObj, 2);
-						decoded.co2_alarm_rule.level2_value = readUInt16LE(bytes, counterObj, 2);
 						break;
 					case 0xbc:
 						var fixed_value = bytes[counterObj.i + 0];
@@ -763,14 +724,11 @@ function cmdMap() {
 		"ff_0x2e": "led_mode",
 		"ff_0x25": "button_lock",
 		"ff_0x06": "temperature_alarm_rule",
-		"f9_0xc4": "co2_alarm_rule",
 		"ff_0x18": "pir_enable",
 		"f9_0xbc": "pir_trigger_report",
 		"ff_0x95": "pir_idle_interval",
 		"f9_0xbf": "illuminance_alarm_rule",
 		"ff_0xea": "temperature_calibration_settings",
-		"ff_0x39": "co2_auto_background_calibration_settings",
-		"ff_0x87": "co2_altitude_calibration",
 		"f9_0x63": "d2d_sending",
 		"f9_0x66": "d2d_master_enable",
 		"ff_0x96": "d2d_master_settings",
@@ -778,7 +736,6 @@ function cmdMap() {
 		"ff_0x68": "data_storage_enable",
 		"ff_0x69": "retransmission_enable",
 		"ff_0x6a": "retransmission_interval",
-		"ff_0x1a": "co2_reset_calibration",
 		"ff_0x27": "clear_historical_data",
 		"fd_0x6b": "retrival_historical_data_by_time",
 		"fd_0x6c": "retrival_historical_data_by_time_range",
