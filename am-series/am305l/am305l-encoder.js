@@ -159,6 +159,8 @@ function milesightDeviceEncode(payload) {
 			throw new Error('temperature_alarm_rule.threshold_min must be between -20 and 60');
 		}
 		buffer.writeInt16LE(payload.temperature_alarm_rule.threshold_min * 10);
+		buffer.writeUInt16LE(0);
+		buffer.writeUInt16LE(0);
 		encoded = encoded.concat(buffer.toBytes());
 	}
 	//0xff_0x18 // pir_enable.sensor_id
@@ -278,6 +280,8 @@ function milesightDeviceEncode(payload) {
 		buffer.writeUInt8(0x39);
 		// 0: disable, 1: enable
 		buffer.writeUInt8(payload.co2_auto_background_calibration_settings.enable);
+		buffer.writeUInt16LE(payload.co2_auto_background_calibration_settings.target_value);
+		buffer.writeUInt16LE(payload.co2_auto_background_calibration_settings.period);
 		encoded = encoded.concat(buffer.toBytes());
 	}
 	//0xff_0x87

@@ -51,6 +51,8 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Threshold ID | 0xFF | 0x06 | 2 | w |  |  |  |
 | Value B | 0xFF | 0x06 | 3 | w | 0 | -20 - 60 |  |
 | Value A | 0xFF | 0x06 | 3 | w | 0 | -20 - 60 |  |
+| Threshold Lock Time | 0xFF | 0x06 | 3 | w |  |  |  |
+| Threshold Duration | 0xFF | 0x06 | 3 | w |  |  |  |
 | CO₂ Threshold Settings | 0xF9 | 0xC4 | 7 | w |  |  |  |
 | Threshold Enable | 0xF9 | 0xC4 | 2 | w | 0 |  | 0：disable<br>1：enable |
 | Threshold Mode | 0xF9 | 0xC4 | 2 | w | 2 |  | 0:enable 1-level only<br>1:enable 2-levle only<br>2:enable 1-level&2-levle |
@@ -90,6 +92,8 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Calibration Value | 0xFF | 0xEA | 3 | w | 400 | -4600 - 4600 |  |
 | CO₂  Auto Background Calibration Settings | 0xFF | 0x39 | 6 | w |  |  |  |
 | CO₂  Auto Background Calibration Enable | 0xFF | 0x39 | 2 | w | 1 |  | 0: disable<br>1: enable |
+| CO₂  Auto Background Calibration Target Value | 0xFF | 0x39 | 3 | w | 400 |  |  |
+| CO₂  Auto Background Calibration Period | 0xFF | 0x39 | 3 | w | 168 |  |  |
 | CO₂ Altitude Compensation | 0xFF | 0x87 | 4 | w |  |  |  |
 | CO₂ Altitude Compensation | 0xFF | 0x87 | 2 | w | 0 |  | 0: disable<br>1: enable |
 | Compensation Value | 0xFF | 0x87 | 3 | w | 0 | 0 - 5000 |  |

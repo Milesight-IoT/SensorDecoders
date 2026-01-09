@@ -90,6 +90,8 @@ function milesightDeviceDecode(bytes) {
 						decoded.temperature_alarm_rule.id = extractBits(bitOptions, 3, 6);
 						decoded.temperature_alarm_rule.threshold_max = readInt16LE(bytes, counterObj, 2) / 10;
 						decoded.temperature_alarm_rule.threshold_min = readInt16LE(bytes, counterObj, 2) / 10;
+						decoded.temperature_alarm_rule.threshold_lock_time = readUInt16LE(bytes, counterObj, 2);
+						decoded.temperature_alarm_rule.threshold_continue_time = readUInt16LE(bytes, counterObj, 2);
 						break;
 					case 0x18:
 						var fixed_value = bytes[counterObj.i + 0];
@@ -165,6 +167,8 @@ function milesightDeviceDecode(bytes) {
 						decoded.co2_auto_background_calibration_settings = decoded.co2_auto_background_calibration_settings || {};
 						// 0: disable, 1: enable
 						decoded.co2_auto_background_calibration_settings.enable = readUInt8(bytes, counterObj, 1);
+						decoded.co2_auto_background_calibration_settings.target_value = readUInt16LE(bytes, counterObj, 2);
+						decoded.co2_auto_background_calibration_settings.period = readUInt16LE(bytes, counterObj, 2);
 						break;
 					case 0x87:
 						decoded.co2_altitude_calibration = decoded.co2_altitude_calibration || {};
