@@ -367,9 +367,7 @@
             "bacnet_type": "multistate_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": [
-                "target_temperature"
-            ]
+            "reference": []
         },
         {
             "id": "temperature_control_status",
