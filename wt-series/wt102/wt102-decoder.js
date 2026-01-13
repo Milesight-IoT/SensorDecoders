@@ -27,6 +27,8 @@ function Decoder(bytes, port) {
 
 function milesightDeviceDecode(bytes) {
 	var decoded = {};
+    var result = {};
+	var history = [];
 
 	var unknown_command = 0;
 	var counterObj = {};
@@ -54,10 +56,19 @@ function milesightDeviceDecode(bytes) {
 				decoded.all_configurations_request_by_device = readOnlyCommand(bytes, counterObj, 0);
 				break;
 			case 0xed:
-				decoded.historical_data_report = decoded.historical_data_report || {};
-				// 0：target time, 1：historical time
-				decoded.historical_data_report.mode = readUInt8(bytes, counterObj, 1);
-				decoded.historical_data_report.timestamp = readUInt32LE(bytes, counterObj, 4);
+				if (history.length === 0) {
+					for (var k in decoded) {
+						if (decoded.hasOwnProperty(k)) {
+							result[k] = decoded[k];
+						}
+					}
+				}
+				decoded = {};
+				// skip type
+				readUInt8(bytes, counterObj, 1);
+				decoded.timestamp = readUInt32LE(bytes, counterObj, 4);
+				history.push(decoded);
+				break;
 				break;
 			case 0xcf:
 				// skip 1 byte
