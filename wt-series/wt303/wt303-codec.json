@@ -4036,7 +4036,7 @@
             "unit": "℃",
             "access_mode": "R",
             "data_type": "NUMBER",
-            "value_type": "INT16",
+            "value_type": "FLOAT",
             "range": [
                 -20,
                 60
@@ -4106,7 +4106,7 @@
             "unit": "℃",
             "access_mode": "RW",
             "data_type": "NUMBER",
-            "value_type": "INT16",
+            "value_type": "FLOAT",
             "range": [
                 0, 60
             ],
