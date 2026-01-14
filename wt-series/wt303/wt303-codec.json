@@ -2676,54 +2676,36 @@
             "values": [
                 {
                     "value": 0,
-                    "name": "Four-pipe, 0~10V Valve+Three-speeds Fan"
+                    "name": "Four-pipe, Two-wire Valve+Three-speeds Fan"
                 },
                 {
                     "value": 1,
-                    "name": "Two-pipe, 0~10V Valve+Three-speeds Fan"
+                    "name": "Two-pipe, Two-wire Valve+Three-speeds Fan"
                 },
                 {
                     "value": 2,
-                    "name": "Two-pipe, 0~10V Valve+EC Fan"
+                    "name": "Two-pipe, Three-wire Valve+Three-speeds Fan"
                 },
                 {
                     "value": 3,
-                    "name": "Four-pipe,Two-wire Valve+EC Fan"
-                },
-                {
-                    "value": 4,
                     "name": "Two-pipe, Two-wire Valve+EC Fan"
-                },
-                {
-                    "value": 5,
-                    "name": "Two-pipe, Three-wire Valve+EC Fan"
                 }
             ],
             "bacnet_type": "multistate_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": [
-                "interface_settings.valve_4_pipe_10_v.cooling",
-                "interface_settings.valve_4_pipe_10_v.heating",
-                "interface_settings.valve_2_pipe_10_v.control",
-                "interface_settings.valve_2_pipe_10_v_fan_ec.fan",
-                "interface_settings.valve_2_pipe_10_v_fan_ec.fan_power",
-                "interface_settings.valve_2_pipe_10_v_fan_ec.control",
-                "interface_settings.valve_4_pipe_2_wire_fan_ec.cooling",
-                "interface_settings.valve_4_pipe_2_wire_fan_ec.heating",
-                "interface_settings.valve_4_pipe_2_wire_fan_ec.fan",
-                "interface_settings.valve_4_pipe_2_wire_fan_ec.fan_power",
-                "interface_settings.valve_2_pipe_2_wire_fan_ec.fan",
-                "interface_settings.valve_2_pipe_2_wire_fan_ec.fan_power",
-                "interface_settings.valve_2_pipe_2_wire_fan_ec.control",
-                "interface_settings.valve_2_pipe_3_wire_fan_ec.no",
-                "interface_settings.valve_2_pipe_3_wire_fan_ec.nc",
-                "interface_settings.valve_2_pipe_3_wire_fan_ec.fan",
-                "interface_settings.valve_2_pipe_3_wire_fan_ec.fan_power"
+                "interface_settings.valve_4_pipe_2_wire.cooling",
+                "interface_settings.valve_4_pipe_2_wire.heating",
+                "interface_settings.valve_2_pipe_2_wire.control",
+                "interface_settings.valve_2_pipe_2_wire.valve",
+                "interface_settings.valve_2_pipe_2_wire.heat_vire",
+                "interface_settings.valve_2_pipe_3_wire.no",
+                "interface_settings.valve_2_pipe_3_wire.nc"            
             ]
         },
         {
-            "id": "interface_settings.valve_4_pipe_10_v.cooling",
+            "id": "interface_settings.valve_4_pipe_2_wire.cooling",
             "name": "Cooling Valve",
             "value": "1",
             "unit": "",
@@ -2733,22 +2715,21 @@
             "values": [
                 {
                     "value": 1,
-                    "name": "AO1"
+                    "name": "V1"
                 },
                 {
                     "value": 2,
-                    "name": "AO2"
+                    "name": "V2"
                 }
             ],
             "bacnet_type": "multistate_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": [
-                "interface_settings.valve_4_pipe_10_v.heating"
+            "reference": [                
             ]
         },
         {
-            "id": "interface_settings.valve_4_pipe_10_v.heating",
+            "id": "interface_settings.valve_4_pipe_2_wire.heating",
             "name": "Heating Valve",
             "value": "2",
             "unit": "",
@@ -2758,22 +2739,21 @@
             "values": [
                 {
                     "value": 1,
-                    "name": "AO1"
+                    "name": "V1"
                 },
                 {
                     "value": 2,
-                    "name": "AO2"
+                    "name": "V2"
                 }
             ],
             "bacnet_type": "multistate_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": [
-                "interface_settings.valve_4_pipe_10_v.cooling"
+            "reference": [                
             ]
         },
         {
-            "id": "interface_settings.valve_2_pipe_10_v.control",
+            "id": "interface_settings.valve_2_pipe_2_wire.control",
             "name": "Valve",
             "value": "1",
             "unit": "",
@@ -2783,282 +2763,17 @@
             "values": [
                 {
                     "value": 1,
-                    "name": "AO1"
+                    "name": "V1"
                 },
                 {
                     "value": 2,
-                    "name": "AO2"
-                }
-            ],
-            "bacnet_type": "multistate_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": []
-        },
-        {
-            "id": "interface_settings.valve_2_pipe_10_v_fan_ec.control",
-            "name": "Valve",
-            "value": "1",
-            "unit": "",
-            "access_mode": "RW",
-            "data_type": "ENUM",
-            "value_type": "UINT8",
-            "values": [
-                {
-                    "value": 1,
-                    "name": "AO1"
-                },
-                {
-                    "value": 2,
-                    "name": "AO2"
+                    "name": "V2"
                 }
             ],
             "bacnet_type": "multistate_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": [
-                "interface_settings.valve_2_pipe_10_v_fan_ec.fan",
-                "interface_settings.valve_2_pipe_10_v_fan_ec.fan_power"
-            ]
-        },
-        {
-            "id": "interface_settings.valve_2_pipe_10_v_fan_ec.fan",
-            "name": "EC Fan",
-            "value": "2",
-            "unit": "",
-            "access_mode": "RW",
-            "data_type": "ENUM",
-            "value_type": "UINT8",
-            "values": [
-                {
-                    "value": 1,
-                    "name": "AO1"
-                },
-                {
-                    "value": 2,
-                    "name": "AO2"
-                }
-            ],
-            "bacnet_type": "multistate_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": [
-                "interface_settings.valve_2_pipe_10_v_fan_ec.control",
-                "interface_settings.valve_2_pipe_10_v_fan_ec.fan_power"
-            ]
-        },
-        {
-            "id": "interface_settings.valve_2_pipe_10_v_fan_ec.fan_power",
-            "name": "Fan Power WIre",
-            "value": "5",
-            "unit": "",
-            "access_mode": "RW",
-            "data_type": "ENUM",
-            "value_type": "UINT8",
-            "values": [
-                {
-                    "value": 0,
-                    "name": "None"
-                },
-                {
-                    "value": 3,
-                    "name": "Q1"
-                },
-                {
-                    "value": 4,
-                    "name": "Q2"
-                },
-                {
-                    "value": 5,
-                    "name": "Q3"
-                }
-            ],
-            "bacnet_type": "multistate_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": [
-                "interface_settings.valve_2_pipe_10_v_fan_ec.control",
-                "interface_settings.valve_2_pipe_10_v_fan_ec.fan"
-            ]
-        },
-        {
-            "id": "interface_settings.valve_4_pipe_2_wire_fan_ec.cooling",
-            "name": "Cooling Valve",
-            "value": "3",
-            "unit": "",
-            "access_mode": "RW",
-            "data_type": "ENUM",
-            "value_type": "UINT8",
-            "values": [
-                {
-                    "value": 3,
-                    "name": "Q1"
-                },
-                {
-                    "value": 4,
-                    "name": "Q2"
-                },
-                {
-                    "value": 5,
-                    "name": "Q3"
-                }
-            ],
-            "bacnet_type": "multistate_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": [
-                "interface_settings.valve_4_pipe_2_wire_fan_ec.heating",
-                "interface_settings.valve_4_pipe_2_wire_fan_ec.fan",
-                "interface_settings.valve_4_pipe_2_wire_fan_ec.fan_power"
-            ]
-        },
-        {
-            "id": "interface_settings.valve_4_pipe_2_wire_fan_ec.heating",
-            "name": "Heating Valve",
-            "value": "4",
-            "unit": "",
-            "access_mode": "RW",
-            "data_type": "ENUM",
-            "value_type": "UINT8",
-            "values": [
-                {
-                    "value": 3,
-                    "name": "Q1"
-                },
-                {
-                    "value": 4,
-                    "name": "Q2"
-                },
-                {
-                    "value": 5,
-                    "name": "Q3"
-                }
-            ],
-            "bacnet_type": "multistate_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": [
-                "interface_settings.valve_4_pipe_2_wire_fan_ec.cooling",
-                "interface_settings.valve_4_pipe_2_wire_fan_ec.fan",
-                "interface_settings.valve_4_pipe_2_wire_fan_ec.fan_power"
-            ]
-        },
-        {
-            "id": "interface_settings.valve_4_pipe_2_wire_fan_ec.fan",
-            "name": "EC Fan",
-            "value": "2",
-            "unit": "",
-            "access_mode": "RW",
-            "data_type": "ENUM",
-            "value_type": "UINT8",
-            "values": [
-                {
-                    "value": 1,
-                    "name": "AO1"
-                },
-                {
-                    "value": 2,
-                    "name": "AO2"
-                }
-            ],
-            "bacnet_type": "multistate_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": [
-                "interface_settings.valve_4_pipe_2_wire_fan_ec.cooling",
-                "interface_settings.valve_4_pipe_2_wire_fan_ec.heating",
-                "interface_settings.valve_4_pipe_2_wire_fan_ec.fan_power"
-            ]
-        },
-        {
-            "id": "interface_settings.valve_4_pipe_2_wire_fan_ec.fan_power",
-            "name": "Fan Power WIre",
-            "value": "5",
-            "unit": "",
-            "access_mode": "RW",
-            "data_type": "ENUM",
-            "value_type": "UINT8",
-            "values": [
-                {
-                    "value": 0,
-                    "name": "None"
-                },
-                {
-                    "value": 3,
-                    "name": "Q1"
-                },
-                {
-                    "value": 4,
-                    "name": "Q2"
-                },
-                {
-                    "value": 5,
-                    "name": "Q3"
-                }
-            ],
-            "bacnet_type": "multistate_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": [
-                "interface_settings.valve_4_pipe_2_wire_fan_ec.cooling",
-                "interface_settings.valve_4_pipe_2_wire_fan_ec.heating",
-                "interface_settings.valve_4_pipe_2_wire_fan_ec.fan"
-            ]
-        },
-        {
-            "id": "interface_settings.valve_2_pipe_2_wire_fan_ec.control",
-            "name": "Valve",
-            "value": "3",
-            "unit": "",
-            "access_mode": "RW",
-            "data_type": "ENUM",
-            "value_type": "UINT8",
-            "values": [
-                {
-                    "value": 3,
-                    "name": "Q1"
-                },
-                {
-                    "value": 4,
-                    "name": "Q2"
-                },
-                {
-                    "value": 5,
-                    "name": "Q3"
-                }
-            ],
-            "bacnet_type": "multistate_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": [
-                "interface_settings.valve_2_pipe_2_wire_fan_ec.fan",
-                "interface_settings.valve_2_pipe_2_wire_fan_ec.fan_power"
-            ]
-        },
-        {
-            "id": "interface_settings.valve_2_pipe_2_wire_fan_ec.fan",
-            "name": "EC Fan",
-            "value": "2",
-            "unit": "",
-            "access_mode": "RW",
-            "data_type": "ENUM",
-            "value_type": "UINT8",
-            "values": [
-                {
-                    "value": 1,
-                    "name": "AO1"
-                },
-                {
-                    "value": 2,
-                    "name": "AO2"
-                }
-            ],
-            "bacnet_type": "multistate_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": [
-                "interface_settings.valve_2_pipe_2_wire_fan_ec.control",
-                "interface_settings.valve_2_pipe_2_wire_fan_ec.fan_power"
             ]
         },
         {
@@ -3108,104 +2823,32 @@
             "reference": []
         },
         {
-            "id": "interface_settings.valve_2_pipe_2_wire_fan_ec.fan_power",
-            "name": "Fan Power WIre",
-            "value": "5",
-            "unit": "",
-            "access_mode": "RW",
-            "data_type": "ENUM",
-            "value_type": "UINT8",
-            "values": [
-                {
-                    "value": 0,
-                    "name": "None"
-                },
-                {
-                    "value": 3,
-                    "name": "Q1"
-                },
-                {
-                    "value": 4,
-                    "name": "Q2"
-                },
-                {
-                    "value": 5,
-                    "name": "Q3"
-                }
-            ],
-            "bacnet_type": "multistate_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": [
-                "interface_settings.valve_2_pipe_2_wire_fan_ec.control",
-                "interface_settings.valve_2_pipe_2_wire_fan_ec.fan"
-            ]
-        },
-        {
-            "id": "interface_settings.valve_2_pipe_3_wire_fan_ec.no",
+            "id": "interface_settings.valve_2_pipe_3_wire.no",
             "name": "NO",
-            "value": "3",
+            "value": "1",
             "unit": "",
             "access_mode": "RW",
             "data_type": "ENUM",
             "value_type": "UINT8",
             "values": [
                 {
-                    "value": 3,
-                    "name": "Q1"
+                    "value": 1,
+                    "name": "V1"
                 },
                 {
-                    "value": 4,
-                    "name": "Q2"
-                },
-                {
-                    "value": 5,
-                    "name": "Q3"
-                }
+                    "value": 2,
+                    "name": "V2"
+                }             
             ],
             "bacnet_type": "multistate_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": [
-                "interface_settings.valve_2_pipe_3_wire_fan_ec.nc",
-                "interface_settings.valve_2_pipe_3_wire_fan_ec.fan",
-                "interface_settings.valve_2_pipe_3_wire_fan_ec.fan_power"
+            "reference": [                
             ]
         },
         {
-            "id": "interface_settings.valve_2_pipe_3_wire_fan_ec.nc",
+            "id": "interface_settings.valve_2_pipe_3_wire.nc",
             "name": "NC",
-            "value": "4",
-            "unit": "",
-            "access_mode": "RW",
-            "data_type": "ENUM",
-            "value_type": "UINT8",
-            "values": [
-                {
-                    "value": 3,
-                    "name": "Q1"
-                },
-                {
-                    "value": 4,
-                    "name": "Q2"
-                },
-                {
-                    "value": 5,
-                    "name": "Q3"
-                }
-            ],
-            "bacnet_type": "multistate_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": [
-                "interface_settings.valve_2_pipe_3_wire_fan_ec.no",
-                "interface_settings.valve_2_pipe_3_wire_fan_ec.fan",
-                "interface_settings.valve_2_pipe_3_wire_fan_ec.fan_power"
-            ]
-        },
-        {
-            "id": "interface_settings.valve_2_pipe_3_wire_fan_ec.fan",
-            "name": "EC Fan",
             "value": "2",
             "unit": "",
             "access_mode": "RW",
@@ -3214,55 +2857,17 @@
             "values": [
                 {
                     "value": 1,
-                    "name": "AO1"
+                    "name": "V1"
                 },
                 {
                     "value": 2,
-                    "name": "AO2"
-                }
+                    "name": "V2"
+                }             
             ],
             "bacnet_type": "multistate_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": [
-                "interface_settings.valve_2_pipe_3_wire_fan_ec.no",
-                "interface_settings.valve_2_pipe_3_wire_fan_ec.nc",
-                "interface_settings.valve_2_pipe_3_wire_fan_ec.fan_power"
-            ]
-        },
-        {
-            "id": "interface_settings.valve_2_pipe_3_wire_fan_ec.fan_power",
-            "name": "Fan Power WIre",
-            "value": "5",
-            "unit": "",
-            "access_mode": "RW",
-            "data_type": "ENUM",
-            "value_type": "UINT8",
-            "values": [
-                {
-                    "value": 0,
-                    "name": "None"
-                },
-                {
-                    "value": 3,
-                    "name": "Q1"
-                },
-                {
-                    "value": 4,
-                    "name": "Q2"
-                },
-                {
-                    "value": 5,
-                    "name": "Q3"
-                }
-            ],
-            "bacnet_type": "multistate_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": [
-                "interface_settings.valve_2_pipe_3_wire_fan_ec.no",
-                "interface_settings.valve_2_pipe_3_wire_fan_ec.nc",
-                "interface_settings.valve_2_pipe_3_wire_fan_ec.fan"
+            "reference": [                
             ]
         },
         {
@@ -4108,7 +3713,7 @@
             "data_type": "NUMBER",
             "value_type": "FLOAT",
             "range": [
-                0, 60
+                20, 60
             ],
             "bacnet_type": "analog_value_object",
             "bacnet_unit_type_id": 62,
