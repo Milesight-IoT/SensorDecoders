@@ -2688,7 +2688,7 @@
                 },
                 {
                     "value": 3,
-                    "name": "Two-pipe, Two-wire Valve+EC Fan"
+                    "name": "Twor-pipe,heat-vire Two-wire Valve+Three-speeds Fan"
                 }
             ],
             "bacnet_type": "multistate_value_object",
@@ -3677,7 +3677,7 @@
                     "name": "No Data Error"
                 }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": []
