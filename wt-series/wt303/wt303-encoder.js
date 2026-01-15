@@ -37,20 +37,6 @@ function milesightDeviceEncode(payload) {
 		buffer.writeUInt8(payload.request_check_order.order);
 		encoded = encoded.concat(buffer.toBytes());
 	}
-	//0x93
-	if ('pipe_temp_settings' in payload) {
-		var buffer = new Buffer();
-		buffer.writeUInt8(0x93);
-		if (payload.pipe_temp_settings.temp_rise_time < 1 || payload.pipe_temp_settings.temp_rise_time > 60) {
-			throw new Error('pipe_temp_settings.temp_rise_time must be between 1 and 60');
-		}
-		buffer.writeUInt8(payload.pipe_temp_settings.temp_rise_time);
-		if (payload.pipe_temp_settings.pipe_work_temp < 20 || payload.pipe_temp_settings.pipe_work_temp > 60) {
-			throw new Error('pipe_temp_settings.pipe_work_temp must be between 20 and 60');
-		}
-		buffer.writeInt16LE(payload.pipe_temp_settings.pipe_work_temp * 100);
-		encoded = encoded.concat(buffer.toBytes());
-	}
 	//0xf4
 	if ('request_full_inspection' in payload) {
 		var buffer = new Buffer();
@@ -343,17 +329,6 @@ function milesightDeviceEncode(payload) {
 			}
 			buffer.writeInt16LE(payload.temperature_alarm.window_status_detection_trigger.temperature * 100);
 		}
-		encoded = encoded.concat(buffer.toBytes());
-	}
-	//0x12
-	if ('pipe_temp_alarm' in payload) {
-		var buffer = new Buffer();
-		buffer.writeUInt8(0x12);
-		if (payload.pipe_temp_alarm.type < 0 || payload.pipe_temp_alarm.type > 3) {
-			throw new Error('pipe_temp_alarm.type must be between 0 and 3');
-		}
-		// 0：collection error, 1：lower range error, 2：over range error, 3：no data error
-		buffer.writeUInt8(payload.pipe_temp_alarm.type);
 		encoded = encoded.concat(buffer.toBytes());
 	}
 	//0x0a
@@ -966,16 +941,6 @@ function milesightDeviceEncode(payload) {
 		buffer.writeUInt8(payload.low_temperature_alarm_settings.duration);
 		encoded = encoded.concat(buffer.toBytes());
 	}
-	//0x11
-	if ('pipe_temp' in payload) {
-		var buffer = new Buffer();
-		buffer.writeUInt8(0x11);
-		if (payload.pipe_temp < -20 || payload.pipe_temp > 60) {
-			throw new Error('pipe_temp must be between -20 and 60');
-		}
-		buffer.writeInt16LE(payload.pipe_temp * 100);
-		encoded = encoded.concat(buffer.toBytes());
-	}
 	//0x7b
 	if ('schedule_settings' in payload) {
 		var buffer = new Buffer();
@@ -1103,16 +1068,10 @@ function milesightDeviceEncode(payload) {
 			buffer.writeUInt8(payload.interface_settings.valve_2_pipe_3_wire.nc);
 		}
 		if (payload.interface_settings.object == 0x03) {
-			if (payload.interface_settings.valve_2_pipe_2_wire.valve < 1 || payload.interface_settings.valve_2_pipe_2_wire.valve > 2) {
-				throw new Error('interface_settings.valve_2_pipe_2_wire.valve must be between 1 and 2');
-			}
-			// 1: V1, 2: V2
-			buffer.writeUInt8(payload.interface_settings.valve_2_pipe_2_wire.valve);
-			if (payload.interface_settings.valve_2_pipe_2_wire.heat_vire < 1 || payload.interface_settings.valve_2_pipe_2_wire.heat_vire > 2) {
-				throw new Error('interface_settings.valve_2_pipe_2_wire.heat_vire must be between 1 and 2');
-			}
-			// 1: V1, 2: V2
-			buffer.writeUInt8(payload.interface_settings.valve_2_pipe_2_wire.heat_vire);
+			// 1：V1/ NO, 2：V2/ NC
+			buffer.writeUInt8(payload.interface_settings.valve_2_pipe_heat_vire_2_wire.control);
+			// 1：V1/ NO, 2：V2/ NC
+			buffer.writeUInt8(payload.interface_settings.valve_2_pipe_heat_vire_2_wire.heat_vire);
 		}
 		encoded = encoded.concat(buffer.toBytes());
 	}
@@ -1391,6 +1350,45 @@ function milesightDeviceEncode(payload) {
 		buffer.writeUInt8(0xbe);
 		encoded = encoded.concat(buffer.toBytes());
 	}
+	//0x11
+	if ('pipe_temperature' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0x11);
+		if (payload.pipe_temperature < -20 || payload.pipe_temperature > 60) {
+			throw new Error('pipe_temperature must be between -20 and 60');
+		}
+		buffer.writeInt16LE(payload.pipe_temperature * 100);
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0x12
+	if ('pipe_temperature_alarm' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0x12);
+		buffer.writeUInt8(payload.pipe_temperature_alarm.type);
+		if (payload.pipe_temperature_alarm.type == 0x00) {
+		}
+		if (payload.pipe_temperature_alarm.type == 0x01) {
+		}
+		if (payload.pipe_temperature_alarm.type == 0x02) {
+		}
+		if (payload.pipe_temperature_alarm.type == 0x03) {
+		}
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0x93
+	if ('heater_switch_settings' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0x93);
+		if (payload.heater_switch_settings.switch_time < 1 || payload.heater_switch_settings.switch_time > 60) {
+			throw new Error('heater_switch_settings.switch_time must be between 1 and 60');
+		}
+		buffer.writeUnknownDataType(payload.heater_switch_settings.switch_time);
+		if (payload.heater_switch_settings.switch_temp < 20 || payload.heater_switch_settings.switch_temp > 60) {
+			throw new Error('heater_switch_settings.switch_temp must be between 20 and 60');
+		}
+		buffer.writeUnknownDataType(payload.heater_switch_settings.switch_temp * 100);
+		encoded = encoded.concat(buffer.toBytes());
+	}
 	return encoded;
 }
 
@@ -1523,7 +1521,6 @@ function isValid(value) {
 function cmdMap() {
 	return {
 		  "request_check_order": "fe",
-		  "pipe_temp_settings": "93",
 		  "request_full_inspection": "f4",
 		  "request_full_inspection.start_inspection": "f400",
 		  "request_full_inspection.control": "f401",
@@ -1546,7 +1543,6 @@ function cmdMap() {
 		  "fan_control_info": "07",
 		  "execution_plan_id": "08",
 		  "temperature_alarm": "09",
-		  "pipe_temp_alarm": "12",
 		  "humidity_alarm": "0a",
 		  "target_temperature_alarm": "0b",
 		  "relay_status": "10",
@@ -1593,7 +1589,6 @@ function cmdMap() {
 		  "temperature_alarm_settings": "76",
 		  "high_temperature_alarm_settings": "77",
 		  "low_temperature_alarm_settings": "78",
-		  "pipe_temp": "11",
 		  "schedule_settings": "7b",
 		  "schedule_settings._item": "7bxx",
 		  "schedule_settings._item.enable": "7bxx00",
@@ -1634,6 +1629,9 @@ function cmdMap() {
 		  "update_open_windows_state": "5d",
 		  "insert_schedule": "5e",
 		  "delete_schedule": "5f",
-		  "reboot": "be"
+		  "reboot": "be",
+		  "pipe_temperature": "11",
+		  "pipe_temperature_alarm": "12",
+		  "heater_switch_settings": "93"
 	};
 }
