@@ -3662,22 +3662,18 @@
             "values": [
                 {
                     "value": 0,
-                    "name": "None"
-                },
-                {
-                    "value": 1,
                     "name": "Collection Error"
                 },
                 {
-                    "value": 2,
+                    "value": 1,
                     "name": "Lower Range Error"
                 },
                 {
-                    "value": 3,
+                    "value": 2,
                     "name": "Over Range Error"
                 },
                 {
-                    "value": 4,
+                    "value": 3,
                     "name": "No Data Error"
                 }
             ],
