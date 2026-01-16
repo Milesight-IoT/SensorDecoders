@@ -975,7 +975,7 @@ function extractBits(byte, startBit, endBit) {
 	if (byte < 0 || byte > 0xffff) {
 	  throw new Error("byte must be in range 0..65535");
 	}
-	if (startBit < 0 || endBit > 16 || startBit >= endBit) {
+	if (startBit >= endBit) {
 	  throw new Error("invalid bit range");
 	}
   
