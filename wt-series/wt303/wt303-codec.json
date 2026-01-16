@@ -3847,12 +3847,12 @@
             "value_type": "UINT8",
             "values": [
                 {
-                    "name": "Open",
-                    "value": 0
+                    "value": 0,
+                    "name": "Open"
                 },
                 {
-                    "name": "Close",
-                    "value": 1
+                    "value": 1,
+                    "name": "Close"
                 }
             ],
             "bacnet_type": "binary_input_object",
@@ -3869,12 +3869,12 @@
             "value_type": "UINT8",
             "values": [
                 {
-                    "name": "Open",
-                    "value": 0
+                    "value": 0,
+                    "name": "Open"
                 },
                 {
-                    "name": "Close",
-                    "value": 1
+                    "value": 1,
+                    "name": "Close"
                 }
             ],
             "bacnet_type": "binary_input_object",
@@ -3891,12 +3891,12 @@
             "value_type": "UINT8",
             "values": [
                 {
-                    "name": "Open",
-                    "value": 0
+                    "value": 0,
+                    "name": "Open"
                 },
                 {
-                    "name": "Close",
-                    "value": 1
+                    "value": 1,
+                    "name": "Close"
                 }
             ],
             "bacnet_type": "binary_input_object",
@@ -3913,12 +3913,12 @@
             "value_type": "UINT8",
             "values": [
                 {
-                    "name": "Open",
-                    "value": 0
+                    "value": 0,
+                    "name": "Open"
                 },
                 {
-                    "name": "Close",
-                    "value": 1
+                    "value": 1,
+                    "name": "Close"
                 }
             ],
             "bacnet_type": "binary_input_object",
@@ -3935,12 +3935,12 @@
             "value_type": "UINT8",
             "values": [
                 {
-                    "name": "Open",
-                    "value": 0
+                    "value": 0,
+                    "name": "Open"
                 },
                 {
-                    "name": "Close",
-                    "value": 1
+                    "value": 1,
+                    "name": "Close"
                 }
             ],
             "bacnet_type": "binary_input_object",
