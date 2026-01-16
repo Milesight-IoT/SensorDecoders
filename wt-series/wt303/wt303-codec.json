@@ -3836,6 +3836,116 @@
             "bacnet_unit_type_id": 62,
             "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
             "reference": []
+        },
+        {
+            "id": "relay_status.low_status",
+            "name": "Relay/Valve Status",
+            "value": "0",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "name": "Open",
+                    "value": 0
+                },
+                {
+                    "name": "Close",
+                    "value": 1
+                }
+            ],
+            "bacnet_type": "binary_input_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS"
+        },
+        {
+            "id": "relay_status.mid_status",
+            "name": "Fan Medium",
+            "value": "0",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "name": "Open",
+                    "value": 0
+                },
+                {
+                    "name": "Close",
+                    "value": 1
+                }
+            ],
+            "bacnet_type": "binary_input_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS"
+        },
+        {
+            "id": "relay_status.high_status",
+            "name": "Fan High ",
+            "value": "0",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "name": "Open",
+                    "value": 0
+                },
+                {
+                    "name": "Close",
+                    "value": 1
+                }
+            ],
+            "bacnet_type": "binary_input_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS"
+        },
+        {
+            "id": "relay_status.valve_1_status",
+            "name": "Valve 1",
+            "value": "0",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "name": "Open",
+                    "value": 0
+                },
+                {
+                    "name": "Close",
+                    "value": 1
+                }
+            ],
+            "bacnet_type": "binary_input_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS"
+        },
+        {
+            "id": "relay_status.valve_2_status",
+            "name": "Valve 2",
+            "value": "0",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "name": "Open",
+                    "value": 0
+                },
+                {
+                    "name": "Close",
+                    "value": 1
+                }
+            ],
+            "bacnet_type": "binary_input_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS"
         }
     ]
 }
