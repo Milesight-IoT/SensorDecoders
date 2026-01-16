@@ -27,6 +27,8 @@ function Decoder(bytes, port) {
 
 function milesightDeviceDecode(bytes) {
 	var decoded = {};
+    var result = {};
+	var history = [];
 
 	var unknown_command = 0;
 	var counterObj = {};
@@ -844,7 +846,17 @@ function milesightDeviceDecode(bytes) {
 		}
 	}
 
-	return decoded;
+	if (Object.keys(history).length > 0) {
+		result.history = history;
+	} else {        
+		for (var k2 in decoded) {
+			if (decoded.hasOwnProperty(k2)) {
+				result[k2] = decoded[k2];
+			}
+		}
+	}
+
+	return result;
 }
 
 function readOnlyCommand(bytes) {
@@ -995,7 +1007,7 @@ function extractBits(byte, startBit, endBit) {
 	if (byte < 0 || byte > 0xffff) {
 	  throw new Error("byte must be in range 0..65535");
 	}
-	if (startBit < 0 || endBit > 16 || startBit >= endBit) {
+	if (startBit >= endBit) {
 	  throw new Error("invalid bit range");
 	}
   
