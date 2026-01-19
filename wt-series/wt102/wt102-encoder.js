@@ -636,10 +636,12 @@ function milesightDeviceEncode(payload) {
 			// 0：Automatic Temperature Control, 1：Valve Opening Control, 2：Integrated Control
 			buffer.writeUInt8(payload.target_temperature_control_settings.mode_settings.mode);
 			if (payload.target_temperature_control_settings.mode_settings.mode == 0x00) {
-				if (payload.target_temperature_control_settings.mode_settings.auto_control.target_temperature < 5 || payload.target_temperature_control_settings.mode_settings.auto_control.target_temperature > 35) {
-					throw new Error('target_temperature_control_settings.mode_settings.auto_control.target_temperature must be between 5 and 35');
+				if (payload.target_temperature_control_settings.mode_settings.auto_control !== undefined && payload.target_temperature_control_settings.mode_settings.auto_control.target_temperature !== undefined) {
+					if (payload.target_temperature_control_settings.mode_settings.auto_control.target_temperature < 5 || payload.target_temperature_control_settings.mode_settings.auto_control.target_temperature > 35) {
+						throw new Error('target_temperature_control_settings.mode_settings.auto_control.target_temperature must be between 5 and 35');
+					}
+					buffer.writeInt16LE(payload.target_temperature_control_settings.mode_settings.auto_control.target_temperature * 100);
 				}
-				buffer.writeInt16LE(payload.target_temperature_control_settings.mode_settings.auto_control.target_temperature * 100);
 			}
 			if (payload.target_temperature_control_settings.mode_settings.mode == 0x01) {
 				if (payload.target_temperature_control_settings.mode_settings.valve_control.target_valve_status < 0 || payload.target_temperature_control_settings.mode_settings.valve_control.target_valve_status > 100) {
