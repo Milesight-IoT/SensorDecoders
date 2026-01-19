@@ -531,10 +531,7 @@
       "bacnet_type": "multistate_value_object",
       "bacnet_unit_type_id": 95,
       "bacnet_unit_type": "UNITS_NO_UNITS",
-      "reference": [
-        "target_temperature_control_settings.mode_settings.valve_control.target_valve_status",
-        "target_temperature_control_settings.mode_settings.intergrated_control.target_temperature"
-      ]
+      "reference": []
     },
     {
       "id": "target_temperature_control_settings.mode_settings.auto_control.target_temperature",
@@ -570,7 +567,9 @@
       "bacnet_type": "analog_value_object",
       "bacnet_unit_type_id": 98,
       "bacnet_unit_type": "UNITS_PERCENT",
-      "reference": []
+      "reference": [
+        "target_temperature_control_settings.mode_settings.mode"
+      ]
     },
     {
       "id": "target_temperature_control_settings.mode_settings.intergrated_control.target_temperature",
@@ -587,7 +586,9 @@
       "bacnet_type": "analog_value_object",
       "bacnet_unit_type_id": 62,
       "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
-      "reference": []
+      "reference": [
+        "target_temperature_control_settings.mode_settings.mode"
+      ]
     },
     {
       "id": "window_opening_detection_settings.enable",
