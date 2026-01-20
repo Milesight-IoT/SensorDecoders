@@ -1057,16 +1057,6 @@ function milesightDeviceEncode(payload) {
 		buffer.writeString(payload.bluetooth_name.content, payload.bluetooth_name.length, true);
 		encoded = encoded.concat(buffer.toBytes());
 	}
-	//0x65
-	if ('ble_enable' in payload) {
-		var buffer = new Buffer();
-		buffer.writeUInt8(0x65);
-		// 0:disable, 1:enable
-		buffer.writeUInt8(payload.ble_enable);
-		// 0:disable, 1:enable
-		buffer.writeUInt8(payload.ble_enable);
-		encoded = encoded.concat(buffer.toBytes());
-	}
 	//0xc5
 	if ('data_storage_settings' in payload) {
 		var buffer = new Buffer();
@@ -1681,7 +1671,6 @@ function cmdMap() {
 		  "device_status": "c8",
 		  "temperature_unit": "63",
 		  "bluetooth_name": "64",
-		  "ble_enable": "65",
 		  "data_storage_settings": "c5",
 		  "data_storage_settings.enable": "c500",
 		  "data_storage_settings.retransmission_enable": "c501",

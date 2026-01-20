@@ -834,12 +834,6 @@ function milesightDeviceDecode(bytes) {
 				decoded.bluetooth_name.length = readUInt8(bytes, counterObj, 1);
 				decoded.bluetooth_name.content = readString(bytes, counterObj, decoded.bluetooth_name.length);
 				break;
-			case 0x65:
-				// 0:disable, 1:enable
-				decoded.ble_enable = readUInt8(bytes, counterObj, 1);
-				// 0:disable, 1:enable
-				decoded.ble_enable = readUInt8(bytes, counterObj, 1);
-				break;
 			case 0xc5:
 				decoded.data_storage_settings = decoded.data_storage_settings || {};
 				var data_storage_settings_command = readUInt8(bytes, counterObj, 1);
@@ -1344,7 +1338,6 @@ function cmdMap() {
 		  "61": "reporting_interval",
 		  "63": "temperature_unit",
 		  "64": "bluetooth_name",
-		  "65": "ble_enable",
 		  "66": "voltage_interface",
 		  "67": "current_interface1",
 		  "68": "current_interface2",
