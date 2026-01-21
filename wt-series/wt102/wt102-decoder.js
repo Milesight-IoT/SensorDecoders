@@ -367,43 +367,43 @@ function milesightDeviceDecode(bytes) {
 				}
 				break;
 			case 0x65:
-				decoded.target_temperature_control_settings = decoded.target_temperature_control_settings || {};
+				decoded.temp_control = decoded.temp_control || {};
 				var target_temperature_control_settings_command = readUInt8(bytes, counterObj, 1);
 				if (target_temperature_control_settings_command == 0x00) {
 					// 0：Disable, 1：Enable
-					decoded.target_temperature_control_settings.enable = readUInt8(bytes, counterObj, 1);
+					decoded.temp_control.enable = readUInt8(bytes, counterObj, 1);
 				}
 				if (target_temperature_control_settings_command == 0x01) {
 					// 0：0.5, 1：1
-					decoded.target_temperature_control_settings.target_temperature_resolution = readUInt8(bytes, counterObj, 1);
+					decoded.temp_control.target_temperature_resolution = readUInt8(bytes, counterObj, 1);
 				}
 				if (target_temperature_control_settings_command == 0x02) {
-					decoded.target_temperature_control_settings.under_temperature_side_deadband = readInt16LE(bytes, counterObj, 2) / 100;
+					decoded.temp_control.under_temperature_side_deadband = readInt16LE(bytes, counterObj, 2) / 100;
 				}
 				if (target_temperature_control_settings_command == 0x03) {
-					decoded.target_temperature_control_settings.over_temperature_side_deadband = readInt16LE(bytes, counterObj, 2) / 100;
+					decoded.temp_control.over_temperature_side_deadband = readInt16LE(bytes, counterObj, 2) / 100;
 				}
 				if (target_temperature_control_settings_command == 0x04) {
-					decoded.target_temperature_control_settings.target_temperature_adjustment_range_min = readInt16LE(bytes, counterObj, 2) / 100;
+					decoded.temp_control.target_temperature_adjustment_range_min = readInt16LE(bytes, counterObj, 2) / 100;
 				}
 				if (target_temperature_control_settings_command == 0x05) {
-					decoded.target_temperature_control_settings.target_temperature_adjustment_range_max = readInt16LE(bytes, counterObj, 2) / 100;
+					decoded.temp_control.target_temperature_adjustment_range_max = readInt16LE(bytes, counterObj, 2) / 100;
 				}
 				if (target_temperature_control_settings_command == 0x06) {
-					decoded.target_temperature_control_settings.mode_settings = decoded.target_temperature_control_settings.mode_settings || {};
+					decoded.temp_control.mode_settings = decoded.temp_control.mode_settings || {};
 					// 0：Automatic Temperature Control, 1：Valve Opening Control, 2：Integrated Control
-					decoded.target_temperature_control_settings.mode_settings.mode = readUInt8(bytes, counterObj, 1);
-					if (decoded.target_temperature_control_settings.mode_settings.mode == 0x00) {
-						decoded.target_temperature_control_settings.mode_settings.auto_control = decoded.target_temperature_control_settings.mode_settings.auto_control || {};
-						decoded.target_temperature_control_settings.mode_settings.auto_control.target_temperature = readInt16LE(bytes, counterObj, 2) / 100;
+					decoded.temp_control.mode_settings.mode = readUInt8(bytes, counterObj, 1);
+					if (decoded.temp_control.mode_settings.mode == 0x00) {
+						decoded.temp_control.mode_settings.auto_control = decoded.temp_control.mode_settings.auto_control || {};
+						decoded.temp_control.mode_settings.auto_control.target_temperature = readInt16LE(bytes, counterObj, 2) / 100;
 					}
-					if (decoded.target_temperature_control_settings.mode_settings.mode == 0x01) {
-						decoded.target_temperature_control_settings.mode_settings.valve_control = decoded.target_temperature_control_settings.mode_settings.valve_control || {};
-						decoded.target_temperature_control_settings.mode_settings.valve_control.target_valve_status = readUInt8(bytes, counterObj, 1);
+					if (decoded.temp_control.mode_settings.mode == 0x01) {
+						decoded.temp_control.mode_settings.valve_control = decoded.temp_control.mode_settings.valve_control || {};
+						decoded.temp_control.mode_settings.valve_control.target_valve_status = readUInt8(bytes, counterObj, 1);
 					}
-					if (decoded.target_temperature_control_settings.mode_settings.mode == 0x02) {
-						decoded.target_temperature_control_settings.mode_settings.intergrated_control = decoded.target_temperature_control_settings.mode_settings.intergrated_control || {};
-						decoded.target_temperature_control_settings.mode_settings.intergrated_control.target_temperature = readInt16LE(bytes, counterObj, 2) / 100;
+					if (decoded.temp_control.mode_settings.mode == 0x02) {
+						decoded.temp_control.mode_settings.intergrated_control = decoded.temp_control.mode_settings.intergrated_control || {};
+						decoded.temp_control.mode_settings.intergrated_control.target_temperature = readInt16LE(bytes, counterObj, 2) / 100;
 					}
 				}
 				break;
@@ -879,7 +879,7 @@ function cmdMap() {
 		  "61": "temperature_source_settings",
 		  "62": "environment_temperature_display_enable",
 		  "63": "heating_period_settings",
-		  "65": "target_temperature_control_settings",
+		  "65": "temp_control",
 		  "66": "window_opening_detection_settings",
 		  "67": "auto_away_settings",
 		  "68": "anti_freeze_protection_setting",
@@ -888,13 +888,13 @@ function cmdMap() {
 		  "6301": "heating_period_settings.heating_period_reporting_interval",
 		  "6302": "heating_period_settings.non_heating_period_reporting_interval",
 		  "6303": "heating_period_settings.valve_status_control",
-		  "6500": "target_temperature_control_settings.enable",
-		  "6501": "target_temperature_control_settings.target_temperature_resolution",
-		  "6502": "target_temperature_control_settings.under_temperature_side_deadband",
-		  "6503": "target_temperature_control_settings.over_temperature_side_deadband",
-		  "6504": "target_temperature_control_settings.target_temperature_adjustment_range_min",
-		  "6505": "target_temperature_control_settings.target_temperature_adjustment_range_max",
-		  "6506": "target_temperature_control_settings.mode_settings",
+		  "6500": "temp_control.enable",
+		  "6501": "temp_control.target_temperature_resolution",
+		  "6502": "temp_control.under_temperature_side_deadband",
+		  "6503": "temp_control.over_temperature_side_deadband",
+		  "6504": "temp_control.target_temperature_adjustment_range_min",
+		  "6505": "temp_control.target_temperature_adjustment_range_max",
+		  "6506": "temp_control.mode_settings",
 		  "ff": "request_check_sequence_number",
 		  "fe": "request_check_order",
 		  "ef": "request_command_queries",
