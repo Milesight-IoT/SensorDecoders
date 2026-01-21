@@ -69,7 +69,6 @@ function milesightDeviceDecode(bytes) {
 				decoded.timestamp = readUInt32LE(bytes, counterObj, 4);
 				history.push(decoded);
 				break;
-				break;
 			case 0xcf:
 				decoded.lorawan_configuration_settings = decoded.lorawan_configuration_settings || {};
 				var lorawan_configuration_settings_command = readUInt8(bytes, counterObj, 1);
@@ -111,20 +110,36 @@ function milesightDeviceDecode(bytes) {
 				decoded.voltage_three_phase_imbalcance = readUInt16LE(bytes, counterObj, 2) / 100;
 				break;
 			case 0x03:
-				decoded.thdi = readBytes(bytes, counterObj, 24);
-				decoded.thdi._item.value = readUInt16LE(bytes, counterObj, 2) / 100;
+				decoded.thdi = [];
+				for (var i = 0; i < 12; i++) {
+					var thdi_item = {};
+					thdi_item.value = readUInt16LE(bytes, counterObj, 2) / 100;
+					decoded.thdi.push(thdi_item);
+				}
 				break;
 			case 0x04:
-				decoded.thdv = readBytes(bytes, counterObj, 6);
-				decoded.thdv._item.value = readUInt16LE(bytes, counterObj, 2) / 100;
+				decoded.thdv = [];
+				for (var i = 0; i < 3; i++) {
+					var thdv_item = {};
+					thdv_item.value = readUInt16LE(bytes, counterObj, 2) / 100;
+					decoded.thdv.push(thdv_item);
+				}
 				break;
 			case 0x05:
-				decoded.current = readBytes(bytes, counterObj, 36);
-				decoded.current._item.value = readUnknownDataType(bytes, counterObj, 3) / 100;
+				decoded.current = [];
+				for (var i = 0; i < 12; i++) {
+					var current_item = {};
+					current_item.value = readUInt24LE(bytes, counterObj, 3) / 100;
+					decoded.current.push(current_item);
+				}
 				break;
 			case 0x06:
-				decoded.voltage = readBytes(bytes, counterObj, 6);
-				decoded.voltage._item.value = readUInt16LE(bytes, counterObj, 2) / 100;
+				decoded.voltage = [];
+				for (var i = 0; i < 3; i++) {
+					var voltage_item = {};
+					voltage_item.value = readUInt16LE(bytes, counterObj, 2) / 100;
+					decoded.voltage.push(voltage_item);
+				}
 				break;
 			case 0x07:
 				decoded.power_factor = decoded.power_factor || {};
@@ -487,6 +502,9 @@ function milesightDeviceDecode(bytes) {
 				var bitOptions = readUInt8(bytes, counterObj, 1);
 				decoded.reverse_reactive_energy2.mask1 = extractBits(bitOptions, 0, 1);
 				decoded.reverse_reactive_energy2.mask2 = extractBits(bitOptions, 1, 2);
+				if (decoded.reverse_reactive_energy2.mask1 == 0x00) {
+					decoded.reverse_reactive_energy2.group1_value = readUInt32LE(bytes, counterObj, 4) / 1000;
+				}
 				if (decoded.reverse_reactive_energy2.mask1 == 0x01) {
 					decoded.reverse_reactive_energy2.group1 = decoded.reverse_reactive_energy2.group1 || {};
 					decoded.reverse_reactive_energy2.group1.chan1 = readUInt32LE(bytes, counterObj, 4) / 1000;
@@ -551,6 +569,11 @@ function milesightDeviceDecode(bytes) {
 					decoded.apparent_energy2.group2.chan3 = readUInt32LE(bytes, counterObj, 4) / 1000;
 				}
 				break;
+			case 0x40:
+				decoded.history_type = decoded.history_type || {};
+				// 1:month energy, 2:month min, 3:month max
+				decoded.history_type.type = readUInt8(bytes, counterObj, 1);
+				break;
 			case 0x30:
 				decoded.temperature_alarm = decoded.temperature_alarm || {};
 				decoded.temperature_alarm.type = readUInt8(bytes, counterObj, 1);
@@ -569,42 +592,42 @@ function milesightDeviceDecode(bytes) {
 				if (decoded.temperature_alarm.type == 0x10) {
 					decoded.temperature_alarm.lower_range_alarm_deactivation = decoded.temperature_alarm.lower_range_alarm_deactivation || {};
 					decoded.temperature_alarm.lower_range_alarm_deactivation.temperature = readInt16LE(bytes, counterObj, 2) / 100;
-					decoded.temperature = decoded.temperature_alarm.lower_range_alarm_deactivation.temperature;
+					// decoded.temperature = decoded.temperature_alarm.lower_range_alarm_deactivation.temperature;
 				}
 				if (decoded.temperature_alarm.type == 0x11) {
 					decoded.temperature_alarm.lower_range_alarm_trigger = decoded.temperature_alarm.lower_range_alarm_trigger || {};
 					decoded.temperature_alarm.lower_range_alarm_trigger.temperature = readInt16LE(bytes, counterObj, 2) / 100;
-					decoded.temperature = decoded.temperature_alarm.lower_range_alarm_trigger.temperature;
+					// decoded.temperature = decoded.temperature_alarm.lower_range_alarm_trigger.temperature;
 				}
 				if (decoded.temperature_alarm.type == 0x12) {
 					decoded.temperature_alarm.over_range_alarm_deactivation = decoded.temperature_alarm.over_range_alarm_deactivation || {};
 					decoded.temperature_alarm.over_range_alarm_deactivation.temperature = readInt16LE(bytes, counterObj, 2) / 100;
-					decoded.temperature = decoded.temperature_alarm.over_range_alarm_deactivation.temperature;
+					// decoded.temperature = decoded.temperature_alarm.over_range_alarm_deactivation.temperature;
 				}
 				if (decoded.temperature_alarm.type == 0x13) {
 					decoded.temperature_alarm.over_range_alarm_trigger = decoded.temperature_alarm.over_range_alarm_trigger || {};
 					decoded.temperature_alarm.over_range_alarm_trigger.temperature = readInt16LE(bytes, counterObj, 2) / 100;
-					decoded.temperature = decoded.temperature_alarm.over_range_alarm_trigger.temperature;
+					// decoded.temperature = decoded.temperature_alarm.over_range_alarm_trigger.temperature;
 				}
 				if (decoded.temperature_alarm.type == 0x14) {
 					decoded.temperature_alarm.within_range_alarm_deactivation = decoded.temperature_alarm.within_range_alarm_deactivation || {};
 					decoded.temperature_alarm.within_range_alarm_deactivation.temperature = readInt16LE(bytes, counterObj, 2) / 100;
-					decoded.temperature = decoded.temperature_alarm.within_range_alarm_deactivation.temperature;
+					// decoded.temperature = decoded.temperature_alarm.within_range_alarm_deactivation.temperature;
 				}
 				if (decoded.temperature_alarm.type == 0x15) {
 					decoded.temperature_alarm.within_range_alarm_trigger = decoded.temperature_alarm.within_range_alarm_trigger || {};
 					decoded.temperature_alarm.within_range_alarm_trigger.temperature = readInt16LE(bytes, counterObj, 2) / 100;
-					decoded.temperature = decoded.temperature_alarm.within_range_alarm_trigger.temperature;
+					// decoded.temperature = decoded.temperature_alarm.within_range_alarm_trigger.temperature;
 				}
 				if (decoded.temperature_alarm.type == 0x16) {
 					decoded.temperature_alarm.exceed_range_alarm_deactivation = decoded.temperature_alarm.exceed_range_alarm_deactivation || {};
 					decoded.temperature_alarm.exceed_range_alarm_deactivation.temperature = readInt16LE(bytes, counterObj, 2) / 100;
-					decoded.temperature = decoded.temperature_alarm.exceed_range_alarm_deactivation.temperature;
+					// decoded.temperature = decoded.temperature_alarm.exceed_range_alarm_deactivation.temperature;
 				}
 				if (decoded.temperature_alarm.type == 0x17) {
 					decoded.temperature_alarm.exceed_range_alarm_trigger = decoded.temperature_alarm.exceed_range_alarm_trigger || {};
 					decoded.temperature_alarm.exceed_range_alarm_trigger.temperature = readInt16LE(bytes, counterObj, 2) / 100;
-					decoded.temperature = decoded.temperature_alarm.exceed_range_alarm_trigger.temperature;
+					// decoded.temperature = decoded.temperature_alarm.exceed_range_alarm_trigger.temperature;
 				}
 				break;
 			case 0x31:
@@ -617,61 +640,61 @@ function milesightDeviceDecode(bytes) {
 				}
 				if (decoded.current_alarm.info.type == 0x01) {
 					decoded.current_alarm.info.lower_range_error = decoded.current_alarm.info.lower_range_error || {};
-					decoded.current_alarm.info.lower_range_error.current = readUnknownDataType(bytes, counterObj, 3) / 100;
-					decoded.current = decoded.current_alarm.info.lower_range_error.current;
+					decoded.current_alarm.info.lower_range_error.current = readUInt24LE(bytes, counterObj, 3) / 100;
+					// decoded.current = decoded.current_alarm.info.lower_range_error.current;
 				}
 				if (decoded.current_alarm.info.type == 0x02) {
 					decoded.current_alarm.info.over_range_error = decoded.current_alarm.info.over_range_error || {};
-					decoded.current_alarm.info.over_range_error.current = readUnknownDataType(bytes, counterObj, 3) / 100;
-					decoded.current = decoded.current_alarm.info.over_range_error.current;
+					decoded.current_alarm.info.over_range_error.current = readUInt24LE(bytes, counterObj, 3) / 100;
+					// decoded.current = decoded.current_alarm.info.over_range_error.current;
 				}
 				if (decoded.current_alarm.info.type == 0x03) {
 					decoded.current_alarm.info.no_data = decoded.current_alarm.info.no_data || {};
 				}
 				if (decoded.current_alarm.info.type == 0x04) {
 					decoded.current_alarm.info.over_range_release = decoded.current_alarm.info.over_range_release || {};
-					decoded.current_alarm.info.over_range_release.current = readUnknownDataType(bytes, counterObj, 3) / 100;
-					decoded.current = decoded.current_alarm.info.over_range_release.current;
+					decoded.current_alarm.info.over_range_release.current = readUInt24LE(bytes, counterObj, 3) / 100;
+					// decoded.current = decoded.current_alarm.info.over_range_release.current;
 				}
 				if (decoded.current_alarm.info.type == 0x10) {
 					decoded.current_alarm.info.lower_range_alarm_deactivation = decoded.current_alarm.info.lower_range_alarm_deactivation || {};
-					decoded.current_alarm.info.lower_range_alarm_deactivation.current = readUnknownDataType(bytes, counterObj, 3) / 100;
-					decoded.current = decoded.current_alarm.info.lower_range_alarm_deactivation.current;
+					decoded.current_alarm.info.lower_range_alarm_deactivation.current = readUInt24LE(bytes, counterObj, 3) / 100;
+					// decoded.current = decoded.current_alarm.info.lower_range_alarm_deactivation.current;
 				}
 				if (decoded.current_alarm.info.type == 0x11) {
 					decoded.current_alarm.info.lower_range_alarm_trigger = decoded.current_alarm.info.lower_range_alarm_trigger || {};
-					decoded.current_alarm.info.lower_range_alarm_trigger.current = readUnknownDataType(bytes, counterObj, 3) / 100;
-					decoded.current = decoded.current_alarm.info.lower_range_alarm_trigger.current;
+					decoded.current_alarm.info.lower_range_alarm_trigger.current = readUInt24LE(bytes, counterObj, 3) / 100;
+					// decoded.current = decoded.current_alarm.info.lower_range_alarm_trigger.current;
 				}
 				if (decoded.current_alarm.info.type == 0x12) {
 					decoded.current_alarm.info.over_range_alarm_deactivation = decoded.current_alarm.info.over_range_alarm_deactivation || {};
-					decoded.current_alarm.info.over_range_alarm_deactivation.current = readUnknownDataType(bytes, counterObj, 3) / 100;
-					decoded.current = decoded.current_alarm.info.over_range_alarm_deactivation.current;
+					decoded.current_alarm.info.over_range_alarm_deactivation.current = readUInt24LE(bytes, counterObj, 3) / 100;
+					// decoded.current = decoded.current_alarm.info.over_range_alarm_deactivation.current;
 				}
 				if (decoded.current_alarm.info.type == 0x13) {
 					decoded.current_alarm.info.over_range_alarm_trigger = decoded.current_alarm.info.over_range_alarm_trigger || {};
-					decoded.current_alarm.info.over_range_alarm_trigger.current = readUnknownDataType(bytes, counterObj, 3) / 100;
-					decoded.current = decoded.current_alarm.info.over_range_alarm_trigger.current;
+					decoded.current_alarm.info.over_range_alarm_trigger.current = readUInt24LE(bytes, counterObj, 3) / 100;
+					// decoded.current = decoded.current_alarm.info.over_range_alarm_trigger.current;
 				}
 				if (decoded.current_alarm.info.type == 0x14) {
 					decoded.current_alarm.info.within_range_alarm_deactivation = decoded.current_alarm.info.within_range_alarm_deactivation || {};
-					decoded.current_alarm.info.within_range_alarm_deactivation.current = readUnknownDataType(bytes, counterObj, 3) / 100;
-					decoded.current = decoded.current_alarm.info.within_range_alarm_deactivation.current;
+					decoded.current_alarm.info.within_range_alarm_deactivation.current = readUInt24LE(bytes, counterObj, 3) / 100;
+					// decoded.current = decoded.current_alarm.info.within_range_alarm_deactivation.current;
 				}
 				if (decoded.current_alarm.info.type == 0x15) {
 					decoded.current_alarm.info.within_range_alarm_trigger = decoded.current_alarm.info.within_range_alarm_trigger || {};
-					decoded.current_alarm.info.within_range_alarm_trigger.current = readUnknownDataType(bytes, counterObj, 3) / 100;
-					decoded.current = decoded.current_alarm.info.within_range_alarm_trigger.current;
+					decoded.current_alarm.info.within_range_alarm_trigger.current = readUInt24LE(bytes, counterObj, 3) / 100;
+					// decoded.current = decoded.current_alarm.info.within_range_alarm_trigger.current;
 				}
 				if (decoded.current_alarm.info.type == 0x16) {
 					decoded.current_alarm.info.exceed_range_alarm_deactivation = decoded.current_alarm.info.exceed_range_alarm_deactivation || {};
-					decoded.current_alarm.info.exceed_range_alarm_deactivation.current = readUnknownDataType(bytes, counterObj, 3) / 100;
-					decoded.current = decoded.current_alarm.info.exceed_range_alarm_deactivation.current;
+					decoded.current_alarm.info.exceed_range_alarm_deactivation.current = readUInt24LE(bytes, counterObj, 3) / 100;
+					// decoded.current = decoded.current_alarm.info.exceed_range_alarm_deactivation.current;
 				}
 				if (decoded.current_alarm.info.type == 0x17) {
 					decoded.current_alarm.info.exceed_range_alarm_trigger = decoded.current_alarm.info.exceed_range_alarm_trigger || {};
-					decoded.current_alarm.info.exceed_range_alarm_trigger.current = readUnknownDataType(bytes, counterObj, 3) / 100;
-					decoded.current = decoded.current_alarm.info.exceed_range_alarm_trigger.current;
+					decoded.current_alarm.info.exceed_range_alarm_trigger.current = readUInt24LE(bytes, counterObj, 3) / 100;
+					// decoded.current = decoded.current_alarm.info.exceed_range_alarm_trigger.current;
 				}
 				break;
 			case 0x32:
@@ -685,12 +708,12 @@ function milesightDeviceDecode(bytes) {
 				if (decoded.voltage_alarm.info.type == 0x01) {
 					decoded.voltage_alarm.info.lower_range_error = decoded.voltage_alarm.info.lower_range_error || {};
 					decoded.voltage_alarm.info.lower_range_error.voltage = readUInt16LE(bytes, counterObj, 2) / 100;
-					decoded.voltage = decoded.voltage_alarm.info.lower_range_error.voltage;
+					// decoded.voltage = decoded.voltage_alarm.info.lower_range_error.voltage;
 				}
 				if (decoded.voltage_alarm.info.type == 0x02) {
 					decoded.voltage_alarm.info.over_range_error = decoded.voltage_alarm.info.over_range_error || {};
 					decoded.voltage_alarm.info.over_range_error.voltage = readUInt16LE(bytes, counterObj, 2) / 100;
-					decoded.voltage = decoded.voltage_alarm.info.over_range_error.voltage;
+					// decoded.voltage = decoded.voltage_alarm.info.over_range_error.voltage;
 				}
 				if (decoded.voltage_alarm.info.type == 0x03) {
 					decoded.voltage_alarm.info.no_data = decoded.voltage_alarm.info.no_data || {};
@@ -698,47 +721,47 @@ function milesightDeviceDecode(bytes) {
 				if (decoded.voltage_alarm.info.type == 0x04) {
 					decoded.voltage_alarm.info.over_range_release = decoded.voltage_alarm.info.over_range_release || {};
 					decoded.voltage_alarm.info.over_range_release.voltage = readUInt16LE(bytes, counterObj, 2) / 100;
-					decoded.voltage = decoded.voltage_alarm.info.over_range_release.voltage;
+					// decoded.voltage = decoded.voltage_alarm.info.over_range_release.voltage;
 				}
 				if (decoded.voltage_alarm.info.type == 0x10) {
 					decoded.voltage_alarm.info.lower_range_alarm_deactivation = decoded.voltage_alarm.info.lower_range_alarm_deactivation || {};
 					decoded.voltage_alarm.info.lower_range_alarm_deactivation.voltage = readUInt16LE(bytes, counterObj, 2) / 100;
-					decoded.voltage = decoded.voltage_alarm.info.lower_range_alarm_deactivation.voltage;
+					// decoded.voltage = decoded.voltage_alarm.info.lower_range_alarm_deactivation.voltage;
 				}
 				if (decoded.voltage_alarm.info.type == 0x11) {
 					decoded.voltage_alarm.info.lower_range_alarm_trigger = decoded.voltage_alarm.info.lower_range_alarm_trigger || {};
 					decoded.voltage_alarm.info.lower_range_alarm_trigger.voltage = readUInt16LE(bytes, counterObj, 2) / 100;
-					decoded.voltage = decoded.voltage_alarm.info.lower_range_alarm_trigger.voltage;
+					// decoded.voltage = decoded.voltage_alarm.info.lower_range_alarm_trigger.voltage;
 				}
 				if (decoded.voltage_alarm.info.type == 0x12) {
 					decoded.voltage_alarm.info.over_range_alarm_deactivation = decoded.voltage_alarm.info.over_range_alarm_deactivation || {};
 					decoded.voltage_alarm.info.over_range_alarm_deactivation.voltage = readUInt16LE(bytes, counterObj, 2) / 100;
-					decoded.voltage = decoded.voltage_alarm.info.over_range_alarm_deactivation.voltage;
+					// decoded.voltage = decoded.voltage_alarm.info.over_range_alarm_deactivation.voltage;
 				}
 				if (decoded.voltage_alarm.info.type == 0x13) {
 					decoded.voltage_alarm.info.over_range_alarm_trigger = decoded.voltage_alarm.info.over_range_alarm_trigger || {};
 					decoded.voltage_alarm.info.over_range_alarm_trigger.voltage = readUInt16LE(bytes, counterObj, 2) / 100;
-					decoded.voltage = decoded.voltage_alarm.info.over_range_alarm_trigger.voltage;
+					// decoded.voltage = decoded.voltage_alarm.info.over_range_alarm_trigger.voltage;
 				}
 				if (decoded.voltage_alarm.info.type == 0x14) {
 					decoded.voltage_alarm.info.within_range_alarm_deactivation = decoded.voltage_alarm.info.within_range_alarm_deactivation || {};
 					decoded.voltage_alarm.info.within_range_alarm_deactivation.voltage = readUInt16LE(bytes, counterObj, 2) / 100;
-					decoded.voltage = decoded.voltage_alarm.info.within_range_alarm_deactivation.voltage;
+					// decoded.voltage = decoded.voltage_alarm.info.within_range_alarm_deactivation.voltage;
 				}
 				if (decoded.voltage_alarm.info.type == 0x15) {
 					decoded.voltage_alarm.info.within_range_alarm_trigger = decoded.voltage_alarm.info.within_range_alarm_trigger || {};
 					decoded.voltage_alarm.info.within_range_alarm_trigger.voltage = readUInt16LE(bytes, counterObj, 2) / 100;
-					decoded.voltage = decoded.voltage_alarm.info.within_range_alarm_trigger.voltage;
+					// decoded.voltage = decoded.voltage_alarm.info.within_range_alarm_trigger.voltage;
 				}
 				if (decoded.voltage_alarm.info.type == 0x16) {
 					decoded.voltage_alarm.info.exceed_range_alarm_deactivation = decoded.voltage_alarm.info.exceed_range_alarm_deactivation || {};
 					decoded.voltage_alarm.info.exceed_range_alarm_deactivation.voltage = readUInt16LE(bytes, counterObj, 2) / 100;
-					decoded.voltage = decoded.voltage_alarm.info.exceed_range_alarm_deactivation.voltage;
+					// decoded.voltage = decoded.voltage_alarm.info.exceed_range_alarm_deactivation.voltage;
 				}
 				if (decoded.voltage_alarm.info.type == 0x17) {
 					decoded.voltage_alarm.info.exceed_range_alarm_trigger = decoded.voltage_alarm.info.exceed_range_alarm_trigger || {};
 					decoded.voltage_alarm.info.exceed_range_alarm_trigger.voltage = readUInt16LE(bytes, counterObj, 2) / 100;
-					decoded.voltage = decoded.voltage_alarm.info.exceed_range_alarm_trigger.voltage;
+					// decoded.voltage = decoded.voltage_alarm.info.exceed_range_alarm_trigger.voltage;
 				}
 				break;
 			case 0x33:
@@ -752,12 +775,12 @@ function milesightDeviceDecode(bytes) {
 				if (decoded.thdi_alarm.info.type == 0x12) {
 					decoded.thdi_alarm.info.over_range_alarm_deactivation = decoded.thdi_alarm.info.over_range_alarm_deactivation || {};
 					decoded.thdi_alarm.info.over_range_alarm_deactivation.thdi = readUInt16LE(bytes, counterObj, 2) / 100;
-					decoded.thdi = decoded.thdi_alarm.info.over_range_alarm_deactivation.thdi;
+					// decoded.thdi = decoded.thdi_alarm.info.over_range_alarm_deactivation.thdi;
 				}
 				if (decoded.thdi_alarm.info.type == 0x13) {
 					decoded.thdi_alarm.info.over_range_alarm_trigger = decoded.thdi_alarm.info.over_range_alarm_trigger || {};
 					decoded.thdi_alarm.info.over_range_alarm_trigger.thdi = readUInt16LE(bytes, counterObj, 2) / 100;
-					decoded.thdi = decoded.thdi_alarm.info.over_range_alarm_trigger.thdi;
+					// decoded.thdi = decoded.thdi_alarm.info.over_range_alarm_trigger.thdi;
 				}
 				break;
 			case 0x34:
@@ -771,12 +794,12 @@ function milesightDeviceDecode(bytes) {
 				if (decoded.thdv_alarm.info.type == 0x12) {
 					decoded.thdv_alarm.info.over_range_alarm_deactivation = decoded.thdv_alarm.info.over_range_alarm_deactivation || {};
 					decoded.thdv_alarm.info.over_range_alarm_deactivation.thdv = readUInt16LE(bytes, counterObj, 2) / 100;
-					decoded.thdv = decoded.thdv_alarm.info.over_range_alarm_deactivation.thdv;
+					// decoded.thdv = decoded.thdv_alarm.info.over_range_alarm_deactivation.thdv;
 				}
 				if (decoded.thdv_alarm.info.type == 0x13) {
 					decoded.thdv_alarm.info.over_range_alarm_trigger = decoded.thdv_alarm.info.over_range_alarm_trigger || {};
 					decoded.thdv_alarm.info.over_range_alarm_trigger.thdv = readUInt16LE(bytes, counterObj, 2) / 100;
-					decoded.thdv = decoded.thdv_alarm.info.over_range_alarm_trigger.thdv;
+					// decoded.thdv = decoded.thdv_alarm.info.over_range_alarm_trigger.thdv;
 				}
 				break;
 			case 0x35:
@@ -788,12 +811,12 @@ function milesightDeviceDecode(bytes) {
 				if (decoded.voltage_unbalance_alarm.type == 0x12) {
 					decoded.voltage_unbalance_alarm.over_range_alarm_deactivation = decoded.voltage_unbalance_alarm.over_range_alarm_deactivation || {};
 					decoded.voltage_unbalance_alarm.over_range_alarm_deactivation.voltage_unbalance = readUInt16LE(bytes, counterObj, 2) / 100;
-					decoded.voltage_three_phase_imbalcance = decoded.voltage_unbalance_alarm.over_range_alarm_deactivation.voltage_unbalance;
+					// decoded.voltage_three_phase_imbalcance = decoded.voltage_unbalance_alarm.over_range_alarm_deactivation.voltage_unbalance;
 				}
 				if (decoded.voltage_unbalance_alarm.type == 0x13) {
 					decoded.voltage_unbalance_alarm.over_range_alarm_trigger = decoded.voltage_unbalance_alarm.over_range_alarm_trigger || {};
 					decoded.voltage_unbalance_alarm.over_range_alarm_trigger.voltage_unbalance = readUInt16LE(bytes, counterObj, 2) / 100;
-					decoded.voltage_three_phase_imbalcance = decoded.voltage_unbalance_alarm.over_range_alarm_trigger.voltage_unbalance;
+					// decoded.voltage_three_phase_imbalcance = decoded.voltage_unbalance_alarm.over_range_alarm_trigger.voltage_unbalance;
 				}
 				break;
 			case 0x36:
@@ -834,6 +857,12 @@ function milesightDeviceDecode(bytes) {
 				decoded.bluetooth_name.length = readUInt8(bytes, counterObj, 1);
 				decoded.bluetooth_name.content = readString(bytes, counterObj, decoded.bluetooth_name.length);
 				break;
+			case 0x65:
+				// 0:disable, 1:enable
+				decoded.ble_enable = readUInt8(bytes, counterObj, 1);
+				// 0:disable, 1:enable
+				decoded.ble_enable = readUInt8(bytes, counterObj, 1);
+				break;
 			case 0xc5:
 				decoded.data_storage_settings = decoded.data_storage_settings || {};
 				var data_storage_settings_command = readUInt8(bytes, counterObj, 1);
@@ -860,37 +889,53 @@ function milesightDeviceDecode(bytes) {
 				decoded.current_interface1 = decoded.current_interface1 || {};
 				// 0：one_phase, 1：three_phase
 				decoded.current_interface1.type = readUInt8(bytes, counterObj, 1);
-				decoded.current_interface1.config = readBytes(bytes, counterObj, 9);
-				// 0：forward, 1：reserse
-				decoded.current_interface1.config._item.direction = readUInt8(bytes, counterObj, 1);
-				decoded.current_interface1.config._item.range = readUInt16LE(bytes, counterObj, 2);
+				decoded.current_interface1.config = [];
+				for (var i = 0; i < 3; i++) {
+					var config_item = {};
+					// 0：forward, 1：reserse
+					config_item.direction = readUInt8(bytes, counterObj, 1);
+					config_item.range = readUInt16LE(bytes, counterObj, 2);
+					decoded.current_interface1.config.push(config_item);
+				}
 				break;
 			case 0x68:
 				decoded.current_interface2 = decoded.current_interface2 || {};
 				// 0：one_phase, 1：three_phase
 				decoded.current_interface2.type = readUInt8(bytes, counterObj, 1);
-				decoded.current_interface2.config = readBytes(bytes, counterObj, 9);
-				// 0：forward, 1：reserse
-				decoded.current_interface2.config._item.direction = readUInt8(bytes, counterObj, 1);
-				decoded.current_interface2.config._item.range = readUInt16LE(bytes, counterObj, 2);
+				decoded.current_interface2.config = [];
+				for (var i = 0; i < 3; i++) {
+					var config_item = {};
+					// 0：forward, 1：reserse
+					config_item.direction = readUInt8(bytes, counterObj, 1);
+					config_item.range = readUInt16LE(bytes, counterObj, 2);
+					decoded.current_interface2.config.push(config_item);
+				}
 				break;
 			case 0x69:
 				decoded.current_interface3 = decoded.current_interface3 || {};
 				// 0：one_phase, 1：three_phase
 				decoded.current_interface3.type = readUInt8(bytes, counterObj, 1);
-				decoded.current_interface3.config = readBytes(bytes, counterObj, 9);
-				// 0：forward, 1：reserse
-				decoded.current_interface3.config._item.direction = readUInt8(bytes, counterObj, 1);
-				decoded.current_interface3.config._item.range = readUInt16LE(bytes, counterObj, 2);
+				decoded.current_interface3.config = [];
+				for (var i = 0; i < 3; i++) {
+					var config_item = {};
+					// 0：forward, 1：reserse
+					config_item.direction = readUInt8(bytes, counterObj, 1);
+					config_item.range = readUInt16LE(bytes, counterObj, 2);
+					decoded.current_interface3.config.push(config_item);
+				}
 				break;
 			case 0x6a:
 				decoded.current_interface4 = decoded.current_interface4 || {};
 				// 0：one_phase, 1：three_phase
 				decoded.current_interface4.type = readUInt8(bytes, counterObj, 1);
-				decoded.current_interface4.config = readBytes(bytes, counterObj, 9);
-				// 0：forward, 1：reserse
-				decoded.current_interface4.config._item.direction = readUInt8(bytes, counterObj, 1);
-				decoded.current_interface4.config._item.range = readUInt16LE(bytes, counterObj, 2);
+				decoded.current_interface4.config = [];
+				for (var i = 0; i < 3; i++) {
+					var config_item = {};
+					// 0：forward, 1：reserse
+					config_item.direction = readUInt8(bytes, counterObj, 1);
+					config_item.range = readUInt16LE(bytes, counterObj, 2);
+					decoded.current_interface4.config.push(config_item);
+				}
 				break;
 			case 0x6b:
 				decoded.temperature_calibration_settings = decoded.temperature_calibration_settings || {};
@@ -1157,6 +1202,17 @@ function readInt16LE(allBytes, counterObj, end) {
 	return ref > 0x7fff ? ref - 0x10000 : ref;
 }
 
+function readUInt24LE(allBytes, counterObj, end) {
+    var bytes = readBytes(allBytes, counterObj, end); // 3 bytes expected
+    var value = (bytes[2] << 16) + (bytes[1] << 8) + bytes[0];
+    return value & 0xffffff;
+}
+
+function readInt24LE(allBytes, counterObj, end) {
+    var ref = readUInt24LE(allBytes, counterObj, end);
+    return ref > 0x7fffff ? ref - 0x1000000 : ref;
+}
+
 function readUInt32LE(allBytes, counterObj, end) {
 	var bytes = readBytes(allBytes, counterObj, end);
 	var value = (bytes[3] << 24) + (bytes[2] << 16) + (bytes[1] << 8) + bytes[0];
@@ -1241,7 +1297,7 @@ function extractBits(byte, startBit, endBit) {
 	if (byte < 0 || byte > 0xffff) {
 	  throw new Error("byte must be in range 0..65535");
 	}
-	if (startBit < 0 || endBit > 16 || startBit >= endBit) {
+	if (startBit >= endBit) {
 	  throw new Error("invalid bit range");
 	}
   
@@ -1333,11 +1389,13 @@ function cmdMap() {
 		  "34": "thdv_alarm",
 		  "35": "voltage_unbalance_alarm",
 		  "36": "power_loss_alarm",
+		  "40": "history_type",
 		  "57": "query_history_set",
 		  "60": "collection_interval",
 		  "61": "reporting_interval",
 		  "63": "temperature_unit",
 		  "64": "bluetooth_name",
+		  "65": "ble_enable",
 		  "66": "voltage_interface",
 		  "67": "current_interface1",
 		  "68": "current_interface2",

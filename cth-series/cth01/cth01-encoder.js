@@ -191,44 +191,52 @@ function milesightDeviceEncode(payload) {
 	if ('thdi' in payload) {
 		var buffer = new Buffer();
 		buffer.writeUInt8(0x03);
-		buffer.writeBytes(payload.thdi, 24);
-		if (payload.thdi._item.value < 0 || payload.thdi._item.value > 100) {
-			throw new Error('thdi._item.value must be between 0 and 100');
+		for (var i = 0; i < payload.thdi.length; i++) {
+			var thdi_item = payload.thdi[i];
+			if (thdi_item.value < 0 || thdi_item.value > 100) {
+				throw new Error('value must be between 0 and 100');
+			}
+			buffer.writeUInt16LE(thdi_item.value * 100);
 		}
-		buffer.writeUInt16LE(payload.thdi._item.value * 100);
 		encoded = encoded.concat(buffer.toBytes());
 	}
 	//0x04
 	if ('thdv' in payload) {
 		var buffer = new Buffer();
 		buffer.writeUInt8(0x04);
-		buffer.writeBytes(payload.thdv, 6);
-		if (payload.thdv._item.value < 0 || payload.thdv._item.value > 100) {
-			throw new Error('thdv._item.value must be between 0 and 100');
+		for (var i = 0; i < payload.thdv.length; i++) {
+			var thdv_item = payload.thdv[i];
+			if (thdv_item.value < 0 || thdv_item.value > 100) {
+				throw new Error('value must be between 0 and 100');
+			}
+			buffer.writeUInt16LE(thdv_item.value * 100);
 		}
-		buffer.writeUInt16LE(payload.thdv._item.value * 100);
 		encoded = encoded.concat(buffer.toBytes());
 	}
 	//0x05
 	if ('current' in payload) {
 		var buffer = new Buffer();
 		buffer.writeUInt8(0x05);
-		buffer.writeBytes(payload.current, 36);
-		if (payload.current._item.value < 0 || payload.current._item.value > 4000) {
-			throw new Error('current._item.value must be between 0 and 4000');
+		for (var i = 0; i < payload.current.length; i++) {
+			var current_item = payload.current[i];
+			if (current_item.value < 0 || current_item.value > 4000) {
+				throw new Error('value must be between 0 and 4000');
+			}
+			buffer.writeUInt24LE(current_item.value * 100);
 		}
-		buffer.writeUnknownDataType(payload.current._item.value * 100);
 		encoded = encoded.concat(buffer.toBytes());
 	}
 	//0x06
 	if ('voltage' in payload) {
 		var buffer = new Buffer();
 		buffer.writeUInt8(0x06);
-		buffer.writeBytes(payload.voltage, 6);
-		if (payload.voltage._item.value < 0 || payload.voltage._item.value > 500) {
-			throw new Error('voltage._item.value must be between 0 and 500');
+		for (var i = 0; i < payload.voltage.length; i++) {
+			var voltage_item = payload.voltage[i];
+			if (voltage_item.value < 0 || voltage_item.value > 500) {
+				throw new Error('value must be between 0 and 500');
+			}
+			buffer.writeUInt16LE(voltage_item.value * 100);
 		}
-		buffer.writeUInt16LE(payload.voltage._item.value * 100);
 		encoded = encoded.concat(buffer.toBytes());
 	}
 	//0x07
@@ -701,6 +709,9 @@ function milesightDeviceEncode(payload) {
 		bitOptions |= payload.reverse_reactive_energy2.mask2 << 1;
 		buffer.writeUInt8(bitOptions);
 
+		if (payload.reverse_reactive_energy2.mask1 == 0x00) {
+			buffer.writeUInt32LE(payload.reverse_reactive_energy2.group1_value * 1000);
+		}
 		if (payload.reverse_reactive_energy2.mask1 == 0x01) {
 			buffer.writeUInt32LE(payload.reverse_reactive_energy2.group1.chan1 * 1000);
 			buffer.writeUInt32LE(payload.reverse_reactive_energy2.group1.chan2 * 1000);
@@ -770,6 +781,14 @@ function milesightDeviceEncode(payload) {
 			buffer.writeUInt32LE(payload.apparent_energy2.group2.chan2 * 1000);
 			buffer.writeUInt32LE(payload.apparent_energy2.group2.chan3 * 1000);
 		}
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0x40
+	if ('history_type' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0x40);
+		// 1:month energy, 2:month min, 3:month max
+		buffer.writeUInt8(payload.history_type.type);
 		encoded = encoded.concat(buffer.toBytes());
 	}
 	//0x30
@@ -847,39 +866,39 @@ function milesightDeviceEncode(payload) {
 		if (payload.current_alarm.info.type == 0x00) {
 		}
 		if (payload.current_alarm.info.type == 0x01) {
-			buffer.writeUnknownDataType(payload.current_alarm.info.lower_range_error.current * 100);
+			buffer.writeUInt24LE(payload.current_alarm.info.lower_range_error.current * 100);
 		}
 		if (payload.current_alarm.info.type == 0x02) {
-			buffer.writeUnknownDataType(payload.current_alarm.info.over_range_error.current * 100);
+			buffer.writeUInt24LE(payload.current_alarm.info.over_range_error.current * 100);
 		}
 		if (payload.current_alarm.info.type == 0x03) {
 		}
 		if (payload.current_alarm.info.type == 0x04) {
-			buffer.writeUnknownDataType(payload.current_alarm.info.over_range_release.current * 100);
+			buffer.writeUInt24LE(payload.current_alarm.info.over_range_release.current * 100);
 		}
 		if (payload.current_alarm.info.type == 0x10) {
-			buffer.writeUnknownDataType(payload.current_alarm.info.lower_range_alarm_deactivation.current * 100);
+			buffer.writeUInt24LE(payload.current_alarm.info.lower_range_alarm_deactivation.current * 100);
 		}
 		if (payload.current_alarm.info.type == 0x11) {
-			buffer.writeUnknownDataType(payload.current_alarm.info.lower_range_alarm_trigger.current * 100);
+			buffer.writeUInt24LE(payload.current_alarm.info.lower_range_alarm_trigger.current * 100);
 		}
 		if (payload.current_alarm.info.type == 0x12) {
-			buffer.writeUnknownDataType(payload.current_alarm.info.over_range_alarm_deactivation.current * 100);
+			buffer.writeUInt24LE(payload.current_alarm.info.over_range_alarm_deactivation.current * 100);
 		}
 		if (payload.current_alarm.info.type == 0x13) {
-			buffer.writeUnknownDataType(payload.current_alarm.info.over_range_alarm_trigger.current * 100);
+			buffer.writeUInt24LE(payload.current_alarm.info.over_range_alarm_trigger.current * 100);
 		}
 		if (payload.current_alarm.info.type == 0x14) {
-			buffer.writeUnknownDataType(payload.current_alarm.info.within_range_alarm_deactivation.current * 100);
+			buffer.writeUInt24LE(payload.current_alarm.info.within_range_alarm_deactivation.current * 100);
 		}
 		if (payload.current_alarm.info.type == 0x15) {
-			buffer.writeUnknownDataType(payload.current_alarm.info.within_range_alarm_trigger.current * 100);
+			buffer.writeUInt24LE(payload.current_alarm.info.within_range_alarm_trigger.current * 100);
 		}
 		if (payload.current_alarm.info.type == 0x16) {
-			buffer.writeUnknownDataType(payload.current_alarm.info.exceed_range_alarm_deactivation.current * 100);
+			buffer.writeUInt24LE(payload.current_alarm.info.exceed_range_alarm_deactivation.current * 100);
 		}
 		if (payload.current_alarm.info.type == 0x17) {
-			buffer.writeUnknownDataType(payload.current_alarm.info.exceed_range_alarm_trigger.current * 100);
+			buffer.writeUInt24LE(payload.current_alarm.info.exceed_range_alarm_trigger.current * 100);
 		}
 		encoded = encoded.concat(buffer.toBytes());
 	}
@@ -1057,6 +1076,16 @@ function milesightDeviceEncode(payload) {
 		buffer.writeString(payload.bluetooth_name.content, payload.bluetooth_name.length, true);
 		encoded = encoded.concat(buffer.toBytes());
 	}
+	//0x65
+	if ('ble_enable' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0x65);
+		// 0:disable, 1:enable
+		buffer.writeUInt8(payload.ble_enable);
+		// 0:disable, 1:enable
+		buffer.writeUInt8(payload.ble_enable);
+		encoded = encoded.concat(buffer.toBytes());
+	}
 	//0xc5
 	if ('data_storage_settings' in payload) {
 		var buffer = new Buffer();
@@ -1106,10 +1135,12 @@ function milesightDeviceEncode(payload) {
 		buffer.writeUInt8(0x67);
 		// 0：one_phase, 1：three_phase
 		buffer.writeUInt8(payload.current_interface1.type);
-		buffer.writeBytes(payload.current_interface1.config, 9);
-		// 0：forward, 1：reserse
-		buffer.writeUInt8(payload.current_interface1.config._item.direction);
-		buffer.writeUInt16LE(payload.current_interface1.config._item.range);
+		for (var i = 0; i < payload.current_interface1.config.length; i++) {
+			var config_item = payload.current_interface1.config[i];
+			// 0：forward, 1：reserse
+			buffer.writeUInt8(config_item.direction);
+			buffer.writeUInt16LE(config_item.range);
+		}
 		encoded = encoded.concat(buffer.toBytes());
 	}
 	//0x68
@@ -1118,10 +1149,12 @@ function milesightDeviceEncode(payload) {
 		buffer.writeUInt8(0x68);
 		// 0：one_phase, 1：three_phase
 		buffer.writeUInt8(payload.current_interface2.type);
-		buffer.writeBytes(payload.current_interface2.config, 9);
-		// 0：forward, 1：reserse
-		buffer.writeUInt8(payload.current_interface2.config._item.direction);
-		buffer.writeUInt16LE(payload.current_interface2.config._item.range);
+		for (var i = 0; i < payload.current_interface2.config.length; i++) {
+			var config_item = payload.current_interface2.config[i];
+			// 0：forward, 1：reserse
+			buffer.writeUInt8(config_item.direction);
+			buffer.writeUInt16LE(config_item.range);
+		}
 		encoded = encoded.concat(buffer.toBytes());
 	}
 	//0x69
@@ -1130,10 +1163,12 @@ function milesightDeviceEncode(payload) {
 		buffer.writeUInt8(0x69);
 		// 0：one_phase, 1：three_phase
 		buffer.writeUInt8(payload.current_interface3.type);
-		buffer.writeBytes(payload.current_interface3.config, 9);
-		// 0：forward, 1：reserse
-		buffer.writeUInt8(payload.current_interface3.config._item.direction);
-		buffer.writeUInt16LE(payload.current_interface3.config._item.range);
+		for (var i = 0; i < payload.current_interface3.config.length; i++) {
+			var config_item = payload.current_interface3.config[i];
+			// 0：forward, 1：reserse
+			buffer.writeUInt8(config_item.direction);
+			buffer.writeUInt16LE(config_item.range);
+		}
 		encoded = encoded.concat(buffer.toBytes());
 	}
 	//0x6a
@@ -1142,10 +1177,12 @@ function milesightDeviceEncode(payload) {
 		buffer.writeUInt8(0x6a);
 		// 0：one_phase, 1：three_phase
 		buffer.writeUInt8(payload.current_interface4.type);
-		buffer.writeBytes(payload.current_interface4.config, 9);
-		// 0：forward, 1：reserse
-		buffer.writeUInt8(payload.current_interface4.config._item.direction);
-		buffer.writeUInt16LE(payload.current_interface4.config._item.range);
+		for (var i = 0; i < payload.current_interface4.config.length; i++) {
+			var config_item = payload.current_interface4.config[i];
+			// 0：forward, 1：reserse
+			buffer.writeUInt8(config_item.direction);
+			buffer.writeUInt16LE(config_item.range);
+		}
 		encoded = encoded.concat(buffer.toBytes());
 	}
 	//0x6b
@@ -1518,6 +1555,14 @@ Buffer.prototype.writeInt16LE = function(value) {
 	this._write(value < 0 ? value + 0x10000 : value, 2, true);
 };
 
+Buffer.prototype.writeUInt24LE = function(value) {
+    this._write(value, 3, true);
+};
+
+Buffer.prototype.writeInt24LE = function(value) {
+    this._write(value < 0 ? value + 0x1000000 : value, 3, true);
+};
+
 Buffer.prototype.writeUInt32LE = function(value) {
 	this._write(value, 4, true);
 };
@@ -1659,6 +1704,7 @@ function cmdMap() {
 		  "reverse_reactive_energy2": "15",
 		  "apparent_energy1": "16",
 		  "apparent_energy2": "17",
+		  "history_type": "40",
 		  "temperature_alarm": "30",
 		  "current_alarm": "31",
 		  "voltage_alarm": "32",
@@ -1671,6 +1717,7 @@ function cmdMap() {
 		  "device_status": "c8",
 		  "temperature_unit": "63",
 		  "bluetooth_name": "64",
+		  "ble_enable": "65",
 		  "data_storage_settings": "c5",
 		  "data_storage_settings.enable": "c500",
 		  "data_storage_settings.retransmission_enable": "c501",

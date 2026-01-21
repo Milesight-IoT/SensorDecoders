@@ -269,6 +269,8 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Apparent Energy | 0x17 | 5 | r | 0 |  |  |
 | Apparent Energy | 0x17 | 5 | r | 0 |  |  |
 | Apparent Energy | 0x17 | 5 | r | 0 |  |  |
+| Historical Data Type | 0x40 | 2 | r |  |  |  |
+| Historical Data Type | 0x40 | 2 | r | 1 |  | 1:month energy<br>2:month min<br>3:month max |
 | Collecting Interval | 0x60 | 1 | rw |  |  |  |
 | Collecting Interval Unit | 0x60 | 2 | rw | 0 |  | 0：second<br>1：min |
 | Collecting Interval | 0x60 | 3 | rw | 30 | 10 - 64800 |  |
