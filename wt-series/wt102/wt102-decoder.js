@@ -205,35 +205,35 @@ function milesightDeviceDecode(bytes) {
 					decoded.auto_away_report.inactive_by_target_temperature = decoded.auto_away_report.inactive_by_target_temperature || {};
 					// 0：Unoccupied, 1：Occupied
 					decoded.auto_away_report.inactive_by_target_temperature.state = readUInt8(bytes, counterObj, 1);
-					decoded.auto_away_report.inactive_by_target_temperature.environment_temperature = readInt16LE(bytes, counterObj, 2) / 100;
-					decoded.temperature = decoded.auto_away_report.inactive_by_target_temperature.environment_temperature;
-					decoded.auto_away_report.inactive_by_target_temperature.target_temperature = readInt16LE(bytes, counterObj, 2) / 100;
-					decoded.target_temperature = decoded.auto_away_report.inactive_by_target_temperature.target_temperature;
+					decoded.at_wy_rprt.inctv_by_trgt_tmprtr.envrnmnt_tmprtr = readInt16LE(bytes, counterObj, 2) / 100;
+					decoded.temperature = decoded.at_wy_rprt.inctv_by_trgt_tmprtr.envrnmnt_tmprtr;
+					decoded.at_wy_rprt.inctv_by_trgt_tmprtr.trgt_tmprtr = readInt16LE(bytes, counterObj, 2) / 100;
+					decoded.target_temperature = decoded.at_wy_rprt.inctv_by_trgt_tmprtr.trgt_tmprtr;
 				}
 				if (decoded.auto_away_report.event_type == 0x21) {
 					decoded.auto_away_report.active_by_target_temperature = decoded.auto_away_report.active_by_target_temperature || {};
 					// 0：Unoccupied, 1：Occupied
 					decoded.auto_away_report.active_by_target_temperature.state = readUInt8(bytes, counterObj, 1);
-					decoded.auto_away_report.active_by_target_temperature.environment_temperature = readInt16LE(bytes, counterObj, 2) / 100;
-					decoded.temperature = decoded.auto_away_report.active_by_target_temperature.environment_temperature;
+					decoded.at_wy_rprt.actv_by_trgt_tmprtr.envrnmnt_tmprtr = readInt16LE(bytes, counterObj, 2) / 100;
+					decoded.temperature = decoded.at_wy_rprt.actv_by_trgt_tmprtr.envrnmnt_tmprtr;
 					decoded.auto_away_report.active_by_target_temperature.target_temperature = readInt16LE(bytes, counterObj, 2) / 100;
 				}
 				if (decoded.auto_away_report.event_type == 0x22) {
 					decoded.auto_away_report.inactive_by_target_valve_opening = decoded.auto_away_report.inactive_by_target_valve_opening || {};
 					// 0：Unoccupied, 1：Occupied
 					decoded.auto_away_report.inactive_by_target_valve_opening.state = readUInt8(bytes, counterObj, 1);
-					decoded.auto_away_report.inactive_by_target_valve_opening.environment_temperature = readInt16LE(bytes, counterObj, 2) / 100;
-					decoded.temperature = decoded.auto_away_report.inactive_by_target_valve_opening.environment_temperature;
-					decoded.auto_away_report.inactive_by_target_valve_opening.target_valve_opening = readUInt8(bytes, counterObj, 1);
-					decoded.target_valve_opening_degree = decoded.auto_away_report.inactive_by_target_valve_opening.target_valve_opening;
+					decoded.at_wy_rprt.inctv_by_trgt_vlv_pnng.envrnmnt_tmprtr = readInt16LE(bytes, counterObj, 2) / 100;
+					decoded.temperature = decoded.at_wy_rprt.inctv_by_trgt_vlv_pnng.envrnmnt_tmprtr;
+					decoded.at_wy_rprt.inctv_by_trgt_vlv_pnng.trgt_vlv_pnng = readUInt8(bytes, counterObj, 1);
+					decoded.target_valve_opening_degree = decoded.at_wy_rprt.inctv_by_trgt_vlv_pnng.trgt_vlv_pnng;
 				}
 				if (decoded.auto_away_report.event_type == 0x23) {
 					decoded.auto_away_report.active_by_target_valve_opening = decoded.auto_away_report.active_by_target_valve_opening || {};
 					// 0：Unoccupied, 1：Occupied
 					decoded.auto_away_report.active_by_target_valve_opening.state = readUInt8(bytes, counterObj, 1);
-					decoded.auto_away_report.active_by_target_valve_opening.environment_temperature = readInt16LE(bytes, counterObj, 2) / 100;
-					decoded.temperature = decoded.auto_away_report.active_by_target_valve_opening.environment_temperature;
-					decoded.auto_away_report.active_by_target_valve_opening.target_valve_opening = readUInt8(bytes, counterObj, 1);
+					decoded.at_wy_rprt.actv_by_trgt_vlv_pnng.envrnmnt_tmprtr = readInt16LE(bytes, counterObj, 2) / 100;
+					decoded.temperature = decoded.at_wy_rprt.actv_by_trgt_vlv_pnng.envrnmnt_tmprtr;
+					decoded.at_wy_rprt.actv_by_trgt_vlv_pnng.trgt_vlv_pnng = readUInt8(bytes, counterObj, 1);
 				}
 				break;
 			case 0x0d:
@@ -266,36 +266,36 @@ function milesightDeviceDecode(bytes) {
 				}
 				if (decoded.periodic_reporting.report_type == 0x01) {
 					decoded.periodic_reporting.target_temperature_for_heating = decoded.periodic_reporting.target_temperature_for_heating || {};
-					decoded.periodic_reporting.target_temperature_for_heating.environment_temperature = readInt16LE(bytes, counterObj, 2) / 100;
-					// decoded.temperature = decoded.periodic_reporting.target_temperature_for_heating.environment_temperature;
-					decoded.periodic_reporting.target_temperature_for_heating.current_valve_opening = readUInt8(bytes, counterObj, 1);
-					// decoded.valve_opening_degree = decoded.periodic_reporting.target_temperature_for_heating.current_valve_opening;
-					decoded.periodic_reporting.target_temperature_for_heating.target_temperature = readInt16LE(bytes, counterObj, 2) / 100;
-					// decoded.target_temperature = decoded.periodic_reporting.target_temperature_for_heating.target_temperature;
+					decoded.prdc_rprtng.trgt_tmprtr_fr_htng.envrnmnt_tmprtr = readInt16LE(bytes, counterObj, 2) / 100;
+					// decoded.temperature = decoded.prdc_rprtng.trgt_tmprtr_fr_htng.envrnmnt_tmprtr;
+					decoded.prdc_rprtng.trgt_tmprtr_fr_htng.crrnt_vlv_pnng = readUInt8(bytes, counterObj, 1);
+					// decoded.valve_opening_degree = decoded.prdc_rprtng.trgt_tmprtr_fr_htng.crrnt_vlv_pnng;
+					decoded.prdc_rprtng.trgt_tmprtr_fr_htng.trgt_tmprtr = readInt16LE(bytes, counterObj, 2) / 100;
+					// decoded.target_temperature = decoded.prdc_rprtng.trgt_tmprtr_fr_htng.trgt_tmprtr;
 					decoded.periodic_reporting.target_temperature_for_heating.battery_level = readUInt8(bytes, counterObj, 1);
 					// decoded.battery = decoded.periodic_reporting.target_temperature_for_heating.battery_level;
 				}
 				if (decoded.periodic_reporting.report_type == 0x02) {
 					decoded.periodic_reporting.target_valve_opening_for_heating = decoded.periodic_reporting.target_valve_opening_for_heating || {};
-					decoded.periodic_reporting.target_valve_opening_for_heating.environment_temperature = readInt16LE(bytes, counterObj, 2) / 100;
-					// decoded.temperature = decoded.periodic_reporting.target_valve_opening_for_heating.environment_temperature;
-					decoded.periodic_reporting.target_valve_opening_for_heating.current_valve_opening = readUInt8(bytes, counterObj, 1);
-					// decoded.valve_opening_degree = decoded.periodic_reporting.target_valve_opening_for_heating.current_valve_opening;
-					decoded.periodic_reporting.target_valve_opening_for_heating.target_valve_opening = readUInt8(bytes, counterObj, 1);
-					// decoded.target_valve_opening_degree = decoded.periodic_reporting.target_valve_opening_for_heating.target_valve_opening;
-					decoded.periodic_reporting.target_valve_opening_for_heating.battery_level = readUInt8(bytes, counterObj, 1);
-					// decoded.battery = decoded.periodic_reporting.target_valve_opening_for_heating.battery_level;
+					decoded.prdc_rprtng.trgt_vlv_pnng_fr_htng.envrnmnt_tmprtr = readInt16LE(bytes, counterObj, 2) / 100;
+					// decoded.temperature = decoded.prdc_rprtng.trgt_vlv_pnng_fr_htng.envrnmnt_tmprtr;
+					decoded.prdc_rprtng.trgt_vlv_pnng_fr_htng.crrnt_vlv_pnng = readUInt8(bytes, counterObj, 1);
+					// decoded.valve_opening_degree = decoded.prdc_rprtng.trgt_vlv_pnng_fr_htng.crrnt_vlv_pnng;
+					decoded.prdc_rprtng.trgt_vlv_pnng_fr_htng.trgt_vlv_pnng = readUInt8(bytes, counterObj, 1);
+					// decoded.target_valve_opening_degree = decoded.prdc_rprtng.trgt_vlv_pnng_fr_htng.trgt_vlv_pnng;
+					decoded.prdc_rprtng.trgt_vlv_pnng_fr_htng.bttry_lvl = readUInt8(bytes, counterObj, 1);
+					// decoded.battery = decoded.prdc_rprtng.trgt_vlv_pnng_fr_htng.bttry_lvl;
 				}
 				if (decoded.periodic_reporting.report_type == 0x03) {
 					decoded.periodic_reporting.integrated_control_for_heating = decoded.periodic_reporting.integrated_control_for_heating || {};
-					decoded.periodic_reporting.integrated_control_for_heating.environment_temperature = readInt16LE(bytes, counterObj, 2) / 100;
-					// decoded.temperature = decoded.periodic_reporting.integrated_control_for_heating.environment_temperature;
-					decoded.periodic_reporting.integrated_control_for_heating.current_valve_opening = readUInt8(bytes, counterObj, 1);
-					// decoded.valve_opening_degree = decoded.periodic_reporting.integrated_control_for_heating.current_valve_opening;
-					decoded.periodic_reporting.integrated_control_for_heating.target_temperature = readInt16LE(bytes, counterObj, 2) / 100;
-					// decoded.target_temperature = decoded.periodic_reporting.integrated_control_for_heating.target_temperature;
-					decoded.periodic_reporting.integrated_control_for_heating.target_valve_opening = readUInt8(bytes, counterObj, 1);
-					// decoded.target_valve_opening_degree = decoded.periodic_reporting.integrated_control_for_heating.target_valve_opening;
+					decoded.prdc_rprtng.intgrtd_cntrl_fr_htng.envrnmnt_tmprtr = readInt16LE(bytes, counterObj, 2) / 100;
+					// decoded.temperature = decoded.prdc_rprtng.intgrtd_cntrl_fr_htng.envrnmnt_tmprtr;
+					decoded.prdc_rprtng.intgrtd_cntrl_fr_htng.crrnt_vlv_pnng = readUInt8(bytes, counterObj, 1);
+					// decoded.valve_opening_degree = decoded.prdc_rprtng.intgrtd_cntrl_fr_htng.crrnt_vlv_pnng;
+					decoded.prdc_rprtng.intgrtd_cntrl_fr_htng.trgt_tmprtr = readInt16LE(bytes, counterObj, 2) / 100;
+					// decoded.target_temperature = decoded.prdc_rprtng.intgrtd_cntrl_fr_htng.trgt_tmprtr;
+					decoded.prdc_rprtng.intgrtd_cntrl_fr_htng.trgt_vlv_pnng = readUInt8(bytes, counterObj, 1);
+					// decoded.target_valve_opening_degree = decoded.prdc_rprtng.intgrtd_cntrl_fr_htng.trgt_vlv_pnng;
 					decoded.periodic_reporting.integrated_control_for_heating.battery_level = readUInt8(bytes, counterObj, 1);
 					// decoded.battery = decoded.periodic_reporting.integrated_control_for_heating.battery_level;
 				}
@@ -316,7 +316,7 @@ function milesightDeviceDecode(bytes) {
 					decoded.temperature_source_settings.external_ntc_reception = decoded.temperature_source_settings.external_ntc_reception || {};
 					decoded.temperature_source_settings.external_ntc_reception.timeout = readUInt16LE(bytes, counterObj, 2);
 					// 0: Maintaining State Control, 1: Close the Valve, 2: Switch to Internal NTC Control
-					decoded.temperature_source_settings.external_ntc_reception.timeout_response = readUInt8(bytes, counterObj, 1);
+					decoded.tmprtr_src_sttngs.extrnl_ntc_rcptn.tmt_rspns = readUInt8(bytes, counterObj, 1);
 				}
 				if (decoded.temperature_source_settings.type == 0x02) {
 					decoded.temperature_source_settings.lorawan_reception = decoded.temperature_source_settings.lorawan_reception || {};
@@ -347,7 +347,7 @@ function milesightDeviceDecode(bytes) {
 						decoded.heating_period_settings.heating_period_reporting_interval.seconds_of_time = readUInt16LE(bytes, counterObj, 2);
 					}
 					if (decoded.heating_period_settings.heating_period_reporting_interval.unit == 0x01) {
-						decoded.heating_period_settings.heating_period_reporting_interval.minutes_of_time = readUInt16LE(bytes, counterObj, 2);
+						decoded.htng_prd_sttngs.htng_prd_rprtng_ntrvl.mnts_f_tm = readUInt16LE(bytes, counterObj, 2);
 					}
 				}
 				if (heating_period_settings_command == 0x02) {
@@ -358,7 +358,7 @@ function milesightDeviceDecode(bytes) {
 						decoded.heating_period_settings.non_heating_period_reporting_interval.seconds_of_time = readUInt16LE(bytes, counterObj, 2);
 					}
 					if (decoded.heating_period_settings.non_heating_period_reporting_interval.unit == 0x01) {
-						decoded.heating_period_settings.non_heating_period_reporting_interval.minutes_of_time = readUInt16LE(bytes, counterObj, 2);
+						decoded.htng_prd_sttngs.nn_htng_prd_rprtng_ntrvl.mnts_f_tm = readUInt16LE(bytes, counterObj, 2);
 					}
 				}
 				if (heating_period_settings_command == 0x03) {
@@ -375,7 +375,7 @@ function milesightDeviceDecode(bytes) {
 				}
 				if (target_temperature_control_settings_command == 0x01) {
 					// 0：0.5, 1：1
-					decoded.target_temperature_control_settings.target_temperature_resolution = readUInt8(bytes, counterObj, 1);
+					decoded.trgt_tmprtr_cntrl_sttngs.trgt_tmprtr_rsltn = readUInt8(bytes, counterObj, 1);
 				}
 				if (target_temperature_control_settings_command == 0x02) {
 					decoded.target_temperature_control_settings.under_temperature_side_deadband = readInt16LE(bytes, counterObj, 2) / 100;
@@ -384,10 +384,10 @@ function milesightDeviceDecode(bytes) {
 					decoded.target_temperature_control_settings.over_temperature_side_deadband = readInt16LE(bytes, counterObj, 2) / 100;
 				}
 				if (target_temperature_control_settings_command == 0x04) {
-					decoded.target_temperature_control_settings.target_temperature_adjustment_range_min = readInt16LE(bytes, counterObj, 2) / 100;
+					decoded.trgt_tmprtr_cntrl_sttngs.trgt_tmprtr_djstmnt_rng_mn = readInt16LE(bytes, counterObj, 2) / 100;
 				}
 				if (target_temperature_control_settings_command == 0x05) {
-					decoded.target_temperature_control_settings.target_temperature_adjustment_range_max = readInt16LE(bytes, counterObj, 2) / 100;
+					decoded.trgt_tmprtr_cntrl_sttngs.trgt_tmprtr_djstmnt_rng_mx = readInt16LE(bytes, counterObj, 2) / 100;
 				}
 				if (target_temperature_control_settings_command == 0x06) {
 					decoded.target_temperature_control_settings.mode_settings = decoded.target_temperature_control_settings.mode_settings || {};
@@ -395,15 +395,15 @@ function milesightDeviceDecode(bytes) {
 					decoded.target_temperature_control_settings.mode_settings.mode = readUInt8(bytes, counterObj, 1);
 					if (decoded.target_temperature_control_settings.mode_settings.mode == 0x00) {
 						decoded.target_temperature_control_settings.mode_settings.auto_control = decoded.target_temperature_control_settings.mode_settings.auto_control || {};
-						decoded.target_temperature_control_settings.mode_settings.auto_control.target_temperature = readInt16LE(bytes, counterObj, 2) / 100;
+						decoded.trgt_tmprtr_cntrl_sttngs.md_sttngs.at_cntrl.trgt_tmprtr = readInt16LE(bytes, counterObj, 2) / 100;
 					}
 					if (decoded.target_temperature_control_settings.mode_settings.mode == 0x01) {
 						decoded.target_temperature_control_settings.mode_settings.valve_control = decoded.target_temperature_control_settings.mode_settings.valve_control || {};
-						decoded.target_temperature_control_settings.mode_settings.valve_control.target_valve_status = readUInt8(bytes, counterObj, 1);
+						decoded.trgt_tmprtr_cntrl_sttngs.md_sttngs.vlv_cntrl.trgt_vlv_stts = readUInt8(bytes, counterObj, 1);
 					}
 					if (decoded.target_temperature_control_settings.mode_settings.mode == 0x02) {
 						decoded.target_temperature_control_settings.mode_settings.intergrated_control = decoded.target_temperature_control_settings.mode_settings.intergrated_control || {};
-						decoded.target_temperature_control_settings.mode_settings.intergrated_control.target_temperature = readInt16LE(bytes, counterObj, 2) / 100;
+						decoded.trgt_tmprtr_cntrl_sttngs.md_sttngs.intrgrtd_cntrl.trgt_tmprtr = readInt16LE(bytes, counterObj, 2) / 100;
 					}
 				}
 				break;
@@ -889,11 +889,11 @@ function cmdMap() {
 		  "6302": "heating_period_settings.non_heating_period_reporting_interval",
 		  "6303": "heating_period_settings.valve_status_control",
 		  "6500": "target_temperature_control_settings.enable",
-		  "6501": "target_temperature_control_settings.target_temperature_resolution",
+		  "6501": 'trgt_tmprtr_cntrl_sttngs.trgt_tmprtr_rsltn',
 		  "6502": "target_temperature_control_settings.under_temperature_side_deadband",
 		  "6503": "target_temperature_control_settings.over_temperature_side_deadband",
-		  "6504": "target_temperature_control_settings.target_temperature_adjustment_range_min",
-		  "6505": "target_temperature_control_settings.target_temperature_adjustment_range_max",
+		  "6504": 'trgt_tmprtr_cntrl_sttngs.trgt_tmprtr_djstmnt_rng_mn',
+		  "6505": 'trgt_tmprtr_cntrl_sttngs.trgt_tmprtr_djstmnt_rng_mx',
 		  "6506": "target_temperature_control_settings.mode_settings",
 		  "ff": "request_check_sequence_number",
 		  "fe": "request_check_order",
