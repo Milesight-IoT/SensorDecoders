@@ -427,7 +427,7 @@
       "reference": []
     },
     {
-      "id": "temp_control.enable",
+      "id": "target_temperature_control_settings.enable",
       "name": "Temperature Control Enable",
       "value": "1",
       "unit": "",
@@ -450,7 +450,7 @@
       "reference": []
     },
     {
-      "id": "temp_control.target_temperature_resolution",
+      "id": "target_temperature_control_settings.target_temperature_resolution",
       "name": "Target Temperature Resolution",
       "value": "0",
       "unit": "°C",
@@ -473,7 +473,7 @@
       "reference": []
     },
     {
-      "id": "temp_control.target_temperature_adjustment_range_min",
+      "id": "target_temperature_control_settings.target_temperature_adjustment_range_min",
       "name": "Minimum of Target Temperature Adjustment Range",
       "value": "5",
       "unit": "°C",
@@ -490,7 +490,7 @@
       "reference": []
     },
     {
-      "id": "temp_control.target_temperature_adjustment_range_max",
+      "id": "target_temperature_control_settings.target_temperature_adjustment_range_max",
       "name": "Maximum of Target Temperature Adjustment Range",
       "value": "35",
       "unit": "°C",
@@ -507,7 +507,7 @@
       "reference": []
     },
     {
-      "id": "temp_control.mode_settings.mode",
+      "id": "target_temperature_control_settings.mode_settings.mode",
       "name": "Temperature Control Mode",
       "value": "0",
       "unit": "",
@@ -534,7 +534,7 @@
       "reference": []
     },
     {
-      "id": "temp_control.mode_settings.auto_control.target_temperature",
+      "id": "target_temperature_control_settings.mode_settings.auto_control.target_temperature",
       "name": "Target Temperature",
       "value": "19",
       "unit": "°C",
@@ -549,11 +549,11 @@
       "bacnet_unit_type_id": 62,
       "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
       "reference": [
-        "temp_control.mode_settings.mode"
+        "target_temperature_control_settings.mode_settings.mode"
       ]
     },
     {
-      "id": "temp_control.mode_settings.valve_control.target_valve_status",
+      "id": "target_temperature_control_settings.mode_settings.valve_control.target_valve_status",
       "name": "Target Valve Opening",
       "value": "50",
       "unit": "%",
@@ -568,11 +568,11 @@
       "bacnet_unit_type_id": 98,
       "bacnet_unit_type": "UNITS_PERCENT",
       "reference": [
-        "temp_control.mode_settings.mode"
+        "target_temperature_control_settings.mode_settings.mode"
       ]
     },
     {
-      "id": "temp_control.mode_settings.intergrated_control.target_temperature",
+      "id": "target_temperature_control_settings.mode_settings.intergrated_control.target_temperature",
       "name": "Target Temperature",
       "value": "19",
       "unit": "°C",
@@ -587,7 +587,7 @@
       "bacnet_unit_type_id": 62,
       "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
       "reference": [
-        "temp_control.mode_settings.mode"
+        "target_temperature_control_settings.mode_settings.mode"
       ]
     },
     {
