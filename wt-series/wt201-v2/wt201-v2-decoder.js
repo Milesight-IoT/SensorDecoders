@@ -123,16 +123,16 @@ function milesightDeviceDecode(bytes) {
             decoded.dst_config.enable = readEnableStatus(enable_value);
             if (enable_value) {
                 decoded.dst_config.offset = offset_value;
-                decoded.dst_config.start_month = readUInt8(bytes[i + 1]);
+                decoded.dst_config.start_month = readMonth(bytes[i + 1]);
                 var start_day = readUInt8(bytes[i + 2]);
-                decoded.dst_config.start_week_num = (start_day >>> 4) & 0x0f;
-                decoded.dst_config.start_week_day = start_day & 0x0f;
-                decoded.dst_config.start_time = readUInt16LE(bytes.slice(i + 3, i + 5));
-                decoded.dst_config.end_month = readUInt8(bytes[i + 5]);
+                decoded.dst_config.start_week_num = readWeek(start_day >> 4);
+                decoded.dst_config.start_week_day = readWeekDay(start_day & 0x0f);
+                decoded.dst_config.start_time = readHourMin(readUInt16LE(bytes.slice(i + 3, i + 5)));
+                decoded.dst_config.end_month = readMonth(bytes[i + 5]);
                 var end_day = readUInt8(bytes[i + 6]);
-                decoded.dst_config.end_week_num = (end_day >>> 4) & 0x0f;
-                decoded.dst_config.end_week_day = end_day & 0x0f;
-                decoded.dst_config.end_time = readUInt16LE(bytes.slice(i + 7, i + 9));
+                decoded.dst_config.end_week_num = readWeek(end_day >> 4);
+                decoded.dst_config.end_week_day = readWeekDay(end_day & 0x0f);
+                decoded.dst_config.end_time = readHourMin(readUInt16LE(bytes.slice(i + 7, i + 9)));
             }
             i += 9;
         }
@@ -401,16 +401,16 @@ function handle_downlink_response(channel_type, bytes, offset) {
             decoded.dst_config.enable = readEnableStatus(enable_value);
             if (enable_value) {
                 decoded.dst_config.offset = readUInt8(bytes[offset + 1]);
-                decoded.dst_config.start_month = readUInt8(bytes[offset + 2]);
+                decoded.dst_config.start_month = readMonth(bytes[offset + 2]);
                 var start_day = readUInt8(bytes[offset + 3]);
-                decoded.dst_config.start_week_num = (start_day >>> 4) & 0x0f;
-                decoded.dst_config.start_week_day = start_day & 0x0f;
-                decoded.dst_config.start_time = readUInt16LE(bytes.slice(offset + 4, offset + 6));
-                decoded.dst_config.end_month = readUInt8(bytes[offset + 6]);
+                decoded.dst_config.start_week_num = readWeek(start_day >>> 4);
+                decoded.dst_config.start_week_day = readWeekDay(start_day & 0x0f);
+                decoded.dst_config.start_time = readHourMin(readUInt16LE(bytes.slice(offset + 4, offset + 6)));
+                decoded.dst_config.end_month = readMonth(bytes[offset + 6]);
                 var end_day = readUInt8(bytes[offset + 7]);
-                decoded.dst_config.end_week_num = (end_day >>> 4) & 0x0f;
-                decoded.dst_config.end_week_day = end_day & 0x0f;
-                decoded.dst_config.end_time = readUInt16LE(bytes.slice(offset + 8, offset + 10));
+                decoded.dst_config.end_week_num = readWeek(end_day >>> 4);
+                decoded.dst_config.end_week_day = readWeekDay(end_day & 0x0f);
+                decoded.dst_config.end_time = readHourMin(readUInt16LE(bytes.slice(offset + 8, offset + 10)));
             }
             offset += 10;
             break;
@@ -679,24 +679,24 @@ function handle_downlink_response_ext(code, channel_type, bytes, offset) {
         // ODM: 7340
         // CHANNEL MASK
         case 0x64:
-            decoded.device_status = {};
+            decoded.cfg_report_mask = {};
             var mask = readUInt8(bytes[offset + 3]) + (readUInt8(bytes[offset + 2]) << 8) + (readUInt8(bytes[offset + 1]) << 16) + (readUInt8(bytes[offset]) << 24);
             var bit_offset = { plan: 0, periodic: 1, target_temperature_range: 2, attributes: 3, lora: 4, tempCtrl_tolerance: 5, level_switch_condition_settings: 6, temperature_control_delta_settings: 7, wire_setting: 8, fans_setting: 9, yaux_setting: 10, target_humidity_range: 11, button_lock: 12, time_setting: 13, relay_status: 14 };
             for (var key in bit_offset) {
-                decoded.device_status[key] = readEnableStatus((mask >>> bit_offset[key]) & 0x01);
+                decoded.cfg_report_mask[key] = readEnableStatus((mask >>> bit_offset[key]) & 0x01);
             }
             offset += 4;
             break;
         case 0x65:
-            decoded.actively_report = readEnableStatus(readUInt8(bytes[offset]));
+            decoded.cfg_report_enable = readEnableStatus(readUInt8(bytes[offset]));
             offset += 1;
             break;
         case 0x66:
-            decoded.up_time = readUInt16LE(bytes.slice(offset, offset + 2));
+            decoded.cfg_report_time = readUInt16LE(bytes.slice(offset, offset + 2));
             offset += 2;
             break;
         case 0x67:
-            decoded.up_counts = readUInt8(bytes[offset]);
+            decoded.cfg_report_counts = readUInt8(bytes[offset]);
             offset += 1;
             break;
         
@@ -1136,6 +1136,78 @@ function readTemperatureSource(value) {
 function readFanControlDuringHeating(value) {
     var mode_map = { 0: "furnace", 1: "thermostat" };
     return getValue(mode_map, value);
+}
+
+function readMonth(month) {
+    var month_map = {
+        1:"Jan.",
+        2:"Feb.",
+        3: "Mar.",
+        4: "Apr.",
+        5: "May.",
+        6: "Jun.",
+        7: "Jul.",
+        8: "Aug.",
+        9: "Sep.",
+        10: "Oct.",
+        11: "Nov.",
+        12: "Dec.",
+    };
+    return getValue(month_map, month);
+}
+
+function readWeek(week) {
+    var weeks_map = {
+        1: "1st",
+        2: "2nd",
+        3: "3rd",
+        4: "4th",
+        5: "last"
+    };
+    return getValue(weeks_map, week);
+}
+
+function readWeekDay(day) {
+    var week_map = {
+        1: "Mon.",
+        2: "Tues.",
+        3: "Wed.",
+        4: "Thurs.",
+        5: "Fri.",
+        6: "Sat.",
+        7: "Sun."
+    };
+    return getValue(week_map, day);
+}
+
+function readHourMin(hour_min) {
+    var hour_min_map = {
+        0: "00:00",
+        60: "01:00",
+        120: "02:00",
+        180: "03:00",
+        240: "04:00",
+        300: "05:00",
+        360: "06:00",
+        420: "07:00",
+        480: "08:00",
+        540: "09:00",
+        600: "10:00",
+        660: "11:00",
+        720: "12:00",
+        780: "13:00",
+        840: "14:00",
+        900: "15:00",
+        960: "16:00",
+        1020: "17:00",
+        1080: "18:00",
+        1140: "19:00",
+        1200: "20:00",
+        1260: "21:00",
+        1320: "22:00",
+        1380: "23:00"
+    };
+    return getValue(hour_min_map, hour_min);
 }
 
 /* eslint-disable */

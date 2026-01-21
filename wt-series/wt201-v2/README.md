@@ -30,6 +30,7 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | LoRaWAN Class | 0xFF | 0x0F |   1    | lorawan_class(1B)<br/>lorawan_class, values: (0: Class A, 1: Class B, 2: Class C, 3: Class CtoB) |
 |  Reset Event  | 0xFF | 0xFE |   1    | reset_event(1B)                                                                                  |
 | Device Status | 0xFF | 0x0B |   1    | device_status(1B)                                                                                |
+| Query Type(7340) | 0xFF | 0x28 |   1    | query_type(1B)<br/>query_type, values: (0: plan, 1: periodic, 2: target_temperature_range, 3: attributes, 4: lora, 5: tempCtrl_tolerance, 6: level_switch_condition_settings, 7: temperature_control_delta_settings, 8: wire_setting, 9: fans_setting, 10: yaux_setting, 11: target_humidity_range, 12: button_lock, 13: time_setting, 14: relay_status) |
 
 ### Telemetry
 
@@ -59,6 +60,14 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Humidity Exception          | 0xB9 | 0x68 |   1    | humidity_exception(1B)<br/>humidity_exception, values: (1: read failed, 2: out of range)                                                                                                                                                                                                                                                                                                                             |
 | ｜ Temperature Target Alarm | 0xF9 | 0x40 |   6    | temperature_target(2B) + temperature_target_range_min(2B) + temperature_target_range_max(2B)                                                                                                                                                                                                                                                                                                                         |
 | Historical Data             | 0x20 | 0xCE |   8    | timestamp(4B) + mode(2B) + temperature_target(2B) + temperature(2B) + humidity(1B)<br/>timestamp, unit: s, read: uint32<br/>value, temperature_control_status(0) + fan_mode(1..2) + fan_status(3..4) + temperature_control_mode(5..6) + temperature_control_status(7..10)<br/>temperature_target, unit: °C, read: unit16 / 10<br/>humidity, unit: %, read: uint8/2                                                   |
+| D2D Info(7340)              | 0x0B | 0x5D |   7    | deveui(5B) + snr(1B) + rssi(1B)<br/>deveui, device EUI (prefixed with 24e124)<br/>snr, range: [-128, 127], unit: dBm, read: int8<br/>rssi, range: [-128, 127], unit: dBm, read: int8                                                                                                                                                                                                                                                                         |
+| LoRa Info(7340)             | 0x0C | 0x5E |   8    | tx_sf(1B) + tx_dr(1B) + tx_power(1B) + win2_dr(1B) + win2_freq(4B)<br/>tx_sf, range: [0, 255]<br/>tx_dr, range: [0, 255]<br/>tx_power, range: [0, 255], unit: dBm<br/>win2_dr, range: [0, 255]<br/>win2_freq, range: [0, 0xFFFFFFFF], unit: Hz, read: uint32                                                                                                                                                                                                 |
+| Device Time(7340)           | 0x0D | 0x5F |   5    | reserved(1B) + time(4B)<br/>time, range: [0, 0xFFFFFFFF], unit: s, read: uint32                                                                                                                                                                                                                                                                                                                                                              |
+| Daylight Saving Time(7340)  | 0x0E | 0x60 |   9    | enable(0..0) + offset(1..7) + start_month(1B) + start_day(1B) + start_time(2B) + end_month(1B) + end_day(1B) + end_time(2B)<br/>enable, values: (0: disable, 1: enable)<br/>offset, range: [1, 120], unit: minutes<br/>start_month/end_month, range: [1, 12], read: uint8<br/>start_day/end_day, read: bits, week_num(4..7) + week_day(0..3), week_num: range[1, 5], week_day: range[1, 7]<br/>start_time/end_time, range: [0, 1439], unit: minutes, read: uint16                                                                                         |
+| Enable Mask(7340)           | 0xF9 | 0x64 |   4    | cfg_report_mask(4B)<br/>cfg_report_mask, read: bits, (bit0: plan, bit1: periodic, bit2: target_temperature_range, bit3: attributes, bit4: lora, bit5: tempCtrl_tolerance, bit6: level_switch_condition_settings, bit7: temperature_control_delta_settings, bit8: wire_setting, bit9: fans_setting, bit10: yaux_setting, bit11: target_humidity_range, bit12: button_lock, bit13: time_setting, bit14: relay_status)<br/>values: (0: disable, 1: enable)<br/>read: uint32  |
+| Actively Report(7340)       | 0xF9 | 0x65 |   1    | cfg_report_enable(1B)<br/>cfg_report_enable, values: (0: disable, 1: enable)                                                                                                                                                                                                                                                                                                                                            |
+| Up Time(7340)               | 0xF9 | 0x66 |   2    | cfg_report_time(2B)<br/>cfg_report_time, range: [0, 1439], unit: minutes, read: uint16                                                                                                                                                                                                                                                                                                                                              |
+| Up Counts(7340)             | 0xF9 | 0x67 |   1    | cfg_report_counts(1B)<br/>cfg_report_counts, range: [1, 12], read: uint8                                                                                                                                                                                                                                                                                                                                                            |
 
 ### WIRES(3B)
 
@@ -168,5 +177,89 @@ For more detailed information, please visit [Milesight Official Website](https:/
             "type": "sleep"
         }
     ]
+}
+
+// ODM 7340 - D2D Info: 0B5D0102030405F5C8
+{
+    "d2d_info": {
+        "deveui": "24e1240102030405",
+        "snr": -11,
+        "rssi": -56
+    }
+}
+
+// ODM 7340 - LoRa Info: 0C5E0A050E03000C8F01
+{
+    "lora_info": {
+        "tx_sf": 10,
+        "tx_dr": 5,
+        "tx_power": 14,
+        "win2_dr": 3,
+        "win2_freq": 26151936
+    }
+}
+
+// ODM 7340 - Device Time: 0D5F005C470A65
+{
+    "dev_time": {
+        "time": 1695172444
+    }
+}
+
+// ODM 7340 - DST Config: 0E6083031200000141B400
+{
+    "dst_config": {
+        "enable": "enable",
+        "end_month": "Jan.",
+        "end_time": "03:00",
+        "end_week_day": "Mon.",
+        "end_week_num": "4th",
+        "offset": 3,
+        "start_month": "Mar.",
+        "start_time": "00:00",
+        "start_week_day": "Tues.",
+        "start_week_num": "1st"
+    }
+}
+
+// ODM 7340 - Query Type: FF2804
+{
+    "query_type": "lora"
+}
+
+// ODM 7340 - Device Status Mask: F9640000700F
+{
+    "cfg_report_mask": {
+        "attributes": "enable",
+        "button_lock": "enable",
+        "fans_setting": "disable",
+        "level_switch_condition_settings": "disable",
+        "lora": "disable",
+        "periodic": "enable",
+        "plan": "enable",
+        "relay_status": "enable",
+        "target_humidity_range": "disable",
+        "target_temperature_range": "enable",
+        "tempCtrl_tolerance": "disable",
+        "temperature_control_delta_settings": "disable",
+        "time_setting": "enable",
+        "wire_setting": "disable",
+        "yaux_setting": "disable"
+    }
+}
+
+// ODM 7340 - Actively Report: F96501
+{
+    "cfg_report_enable": "enable"
+}
+
+// ODM 7340 - Up Time: F966F000
+{
+    "cfg_report_time": 240
+}
+
+// ODM 7340 - Up Counts: F96703
+{
+    "cfg_report_counts": 3
 }
 ```

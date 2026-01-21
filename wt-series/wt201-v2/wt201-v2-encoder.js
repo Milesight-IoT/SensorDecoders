@@ -232,17 +232,17 @@ function milesightDeviceEncode(payload) {
         encoded = encoded.concat(setTemperatureControlForbiddenConfig(payload.temperature_control_forbidden_config));
     }
     // ODM: 7340
-    if ("device_status" in payload) {
-        encoded = encoded.concat(setDeviceStatus(payload.device_status));
+    if ("cfg_report_mask" in payload) {
+        encoded = encoded.concat(setEnableMask(payload.cfg_report_mask));
     }
-    if ("actively_report" in payload) {
-        encoded = encoded.concat(setActivelyReport(payload.actively_report));
+    if ("cfg_report_enable" in payload) {
+        encoded = encoded.concat(setActivelyReport(payload.cfg_report_enable));
     }
-    if ("up_time" in payload) {
-        encoded = encoded.concat(setUpTime(payload.up_time));
+    if ("cfg_report_time" in payload) {
+        encoded = encoded.concat(setUpTime(payload.cfg_report_time));
     }
-    if ("up_counts" in payload) {
-        encoded = encoded.concat(setUpCounts(payload.up_counts));
+    if ("cfg_report_counts" in payload) {
+        encoded = encoded.concat(setUpCounts(payload.cfg_report_counts));
     }
 
     return encoded;
@@ -268,11 +268,11 @@ function reboot(reboot) {
 
 /**
  * set query type
- * @param {number} report_status values: (0: plan, 1: periodic, 2: target_temperature_range)
+ * @param {number} report_status values: (0: plan, 1: periodic, 2: target_temperature_range, 3: attributes, 4: lora, 5: tempCtrl_tolerance, 6: level_switch_condition_settings, 7: temperature_control_delta_settings, 8: wire_setting, 9: fans_setting, 10: yaux_setting, 11: target_humidity_range, 12: button_lock, 13: time_setting, 14: relay_status)
  * @example { "report_status": 1 }
  */
 function setQueryType(report_status) {
-    var report_status_map = { 0: "plan", 1: "periodic", 2: "target_temperature_range" };
+    var report_status_map = { 0: "plan", 1: "periodic", 2: "target_temperature_range", 3: "attributes", 4: "lora", 5: "tempCtrl_tolerance", 6: "level_switch_condition_settings", 7: "temperature_control_delta_settings", 8: "wire_setting", 9: "fans_setting", 10: "yaux_setting", 11: "target_humidity_range", 12: "button_lock", 13: "time_setting", 14: "relay_status" };
     var report_status_values = getValues(report_status_map);
     if (report_status_values.indexOf(report_status) === -1) {
         throw new Error("report_status must be one of " + report_status_values.join(", "));
@@ -369,13 +369,13 @@ function setTimeZone(time_zone) {
  * @param {object} dst_config
  * @param {number} dst_config.enable values: (0: disable, 1: enable)
  * @param {number} dst_config.offset, unit: minute
- * @param {number} dst_config.start_month, values: (1: January, 2: February, 3: March, 4: April, 5: May, 6: June, 7: July, 8: August, 9: September, 10: October, 11: November, 12: December)
- * @param {number} dst_config.start_week_num, range: [1, 5]
- * @param {number} dst_config.start_week_day, range: [1, 7]
+ * @param {number} dst_config.start_month, values: (1: Jan., 2: Feb., 3: Mar., 4: Apr., 5: May, 6: Jun., 7: Jul., 8: Aug., 9: Sep., 10: Oct., 11: Nov., 12: Dec.)
+ * @param {number} dst_config.start_week_num, values: (1: "1st", 2: "2nd", 3: "3rd", 4: "4th", 5: "last")
+ * @param {number} dst_config.start_week_day, values: (1: "Mon.", 2: "Tues.", 3: "Wed.", 4: "Thurs.", 5: "Fri.", 6: "Sat.", 7: "Sun.")
  * @param {number} dst_config.start_time, unit: minute, convert: "hh:mm" -> "hh * 60 + mm"
- * @param {number} dst_config.end_month, values: (1: January, 2: February, 3: March, 4: April, 5: May, 6: June, 7: July, 8: August, 9: September, 10: October, 11: November, 12: December)
- * @param {number} dst_config.end_week_num, range: [1, 5]
- * @param {number} dst_config.end_week_day, range: [1, 7]
+ * @param {number} dst_config.end_month, values: (1: Jan., 2: Feb., 3: Mar., 4: Apr., 5: May, 6: Jun., 7: Jul., 8: Aug., 9: Sep., 10: Oct., 11: Nov., 12: Dec.)
+ * @param {number} dst_config.end_week_num, values: (1: "1st", 2: "2nd", 3: "3rd", 4: "4th", 5: "last")
+ * @param {number} dst_config.end_week_day, values: (1: "Mon.", 2: "Tues.", 3: "Wed.", 4: "Thurs.", 5: "Fri.", 6: "Sat.", 7: "Sun.")
  * @param {number} dst_config.end_time, unit: minute, convert: "hh:mm" -> "hh * 60 + mm"
  * @example { "dst_config": { "enable": 1, "offset": 60, "start_month": 3, "start_week_num": 2, "start_week_day": 7, "start_time": 120, "end_month": 1, "end_week_num": 4, "end_week_day": 1, "end_time": 180 } } output: FFBA013C032778000141B400
  */
@@ -397,7 +397,8 @@ function setDaylightSavingTime(dst_config) {
         throw new Error("dst_config.enable must be one of " + enable_values.join(", "));
     }
 
-    var month_values = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+    var month_map = { 1: "Jan.", 2: "Feb.", 3: "Mar.", 4: "Apr.", 5: "May", 6: "Jun.", 7: "Jul.", 8: "Aug.", 9: "Sep.", 10: "Oct.", 11: "Nov.", 12: "Dec." };
+    var month_values = getValues(month_map);
     var enable_value = getValue(enable_map, enable);
     if (enable_value && month_values.indexOf(start_month) === -1) {
         throw new Error("dst_config.start_month must be one of " + month_values.join(", "));
@@ -405,9 +406,29 @@ function setDaylightSavingTime(dst_config) {
     if (enable_value && month_values.indexOf(end_month) === -1) {
         throw new Error("dst_config.end_month must be one of " + month_values.join(", "));
     }
-    var week_values = [1, 2, 3, 4, 5, 6, 7];
-    if (enable_value && week_values.indexOf(start_week_day) === -1) {
-        throw new Error("dst_config.start_week_day must be one of " + week_values.join(", "));
+    var week_num_map = { 1: "1st", 2: "2nd", 3: "3rd", 4: "4th", 5: "last" };
+    var week_num_values = getValues(week_num_map);
+    if (enable_value && week_num_values.indexOf(start_week_num) === -1) {
+        throw new Error("dst_config.start_week_num must be one of " + week_num_values.join(", "));
+    }
+    if (enable_value && week_num_values.indexOf(end_week_num) === -1) {
+        throw new Error("dst_config.end_week_num must be one of " + week_num_values.join(", "));
+    }
+    var week_day_map = { 1: "Mon.", 2: "Tues.", 3: "Wed.", 4: "Thurs.", 5: "Fri.", 6: "Sat.", 7: "Sun." };
+    var week_day_values = getValues(week_day_map);
+    if (enable_value && week_day_values.indexOf(start_week_day) === -1) {
+        throw new Error("dst_config.start_week_day must be one of " + week_day_values.join(", "));
+    }
+    if (enable_value && week_day_values.indexOf(end_week_day) === -1) {
+        throw new Error("dst_config.end_week_day must be one of " + week_day_values.join(", "));
+    }
+    var time_map = { 0: "00:00", 60: "01:00", 120: "02:00", 180: "03:00", 240: "04:00", 300: "05:00", 360: "06:00", 420: "07:00", 480: "08:00", 540: "09:00", 600: "10:00", 660: "11:00", 720: "12:00", 780: "13:00", 840: "14:00", 900: "15:00", 960: "16:00", 1020: "17:00", 1080: "18:00", 1140: "19:00", 1200: "20:00", 1260: "21:00", 1320: "22:00", 1380: "23:00" };
+    var time_values = getValues(time_map);
+    if (enable_value && time_values.indexOf(start_time) === -1) {
+        throw new Error("dst_config.start_time must be one of " + time_values.join(", "));
+    }
+    if (enable_value && time_values.indexOf(end_time) === -1) {
+        throw new Error("dst_config.end_time must be one of " + time_values.join(", "));
     }
 
     var buffer = new Buffer(12);
@@ -415,12 +436,12 @@ function setDaylightSavingTime(dst_config) {
     buffer.writeUInt8(0xba);
     buffer.writeUInt8(enable_value);
     buffer.writeInt8(offset);
-    buffer.writeUInt8(enable_value && start_month);
-    buffer.writeUInt8(enable_value && (start_week_num << 4) | start_week_day);
-    buffer.writeUInt16LE(enable_value && start_time);
-    buffer.writeUInt8(enable_value && end_month);
-    buffer.writeUInt8(enable_value && (end_week_num << 4) | end_week_day);
-    buffer.writeUInt16LE(enable_value && end_time);
+    buffer.writeUInt8(enable_value && getValue(month_map, start_month));
+    buffer.writeUInt8(enable_value && (getValue(week_num_map, start_week_num) << 4) | getValue(week_day_map, start_week_day));
+    buffer.writeUInt16LE(enable_value && getValue(time_map, start_time));
+    buffer.writeUInt8(enable_value && getValue(month_map, end_month));
+    buffer.writeUInt8(enable_value && (getValue(week_num_map, end_week_num) << 4) | getValue(week_day_map, end_week_day));
+    buffer.writeUInt16LE(enable_value && getValue(time_map, end_time));
     return buffer.toBytes();
 }
 
@@ -1869,36 +1890,36 @@ function setTemperatureControlForbiddenConfig(temperature_control_forbidden_conf
 }
 
 /**
- * set device status
- * @param {object} device_status
- * @param {number} device_status.plan values: (0: disable, 1: enable)
- * @param {number} device_status.periodic values: (0: disable, 1: enable)
- * @param {number} device_status.target_temperature_range values: (0: disable, 1: enable)
- * @param {number} device_status.attributes values: (0: disable, 1: enable)
- * @param {number} device_status.lora values: (0: disable, 1: enable)
- * @param {number} device_status.tempCtrl_tolerance values: (0: disable, 1: enable)
- * @param {number} device_status.level_switch_condition_settings values: (0: disable, 1: enable)
- * @param {number} device_status.temperature_control_delta_settings values: (0: disable, 1: enable)
- * @param {number} device_status.wire_setting values: (0: disable, 1: enable)
- * @param {number} device_status.fans_setting values: (0: disable, 1: enable)
- * @param {number} device_status.yaux_setting values: (0: disable, 1: enable)
- * @param {number} device_status.target_humidity_range values: (0: disable, 1: enable)
- * @param {number} device_status.button_lock values: (0: disable, 1: enable)
- * @param {number} device_status.time_setting values: (0: disable, 1: enable)
- * @param {number} device_status.relay_status values: (0: disable, 1: enable)
- * @example { "device_status": { "plan": 1, "periodic": 1, "target_temperature_range": 1, "attributes": 1, "lora": 1, "tempCtrl_tolerance": 1, "level_switch_condition_settings": 1, "temperature_control_delta_settings": 1, "wire_setting": 1, "fans_setting": 1, "yaux_setting": 1, "target_humidity_range": 1, "button_lock": 1, "time_setting": 1, "relay_status": 1 } }
+ * set enable mask
+ * @param {object} cfg_report_mask
+ * @param {number} cfg_report_mask.plan values: (0: disable, 1: enable)
+ * @param {number} cfg_report_mask.periodic values: (0: disable, 1: enable)
+ * @param {number} cfg_report_mask.target_temperature_range values: (0: disable, 1: enable)
+ * @param {number} cfg_report_mask.attributes values: (0: disable, 1: enable)
+ * @param {number} cfg_report_mask.lora values: (0: disable, 1: enable)
+ * @param {number} cfg_report_mask.tempCtrl_tolerance values: (0: disable, 1: enable)
+ * @param {number} cfg_report_mask.level_switch_condition_settings values: (0: disable, 1: enable)
+ * @param {number} cfg_report_mask.temperature_control_delta_settings values: (0: disable, 1: enable)
+ * @param {number} cfg_report_mask.wire_setting values: (0: disable, 1: enable)
+ * @param {number} cfg_report_mask.fans_setting values: (0: disable, 1: enable)
+ * @param {number} cfg_report_mask.yaux_setting values: (0: disable, 1: enable)
+ * @param {number} cfg_report_mask.target_humidity_range values: (0: disable, 1: enable)
+ * @param {number} cfg_report_mask.button_lock values: (0: disable, 1: enable)
+ * @param {number} cfg_report_mask.time_setting values: (0: disable, 1: enable)
+ * @param {number} cfg_report_mask.relay_status values: (0: disable, 1: enable)
+ * @example { "cfg_report_mask": { "plan": 1, "periodic": 1, "target_temperature_range": 1, "attributes": 1, "lora": 1, "tempCtrl_tolerance": 1, "level_switch_condition_settings": 1, "temperature_control_delta_settings": 1, "wire_setting": 1, "fans_setting": 1, "yaux_setting": 1, "target_humidity_range": 1, "button_lock": 1, "time_setting": 1, "relay_status": 1 } }
  */
-function setDeviceStatus(device_status) {
+function setEnableMask(cfg_report_mask) {
     var data = 0x00;
     var enable_map = { 0: "disable", 1: "enable" };
     var enable_values = getValues(enable_map);
     var bit_offset = { plan: 0, periodic: 1, target_temperature_range: 2, attributes: 3, lora: 4, tempCtrl_tolerance: 5, level_switch_condition_settings: 6, temperature_control_delta_settings: 7, wire_setting: 8, fans_setting: 9, yaux_setting: 10, target_humidity_range: 11, button_lock: 12, time_setting: 13, relay_status: 14 };
     for (var key in bit_offset) {
-        if (key in device_status) {
-            if (enable_values.indexOf(device_status[key]) === -1) {
-                throw new Error("device_status." + key + " must be one of " + enable_values.join(", "));
+        if (key in cfg_report_mask) {
+            if (enable_values.indexOf(cfg_report_mask[key]) === -1) {
+                throw new Error("cfg_report_mask." + key + " must be one of " + enable_values.join(", "));
             }
-            data |= getValue(enable_map, device_status[key]) << bit_offset[key];
+            data |= getValue(enable_map, cfg_report_mask[key]) << bit_offset[key];
         }
     }
 
@@ -1907,17 +1928,17 @@ function setDeviceStatus(device_status) {
 
 /**
  * set actively report
- * @param {number} actively_report values: (0: disable, 1: enable)
- * @example { "actively_report": 1 }
+ * @param {number} cfg_report_enable values: (0: disable, 1: enable)
+ * @example { "cfg_report_enable": 1 }
  */
-function setActivelyReport(actively_report) {
+function setActivelyReport(cfg_report_enable) {
     var enable_map = { 0: "disable", 1: "enable" };
     var enable_values = getValues(enable_map);
-    if (enable_values.indexOf(actively_report) === -1) {
-        throw new Error("actively_report must be one of " + enable_values.join(", "));
+    if (enable_values.indexOf(cfg_report_enable) === -1) {
+        throw new Error("cfg_report_enable must be one of " + enable_values.join(", "));
     }
 
-    var data = getValue(enable_map, actively_report);
+    var data = getValue(enable_map, cfg_report_enable);
     var buffer = new Buffer(3);
     buffer.writeUInt8(0xf9);
     buffer.writeUInt8(0x65);
@@ -1927,41 +1948,41 @@ function setActivelyReport(actively_report) {
 
 /**
  * set up time
- * @param {number} up_time range: [0, 1439] unit: minute
- * @example { "up_time": 240 }
+ * @param {number} cfg_report_time range: [0, 1439] unit: minute
+ * @example { "cfg_report_time": 240 }
  */
-function setUpTime(up_time) {
-    if (typeof up_time !== "number") {
-        throw new Error("up_time must be a number");
+function setUpTime(cfg_report_time) {
+    if (typeof cfg_report_time !== "number") {
+        throw new Error("cfg_report_time must be a number");
     }
-    if (up_time < 0 || up_time > 1439) {
-        throw new Error("up_time must be between 0 and 1439");
+    if (cfg_report_time < 0 || cfg_report_time > 1439) {
+        throw new Error("cfg_report_time must be between 0 and 1439");
     }
 
     var buffer = new Buffer(3);
     buffer.writeUInt8(0xf9);
     buffer.writeUInt8(0x66);
-    buffer.writeUInt16LE(up_time);
+    buffer.writeUInt16LE(cfg_report_time);
     return buffer.toBytes();
 }
 
 /**
  * set up counts
- * @param {number} up_counts range: [1, 12]
- * @example { "up_counts": 3 }
+ * @param {number} cfg_report_counts range: [1, 12]
+ * @example { "cfg_report_counts": 3 }
  */
-function setUpCounts(up_counts) {
-    if (typeof up_counts !== "number") {
-        throw new Error("up_counts must be a number");
+function setUpCounts(cfg_report_counts) {
+    if (typeof cfg_report_counts !== "number") {
+        throw new Error("cfg_report_counts must be a number");
     }
-    if (up_counts < 1 || up_counts > 12) {
-        throw new Error("up_counts must be between 1 and 12");
+    if (cfg_report_counts < 1 || cfg_report_counts > 12) {
+        throw new Error("cfg_report_counts must be between 1 and 12");
     }
 
     var buffer = new Buffer(3);
     buffer.writeUInt8(0xf9);
     buffer.writeUInt8(0x67);
-    buffer.writeUInt8(up_counts);
+    buffer.writeUInt8(cfg_report_counts);
     return buffer.toBytes();
 }
 

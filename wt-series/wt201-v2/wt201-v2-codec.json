@@ -640,6 +640,28 @@
             "bacnet_unit_type": "UNITS_NO_UNITS"
         },
         {
+            "id": "temperature_control_support_mode.em_heat",
+            "name": "Temperature Control Support Mode (EM Heat)",
+            "value": "",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "disable"
+                },
+                {
+                    "value": 1,
+                    "name": "enable"
+                }
+            ],
+            "bacnet_type": "binary_input_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS"
+        },
+        {
             "id": "temperature_control_support_mode.cool",
             "name": "Temperature Control Support Mode (Cool)",
             "value": "",
@@ -1210,51 +1232,51 @@
             "values": [
                 {
                     "value": 1,
-                    "name": "January"
+                    "name": "Jan."
                 },
                 {
                     "value": 2,
-                    "name": "February"
+                    "name": "Feb."
                 },
                 {
                     "value": 3,
-                    "name": "March"
+                    "name": "Mar."
                 },
                 {
                     "value": 4,
-                    "name": "April"
+                    "name": "Apr."
                 },
                 {
                     "value": 5,
-                    "name": "May"
+                    "name": "May."
                 },
                 {
                     "value": 6,
-                    "name": "June"
+                    "name": "Jun."
                 },
                 {
                     "value": 7,
-                    "name": "July"
+                    "name": "Jul."
                 },
                 {
                     "value": 8,
-                    "name": "August"
+                    "name": "Aug."
                 },
                 {
                     "value": 9,
-                    "name": "September"
+                    "name": "Sep."
                 },
                 {
                     "value": 10,
-                    "name": "October"
+                    "name": "Oct."
                 },
                 {
                     "value": 11,
-                    "name": "November"
+                    "name": "Nov."
                 },
                 {
                     "value": 12,
-                    "name": "December"
+                    "name": "Dec."
                 }
             ],
             "bacnet_type": "multistate_value_object",
@@ -1279,9 +1301,31 @@
             "value": "0",
             "unit": "",
             "access_mode": "RW",
-            "data_type": "NUMBER",
+            "data_type": "ENUM",
             "value_type": "UINT8",
-            "bacnet_type": "analog_value_object",
+            "values": [
+                {
+                    "value": 1,
+                    "name": "1st"
+                },
+                {
+                    "value": 2,
+                    "name": "2nd"
+                },
+                {
+                    "value": 3,
+                    "name": "3rd"
+                },
+                {
+                    "value": 4,
+                    "name": "4th"
+                },
+                {
+                    "value": 5,
+                    "name": "last"
+                }
+            ],
+            "bacnet_type": "multistate_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": [
@@ -1308,31 +1352,31 @@
             "values": [
                 {
                     "value": 1,
-                    "name": "Monday"
+                    "name": "Mon."
                 },
                 {
                     "value": 2,
-                    "name": "Tuesday"
+                    "name": "Tues."
                 },
                 {
                     "value": 3,
-                    "name": "Wednesday"
+                    "name": "Wed."
                 },
                 {
                     "value": 4,
-                    "name": "Thursday"
+                    "name": "Thurs."
                 },
                 {
                     "value": 5,
-                    "name": "Friday"
+                    "name": "Fri."
                 },
                 {
                     "value": 6,
-                    "name": "Saturday"
+                    "name": "Sat."
                 },
                 {
                     "value": 7,
-                    "name": "Sunday"
+                    "name": "Sun."
                 }
             ],
             "bacnet_type": "multistate_value_object",
@@ -1358,6 +1402,10 @@
             "unit": "min",
             "access_mode": "RW",
             "data_type": "NUMBER",
+            "range": [
+                0,
+                1439
+            ],
             "value_type": "UINT16",
             "bacnet_type": "analog_value_object",
             "bacnet_unit_type_id": 72,
@@ -1386,51 +1434,51 @@
             "values": [
                 {
                     "value": 1,
-                    "name": "January"
+                    "name": "Jan."
                 },
                 {
                     "value": 2,
-                    "name": "February"
+                    "name": "Feb."
                 },
                 {
                     "value": 3,
-                    "name": "March"
+                    "name": "Mar."
                 },
                 {
                     "value": 4,
-                    "name": "April"
+                    "name": "Apr."
                 },
                 {
                     "value": 5,
-                    "name": "May"
+                    "name": "May."
                 },
                 {
                     "value": 6,
-                    "name": "June"
+                    "name": "Jun."
                 },
                 {
                     "value": 7,
-                    "name": "July"
+                    "name": "Jul."
                 },
                 {
                     "value": 8,
-                    "name": "August"
+                    "name": "Aug."
                 },
                 {
                     "value": 9,
-                    "name": "September"
+                    "name": "Sep."
                 },
                 {
                     "value": 10,
-                    "name": "October"
+                    "name": "Oct."
                 },
                 {
                     "value": 11,
-                    "name": "November"
+                    "name": "Nov."
                 },
                 {
                     "value": 12,
-                    "name": "December"
+                    "name": "Dec."
                 }
             ],
             "bacnet_type": "multistate_value_object",
@@ -1455,9 +1503,31 @@
             "value": "0",
             "unit": "",
             "access_mode": "RW",
-            "data_type": "NUMBER",
+            "data_type": "ENUM",
+            "values": [
+                {
+                    "value": 1,
+                    "name": "1st"
+                },
+                {
+                    "value": 2,
+                    "name": "2nd"
+                },
+                {
+                    "value": 3,
+                    "name": "3rd"
+                },
+                {
+                    "value": 4,
+                    "name": "4th"
+                },
+                {
+                    "value": 5,
+                    "name": "last"
+                }
+            ],
             "value_type": "UINT8",
-            "bacnet_type": "analog_value_object",
+            "bacnet_type": "multistate_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": [
@@ -1484,31 +1554,31 @@
             "values": [
                 {
                     "value": 1,
-                    "name": "Monday"
+                    "name": "Mon."
                 },
                 {
                     "value": 2,
-                    "name": "Tuesday"
+                    "name": "Tues."
                 },
                 {
                     "value": 3,
-                    "name": "Wednesday"
+                    "name": "Wed."
                 },
                 {
                     "value": 4,
-                    "name": "Thursday"
+                    "name": "Thurs."
                 },
                 {
                     "value": 5,
-                    "name": "Friday"
+                    "name": "Fri."
                 },
                 {
                     "value": 6,
-                    "name": "Saturday"
+                    "name": "Sat."
                 },
                 {
                     "value": 7,
-                    "name": "Sunday"
+                    "name": "Sun."
                 }
             ],
             "bacnet_type": "multistate_value_object",
@@ -1534,6 +1604,10 @@
             "unit": "min",
             "access_mode": "RW",
             "data_type": "NUMBER",
+            "range": [
+                0,
+                1439
+            ],
             "value_type": "UINT16",
             "bacnet_type": "analog_value_object",
             "bacnet_unit_type_id": 72,
@@ -4030,8 +4104,8 @@
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": [
-                "d2d_info.snr",
-                "d2d_info.rssi"
+                "d2d_info.rssi",
+                "d2d_info.snr"
             ]
         },
         {
@@ -4041,8 +4115,11 @@
             "unit": "",
             "access_mode": "R",
             "data_type": "NUMBER",
-            "value_type": "UINT8",
-            "range": [-128, 127],
+            "value_type": "INT8",
+            "range": [
+                -128,
+                127
+            ],
             "bacnet_type": "analog_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
@@ -4058,8 +4135,11 @@
             "unit": "",
             "access_mode": "R",
             "data_type": "NUMBER",
-            "value_type": "UINT8",
-            "range": [-128, 127],
+            "value_type": "INT8",
+            "range": [
+                -128,
+                127
+            ],
             "bacnet_type": "analog_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
@@ -4069,87 +4149,136 @@
             ]
         },
         {
-            "id": "tx_sf",
+            "id": "lora_info.tx_sf",
             "name": "TX SF",
             "value": "",
             "unit": "",
             "access_mode": "R",
             "data_type": "NUMBER",
             "value_type": "UINT8",
-            "range": [0, 255],
+            "range": [
+                0,
+                255
+            ],
             "bacnet_type": "analog_input_object",
             "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS"
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "lora_info.tx_dr",
+                "lora_info.tx_power",
+                "lora_info.win2_dr",
+                "lora_info.win2_freq"
+            ]
         },
         {
-            "id": "tx_dr",
+            "id": "lora_info.tx_dr",
             "name": "TX DR",
             "value": "",
             "unit": "",
             "access_mode": "R",
             "data_type": "NUMBER",
             "value_type": "UINT8",
-            "range": [0, 255],
+            "range": [
+                0,
+                255
+            ],
             "bacnet_type": "analog_input_object",
             "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS"
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "lora_info.tx_sf",
+                "lora_info.tx_power",
+                "lora_info.win2_dr",
+                "lora_info.win2_freq"
+            ]
         },
         {
-            "id": "tx_power",
+            "id": "lora_info.tx_power",
             "name": "TX Power",
             "value": "",
             "unit": "",
             "access_mode": "R",
             "data_type": "NUMBER",
             "value_type": "UINT8",
-            "range": [0, 255],
+            "range": [
+                0,
+                255
+            ],
             "bacnet_type": "analog_input_object",
             "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS"
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "lora_info.tx_sf",
+                "lora_info.tx_dr",
+                "lora_info.win2_dr",
+                "lora_info.win2_freq"
+            ]
         },
         {
-            "id": "win2_dr",
+            "id": "lora_info.win2_dr",
             "name": "WIN2 DR",
             "value": "",
             "unit": "",
             "access_mode": "R",
             "data_type": "NUMBER",
             "value_type": "UINT8",
-            "range": [0, 255],
+            "range": [
+                0,
+                255
+            ],
             "bacnet_type": "analog_input_object",
             "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS"
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "lora_info.tx_sf",
+                "lora_info.tx_dr",
+                "lora_info.tx_power",
+                "lora_info.win2_freq"
+            ]
         },
         {
-            "id": "win2_freq",
+            "id": "lora_info.win2_freq",
             "name": "WIN2 FREQ",
             "value": "",
             "unit": "Hz",
             "access_mode": "R",
             "data_type": "NUMBER",
             "value_type": "UINT32",
-            "range": [0, 4294967295],
+            "range": [
+                0,
+                4294967295
+            ],
             "bacnet_type": "analog_input_object",
             "bacnet_unit_type_id": 27,
-            "bacnet_unit_type": "UNITS_HERTZ"
+            "bacnet_unit_type": "UNITS_HERTZ",
+            "reference": [
+                "lora_info.tx_sf",
+                "lora_info.tx_dr",
+                "lora_info.tx_power",
+                "lora_info.win2_dr"
+            ]
         },
         {
-            "id": "device_time",
+            "id": "dev_time.time",
             "name": "Device Time",
             "value": "",
             "unit": "s",
             "access_mode": "R",
             "data_type": "NUMBER",
             "value_type": "UINT32",
-            "range": [0, 4294967295],
+            "range": [
+                0,
+                4294967295
+            ],
             "bacnet_type": "analog_input_object",
             "bacnet_unit_type_id": 73,
-            "bacnet_unit_type": "UNITS_SECONDS"
+            "bacnet_unit_type": "UNITS_SECONDS",
+            "reference": []
         },
         {
-            "id": "actively_report",
+            "id": "cfg_report_enable",
             "name": "Actively Report",
-            "value": "",
+            "value": "1",
             "unit": "",
             "access_mode": "RW",
             "data_type": "BOOL",
@@ -4169,27 +4298,33 @@
             "bacnet_unit_type": "UNITS_NO_UNITS"
         },
         {
-            "id": "up_time",
+            "id": "cfg_report_time",
             "name": "Up Time",
-            "value": "",
+            "value": "240",
             "unit": "min",
             "access_mode": "RW",
             "data_type": "NUMBER",
             "value_type": "UINT16",
-            "range": [0, 1439],
+            "range": [
+                0,
+                1439
+            ],
             "bacnet_type": "analog_value_object",
             "bacnet_unit_type_id": 72,
             "bacnet_unit_type": "UNITS_MINUTES"
         },
         {
-            "id": "up_counts",
+            "id": "cfg_report_counts",
             "name": "Up Counts",
-            "value": "",
+            "value": "3",
             "unit": "",
             "access_mode": "RW",
             "data_type": "NUMBER",
             "value_type": "UINT8",
-            "range": [1, 12],
+            "range": [
+                1,
+                12
+            ],
             "bacnet_type": "analog_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS"
@@ -4200,85 +4335,585 @@
             "value": "",
             "unit": "",
             "access_mode": "W",
-            "data_type": "ENUM",
+            "data_type": "NUMBER",
             "value_type": "UINT8",
-            "values": [
-                {
-                    "value": 0,
-                    "name": "plan"
-                },
-                {
-                    "value": 1,
-                    "name": "periodic"
-                },
-                {
-                    "value": 2,
-                    "name": "target_temperature_range"
-                },
-                {
-                    "value": 3,
-                    "name": "attributes"
-                },
-                {
-                    "value": 4,
-                    "name": "lora"
-                },
-                {
-                    "value": 5,
-                    "name": "tempCtrl_tolerance"
-                },
-                {
-                    "value": 6,
-                    "name": "level_switch_condition_settings"
-                },
-                {
-                    "value": 7,
-                    "name": "temperature_control_delta_settings"
-                },
-                {
-                    "value": 8,
-                    "name": "wire_setting"
-                },
-                {
-                    "value": 9,
-                    "name": "fans_setting"
-                },
-                {
-                    "value": 10,
-                    "name": "yaux_setting"
-                },
-                {
-                    "value": 11,
-                    "name": "target_humidity_range"
-                },
-                {
-                    "value": 12,
-                    "name": "button_lock"
-                },
-                {
-                    "value": 13,
-                    "name": "time_setting"
-                },
-                {
-                    "value": 14,
-                    "name": "relay_status"
-                }
+            "range": [
+                0,
+                14
             ],
-            "bacnet_type": "multistate_output_object",
+            "bacnet_type": "analog_output_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS"
         },
         {
-            "id": "cfg_report_mask",
-            "name": "Channel mask",
-            "value": "",
+            "id": "cfg_report_mask.plan",
+            "name": "Enable Mask (Plan)",
+            "value": "1",
             "unit": "",
             "access_mode": "RW",
-            "data_type": "NUMBER",
+            "data_type": "BOOL",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "disable"
+                },
+                {
+                    "value": 1,
+                    "name": "enable"
+                }
+            ],
             "value_type": "UINT32",
-            "bacnet_type": "analog_value_object",
+            "bacnet_type": "binary_value_object",
             "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS"
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "cfg_report_mask.periodic",
+                "cfg_report_mask.target_temperature_range",
+                "cfg_report_mask.attributes",
+                "cfg_report_mask.lora",
+                "cfg_report_mask.tempCtrl_tolerance",
+                "cfg_report_mask.level_switch_condition_settings",
+                "cfg_report_mask.temperature_control_delta_settings",
+                "cfg_report_mask.wire_setting",
+                "cfg_report_mask.fans_setting",
+                "cfg_report_mask.yaux_setting",
+                "cfg_report_mask.target_humidity_range",
+                "cfg_report_mask.button_lock",
+                "cfg_report_mask.time_setting",
+                "cfg_report_mask.relay_status"
+            ]
+        },
+        {
+            "id": "cfg_report_mask.periodic",
+            "name": "Enable Mask (Periodic)",
+            "value": "1",
+            "unit": "",
+            "access_mode": "RW",
+            "data_type": "BOOL",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "disable"
+                },
+                {
+                    "value": 1,
+                    "name": "enable"
+                }
+            ],
+            "value_type": "UINT32",
+            "bacnet_type": "binary_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "cfg_report_mask.plan",
+                "cfg_report_mask.target_temperature_range",
+                "cfg_report_mask.attributes",
+                "cfg_report_mask.lora",
+                "cfg_report_mask.tempCtrl_tolerance",
+                "cfg_report_mask.level_switch_condition_settings",
+                "cfg_report_mask.temperature_control_delta_settings",
+                "cfg_report_mask.wire_setting",
+                "cfg_report_mask.fans_setting",
+                "cfg_report_mask.yaux_setting",
+                "cfg_report_mask.target_humidity_range",
+                "cfg_report_mask.button_lock",
+                "cfg_report_mask.time_setting",
+                "cfg_report_mask.relay_status"
+            ]
+        },
+        {
+            "id": "cfg_report_mask.target_temperature_range",
+            "name": "Enable Mask (Target Temperature Range)",
+            "value": "1",
+            "unit": "",
+            "access_mode": "RW",
+            "data_type": "BOOL",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "disable"
+                },
+                {
+                    "value": 1,
+                    "name": "enable"
+                }
+            ],
+            "value_type": "UINT32",
+            "bacnet_type": "binary_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "cfg_report_mask.plan",
+                "cfg_report_mask.periodic",
+                "cfg_report_mask.attributes",
+                "cfg_report_mask.lora",
+                "cfg_report_mask.tempCtrl_tolerance",
+                "cfg_report_mask.level_switch_condition_settings",
+                "cfg_report_mask.temperature_control_delta_settings",
+                "cfg_report_mask.wire_setting",
+                "cfg_report_mask.fans_setting",
+                "cfg_report_mask.yaux_setting",
+                "cfg_report_mask.target_humidity_range",
+                "cfg_report_mask.button_lock",
+                "cfg_report_mask.time_setting",
+                "cfg_report_mask.relay_status"
+            ]
+        },
+        {
+            "id": "cfg_report_mask.attributes",
+            "name": "Enable Mask (Attributes)",
+            "value": "1",
+            "unit": "",
+            "access_mode": "RW",
+            "data_type": "BOOL",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "disable"
+                },
+                {
+                    "value": 1,
+                    "name": "enable"
+                }
+            ],
+            "value_type": "UINT32",
+            "bacnet_type": "binary_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "cfg_report_mask.plan",
+                "cfg_report_mask.periodic",
+                "cfg_report_mask.target_temperature_range",
+                "cfg_report_mask.lora",
+                "cfg_report_mask.tempCtrl_tolerance",
+                "cfg_report_mask.level_switch_condition_settings",
+                "cfg_report_mask.temperature_control_delta_settings",
+                "cfg_report_mask.wire_setting",
+                "cfg_report_mask.fans_setting",
+                "cfg_report_mask.yaux_setting",
+                "cfg_report_mask.target_humidity_range",
+                "cfg_report_mask.button_lock",
+                "cfg_report_mask.time_setting",
+                "cfg_report_mask.relay_status"
+            ]
+        },
+        {
+            "id": "cfg_report_mask.lora",
+            "name": "Enable Mask (LoRa)",
+            "value": "1",
+            "unit": "",
+            "access_mode": "RW",
+            "data_type": "BOOL",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "disable"
+                },
+                {
+                    "value": 1,
+                    "name": "enable"
+                }
+            ],
+            "value_type": "UINT32",
+            "bacnet_type": "binary_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "cfg_report_mask.plan",
+                "cfg_report_mask.periodic",
+                "cfg_report_mask.target_temperature_range",
+                "cfg_report_mask.attributes",
+                "cfg_report_mask.tempCtrl_tolerance",
+                "cfg_report_mask.level_switch_condition_settings",
+                "cfg_report_mask.temperature_control_delta_settings",
+                "cfg_report_mask.wire_setting",
+                "cfg_report_mask.fans_setting",
+                "cfg_report_mask.yaux_setting",
+                "cfg_report_mask.target_humidity_range",
+                "cfg_report_mask.button_lock",
+                "cfg_report_mask.time_setting",
+                "cfg_report_mask.relay_status"
+            ]
+        },
+        {
+            "id": "cfg_report_mask.tempCtrl_tolerance",
+            "name": "Enable Mask (Temperature Control Tolerance)",
+            "value": "1",
+            "unit": "",
+            "access_mode": "RW",
+            "data_type": "BOOL",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "disable"
+                },
+                {
+                    "value": 1,
+                    "name": "enable"
+                }
+            ],
+            "value_type": "UINT32",
+            "bacnet_type": "binary_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "cfg_report_mask.plan",
+                "cfg_report_mask.periodic",
+                "cfg_report_mask.target_temperature_range",
+                "cfg_report_mask.attributes",
+                "cfg_report_mask.lora",
+                "cfg_report_mask.level_switch_condition_settings",
+                "cfg_report_mask.temperature_control_delta_settings",
+                "cfg_report_mask.wire_setting",
+                "cfg_report_mask.fans_setting",
+                "cfg_report_mask.yaux_setting",
+                "cfg_report_mask.target_humidity_range",
+                "cfg_report_mask.button_lock",
+                "cfg_report_mask.time_setting",
+                "cfg_report_mask.relay_status"
+            ]
+        },
+        {
+            "id": "cfg_report_mask.level_switch_condition_settings",
+            "name": "Enable Mask (Level Switch Condition Settings)",
+            "value": "1",
+            "unit": "",
+            "access_mode": "RW",
+            "data_type": "BOOL",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "disable"
+                },
+                {
+                    "value": 1,
+                    "name": "enable"
+                }
+            ],
+            "value_type": "UINT32",
+            "bacnet_type": "binary_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "cfg_report_mask.plan",
+                "cfg_report_mask.periodic",
+                "cfg_report_mask.target_temperature_range",
+                "cfg_report_mask.attributes",
+                "cfg_report_mask.lora",
+                "cfg_report_mask.tempCtrl_tolerance",
+                "cfg_report_mask.temperature_control_delta_settings",
+                "cfg_report_mask.wire_setting",
+                "cfg_report_mask.fans_setting",
+                "cfg_report_mask.yaux_setting",
+                "cfg_report_mask.target_humidity_range",
+                "cfg_report_mask.button_lock",
+                "cfg_report_mask.time_setting",
+                "cfg_report_mask.relay_status"
+            ]
+        },
+        {
+            "id": "cfg_report_mask.temperature_control_delta_settings",
+            "name": "Enable Mask (Temperature Control Delta Settings)",
+            "value": "1",
+            "unit": "",
+            "access_mode": "RW",
+            "data_type": "BOOL",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "disable"
+                },
+                {
+                    "value": 1,
+                    "name": "enable"
+                }
+            ],
+            "value_type": "UINT32",
+            "bacnet_type": "binary_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "cfg_report_mask.plan",
+                "cfg_report_mask.periodic",
+                "cfg_report_mask.target_temperature_range",
+                "cfg_report_mask.attributes",
+                "cfg_report_mask.lora",
+                "cfg_report_mask.tempCtrl_tolerance",
+                "cfg_report_mask.level_switch_condition_settings",
+                "cfg_report_mask.wire_setting",
+                "cfg_report_mask.fans_setting",
+                "cfg_report_mask.yaux_setting",
+                "cfg_report_mask.target_humidity_range",
+                "cfg_report_mask.button_lock",
+                "cfg_report_mask.time_setting",
+                "cfg_report_mask.relay_status"
+            ]
+        },
+        {
+            "id": "cfg_report_mask.wire_setting",
+            "name": "Enable Mask (Wire Setting)",
+            "value": "1",
+            "unit": "",
+            "access_mode": "RW",
+            "data_type": "BOOL",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "disable"
+                },
+                {
+                    "value": 1,
+                    "name": "enable"
+                }
+            ],
+            "value_type": "UINT32",
+            "bacnet_type": "binary_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "cfg_report_mask.plan",
+                "cfg_report_mask.periodic",
+                "cfg_report_mask.target_temperature_range",
+                "cfg_report_mask.attributes",
+                "cfg_report_mask.lora",
+                "cfg_report_mask.tempCtrl_tolerance",
+                "cfg_report_mask.level_switch_condition_settings",
+                "cfg_report_mask.temperature_control_delta_settings",
+                "cfg_report_mask.fans_setting",
+                "cfg_report_mask.yaux_setting",
+                "cfg_report_mask.target_humidity_range",
+                "cfg_report_mask.button_lock",
+                "cfg_report_mask.time_setting",
+                "cfg_report_mask.relay_status"
+            ]
+        },
+        {
+            "id": "cfg_report_mask.fans_setting",
+            "name": "Enable Mask (Fans Setting)",
+            "value": "1",
+            "unit": "",
+            "access_mode": "RW",
+            "data_type": "BOOL",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "disable"
+                },
+                {
+                    "value": 1,
+                    "name": "enable"
+                }
+            ],
+            "value_type": "UINT32",
+            "bacnet_type": "binary_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "cfg_report_mask.plan",
+                "cfg_report_mask.periodic",
+                "cfg_report_mask.target_temperature_range",
+                "cfg_report_mask.attributes",
+                "cfg_report_mask.lora",
+                "cfg_report_mask.tempCtrl_tolerance",
+                "cfg_report_mask.level_switch_condition_settings",
+                "cfg_report_mask.temperature_control_delta_settings",
+                "cfg_report_mask.wire_setting",
+                "cfg_report_mask.yaux_setting",
+                "cfg_report_mask.target_humidity_range",
+                "cfg_report_mask.button_lock",
+                "cfg_report_mask.time_setting",
+                "cfg_report_mask.relay_status"
+            ]
+        },
+        {
+            "id": "cfg_report_mask.yaux_setting",
+            "name": "Enable Mask (Yaux Setting)",
+            "value": "1",
+            "unit": "",
+            "access_mode": "RW",
+            "data_type": "BOOL",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "disable"
+                },
+                {
+                    "value": 1,
+                    "name": "enable"
+                }
+            ],
+            "value_type": "UINT32",
+            "bacnet_type": "binary_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "cfg_report_mask.plan",
+                "cfg_report_mask.periodic",
+                "cfg_report_mask.target_temperature_range",
+                "cfg_report_mask.attributes",
+                "cfg_report_mask.lora",
+                "cfg_report_mask.tempCtrl_tolerance",
+                "cfg_report_mask.level_switch_condition_settings",
+                "cfg_report_mask.temperature_control_delta_settings",
+                "cfg_report_mask.wire_setting",
+                "cfg_report_mask.fans_setting",
+                "cfg_report_mask.target_humidity_range",
+                "cfg_report_mask.button_lock",
+                "cfg_report_mask.time_setting",
+                "cfg_report_mask.relay_status"
+            ]
+        },
+        {
+            "id": "cfg_report_mask.target_humidity_range",
+            "name": "Enable Mask (Target Humidity Range)",
+            "value": "1",
+            "unit": "",
+            "access_mode": "RW",
+            "data_type": "BOOL",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "disable"
+                },
+                {
+                    "value": 1,
+                    "name": "enable"
+                }
+            ],
+            "value_type": "UINT32",
+            "bacnet_type": "binary_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "cfg_report_mask.plan",
+                "cfg_report_mask.periodic",
+                "cfg_report_mask.target_temperature_range",
+                "cfg_report_mask.attributes",
+                "cfg_report_mask.lora",
+                "cfg_report_mask.tempCtrl_tolerance",
+                "cfg_report_mask.level_switch_condition_settings",
+                "cfg_report_mask.temperature_control_delta_settings",
+                "cfg_report_mask.wire_setting",
+                "cfg_report_mask.fans_setting",
+                "cfg_report_mask.yaux_setting",
+                "cfg_report_mask.button_lock",
+                "cfg_report_mask.time_setting",
+                "cfg_report_mask.relay_status"
+            ]
+        },
+        {
+            "id": "cfg_report_mask.button_lock",
+            "name": "Enable Mask (Button Lock)",
+            "value": "1",
+            "unit": "",
+            "access_mode": "RW",
+            "data_type": "BOOL",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "disable"
+                },
+                {
+                    "value": 1,
+                    "name": "enable"
+                }
+            ],
+            "value_type": "UINT32",
+            "bacnet_type": "binary_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "cfg_report_mask.plan",
+                "cfg_report_mask.periodic",
+                "cfg_report_mask.target_temperature_range",
+                "cfg_report_mask.attributes",
+                "cfg_report_mask.lora",
+                "cfg_report_mask.tempCtrl_tolerance",
+                "cfg_report_mask.level_switch_condition_settings",
+                "cfg_report_mask.temperature_control_delta_settings",
+                "cfg_report_mask.wire_setting",
+                "cfg_report_mask.fans_setting",
+                "cfg_report_mask.yaux_setting",
+                "cfg_report_mask.target_humidity_range",
+                "cfg_report_mask.time_setting",
+                "cfg_report_mask.relay_status"
+            ]
+        },
+        {
+            "id": "cfg_report_mask.time_setting",
+            "name": "Enable Mask (Time Setting)",
+            "value": "1",
+            "unit": "",
+            "access_mode": "RW",
+            "data_type": "BOOL",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "disable"
+                },
+                {
+                    "value": 1,
+                    "name": "enable"
+                }
+            ],
+            "value_type": "UINT32",
+            "bacnet_type": "binary_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "cfg_report_mask.plan",
+                "cfg_report_mask.periodic",
+                "cfg_report_mask.target_temperature_range",
+                "cfg_report_mask.attributes",
+                "cfg_report_mask.lora",
+                "cfg_report_mask.tempCtrl_tolerance",
+                "cfg_report_mask.level_switch_condition_settings",
+                "cfg_report_mask.temperature_control_delta_settings",
+                "cfg_report_mask.wire_setting",
+                "cfg_report_mask.fans_setting",
+                "cfg_report_mask.yaux_setting",
+                "cfg_report_mask.target_humidity_range",
+                "cfg_report_mask.button_lock",
+                "cfg_report_mask.relay_status"
+            ]
+        },
+        {
+            "id": "cfg_report_mask.relay_status",
+            "name": "Enable Mask (Relay Status)",
+            "value": "1",
+            "unit": "",
+            "access_mode": "RW",
+            "data_type": "BOOL",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "disable"
+                },
+                {
+                    "value": 1,
+                    "name": "enable"
+                }
+            ],
+            "value_type": "UINT32",
+            "bacnet_type": "binary_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "cfg_report_mask.plan",
+                "cfg_report_mask.periodic",
+                "cfg_report_mask.target_temperature_range",
+                "cfg_report_mask.attributes",
+                "cfg_report_mask.lora",
+                "cfg_report_mask.tempCtrl_tolerance",
+                "cfg_report_mask.level_switch_condition_settings",
+                "cfg_report_mask.temperature_control_delta_settings",
+                "cfg_report_mask.wire_setting",
+                "cfg_report_mask.fans_setting",
+                "cfg_report_mask.yaux_setting",
+                "cfg_report_mask.target_humidity_range",
+                "cfg_report_mask.button_lock",
+                "cfg_report_mask.time_setting"
+            ]
         }
     ]
 }
