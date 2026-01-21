@@ -320,22 +320,31 @@ function milesightDeviceEncode(payload) {
 		if (payload.auto_away_report.event_type == 0x20) {
 			// 0：Unoccupied, 1：Occupied
 			buffer.writeUInt8(payload.auto_away_report.inactive_by_target_temperature.state);
-			if (payload.auto_away_report.inactive_by_target_temperature.environment_temperature < -20 || payload.auto_away_report.inactive_by_target_temperature.environment_temperature > 60) {
-				throw new Error('auto_away_report.inactive_by_target_temperature.environment_temperature must be between -20 and 60');
+			// auto_away_report.inactive_by_target_temperature.environment_temperature -> at_wy_rprt.inctv_by_trgt_tmprtr.envrnmnt_tmprtr
+			if (payload.at_wy_rprt.inctv_by_trgt_tmprtr.envrnmnt_tmprtr < -20 || payload.at_wy_rprt.inctv_by_trgt_tmprtr.envrnmnt_tmprtr > 60) {
+				// auto_away_report.inactive_by_target_temperature.environment_temperature -> at_wy_rprt.inctv_by_trgt_tmprtr.envrnmnt_tmprtr
+				throw new Error('at_wy_rprt.inctv_by_trgt_tmprtr.envrnmnt_tmprtr must be between -20 and 60');
 			}
-			buffer.writeInt16LE(payload.auto_away_report.inactive_by_target_temperature.environment_temperature * 100);
-			if (payload.auto_away_report.inactive_by_target_temperature.target_temperature < 5 || payload.auto_away_report.inactive_by_target_temperature.target_temperature > 35) {
-				throw new Error('auto_away_report.inactive_by_target_temperature.target_temperature must be between 5 and 35');
+			// auto_away_report.inactive_by_target_temperature.environment_temperature -> at_wy_rprt.inctv_by_trgt_tmprtr.envrnmnt_tmprtr
+			buffer.writeInt16LE(payload.at_wy_rprt.inctv_by_trgt_tmprtr.envrnmnt_tmprtr * 100);
+			// auto_away_report.inactive_by_target_temperature.target_temperature -> at_wy_rprt.inctv_by_trgt_tmprtr.trgt_tmprtr
+			if (payload.at_wy_rprt.inctv_by_trgt_tmprtr.trgt_tmprtr < 5 || payload.at_wy_rprt.inctv_by_trgt_tmprtr.trgt_tmprtr > 35) {
+				// auto_away_report.inactive_by_target_temperature.target_temperature -> at_wy_rprt.inctv_by_trgt_tmprtr.trgt_tmprtr
+				throw new Error('at_wy_rprt.inctv_by_trgt_tmprtr.trgt_tmprtr must be between 5 and 35');
 			}
-			buffer.writeInt16LE(payload.auto_away_report.inactive_by_target_temperature.target_temperature * 100);
+			// auto_away_report.inactive_by_target_temperature.target_temperature -> at_wy_rprt.inctv_by_trgt_tmprtr.trgt_tmprtr
+			buffer.writeInt16LE(payload.at_wy_rprt.inctv_by_trgt_tmprtr.trgt_tmprtr * 100);
 		}
 		if (payload.auto_away_report.event_type == 0x21) {
 			// 0：Unoccupied, 1：Occupied
 			buffer.writeUInt8(payload.auto_away_report.active_by_target_temperature.state);
-			if (payload.auto_away_report.active_by_target_temperature.environment_temperature < -20 || payload.auto_away_report.active_by_target_temperature.environment_temperature > 60) {
-				throw new Error('auto_away_report.active_by_target_temperature.environment_temperature must be between -20 and 60');
+			// auto_away_report.active_by_target_temperature.environment_temperature -> at_wy_rprt.actv_by_trgt_tmprtr.envrnmnt_tmprtr
+			if (payload.at_wy_rprt.actv_by_trgt_tmprtr.envrnmnt_tmprtr < -20 || payload.at_wy_rprt.actv_by_trgt_tmprtr.envrnmnt_tmprtr > 60) {
+				// auto_away_report.active_by_target_temperature.environment_temperature -> at_wy_rprt.actv_by_trgt_tmprtr.envrnmnt_tmprtr
+				throw new Error('at_wy_rprt.actv_by_trgt_tmprtr.envrnmnt_tmprtr must be between -20 and 60');
 			}
-			buffer.writeInt16LE(payload.auto_away_report.active_by_target_temperature.environment_temperature * 100);
+			// auto_away_report.active_by_target_temperature.environment_temperature -> at_wy_rprt.actv_by_trgt_tmprtr.envrnmnt_tmprtr
+			buffer.writeInt16LE(payload.at_wy_rprt.actv_by_trgt_tmprtr.envrnmnt_tmprtr * 100);
 			if (payload.auto_away_report.active_by_target_temperature.target_temperature < 5 || payload.auto_away_report.active_by_target_temperature.target_temperature > 35) {
 				throw new Error('auto_away_report.active_by_target_temperature.target_temperature must be between 5 and 35');
 			}
@@ -344,26 +353,38 @@ function milesightDeviceEncode(payload) {
 		if (payload.auto_away_report.event_type == 0x22) {
 			// 0：Unoccupied, 1：Occupied
 			buffer.writeUInt8(payload.auto_away_report.inactive_by_target_valve_opening.state);
-			if (payload.auto_away_report.inactive_by_target_valve_opening.environment_temperature < -20 || payload.auto_away_report.inactive_by_target_valve_opening.environment_temperature > 60) {
-				throw new Error('auto_away_report.inactive_by_target_valve_opening.environment_temperature must be between -20 and 60');
+			// auto_away_report.inactive_by_target_valve_opening.environment_temperature -> at_wy_rprt.inctv_by_trgt_vlv_pnng.envrnmnt_tmprtr
+			if (payload.at_wy_rprt.inctv_by_trgt_vlv_pnng.envrnmnt_tmprtr < -20 || payload.at_wy_rprt.inctv_by_trgt_vlv_pnng.envrnmnt_tmprtr > 60) {
+				// auto_away_report.inactive_by_target_valve_opening.environment_temperature -> at_wy_rprt.inctv_by_trgt_vlv_pnng.envrnmnt_tmprtr
+				throw new Error('at_wy_rprt.inctv_by_trgt_vlv_pnng.envrnmnt_tmprtr must be between -20 and 60');
 			}
-			buffer.writeInt16LE(payload.auto_away_report.inactive_by_target_valve_opening.environment_temperature * 100);
-			if (payload.auto_away_report.inactive_by_target_valve_opening.target_valve_opening < 0 || payload.auto_away_report.inactive_by_target_valve_opening.target_valve_opening > 100) {
-				throw new Error('auto_away_report.inactive_by_target_valve_opening.target_valve_opening must be between 0 and 100');
+			// auto_away_report.inactive_by_target_valve_opening.environment_temperature -> at_wy_rprt.inctv_by_trgt_vlv_pnng.envrnmnt_tmprtr
+			buffer.writeInt16LE(payload.at_wy_rprt.inctv_by_trgt_vlv_pnng.envrnmnt_tmprtr * 100);
+			// auto_away_report.inactive_by_target_valve_opening.target_valve_opening -> at_wy_rprt.inctv_by_trgt_vlv_pnng.trgt_vlv_pnng
+			if (payload.at_wy_rprt.inctv_by_trgt_vlv_pnng.trgt_vlv_pnng < 0 || payload.at_wy_rprt.inctv_by_trgt_vlv_pnng.trgt_vlv_pnng > 100) {
+				// auto_away_report.inactive_by_target_valve_opening.target_valve_opening -> at_wy_rprt.inctv_by_trgt_vlv_pnng.trgt_vlv_pnng
+				throw new Error('at_wy_rprt.inctv_by_trgt_vlv_pnng.trgt_vlv_pnng must be between 0 and 100');
 			}
-			buffer.writeUInt8(payload.auto_away_report.inactive_by_target_valve_opening.target_valve_opening);
+			// auto_away_report.inactive_by_target_valve_opening.target_valve_opening -> at_wy_rprt.inctv_by_trgt_vlv_pnng.trgt_vlv_pnng
+			buffer.writeUInt8(payload.at_wy_rprt.inctv_by_trgt_vlv_pnng.trgt_vlv_pnng);
 		}
 		if (payload.auto_away_report.event_type == 0x23) {
 			// 0：Unoccupied, 1：Occupied
 			buffer.writeUInt8(payload.auto_away_report.active_by_target_valve_opening.state);
-			if (payload.auto_away_report.active_by_target_valve_opening.environment_temperature < -20 || payload.auto_away_report.active_by_target_valve_opening.environment_temperature > 60) {
-				throw new Error('auto_away_report.active_by_target_valve_opening.environment_temperature must be between -20 and 60');
+			// auto_away_report.active_by_target_valve_opening.environment_temperature -> at_wy_rprt.actv_by_trgt_vlv_pnng.envrnmnt_tmprtr
+			if (payload.at_wy_rprt.actv_by_trgt_vlv_pnng.envrnmnt_tmprtr < -20 || payload.at_wy_rprt.actv_by_trgt_vlv_pnng.envrnmnt_tmprtr > 60) {
+				// auto_away_report.active_by_target_valve_opening.environment_temperature -> at_wy_rprt.actv_by_trgt_vlv_pnng.envrnmnt_tmprtr
+				throw new Error('at_wy_rprt.actv_by_trgt_vlv_pnng.envrnmnt_tmprtr must be between -20 and 60');
 			}
-			buffer.writeInt16LE(payload.auto_away_report.active_by_target_valve_opening.environment_temperature * 100);
-			if (payload.auto_away_report.active_by_target_valve_opening.target_valve_opening < 0 || payload.auto_away_report.active_by_target_valve_opening.target_valve_opening > 100) {
-				throw new Error('auto_away_report.active_by_target_valve_opening.target_valve_opening must be between 0 and 100');
+			// auto_away_report.active_by_target_valve_opening.environment_temperature -> at_wy_rprt.actv_by_trgt_vlv_pnng.envrnmnt_tmprtr
+			buffer.writeInt16LE(payload.at_wy_rprt.actv_by_trgt_vlv_pnng.envrnmnt_tmprtr * 100);
+			// auto_away_report.active_by_target_valve_opening.target_valve_opening -> at_wy_rprt.actv_by_trgt_vlv_pnng.trgt_vlv_pnng
+			if (payload.at_wy_rprt.actv_by_trgt_vlv_pnng.trgt_vlv_pnng < 0 || payload.at_wy_rprt.actv_by_trgt_vlv_pnng.trgt_vlv_pnng > 100) {
+				// auto_away_report.active_by_target_valve_opening.target_valve_opening -> at_wy_rprt.actv_by_trgt_vlv_pnng.trgt_vlv_pnng
+				throw new Error('at_wy_rprt.actv_by_trgt_vlv_pnng.trgt_vlv_pnng must be between 0 and 100');
 			}
-			buffer.writeUInt8(payload.auto_away_report.active_by_target_valve_opening.target_valve_opening);
+			// auto_away_report.active_by_target_valve_opening.target_valve_opening -> at_wy_rprt.actv_by_trgt_vlv_pnng.trgt_vlv_pnng
+			buffer.writeUInt8(payload.at_wy_rprt.actv_by_trgt_vlv_pnng.trgt_vlv_pnng);
 		}
 		encoded = encoded.concat(buffer.toBytes());
 	}
@@ -406,58 +427,91 @@ function milesightDeviceEncode(payload) {
 			buffer.writeUInt8(payload.periodic_reporting.non_heating_season.battery_level);
 		}
 		if (payload.periodic_reporting.report_type == 0x01) {
-			if (payload.periodic_reporting.target_temperature_for_heating.environment_temperature < -20 || payload.periodic_reporting.target_temperature_for_heating.environment_temperature > 60) {
-				throw new Error('periodic_reporting.target_temperature_for_heating.environment_temperature must be between -20 and 60');
+			// periodic_reporting.target_temperature_for_heating.environment_temperature -> prdc_rprtng.trgt_tmprtr_fr_htng.envrnmnt_tmprtr
+			if (payload.prdc_rprtng.trgt_tmprtr_fr_htng.envrnmnt_tmprtr < -20 || payload.prdc_rprtng.trgt_tmprtr_fr_htng.envrnmnt_tmprtr > 60) {
+				// periodic_reporting.target_temperature_for_heating.environment_temperature -> prdc_rprtng.trgt_tmprtr_fr_htng.envrnmnt_tmprtr
+				throw new Error('prdc_rprtng.trgt_tmprtr_fr_htng.envrnmnt_tmprtr must be between -20 and 60');
 			}
-			buffer.writeInt16LE(payload.periodic_reporting.target_temperature_for_heating.environment_temperature * 100);
-			if (payload.periodic_reporting.target_temperature_for_heating.current_valve_opening < 0 || payload.periodic_reporting.target_temperature_for_heating.current_valve_opening > 100) {
-				throw new Error('periodic_reporting.target_temperature_for_heating.current_valve_opening must be between 0 and 100');
+			// periodic_reporting.target_temperature_for_heating.environment_temperature -> prdc_rprtng.trgt_tmprtr_fr_htng.envrnmnt_tmprtr
+			buffer.writeInt16LE(payload.prdc_rprtng.trgt_tmprtr_fr_htng.envrnmnt_tmprtr * 100);
+			// periodic_reporting.target_temperature_for_heating.current_valve_opening -> prdc_rprtng.trgt_tmprtr_fr_htng.crrnt_vlv_pnng
+			if (payload.prdc_rprtng.trgt_tmprtr_fr_htng.crrnt_vlv_pnng < 0 || payload.prdc_rprtng.trgt_tmprtr_fr_htng.crrnt_vlv_pnng > 100) {
+				// periodic_reporting.target_temperature_for_heating.current_valve_opening -> prdc_rprtng.trgt_tmprtr_fr_htng.crrnt_vlv_pnng
+				throw new Error('prdc_rprtng.trgt_tmprtr_fr_htng.crrnt_vlv_pnng must be between 0 and 100');
 			}
-			buffer.writeUInt8(payload.periodic_reporting.target_temperature_for_heating.current_valve_opening);
-			if (payload.periodic_reporting.target_temperature_for_heating.target_temperature < 5 || payload.periodic_reporting.target_temperature_for_heating.target_temperature > 35) {
-				throw new Error('periodic_reporting.target_temperature_for_heating.target_temperature must be between 5 and 35');
+			// periodic_reporting.target_temperature_for_heating.current_valve_opening -> prdc_rprtng.trgt_tmprtr_fr_htng.crrnt_vlv_pnng
+			buffer.writeUInt8(payload.prdc_rprtng.trgt_tmprtr_fr_htng.crrnt_vlv_pnng);
+			// periodic_reporting.target_temperature_for_heating.target_temperature -> prdc_rprtng.trgt_tmprtr_fr_htng.trgt_tmprtr
+			if (payload.prdc_rprtng.trgt_tmprtr_fr_htng.trgt_tmprtr < 5 || payload.prdc_rprtng.trgt_tmprtr_fr_htng.trgt_tmprtr > 35) {
+				// periodic_reporting.target_temperature_for_heating.target_temperature -> prdc_rprtng.trgt_tmprtr_fr_htng.trgt_tmprtr
+				throw new Error('prdc_rprtng.trgt_tmprtr_fr_htng.trgt_tmprtr must be between 5 and 35');
 			}
-			buffer.writeInt16LE(payload.periodic_reporting.target_temperature_for_heating.target_temperature * 100);
+			// periodic_reporting.target_temperature_for_heating.target_temperature -> prdc_rprtng.trgt_tmprtr_fr_htng.trgt_tmprtr
+			buffer.writeInt16LE(payload.prdc_rprtng.trgt_tmprtr_fr_htng.trgt_tmprtr * 100);
 			if (payload.periodic_reporting.target_temperature_for_heating.battery_level < 0 || payload.periodic_reporting.target_temperature_for_heating.battery_level > 100) {
 				throw new Error('periodic_reporting.target_temperature_for_heating.battery_level must be between 0 and 100');
 			}
 			buffer.writeUInt8(payload.periodic_reporting.target_temperature_for_heating.battery_level);
 		}
 		if (payload.periodic_reporting.report_type == 0x02) {
-			if (payload.periodic_reporting.target_valve_opening_for_heating.environment_temperature < -20 || payload.periodic_reporting.target_valve_opening_for_heating.environment_temperature > 60) {
-				throw new Error('periodic_reporting.target_valve_opening_for_heating.environment_temperature must be between -20 and 60');
+			// periodic_reporting.target_valve_opening_for_heating.environment_temperature -> prdc_rprtng.trgt_vlv_pnng_fr_htng.envrnmnt_tmprtr
+			if (payload.prdc_rprtng.trgt_vlv_pnng_fr_htng.envrnmnt_tmprtr < -20 || payload.prdc_rprtng.trgt_vlv_pnng_fr_htng.envrnmnt_tmprtr > 60) {
+				// periodic_reporting.target_valve_opening_for_heating.environment_temperature -> prdc_rprtng.trgt_vlv_pnng_fr_htng.envrnmnt_tmprtr
+				throw new Error('prdc_rprtng.trgt_vlv_pnng_fr_htng.envrnmnt_tmprtr must be between -20 and 60');
 			}
-			buffer.writeInt16LE(payload.periodic_reporting.target_valve_opening_for_heating.environment_temperature * 100);
-			if (payload.periodic_reporting.target_valve_opening_for_heating.current_valve_opening < 0 || payload.periodic_reporting.target_valve_opening_for_heating.current_valve_opening > 100) {
-				throw new Error('periodic_reporting.target_valve_opening_for_heating.current_valve_opening must be between 0 and 100');
+			// periodic_reporting.target_valve_opening_for_heating.environment_temperature -> prdc_rprtng.trgt_vlv_pnng_fr_htng.envrnmnt_tmprtr
+			buffer.writeInt16LE(payload.prdc_rprtng.trgt_vlv_pnng_fr_htng.envrnmnt_tmprtr * 100);
+			// periodic_reporting.target_valve_opening_for_heating.current_valve_opening -> prdc_rprtng.trgt_vlv_pnng_fr_htng.crrnt_vlv_pnng
+			if (payload.prdc_rprtng.trgt_vlv_pnng_fr_htng.crrnt_vlv_pnng < 0 || payload.prdc_rprtng.trgt_vlv_pnng_fr_htng.crrnt_vlv_pnng > 100) {
+				// periodic_reporting.target_valve_opening_for_heating.current_valve_opening -> prdc_rprtng.trgt_vlv_pnng_fr_htng.crrnt_vlv_pnng
+				throw new Error('prdc_rprtng.trgt_vlv_pnng_fr_htng.crrnt_vlv_pnng must be between 0 and 100');
 			}
-			buffer.writeUInt8(payload.periodic_reporting.target_valve_opening_for_heating.current_valve_opening);
-			if (payload.periodic_reporting.target_valve_opening_for_heating.target_valve_opening < 0 || payload.periodic_reporting.target_valve_opening_for_heating.target_valve_opening > 100) {
-				throw new Error('periodic_reporting.target_valve_opening_for_heating.target_valve_opening must be between 0 and 100');
+			// periodic_reporting.target_valve_opening_for_heating.current_valve_opening -> prdc_rprtng.trgt_vlv_pnng_fr_htng.crrnt_vlv_pnng
+			buffer.writeUInt8(payload.prdc_rprtng.trgt_vlv_pnng_fr_htng.crrnt_vlv_pnng);
+			// periodic_reporting.target_valve_opening_for_heating.target_valve_opening -> prdc_rprtng.trgt_vlv_pnng_fr_htng.trgt_vlv_pnng
+			if (payload.prdc_rprtng.trgt_vlv_pnng_fr_htng.trgt_vlv_pnng < 0 || payload.prdc_rprtng.trgt_vlv_pnng_fr_htng.trgt_vlv_pnng > 100) {
+				// periodic_reporting.target_valve_opening_for_heating.target_valve_opening -> prdc_rprtng.trgt_vlv_pnng_fr_htng.trgt_vlv_pnng
+				throw new Error('prdc_rprtng.trgt_vlv_pnng_fr_htng.trgt_vlv_pnng must be between 0 and 100');
 			}
-			buffer.writeUInt8(payload.periodic_reporting.target_valve_opening_for_heating.target_valve_opening);
-			if (payload.periodic_reporting.target_valve_opening_for_heating.battery_level < 0 || payload.periodic_reporting.target_valve_opening_for_heating.battery_level > 100) {
-				throw new Error('periodic_reporting.target_valve_opening_for_heating.battery_level must be between 0 and 100');
+			// periodic_reporting.target_valve_opening_for_heating.target_valve_opening -> prdc_rprtng.trgt_vlv_pnng_fr_htng.trgt_vlv_pnng
+			buffer.writeUInt8(payload.prdc_rprtng.trgt_vlv_pnng_fr_htng.trgt_vlv_pnng);
+			// periodic_reporting.target_valve_opening_for_heating.battery_level -> prdc_rprtng.trgt_vlv_pnng_fr_htng.bttry_lvl
+			if (payload.prdc_rprtng.trgt_vlv_pnng_fr_htng.bttry_lvl < 0 || payload.prdc_rprtng.trgt_vlv_pnng_fr_htng.bttry_lvl > 100) {
+				// periodic_reporting.target_valve_opening_for_heating.battery_level -> prdc_rprtng.trgt_vlv_pnng_fr_htng.bttry_lvl
+				throw new Error('prdc_rprtng.trgt_vlv_pnng_fr_htng.bttry_lvl must be between 0 and 100');
 			}
-			buffer.writeUInt8(payload.periodic_reporting.target_valve_opening_for_heating.battery_level);
+			// periodic_reporting.target_valve_opening_for_heating.battery_level -> prdc_rprtng.trgt_vlv_pnng_fr_htng.bttry_lvl
+			buffer.writeUInt8(payload.prdc_rprtng.trgt_vlv_pnng_fr_htng.bttry_lvl);
 		}
 		if (payload.periodic_reporting.report_type == 0x03) {
-			if (payload.periodic_reporting.integrated_control_for_heating.environment_temperature < -20 || payload.periodic_reporting.integrated_control_for_heating.environment_temperature > 60) {
-				throw new Error('periodic_reporting.integrated_control_for_heating.environment_temperature must be between -20 and 60');
+			// periodic_reporting.integrated_control_for_heating.environment_temperature -> prdc_rprtng.intgrtd_cntrl_fr_htng.envrnmnt_tmprtr
+			if (payload.prdc_rprtng.intgrtd_cntrl_fr_htng.envrnmnt_tmprtr < -20 || payload.prdc_rprtng.intgrtd_cntrl_fr_htng.envrnmnt_tmprtr > 60) {
+				// periodic_reporting.integrated_control_for_heating.environment_temperature -> prdc_rprtng.intgrtd_cntrl_fr_htng.envrnmnt_tmprtr
+				throw new Error('prdc_rprtng.intgrtd_cntrl_fr_htng.envrnmnt_tmprtr must be between -20 and 60');
 			}
-			buffer.writeInt16LE(payload.periodic_reporting.integrated_control_for_heating.environment_temperature * 100);
-			if (payload.periodic_reporting.integrated_control_for_heating.current_valve_opening < 0 || payload.periodic_reporting.integrated_control_for_heating.current_valve_opening > 100) {
-				throw new Error('periodic_reporting.integrated_control_for_heating.current_valve_opening must be between 0 and 100');
+			// periodic_reporting.integrated_control_for_heating.environment_temperature -> prdc_rprtng.intgrtd_cntrl_fr_htng.envrnmnt_tmprtr
+			buffer.writeInt16LE(payload.prdc_rprtng.intgrtd_cntrl_fr_htng.envrnmnt_tmprtr * 100);
+			// periodic_reporting.integrated_control_for_heating.current_valve_opening -> prdc_rprtng.intgrtd_cntrl_fr_htng.crrnt_vlv_pnng
+			if (payload.prdc_rprtng.intgrtd_cntrl_fr_htng.crrnt_vlv_pnng < 0 || payload.prdc_rprtng.intgrtd_cntrl_fr_htng.crrnt_vlv_pnng > 100) {
+				// periodic_reporting.integrated_control_for_heating.current_valve_opening -> prdc_rprtng.intgrtd_cntrl_fr_htng.crrnt_vlv_pnng
+				throw new Error('prdc_rprtng.intgrtd_cntrl_fr_htng.crrnt_vlv_pnng must be between 0 and 100');
 			}
-			buffer.writeUInt8(payload.periodic_reporting.integrated_control_for_heating.current_valve_opening);
-			if (payload.periodic_reporting.integrated_control_for_heating.target_temperature < 5 || payload.periodic_reporting.integrated_control_for_heating.target_temperature > 35) {
-				throw new Error('periodic_reporting.integrated_control_for_heating.target_temperature must be between 5 and 35');
+			// periodic_reporting.integrated_control_for_heating.current_valve_opening -> prdc_rprtng.intgrtd_cntrl_fr_htng.crrnt_vlv_pnng
+			buffer.writeUInt8(payload.prdc_rprtng.intgrtd_cntrl_fr_htng.crrnt_vlv_pnng);
+			// periodic_reporting.integrated_control_for_heating.target_temperature -> prdc_rprtng.intgrtd_cntrl_fr_htng.trgt_tmprtr
+			if (payload.prdc_rprtng.intgrtd_cntrl_fr_htng.trgt_tmprtr < 5 || payload.prdc_rprtng.intgrtd_cntrl_fr_htng.trgt_tmprtr > 35) {
+				// periodic_reporting.integrated_control_for_heating.target_temperature -> prdc_rprtng.intgrtd_cntrl_fr_htng.trgt_tmprtr
+				throw new Error('prdc_rprtng.intgrtd_cntrl_fr_htng.trgt_tmprtr must be between 5 and 35');
 			}
-			buffer.writeInt16LE(payload.periodic_reporting.integrated_control_for_heating.target_temperature * 100);
-			if (payload.periodic_reporting.integrated_control_for_heating.target_valve_opening < 0 || payload.periodic_reporting.integrated_control_for_heating.target_valve_opening > 100) {
-				throw new Error('periodic_reporting.integrated_control_for_heating.target_valve_opening must be between 0 and 100');
+			// periodic_reporting.integrated_control_for_heating.target_temperature -> prdc_rprtng.intgrtd_cntrl_fr_htng.trgt_tmprtr
+			buffer.writeInt16LE(payload.prdc_rprtng.intgrtd_cntrl_fr_htng.trgt_tmprtr * 100);
+			// periodic_reporting.integrated_control_for_heating.target_valve_opening -> prdc_rprtng.intgrtd_cntrl_fr_htng.trgt_vlv_pnng
+			if (payload.prdc_rprtng.intgrtd_cntrl_fr_htng.trgt_vlv_pnng < 0 || payload.prdc_rprtng.intgrtd_cntrl_fr_htng.trgt_vlv_pnng > 100) {
+				// periodic_reporting.integrated_control_for_heating.target_valve_opening -> prdc_rprtng.intgrtd_cntrl_fr_htng.trgt_vlv_pnng
+				throw new Error('prdc_rprtng.intgrtd_cntrl_fr_htng.trgt_vlv_pnng must be between 0 and 100');
 			}
-			buffer.writeUInt8(payload.periodic_reporting.integrated_control_for_heating.target_valve_opening);
+			// periodic_reporting.integrated_control_for_heating.target_valve_opening -> prdc_rprtng.intgrtd_cntrl_fr_htng.trgt_vlv_pnng
+			buffer.writeUInt8(payload.prdc_rprtng.intgrtd_cntrl_fr_htng.trgt_vlv_pnng);
 			if (payload.periodic_reporting.integrated_control_for_heating.battery_level < 0 || payload.periodic_reporting.integrated_control_for_heating.battery_level > 100) {
 				throw new Error('periodic_reporting.integrated_control_for_heating.battery_level must be between 0 and 100');
 			}
@@ -493,7 +547,8 @@ function milesightDeviceEncode(payload) {
 			}
 			buffer.writeUInt16LE(payload.temperature_source_settings.external_ntc_reception.timeout);
 			// 0: Maintaining State Control, 1: Close the Valve, 2: Switch to Internal NTC Control
-			buffer.writeUInt8(payload.temperature_source_settings.external_ntc_reception.timeout_response);
+			// temperature_source_settings.external_ntc_reception.timeout_response -> tmprtr_src_sttngs.extrnl_ntc_rcptn.tmt_rspns
+			buffer.writeUInt8(payload.tmprtr_src_sttngs.extrnl_ntc_rcptn.tmt_rspns);
 		}
 		if (payload.temperature_source_settings.type == 0x02) {
 			if (payload.temperature_source_settings.lorawan_reception.timeout < 1 || payload.temperature_source_settings.lorawan_reception.timeout > 1440) {
@@ -548,10 +603,13 @@ function milesightDeviceEncode(payload) {
 				buffer.writeUInt16LE(payload.heating_period_settings.heating_period_reporting_interval.seconds_of_time);
 			}
 			if (payload.heating_period_settings.heating_period_reporting_interval.unit == 0x01) {
-				if (payload.heating_period_settings.heating_period_reporting_interval.minutes_of_time < 1 || payload.heating_period_settings.heating_period_reporting_interval.minutes_of_time > 1440) {
-					throw new Error('heating_period_settings.heating_period_reporting_interval.minutes_of_time must be between 1 and 1440');
+				// heating_period_settings.heating_period_reporting_interval.minutes_of_time -> htng_prd_sttngs.htng_prd_rprtng_ntrvl.mnts_f_tm
+				if (payload.htng_prd_sttngs.htng_prd_rprtng_ntrvl.mnts_f_tm < 1 || payload.htng_prd_sttngs.htng_prd_rprtng_ntrvl.mnts_f_tm > 1440) {
+					// heating_period_settings.heating_period_reporting_interval.minutes_of_time -> htng_prd_sttngs.htng_prd_rprtng_ntrvl.mnts_f_tm
+					throw new Error('htng_prd_sttngs.htng_prd_rprtng_ntrvl.mnts_f_tm must be between 1 and 1440');
 				}
-				buffer.writeUInt16LE(payload.heating_period_settings.heating_period_reporting_interval.minutes_of_time);
+				// heating_period_settings.heating_period_reporting_interval.minutes_of_time -> htng_prd_sttngs.htng_prd_rprtng_ntrvl.mnts_f_tm
+				buffer.writeUInt16LE(payload.htng_prd_sttngs.htng_prd_rprtng_ntrvl.mnts_f_tm);
 			}
 		}
 		if (isValid(payload.heating_period_settings.non_heating_period_reporting_interval)) {
@@ -566,10 +624,13 @@ function milesightDeviceEncode(payload) {
 				buffer.writeUInt16LE(payload.heating_period_settings.non_heating_period_reporting_interval.seconds_of_time);
 			}
 			if (payload.heating_period_settings.non_heating_period_reporting_interval.unit == 0x01) {
-				if (payload.heating_period_settings.non_heating_period_reporting_interval.minutes_of_time < 1 || payload.heating_period_settings.non_heating_period_reporting_interval.minutes_of_time > 1440) {
-					throw new Error('heating_period_settings.non_heating_period_reporting_interval.minutes_of_time must be between 1 and 1440');
+				// heating_period_settings.non_heating_period_reporting_interval.minutes_of_time -> htng_prd_sttngs.nn_htng_prd_rprtng_ntrvl.mnts_f_tm
+				if (payload.htng_prd_sttngs.nn_htng_prd_rprtng_ntrvl.mnts_f_tm < 1 || payload.htng_prd_sttngs.nn_htng_prd_rprtng_ntrvl.mnts_f_tm > 1440) {
+					// heating_period_settings.non_heating_period_reporting_interval.minutes_of_time -> htng_prd_sttngs.nn_htng_prd_rprtng_ntrvl.mnts_f_tm
+					throw new Error('htng_prd_sttngs.nn_htng_prd_rprtng_ntrvl.mnts_f_tm must be between 1 and 1440');
 				}
-				buffer.writeUInt16LE(payload.heating_period_settings.non_heating_period_reporting_interval.minutes_of_time);
+				// heating_period_settings.non_heating_period_reporting_interval.minutes_of_time -> htng_prd_sttngs.nn_htng_prd_rprtng_ntrvl.mnts_f_tm
+				buffer.writeUInt16LE(payload.htng_prd_sttngs.nn_htng_prd_rprtng_ntrvl.mnts_f_tm);
 			}
 		}
 		if (isValid(payload.heating_period_settings.valve_status_control)) {
@@ -591,12 +652,14 @@ function milesightDeviceEncode(payload) {
 			// 0：Disable, 1：Enable
 			buffer.writeUInt8(payload.target_temperature_control_settings.enable);
 		}
-		if (isValid(payload.target_temperature_control_settings.target_temperature_resolution)) {
+		// target_temperature_control_settings.target_temperature_resolution -> trgt_tmprtr_cntrl_sttngs.trgt_tmprtr_rsltn
+		if (isValid(payload.trgt_tmprtr_cntrl_sttngs.trgt_tmprtr_rsltn)) {
 			buffer.writeUInt8(0x65);
 			// 0：0.5, 1：1
 			buffer.writeUInt8(0x01);
 			// 0：0.5, 1：1
-			buffer.writeUInt8(payload.target_temperature_control_settings.target_temperature_resolution);
+			// target_temperature_control_settings.target_temperature_resolution -> trgt_tmprtr_cntrl_sttngs.trgt_tmprtr_rsltn
+			buffer.writeUInt8(payload.trgt_tmprtr_cntrl_sttngs.trgt_tmprtr_rsltn);
 		}
 		if (isValid(payload.target_temperature_control_settings.under_temperature_side_deadband)) {
 			buffer.writeUInt8(0x65);
@@ -614,21 +677,29 @@ function milesightDeviceEncode(payload) {
 			}
 			buffer.writeInt16LE(payload.target_temperature_control_settings.over_temperature_side_deadband * 100);
 		}
-		if (isValid(payload.target_temperature_control_settings.target_temperature_adjustment_range_min)) {
+		// target_temperature_control_settings.target_temperature_adjustment_range_min -> trgt_tmprtr_cntrl_sttngs.trgt_tmprtr_djstmnt_rng_mn
+		if (isValid(payload.trgt_tmprtr_cntrl_sttngs.trgt_tmprtr_djstmnt_rng_mn)) {
 			buffer.writeUInt8(0x65);
 			buffer.writeUInt8(0x04);
-			if (payload.target_temperature_control_settings.target_temperature_adjustment_range_min < 5 || payload.target_temperature_control_settings.target_temperature_adjustment_range_min > 35) {
-				throw new Error('target_temperature_control_settings.target_temperature_adjustment_range_min must be between 5 and 35');
+			// target_temperature_control_settings.target_temperature_adjustment_range_min -> trgt_tmprtr_cntrl_sttngs.trgt_tmprtr_djstmnt_rng_mn
+			if (payload.trgt_tmprtr_cntrl_sttngs.trgt_tmprtr_djstmnt_rng_mn < 5 || payload.trgt_tmprtr_cntrl_sttngs.trgt_tmprtr_djstmnt_rng_mn > 35) {
+				// target_temperature_control_settings.target_temperature_adjustment_range_min -> trgt_tmprtr_cntrl_sttngs.trgt_tmprtr_djstmnt_rng_mn
+				throw new Error('trgt_tmprtr_cntrl_sttngs.trgt_tmprtr_djstmnt_rng_mn must be between 5 and 35');
 			}
-			buffer.writeInt16LE(payload.target_temperature_control_settings.target_temperature_adjustment_range_min * 100);
+			// target_temperature_control_settings.target_temperature_adjustment_range_min -> trgt_tmprtr_cntrl_sttngs.trgt_tmprtr_djstmnt_rng_mn
+			buffer.writeInt16LE(payload.trgt_tmprtr_cntrl_sttngs.trgt_tmprtr_djstmnt_rng_mn * 100);
 		}
-		if (isValid(payload.target_temperature_control_settings.target_temperature_adjustment_range_max)) {
+		// target_temperature_control_settings.target_temperature_adjustment_range_max -> trgt_tmprtr_cntrl_sttngs.trgt_tmprtr_djstmnt_rng_mx
+		if (isValid(payload.trgt_tmprtr_cntrl_sttngs.trgt_tmprtr_djstmnt_rng_mx)) {
 			buffer.writeUInt8(0x65);
 			buffer.writeUInt8(0x05);
-			if (payload.target_temperature_control_settings.target_temperature_adjustment_range_max < 5 || payload.target_temperature_control_settings.target_temperature_adjustment_range_max > 35) {
-				throw new Error('target_temperature_control_settings.target_temperature_adjustment_range_max must be between 5 and 35');
+			// target_temperature_control_settings.target_temperature_adjustment_range_max -> trgt_tmprtr_cntrl_sttngs.trgt_tmprtr_djstmnt_rng_mx
+			if (payload.trgt_tmprtr_cntrl_sttngs.trgt_tmprtr_djstmnt_rng_mx < 5 || payload.trgt_tmprtr_cntrl_sttngs.trgt_tmprtr_djstmnt_rng_mx > 35) {
+				// target_temperature_control_settings.target_temperature_adjustment_range_max -> trgt_tmprtr_cntrl_sttngs.trgt_tmprtr_djstmnt_rng_mx
+				throw new Error('trgt_tmprtr_cntrl_sttngs.trgt_tmprtr_djstmnt_rng_mx must be between 5 and 35');
 			}
-			buffer.writeInt16LE(payload.target_temperature_control_settings.target_temperature_adjustment_range_max * 100);
+			// target_temperature_control_settings.target_temperature_adjustment_range_max -> trgt_tmprtr_cntrl_sttngs.trgt_tmprtr_djstmnt_rng_mx
+			buffer.writeInt16LE(payload.trgt_tmprtr_cntrl_sttngs.trgt_tmprtr_djstmnt_rng_mx * 100);
 		}
 		if (isValid(payload.target_temperature_control_settings.mode_settings)) {
 			buffer.writeUInt8(0x65);
@@ -636,24 +707,34 @@ function milesightDeviceEncode(payload) {
 			// 0：Automatic Temperature Control, 1：Valve Opening Control, 2：Integrated Control
 			buffer.writeUInt8(payload.target_temperature_control_settings.mode_settings.mode);
 			if (payload.target_temperature_control_settings.mode_settings.mode == 0x00) {
-				if (payload.target_temperature_control_settings.mode_settings.auto_control !== undefined && payload.target_temperature_control_settings.mode_settings.auto_control.target_temperature !== undefined) {
-					if (payload.target_temperature_control_settings.mode_settings.auto_control.target_temperature < 5 || payload.target_temperature_control_settings.mode_settings.auto_control.target_temperature > 35) {
-						throw new Error('target_temperature_control_settings.mode_settings.auto_control.target_temperature must be between 5 and 35');
+				// target_temperature_control_settings.mode_settings.auto_control.target_temperature -> trgt_tmprtr_cntrl_sttngs.md_sttngs.at_cntrl.trgt_tmprtr
+				if (payload.target_temperature_control_settings.mode_settings.auto_control !== undefined && payload.trgt_tmprtr_cntrl_sttngs.md_sttngs.at_cntrl.trgt_tmprtr !== undefined) {
+					// target_temperature_control_settings.mode_settings.auto_control.target_temperature -> trgt_tmprtr_cntrl_sttngs.md_sttngs.at_cntrl.trgt_tmprtr
+					if (payload.trgt_tmprtr_cntrl_sttngs.md_sttngs.at_cntrl.trgt_tmprtr < 5 || payload.trgt_tmprtr_cntrl_sttngs.md_sttngs.at_cntrl.trgt_tmprtr > 35) {
+						// target_temperature_control_settings.mode_settings.auto_control.target_temperature -> trgt_tmprtr_cntrl_sttngs.md_sttngs.at_cntrl.trgt_tmprtr
+						throw new Error('trgt_tmprtr_cntrl_sttngs.md_sttngs.at_cntrl.trgt_tmprtr must be between 5 and 35');
 					}
-					buffer.writeInt16LE(payload.target_temperature_control_settings.mode_settings.auto_control.target_temperature * 100);
+					// target_temperature_control_settings.mode_settings.auto_control.target_temperature -> trgt_tmprtr_cntrl_sttngs.md_sttngs.at_cntrl.trgt_tmprtr
+					buffer.writeInt16LE(payload.trgt_tmprtr_cntrl_sttngs.md_sttngs.at_cntrl.trgt_tmprtr * 100);
 				}
 			}
 			if (payload.target_temperature_control_settings.mode_settings.mode == 0x01) {
-				if (payload.target_temperature_control_settings.mode_settings.valve_control.target_valve_status < 0 || payload.target_temperature_control_settings.mode_settings.valve_control.target_valve_status > 100) {
-					throw new Error('target_temperature_control_settings.mode_settings.valve_control.target_valve_status must be between 0 and 100');
+				// target_temperature_control_settings.mode_settings.valve_control.target_valve_status -> trgt_tmprtr_cntrl_sttngs.md_sttngs.vlv_cntrl.trgt_vlv_stts
+				if (payload.trgt_tmprtr_cntrl_sttngs.md_sttngs.vlv_cntrl.trgt_vlv_stts < 0 || payload.trgt_tmprtr_cntrl_sttngs.md_sttngs.vlv_cntrl.trgt_vlv_stts > 100) {
+					// target_temperature_control_settings.mode_settings.valve_control.target_valve_status -> trgt_tmprtr_cntrl_sttngs.md_sttngs.vlv_cntrl.trgt_vlv_stts
+					throw new Error('trgt_tmprtr_cntrl_sttngs.md_sttngs.vlv_cntrl.trgt_vlv_stts must be between 0 and 100');
 				}
-				buffer.writeUInt8(payload.target_temperature_control_settings.mode_settings.valve_control.target_valve_status);
+				// target_temperature_control_settings.mode_settings.valve_control.target_valve_status -> trgt_tmprtr_cntrl_sttngs.md_sttngs.vlv_cntrl.trgt_vlv_stts
+				buffer.writeUInt8(payload.trgt_tmprtr_cntrl_sttngs.md_sttngs.vlv_cntrl.trgt_vlv_stts);
 			}
 			if (payload.target_temperature_control_settings.mode_settings.mode == 0x02) {
-				if (payload.target_temperature_control_settings.mode_settings.intergrated_control.target_temperature < 5 || payload.target_temperature_control_settings.mode_settings.intergrated_control.target_temperature > 35) {
-					throw new Error('target_temperature_control_settings.mode_settings.intergrated_control.target_temperature must be between 5 and 35');
+				// target_temperature_control_settings.mode_settings.intergrated_control.target_temperature -> trgt_tmprtr_cntrl_sttngs.md_sttngs.intrgrtd_cntrl.trgt_tmprtr
+				if (payload.trgt_tmprtr_cntrl_sttngs.md_sttngs.intrgrtd_cntrl.trgt_tmprtr < 5 || payload.trgt_tmprtr_cntrl_sttngs.md_sttngs.intrgrtd_cntrl.trgt_tmprtr > 35) {
+					// target_temperature_control_settings.mode_settings.intergrated_control.target_temperature -> trgt_tmprtr_cntrl_sttngs.md_sttngs.intrgrtd_cntrl.trgt_tmprtr
+					throw new Error('trgt_tmprtr_cntrl_sttngs.md_sttngs.intrgrtd_cntrl.trgt_tmprtr must be between 5 and 35');
 				}
-				buffer.writeInt16LE(payload.target_temperature_control_settings.mode_settings.intergrated_control.target_temperature * 100);
+				// target_temperature_control_settings.mode_settings.intergrated_control.target_temperature -> trgt_tmprtr_cntrl_sttngs.md_sttngs.intrgrtd_cntrl.trgt_tmprtr
+				buffer.writeInt16LE(payload.trgt_tmprtr_cntrl_sttngs.md_sttngs.intrgrtd_cntrl.trgt_tmprtr * 100);
 			}
 		}
 		encoded = encoded.concat(buffer.toBytes());
