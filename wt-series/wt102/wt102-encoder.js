@@ -47,6 +47,47 @@ function milesightDeviceEncode(payload) {
 		buffer.writeUInt8(payload.request_check_order.order);
 		encoded = encoded.concat(buffer.toBytes());
 	}
+	//0xef
+	if ('req' in payload) {
+		var buffer = new Buffer();
+		var reqList = payload.req;
+		for (var idx = 0; idx < reqList.length; idx++) {
+			var req_command = reqList[idx];
+			var pureNumber = [];
+			var formateStrParts = [];
+		
+			req_command.split('.').forEach(function(part) {
+				if (/^[0-9]+$/.test(part)) {
+					// padStart ES5 兼容
+					var hex = Number(part).toString(16);
+					while (hex.length < 2) { hex = '0' + hex; }
+					pureNumber.push(hex);
+					console.log(pureNumber);
+					formateStrParts.push('_item');
+				} else {
+					formateStrParts.push(part);
+				}
+			});
+		
+			var formateStr = formateStrParts.join('.');
+			var hexString = cmdMap()[formateStr];
+		
+			if (hexString && hexString.indexOf('xx') !== -1) {
+				var i = 0;
+				hexString = hexString.replace(/xx/g, function() {
+					return pureNumber[i++];
+				});
+			}
+		
+			if (hexString) {
+				var length = hexString.length / 2;
+				buffer.writeUInt8(0xef);
+				buffer.writeUInt8(length);
+				buffer.writeHexString(hexString, length, true);
+			}
+		}
+		encoded = encoded.concat(buffer.toBytes());
+	}
 	//0xee
 	if ('request_query_all_configurations' in payload) {
 		var buffer = new Buffer();
@@ -193,8 +234,8 @@ function milesightDeviceEncode(payload) {
 	if ('target_temperature' in payload) {
 		var buffer = new Buffer();
 		buffer.writeUInt8(0x06);
-		if (payload.target_temperature < -20 || payload.target_temperature > 60) {
-			throw new Error('target_temperature must be between -20 and 60');
+		if (payload.target_temperature < 5 || payload.target_temperature > 35) {
+			throw new Error('target_temperature must be between 5 and 35');
 		}
 		buffer.writeInt16LE(payload.target_temperature * 100);
 		encoded = encoded.concat(buffer.toBytes());
@@ -517,6 +558,14 @@ function milesightDeviceEncode(payload) {
 			}
 			buffer.writeUInt8(payload.periodic_reporting.integrated_control_for_heating.battery_level);
 		}
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0xc9
+	if ('random_key' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0xc9);
+		// 0：Disable, 1：Enable
+		buffer.writeUInt8(payload.random_key);
 		encoded = encoded.concat(buffer.toBytes());
 	}
 	//0xc4
@@ -1011,6 +1060,18 @@ function milesightDeviceEncode(payload) {
 		buffer.writeUInt8(payload.change_report_enable);
 		encoded = encoded.concat(buffer.toBytes());
 	}
+	//0x70
+	if ('motor_controllable_range' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0x70);
+		// 0：Disable, 1：Enable
+		buffer.writeUInt8(payload.motor_controllable_range.enable);
+		if (payload.motor_controllable_range.distance < 0 || payload.motor_controllable_range.distance > 666) {
+			throw new Error('motor_controllable_range.distance must be between 0 and 666');
+		}
+		buffer.writeUInt16LE(payload.motor_controllable_range.distance * 100);
+		encoded = encoded.concat(buffer.toBytes());
+	}
 	//0xc7
 	if ('time_zone' in payload) {
 		var buffer = new Buffer();
@@ -1036,8 +1097,8 @@ function milesightDeviceEncode(payload) {
 
 		// 1：Mon., 2：Tues., 3：Wed., 4：Thurs., 5：Fri., 6：Sat., 7：Sun.
 		bitOptions |= payload.daylight_saving_time.start_week_day << 0;
-
 		buffer.writeUInt8(bitOptions);
+
 		buffer.writeUInt16LE(payload.daylight_saving_time.start_hour_min);
 		// 1:Jan., 2:Feb., 3:Mar., 4:Apr., 5:May, 6:Jun., 7:Jul., 8:Aug., 9:Sep., 10:Oct., 11:Nov., 12:Dec.
 		buffer.writeUInt8(payload.daylight_saving_time.end_month);
@@ -1047,8 +1108,8 @@ function milesightDeviceEncode(payload) {
 
 		// 1：Mon., 2：Tues., 3：Wed., 4：Thurs., 5：Fri., 6：Sat., 7：Sun.
 		bitOptions |= payload.daylight_saving_time.end_week_day << 0;
-
 		buffer.writeUInt8(bitOptions);
+
 		buffer.writeUInt16LE(payload.daylight_saving_time.end_hour_min);
 		encoded = encoded.concat(buffer.toBytes());
 	}
@@ -1255,6 +1316,14 @@ Buffer.prototype.writeInt16LE = function(value) {
 	this._write(value < 0 ? value + 0x10000 : value, 2, true);
 };
 
+Buffer.prototype.writeUInt24LE = function(value) {
+    this._write(value, 3, true);
+};
+
+Buffer.prototype.writeInt24LE = function(value) {
+    this._write(value < 0 ? value + 0x1000000 : value, 3, true);
+};
+
 Buffer.prototype.writeUInt32LE = function(value) {
 	this._write(value, 4, true);
 };
@@ -1349,4 +1418,106 @@ function encodeUtf8(str) {
 
 function isValid(value) {
 	return value !== undefined && value !== null && value !== '';
+}
+
+
+function cmdMap() {
+	return {
+		  "request_check_sequence_number": "ff",
+		  "request_check_order": "fe",
+		  "request_command_queries": "ef",
+		  "request_query_all_configurations": "ee",
+		  "historical_data_report": "ed",
+		  "lorawan_configuration_settings": "cf",
+		  "lorawan_configuration_settings.version": "cfd8",
+		  "tsl_version": "df",
+		  "product_name": "de",
+		  "product_pn": "dd",
+		  "product_sn": "db",
+		  "version": "da",
+		  "oem_id": "d9",
+		  "device_status": "c8",
+		  "product_frequency_band": "d8",
+		  "battery": "00",
+		  "temperature": "01",
+		  "motor_total_stroke": "02",
+		  "motor_position": "03",
+		  "valve_opening_degree": "04",
+		  "motor_calibration_result_report": "05",
+		  "target_temperature": "06",
+		  "target_valve_opening_degree": "07",
+		  "low_battery_alarm": "08",
+		  "temperature_alarm": "09",
+		  "anti_freeze_protection_alarm": "0a",
+		  "mandatory_heating_alarm": "0b",
+		  "auto_away_report": "0c",
+		  "window_opening_alarm": "0d",
+		  "periodic_reporting": "0e",
+		  "random_key": "c9",
+		  "auto_p_enable": "c4",
+		  "temperature_unit": "60",
+		  "temperature_source_settings": "61",
+		  "environment_temperature_display_enable": "62",
+		  "heating_period_settings": "63",
+		  "heating_period_settings.heating_date_settings": "6300",
+		  "heating_period_settings.heating_period_reporting_interval": "6301",
+		  "heating_period_settings.non_heating_period_reporting_interval": "6302",
+		  "heating_period_settings.valve_status_control": "6303",
+		  "target_temperature_control_settings": "65",
+		  "target_temperature_control_settings.enable": "6500",
+		  "target_temperature_control_settings.target_temperature_resolution": "6501",
+		  "target_temperature_control_settings.under_temperature_side_deadband": "6502",
+		  "target_temperature_control_settings.over_temperature_side_deadband": "6503",
+		  "target_temperature_control_settings.target_temperature_adjustment_range_min": "6504",
+		  "target_temperature_control_settings.target_temperature_adjustment_range_max": "6505",
+		  "target_temperature_control_settings.mode_settings": "6506",
+		  "window_opening_detection_settings": "66",
+		  "auto_away_settings": "67",
+		  "anti_freeze_protection_setting": "68",
+		  "mandatory_heating_enable": "69",
+		  "child_lock": "6a",
+		  "motor_stroke_limit": "6b",
+		  "temperature_calibration_settings": "6c",
+		  "temperature_alarm_settings": "6d",
+		  "schedule_settings": "6e",
+		  "schedule_settings._item": "6exx",
+		  "schedule_settings._item.enable": "6exx00",
+		  "schedule_settings._item.start_time": "6exx01",
+		  "schedule_settings._item.cycle_settings": "6exx02",
+		  "schedule_settings._item.temperature_control_mode": "6exx03",
+		  "schedule_settings._item.target_temperature": "6exx04",
+		  "schedule_settings._item.target_valve_status": "6exx05",
+		  "schedule_settings._item.pre_heating_enable": "6exx06",
+		  "schedule_settings._item.pre_heating_mode": "6exx07",
+		  "schedule_settings._item.pre_heating_manual_time": "6exx08",
+		  "schedule_settings._item.report_cycle": "6exx09",
+		  "change_report_enable": "6f",
+		  "motor_controllable_range": "70",
+		  "time_zone": "c7",
+		  "daylight_saving_time": "c6",
+		  "data_storage_settings": "c5",
+		  "data_storage_settings.enable": "c500",
+		  "data_storage_settings.retransmission_enable": "c501",
+		  "data_storage_settings.retransmission_interval": "c502",
+		  "data_storage_settings.retrieval_interval": "c503",
+		  "reconnect": "b6",
+		  "query_device_status": "b9",
+		  "synchronize_time": "b8",
+		  "set_time": "b7",
+		  "collect_data": "b5",
+		  "clear_historical_data": "bd",
+		  "stop_historical_data_retrieval": "bc",
+		  "retrieve_historical_data_by_time_range": "bb",
+		  "retrieve_historical_data_by_time": "ba",
+		  "query_motor_stroke_position": "57",
+		  "calibrate_motor": "58",
+		  "set_target_valve_opening_degree": "59",
+		  "set_target_temperature": "5a",
+		  "set_temperature": "5b",
+		  "set_occupancy_state": "5c",
+		  "set_opening_window": "5d",
+		  "delete_schedule": "5e",
+		  "reset": "bf",
+		  "reboot": "be"
+	};
 }

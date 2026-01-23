@@ -335,6 +335,10 @@ function milesightDeviceDecode(bytes) {
 					// decoded.battery = decoded.periodic_reporting.integrated_control_for_heating.battery_level;
 				}
 				break;
+			case 0xc9:
+				// 0：Disable, 1：Enable
+				decoded.random_key = readUInt8(bytes, counterObj, 1);
+				break;
 			case 0xc4:
 				// 0：Disable, 1：Enable
 				decoded.auto_p_enable = readUInt8(bytes, counterObj, 1);
@@ -534,9 +538,9 @@ function milesightDeviceDecode(bytes) {
 			case 0x6e:
 				decoded.schedule_settings = decoded.schedule_settings || [];
 				var id = readUInt8(bytes, counterObj, 1);
-				var schedule_settings_item = pickArrayItem(decoded.schedule_settings, id);
+				var schedule_settings_item = pickArrayItem(decoded.schedule_settings, id, 'id');
 				schedule_settings_item.id = id;
-				insertArrayItem(decoded.schedule_settings, schedule_settings_item);
+				insertArrayItem(decoded.schedule_settings, schedule_settings_item, 'id');
 				var schedule_settings_item_command = readUInt8(bytes, counterObj, 1);
 				if (schedule_settings_item_command == 0x00) {
 					// 0：Disable, 1：Enable
@@ -592,6 +596,12 @@ function milesightDeviceDecode(bytes) {
 			case 0x6f:
 				// 0：Disable, 1：Enable
 				decoded.change_report_enable = readUInt8(bytes, counterObj, 1);
+				break;
+			case 0x70:
+				decoded.motor_controllable_range = decoded.motor_controllable_range || {};
+				// 0：Disable, 1：Enable
+				decoded.motor_controllable_range.enable = readUInt8(bytes, counterObj, 1);
+				decoded.motor_controllable_range.distance = readUInt16LE(bytes, counterObj, 2) / 100;
 				break;
 			case 0xc7:
 				decoded.time_zone = readInt16LE(bytes, counterObj, 2);
@@ -712,7 +722,17 @@ function milesightDeviceDecode(bytes) {
 		}
 	}
 
-	return decoded;
+	if (Object.keys(history).length > 0) {
+		result.history = history;
+	} else {        
+		for (var k2 in decoded) {
+			if (decoded.hasOwnProperty(k2)) {
+				result[k2] = decoded[k2];
+			}
+		}
+	}
+
+	return result;
 }
 
 function readOnlyCommand(bytes) {
@@ -787,6 +807,17 @@ function readUInt16LE(allBytes, counterObj, end) {
 function readInt16LE(allBytes, counterObj, end) {
 	var ref = readUInt16LE(allBytes, counterObj, end);
 	return ref > 0x7fff ? ref - 0x10000 : ref;
+}
+
+function readUInt24LE(allBytes, counterObj, end) {
+    var bytes = readBytes(allBytes, counterObj, end); // 3 bytes expected
+    var value = (bytes[2] << 16) + (bytes[1] << 8) + bytes[0];
+    return value & 0xffffff;
+}
+
+function readInt24LE(allBytes, counterObj, end) {
+    var ref = readUInt24LE(allBytes, counterObj, end);
+    return ref > 0x7fffff ? ref - 0x1000000 : ref;
 }
 
 function readUInt32LE(allBytes, counterObj, end) {
@@ -873,7 +904,7 @@ function extractBits(byte, startBit, endBit) {
 	if (byte < 0 || byte > 0xffff) {
 	  throw new Error("byte must be in range 0..65535");
 	}
-	if (startBit < 0 || endBit > 16 || startBit >= endBit) {
+	if (startBit >= endBit) {
 	  throw new Error("invalid bit range");
 	}
   
@@ -882,36 +913,70 @@ function extractBits(byte, startBit, endBit) {
 	return (byte >>> startBit) & mask;
 }
 
-function pickArrayItem(array, index) {
-    for (var i = 0; i < array.length; i++) { 
-        if (array[i].id === index) {
-            return array[i];
-        }
-    }
+function pickArrayItem(array, index, idName) {
+	for (var i = 0; i < array.length; i++) { 
+		if (array[i][idName] === index) {
+			return array[i];
+		}
+	}
 
 	return {};
 }
 
-function insertArrayItem(array, item) {
-    for (var i = 0; i < array.length; i++) { 
-        if (array[i].id === item.id) {
-            array[i] = item;
-            return;
-        }
-    }
-    array.push(item);
+function insertArrayItem(array, item, idName) {
+	for (var i = 0; i < array.length; i++) { 
+		if (array[i][idName] === item[idName]) {
+			array[i] = item;
+			return;
+		}
+	}
+	array.push(item);
 }
 
 function readCommand(allBytes, counterObj, end) {
-	var bytes = readBytes(allBytes, counterObj, end);
-	var cmd = bytes
-		.map(function(b) {
-			var hex = b.toString(16);
-			return hex.length === 1 ? '0' + hex : hex;
-		})
-		.join('')
-		.toLowerCase();
-	return cmdMap()[cmd];
+    var bytes = readBytes(allBytes, counterObj, end);
+    var cmd = bytes
+        .map(function(b) {
+            var hex = b.toString(16);
+            return hex.length === 1 ? '0' + hex : hex;
+        })
+        .join('')
+        .toLowerCase();
+
+    var map = cmdMap();
+    for (var key in map) {
+        var xxs = [];
+        var isMatch = false;
+        if (key.length !== cmd.length) {
+            continue;
+        }
+        for (var i = 0; i < key.length; i += 2) {
+            var hexString = key.slice(i, i + 2);
+            var cmdString = cmd.slice(i, i + 2);
+            if (hexString === cmdString || hexString === 'xx') {
+                if (hexString === 'xx') {
+                    xxs.push('.' + parseInt(cmdString, 16));
+                }
+                isMatch = true;
+                continue;
+            } else {
+                isMatch = false;
+                break;
+            }
+        }
+        if (isMatch) {
+            var propertyId = map[key];
+            if (propertyId.indexOf('._item') === -1) {
+                return propertyId;
+            }
+            var j = 0;
+            var result = propertyId.replace(/\._item/g, function() {
+                return xxs[j++];
+            });
+            return result;
+        }
+    }
+    return null;
 }
 
 function cmdMap() {
@@ -928,6 +993,7 @@ function cmdMap() {
 		  "67": "auto_away_settings",
 		  "68": "anti_freeze_protection_setting",
 		  "69": "mandatory_heating_enable",
+		  "70": "motor_controllable_range",
 		  "6300": "heating_period_settings.heating_date_settings",
 		  "6301": "heating_period_settings.heating_period_reporting_interval",
 		  "6302": "heating_period_settings.non_heating_period_reporting_interval",
@@ -946,6 +1012,7 @@ function cmdMap() {
 		  "fe": "request_check_order",
 		  "ef": "request_command_queries",
 		  "ee": "request_query_all_configurations",
+		  "ed": "historical_data_report",
 		  "cf": "lorawan_configuration_settings",
 		  "cfd8": "lorawan_configuration_settings.version",
 		  "df": "tsl_version",
@@ -978,6 +1045,17 @@ function cmdMap() {
 		  "6c": "temperature_calibration_settings",
 		  "6d": "temperature_alarm_settings",
 		  "6e": "schedule_settings",
+		  "6exx": "schedule_settings._item",
+		  "6exx00": "schedule_settings._item.enable",
+		  "6exx01": "schedule_settings._item.start_time",
+		  "6exx02": "schedule_settings._item.cycle_settings",
+		  "6exx03": "schedule_settings._item.temperature_control_mode",
+		  "6exx04": "schedule_settings._item.target_temperature",
+		  "6exx05": "schedule_settings._item.target_valve_status",
+		  "6exx06": "schedule_settings._item.pre_heating_enable",
+		  "6exx07": "schedule_settings._item.pre_heating_mode",
+		  "6exx08": "schedule_settings._item.pre_heating_manual_time",
+		  "6exx09": "schedule_settings._item.report_cycle",
 		  "6f": "change_report_enable",
 		  "c7": "time_zone",
 		  "c6": "daylight_saving_time",

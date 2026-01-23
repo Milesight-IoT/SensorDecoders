@@ -27,8 +27,8 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Temperature | 0x01 | 3 | r |  | -20 - 60 |  |
 | Motor Stroke | 0x02 | 3 | r |  | 0 - 3028 |  |
 | Motor Position | 0x03 | 3 | r |  | 0 - 3028 |  |
-| Valve Opening | 0x04 | 2 | r |  | 0 - 100 |  |
-| Target Temperature | 0x06 | 3 | r |  | -20 - 60 |  |
+| Current Valve Opening | 0x04 | 2 | r |  | 0 - 100 |  |
+| Target Temperature | 0x06 | 3 | r |  | 5 - 35 |  |
 | Target Valve Opening | 0x07 | 2 | r |  | 0 - 100 |  |
 | Random key | 0xC9 | 2 | rw | 0 |  | 0：Disable<br>1：Enable |
 | Auto-P | 0xC4 | 2 | rw | 1 |  | 0：Disable<br>1：Enable |
@@ -136,6 +136,9 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Manual Preheating Time | 0x6E | 3 | rw | 10 | 1 - 1440 |  |
 | Reporting Interval | 0x6E | 3 | rw | 10 | 1 - 1440 |  |
 | Local Modification Report | 0x6F | 2 | rw | 0 |  | 0：Disable<br>1：Enable |
+| Motor Controllable Distance | 0x70 | 4 | rw |  |  |  |
+| Motor Controllable Distance Enable | 0x70 | 2 | rw | 0 |  | 0：Disable<br>1：Enable |
+| Motor Controllable Distance | 0x70 | 3 | rw | 666 | 0 - 666 |  |
 | Time Zone | 0xC7 | 3 | rw | 0 |  | -720：UTC-12(IDLW)<br>-660：UTC-11(SST)<br>-600：UTC-10(HST)<br>-570：UTC-9:30(MIT)<br>-540：UTC-9(AKST)<br>-480：UTC-8(PST)<br>-420：UTC-7(MST)<br>-360：UTC-6(CST)<br>-300：UTC-5(EST)<br>-240：UTC-4(AST)<br>-210：UTC-3:30(NST)<br>-180：UTC-3(BRT)<br>-120：UTC-2(FNT)<br>-60：UTC-1(CVT)<br>0：UTC(WET)<br>60：UTC+1(CET)<br>120：UTC+2(EET)<br>180：UTC+3(MSK)<br>210：UTC+3:30(IRST)<br>240：UTC+4(GST)<br>270：UTC+4:30(AFT)<br>300：UTC+5(PKT)<br>330：UTC+5:30(IST)<br>345：UTC+5:45(NPT)<br>360：UTC+6(BHT)<br>390：UTC+6:30(MMT)<br>420：UTC+7(ICT)<br>480：UTC+8(CT/CST)<br>540：UTC+9(JST)<br>570：UTC+9:30(ACST)<br>600：UTC+10(AEST)<br>630：UTC+10:30(LHST)<br>660：UTC+11(VUT)<br>720：UTC+12(NZST)<br>765：UTC+12:45(CHAST)<br>780：UTC+13(PHOT)<br>840：UTC+14(LINT) |
 | Daylight Saving Time | 0xC6 | M | rw |  |  |  |
 | Enable | 0xC6 | 2 | rw | 0 |  | 0：Disable<br>1：Enable |
@@ -150,10 +153,10 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Time | 0xC6 | 3 | rw | 0 |  | 0：00:00<br>60：01:00<br>120：02:00<br>180：03:00<br>240：04:00<br>300：05:00<br>360：06:00<br>420：07:00<br>480：08:00<br>540：09:00<br>600：10:00<br>660：11:00<br>720：12:00<br>780：13:00<br>840：14:00<br>900：15:00<br>960：16:00<br>1020：17:00<br>1080：18:00<br>1140：19:00<br>1200：20:00<br>1260：21:00<br>1320：22:00<br>1380：23:00 |
 | Data Storage Settings | 0xC5 | 1 | rw |  |  |  |
 | Sub-command | 0xC5 | 2 | rw | 0 |  |  |
-| Enable | 0xC5 | 2 | rw | 0 |  | 0：Disable<br>1：Enable |
+| Data Storage Enable | 0xC5 | 2 | rw | 0 |  | 0：Disable<br>1：Enable |
 | Data Retransmission Enable | 0xC5 | 2 | rw | 0 |  | 0：Disable<br>1：Enable |
-| Retransmission Interval | 0xC5 | 3 | rw | 600 | 30 - 1200 |  |
-| Retrieval Interval | 0xC5 | 3 | rw | 60 | 30 - 1200 |  |
+| Data Retransmission Interval | 0xC5 | 3 | rw | 600 | 30 - 1200 |  |
+| Data Retrieval Interval | 0xC5 | 3 | rw | 60 | 30 - 1200 |  |
 
 ### Event
 
@@ -163,6 +166,7 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Order Check Response | 0xFE | 2 | r |  |  |  |
 | Command Response | 0xEF | 1 | r |  |  |  |
 | Request to Push All Configurations | 0xEE | 1 | r |  |  |  |
+| Historical Data | 0xED | 6 | r |  |  |  |
 | Motor Calibration Result | 0x05 | 2 | r |  |  |  |
 | Battery Low Alarm | 0x08 | 2 | r |  |  |  |
 | Temperature  Alarm | 0x09 | 1 | r |  |  |  |
@@ -189,6 +193,8 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Command Length | 0xEF | 2 | r | 1 | 1 - 15 |  |
 | Answered Commands | 0xEF | 1 | r |  |  |  |
 | Request to Query All Configurations | 0xEE | 1 | w |  |  |  |
+| Historical Data Mode | 0xED | 2 | r |  |  | 0：target time<br>1：historical time |
+| Historical Data Timestamps | 0xED | 5 | r |  |  |  |
 | Motor Calibration Status | 0x05 | 2 | r |  |  | 0：Uncalibrated<br>1：Calibration success<br>2：Calibration failed<br>out of range<br>3：Calibration failed<br>temperature control disabled<br>4：Calibration failed<br>uninstalled |
 | Battery | 0x08 | 2 | r |  | 0 - 100 |  |
 | Alarm Type | 0x09 | 2 | r |  |  |  |
@@ -276,7 +282,7 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Motor Stroke And Position Query | 0x57 | 1 | w |  |  |  |
 | Calibrate Motor | 0x58 | 1 | w |  |  |  |
 | Target Valve Opening Setting | 0x59 | 2 | w |  |  |  |
-| Valve Opening | 0x59 | 2 | w | 0 | 0 - 100 |  |
+| Target Valve Opening | 0x59 | 2 | w | 0 | 0 - 100 |  |
 | Target Temperature Setting | 0x5A | 3 | w |  |  |  |
 | Temperature | 0x5A | 3 | w | 0 | 5 - 35 |  |
 | LoRa Receive Temperature | 0x5B | 3 | w |  |  |  |
