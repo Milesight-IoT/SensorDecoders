@@ -1287,54 +1287,69 @@
     },
     {
       "id": "reconnect",
-      "name": "Reconnect",
-      "value": "",
-      "unit": "",
+      "name": "Network Reconnection",
       "access_mode": "W",
-      "data_type": "NUMBER",
+      "data_type": "BOOL",
       "value_type": "UINT8",
-      "range": [
-        0,
-        1
-      ],
-      "bacnet_type": "analog_output_object",
+      "unit": "",
       "bacnet_unit_type_id": 95,
       "bacnet_unit_type": "UNITS_NO_UNITS",
-      "reference": []
+      "bacnet_type": "binary_output_object",
+      "value": "",
+      "values": [
+        {
+          "value": 0,
+          "name": "no"
+        },
+        {
+          "value": 1,
+          "name": "yes"
+        }
+      ]
     },
     {
       "id": "query_device_status",
-      "name": "Query Device Status",
-      "value": "",
-      "unit": "",
+      "name": "Device Status Query",
       "access_mode": "W",
-      "data_type": "NUMBER",
+      "data_type": "BOOL",
       "value_type": "UINT8",
-      "range": [
-        0,
-        1
-      ],
-      "bacnet_type": "analog_output_object",
+      "unit": "",
       "bacnet_unit_type_id": 95,
       "bacnet_unit_type": "UNITS_NO_UNITS",
-      "reference": []
+      "bacnet_type": "binary_output_object",
+      "value": "",
+      "values": [
+        {
+          "value": 0,
+          "name": "no"
+        },
+        {
+          "value": 1,
+          "name": "yes"
+        }
+      ]
     },
     {
       "id": "synchronize_time",
-      "name": "Synchronize Time",
-      "value": "",
-      "unit": "",
+      "name": "Time Synchronize",
       "access_mode": "W",
-      "data_type": "NUMBER",
+      "data_type": "BOOL",
       "value_type": "UINT8",
-      "range": [
-        0,
-        1
-      ],
-      "bacnet_type": "analog_output_object",
+      "unit": "",
       "bacnet_unit_type_id": 95,
       "bacnet_unit_type": "UNITS_NO_UNITS",
-      "reference": []
+      "bacnet_type": "binary_output_object",
+      "value": "",
+      "values": [
+        {
+          "value": 0,
+          "name": "no"
+        },
+        {
+          "value": 1,
+          "name": "yes"
+        }
+      ]
     },
     {
       "id": "set_time.timestamp",
@@ -1343,10 +1358,7 @@
       "unit": "",
       "access_mode": "W",
       "data_type": "NUMBER",
-      "value_type": "UINT32",
-      "range": [
-        0, 2147483647
-      ],
+      "value_type": "UINT8",
       "bacnet_type": "analog_output_object",
       "bacnet_unit_type_id": 95,
       "bacnet_unit_type": "UNITS_NO_UNITS",
@@ -1423,46 +1435,46 @@
       "unit": "",
       "access_mode": "W",
       "data_type": "NUMBER",
-      "value_type": "UINT32",
-      "range": [
-        0, 2147483647
-      ],
+      "value_type": "UINT8",
       "bacnet_type": "analog_output_object",
       "bacnet_unit_type_id": 95,
       "bacnet_unit_type": "UNITS_NO_UNITS",
-      "reference": []
+      "reference": ["retrieve_historical_data_by_time_range.start_time"]
     },
     {
-      "id": "retrieve_historical_data_by_time.time",
-      "name": "Time",
-      "value": "",
-      "unit": "",
-      "access_mode": "W",
-      "data_type": "NUMBER",
-      "value_type": "UINT32",
-      "range": [
-        0, 2147483647
-      ],
-      "bacnet_type": "analog_output_object",
-      "bacnet_unit_type_id": 95,
-      "bacnet_unit_type": "UNITS_NO_UNITS",
-      "reference": []
-    },
-    {
-      "id": "query_motor_stroke_position",
-      "name": "Query Motor Stroke Position",
+      "id": "retrieve_historical_data_by_time_range.start_time",
+      "name": "Start Time",
       "value": "",
       "unit": "",
       "access_mode": "W",
       "data_type": "NUMBER",
       "value_type": "UINT8",
-      "range": [
-        0, 1
-      ],
       "bacnet_type": "analog_output_object",
       "bacnet_unit_type_id": 95,
       "bacnet_unit_type": "UNITS_NO_UNITS",
-      "reference": []
+      "reference": ["retrieve_historical_data_by_time_range.end_time"]
+    },
+    {
+      "id": "query_motor_stroke_position",
+      "name": "Motor Stroke And Position Query",
+      "access_mode": "W",
+      "data_type": "BOOL",
+      "value_type": "UINT8",
+      "unit": "",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS",
+      "bacnet_type": "binary_output_object",
+      "value": "",
+      "values": [
+        {
+          "value": 0,
+          "name": "no"
+        },
+        {
+          "value": 1,
+          "name": "yes"
+        }
+      ]
     },
     {
       "id": "time_zone",
@@ -3558,149 +3570,176 @@
     },
     {
       "id": "set_occupancy_state.state",
-      "name": "Set Occupancy State",
-      "value": "",
+      "name": "Occupancy Status",
+      "value": "0",
       "unit": "",
       "access_mode": "W",
       "data_type": "ENUM",
       "value_type": "UINT8",
       "values": [
         {
-          "name": "Unoccupied",
-          "value": 0
+          "value": 0,
+          "name": "Unoccupied"
         },
         {
-          "name": "Occupied",
-          "value": 1
+          "value": 1,
+          "name": "Occupied"
         }
       ],
       "bacnet_type": "multistate_value_object",
       "bacnet_unit_type_id": 95,
-      "bacnet_unit_type": "UNITS_NO_UNITS"
+      "bacnet_unit_type": "UNITS_NO_UNITS",
+      "reference": []
     },
     {
       "id": "set_opening_window.state",
-      "name": "Set Opening Window",
-      "value": "",
+      "name": "Open Window Status",
+      "value": "0",
       "unit": "",
       "access_mode": "W",
       "data_type": "ENUM",
       "value_type": "UINT8",
       "values": [
         {
-          "name": "Normal",
-          "value": 0
+          "value": 0,
+          "name": "Normal"
         },
         {
-          "name": "Open",
-          "value": 1
+          "value": 1,
+          "name": "Open"
         }
       ],
       "bacnet_type": "multistate_value_object",
       "bacnet_unit_type_id": 95,
-      "bacnet_unit_type": "UNITS_NO_UNITS"
+      "bacnet_unit_type": "UNITS_NO_UNITS",
+      "reference": []
     },
     {
       "id": "delete_schedule.type",
-      "name": "Delete Schedule",
-      "value": "",
+      "name": "Select Schedule",
+      "value": "255",
       "unit": "",
       "access_mode": "W",
       "data_type": "ENUM",
       "value_type": "UINT8",
       "values": [
         {
-          "name": "Schedule1",
-          "value": 0
+          "value": 0,
+          "name": "Schedule1"
         },
         {
-          "name": "Schedule2",
-          "value": 1
+          "value": 1,
+          "name": "Schedule2"
         },
         {
-          "name": "Schedule3",
-          "value": 2
+          "value": 2,
+          "name": "Schedule3"
         },
         {
-          "name": "Schedule4",
-          "value": 3
+          "value": 3,
+          "name": "Schedule4"
         },
         {
-          "name": "Schedule5",
-          "value": 4
+          "value": 4,
+          "name": "Schedule5"
         },
         {
-          "name": "Schedule6",
-          "value": 5
+          "value": 5,
+          "name": "Schedule6"
         },
         {
-          "name": "Schedule7",
-          "value": 6
+          "value": 6,
+          "name": "Schedule7"
         },
         {
-          "name": "Schedule8",
-          "value": 7
+          "value": 7,
+          "name": "Schedule8"
         },
         {
-          "name": "Schedule9",
-          "value": 8
+          "value": 8,
+          "name": "Schedule9"
         },
         {
-          "name": "Schedule10",
-          "value": 9
+          "value": 9,
+          "name": "Schedule10"
         },
         {
-          "name": "Schedule11",
-          "value": 10
+          "value": 10,
+          "name": "Schedule11"
         },
         {
-          "name": "Schedule12",
-          "value": 11
+          "value": 11,
+          "name": "Schedule12"
         },
         {
-          "name": "Schedule13",
-          "value": 12
+          "value": 12,
+          "name": "Schedule13"
         },
         {
-          "name": "Reset All",
-          "value": 255
+          "value": 13,
+          "name": "Schedule14"
+        },
+        {
+          "value": 14,
+          "name": "Schedule15"
+        },
+        {
+          "value": 15,
+          "name": "Schedule16"
+        },
+        {
+          "value": 255,
+          "name": "Reset All"
         }
       ],
       "bacnet_type": "multistate_value_object",
       "bacnet_unit_type_id": 95,
-      "bacnet_unit_type": "UNITS_NO_UNITS"
+      "bacnet_unit_type": "UNITS_NO_UNITS",
+      "reference": []
     },
     {
       "id": "reset",
       "name": "Reset",
-      "value": "",
-      "unit": "",
       "access_mode": "W",
-      "data_type": "NUMBER",
+      "data_type": "BOOL",
       "value_type": "UINT8",
-      "range": [
-        0,
-        1
-      ],
-      "bacnet_type": "analog_output_object",
+      "unit": "",
       "bacnet_unit_type_id": 95,
-      "bacnet_unit_type": "UNITS_NO_UNITS"
+      "bacnet_unit_type": "UNITS_NO_UNITS",
+      "bacnet_type": "binary_output_object",
+      "value": "",
+      "values": [
+        {
+          "value": 0,
+          "name": "no"
+        },
+        {
+          "value": 1,
+          "name": "yes"
+        }
+      ]
     },
     {
       "id": "reboot",
       "name": "Reboot",
-      "value": "",
-      "unit": "",
       "access_mode": "W",
-      "data_type": "NUMBER",
+      "data_type": "BOOL",
       "value_type": "UINT8",
-      "range": [
-        0,
-        1
-      ],
-      "bacnet_type": "analog_output_object",
+      "unit": "",
       "bacnet_unit_type_id": 95,
-      "bacnet_unit_type": "UNITS_NO_UNITS"
+      "bacnet_unit_type": "UNITS_NO_UNITS",
+      "bacnet_type": "binary_output_object",
+      "value": "",
+      "values": [
+        {
+          "value": 0,
+          "name": "no"
+        },
+        {
+          "value": 1,
+          "name": "yes"
+        }
+      ]
     }
   ]
 }
