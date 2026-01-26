@@ -631,78 +631,78 @@ function milesightDeviceEncode(payload) {
 		encoded = encoded.concat(buffer.toBytes());
 	}
 	//0x65
-	if ('target_temperature_control_settings' in payload) {
+	if ('temp_control' in payload) {
 		var buffer = new Buffer();
-		if (isValid(payload.target_temperature_control_settings.enable)) {
+		if (isValid(payload.temp_control.enable)) {
 			buffer.writeUInt8(0x65);
 			// 0：Disable, 1：Enable
 			buffer.writeUInt8(0x00);
 			// 0：Disable, 1：Enable
-			buffer.writeUInt8(payload.target_temperature_control_settings.enable);
+			buffer.writeUInt8(payload.temp_control.enable);
 		}
-		if (isValid(payload.target_temperature_control_settings.target_temperature_resolution)) {
+		if (isValid(payload.temp_control.target_temperature_resolution)) {
 			buffer.writeUInt8(0x65);
 			// 0：0.5, 1：1
 			buffer.writeUInt8(0x01);
 			// 0：0.5, 1：1
-			buffer.writeUInt8(payload.target_temperature_control_settings.target_temperature_resolution);
+			buffer.writeUInt8(payload.temp_control.target_temperature_resolution);
 		}
-		if (isValid(payload.target_temperature_control_settings.under_temperature_side_deadband)) {
+		if (isValid(payload.temp_control.under_temperature_side_deadband)) {
 			buffer.writeUInt8(0x65);
 			buffer.writeUInt8(0x02);
-			if (payload.target_temperature_control_settings.under_temperature_side_deadband < 0.1 || payload.target_temperature_control_settings.under_temperature_side_deadband > 5) {
-				throw new Error('target_temperature_control_settings.under_temperature_side_deadband must be between 0.1 and 5');
+			if (payload.temp_control.under_temperature_side_deadband < 0.1 || payload.temp_control.under_temperature_side_deadband > 5) {
+				throw new Error('temp_control.under_temperature_side_deadband must be between 0.1 and 5');
 			}
-			buffer.writeInt16LE(payload.target_temperature_control_settings.under_temperature_side_deadband * 100);
+			buffer.writeInt16LE(payload.temp_control.under_temperature_side_deadband * 100);
 		}
-		if (isValid(payload.target_temperature_control_settings.over_temperature_side_deadband)) {
+		if (isValid(payload.temp_control.over_temperature_side_deadband)) {
 			buffer.writeUInt8(0x65);
 			buffer.writeUInt8(0x03);
-			if (payload.target_temperature_control_settings.over_temperature_side_deadband < 0.1 || payload.target_temperature_control_settings.over_temperature_side_deadband > 5) {
-				throw new Error('target_temperature_control_settings.over_temperature_side_deadband must be between 0.1 and 5');
+			if (payload.temp_control.over_temperature_side_deadband < 0.1 || payload.temp_control.over_temperature_side_deadband > 5) {
+				throw new Error('temp_control.over_temperature_side_deadband must be between 0.1 and 5');
 			}
-			buffer.writeInt16LE(payload.target_temperature_control_settings.over_temperature_side_deadband * 100);
+			buffer.writeInt16LE(payload.temp_control.over_temperature_side_deadband * 100);
 		}
-		if (isValid(payload.target_temperature_control_settings.target_temperature_adjustment_range_min)) {
+		if (isValid(payload.temp_control.target_temperature_adjustment_range_min)) {
 			buffer.writeUInt8(0x65);
 			buffer.writeUInt8(0x04);
-			if (payload.target_temperature_control_settings.target_temperature_adjustment_range_min < 5 || payload.target_temperature_control_settings.target_temperature_adjustment_range_min > 35) {
-				throw new Error('target_temperature_control_settings.target_temperature_adjustment_range_min must be between 5 and 35');
+			if (payload.temp_control.target_temperature_adjustment_range_min < 5 || payload.temp_control.target_temperature_adjustment_range_min > 35) {
+				throw new Error('temp_control.target_temperature_adjustment_range_min must be between 5 and 35');
 			}
-			buffer.writeInt16LE(payload.target_temperature_control_settings.target_temperature_adjustment_range_min * 100);
+			buffer.writeInt16LE(payload.temp_control.target_temperature_adjustment_range_min * 100);
 		}
-		if (isValid(payload.target_temperature_control_settings.target_temperature_adjustment_range_max)) {
+		if (isValid(payload.temp_control.target_temperature_adjustment_range_max)) {
 			buffer.writeUInt8(0x65);
 			buffer.writeUInt8(0x05);
-			if (payload.target_temperature_control_settings.target_temperature_adjustment_range_max < 5 || payload.target_temperature_control_settings.target_temperature_adjustment_range_max > 35) {
-				throw new Error('target_temperature_control_settings.target_temperature_adjustment_range_max must be between 5 and 35');
+			if (payload.temp_control.target_temperature_adjustment_range_max < 5 || payload.temp_control.target_temperature_adjustment_range_max > 35) {
+				throw new Error('temp_control.target_temperature_adjustment_range_max must be between 5 and 35');
 			}
-			buffer.writeInt16LE(payload.target_temperature_control_settings.target_temperature_adjustment_range_max * 100);
+			buffer.writeInt16LE(payload.temp_control.target_temperature_adjustment_range_max * 100);
 		}
-		if (isValid(payload.target_temperature_control_settings.mode_settings)) {
+		if (isValid(payload.temp_control.mode_settings)) {
 			buffer.writeUInt8(0x65);
 			buffer.writeUInt8(0x06);
 			// 0：Automatic Temperature Control, 1：Valve Opening Control, 2：Integrated Control
-			buffer.writeUInt8(payload.target_temperature_control_settings.mode_settings.mode);
-			if (payload.target_temperature_control_settings.mode_settings.mode == 0x00) {
-				if (payload.target_temperature_control_settings.mode_settings.auto_control !== undefined && payload.target_temperature_control_settings.mode_settings.auto_control.target_temperature !== undefined) {
-					if (payload.target_temperature_control_settings.mode_settings.auto_control.target_temperature < 5 || payload.target_temperature_control_settings.mode_settings.auto_control.target_temperature > 35) {
-						throw new Error('target_temperature_control_settings.mode_settings.auto_control.target_temperature must be between 5 and 35');
+			buffer.writeUInt8(payload.temp_control.mode_settings.mode);
+			if (payload.temp_control.mode_settings.mode == 0x00) {
+				if (payload.temp_control.mode_settings.auto_control !== undefined && payload.temp_control.mode_settings.auto_control.target_temperature !== undefined) {
+					if (payload.temp_control.mode_settings.auto_control.target_temperature < 5 || payload.temp_control.mode_settings.auto_control.target_temperature > 35) {
+						throw new Error('temp_control.mode_settings.auto_control.target_temperature must be between 5 and 35');
 					}
-					buffer.writeInt16LE(payload.target_temperature_control_settings.mode_settings.auto_control.target_temperature * 100);
+					buffer.writeInt16LE(payload.temp_control.mode_settings.auto_control.target_temperature * 100);
 				}
 			}
-			if (payload.target_temperature_control_settings.mode_settings.mode == 0x01) {
-				if (payload.target_temperature_control_settings.mode_settings.valve_control.target_valve_status < 0 || payload.target_temperature_control_settings.mode_settings.valve_control.target_valve_status > 100) {
-					throw new Error('target_temperature_control_settings.mode_settings.valve_control.target_valve_status must be between 0 and 100');
+			if (payload.temp_control.mode_settings.mode == 0x01) {
+				if (payload.temp_control.mode_settings.valve_control.target_valve_status < 0 || payload.temp_control.mode_settings.valve_control.target_valve_status > 100) {
+					throw new Error('temp_control.mode_settings.valve_control.target_valve_status must be between 0 and 100');
 				}
-				buffer.writeUInt8(payload.target_temperature_control_settings.mode_settings.valve_control.target_valve_status);
+				buffer.writeUInt8(payload.temp_control.mode_settings.valve_control.target_valve_status);
 			}
-			if (payload.target_temperature_control_settings.mode_settings.mode == 0x02) {
-				if (payload.target_temperature_control_settings.mode_settings.intergrated_control.target_temperature < 5 || payload.target_temperature_control_settings.mode_settings.intergrated_control.target_temperature > 35) {
-					throw new Error('target_temperature_control_settings.mode_settings.intergrated_control.target_temperature must be between 5 and 35');
+			if (payload.temp_control.mode_settings.mode == 0x02) {
+				if (payload.temp_control.mode_settings.intergrated_control.target_temperature < 5 || payload.temp_control.mode_settings.intergrated_control.target_temperature > 35) {
+					throw new Error('temp_control.mode_settings.intergrated_control.target_temperature must be between 5 and 35');
 				}
-				buffer.writeInt16LE(payload.target_temperature_control_settings.mode_settings.intergrated_control.target_temperature * 100);
+				buffer.writeInt16LE(payload.temp_control.mode_settings.intergrated_control.target_temperature * 100);
 			}
 		}
 		encoded = encoded.concat(buffer.toBytes());
