@@ -65,6 +65,9 @@ function milesightDeviceEncode(payload) {
     if ("clear_history" in payload) {
         encoded = encoded.concat(clearHistory(payload.clear_history));
     }
+    if ("full_storage_alarm_enable" in payload) {
+        encoded = encoded.concat(setFullStorageAlarmEnable(payload.full_storage_alarm_enable));
+    }
 
     return encoded;
 }
@@ -313,6 +316,25 @@ function clearHistory(clear_history) {
         return [];
     }
     return [0xff, 0x27, 0x01];
+}
+
+/**
+ * set full storage alarm enable (V1.7+, cert version only)
+ * @param {number} full_storage_alarm_enable values: (0: disable, 1: enable)
+ * @example { "full_storage_alarm_enable": 1 }
+ */
+function setFullStorageAlarmEnable(full_storage_alarm_enable) {
+    var enable_map = { 0: "disable", 1: "enable" };
+    var enable_values = getValues(enable_map);
+    if (enable_values.indexOf(full_storage_alarm_enable) === -1) {
+        throw new Error("full_storage_alarm_enable must be one of " + enable_values.join(", "));
+    }
+
+    var buffer = new Buffer(3);
+    buffer.writeUInt8(0xf9);
+    buffer.writeUInt8(0xc9);
+    buffer.writeUInt8(getValue(enable_map, full_storage_alarm_enable));
+    return buffer.toBytes();
 }
 
 function getValues(map) {

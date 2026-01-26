@@ -89,6 +89,11 @@ function milesightDeviceDecode(bytes) {
             decoded.humidity = readUInt8(bytes[i]) / 2;
             i += 1;
         }
+        // STORAGE STATUS (V1.7+, cert version only)
+        else if (channel_id === 0x05 && channel_type === 0x9c) {
+            decoded.storage_status = readStorageStatus(bytes[i]);
+            i += 1;
+        }
         // HISTORY
         else if (channel_id === 0x20 && channel_type === 0xce) {
             var data = {};
@@ -99,9 +104,14 @@ function milesightDeviceDecode(bytes) {
             decoded.history = decoded.history || [];
             decoded.history.push(data);
         }
+        // FULL STORAGE ALARM ENABLE (V1.7+, cert version only)
+        else if (channel_id === 0xf9 && channel_type === 0xc9) {
+            decoded.full_storage_alarm_enable = readEnableStatus(bytes[i]);
+            i += 1;
+        }
         // DOWNLINK RESPONSE
-        else if (channel_id === 0xfe || channel_id === 0xff) {
-            var result = handle_downlink_response(channel_type, bytes, i);
+        else if (channel_id === 0xfe || channel_id === 0xff || channel_id === 0xf8) {
+            var result = handle_downlink_response(channel_id, channel_type, bytes, i);
             decoded = Object.assign(decoded, result.data);
             i = result.offset;
         } else {
@@ -112,8 +122,9 @@ function milesightDeviceDecode(bytes) {
     return decoded;
 }
 
-function handle_downlink_response(channel_type, bytes, offset) {
+function handle_downlink_response(channel_id, channel_type, bytes, offset) {
     var decoded = {};
+    var has_result_flag = hasResultFlag(channel_id);
 
     switch (channel_type) {
         case 0x02:
@@ -162,6 +173,24 @@ function handle_downlink_response(channel_type, bytes, offset) {
                 decoded.resend_interval = readUInt16LE(bytes.slice(offset + 1, offset + 3));
             }
             offset += 3;
+            break;
+        // FULL STORAGE ALARM ENABLE (V1.7+, cert version only)
+        case 0xc9:
+            decoded.full_storage_alarm_enable = readEnableStatus(bytes[offset]);
+            offset += 1;
+            // For F8 channel, read result code
+            if (has_result_flag) {
+                var result_code = readUInt8(bytes[offset]);
+                offset += 1;
+                if (result_code !== 0) {
+                    var request = decoded;
+                    decoded = {};
+                    decoded.device_response_result = {};
+                    decoded.device_response_result.channel_type = channel_type;
+                    decoded.device_response_result.result = readResultStatus(result_code);
+                    decoded.device_response_result.request = request;
+                }
+            }
             break;
         default:
             throw new Error("unknown downlink response");
@@ -219,6 +248,33 @@ function readResetEvent(status) {
 
 function readDeviceStatus(status) {
     var status_map = { 0: "off", 1: "on" };
+    return getValue(status_map, status);
+}
+
+/**
+ * read storage status (V1.7+, cert version only)
+ * @param {number} status values: (1: sufficient, 2: less_than_10_percent, 3: full, 4: overwritten)
+ */
+function readStorageStatus(status) {
+    var status_map = {
+        1: "sufficient",
+        2: "less_than_10_percent",
+        3: "full",
+        4: "overwritten"
+    };
+    return getValue(status_map, status);
+}
+
+function hasResultFlag(channel_id) {
+    return channel_id === 0xf8;
+}
+
+function readResultStatus(status) {
+    var status_map = {
+        0: "success",
+        1: "forbidden",
+        2: "invalid parameter"
+    };
     return getValue(status_map, status);
 }
 
