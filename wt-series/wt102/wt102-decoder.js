@@ -407,7 +407,7 @@ function milesightDeviceDecode(bytes) {
 					}
 					if (decoded.temp_control.mode_settings.mode == 0x02) {
 						decoded.temp_control.mode_settings.intergrated_control = decoded.temp_control.mode_settings.intergrated_control || {};
-						decoded.temp_control.mode_settings.intergrated_control.target_temperature = readInt16LE(bytes, counterObj, 2) / 100;
+						decoded.temp_control.mode_settings.intergrated_control.target_temp = readInt16LE(bytes, counterObj, 2) / 100;
 					}
 				}
 				break;

@@ -3421,7 +3421,7 @@
             "reference": []
         },
         {
-            "id": "temp_control.mode_settings.intergrated_control.target_temperature",
+            "id": "temp_control.mode_settings.intergrated_control.target_temp",
             "name": "Target Temperature",
             "value": "19",
             "unit": "°C",

@@ -699,10 +699,10 @@ function milesightDeviceEncode(payload) {
 				buffer.writeUInt8(payload.temp_control.mode_settings.valve_control.target_valve_status);
 			}
 			if (payload.temp_control.mode_settings.mode == 0x02) {
-				if (payload.temp_control.mode_settings.intergrated_control.target_temperature < 5 || payload.temp_control.mode_settings.intergrated_control.target_temperature > 35) {
-					throw new Error('temp_control.mode_settings.intergrated_control.target_temperature must be between 5 and 35');
+				if (payload.temp_control.mode_settings.intergrated_control.target_temp < 5 || payload.temp_control.mode_settings.intergrated_control.target_temp > 35) {
+					throw new Error('temp_control.mode_settings.intergrated_control.target_temp must be between 5 and 35');
 				}
-				buffer.writeInt16LE(payload.temp_control.mode_settings.intergrated_control.target_temperature * 100);
+				buffer.writeInt16LE(payload.temp_control.mode_settings.intergrated_control.target_temp * 100);
 			}
 		}
 		encoded = encoded.concat(buffer.toBytes());
