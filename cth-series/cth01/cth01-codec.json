@@ -189,17 +189,7 @@
             "bacnet_type": "multistate_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": [
-                "active_power1.mask1",
-                "active_power1.group1_value",
-                "active_power1.group1.chan1",
-                "active_power1.group1.chan2",
-                "active_power1.group1.chan3",
-                "active_power1.group2_value",
-                "active_power1.group2.chan1",
-                "active_power1.group2.chan2",
-                "active_power1.group2.chan3"
-            ]
+            "reference": []
         },
         {
             "id": "active_power2.group1_value",
@@ -389,17 +379,7 @@
             "bacnet_type": "multistate_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": [
-                "active_power2.mask1",
-                "active_power2.group1_value",
-                "active_power2.group1.chan1",
-                "active_power2.group1.chan2",
-                "active_power2.group1.chan3",
-                "active_power2.group2_value",
-                "active_power2.group2.chan1",
-                "active_power2.group2.chan2",
-                "active_power2.group2.chan3"
-            ]
+            "reference": []
         },
         {
             "id": "alarm_global_settings.interval",
@@ -454,10 +434,10 @@
             "unit": "",
             "access_mode": "RW",
             "data_type": "NUMBER",
-            "value_type": "UINT8",
+            "value_type": "UINT16",
             "range": [
                 1,
-                100
+                1000
             ],
             "bacnet_type": "analog_value_object",
             "bacnet_unit_type_id": 95,
@@ -655,17 +635,7 @@
             "bacnet_type": "multistate_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": [
-                "apparent_energy1.mask1",
-                "apparent_energy1.group1_value",
-                "apparent_energy1.group1.chan1",
-                "apparent_energy1.group1.chan2",
-                "apparent_energy1.group1.chan3",
-                "apparent_energy1.group2_value",
-                "apparent_energy1.group2.chan1",
-                "apparent_energy1.group2.chan2",
-                "apparent_energy1.group2.chan3"
-            ]
+            "reference": []
         },
         {
             "id": "apparent_energy2.group1_value",
@@ -855,17 +825,7 @@
             "bacnet_type": "multistate_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": [
-                "apparent_energy2.mask1",
-                "apparent_energy2.group1_value",
-                "apparent_energy2.group1.chan1",
-                "apparent_energy2.group1.chan2",
-                "apparent_energy2.group1.chan3",
-                "apparent_energy2.group2_value",
-                "apparent_energy2.group2.chan1",
-                "apparent_energy2.group2.chan2",
-                "apparent_energy2.group2.chan3"
-            ]
+            "reference": []
         },
         {
             "id": "apparent_power1.group1_value",
@@ -1055,17 +1015,7 @@
             "bacnet_type": "multistate_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": [
-                "apparent_power1.mask1",
-                "apparent_power1.group1_value",
-                "apparent_power1.group1.chan1",
-                "apparent_power1.group1.chan2",
-                "apparent_power1.group1.chan3",
-                "apparent_power1.group2_value",
-                "apparent_power1.group2.chan1",
-                "apparent_power1.group2.chan2",
-                "apparent_power1.group2.chan3"
-            ]
+            "reference": []
         },
         {
             "id": "apparent_power2.group1_value",
@@ -1255,17 +1205,7 @@
             "bacnet_type": "multistate_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": [
-                "apparent_power2.mask1",
-                "apparent_power2.group1_value",
-                "apparent_power2.group1.chan1",
-                "apparent_power2.group1.chan2",
-                "apparent_power2.group1.chan3",
-                "apparent_power2.group2_value",
-                "apparent_power2.group2.chan1",
-                "apparent_power2.group2.chan2",
-                "apparent_power2.group2.chan3"
-            ]
+            "reference": []
         },
         {
             "id": "bluetooth_name.content",
@@ -1544,19 +1484,7 @@
             "bacnet_type": "multistate_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": [
-                "current_alarm.info.lower_range_error.current",
-                "current_alarm.info.over_range_error.current",
-                "current_alarm.info.over_range_release.current",
-                "current_alarm.info.lower_range_alarm_deactivation.current",
-                "current_alarm.info.lower_range_alarm_trigger.current",
-                "current_alarm.info.over_range_alarm_deactivation.current",
-                "current_alarm.info.over_range_alarm_trigger.current",
-                "current_alarm.info.within_range_alarm_deactivation.current",
-                "current_alarm.info.within_range_alarm_trigger.current",
-                "current_alarm.info.exceed_range_alarm_deactivation.current",
-                "current_alarm.info.exceed_range_alarm_trigger.current"
-            ]
+            "reference": []
         },
         {
             "id": "current_alarm.info.within_range_alarm_deactivation.current",
@@ -1975,17 +1903,7 @@
             "bacnet_type": "multistate_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": [
-                "forward_active_energy1.mask1",
-                "forward_active_energy1.group1_value",
-                "forward_active_energy1.group1.chan1",
-                "forward_active_energy1.group1.chan2",
-                "forward_active_energy1.group1.chan3",
-                "forward_active_energy1.group2_value",
-                "forward_active_energy1.group2.chan1",
-                "forward_active_energy1.group2.chan2",
-                "forward_active_energy1.group2.chan3"
-            ]
+            "reference": []
         },
         {
             "id": "forward_active_energy2.group1_value",
@@ -2175,17 +2093,7 @@
             "bacnet_type": "multistate_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": [
-                "forward_active_energy2.mask1",
-                "forward_active_energy2.group1_value",
-                "forward_active_energy2.group1.chan1",
-                "forward_active_energy2.group1.chan2",
-                "forward_active_energy2.group1.chan3",
-                "forward_active_energy2.group2_value",
-                "forward_active_energy2.group2.chan1",
-                "forward_active_energy2.group2.chan2",
-                "forward_active_energy2.group2.chan3"
-            ]
+            "reference": []
         },
         {
             "id": "forward_reactive_energy1.group1_value",
@@ -2375,17 +2283,7 @@
             "bacnet_type": "multistate_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": [
-                "forward_reactive_energy1.mask1",
-                "forward_reactive_energy1.group1_value",
-                "forward_reactive_energy1.group1.chan1",
-                "forward_reactive_energy1.group1.chan2",
-                "forward_reactive_energy1.group1.chan3",
-                "forward_reactive_energy1.group2_value",
-                "forward_reactive_energy1.group2.chan1",
-                "forward_reactive_energy1.group2.chan2",
-                "forward_reactive_energy1.group2.chan3"
-            ]
+            "reference": []
         },
         {
             "id": "forward_reactive_energy2.group1_value",
@@ -2575,17 +2473,7 @@
             "bacnet_type": "multistate_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": [
-                "forward_reactive_energy2.mask1",
-                "forward_reactive_energy2.group1_value",
-                "forward_reactive_energy2.group1.chan1",
-                "forward_reactive_energy2.group1.chan2",
-                "forward_reactive_energy2.group1.chan3",
-                "forward_reactive_energy2.group2_value",
-                "forward_reactive_energy2.group2.chan1",
-                "forward_reactive_energy2.group2.chan2",
-                "forward_reactive_energy2.group2.chan3"
-            ]
+            "reference": []
         },
         {
             "id": "historical_data_report.mode",
@@ -2626,6 +2514,33 @@
             "reference": [
                 "historical_data_report.mode"
             ]
+        },
+        {
+            "id": "history_type.type",
+            "name": "Historical Data Type",
+            "value": "1",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 1,
+                    "name": "month energy"
+                },
+                {
+                    "value": 2,
+                    "name": "month min"
+                },
+                {
+                    "value": 3,
+                    "name": "month max"
+                }
+            ],
+            "bacnet_type": "multistate_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": []
         },
         {
             "id": "month_statistics_settings.day",
@@ -2704,7 +2619,7 @@
             "id": "power_factor.group1_value",
             "name": "Power Factor",
             "value": "0",
-            "unit": "%",
+            "unit": "",
             "access_mode": "R",
             "data_type": "NUMBER",
             "value_type": "FLOAT",
@@ -2713,8 +2628,8 @@
                 100
             ],
             "bacnet_type": "analog_input_object",
-            "bacnet_unit_type_id": 98,
-            "bacnet_unit_type": "UNITS_PERCENT",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": [
                 "power_factor.mask4"
             ]
@@ -2723,7 +2638,7 @@
             "id": "power_factor.group1.chan1",
             "name": "Power Factor",
             "value": "0",
-            "unit": "%",
+            "unit": "",
             "access_mode": "R",
             "data_type": "NUMBER",
             "value_type": "FLOAT",
@@ -2732,8 +2647,8 @@
                 100
             ],
             "bacnet_type": "analog_input_object",
-            "bacnet_unit_type_id": 98,
-            "bacnet_unit_type": "UNITS_PERCENT",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": [
                 "power_factor.group1.chan2",
                 "power_factor.group1.chan3"
@@ -2743,7 +2658,7 @@
             "id": "power_factor.group1.chan2",
             "name": "Power Factor",
             "value": "0",
-            "unit": "%",
+            "unit": "",
             "access_mode": "R",
             "data_type": "NUMBER",
             "value_type": "FLOAT",
@@ -2752,8 +2667,8 @@
                 100
             ],
             "bacnet_type": "analog_input_object",
-            "bacnet_unit_type_id": 98,
-            "bacnet_unit_type": "UNITS_PERCENT",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": [
                 "power_factor.group1.chan1",
                 "power_factor.group1.chan3"
@@ -2763,7 +2678,7 @@
             "id": "power_factor.group1.chan3",
             "name": "Power Factor",
             "value": "0",
-            "unit": "%",
+            "unit": "",
             "access_mode": "R",
             "data_type": "NUMBER",
             "value_type": "FLOAT",
@@ -2772,8 +2687,8 @@
                 100
             ],
             "bacnet_type": "analog_input_object",
-            "bacnet_unit_type_id": 98,
-            "bacnet_unit_type": "UNITS_PERCENT",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": [
                 "power_factor.group1.chan1",
                 "power_factor.group1.chan2"
@@ -2783,7 +2698,7 @@
             "id": "power_factor.group2_value",
             "name": "Power Factor",
             "value": "0",
-            "unit": "%",
+            "unit": "",
             "access_mode": "R",
             "data_type": "NUMBER",
             "value_type": "FLOAT",
@@ -2792,8 +2707,8 @@
                 100
             ],
             "bacnet_type": "analog_input_object",
-            "bacnet_unit_type_id": 98,
-            "bacnet_unit_type": "UNITS_PERCENT",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": [
                 "power_factor.mask4"
             ]
@@ -2802,7 +2717,7 @@
             "id": "power_factor.group2.chan1",
             "name": "Power Factor",
             "value": "0",
-            "unit": "%",
+            "unit": "",
             "access_mode": "R",
             "data_type": "NUMBER",
             "value_type": "FLOAT",
@@ -2811,8 +2726,8 @@
                 100
             ],
             "bacnet_type": "analog_input_object",
-            "bacnet_unit_type_id": 98,
-            "bacnet_unit_type": "UNITS_PERCENT",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": [
                 "power_factor.group2.chan2",
                 "power_factor.group2.chan3"
@@ -2822,7 +2737,7 @@
             "id": "power_factor.group2.chan2",
             "name": "Power Factor",
             "value": "0",
-            "unit": "%",
+            "unit": "",
             "access_mode": "R",
             "data_type": "NUMBER",
             "value_type": "FLOAT",
@@ -2831,8 +2746,8 @@
                 100
             ],
             "bacnet_type": "analog_input_object",
-            "bacnet_unit_type_id": 98,
-            "bacnet_unit_type": "UNITS_PERCENT",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": [
                 "power_factor.group2.chan1",
                 "power_factor.group2.chan3"
@@ -2842,7 +2757,7 @@
             "id": "power_factor.group2.chan3",
             "name": "Power Factor",
             "value": "0",
-            "unit": "%",
+            "unit": "",
             "access_mode": "R",
             "data_type": "NUMBER",
             "value_type": "FLOAT",
@@ -2851,8 +2766,8 @@
                 100
             ],
             "bacnet_type": "analog_input_object",
-            "bacnet_unit_type_id": 98,
-            "bacnet_unit_type": "UNITS_PERCENT",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": [
                 "power_factor.group2.chan1",
                 "power_factor.group2.chan2"
@@ -2862,7 +2777,7 @@
             "id": "power_factor.group3_value",
             "name": "Power Factor",
             "value": "0",
-            "unit": "%",
+            "unit": "",
             "access_mode": "R",
             "data_type": "NUMBER",
             "value_type": "FLOAT",
@@ -2871,8 +2786,8 @@
                 100
             ],
             "bacnet_type": "analog_input_object",
-            "bacnet_unit_type_id": 98,
-            "bacnet_unit_type": "UNITS_PERCENT",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": [
                 "power_factor.mask4"
             ]
@@ -2881,7 +2796,7 @@
             "id": "power_factor.group3.chan1",
             "name": "Power Factor",
             "value": "0",
-            "unit": "%",
+            "unit": "",
             "access_mode": "R",
             "data_type": "NUMBER",
             "value_type": "FLOAT",
@@ -2890,8 +2805,8 @@
                 100
             ],
             "bacnet_type": "analog_input_object",
-            "bacnet_unit_type_id": 98,
-            "bacnet_unit_type": "UNITS_PERCENT",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": [
                 "power_factor.group3.chan2",
                 "power_factor.group3.chan3"
@@ -2901,7 +2816,7 @@
             "id": "power_factor.group3.chan2",
             "name": "Power Factor",
             "value": "0",
-            "unit": "%",
+            "unit": "",
             "access_mode": "R",
             "data_type": "NUMBER",
             "value_type": "FLOAT",
@@ -2910,8 +2825,8 @@
                 100
             ],
             "bacnet_type": "analog_input_object",
-            "bacnet_unit_type_id": 98,
-            "bacnet_unit_type": "UNITS_PERCENT",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": [
                 "power_factor.group3.chan1",
                 "power_factor.group3.chan3"
@@ -2921,7 +2836,7 @@
             "id": "power_factor.group3.chan3",
             "name": "Power Factor",
             "value": "0",
-            "unit": "%",
+            "unit": "",
             "access_mode": "R",
             "data_type": "NUMBER",
             "value_type": "FLOAT",
@@ -2930,8 +2845,8 @@
                 100
             ],
             "bacnet_type": "analog_input_object",
-            "bacnet_unit_type_id": 98,
-            "bacnet_unit_type": "UNITS_PERCENT",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": [
                 "power_factor.group3.chan1",
                 "power_factor.group3.chan2"
@@ -2941,7 +2856,7 @@
             "id": "power_factor.group4_value",
             "name": "Power Factor",
             "value": "0",
-            "unit": "%",
+            "unit": "",
             "access_mode": "R",
             "data_type": "NUMBER",
             "value_type": "FLOAT",
@@ -2950,8 +2865,8 @@
                 100
             ],
             "bacnet_type": "analog_input_object",
-            "bacnet_unit_type_id": 98,
-            "bacnet_unit_type": "UNITS_PERCENT",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": [
                 "power_factor.mask4"
             ]
@@ -2960,7 +2875,7 @@
             "id": "power_factor.group4.chan1",
             "name": "Power Factor",
             "value": "0",
-            "unit": "%",
+            "unit": "",
             "access_mode": "R",
             "data_type": "NUMBER",
             "value_type": "FLOAT",
@@ -2969,8 +2884,8 @@
                 100
             ],
             "bacnet_type": "analog_input_object",
-            "bacnet_unit_type_id": 98,
-            "bacnet_unit_type": "UNITS_PERCENT",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": [
                 "power_factor.group4.chan2",
                 "power_factor.group4.chan3"
@@ -2980,7 +2895,7 @@
             "id": "power_factor.group4.chan2",
             "name": "Power Factor",
             "value": "0",
-            "unit": "%",
+            "unit": "",
             "access_mode": "R",
             "data_type": "NUMBER",
             "value_type": "FLOAT",
@@ -2989,8 +2904,8 @@
                 100
             ],
             "bacnet_type": "analog_input_object",
-            "bacnet_unit_type_id": 98,
-            "bacnet_unit_type": "UNITS_PERCENT",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": [
                 "power_factor.group4.chan1",
                 "power_factor.group4.chan3"
@@ -3000,7 +2915,7 @@
             "id": "power_factor.group4.chan3",
             "name": "Power Factor",
             "value": "0",
-            "unit": "%",
+            "unit": "",
             "access_mode": "R",
             "data_type": "NUMBER",
             "value_type": "FLOAT",
@@ -3009,8 +2924,8 @@
                 100
             ],
             "bacnet_type": "analog_input_object",
-            "bacnet_unit_type_id": 98,
-            "bacnet_unit_type": "UNITS_PERCENT",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": [
                 "power_factor.group4.chan1",
                 "power_factor.group4.chan2"
@@ -3208,27 +3123,7 @@
             "bacnet_type": "multistate_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": [
-                "power_factor.mask1",
-                "power_factor.mask2",
-                "power_factor.mask3",
-                "power_factor.group1_value",
-                "power_factor.group1.chan1",
-                "power_factor.group1.chan2",
-                "power_factor.group1.chan3",
-                "power_factor.group2_value",
-                "power_factor.group2.chan1",
-                "power_factor.group2.chan2",
-                "power_factor.group2.chan3",
-                "power_factor.group3_value",
-                "power_factor.group3.chan1",
-                "power_factor.group3.chan2",
-                "power_factor.group3.chan3",
-                "power_factor.group4_value",
-                "power_factor.group4.chan1",
-                "power_factor.group4.chan2",
-                "power_factor.group4.chan3"
-            ]
+            "reference": []
         },
         {
             "id": "product_sn",
@@ -3475,17 +3370,7 @@
             "bacnet_type": "multistate_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": [
-                "reactive_power1.mask1",
-                "reactive_power1.group1_value",
-                "reactive_power1.group1.chan1",
-                "reactive_power1.group1.chan2",
-                "reactive_power1.group1.chan3",
-                "reactive_power1.group2_value",
-                "reactive_power1.group2.chan1",
-                "reactive_power1.group2.chan2",
-                "reactive_power1.group2.chan3"
-            ]
+            "reference": []
         },
         {
             "id": "reactive_power2.group1_value",
@@ -3675,17 +3560,7 @@
             "bacnet_type": "multistate_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": [
-                "reactive_power2.mask1",
-                "reactive_power2.group1_value",
-                "reactive_power2.group1.chan1",
-                "reactive_power2.group1.chan2",
-                "reactive_power2.group1.chan3",
-                "reactive_power2.group2_value",
-                "reactive_power2.group2.chan1",
-                "reactive_power2.group2.chan2",
-                "reactive_power2.group2.chan3"
-            ]
+            "reference": []
         },
         {
             "id": "reboot",
@@ -4360,10 +4235,7 @@
             "bacnet_type": "multistate_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": [
-                "reporting_interval.seconds_of_time",
-                "reporting_interval.minutes_of_time"
-            ]
+            "reference": []
         },
         {
             "id": "request_query_all_configurations",
@@ -4724,17 +4596,7 @@
             "bacnet_type": "multistate_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": [
-                "reverse_active_energy1.mask1",
-                "reverse_active_energy1.group1_value",
-                "reverse_active_energy1.group1.chan1",
-                "reverse_active_energy1.group1.chan2",
-                "reverse_active_energy1.group1.chan3",
-                "reverse_active_energy1.group2_value",
-                "reverse_active_energy1.group2.chan1",
-                "reverse_active_energy1.group2.chan2",
-                "reverse_active_energy1.group2.chan3"
-            ]
+            "reference": []
         },
         {
             "id": "reverse_active_energy2.group1_value",
@@ -4924,17 +4786,7 @@
             "bacnet_type": "multistate_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": [
-                "reverse_active_energy2.mask1",
-                "reverse_active_energy2.group1_value",
-                "reverse_active_energy2.group1.chan1",
-                "reverse_active_energy2.group1.chan2",
-                "reverse_active_energy2.group1.chan3",
-                "reverse_active_energy2.group2_value",
-                "reverse_active_energy2.group2.chan1",
-                "reverse_active_energy2.group2.chan2",
-                "reverse_active_energy2.group2.chan3"
-            ]
+            "reference": []
         },
         {
             "id": "reverse_reactive_energy1.group1_value",
@@ -5124,17 +4976,7 @@
             "bacnet_type": "multistate_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": [
-                "reverse_reactive_energy1.mask1",
-                "reverse_reactive_energy1.group1_value",
-                "reverse_reactive_energy1.group1.chan1",
-                "reverse_reactive_energy1.group1.chan2",
-                "reverse_reactive_energy1.group1.chan3",
-                "reverse_reactive_energy1.group2_value",
-                "reverse_reactive_energy1.group2.chan1",
-                "reverse_reactive_energy1.group2.chan2",
-                "reverse_reactive_energy1.group2.chan3"
-            ]
+            "reference": []
         },
         {
             "id": "reverse_reactive_energy2.group1.chan1",
@@ -5309,16 +5151,7 @@
             "bacnet_type": "multistate_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": [
-                "reverse_reactive_energy2.mask1",
-                "reverse_reactive_energy2.group1.chan1",
-                "reverse_reactive_energy2.group1.chan2",
-                "reverse_reactive_energy2.group1.chan3",
-                "reverse_reactive_energy2.group2_value",
-                "reverse_reactive_energy2.group2.chan1",
-                "reverse_reactive_energy2.group2.chan2",
-                "reverse_reactive_energy2.group2.chan3"
-            ]
+            "reference": []
         },
         {
             "id": "stop_historical_data_retrieval.type",
@@ -5383,7 +5216,7 @@
             "value_type": "FLOAT",
             "range": [
                 -20,
-                60
+                100
             ],
             "bacnet_type": "analog_input_object",
             "bacnet_unit_type_id": 62,
@@ -5465,7 +5298,7 @@
             "value_type": "FLOAT",
             "range": [
                 -20,
-                60
+                100
             ],
             "bacnet_type": "analog_value_object",
             "bacnet_unit_type_id": 62,
@@ -5486,7 +5319,7 @@
             "value_type": "FLOAT",
             "range": [
                 -20,
-                60
+                100
             ],
             "bacnet_type": "analog_value_object",
             "bacnet_unit_type_id": 62,
@@ -5507,7 +5340,7 @@
             "value_type": "FLOAT",
             "range": [
                 -20,
-                60
+                100
             ],
             "bacnet_type": "analog_input_object",
             "bacnet_unit_type_id": 62,
@@ -5524,7 +5357,7 @@
             "value_type": "FLOAT",
             "range": [
                 -20,
-                60
+                100
             ],
             "bacnet_type": "analog_input_object",
             "bacnet_unit_type_id": 62,
@@ -5541,7 +5374,7 @@
             "value_type": "FLOAT",
             "range": [
                 -20,
-                60
+                100
             ],
             "bacnet_type": "analog_input_object",
             "bacnet_unit_type_id": 62,
@@ -5558,7 +5391,7 @@
             "value_type": "FLOAT",
             "range": [
                 -20,
-                60
+                100
             ],
             "bacnet_type": "analog_input_object",
             "bacnet_unit_type_id": 62,
@@ -5575,7 +5408,7 @@
             "value_type": "FLOAT",
             "range": [
                 -20,
-                60
+                100
             ],
             "bacnet_type": "analog_input_object",
             "bacnet_unit_type_id": 62,
@@ -5592,7 +5425,7 @@
             "value_type": "FLOAT",
             "range": [
                 -20,
-                60
+                100
             ],
             "bacnet_type": "analog_input_object",
             "bacnet_unit_type_id": 62,
@@ -5660,16 +5493,7 @@
             "bacnet_type": "multistate_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": [
-                "temperature_alarm.lower_range_alarm_deactivation.temperature",
-                "temperature_alarm.lower_range_alarm_trigger.temperature",
-                "temperature_alarm.over_range_alarm_deactivation.temperature",
-                "temperature_alarm.over_range_alarm_trigger.temperature",
-                "temperature_alarm.within_range_alarm_deactivation.temperature",
-                "temperature_alarm.within_range_alarm_trigger.temperature",
-                "temperature_alarm.exceed_range_alarm_deactivation.temperature",
-                "temperature_alarm.exceed_range_alarm_trigger.temperature"
-            ]
+            "reference": []
         },
         {
             "id": "temperature_alarm.within_range_alarm_deactivation.temperature",
@@ -5681,7 +5505,7 @@
             "value_type": "FLOAT",
             "range": [
                 -20,
-                60
+                100
             ],
             "bacnet_type": "analog_input_object",
             "bacnet_unit_type_id": 62,
@@ -5698,7 +5522,7 @@
             "value_type": "FLOAT",
             "range": [
                 -20,
-                60
+                100
             ],
             "bacnet_type": "analog_input_object",
             "bacnet_unit_type_id": 62,
@@ -5714,8 +5538,8 @@
             "data_type": "NUMBER",
             "value_type": "FLOAT",
             "range": [
-                -80,
-                80
+                -120,
+                120
             ],
             "bacnet_type": "analog_value_object",
             "bacnet_unit_type_id": 62,
@@ -5843,10 +5667,7 @@
             "bacnet_type": "multistate_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": [
-                "thdi_alarm.info.over_range_alarm_deactivation.thdi",
-                "thdi_alarm.info.over_range_alarm_trigger.thdi"
-            ]
+            "reference": []
         },
         {
             "id": "thdv_alarm.channel",
@@ -5920,10 +5741,7 @@
             "bacnet_type": "multistate_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": [
-                "thdv_alarm.info.over_range_alarm_deactivation.thdv",
-                "thdv_alarm.info.over_range_alarm_trigger.thdv"
-            ]
+            "reference": []
         },
         {
             "id": "tsl_version",
@@ -6182,19 +6000,7 @@
             "bacnet_type": "multistate_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": [
-                "voltage_alarm.info.lower_range_error.voltage",
-                "voltage_alarm.info.over_range_error.voltage",
-                "voltage_alarm.info.over_range_release.voltage",
-                "voltage_alarm.info.lower_range_alarm_deactivation.voltage",
-                "voltage_alarm.info.lower_range_alarm_trigger.voltage",
-                "voltage_alarm.info.over_range_alarm_deactivation.voltage",
-                "voltage_alarm.info.over_range_alarm_trigger.voltage",
-                "voltage_alarm.info.within_range_alarm_deactivation.voltage",
-                "voltage_alarm.info.within_range_alarm_trigger.voltage",
-                "voltage_alarm.info.exceed_range_alarm_deactivation.voltage",
-                "voltage_alarm.info.exceed_range_alarm_trigger.voltage"
-            ]
+            "reference": []
         },
         {
             "id": "voltage_alarm.info.within_range_alarm_deactivation.voltage",
@@ -6419,10 +6225,7 @@
             "bacnet_type": "multistate_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": [
-                "voltage_unbalance_alarm.over_range_alarm_deactivation.voltage_unbalance",
-                "voltage_unbalance_alarm.over_range_alarm_trigger.voltage_unbalance"
-            ]
+            "reference": []
         }
     ]
 }

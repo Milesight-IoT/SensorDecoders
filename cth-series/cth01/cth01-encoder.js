@@ -187,8 +187,8 @@ function milesightDeviceEncode(payload) {
 	if ('temperature' in payload) {
 		var buffer = new Buffer();
 		buffer.writeUInt8(0x01);
-		if (payload.temperature < -20 || payload.temperature > 60) {
-			throw new Error('temperature must be between -20 and 60');
+		if (payload.temperature < -20 || payload.temperature > 100) {
+			throw new Error('temperature must be between -20 and 100');
 		}
 		buffer.writeInt16LE(payload.temperature * 100);
 		encoded = encoded.concat(buffer.toBytes());
@@ -1425,50 +1425,50 @@ function milesightDeviceEncode(payload) {
 		if (payload.temperature_alarm.type == 0x03) {
 		}
 		if (payload.temperature_alarm.type == 0x10) {
-			if (payload.temperature_alarm.lower_range_alarm_deactivation.temperature < -20 || payload.temperature_alarm.lower_range_alarm_deactivation.temperature > 60) {
-				throw new Error('temperature_alarm.lower_range_alarm_deactivation.temperature must be between -20 and 60');
+			if (payload.temperature_alarm.lower_range_alarm_deactivation.temperature < -20 || payload.temperature_alarm.lower_range_alarm_deactivation.temperature > 100) {
+				throw new Error('temperature_alarm.lower_range_alarm_deactivation.temperature must be between -20 and 100');
 			}
 			buffer.writeInt16LE(payload.temperature_alarm.lower_range_alarm_deactivation.temperature * 100);
 		}
 		if (payload.temperature_alarm.type == 0x11) {
-			if (payload.temperature_alarm.lower_range_alarm_trigger.temperature < -20 || payload.temperature_alarm.lower_range_alarm_trigger.temperature > 60) {
-				throw new Error('temperature_alarm.lower_range_alarm_trigger.temperature must be between -20 and 60');
+			if (payload.temperature_alarm.lower_range_alarm_trigger.temperature < -20 || payload.temperature_alarm.lower_range_alarm_trigger.temperature > 100) {
+				throw new Error('temperature_alarm.lower_range_alarm_trigger.temperature must be between -20 and 100');
 			}
 			buffer.writeInt16LE(payload.temperature_alarm.lower_range_alarm_trigger.temperature * 100);
 		}
 		if (payload.temperature_alarm.type == 0x12) {
-			if (payload.temperature_alarm.over_range_alarm_deactivation.temperature < -20 || payload.temperature_alarm.over_range_alarm_deactivation.temperature > 60) {
-				throw new Error('temperature_alarm.over_range_alarm_deactivation.temperature must be between -20 and 60');
+			if (payload.temperature_alarm.over_range_alarm_deactivation.temperature < -20 || payload.temperature_alarm.over_range_alarm_deactivation.temperature > 100) {
+				throw new Error('temperature_alarm.over_range_alarm_deactivation.temperature must be between -20 and 100');
 			}
 			buffer.writeInt16LE(payload.temperature_alarm.over_range_alarm_deactivation.temperature * 100);
 		}
 		if (payload.temperature_alarm.type == 0x13) {
-			if (payload.temperature_alarm.over_range_alarm_trigger.temperature < -20 || payload.temperature_alarm.over_range_alarm_trigger.temperature > 60) {
-				throw new Error('temperature_alarm.over_range_alarm_trigger.temperature must be between -20 and 60');
+			if (payload.temperature_alarm.over_range_alarm_trigger.temperature < -20 || payload.temperature_alarm.over_range_alarm_trigger.temperature > 100) {
+				throw new Error('temperature_alarm.over_range_alarm_trigger.temperature must be between -20 and 100');
 			}
 			buffer.writeInt16LE(payload.temperature_alarm.over_range_alarm_trigger.temperature * 100);
 		}
 		if (payload.temperature_alarm.type == 0x14) {
-			if (payload.temperature_alarm.within_range_alarm_deactivation.temperature < -20 || payload.temperature_alarm.within_range_alarm_deactivation.temperature > 60) {
-				throw new Error('temperature_alarm.within_range_alarm_deactivation.temperature must be between -20 and 60');
+			if (payload.temperature_alarm.within_range_alarm_deactivation.temperature < -20 || payload.temperature_alarm.within_range_alarm_deactivation.temperature > 100) {
+				throw new Error('temperature_alarm.within_range_alarm_deactivation.temperature must be between -20 and 100');
 			}
 			buffer.writeInt16LE(payload.temperature_alarm.within_range_alarm_deactivation.temperature * 100);
 		}
 		if (payload.temperature_alarm.type == 0x15) {
-			if (payload.temperature_alarm.within_range_alarm_trigger.temperature < -20 || payload.temperature_alarm.within_range_alarm_trigger.temperature > 60) {
-				throw new Error('temperature_alarm.within_range_alarm_trigger.temperature must be between -20 and 60');
+			if (payload.temperature_alarm.within_range_alarm_trigger.temperature < -20 || payload.temperature_alarm.within_range_alarm_trigger.temperature > 100) {
+				throw new Error('temperature_alarm.within_range_alarm_trigger.temperature must be between -20 and 100');
 			}
 			buffer.writeInt16LE(payload.temperature_alarm.within_range_alarm_trigger.temperature * 100);
 		}
 		if (payload.temperature_alarm.type == 0x16) {
-			if (payload.temperature_alarm.exceed_range_alarm_deactivation.temperature < -20 || payload.temperature_alarm.exceed_range_alarm_deactivation.temperature > 60) {
-				throw new Error('temperature_alarm.exceed_range_alarm_deactivation.temperature must be between -20 and 60');
+			if (payload.temperature_alarm.exceed_range_alarm_deactivation.temperature < -20 || payload.temperature_alarm.exceed_range_alarm_deactivation.temperature > 100) {
+				throw new Error('temperature_alarm.exceed_range_alarm_deactivation.temperature must be between -20 and 100');
 			}
 			buffer.writeInt16LE(payload.temperature_alarm.exceed_range_alarm_deactivation.temperature * 100);
 		}
 		if (payload.temperature_alarm.type == 0x17) {
-			if (payload.temperature_alarm.exceed_range_alarm_trigger.temperature < -20 || payload.temperature_alarm.exceed_range_alarm_trigger.temperature > 60) {
-				throw new Error('temperature_alarm.exceed_range_alarm_trigger.temperature must be between -20 and 60');
+			if (payload.temperature_alarm.exceed_range_alarm_trigger.temperature < -20 || payload.temperature_alarm.exceed_range_alarm_trigger.temperature > 100) {
+				throw new Error('temperature_alarm.exceed_range_alarm_trigger.temperature must be between -20 and 100');
 			}
 			buffer.writeInt16LE(payload.temperature_alarm.exceed_range_alarm_trigger.temperature * 100);
 		}
@@ -1720,16 +1720,6 @@ function milesightDeviceEncode(payload) {
 		buffer.writeString(payload.bluetooth_name.content, payload.bluetooth_name.length, true);
 		encoded = encoded.concat(buffer.toBytes());
 	}
-	//0x65
-	if ('ble_enable' in payload) {
-		var buffer = new Buffer();
-		buffer.writeUInt8(0x65);
-		// 0:disable, 1:enable
-		buffer.writeUInt8(payload.ble_enable);
-		// 0:disable, 1:enable
-		buffer.writeUInt8(payload.ble_enable);
-		encoded = encoded.concat(buffer.toBytes());
-	}
 	//0xc5
 	if ('data_storage_settings' in payload) {
 		var buffer = new Buffer();
@@ -1835,8 +1825,8 @@ function milesightDeviceEncode(payload) {
 		buffer.writeUInt8(0x6b);
 		// 0：disable, 1：enable
 		buffer.writeUInt8(payload.temperature_calibration_settings.enable);
-		if (payload.temperature_calibration_settings.calibration_value < -80 || payload.temperature_calibration_settings.calibration_value > 80) {
-			throw new Error('temperature_calibration_settings.calibration_value must be between -80 and 80');
+		if (payload.temperature_calibration_settings.calibration_value < -120 || payload.temperature_calibration_settings.calibration_value > 120) {
+			throw new Error('temperature_calibration_settings.calibration_value must be between -120 and 120');
 		}
 		buffer.writeInt16LE(payload.temperature_calibration_settings.calibration_value * 100);
 		encoded = encoded.concat(buffer.toBytes());
@@ -1890,12 +1880,12 @@ function milesightDeviceEncode(payload) {
 		buffer.writeUInt8(payload.temperature_alarm_settings.enable);
 		// 0:disable, 1:condition: x<A, 2:condition: x>B, 3:condition: A≤x≤B, 4:condition: x<A or x>B
 		buffer.writeUInt8(payload.temperature_alarm_settings.threshold_condition);
-		if (payload.temperature_alarm_settings.threshold_min < -20 || payload.temperature_alarm_settings.threshold_min > 60) {
-			throw new Error('temperature_alarm_settings.threshold_min must be between -20 and 60');
+		if (payload.temperature_alarm_settings.threshold_min < -20 || payload.temperature_alarm_settings.threshold_min > 100) {
+			throw new Error('temperature_alarm_settings.threshold_min must be between -20 and 100');
 		}
 		buffer.writeInt16LE(payload.temperature_alarm_settings.threshold_min * 100);
-		if (payload.temperature_alarm_settings.threshold_max < -20 || payload.temperature_alarm_settings.threshold_max > 60) {
-			throw new Error('temperature_alarm_settings.threshold_max must be between -20 and 60');
+		if (payload.temperature_alarm_settings.threshold_max < -20 || payload.temperature_alarm_settings.threshold_max > 100) {
+			throw new Error('temperature_alarm_settings.threshold_max must be between -20 and 100');
 		}
 		buffer.writeInt16LE(payload.temperature_alarm_settings.threshold_max * 100);
 		encoded = encoded.concat(buffer.toBytes());
@@ -2018,8 +2008,8 @@ function milesightDeviceEncode(payload) {
 			throw new Error('alarm_global_settings.interval must be between 1 and 1440');
 		}
 		buffer.writeUInt16LE(payload.alarm_global_settings.interval);
-		if (payload.alarm_global_settings.times < 1 || payload.alarm_global_settings.times > 100) {
-			throw new Error('alarm_global_settings.times must be between 1 and 100');
+		if (payload.alarm_global_settings.times < 1 || payload.alarm_global_settings.times > 1000) {
+			throw new Error('alarm_global_settings.times must be between 1 and 1000');
 		}
 		buffer.writeUInt16LE(payload.alarm_global_settings.times);
 		// 0：disable, 1：enable
@@ -2361,7 +2351,6 @@ function cmdMap() {
 		  "device_status": "c8",
 		  "temperature_unit": "63",
 		  "bluetooth_name": "64",
-		  "ble_enable": "65",
 		  "data_storage_settings": "c5",
 		  "data_storage_settings.enable": "c500",
 		  "data_storage_settings.retransmission_enable": "c501",

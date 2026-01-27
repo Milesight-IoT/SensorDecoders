@@ -23,7 +23,7 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | OEM ID | 0xD9 | 3 | rw |  |  |  |
 | Product Region | 0xD8 | 17 | r |  |  |  |
 | Device Information | 0xD7 | M | r |  |  |  |
-| Temperature | 0x01 | 3 | r |  | -20 - 60 |  |
+| Temperature | 0x01 | 3 | r |  | -20 - 100 |  |
 | Voltage Three-phase Unbalance | 0x02 | 3 | r |  | 0 - 100 |  |
 | THDi | 0x03 | 25 | r |  |  |  |
 | THDi | 0x03 | 3 | r |  |  |  |
@@ -284,8 +284,6 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Bluetooth Name | 0x64 | 1 | rw |  |  |  |
 | Name Length | 0x64 | 2 | rw | 13 | 1 - 255 |  |
 | Name | 0x64 | 1 | rw |  |  |  |
-| Bluetooth Enable | 0x65 | 2 | rw | 1 |  | 0:disable<br>1:enable |
-| Bluetooth Enable | 0x65 | 2 | rw | 1 |  | 0:disable<br>1:enable |
 | Data Storage Settings | 0xC5 | 1 | rw |  |  |  |
 | Sub-command | 0xC5 | 2 | rw | 0 |  |  |
 | Data Storage Enable | 0xC5 | 2 | rw | 0 |  | 0：disable<br>1：enable |
@@ -319,7 +317,7 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Channel Range | 0x6A | 3 | rw | 0 |  | 0：NONE<br>1：100A<br>2：300A<br>3：500A<br>4：1000A<br>5：4000A |
 | Temperature Calibration Settings | 0x6B | 4 | rw |  |  |  |
 | Temperature Calibration | 0x6B | 2 | rw | 0 |  | 0：disable<br>1：enable |
-| Calibration Value | 0x6B | 3 | rw | 0 | -80 - 80 |  |
+| Calibration Value | 0x6B | 3 | rw | 0 | -120 - 120 |  |
 | Time Zone | 0xC7 | 3 | rw | 0 |  | -720：UTC-12(IDLW)<br>-660：UTC-11(SST)<br>-600：UTC-10(HST)<br>-570：UTC-9:30(MIT)<br>-540：UTC-9(AKST)<br>-480：UTC-8(PST)<br>-420：UTC-7(MST)<br>-360：UTC-6(CST)<br>-300：UTC-5(EST)<br>-240：UTC-4(AST)<br>-210：UTC-3:30(NST)<br>-180：UTC-3(BRT)<br>-120：UTC-2(FNT)<br>-60：UTC-1(CVT)<br>0：UTC(WET)<br>60：UTC+1(CET)<br>120：UTC+2(EET)<br>180：UTC+3(MSK)<br>210：UTC+3:30(IRST)<br>240：UTC+4(GST)<br>270：UTC+4:30(AFT)<br>300：UTC+5(PKT)<br>330：UTC+5:30(IST)<br>345：UTC+5:45(NPT)<br>360：UTC+6(BHT)<br>390：UTC+6:30(MMT)<br>420：UTC+7(ICT)<br>480：UTC+8(CT/CST)<br>540：UTC+9(JST)<br>570：UTC+9:30(ACST)<br>600：UTC+10(AEST)<br>630：UTC+10:30(LHST)<br>660：UTC+11(VUT)<br>720：UTC+12(NZST)<br>765：UTC+12:45(CHAST)<br>780：UTC+13(PHOT)<br>840：UTC+14(LINT) |
 | Daylight Saving Time | 0xC6 | M | rw |  |  |  |
 | Daylight Saving Time | 0xC6 | 2 | rw | 0 |  | 0：disable<br>1：enable |
@@ -335,8 +333,8 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Temperature Threshold Alarm Settings | 0x76 | 7 | rw |  |  |  |
 | Threshold Alarm Enable | 0x76 | 2 | rw | 0 |  | 0：disable<br>1：enable |
 | Threshold Mode | 0x76 | 2 | rw | 0 |  | 0:disable<br>1:condition: x<A<br>2:condition: x>B<br>3:condition: A≤x≤B<br>4:condition: x<A or x>B |
-| Value A | 0x76 | 3 | rw | 0 | -20 - 60 |  |
-| Value B | 0x76 | 3 | rw | 0 | -20 - 60 |  |
+| Value A | 0x76 | 3 | rw | 0 | -20 - 100 |  |
+| Value B | 0x76 | 3 | rw | 0 | -20 - 100 |  |
 | Current Threshold Alarm Settings | 0x77 | 1 | rw |  |  |  |
 | Current Threshold Alarm | 0x77 | 8 | rw |  |  |  |
 | Threshold Alarm Channel | 0x77 | 2 | rw | 0 |  |  |
@@ -372,7 +370,7 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Value B | 0x7B | 3 | rw | 0 | 0 - 100 |  |
 | Threshold Alarm Global Settings | 0x7C | 1 | rw |  |  |  |
 | Alarm Interval | 0x7C | 3 | rw | 5 | 1 - 1440 |  |
-| Alarm Times | 0x7C | 3 | rw | 3 | 1 - 100 |  |
+| Alarm Times | 0x7C | 3 | rw | 3 | 1 - 1000 |  |
 | Threshold Released Report Enable | 0x7C | 2 | rw | 0 |  | 0：disable<br>1：enable |
 | Monthly Statistics Time | 0x6D | 1 | rw |  |  |  |
 | day | 0x6D | 2 | rw | 1 | 1 - 28 |  |
@@ -437,21 +435,21 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Overrange (Upper Limit) | 0x30 | 1 | r |  |  |  |
 | No Data | 0x30 | 1 | r |  |  |  |
 | Temperature Below Threshold Alarm Released | 0x30 | 3 | r |  |  |  |
-| Temperature | 0x30 | 3 | r |  | -20 - 60 |  |
+| Temperature | 0x30 | 3 | r |  | -20 - 100 |  |
 | Temperature Below Threshold Alarm | 0x30 | 3 | r |  |  |  |
-| Temperature | 0x30 | 3 | r |  | -20 - 60 |  |
+| Temperature | 0x30 | 3 | r |  | -20 - 100 |  |
 | Temperature Exceeds Threshold Alarm Released | 0x30 | 3 | r |  |  |  |
-| Temperature | 0x30 | 3 | r |  | -20 - 60 |  |
+| Temperature | 0x30 | 3 | r |  | -20 - 100 |  |
 | Temperature Exceeds Threshold Alarm | 0x30 | 3 | r |  |  |  |
-| Temperature | 0x30 | 3 | r |  | -20 - 60 |  |
+| Temperature | 0x30 | 3 | r |  | -20 - 100 |  |
 | Temperature Between Thresholds Alarm Released | 0x30 | 3 | r |  |  |  |
-| Temperature | 0x30 | 3 | r |  | -20 - 60 |  |
+| Temperature | 0x30 | 3 | r |  | -20 - 100 |  |
 | Temperature Between Thresholds Alarm | 0x30 | 3 | r |  |  |  |
-| Temperature | 0x30 | 3 | r |  | -20 - 60 |  |
+| Temperature | 0x30 | 3 | r |  | -20 - 100 |  |
 | Temperature Outside Thresholds Alarm Released | 0x30 | 3 | r |  |  |  |
-| Temperature | 0x30 | 3 | r |  | -20 - 60 |  |
+| Temperature | 0x30 | 3 | r |  | -20 - 100 |  |
 | Temperature Outside Thresholds Alarm | 0x30 | 3 | r |  |  |  |
-| Temperature | 0x30 | 3 | r |  | -20 - 60 |  |
+| Temperature | 0x30 | 3 | r |  | -20 - 100 |  |
 | Alarm Channel | 0x31 | 2 | r |  | 0 - 11 |  |
 | Current Threshold Alarm Info | 0x31 | 1 | r |  |  |  |
 | Alarm Type | 0x31 | 2 | r |  |  |  |
