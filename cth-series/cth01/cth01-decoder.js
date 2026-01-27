@@ -29,6 +29,22 @@ function milesightDeviceDecode(bytes) {
 	var decoded = {};
     var result = {};
 	var history = [];
+	var error_value_map = {
+		current: 0xFFFFFF / 100,
+		voltage: 0xFFFF / 100,
+		forward_active_energy: 0xFFFFFFFF / 1000,
+		reverse_active_energy: 0xFFFFFFFF / 1000,
+		forward_reactive_energy: 0xFFFFFFFF / 1000,
+		reverse_reactive_energy: 0xFFFFFFFF / 1000,
+		apparent_energy: 0xFFFFFFFF / 1000,
+		power_factor: 0xFF / 100,
+		active_power: -0.001,
+		reactive_power: -0.001,
+		apparent_power: -0.001,
+		thdi: 0xFFFF / 100,
+		thdv: 0xFFFF / 100,
+		voltage_three_phase_imbalcance: 0xFFFF / 100
+	}
 
 	var unknown_command = 0;
 	var counterObj = {};
@@ -107,13 +123,13 @@ function milesightDeviceDecode(bytes) {
 				decoded.temperature = readInt16LE(bytes, counterObj, 2) / 100;
 				break;
 			case 0x02:
-				decoded.voltage_three_phase_imbalcance = readUInt16LE(bytes, counterObj, 2) / 100;
+				decoded.voltage_three_phase_imbalcance = readWithErrorCheck(readUInt16LE(bytes, counterObj, 2) / 100, error_value_map.voltage_three_phase_imbalcance);
 				break;
 			case 0x03:
 				decoded.thdi = [];
 				for (var i = 0; i < 12; i++) {
 					var thdi_item = {};
-					thdi_item.value = readUInt16LE(bytes, counterObj, 2) / 100;
+					thdi_item.value = readWithErrorCheck(readUInt16LE(bytes, counterObj, 2) / 100, error_value_map.thdi);
 					decoded.thdi.push(thdi_item);
 				}
 				break;
@@ -121,7 +137,7 @@ function milesightDeviceDecode(bytes) {
 				decoded.thdv = [];
 				for (var i = 0; i < 3; i++) {
 					var thdv_item = {};
-					thdv_item.value = readUInt16LE(bytes, counterObj, 2) / 100;
+					thdv_item.value = readWithErrorCheck(readUInt16LE(bytes, counterObj, 2) / 100, error_value_map.thdv);
 					decoded.thdv.push(thdv_item);
 				}
 				break;
@@ -129,7 +145,7 @@ function milesightDeviceDecode(bytes) {
 				decoded.current = [];
 				for (var i = 0; i < 12; i++) {
 					var current_item = {};
-					current_item.value = readUInt24LE(bytes, counterObj, 3) / 100;
+					current_item.value = readWithErrorCheck(readUInt24LE(bytes, counterObj, 3) / 100, error_value_map.current);
 					decoded.current.push(current_item);
 				}
 				break;
@@ -137,7 +153,7 @@ function milesightDeviceDecode(bytes) {
 				decoded.voltage = [];
 				for (var i = 0; i < 3; i++) {
 					var voltage_item = {};
-					voltage_item.value = readUInt16LE(bytes, counterObj, 2) / 100;
+					voltage_item.value = readWithErrorCheck(readUInt16LE(bytes, counterObj, 2) / 100, error_value_map.voltage);
 					decoded.voltage.push(voltage_item);
 				}
 				break;
@@ -149,40 +165,40 @@ function milesightDeviceDecode(bytes) {
 				decoded.power_factor.mask3 = extractBits(bitOptions, 2, 3);
 				decoded.power_factor.mask4 = extractBits(bitOptions, 3, 4);
 				if (decoded.power_factor.mask1 == 0x00) {
-					decoded.power_factor.group1_value = readUInt8(bytes, counterObj, 1) / 100;
+					decoded.power_factor.group1_value = readWithErrorCheck(readUInt8(bytes, counterObj, 1) / 100, error_value_map.power_factor);
 				}
 				if (decoded.power_factor.mask1 == 0x01) {
 					decoded.power_factor.group1 = decoded.power_factor.group1 || {};
-					decoded.power_factor.group1.chan1 = readUInt8(bytes, counterObj, 1) / 100;
-					decoded.power_factor.group1.chan2 = readUInt8(bytes, counterObj, 1) / 100;
-					decoded.power_factor.group1.chan3 = readUInt8(bytes, counterObj, 1) / 100;
+					decoded.power_factor.group1.chan1 = readWithErrorCheck(readUInt8(bytes, counterObj, 1) / 100, error_value_map.power_factor);
+					decoded.power_factor.group1.chan2 = readWithErrorCheck(readUInt8(bytes, counterObj, 1) / 100, error_value_map.power_factor);
+					decoded.power_factor.group1.chan3 = readWithErrorCheck(readUInt8(bytes, counterObj, 1) / 100, error_value_map.power_factor);
 				}
 				if (decoded.power_factor.mask2 == 0x00) {
-					decoded.power_factor.group2_value = readUInt8(bytes, counterObj, 1) / 100;
+					decoded.power_factor.group2_value = readWithErrorCheck(readUInt8(bytes, counterObj, 1) / 100, error_value_map.power_factor);
 				}
 				if (decoded.power_factor.mask2 == 0x01) {
 					decoded.power_factor.group2 = decoded.power_factor.group2 || {};
-					decoded.power_factor.group2.chan1 = readUInt8(bytes, counterObj, 1) / 100;
-					decoded.power_factor.group2.chan2 = readUInt8(bytes, counterObj, 1) / 100;
-					decoded.power_factor.group2.chan3 = readUInt8(bytes, counterObj, 1) / 100;
+					decoded.power_factor.group2.chan1 = readWithErrorCheck(readUInt8(bytes, counterObj, 1) / 100, error_value_map.power_factor);
+					decoded.power_factor.group2.chan2 = readWithErrorCheck(readUInt8(bytes, counterObj, 1) / 100, error_value_map.power_factor);
+					decoded.power_factor.group2.chan3 = readWithErrorCheck(readUInt8(bytes, counterObj, 1) / 100, error_value_map.power_factor);
 				}
 				if (decoded.power_factor.mask3 == 0x00) {
-					decoded.power_factor.group3_value = readUInt8(bytes, counterObj, 1) / 100;
+					decoded.power_factor.group3_value = readWithErrorCheck(readUInt8(bytes, counterObj, 1) / 100, error_value_map.power_factor);
 				}
 				if (decoded.power_factor.mask3 == 0x01) {
 					decoded.power_factor.group3 = decoded.power_factor.group3 || {};
-					decoded.power_factor.group3.chan1 = readUInt8(bytes, counterObj, 1) / 100;
-					decoded.power_factor.group3.chan2 = readUInt8(bytes, counterObj, 1) / 100;
-					decoded.power_factor.group3.chan3 = readUInt8(bytes, counterObj, 1) / 100;
+					decoded.power_factor.group3.chan1 = readWithErrorCheck(readUInt8(bytes, counterObj, 1) / 100, error_value_map.power_factor);
+					decoded.power_factor.group3.chan2 = readWithErrorCheck(readUInt8(bytes, counterObj, 1) / 100, error_value_map.power_factor);
+					decoded.power_factor.group3.chan3 = readWithErrorCheck(readUInt8(bytes, counterObj, 1) / 100, error_value_map.power_factor);
 				}
 				if (decoded.power_factor.mask4 == 0x00) {
-					decoded.power_factor.group4_value = readUInt8(bytes, counterObj, 1) / 100;
+					decoded.power_factor.group4_value = readWithErrorCheck(readUInt8(bytes, counterObj, 1) / 100, error_value_map.power_factor);
 				}
 				if (decoded.power_factor.mask4 == 0x01) {
 					decoded.power_factor.group4 = decoded.power_factor.group4 || {};
-					decoded.power_factor.group4.chan1 = readUInt8(bytes, counterObj, 1) / 100;
-					decoded.power_factor.group4.chan2 = readUInt8(bytes, counterObj, 1) / 100;
-					decoded.power_factor.group4.chan3 = readUInt8(bytes, counterObj, 1) / 100;
+					decoded.power_factor.group4.chan1 = readWithErrorCheck(readUInt8(bytes, counterObj, 1) / 100, error_value_map.power_factor);
+					decoded.power_factor.group4.chan2 = readWithErrorCheck(readUInt8(bytes, counterObj, 1) / 100, error_value_map.power_factor);
+					decoded.power_factor.group4.chan3 = readWithErrorCheck(readUInt8(bytes, counterObj, 1) / 100, error_value_map.power_factor);
 				}
 				break;
 			case 0x08:
@@ -191,22 +207,22 @@ function milesightDeviceDecode(bytes) {
 				decoded.active_power1.mask1 = extractBits(bitOptions, 0, 1);
 				decoded.active_power1.mask2 = extractBits(bitOptions, 1, 2);
 				if (decoded.active_power1.mask1 == 0x00) {
-					decoded.active_power1.group1_value = readInt32LE(bytes, counterObj, 4) / 1000;
+					decoded.active_power1.group1_value = readWithErrorCheck(readInt32LE(bytes, counterObj, 4) / 1000, error_value_map.active_power);
 				}
 				if (decoded.active_power1.mask1 == 0x01) {
 					decoded.active_power1.group1 = decoded.active_power1.group1 || {};
-					decoded.active_power1.group1.chan1 = readInt32LE(bytes, counterObj, 4) / 1000;
-					decoded.active_power1.group1.chan2 = readInt32LE(bytes, counterObj, 4) / 1000;
-					decoded.active_power1.group1.chan3 = readInt32LE(bytes, counterObj, 4) / 1000;
+					decoded.active_power1.group1.chan1 = readWithErrorCheck(readInt32LE(bytes, counterObj, 4) / 1000, error_value_map.active_power);
+					decoded.active_power1.group1.chan2 = readWithErrorCheck(readInt32LE(bytes, counterObj, 4) / 1000, error_value_map.active_power);
+					decoded.active_power1.group1.chan3 = readWithErrorCheck(readInt32LE(bytes, counterObj, 4) / 1000, error_value_map.active_power);
 				}
 				if (decoded.active_power1.mask2 == 0x00) {
-					decoded.active_power1.group2_value = readInt32LE(bytes, counterObj, 4) / 1000;
+					decoded.active_power1.group2_value = readWithErrorCheck(readInt32LE(bytes, counterObj, 4) / 1000, error_value_map.active_power);
 				}
 				if (decoded.active_power1.mask2 == 0x01) {
 					decoded.active_power1.group2 = decoded.active_power1.group2 || {};
-					decoded.active_power1.group2.chan1 = readInt32LE(bytes, counterObj, 4) / 1000;
-					decoded.active_power1.group2.chan2 = readInt32LE(bytes, counterObj, 4) / 1000;
-					decoded.active_power1.group2.chan3 = readInt32LE(bytes, counterObj, 4) / 1000;
+					decoded.active_power1.group2.chan1 = readWithErrorCheck(readInt32LE(bytes, counterObj, 4) / 1000, error_value_map.active_power);
+					decoded.active_power1.group2.chan2 = readWithErrorCheck(readInt32LE(bytes, counterObj, 4) / 1000, error_value_map.active_power);
+					decoded.active_power1.group2.chan3 = readWithErrorCheck(readInt32LE(bytes, counterObj, 4) / 1000, error_value_map.active_power);
 				}
 				break;
 			case 0x09:
@@ -215,22 +231,22 @@ function milesightDeviceDecode(bytes) {
 				decoded.active_power2.mask1 = extractBits(bitOptions, 0, 1);
 				decoded.active_power2.mask2 = extractBits(bitOptions, 1, 2);
 				if (decoded.active_power2.mask1 == 0x00) {
-					decoded.active_power2.group1_value = readInt32LE(bytes, counterObj, 4) / 1000;
+					decoded.active_power2.group1_value = readWithErrorCheck(readInt32LE(bytes, counterObj, 4) / 1000, error_value_map.active_power);
 				}
 				if (decoded.active_power2.mask1 == 0x01) {
 					decoded.active_power2.group1 = decoded.active_power2.group1 || {};
-					decoded.active_power2.group1.chan1 = readInt32LE(bytes, counterObj, 4) / 1000;
-					decoded.active_power2.group1.chan2 = readInt32LE(bytes, counterObj, 4) / 1000;
-					decoded.active_power2.group1.chan3 = readInt32LE(bytes, counterObj, 4) / 1000;
+					decoded.active_power2.group1.chan1 = readWithErrorCheck(readInt32LE(bytes, counterObj, 4) / 1000, error_value_map.active_power);
+					decoded.active_power2.group1.chan2 = readWithErrorCheck(readInt32LE(bytes, counterObj, 4) / 1000, error_value_map.active_power);
+					decoded.active_power2.group1.chan3 = readWithErrorCheck(readInt32LE(bytes, counterObj, 4) / 1000, error_value_map.active_power);
 				}
 				if (decoded.active_power2.mask2 == 0x00) {
-					decoded.active_power2.group2_value = readInt32LE(bytes, counterObj, 4) / 1000;
+					decoded.active_power2.group2_value = readWithErrorCheck(readInt32LE(bytes, counterObj, 4) / 1000, error_value_map.active_power);
 				}
 				if (decoded.active_power2.mask2 == 0x01) {
 					decoded.active_power2.group2 = decoded.active_power2.group2 || {};
-					decoded.active_power2.group2.chan1 = readInt32LE(bytes, counterObj, 4) / 1000;
-					decoded.active_power2.group2.chan2 = readInt32LE(bytes, counterObj, 4) / 1000;
-					decoded.active_power2.group2.chan3 = readInt32LE(bytes, counterObj, 4) / 1000;
+					decoded.active_power2.group2.chan1 = readWithErrorCheck(readInt32LE(bytes, counterObj, 4) / 1000, error_value_map.active_power);
+					decoded.active_power2.group2.chan2 = readWithErrorCheck(readInt32LE(bytes, counterObj, 4) / 1000, error_value_map.active_power);
+					decoded.active_power2.group2.chan3 = readWithErrorCheck(readInt32LE(bytes, counterObj, 4) / 1000, error_value_map.active_power);
 				}
 				break;
 			case 0x0a:
@@ -239,22 +255,22 @@ function milesightDeviceDecode(bytes) {
 				decoded.reactive_power1.mask1 = extractBits(bitOptions, 0, 1);
 				decoded.reactive_power1.mask2 = extractBits(bitOptions, 1, 2);
 				if (decoded.reactive_power1.mask1 == 0x00) {
-					decoded.reactive_power1.group1_value = readInt32LE(bytes, counterObj, 4) / 1000;
+					decoded.reactive_power1.group1_value = readWithErrorCheck(readInt32LE(bytes, counterObj, 4) / 1000, error_value_map.reactive_power);
 				}
 				if (decoded.reactive_power1.mask1 == 0x01) {
 					decoded.reactive_power1.group1 = decoded.reactive_power1.group1 || {};
-					decoded.reactive_power1.group1.chan1 = readInt32LE(bytes, counterObj, 4) / 1000;
-					decoded.reactive_power1.group1.chan2 = readInt32LE(bytes, counterObj, 4) / 1000;
-					decoded.reactive_power1.group1.chan3 = readInt32LE(bytes, counterObj, 4) / 1000;
+					decoded.reactive_power1.group1.chan1 = readWithErrorCheck(readInt32LE(bytes, counterObj, 4) / 1000, error_value_map.reactive_power);
+					decoded.reactive_power1.group1.chan2 = readWithErrorCheck(readInt32LE(bytes, counterObj, 4) / 1000, error_value_map.reactive_power);
+					decoded.reactive_power1.group1.chan3 = readWithErrorCheck(readInt32LE(bytes, counterObj, 4) / 1000, error_value_map.reactive_power);
 				}
 				if (decoded.reactive_power1.mask2 == 0x00) {
-					decoded.reactive_power1.group2_value = readInt32LE(bytes, counterObj, 4) / 1000;
+					decoded.reactive_power1.group2_value = readWithErrorCheck(readInt32LE(bytes, counterObj, 4) / 1000, error_value_map.reactive_power);
 				}
 				if (decoded.reactive_power1.mask2 == 0x01) {
 					decoded.reactive_power1.group2 = decoded.reactive_power1.group2 || {};
-					decoded.reactive_power1.group2.chan1 = readInt32LE(bytes, counterObj, 4) / 1000;
-					decoded.reactive_power1.group2.chan2 = readInt32LE(bytes, counterObj, 4) / 1000;
-					decoded.reactive_power1.group2.chan3 = readInt32LE(bytes, counterObj, 4) / 1000;
+					decoded.reactive_power1.group2.chan1 = readWithErrorCheck(readInt32LE(bytes, counterObj, 4) / 1000, error_value_map.reactive_power);
+					decoded.reactive_power1.group2.chan2 = readWithErrorCheck(readInt32LE(bytes, counterObj, 4) / 1000, error_value_map.reactive_power);
+					decoded.reactive_power1.group2.chan3 = readWithErrorCheck(readInt32LE(bytes, counterObj, 4) / 1000, error_value_map.reactive_power);
 				}
 				break;
 			case 0x0b:
@@ -263,22 +279,22 @@ function milesightDeviceDecode(bytes) {
 				decoded.reactive_power2.mask1 = extractBits(bitOptions, 0, 1);
 				decoded.reactive_power2.mask2 = extractBits(bitOptions, 1, 2);
 				if (decoded.reactive_power2.mask1 == 0x00) {
-					decoded.reactive_power2.group1_value = readInt32LE(bytes, counterObj, 4) / 1000;
+					decoded.reactive_power2.group1_value = readWithErrorCheck(readInt32LE(bytes, counterObj, 4) / 1000, error_value_map.reactive_power);
 				}
 				if (decoded.reactive_power2.mask1 == 0x01) {
 					decoded.reactive_power2.group1 = decoded.reactive_power2.group1 || {};
-					decoded.reactive_power2.group1.chan1 = readInt32LE(bytes, counterObj, 4) / 1000;
-					decoded.reactive_power2.group1.chan2 = readInt32LE(bytes, counterObj, 4) / 1000;
-					decoded.reactive_power2.group1.chan3 = readInt32LE(bytes, counterObj, 4) / 1000;
+					decoded.reactive_power2.group1.chan1 = readWithErrorCheck(readInt32LE(bytes, counterObj, 4) / 1000, error_value_map.reactive_power);
+					decoded.reactive_power2.group1.chan2 = readWithErrorCheck(readInt32LE(bytes, counterObj, 4) / 1000, error_value_map.reactive_power);
+					decoded.reactive_power2.group1.chan3 = readWithErrorCheck(readInt32LE(bytes, counterObj, 4) / 1000, error_value_map.reactive_power);
 				}
 				if (decoded.reactive_power2.mask2 == 0x00) {
-					decoded.reactive_power2.group2_value = readInt32LE(bytes, counterObj, 4) / 1000;
+					decoded.reactive_power2.group2_value = readWithErrorCheck(readInt32LE(bytes, counterObj, 4) / 1000, error_value_map.reactive_power);
 				}
 				if (decoded.reactive_power2.mask2 == 0x01) {
 					decoded.reactive_power2.group2 = decoded.reactive_power2.group2 || {};
-					decoded.reactive_power2.group2.chan1 = readInt32LE(bytes, counterObj, 4) / 1000;
-					decoded.reactive_power2.group2.chan2 = readInt32LE(bytes, counterObj, 4) / 1000;
-					decoded.reactive_power2.group2.chan3 = readInt32LE(bytes, counterObj, 4) / 1000;
+					decoded.reactive_power2.group2.chan1 = readWithErrorCheck(readInt32LE(bytes, counterObj, 4) / 1000, error_value_map.reactive_power);
+					decoded.reactive_power2.group2.chan2 = readWithErrorCheck(readInt32LE(bytes, counterObj, 4) / 1000, error_value_map.reactive_power);
+					decoded.reactive_power2.group2.chan3 = readWithErrorCheck(readInt32LE(bytes, counterObj, 4) / 1000, error_value_map.reactive_power);
 				}
 				break;
 			case 0x0c:
@@ -287,22 +303,22 @@ function milesightDeviceDecode(bytes) {
 				decoded.apparent_power1.mask1 = extractBits(bitOptions, 0, 1);
 				decoded.apparent_power1.mask2 = extractBits(bitOptions, 1, 2);
 				if (decoded.apparent_power1.mask1 == 0x00) {
-					decoded.apparent_power1.group1_value = readInt32LE(bytes, counterObj, 4) / 1000;
+					decoded.apparent_power1.group1_value = readWithErrorCheck(readInt32LE(bytes, counterObj, 4) / 1000, error_value_map.apparent_power);
 				}
 				if (decoded.apparent_power1.mask1 == 0x01) {
 					decoded.apparent_power1.group1 = decoded.apparent_power1.group1 || {};
-					decoded.apparent_power1.group1.chan1 = readInt32LE(bytes, counterObj, 4) / 1000;
-					decoded.apparent_power1.group1.chan2 = readInt32LE(bytes, counterObj, 4) / 1000;
-					decoded.apparent_power1.group1.chan3 = readInt32LE(bytes, counterObj, 4) / 1000;
+					decoded.apparent_power1.group1.chan1 = readWithErrorCheck(readInt32LE(bytes, counterObj, 4) / 1000, error_value_map.apparent_power);
+					decoded.apparent_power1.group1.chan2 = readWithErrorCheck(readInt32LE(bytes, counterObj, 4) / 1000, error_value_map.apparent_power);
+					decoded.apparent_power1.group1.chan3 = readWithErrorCheck(readInt32LE(bytes, counterObj, 4) / 1000, error_value_map.apparent_power);
 				}
 				if (decoded.apparent_power1.mask2 == 0x00) {
-					decoded.apparent_power1.group2_value = readInt32LE(bytes, counterObj, 4) / 1000;
+					decoded.apparent_power1.group2_value = readWithErrorCheck(readInt32LE(bytes, counterObj, 4) / 1000, error_value_map.apparent_power);
 				}
 				if (decoded.apparent_power1.mask2 == 0x01) {
 					decoded.apparent_power1.group2 = decoded.apparent_power1.group2 || {};
-					decoded.apparent_power1.group2.chan1 = readInt32LE(bytes, counterObj, 4) / 1000;
-					decoded.apparent_power1.group2.chan2 = readInt32LE(bytes, counterObj, 4) / 1000;
-					decoded.apparent_power1.group2.chan3 = readInt32LE(bytes, counterObj, 4) / 1000;
+					decoded.apparent_power1.group2.chan1 = readWithErrorCheck(readInt32LE(bytes, counterObj, 4) / 1000, error_value_map.apparent_power);
+					decoded.apparent_power1.group2.chan2 = readWithErrorCheck(readInt32LE(bytes, counterObj, 4) / 1000, error_value_map.apparent_power);
+					decoded.apparent_power1.group2.chan3 = readWithErrorCheck(readInt32LE(bytes, counterObj, 4) / 1000, error_value_map.apparent_power);
 				}
 				break;
 			case 0x0d:
@@ -311,22 +327,22 @@ function milesightDeviceDecode(bytes) {
 				decoded.apparent_power2.mask1 = extractBits(bitOptions, 0, 1);
 				decoded.apparent_power2.mask2 = extractBits(bitOptions, 1, 2);
 				if (decoded.apparent_power2.mask1 == 0x00) {
-					decoded.apparent_power2.group1_value = readInt32LE(bytes, counterObj, 4) / 1000;
+					decoded.apparent_power2.group1_value = readWithErrorCheck(readInt32LE(bytes, counterObj, 4) / 1000, error_value_map.apparent_power);
 				}
 				if (decoded.apparent_power2.mask1 == 0x01) {
 					decoded.apparent_power2.group1 = decoded.apparent_power2.group1 || {};
-					decoded.apparent_power2.group1.chan1 = readInt32LE(bytes, counterObj, 4) / 1000;
-					decoded.apparent_power2.group1.chan2 = readInt32LE(bytes, counterObj, 4) / 1000;
-					decoded.apparent_power2.group1.chan3 = readInt32LE(bytes, counterObj, 4) / 1000;
+					decoded.apparent_power2.group1.chan1 = readWithErrorCheck(readInt32LE(bytes, counterObj, 4) / 1000, error_value_map.apparent_power);
+					decoded.apparent_power2.group1.chan2 = readWithErrorCheck(readInt32LE(bytes, counterObj, 4) / 1000, error_value_map.apparent_power);
+					decoded.apparent_power2.group1.chan3 = readWithErrorCheck(readInt32LE(bytes, counterObj, 4) / 1000, error_value_map.apparent_power);
 				}
 				if (decoded.apparent_power2.mask2 == 0x00) {
-					decoded.apparent_power2.group2_value = readInt32LE(bytes, counterObj, 4) / 1000;
+					decoded.apparent_power2.group2_value = readWithErrorCheck(readInt32LE(bytes, counterObj, 4) / 1000, error_value_map.apparent_power);
 				}
 				if (decoded.apparent_power2.mask2 == 0x01) {
 					decoded.apparent_power2.group2 = decoded.apparent_power2.group2 || {};
-					decoded.apparent_power2.group2.chan1 = readInt32LE(bytes, counterObj, 4) / 1000;
-					decoded.apparent_power2.group2.chan2 = readInt32LE(bytes, counterObj, 4) / 1000;
-					decoded.apparent_power2.group2.chan3 = readInt32LE(bytes, counterObj, 4) / 1000;
+					decoded.apparent_power2.group2.chan1 = readWithErrorCheck(readInt32LE(bytes, counterObj, 4) / 1000, error_value_map.apparent_power);
+					decoded.apparent_power2.group2.chan2 = readWithErrorCheck(readInt32LE(bytes, counterObj, 4) / 1000, error_value_map.apparent_power);
+					decoded.apparent_power2.group2.chan3 = readWithErrorCheck(readInt32LE(bytes, counterObj, 4) / 1000, error_value_map.apparent_power);
 				}
 				break;
 			case 0x0e:
@@ -335,22 +351,22 @@ function milesightDeviceDecode(bytes) {
 				decoded.forward_active_energy1.mask1 = extractBits(bitOptions, 0, 1);
 				decoded.forward_active_energy1.mask2 = extractBits(bitOptions, 1, 2);
 				if (decoded.forward_active_energy1.mask1 == 0x00) {
-					decoded.forward_active_energy1.group1_value = readUInt32LE(bytes, counterObj, 4) / 1000;
+					decoded.forward_active_energy1.group1_value = readWithErrorCheck(readUInt32LE(bytes, counterObj, 4) / 1000, error_value_map.forward_active_energy);
 				}
 				if (decoded.forward_active_energy1.mask1 == 0x01) {
 					decoded.forward_active_energy1.group1 = decoded.forward_active_energy1.group1 || {};
-					decoded.forward_active_energy1.group1.chan1 = readUInt32LE(bytes, counterObj, 4) / 1000;
-					decoded.forward_active_energy1.group1.chan2 = readUInt32LE(bytes, counterObj, 4) / 1000;
-					decoded.forward_active_energy1.group1.chan3 = readUInt32LE(bytes, counterObj, 4) / 1000;
+					decoded.forward_active_energy1.group1.chan1 = readWithErrorCheck(readUInt32LE(bytes, counterObj, 4) / 1000, error_value_map.forward_active_energy);
+					decoded.forward_active_energy1.group1.chan2 = readWithErrorCheck(readUInt32LE(bytes, counterObj, 4) / 1000, error_value_map.forward_active_energy);
+					decoded.forward_active_energy1.group1.chan3 = readWithErrorCheck(readUInt32LE(bytes, counterObj, 4) / 1000, error_value_map.forward_active_energy);
 				}
 				if (decoded.forward_active_energy1.mask2 == 0x00) {
-					decoded.forward_active_energy1.group2_value = readUInt32LE(bytes, counterObj, 4) / 1000;
+					decoded.forward_active_energy1.group2_value = readWithErrorCheck(readUInt32LE(bytes, counterObj, 4) / 1000, error_value_map.forward_active_energy);
 				}
 				if (decoded.forward_active_energy1.mask2 == 0x01) {
 					decoded.forward_active_energy1.group2 = decoded.forward_active_energy1.group2 || {};
-					decoded.forward_active_energy1.group2.chan1 = readUInt32LE(bytes, counterObj, 4) / 1000;
-					decoded.forward_active_energy1.group2.chan2 = readUInt32LE(bytes, counterObj, 4) / 1000;
-					decoded.forward_active_energy1.group2.chan3 = readUInt32LE(bytes, counterObj, 4) / 1000;
+					decoded.forward_active_energy1.group2.chan1 = readWithErrorCheck(readUInt32LE(bytes, counterObj, 4) / 1000, error_value_map.forward_active_energy);
+					decoded.forward_active_energy1.group2.chan2 = readWithErrorCheck(readUInt32LE(bytes, counterObj, 4) / 1000, error_value_map.forward_active_energy);
+					decoded.forward_active_energy1.group2.chan3 = readWithErrorCheck(readUInt32LE(bytes, counterObj, 4) / 1000, error_value_map.forward_active_energy);
 				}
 				break;
 			case 0x0f:
@@ -359,22 +375,22 @@ function milesightDeviceDecode(bytes) {
 				decoded.forward_active_energy2.mask1 = extractBits(bitOptions, 0, 1);
 				decoded.forward_active_energy2.mask2 = extractBits(bitOptions, 1, 2);
 				if (decoded.forward_active_energy2.mask1 == 0x00) {
-					decoded.forward_active_energy2.group1_value = readUInt32LE(bytes, counterObj, 4) / 1000;
+					decoded.forward_active_energy2.group1_value = readWithErrorCheck(readUInt32LE(bytes, counterObj, 4) / 1000, error_value_map.forward_active_energy);
 				}
 				if (decoded.forward_active_energy2.mask1 == 0x01) {
 					decoded.forward_active_energy2.group1 = decoded.forward_active_energy2.group1 || {};
-					decoded.forward_active_energy2.group1.chan1 = readUInt32LE(bytes, counterObj, 4) / 1000;
-					decoded.forward_active_energy2.group1.chan2 = readUInt32LE(bytes, counterObj, 4) / 1000;
-					decoded.forward_active_energy2.group1.chan3 = readUInt32LE(bytes, counterObj, 4) / 1000;
+					decoded.forward_active_energy2.group1.chan1 = readWithErrorCheck(readUInt32LE(bytes, counterObj, 4) / 1000, error_value_map.forward_active_energy);
+					decoded.forward_active_energy2.group1.chan2 = readWithErrorCheck(readUInt32LE(bytes, counterObj, 4) / 1000, error_value_map.forward_active_energy);
+					decoded.forward_active_energy2.group1.chan3 = readWithErrorCheck(readUInt32LE(bytes, counterObj, 4) / 1000, error_value_map.forward_active_energy);
 				}
 				if (decoded.forward_active_energy2.mask2 == 0x00) {
-					decoded.forward_active_energy2.group2_value = readUInt32LE(bytes, counterObj, 4) / 1000;
+					decoded.forward_active_energy2.group2_value = readWithErrorCheck(readUInt32LE(bytes, counterObj, 4) / 1000, error_value_map.forward_active_energy);
 				}
 				if (decoded.forward_active_energy2.mask2 == 0x01) {
 					decoded.forward_active_energy2.group2 = decoded.forward_active_energy2.group2 || {};
-					decoded.forward_active_energy2.group2.chan1 = readUInt32LE(bytes, counterObj, 4) / 1000;
-					decoded.forward_active_energy2.group2.chan2 = readUInt32LE(bytes, counterObj, 4) / 1000;
-					decoded.forward_active_energy2.group2.chan3 = readUInt32LE(bytes, counterObj, 4) / 1000;
+					decoded.forward_active_energy2.group2.chan1 = readWithErrorCheck(readUInt32LE(bytes, counterObj, 4) / 1000, error_value_map.forward_active_energy);
+					decoded.forward_active_energy2.group2.chan2 = readWithErrorCheck(readUInt32LE(bytes, counterObj, 4) / 1000, error_value_map.forward_active_energy);
+					decoded.forward_active_energy2.group2.chan3 = readWithErrorCheck(readUInt32LE(bytes, counterObj, 4) / 1000, error_value_map.forward_active_energy);
 				}
 				break;
 			case 0x10:
@@ -383,22 +399,22 @@ function milesightDeviceDecode(bytes) {
 				decoded.reverse_active_energy1.mask1 = extractBits(bitOptions, 0, 1);
 				decoded.reverse_active_energy1.mask2 = extractBits(bitOptions, 1, 2);
 				if (decoded.reverse_active_energy1.mask1 == 0x00) {
-					decoded.reverse_active_energy1.group1_value = readUInt32LE(bytes, counterObj, 4) / 1000;
+					decoded.reverse_active_energy1.group1_value = readWithErrorCheck(readUInt32LE(bytes, counterObj, 4) / 1000, error_value_map.reverse_active_energy);
 				}
 				if (decoded.reverse_active_energy1.mask1 == 0x01) {
 					decoded.reverse_active_energy1.group1 = decoded.reverse_active_energy1.group1 || {};
-					decoded.reverse_active_energy1.group1.chan1 = readUInt32LE(bytes, counterObj, 4) / 1000;
-					decoded.reverse_active_energy1.group1.chan2 = readUInt32LE(bytes, counterObj, 4) / 1000;
-					decoded.reverse_active_energy1.group1.chan3 = readUInt32LE(bytes, counterObj, 4) / 1000;
+					decoded.reverse_active_energy1.group1.chan1 = readWithErrorCheck(readUInt32LE(bytes, counterObj, 4) / 1000, error_value_map.reverse_active_energy);
+					decoded.reverse_active_energy1.group1.chan2 = readWithErrorCheck(readUInt32LE(bytes, counterObj, 4) / 1000, error_value_map.reverse_active_energy);
+					decoded.reverse_active_energy1.group1.chan3 = readWithErrorCheck(readUInt32LE(bytes, counterObj, 4) / 1000, error_value_map.reverse_active_energy);
 				}
 				if (decoded.reverse_active_energy1.mask2 == 0x00) {
-					decoded.reverse_active_energy1.group2_value = readUInt32LE(bytes, counterObj, 4) / 1000;
+					decoded.reverse_active_energy1.group2_value = readWithErrorCheck(readUInt32LE(bytes, counterObj, 4) / 1000, error_value_map.reverse_active_energy);
 				}
 				if (decoded.reverse_active_energy1.mask2 == 0x01) {
 					decoded.reverse_active_energy1.group2 = decoded.reverse_active_energy1.group2 || {};
-					decoded.reverse_active_energy1.group2.chan1 = readUInt32LE(bytes, counterObj, 4) / 1000;
-					decoded.reverse_active_energy1.group2.chan2 = readUInt32LE(bytes, counterObj, 4) / 1000;
-					decoded.reverse_active_energy1.group2.chan3 = readUInt32LE(bytes, counterObj, 4) / 1000;
+					decoded.reverse_active_energy1.group2.chan1 = readWithErrorCheck(readUInt32LE(bytes, counterObj, 4) / 1000, error_value_map.reverse_active_energy);
+					decoded.reverse_active_energy1.group2.chan2 = readWithErrorCheck(readUInt32LE(bytes, counterObj, 4) / 1000, error_value_map.reverse_active_energy);
+					decoded.reverse_active_energy1.group2.chan3 = readWithErrorCheck(readUInt32LE(bytes, counterObj, 4) / 1000, error_value_map.reverse_active_energy);
 				}
 				break;
 			case 0x11:
@@ -407,22 +423,22 @@ function milesightDeviceDecode(bytes) {
 				decoded.reverse_active_energy2.mask1 = extractBits(bitOptions, 0, 1);
 				decoded.reverse_active_energy2.mask2 = extractBits(bitOptions, 1, 2);
 				if (decoded.reverse_active_energy2.mask1 == 0x00) {
-					decoded.reverse_active_energy2.group1_value = readUInt32LE(bytes, counterObj, 4) / 1000;
+					decoded.reverse_active_energy2.group1_value = readWithErrorCheck(readUInt32LE(bytes, counterObj, 4) / 1000, error_value_map.reverse_active_energy);
 				}
 				if (decoded.reverse_active_energy2.mask1 == 0x01) {
 					decoded.reverse_active_energy2.group1 = decoded.reverse_active_energy2.group1 || {};
-					decoded.reverse_active_energy2.group1.chan1 = readUInt32LE(bytes, counterObj, 4) / 1000;
-					decoded.reverse_active_energy2.group1.chan2 = readUInt32LE(bytes, counterObj, 4) / 1000;
-					decoded.reverse_active_energy2.group1.chan3 = readUInt32LE(bytes, counterObj, 4) / 1000;
+					decoded.reverse_active_energy2.group1.chan1 = readWithErrorCheck(readUInt32LE(bytes, counterObj, 4) / 1000, error_value_map.reverse_active_energy);
+					decoded.reverse_active_energy2.group1.chan2 = readWithErrorCheck(readUInt32LE(bytes, counterObj, 4) / 1000, error_value_map.reverse_active_energy);
+					decoded.reverse_active_energy2.group1.chan3 = readWithErrorCheck(readUInt32LE(bytes, counterObj, 4) / 1000, error_value_map.reverse_active_energy);
 				}
 				if (decoded.reverse_active_energy2.mask2 == 0x00) {
-					decoded.reverse_active_energy2.group2_value = readUInt32LE(bytes, counterObj, 4) / 1000;
+					decoded.reverse_active_energy2.group2_value = readWithErrorCheck(readUInt32LE(bytes, counterObj, 4) / 1000, error_value_map.reverse_active_energy);
 				}
 				if (decoded.reverse_active_energy2.mask2 == 0x01) {
 					decoded.reverse_active_energy2.group2 = decoded.reverse_active_energy2.group2 || {};
-					decoded.reverse_active_energy2.group2.chan1 = readUInt32LE(bytes, counterObj, 4) / 1000;
-					decoded.reverse_active_energy2.group2.chan2 = readUInt32LE(bytes, counterObj, 4) / 1000;
-					decoded.reverse_active_energy2.group2.chan3 = readUInt32LE(bytes, counterObj, 4) / 1000;
+					decoded.reverse_active_energy2.group2.chan1 = readWithErrorCheck(readUInt32LE(bytes, counterObj, 4) / 1000, error_value_map.reverse_active_energy);
+					decoded.reverse_active_energy2.group2.chan2 = readWithErrorCheck(readUInt32LE(bytes, counterObj, 4) / 1000, error_value_map.reverse_active_energy);
+					decoded.reverse_active_energy2.group2.chan3 = readWithErrorCheck(readUInt32LE(bytes, counterObj, 4) / 1000, error_value_map.reverse_active_energy);
 				}
 				break;
 			case 0x12:
@@ -431,22 +447,22 @@ function milesightDeviceDecode(bytes) {
 				decoded.forward_reactive_energy1.mask1 = extractBits(bitOptions, 0, 1);
 				decoded.forward_reactive_energy1.mask2 = extractBits(bitOptions, 1, 2);
 				if (decoded.forward_reactive_energy1.mask1 == 0x00) {
-					decoded.forward_reactive_energy1.group1_value = readUInt32LE(bytes, counterObj, 4) / 1000;
+					decoded.forward_reactive_energy1.group1_value = readWithErrorCheck(readUInt32LE(bytes, counterObj, 4) / 1000, error_value_map.forward_reactive_energy);
 				}
 				if (decoded.forward_reactive_energy1.mask1 == 0x01) {
 					decoded.forward_reactive_energy1.group1 = decoded.forward_reactive_energy1.group1 || {};
-					decoded.forward_reactive_energy1.group1.chan1 = readUInt32LE(bytes, counterObj, 4) / 1000;
-					decoded.forward_reactive_energy1.group1.chan2 = readUInt32LE(bytes, counterObj, 4) / 1000;
-					decoded.forward_reactive_energy1.group1.chan3 = readUInt32LE(bytes, counterObj, 4) / 1000;
+					decoded.forward_reactive_energy1.group1.chan1 = readWithErrorCheck(readUInt32LE(bytes, counterObj, 4) / 1000, error_value_map.forward_reactive_energy);
+					decoded.forward_reactive_energy1.group1.chan2 = readWithErrorCheck(readUInt32LE(bytes, counterObj, 4) / 1000, error_value_map.forward_reactive_energy);
+					decoded.forward_reactive_energy1.group1.chan3 = readWithErrorCheck(readUInt32LE(bytes, counterObj, 4) / 1000, error_value_map.forward_reactive_energy);
 				}
 				if (decoded.forward_reactive_energy1.mask2 == 0x00) {
-					decoded.forward_reactive_energy1.group2_value = readUInt32LE(bytes, counterObj, 4) / 1000;
+					decoded.forward_reactive_energy1.group2_value = readWithErrorCheck(readUInt32LE(bytes, counterObj, 4) / 1000, error_value_map.forward_reactive_energy);
 				}
 				if (decoded.forward_reactive_energy1.mask2 == 0x01) {
 					decoded.forward_reactive_energy1.group2 = decoded.forward_reactive_energy1.group2 || {};
-					decoded.forward_reactive_energy1.group2.chan1 = readUInt32LE(bytes, counterObj, 4) / 1000;
-					decoded.forward_reactive_energy1.group2.chan2 = readUInt32LE(bytes, counterObj, 4) / 1000;
-					decoded.forward_reactive_energy1.group2.chan3 = readUInt32LE(bytes, counterObj, 4) / 1000;
+					decoded.forward_reactive_energy1.group2.chan1 = readWithErrorCheck(readUInt32LE(bytes, counterObj, 4) / 1000, error_value_map.forward_reactive_energy);
+					decoded.forward_reactive_energy1.group2.chan2 = readWithErrorCheck(readUInt32LE(bytes, counterObj, 4) / 1000, error_value_map.forward_reactive_energy);
+					decoded.forward_reactive_energy1.group2.chan3 = readWithErrorCheck(readUInt32LE(bytes, counterObj, 4) / 1000, error_value_map.forward_reactive_energy);
 				}
 				break;
 			case 0x13:
@@ -455,22 +471,22 @@ function milesightDeviceDecode(bytes) {
 				decoded.forward_reactive_energy2.mask1 = extractBits(bitOptions, 0, 1);
 				decoded.forward_reactive_energy2.mask2 = extractBits(bitOptions, 1, 2);
 				if (decoded.forward_reactive_energy2.mask1 == 0x00) {
-					decoded.forward_reactive_energy2.group1_value = readUInt32LE(bytes, counterObj, 4) / 1000;
+					decoded.forward_reactive_energy2.group1_value = readWithErrorCheck(readUInt32LE(bytes, counterObj, 4) / 1000, error_value_map.forward_reactive_energy);
 				}
 				if (decoded.forward_reactive_energy2.mask1 == 0x01) {
 					decoded.forward_reactive_energy2.group1 = decoded.forward_reactive_energy2.group1 || {};
-					decoded.forward_reactive_energy2.group1.chan1 = readUInt32LE(bytes, counterObj, 4) / 1000;
-					decoded.forward_reactive_energy2.group1.chan2 = readUInt32LE(bytes, counterObj, 4) / 1000;
-					decoded.forward_reactive_energy2.group1.chan3 = readUInt32LE(bytes, counterObj, 4) / 1000;
+					decoded.forward_reactive_energy2.group1.chan1 = readWithErrorCheck(readUInt32LE(bytes, counterObj, 4) / 1000, error_value_map.forward_reactive_energy);
+					decoded.forward_reactive_energy2.group1.chan2 = readWithErrorCheck(readUInt32LE(bytes, counterObj, 4) / 1000, error_value_map.forward_reactive_energy);
+					decoded.forward_reactive_energy2.group1.chan3 = readWithErrorCheck(readUInt32LE(bytes, counterObj, 4) / 1000, error_value_map.forward_reactive_energy);
 				}
 				if (decoded.forward_reactive_energy2.mask2 == 0x00) {
-					decoded.forward_reactive_energy2.group2_value = readUInt32LE(bytes, counterObj, 4) / 1000;
+					decoded.forward_reactive_energy2.group2_value = readWithErrorCheck(readUInt32LE(bytes, counterObj, 4) / 1000, error_value_map.forward_reactive_energy);
 				}
 				if (decoded.forward_reactive_energy2.mask2 == 0x01) {
 					decoded.forward_reactive_energy2.group2 = decoded.forward_reactive_energy2.group2 || {};
-					decoded.forward_reactive_energy2.group2.chan1 = readUInt32LE(bytes, counterObj, 4) / 1000;
-					decoded.forward_reactive_energy2.group2.chan2 = readUInt32LE(bytes, counterObj, 4) / 1000;
-					decoded.forward_reactive_energy2.group2.chan3 = readUInt32LE(bytes, counterObj, 4) / 1000;
+					decoded.forward_reactive_energy2.group2.chan1 = readWithErrorCheck(readUInt32LE(bytes, counterObj, 4) / 1000, error_value_map.forward_reactive_energy);
+					decoded.forward_reactive_energy2.group2.chan2 = readWithErrorCheck(readUInt32LE(bytes, counterObj, 4) / 1000, error_value_map.forward_reactive_energy);
+					decoded.forward_reactive_energy2.group2.chan3 = readWithErrorCheck(readUInt32LE(bytes, counterObj, 4) / 1000, error_value_map.forward_reactive_energy);
 				}
 				break;
 			case 0x14:
@@ -479,22 +495,22 @@ function milesightDeviceDecode(bytes) {
 				decoded.reverse_reactive_energy1.mask1 = extractBits(bitOptions, 0, 1);
 				decoded.reverse_reactive_energy1.mask2 = extractBits(bitOptions, 1, 2);
 				if (decoded.reverse_reactive_energy1.mask1 == 0x00) {
-					decoded.reverse_reactive_energy1.group1_value = readUInt32LE(bytes, counterObj, 4) / 1000;
+					decoded.reverse_reactive_energy1.group1_value = readWithErrorCheck(readUInt32LE(bytes, counterObj, 4) / 1000, error_value_map.reverse_reactive_energy);
 				}
 				if (decoded.reverse_reactive_energy1.mask1 == 0x01) {
 					decoded.reverse_reactive_energy1.group1 = decoded.reverse_reactive_energy1.group1 || {};
-					decoded.reverse_reactive_energy1.group1.chan1 = readUInt32LE(bytes, counterObj, 4) / 1000;
-					decoded.reverse_reactive_energy1.group1.chan2 = readUInt32LE(bytes, counterObj, 4) / 1000;
-					decoded.reverse_reactive_energy1.group1.chan3 = readUInt32LE(bytes, counterObj, 4) / 1000;
+					decoded.reverse_reactive_energy1.group1.chan1 = readWithErrorCheck(readUInt32LE(bytes, counterObj, 4) / 1000, error_value_map.reverse_reactive_energy);
+					decoded.reverse_reactive_energy1.group1.chan2 = readWithErrorCheck(readUInt32LE(bytes, counterObj, 4) / 1000, error_value_map.reverse_reactive_energy);
+					decoded.reverse_reactive_energy1.group1.chan3 = readWithErrorCheck(readUInt32LE(bytes, counterObj, 4) / 1000, error_value_map.reverse_reactive_energy);
 				}
 				if (decoded.reverse_reactive_energy1.mask2 == 0x00) {
-					decoded.reverse_reactive_energy1.group2_value = readUInt32LE(bytes, counterObj, 4) / 1000;
+					decoded.reverse_reactive_energy1.group2_value = readWithErrorCheck(readUInt32LE(bytes, counterObj, 4) / 1000, error_value_map.reverse_reactive_energy);
 				}
 				if (decoded.reverse_reactive_energy1.mask2 == 0x01) {
 					decoded.reverse_reactive_energy1.group2 = decoded.reverse_reactive_energy1.group2 || {};
-					decoded.reverse_reactive_energy1.group2.chan1 = readUInt32LE(bytes, counterObj, 4) / 1000;
-					decoded.reverse_reactive_energy1.group2.chan2 = readUInt32LE(bytes, counterObj, 4) / 1000;
-					decoded.reverse_reactive_energy1.group2.chan3 = readUInt32LE(bytes, counterObj, 4) / 1000;
+					decoded.reverse_reactive_energy1.group2.chan1 = readWithErrorCheck(readUInt32LE(bytes, counterObj, 4) / 1000, error_value_map.reverse_reactive_energy);
+					decoded.reverse_reactive_energy1.group2.chan2 = readWithErrorCheck(readUInt32LE(bytes, counterObj, 4) / 1000, error_value_map.reverse_reactive_energy);
+					decoded.reverse_reactive_energy1.group2.chan3 = readWithErrorCheck(readUInt32LE(bytes, counterObj, 4) / 1000, error_value_map.reverse_reactive_energy);
 				}
 				break;
 			case 0x15:
@@ -503,22 +519,22 @@ function milesightDeviceDecode(bytes) {
 				decoded.reverse_reactive_energy2.mask1 = extractBits(bitOptions, 0, 1);
 				decoded.reverse_reactive_energy2.mask2 = extractBits(bitOptions, 1, 2);
 				if (decoded.reverse_reactive_energy2.mask1 == 0x00) {
-					decoded.reverse_reactive_energy2.group1_value = readUInt32LE(bytes, counterObj, 4) / 1000;
+					decoded.reverse_reactive_energy2.group1_value = readWithErrorCheck(readUInt32LE(bytes, counterObj, 4) / 1000, error_value_map.reverse_reactive_energy);
 				}
 				if (decoded.reverse_reactive_energy2.mask1 == 0x01) {
 					decoded.reverse_reactive_energy2.group1 = decoded.reverse_reactive_energy2.group1 || {};
-					decoded.reverse_reactive_energy2.group1.chan1 = readUInt32LE(bytes, counterObj, 4) / 1000;
-					decoded.reverse_reactive_energy2.group1.chan2 = readUInt32LE(bytes, counterObj, 4) / 1000;
-					decoded.reverse_reactive_energy2.group1.chan3 = readUInt32LE(bytes, counterObj, 4) / 1000;
+					decoded.reverse_reactive_energy2.group1.chan1 = readWithErrorCheck(readUInt32LE(bytes, counterObj, 4) / 1000, error_value_map.reverse_reactive_energy);
+					decoded.reverse_reactive_energy2.group1.chan2 = readWithErrorCheck(readUInt32LE(bytes, counterObj, 4) / 1000, error_value_map.reverse_reactive_energy);
+					decoded.reverse_reactive_energy2.group1.chan3 = readWithErrorCheck(readUInt32LE(bytes, counterObj, 4) / 1000, error_value_map.reverse_reactive_energy);
 				}
 				if (decoded.reverse_reactive_energy2.mask2 == 0x00) {
-					decoded.reverse_reactive_energy2.group2_value = readUInt32LE(bytes, counterObj, 4) / 1000;
+					decoded.reverse_reactive_energy2.group2_value = readWithErrorCheck(readUInt32LE(bytes, counterObj, 4) / 1000, error_value_map.reverse_reactive_energy);
 				}
 				if (decoded.reverse_reactive_energy2.mask2 == 0x01) {
 					decoded.reverse_reactive_energy2.group2 = decoded.reverse_reactive_energy2.group2 || {};
-					decoded.reverse_reactive_energy2.group2.chan1 = readUInt32LE(bytes, counterObj, 4) / 1000;
-					decoded.reverse_reactive_energy2.group2.chan2 = readUInt32LE(bytes, counterObj, 4) / 1000;
-					decoded.reverse_reactive_energy2.group2.chan3 = readUInt32LE(bytes, counterObj, 4) / 1000;
+					decoded.reverse_reactive_energy2.group2.chan1 = readWithErrorCheck(readUInt32LE(bytes, counterObj, 4) / 1000, error_value_map.reverse_reactive_energy);
+					decoded.reverse_reactive_energy2.group2.chan2 = readWithErrorCheck(readUInt32LE(bytes, counterObj, 4) / 1000, error_value_map.reverse_reactive_energy);
+					decoded.reverse_reactive_energy2.group2.chan3 = readWithErrorCheck(readUInt32LE(bytes, counterObj, 4) / 1000, error_value_map.reverse_reactive_energy);
 				}
 				break;
 			case 0x16:
@@ -527,22 +543,22 @@ function milesightDeviceDecode(bytes) {
 				decoded.apparent_energy1.mask1 = extractBits(bitOptions, 0, 1);
 				decoded.apparent_energy1.mask2 = extractBits(bitOptions, 1, 2);
 				if (decoded.apparent_energy1.mask1 == 0x00) {
-					decoded.apparent_energy1.group1_value = readUInt32LE(bytes, counterObj, 4) / 1000;
+					decoded.apparent_energy1.group1_value = readWithErrorCheck(readUInt32LE(bytes, counterObj, 4) / 1000, error_value_map.apparent_energy);
 				}
 				if (decoded.apparent_energy1.mask1 == 0x01) {
 					decoded.apparent_energy1.group1 = decoded.apparent_energy1.group1 || {};
-					decoded.apparent_energy1.group1.chan1 = readUInt32LE(bytes, counterObj, 4) / 1000;
-					decoded.apparent_energy1.group1.chan2 = readUInt32LE(bytes, counterObj, 4) / 1000;
-					decoded.apparent_energy1.group1.chan3 = readUInt32LE(bytes, counterObj, 4) / 1000;
+					decoded.apparent_energy1.group1.chan1 = readWithErrorCheck(readUInt32LE(bytes, counterObj, 4) / 1000, error_value_map.apparent_energy);
+					decoded.apparent_energy1.group1.chan2 = readWithErrorCheck(readUInt32LE(bytes, counterObj, 4) / 1000, error_value_map.apparent_energy);
+					decoded.apparent_energy1.group1.chan3 = readWithErrorCheck(readUInt32LE(bytes, counterObj, 4) / 1000, error_value_map.apparent_energy);
 				}
 				if (decoded.apparent_energy1.mask2 == 0x00) {
-					decoded.apparent_energy1.group2_value = readUInt32LE(bytes, counterObj, 4) / 1000;
+					decoded.apparent_energy1.group2_value = readWithErrorCheck(readUInt32LE(bytes, counterObj, 4) / 1000, error_value_map.apparent_energy);
 				}
 				if (decoded.apparent_energy1.mask2 == 0x01) {
 					decoded.apparent_energy1.group2 = decoded.apparent_energy1.group2 || {};
-					decoded.apparent_energy1.group2.chan1 = readUInt32LE(bytes, counterObj, 4) / 1000;
-					decoded.apparent_energy1.group2.chan2 = readUInt32LE(bytes, counterObj, 4) / 1000;
-					decoded.apparent_energy1.group2.chan3 = readUInt32LE(bytes, counterObj, 4) / 1000;
+					decoded.apparent_energy1.group2.chan1 = readWithErrorCheck(readUInt32LE(bytes, counterObj, 4) / 1000, error_value_map.apparent_energy);
+					decoded.apparent_energy1.group2.chan2 = readWithErrorCheck(readUInt32LE(bytes, counterObj, 4) / 1000, error_value_map.apparent_energy);
+					decoded.apparent_energy1.group2.chan3 = readWithErrorCheck(readUInt32LE(bytes, counterObj, 4) / 1000, error_value_map.apparent_energy);
 				}
 				break;
 			case 0x17:
@@ -551,22 +567,22 @@ function milesightDeviceDecode(bytes) {
 				decoded.apparent_energy2.mask1 = extractBits(bitOptions, 0, 1);
 				decoded.apparent_energy2.mask2 = extractBits(bitOptions, 1, 2);
 				if (decoded.apparent_energy2.mask1 == 0x00) {
-					decoded.apparent_energy2.group1_value = readUInt32LE(bytes, counterObj, 4) / 1000;
+					decoded.apparent_energy2.group1_value = readWithErrorCheck(readUInt32LE(bytes, counterObj, 4) / 1000, error_value_map.apparent_energy);
 				}
 				if (decoded.apparent_energy2.mask1 == 0x01) {
 					decoded.apparent_energy2.group1 = decoded.apparent_energy2.group1 || {};
-					decoded.apparent_energy2.group1.chan1 = readUInt32LE(bytes, counterObj, 4) / 1000;
-					decoded.apparent_energy2.group1.chan2 = readUInt32LE(bytes, counterObj, 4) / 1000;
-					decoded.apparent_energy2.group1.chan3 = readUInt32LE(bytes, counterObj, 4) / 1000;
+					decoded.apparent_energy2.group1.chan1 = readWithErrorCheck(readUInt32LE(bytes, counterObj, 4) / 1000, error_value_map.apparent_energy);
+					decoded.apparent_energy2.group1.chan2 = readWithErrorCheck(readUInt32LE(bytes, counterObj, 4) / 1000, error_value_map.apparent_energy);
+					decoded.apparent_energy2.group1.chan3 = readWithErrorCheck(readUInt32LE(bytes, counterObj, 4) / 1000, error_value_map.apparent_energy);
 				}
 				if (decoded.apparent_energy2.mask2 == 0x00) {
-					decoded.apparent_energy2.group2_value = readUInt32LE(bytes, counterObj, 4) / 1000;
+					decoded.apparent_energy2.group2_value = readWithErrorCheck(readUInt32LE(bytes, counterObj, 4) / 1000, error_value_map.apparent_energy);
 				}
 				if (decoded.apparent_energy2.mask2 == 0x01) {
 					decoded.apparent_energy2.group2 = decoded.apparent_energy2.group2 || {};
-					decoded.apparent_energy2.group2.chan1 = readUInt32LE(bytes, counterObj, 4) / 1000;
-					decoded.apparent_energy2.group2.chan2 = readUInt32LE(bytes, counterObj, 4) / 1000;
-					decoded.apparent_energy2.group2.chan3 = readUInt32LE(bytes, counterObj, 4) / 1000;
+					decoded.apparent_energy2.group2.chan1 = readWithErrorCheck(readUInt32LE(bytes, counterObj, 4) / 1000, error_value_map.apparent_energy);
+					decoded.apparent_energy2.group2.chan2 = readWithErrorCheck(readUInt32LE(bytes, counterObj, 4) / 1000, error_value_map.apparent_energy);
+					decoded.apparent_energy2.group2.chan3 = readWithErrorCheck(readUInt32LE(bytes, counterObj, 4) / 1000, error_value_map.apparent_energy);
 				}
 				break;
 			case 0x40:
@@ -591,42 +607,42 @@ function milesightDeviceDecode(bytes) {
 				}
 				if (decoded.temperature_alarm.type == 0x10) {
 					decoded.temperature_alarm.lower_range_alarm_deactivation = decoded.temperature_alarm.lower_range_alarm_deactivation || {};
-					decoded.temperature_alarm.lower_range_alarm_deactivation.temperature = readInt16LE(bytes, counterObj, 2) / 100;
+					decoded.temperature_alarm.lower_range_alarm_deactivation.temperature = readWithErrorCheck(readInt16LE(bytes, counterObj, 2) / 100, error_value_map.temperature);
 					// decoded.temperature = decoded.temperature_alarm.lower_range_alarm_deactivation.temperature;
 				}
 				if (decoded.temperature_alarm.type == 0x11) {
 					decoded.temperature_alarm.lower_range_alarm_trigger = decoded.temperature_alarm.lower_range_alarm_trigger || {};
-					decoded.temperature_alarm.lower_range_alarm_trigger.temperature = readInt16LE(bytes, counterObj, 2) / 100;
+					decoded.temperature_alarm.lower_range_alarm_trigger.temperature = readWithErrorCheck(readInt16LE(bytes, counterObj, 2) / 100, error_value_map.temperature);
 					// decoded.temperature = decoded.temperature_alarm.lower_range_alarm_trigger.temperature;
 				}
 				if (decoded.temperature_alarm.type == 0x12) {
 					decoded.temperature_alarm.over_range_alarm_deactivation = decoded.temperature_alarm.over_range_alarm_deactivation || {};
-					decoded.temperature_alarm.over_range_alarm_deactivation.temperature = readInt16LE(bytes, counterObj, 2) / 100;
+					decoded.temperature_alarm.over_range_alarm_deactivation.temperature = readWithErrorCheck(readInt16LE(bytes, counterObj, 2) / 100, error_value_map.temperature);
 					// decoded.temperature = decoded.temperature_alarm.over_range_alarm_deactivation.temperature;
 				}
 				if (decoded.temperature_alarm.type == 0x13) {
 					decoded.temperature_alarm.over_range_alarm_trigger = decoded.temperature_alarm.over_range_alarm_trigger || {};
-					decoded.temperature_alarm.over_range_alarm_trigger.temperature = readInt16LE(bytes, counterObj, 2) / 100;
+					decoded.temperature_alarm.over_range_alarm_trigger.temperature = readWithErrorCheck(readInt16LE(bytes, counterObj, 2) / 100, error_value_map.temperature);
 					// decoded.temperature = decoded.temperature_alarm.over_range_alarm_trigger.temperature;
 				}
 				if (decoded.temperature_alarm.type == 0x14) {
 					decoded.temperature_alarm.within_range_alarm_deactivation = decoded.temperature_alarm.within_range_alarm_deactivation || {};
-					decoded.temperature_alarm.within_range_alarm_deactivation.temperature = readInt16LE(bytes, counterObj, 2) / 100;
+					decoded.temperature_alarm.within_range_alarm_deactivation.temperature = readWithErrorCheck(readInt16LE(bytes, counterObj, 2) / 100, error_value_map.temperature);
 					// decoded.temperature = decoded.temperature_alarm.within_range_alarm_deactivation.temperature;
 				}
 				if (decoded.temperature_alarm.type == 0x15) {
 					decoded.temperature_alarm.within_range_alarm_trigger = decoded.temperature_alarm.within_range_alarm_trigger || {};
-					decoded.temperature_alarm.within_range_alarm_trigger.temperature = readInt16LE(bytes, counterObj, 2) / 100;
+					decoded.temperature_alarm.within_range_alarm_trigger.temperature = readWithErrorCheck(readInt16LE(bytes, counterObj, 2) / 100, error_value_map.temperature);
 					// decoded.temperature = decoded.temperature_alarm.within_range_alarm_trigger.temperature;
 				}
 				if (decoded.temperature_alarm.type == 0x16) {
 					decoded.temperature_alarm.exceed_range_alarm_deactivation = decoded.temperature_alarm.exceed_range_alarm_deactivation || {};
-					decoded.temperature_alarm.exceed_range_alarm_deactivation.temperature = readInt16LE(bytes, counterObj, 2) / 100;
+					decoded.temperature_alarm.exceed_range_alarm_deactivation.temperature = readWithErrorCheck(readInt16LE(bytes, counterObj, 2) / 100, error_value_map.temperature);
 					// decoded.temperature = decoded.temperature_alarm.exceed_range_alarm_deactivation.temperature;
 				}
 				if (decoded.temperature_alarm.type == 0x17) {
 					decoded.temperature_alarm.exceed_range_alarm_trigger = decoded.temperature_alarm.exceed_range_alarm_trigger || {};
-					decoded.temperature_alarm.exceed_range_alarm_trigger.temperature = readInt16LE(bytes, counterObj, 2) / 100;
+					decoded.temperature_alarm.exceed_range_alarm_trigger.temperature = readWithErrorCheck(readInt16LE(bytes, counterObj, 2) / 100, error_value_map.temperature);
 					// decoded.temperature = decoded.temperature_alarm.exceed_range_alarm_trigger.temperature;
 				}
 				break;
@@ -640,12 +656,12 @@ function milesightDeviceDecode(bytes) {
 				}
 				if (decoded.current_alarm.info.type == 0x01) {
 					decoded.current_alarm.info.lower_range_error = decoded.current_alarm.info.lower_range_error || {};
-					decoded.current_alarm.info.lower_range_error.current = readUInt24LE(bytes, counterObj, 3) / 100;
+					decoded.current_alarm.info.lower_range_error.current = readWithErrorCheck(readUInt24LE(bytes, counterObj, 3) / 100, error_value_map.current);
 					// decoded.current = decoded.current_alarm.info.lower_range_error.current;
 				}
 				if (decoded.current_alarm.info.type == 0x02) {
 					decoded.current_alarm.info.over_range_error = decoded.current_alarm.info.over_range_error || {};
-					decoded.current_alarm.info.over_range_error.current = readUInt24LE(bytes, counterObj, 3) / 100;
+					decoded.current_alarm.info.over_range_error.current = readWithErrorCheck(readUInt24LE(bytes, counterObj, 3) / 100, error_value_map.current);
 					// decoded.current = decoded.current_alarm.info.over_range_error.current;
 				}
 				if (decoded.current_alarm.info.type == 0x03) {
@@ -653,47 +669,47 @@ function milesightDeviceDecode(bytes) {
 				}
 				if (decoded.current_alarm.info.type == 0x04) {
 					decoded.current_alarm.info.over_range_release = decoded.current_alarm.info.over_range_release || {};
-					decoded.current_alarm.info.over_range_release.current = readUInt24LE(bytes, counterObj, 3) / 100;
+					decoded.current_alarm.info.over_range_release.current = readWithErrorCheck(readUInt24LE(bytes, counterObj, 3) / 100, error_value_map.current);
 					// decoded.current = decoded.current_alarm.info.over_range_release.current;
 				}
 				if (decoded.current_alarm.info.type == 0x10) {
 					decoded.current_alarm.info.lower_range_alarm_deactivation = decoded.current_alarm.info.lower_range_alarm_deactivation || {};
-					decoded.current_alarm.info.lower_range_alarm_deactivation.current = readUInt24LE(bytes, counterObj, 3) / 100;
+					decoded.current_alarm.info.lower_range_alarm_deactivation.current = readWithErrorCheck(readUInt24LE(bytes, counterObj, 3) / 100, error_value_map.current);
 					// decoded.current = decoded.current_alarm.info.lower_range_alarm_deactivation.current;
 				}
 				if (decoded.current_alarm.info.type == 0x11) {
 					decoded.current_alarm.info.lower_range_alarm_trigger = decoded.current_alarm.info.lower_range_alarm_trigger || {};
-					decoded.current_alarm.info.lower_range_alarm_trigger.current = readUInt24LE(bytes, counterObj, 3) / 100;
+					decoded.current_alarm.info.lower_range_alarm_trigger.current = readWithErrorCheck(readUInt24LE(bytes, counterObj, 3) / 100, error_value_map.current);
 					// decoded.current = decoded.current_alarm.info.lower_range_alarm_trigger.current;
 				}
 				if (decoded.current_alarm.info.type == 0x12) {
 					decoded.current_alarm.info.over_range_alarm_deactivation = decoded.current_alarm.info.over_range_alarm_deactivation || {};
-					decoded.current_alarm.info.over_range_alarm_deactivation.current = readUInt24LE(bytes, counterObj, 3) / 100;
+					decoded.current_alarm.info.over_range_alarm_deactivation.current = readWithErrorCheck(readUInt24LE(bytes, counterObj, 3) / 100, error_value_map.current);
 					// decoded.current = decoded.current_alarm.info.over_range_alarm_deactivation.current;
 				}
 				if (decoded.current_alarm.info.type == 0x13) {
 					decoded.current_alarm.info.over_range_alarm_trigger = decoded.current_alarm.info.over_range_alarm_trigger || {};
-					decoded.current_alarm.info.over_range_alarm_trigger.current = readUInt24LE(bytes, counterObj, 3) / 100;
+					decoded.current_alarm.info.over_range_alarm_trigger.current = readWithErrorCheck(readUInt24LE(bytes, counterObj, 3) / 100, error_value_map.current);
 					// decoded.current = decoded.current_alarm.info.over_range_alarm_trigger.current;
 				}
 				if (decoded.current_alarm.info.type == 0x14) {
 					decoded.current_alarm.info.within_range_alarm_deactivation = decoded.current_alarm.info.within_range_alarm_deactivation || {};
-					decoded.current_alarm.info.within_range_alarm_deactivation.current = readUInt24LE(bytes, counterObj, 3) / 100;
+					decoded.current_alarm.info.within_range_alarm_deactivation.current = readWithErrorCheck(readUInt24LE(bytes, counterObj, 3) / 100, error_value_map.current);
 					// decoded.current = decoded.current_alarm.info.within_range_alarm_deactivation.current;
 				}
 				if (decoded.current_alarm.info.type == 0x15) {
 					decoded.current_alarm.info.within_range_alarm_trigger = decoded.current_alarm.info.within_range_alarm_trigger || {};
-					decoded.current_alarm.info.within_range_alarm_trigger.current = readUInt24LE(bytes, counterObj, 3) / 100;
+					decoded.current_alarm.info.within_range_alarm_trigger.current = readWithErrorCheck(readUInt24LE(bytes, counterObj, 3) / 100, error_value_map.current);
 					// decoded.current = decoded.current_alarm.info.within_range_alarm_trigger.current;
 				}
 				if (decoded.current_alarm.info.type == 0x16) {
 					decoded.current_alarm.info.exceed_range_alarm_deactivation = decoded.current_alarm.info.exceed_range_alarm_deactivation || {};
-					decoded.current_alarm.info.exceed_range_alarm_deactivation.current = readUInt24LE(bytes, counterObj, 3) / 100;
+					decoded.current_alarm.info.exceed_range_alarm_deactivation.current = readWithErrorCheck(readUInt24LE(bytes, counterObj, 3) / 100, error_value_map.current);
 					// decoded.current = decoded.current_alarm.info.exceed_range_alarm_deactivation.current;
 				}
 				if (decoded.current_alarm.info.type == 0x17) {
 					decoded.current_alarm.info.exceed_range_alarm_trigger = decoded.current_alarm.info.exceed_range_alarm_trigger || {};
-					decoded.current_alarm.info.exceed_range_alarm_trigger.current = readUInt24LE(bytes, counterObj, 3) / 100;
+					decoded.current_alarm.info.exceed_range_alarm_trigger.current = readWithErrorCheck(readUInt24LE(bytes, counterObj, 3) / 100, error_value_map.current);
 					// decoded.current = decoded.current_alarm.info.exceed_range_alarm_trigger.current;
 				}
 				break;
@@ -707,12 +723,12 @@ function milesightDeviceDecode(bytes) {
 				}
 				if (decoded.voltage_alarm.info.type == 0x01) {
 					decoded.voltage_alarm.info.lower_range_error = decoded.voltage_alarm.info.lower_range_error || {};
-					decoded.voltage_alarm.info.lower_range_error.voltage = readUInt16LE(bytes, counterObj, 2) / 100;
+					decoded.voltage_alarm.info.lower_range_error.voltage = readWithErrorCheck(readUInt16LE(bytes, counterObj, 2) / 100, error_value_map.voltage);
 					// decoded.voltage = decoded.voltage_alarm.info.lower_range_error.voltage;
 				}
 				if (decoded.voltage_alarm.info.type == 0x02) {
 					decoded.voltage_alarm.info.over_range_error = decoded.voltage_alarm.info.over_range_error || {};
-					decoded.voltage_alarm.info.over_range_error.voltage = readUInt16LE(bytes, counterObj, 2) / 100;
+					decoded.voltage_alarm.info.over_range_error.voltage = readWithErrorCheck(readUInt16LE(bytes, counterObj, 2) / 100, error_value_map.voltage);
 					// decoded.voltage = decoded.voltage_alarm.info.over_range_error.voltage;
 				}
 				if (decoded.voltage_alarm.info.type == 0x03) {
@@ -720,47 +736,47 @@ function milesightDeviceDecode(bytes) {
 				}
 				if (decoded.voltage_alarm.info.type == 0x04) {
 					decoded.voltage_alarm.info.over_range_release = decoded.voltage_alarm.info.over_range_release || {};
-					decoded.voltage_alarm.info.over_range_release.voltage = readUInt16LE(bytes, counterObj, 2) / 100;
+					decoded.voltage_alarm.info.over_range_release.voltage = readWithErrorCheck(readUInt16LE(bytes, counterObj, 2) / 100, error_value_map.voltage);
 					// decoded.voltage = decoded.voltage_alarm.info.over_range_release.voltage;
 				}
 				if (decoded.voltage_alarm.info.type == 0x10) {
 					decoded.voltage_alarm.info.lower_range_alarm_deactivation = decoded.voltage_alarm.info.lower_range_alarm_deactivation || {};
-					decoded.voltage_alarm.info.lower_range_alarm_deactivation.voltage = readUInt16LE(bytes, counterObj, 2) / 100;
+					decoded.voltage_alarm.info.lower_range_alarm_deactivation.voltage = readWithErrorCheck(readUInt16LE(bytes, counterObj, 2) / 100, error_value_map.voltage);
 					// decoded.voltage = decoded.voltage_alarm.info.lower_range_alarm_deactivation.voltage;
 				}
 				if (decoded.voltage_alarm.info.type == 0x11) {
 					decoded.voltage_alarm.info.lower_range_alarm_trigger = decoded.voltage_alarm.info.lower_range_alarm_trigger || {};
-					decoded.voltage_alarm.info.lower_range_alarm_trigger.voltage = readUInt16LE(bytes, counterObj, 2) / 100;
+					decoded.voltage_alarm.info.lower_range_alarm_trigger.voltage = readWithErrorCheck(readUInt16LE(bytes, counterObj, 2) / 100, error_value_map.voltage);
 					// decoded.voltage = decoded.voltage_alarm.info.lower_range_alarm_trigger.voltage;
 				}
 				if (decoded.voltage_alarm.info.type == 0x12) {
 					decoded.voltage_alarm.info.over_range_alarm_deactivation = decoded.voltage_alarm.info.over_range_alarm_deactivation || {};
-					decoded.voltage_alarm.info.over_range_alarm_deactivation.voltage = readUInt16LE(bytes, counterObj, 2) / 100;
+					decoded.voltage_alarm.info.over_range_alarm_deactivation.voltage = readWithErrorCheck(readUInt16LE(bytes, counterObj, 2) / 100, error_value_map.voltage);
 					// decoded.voltage = decoded.voltage_alarm.info.over_range_alarm_deactivation.voltage;
 				}
 				if (decoded.voltage_alarm.info.type == 0x13) {
 					decoded.voltage_alarm.info.over_range_alarm_trigger = decoded.voltage_alarm.info.over_range_alarm_trigger || {};
-					decoded.voltage_alarm.info.over_range_alarm_trigger.voltage = readUInt16LE(bytes, counterObj, 2) / 100;
+					decoded.voltage_alarm.info.over_range_alarm_trigger.voltage = readWithErrorCheck(readUInt16LE(bytes, counterObj, 2) / 100, error_value_map.voltage);
 					// decoded.voltage = decoded.voltage_alarm.info.over_range_alarm_trigger.voltage;
 				}
 				if (decoded.voltage_alarm.info.type == 0x14) {
 					decoded.voltage_alarm.info.within_range_alarm_deactivation = decoded.voltage_alarm.info.within_range_alarm_deactivation || {};
-					decoded.voltage_alarm.info.within_range_alarm_deactivation.voltage = readUInt16LE(bytes, counterObj, 2) / 100;
+					decoded.voltage_alarm.info.within_range_alarm_deactivation.voltage = readWithErrorCheck(readUInt16LE(bytes, counterObj, 2) / 100, error_value_map.voltage);
 					// decoded.voltage = decoded.voltage_alarm.info.within_range_alarm_deactivation.voltage;
 				}
 				if (decoded.voltage_alarm.info.type == 0x15) {
 					decoded.voltage_alarm.info.within_range_alarm_trigger = decoded.voltage_alarm.info.within_range_alarm_trigger || {};
-					decoded.voltage_alarm.info.within_range_alarm_trigger.voltage = readUInt16LE(bytes, counterObj, 2) / 100;
+					decoded.voltage_alarm.info.within_range_alarm_trigger.voltage = readWithErrorCheck(readUInt16LE(bytes, counterObj, 2) / 100, error_value_map.voltage);
 					// decoded.voltage = decoded.voltage_alarm.info.within_range_alarm_trigger.voltage;
 				}
 				if (decoded.voltage_alarm.info.type == 0x16) {
 					decoded.voltage_alarm.info.exceed_range_alarm_deactivation = decoded.voltage_alarm.info.exceed_range_alarm_deactivation || {};
-					decoded.voltage_alarm.info.exceed_range_alarm_deactivation.voltage = readUInt16LE(bytes, counterObj, 2) / 100;
+					decoded.voltage_alarm.info.exceed_range_alarm_deactivation.voltage = readWithErrorCheck(readUInt16LE(bytes, counterObj, 2) / 100, error_value_map.voltage);
 					// decoded.voltage = decoded.voltage_alarm.info.exceed_range_alarm_deactivation.voltage;
 				}
 				if (decoded.voltage_alarm.info.type == 0x17) {
 					decoded.voltage_alarm.info.exceed_range_alarm_trigger = decoded.voltage_alarm.info.exceed_range_alarm_trigger || {};
-					decoded.voltage_alarm.info.exceed_range_alarm_trigger.voltage = readUInt16LE(bytes, counterObj, 2) / 100;
+					decoded.voltage_alarm.info.exceed_range_alarm_trigger.voltage = readWithErrorCheck(readUInt16LE(bytes, counterObj, 2) / 100, error_value_map.voltage);
 					// decoded.voltage = decoded.voltage_alarm.info.exceed_range_alarm_trigger.voltage;
 				}
 				break;
@@ -774,12 +790,12 @@ function milesightDeviceDecode(bytes) {
 				}
 				if (decoded.thdi_alarm.info.type == 0x12) {
 					decoded.thdi_alarm.info.over_range_alarm_deactivation = decoded.thdi_alarm.info.over_range_alarm_deactivation || {};
-					decoded.thdi_alarm.info.over_range_alarm_deactivation.thdi = readUInt16LE(bytes, counterObj, 2) / 100;
+					decoded.thdi_alarm.info.over_range_alarm_deactivation.thdi = readWithErrorCheck(readUInt16LE(bytes, counterObj, 2) / 100, error_value_map.thdi);
 					// decoded.thdi = decoded.thdi_alarm.info.over_range_alarm_deactivation.thdi;
 				}
 				if (decoded.thdi_alarm.info.type == 0x13) {
 					decoded.thdi_alarm.info.over_range_alarm_trigger = decoded.thdi_alarm.info.over_range_alarm_trigger || {};
-					decoded.thdi_alarm.info.over_range_alarm_trigger.thdi = readUInt16LE(bytes, counterObj, 2) / 100;
+					decoded.thdi_alarm.info.over_range_alarm_trigger.thdi = readWithErrorCheck(readUInt16LE(bytes, counterObj, 2) / 100, error_value_map.thdi);
 					// decoded.thdi = decoded.thdi_alarm.info.over_range_alarm_trigger.thdi;
 				}
 				break;
@@ -793,12 +809,12 @@ function milesightDeviceDecode(bytes) {
 				}
 				if (decoded.thdv_alarm.info.type == 0x12) {
 					decoded.thdv_alarm.info.over_range_alarm_deactivation = decoded.thdv_alarm.info.over_range_alarm_deactivation || {};
-					decoded.thdv_alarm.info.over_range_alarm_deactivation.thdv = readUInt16LE(bytes, counterObj, 2) / 100;
+					decoded.thdv_alarm.info.over_range_alarm_deactivation.thdv = readWithErrorCheck(readUInt16LE(bytes, counterObj, 2) / 100, error_value_map.thdv);
 					// decoded.thdv = decoded.thdv_alarm.info.over_range_alarm_deactivation.thdv;
 				}
 				if (decoded.thdv_alarm.info.type == 0x13) {
 					decoded.thdv_alarm.info.over_range_alarm_trigger = decoded.thdv_alarm.info.over_range_alarm_trigger || {};
-					decoded.thdv_alarm.info.over_range_alarm_trigger.thdv = readUInt16LE(bytes, counterObj, 2) / 100;
+					decoded.thdv_alarm.info.over_range_alarm_trigger.thdv = readWithErrorCheck(readUInt16LE(bytes, counterObj, 2) / 100, error_value_map.thdv);
 					// decoded.thdv = decoded.thdv_alarm.info.over_range_alarm_trigger.thdv;
 				}
 				break;
@@ -810,12 +826,12 @@ function milesightDeviceDecode(bytes) {
 				}
 				if (decoded.voltage_unbalance_alarm.type == 0x12) {
 					decoded.voltage_unbalance_alarm.over_range_alarm_deactivation = decoded.voltage_unbalance_alarm.over_range_alarm_deactivation || {};
-					decoded.voltage_unbalance_alarm.over_range_alarm_deactivation.voltage_unbalance = readUInt16LE(bytes, counterObj, 2) / 100;
+					decoded.voltage_unbalance_alarm.over_range_alarm_deactivation.voltage_unbalance = readWithErrorCheck(readUInt16LE(bytes, counterObj, 2) / 100, error_value_map.voltage_unbalance);
 					// decoded.voltage_three_phase_imbalcance = decoded.voltage_unbalance_alarm.over_range_alarm_deactivation.voltage_unbalance;
 				}
 				if (decoded.voltage_unbalance_alarm.type == 0x13) {
 					decoded.voltage_unbalance_alarm.over_range_alarm_trigger = decoded.voltage_unbalance_alarm.over_range_alarm_trigger || {};
-					decoded.voltage_unbalance_alarm.over_range_alarm_trigger.voltage_unbalance = readUInt16LE(bytes, counterObj, 2) / 100;
+					decoded.voltage_unbalance_alarm.over_range_alarm_trigger.voltage_unbalance = readWithErrorCheck(readUInt16LE(bytes, counterObj, 2) / 100, error_value_map.voltage_unbalance);
 					// decoded.voltage_three_phase_imbalcance = decoded.voltage_unbalance_alarm.over_range_alarm_trigger.voltage_unbalance;
 				}
 				break;
@@ -1200,6 +1216,13 @@ function readUInt16LE(allBytes, counterObj, end) {
 function readInt16LE(allBytes, counterObj, end) {
 	var ref = readUInt16LE(allBytes, counterObj, end);
 	return ref > 0x7fff ? ref - 0x10000 : ref;
+}
+
+function readWithErrorCheck(value, errorValue) {
+	if (value == errorValue) {
+		return 'error';
+	}
+	return value;
 }
 
 function readUInt24LE(allBytes, counterObj, end) {

@@ -27,6 +27,22 @@ function Encoder(obj, port) {
 
 function milesightDeviceEncode(payload) {
 	var encoded = [];
+	var error_value_map = {
+		current: [0xFF, 0xFF, 0xFF],
+		voltage: [0xFF, 0xFF],
+		forward_active_energy: [0xFF, 0xFF, 0xFF, 0xFF],
+		reverse_active_energy: [0xFF, 0xFF, 0xFF, 0xFF],
+		forward_reactive_energy: [0xFF, 0xFF, 0xFF, 0xFF],
+		reverse_reactive_energy: [0xFF, 0xFF, 0xFF, 0xFF],
+		apparent_energy: [0xFF, 0xFF, 0xFF, 0xFF],
+		power_factor: [0xFF],
+		active_power: [0xFF, 0xFF, 0xFF, 0xFF],
+		reactive_power: [0xFF, 0xFF, 0xFF, 0xFF],
+		apparent_power: [0xFF, 0xFF, 0xFF, 0xFF],
+		thdi: [0xFF, 0xFF],
+		thdv: [0xFF, 0xFF],
+		voltage_three_phase_imbalcance: [0xFF, 0xFF]
+	}
 	//0xff
 	if ('request_check_sequence_number' in payload) {
 		var buffer = new Buffer();
@@ -181,10 +197,14 @@ function milesightDeviceEncode(payload) {
 	if ('voltage_three_phase_imbalcance' in payload) {
 		var buffer = new Buffer();
 		buffer.writeUInt8(0x02);
-		if (payload.voltage_three_phase_imbalcance < 0 || payload.voltage_three_phase_imbalcance > 100) {
-			throw new Error('voltage_three_phase_imbalcance must be between 0 and 100');
+		if (payload.voltage_three_phase_imbalcance === 'error') {
+			buffer.writeBytes(error_value_map.voltage_three_phase_imbalcance);
+		} else {
+			if (payload.voltage_three_phase_imbalcance < 0 || payload.voltage_three_phase_imbalcance > 100) {
+				throw new Error('voltage_three_phase_imbalcance must be between 0 and 100');
+			}
+			buffer.writeUInt16LE(payload.voltage_three_phase_imbalcance * 100);
 		}
-		buffer.writeUInt16LE(payload.voltage_three_phase_imbalcance * 100);
 		encoded = encoded.concat(buffer.toBytes());
 	}
 	//0x03
@@ -193,10 +213,14 @@ function milesightDeviceEncode(payload) {
 		buffer.writeUInt8(0x03);
 		for (var i = 0; i < payload.thdi.length; i++) {
 			var thdi_item = payload.thdi[i];
-			if (thdi_item.value < 0 || thdi_item.value > 100) {
-				throw new Error('value must be between 0 and 100');
+			if (thdi_item.value === 'error') {
+				buffer.writeBytes(error_value_map.thdi);
+			} else {
+				if (thdi_item.value < 0 || thdi_item.value > 100) {
+					throw new Error('value must be between 0 and 100');
+				}
+				buffer.writeUInt16LE(thdi_item.value * 100);
 			}
-			buffer.writeUInt16LE(thdi_item.value * 100);
 		}
 		encoded = encoded.concat(buffer.toBytes());
 	}
@@ -206,10 +230,14 @@ function milesightDeviceEncode(payload) {
 		buffer.writeUInt8(0x04);
 		for (var i = 0; i < payload.thdv.length; i++) {
 			var thdv_item = payload.thdv[i];
-			if (thdv_item.value < 0 || thdv_item.value > 100) {
-				throw new Error('value must be between 0 and 100');
+			if (thdv_item.value === 'error') {
+				buffer.writeBytes(error_value_map.thdv);
+			} else {
+				if (thdv_item.value < 0 || thdv_item.value > 100) {
+					throw new Error('value must be between 0 and 100');
+				}
+				buffer.writeUInt16LE(thdv_item.value * 100);
 			}
-			buffer.writeUInt16LE(thdv_item.value * 100);
 		}
 		encoded = encoded.concat(buffer.toBytes());
 	}
@@ -219,10 +247,14 @@ function milesightDeviceEncode(payload) {
 		buffer.writeUInt8(0x05);
 		for (var i = 0; i < payload.current.length; i++) {
 			var current_item = payload.current[i];
-			if (current_item.value < 0 || current_item.value > 4000) {
-				throw new Error('value must be between 0 and 4000');
+			if (current_item.value === 'error') {
+				buffer.writeBytes(error_value_map.current);
+			} else {
+				if (current_item.value < 0 || current_item.value > 4000) {
+					throw new Error('value must be between 0 and 4000');
+				}
+				buffer.writeUInt24LE(current_item.value * 100);
 			}
-			buffer.writeUInt24LE(current_item.value * 100);
 		}
 		encoded = encoded.concat(buffer.toBytes());
 	}
@@ -231,11 +263,15 @@ function milesightDeviceEncode(payload) {
 		var buffer = new Buffer();
 		buffer.writeUInt8(0x06);
 		for (var i = 0; i < payload.voltage.length; i++) {
-			var voltage_item = payload.voltage[i];
-			if (voltage_item.value < 0 || voltage_item.value > 500) {
-				throw new Error('value must be between 0 and 500');
+			var voltage_item = payload.voltage[i];	
+			if (voltage_item.value === 'error') {
+				buffer.writeBytes(error_value_map.voltage);
+			} else {
+				if (voltage_item.value < 0 || voltage_item.value > 500) {
+					throw new Error('value must be between 0 and 500');
+				}
+				buffer.writeUInt16LE(voltage_item.value * 100);
 			}
-			buffer.writeUInt16LE(voltage_item.value * 100);
 		}
 		encoded = encoded.concat(buffer.toBytes());
 	}
@@ -254,84 +290,148 @@ function milesightDeviceEncode(payload) {
 		buffer.writeUInt8(bitOptions);
 
 		if (payload.power_factor.mask1 == 0x00) {
-			if (payload.power_factor.group1_value < 0 || payload.power_factor.group1_value > 100) {
-				throw new Error('power_factor.group1_value must be between 0 and 100');
+			if (payload.power_factor.group1_value === 'error') {
+				buffer.writeBytes(error_value_map.power_factor);
+			} else {
+				if (payload.power_factor.group1_value < 0 || payload.power_factor.group1_value > 100) {
+					throw new Error('power_factor.group1_value must be between 0 and 100');
+				}
+				buffer.writeUInt8(payload.power_factor.group1_value * 100);
 			}
-			buffer.writeUInt8(payload.power_factor.group1_value * 100);
 		}
 		if (payload.power_factor.mask1 == 0x01) {
-			if (payload.power_factor.group1.chan1 < 0 || payload.power_factor.group1.chan1 > 100) {
-				throw new Error('power_factor.group1.chan1 must be between 0 and 100');
+			if (payload.power_factor.group1.chan1 === 'error') {
+				buffer.writeBytes(error_value_map.power_factor);
+			} else {
+				if (payload.power_factor.group1.chan1 < 0 || payload.power_factor.group1.chan1 > 100) {
+					throw new Error('power_factor.group1.chan1 must be between 0 and 100');
+				}
+				buffer.writeUInt8(payload.power_factor.group1.chan1 * 100);
 			}
-			buffer.writeUInt8(payload.power_factor.group1.chan1 * 100);
-			if (payload.power_factor.group1.chan2 < 0 || payload.power_factor.group1.chan2 > 100) {
-				throw new Error('power_factor.group1.chan2 must be between 0 and 100');
+			if (payload.power_factor.group1.chan2 === 'error') {
+				buffer.writeBytes(error_value_map.power_factor);
+			} else {
+				if (payload.power_factor.group1.chan2 < 0 || payload.power_factor.group1.chan2 > 100) {
+					throw new Error('power_factor.group1.chan2 must be between 0 and 100');
+				}
+				buffer.writeUInt8(payload.power_factor.group1.chan2 * 100);
 			}
-			buffer.writeUInt8(payload.power_factor.group1.chan2 * 100);
-			if (payload.power_factor.group1.chan3 < 0 || payload.power_factor.group1.chan3 > 100) {
-				throw new Error('power_factor.group1.chan3 must be between 0 and 100');
+			if (payload.power_factor.group1.chan3 === 'error') {
+				buffer.writeBytes(error_value_map.power_factor);
+			} else {
+				if (payload.power_factor.group1.chan3 < 0 || payload.power_factor.group1.chan3 > 100) {
+					throw new Error('power_factor.group1.chan3 must be between 0 and 100');
+				}
+				buffer.writeUInt8(payload.power_factor.group1.chan3 * 100);
 			}
-			buffer.writeUInt8(payload.power_factor.group1.chan3 * 100);
 		}
 		if (payload.power_factor.mask2 == 0x00) {
-			if (payload.power_factor.group2_value < 0 || payload.power_factor.group2_value > 100) {
-				throw new Error('power_factor.group2_value must be between 0 and 100');
+			if (payload.power_factor.group2_value === 'error') {
+				buffer.writeBytes(error_value_map.power_factor);
+			} else {
+				if (payload.power_factor.group2_value < 0 || payload.power_factor.group2_value > 100) {
+					throw new Error('power_factor.group2_value must be between 0 and 100');
+				}
+				buffer.writeUInt8(payload.power_factor.group2_value * 100);
 			}
-			buffer.writeUInt8(payload.power_factor.group2_value * 100);
 		}
 		if (payload.power_factor.mask2 == 0x01) {
-			if (payload.power_factor.group2.chan1 < 0 || payload.power_factor.group2.chan1 > 100) {
-				throw new Error('power_factor.group2.chan1 must be between 0 and 100');
+			if (payload.power_factor.group2.chan1 === 'error') {
+				buffer.writeBytes(error_value_map.power_factor);
+			} else {
+				if (payload.power_factor.group2.chan1 < 0 || payload.power_factor.group2.chan1 > 100) {
+					throw new Error('power_factor.group2.chan1 must be between 0 and 100');
+				}
+				buffer.writeUInt8(payload.power_factor.group2.chan1 * 100);
 			}
-			buffer.writeUInt8(payload.power_factor.group2.chan1 * 100);
-			if (payload.power_factor.group2.chan2 < 0 || payload.power_factor.group2.chan2 > 100) {
-				throw new Error('power_factor.group2.chan2 must be between 0 and 100');
+			if (payload.power_factor.group2.chan2 === 'error') {
+				buffer.writeBytes(error_value_map.power_factor);
+			} else {
+				if (payload.power_factor.group2.chan2 < 0 || payload.power_factor.group2.chan2 > 100) {
+					throw new Error('power_factor.group2.chan2 must be between 0 and 100');
+				}
+				buffer.writeUInt8(payload.power_factor.group2.chan2 * 100);
 			}
-			buffer.writeUInt8(payload.power_factor.group2.chan2 * 100);
-			if (payload.power_factor.group2.chan3 < 0 || payload.power_factor.group2.chan3 > 100) {
-				throw new Error('power_factor.group2.chan3 must be between 0 and 100');
+			if (payload.power_factor.group2.chan3 === 'error') {
+				buffer.writeBytes(error_value_map.power_factor);
+			} else {
+				if (payload.power_factor.group2.chan3 < 0 || payload.power_factor.group2.chan3 > 100) {
+					throw new Error('power_factor.group2.chan3 must be between 0 and 100');
+				}
+				buffer.writeUInt8(payload.power_factor.group2.chan3 * 100);
 			}
-			buffer.writeUInt8(payload.power_factor.group2.chan3 * 100);
 		}
 		if (payload.power_factor.mask3 == 0x00) {
-			if (payload.power_factor.group3_value < 0 || payload.power_factor.group3_value > 100) {
-				throw new Error('power_factor.group3_value must be between 0 and 100');
+			if (payload.power_factor.group3_value === 'error') {
+				buffer.writeBytes(error_value_map.power_factor);
+			} else {
+				if (payload.power_factor.group3_value < 0 || payload.power_factor.group3_value > 100) {
+					throw new Error('power_factor.group3_value must be between 0 and 100');
+				}
+				buffer.writeUInt8(payload.power_factor.group3_value * 100);
 			}
-			buffer.writeUInt8(payload.power_factor.group3_value * 100);
 		}
 		if (payload.power_factor.mask3 == 0x01) {
-			if (payload.power_factor.group3.chan1 < 0 || payload.power_factor.group3.chan1 > 100) {
-				throw new Error('power_factor.group3.chan1 must be between 0 and 100');
+			if (payload.power_factor.group3.chan1 === 'error') {
+				buffer.writeBytes(error_value_map.power_factor);
+			} else {
+				if (payload.power_factor.group3.chan1 < 0 || payload.power_factor.group3.chan1 > 100) {
+					throw new Error('power_factor.group3.chan1 must be between 0 and 100');
+				}
+				buffer.writeUInt8(payload.power_factor.group3.chan1 * 100);
 			}
-			buffer.writeUInt8(payload.power_factor.group3.chan1 * 100);
-			if (payload.power_factor.group3.chan2 < 0 || payload.power_factor.group3.chan2 > 100) {
-				throw new Error('power_factor.group3.chan2 must be between 0 and 100');
+			if (payload.power_factor.group3.chan2 === 'error') {
+				buffer.writeBytes(error_value_map.power_factor);
+			} else {
+				if (payload.power_factor.group3.chan2 < 0 || payload.power_factor.group3.chan2 > 100) {
+					throw new Error('power_factor.group3.chan2 must be between 0 and 100');
+				}
+				buffer.writeUInt8(payload.power_factor.group3.chan2 * 100);
 			}
-			buffer.writeUInt8(payload.power_factor.group3.chan2 * 100);
-			if (payload.power_factor.group3.chan3 < 0 || payload.power_factor.group3.chan3 > 100) {
-				throw new Error('power_factor.group3.chan3 must be between 0 and 100');
+			if (payload.power_factor.group3.chan3 === 'error') {
+				buffer.writeBytes(error_value_map.power_factor);
+			} else {
+				if (payload.power_factor.group3.chan3 < 0 || payload.power_factor.group3.chan3 > 100) {
+					throw new Error('power_factor.group3.chan3 must be between 0 and 100');
+				}
+				buffer.writeUInt8(payload.power_factor.group3.chan3 * 100);
 			}
-			buffer.writeUInt8(payload.power_factor.group3.chan3 * 100);
 		}
 		if (payload.power_factor.mask4 == 0x00) {
-			if (payload.power_factor.group4_value < 0 || payload.power_factor.group4_value > 100) {
-				throw new Error('power_factor.group4_value must be between 0 and 100');
+			if (payload.power_factor.group4_value === 'error') {
+				buffer.writeBytes(error_value_map.power_factor);
+			} else {
+				if (payload.power_factor.group4_value < 0 || payload.power_factor.group4_value > 100) {
+					throw new Error('power_factor.group4_value must be between 0 and 100');
+				}
+				buffer.writeUInt8(payload.power_factor.group4_value * 100);
 			}
-			buffer.writeUInt8(payload.power_factor.group4_value * 100);
 		}
 		if (payload.power_factor.mask4 == 0x01) {
-			if (payload.power_factor.group4.chan1 < 0 || payload.power_factor.group4.chan1 > 100) {
-				throw new Error('power_factor.group4.chan1 must be between 0 and 100');
+			if (payload.power_factor.group4.chan1 === 'error') {
+				buffer.writeBytes(error_value_map.power_factor);
+			} else {
+				if (payload.power_factor.group4.chan1 < 0 || payload.power_factor.group4.chan1 > 100) {
+					throw new Error('power_factor.group4.chan1 must be between 0 and 100');
+				}
+				buffer.writeUInt8(payload.power_factor.group4.chan1 * 100);
 			}
-			buffer.writeUInt8(payload.power_factor.group4.chan1 * 100);
-			if (payload.power_factor.group4.chan2 < 0 || payload.power_factor.group4.chan2 > 100) {
-				throw new Error('power_factor.group4.chan2 must be between 0 and 100');
+			if (payload.power_factor.group4.chan2 === 'error') {
+				buffer.writeBytes(error_value_map.power_factor);
+			} else {
+				if (payload.power_factor.group4.chan2 < 0 || payload.power_factor.group4.chan2 > 100) {
+					throw new Error('power_factor.group4.chan2 must be between 0 and 100');
+				}
+				buffer.writeUInt8(payload.power_factor.group4.chan2 * 100);
 			}
-			buffer.writeUInt8(payload.power_factor.group4.chan2 * 100);
-			if (payload.power_factor.group4.chan3 < 0 || payload.power_factor.group4.chan3 > 100) {
-				throw new Error('power_factor.group4.chan3 must be between 0 and 100');
+			if (payload.power_factor.group4.chan3 === 'error') {
+				buffer.writeBytes(error_value_map.power_factor);
+			} else {
+				if (payload.power_factor.group4.chan3 < 0 || payload.power_factor.group4.chan3 > 100) {
+					throw new Error('power_factor.group4.chan3 must be between 0 and 100');
+				}
+				buffer.writeUInt8(payload.power_factor.group4.chan3 * 100);
 			}
-			buffer.writeUInt8(payload.power_factor.group4.chan3 * 100);
 		}
 		encoded = encoded.concat(buffer.toBytes());
 	}
@@ -346,20 +446,55 @@ function milesightDeviceEncode(payload) {
 		buffer.writeUInt8(bitOptions);
 
 		if (payload.active_power1.mask1 == 0x00) {
-			buffer.writeInt32LE(payload.active_power1.group1_value * 1000);
+			if (payload.active_power1.group1_value === 'error') {
+				buffer.writeBytes(error_value_map.active_power);
+			} else {
+				if (payload.active_power1.group1_value < 0 || payload.active_power1.group1_value > 4000) {
+					throw new Error('active_power1.group1_value must be between 0 and 4000');
+				}
+				buffer.writeInt32LE(payload.active_power1.group1_value * 1000);
+			}
 		}
 		if (payload.active_power1.mask1 == 0x01) {
-			buffer.writeInt32LE(payload.active_power1.group1.chan1 * 1000);
-			buffer.writeInt32LE(payload.active_power1.group1.chan2 * 1000);
-			buffer.writeInt32LE(payload.active_power1.group1.chan3 * 1000);
+			if (payload.active_power1.group1.chan1 === 'error') {
+				buffer.writeBytes(error_value_map.active_power);
+			} else {
+				buffer.writeInt32LE(payload.active_power1.group1.chan1 * 1000);
+			}
+			if (payload.active_power1.group1.chan2 === 'error') {
+				buffer.writeBytes(error_value_map.active_power);
+			} else {
+				buffer.writeInt32LE(payload.active_power1.group1.chan2 * 1000);
+			}
+			if (payload.active_power1.group1.chan3 === 'error') {
+				buffer.writeBytes(error_value_map.active_power);
+			} else {
+				buffer.writeInt32LE(payload.active_power1.group1.chan3 * 1000);
+			}
 		}
 		if (payload.active_power1.mask2 == 0x00) {
-			buffer.writeInt32LE(payload.active_power1.group2_value * 1000);
+			if (payload.active_power1.group2_value === 'error') {
+				buffer.writeBytes(error_value_map.active_power);
+			} else {
+				buffer.writeInt32LE(payload.active_power1.group2_value * 1000);
+			}
 		}
 		if (payload.active_power1.mask2 == 0x01) {
-			buffer.writeInt32LE(payload.active_power1.group2.chan1 * 1000);
-			buffer.writeInt32LE(payload.active_power1.group2.chan2 * 1000);
-			buffer.writeInt32LE(payload.active_power1.group2.chan3 * 1000);
+			if (payload.active_power1.group2.chan1 === 'error') {
+				buffer.writeBytes(error_value_map.active_power);
+			} else {
+				buffer.writeInt32LE(payload.active_power1.group2.chan1 * 1000);
+			}
+			if (payload.active_power1.group2.chan2 === 'error') {
+				buffer.writeBytes(error_value_map.active_power);
+			} else {
+				buffer.writeInt32LE(payload.active_power1.group2.chan2 * 1000);
+			}
+			if (payload.active_power1.group2.chan3 === 'error') {
+				buffer.writeBytes(error_value_map.active_power);
+			} else {
+				buffer.writeInt32LE(payload.active_power1.group2.chan3 * 1000);
+			}
 		}
 		encoded = encoded.concat(buffer.toBytes());
 	}
@@ -374,20 +509,52 @@ function milesightDeviceEncode(payload) {
 		buffer.writeUInt8(bitOptions);
 
 		if (payload.active_power2.mask1 == 0x00) {
-			buffer.writeInt32LE(payload.active_power2.group1_value * 1000);
+			if (payload.active_power2.group1_value === 'error') {
+				buffer.writeBytes(error_value_map.active_power);
+			} else {
+				buffer.writeInt32LE(payload.active_power2.group1_value * 1000);
+			}
 		}
 		if (payload.active_power2.mask1 == 0x01) {
-			buffer.writeInt32LE(payload.active_power2.group1.chan1 * 1000);
-			buffer.writeInt32LE(payload.active_power2.group1.chan2 * 1000);
-			buffer.writeInt32LE(payload.active_power2.group1.chan3 * 1000);
+			if (payload.active_power2.group1.chan1 === 'error') {
+				buffer.writeBytes(error_value_map.active_power);
+			} else {
+				buffer.writeInt32LE(payload.active_power2.group1.chan1 * 1000);
+			}
+			if (payload.active_power2.group1.chan2 === 'error') {
+				buffer.writeBytes(error_value_map.active_power);
+			} else {
+				buffer.writeInt32LE(payload.active_power2.group1.chan2 * 1000);
+			}
+			if (payload.active_power2.group1.chan3 === 'error') {
+				buffer.writeBytes(error_value_map.active_power);
+			} else {
+				buffer.writeInt32LE(payload.active_power2.group1.chan3 * 1000);
+			}
 		}
 		if (payload.active_power2.mask2 == 0x00) {
-			buffer.writeInt32LE(payload.active_power2.group2_value * 1000);
+			if (payload.active_power2.group2_value === 'error') {
+				buffer.writeBytes(error_value_map.active_power);
+			} else {
+				buffer.writeInt32LE(payload.active_power2.group2_value * 1000);
+			}
 		}
 		if (payload.active_power2.mask2 == 0x01) {
-			buffer.writeInt32LE(payload.active_power2.group2.chan1 * 1000);
-			buffer.writeInt32LE(payload.active_power2.group2.chan2 * 1000);
-			buffer.writeInt32LE(payload.active_power2.group2.chan3 * 1000);
+			if (payload.active_power2.group2.chan1 === 'error') {
+				buffer.writeBytes(error_value_map.active_power);
+			} else {
+				buffer.writeInt32LE(payload.active_power2.group2.chan1 * 1000);
+			}
+			if (payload.active_power2.group2.chan2 === 'error') {
+				buffer.writeBytes(error_value_map.active_power);
+			} else {
+				buffer.writeInt32LE(payload.active_power2.group2.chan2 * 1000);
+			}
+			if (payload.active_power2.group2.chan3 === 'error') {
+				buffer.writeBytes(error_value_map.active_power);
+			} else {
+				buffer.writeInt32LE(payload.active_power2.group2.chan3 * 1000);
+			}
 		}
 		encoded = encoded.concat(buffer.toBytes());
 	}
@@ -402,20 +569,52 @@ function milesightDeviceEncode(payload) {
 		buffer.writeUInt8(bitOptions);
 
 		if (payload.reactive_power1.mask1 == 0x00) {
-			buffer.writeInt32LE(payload.reactive_power1.group1_value * 1000);
+			if (payload.reactive_power1.group1_value === 'error') {
+				buffer.writeBytes(error_value_map.reactive_power);
+			} else {
+				buffer.writeInt32LE(payload.reactive_power1.group1_value * 1000);
+			}
 		}
 		if (payload.reactive_power1.mask1 == 0x01) {
-			buffer.writeInt32LE(payload.reactive_power1.group1.chan1 * 1000);
-			buffer.writeInt32LE(payload.reactive_power1.group1.chan2 * 1000);
-			buffer.writeInt32LE(payload.reactive_power1.group1.chan3 * 1000);
+			if (payload.reactive_power1.group1.chan1 === 'error') {
+				buffer.writeBytes(error_value_map.reactive_power);
+			} else {
+				buffer.writeInt32LE(payload.reactive_power1.group1.chan1 * 1000);
+			}
+			if (payload.reactive_power1.group1.chan2 === 'error') {
+				buffer.writeBytes(error_value_map.reactive_power);
+			} else {
+				buffer.writeInt32LE(payload.reactive_power1.group1.chan2 * 1000);
+			}
+			if (payload.reactive_power1.group1.chan3 === 'error') {
+				buffer.writeBytes(error_value_map.reactive_power);
+			} else {
+				buffer.writeInt32LE(payload.reactive_power1.group1.chan3 * 1000);
+			}
 		}
 		if (payload.reactive_power1.mask2 == 0x00) {
-			buffer.writeInt32LE(payload.reactive_power1.group2_value * 1000);
+			if (payload.reactive_power1.group2_value === 'error') {
+				buffer.writeBytes(error_value_map.reactive_power);
+			} else {
+				buffer.writeInt32LE(payload.reactive_power1.group2_value * 1000);
+			}
 		}
 		if (payload.reactive_power1.mask2 == 0x01) {
-			buffer.writeInt32LE(payload.reactive_power1.group2.chan1 * 1000);
-			buffer.writeInt32LE(payload.reactive_power1.group2.chan2 * 1000);
-			buffer.writeInt32LE(payload.reactive_power1.group2.chan3 * 1000);
+			if (payload.reactive_power1.group2.chan1 === 'error') {
+				buffer.writeBytes(error_value_map.reactive_power);
+			} else {
+				buffer.writeInt32LE(payload.reactive_power1.group2.chan1 * 1000);
+			}
+			if (payload.reactive_power1.group2.chan2 === 'error') {
+				buffer.writeBytes(error_value_map.reactive_power);
+			} else {
+				buffer.writeInt32LE(payload.reactive_power1.group2.chan2 * 1000);
+			}
+			if (payload.reactive_power1.group2.chan3 === 'error') {
+				buffer.writeBytes(error_value_map.reactive_power);
+			} else {
+				buffer.writeInt32LE(payload.reactive_power1.group2.chan3 * 1000);
+			}
 		}
 		encoded = encoded.concat(buffer.toBytes());
 	}
@@ -430,20 +629,52 @@ function milesightDeviceEncode(payload) {
 		buffer.writeUInt8(bitOptions);
 
 		if (payload.reactive_power2.mask1 == 0x00) {
-			buffer.writeInt32LE(payload.reactive_power2.group1_value * 1000);
+			if (payload.reactive_power2.group1_value === 'error') {
+				buffer.writeBytes(error_value_map.reactive_power);
+			} else {
+				buffer.writeInt32LE(payload.reactive_power2.group1_value * 1000);
+			}
 		}
 		if (payload.reactive_power2.mask1 == 0x01) {
-			buffer.writeInt32LE(payload.reactive_power2.group1.chan1 * 1000);
-			buffer.writeInt32LE(payload.reactive_power2.group1.chan2 * 1000);
-			buffer.writeInt32LE(payload.reactive_power2.group1.chan3 * 1000);
+			if (payload.reactive_power2.group1.chan1 === 'error') {
+				buffer.writeBytes(error_value_map.reactive_power);
+			} else {
+				buffer.writeInt32LE(payload.reactive_power2.group1.chan1 * 1000);
+			}
+			if (payload.reactive_power2.group1.chan2 === 'error') {
+				buffer.writeBytes(error_value_map.reactive_power);
+			} else {
+				buffer.writeInt32LE(payload.reactive_power2.group1.chan2 * 1000);
+			}
+			if (payload.reactive_power2.group1.chan3 === 'error') {
+				buffer.writeBytes(error_value_map.reactive_power);
+			} else {
+				buffer.writeInt32LE(payload.reactive_power2.group1.chan3 * 1000);
+			}
 		}
 		if (payload.reactive_power2.mask2 == 0x00) {
-			buffer.writeInt32LE(payload.reactive_power2.group2_value * 1000);
+			if (payload.reactive_power2.group2_value === 'error') {
+				buffer.writeBytes(error_value_map.reactive_power);
+			} else {
+				buffer.writeInt32LE(payload.reactive_power2.group2_value * 1000);
+			}
 		}
 		if (payload.reactive_power2.mask2 == 0x01) {
-			buffer.writeInt32LE(payload.reactive_power2.group2.chan1 * 1000);
-			buffer.writeInt32LE(payload.reactive_power2.group2.chan2 * 1000);
-			buffer.writeInt32LE(payload.reactive_power2.group2.chan3 * 1000);
+			if (payload.reactive_power2.group2.chan1 === 'error') {
+				buffer.writeBytes(error_value_map.reactive_power);
+			} else {
+				buffer.writeInt32LE(payload.reactive_power2.group2.chan1 * 1000);
+			}
+			if (payload.reactive_power2.group2.chan2 === 'error') {
+				buffer.writeBytes(error_value_map.reactive_power);
+			} else {
+				buffer.writeInt32LE(payload.reactive_power2.group2.chan2 * 1000);
+			}
+			if (payload.reactive_power2.group2.chan3 === 'error') {
+				buffer.writeBytes(error_value_map.reactive_power);
+			} else {
+				buffer.writeInt32LE(payload.reactive_power2.group2.chan3 * 1000);
+			}
 		}
 		encoded = encoded.concat(buffer.toBytes());
 	}
@@ -458,20 +689,55 @@ function milesightDeviceEncode(payload) {
 		buffer.writeUInt8(bitOptions);
 
 		if (payload.apparent_power1.mask1 == 0x00) {
-			buffer.writeInt32LE(payload.apparent_power1.group1_value * 1000);
+			if (payload.apparent_power1.group1_value === 'error') {
+				buffer.writeBytes(error_value_map.apparent_power);
+			} else {
+				if (payload.apparent_power1.group1_value < 0 || payload.apparent_power1.group1_value > 4000) {
+					throw new Error('apparent_power1.group1_value must be between 0 and 4000');
+				}
+				buffer.writeInt32LE(payload.apparent_power1.group1_value * 1000);
+			}
 		}
 		if (payload.apparent_power1.mask1 == 0x01) {
-			buffer.writeInt32LE(payload.apparent_power1.group1.chan1 * 1000);
-			buffer.writeInt32LE(payload.apparent_power1.group1.chan2 * 1000);
-			buffer.writeInt32LE(payload.apparent_power1.group1.chan3 * 1000);
+			if (payload.apparent_power1.group1.chan1 === 'error') {
+				buffer.writeBytes(error_value_map.apparent_power);
+			} else {
+				buffer.writeInt32LE(payload.apparent_power1.group1.chan1 * 1000);
+			}
+			if (payload.apparent_power1.group1.chan2 === 'error') {
+				buffer.writeBytes(error_value_map.apparent_power);
+			} else {
+				buffer.writeInt32LE(payload.apparent_power1.group1.chan2 * 1000);
+			}
+			if (payload.apparent_power1.group1.chan3 === 'error') {
+				buffer.writeBytes(error_value_map.apparent_power);
+			} else {
+				buffer.writeInt32LE(payload.apparent_power1.group1.chan3 * 1000);
+			}
 		}
 		if (payload.apparent_power1.mask2 == 0x00) {
-			buffer.writeInt32LE(payload.apparent_power1.group2_value * 1000);
+			if (payload.apparent_power1.group2_value === 'error') {
+				buffer.writeBytes(error_value_map.apparent_power);
+			} else {
+				buffer.writeInt32LE(payload.apparent_power1.group2_value * 1000);
+			}
 		}
 		if (payload.apparent_power1.mask2 == 0x01) {
-			buffer.writeInt32LE(payload.apparent_power1.group2.chan1 * 1000);
-			buffer.writeInt32LE(payload.apparent_power1.group2.chan2 * 1000);
-			buffer.writeInt32LE(payload.apparent_power1.group2.chan3 * 1000);
+			if (payload.apparent_power1.group2.chan1 === 'error') {
+				buffer.writeBytes(error_value_map.apparent_power);
+			} else {
+				buffer.writeInt32LE(payload.apparent_power1.group2.chan1 * 1000);
+			}
+			if (payload.apparent_power1.group2.chan2 === 'error') {
+				buffer.writeBytes(error_value_map.apparent_power);
+			} else {
+				buffer.writeInt32LE(payload.apparent_power1.group2.chan2 * 1000);
+			}
+			if (payload.apparent_power1.group2.chan3 === 'error') {
+				buffer.writeBytes(error_value_map.apparent_power);
+			} else {
+				buffer.writeInt32LE(payload.apparent_power1.group2.chan3 * 1000);
+			}
 		}
 		encoded = encoded.concat(buffer.toBytes());
 	}
@@ -486,20 +752,52 @@ function milesightDeviceEncode(payload) {
 		buffer.writeUInt8(bitOptions);
 
 		if (payload.apparent_power2.mask1 == 0x00) {
-			buffer.writeInt32LE(payload.apparent_power2.group1_value * 1000);
+			if (payload.apparent_power2.group1_value === 'error') {
+				buffer.writeBytes(error_value_map.apparent_power);
+			} else {
+				buffer.writeInt32LE(payload.apparent_power2.group1_value * 1000);
+			}
 		}
 		if (payload.apparent_power2.mask1 == 0x01) {
-			buffer.writeInt32LE(payload.apparent_power2.group1.chan1 * 1000);
-			buffer.writeInt32LE(payload.apparent_power2.group1.chan2 * 1000);
-			buffer.writeInt32LE(payload.apparent_power2.group1.chan3 * 1000);
+			if (payload.apparent_power2.group1.chan1 === 'error') {
+				buffer.writeBytes(error_value_map.apparent_power);
+			} else {
+				buffer.writeInt32LE(payload.apparent_power2.group1.chan1 * 1000);
+			}
+			if (payload.apparent_power2.group1.chan2 === 'error') {
+				buffer.writeBytes(error_value_map.apparent_power);
+			} else {
+				buffer.writeInt32LE(payload.apparent_power2.group1.chan2 * 1000);
+			}
+			if (payload.apparent_power2.group1.chan3 === 'error') {
+				buffer.writeBytes(error_value_map.apparent_power);
+			} else {
+				buffer.writeInt32LE(payload.apparent_power2.group1.chan3 * 1000);
+			}
 		}
 		if (payload.apparent_power2.mask2 == 0x00) {
-			buffer.writeInt32LE(payload.apparent_power2.group2_value * 1000);
+			if (payload.apparent_power2.group2_value === 'error') {
+				buffer.writeBytes(error_value_map.apparent_power);
+			} else {
+				buffer.writeInt32LE(payload.apparent_power2.group2_value * 1000);
+			}
 		}
 		if (payload.apparent_power2.mask2 == 0x01) {
-			buffer.writeInt32LE(payload.apparent_power2.group2.chan1 * 1000);
-			buffer.writeInt32LE(payload.apparent_power2.group2.chan2 * 1000);
-			buffer.writeInt32LE(payload.apparent_power2.group2.chan3 * 1000);
+			if (payload.apparent_power2.group2.chan1 === 'error') {
+				buffer.writeBytes(error_value_map.apparent_power);
+			} else {
+				buffer.writeInt32LE(payload.apparent_power2.group2.chan1 * 1000);
+			}
+			if (payload.apparent_power2.group2.chan2 === 'error') {
+				buffer.writeBytes(error_value_map.apparent_power);
+			} else {
+				buffer.writeInt32LE(payload.apparent_power2.group2.chan2 * 1000);
+			}
+			if (payload.apparent_power2.group2.chan3 === 'error') {
+				buffer.writeBytes(error_value_map.apparent_power);
+			} else {
+				buffer.writeInt32LE(payload.apparent_power2.group2.chan3 * 1000);
+			}
 		}
 		encoded = encoded.concat(buffer.toBytes());
 	}
@@ -514,20 +812,55 @@ function milesightDeviceEncode(payload) {
 		buffer.writeUInt8(bitOptions);
 
 		if (payload.forward_active_energy1.mask1 == 0x00) {
-			buffer.writeUInt32LE(payload.forward_active_energy1.group1_value * 1000);
+			if (payload.forward_active_energy1.group1_value === 'error') {
+				buffer.writeBytes(error_value_map.forward_active_energy);
+			} else {
+				if (payload.forward_active_energy1.group1_value < 0 || payload.forward_active_energy1.group1_value > 4000) {
+					throw new Error('forward_active_energy1.group1_value must be between 0 and 4000');
+				}
+				buffer.writeUInt32LE(payload.forward_active_energy1.group1_value * 1000);
+			}
 		}
 		if (payload.forward_active_energy1.mask1 == 0x01) {
-			buffer.writeUInt32LE(payload.forward_active_energy1.group1.chan1 * 1000);
-			buffer.writeUInt32LE(payload.forward_active_energy1.group1.chan2 * 1000);
-			buffer.writeUInt32LE(payload.forward_active_energy1.group1.chan3 * 1000);
+			if (payload.forward_active_energy1.group1.chan1 === 'error') {
+				buffer.writeBytes(error_value_map.forward_active_energy);
+			} else {
+				buffer.writeUInt32LE(payload.forward_active_energy1.group1.chan1 * 1000);
+			}
+			if (payload.forward_active_energy1.group1.chan2 === 'error') {
+				buffer.writeBytes(error_value_map.forward_active_energy);
+			} else {
+				buffer.writeUInt32LE(payload.forward_active_energy1.group1.chan2 * 1000);
+			}
+			if (payload.forward_active_energy1.group1.chan3 === 'error') {
+				buffer.writeBytes(error_value_map.forward_active_energy);
+			} else {
+				buffer.writeUInt32LE(payload.forward_active_energy1.group1.chan3 * 1000);
+			}
 		}
 		if (payload.forward_active_energy1.mask2 == 0x00) {
-			buffer.writeUInt32LE(payload.forward_active_energy1.group2_value * 1000);
+			if (payload.forward_active_energy1.group2_value === 'error') {
+				buffer.writeBytes(error_value_map.forward_active_energy);
+			} else {
+				buffer.writeUInt32LE(payload.forward_active_energy1.group2_value * 1000);
+			}
 		}
 		if (payload.forward_active_energy1.mask2 == 0x01) {
-			buffer.writeUInt32LE(payload.forward_active_energy1.group2.chan1 * 1000);
-			buffer.writeUInt32LE(payload.forward_active_energy1.group2.chan2 * 1000);
-			buffer.writeUInt32LE(payload.forward_active_energy1.group2.chan3 * 1000);
+			if (payload.forward_active_energy1.group2.chan1 === 'error') {
+				buffer.writeBytes(error_value_map.forward_active_energy);
+			} else {
+				buffer.writeUInt32LE(payload.forward_active_energy1.group2.chan1 * 1000);
+			}
+			if (payload.forward_active_energy1.group2.chan2 === 'error') {
+				buffer.writeBytes(error_value_map.forward_active_energy);
+			} else {
+				buffer.writeUInt32LE(payload.forward_active_energy1.group2.chan2 * 1000);
+			}
+			if (payload.forward_active_energy1.group2.chan3 === 'error') {
+				buffer.writeBytes(error_value_map.forward_active_energy);
+			} else {
+				buffer.writeUInt32LE(payload.forward_active_energy1.group2.chan3 * 1000);
+			}
 		}
 		encoded = encoded.concat(buffer.toBytes());
 	}
@@ -542,20 +875,52 @@ function milesightDeviceEncode(payload) {
 		buffer.writeUInt8(bitOptions);
 
 		if (payload.forward_active_energy2.mask1 == 0x00) {
-			buffer.writeUInt32LE(payload.forward_active_energy2.group1_value * 1000);
+			if (payload.forward_active_energy2.group1_value === 'error') {
+				buffer.writeBytes(error_value_map.forward_active_energy);
+			} else {
+				buffer.writeUInt32LE(payload.forward_active_energy2.group1_value * 1000);
+			}
 		}
 		if (payload.forward_active_energy2.mask1 == 0x01) {
-			buffer.writeUInt32LE(payload.forward_active_energy2.group1.chan1 * 1000);
-			buffer.writeUInt32LE(payload.forward_active_energy2.group1.chan2 * 1000);
-			buffer.writeUInt32LE(payload.forward_active_energy2.group1.chan3 * 1000);
+			if (payload.forward_active_energy2.group1.chan1 === 'error') {
+				buffer.writeBytes(error_value_map.forward_active_energy);
+			} else {
+				buffer.writeUInt32LE(payload.forward_active_energy2.group1.chan1 * 1000);
+			}
+			if (payload.forward_active_energy2.group1.chan2 === 'error') {
+				buffer.writeBytes(error_value_map.forward_active_energy);
+			} else {
+				buffer.writeUInt32LE(payload.forward_active_energy2.group1.chan2 * 1000);
+			}
+			if (payload.forward_active_energy2.group1.chan3 === 'error') {
+				buffer.writeBytes(error_value_map.forward_active_energy);
+			} else {
+				buffer.writeUInt32LE(payload.forward_active_energy2.group1.chan3 * 1000);
+			}
 		}
 		if (payload.forward_active_energy2.mask2 == 0x00) {
-			buffer.writeUInt32LE(payload.forward_active_energy2.group2_value * 1000);
+			if (payload.forward_active_energy2.group2_value === 'error') {
+				buffer.writeBytes(error_value_map.forward_active_energy);
+			} else {
+				buffer.writeUInt32LE(payload.forward_active_energy2.group2_value * 1000);
+			}
 		}
 		if (payload.forward_active_energy2.mask2 == 0x01) {
-			buffer.writeUInt32LE(payload.forward_active_energy2.group2.chan1 * 1000);
-			buffer.writeUInt32LE(payload.forward_active_energy2.group2.chan2 * 1000);
-			buffer.writeUInt32LE(payload.forward_active_energy2.group2.chan3 * 1000);
+			if (payload.forward_active_energy2.group2.chan1 === 'error') {
+				buffer.writeBytes(error_value_map.forward_active_energy);
+			} else {
+				buffer.writeUInt32LE(payload.forward_active_energy2.group2.chan1 * 1000);
+			}
+			if (payload.forward_active_energy2.group2.chan2 === 'error') {
+				buffer.writeBytes(error_value_map.forward_active_energy);
+			} else {
+				buffer.writeUInt32LE(payload.forward_active_energy2.group2.chan2 * 1000);
+			}
+			if (payload.forward_active_energy2.group2.chan3 === 'error') {
+				buffer.writeBytes(error_value_map.forward_active_energy);
+			} else {
+				buffer.writeUInt32LE(payload.forward_active_energy2.group2.chan3 * 1000);
+			}
 		}
 		encoded = encoded.concat(buffer.toBytes());
 	}
@@ -570,20 +935,55 @@ function milesightDeviceEncode(payload) {
 		buffer.writeUInt8(bitOptions);
 
 		if (payload.reverse_active_energy1.mask1 == 0x00) {
-			buffer.writeUInt32LE(payload.reverse_active_energy1.group1_value * 1000);
+			if (payload.reverse_active_energy1.group1_value === 'error') {
+				buffer.writeBytes(error_value_map.reverse_active_energy);
+			} else {
+				if (payload.reverse_active_energy1.group1_value < 0 || payload.reverse_active_energy1.group1_value > 4000) {
+					throw new Error('reverse_active_energy1.group1_value must be between 0 and 4000');
+				}
+				buffer.writeUInt32LE(payload.reverse_active_energy1.group1_value * 1000);
+			}
 		}
 		if (payload.reverse_active_energy1.mask1 == 0x01) {
-			buffer.writeUInt32LE(payload.reverse_active_energy1.group1.chan1 * 1000);
-			buffer.writeUInt32LE(payload.reverse_active_energy1.group1.chan2 * 1000);
-			buffer.writeUInt32LE(payload.reverse_active_energy1.group1.chan3 * 1000);
+			if (payload.reverse_active_energy1.group1.chan1 === 'error') {
+				buffer.writeBytes(error_value_map.reverse_active_energy);
+			} else {
+				buffer.writeUInt32LE(payload.reverse_active_energy1.group1.chan1 * 1000);
+			}
+			if (payload.reverse_active_energy1.group1.chan2 === 'error') {
+				buffer.writeBytes(error_value_map.reverse_active_energy);
+			} else {
+				buffer.writeUInt32LE(payload.reverse_active_energy1.group1.chan2 * 1000);
+			}
+			if (payload.reverse_active_energy1.group1.chan3 === 'error') {
+				buffer.writeBytes(error_value_map.reverse_active_energy);
+			} else {
+				buffer.writeUInt32LE(payload.reverse_active_energy1.group1.chan3 * 1000);
+			}
 		}
 		if (payload.reverse_active_energy1.mask2 == 0x00) {
-			buffer.writeUInt32LE(payload.reverse_active_energy1.group2_value * 1000);
+			if (payload.reverse_active_energy1.group2_value === 'error') {
+				buffer.writeBytes(error_value_map.reverse_active_energy);
+			} else {
+				buffer.writeUInt32LE(payload.reverse_active_energy1.group2_value * 1000);
+			}
 		}
 		if (payload.reverse_active_energy1.mask2 == 0x01) {
-			buffer.writeUInt32LE(payload.reverse_active_energy1.group2.chan1 * 1000);
-			buffer.writeUInt32LE(payload.reverse_active_energy1.group2.chan2 * 1000);
-			buffer.writeUInt32LE(payload.reverse_active_energy1.group2.chan3 * 1000);
+			if (payload.reverse_active_energy1.group2.chan1 === 'error') {
+				buffer.writeBytes(error_value_map.reverse_active_energy);
+			} else {
+				buffer.writeUInt32LE(payload.reverse_active_energy1.group2.chan1 * 1000);
+			}
+			if (payload.reverse_active_energy1.group2.chan2 === 'error') {
+				buffer.writeBytes(error_value_map.reverse_active_energy);
+			} else {
+				buffer.writeUInt32LE(payload.reverse_active_energy1.group2.chan2 * 1000);
+			}
+			if (payload.reverse_active_energy1.group2.chan3 === 'error') {
+				buffer.writeBytes(error_value_map.reverse_active_energy);
+			} else {
+				buffer.writeUInt32LE(payload.reverse_active_energy1.group2.chan3 * 1000);
+			}
 		}
 		encoded = encoded.concat(buffer.toBytes());
 	}
@@ -598,20 +998,52 @@ function milesightDeviceEncode(payload) {
 		buffer.writeUInt8(bitOptions);
 
 		if (payload.reverse_active_energy2.mask1 == 0x00) {
-			buffer.writeUInt32LE(payload.reverse_active_energy2.group1_value * 1000);
+			if (payload.reverse_active_energy2.group1_value === 'error') {
+				buffer.writeBytes(error_value_map.reverse_active_energy);
+			} else {
+				buffer.writeUInt32LE(payload.reverse_active_energy2.group1_value * 1000);
+			}
 		}
 		if (payload.reverse_active_energy2.mask1 == 0x01) {
-			buffer.writeUInt32LE(payload.reverse_active_energy2.group1.chan1 * 1000);
-			buffer.writeUInt32LE(payload.reverse_active_energy2.group1.chan2 * 1000);
-			buffer.writeUInt32LE(payload.reverse_active_energy2.group1.chan3 * 1000);
+			if (payload.reverse_active_energy2.group1.chan1 === 'error') {
+				buffer.writeBytes(error_value_map.reverse_active_energy);
+			} else {
+				buffer.writeUInt32LE(payload.reverse_active_energy2.group1.chan1 * 1000);
+			}
+			if (payload.reverse_active_energy2.group1.chan2 === 'error') {
+				buffer.writeBytes(error_value_map.reverse_active_energy);
+			} else {
+				buffer.writeUInt32LE(payload.reverse_active_energy2.group1.chan2 * 1000);
+			}
+			if (payload.reverse_active_energy2.group1.chan3 === 'error') {
+				buffer.writeBytes(error_value_map.reverse_active_energy);
+			} else {
+				buffer.writeUInt32LE(payload.reverse_active_energy2.group1.chan3 * 1000);
+			}
 		}
 		if (payload.reverse_active_energy2.mask2 == 0x00) {
-			buffer.writeUInt32LE(payload.reverse_active_energy2.group2_value * 1000);
+			if (payload.reverse_active_energy2.group2_value === 'error') {
+				buffer.writeBytes(error_value_map.reverse_active_energy);
+			} else {
+				buffer.writeUInt32LE(payload.reverse_active_energy2.group2_value * 1000);
+			}
 		}
 		if (payload.reverse_active_energy2.mask2 == 0x01) {
-			buffer.writeUInt32LE(payload.reverse_active_energy2.group2.chan1 * 1000);
-			buffer.writeUInt32LE(payload.reverse_active_energy2.group2.chan2 * 1000);
-			buffer.writeUInt32LE(payload.reverse_active_energy2.group2.chan3 * 1000);
+			if (payload.reverse_active_energy2.group2.chan1 === 'error') {
+				buffer.writeBytes(error_value_map.reverse_active_energy);
+			} else {
+				buffer.writeUInt32LE(payload.reverse_active_energy2.group2.chan1 * 1000);
+			}
+			if (payload.reverse_active_energy2.group2.chan2 === 'error') {
+				buffer.writeBytes(error_value_map.reverse_active_energy);
+			} else {
+				buffer.writeUInt32LE(payload.reverse_active_energy2.group2.chan2 * 1000);
+			}
+			if (payload.reverse_active_energy2.group2.chan3 === 'error') {
+				buffer.writeBytes(error_value_map.reverse_active_energy);
+			} else {
+				buffer.writeUInt32LE(payload.reverse_active_energy2.group2.chan3 * 1000);
+			}
 		}
 		encoded = encoded.concat(buffer.toBytes());
 	}
@@ -626,20 +1058,52 @@ function milesightDeviceEncode(payload) {
 		buffer.writeUInt8(bitOptions);
 
 		if (payload.forward_reactive_energy1.mask1 == 0x00) {
-			buffer.writeUInt32LE(payload.forward_reactive_energy1.group1_value * 1000);
+			if (payload.forward_reactive_energy1.group1_value === 'error') {
+				buffer.writeBytes(error_value_map.forward_reactive_energy);
+			} else {
+				buffer.writeUInt32LE(payload.forward_reactive_energy1.group1_value * 1000);
+			}
 		}
 		if (payload.forward_reactive_energy1.mask1 == 0x01) {
-			buffer.writeUInt32LE(payload.forward_reactive_energy1.group1.chan1 * 1000);
-			buffer.writeUInt32LE(payload.forward_reactive_energy1.group1.chan2 * 1000);
-			buffer.writeUInt32LE(payload.forward_reactive_energy1.group1.chan3 * 1000);
+			if (payload.forward_reactive_energy1.group1.chan1 === 'error') {
+				buffer.writeBytes(error_value_map.forward_reactive_energy);
+			} else {
+				buffer.writeUInt32LE(payload.forward_reactive_energy1.group1.chan1 * 1000);
+			}
+			if (payload.forward_reactive_energy1.group1.chan2 === 'error') {
+				buffer.writeBytes(error_value_map.forward_reactive_energy);
+			} else {
+				buffer.writeUInt32LE(payload.forward_reactive_energy1.group1.chan2 * 1000);
+			}
+			if (payload.forward_reactive_energy1.group1.chan3 === 'error') {
+				buffer.writeBytes(error_value_map.forward_reactive_energy);
+			} else {
+				buffer.writeUInt32LE(payload.forward_reactive_energy1.group1.chan3 * 1000);
+			}
 		}
 		if (payload.forward_reactive_energy1.mask2 == 0x00) {
-			buffer.writeUInt32LE(payload.forward_reactive_energy1.group2_value * 1000);
+			if (payload.forward_reactive_energy1.group2_value === 'error') {
+				buffer.writeBytes(error_value_map.forward_reactive_energy);
+			} else {
+				buffer.writeUInt32LE(payload.forward_reactive_energy1.group2_value * 1000);
+			}
 		}
 		if (payload.forward_reactive_energy1.mask2 == 0x01) {
-			buffer.writeUInt32LE(payload.forward_reactive_energy1.group2.chan1 * 1000);
-			buffer.writeUInt32LE(payload.forward_reactive_energy1.group2.chan2 * 1000);
-			buffer.writeUInt32LE(payload.forward_reactive_energy1.group2.chan3 * 1000);
+			if (payload.forward_reactive_energy1.group2.chan1 === 'error') {
+				buffer.writeBytes(error_value_map.forward_reactive_energy);
+			} else {
+				buffer.writeUInt32LE(payload.forward_reactive_energy1.group2.chan1 * 1000);
+			}
+			if (payload.forward_reactive_energy1.group2.chan2 === 'error') {
+				buffer.writeBytes(error_value_map.forward_reactive_energy);
+			} else {
+				buffer.writeUInt32LE(payload.forward_reactive_energy1.group2.chan2 * 1000);
+			}
+			if (payload.forward_reactive_energy1.group2.chan3 === 'error') {
+				buffer.writeBytes(error_value_map.forward_reactive_energy);
+			} else {
+				buffer.writeUInt32LE(payload.forward_reactive_energy1.group2.chan3 * 1000);
+			}
 		}
 		encoded = encoded.concat(buffer.toBytes());
 	}
@@ -654,20 +1118,52 @@ function milesightDeviceEncode(payload) {
 		buffer.writeUInt8(bitOptions);
 
 		if (payload.forward_reactive_energy2.mask1 == 0x00) {
-			buffer.writeUInt32LE(payload.forward_reactive_energy2.group1_value * 1000);
+			if (payload.forward_reactive_energy2.group1_value === 'error') {
+				buffer.writeBytes(error_value_map.forward_reactive_energy);
+			} else {
+				buffer.writeUInt32LE(payload.forward_reactive_energy2.group1_value * 1000);
+			}
 		}
 		if (payload.forward_reactive_energy2.mask1 == 0x01) {
-			buffer.writeUInt32LE(payload.forward_reactive_energy2.group1.chan1 * 1000);
-			buffer.writeUInt32LE(payload.forward_reactive_energy2.group1.chan2 * 1000);
-			buffer.writeUInt32LE(payload.forward_reactive_energy2.group1.chan3 * 1000);
+			if (payload.forward_reactive_energy2.group1.chan1 === 'error') {
+				buffer.writeBytes(error_value_map.forward_reactive_energy);
+			} else {
+				buffer.writeUInt32LE(payload.forward_reactive_energy2.group1.chan1 * 1000);
+			}
+			if (payload.forward_reactive_energy2.group1.chan2 === 'error') {
+				buffer.writeBytes(error_value_map.forward_reactive_energy);
+			} else {
+				buffer.writeUInt32LE(payload.forward_reactive_energy2.group1.chan2 * 1000);
+			}
+			if (payload.forward_reactive_energy2.group1.chan3 === 'error') {
+				buffer.writeBytes(error_value_map.forward_reactive_energy);
+			} else {
+				buffer.writeUInt32LE(payload.forward_reactive_energy2.group1.chan3 * 1000);
+			}
 		}
 		if (payload.forward_reactive_energy2.mask2 == 0x00) {
-			buffer.writeUInt32LE(payload.forward_reactive_energy2.group2_value * 1000);
+			if (payload.forward_reactive_energy2.group2_value === 'error') {
+				buffer.writeBytes(error_value_map.forward_reactive_energy);
+			} else {
+				buffer.writeUInt32LE(payload.forward_reactive_energy2.group2_value * 1000);
+			}
 		}
 		if (payload.forward_reactive_energy2.mask2 == 0x01) {
-			buffer.writeUInt32LE(payload.forward_reactive_energy2.group2.chan1 * 1000);
-			buffer.writeUInt32LE(payload.forward_reactive_energy2.group2.chan2 * 1000);
-			buffer.writeUInt32LE(payload.forward_reactive_energy2.group2.chan3 * 1000);
+			if (payload.forward_reactive_energy2.group2.chan1 === 'error') {
+				buffer.writeBytes(error_value_map.forward_reactive_energy);
+			} else {
+				buffer.writeUInt32LE(payload.forward_reactive_energy2.group2.chan1 * 1000);
+			}
+			if (payload.forward_reactive_energy2.group2.chan2 === 'error') {
+				buffer.writeBytes(error_value_map.forward_reactive_energy);
+			} else {
+				buffer.writeUInt32LE(payload.forward_reactive_energy2.group2.chan2 * 1000);
+			}
+			if (payload.forward_reactive_energy2.group2.chan3 === 'error') {
+				buffer.writeBytes(error_value_map.forward_reactive_energy);
+			} else {
+				buffer.writeUInt32LE(payload.forward_reactive_energy2.group2.chan3 * 1000);
+			}
 		}
 		encoded = encoded.concat(buffer.toBytes());
 	}
@@ -682,20 +1178,52 @@ function milesightDeviceEncode(payload) {
 		buffer.writeUInt8(bitOptions);
 
 		if (payload.reverse_reactive_energy1.mask1 == 0x00) {
-			buffer.writeUInt32LE(payload.reverse_reactive_energy1.group1_value * 1000);
+			if (payload.reverse_reactive_energy1.group1_value === 'error') {
+				buffer.writeBytes(error_value_map.reverse_reactive_energy);
+			} else {
+				buffer.writeUInt32LE(payload.reverse_reactive_energy1.group1_value * 1000);
+			}
 		}
 		if (payload.reverse_reactive_energy1.mask1 == 0x01) {
-			buffer.writeUInt32LE(payload.reverse_reactive_energy1.group1.chan1 * 1000);
-			buffer.writeUInt32LE(payload.reverse_reactive_energy1.group1.chan2 * 1000);
-			buffer.writeUInt32LE(payload.reverse_reactive_energy1.group1.chan3 * 1000);
+			if (payload.reverse_reactive_energy1.group1.chan1 === 'error') {
+				buffer.writeBytes(error_value_map.reverse_reactive_energy);
+			} else {
+				buffer.writeUInt32LE(payload.reverse_reactive_energy1.group1.chan1 * 1000);
+			}
+			if (payload.reverse_reactive_energy1.group1.chan2 === 'error') {
+				buffer.writeBytes(error_value_map.reverse_reactive_energy);
+			} else {
+				buffer.writeUInt32LE(payload.reverse_reactive_energy1.group1.chan2 * 1000);
+			}
+			if (payload.reverse_reactive_energy1.group1.chan3 === 'error') {
+				buffer.writeBytes(error_value_map.reverse_reactive_energy);
+			} else {
+				buffer.writeUInt32LE(payload.reverse_reactive_energy1.group1.chan3 * 1000);
+			}
 		}
 		if (payload.reverse_reactive_energy1.mask2 == 0x00) {
-			buffer.writeUInt32LE(payload.reverse_reactive_energy1.group2_value * 1000);
+			if (payload.reverse_reactive_energy1.group2_value === 'error') {
+				buffer.writeBytes(error_value_map.reverse_reactive_energy);
+			} else {
+				buffer.writeUInt32LE(payload.reverse_reactive_energy1.group2_value * 1000);
+			}
 		}
 		if (payload.reverse_reactive_energy1.mask2 == 0x01) {
-			buffer.writeUInt32LE(payload.reverse_reactive_energy1.group2.chan1 * 1000);
-			buffer.writeUInt32LE(payload.reverse_reactive_energy1.group2.chan2 * 1000);
-			buffer.writeUInt32LE(payload.reverse_reactive_energy1.group2.chan3 * 1000);
+			if (payload.reverse_reactive_energy1.group2.chan1 === 'error') {
+				buffer.writeBytes(error_value_map.reverse_reactive_energy);
+			} else {
+				buffer.writeUInt32LE(payload.reverse_reactive_energy1.group2.chan1 * 1000);
+			}
+			if (payload.reverse_reactive_energy1.group2.chan2 === 'error') {
+				buffer.writeBytes(error_value_map.reverse_reactive_energy);
+			} else {
+				buffer.writeUInt32LE(payload.reverse_reactive_energy1.group2.chan2 * 1000);
+			}
+			if (payload.reverse_reactive_energy1.group2.chan3 === 'error') {
+				buffer.writeBytes(error_value_map.reverse_reactive_energy);
+			} else {
+				buffer.writeUInt32LE(payload.reverse_reactive_energy1.group2.chan3 * 1000);
+			}
 		}
 		encoded = encoded.concat(buffer.toBytes());
 	}
@@ -710,20 +1238,48 @@ function milesightDeviceEncode(payload) {
 		buffer.writeUInt8(bitOptions);
 
 		if (payload.reverse_reactive_energy2.mask1 == 0x00) {
-			buffer.writeUInt32LE(payload.reverse_reactive_energy2.group1_value * 1000);
+			if (payload.reverse_reactive_energy2.group1_value === 'error') {
+				buffer.writeBytes(error_value_map.reverse_reactive_energy);
+			} else {
+				buffer.writeUInt32LE(payload.reverse_reactive_energy2.group1_value * 1000);
+			}
 		}
 		if (payload.reverse_reactive_energy2.mask1 == 0x01) {
-			buffer.writeUInt32LE(payload.reverse_reactive_energy2.group1.chan1 * 1000);
-			buffer.writeUInt32LE(payload.reverse_reactive_energy2.group1.chan2 * 1000);
-			buffer.writeUInt32LE(payload.reverse_reactive_energy2.group1.chan3 * 1000);
+			if (payload.reverse_reactive_energy2.group1.chan1 === 'error') {
+				buffer.writeBytes(error_value_map.reverse_reactive_energy);
+			} else {
+				buffer.writeUInt32LE(payload.reverse_reactive_energy2.group1.chan1 * 1000);
+			}
+			if (payload.reverse_reactive_energy2.group1.chan2 === 'error') {
+				buffer.writeBytes(error_value_map.reverse_reactive_energy);
+			} else {
+				buffer.writeUInt32LE(payload.reverse_reactive_energy2.group1.chan2 * 1000);
+			}
+			if (payload.reverse_reactive_energy2.group1.chan3 === 'error') {
+				buffer.writeBytes(error_value_map.reverse_reactive_energy);
+			} else {
+				buffer.writeUInt32LE(payload.reverse_reactive_energy2.group1.chan3 * 1000);
+			}
 		}
 		if (payload.reverse_reactive_energy2.mask2 == 0x00) {
 			buffer.writeUInt32LE(payload.reverse_reactive_energy2.group2_value * 1000);
 		}
 		if (payload.reverse_reactive_energy2.mask2 == 0x01) {
-			buffer.writeUInt32LE(payload.reverse_reactive_energy2.group2.chan1 * 1000);
-			buffer.writeUInt32LE(payload.reverse_reactive_energy2.group2.chan2 * 1000);
-			buffer.writeUInt32LE(payload.reverse_reactive_energy2.group2.chan3 * 1000);
+			if (payload.reverse_reactive_energy2.group2.chan1 === 'error') {
+				buffer.writeBytes(error_value_map.reverse_reactive_energy);
+			} else {
+				buffer.writeUInt32LE(payload.reverse_reactive_energy2.group2.chan1 * 1000);
+			}
+			if (payload.reverse_reactive_energy2.group2.chan2 === 'error') {
+				buffer.writeBytes(error_value_map.reverse_reactive_energy);
+			} else {
+				buffer.writeUInt32LE(payload.reverse_reactive_energy2.group2.chan2 * 1000);
+			}
+			if (payload.reverse_reactive_energy2.group2.chan3 === 'error') {
+				buffer.writeBytes(error_value_map.reverse_reactive_energy);
+			} else {
+				buffer.writeUInt32LE(payload.reverse_reactive_energy2.group2.chan3 * 1000);
+			}
 		}
 		encoded = encoded.concat(buffer.toBytes());
 	}
@@ -738,20 +1294,52 @@ function milesightDeviceEncode(payload) {
 		buffer.writeUInt8(bitOptions);
 
 		if (payload.apparent_energy1.mask1 == 0x00) {
-			buffer.writeUInt32LE(payload.apparent_energy1.group1_value * 1000);
+			if (payload.apparent_energy1.group1_value === 'error') {
+				buffer.writeBytes(error_value_map.apparent_energy);
+			} else {
+				buffer.writeUInt32LE(payload.apparent_energy1.group1_value * 1000);
+			}
 		}
 		if (payload.apparent_energy1.mask1 == 0x01) {
-			buffer.writeUInt32LE(payload.apparent_energy1.group1.chan1 * 1000);
-			buffer.writeUInt32LE(payload.apparent_energy1.group1.chan2 * 1000);
-			buffer.writeUInt32LE(payload.apparent_energy1.group1.chan3 * 1000);
+			if (payload.apparent_energy1.group1.chan1 === 'error') {
+				buffer.writeBytes(error_value_map.apparent_energy);
+			} else {
+				buffer.writeUInt32LE(payload.apparent_energy1.group1.chan1 * 1000);
+			}
+			if (payload.apparent_energy1.group1.chan2 === 'error') {
+				buffer.writeBytes(error_value_map.apparent_energy);
+			} else {
+				buffer.writeUInt32LE(payload.apparent_energy1.group1.chan2 * 1000);
+			}
+			if (payload.apparent_energy1.group1.chan3 === 'error') {
+				buffer.writeBytes(error_value_map.apparent_energy);
+			} else {
+				buffer.writeUInt32LE(payload.apparent_energy1.group1.chan3 * 1000);
+			}
 		}
 		if (payload.apparent_energy1.mask2 == 0x00) {
-			buffer.writeUInt32LE(payload.apparent_energy1.group2_value * 1000);
+			if (payload.apparent_energy1.group2_value === 'error') {
+				buffer.writeBytes(error_value_map.apparent_energy);
+			} else {
+				buffer.writeUInt32LE(payload.apparent_energy1.group2_value * 1000);
+			}
 		}
 		if (payload.apparent_energy1.mask2 == 0x01) {
-			buffer.writeUInt32LE(payload.apparent_energy1.group2.chan1 * 1000);
-			buffer.writeUInt32LE(payload.apparent_energy1.group2.chan2 * 1000);
-			buffer.writeUInt32LE(payload.apparent_energy1.group2.chan3 * 1000);
+			if (payload.apparent_energy1.group2.chan1 === 'error') {
+				buffer.writeBytes(error_value_map.apparent_energy);
+			} else {
+				buffer.writeUInt32LE(payload.apparent_energy1.group2.chan1 * 1000);
+			}
+			if (payload.apparent_energy1.group2.chan2 === 'error') {
+				buffer.writeBytes(error_value_map.apparent_energy);
+			} else {
+				buffer.writeUInt32LE(payload.apparent_energy1.group2.chan2 * 1000);
+			}
+			if (payload.apparent_energy1.group2.chan3 === 'error') {
+				buffer.writeBytes(error_value_map.apparent_energy);
+			} else {
+				buffer.writeUInt32LE(payload.apparent_energy1.group2.chan3 * 1000);
+			}
 		}
 		encoded = encoded.concat(buffer.toBytes());
 	}
@@ -766,20 +1354,52 @@ function milesightDeviceEncode(payload) {
 		buffer.writeUInt8(bitOptions);
 
 		if (payload.apparent_energy2.mask1 == 0x00) {
-			buffer.writeUInt32LE(payload.apparent_energy2.group1_value * 1000);
+			if (payload.apparent_energy2.group1_value === 'error') {
+				buffer.writeBytes(error_value_map.apparent_energy);
+			} else {
+				buffer.writeUInt32LE(payload.apparent_energy2.group1_value * 1000);
+			}
 		}
 		if (payload.apparent_energy2.mask1 == 0x01) {
-			buffer.writeUInt32LE(payload.apparent_energy2.group1.chan1 * 1000);
-			buffer.writeUInt32LE(payload.apparent_energy2.group1.chan2 * 1000);
-			buffer.writeUInt32LE(payload.apparent_energy2.group1.chan3 * 1000);
+			if (payload.apparent_energy2.group1.chan1 === 'error') {
+				buffer.writeBytes(error_value_map.apparent_energy);
+			} else {
+				buffer.writeUInt32LE(payload.apparent_energy2.group1.chan1 * 1000);
+			}
+			if (payload.apparent_energy2.group1.chan2 === 'error') {
+				buffer.writeBytes(error_value_map.apparent_energy);
+			} else {
+				buffer.writeUInt32LE(payload.apparent_energy2.group1.chan2 * 1000);
+			}
+			if (payload.apparent_energy2.group1.chan3 === 'error') {
+				buffer.writeBytes(error_value_map.apparent_energy);
+			} else {
+				buffer.writeUInt32LE(payload.apparent_energy2.group1.chan3 * 1000);
+			}
 		}
 		if (payload.apparent_energy2.mask2 == 0x00) {
-			buffer.writeUInt32LE(payload.apparent_energy2.group2_value * 1000);
+			if (payload.apparent_energy2.group2_value === 'error') {
+				buffer.writeBytes(error_value_map.apparent_energy);
+			} else {
+				buffer.writeUInt32LE(payload.apparent_energy2.group2_value * 1000);
+			}
 		}
 		if (payload.apparent_energy2.mask2 == 0x01) {
-			buffer.writeUInt32LE(payload.apparent_energy2.group2.chan1 * 1000);
-			buffer.writeUInt32LE(payload.apparent_energy2.group2.chan2 * 1000);
-			buffer.writeUInt32LE(payload.apparent_energy2.group2.chan3 * 1000);
+			if (payload.apparent_energy2.group2.chan1 === 'error') {
+				buffer.writeBytes(error_value_map.apparent_energy);
+			} else {
+				buffer.writeUInt32LE(payload.apparent_energy2.group2.chan1 * 1000);
+			}
+			if (payload.apparent_energy2.group2.chan2 === 'error') {
+				buffer.writeBytes(error_value_map.apparent_energy);
+			} else {
+				buffer.writeUInt32LE(payload.apparent_energy2.group2.chan2 * 1000);
+			}
+			if (payload.apparent_energy2.group2.chan3 === 'error') {
+				buffer.writeBytes(error_value_map.apparent_energy);
+			} else {
+				buffer.writeUInt32LE(payload.apparent_energy2.group2.chan3 * 1000);
+			}
 		}
 		encoded = encoded.concat(buffer.toBytes());
 	}
@@ -962,10 +1582,18 @@ function milesightDeviceEncode(payload) {
 		if (payload.thdi_alarm.info.type == 0x00) {
 		}
 		if (payload.thdi_alarm.info.type == 0x12) {
-			buffer.writeUInt16LE(payload.thdi_alarm.info.over_range_alarm_deactivation.thdi * 100);
+			if (payload.thdi_alarm.info.over_range_alarm_deactivation.thdi === 'error') {
+				buffer.writeBytes(error_value_map.thdi);
+			} else {
+				buffer.writeUInt16LE(payload.thdi_alarm.info.over_range_alarm_deactivation.thdi * 100);
+			}
 		}
 		if (payload.thdi_alarm.info.type == 0x13) {
-			buffer.writeUInt16LE(payload.thdi_alarm.info.over_range_alarm_trigger.thdi * 100);
+			if (payload.thdi_alarm.info.over_range_alarm_trigger.thdi === 'error') {
+				buffer.writeBytes(error_value_map.thdi);
+			} else {
+				buffer.writeUInt16LE(payload.thdi_alarm.info.over_range_alarm_trigger.thdi * 100);
+			}
 		}
 		encoded = encoded.concat(buffer.toBytes());
 	}
@@ -981,10 +1609,18 @@ function milesightDeviceEncode(payload) {
 		if (payload.thdv_alarm.info.type == 0x00) {
 		}
 		if (payload.thdv_alarm.info.type == 0x12) {
-			buffer.writeUInt16LE(payload.thdv_alarm.info.over_range_alarm_deactivation.thdv * 100);
+			if (payload.thdv_alarm.info.over_range_alarm_deactivation.thdv === 'error') {
+				buffer.writeBytes(error_value_map.thdv);
+			} else {
+				buffer.writeUInt16LE(payload.thdv_alarm.info.over_range_alarm_deactivation.thdv * 100);
+			}
 		}
 		if (payload.thdv_alarm.info.type == 0x13) {
-			buffer.writeUInt16LE(payload.thdv_alarm.info.over_range_alarm_trigger.thdv * 100);
+			if (payload.thdv_alarm.info.over_range_alarm_trigger.thdv === 'error') {
+				buffer.writeBytes(error_value_map.thdv);
+			} else {
+				buffer.writeUInt16LE(payload.thdv_alarm.info.over_range_alarm_trigger.thdv * 100);
+			}
 		}
 		encoded = encoded.concat(buffer.toBytes());
 	}
@@ -996,10 +1632,18 @@ function milesightDeviceEncode(payload) {
 		if (payload.voltage_unbalance_alarm.type == 0x00) {
 		}
 		if (payload.voltage_unbalance_alarm.type == 0x12) {
-			buffer.writeUInt16LE(payload.voltage_unbalance_alarm.over_range_alarm_deactivation.voltage_unbalance * 100);
+			if (payload.voltage_unbalance_alarm.over_range_alarm_deactivation.voltage_unbalance === 'error') {
+				buffer.writeBytes(error_value_map.voltage_three_phase_imbalcance);
+			} else {
+				buffer.writeUInt16LE(payload.voltage_unbalance_alarm.over_range_alarm_deactivation.voltage_unbalance * 100);
+			}
 		}
 		if (payload.voltage_unbalance_alarm.type == 0x13) {
-			buffer.writeUInt16LE(payload.voltage_unbalance_alarm.over_range_alarm_trigger.voltage_unbalance * 100);
+			if (payload.voltage_unbalance_alarm.over_range_alarm_trigger.voltage_unbalance === 'error') {
+				buffer.writeBytes(error_value_map.voltage_three_phase_imbalcance);
+			} else {
+				buffer.writeUInt16LE(payload.voltage_unbalance_alarm.over_range_alarm_trigger.voltage_unbalance * 100);
+			}
 		}
 		encoded = encoded.concat(buffer.toBytes());
 	}
