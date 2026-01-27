@@ -3326,7 +3326,7 @@
             "bacnet_unit_type": "UNITS_DEGREES_CELSIUS"
         },
         {
-            "id": "target_temperature_control_settings.command",
+            "id": "temp_control.command",
             "name": "Sub-command",
             "value": "0",
             "unit": "",
@@ -3381,7 +3381,7 @@
             "reference": []
         },
         {
-            "id": "target_temperature_control_settings.enable",
+            "id": "temp_control.enable",
             "name": "Temperature Control Enable",
             "value": "1",
             "unit": "",
@@ -3404,7 +3404,7 @@
             "reference": []
         },
         {
-            "id": "target_temperature_control_settings.mode_settings.auto_control.target_temperature",
+            "id": "temp_control.mode_settings.auto_control.target_temperature",
             "name": "Target Temperature",
             "value": "19",
             "unit": "°C",
@@ -3421,7 +3421,7 @@
             "reference": []
         },
         {
-            "id": "target_temperature_control_settings.mode_settings.intergrated_control.target_temperature",
+            "id": "temp_control.mode_settings.intergrated_control.target_temperature",
             "name": "Target Temperature",
             "value": "19",
             "unit": "°C",
@@ -3438,7 +3438,7 @@
             "reference": []
         },
         {
-            "id": "target_temperature_control_settings.mode_settings.mode",
+            "id": "temp_control.mode_settings.mode",
             "name": "Temperature Control Mode",
             "value": "0",
             "unit": "",
@@ -3465,7 +3465,7 @@
             "reference": []
         },
         {
-            "id": "target_temperature_control_settings.mode_settings.valve_control.target_valve_status",
+            "id": "temp_control.mode_settings.valve_control.target_valve_status",
             "name": "Target Valve Opening",
             "value": "50",
             "unit": "%",
@@ -3482,7 +3482,7 @@
             "reference": []
         },
         {
-            "id": "target_temperature_control_settings.over_temperature_side_deadband",
+            "id": "temp_control.over_temperature_side_deadband",
             "name": "Over-temperature Side Deadband",
             "value": "0.1",
             "unit": "°C",
@@ -3499,7 +3499,7 @@
             "reference": []
         },
         {
-            "id": "target_temperature_control_settings.target_temperature_adjustment_range_max",
+            "id": "temp_control.target_temperature_adjustment_range_max",
             "name": "Maximum of Target Temperature Adjustment Range",
             "value": "35",
             "unit": "°C",
@@ -3516,7 +3516,7 @@
             "reference": []
         },
         {
-            "id": "target_temperature_control_settings.target_temperature_adjustment_range_min",
+            "id": "temp_control.target_temperature_adjustment_range_min",
             "name": "Minimum of Target Temperature Adjustment Range",
             "value": "5",
             "unit": "°C",
@@ -3533,7 +3533,7 @@
             "reference": []
         },
         {
-            "id": "target_temperature_control_settings.target_temperature_resolution",
+            "id": "temp_control.target_temperature_resolution",
             "name": "Target Temperature Resolution",
             "value": "0",
             "unit": "°C",
@@ -3556,7 +3556,7 @@
             "reference": []
         },
         {
-            "id": "target_temperature_control_settings.under_temperature_side_deadband",
+            "id": "temp_control.under_temperature_side_deadband",
             "name": "Under-temperature Side Deadband",
             "value": "0.1",
             "unit": "°C",
