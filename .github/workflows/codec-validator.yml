@@ -74,7 +74,7 @@ jobs:
               -d "{
                 \"msgtype\": \"markdown\",
                 \"markdown\": {
-                  \"content\": \"## Codec Validation Failed\n\n**Repository:** ${{ github.repository }}\n**Branch:** <font color=\\\"warning\\\">${{ github.ref_name }}</font>\n**Author:** ${{ github.actor }}\n**Commit:** ${{ github.event.head_commit.message }}\n\n────────────────\n\n[View Commit](${{ github.event.head_commit.url }})  |  [View Actions](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})\"
+                  \"content\": \"## Codec 校验失败\n\n**仓库:** ${{ github.repository }}\n**分支:** <font color=\\\"warning\\\">${{ github.ref_name }}</font>\n**作者:** ${{ github.actor }}\n**提交:** ${{ github.event.head_commit.message }}\n\n────────────────\n\n[查看 Actions](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})  |  [查看提交](${{ github.event.head_commit.url }})\"
                 }
               }"
           else
