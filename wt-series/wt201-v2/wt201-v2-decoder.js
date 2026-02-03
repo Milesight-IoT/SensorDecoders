@@ -500,6 +500,25 @@ function handle_downlink_response_ext(code, channel_type, bytes, offset) {
             }
             offset += 2;
             break;
+
+        // fireware version 1.4
+        case 0x29:
+            var offline_timeout = readUInt8(bytes[offset]);
+            decoded.offline_timeout = {};
+            if(RAW_VALUE) {
+                var rawValue_offline_timeout_map = { 5: 1, 10: 2, 20: 3, 30: 4, 40: 5, 50: 6, 60: 7, 255: 8 };
+                decoded.offline_timeout.value = rawValue_offline_timeout_map[offline_timeout];
+                decoded.offline_timeout.time = offline_timeout === 255 ? "disable" : offline_timeout;
+            } else {
+                decoded.offline_timeout.time = offline_timeout === 255 ? "disable" : offline_timeout;
+            }
+            offset += 1;
+            break;
+        case 0x2a:
+            decoded.down_heart = readUInt8(bytes[offset]);
+            offset += 1;
+            break;
+        
         case 0x3a:
             decoded.wires_relay_change_report_enable = readEnableStatus(readUInt8(bytes[offset]));
             offset += 1;
@@ -1045,6 +1064,15 @@ function readTemperatureSource(value) {
 function readFanControlDuringHeating(value) {
     var mode_map = { 0: "furnace", 1: "thermostat" };
     return getValue(mode_map, value);
+}
+
+function readOfflineTimeout(value) {
+    if (RAW_VALUE) {
+        var rawValue_offline_timeout_map = { 5: 1, 10: 2, 20: 3, 30: 4, 40: 5, 50: 6, 60: 7, 255: 8 };
+        return rawValue_offline_timeout_map[value];
+    }
+    
+    return value;
 }
 
 /* eslint-disable */

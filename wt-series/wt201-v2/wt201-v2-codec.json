@@ -4018,6 +4018,69 @@
             "bacnet_type": "binary_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS"
+        },
+        {
+            "id": "down_heart",
+            "name": "Down Heart",
+            "value": "",
+            "unit": "",
+            "access_mode": "W",
+            "data_type": "NUMBER",
+            "value_type": "UINT8",
+            "range": [
+                0,
+                255
+            ],
+            "bacnet_type": "analog_output_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS"
+        },
+        {
+            "id": "offline_timeout.value",
+            "name": "Offline Timeout",
+            "value": "",
+            "unit": "min",
+            "access_mode": "RW",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 8,
+                    "name": "disable"
+                },
+                {
+                    "value": 1,
+                    "name": "5"
+                },
+                {
+                    "value": 2,
+                    "name": "10"
+                },
+                {
+                    "value": 3,
+                    "name": "20"
+                },
+                {
+                    "value": 4,
+                    "name": "30"
+                },
+                {
+                    "value": 5,
+                    "name": "40"
+                },
+                {
+                    "value": 6,
+                    "name": "50"
+                },
+                {
+                    "value": 7,
+                    "name": "60"
+                }
+            ],
+            "bacnet_type": "multistate_value_object",
+            "bacnet_unit_type_id": 72,
+            "bacnet_unit_type": "UNITS_MINUTES",
+            "reference": []
         }
     ]
 }
