@@ -180,6 +180,15 @@ function milesightDeviceEncode(payload) {
     if ("offline_control_mode" in payload) {
         encoded = encoded.concat(setOfflineControlMode(payload.offline_control_mode));
     }
+
+    // fireware version 1.4
+    if ("offline_timeout" in payload) {
+        encoded = encoded.concat(setOfflineTimeout(payload.offline_timeout));
+    }
+    if ("down_heart" in payload) {
+        encoded = encoded.concat(setDownHeart(payload.down_heart));
+    }
+    
     if ("wires_relay_config" in payload) {
         encoded = encoded.concat(setWiresRelayConfig(payload.wires_relay_config));
     }
@@ -1700,6 +1709,58 @@ function setOfflineControlMode(offline_control_mode) {
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0xf8);
     buffer.writeUInt8(getValue(offline_control_mode_map, offline_control_mode));
+    return buffer.toBytes();
+}
+
+/**
+ * set offline timeout
+ * @since firmware version 1.4
+ * @param {number} offline_timeout unit: minute range: [1, 60] 255: disable
+ * @example { "offline_timeout": 10 }
+ */
+function setOfflineTimeout(offline_timeout) {
+    var enable_map = {255: "disable"};
+    var enable_values = getValues(enable_map);
+
+    var buffer = new Buffer(3);
+    if (enable_values.indexOf(offline_timeout) === -1) {
+        if (typeof offline_timeout !== "number") {
+            throw new Error("offline_timeout must be a number");
+        }
+        if (offline_timeout < 1 || offline_timeout > 60) {
+            throw new Error("offline_timeout must be in range [1, 60]");
+        }
+
+        buffer.writeUInt8(0xf9);
+        buffer.writeUInt8(0x29);
+        buffer.writeUInt8(offline_timeout);
+        return buffer.toBytes();
+    }
+
+    buffer.writeUInt8(0xf9);
+    buffer.writeUInt8(0x29);
+    buffer.writeUInt8(getValue(enable_map, offline_timeout));
+    return buffer.toBytes();
+}
+
+/**
+ * set down heart
+ * @since firmware version 1.4
+ * @param {number} down_heart range: [0, 255]
+ * @example { "down_heart": 0 }
+ */
+function setDownHeart(down_heart) {
+    if (typeof down_heart !== "number") {
+        throw new Error("down_heart must be a number");
+    }
+    if (down_heart < 0 || down_heart > 255) {
+        throw new Error("down_heart must be in range [0, 255]");
+    }
+
+    var buffer = new Buffer(3);
+    buffer.writeUInt8(0xf9);
+    buffer.writeUInt8(0x2a);
+    buffer.writeUInt8(down_heart);
     return buffer.toBytes();
 }
 
