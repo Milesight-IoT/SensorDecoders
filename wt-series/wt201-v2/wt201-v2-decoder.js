@@ -500,6 +500,22 @@ function handle_downlink_response_ext(code, channel_type, bytes, offset) {
             }
             offset += 2;
             break;
+
+        // fireware version 1.4
+        case 0x29:
+            var offline_timeout = readUInt8(bytes[offset]);
+            if (offline_timeout !== 255) {
+                decoded.offline_timeout = offline_timeout;
+            } else {
+                decoded.offline_timeout = "disable";
+            }
+            offset += 1;
+            break;
+        case 0x2a:
+            decoded.down_heart = readYesNoStatus(1);
+            offset += 1;
+            break;
+        
         case 0x3a:
             decoded.wires_relay_change_report_enable = readEnableStatus(readUInt8(bytes[offset]));
             offset += 1;
