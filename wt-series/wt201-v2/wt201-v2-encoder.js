@@ -180,6 +180,15 @@ function milesightDeviceEncode(payload) {
     if ("offline_control_mode" in payload) {
         encoded = encoded.concat(setOfflineControlMode(payload.offline_control_mode));
     }
+
+    // fireware version 1.4
+    if ("offline_timeout" in payload) {
+        encoded = encoded.concat(setOfflineTimeout(payload.offline_timeout));
+    }
+    if ("down_heart" in payload) {
+        encoded = encoded.concat(setDownHeart(payload.down_heart));
+    }
+    
     if ("wires_relay_config" in payload) {
         encoded = encoded.concat(setWiresRelayConfig(payload.wires_relay_config));
     }
@@ -1700,6 +1709,66 @@ function setOfflineControlMode(offline_control_mode) {
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0xf8);
     buffer.writeUInt8(getValue(offline_control_mode_map, offline_control_mode));
+    return buffer.toBytes();
+}
+
+/**
+ * set offline timeout
+ * @since firmware version 1.4
+ * @param {object} offline_timeout
+ * @param {number} offline_timeout.value values: [ 1, 2, 3, 4, 5, 6, 7, 8 ]
+ * @param {string} offline_timeout.time values: [ 'disable', 5, 10, 20, 30, 40, 50, 60 ]
+ * @example { "offline_timeout": { "value": 2, "time": 5 } }
+ */
+function setOfflineTimeout(offline_timeout) { 
+    var offline_timeout_value_map = [ 1, 2, 3, 4, 5, 6, 7, 8 ];
+    var offline_timeout_time_map = [ 'disable', 5, 10, 20, 30, 40, 50, 60 ];
+    var buffer = new Buffer(3);
+    buffer.writeUInt8(0xf9);
+    buffer.writeUInt8(0x29);
+
+    if(RAW_VALUE) {
+        var value = offline_timeout.value;
+    
+        if (offline_timeout_value_map.indexOf(value) === -1) {
+            throw new Error("offline_timeout.value must be one of " + offline_timeout_value_map.join(", "));
+        }
+
+        buffer.writeUInt8(offline_timeout_time_map[value - 1] === 'disable' ? 255 : offline_timeout_time_map[value - 1]);
+    } else {
+        var time = offline_timeout.time === 'disable' ? 255 : offline_timeout.time;
+    
+        if (typeof time !== "number") {
+            throw new Error("offline_timeout.time must be a number");
+        }
+        if (time < 1 || time > 255) {
+            throw new Error("offline_timeout.time must be in range [1, 255]");
+        }
+
+        buffer.writeUInt8(time);
+    }
+
+    return buffer.toBytes();
+}
+
+/**
+ * set down heart
+ * @since firmware version 1.4
+ * @param {number} down_heart range: [0, 255]
+ * @example { "down_heart": 0 }
+ */
+function setDownHeart(down_heart) {
+    if (typeof down_heart !== "number") {
+        throw new Error("down_heart must be a number");
+    }
+    if (down_heart < 0 || down_heart > 255) {
+        throw new Error("down_heart must be in range [0, 255]");
+    }
+
+    var buffer = new Buffer(3);
+    buffer.writeUInt8(0xf9);
+    buffer.writeUInt8(0x2a);
+    buffer.writeUInt8(down_heart);
     return buffer.toBytes();
 }
 

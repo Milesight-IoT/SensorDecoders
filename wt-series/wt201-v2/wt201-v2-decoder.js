@@ -500,6 +500,25 @@ function handle_downlink_response_ext(code, channel_type, bytes, offset) {
             }
             offset += 2;
             break;
+
+        // fireware version 1.4
+        case 0x29:
+            var offline_timeout = readUInt8(bytes[offset]);
+            decoded.offline_timeout = {};
+            if(RAW_VALUE) {
+                var rawValue_offline_timeout_map = { 255: 1, 5: 2, 10: 3, 20: 4, 30: 5, 40: 6, 50: 7, 60: 8 };
+                decoded.offline_timeout.value = rawValue_offline_timeout_map[offline_timeout];
+                decoded.offline_timeout.time = offline_timeout === 255 ? "disable" : offline_timeout;
+            } else {
+                decoded.offline_timeout.time = offline_timeout === 255 ? "disable" : offline_timeout;
+            }
+            offset += 1;
+            break;
+        case 0x2a:
+            decoded.down_heart = readUInt8(bytes[offset]);
+            offset += 1;
+            break;
+        
         case 0x3a:
             decoded.wires_relay_change_report_enable = readEnableStatus(readUInt8(bytes[offset]));
             offset += 1;
