@@ -119,8 +119,9 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Screen Display | 0x66 | 2 | rw | 1 |  | 0：disable<br>1：enable |
 | Ambient Temperature | 0x66 | 2 | rw | 1 |  | 0：disable<br>1：enable |
 | Ambient Humidity | 0x66 | 2 | rw | 1 |  | 0：disable<br>1：enable |
-| Target Temperature  | 0x66 | 2 | rw | 1 |  | 0：disable<br>1：enable |
+| Target Temperature | 0x66 | 2 | rw | 1 |  | 0：disable<br>1：enable |
 | Schedule | 0x66 | 2 | rw | 1 |  | 0：disable<br>1：enable |
+| Region | 0x66 | 2 | rw | 1 |  | 0：disable<br>1：enable |
 | Reserved | 0x66 | 2 | rw |  |  |  |
 | Child Lock | 0x75 | 3 | rw |  |  |  |
 | Child Lock Enable | 0x75 | 2 | rw | 0 |  | 0：disable<br>1：enable |
@@ -319,6 +320,10 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Enable | 0x8B | 2 | rw | 0 |  | 0：disable<br>1：enable |
 | Control Command | 0x8B | 3 | rw | 0000 |  |  |
 | Action Status | 0x8B | 2 | rw | 16 |  | 0：Schedule1<br>1：Schedule2<br>2：Schedule3<br>3：Schedule4<br>4：Schedule5<br>5：Schedule6<br>6：Schedule7<br>7：Schedule8<br>16：System Off<br>17：System On |
+| Region name | 0x93 | 1 | rw |  |  |  |
+| Sub-command | 0x93 | 2 | rw | 0 |  |  |
+| Name (prefix7) | 0x93 | 8 | rw |  |  |  |
+| Name (suffix7) | 0x93 | 8 | rw |  |  |  |
 
 ### Event
 

@@ -728,7 +728,10 @@ function milesightDeviceEncode(payload) {
 		// 0：disable, 1：enable
 		bitOptions |= payload.screen_object_settings.schedule_name << 3;
 
-		bitOptions |= payload.screen_object_settings.reserved << 4;
+		// 0：disable, 1：enable
+		bitOptions |= payload.screen_object_settings.region_name << 4;
+
+		bitOptions |= payload.screen_object_settings.reserved << 5;
 		buffer.writeUInt8(bitOptions);
 
 		encoded = encoded.concat(buffer.toBytes());
@@ -1037,18 +1040,33 @@ function milesightDeviceEncode(payload) {
 		buffer.writeUInt8(0x7c);
 		buffer.writeUInt8(payload.interface_settings.object);
 		if (payload.interface_settings.object == 0x00) {
+			if (payload.interface_settings.valve_4_pipe_2_wire.cooling < 1 || payload.interface_settings.valve_4_pipe_2_wire.cooling > 2) {
+				throw new Error('interface_settings.valve_4_pipe_2_wire.cooling must be between 1 and 2');
+			}
 			// 1：V1/ NO, 2：V2/ NC
 			buffer.writeUInt8(payload.interface_settings.valve_4_pipe_2_wire.cooling);
+			if (payload.interface_settings.valve_4_pipe_2_wire.heating < 1 || payload.interface_settings.valve_4_pipe_2_wire.heating > 2) {
+				throw new Error('interface_settings.valve_4_pipe_2_wire.heating must be between 1 and 2');
+			}
 			// 1：V1/ NO, 2：V2/ NC
 			buffer.writeUInt8(payload.interface_settings.valve_4_pipe_2_wire.heating);
 		}
 		if (payload.interface_settings.object == 0x01) {
+			if (payload.interface_settings.valve_2_pipe_2_wire.control < 1 || payload.interface_settings.valve_2_pipe_2_wire.control > 2) {
+				throw new Error('interface_settings.valve_2_pipe_2_wire.control must be between 1 and 2');
+			}
 			// 1：V1/ NO, 2：V2/ NC
 			buffer.writeUInt8(payload.interface_settings.valve_2_pipe_2_wire.control);
 		}
 		if (payload.interface_settings.object == 0x02) {
+			if (payload.interface_settings.valve_2_pipe_3_wire.no < 1 || payload.interface_settings.valve_2_pipe_3_wire.no > 2) {
+				throw new Error('interface_settings.valve_2_pipe_3_wire.no must be between 1 and 2');
+			}
 			// 1：V1/ NO, 2：V2/ NC
 			buffer.writeUInt8(payload.interface_settings.valve_2_pipe_3_wire.no);
+			if (payload.interface_settings.valve_2_pipe_3_wire.nc < 1 || payload.interface_settings.valve_2_pipe_3_wire.nc > 2) {
+				throw new Error('interface_settings.valve_2_pipe_3_wire.nc must be between 1 and 2');
+			}
 			// 1：V1/ NO, 2：V2/ NC
 			buffer.writeUInt8(payload.interface_settings.valve_2_pipe_3_wire.nc);
 		}
@@ -1329,6 +1347,21 @@ function milesightDeviceEncode(payload) {
 		buffer.writeUInt8(0xbe);
 		encoded = encoded.concat(buffer.toBytes());
 	}
+	//0x93
+	if ('region_name' in payload) {
+		var buffer = new Buffer();
+		if (isValid(payload.region_name.name_first)) {
+			buffer.writeUInt8(0x93);
+			buffer.writeUInt8(0x00);
+			buffer.writeString(payload.region_name.name_first, 7);
+		}
+		if (isValid(payload.region_name.name_last)) {
+			buffer.writeUInt8(0x93);
+			buffer.writeUInt8(0x01);
+			buffer.writeString(payload.region_name.name_last, 7);
+		}
+		encoded = encoded.concat(buffer.toBytes());
+	}
 	return encoded;
 }
 
@@ -1359,6 +1392,14 @@ Buffer.prototype.writeUInt16LE = function(value) {
 
 Buffer.prototype.writeInt16LE = function(value) {
 	this._write(value < 0 ? value + 0x10000 : value, 2, true);
+};
+
+Buffer.prototype.writeUInt24LE = function(value) {
+    this._write(value, 3, true);
+};
+
+Buffer.prototype.writeInt24LE = function(value) {
+    this._write(value < 0 ? value + 0x1000000 : value, 3, true);
 };
 
 Buffer.prototype.writeUInt32LE = function(value) {
@@ -1569,6 +1610,9 @@ function cmdMap() {
 		  "update_open_windows_state": "5d",
 		  "insert_schedule": "5e",
 		  "delete_schedule": "5f",
-		  "reboot": "be"
+		  "reboot": "be",
+		  "region_name": "93",
+		  "region_name.name_first": "9300",
+		  "region_name.name_last": "9301"
 	};
 }
