@@ -351,7 +351,6 @@
         },
         {
             "id": "alarm_deactivation_enable",
-            "description": "This setting is only related to the temperature and humidity threshold",
             "name": "Alarm Threshold Release",
             "value": "0",
             "unit": "",
@@ -374,7 +373,6 @@
         },
         {
             "id": "alarm_reporting_times",
-            "description": "This setting is only related to the temperature and humidity threshold.  The collection interval must not exceed the reporting interval.",
             "name": "Alarm Max Count",
             "value": "1",
             "unit": "",
@@ -426,7 +424,6 @@
         },
         {
             "id": "base_station_position_enable",
-            "description": "The location will be obtained only after the device is successfully connected to the network",
             "name": "Base Station Positioning",
             "value": "0",
             "unit": "",
@@ -902,7 +899,6 @@
         },
         {
             "id": "collection_interval.minutes_of_time",
-            "description": "This setting is only related to the temperature and humidity threshold",
             "name": "Collecting Interval",
             "value": "15",
             "unit": "min",
@@ -922,7 +918,6 @@
         },
         {
             "id": "collection_interval.seconds_of_time",
-            "description": "This setting is only related to the temperature and humidity threshold",
             "name": "Collecting Interval",
             "value": "900",
             "unit": "s",
@@ -961,14 +956,10 @@
             "bacnet_type": "multistate_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": [
-                "collection_interval.seconds_of_time",
-                "collection_interval.minutes_of_time"
-            ]
+            "reference": []
         },
         {
             "id": "cumulative_times",
-            "description": "Set cumulative count for cumulative periodic packet reporting. Reporting interval = cycle × count.",
             "name": "Cumulative Numbers",
             "value": "8",
             "unit": "",
@@ -1079,7 +1070,6 @@
         },
         {
             "id": "daylight_saving_time.daylight_saving_time_offset",
-            "description": "Clocks are adjusted forward during daylight saving time",
             "name": "DST Bias",
             "value": "60",
             "unit": "min",
@@ -1261,7 +1251,6 @@
         },
         {
             "id": "daylight_saving_time.end_month",
-            "description": "The start time and end time months cannot be the same！",
             "name": "Month",
             "value": "2",
             "unit": "",
@@ -1554,7 +1543,6 @@
         },
         {
             "id": "daylight_saving_time.start_month",
-            "description": "The start time and end time months cannot be the same！",
             "name": "Month",
             "value": "1",
             "unit": "",
@@ -1726,7 +1714,6 @@
         },
         {
             "id": "falling_alarm_settings.enable",
-            "description": "Beware of false fall alarm triggers. Verify before trusting.",
             "name": "Falling Alarm Enable",
             "value": "0",
             "unit": "",
@@ -1869,9 +1856,9 @@
             "value": "",
             "unit": "",
             "access_mode": "R",
-            "data_type": "TEXT",
-            "value_type": "STRING",
-            "bacnet_type": "character_string_value_object",
+            "data_type": "NUMBER",
+            "value_type": "UINT8",
+            "bacnet_type": "analog_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": [
@@ -2286,19 +2273,7 @@
             "bacnet_type": "multistate_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": [
-                "humidity_alarm.lower_range_alarm_deactivation.humidity",
-                "humidity_alarm.lower_range_alarm_trigger.humidity",
-                "humidity_alarm.over_range_alarm_deactivation.humidity",
-                "humidity_alarm.over_range_alarm_trigger.humidity",
-                "humidity_alarm.within_range_alarm_deactivation.humidity",
-                "humidity_alarm.within_range_alarm_trigger.humidity",
-                "humidity_alarm.exceed_range_alarm_deactivation.humidity",
-                "humidity_alarm.exceed_range_alarm_trigger.humidity",
-                "humidity_alarm.mutation_alarm_trigger_no_mutation.humidity",
-                "humidity_alarm.mutation_alarm_trigger.humidity",
-                "humidity_alarm.mutation_alarm_trigger.saltation"
-            ]
+            "reference": []
         },
         {
             "id": "humidity_alarm.within_range_alarm_deactivation.humidity",
@@ -2380,7 +2355,6 @@
         },
         {
             "id": "humidity_mutation_alarm_settings.enable",
-            "description": "1.The threshold alarm for sudden change remains unaffected by the settings of alarm times and threshold release \n2.When this function is enabled, the device will uplink a data packet when the absolute value of the difference between the two collected values exceeds the set threshold",
             "name": "Humidity Shift Threshold",
             "value": "0",
             "unit": "",
@@ -2413,7 +2387,7 @@
             "data_type": "NUMBER",
             "value_type": "FLOAT",
             "range": [
-                0.1,
+                0,
                 100
             ],
             "bacnet_type": "analog_value_object",
@@ -2425,7 +2399,6 @@
         },
         {
             "id": "light_alarm_settings.enable",
-            "description": "Once enabled, it will only report when the status changes. When the value is greater than the set value, the device status is \"bright\" and when the value is less than or equal to the set value, the device status is \"dark\"",
             "name": "Threshold Alarm Config Enable",
             "value": "1",
             "unit": "",
@@ -2628,10 +2601,7 @@
             "bacnet_type": "multistate_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": [
-                "light_collection_interval.seconds_of_time",
-                "light_collection_interval.minutes_of_time"
-            ]
+            "reference": []
         },
         {
             "id": "light_tolerance_value",
@@ -2890,10 +2860,7 @@
             "bacnet_type": "multistate_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": [
-                "reporting_interval.seconds_of_time",
-                "reporting_interval.minutes_of_time"
-            ]
+            "reference": []
         },
         {
             "id": "request_query_all_configurations",
@@ -2945,9 +2912,9 @@
             "value": "",
             "unit": "",
             "access_mode": "W",
-            "data_type": "TEXT",
-            "value_type": "STRING",
-            "bacnet_type": "character_string_value_object",
+            "data_type": "NUMBER",
+            "value_type": "UINT8",
+            "bacnet_type": "analog_output_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": [
@@ -2960,9 +2927,9 @@
             "value": "",
             "unit": "",
             "access_mode": "W",
-            "data_type": "TEXT",
-            "value_type": "STRING",
-            "bacnet_type": "character_string_value_object",
+            "data_type": "NUMBER",
+            "value_type": "UINT8",
+            "bacnet_type": "analog_output_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": [
@@ -2975,9 +2942,9 @@
             "value": "",
             "unit": "",
             "access_mode": "W",
-            "data_type": "TEXT",
-            "value_type": "STRING",
-            "bacnet_type": "character_string_value_object",
+            "data_type": "NUMBER",
+            "value_type": "UINT8",
+            "bacnet_type": "analog_output_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": []
@@ -3056,7 +3023,6 @@
         },
         {
             "id": "set_zero_calibration.operation",
-            "description": "Must be calibrated in the horizontal plane.",
             "name": "Zero Calibration",
             "value": "1",
             "unit": "",
@@ -3530,19 +3496,7 @@
             "bacnet_type": "multistate_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": [
-                "temperature_alarm.lower_range_alarm_deactivation.temperature",
-                "temperature_alarm.lower_range_alarm_trigger.temperature",
-                "temperature_alarm.over_range_alarm_deactivation.temperature",
-                "temperature_alarm.over_range_alarm_trigger.temperature",
-                "temperature_alarm.within_range_alarm_deactivation.temperature",
-                "temperature_alarm.within_range_alarm_trigger.temperature",
-                "temperature_alarm.exceed_range_alarm_deactivation.temperature",
-                "temperature_alarm.exceed_range_alarm_trigger.temperature",
-                "temperature_alarm.mutation_alarm_trigger_no_mutation.temperature",
-                "temperature_alarm.mutation_alarm_trigger.temperature",
-                "temperature_alarm.mutation_alarm_trigger.saltation"
-            ]
+            "reference": []
         },
         {
             "id": "temperature_alarm.within_range_alarm_deactivation.temperature",
@@ -3624,7 +3578,6 @@
         },
         {
             "id": "temperature_mutation_alarm_settings.enable",
-            "description": "1.The threshold alarm for sudden change remains unaffected by the settings of alarm times and threshold release \n2.When this function is enabled, the device will uplink a data packet when the absolute value of the difference between the two collected values exceeds the set threshold",
             "name": "Temperature Shift Threshold",
             "value": "0",
             "unit": "",
@@ -3657,7 +3610,7 @@
             "data_type": "NUMBER",
             "value_type": "FLOAT",
             "range": [
-                0.1,
+                0,
                 100
             ],
             "bacnet_type": "analog_value_object",
@@ -3712,7 +3665,6 @@
         },
         {
             "id": "tilt_alarm_settings.enable",
-            "description": "Once enabled, it'll report only upon status change. When the value exceeds the set value, the device status is \"tilted\"; when it's less than or equal to the alarm value, the status is \"normal\".",
             "name": "Threshold Alarm Config Enable",
             "value": "0",
             "unit": "",
