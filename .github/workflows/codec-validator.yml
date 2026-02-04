@@ -1,0 +1,82 @@
+name: Codec Validator
+
+on:
+  push:
+    branches:
+      - '**'
+    paths:
+      - '**/*codec*.json'
+  pull_request:
+    branches:
+      - '**'
+    paths:
+      - '**/*codec*.json'
+
+jobs:
+  detect-files:
+    runs-on: ubuntu-latest
+    outputs:
+      files: ${{ steps.changed_files.outputs.files }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 2
+
+      - name: Get changed codec files
+        id: changed_files
+        run: |
+          if [ "${{ github.event_name }}" == "pull_request" ]; then
+            CHANGED_FILES=$(git diff --name-only ${{ github.event.pull_request.base.sha }} ${{ github.sha }} | grep -E '.*codec.*\.json$' || echo "")
+          else
+            CHANGED_FILES=$(git diff --name-only HEAD~1 HEAD | grep -E '.*codec.*\.json$' || echo "")
+          fi
+
+          # 转换为 JSON 数组
+          if [ -z "$CHANGED_FILES" ]; then
+            echo "files=[]" >> $GITHUB_OUTPUT
+          else
+            FILES_JSON=$(echo "$CHANGED_FILES" | jq -R -s -c 'split("\n") | map(select(length > 0))')
+            echo "files=$FILES_JSON" >> $GITHUB_OUTPUT
+          fi
+
+  validate:
+    needs: detect-files
+    if: needs.detect-files.outputs.files != '[]'
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        file: ${{ fromJson(needs.detect-files.outputs.files) }}
+      fail-fast: false  # 即使某个文件失败，也继续验证其他文件
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Validate ${{ matrix.file }}
+        id: validate
+        uses: FengFuLiu/codec-validator-action@main
+        with:
+          codec-path: ${{ matrix.file }}
+          fail-on-warning: false
+
+  notify:
+    needs: [detect-files, validate]
+    if: always() && failure() && needs.detect-files.outputs.files != '[]'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Send WeChat notification
+        env:
+          WECHAT_WEBHOOK: ${{ secrets.WECHAT_WEBHOOK_URL }}
+        run: |
+          if [ -n "$WECHAT_WEBHOOK" ]; then
+            curl -X POST "$WECHAT_WEBHOOK" \
+              -H 'Content-Type: application/json' \
+              -d "{
+                \"msgtype\": \"markdown\",
+                \"markdown\": {
+                  \"content\": \"## Codec 校验失败\n\n**仓库:** ${{ github.repository }}\n**分支:** <font color=\\\"warning\\\">${{ github.ref_name }}</font>\n**作者:** ${{ github.actor }}\n**提交:** ${{ github.event.head_commit.message }}\n\n────────────────\n\n[查看 Actions](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})  |  [查看提交](${{ github.event.head_commit.url }})\"
+                }
+              }"
+          else
+            echo "Warning: WECHAT_WEBHOOK_URL secret is not configured, skipping notification"
+          fi
