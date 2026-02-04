@@ -27,6 +27,8 @@ function Decoder(bytes, port) {
 
 function milesightDeviceDecode(bytes) {
 	var decoded = {};
+    var result = {};
+	var history = [];
 
 	var unknown_command = 0;
 	var counterObj = {};
@@ -51,10 +53,19 @@ function milesightDeviceDecode(bytes) {
 				decoded.all_configurations_request_by_device = readOnlyCommand(bytes, counterObj, 0);
 				break;
 			case 0xed:
-				decoded.historical_data_report = decoded.historical_data_report || {};
-				// 0：target time, 1：historical time
-				decoded.historical_data_report.mode = readUInt8(bytes, counterObj, 1);
-				decoded.historical_data_report.timestamp = readUInt32LE(bytes, counterObj, 4);
+				if (history.length === 0) {
+					for (var k in decoded) {
+						if (decoded.hasOwnProperty(k)) {
+							result[k] = decoded[k];
+						}
+					}
+				}
+				decoded = {};
+				// skip type
+				readUInt8(bytes, counterObj, 1);
+				decoded.timestamp = readUInt32LE(bytes, counterObj, 4);
+				history.push(decoded);
+				break;
 				break;
 			case 0xdf:
 				decoded.tsl_version = readProtocolVersion(readBytes(bytes, counterObj, 2));
@@ -888,7 +899,17 @@ function milesightDeviceDecode(bytes) {
 		}
 	}
 
-	return decoded;
+	if (Object.keys(history).length > 0) {
+		result.history = history;
+	} else {        
+		for (var k2 in decoded) {
+			if (decoded.hasOwnProperty(k2)) {
+				result[k2] = decoded[k2];
+			}
+		}
+	}
+
+	return result;
 }
 
 function readOnlyCommand(bytes) {
@@ -953,6 +974,17 @@ function readUInt16LE(allBytes, counterObj, end) {
 function readInt16LE(allBytes, counterObj, end) {
 	var ref = readUInt16LE(allBytes, counterObj, end);
 	return ref > 0x7fff ? ref - 0x10000 : ref;
+}
+
+function readUInt24LE(allBytes, counterObj, end) {
+    var bytes = readBytes(allBytes, counterObj, end); // 3 bytes expected
+    var value = (bytes[2] << 16) + (bytes[1] << 8) + bytes[0];
+    return value & 0xffffff;
+}
+
+function readInt24LE(allBytes, counterObj, end) {
+    var ref = readUInt24LE(allBytes, counterObj, end);
+    return ref > 0x7fffff ? ref - 0x1000000 : ref;
 }
 
 function readUInt32LE(allBytes, counterObj, end) {
@@ -1039,7 +1071,7 @@ function extractBits(byte, startBit, endBit) {
 	if (byte < 0 || byte > 0xffff) {
 	  throw new Error("byte must be in range 0..65535");
 	}
-	if (startBit < 0 || endBit > 16 || startBit >= endBit) {
+	if (startBit >= endBit) {
 	  throw new Error("invalid bit range");
 	}
   

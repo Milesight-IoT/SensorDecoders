@@ -85,13 +85,24 @@ function milesightDeviceEncode(payload) {
 		encoded = encoded.concat(buffer.toBytes());
 	}
 	//0xed
-	if ('historical_data_report' in payload) {
-		var buffer = new Buffer();
-		buffer.writeUInt8(0xed);
-		// 0：target time, 1：historical time
-		buffer.writeUInt8(payload.historical_data_report.mode);
-		buffer.writeUInt32LE(payload.historical_data_report.timestamp);
-		encoded = encoded.concat(buffer.toBytes());
+	if ('history' in payload) {
+		for (var i = 0; i < payload.history.length; i++) {
+			var buffer = new Buffer();
+			var history = payload.history[i];
+			buffer.writeUInt8(0xed);
+			// 0：target time, 1：historical time
+			buffer.writeUInt8(1);
+			buffer.writeUInt32LE(history.timestamp);
+			var reset = {};
+			for (var k in history) {
+				if (history.hasOwnProperty(k) && k !== "timestamp") {
+					reset[k] = history[k];
+				}
+			}
+		
+			encoded = encoded.concat(buffer.toBytes());
+			encoded = encoded.concat(milesightDeviceEncode(reset));
+		}
 	}
 	//0xde
 	if ('product_name' in payload) {
@@ -1520,6 +1531,14 @@ Buffer.prototype.writeUInt16LE = function(value) {
 
 Buffer.prototype.writeInt16LE = function(value) {
 	this._write(value < 0 ? value + 0x10000 : value, 2, true);
+};
+
+Buffer.prototype.writeUInt24LE = function(value) {
+    this._write(value, 3, true);
+};
+
+Buffer.prototype.writeInt24LE = function(value) {
+    this._write(value < 0 ? value + 0x1000000 : value, 3, true);
 };
 
 Buffer.prototype.writeUInt32LE = function(value) {
