@@ -591,7 +591,8 @@ function milesightDeviceDecode(bytes) {
 				decoded.history_type.type = readUInt8(bytes, counterObj, 1);
 				break;
 			case 0x30:
-				decoded.temperature_alarm = decoded.temperature_alarm || {};
+				decoded.event = decoded.event || [];
+				decoded.temperature_alarm = {};
 				decoded.temperature_alarm.type = readUInt8(bytes, counterObj, 1);
 				if (decoded.temperature_alarm.type == 0x00) {
 					decoded.temperature_alarm.collection_error = decoded.temperature_alarm.collection_error || {};
@@ -645,9 +646,11 @@ function milesightDeviceDecode(bytes) {
 					decoded.temperature_alarm.exceed_range_alarm_trigger.temperature = readWithErrorCheck(readInt16LE(bytes, counterObj, 2) / 100, error_value_map.temperature);
 					// decoded.temperature = decoded.temperature_alarm.exceed_range_alarm_trigger.temperature;
 				}
+				decoded.event.push(decoded.temperature_alarm);
 				break;
 			case 0x31:
-				decoded.current_alarm = decoded.current_alarm || {};
+				decoded.event = decoded.event || [];
+				decoded.current_alarm = {};
 				decoded.current_alarm.channel = readUInt8(bytes, counterObj, 1);
 				decoded.current_alarm.info = decoded.current_alarm.info || {};
 				decoded.current_alarm.info.type = readUInt8(bytes, counterObj, 1);
@@ -712,9 +715,11 @@ function milesightDeviceDecode(bytes) {
 					decoded.current_alarm.info.exceed_range_alarm_trigger.current = readWithErrorCheck(readUInt24LE(bytes, counterObj, 3) / 100, error_value_map.current);
 					// decoded.current = decoded.current_alarm.info.exceed_range_alarm_trigger.current;
 				}
+				decoded.event.push(decoded.current_alarm);
 				break;
 			case 0x32:
-				decoded.voltage_alarm = decoded.voltage_alarm || {};
+				decoded.event = decoded.event || [];
+				decoded.voltage_alarm = {};
 				decoded.voltage_alarm.channel = readUInt8(bytes, counterObj, 1);
 				decoded.voltage_alarm.info = decoded.voltage_alarm.info || {};
 				decoded.voltage_alarm.info.type = readUInt8(bytes, counterObj, 1);
@@ -779,9 +784,11 @@ function milesightDeviceDecode(bytes) {
 					decoded.voltage_alarm.info.exceed_range_alarm_trigger.voltage = readWithErrorCheck(readUInt16LE(bytes, counterObj, 2) / 100, error_value_map.voltage);
 					// decoded.voltage = decoded.voltage_alarm.info.exceed_range_alarm_trigger.voltage;
 				}
+				decoded.event.push(decoded.voltage_alarm);
 				break;
 			case 0x33:
-				decoded.thdi_alarm = decoded.thdi_alarm || {};
+				decoded.event = decoded.event || [];
+				decoded.thdi_alarm = {};
 				decoded.thdi_alarm.channel = readUInt8(bytes, counterObj, 1);
 				decoded.thdi_alarm.info = decoded.thdi_alarm.info || {};
 				decoded.thdi_alarm.info.type = readUInt8(bytes, counterObj, 1);
@@ -798,9 +805,11 @@ function milesightDeviceDecode(bytes) {
 					decoded.thdi_alarm.info.over_range_alarm_trigger.thdi = readWithErrorCheck(readUInt16LE(bytes, counterObj, 2) / 100, error_value_map.thdi);
 					// decoded.thdi = decoded.thdi_alarm.info.over_range_alarm_trigger.thdi;
 				}
+				decoded.event.push(decoded.thdi_alarm);
 				break;
 			case 0x34:
-				decoded.thdv_alarm = decoded.thdv_alarm || {};
+				decoded.event = decoded.event || [];
+				decoded.thdv_alarm = {};
 				decoded.thdv_alarm.channel = readUInt8(bytes, counterObj, 1);
 				decoded.thdv_alarm.info = decoded.thdv_alarm.info || {};
 				decoded.thdv_alarm.info.type = readUInt8(bytes, counterObj, 1);
@@ -817,9 +826,11 @@ function milesightDeviceDecode(bytes) {
 					decoded.thdv_alarm.info.over_range_alarm_trigger.thdv = readWithErrorCheck(readUInt16LE(bytes, counterObj, 2) / 100, error_value_map.thdv);
 					// decoded.thdv = decoded.thdv_alarm.info.over_range_alarm_trigger.thdv;
 				}
+				decoded.event.push(decoded.thdv_alarm);
 				break;
 			case 0x35:
-				decoded.voltage_unbalance_alarm = decoded.voltage_unbalance_alarm || {};
+				decoded.event = decoded.event || [];
+				decoded.voltage_unbalance_alarm = {};
 				decoded.voltage_unbalance_alarm.type = readUInt8(bytes, counterObj, 1);
 				if (decoded.voltage_unbalance_alarm.type == 0x00) {
 					decoded.voltage_unbalance_alarm.collection_error = decoded.voltage_unbalance_alarm.collection_error || {};
@@ -834,6 +845,7 @@ function milesightDeviceDecode(bytes) {
 					decoded.voltage_unbalance_alarm.over_range_alarm_trigger.voltage_unbalance = readWithErrorCheck(readUInt16LE(bytes, counterObj, 2) / 100, error_value_map.voltage_unbalance);
 					// decoded.voltage_three_phase_imbalcance = decoded.voltage_unbalance_alarm.over_range_alarm_trigger.voltage_unbalance;
 				}
+				decoded.event.push(decoded.voltage_unbalance_alarm);
 				break;
 			case 0x36:
 				decoded.power_loss_alarm = readOnlyCommand(bytes, counterObj, 0);
