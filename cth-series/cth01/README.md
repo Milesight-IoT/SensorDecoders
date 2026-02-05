@@ -42,233 +42,233 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Power Factor | 0x07 | 2 | r |  |  |  |
 | Power Factor | 0x07 | 2 | r |  |  |  |
 | Power Factor | 0x07 | 2 | r |  |  |  |
-| Power Factor | 0x07 | 2 | r | 0 | 0 - 100 |  |
+| Power Factor a | 0x07 | 2 | r | 0 | 0 - 100 |  |
 | Power Factor | 0x07 | 4 | r |  |  |  |
-| Power Factor | 0x07 | 2 | r | 0 | 0 - 100 |  |
-| Power Factor | 0x07 | 2 | r | 0 | 0 - 100 |  |
-| Power Factor | 0x07 | 2 | r | 0 | 0 - 100 |  |
-| Power Factor | 0x07 | 2 | r | 0 | 0 - 100 |  |
+| Power Factor1 | 0x07 | 2 | r | 0 | 0 - 100 |  |
+| Power Factor2 | 0x07 | 2 | r | 0 | 0 - 100 |  |
+| Power Factor3 | 0x07 | 2 | r | 0 | 0 - 100 |  |
+| Power Factorb | 0x07 | 2 | r | 0 | 0 - 100 |  |
 | Power Factor | 0x07 | 4 | r |  |  |  |
-| Power Factor | 0x07 | 2 | r | 0 | 0 - 100 |  |
-| Power Factor | 0x07 | 2 | r | 0 | 0 - 100 |  |
-| Power Factor | 0x07 | 2 | r | 0 | 0 - 100 |  |
-| Power Factor | 0x07 | 2 | r | 0 | 0 - 100 |  |
+| Power Factor4 | 0x07 | 2 | r | 0 | 0 - 100 |  |
+| Power Factor5 | 0x07 | 2 | r | 0 | 0 - 100 |  |
+| Power Factor6 | 0x07 | 2 | r | 0 | 0 - 100 |  |
+| Power Factor c | 0x07 | 2 | r | 0 | 0 - 100 |  |
 | Power Factor | 0x07 | 4 | r |  |  |  |
-| Power Factor | 0x07 | 2 | r | 0 | 0 - 100 |  |
-| Power Factor | 0x07 | 2 | r | 0 | 0 - 100 |  |
-| Power Factor | 0x07 | 2 | r | 0 | 0 - 100 |  |
-| Power Factor | 0x07 | 2 | r | 0 | 0 - 100 |  |
+| Power Factor7 | 0x07 | 2 | r | 0 | 0 - 100 |  |
+| Power Factor8 | 0x07 | 2 | r | 0 | 0 - 100 |  |
+| Power Factor9 | 0x07 | 2 | r | 0 | 0 - 100 |  |
+| Power Factor d | 0x07 | 2 | r | 0 | 0 - 100 |  |
 | Power Factor | 0x07 | 4 | r |  |  |  |
-| Power Factor | 0x07 | 2 | r | 0 | 0 - 100 |  |
-| Power Factor | 0x07 | 2 | r | 0 | 0 - 100 |  |
-| Power Factor | 0x07 | 2 | r | 0 | 0 - 100 |  |
+| Power Factor10 | 0x07 | 2 | r | 0 | 0 - 100 |  |
+| Power Factor11 | 0x07 | 2 | r | 0 | 0 - 100 |  |
+| Power Factor12 | 0x07 | 2 | r | 0 | 0 - 100 |  |
 | Active Power | 0x08 | 1 | r |  |  |  |
 | Active Power | 0x08 | 2 | r |  |  |  |
 | Active Power | 0x08 | 2 | r |  |  |  |
-| Active Power | 0x08 | 5 | r | 0 |  |  |
+| Active Power a | 0x08 | 5 | r | 0 |  |  |
 | Active Power | 0x08 | 9 | r |  |  |  |
-| Active Power | 0x08 | 5 | r | 0 |  |  |
-| Active Power | 0x08 | 5 | r | 0 |  |  |
-| Active Power | 0x08 | 5 | r | 0 |  |  |
-| Active Power | 0x08 | 5 | r | 0 |  |  |
+| Active Power1 | 0x08 | 5 | r | 0 |  |  |
+| Active Power2 | 0x08 | 5 | r | 0 |  |  |
+| Active Power3 | 0x08 | 5 | r | 0 |  |  |
+| Active Power b | 0x08 | 5 | r | 0 |  |  |
 | Active Power | 0x08 | 9 | r |  |  |  |
-| Active Power | 0x08 | 5 | r | 0 |  |  |
-| Active Power | 0x08 | 5 | r | 0 |  |  |
-| Active Power | 0x08 | 5 | r | 0 |  |  |
+| Active Power4 | 0x08 | 5 | r | 0 |  |  |
+| Active Power5 | 0x08 | 5 | r | 0 |  |  |
+| Active Power6 | 0x08 | 5 | r | 0 |  |  |
 | Active Power | 0x09 | 1 | r |  |  |  |
 | Active Power | 0x09 | 2 | r |  |  |  |
 | Active Power | 0x09 | 2 | r |  |  |  |
-| Active Power | 0x09 | 5 | r | 0 |  |  |
+| Active Power c | 0x09 | 5 | r | 0 |  |  |
 | Active Power | 0x09 | 9 | r |  |  |  |
-| Active Power | 0x09 | 5 | r | 0 |  |  |
-| Active Power | 0x09 | 5 | r | 0 |  |  |
-| Active Power | 0x09 | 5 | r | 0 |  |  |
-| Active Power | 0x09 | 5 | r | 0 |  |  |
+| Active Power7 | 0x09 | 5 | r | 0 |  |  |
+| Active Power8 | 0x09 | 5 | r | 0 |  |  |
+| Active Power9 | 0x09 | 5 | r | 0 |  |  |
+| Active Power d | 0x09 | 5 | r | 0 |  |  |
 | Active Power | 0x09 | 9 | r |  |  |  |
-| Active Power | 0x09 | 5 | r | 0 |  |  |
-| Active Power | 0x09 | 5 | r | 0 |  |  |
-| Active Power | 0x09 | 5 | r | 0 |  |  |
+| Active Power10 | 0x09 | 5 | r | 0 |  |  |
+| Active Power11 | 0x09 | 5 | r | 0 |  |  |
+| Active Power12 | 0x09 | 5 | r | 0 |  |  |
 | Reactive Power | 0x0A | 1 | r |  |  |  |
 | Reactive Power | 0x0A | 2 | r |  |  |  |
 | Reactive Power | 0x0A | 2 | r |  |  |  |
-| Reactive Power | 0x0A | 5 | r | 0 |  |  |
+| Reactive Power a | 0x0A | 5 | r | 0 |  |  |
 | Reactive Power | 0x0A | 9 | r |  |  |  |
-| Reactive Power | 0x0A | 5 | r | 0 |  |  |
-| Reactive Power | 0x0A | 5 | r | 0 |  |  |
-| Reactive Power | 0x0A | 5 | r | 0 |  |  |
-| Reactive Power | 0x0A | 5 | r | 0 |  |  |
+| Reactive Power1 | 0x0A | 5 | r | 0 |  |  |
+| Reactive Power2 | 0x0A | 5 | r | 0 |  |  |
+| Reactive Power3 | 0x0A | 5 | r | 0 |  |  |
+| Reactive Power b | 0x0A | 5 | r | 0 |  |  |
 | Reactive Power | 0x0A | 9 | r |  |  |  |
-| Reactive Power | 0x0A | 5 | r | 0 |  |  |
-| Reactive Power | 0x0A | 5 | r | 0 |  |  |
-| Reactive Power | 0x0A | 5 | r | 0 |  |  |
+| Reactive Power4 | 0x0A | 5 | r | 0 |  |  |
+| Reactive Power5 | 0x0A | 5 | r | 0 |  |  |
+| Reactive Power6 | 0x0A | 5 | r | 0 |  |  |
 | Reactive Power | 0x0B | 1 | r |  |  |  |
 | Reactive Power | 0x0B | 2 | r |  |  |  |
 | Reactive Power | 0x0B | 2 | r |  |  |  |
-| Reactive Power | 0x0B | 5 | r | 0 |  |  |
+| Reactive Power c | 0x0B | 5 | r | 0 |  |  |
 | Reactive Power | 0x0B | 9 | r |  |  |  |
-| Reactive Power | 0x0B | 5 | r | 0 |  |  |
-| Reactive Power | 0x0B | 5 | r | 0 |  |  |
-| Reactive Power | 0x0B | 5 | r | 0 |  |  |
-| Reactive Power | 0x0B | 5 | r | 0 |  |  |
+| Reactive Power7 | 0x0B | 5 | r | 0 |  |  |
+| Reactive Power8 | 0x0B | 5 | r | 0 |  |  |
+| Reactive Power9 | 0x0B | 5 | r | 0 |  |  |
+| Reactive Power d | 0x0B | 5 | r | 0 |  |  |
 | Reactive Power | 0x0B | 9 | r |  |  |  |
-| Reactive Power | 0x0B | 5 | r | 0 |  |  |
-| Reactive Power | 0x0B | 5 | r | 0 |  |  |
-| Reactive Power | 0x0B | 5 | r | 0 |  |  |
+| Reactive Power10 | 0x0B | 5 | r | 0 |  |  |
+| Reactive Power11 | 0x0B | 5 | r | 0 |  |  |
+| Reactive Power12 | 0x0B | 5 | r | 0 |  |  |
 | Apparent Power | 0x0C | 1 | r |  |  |  |
 | Apparent Power | 0x0C | 2 | r |  |  |  |
 | Apparent Power | 0x0C | 2 | r |  |  |  |
-| Apparent Power | 0x0C | 5 | r | 0 |  |  |
+| Apparent Power a | 0x0C | 5 | r | 0 |  |  |
 | Apparent Power | 0x0C | 9 | r |  |  |  |
-| Apparent Power | 0x0C | 5 | r | 0 |  |  |
-| Apparent Power | 0x0C | 5 | r | 0 |  |  |
-| Apparent Power | 0x0C | 5 | r | 0 |  |  |
-| Apparent Power | 0x0C | 5 | r | 0 |  |  |
+| Apparent Power1 | 0x0C | 5 | r | 0 |  |  |
+| Apparent Power2 | 0x0C | 5 | r | 0 |  |  |
+| Apparent Power3 | 0x0C | 5 | r | 0 |  |  |
+| Apparent Power b | 0x0C | 5 | r | 0 |  |  |
 | Apparent Power | 0x0C | 9 | r |  |  |  |
-| Apparent Power | 0x0C | 5 | r | 0 |  |  |
-| Apparent Power | 0x0C | 5 | r | 0 |  |  |
-| Apparent Power | 0x0C | 5 | r | 0 |  |  |
+| Apparent Power4 | 0x0C | 5 | r | 0 |  |  |
+| Apparent Power5 | 0x0C | 5 | r | 0 |  |  |
+| Apparent Power6 | 0x0C | 5 | r | 0 |  |  |
 | Apparent Power | 0x0D | 1 | r |  |  |  |
 | Apparent Power | 0x0D | 2 | r |  |  |  |
 | Apparent Power | 0x0D | 2 | r |  |  |  |
-| Apparent Power | 0x0D | 5 | r | 0 |  |  |
+| Apparent Power c | 0x0D | 5 | r | 0 |  |  |
 | Apparent Power | 0x0D | 9 | r |  |  |  |
-| Apparent Power | 0x0D | 5 | r | 0 |  |  |
-| Apparent Power | 0x0D | 5 | r | 0 |  |  |
-| Apparent Power | 0x0D | 5 | r | 0 |  |  |
-| Apparent Power | 0x0D | 5 | r | 0 |  |  |
+| Apparent Power7 | 0x0D | 5 | r | 0 |  |  |
+| Apparent Power8 | 0x0D | 5 | r | 0 |  |  |
+| Apparent Power9 | 0x0D | 5 | r | 0 |  |  |
+| Apparent Power d | 0x0D | 5 | r | 0 |  |  |
 | Apparent Power | 0x0D | 9 | r |  |  |  |
-| Apparent Power | 0x0D | 5 | r | 0 |  |  |
-| Apparent Power | 0x0D | 5 | r | 0 |  |  |
-| Apparent Power | 0x0D | 5 | r | 0 |  |  |
+| Apparent Power10 | 0x0D | 5 | r | 0 |  |  |
+| Apparent Power11 | 0x0D | 5 | r | 0 |  |  |
+| Apparent Power12 | 0x0D | 5 | r | 0 |  |  |
 | Imported Active Energy | 0x0E | 1 | r |  |  |  |
 | Imported Active Energy | 0x0E | 2 | r |  |  |  |
 | Imported Active Energy | 0x0E | 2 | r |  |  |  |
-| Imported Active Energy | 0x0E | 5 | r | 0 |  |  |
+| Imported Active Energy a | 0x0E | 5 | r | 0 |  |  |
 | Imported Active Energy | 0x0E | 9 | r |  |  |  |
-| Imported Active Energy | 0x0E | 5 | r | 0 |  |  |
-| Imported Active Energy | 0x0E | 5 | r | 0 |  |  |
-| Imported Active Energy | 0x0E | 5 | r | 0 |  |  |
-| Imported Active Energy | 0x0E | 5 | r | 0 |  |  |
+| Imported Active Energy1 | 0x0E | 5 | r | 0 |  |  |
+| Imported Active Energy2 | 0x0E | 5 | r | 0 |  |  |
+| Imported Active Energy3 | 0x0E | 5 | r | 0 |  |  |
+| Imported Active Energy b | 0x0E | 5 | r | 0 |  |  |
 | Imported Active Energy | 0x0E | 9 | r |  |  |  |
-| Imported Active Energy | 0x0E | 5 | r | 0 |  |  |
-| Imported Active Energy | 0x0E | 5 | r | 0 |  |  |
-| Imported Active Energy | 0x0E | 5 | r | 0 |  |  |
+| Imported Active Energy4 | 0x0E | 5 | r | 0 |  |  |
+| Imported Active Energy5 | 0x0E | 5 | r | 0 |  |  |
+| Imported Active Energy6 | 0x0E | 5 | r | 0 |  |  |
 | Imported Active Energy | 0x0F | 1 | r |  |  |  |
 | Imported Active Energy | 0x0F | 2 | r |  |  |  |
 | Imported Active Energy | 0x0F | 2 | r |  |  |  |
-| Imported Active Energy | 0x0F | 5 | r | 0 |  |  |
+| Imported Active Energy c | 0x0F | 5 | r | 0 |  |  |
 | Imported Active Energy | 0x0F | 9 | r |  |  |  |
-| Imported Active Energy | 0x0F | 5 | r | 0 |  |  |
-| Imported Active Energy | 0x0F | 5 | r | 0 |  |  |
-| Imported Active Energy | 0x0F | 5 | r | 0 |  |  |
-| Imported Active Energy | 0x0F | 5 | r | 0 |  |  |
+| Imported Active Energy7 | 0x0F | 5 | r | 0 |  |  |
+| Imported Active Energy8 | 0x0F | 5 | r | 0 |  |  |
+| Imported Active Energy9 | 0x0F | 5 | r | 0 |  |  |
+| Imported Active Energy d | 0x0F | 5 | r | 0 |  |  |
 | Imported Active Energy | 0x0F | 9 | r |  |  |  |
-| Imported Active Energy | 0x0F | 5 | r | 0 |  |  |
-| Imported Active Energy | 0x0F | 5 | r | 0 |  |  |
-| Imported Active Energy | 0x0F | 5 | r | 0 |  |  |
+| Imported Active Energy10 | 0x0F | 5 | r | 0 |  |  |
+| Imported Active Energy11 | 0x0F | 5 | r | 0 |  |  |
+| Imported Active Energy12 | 0x0F | 5 | r | 0 |  |  |
 | Exported Active Energy | 0x10 | 1 | r |  |  |  |
 | Exported Active Energy | 0x10 | 2 | r |  |  |  |
 | Exported Active Energy | 0x10 | 2 | r |  |  |  |
-| Exported Active Energy | 0x10 | 5 | r | 0 |  |  |
+| Exported Active Energy a | 0x10 | 5 | r | 0 |  |  |
 | Exported Active Energy | 0x10 | 9 | r |  |  |  |
-| Exported Active Energy | 0x10 | 5 | r | 0 |  |  |
-| Exported Active Energy | 0x10 | 5 | r | 0 |  |  |
-| Exported Active Energy | 0x10 | 5 | r | 0 |  |  |
-| Exported Active Energy | 0x10 | 5 | r | 0 |  |  |
+| Exported Active Energy1 | 0x10 | 5 | r | 0 |  |  |
+| Exported Active Energy2 | 0x10 | 5 | r | 0 |  |  |
+| Exported Active Energy3 | 0x10 | 5 | r | 0 |  |  |
+| Exported Active Energy b | 0x10 | 5 | r | 0 |  |  |
 | Exported Active Energy | 0x10 | 9 | r |  |  |  |
-| Exported Active Energy | 0x10 | 5 | r | 0 |  |  |
-| Exported Active Energy | 0x10 | 5 | r | 0 |  |  |
-| Exported Active Energy | 0x10 | 5 | r | 0 |  |  |
+| Exported Active Energy4 | 0x10 | 5 | r | 0 |  |  |
+| Exported Active Energy5 | 0x10 | 5 | r | 0 |  |  |
+| Exported Active Energy6 | 0x10 | 5 | r | 0 |  |  |
 | Exported Active Energy | 0x11 | 1 | r |  |  |  |
 | Exported Active Energy | 0x11 | 2 | r |  |  |  |
 | Exported Active Energy | 0x11 | 2 | r |  |  |  |
-| Exported Active Energy | 0x11 | 5 | r | 0 |  |  |
+| Exported Active Energy c | 0x11 | 5 | r | 0 |  |  |
 | Exported Active Energy | 0x11 | 9 | r |  |  |  |
-| Exported Active Energy | 0x11 | 5 | r | 0 |  |  |
-| Exported Active Energy | 0x11 | 5 | r | 0 |  |  |
-| Exported Active Energy | 0x11 | 5 | r | 0 |  |  |
-| Exported Active Energy | 0x11 | 5 | r | 0 |  |  |
+| Exported Active Energy7 | 0x11 | 5 | r | 0 |  |  |
+| Exported Active Energy8 | 0x11 | 5 | r | 0 |  |  |
+| Exported Active Energy9 | 0x11 | 5 | r | 0 |  |  |
+| Exported Active Energy d | 0x11 | 5 | r | 0 |  |  |
 | Exported Active Energy | 0x11 | 9 | r |  |  |  |
-| Exported Active Energy | 0x11 | 5 | r | 0 |  |  |
-| Exported Active Energy | 0x11 | 5 | r | 0 |  |  |
-| Exported Active Energy | 0x11 | 5 | r | 0 |  |  |
+| Exported Active Energy10 | 0x11 | 5 | r | 0 |  |  |
+| Exported Active Energy11 | 0x11 | 5 | r | 0 |  |  |
+| Exported Active Energy12 | 0x11 | 5 | r | 0 |  |  |
 | Imported Reactive Energy | 0x12 | 1 | r |  |  |  |
 | Imported Reactive Energy | 0x12 | 2 | r |  |  |  |
 | Imported Reactive Energy | 0x12 | 2 | r |  |  |  |
-| Imported Reactive Energy | 0x12 | 5 | r | 0 |  |  |
+| Imported Reactive Energy a | 0x12 | 5 | r | 0 |  |  |
 | Imported Reactive Energy | 0x12 | 9 | r |  |  |  |
-| Imported Reactive Energy | 0x12 | 5 | r | 0 |  |  |
-| Imported Reactive Energy | 0x12 | 5 | r | 0 |  |  |
-| Imported Reactive Energy | 0x12 | 5 | r | 0 |  |  |
-| Imported Reactive Energy | 0x12 | 5 | r | 0 |  |  |
+| Imported Reactive Energy1 | 0x12 | 5 | r | 0 |  |  |
+| Imported Reactive Energy2 | 0x12 | 5 | r | 0 |  |  |
+| Imported Reactive Energy3 | 0x12 | 5 | r | 0 |  |  |
+| Imported Reactive Energy b | 0x12 | 5 | r | 0 |  |  |
 | Imported Reactive Energy | 0x12 | 9 | r |  |  |  |
-| Imported Reactive Energy | 0x12 | 5 | r | 0 |  |  |
-| Imported Reactive Energy | 0x12 | 5 | r | 0 |  |  |
-| Imported Reactive Energy | 0x12 | 5 | r | 0 |  |  |
+| Imported Reactive Energy4 | 0x12 | 5 | r | 0 |  |  |
+| Imported Reactive Energy5 | 0x12 | 5 | r | 0 |  |  |
+| Imported Reactive Energy6 | 0x12 | 5 | r | 0 |  |  |
 | Imported Reactive Energy | 0x13 | 1 | r |  |  |  |
 | Imported Reactive Energy | 0x13 | 2 | r |  |  |  |
 | Imported Reactive Energy | 0x13 | 2 | r |  |  |  |
-| Imported Reactive Energy | 0x13 | 5 | r | 0 |  |  |
+| Imported Reactive Energy c | 0x13 | 5 | r | 0 |  |  |
 | Imported Reactive Energy | 0x13 | 9 | r |  |  |  |
-| Imported Reactive Energy | 0x13 | 5 | r | 0 |  |  |
-| Imported Reactive Energy | 0x13 | 5 | r | 0 |  |  |
-| Imported Reactive Energy | 0x13 | 5 | r | 0 |  |  |
-| Imported Reactive Energy | 0x13 | 5 | r | 0 |  |  |
+| Imported Reactive Energy7 | 0x13 | 5 | r | 0 |  |  |
+| Imported Reactive Energy8 | 0x13 | 5 | r | 0 |  |  |
+| Imported Reactive Energy9 | 0x13 | 5 | r | 0 |  |  |
+| Imported Reactive Energy d | 0x13 | 5 | r | 0 |  |  |
 | Imported Reactive Energy | 0x13 | 9 | r |  |  |  |
-| Imported Reactive Energy | 0x13 | 5 | r | 0 |  |  |
-| Imported Reactive Energy | 0x13 | 5 | r | 0 |  |  |
-| Imported Reactive Energy | 0x13 | 5 | r | 0 |  |  |
+| Imported Reactive Energy10 | 0x13 | 5 | r | 0 |  |  |
+| Imported Reactive Energy11 | 0x13 | 5 | r | 0 |  |  |
+| Imported Reactive Energy12 | 0x13 | 5 | r | 0 |  |  |
 | Exported Reactive Energy | 0x14 | 1 | r |  |  |  |
 | Exported Reactive Energy | 0x14 | 2 | r |  |  |  |
 | Exported Reactive Energy | 0x14 | 2 | r |  |  |  |
-| Exported Reactive Energy | 0x14 | 5 | r | 0 |  |  |
+| Exported Reactive Energy a | 0x14 | 5 | r | 0 |  |  |
 | Exported Reactive Energy | 0x14 | 9 | r |  |  |  |
-| Exported Reactive Energy | 0x14 | 5 | r | 0 |  |  |
-| Exported Reactive Energy | 0x14 | 5 | r | 0 |  |  |
-| Exported Reactive Energy | 0x14 | 5 | r | 0 |  |  |
-| Exported Reactive Energy | 0x14 | 5 | r | 0 |  |  |
+| Exported Reactive Energy1 | 0x14 | 5 | r | 0 |  |  |
+| Exported Reactive Energy2 | 0x14 | 5 | r | 0 |  |  |
+| Exported Reactive Energy3 | 0x14 | 5 | r | 0 |  |  |
+| Exported Reactive Energy b | 0x14 | 5 | r | 0 |  |  |
 | Exported Reactive Energy | 0x14 | 9 | r |  |  |  |
-| Exported Reactive Energy | 0x14 | 5 | r | 0 |  |  |
-| Exported Reactive Energy | 0x14 | 5 | r | 0 |  |  |
-| Exported Reactive Energy | 0x14 | 5 | r | 0 |  |  |
+| Exported Reactive Energy4 | 0x14 | 5 | r | 0 |  |  |
+| Exported Reactive Energy5 | 0x14 | 5 | r | 0 |  |  |
+| Exported Reactive Energy6 | 0x14 | 5 | r | 0 |  |  |
 | Exported Reactive Energy | 0x15 | 1 | r |  |  |  |
 | Exported Reactive Energy | 0x15 | 2 | r |  |  |  |
 | Exported Reactive Energy | 0x15 | 2 | r |  |  |  |
 | Exported Reactive Energy | 0x15 | 9 | r |  |  |  |
-| Exported Reactive Energy | 0x15 | 5 | r | 0 |  |  |
-| Exported Reactive Energy | 0x15 | 5 | r | 0 |  |  |
-| Exported Reactive Energy | 0x15 | 5 | r | 0 |  |  |
-| Exported Reactive Energy | 0x15 | 5 | r | 0 |  |  |
+| Exported Reactive Energy7 | 0x15 | 5 | r | 0 |  |  |
+| Exported Reactive Energy8 | 0x15 | 5 | r | 0 |  |  |
+| Exported Reactive Energy9 | 0x15 | 5 | r | 0 |  |  |
+| Exported Reactive Energy d | 0x15 | 5 | r | 0 |  |  |
 | Exported Reactive Energy | 0x15 | 9 | r |  |  |  |
-| Exported Reactive Energy | 0x15 | 5 | r | 0 |  |  |
-| Exported Reactive Energy | 0x15 | 5 | r | 0 |  |  |
-| Exported Reactive Energy | 0x15 | 5 | r | 0 |  |  |
+| Exported Reactive Energy10 | 0x15 | 5 | r | 0 |  |  |
+| Exported Reactive Energy11 | 0x15 | 5 | r | 0 |  |  |
+| Exported Reactive Energy12 | 0x15 | 5 | r | 0 |  |  |
 | Apparent Energy | 0x16 | 1 | r |  |  |  |
 | Apparent Energy | 0x16 | 2 | r |  |  |  |
 | Apparent Energy | 0x16 | 2 | r |  |  |  |
-| Apparent Energy | 0x16 | 5 | r | 0 |  |  |
+| Apparent Energy a | 0x16 | 5 | r | 0 |  |  |
 | Apparent Energy | 0x16 | 9 | r |  |  |  |
-| Apparent Energy | 0x16 | 5 | r | 0 |  |  |
-| Apparent Energy | 0x16 | 5 | r | 0 |  |  |
-| Apparent Energy | 0x16 | 5 | r | 0 |  |  |
-| Apparent Energy | 0x16 | 5 | r | 0 |  |  |
+| Apparent Energy1 | 0x16 | 5 | r | 0 |  |  |
+| Apparent Energy2 | 0x16 | 5 | r | 0 |  |  |
+| Apparent Energy3 | 0x16 | 5 | r | 0 |  |  |
+| Apparent Energy b | 0x16 | 5 | r | 0 |  |  |
 | Apparent Energy | 0x16 | 9 | r |  |  |  |
-| Apparent Energy | 0x16 | 5 | r | 0 |  |  |
-| Apparent Energy | 0x16 | 5 | r | 0 |  |  |
-| Apparent Energy | 0x16 | 5 | r | 0 |  |  |
+| Apparent Energy4 | 0x16 | 5 | r | 0 |  |  |
+| Apparent Energy5 | 0x16 | 5 | r | 0 |  |  |
+| Apparent Energy6 | 0x16 | 5 | r | 0 |  |  |
 | Apparent Energy | 0x17 | 1 | r |  |  |  |
 | Apparent Energy | 0x17 | 2 | r |  |  |  |
 | Apparent Energy | 0x17 | 2 | r |  |  |  |
-| Apparent Energy | 0x17 | 5 | r | 0 |  |  |
+| Apparent Energy c | 0x17 | 5 | r | 0 |  |  |
 | Apparent Energy | 0x17 | 9 | r |  |  |  |
-| Apparent Energy | 0x17 | 5 | r | 0 |  |  |
-| Apparent Energy | 0x17 | 5 | r | 0 |  |  |
-| Apparent Energy | 0x17 | 5 | r | 0 |  |  |
-| Apparent Energy | 0x17 | 5 | r | 0 |  |  |
+| Apparent Energy7 | 0x17 | 5 | r | 0 |  |  |
+| Apparent Energy8 | 0x17 | 5 | r | 0 |  |  |
+| Apparent Energy9 | 0x17 | 5 | r | 0 |  |  |
+| Apparent Energy d | 0x17 | 5 | r | 0 |  |  |
 | Apparent Energy | 0x17 | 9 | r |  |  |  |
-| Apparent Energy | 0x17 | 5 | r | 0 |  |  |
-| Apparent Energy | 0x17 | 5 | r | 0 |  |  |
-| Apparent Energy | 0x17 | 5 | r | 0 |  |  |
+| Apparent Energy10 | 0x17 | 5 | r | 0 |  |  |
+| Apparent Energy11 | 0x17 | 5 | r | 0 |  |  |
+| Apparent Energy12 | 0x17 | 5 | r | 0 |  |  |
 | Historical Data Type | 0x40 | 2 | r |  |  |  |
 | Historical Data Type | 0x40 | 2 | r | 1 |  | 1:month energy<br>2:month min<br>3:month max |
 | Collecting Interval | 0x60 | 1 | rw |  |  |  |
@@ -276,13 +276,13 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Collecting Interval | 0x60 | 3 | rw | 30 | 10 - 64800 |  |
 | Collecting Interval | 0x60 | 3 | rw | 1 | 1 - 1440 |  |
 | Report Interval | 0x61 | 1 | rw |  |  |  |
-| Report Interval Unit | 0x61 | 2 | rw | 0 |  | 0：second<br>1：min |
+| Report Interval Unit | 0x61 | 2 | rw | 1 |  | 0：second<br>1：min |
 | Report Interval | 0x61 | 3 | rw | 30 | 10 - 64800 |  |
 | Report Interval | 0x61 | 3 | rw | 1 | 1 - 1440 |  |
 | Device Status | 0xC8 | 2 | rw | 0 |  | 0：Power Off<br>1：Power On |
 | Temperature Unit | 0x63 | 2 | rw | 0 |  | 0：℃<br>1：℉ |
 | Bluetooth Name | 0x64 | 1 | rw |  |  |  |
-| Name Length | 0x64 | 2 | rw | 13 | 1 - 255 |  |
+| Name Length | 0x64 | 2 | rw | 13 | 1 - 13 |  |
 | Name | 0x64 | 1 | rw |  |  |  |
 | Data Storage Settings | 0xC5 | 1 | rw |  |  |  |
 | Sub-command | 0xC5 | 2 | rw | 0 |  |  |
@@ -353,21 +353,21 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | THDi Threshold Alarm | 0x79 | 8 | rw |  |  |  |
 | Threshold Alarm Channel | 0x79 | 2 | rw | 0 |  |  |
 | Threshold Alarm Enable | 0x79 | 2 | rw | 0 |  | 0：disable<br>1：enable |
-| Threshold Mode | 0x79 | 2 | rw | 2 |  | 0:disable<br>1:condition: x<A<br>2:condition: x>B<br>3:condition: A≤x≤B<br>4:condition: x<A or x>B |
+| Threshold Mode | 0x79 | 2 | rw | 0 |  | 0:disable<br>2:condition: x>B |
 | Value A | 0x79 | 3 | rw | 0 | 0 - 100 |  |
-| Value B | 0x79 | 3 | rw | 0 | 0 - 100 |  |
+| Value B | 0x79 | 3 | rw | 8 | 1 - 100 |  |
 | THDv Threshold Alarm Settings | 0x7A | 8 | rw |  |  |  |
 | THDv Threshold Alarm | 0x7A | 8 | rw |  |  |  |
 | Threshold Alarm Channel | 0x7A | 2 | rw | 0 |  |  |
 | Threshold Alarm Enable | 0x7A | 2 | rw | 0 |  | 0：disable<br>1：enable |
-| Threshold Mode | 0x7A | 2 | rw | 2 |  | 0:disable<br>1:condition: x<A<br>2:condition: x>B<br>3:condition: A≤x≤B<br>4:condition: x<A or x>B |
+| Threshold Mode | 0x7A | 2 | rw | 0 |  | 0:disable<br>2:condition: x>B |
 | Value A | 0x7A | 3 | rw | 0 | 0 - 100 |  |
-| Value B | 0x7A | 3 | rw | 0 | 0 - 100 |  |
+| Value B | 0x7A | 3 | rw | 5 | 1 - 100 |  |
 | Voltage Three-phase Unbalance Threshold Alarm Settings | 0x7B | 7 | rw |  |  |  |
 | Threshold Alarm Enable | 0x7B | 2 | rw | 0 |  | 0：disable<br>1：enable |
-| Threshold Mode | 0x7B | 2 | rw | 2 |  | 0:disable<br>1:condition: x<A<br>2:condition: x>B<br>3:condition: A≤x≤B<br>4:condition: x<A or x>B |
+| Threshold Mode | 0x7B | 2 | rw | 0 |  | 0:disable<br>2:condition: x>B |
 | Value A | 0x7B | 3 | rw | 0 | 0 - 100 |  |
-| Value B | 0x7B | 3 | rw | 0 | 0 - 100 |  |
+| Value B | 0x7B | 3 | rw | 3 | 1 - 100 |  |
 | Threshold Alarm Global Settings | 0x7C | 1 | rw |  |  |  |
 | Alarm Interval | 0x7C | 3 | rw | 5 | 1 - 1440 |  |
 | Alarm Times | 0x7C | 3 | rw | 3 | 1 - 1000 |  |
@@ -543,7 +543,7 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Timestamp | 0xB7 | 5 | w |  |  |  |
 | Network Reconnection | 0xB6 | 1 | w |  |  |  |
 | Clear Cumulative Energy Consumption | 0x5F | 2 | w |  |  |  |
-| Channel Number | 0x5F | 2 | w | 0 |  |  |
+| Channel Number | 0x5F | 2 | w | 0 | 0 - 12 |  |
 | Clear Historical Data | 0x5E | 2 | w |  |  |  |
 | Data Type to Clear | 0x5E | 2 | w | 0 |  | 0：alarm data<br>1：period data<br>2：month energy data<br>3：month min_max data |
 | Query Data Storage Configuration | 0x57 | 1 | w |  |  |  |

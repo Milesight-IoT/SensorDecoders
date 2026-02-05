@@ -3,7 +3,7 @@
     "object": [
         {
             "id": "active_power1.group1_value",
-            "name": "Active Power",
+            "name": "Active Power a",
             "value": "0",
             "unit": "kW",
             "access_mode": "R",
@@ -18,7 +18,7 @@
         },
         {
             "id": "active_power1.group1.chan1",
-            "name": "Active Power",
+            "name": "Active Power1",
             "value": "0",
             "unit": "kW",
             "access_mode": "R",
@@ -34,7 +34,7 @@
         },
         {
             "id": "active_power1.group1.chan2",
-            "name": "Active Power",
+            "name": "Active Power2",
             "value": "0",
             "unit": "kW",
             "access_mode": "R",
@@ -50,7 +50,7 @@
         },
         {
             "id": "active_power1.group1.chan3",
-            "name": "Active Power",
+            "name": "Active Power3",
             "value": "0",
             "unit": "kW",
             "access_mode": "R",
@@ -66,7 +66,7 @@
         },
         {
             "id": "active_power1.group2_value",
-            "name": "Active Power",
+            "name": "Active Power b",
             "value": "0",
             "unit": "kW",
             "access_mode": "R",
@@ -81,7 +81,7 @@
         },
         {
             "id": "active_power1.group2.chan1",
-            "name": "Active Power",
+            "name": "Active Power4",
             "value": "0",
             "unit": "kW",
             "access_mode": "R",
@@ -97,7 +97,7 @@
         },
         {
             "id": "active_power1.group2.chan2",
-            "name": "Active Power",
+            "name": "Active Power5",
             "value": "0",
             "unit": "kW",
             "access_mode": "R",
@@ -113,7 +113,7 @@
         },
         {
             "id": "active_power1.group2.chan3",
-            "name": "Active Power",
+            "name": "Active Power6",
             "value": "0",
             "unit": "kW",
             "access_mode": "R",
@@ -138,7 +138,7 @@
             "values": [
                 {
                     "value": 0,
-                    "name": "Active Power"
+                    "name": "Active Power a"
                 },
                 {
                     "value": 1,
@@ -146,7 +146,7 @@
                 },
                 {
                     "value": 0,
-                    "name": "Active Power"
+                    "name": "Active Power b"
                 },
                 {
                     "value": 1,
@@ -171,7 +171,7 @@
             "values": [
                 {
                     "value": 0,
-                    "name": "Active Power"
+                    "name": "Active Power a"
                 },
                 {
                     "value": 1,
@@ -179,7 +179,7 @@
                 },
                 {
                     "value": 0,
-                    "name": "Active Power"
+                    "name": "Active Power b"
                 },
                 {
                     "value": 1,
@@ -193,7 +193,7 @@
         },
         {
             "id": "active_power2.group1_value",
-            "name": "Active Power",
+            "name": "Active Power c",
             "value": "0",
             "unit": "kW",
             "access_mode": "R",
@@ -208,7 +208,7 @@
         },
         {
             "id": "active_power2.group1.chan1",
-            "name": "Active Power",
+            "name": "Active Power7",
             "value": "0",
             "unit": "kW",
             "access_mode": "R",
@@ -224,7 +224,7 @@
         },
         {
             "id": "active_power2.group1.chan2",
-            "name": "Active Power",
+            "name": "Active Power8",
             "value": "0",
             "unit": "kW",
             "access_mode": "R",
@@ -240,7 +240,7 @@
         },
         {
             "id": "active_power2.group1.chan3",
-            "name": "Active Power",
+            "name": "Active Power9",
             "value": "0",
             "unit": "kW",
             "access_mode": "R",
@@ -256,7 +256,7 @@
         },
         {
             "id": "active_power2.group2_value",
-            "name": "Active Power",
+            "name": "Active Power d",
             "value": "0",
             "unit": "kW",
             "access_mode": "R",
@@ -271,7 +271,7 @@
         },
         {
             "id": "active_power2.group2.chan1",
-            "name": "Active Power",
+            "name": "Active Power10",
             "value": "0",
             "unit": "kW",
             "access_mode": "R",
@@ -287,7 +287,7 @@
         },
         {
             "id": "active_power2.group2.chan2",
-            "name": "Active Power",
+            "name": "Active Power11",
             "value": "0",
             "unit": "kW",
             "access_mode": "R",
@@ -303,7 +303,7 @@
         },
         {
             "id": "active_power2.group2.chan3",
-            "name": "Active Power",
+            "name": "Active Power12",
             "value": "0",
             "unit": "kW",
             "access_mode": "R",
@@ -328,7 +328,7 @@
             "values": [
                 {
                     "value": 0,
-                    "name": "Active Power"
+                    "name": "Active Power c"
                 },
                 {
                     "value": 1,
@@ -336,7 +336,7 @@
                 },
                 {
                     "value": 0,
-                    "name": "Active Power"
+                    "name": "Active Power d"
                 },
                 {
                     "value": 1,
@@ -361,7 +361,7 @@
             "values": [
                 {
                     "value": 0,
-                    "name": "Active Power"
+                    "name": "Active Power c"
                 },
                 {
                     "value": 1,
@@ -369,7 +369,7 @@
                 },
                 {
                     "value": 0,
-                    "name": "Active Power"
+                    "name": "Active Power d"
                 },
                 {
                     "value": 1,
@@ -449,7 +449,7 @@
         },
         {
             "id": "apparent_energy1.group1_value",
-            "name": "Apparent Energy",
+            "name": "Apparent Energy a",
             "value": "0",
             "unit": "kVAh",
             "access_mode": "R",
@@ -464,7 +464,7 @@
         },
         {
             "id": "apparent_energy1.group1.chan1",
-            "name": "Apparent Energy",
+            "name": "Apparent Energy1",
             "value": "0",
             "unit": "kVAh",
             "access_mode": "R",
@@ -480,7 +480,7 @@
         },
         {
             "id": "apparent_energy1.group1.chan2",
-            "name": "Apparent Energy",
+            "name": "Apparent Energy2",
             "value": "0",
             "unit": "kVAh",
             "access_mode": "R",
@@ -496,7 +496,7 @@
         },
         {
             "id": "apparent_energy1.group1.chan3",
-            "name": "Apparent Energy",
+            "name": "Apparent Energy3",
             "value": "0",
             "unit": "kVAh",
             "access_mode": "R",
@@ -512,7 +512,7 @@
         },
         {
             "id": "apparent_energy1.group2_value",
-            "name": "Apparent Energy",
+            "name": "Apparent Energy b",
             "value": "0",
             "unit": "kVAh",
             "access_mode": "R",
@@ -527,7 +527,7 @@
         },
         {
             "id": "apparent_energy1.group2.chan1",
-            "name": "Apparent Energy",
+            "name": "Apparent Energy4",
             "value": "0",
             "unit": "kVAh",
             "access_mode": "R",
@@ -543,7 +543,7 @@
         },
         {
             "id": "apparent_energy1.group2.chan2",
-            "name": "Apparent Energy",
+            "name": "Apparent Energy5",
             "value": "0",
             "unit": "kVAh",
             "access_mode": "R",
@@ -559,7 +559,7 @@
         },
         {
             "id": "apparent_energy1.group2.chan3",
-            "name": "Apparent Energy",
+            "name": "Apparent Energy6",
             "value": "0",
             "unit": "kVAh",
             "access_mode": "R",
@@ -584,7 +584,7 @@
             "values": [
                 {
                     "value": 0,
-                    "name": "Apparent Energy"
+                    "name": "Apparent Energy a"
                 },
                 {
                     "value": 1,
@@ -592,7 +592,7 @@
                 },
                 {
                     "value": 0,
-                    "name": "Apparent Energy"
+                    "name": "Apparent Energy b"
                 },
                 {
                     "value": 1,
@@ -617,7 +617,7 @@
             "values": [
                 {
                     "value": 0,
-                    "name": "Apparent Energy"
+                    "name": "Apparent Energy a"
                 },
                 {
                     "value": 1,
@@ -625,7 +625,7 @@
                 },
                 {
                     "value": 0,
-                    "name": "Apparent Energy"
+                    "name": "Apparent Energy b"
                 },
                 {
                     "value": 1,
@@ -639,7 +639,7 @@
         },
         {
             "id": "apparent_energy2.group1_value",
-            "name": "Apparent Energy",
+            "name": "Apparent Energy c",
             "value": "0",
             "unit": "kVAh",
             "access_mode": "R",
@@ -654,7 +654,7 @@
         },
         {
             "id": "apparent_energy2.group1.chan1",
-            "name": "Apparent Energy",
+            "name": "Apparent Energy7",
             "value": "0",
             "unit": "kVAh",
             "access_mode": "R",
@@ -670,7 +670,7 @@
         },
         {
             "id": "apparent_energy2.group1.chan2",
-            "name": "Apparent Energy",
+            "name": "Apparent Energy8",
             "value": "0",
             "unit": "kVAh",
             "access_mode": "R",
@@ -686,7 +686,7 @@
         },
         {
             "id": "apparent_energy2.group1.chan3",
-            "name": "Apparent Energy",
+            "name": "Apparent Energy9",
             "value": "0",
             "unit": "kVAh",
             "access_mode": "R",
@@ -702,7 +702,7 @@
         },
         {
             "id": "apparent_energy2.group2_value",
-            "name": "Apparent Energy",
+            "name": "Apparent Energy d",
             "value": "0",
             "unit": "kVAh",
             "access_mode": "R",
@@ -717,7 +717,7 @@
         },
         {
             "id": "apparent_energy2.group2.chan1",
-            "name": "Apparent Energy",
+            "name": "Apparent Energy10",
             "value": "0",
             "unit": "kVAh",
             "access_mode": "R",
@@ -733,7 +733,7 @@
         },
         {
             "id": "apparent_energy2.group2.chan2",
-            "name": "Apparent Energy",
+            "name": "Apparent Energy11",
             "value": "0",
             "unit": "kVAh",
             "access_mode": "R",
@@ -749,7 +749,7 @@
         },
         {
             "id": "apparent_energy2.group2.chan3",
-            "name": "Apparent Energy",
+            "name": "Apparent Energy12",
             "value": "0",
             "unit": "kVAh",
             "access_mode": "R",
@@ -774,7 +774,7 @@
             "values": [
                 {
                     "value": 0,
-                    "name": "Apparent Energy"
+                    "name": "Apparent Energy c"
                 },
                 {
                     "value": 1,
@@ -782,7 +782,7 @@
                 },
                 {
                     "value": 0,
-                    "name": "Apparent Energy"
+                    "name": "Apparent Energy d"
                 },
                 {
                     "value": 1,
@@ -807,7 +807,7 @@
             "values": [
                 {
                     "value": 0,
-                    "name": "Apparent Energy"
+                    "name": "Apparent Energy c"
                 },
                 {
                     "value": 1,
@@ -815,7 +815,7 @@
                 },
                 {
                     "value": 0,
-                    "name": "Apparent Energy"
+                    "name": "Apparent Energy d"
                 },
                 {
                     "value": 1,
@@ -829,7 +829,7 @@
         },
         {
             "id": "apparent_power1.group1_value",
-            "name": "Apparent Power",
+            "name": "Apparent Power a",
             "value": "0",
             "unit": "kVA",
             "access_mode": "R",
@@ -844,7 +844,7 @@
         },
         {
             "id": "apparent_power1.group1.chan1",
-            "name": "Apparent Power",
+            "name": "Apparent Power1",
             "value": "0",
             "unit": "kVA",
             "access_mode": "R",
@@ -860,7 +860,7 @@
         },
         {
             "id": "apparent_power1.group1.chan2",
-            "name": "Apparent Power",
+            "name": "Apparent Power2",
             "value": "0",
             "unit": "kVA",
             "access_mode": "R",
@@ -876,7 +876,7 @@
         },
         {
             "id": "apparent_power1.group1.chan3",
-            "name": "Apparent Power",
+            "name": "Apparent Power3",
             "value": "0",
             "unit": "kVA",
             "access_mode": "R",
@@ -892,7 +892,7 @@
         },
         {
             "id": "apparent_power1.group2_value",
-            "name": "Apparent Power",
+            "name": "Apparent Power b",
             "value": "0",
             "unit": "kVA",
             "access_mode": "R",
@@ -907,7 +907,7 @@
         },
         {
             "id": "apparent_power1.group2.chan1",
-            "name": "Apparent Power",
+            "name": "Apparent Power4",
             "value": "0",
             "unit": "kVA",
             "access_mode": "R",
@@ -923,7 +923,7 @@
         },
         {
             "id": "apparent_power1.group2.chan2",
-            "name": "Apparent Power",
+            "name": "Apparent Power5",
             "value": "0",
             "unit": "kVA",
             "access_mode": "R",
@@ -939,7 +939,7 @@
         },
         {
             "id": "apparent_power1.group2.chan3",
-            "name": "Apparent Power",
+            "name": "Apparent Power6",
             "value": "0",
             "unit": "kVA",
             "access_mode": "R",
@@ -964,7 +964,7 @@
             "values": [
                 {
                     "value": 0,
-                    "name": "Apparent Power"
+                    "name": "Apparent Power a"
                 },
                 {
                     "value": 1,
@@ -972,7 +972,7 @@
                 },
                 {
                     "value": 0,
-                    "name": "Apparent Power"
+                    "name": "Apparent Power b"
                 },
                 {
                     "value": 1,
@@ -997,7 +997,7 @@
             "values": [
                 {
                     "value": 0,
-                    "name": "Apparent Power"
+                    "name": "Apparent Power a"
                 },
                 {
                     "value": 1,
@@ -1005,7 +1005,7 @@
                 },
                 {
                     "value": 0,
-                    "name": "Apparent Power"
+                    "name": "Apparent Power b"
                 },
                 {
                     "value": 1,
@@ -1019,7 +1019,7 @@
         },
         {
             "id": "apparent_power2.group1_value",
-            "name": "Apparent Power",
+            "name": "Apparent Power c",
             "value": "0",
             "unit": "kVA",
             "access_mode": "R",
@@ -1034,7 +1034,7 @@
         },
         {
             "id": "apparent_power2.group1.chan1",
-            "name": "Apparent Power",
+            "name": "Apparent Power7",
             "value": "0",
             "unit": "kVA",
             "access_mode": "R",
@@ -1050,7 +1050,7 @@
         },
         {
             "id": "apparent_power2.group1.chan2",
-            "name": "Apparent Power",
+            "name": "Apparent Power8",
             "value": "0",
             "unit": "kVA",
             "access_mode": "R",
@@ -1066,7 +1066,7 @@
         },
         {
             "id": "apparent_power2.group1.chan3",
-            "name": "Apparent Power",
+            "name": "Apparent Power9",
             "value": "0",
             "unit": "kVA",
             "access_mode": "R",
@@ -1082,7 +1082,7 @@
         },
         {
             "id": "apparent_power2.group2_value",
-            "name": "Apparent Power",
+            "name": "Apparent Power d",
             "value": "0",
             "unit": "kVA",
             "access_mode": "R",
@@ -1097,7 +1097,7 @@
         },
         {
             "id": "apparent_power2.group2.chan1",
-            "name": "Apparent Power",
+            "name": "Apparent Power10",
             "value": "0",
             "unit": "kVA",
             "access_mode": "R",
@@ -1113,7 +1113,7 @@
         },
         {
             "id": "apparent_power2.group2.chan2",
-            "name": "Apparent Power",
+            "name": "Apparent Power11",
             "value": "0",
             "unit": "kVA",
             "access_mode": "R",
@@ -1129,7 +1129,7 @@
         },
         {
             "id": "apparent_power2.group2.chan3",
-            "name": "Apparent Power",
+            "name": "Apparent Power12",
             "value": "0",
             "unit": "kVA",
             "access_mode": "R",
@@ -1154,7 +1154,7 @@
             "values": [
                 {
                     "value": 0,
-                    "name": "Apparent Power"
+                    "name": "Apparent Power c"
                 },
                 {
                     "value": 1,
@@ -1162,7 +1162,7 @@
                 },
                 {
                     "value": 0,
-                    "name": "Apparent Power"
+                    "name": "Apparent Power d"
                 },
                 {
                     "value": 1,
@@ -1187,7 +1187,7 @@
             "values": [
                 {
                     "value": 0,
-                    "name": "Apparent Power"
+                    "name": "Apparent Power c"
                 },
                 {
                     "value": 1,
@@ -1195,7 +1195,7 @@
                 },
                 {
                     "value": 0,
-                    "name": "Apparent Power"
+                    "name": "Apparent Power d"
                 },
                 {
                     "value": 1,
@@ -1232,7 +1232,7 @@
             "value_type": "UINT8",
             "range": [
                 1,
-                255
+                13
             ],
             "bacnet_type": "analog_value_object",
             "bacnet_unit_type_id": 95,
@@ -1716,8 +1716,652 @@
             "reference": []
         },
         {
+            "id": "daylight_saving_time.daylight_saving_time_offset",
+            "name": "DST Bias",
+            "value": "60",
+            "unit": "min",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "UINT8",
+            "range": [
+                0,
+                120
+            ],
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 72,
+            "bacnet_unit_type": "UNITS_MINUTES",
+            "reference": [
+                "daylight_saving_time.enable",
+                "daylight_saving_time.start_month",
+                "daylight_saving_time.start_week_num",
+                "daylight_saving_time.start_week_day",
+                "daylight_saving_time.start_hour_min",
+                "daylight_saving_time.end_month",
+                "daylight_saving_time.end_week_num",
+                "daylight_saving_time.end_week_day",
+                "daylight_saving_time.end_hour_min"
+            ]
+        },
+        {
+            "id": "daylight_saving_time.enable",
+            "name": "Daylight Saving Time",
+            "value": "0",
+            "unit": "",
+            "access_mode": "RW",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "disable"
+                },
+                {
+                    "value": 1,
+                    "name": "enable"
+                }
+            ],
+            "bacnet_type": "binary_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "daylight_saving_time.daylight_saving_time_offset",
+                "daylight_saving_time.start_month",
+                "daylight_saving_time.start_week_num",
+                "daylight_saving_time.start_week_day",
+                "daylight_saving_time.start_hour_min",
+                "daylight_saving_time.end_month",
+                "daylight_saving_time.end_week_num",
+                "daylight_saving_time.end_week_day",
+                "daylight_saving_time.end_hour_min"
+            ]
+        },
+        {
+            "id": "daylight_saving_time.end_hour_min",
+            "name": "Time",
+            "value": "0",
+            "unit": "min",
+            "access_mode": "RW",
+            "data_type": "ENUM",
+            "value_type": "UINT16",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "00:00"
+                },
+                {
+                    "value": 60,
+                    "name": "01:00"
+                },
+                {
+                    "value": 120,
+                    "name": "02:00"
+                },
+                {
+                    "value": 180,
+                    "name": "03:00"
+                },
+                {
+                    "value": 240,
+                    "name": "04:00"
+                },
+                {
+                    "value": 300,
+                    "name": "05:00"
+                },
+                {
+                    "value": 360,
+                    "name": "06:00"
+                },
+                {
+                    "value": 420,
+                    "name": "07:00"
+                },
+                {
+                    "value": 480,
+                    "name": "08:00"
+                },
+                {
+                    "value": 540,
+                    "name": "09:00"
+                },
+                {
+                    "value": 600,
+                    "name": "10:00"
+                },
+                {
+                    "value": 660,
+                    "name": "11:00"
+                },
+                {
+                    "value": 720,
+                    "name": "12:00"
+                },
+                {
+                    "value": 780,
+                    "name": "13:00"
+                },
+                {
+                    "value": 840,
+                    "name": "14:00"
+                },
+                {
+                    "value": 900,
+                    "name": "15:00"
+                },
+                {
+                    "value": 960,
+                    "name": "16:00"
+                },
+                {
+                    "value": 1020,
+                    "name": "17:00"
+                },
+                {
+                    "value": 1080,
+                    "name": "18:00"
+                },
+                {
+                    "value": 1140,
+                    "name": "19:00"
+                },
+                {
+                    "value": 1200,
+                    "name": "20:00"
+                },
+                {
+                    "value": 1260,
+                    "name": "21:00"
+                },
+                {
+                    "value": 1320,
+                    "name": "22:00"
+                },
+                {
+                    "value": 1380,
+                    "name": "23:00"
+                }
+            ],
+            "bacnet_type": "multistate_value_object",
+            "bacnet_unit_type_id": 72,
+            "bacnet_unit_type": "UNITS_MINUTES",
+            "reference": [
+                "daylight_saving_time.enable",
+                "daylight_saving_time.daylight_saving_time_offset",
+                "daylight_saving_time.start_month",
+                "daylight_saving_time.start_week_num",
+                "daylight_saving_time.start_week_day",
+                "daylight_saving_time.start_hour_min",
+                "daylight_saving_time.end_month",
+                "daylight_saving_time.end_week_num",
+                "daylight_saving_time.end_week_day"
+            ]
+        },
+        {
+            "id": "daylight_saving_time.end_month",
+            "name": "Month",
+            "value": "1",
+            "unit": "",
+            "access_mode": "RW",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 1,
+                    "name": "Jan."
+                },
+                {
+                    "value": 2,
+                    "name": "Feb."
+                },
+                {
+                    "value": 3,
+                    "name": "Mar."
+                },
+                {
+                    "value": 4,
+                    "name": "Apr."
+                },
+                {
+                    "value": 5,
+                    "name": "May"
+                },
+                {
+                    "value": 6,
+                    "name": "Jun."
+                },
+                {
+                    "value": 7,
+                    "name": "Jul."
+                },
+                {
+                    "value": 8,
+                    "name": "Aug."
+                },
+                {
+                    "value": 9,
+                    "name": "Sep."
+                },
+                {
+                    "value": 10,
+                    "name": "Oct."
+                },
+                {
+                    "value": 11,
+                    "name": "Nov."
+                },
+                {
+                    "value": 12,
+                    "name": "Dec."
+                }
+            ],
+            "bacnet_type": "multistate_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "daylight_saving_time.enable",
+                "daylight_saving_time.daylight_saving_time_offset",
+                "daylight_saving_time.start_month",
+                "daylight_saving_time.start_week_num",
+                "daylight_saving_time.start_week_day",
+                "daylight_saving_time.start_hour_min",
+                "daylight_saving_time.end_week_num",
+                "daylight_saving_time.end_week_day",
+                "daylight_saving_time.end_hour_min"
+            ]
+        },
+        {
+            "id": "daylight_saving_time.end_week_day",
+            "name": "Week",
+            "value": "1",
+            "unit": "",
+            "access_mode": "RW",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 1,
+                    "name": "Mon."
+                },
+                {
+                    "value": 2,
+                    "name": "Tues."
+                },
+                {
+                    "value": 3,
+                    "name": "Wed."
+                },
+                {
+                    "value": 4,
+                    "name": "Thurs."
+                },
+                {
+                    "value": 5,
+                    "name": "Fri."
+                },
+                {
+                    "value": 6,
+                    "name": "Sat."
+                },
+                {
+                    "value": 7,
+                    "name": "Sun."
+                }
+            ],
+            "bacnet_type": "multistate_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "daylight_saving_time.enable",
+                "daylight_saving_time.daylight_saving_time_offset",
+                "daylight_saving_time.start_month",
+                "daylight_saving_time.start_week_num",
+                "daylight_saving_time.start_week_day",
+                "daylight_saving_time.start_hour_min",
+                "daylight_saving_time.end_month",
+                "daylight_saving_time.end_week_num",
+                "daylight_saving_time.end_hour_min"
+            ]
+        },
+        {
+            "id": "daylight_saving_time.end_week_num",
+            "name": "Number of Week",
+            "value": "1",
+            "unit": "",
+            "access_mode": "RW",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 1,
+                    "name": "1st"
+                },
+                {
+                    "value": 2,
+                    "name": "2nd"
+                },
+                {
+                    "value": 3,
+                    "name": "3rd"
+                },
+                {
+                    "value": 4,
+                    "name": "4th"
+                },
+                {
+                    "value": 5,
+                    "name": "last"
+                }
+            ],
+            "bacnet_type": "multistate_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "daylight_saving_time.enable",
+                "daylight_saving_time.daylight_saving_time_offset",
+                "daylight_saving_time.start_month",
+                "daylight_saving_time.start_week_num",
+                "daylight_saving_time.start_week_day",
+                "daylight_saving_time.start_hour_min",
+                "daylight_saving_time.end_month",
+                "daylight_saving_time.end_week_day",
+                "daylight_saving_time.end_hour_min"
+            ]
+        },
+        {
+            "id": "daylight_saving_time.start_hour_min",
+            "name": "Time",
+            "value": "0",
+            "unit": "min",
+            "access_mode": "RW",
+            "data_type": "ENUM",
+            "value_type": "UINT16",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "00:00"
+                },
+                {
+                    "value": 60,
+                    "name": "01:00"
+                },
+                {
+                    "value": 120,
+                    "name": "02:00"
+                },
+                {
+                    "value": 180,
+                    "name": "03:00"
+                },
+                {
+                    "value": 240,
+                    "name": "04:00"
+                },
+                {
+                    "value": 300,
+                    "name": "05:00"
+                },
+                {
+                    "value": 360,
+                    "name": "06:00"
+                },
+                {
+                    "value": 420,
+                    "name": "07:00"
+                },
+                {
+                    "value": 480,
+                    "name": "08:00"
+                },
+                {
+                    "value": 540,
+                    "name": "09:00"
+                },
+                {
+                    "value": 600,
+                    "name": "10:00"
+                },
+                {
+                    "value": 660,
+                    "name": "11:00"
+                },
+                {
+                    "value": 720,
+                    "name": "12:00"
+                },
+                {
+                    "value": 780,
+                    "name": "13:00"
+                },
+                {
+                    "value": 840,
+                    "name": "14:00"
+                },
+                {
+                    "value": 900,
+                    "name": "15:00"
+                },
+                {
+                    "value": 960,
+                    "name": "16:00"
+                },
+                {
+                    "value": 1020,
+                    "name": "17:00"
+                },
+                {
+                    "value": 1080,
+                    "name": "18:00"
+                },
+                {
+                    "value": 1140,
+                    "name": "19:00"
+                },
+                {
+                    "value": 1200,
+                    "name": "20:00"
+                },
+                {
+                    "value": 1260,
+                    "name": "21:00"
+                },
+                {
+                    "value": 1320,
+                    "name": "22:00"
+                },
+                {
+                    "value": 1380,
+                    "name": "23:00"
+                }
+            ],
+            "bacnet_type": "multistate_value_object",
+            "bacnet_unit_type_id": 72,
+            "bacnet_unit_type": "UNITS_MINUTES",
+            "reference": [
+                "daylight_saving_time.enable",
+                "daylight_saving_time.daylight_saving_time_offset",
+                "daylight_saving_time.start_month",
+                "daylight_saving_time.start_week_num",
+                "daylight_saving_time.start_week_day",
+                "daylight_saving_time.end_month",
+                "daylight_saving_time.end_week_num",
+                "daylight_saving_time.end_week_day",
+                "daylight_saving_time.end_hour_min"
+            ]
+        },
+        {
+            "id": "daylight_saving_time.start_month",
+            "name": "Month",
+            "value": "1",
+            "unit": "",
+            "access_mode": "RW",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 1,
+                    "name": "Jan."
+                },
+                {
+                    "value": 2,
+                    "name": "Feb."
+                },
+                {
+                    "value": 3,
+                    "name": "Mar."
+                },
+                {
+                    "value": 4,
+                    "name": "Apr."
+                },
+                {
+                    "value": 5,
+                    "name": "May"
+                },
+                {
+                    "value": 6,
+                    "name": "Jun."
+                },
+                {
+                    "value": 7,
+                    "name": "Jul."
+                },
+                {
+                    "value": 8,
+                    "name": "Aug."
+                },
+                {
+                    "value": 9,
+                    "name": "Sep."
+                },
+                {
+                    "value": 10,
+                    "name": "Oct."
+                },
+                {
+                    "value": 11,
+                    "name": "Nov."
+                },
+                {
+                    "value": 12,
+                    "name": "Dec."
+                }
+            ],
+            "bacnet_type": "multistate_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "daylight_saving_time.enable",
+                "daylight_saving_time.daylight_saving_time_offset",
+                "daylight_saving_time.start_week_num",
+                "daylight_saving_time.start_week_day",
+                "daylight_saving_time.start_hour_min",
+                "daylight_saving_time.end_month",
+                "daylight_saving_time.end_week_num",
+                "daylight_saving_time.end_week_day",
+                "daylight_saving_time.end_hour_min"
+            ]
+        },
+        {
+            "id": "daylight_saving_time.start_week_day",
+            "name": "Week",
+            "value": "1",
+            "unit": "",
+            "access_mode": "RW",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 1,
+                    "name": "Mon."
+                },
+                {
+                    "value": 2,
+                    "name": "Tues."
+                },
+                {
+                    "value": 3,
+                    "name": "Wed."
+                },
+                {
+                    "value": 4,
+                    "name": "Thurs."
+                },
+                {
+                    "value": 5,
+                    "name": "Fri."
+                },
+                {
+                    "value": 6,
+                    "name": "Sat."
+                },
+                {
+                    "value": 7,
+                    "name": "Sun."
+                }
+            ],
+            "bacnet_type": "multistate_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "daylight_saving_time.enable",
+                "daylight_saving_time.daylight_saving_time_offset",
+                "daylight_saving_time.start_month",
+                "daylight_saving_time.start_week_num",
+                "daylight_saving_time.start_hour_min",
+                "daylight_saving_time.end_month",
+                "daylight_saving_time.end_week_num",
+                "daylight_saving_time.end_week_day",
+                "daylight_saving_time.end_hour_min"
+            ]
+        },
+        {
+            "id": "daylight_saving_time.start_week_num",
+            "name": "Number of Week",
+            "value": "1",
+            "unit": "",
+            "access_mode": "RW",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 1,
+                    "name": "1st"
+                },
+                {
+                    "value": 2,
+                    "name": "2nd"
+                },
+                {
+                    "value": 3,
+                    "name": "3rd"
+                },
+                {
+                    "value": 4,
+                    "name": "4th"
+                },
+                {
+                    "value": 5,
+                    "name": "last"
+                }
+            ],
+            "bacnet_type": "multistate_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "daylight_saving_time.enable",
+                "daylight_saving_time.daylight_saving_time_offset",
+                "daylight_saving_time.start_month",
+                "daylight_saving_time.start_week_day",
+                "daylight_saving_time.start_hour_min",
+                "daylight_saving_time.end_month",
+                "daylight_saving_time.end_week_num",
+                "daylight_saving_time.end_week_day",
+                "daylight_saving_time.end_hour_min"
+            ]
+        },
+        {
             "id": "forward_active_energy1.group1_value",
-            "name": "Imported Active Energy",
+            "name": "Imported Active Energy a",
             "value": "0",
             "unit": "kWh",
             "access_mode": "R",
@@ -1732,7 +2376,7 @@
         },
         {
             "id": "forward_active_energy1.group1.chan1",
-            "name": "Imported Active Energy",
+            "name": "Imported Active Energy1",
             "value": "0",
             "unit": "kWh",
             "access_mode": "R",
@@ -1748,7 +2392,7 @@
         },
         {
             "id": "forward_active_energy1.group1.chan2",
-            "name": "Imported Active Energy",
+            "name": "Imported Active Energy2",
             "value": "0",
             "unit": "kWh",
             "access_mode": "R",
@@ -1764,7 +2408,7 @@
         },
         {
             "id": "forward_active_energy1.group1.chan3",
-            "name": "Imported Active Energy",
+            "name": "Imported Active Energy3",
             "value": "0",
             "unit": "kWh",
             "access_mode": "R",
@@ -1780,7 +2424,7 @@
         },
         {
             "id": "forward_active_energy1.group2_value",
-            "name": "Imported Active Energy",
+            "name": "Imported Active Energy b",
             "value": "0",
             "unit": "kWh",
             "access_mode": "R",
@@ -1795,7 +2439,7 @@
         },
         {
             "id": "forward_active_energy1.group2.chan1",
-            "name": "Imported Active Energy",
+            "name": "Imported Active Energy4",
             "value": "0",
             "unit": "kWh",
             "access_mode": "R",
@@ -1811,7 +2455,7 @@
         },
         {
             "id": "forward_active_energy1.group2.chan2",
-            "name": "Imported Active Energy",
+            "name": "Imported Active Energy5",
             "value": "0",
             "unit": "kWh",
             "access_mode": "R",
@@ -1827,7 +2471,7 @@
         },
         {
             "id": "forward_active_energy1.group2.chan3",
-            "name": "Imported Active Energy",
+            "name": "Imported Active Energy6",
             "value": "0",
             "unit": "kWh",
             "access_mode": "R",
@@ -1852,7 +2496,7 @@
             "values": [
                 {
                     "value": 0,
-                    "name": "Imported Active Energy"
+                    "name": "Imported Active Energy a"
                 },
                 {
                     "value": 1,
@@ -1860,7 +2504,7 @@
                 },
                 {
                     "value": 0,
-                    "name": "Imported Active Energy"
+                    "name": "Imported Active Energy b"
                 },
                 {
                     "value": 1,
@@ -1885,7 +2529,7 @@
             "values": [
                 {
                     "value": 0,
-                    "name": "Imported Active Energy"
+                    "name": "Imported Active Energy a"
                 },
                 {
                     "value": 1,
@@ -1893,7 +2537,7 @@
                 },
                 {
                     "value": 0,
-                    "name": "Imported Active Energy"
+                    "name": "Imported Active Energy b"
                 },
                 {
                     "value": 1,
@@ -1907,7 +2551,7 @@
         },
         {
             "id": "forward_active_energy2.group1_value",
-            "name": "Imported Active Energy",
+            "name": "Imported Active Energy c",
             "value": "0",
             "unit": "kWh",
             "access_mode": "R",
@@ -1922,7 +2566,7 @@
         },
         {
             "id": "forward_active_energy2.group1.chan1",
-            "name": "Imported Active Energy",
+            "name": "Imported Active Energy7",
             "value": "0",
             "unit": "kWh",
             "access_mode": "R",
@@ -1938,7 +2582,7 @@
         },
         {
             "id": "forward_active_energy2.group1.chan2",
-            "name": "Imported Active Energy",
+            "name": "Imported Active Energy8",
             "value": "0",
             "unit": "kWh",
             "access_mode": "R",
@@ -1954,7 +2598,7 @@
         },
         {
             "id": "forward_active_energy2.group1.chan3",
-            "name": "Imported Active Energy",
+            "name": "Imported Active Energy9",
             "value": "0",
             "unit": "kWh",
             "access_mode": "R",
@@ -1970,7 +2614,7 @@
         },
         {
             "id": "forward_active_energy2.group2_value",
-            "name": "Imported Active Energy",
+            "name": "Imported Active Energy d",
             "value": "0",
             "unit": "kWh",
             "access_mode": "R",
@@ -1985,7 +2629,7 @@
         },
         {
             "id": "forward_active_energy2.group2.chan1",
-            "name": "Imported Active Energy",
+            "name": "Imported Active Energy10",
             "value": "0",
             "unit": "kWh",
             "access_mode": "R",
@@ -2001,7 +2645,7 @@
         },
         {
             "id": "forward_active_energy2.group2.chan2",
-            "name": "Imported Active Energy",
+            "name": "Imported Active Energy11",
             "value": "0",
             "unit": "kWh",
             "access_mode": "R",
@@ -2017,7 +2661,7 @@
         },
         {
             "id": "forward_active_energy2.group2.chan3",
-            "name": "Imported Active Energy",
+            "name": "Imported Active Energy12",
             "value": "0",
             "unit": "kWh",
             "access_mode": "R",
@@ -2042,7 +2686,7 @@
             "values": [
                 {
                     "value": 0,
-                    "name": "Imported Active Energy"
+                    "name": "Imported Active Energy c"
                 },
                 {
                     "value": 1,
@@ -2050,7 +2694,7 @@
                 },
                 {
                     "value": 0,
-                    "name": "Imported Active Energy"
+                    "name": "Imported Active Energy d"
                 },
                 {
                     "value": 1,
@@ -2075,7 +2719,7 @@
             "values": [
                 {
                     "value": 0,
-                    "name": "Imported Active Energy"
+                    "name": "Imported Active Energy c"
                 },
                 {
                     "value": 1,
@@ -2083,7 +2727,7 @@
                 },
                 {
                     "value": 0,
-                    "name": "Imported Active Energy"
+                    "name": "Imported Active Energy d"
                 },
                 {
                     "value": 1,
@@ -2097,7 +2741,7 @@
         },
         {
             "id": "forward_reactive_energy1.group1_value",
-            "name": "Imported Reactive Energy",
+            "name": "Imported Reactive Energy a",
             "value": "0",
             "unit": "kVArh",
             "access_mode": "R",
@@ -2112,7 +2756,7 @@
         },
         {
             "id": "forward_reactive_energy1.group1.chan1",
-            "name": "Imported Reactive Energy",
+            "name": "Imported Reactive Energy1",
             "value": "0",
             "unit": "kVArh",
             "access_mode": "R",
@@ -2128,7 +2772,7 @@
         },
         {
             "id": "forward_reactive_energy1.group1.chan2",
-            "name": "Imported Reactive Energy",
+            "name": "Imported Reactive Energy2",
             "value": "0",
             "unit": "kVArh",
             "access_mode": "R",
@@ -2144,7 +2788,7 @@
         },
         {
             "id": "forward_reactive_energy1.group1.chan3",
-            "name": "Imported Reactive Energy",
+            "name": "Imported Reactive Energy3",
             "value": "0",
             "unit": "kVArh",
             "access_mode": "R",
@@ -2160,7 +2804,7 @@
         },
         {
             "id": "forward_reactive_energy1.group2_value",
-            "name": "Imported Reactive Energy",
+            "name": "Imported Reactive Energy b",
             "value": "0",
             "unit": "kVArh",
             "access_mode": "R",
@@ -2175,7 +2819,7 @@
         },
         {
             "id": "forward_reactive_energy1.group2.chan1",
-            "name": "Imported Reactive Energy",
+            "name": "Imported Reactive Energy4",
             "value": "0",
             "unit": "kVArh",
             "access_mode": "R",
@@ -2191,7 +2835,7 @@
         },
         {
             "id": "forward_reactive_energy1.group2.chan2",
-            "name": "Imported Reactive Energy",
+            "name": "Imported Reactive Energy5",
             "value": "0",
             "unit": "kVArh",
             "access_mode": "R",
@@ -2207,7 +2851,7 @@
         },
         {
             "id": "forward_reactive_energy1.group2.chan3",
-            "name": "Imported Reactive Energy",
+            "name": "Imported Reactive Energy6",
             "value": "0",
             "unit": "kVArh",
             "access_mode": "R",
@@ -2232,7 +2876,7 @@
             "values": [
                 {
                     "value": 0,
-                    "name": "Imported Reactive Energy"
+                    "name": "Imported Reactive Energy a"
                 },
                 {
                     "value": 1,
@@ -2240,7 +2884,7 @@
                 },
                 {
                     "value": 0,
-                    "name": "Imported Reactive Energy"
+                    "name": "Imported Reactive Energy b"
                 },
                 {
                     "value": 1,
@@ -2265,7 +2909,7 @@
             "values": [
                 {
                     "value": 0,
-                    "name": "Imported Reactive Energy"
+                    "name": "Imported Reactive Energy a"
                 },
                 {
                     "value": 1,
@@ -2273,7 +2917,7 @@
                 },
                 {
                     "value": 0,
-                    "name": "Imported Reactive Energy"
+                    "name": "Imported Reactive Energy b"
                 },
                 {
                     "value": 1,
@@ -2287,7 +2931,7 @@
         },
         {
             "id": "forward_reactive_energy2.group1_value",
-            "name": "Imported Reactive Energy",
+            "name": "Imported Reactive Energy c",
             "value": "0",
             "unit": "kVArh",
             "access_mode": "R",
@@ -2302,7 +2946,7 @@
         },
         {
             "id": "forward_reactive_energy2.group1.chan1",
-            "name": "Imported Reactive Energy",
+            "name": "Imported Reactive Energy7",
             "value": "0",
             "unit": "kVArh",
             "access_mode": "R",
@@ -2318,7 +2962,7 @@
         },
         {
             "id": "forward_reactive_energy2.group1.chan2",
-            "name": "Imported Reactive Energy",
+            "name": "Imported Reactive Energy8",
             "value": "0",
             "unit": "kVArh",
             "access_mode": "R",
@@ -2334,7 +2978,7 @@
         },
         {
             "id": "forward_reactive_energy2.group1.chan3",
-            "name": "Imported Reactive Energy",
+            "name": "Imported Reactive Energy9",
             "value": "0",
             "unit": "kVArh",
             "access_mode": "R",
@@ -2350,7 +2994,7 @@
         },
         {
             "id": "forward_reactive_energy2.group2_value",
-            "name": "Imported Reactive Energy",
+            "name": "Imported Reactive Energy d",
             "value": "0",
             "unit": "kVArh",
             "access_mode": "R",
@@ -2365,7 +3009,7 @@
         },
         {
             "id": "forward_reactive_energy2.group2.chan1",
-            "name": "Imported Reactive Energy",
+            "name": "Imported Reactive Energy10",
             "value": "0",
             "unit": "kVArh",
             "access_mode": "R",
@@ -2381,7 +3025,7 @@
         },
         {
             "id": "forward_reactive_energy2.group2.chan2",
-            "name": "Imported Reactive Energy",
+            "name": "Imported Reactive Energy11",
             "value": "0",
             "unit": "kVArh",
             "access_mode": "R",
@@ -2397,7 +3041,7 @@
         },
         {
             "id": "forward_reactive_energy2.group2.chan3",
-            "name": "Imported Reactive Energy",
+            "name": "Imported Reactive Energy12",
             "value": "0",
             "unit": "kVArh",
             "access_mode": "R",
@@ -2422,7 +3066,7 @@
             "values": [
                 {
                     "value": 0,
-                    "name": "Imported Reactive Energy"
+                    "name": "Imported Reactive Energy c"
                 },
                 {
                     "value": 1,
@@ -2430,7 +3074,7 @@
                 },
                 {
                     "value": 0,
-                    "name": "Imported Reactive Energy"
+                    "name": "Imported Reactive Energy d"
                 },
                 {
                     "value": 1,
@@ -2455,7 +3099,7 @@
             "values": [
                 {
                     "value": 0,
-                    "name": "Imported Reactive Energy"
+                    "name": "Imported Reactive Energy c"
                 },
                 {
                     "value": 1,
@@ -2463,7 +3107,7 @@
                 },
                 {
                     "value": 0,
-                    "name": "Imported Reactive Energy"
+                    "name": "Imported Reactive Energy d"
                 },
                 {
                     "value": 1,
@@ -2617,7 +3261,7 @@
         },
         {
             "id": "power_factor.group1_value",
-            "name": "Power Factor",
+            "name": "Power Factor a",
             "value": "0",
             "unit": "",
             "access_mode": "R",
@@ -2636,7 +3280,7 @@
         },
         {
             "id": "power_factor.group1.chan1",
-            "name": "Power Factor",
+            "name": "Power Factor1",
             "value": "0",
             "unit": "",
             "access_mode": "R",
@@ -2656,7 +3300,7 @@
         },
         {
             "id": "power_factor.group1.chan2",
-            "name": "Power Factor",
+            "name": "Power Factor2",
             "value": "0",
             "unit": "",
             "access_mode": "R",
@@ -2676,7 +3320,7 @@
         },
         {
             "id": "power_factor.group1.chan3",
-            "name": "Power Factor",
+            "name": "Power Factor3",
             "value": "0",
             "unit": "",
             "access_mode": "R",
@@ -2696,7 +3340,7 @@
         },
         {
             "id": "power_factor.group2_value",
-            "name": "Power Factor",
+            "name": "Power Factorb",
             "value": "0",
             "unit": "",
             "access_mode": "R",
@@ -2715,7 +3359,7 @@
         },
         {
             "id": "power_factor.group2.chan1",
-            "name": "Power Factor",
+            "name": "Power Factor4",
             "value": "0",
             "unit": "",
             "access_mode": "R",
@@ -2735,7 +3379,7 @@
         },
         {
             "id": "power_factor.group2.chan2",
-            "name": "Power Factor",
+            "name": "Power Factor5",
             "value": "0",
             "unit": "",
             "access_mode": "R",
@@ -2755,7 +3399,7 @@
         },
         {
             "id": "power_factor.group2.chan3",
-            "name": "Power Factor",
+            "name": "Power Factor6",
             "value": "0",
             "unit": "",
             "access_mode": "R",
@@ -2775,7 +3419,7 @@
         },
         {
             "id": "power_factor.group3_value",
-            "name": "Power Factor",
+            "name": "Power Factor c",
             "value": "0",
             "unit": "",
             "access_mode": "R",
@@ -2794,7 +3438,7 @@
         },
         {
             "id": "power_factor.group3.chan1",
-            "name": "Power Factor",
+            "name": "Power Factor7",
             "value": "0",
             "unit": "",
             "access_mode": "R",
@@ -2814,7 +3458,7 @@
         },
         {
             "id": "power_factor.group3.chan2",
-            "name": "Power Factor",
+            "name": "Power Factor8",
             "value": "0",
             "unit": "",
             "access_mode": "R",
@@ -2834,7 +3478,7 @@
         },
         {
             "id": "power_factor.group3.chan3",
-            "name": "Power Factor",
+            "name": "Power Factor9",
             "value": "0",
             "unit": "",
             "access_mode": "R",
@@ -2854,7 +3498,7 @@
         },
         {
             "id": "power_factor.group4_value",
-            "name": "Power Factor",
+            "name": "Power Factor d",
             "value": "0",
             "unit": "",
             "access_mode": "R",
@@ -2873,7 +3517,7 @@
         },
         {
             "id": "power_factor.group4.chan1",
-            "name": "Power Factor",
+            "name": "Power Factor10",
             "value": "0",
             "unit": "",
             "access_mode": "R",
@@ -2893,7 +3537,7 @@
         },
         {
             "id": "power_factor.group4.chan2",
-            "name": "Power Factor",
+            "name": "Power Factor11",
             "value": "0",
             "unit": "",
             "access_mode": "R",
@@ -2913,7 +3557,7 @@
         },
         {
             "id": "power_factor.group4.chan3",
-            "name": "Power Factor",
+            "name": "Power Factor12",
             "value": "0",
             "unit": "",
             "access_mode": "R",
@@ -2942,7 +3586,7 @@
             "values": [
                 {
                     "value": 0,
-                    "name": "Power Factor"
+                    "name": "Power Factor a"
                 },
                 {
                     "value": 1,
@@ -2950,7 +3594,7 @@
                 },
                 {
                     "value": 0,
-                    "name": "Power Factor"
+                    "name": "Power Factorb"
                 },
                 {
                     "value": 1,
@@ -2958,7 +3602,7 @@
                 },
                 {
                     "value": 0,
-                    "name": "Power Factor"
+                    "name": "Power Factor c"
                 },
                 {
                     "value": 1,
@@ -2966,7 +3610,7 @@
                 },
                 {
                     "value": 0,
-                    "name": "Power Factor"
+                    "name": "Power Factor d"
                 },
                 {
                     "value": 1,
@@ -2991,7 +3635,7 @@
             "values": [
                 {
                     "value": 0,
-                    "name": "Power Factor"
+                    "name": "Power Factor a"
                 },
                 {
                     "value": 1,
@@ -2999,7 +3643,7 @@
                 },
                 {
                     "value": 0,
-                    "name": "Power Factor"
+                    "name": "Power Factorb"
                 },
                 {
                     "value": 1,
@@ -3007,7 +3651,7 @@
                 },
                 {
                     "value": 0,
-                    "name": "Power Factor"
+                    "name": "Power Factor c"
                 },
                 {
                     "value": 1,
@@ -3015,7 +3659,7 @@
                 },
                 {
                     "value": 0,
-                    "name": "Power Factor"
+                    "name": "Power Factor d"
                 },
                 {
                     "value": 1,
@@ -3040,7 +3684,7 @@
             "values": [
                 {
                     "value": 0,
-                    "name": "Power Factor"
+                    "name": "Power Factor a"
                 },
                 {
                     "value": 1,
@@ -3048,7 +3692,7 @@
                 },
                 {
                     "value": 0,
-                    "name": "Power Factor"
+                    "name": "Power Factorb"
                 },
                 {
                     "value": 1,
@@ -3056,7 +3700,7 @@
                 },
                 {
                     "value": 0,
-                    "name": "Power Factor"
+                    "name": "Power Factor c"
                 },
                 {
                     "value": 1,
@@ -3064,7 +3708,7 @@
                 },
                 {
                     "value": 0,
-                    "name": "Power Factor"
+                    "name": "Power Factor d"
                 },
                 {
                     "value": 1,
@@ -3089,7 +3733,7 @@
             "values": [
                 {
                     "value": 0,
-                    "name": "Power Factor"
+                    "name": "Power Factor a"
                 },
                 {
                     "value": 1,
@@ -3097,7 +3741,7 @@
                 },
                 {
                     "value": 0,
-                    "name": "Power Factor"
+                    "name": "Power Factorb"
                 },
                 {
                     "value": 1,
@@ -3105,7 +3749,7 @@
                 },
                 {
                     "value": 0,
-                    "name": "Power Factor"
+                    "name": "Power Factor c"
                 },
                 {
                     "value": 1,
@@ -3113,7 +3757,7 @@
                 },
                 {
                     "value": 0,
-                    "name": "Power Factor"
+                    "name": "Power Factor d"
                 },
                 {
                     "value": 1,
@@ -3184,7 +3828,7 @@
         },
         {
             "id": "reactive_power1.group1_value",
-            "name": "Reactive Power",
+            "name": "Reactive Power a",
             "value": "0",
             "unit": "kvar",
             "access_mode": "R",
@@ -3199,7 +3843,7 @@
         },
         {
             "id": "reactive_power1.group1.chan1",
-            "name": "Reactive Power",
+            "name": "Reactive Power1",
             "value": "0",
             "unit": "kvar",
             "access_mode": "R",
@@ -3215,7 +3859,7 @@
         },
         {
             "id": "reactive_power1.group1.chan2",
-            "name": "Reactive Power",
+            "name": "Reactive Power2",
             "value": "0",
             "unit": "kvar",
             "access_mode": "R",
@@ -3231,7 +3875,7 @@
         },
         {
             "id": "reactive_power1.group1.chan3",
-            "name": "Reactive Power",
+            "name": "Reactive Power3",
             "value": "0",
             "unit": "kvar",
             "access_mode": "R",
@@ -3247,7 +3891,7 @@
         },
         {
             "id": "reactive_power1.group2_value",
-            "name": "Reactive Power",
+            "name": "Reactive Power b",
             "value": "0",
             "unit": "kvar",
             "access_mode": "R",
@@ -3262,7 +3906,7 @@
         },
         {
             "id": "reactive_power1.group2.chan1",
-            "name": "Reactive Power",
+            "name": "Reactive Power4",
             "value": "0",
             "unit": "kvar",
             "access_mode": "R",
@@ -3278,7 +3922,7 @@
         },
         {
             "id": "reactive_power1.group2.chan2",
-            "name": "Reactive Power",
+            "name": "Reactive Power5",
             "value": "0",
             "unit": "kvar",
             "access_mode": "R",
@@ -3294,7 +3938,7 @@
         },
         {
             "id": "reactive_power1.group2.chan3",
-            "name": "Reactive Power",
+            "name": "Reactive Power6",
             "value": "0",
             "unit": "kvar",
             "access_mode": "R",
@@ -3319,7 +3963,7 @@
             "values": [
                 {
                     "value": 0,
-                    "name": "Reactive Power"
+                    "name": "Reactive Power a"
                 },
                 {
                     "value": 1,
@@ -3327,7 +3971,7 @@
                 },
                 {
                     "value": 0,
-                    "name": "Reactive Power"
+                    "name": "Reactive Power b"
                 },
                 {
                     "value": 1,
@@ -3352,7 +3996,7 @@
             "values": [
                 {
                     "value": 0,
-                    "name": "Reactive Power"
+                    "name": "Reactive Power a"
                 },
                 {
                     "value": 1,
@@ -3360,7 +4004,7 @@
                 },
                 {
                     "value": 0,
-                    "name": "Reactive Power"
+                    "name": "Reactive Power b"
                 },
                 {
                     "value": 1,
@@ -3374,7 +4018,7 @@
         },
         {
             "id": "reactive_power2.group1_value",
-            "name": "Reactive Power",
+            "name": "Reactive Power c",
             "value": "0",
             "unit": "kvar",
             "access_mode": "R",
@@ -3389,7 +4033,7 @@
         },
         {
             "id": "reactive_power2.group1.chan1",
-            "name": "Reactive Power",
+            "name": "Reactive Power7",
             "value": "0",
             "unit": "kvar",
             "access_mode": "R",
@@ -3405,7 +4049,7 @@
         },
         {
             "id": "reactive_power2.group1.chan2",
-            "name": "Reactive Power",
+            "name": "Reactive Power8",
             "value": "0",
             "unit": "kvar",
             "access_mode": "R",
@@ -3421,7 +4065,7 @@
         },
         {
             "id": "reactive_power2.group1.chan3",
-            "name": "Reactive Power",
+            "name": "Reactive Power9",
             "value": "0",
             "unit": "kvar",
             "access_mode": "R",
@@ -3437,7 +4081,7 @@
         },
         {
             "id": "reactive_power2.group2_value",
-            "name": "Reactive Power",
+            "name": "Reactive Power d",
             "value": "0",
             "unit": "kvar",
             "access_mode": "R",
@@ -3452,7 +4096,7 @@
         },
         {
             "id": "reactive_power2.group2.chan1",
-            "name": "Reactive Power",
+            "name": "Reactive Power10",
             "value": "0",
             "unit": "kvar",
             "access_mode": "R",
@@ -3468,7 +4112,7 @@
         },
         {
             "id": "reactive_power2.group2.chan2",
-            "name": "Reactive Power",
+            "name": "Reactive Power11",
             "value": "0",
             "unit": "kvar",
             "access_mode": "R",
@@ -3484,7 +4128,7 @@
         },
         {
             "id": "reactive_power2.group2.chan3",
-            "name": "Reactive Power",
+            "name": "Reactive Power12",
             "value": "0",
             "unit": "kvar",
             "access_mode": "R",
@@ -3509,7 +4153,7 @@
             "values": [
                 {
                     "value": 0,
-                    "name": "Reactive Power"
+                    "name": "Reactive Power c"
                 },
                 {
                     "value": 1,
@@ -3517,7 +4161,7 @@
                 },
                 {
                     "value": 0,
-                    "name": "Reactive Power"
+                    "name": "Reactive Power d"
                 },
                 {
                     "value": 1,
@@ -3542,7 +4186,7 @@
             "values": [
                 {
                     "value": 0,
-                    "name": "Reactive Power"
+                    "name": "Reactive Power c"
                 },
                 {
                     "value": 1,
@@ -3550,7 +4194,7 @@
                 },
                 {
                     "value": 0,
-                    "name": "Reactive Power"
+                    "name": "Reactive Power d"
                 },
                 {
                     "value": 1,
@@ -4217,7 +4861,7 @@
         {
             "id": "reporting_interval.unit",
             "name": "Report Interval Unit",
-            "value": "0",
+            "value": "1",
             "unit": "",
             "access_mode": "RW",
             "data_type": "ENUM",
@@ -4289,6 +4933,10 @@
             "access_mode": "W",
             "data_type": "NUMBER",
             "value_type": "UINT8",
+            "range": [
+                0,
+                12
+            ],
             "bacnet_type": "analog_output_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
@@ -4410,7 +5058,7 @@
         },
         {
             "id": "reverse_active_energy1.group1_value",
-            "name": "Exported Active Energy",
+            "name": "Exported Active Energy a",
             "value": "0",
             "unit": "kWh",
             "access_mode": "R",
@@ -4425,7 +5073,7 @@
         },
         {
             "id": "reverse_active_energy1.group1.chan1",
-            "name": "Exported Active Energy",
+            "name": "Exported Active Energy1",
             "value": "0",
             "unit": "kWh",
             "access_mode": "R",
@@ -4441,7 +5089,7 @@
         },
         {
             "id": "reverse_active_energy1.group1.chan2",
-            "name": "Exported Active Energy",
+            "name": "Exported Active Energy2",
             "value": "0",
             "unit": "kWh",
             "access_mode": "R",
@@ -4457,7 +5105,7 @@
         },
         {
             "id": "reverse_active_energy1.group1.chan3",
-            "name": "Exported Active Energy",
+            "name": "Exported Active Energy3",
             "value": "0",
             "unit": "kWh",
             "access_mode": "R",
@@ -4473,7 +5121,7 @@
         },
         {
             "id": "reverse_active_energy1.group2_value",
-            "name": "Exported Active Energy",
+            "name": "Exported Active Energy b",
             "value": "0",
             "unit": "kWh",
             "access_mode": "R",
@@ -4488,7 +5136,7 @@
         },
         {
             "id": "reverse_active_energy1.group2.chan1",
-            "name": "Exported Active Energy",
+            "name": "Exported Active Energy4",
             "value": "0",
             "unit": "kWh",
             "access_mode": "R",
@@ -4504,7 +5152,7 @@
         },
         {
             "id": "reverse_active_energy1.group2.chan2",
-            "name": "Exported Active Energy",
+            "name": "Exported Active Energy5",
             "value": "0",
             "unit": "kWh",
             "access_mode": "R",
@@ -4520,7 +5168,7 @@
         },
         {
             "id": "reverse_active_energy1.group2.chan3",
-            "name": "Exported Active Energy",
+            "name": "Exported Active Energy6",
             "value": "0",
             "unit": "kWh",
             "access_mode": "R",
@@ -4545,7 +5193,7 @@
             "values": [
                 {
                     "value": 0,
-                    "name": "Exported Active Energy"
+                    "name": "Exported Active Energy a"
                 },
                 {
                     "value": 1,
@@ -4553,7 +5201,7 @@
                 },
                 {
                     "value": 0,
-                    "name": "Exported Active Energy"
+                    "name": "Exported Active Energy b"
                 },
                 {
                     "value": 1,
@@ -4578,7 +5226,7 @@
             "values": [
                 {
                     "value": 0,
-                    "name": "Exported Active Energy"
+                    "name": "Exported Active Energy a"
                 },
                 {
                     "value": 1,
@@ -4586,7 +5234,7 @@
                 },
                 {
                     "value": 0,
-                    "name": "Exported Active Energy"
+                    "name": "Exported Active Energy b"
                 },
                 {
                     "value": 1,
@@ -4600,7 +5248,7 @@
         },
         {
             "id": "reverse_active_energy2.group1_value",
-            "name": "Exported Active Energy",
+            "name": "Exported Active Energy c",
             "value": "0",
             "unit": "kWh",
             "access_mode": "R",
@@ -4615,7 +5263,7 @@
         },
         {
             "id": "reverse_active_energy2.group1.chan1",
-            "name": "Exported Active Energy",
+            "name": "Exported Active Energy7",
             "value": "0",
             "unit": "kWh",
             "access_mode": "R",
@@ -4631,7 +5279,7 @@
         },
         {
             "id": "reverse_active_energy2.group1.chan2",
-            "name": "Exported Active Energy",
+            "name": "Exported Active Energy8",
             "value": "0",
             "unit": "kWh",
             "access_mode": "R",
@@ -4647,7 +5295,7 @@
         },
         {
             "id": "reverse_active_energy2.group1.chan3",
-            "name": "Exported Active Energy",
+            "name": "Exported Active Energy9",
             "value": "0",
             "unit": "kWh",
             "access_mode": "R",
@@ -4663,7 +5311,7 @@
         },
         {
             "id": "reverse_active_energy2.group2_value",
-            "name": "Exported Active Energy",
+            "name": "Exported Active Energy d",
             "value": "0",
             "unit": "kWh",
             "access_mode": "R",
@@ -4678,7 +5326,7 @@
         },
         {
             "id": "reverse_active_energy2.group2.chan1",
-            "name": "Exported Active Energy",
+            "name": "Exported Active Energy10",
             "value": "0",
             "unit": "kWh",
             "access_mode": "R",
@@ -4694,7 +5342,7 @@
         },
         {
             "id": "reverse_active_energy2.group2.chan2",
-            "name": "Exported Active Energy",
+            "name": "Exported Active Energy11",
             "value": "0",
             "unit": "kWh",
             "access_mode": "R",
@@ -4710,7 +5358,7 @@
         },
         {
             "id": "reverse_active_energy2.group2.chan3",
-            "name": "Exported Active Energy",
+            "name": "Exported Active Energy12",
             "value": "0",
             "unit": "kWh",
             "access_mode": "R",
@@ -4735,7 +5383,7 @@
             "values": [
                 {
                     "value": 0,
-                    "name": "Exported Active Energy"
+                    "name": "Exported Active Energy c"
                 },
                 {
                     "value": 1,
@@ -4743,7 +5391,7 @@
                 },
                 {
                     "value": 0,
-                    "name": "Exported Active Energy"
+                    "name": "Exported Active Energy d"
                 },
                 {
                     "value": 1,
@@ -4768,7 +5416,7 @@
             "values": [
                 {
                     "value": 0,
-                    "name": "Exported Active Energy"
+                    "name": "Exported Active Energy c"
                 },
                 {
                     "value": 1,
@@ -4776,7 +5424,7 @@
                 },
                 {
                     "value": 0,
-                    "name": "Exported Active Energy"
+                    "name": "Exported Active Energy d"
                 },
                 {
                     "value": 1,
@@ -4790,7 +5438,7 @@
         },
         {
             "id": "reverse_reactive_energy1.group1_value",
-            "name": "Exported Reactive Energy",
+            "name": "Exported Reactive Energy a",
             "value": "0",
             "unit": "kVArh",
             "access_mode": "R",
@@ -4805,7 +5453,7 @@
         },
         {
             "id": "reverse_reactive_energy1.group1.chan1",
-            "name": "Exported Reactive Energy",
+            "name": "Exported Reactive Energy1",
             "value": "0",
             "unit": "kVArh",
             "access_mode": "R",
@@ -4821,7 +5469,7 @@
         },
         {
             "id": "reverse_reactive_energy1.group1.chan2",
-            "name": "Exported Reactive Energy",
+            "name": "Exported Reactive Energy2",
             "value": "0",
             "unit": "kVArh",
             "access_mode": "R",
@@ -4837,7 +5485,7 @@
         },
         {
             "id": "reverse_reactive_energy1.group1.chan3",
-            "name": "Exported Reactive Energy",
+            "name": "Exported Reactive Energy3",
             "value": "0",
             "unit": "kVArh",
             "access_mode": "R",
@@ -4853,7 +5501,7 @@
         },
         {
             "id": "reverse_reactive_energy1.group2_value",
-            "name": "Exported Reactive Energy",
+            "name": "Exported Reactive Energy b",
             "value": "0",
             "unit": "kVArh",
             "access_mode": "R",
@@ -4868,7 +5516,7 @@
         },
         {
             "id": "reverse_reactive_energy1.group2.chan1",
-            "name": "Exported Reactive Energy",
+            "name": "Exported Reactive Energy4",
             "value": "0",
             "unit": "kVArh",
             "access_mode": "R",
@@ -4884,7 +5532,7 @@
         },
         {
             "id": "reverse_reactive_energy1.group2.chan2",
-            "name": "Exported Reactive Energy",
+            "name": "Exported Reactive Energy5",
             "value": "0",
             "unit": "kVArh",
             "access_mode": "R",
@@ -4900,7 +5548,7 @@
         },
         {
             "id": "reverse_reactive_energy1.group2.chan3",
-            "name": "Exported Reactive Energy",
+            "name": "Exported Reactive Energy6",
             "value": "0",
             "unit": "kVArh",
             "access_mode": "R",
@@ -4925,7 +5573,7 @@
             "values": [
                 {
                     "value": 0,
-                    "name": "Exported Reactive Energy"
+                    "name": "Exported Reactive Energy a"
                 },
                 {
                     "value": 1,
@@ -4933,7 +5581,7 @@
                 },
                 {
                     "value": 0,
-                    "name": "Exported Reactive Energy"
+                    "name": "Exported Reactive Energy b"
                 },
                 {
                     "value": 1,
@@ -4958,7 +5606,7 @@
             "values": [
                 {
                     "value": 0,
-                    "name": "Exported Reactive Energy"
+                    "name": "Exported Reactive Energy a"
                 },
                 {
                     "value": 1,
@@ -4966,7 +5614,7 @@
                 },
                 {
                     "value": 0,
-                    "name": "Exported Reactive Energy"
+                    "name": "Exported Reactive Energy b"
                 },
                 {
                     "value": 1,
@@ -4980,7 +5628,7 @@
         },
         {
             "id": "reverse_reactive_energy2.group1.chan1",
-            "name": "Exported Reactive Energy",
+            "name": "Exported Reactive Energy7",
             "value": "0",
             "unit": "kVArh",
             "access_mode": "R",
@@ -4996,7 +5644,7 @@
         },
         {
             "id": "reverse_reactive_energy2.group1.chan2",
-            "name": "Exported Reactive Energy",
+            "name": "Exported Reactive Energy8",
             "value": "0",
             "unit": "kVArh",
             "access_mode": "R",
@@ -5012,7 +5660,7 @@
         },
         {
             "id": "reverse_reactive_energy2.group1.chan3",
-            "name": "Exported Reactive Energy",
+            "name": "Exported Reactive Energy9",
             "value": "0",
             "unit": "kVArh",
             "access_mode": "R",
@@ -5028,7 +5676,7 @@
         },
         {
             "id": "reverse_reactive_energy2.group2_value",
-            "name": "Exported Reactive Energy",
+            "name": "Exported Reactive Energy d",
             "value": "0",
             "unit": "kVArh",
             "access_mode": "R",
@@ -5043,7 +5691,7 @@
         },
         {
             "id": "reverse_reactive_energy2.group2.chan1",
-            "name": "Exported Reactive Energy",
+            "name": "Exported Reactive Energy10",
             "value": "0",
             "unit": "kVArh",
             "access_mode": "R",
@@ -5059,7 +5707,7 @@
         },
         {
             "id": "reverse_reactive_energy2.group2.chan2",
-            "name": "Exported Reactive Energy",
+            "name": "Exported Reactive Energy11",
             "value": "0",
             "unit": "kVArh",
             "access_mode": "R",
@@ -5075,7 +5723,7 @@
         },
         {
             "id": "reverse_reactive_energy2.group2.chan3",
-            "name": "Exported Reactive Energy",
+            "name": "Exported Reactive Energy12",
             "value": "0",
             "unit": "kVArh",
             "access_mode": "R",
@@ -5100,7 +5748,7 @@
             "values": [
                 {
                     "value": 0,
-                    "name": "Exported Reactive Energy"
+                    "name": "Exported Reactive Energy c"
                 },
                 {
                     "value": 1,
@@ -5108,7 +5756,7 @@
                 },
                 {
                     "value": 0,
-                    "name": "Exported Reactive Energy"
+                    "name": "Exported Reactive Energy d"
                 },
                 {
                     "value": 1,
@@ -5133,7 +5781,7 @@
             "values": [
                 {
                     "value": 0,
-                    "name": "Exported Reactive Energy"
+                    "name": "Exported Reactive Energy c"
                 },
                 {
                     "value": 1,
@@ -5141,7 +5789,7 @@
                 },
                 {
                     "value": 0,
-                    "name": "Exported Reactive Energy"
+                    "name": "Exported Reactive Energy d"
                 },
                 {
                     "value": 1,
@@ -5744,6 +6392,168 @@
             "reference": []
         },
         {
+            "id": "time_zone",
+            "name": "Time Zone",
+            "value": "0",
+            "unit": "min",
+            "access_mode": "RW",
+            "data_type": "ENUM",
+            "value_type": "INT16",
+            "values": [
+                {
+                    "value": -720,
+                    "name": "UTC-12(IDLW)"
+                },
+                {
+                    "value": -660,
+                    "name": "UTC-11(SST)"
+                },
+                {
+                    "value": -600,
+                    "name": "UTC-10(HST)"
+                },
+                {
+                    "value": -570,
+                    "name": "UTC-9:30(MIT)"
+                },
+                {
+                    "value": -540,
+                    "name": "UTC-9(AKST)"
+                },
+                {
+                    "value": -480,
+                    "name": "UTC-8(PST)"
+                },
+                {
+                    "value": -420,
+                    "name": "UTC-7(MST)"
+                },
+                {
+                    "value": -360,
+                    "name": "UTC-6(CST)"
+                },
+                {
+                    "value": -300,
+                    "name": "UTC-5(EST)"
+                },
+                {
+                    "value": -240,
+                    "name": "UTC-4(AST)"
+                },
+                {
+                    "value": -210,
+                    "name": "UTC-3:30(NST)"
+                },
+                {
+                    "value": -180,
+                    "name": "UTC-3(BRT)"
+                },
+                {
+                    "value": -120,
+                    "name": "UTC-2(FNT)"
+                },
+                {
+                    "value": -60,
+                    "name": "UTC-1(CVT)"
+                },
+                {
+                    "value": 0,
+                    "name": "UTC(WET)"
+                },
+                {
+                    "value": 60,
+                    "name": "UTC+1(CET)"
+                },
+                {
+                    "value": 120,
+                    "name": "UTC+2(EET)"
+                },
+                {
+                    "value": 180,
+                    "name": "UTC+3(MSK)"
+                },
+                {
+                    "value": 210,
+                    "name": "UTC+3:30(IRST)"
+                },
+                {
+                    "value": 240,
+                    "name": "UTC+4(GST)"
+                },
+                {
+                    "value": 270,
+                    "name": "UTC+4:30(AFT)"
+                },
+                {
+                    "value": 300,
+                    "name": "UTC+5(PKT)"
+                },
+                {
+                    "value": 330,
+                    "name": "UTC+5:30(IST)"
+                },
+                {
+                    "value": 345,
+                    "name": "UTC+5:45(NPT)"
+                },
+                {
+                    "value": 360,
+                    "name": "UTC+6(BHT)"
+                },
+                {
+                    "value": 390,
+                    "name": "UTC+6:30(MMT)"
+                },
+                {
+                    "value": 420,
+                    "name": "UTC+7(ICT)"
+                },
+                {
+                    "value": 480,
+                    "name": "UTC+8(CT/CST)"
+                },
+                {
+                    "value": 540,
+                    "name": "UTC+9(JST)"
+                },
+                {
+                    "value": 570,
+                    "name": "UTC+9:30(ACST)"
+                },
+                {
+                    "value": 600,
+                    "name": "UTC+10(AEST)"
+                },
+                {
+                    "value": 630,
+                    "name": "UTC+10:30(LHST)"
+                },
+                {
+                    "value": 660,
+                    "name": "UTC+11(VUT)"
+                },
+                {
+                    "value": 720,
+                    "name": "UTC+12(NZST)"
+                },
+                {
+                    "value": 765,
+                    "name": "UTC+12:45(CHAST)"
+                },
+                {
+                    "value": 780,
+                    "name": "UTC+13(PHOT)"
+                },
+                {
+                    "value": 840,
+                    "name": "UTC+14(LINT)"
+                }
+            ],
+            "bacnet_type": "multistate_value_object",
+            "bacnet_unit_type_id": 72,
+            "bacnet_unit_type": "UNITS_MINUTES"
+        },
+        {
             "id": "tsl_version",
             "name": "TSL Version",
             "value": "",
@@ -6096,7 +6906,7 @@
         {
             "id": "voltage_unbalance_alarm_settings.threshold_condition",
             "name": "Threshold Mode",
-            "value": "2",
+            "value": "0",
             "unit": "",
             "access_mode": "RW",
             "data_type": "ENUM",
@@ -6107,20 +6917,8 @@
                     "name": "disable"
                 },
                 {
-                    "value": 1,
-                    "name": "condition: x<A"
-                },
-                {
                     "value": 2,
                     "name": "condition: x>B"
-                },
-                {
-                    "value": 3,
-                    "name": "condition: A≤x≤B"
-                },
-                {
-                    "value": 4,
-                    "name": "condition: x<A or x>B"
                 }
             ],
             "bacnet_type": "multistate_value_object",
@@ -6135,13 +6933,13 @@
         {
             "id": "voltage_unbalance_alarm_settings.threshold_max",
             "name": "Value B",
-            "value": "0",
+            "value": "3",
             "unit": "%",
             "access_mode": "RW",
             "data_type": "NUMBER",
             "value_type": "UINT8",
             "range": [
-                0,
+                1,
                 100
             ],
             "bacnet_type": "analog_value_object",

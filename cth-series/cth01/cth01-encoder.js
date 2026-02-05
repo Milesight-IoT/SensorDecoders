@@ -449,9 +449,6 @@ function milesightDeviceEncode(payload) {
 			if (payload.active_power1.group1_value === 'error') {
 				buffer.writeBytes(error_value_map.active_power);
 			} else {
-				if (payload.active_power1.group1_value < 0 || payload.active_power1.group1_value > 4000) {
-					throw new Error('active_power1.group1_value must be between 0 and 4000');
-				}
 				buffer.writeInt32LE(payload.active_power1.group1_value * 1000);
 			}
 		}
@@ -692,9 +689,6 @@ function milesightDeviceEncode(payload) {
 			if (payload.apparent_power1.group1_value === 'error') {
 				buffer.writeBytes(error_value_map.apparent_power);
 			} else {
-				if (payload.apparent_power1.group1_value < 0 || payload.apparent_power1.group1_value > 4000) {
-					throw new Error('apparent_power1.group1_value must be between 0 and 4000');
-				}
 				buffer.writeInt32LE(payload.apparent_power1.group1_value * 1000);
 			}
 		}
@@ -815,9 +809,6 @@ function milesightDeviceEncode(payload) {
 			if (payload.forward_active_energy1.group1_value === 'error') {
 				buffer.writeBytes(error_value_map.forward_active_energy);
 			} else {
-				if (payload.forward_active_energy1.group1_value < 0 || payload.forward_active_energy1.group1_value > 4000) {
-					throw new Error('forward_active_energy1.group1_value must be between 0 and 4000');
-				}
 				buffer.writeUInt32LE(payload.forward_active_energy1.group1_value * 1000);
 			}
 		}
@@ -938,9 +929,6 @@ function milesightDeviceEncode(payload) {
 			if (payload.reverse_active_energy1.group1_value === 'error') {
 				buffer.writeBytes(error_value_map.reverse_active_energy);
 			} else {
-				if (payload.reverse_active_energy1.group1_value < 0 || payload.reverse_active_energy1.group1_value > 4000) {
-					throw new Error('reverse_active_energy1.group1_value must be between 0 and 4000');
-				}
 				buffer.writeUInt32LE(payload.reverse_active_energy1.group1_value * 1000);
 			}
 		}
@@ -1713,8 +1701,8 @@ function milesightDeviceEncode(payload) {
 	if ('bluetooth_name' in payload) {
 		var buffer = new Buffer();
 		buffer.writeUInt8(0x64);
-		if (payload.bluetooth_name.length < 1 || payload.bluetooth_name.length > 255) {
-			throw new Error('bluetooth_name.length must be between 1 and 255');
+		if (payload.bluetooth_name.length < 1 || payload.bluetooth_name.length > 13) {
+			throw new Error('bluetooth_name.length must be between 1 and 13');
 		}
 		buffer.writeUInt8(payload.bluetooth_name.length);
 		buffer.writeString(payload.bluetooth_name.content, payload.bluetooth_name.length, true);
@@ -1946,14 +1934,14 @@ function milesightDeviceEncode(payload) {
 			buffer.writeUInt8(thdi_alarm_settings_item_id);
 			// 0：disable, 1：enable
 			buffer.writeUInt8(thdi_alarm_settings_item.enable);
-			// 0:disable, 1:condition: x<A, 2:condition: x>B, 3:condition: A≤x≤B, 4:condition: x<A or x>B
+			// 0:disable, 2:condition: x>B
 			buffer.writeUInt8(thdi_alarm_settings_item.threshold_condition);
 			if (thdi_alarm_settings_item.threshold_min < 0 || thdi_alarm_settings_item.threshold_min > 100) {
 				throw new Error('threshold_min must be between 0 and 100');
 			}
 			buffer.writeInt16LE(thdi_alarm_settings_item.threshold_min);
-			if (thdi_alarm_settings_item.threshold_max < 0 || thdi_alarm_settings_item.threshold_max > 100) {
-				throw new Error('threshold_max must be between 0 and 100');
+			if (thdi_alarm_settings_item.threshold_max < 1 || thdi_alarm_settings_item.threshold_max > 100) {
+				throw new Error('threshold_max must be between 1 and 100');
 			}
 			buffer.writeInt16LE(thdi_alarm_settings_item.threshold_max);
 		}
@@ -1969,14 +1957,14 @@ function milesightDeviceEncode(payload) {
 			buffer.writeUInt8(thdv_alarm_settings_item_id);
 			// 0：disable, 1：enable
 			buffer.writeUInt8(thdv_alarm_settings_item.enable);
-			// 0:disable, 1:condition: x<A, 2:condition: x>B, 3:condition: A≤x≤B, 4:condition: x<A or x>B
+			// 0:disable, 2:condition: x>B
 			buffer.writeUInt8(thdv_alarm_settings_item.threshold_condition);
 			if (thdv_alarm_settings_item.threshold_min < 0 || thdv_alarm_settings_item.threshold_min > 100) {
 				throw new Error('threshold_min must be between 0 and 100');
 			}
 			buffer.writeInt16LE(thdv_alarm_settings_item.threshold_min);
-			if (thdv_alarm_settings_item.threshold_max < 0 || thdv_alarm_settings_item.threshold_max > 100) {
-				throw new Error('threshold_max must be between 0 and 100');
+			if (thdv_alarm_settings_item.threshold_max < 1 || thdv_alarm_settings_item.threshold_max > 100) {
+				throw new Error('threshold_max must be between 1 and 100');
 			}
 			buffer.writeInt16LE(thdv_alarm_settings_item.threshold_max);
 		}
@@ -1988,14 +1976,14 @@ function milesightDeviceEncode(payload) {
 		buffer.writeUInt8(0x7b);
 		// 0：disable, 1：enable
 		buffer.writeUInt8(payload.voltage_unbalance_alarm_settings.enable);
-		// 0:disable, 1:condition: x<A, 2:condition: x>B, 3:condition: A≤x≤B, 4:condition: x<A or x>B
+		// 0:disable, 2:condition: x>B
 		buffer.writeUInt8(payload.voltage_unbalance_alarm_settings.threshold_condition);
 		if (payload.voltage_unbalance_alarm_settings.threshold_min < 0 || payload.voltage_unbalance_alarm_settings.threshold_min > 100) {
 			throw new Error('voltage_unbalance_alarm_settings.threshold_min must be between 0 and 100');
 		}
 		buffer.writeInt16LE(payload.voltage_unbalance_alarm_settings.threshold_min);
-		if (payload.voltage_unbalance_alarm_settings.threshold_max < 0 || payload.voltage_unbalance_alarm_settings.threshold_max > 100) {
-			throw new Error('voltage_unbalance_alarm_settings.threshold_max must be between 0 and 100');
+		if (payload.voltage_unbalance_alarm_settings.threshold_max < 1 || payload.voltage_unbalance_alarm_settings.threshold_max > 100) {
+			throw new Error('voltage_unbalance_alarm_settings.threshold_max must be between 1 and 100');
 		}
 		buffer.writeInt16LE(payload.voltage_unbalance_alarm_settings.threshold_max);
 		encoded = encoded.concat(buffer.toBytes());
@@ -2140,6 +2128,9 @@ function milesightDeviceEncode(payload) {
 	if ('reset_energy' in payload) {
 		var buffer = new Buffer();
 		buffer.writeUInt8(0x5f);
+		if (payload.reset_energy.channel < 0 || payload.reset_energy.channel > 12) {
+			throw new Error('reset_energy.channel must be between 0 and 12');
+		}
 		buffer.writeUInt8(payload.reset_energy.channel);
 		encoded = encoded.concat(buffer.toBytes());
 	}

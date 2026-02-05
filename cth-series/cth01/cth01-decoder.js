@@ -27,7 +27,7 @@ function Decoder(bytes, port) {
 
 function milesightDeviceDecode(bytes) {
 	var decoded = {};
-    var result = {};
+  var result = {};
 	var history = [];
 	var error_value_map = {
 		current: 0xFFFFFF / 100,
@@ -885,12 +885,6 @@ function milesightDeviceDecode(bytes) {
 				decoded.bluetooth_name.length = readUInt8(bytes, counterObj, 1);
 				decoded.bluetooth_name.content = readString(bytes, counterObj, decoded.bluetooth_name.length);
 				break;
-			case 0x65:
-				// 0:disable, 1:enable
-				decoded.ble_enable = readUInt8(bytes, counterObj, 1);
-				// 0:disable, 1:enable
-				decoded.ble_enable = readUInt8(bytes, counterObj, 1);
-				break;
 			case 0xc5:
 				decoded.data_storage_settings = decoded.data_storage_settings || {};
 				var data_storage_settings_command = readUInt8(bytes, counterObj, 1);
@@ -1039,7 +1033,7 @@ function milesightDeviceDecode(bytes) {
 				insertArrayItem(decoded.thdi_alarm_settings, thdi_alarm_settings_item, 'channel');
 				// 0：disable, 1：enable
 				thdi_alarm_settings_item.enable = readUInt8(bytes, counterObj, 1);
-				// 0:disable, 1:condition: x<A, 2:condition: x>B, 3:condition: A≤x≤B, 4:condition: x<A or x>B
+				// 0:disable, 2:condition: x>B
 				thdi_alarm_settings_item.threshold_condition = readUInt8(bytes, counterObj, 1);
 				thdi_alarm_settings_item.threshold_min = readInt16LE(bytes, counterObj, 2);
 				thdi_alarm_settings_item.threshold_max = readInt16LE(bytes, counterObj, 2);
@@ -1052,7 +1046,7 @@ function milesightDeviceDecode(bytes) {
 				insertArrayItem(decoded.thdv_alarm_settings, thdv_alarm_settings_item, 'channel');
 				// 0：disable, 1：enable
 				thdv_alarm_settings_item.enable = readUInt8(bytes, counterObj, 1);
-				// 0:disable, 1:condition: x<A, 2:condition: x>B, 3:condition: A≤x≤B, 4:condition: x<A or x>B
+				// 0:disable, 2:condition: x>B
 				thdv_alarm_settings_item.threshold_condition = readUInt8(bytes, counterObj, 1);
 				thdv_alarm_settings_item.threshold_min = readInt16LE(bytes, counterObj, 2);
 				thdv_alarm_settings_item.threshold_max = readInt16LE(bytes, counterObj, 2);
@@ -1061,7 +1055,7 @@ function milesightDeviceDecode(bytes) {
 				decoded.voltage_unbalance_alarm_settings = decoded.voltage_unbalance_alarm_settings || {};
 				// 0：disable, 1：enable
 				decoded.voltage_unbalance_alarm_settings.enable = readUInt8(bytes, counterObj, 1);
-				// 0:disable, 1:condition: x<A, 2:condition: x>B, 3:condition: A≤x≤B, 4:condition: x<A or x>B
+				// 0:disable, 2:condition: x>B
 				decoded.voltage_unbalance_alarm_settings.threshold_condition = readUInt8(bytes, counterObj, 1);
 				decoded.voltage_unbalance_alarm_settings.threshold_min = readInt16LE(bytes, counterObj, 2);
 				decoded.voltage_unbalance_alarm_settings.threshold_max = readInt16LE(bytes, counterObj, 2);
@@ -1430,7 +1424,6 @@ function cmdMap() {
 		  "61": "reporting_interval",
 		  "63": "temperature_unit",
 		  "64": "bluetooth_name",
-		  "65": "ble_enable",
 		  "66": "voltage_interface",
 		  "67": "current_interface1",
 		  "68": "current_interface2",
