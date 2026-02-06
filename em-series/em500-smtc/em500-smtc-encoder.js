@@ -400,8 +400,8 @@ function setTimeSyncEnable(time_sync_enable) {
  * @param {object} electricity_alarm_config
  * @param {number} electricity_alarm_config.enable values: (0: disable, 1: enable)
  * @param {number} electricity_alarm_config.condition values: (0: disable, 1: below, 2: above, 3: between, 4: outside)
- * @param {number} electricity_alarm_config.threshold_min condition=(below, within, outside)
- * @param {number} electricity_alarm_config.threshold_max condition=(above, within, outside)
+ * @param {number} electricity_alarm_config.threshold_min condition=(below, within, outside), unit: mS/cm
+ * @param {number} electricity_alarm_config.threshold_max condition=(above, within, outside), unit: mS/cm
  */
 function setElectricityAlarmConfig(electricity_alarm_config) {
     var condition = electricity_alarm_config.condition;
@@ -429,8 +429,9 @@ function setElectricityAlarmConfig(electricity_alarm_config) {
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0x06);
     buffer.writeUInt8(data);
-    buffer.writeInt16LE(threshold_min);
-    buffer.writeInt16LE(threshold_max);
+    // EM500-SMTC: threshold unit is 0.01mS/cm
+    buffer.writeInt16LE(threshold_min * 100);
+    buffer.writeInt16LE(threshold_max * 100);
     buffer.writeUInt16LE(0x00);
     buffer.writeUInt16LE(0x00);
     return buffer.toBytes();
@@ -515,8 +516,8 @@ function setTemperatureMutationAlarmConfig(temperature_mutation_alarm_config) {
  * @param {object} moisture_alarm_config
  * @param {number} moisture_alarm_config.enable values: (0: disable, 1: enable)
  * @param {number} moisture_alarm_config.condition values: (0: disable, 1: below, 2: above, 3: between, 4: outside)
- * @param {number} moisture_alarm_config.threshold_min condition=(below, within, outside)
- * @param {number} moisture_alarm_config.threshold_max condition=(above, within, outside)
+ * @param {number} moisture_alarm_config.threshold_min condition=(below, within, outside), unit: %
+ * @param {number} moisture_alarm_config.threshold_max condition=(above, within, outside), unit: %
  */
 function setMoistureAlarmConfig(moisture_alarm_config) {
     var condition = moisture_alarm_config.condition;
@@ -544,8 +545,9 @@ function setMoistureAlarmConfig(moisture_alarm_config) {
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0x06);
     buffer.writeUInt8(data);
-    buffer.writeInt16LE(threshold_min * 100);
-    buffer.writeInt16LE(threshold_max * 100);
+    // EM500-SMTC: threshold unit is 0.1%
+    buffer.writeInt16LE(threshold_min * 10);
+    buffer.writeInt16LE(threshold_max * 10);
     buffer.writeUInt16LE(0x00);
     buffer.writeUInt16LE(0x00);
     return buffer.toBytes();
@@ -620,7 +622,7 @@ function setTemperatureCalibrationConfig(temperature_calibration_settings) {
  * moisture calibration
  * @param {object} moisture_calibration_settings
  * @param {number} moisture_calibration_settings.enable values: (0: disable, 1: enable)
- * @param {number} moisture_calibration_settings.calibration_value
+ * @param {number} moisture_calibration_settings.calibration_value unit: %
  * @example { "moisture_calibration_settings": { "enable": 1, "calibration_value": 23 } }
  */
 function setMoistureCalibrationConfig(moisture_calibration_settings) {
@@ -638,7 +640,8 @@ function setMoistureCalibrationConfig(moisture_calibration_settings) {
     buffer.writeUInt8(0xf1);
     buffer.writeUInt8(0x01); // moisture
     buffer.writeUInt8(getValue(enable_map, enable));
-    buffer.writeInt16LE(calibration_value * 100);
+    // EM500-SMTC: calibration unit changed from int16/100 to int16/10
+    buffer.writeInt16LE(calibration_value * 10);
     return buffer.toBytes();
 }
 
@@ -646,7 +649,7 @@ function setMoistureCalibrationConfig(moisture_calibration_settings) {
  * electricity calibration
  * @param {object} electricity_calibration_settings
  * @param {number} electricity_calibration_settings.enable values: (0: disable, 1: enable)
- * @param {number} electricity_calibration_settings.calibration_value
+ * @param {number} electricity_calibration_settings.calibration_value unit: mS/cm
  * @example { "electricity_calibration_settings": { "enable": 1, "calibration_value": 23 } }
  */
 function setElectricityCalibrationConfig(electricity_calibration_settings) {
@@ -664,7 +667,8 @@ function setElectricityCalibrationConfig(electricity_calibration_settings) {
     buffer.writeUInt8(0xf1);
     buffer.writeUInt8(0x07); // electricity
     buffer.writeUInt8(getValue(enable_map, enable));
-    buffer.writeInt16LE(calibration_value);
+    // EM500-SMTC: calibration unit is 0.01 mS/cm
+    buffer.writeInt16LE(calibration_value * 100);
     return buffer.toBytes();
 }
 

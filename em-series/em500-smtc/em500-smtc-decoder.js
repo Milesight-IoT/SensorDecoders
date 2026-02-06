@@ -96,27 +96,27 @@ function milesightDeviceDecode(bytes) {
             decoded.moisture = readUInt8(bytes[i]) / 2;
             i += 1;
         }
-        // MOISTURE (new resolution 0.01)
-        else if (channel_id === 0x04 && channel_type === 0xca) {
+        // MOISTURE (resolution 0.1)
+        else if (channel_id === 0x04 && channel_type === 0xc6) {
             var moisture_value = readUInt16LE(bytes.slice(i, i + 2));
             if (moisture_value === 0xffff) {
                 decoded.moisture_error = readSensorStatus(1);
             } else if (moisture_value === 0xfffd) {
                 decoded.moisture_error = readSensorStatus(2);
             } else {
-                decoded.moisture = moisture_value / 100;
+                decoded.moisture = moisture_value / 10;
             }
             i += 2;
         }
-        // EC
-        else if (channel_id === 0x05 && channel_type === 0x7f) {
+        // EC (unit: mS/cm, resolution 0.01)
+        else if (channel_id === 0x05 && channel_type === 0xc5) {
             var electricity_value = readUInt16LE(bytes.slice(i, i + 2));
             if (electricity_value === 0xffff) {
                 decoded.electricity_error = readSensorStatus(1);
             } else if (electricity_value === 0xfffd) {
                 decoded.electricity_error = readSensorStatus(2);
             } else {
-                decoded.electricity = electricity_value;
+                decoded.electricity = electricity_value / 100;
             }
             i += 2;
         }
@@ -137,7 +137,8 @@ function milesightDeviceDecode(bytes) {
             } else if (electricity_value === 0xfffd) {
                 data.electricity_error = readSensorStatus(2);
             } else {
-                data.electricity = electricity_value;
+                // EM500-SMTC: electricity unit is mS/cm with resolution 0.01
+                data.electricity = electricity_value / 100;
             }
             var temperature_value = readUInt16LE(bytes.slice(i + 6, i + 8));
             if (temperature_value === 0xffff) {
@@ -196,8 +197,8 @@ function handle_downlink_response(channel_type, bytes, offset) {
                 decoded.electricity_alarm_config = {};
                 decoded.electricity_alarm_config.enable = readEnableStatus(enable);
                 decoded.electricity_alarm_config.condition = readConditionType(condition);
-                decoded.electricity_alarm_config.threshold_min = readInt16LE(bytes.slice(offset + 1, offset + 3));
-                decoded.electricity_alarm_config.threshold_max = readInt16LE(bytes.slice(offset + 3, offset + 5));
+                decoded.electricity_alarm_config.threshold_min = readInt16LE(bytes.slice(offset + 1, offset + 3)) / 100;
+                decoded.electricity_alarm_config.threshold_max = readInt16LE(bytes.slice(offset + 3, offset + 5)) / 100;
             }
             // temperature alarm
             if (id === 2) {
@@ -218,8 +219,8 @@ function handle_downlink_response(channel_type, bytes, offset) {
                 decoded.moisture_alarm_config = {};
                 decoded.moisture_alarm_config.enable = readEnableStatus(enable);
                 decoded.moisture_alarm_config.condition = readConditionType(condition);
-                decoded.moisture_alarm_config.threshold_min = readInt16LE(bytes.slice(offset + 1, offset + 3)) / 100;
-                decoded.moisture_alarm_config.threshold_max = readInt16LE(bytes.slice(offset + 3, offset + 5)) / 100;
+                decoded.moisture_alarm_config.threshold_min = readInt16LE(bytes.slice(offset + 1, offset + 3)) / 10;
+                decoded.moisture_alarm_config.threshold_max = readInt16LE(bytes.slice(offset + 3, offset + 5)) / 10;
             }
             offset += 9;
             break;
@@ -317,11 +318,12 @@ function handle_downlink_response(channel_type, bytes, offset) {
             } else if (calibration_type === 0x01) {
                 decoded.moisture_calibration_settings = {};
                 decoded.moisture_calibration_settings.enable = readEnableStatus(bytes[offset + 1]);
-                decoded.moisture_calibration_settings.calibration_value = readInt16LE(bytes.slice(offset + 2, offset + 4)) / 100;
+                // EM500-SMTC: calibration unit changed from int16/100 to int16/10
+                decoded.moisture_calibration_settings.calibration_value = readInt16LE(bytes.slice(offset + 2, offset + 4)) / 10;
             } else if (calibration_type === 0x07) {
                 decoded.electricity_calibration_settings = {};
                 decoded.electricity_calibration_settings.enable = readEnableStatus(bytes[offset + 1]);
-                decoded.electricity_calibration_settings.calibration_value = readInt16LE(bytes.slice(offset + 2, offset + 4));
+                decoded.electricity_calibration_settings.calibration_value = readInt16LE(bytes.slice(offset + 2, offset + 4)) / 100;
             }
             offset += 4;
             break;
