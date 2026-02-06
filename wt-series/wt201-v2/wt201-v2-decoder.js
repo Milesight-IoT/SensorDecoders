@@ -441,7 +441,7 @@ function handle_downlink_response(channel_type, bytes, offset) {
             offset += 3;
             break;
         case 0xfb:
-            decoded.temperature_control_mode = readTemperatureControlMode(readUInt8(bytes[offset]));
+            decoded.current_temperature_control_mode = readTemperatureControlMode(readUInt8(bytes[offset]));
             offset += 1;
             break;
         default:
@@ -1081,7 +1081,7 @@ function getValue(map, key) {
     return value;
 }
 
-if (!Object.assign) {
+//if (!Object.assign) {
     Object.defineProperty(Object, "assign", {
         enumerable: false,
         configurable: true,
@@ -1117,4 +1117,4 @@ if (!Object.assign) {
             return to;
         },
     });
-}
+//}

@@ -11,7 +11,8 @@ var RAW_VALUE = 0x00;
 /* eslint-disable */
 // Chirpstack v4
 function encodeDownlink(input) {
-    return milesightDeviceEncode(input.data);
+    var encoded = milesightDeviceEncode(input.data);
+    return { bytes: encoded };
 }
 
 // Chirpstack v3

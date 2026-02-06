@@ -95,7 +95,7 @@ function milesightDeviceDecode(bytes) {
         else if (includes(child_period_chns, channel_id) && channel_type === 0xcc) {
             var child_period_name = "line_" + ((channel_id - child_period_chns[0]) / 3 + 1);
             decoded[child_period_name + "_child_period_in"] = readUInt16LE(bytes.slice(i, i + 2));
-            decoded[channel_period_name + "_child_period_out"] = readUInt16LE(bytes.slice(i + 2, i + 4));
+            decoded[child_period_name + "_child_period_out"] = readUInt16LE(bytes.slice(i + 2, i + 4));
             i += 4;
         }
         // REGION COUNT
@@ -498,7 +498,7 @@ function getValue(map, key) {
     return value;
 }
 
-if (!Object.assign) {
+//if (!Object.assign) {
     Object.defineProperty(Object, "assign", {
         enumerable: false,
         configurable: true,
@@ -534,4 +534,4 @@ if (!Object.assign) {
             return to;
         },
     });
-}
+//}

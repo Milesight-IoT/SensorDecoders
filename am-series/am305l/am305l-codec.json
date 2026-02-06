@@ -1,0 +1,2203 @@
+{
+  "version": "1.0.0",
+  "object": [
+    {
+      "id": "temperature",
+      "name": "Temperature",
+      "value": "",
+      "unit": "°C",
+      "access_mode": "R",
+      "data_type": "NUMBER",
+      "value_type": "FLOAT",
+      "range": [
+        -20,
+        60
+      ],
+      "bacnet_type": "analog_input_object",
+      "bacnet_unit_type_id": 62,
+      "bacnet_unit_type": "UNITS_DEGREES_CELSIUS"
+    },
+    {
+      "id": "humidity",
+      "name": "Humidity",
+      "value": "",
+      "unit": "%RH",
+      "access_mode": "R",
+      "data_type": "NUMBER",
+      "value_type": "FLOAT",
+      "range": [
+        0,
+        100
+      ],
+      "bacnet_type": "analog_input_object",
+      "bacnet_unit_type_id": 29,
+      "bacnet_unit_type": "UNITS_PERCENT_RELATIVE_HUMIDITY"
+    },
+    {
+      "id": "pir.pir_status",
+      "name": "PIR Status",
+      "value": "",
+      "unit": "",
+      "access_mode": "R",
+      "data_type": "ENUM",
+      "value_type": "UINT8",
+      "values": [
+        {
+          "value": 0,
+          "name": "vacant"
+        },
+        {
+          "value": 1,
+          "name": "trigger"
+        }
+      ],
+      "bacnet_type": "multistate_value_object",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS",
+      "reference": [
+        "pir.pir_count"
+      ]
+    },
+    {
+      "id": "pir.pir_count",
+      "name": "PIR Count",
+      "value": "",
+      "unit": "",
+      "access_mode": "R",
+      "data_type": "NUMBER",
+      "value_type": "UINT16",
+      "range": [
+        0,
+        32767
+      ],
+      "bacnet_type": "analog_input_object",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS",
+      "reference": [
+        "pir.pir_status"
+      ]
+    },
+    {
+      "id": "als_level",
+      "name": "Illuminance Level",
+      "value": "",
+      "unit": "",
+      "access_mode": "R",
+      "data_type": "NUMBER",
+      "value_type": "UINT8",
+      "range": [
+        0,
+        5
+      ],
+      "bacnet_type": "analog_input_object",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS"
+    },
+    {
+      "id": "Lux",
+      "name": "Illuminance Value",
+      "value": "",
+      "unit": "lx",
+      "access_mode": "R",
+      "data_type": "NUMBER",
+      "value_type": "UINT16",
+      "range": [
+        0,
+        60000
+      ],
+      "bacnet_type": "analog_input_object",
+      "bacnet_unit_type_id": 37,
+      "bacnet_unit_type": "UNITS_LUXES"
+    },
+    {
+      "id": "co2",
+      "name": "CO₂",
+      "value": "",
+      "unit": "ppm",
+      "access_mode": "R",
+      "data_type": "NUMBER",
+      "value_type": "UINT16",
+      "range": [
+        400,
+        5000
+      ],
+      "bacnet_type": "analog_input_object",
+      "bacnet_unit_type_id": 96,
+      "bacnet_unit_type": "UNITS_PARTS_PER_MILLION"
+    },
+    {
+      "id": "reporting_interval.interval",
+      "name": "Reporting Interval",
+      "value": "10",
+      "unit": "min",
+      "access_mode": "W",
+      "data_type": "NUMBER",
+      "value_type": "UINT16",
+      "range": [
+        1,
+        1440
+      ],
+      "bacnet_type": "analog_output_object",
+      "bacnet_unit_type_id": 72,
+      "bacnet_unit_type": "UNITS_MINUTES",
+      "reference": []
+    },
+    {
+      "id": "collecting_interval.interval",
+      "name": "Collecting Interval",
+      "value": "10",
+      "unit": "min",
+      "access_mode": "W",
+      "data_type": "NUMBER",
+      "value_type": "UINT16",
+      "range": [
+        1,
+        1440
+      ],
+      "bacnet_type": "analog_output_object",
+      "bacnet_unit_type_id": 72,
+      "bacnet_unit_type": "UNITS_MINUTES",
+      "reference": []
+    },
+    {
+      "id": "alarm_reporting_times",
+      "name": "Alarm Reporting Times",
+      "value": "1",
+      "unit": "",
+      "access_mode": "RW",
+      "data_type": "NUMBER",
+      "value_type": "UINT16",
+      "range": [
+        1,
+        1000
+      ],
+      "bacnet_type": "analog_value_object",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS"
+    },
+    {
+      "id": "alarm_deactivation_enable",
+      "name": "Alarm Dismiss Report",
+      "value": "0",
+      "unit": "",
+      "access_mode": "RW",
+      "data_type": "BOOL",
+      "value_type": "UINT8",
+      "values": [
+        {
+          "value": 0,
+          "name": "disable"
+        },
+        {
+          "value": 1,
+          "name": "enable"
+        }
+      ],
+      "bacnet_type": "binary_value_object",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS"
+    },
+    {
+      "id": "temperature_unit.unit",
+      "name": "Temperature Unit",
+      "value": "0",
+      "unit": "",
+      "access_mode": "W",
+      "data_type": "ENUM",
+      "value_type": "UINT8",
+      "values": [
+        {
+          "value": 0,
+          "name": "celsius"
+        },
+        {
+          "value": 1,
+          "name": "fahrenheit"
+        }
+      ],
+      "bacnet_type": "multistate_value_object",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS",
+      "reference": []
+    },
+    {
+      "id": "led_mode",
+      "name": "LED Indicator",
+      "value": "2",
+      "unit": "",
+      "access_mode": "W",
+      "data_type": "ENUM",
+      "value_type": "UINT8",
+      "values": [
+        {
+          "value": 0,
+          "name": "disable"
+        },
+        {
+          "value": 2,
+          "name": "enable"
+        }
+      ],
+      "bacnet_type": "multistate_value_object",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS"
+    },
+    {
+      "id": "button_lock.power_off",
+      "name": "Power Off Lock",
+      "value": "0",
+      "unit": "",
+      "access_mode": "W",
+      "data_type": "BOOL",
+      "value_type": "UINT8",
+      "values": [
+        {
+          "value": 0,
+          "name": "disable"
+        },
+        {
+          "value": 1,
+          "name": "enable"
+        }
+      ],
+      "bacnet_type": "binary_output_object",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS",
+      "reference": [
+        "button_lock.power_on"
+      ]
+    },
+    {
+      "id": "button_lock.power_on",
+      "name": "Power On Lock",
+      "value": "0",
+      "unit": "",
+      "access_mode": "W",
+      "data_type": "BOOL",
+      "value_type": "UINT8",
+      "values": [
+        {
+          "value": 0,
+          "name": "disable"
+        },
+        {
+          "value": 1,
+          "name": "enable"
+        }
+      ],
+      "bacnet_type": "binary_output_object",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS",
+      "reference": [
+        "button_lock.power_off"
+      ]
+    },
+    {
+      "id": "temperature_alarm_rule.enable",
+      "name": "Threshold Enable",
+      "value": "0",
+      "unit": "",
+      "access_mode": "W",
+      "data_type": "BOOL",
+      "value_type": "UINT8",
+      "values": [
+        {
+          "value": 0,
+          "name": "disable"
+        },
+        {
+          "value": 1,
+          "name": "enable"
+        }
+      ],
+      "bacnet_type": "binary_output_object",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS",
+      "reference": [
+        "temperature_alarm_rule.condition",
+        "temperature_alarm_rule.threshold_max",
+        "temperature_alarm_rule.threshold_min"
+      ]
+    },
+    {
+      "id": "temperature_alarm_rule.condition",
+      "name": "Threshold Condition",
+      "value": "1",
+      "unit": "",
+      "access_mode": "W",
+      "data_type": "ENUM",
+      "value_type": "UINT8",
+      "values": [
+        {
+          "value": 1,
+          "name": "condition: x<A"
+        },
+        {
+          "value": 2,
+          "name": "condition: x>B"
+        },
+        {
+          "value": 3,
+          "name": "condition: A<x<B"
+        },
+        {
+          "value": 4,
+          "name": "condition: x<A or x>B"
+        }
+      ],
+      "bacnet_type": "multistate_value_object",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS",
+      "reference": [
+        "temperature_alarm_rule.enable",
+        "temperature_alarm_rule.threshold_max",
+        "temperature_alarm_rule.threshold_min"
+      ]
+    },
+    {
+      "id": "temperature_alarm_rule.threshold_max",
+      "name": "Value B",
+      "value": "0",
+      "unit": "°C",
+      "access_mode": "W",
+      "data_type": "NUMBER",
+      "value_type": "FLOAT",
+      "range": [
+        -20,
+        60
+      ],
+      "bacnet_type": "analog_output_object",
+      "bacnet_unit_type_id": 62,
+      "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
+      "reference": [
+        "temperature_alarm_rule.enable",
+        "temperature_alarm_rule.condition",
+        "temperature_alarm_rule.threshold_min"
+      ]
+    },
+    {
+      "id": "temperature_alarm_rule.threshold_min",
+      "name": "Value A",
+      "value": "0",
+      "unit": "°C",
+      "access_mode": "W",
+      "data_type": "NUMBER",
+      "value_type": "FLOAT",
+      "range": [
+        -20,
+        60
+      ],
+      "bacnet_type": "analog_output_object",
+      "bacnet_unit_type_id": 62,
+      "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
+      "reference": [
+        "temperature_alarm_rule.enable",
+        "temperature_alarm_rule.condition",
+        "temperature_alarm_rule.threshold_max"
+      ]
+    },
+    {
+      "id": "co2_alarm_rule.enable",
+      "name": "Threshold Enable",
+      "value": "0",
+      "unit": "",
+      "access_mode": "W",
+      "data_type": "BOOL",
+      "value_type": "UINT8",
+      "values": [
+        {
+          "value": 0,
+          "name": "disable"
+        },
+        {
+          "value": 1,
+          "name": "enable"
+        }
+      ],
+      "bacnet_type": "binary_output_object",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS",
+      "reference": [
+        "co2_alarm_rule.mode",
+        "co2_alarm_rule.level1_value",
+        "co2_alarm_rule.level2_value"
+      ]
+    },
+    {
+      "id": "co2_alarm_rule.mode",
+      "name": "Threshold Mode",
+      "value": "2",
+      "unit": "",
+      "access_mode": "W",
+      "data_type": "ENUM",
+      "value_type": "UINT8",
+      "values": [
+        {
+          "value": 0,
+          "name": "enable 1-level only"
+        },
+        {
+          "value": 1,
+          "name": "enable 2-levle only"
+        },
+        {
+          "value": 2,
+          "name": "enable 1-level&2-levle"
+        }
+      ],
+      "bacnet_type": "multistate_value_object",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS",
+      "reference": [
+        "co2_alarm_rule.enable",
+        "co2_alarm_rule.level1_value",
+        "co2_alarm_rule.level2_value"
+      ]
+    },
+    {
+      "id": "co2_alarm_rule.level1_value",
+      "name": "Bad,1-level Alarm Value",
+      "value": "5000",
+      "unit": "ppm",
+      "access_mode": "W",
+      "data_type": "NUMBER",
+      "value_type": "UINT16",
+      "range": [
+        400,
+        5000
+      ],
+      "bacnet_type": "analog_output_object",
+      "bacnet_unit_type_id": 96,
+      "bacnet_unit_type": "UNITS_PARTS_PER_MILLION",
+      "reference": [
+        "co2_alarm_rule.enable",
+        "co2_alarm_rule.mode",
+        "co2_alarm_rule.level2_value"
+      ]
+    },
+    {
+      "id": "co2_alarm_rule.level2_value",
+      "name": "Polluted,2-level Alarm Value",
+      "value": "400",
+      "unit": "ppm",
+      "access_mode": "W",
+      "data_type": "NUMBER",
+      "value_type": "UINT16",
+      "range": [
+        400,
+        5000
+      ],
+      "bacnet_type": "analog_output_object",
+      "bacnet_unit_type_id": 96,
+      "bacnet_unit_type": "UNITS_PARTS_PER_MILLION",
+      "reference": [
+        "co2_alarm_rule.enable",
+        "co2_alarm_rule.mode",
+        "co2_alarm_rule.level1_value"
+      ]
+    },
+    {
+      "id": "pir_enable.enable",
+      "name": "PIR Collecting Enable",
+      "value": "1",
+      "unit": "",
+      "access_mode": "W",
+      "data_type": "BOOL",
+      "value_type": "UINT8",
+      "values": [
+        {
+          "value": 0,
+          "name": "disable"
+        },
+        {
+          "value": 1,
+          "name": "enable"
+        }
+      ],
+      "bacnet_type": "binary_output_object",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS",
+      "reference": []
+    },
+    {
+      "id": "pir_trigger_report.enable",
+      "name": "PIR Trigger Reporting",
+      "value": "0",
+      "unit": "",
+      "access_mode": "W",
+      "data_type": "BOOL",
+      "value_type": "UINT8",
+      "values": [
+        {
+          "value": 0,
+          "name": "disable"
+        },
+        {
+          "value": 1,
+          "name": "enable"
+        }
+      ],
+      "bacnet_type": "binary_output_object",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS",
+      "reference": []
+    },
+    {
+      "id": "pir_idle_report.enable",
+      "name": "PIR Vacant Reporting",
+      "value": "0",
+      "unit": "",
+      "access_mode": "W",
+      "data_type": "BOOL",
+      "value_type": "UINT8",
+      "values": [
+        {
+          "value": 0,
+          "name": "disable"
+        },
+        {
+          "value": 1,
+          "name": "enable"
+        }
+      ],
+      "bacnet_type": "binary_output_object",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS",
+      "reference": []
+    },
+    {
+      "id": "pir_idle_interval",
+      "name": "Time To Report Vacancy",
+      "value": "120",
+      "unit": "s",
+      "access_mode": "W",
+      "data_type": "NUMBER",
+      "value_type": "UINT16",
+      "range": [
+        60,
+        3600
+      ],
+      "bacnet_type": "analog_output_object",
+      "bacnet_unit_type_id": 73,
+      "bacnet_unit_type": "UNITS_SECONDS"
+    },
+    {
+      "id": "illuminance_collecting_enable.enable",
+      "name": "Illuminance Collecting Enable",
+      "value": "1",
+      "unit": "",
+      "access_mode": "W",
+      "data_type": "BOOL",
+      "value_type": "UINT8",
+      "values": [
+        {
+          "value": 0,
+          "name": "disable"
+        },
+        {
+          "value": 1,
+          "name": "enable"
+        }
+      ],
+      "bacnet_type": "binary_output_object",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS",
+      "reference": []
+    },
+    {
+      "id": "illuminance_mode.mode",
+      "name": "Illuminance Mode",
+      "value": "0",
+      "unit": "",
+      "access_mode": "W",
+      "data_type": "ENUM",
+      "value_type": "UINT8",
+      "values": [
+        {
+          "value": 0,
+          "name": "illuminance level"
+        },
+        {
+          "value": 1,
+          "name": "illuminance value"
+        }
+      ],
+      "bacnet_type": "multistate_value_object",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS",
+      "reference": []
+    },
+    {
+      "id": "illuminance_alarm_rule.enable",
+      "name": "Illuminance Threshold Enable",
+      "value": "0",
+      "unit": "",
+      "access_mode": "W",
+      "data_type": "BOOL",
+      "value_type": "UINT8",
+      "values": [
+        {
+          "value": 0,
+          "name": "disable"
+        },
+        {
+          "value": 1,
+          "name": "enable"
+        }
+      ],
+      "bacnet_type": "binary_output_object",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS",
+      "reference": [
+        "illuminance_alarm_rule.dim_value",
+        "illuminance_alarm_rule.bright_value"
+      ]
+    },
+    {
+      "id": "illuminance_alarm_rule.dim_value",
+      "name": "Dim,Below",
+      "value": "300",
+      "unit": "lx",
+      "access_mode": "W",
+      "data_type": "NUMBER",
+      "value_type": "UINT16",
+      "range": [
+        0,
+        60000
+      ],
+      "bacnet_type": "analog_output_object",
+      "bacnet_unit_type_id": 37,
+      "bacnet_unit_type": "UNITS_LUXES",
+      "reference": [
+        "illuminance_alarm_rule.enable",
+        "illuminance_alarm_rule.bright_value"
+      ]
+    },
+    {
+      "id": "illuminance_alarm_rule.bright_value",
+      "name": "Bright,Above",
+      "value": "700",
+      "unit": "lx",
+      "access_mode": "W",
+      "data_type": "NUMBER",
+      "value_type": "UINT16",
+      "range": [
+        0,
+        60000
+      ],
+      "bacnet_type": "analog_output_object",
+      "bacnet_unit_type_id": 37,
+      "bacnet_unit_type": "UNITS_LUXES",
+      "reference": [
+        "illuminance_alarm_rule.enable",
+        "illuminance_alarm_rule.dim_value"
+      ]
+    },
+    {
+      "id": "co2_collecting_enable.enable",
+      "name": "CO₂ Collecting Enable",
+      "value": "1",
+      "unit": "",
+      "access_mode": "W",
+      "data_type": "BOOL",
+      "value_type": "UINT8",
+      "values": [
+        {
+          "value": 0,
+          "name": "disable"
+        },
+        {
+          "value": 1,
+          "name": "enable"
+        }
+      ],
+      "bacnet_type": "binary_output_object",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS",
+      "reference": []
+    },
+    {
+      "id": "temperature_calibration_settings.enable",
+      "name": "Calibration Enable",
+      "value": "0",
+      "unit": "",
+      "access_mode": "W",
+      "data_type": "BOOL",
+      "value_type": "UINT8",
+      "values": [
+        {
+          "value": 0,
+          "name": "disable"
+        },
+        {
+          "value": 1,
+          "name": "enable"
+        }
+      ],
+      "bacnet_type": "binary_output_object",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS",
+      "reference": [
+        "temperature_calibration_settings.value"
+      ]
+    },
+    {
+      "id": "temperature_calibration_settings.value",
+      "name": "Calibration Value",
+      "value": "0",
+      "unit": "°C",
+      "access_mode": "W",
+      "data_type": "NUMBER",
+      "value_type": "FLOAT",
+      "range": [
+        -80,
+        80
+      ],
+      "bacnet_type": "analog_output_object",
+      "bacnet_unit_type_id": 62,
+      "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
+      "reference": [
+        "temperature_calibration_settings.enable"
+      ]
+    },
+    {
+      "id": "humidity_calibration_settings.enable",
+      "name": "Calibration Enable",
+      "value": "0",
+      "unit": "",
+      "access_mode": "W",
+      "data_type": "BOOL",
+      "value_type": "UINT8",
+      "values": [
+        {
+          "value": 0,
+          "name": "disable"
+        },
+        {
+          "value": 1,
+          "name": "enable"
+        }
+      ],
+      "bacnet_type": "binary_output_object",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS",
+      "reference": [
+        "humidity_calibration_settings.value"
+      ]
+    },
+    {
+      "id": "humidity_calibration_settings.value",
+      "name": "Calibration Value",
+      "value": "0",
+      "unit": "%RH",
+      "access_mode": "W",
+      "data_type": "NUMBER",
+      "value_type": "FLOAT",
+      "range": [
+        -100,
+        100
+      ],
+      "bacnet_type": "analog_output_object",
+      "bacnet_unit_type_id": 29,
+      "bacnet_unit_type": "UNITS_PERCENT_RELATIVE_HUMIDITY",
+      "reference": [
+        "humidity_calibration_settings.enable"
+      ]
+    },
+    {
+      "id": "co2_calibration_settings.enable",
+      "name": "Calibration Enable",
+      "value": "0",
+      "unit": "",
+      "access_mode": "W",
+      "data_type": "BOOL",
+      "value_type": "UINT8",
+      "values": [
+        {
+          "value": 0,
+          "name": "disable"
+        },
+        {
+          "value": 1,
+          "name": "enable"
+        }
+      ],
+      "bacnet_type": "binary_output_object",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS",
+      "reference": [
+        "co2_calibration_settings.value"
+      ]
+    },
+    {
+      "id": "co2_calibration_settings.value",
+      "name": "Calibration Value",
+      "value": "400",
+      "unit": "ppm",
+      "access_mode": "W",
+      "data_type": "NUMBER",
+      "value_type": "INT16",
+      "range": [
+        -4600,
+        4600
+      ],
+      "bacnet_type": "analog_output_object",
+      "bacnet_unit_type_id": 96,
+      "bacnet_unit_type": "UNITS_PARTS_PER_MILLION",
+      "reference": [
+        "co2_calibration_settings.enable"
+      ]
+    },
+    {
+      "id": "co2_auto_background_calibration_settings.enable",
+      "name": "CO₂  Auto Background Calibration Enable",
+      "value": "1",
+      "unit": "",
+      "access_mode": "W",
+      "data_type": "BOOL",
+      "value_type": "UINT8",
+      "values": [
+        {
+          "value": 0,
+          "name": "disable"
+        },
+        {
+          "value": 1,
+          "name": "enable"
+        }
+      ],
+      "bacnet_type": "binary_output_object",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS",
+      "reference": []
+    },
+    {
+      "id": "co2_altitude_calibration.enable",
+      "name": "CO₂ Altitude Compensation",
+      "value": "0",
+      "unit": "",
+      "access_mode": "W",
+      "data_type": "BOOL",
+      "value_type": "UINT8",
+      "values": [
+        {
+          "value": 0,
+          "name": "disable"
+        },
+        {
+          "value": 1,
+          "name": "enable"
+        }
+      ],
+      "bacnet_type": "binary_output_object",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS",
+      "reference": [
+        "co2_altitude_calibration.value"
+      ]
+    },
+    {
+      "id": "co2_altitude_calibration.value",
+      "name": "Compensation Value",
+      "value": "0",
+      "unit": "",
+      "access_mode": "W",
+      "data_type": "NUMBER",
+      "value_type": "UINT16",
+      "range": [
+        0,
+        5000
+      ],
+      "bacnet_type": "analog_output_object",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS",
+      "reference": [
+        "co2_altitude_calibration.enable"
+      ]
+    },
+    {
+      "id": "d2d_sending.enable",
+      "name": "D2D Data Transmission Enalbe",
+      "value": "0",
+      "unit": "",
+      "access_mode": "W",
+      "data_type": "BOOL",
+      "value_type": "UINT8",
+      "values": [
+        {
+          "value": 0,
+          "name": "disable"
+        },
+        {
+          "value": 1,
+          "name": "enable"
+        }
+      ],
+      "bacnet_type": "binary_output_object",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS",
+      "reference": [
+        "d2d_sending.lora_uplink_enable",
+        "d2d_sending.temperature_enable",
+        "d2d_sending.humidity_enable"
+      ]
+    },
+    {
+      "id": "d2d_sending.lora_uplink_enable",
+      "name": "LoRa Uplink",
+      "value": "0",
+      "unit": "",
+      "access_mode": "W",
+      "data_type": "BOOL",
+      "value_type": "UINT8",
+      "values": [
+        {
+          "value": 0,
+          "name": "disable"
+        },
+        {
+          "value": 1,
+          "name": "enable"
+        }
+      ],
+      "bacnet_type": "binary_output_object",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS",
+      "reference": [
+        "d2d_sending.enable",
+        "d2d_sending.temperature_enable",
+        "d2d_sending.humidity_enable"
+      ]
+    },
+    {
+      "id": "d2d_sending.temperature_enable",
+      "name": "Temperature",
+      "value": "0",
+      "unit": "",
+      "access_mode": "W",
+      "data_type": "BOOL",
+      "value_type": "UINT8",
+      "values": [
+        {
+          "value": 0,
+          "name": "disable"
+        },
+        {
+          "value": 1,
+          "name": "enable"
+        }
+      ],
+      "bacnet_type": "binary_output_object",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS",
+      "reference": [
+        "d2d_sending.enable",
+        "d2d_sending.lora_uplink_enable",
+        "d2d_sending.humidity_enable"
+      ]
+    },
+    {
+      "id": "d2d_sending.humidity_enable",
+      "name": "Humidity",
+      "value": "0",
+      "unit": "",
+      "access_mode": "W",
+      "data_type": "BOOL",
+      "value_type": "UINT8",
+      "values": [
+        {
+          "value": 0,
+          "name": "disable"
+        },
+        {
+          "value": 1,
+          "name": "enable"
+        }
+      ],
+      "bacnet_type": "binary_output_object",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS",
+      "reference": [
+        "d2d_sending.enable",
+        "d2d_sending.lora_uplink_enable",
+        "d2d_sending.temperature_enable"
+      ]
+    },
+    {
+      "id": "d2d_master_enable",
+      "name": "D2D Controller Enable",
+      "value": "0",
+      "unit": "",
+      "access_mode": "W",
+      "data_type": "BOOL",
+      "value_type": "UINT8",
+      "values": [
+        {
+          "value": 0,
+          "name": "disable"
+        },
+        {
+          "value": 1,
+          "name": "enable"
+        }
+      ],
+      "bacnet_type": "binary_output_object",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS"
+    },
+    {
+      "id": "data_storage_enable.enable",
+      "name": "Data Storage Enable",
+      "value": "0",
+      "unit": "",
+      "access_mode": "W",
+      "data_type": "BOOL",
+      "value_type": "UINT8",
+      "values": [
+        {
+          "value": 0,
+          "name": "disable"
+        },
+        {
+          "value": 1,
+          "name": "enable"
+        }
+      ],
+      "bacnet_type": "binary_output_object",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS",
+      "reference": []
+    },
+    {
+      "id": "retransmission_enable.enable",
+      "name": "Data Retransmission Enable",
+      "value": "0",
+      "unit": "",
+      "access_mode": "W",
+      "data_type": "BOOL",
+      "value_type": "UINT8",
+      "values": [
+        {
+          "value": 0,
+          "name": "disable"
+        },
+        {
+          "value": 1,
+          "name": "enable"
+        }
+      ],
+      "bacnet_type": "binary_output_object",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS",
+      "reference": []
+    },
+    {
+      "id": "retransmission_interval.interval",
+      "name": "Retransmission Interval",
+      "value": "600",
+      "unit": "s",
+      "access_mode": "W",
+      "data_type": "NUMBER",
+      "value_type": "UINT16",
+      "range": [
+        30,
+        1200
+      ],
+      "bacnet_type": "analog_output_object",
+      "bacnet_unit_type_id": 73,
+      "bacnet_unit_type": "UNITS_SECONDS",
+      "reference": []
+    },
+    {
+      "id": "retrival_interval.interval",
+      "name": "Retrival Interval",
+      "value": "60",
+      "unit": "s",
+      "access_mode": "W",
+      "data_type": "NUMBER",
+      "value_type": "UINT16",
+      "range": [
+        30,
+        1200
+      ],
+      "bacnet_type": "analog_output_object",
+      "bacnet_unit_type_id": 73,
+      "bacnet_unit_type": "UNITS_SECONDS",
+      "reference": []
+    },
+    {
+      "id": "pir_status_change.status",
+      "name": "PIR Status",
+      "value": "",
+      "unit": "",
+      "access_mode": "R",
+      "data_type": "ENUM",
+      "value_type": "UINT8",
+      "values": [
+        {
+          "value": 0,
+          "name": "vacant"
+        },
+        {
+          "value": 1,
+          "name": "trigger"
+        }
+      ],
+      "bacnet_type": "multistate_value_object",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS",
+      "reference": []
+    },
+    {
+      "id": "temperature_collection_anomaly.type",
+      "name": "Abnormal temperature",
+      "value": "",
+      "unit": "",
+      "access_mode": "R",
+      "data_type": "ENUM",
+      "value_type": "UINT8",
+      "values": [
+        {
+          "value": 0,
+          "name": "collect abnormal"
+        },
+        {
+          "value": 1,
+          "name": "collect out of range"
+        }
+      ],
+      "bacnet_type": "multistate_value_object",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS",
+      "reference": []
+    },
+    {
+      "id": "humidity_collection_anomaly.type",
+      "name": "Abnormal humidity",
+      "value": "",
+      "unit": "",
+      "access_mode": "R",
+      "data_type": "ENUM",
+      "value_type": "UINT8",
+      "values": [
+        {
+          "value": 0,
+          "name": "collect abnormal"
+        },
+        {
+          "value": 0,
+          "name": "collect abnormal"
+        }
+      ],
+      "bacnet_type": "multistate_value_object",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS",
+      "reference": []
+    },
+    {
+      "id": "illuminace_collection_anomaly.type",
+      "name": "Abnormal illuminace Level",
+      "value": "",
+      "unit": "",
+      "access_mode": "R",
+      "data_type": "ENUM",
+      "value_type": "UINT8",
+      "values": [
+        {
+          "value": 0,
+          "name": "collect abnormal"
+        },
+        {
+          "value": 0,
+          "name": "collect abnormal"
+        }
+      ],
+      "bacnet_type": "multistate_value_object",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS",
+      "reference": []
+    },
+    {
+      "id": "Lux_collection_anomaly.type",
+      "name": "Abnormal illuminace Value",
+      "value": "",
+      "unit": "",
+      "access_mode": "R",
+      "data_type": "ENUM",
+      "value_type": "UINT8",
+      "values": [
+        {
+          "value": 0,
+          "name": "collect abnormal"
+        },
+        {
+          "value": 1,
+          "name": "collect out of range"
+        }
+      ],
+      "bacnet_type": "multistate_value_object",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS",
+      "reference": []
+    },
+    {
+      "id": "co2_collection_anomaly.type",
+      "name": "Abnormal CO₂",
+      "value": "",
+      "unit": "",
+      "access_mode": "R",
+      "data_type": "ENUM",
+      "value_type": "UINT8",
+      "values": [
+        {
+          "value": 0,
+          "name": "collect abnormal"
+        },
+        {
+          "value": 1,
+          "name": "collect out of range"
+        }
+      ],
+      "bacnet_type": "multistate_value_object",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS",
+      "reference": []
+    },
+    {
+      "id": "temperature_alarm.temperature",
+      "name": "Temperature",
+      "value": "",
+      "unit": "°C",
+      "access_mode": "R",
+      "data_type": "NUMBER",
+      "value_type": "FLOAT",
+      "bacnet_type": "analog_input_object",
+      "bacnet_unit_type_id": 62,
+      "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
+      "reference": [
+        "temperature_alarm.alarm_type"
+      ]
+    },
+    {
+      "id": "temperature_alarm.alarm_type",
+      "name": "Alarm Type",
+      "value": "",
+      "unit": "",
+      "access_mode": "R",
+      "data_type": "ENUM",
+      "value_type": "UINT8",
+      "values": [
+        {
+          "value": 16,
+          "name": "below alarm released"
+        },
+        {
+          "value": 17,
+          "name": "below alarm"
+        },
+        {
+          "value": 18,
+          "name": "above alarm released"
+        },
+        {
+          "value": 19,
+          "name": "above alarm"
+        },
+        {
+          "value": 20,
+          "name": "within alarm released"
+        },
+        {
+          "value": 21,
+          "name": "within alarm"
+        },
+        {
+          "value": 22,
+          "name": "exceed tolerance alarm released"
+        },
+        {
+          "value": 23,
+          "name": "exceed tolerance alarm"
+        }
+      ],
+      "bacnet_type": "multistate_value_object",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS",
+      "reference": [
+        "temperature_alarm.temperature"
+      ]
+    },
+    {
+      "id": "Lux_alarm.Lux",
+      "name": "Illuminace Value",
+      "value": "",
+      "unit": "lx",
+      "access_mode": "R",
+      "data_type": "NUMBER",
+      "value_type": "UINT8",
+      "bacnet_type": "analog_input_object",
+      "bacnet_unit_type_id": 37,
+      "bacnet_unit_type": "UNITS_LUXES",
+      "reference": [
+        "Lux_alarm.alarm_type"
+      ]
+    },
+    {
+      "id": "Lux_alarm.alarm_type",
+      "name": "Alarm Type",
+      "value": "",
+      "unit": "",
+      "access_mode": "R",
+      "data_type": "ENUM",
+      "value_type": "UINT8",
+      "values": [
+        {
+          "value": 16,
+          "name": "dim"
+        },
+        {
+          "value": 17,
+          "name": "bright"
+        }
+      ],
+      "bacnet_type": "multistate_value_object",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS",
+      "reference": [
+        "Lux_alarm.Lux"
+      ]
+    },
+    {
+      "id": "co2_alarm.co2",
+      "name": "CO₂",
+      "value": "",
+      "unit": "ppm",
+      "access_mode": "R",
+      "data_type": "NUMBER",
+      "value_type": "UINT8",
+      "bacnet_type": "analog_input_object",
+      "bacnet_unit_type_id": 96,
+      "bacnet_unit_type": "UNITS_PARTS_PER_MILLION",
+      "reference": [
+        "co2_alarm.alarm_type"
+      ]
+    },
+    {
+      "id": "co2_alarm.alarm_type",
+      "name": "Alarm Type",
+      "value": "",
+      "unit": "",
+      "access_mode": "R",
+      "data_type": "ENUM",
+      "value_type": "UINT8",
+      "values": [
+        {
+          "value": 16,
+          "name": "Polluted,2-level alarm released"
+        },
+        {
+          "value": 17,
+          "name": "Polluted,2-level alarm"
+        },
+        {
+          "value": 18,
+          "name": "Bad,1-level alarm released"
+        },
+        {
+          "value": 19,
+          "name": "Bad,1-level alarm"
+        }
+      ],
+      "bacnet_type": "multistate_value_object",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS",
+      "reference": [
+        "co2_alarm.co2"
+      ]
+    },
+    {
+      "id": "historical_data_retrieval.timestamp",
+      "name": "Timestamp",
+      "value": "",
+      "unit": "s",
+      "access_mode": "R",
+      "data_type": "NUMBER",
+      "value_type": "UINT8",
+      "bacnet_type": "analog_input_object",
+      "bacnet_unit_type_id": 73,
+      "bacnet_unit_type": "UNITS_SECONDS",
+      "reference": [
+        "historical_data_retrieval.temperature_type",
+        "historical_data_retrieval.temperature",
+        "historical_data_retrieval.humidity_type",
+        "historical_data_retrieval.humidity",
+        "historical_data_retrieval.pir_type",
+        "historical_data_retrieval.pir_status",
+        "historical_data_retrieval.pir_count",
+        "historical_data_retrieval.als_level_type",
+        "historical_data_retrieval.als_level",
+        "historical_data_retrieval.co2_type",
+        "historical_data_retrieval.co2"
+      ]
+    },
+    {
+      "id": "historical_data_retrieval.temperature_type",
+      "name": "Temperature Type",
+      "value": "",
+      "unit": "",
+      "access_mode": "R",
+      "data_type": "ENUM",
+      "value_type": "UINT8",
+      "values": [
+        {
+          "value": 0,
+          "name": "data invalid"
+        },
+        {
+          "value": 1,
+          "name": "data valid"
+        },
+        {
+          "value": 2,
+          "name": "data out of range"
+        },
+        {
+          "value": 3,
+          "name": "data collect abnormal"
+        }
+      ],
+      "bacnet_type": "multistate_value_object",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS",
+      "reference": [
+        "historical_data_retrieval.timestamp",
+        "historical_data_retrieval.temperature",
+        "historical_data_retrieval.humidity_type",
+        "historical_data_retrieval.humidity",
+        "historical_data_retrieval.pir_type",
+        "historical_data_retrieval.pir_status",
+        "historical_data_retrieval.pir_count",
+        "historical_data_retrieval.als_level_type",
+        "historical_data_retrieval.als_level",
+        "historical_data_retrieval.co2_type",
+        "historical_data_retrieval.co2"
+      ]
+    },
+    {
+      "id": "historical_data_retrieval.temperature",
+      "name": "Temperature",
+      "value": "",
+      "unit": "°C",
+      "access_mode": "R",
+      "data_type": "NUMBER",
+      "value_type": "FLOAT",
+      "bacnet_type": "analog_input_object",
+      "bacnet_unit_type_id": 62,
+      "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
+      "reference": [
+        "historical_data_retrieval.timestamp",
+        "historical_data_retrieval.temperature_type",
+        "historical_data_retrieval.humidity_type",
+        "historical_data_retrieval.humidity",
+        "historical_data_retrieval.pir_type",
+        "historical_data_retrieval.pir_status",
+        "historical_data_retrieval.pir_count",
+        "historical_data_retrieval.als_level_type",
+        "historical_data_retrieval.als_level",
+        "historical_data_retrieval.co2_type",
+        "historical_data_retrieval.co2"
+      ]
+    },
+    {
+      "id": "historical_data_retrieval.humidity_type",
+      "name": "Humidity type",
+      "value": "",
+      "unit": "",
+      "access_mode": "R",
+      "data_type": "ENUM",
+      "value_type": "UINT8",
+      "values": [
+        {
+          "value": 0,
+          "name": "data invalid"
+        },
+        {
+          "value": 1,
+          "name": "data valid"
+        },
+        {
+          "value": 2,
+          "name": "data out of range"
+        },
+        {
+          "value": 3,
+          "name": "data collect abnormal"
+        }
+      ],
+      "bacnet_type": "multistate_value_object",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS",
+      "reference": [
+        "historical_data_retrieval.timestamp",
+        "historical_data_retrieval.temperature_type",
+        "historical_data_retrieval.temperature",
+        "historical_data_retrieval.humidity",
+        "historical_data_retrieval.pir_type",
+        "historical_data_retrieval.pir_status",
+        "historical_data_retrieval.pir_count",
+        "historical_data_retrieval.als_level_type",
+        "historical_data_retrieval.als_level",
+        "historical_data_retrieval.co2_type",
+        "historical_data_retrieval.co2"
+      ]
+    },
+    {
+      "id": "historical_data_retrieval.humidity",
+      "name": "Humidity",
+      "value": "",
+      "unit": "%RH",
+      "access_mode": "R",
+      "data_type": "NUMBER",
+      "value_type": "FLOAT",
+      "bacnet_type": "analog_input_object",
+      "bacnet_unit_type_id": 29,
+      "bacnet_unit_type": "UNITS_PERCENT_RELATIVE_HUMIDITY",
+      "reference": [
+        "historical_data_retrieval.timestamp",
+        "historical_data_retrieval.temperature_type",
+        "historical_data_retrieval.temperature",
+        "historical_data_retrieval.humidity_type",
+        "historical_data_retrieval.pir_type",
+        "historical_data_retrieval.pir_status",
+        "historical_data_retrieval.pir_count",
+        "historical_data_retrieval.als_level_type",
+        "historical_data_retrieval.als_level",
+        "historical_data_retrieval.co2_type",
+        "historical_data_retrieval.co2"
+      ]
+    },
+    {
+      "id": "historical_data_retrieval.pir_type",
+      "name": "PIR type",
+      "value": "",
+      "unit": "",
+      "access_mode": "R",
+      "data_type": "ENUM",
+      "value_type": "UINT8",
+      "values": [
+        {
+          "value": 0,
+          "name": "data invalid"
+        },
+        {
+          "value": 1,
+          "name": "data valid"
+        }
+      ],
+      "bacnet_type": "multistate_value_object",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS",
+      "reference": [
+        "historical_data_retrieval.timestamp",
+        "historical_data_retrieval.temperature_type",
+        "historical_data_retrieval.temperature",
+        "historical_data_retrieval.humidity_type",
+        "historical_data_retrieval.humidity",
+        "historical_data_retrieval.pir_status",
+        "historical_data_retrieval.pir_count",
+        "historical_data_retrieval.als_level_type",
+        "historical_data_retrieval.als_level",
+        "historical_data_retrieval.co2_type",
+        "historical_data_retrieval.co2"
+      ]
+    },
+    {
+      "id": "historical_data_retrieval.pir_status",
+      "name": "PIR Status",
+      "value": "",
+      "unit": "",
+      "access_mode": "R",
+      "data_type": "ENUM",
+      "value_type": "UINT8",
+      "values": [
+        {
+          "value": 0,
+          "name": "vacant"
+        },
+        {
+          "value": 1,
+          "name": "trigger"
+        }
+      ],
+      "bacnet_type": "multistate_value_object",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS",
+      "reference": [
+        "historical_data_retrieval.timestamp",
+        "historical_data_retrieval.temperature_type",
+        "historical_data_retrieval.temperature",
+        "historical_data_retrieval.humidity_type",
+        "historical_data_retrieval.humidity",
+        "historical_data_retrieval.pir_type",
+        "historical_data_retrieval.pir_count",
+        "historical_data_retrieval.als_level_type",
+        "historical_data_retrieval.als_level",
+        "historical_data_retrieval.co2_type",
+        "historical_data_retrieval.co2"
+      ]
+    },
+    {
+      "id": "historical_data_retrieval.pir_count",
+      "name": "PIR Count",
+      "value": "",
+      "unit": "",
+      "access_mode": "R",
+      "data_type": "NUMBER",
+      "value_type": "UINT8",
+      "bacnet_type": "analog_input_object",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS",
+      "reference": [
+        "historical_data_retrieval.timestamp",
+        "historical_data_retrieval.temperature_type",
+        "historical_data_retrieval.temperature",
+        "historical_data_retrieval.humidity_type",
+        "historical_data_retrieval.humidity",
+        "historical_data_retrieval.pir_type",
+        "historical_data_retrieval.pir_status",
+        "historical_data_retrieval.als_level_type",
+        "historical_data_retrieval.als_level",
+        "historical_data_retrieval.co2_type",
+        "historical_data_retrieval.co2"
+      ]
+    },
+    {
+      "id": "historical_data_retrieval.als_level_type",
+      "name": "Illuminance Level Type",
+      "value": "",
+      "unit": "",
+      "access_mode": "R",
+      "data_type": "ENUM",
+      "value_type": "UINT8",
+      "values": [
+        {
+          "value": 0,
+          "name": "data invalid"
+        },
+        {
+          "value": 1,
+          "name": "data valid"
+        },
+        {
+          "value": 2,
+          "name": "data out of range"
+        },
+        {
+          "value": 3,
+          "name": "data collect abnormal"
+        }
+      ],
+      "bacnet_type": "multistate_value_object",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS",
+      "reference": [
+        "historical_data_retrieval.timestamp",
+        "historical_data_retrieval.temperature_type",
+        "historical_data_retrieval.temperature",
+        "historical_data_retrieval.humidity_type",
+        "historical_data_retrieval.humidity",
+        "historical_data_retrieval.pir_type",
+        "historical_data_retrieval.pir_status",
+        "historical_data_retrieval.pir_count",
+        "historical_data_retrieval.als_level",
+        "historical_data_retrieval.co2_type",
+        "historical_data_retrieval.co2"
+      ]
+    },
+    {
+      "id": "historical_data_retrieval.als_level",
+      "name": "Illuminance Level",
+      "value": "",
+      "unit": "",
+      "access_mode": "R",
+      "data_type": "NUMBER",
+      "value_type": "UINT8",
+      "bacnet_type": "analog_input_object",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS",
+      "reference": [
+        "historical_data_retrieval.timestamp",
+        "historical_data_retrieval.temperature_type",
+        "historical_data_retrieval.temperature",
+        "historical_data_retrieval.humidity_type",
+        "historical_data_retrieval.humidity",
+        "historical_data_retrieval.pir_type",
+        "historical_data_retrieval.pir_status",
+        "historical_data_retrieval.pir_count",
+        "historical_data_retrieval.als_level_type",
+        "historical_data_retrieval.co2_type",
+        "historical_data_retrieval.co2"
+      ]
+    },
+    {
+      "id": "historical_data_retrieval.co2_type",
+      "name": "CO₂ Type",
+      "value": "",
+      "unit": "",
+      "access_mode": "R",
+      "data_type": "ENUM",
+      "value_type": "UINT8",
+      "values": [
+        {
+          "value": 0,
+          "name": "data invalid"
+        },
+        {
+          "value": 1,
+          "name": "data valid"
+        },
+        {
+          "value": 2,
+          "name": "data out of range"
+        },
+        {
+          "value": 3,
+          "name": "data collect abnormal"
+        }
+      ],
+      "bacnet_type": "multistate_value_object",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS",
+      "reference": [
+        "historical_data_retrieval.timestamp",
+        "historical_data_retrieval.temperature_type",
+        "historical_data_retrieval.temperature",
+        "historical_data_retrieval.humidity_type",
+        "historical_data_retrieval.humidity",
+        "historical_data_retrieval.pir_type",
+        "historical_data_retrieval.pir_status",
+        "historical_data_retrieval.pir_count",
+        "historical_data_retrieval.als_level_type",
+        "historical_data_retrieval.als_level",
+        "historical_data_retrieval.co2"
+      ]
+    },
+    {
+      "id": "historical_data_retrieval.co2",
+      "name": "CO₂",
+      "value": "",
+      "unit": "ppm",
+      "access_mode": "R",
+      "data_type": "NUMBER",
+      "value_type": "UINT8",
+      "bacnet_type": "analog_input_object",
+      "bacnet_unit_type_id": 96,
+      "bacnet_unit_type": "UNITS_PARTS_PER_MILLION",
+      "reference": [
+        "historical_data_retrieval.timestamp",
+        "historical_data_retrieval.temperature_type",
+        "historical_data_retrieval.temperature",
+        "historical_data_retrieval.humidity_type",
+        "historical_data_retrieval.humidity",
+        "historical_data_retrieval.pir_type",
+        "historical_data_retrieval.pir_status",
+        "historical_data_retrieval.pir_count",
+        "historical_data_retrieval.als_level_type",
+        "historical_data_retrieval.als_level",
+        "historical_data_retrieval.co2_type"
+      ]
+    },
+    {
+      "id": "historical_data_retrieval_Lux.timestamp",
+      "name": "Timestamp",
+      "value": "",
+      "unit": "s",
+      "access_mode": "R",
+      "data_type": "NUMBER",
+      "value_type": "UINT8",
+      "bacnet_type": "analog_input_object",
+      "bacnet_unit_type_id": 73,
+      "bacnet_unit_type": "UNITS_SECONDS",
+      "reference": [
+        "historical_data_retrieval_Lux.temperature_type",
+        "historical_data_retrieval_Lux.temperature",
+        "historical_data_retrieval_Lux.humidity_type",
+        "historical_data_retrieval_Lux.humidity",
+        "historical_data_retrieval_Lux.pir_type",
+        "historical_data_retrieval_Lux.pir_status",
+        "historical_data_retrieval_Lux.pir_count",
+        "historical_data_retrieval_Lux.Lux_type",
+        "historical_data_retrieval_Lux.Lux",
+        "historical_data_retrieval_Lux.co2_type",
+        "historical_data_retrieval_Lux.co2"
+      ]
+    },
+    {
+      "id": "historical_data_retrieval_Lux.temperature_type",
+      "name": "Temperature type",
+      "value": "",
+      "unit": "",
+      "access_mode": "R",
+      "data_type": "ENUM",
+      "value_type": "UINT8",
+      "values": [
+        {
+          "value": 0,
+          "name": "data invalid"
+        },
+        {
+          "value": 1,
+          "name": "data valid"
+        },
+        {
+          "value": 2,
+          "name": "data out of range"
+        },
+        {
+          "value": 3,
+          "name": "data collect abnormal"
+        }
+      ],
+      "bacnet_type": "multistate_value_object",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS",
+      "reference": [
+        "historical_data_retrieval_Lux.timestamp",
+        "historical_data_retrieval_Lux.temperature",
+        "historical_data_retrieval_Lux.humidity_type",
+        "historical_data_retrieval_Lux.humidity",
+        "historical_data_retrieval_Lux.pir_type",
+        "historical_data_retrieval_Lux.pir_status",
+        "historical_data_retrieval_Lux.pir_count",
+        "historical_data_retrieval_Lux.Lux_type",
+        "historical_data_retrieval_Lux.Lux",
+        "historical_data_retrieval_Lux.co2_type",
+        "historical_data_retrieval_Lux.co2"
+      ]
+    },
+    {
+      "id": "historical_data_retrieval_Lux.temperature",
+      "name": "Temperature",
+      "value": "",
+      "unit": "°C",
+      "access_mode": "R",
+      "data_type": "NUMBER",
+      "value_type": "FLOAT",
+      "bacnet_type": "analog_input_object",
+      "bacnet_unit_type_id": 62,
+      "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
+      "reference": [
+        "historical_data_retrieval_Lux.timestamp",
+        "historical_data_retrieval_Lux.temperature_type",
+        "historical_data_retrieval_Lux.humidity_type",
+        "historical_data_retrieval_Lux.humidity",
+        "historical_data_retrieval_Lux.pir_type",
+        "historical_data_retrieval_Lux.pir_status",
+        "historical_data_retrieval_Lux.pir_count",
+        "historical_data_retrieval_Lux.Lux_type",
+        "historical_data_retrieval_Lux.Lux",
+        "historical_data_retrieval_Lux.co2_type",
+        "historical_data_retrieval_Lux.co2"
+      ]
+    },
+    {
+      "id": "historical_data_retrieval_Lux.humidity_type",
+      "name": "Humidity Type",
+      "value": "",
+      "unit": "",
+      "access_mode": "R",
+      "data_type": "ENUM",
+      "value_type": "UINT8",
+      "values": [
+        {
+          "value": 0,
+          "name": "data invalid"
+        },
+        {
+          "value": 1,
+          "name": "data valid"
+        },
+        {
+          "value": 2,
+          "name": "data out of range"
+        },
+        {
+          "value": 3,
+          "name": "data collect abnormal"
+        }
+      ],
+      "bacnet_type": "multistate_value_object",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS",
+      "reference": [
+        "historical_data_retrieval_Lux.timestamp",
+        "historical_data_retrieval_Lux.temperature_type",
+        "historical_data_retrieval_Lux.temperature",
+        "historical_data_retrieval_Lux.humidity",
+        "historical_data_retrieval_Lux.pir_type",
+        "historical_data_retrieval_Lux.pir_status",
+        "historical_data_retrieval_Lux.pir_count",
+        "historical_data_retrieval_Lux.Lux_type",
+        "historical_data_retrieval_Lux.Lux",
+        "historical_data_retrieval_Lux.co2_type",
+        "historical_data_retrieval_Lux.co2"
+      ]
+    },
+    {
+      "id": "historical_data_retrieval_Lux.humidity",
+      "name": "Humidity",
+      "value": "",
+      "unit": "%RH",
+      "access_mode": "R",
+      "data_type": "NUMBER",
+      "value_type": "FLOAT",
+      "bacnet_type": "analog_input_object",
+      "bacnet_unit_type_id": 29,
+      "bacnet_unit_type": "UNITS_PERCENT_RELATIVE_HUMIDITY",
+      "reference": [
+        "historical_data_retrieval_Lux.timestamp",
+        "historical_data_retrieval_Lux.temperature_type",
+        "historical_data_retrieval_Lux.temperature",
+        "historical_data_retrieval_Lux.humidity_type",
+        "historical_data_retrieval_Lux.pir_type",
+        "historical_data_retrieval_Lux.pir_status",
+        "historical_data_retrieval_Lux.pir_count",
+        "historical_data_retrieval_Lux.Lux_type",
+        "historical_data_retrieval_Lux.Lux",
+        "historical_data_retrieval_Lux.co2_type",
+        "historical_data_retrieval_Lux.co2"
+      ]
+    },
+    {
+      "id": "historical_data_retrieval_Lux.pir_type",
+      "name": "PIR Type",
+      "value": "",
+      "unit": "",
+      "access_mode": "R",
+      "data_type": "ENUM",
+      "value_type": "UINT8",
+      "values": [
+        {
+          "value": 0,
+          "name": "data invalid"
+        },
+        {
+          "value": 1,
+          "name": "data valid"
+        }
+      ],
+      "bacnet_type": "multistate_value_object",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS",
+      "reference": [
+        "historical_data_retrieval_Lux.timestamp",
+        "historical_data_retrieval_Lux.temperature_type",
+        "historical_data_retrieval_Lux.temperature",
+        "historical_data_retrieval_Lux.humidity_type",
+        "historical_data_retrieval_Lux.humidity",
+        "historical_data_retrieval_Lux.pir_status",
+        "historical_data_retrieval_Lux.pir_count",
+        "historical_data_retrieval_Lux.Lux_type",
+        "historical_data_retrieval_Lux.Lux",
+        "historical_data_retrieval_Lux.co2_type",
+        "historical_data_retrieval_Lux.co2"
+      ]
+    },
+    {
+      "id": "historical_data_retrieval_Lux.pir_status",
+      "name": "PIR Status",
+      "value": "",
+      "unit": "",
+      "access_mode": "R",
+      "data_type": "ENUM",
+      "value_type": "UINT8",
+      "values": [
+        {
+          "value": 0,
+          "name": "vacant"
+        },
+        {
+          "value": 1,
+          "name": "trigger"
+        }
+      ],
+      "bacnet_type": "multistate_value_object",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS",
+      "reference": [
+        "historical_data_retrieval_Lux.timestamp",
+        "historical_data_retrieval_Lux.temperature_type",
+        "historical_data_retrieval_Lux.temperature",
+        "historical_data_retrieval_Lux.humidity_type",
+        "historical_data_retrieval_Lux.humidity",
+        "historical_data_retrieval_Lux.pir_type",
+        "historical_data_retrieval_Lux.pir_count",
+        "historical_data_retrieval_Lux.Lux_type",
+        "historical_data_retrieval_Lux.Lux",
+        "historical_data_retrieval_Lux.co2_type",
+        "historical_data_retrieval_Lux.co2"
+      ]
+    },
+    {
+      "id": "historical_data_retrieval_Lux.pir_count",
+      "name": "PIR Count",
+      "value": "",
+      "unit": "",
+      "access_mode": "R",
+      "data_type": "NUMBER",
+      "value_type": "UINT8",
+      "bacnet_type": "analog_input_object",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS",
+      "reference": [
+        "historical_data_retrieval_Lux.timestamp",
+        "historical_data_retrieval_Lux.temperature_type",
+        "historical_data_retrieval_Lux.temperature",
+        "historical_data_retrieval_Lux.humidity_type",
+        "historical_data_retrieval_Lux.humidity",
+        "historical_data_retrieval_Lux.pir_type",
+        "historical_data_retrieval_Lux.pir_status",
+        "historical_data_retrieval_Lux.Lux_type",
+        "historical_data_retrieval_Lux.Lux",
+        "historical_data_retrieval_Lux.co2_type",
+        "historical_data_retrieval_Lux.co2"
+      ]
+    },
+    {
+      "id": "historical_data_retrieval_Lux.Lux_type",
+      "name": "Illuminace Value Type",
+      "value": "",
+      "unit": "",
+      "access_mode": "R",
+      "data_type": "ENUM",
+      "value_type": "UINT8",
+      "values": [
+        {
+          "value": 0,
+          "name": "data invalid"
+        },
+        {
+          "value": 1,
+          "name": "data valid"
+        },
+        {
+          "value": 2,
+          "name": "data out of range"
+        },
+        {
+          "value": 3,
+          "name": "data collect abnormal"
+        }
+      ],
+      "bacnet_type": "multistate_value_object",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS",
+      "reference": [
+        "historical_data_retrieval_Lux.timestamp",
+        "historical_data_retrieval_Lux.temperature_type",
+        "historical_data_retrieval_Lux.temperature",
+        "historical_data_retrieval_Lux.humidity_type",
+        "historical_data_retrieval_Lux.humidity",
+        "historical_data_retrieval_Lux.pir_type",
+        "historical_data_retrieval_Lux.pir_status",
+        "historical_data_retrieval_Lux.pir_count",
+        "historical_data_retrieval_Lux.Lux",
+        "historical_data_retrieval_Lux.co2_type",
+        "historical_data_retrieval_Lux.co2"
+      ]
+    },
+    {
+      "id": "historical_data_retrieval_Lux.Lux",
+      "name": "Illuminace Value",
+      "value": "",
+      "unit": "lx",
+      "access_mode": "R",
+      "data_type": "NUMBER",
+      "value_type": "UINT8",
+      "bacnet_type": "analog_input_object",
+      "bacnet_unit_type_id": 37,
+      "bacnet_unit_type": "UNITS_LUXES",
+      "reference": [
+        "historical_data_retrieval_Lux.timestamp",
+        "historical_data_retrieval_Lux.temperature_type",
+        "historical_data_retrieval_Lux.temperature",
+        "historical_data_retrieval_Lux.humidity_type",
+        "historical_data_retrieval_Lux.humidity",
+        "historical_data_retrieval_Lux.pir_type",
+        "historical_data_retrieval_Lux.pir_status",
+        "historical_data_retrieval_Lux.pir_count",
+        "historical_data_retrieval_Lux.Lux_type",
+        "historical_data_retrieval_Lux.co2_type",
+        "historical_data_retrieval_Lux.co2"
+      ]
+    },
+    {
+      "id": "historical_data_retrieval_Lux.co2_type",
+      "name": "CO₂ Type",
+      "value": "",
+      "unit": "",
+      "access_mode": "R",
+      "data_type": "ENUM",
+      "value_type": "UINT8",
+      "values": [
+        {
+          "value": 0,
+          "name": "data invalid"
+        },
+        {
+          "value": 1,
+          "name": "data valid"
+        },
+        {
+          "value": 2,
+          "name": "data out of range"
+        },
+        {
+          "value": 3,
+          "name": "data collect abnormal"
+        }
+      ],
+      "bacnet_type": "multistate_value_object",
+      "bacnet_unit_type_id": 95,
+      "bacnet_unit_type": "UNITS_NO_UNITS",
+      "reference": [
+        "historical_data_retrieval_Lux.timestamp",
+        "historical_data_retrieval_Lux.temperature_type",
+        "historical_data_retrieval_Lux.temperature",
+        "historical_data_retrieval_Lux.humidity_type",
+        "historical_data_retrieval_Lux.humidity",
+        "historical_data_retrieval_Lux.pir_type",
+        "historical_data_retrieval_Lux.pir_status",
+        "historical_data_retrieval_Lux.pir_count",
+        "historical_data_retrieval_Lux.Lux_type",
+        "historical_data_retrieval_Lux.Lux",
+        "historical_data_retrieval_Lux.co2"
+      ]
+    },
+    {
+      "id": "historical_data_retrieval_Lux.co2",
+      "name": "CO₂",
+      "value": "",
+      "unit": "ppm",
+      "access_mode": "R",
+      "data_type": "NUMBER",
+      "value_type": "UINT8",
+      "bacnet_type": "analog_input_object",
+      "bacnet_unit_type_id": 96,
+      "bacnet_unit_type": "UNITS_PARTS_PER_MILLION",
+      "reference": [
+        "historical_data_retrieval_Lux.timestamp",
+        "historical_data_retrieval_Lux.temperature_type",
+        "historical_data_retrieval_Lux.temperature",
+        "historical_data_retrieval_Lux.humidity_type",
+        "historical_data_retrieval_Lux.humidity",
+        "historical_data_retrieval_Lux.pir_type",
+        "historical_data_retrieval_Lux.pir_status",
+        "historical_data_retrieval_Lux.pir_count",
+        "historical_data_retrieval_Lux.Lux_type",
+        "historical_data_retrieval_Lux.Lux",
+        "historical_data_retrieval_Lux.co2_type"
+      ]
+    }
+  ]
+}
