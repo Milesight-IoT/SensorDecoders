@@ -154,7 +154,7 @@ function milesightDeviceDecode(bytes) {
             } else if (moisture_value === 0xfffd) {
                 data.moisture_error = readSensorStatus(2);
             } else {
-                data.moisture = moisture_value / 100;
+                data.moisture = moisture_value / 10;
             }
             i += 10;
 
