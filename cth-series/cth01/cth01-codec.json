@@ -1218,6 +1218,7 @@
             "bacnet_type": "character_string_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
+            "max_length": 13,
             "reference": [
                 "bluetooth_name.length"
             ]
