@@ -688,6 +688,14 @@ Buffer.prototype.writeInt16LE = function(value) {
 	this._write(value < 0 ? value + 0x10000 : value, 2, true);
 };
 
+Buffer.prototype.writeUInt24LE = function(value) {
+	this._write(value, 3, true);
+};
+
+Buffer.prototype.writeInt24LE = function(value) {
+	this._write(value < 0 ? value + 0x1000000 : value, 3, true);
+};
+
 Buffer.prototype.writeUInt32LE = function(value) {
 	this._write(value, 4, true);
 };
