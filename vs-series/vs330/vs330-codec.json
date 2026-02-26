@@ -147,11 +147,13 @@
             "value": "1",
             "unit": "",
             "access_mode": "R",
-            "data_type": "BOOL",
+            "data_type": "ENUM",
             "value_type": "UINT8",
             "values": [
                 { "value": 0, "name": "vacant" },
-                { "value": 1, "name": "occupied" }
+                { "value": 1, "name": "occupied" },
+                { "value": 2, "name": "incomplete_first_learn" },
+                { "value": 3, "name": "collection_failed" }
             ],
             "bacnet_type": "binary_input_object",
             "bacnet_unit_type_id": 95,

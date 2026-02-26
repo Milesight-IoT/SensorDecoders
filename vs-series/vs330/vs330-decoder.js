@@ -240,7 +240,7 @@ function readEnableStatus(status) {
 }
 
 function readOccupancyStatus(status) {
-    var status_map = { 0: "vacant", 1: "occupied", 2: "Incomplete_first_learn", 3: "collection_failed" };
+    var status_map = { 0: "vacant", 1: "occupied", 2: "incomplete_first_learn", 3: "collection_failed" };
     return getValue(status_map, status);
 }
 
