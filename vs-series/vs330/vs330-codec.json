@@ -158,6 +158,54 @@
             "bacnet_unit_type": "UNITS_NO_UNITS"
         },
         {
+            "id": "learn_status",
+            "name": "Learn Status",
+            "value": "1",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [
+                { "value": 0, "name": "not_executed" },
+                { "value": 1, "name": "success" },
+                { "value": 2, "name": "failed_due_to_collection" },
+                { "value": 3, "name": "failed_due_to_pir_interrupt" }
+            ],
+            "bacnet_type": "binary_input_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS"
+        },
+        {
+            "id": "second_learn_status",
+            "name": "Second Learn Status",
+            "value": "1",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [
+                { "value": 0, "name": "not_executed" },
+                { "value": 1, "name": "success" },
+                { "value": 2, "name": "failed_due_to_collection" },
+                { "value": 3, "name": "failed_due_to_pir_interrupt" }
+            ],
+            "bacnet_type": "binary_input_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS"
+        },
+        {
+            "id": "collection_count",
+            "name": "Collection Count",
+            "value": "1",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "NUMBER",
+            "value_type": "UINT32",
+            "bacnet_type": "analog_input_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS"
+        },
+        {
             "id": "calibration_status",
             "name": "Calibration Status",
             "value": "1",
@@ -282,6 +330,78 @@
             "bacnet_unit_type_id": 30,
             "bacnet_unit_type": "UNITS_MILLIMETERS",
             "reference": ["back_test_config.enable", "back_test_config.distance"]
+        },
+        {
+            "id": "distance_info.distance1",
+            "name": "Distance 1",
+            "value": "",
+            "unit": "mm",
+            "access_mode": "R",
+            "data_type": "NUMBER",
+            "value_type": "UINT16",
+            "bacnet_type": "analog_input_object",
+            "bacnet_unit_type_id": 30,
+            "bacnet_unit_type": "UNIT   S_MILLIMETERS"
+        },
+        {
+            "id": "distance_info.distance2",
+            "name": "Distance 2",
+            "value": "",
+            "unit": "mm",
+            "access_mode": "R",
+            "data_type": "NUMBER",
+            "value_type": "UINT16",
+            "bacnet_type": "analog_input_object",
+            "bacnet_unit_type_id": 30,
+            "bacnet_unit_type": "UNITS_MILLIMETERS"
+        },
+        {
+            "id": "distance_info.distance3",
+            "name": "Distance 3",
+            "value": "",
+            "unit": "mm",
+            "access_mode": "R",
+            "data_type": "NUMBER",
+            "value_type": "UINT16",
+            "bacnet_type": "analog_input_object",
+            "bacnet_unit_type_id": 30,
+            "bacnet_unit_type": "UNITS_MILLIMETERS"
+        },
+        {
+            "id": "distance_info.distance4",
+            "name": "Distance 4",
+            "value": "",
+            "unit": "mm",
+            "access_mode": "R",
+            "data_type": "NUMBER",
+            "value_type": "UINT16",
+            "bacnet_type": "analog_input_object",
+            "bacnet_unit_type_id": 30,
+            "bacnet_unit_type": "UNITS_MILLIMETERS"
+        },
+        {
+            "id": "ambient_counts",
+            "name": "Ambient Counts",
+            "value": "",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "NUMBER",
+            "value_type": "UINT32",
+            "bacnet_type": "analog_input_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS"
+        },
+        {
+            "id": "similarity",
+            "name": "Similarity",
+            "value": "",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "NUMBER",
+            "value_type": "UINT8",
+            "bacnet_type": "analog_input_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS"
         }
     ]
 }

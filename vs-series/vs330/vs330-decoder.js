@@ -88,21 +88,47 @@ function milesightDeviceDecode(bytes) {
             decoded.occupancy = readOccupancyStatus(bytes[i]);
             i += 1;
         }
+        else if (channel_id === 0x04 && channel_type === 0xa8) {
+            decoded.learn_status = readLearnStatus(bytes[i]);
+            i += 1;
+        }
+        else if (channel_id === 0x08 && channel_type === 0xa8) {
+            decoded.second_learn_status = readLearnStatus(bytes[i]);
+            i += 1;
+        }
+        else if (channel_id === 0x09 && channel_type === 0xa9) {
+            decoded.collection_count = readUInt32LE(bytes.slice(i, i + 4));
+            i += 4;
+        }
         // CALIBRATION
         else if (channel_id === 0x04 && channel_type === 0x8e) {
             decoded.calibration_status = readCalibrationStatus(bytes[i]);
             i += 1;
         } 
+
         else if (channel_id === 0x02 && channel_type === 0xa5) {
-            decoded.human_exist_height = readUInt16LE(bytes.slice(i, i + 2));
-            i += 2;
+            decoded.distanceInfo = {};
+            decoded.distanceInfo.distance1 = readUInt16LE(bytes.slice(i, i + 2));
+            decoded.distanceInfo.distance2 = readUInt16LE(bytes.slice(i + 2, i + 4));
+            decoded.distanceInfo.distance3 = readUInt16LE(bytes.slice(i + 4, i + 6));
+            decoded.distanceInfo.distance4 = readUInt16LE(bytes.slice(i + 6, i + 8));
+            i += 8;
+        }
+        else if (channel_id === 0x06 && channel_type === 0xa6) {
+            decoded.ambient_counts = readUInt32LE(bytes.slice(i, i + 4));
+            i += 4;
+        }
+        else if (channel_id === 0x07 && channel_type === 0xa7) {
+            decoded.similarity = readUInt8(bytes[i]);
+            i += 4;
         }
         // DOWNLINK RESPONSE
         else if (channel_id === 0xfe || channel_id === 0xff) {
             var result = handle_downlink_response(channel_type, bytes, i);
             decoded = Object.assign(decoded, result.data);
             i = result.offset;
-        } else {
+        }      
+        else {
             break;
         }
     }
@@ -214,7 +240,12 @@ function readEnableStatus(status) {
 }
 
 function readOccupancyStatus(status) {
-    var status_map = { 0: "vacant", 1: "occupied" };
+    var status_map = { 0: "vacant", 1: "occupied", 2: "Incomplete_first_learn", 3: "collection_failed" };
+    return getValue(status_map, status);
+}
+
+function readLearnStatus(status) {
+    var status_map = { 0: "not_executed", 1: "success", 2: "failed_due_to_collection", 3: "failed_due_to_pir_interrupt" };
     return getValue(status_map, status);
 }
 
@@ -236,6 +267,11 @@ function readInt8(bytes) {
 function readUInt16LE(bytes) {
     var value = (bytes[1] << 8) + bytes[0];
     return value & 0xffff;
+}
+
+function readUInt32LE(bytes) {
+    var value = (bytes[3] << 24) + (bytes[2] << 16) + (bytes[1] << 8) + bytes[0];
+    return value & 0xffffffff;
 }
 
 function readInt16LE(bytes) {
