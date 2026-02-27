@@ -87,7 +87,7 @@ function milesightDeviceDecode(bytes) {
         else if (channel_id === 0x03 && channel_type === 0x8e) {
             var status = bytes[i];
             if (status <= 1) {
-                decoded.occupancy = readOccupancyStatus(bytes[i]);
+                decoded.occupancy = readOccupancyStatus(status);
             }
             i += 1;
         }
