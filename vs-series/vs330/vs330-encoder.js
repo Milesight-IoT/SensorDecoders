@@ -50,7 +50,27 @@ function milesightDeviceEncode(payload) {
     if ("back_test_config" in payload) {
         encoded = encoded.concat(setBackTestMode(payload.back_test_config));
     }
-
+    if ("test_install_config" in payload) {
+        encoded = encoded.concat(setTestDeployConfig(payload.test_install_config));
+    }
+    if ("debug_enable" in payload) {
+        encoded = encoded.concat(setDebugEnable(payload.debug_enable));
+    }
+    if ("second_learn_enable" in payload) {
+        encoded = encoded.concat(setSecondLearnEnable(payload.second_learn_enable));
+    }
+    if ("second_learn_time" in payload) {
+        encoded = encoded.concat(setSecondLearnTime(payload.second_learn_time));
+    }
+    if ("collection_count" in payload) {
+        encoded = encoded.concat(setCollectionCount(payload.collection_count));
+    }
+    if ("pir_collection_config" in payload) {
+        encoded = encoded.concat(setPIRCollectionConfig(payload.pir_collection_config));
+    }
+    if ("toilet_mode" in payload) {
+        encoded = encoded.concat(setToiletMode(payload.toilet_mode));
+    }
     return encoded;
 }
 
@@ -89,6 +109,160 @@ function setCollectionInterval(collection_interval) {
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0x02);
     buffer.writeUInt16LE(collection_interval);
+    return buffer.toBytes();
+}
+
+/**
+ * set test install config
+ * @param {object} test_install_config
+ * @param {number} test_install_config.test_enable values: (0: disable, 1: enable)
+ * @param {number} test_install_config.deploy_height unit: cm, range: [250, 350]
+ * @example { "test_install_config": { "test_enable": 0, "deploy_height": 250 } }
+ */
+function setTestDeployConfig(test_install_config) {
+    var enable = test_install_config.test_enable;
+    var height = test_install_config.deploy_height;
+
+    var enable_map = { 0: "disable", 1: "enable" };
+    var enable_values = getValues(enable_map);
+    if (enable_values.indexOf(enable) === -1) {
+        throw new Error("test_install_config.test_enable must be one of " + enable_values.join(", "));
+    }
+    if (height < 250 || height > 350) {
+        throw new Error("test_install_config.deploy_height must be in range [250, 350]");
+    }
+
+    var buffer = new Buffer(5);
+    buffer.writeUInt8(0xf9);
+    buffer.writeUInt8(0x7e);
+    buffer.writeUInt8(getValue(enable_map, enable));
+    buffer.writeUInt16LE(height);
+    return buffer.toBytes();
+}
+
+/**
+ * set debug enable
+ * @param {number} debug_enable values: (0: disable, 1: enable)
+ * @example { "debug_enable": 1 }
+ */
+function setDebugEnable(debug_enable) {
+    var enable_map = { 0: "disable", 1: "enable" };
+    var enable_values = getValues(enable_map);
+    if (enable_values.indexOf(debug_enable) === -1) {
+        throw new Error("debug_enable must be one of " + enable_values.join(", "));
+    }
+    
+    var buffer = new Buffer(3);
+    buffer.writeUInt8(0xf9);
+    buffer.writeUInt8(0x7f);
+    buffer.writeUInt8(getValue(enable_map, debug_enable));
+    return buffer.toBytes();
+}
+
+/**
+ * set second learn enable
+ * @param {number} second_learn_enable values: (0: disable, 1: enable)
+ * @example { "second_learn_enable": 1 }
+ */
+function setSecondLearnEnable(second_learn_enable) {
+    var enable_map = { 0: "disable", 1: "enable" };
+    var enable_values = getValues(enable_map);
+    if (enable_values.indexOf(second_learn_enable) === -1) {
+        throw new Error("second_learn_enable must be one of " + enable_values.join(", "));
+    }
+    
+    var buffer = new Buffer(3);
+    buffer.writeUInt8(0xf9);
+    buffer.writeUInt8(0x80);
+    buffer.writeUInt8(getValue(enable_map, second_learn_enable));
+    return buffer.toBytes();
+}
+
+/**
+ * set second learn time
+ * @param {number} second_learn_time unit: second, range: [1, 60]
+ * @example { "second_learn_time": 10 }
+ */
+function setSecondLearnTime(second_learn_time) {
+    if (typeof second_learn_time !== "number") {
+        throw new Error("second_learn_time must be a number");
+    }
+    if (second_learn_time < 30 || second_learn_time > 1440) {
+        throw new Error("second_learn_time must be in range [30, 1440]");
+    }
+
+    var buffer = new Buffer(4);
+    buffer.writeUInt8(0xf9);
+    buffer.writeUInt8(0x81);
+    buffer.writeUInt16LE(second_learn_time);
+    return buffer.toBytes();
+}
+
+/**
+ * set collection count
+ * @param {number} collection_count unit: count, 
+ * @example { "collection_count": 100 }
+ */
+function setCollectionCount(collection_count) {
+    if (typeof collection_count !== "number") {
+        throw new Error("collection_count must be a number");
+    }
+    
+    var buffer = new Buffer(6);
+    buffer.writeUInt8(0xf9);
+    buffer.writeUInt8(0x88);
+    buffer.writeUInt32LE(collection_count);
+    return buffer.toBytes();
+}
+
+/**
+ * set PIR collection config
+ * @param {object} pir_collection_config
+ * @param {number} pir_collection_config.first_delay unit: second
+ * @param {number} pir_collection_config.interval unit: second
+ * @param {number} pir_collection_config.count
+ * @example { "pir_collection_config": { "first_delay": 10, "interval": 10, "count": 10 } }
+ */
+function setPIRCollectionConfig(pir_collection_config) {
+    var first_delay = pir_collection_config.first_delay;
+    var interval = pir_collection_config.interval;
+    var count = pir_collection_config.count;
+
+    if (typeof first_delay !== "number") {
+        throw new Error("first_delay must be a number");
+    }
+    if (typeof interval !== "number") {
+        throw new Error("interval must be a number");
+    }
+    if (typeof count !== "number") {
+        throw new Error("count must be a number");
+    }
+    
+    var buffer = new Buffer(5);
+    buffer.writeUInt8(0xf9);
+    buffer.writeUInt8(0xb9);
+    buffer.writeUInt8(first_delay);
+    buffer.writeUInt8(interval);
+    buffer.writeUInt8(count);
+    return buffer.toBytes();
+}
+
+/**
+ * set toilet mode
+ * @param {number} toilet_mode values: (0: disable, 1: enable)
+ * @example { "toilet_mode": 1 }
+ */
+function setToiletMode(toilet_mode) {
+    var mode_map = { 0: "disable", 1: "enable" };
+    var mode_values = getValues(mode_map);
+    if (mode_values.indexOf(toilet_mode) === -1) {
+        throw new Error("toilet_mode must be one of " + mode_values.join(", "));
+    }
+    
+    var buffer = new Buffer(3);
+    buffer.writeUInt8(0xf9);
+    buffer.writeUInt8(0xa1);
+    buffer.writeUInt8(getValue(mode_map, toilet_mode));
     return buffer.toBytes();
 }
 
@@ -254,6 +428,11 @@ Buffer.prototype.writeUInt16LE = function (value) {
 Buffer.prototype.writeInt16LE = function (value) {
     this._write(value < 0 ? value + 0x10000 : value, 2, true);
     this.offset += 2;
+};
+
+Buffer.prototype.writeUInt32LE = function (value) {
+    this._write(value, 4, true);
+    this.offset += 4;
 };
 
 Buffer.prototype.toBytes = function () {
