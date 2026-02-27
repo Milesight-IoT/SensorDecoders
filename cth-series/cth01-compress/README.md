@@ -1,6 +1,6 @@
 # CTH01 Sensor
 
-![CTH01](cth01.png)
+![CTH01](CTH01.png)
 
 For more detailed information, please visit [Milesight Official Website](https://www.milesight.com/iot/product/lorawan-sensor/cth01)
 
