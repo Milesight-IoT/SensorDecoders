@@ -332,6 +332,36 @@
             "reference": ["back_test_config.enable", "back_test_config.distance"]
         },
         {
+            "id": "test_install_config.test_enable",
+            "name": "Test Install Config (Test Enable)",
+            "value": "",
+            "unit": "",
+            "access_mode": "RW",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                { "value": 0, "name": "disable" },
+                { "value": 1, "name": "enable" }
+            ],
+            "bacnet_type": "binary_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": ["test_install_config.test_enable", "test_install_config.deploy_height"]
+        },
+        {
+            "id": "test_install_config.deploy_height",
+            "name": "Test Install Config (Deploy Height)",
+            "value": "250",
+            "unit": "cm",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "UINT16",
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 31,
+            "bacnet_unit_type": "UNITS_CENTIMETERS",
+            "reference": ["test_install_config.test_enable", "test_install_config.deploy_height"]
+        },
+        {
             "id": "distance_info.distance1",
             "name": "Distance 1",
             "value": "",
