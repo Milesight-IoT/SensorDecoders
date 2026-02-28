@@ -110,11 +110,11 @@ function milesightDeviceDecode(bytes) {
         } 
 
         else if (channel_id === 0x02 && channel_type === 0xa5) {
-            decoded.distanceInfo = {};
-            decoded.distanceInfo.distance1 = readUInt16LE(bytes.slice(i, i + 2));
-            decoded.distanceInfo.distance2 = readUInt16LE(bytes.slice(i + 2, i + 4));
-            decoded.distanceInfo.distance3 = readUInt16LE(bytes.slice(i + 4, i + 6));
-            decoded.distanceInfo.distance4 = readUInt16LE(bytes.slice(i + 6, i + 8));
+            decoded.distance_info = {};
+            decoded.distance_info.distance1 = readUInt16LE(bytes.slice(i, i + 2));
+            decoded.distance_info.distance2 = readUInt16LE(bytes.slice(i + 2, i + 4));
+            decoded.distance_info.distance3 = readUInt16LE(bytes.slice(i + 4, i + 6));
+            decoded.distance_info.distance4 = readUInt16LE(bytes.slice(i + 6, i + 8));
             i += 8;
         }
         else if (channel_id === 0x06 && channel_type === 0xa6) {
