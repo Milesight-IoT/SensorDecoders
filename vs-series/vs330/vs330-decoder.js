@@ -123,7 +123,7 @@ function milesightDeviceDecode(bytes) {
         }
         else if (channel_id === 0x07 && channel_type === 0xa7) {
             decoded.similarity = readUInt8(bytes[i]);
-            i += 4;
+            i += 1;
         }
         // DOWNLINK RESPONSE
         else if (channel_id === 0xfe || channel_id === 0xff) {
