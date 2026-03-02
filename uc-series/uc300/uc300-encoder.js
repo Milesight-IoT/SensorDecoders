@@ -274,7 +274,7 @@ function controlOutputStatusWithDuration(gpio_index, gpio_output_x_control) {
 
     var buffer = new Buffer(7);
     buffer.writeUInt8(0xff);
-    buffer.writeUInt8(0x92);
+    buffer.writeUInt8(0x93);
     buffer.writeUInt8(gpio_index);
     buffer.writeUInt8(getValue(on_off_map, status));
     buffer.writeUInt32LE(duration);

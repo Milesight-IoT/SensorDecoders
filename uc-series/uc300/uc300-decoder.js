@@ -362,7 +362,7 @@ function handle_downlink_response(channel_type, bytes, offset) {
             decoded.jitter_config[channel_map[channel_id]] = readUInt32LE(bytes.slice(offset + 1, offset + 5));
             offset += 5;
             break;
-        case 0x92:
+        case 0x93:
             var gpio_index = readUInt8(bytes[offset]);
             var gpio_output_chn_name = "gpio_output_" + gpio_index + "_control";
             decoded[gpio_output_chn_name] = {
