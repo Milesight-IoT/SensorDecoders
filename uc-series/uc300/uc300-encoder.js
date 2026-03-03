@@ -272,7 +272,7 @@ function controlOutputStatusWithDuration(gpio_index, gpio_output_x_control) {
         throw new Error("gpio_output_" + gpio_index + "_control.status must be one of " + on_off_values.join(", "));
     }
 
-    var buffer = new Buffer(7);
+    var buffer = new Buffer(8);
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0x93);
     buffer.writeUInt8(gpio_index);
