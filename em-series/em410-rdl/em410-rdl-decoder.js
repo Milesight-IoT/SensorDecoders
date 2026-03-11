@@ -29,15 +29,18 @@ function Decoder(bytes, port) {
 function milesightDeviceDecode(bytes) {
     var decoded = {};
 
-    for (var i = 0; i < bytes.length; ) {
-        var channel_id = bytes[i++];
-        if (channel_id === 0x07){
-            var id = readUInt16LE(bytes.slice(i, i + 2));
-            var distance_raw_data = readUInt16LE(bytes.slice(i + 2, i + 4));
-            var distance_value = readInt16LE(bytes.slice(i + 2, i + 4));
-            i += 4;
+    // FOR HISTORY SERIAL ONLY
+    if (bytes[0] === 0x07 && bytes[1] === 0xba) {
+        var period = readUInt16LE(bytes.slice(2, 4));
+        decoded.history_serial_period = period
+        decoded.history_serial = []
+
+        for (var i = 4; i <= bytes.length - 2;) {
+            var distance_raw_data = readUInt16LE(bytes.slice(i, i + 2));
+            var distance_value = readInt16LE(bytes.slice(i, i + 2));
+            i += 2;
+
             var data = {}
-            data.id = id;
             if (distance_raw_data === 0xfffd) {
                 data.distance_sensor_status = "no target";
             } else if (distance_raw_data === 0xffff) {
@@ -47,11 +50,13 @@ function milesightDeviceDecode(bytes) {
             } else {
                 data.distance = distance_value;
             }
-            decoded.history_serial = decoded.history_serial || [];
             decoded.history_serial.push(data);
-            continue;
         }
+        return decoded;
+    }
 
+    for (var i = 0; i < bytes.length; ) {
+        var channel_id = bytes[i++];
         var channel_type = bytes[i++];
 
         // IPSO VERSION
@@ -98,6 +103,11 @@ function milesightDeviceDecode(bytes) {
         else if (channel_id === 0x01 && channel_type === 0x75) {
             decoded.battery = readUInt8(bytes[i]);
             i += 1;
+        }
+        // VOLTAGE
+        else if (channel_id === 0x01 && channel_type === 0xb9) {
+            decoded.voltage = readUInt16LE(bytes.slice(i, i + 2))
+            i += 2;
         }
         // TEMPERATURE
         else if (channel_id === 0x03 && channel_type === 0x67) {

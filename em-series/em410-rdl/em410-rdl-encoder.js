@@ -119,6 +119,12 @@ function milesightDeviceEncode(payload) {
     if ("password" in payload) {
         encoded = encoded.concat(setPassword(payload.password));
     }
+    if ("voltage_data_reporting_config" in payload) {
+        encoded = encoded.concat(setVoltageDataReportingConfig(payload.voltage_data_reporting_config));
+    }
+    if ("distance_report_quantity" in payload) {
+        encoded = encoded.concat(setDistanceReportQuantity(payload.distance_report_quantity));
+    }
 
     return encoded;
 }
@@ -197,6 +203,52 @@ function setPassword(password) {
     buffer.writeUInt8(0xf9);
     buffer.writeUInt8(0xc8);
     buffer.writeString(password);
+    return buffer.toBytes();
+}
+
+/**
+ * set voltage data reporting config
+ * @param {object} voltage_data_reporting_config
+ * @param {number} voltage_data_reporting_config.enable
+ * @param {number} voltage_data_reporting_config.period
+ */
+function setVoltageDataReportingConfig(voltage_data_reporting_config) {
+    var enable = voltage_data_reporting_config.enable
+    var period = voltage_data_reporting_config.period
+
+    var enable_map = { 0: "disable", 1: "enable" };
+    var enable_values = getValues(enable_map);
+    if (enable_values.indexOf(enable) === -1) {
+        throw new Error("voltage_data_reporting_config.enable must be one of " + enable_values.join(", "));
+    }
+
+    if (typeof period !== "number") {
+        throw new Error("voltage_data_reporting_config.period must be a number");
+    }
+
+    var buffer = new Buffer(5);
+    buffer.writeUInt8(0xf9);
+    buffer.writeUInt8(0xcb);
+    buffer.writeUInt8(getValue(enable_map, enable));
+    buffer.writeUInt16LE(period);
+    return buffer.toBytes();
+}
+
+
+/**
+ * set distance report quantity
+ * @param {number} distance_report_quantity
+ */
+function setDistanceReportQuantity(distance_report_quantity) {
+
+    if (typeof distance_report_quantity !== "number") {
+        throw new Error("distance_report_quantity must be a number");
+    }
+
+    var buffer = new Buffer(3);
+    buffer.writeUInt8(0xf9);
+    buffer.writeUInt8(0xcc);
+    buffer.writeUInt8(distance_report_quantity);
     return buffer.toBytes();
 }
 
