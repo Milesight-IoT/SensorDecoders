@@ -27,7 +27,7 @@ function Decoder(bytes, port) {
 
 function milesightDeviceDecode(bytes) {
 	var decoded = {};
-    var result = {};
+	var result = {};
 	var history = [];
 
 	var unknown_command = 0;
@@ -106,8 +106,7 @@ function milesightDeviceDecode(bytes) {
 				decoded.battery = readUInt8(bytes, counterObj, 1);
 				break;
 			case 0x01:
-				// decoded.temperature = readInt16LE(bytes, counterObj, 2) / 100;
-				decoded.temperature = Math.round(readInt16LE(bytes, counterObj, 2) / 100 * 10) / 10;
+				decoded.temperature = readInt16LE(bytes, counterObj, 2) / 100;
 				break;
 			case 0x02:
 				decoded.motor_total_stroke = readUInt16LE(bytes, counterObj, 2);
@@ -688,6 +687,8 @@ function milesightDeviceDecode(bytes) {
 		}
 	}
 
+	processTemperature(result);
+
 	return result;
 }
 
@@ -766,14 +767,14 @@ function readInt16LE(allBytes, counterObj, end) {
 }
 
 function readUInt24LE(allBytes, counterObj, end) {
-    var bytes = readBytes(allBytes, counterObj, end); // 3 bytes expected
-    var value = (bytes[2] << 16) + (bytes[1] << 8) + bytes[0];
-    return value & 0xffffff;
+	var bytes = readBytes(allBytes, counterObj, end); // 3 bytes expected
+	var value = (bytes[2] << 16) + (bytes[1] << 8) + bytes[0];
+	return value & 0xffffff;
 }
 
 function readInt24LE(allBytes, counterObj, end) {
-    var ref = readUInt24LE(allBytes, counterObj, end);
-    return ref > 0x7fffff ? ref - 0x1000000 : ref;
+	var ref = readUInt24LE(allBytes, counterObj, end);
+	return ref > 0x7fffff ? ref - 0x1000000 : ref;
 }
 
 function readUInt32LE(allBytes, counterObj, end) {
@@ -890,49 +891,145 @@ function insertArrayItem(array, item, idName) {
 }
 
 function readCommand(allBytes, counterObj, end) {
-    var bytes = readBytes(allBytes, counterObj, end);
-    var cmd = bytes
-        .map(function(b) {
-            var hex = b.toString(16);
-            return hex.length === 1 ? '0' + hex : hex;
-        })
-        .join('')
-        .toLowerCase();
+	var bytes = readBytes(allBytes, counterObj, end);
+	var cmd = bytes
+		.map(function(b) {
+			var hex = b.toString(16);
+			return hex.length === 1 ? '0' + hex : hex;
+		})
+		.join('')
+		.toLowerCase();
 
-    var map = cmdMap();
-    for (var key in map) {
-        var xxs = [];
-        var isMatch = false;
-        if (key.length !== cmd.length) {
-            continue;
-        }
-        for (var i = 0; i < key.length; i += 2) {
-            var hexString = key.slice(i, i + 2);
-            var cmdString = cmd.slice(i, i + 2);
-            if (hexString === cmdString || hexString === 'xx') {
-                if (hexString === 'xx') {
-                    xxs.push('.' + parseInt(cmdString, 16));
-                }
-                isMatch = true;
-                continue;
-            } else {
-                isMatch = false;
-                break;
-            }
-        }
-        if (isMatch) {
-            var propertyId = map[key];
-            if (propertyId.indexOf('._item') === -1) {
-                return propertyId;
-            }
-            var j = 0;
-            var result = propertyId.replace(/\._item/g, function() {
-                return xxs[j++];
-            });
-            return result;
-        }
-    }
-    return null;
+	var map = cmdMap();
+	for (var key in map) {
+		var xxs = [];
+		var isMatch = false;
+		if (key.length !== cmd.length) {
+			continue;
+		}
+		for (var i = 0; i < key.length; i += 2) {
+			var hexString = key.slice(i, i + 2);
+			var cmdString = cmd.slice(i, i + 2);
+			if (hexString === cmdString || hexString === 'xx') {
+				if (hexString === 'xx') {
+					xxs.push('.' + parseInt(cmdString, 16));
+				}
+				isMatch = true;
+				continue;
+			} else {
+				isMatch = false;
+				break;
+			}
+		}
+		if (isMatch) {
+			var propertyId = map[key];
+			if (propertyId.indexOf('._item') === -1) {
+				return propertyId;
+			}
+			var j = 0;
+			var result = propertyId.replace(/\._item/g, function() {
+				return xxs[j++];
+			});
+			return result;
+		}
+	}
+	return null;
+}
+
+function hasPath(obj, path) {
+	var parts = path.split('.');
+	var current = obj;
+  
+	for (var i = 0; i < parts.length; i++) {
+	  	if (!current || !(parts[i] in current)) {
+			return false;
+	  	}
+	  	current = current[parts[i]];
+	}
+  
+	return true;
+}
+
+function getPath(obj, path) {
+	var parts = path.split('.');
+	var current = obj;
+  
+	for (var i = 0; i < parts.length; i++) {
+	  	var key = parts[i];
+  
+	  	if (!current || !(key in current)) {
+			return null;
+	  	}
+  
+	  	current = current[key];
+	}
+  
+	return current;
+}
+  
+
+function setPath(obj, path, value) {
+	var parts = path.split('.');
+	var current = obj;
+  
+	for (var i = 0; i < parts.length - 1; i++) {
+	  	var key = parts[i];
+  
+	  	if (!(key in current) || typeof current[key] !== 'object') {
+			current[key] = {};
+	  	}
+  
+	  	current = current[key];
+	}
+
+	current[parts[parts.length - 1]] = value;
+	return obj;
+}
+
+function convertName(propertyId, prefix) {
+	var parts = propertyId.split('.');
+	var lastPart = parts[parts.length - 1];
+	parts[parts.length - 1] = prefix + '_' + lastPart;
+	return parts.join('.');
+}
+
+function recoverName(propertyId, prefix) {
+	var parts = propertyId.split('.');
+	var lastPart = parts[parts.length - 1];
+	parts[parts.length - 1] = lastPart.replace(prefix + '_', '');
+	return parts.join('.');
+}
+
+function getAllLeafPaths(obj, prefix) {
+	var paths = [];
+
+	function recurse(current, path) {
+	  if (Array.isArray(current)) {
+		current.forEach(function (item, index) {
+		  var newPath = path ? (path + "." + index) : String(index);
+		  recurse(item, newPath);
+		});
+  
+	  } else if (typeof current === 'object' && current !== null) {
+		for (var key in current) {
+		  if (Object.prototype.hasOwnProperty.call(current, key)) {
+			var newPath = path ? (path + "." + key) : key;
+			recurse(current[key], newPath);
+		  }
+		}
+  
+	  } else {
+		paths.push(path);
+	  }
+	}
+  
+	recurse(obj, "");
+	return paths;
+  
+}
+
+function isInteger(str) {
+	return typeof str === 'string' && /^[0-9]+$/.test(str);
 }
 
 function cmdMap() {
@@ -950,6 +1047,8 @@ function cmdMap() {
 		  "68": "anti_freeze_protection_setting",
 		  "69": "mandatory_heating_enable",
 		  "70": "motor_controllable_range",
+		  "6101": "temperature_source_settings.external_ntc_reception",
+		  "6102": "temperature_source_settings.lorawan_reception",
 		  "6300": "heating_period_settings.heating_date_settings",
 		  "6301": "heating_period_settings.heating_period_reporting_interval",
 		  "6302": "heating_period_settings.non_heating_period_reporting_interval",
@@ -961,6 +1060,13 @@ function cmdMap() {
 		  "6504": "temp_control.target_temperature_adjustment_range_min",
 		  "6505": "temp_control.target_temperature_adjustment_range_max",
 		  "6506": "temp_control.mode_settings",
+		  "630100": "heating_period_settings.heating_period_reporting_interval.seconds_of_time",
+		  "630101": "heating_period_settings.heating_period_reporting_interval.minutes_of_time",
+		  "630200": "heating_period_settings.non_heating_period_reporting_interval.seconds_of_time",
+		  "630201": "heating_period_settings.non_heating_period_reporting_interval.minutes_of_time",
+		  "650600": "temp_control.mode_settings.auto_control",
+		  "650601": "temp_control.mode_settings.valve_control",
+		  "650602": "temp_control.mode_settings.intergrated_control",
 		  "ff": "request_check_sequence_number",
 		  "fe": "request_check_order",
 		  "ef": "request_command_queries",
@@ -986,11 +1092,29 @@ function cmdMap() {
 		  "07": "target_valve_opening_degree",
 		  "08": "low_battery_alarm",
 		  "09": "temperature_alarm",
+		  "0910": "temperature_alarm.lower_range_alarm_deactivation",
+		  "0911": "temperature_alarm.lower_range_alarm_trigger",
+		  "0912": "temperature_alarm.over_range_alarm_deactivation",
+		  "0913": "temperature_alarm.over_range_alarm_trigger",
 		  "0a": "anti_freeze_protection_alarm",
+		  "0a20": "anti_freeze_protection_alarm.lifted",
+		  "0a21": "anti_freeze_protection_alarm.trigger",
 		  "0b": "mandatory_heating_alarm",
+		  "0b20": "mandatory_heating_alarm.exit",
+		  "0b21": "mandatory_heating_alarm.enter",
 		  "0c": "auto_away_report",
+		  "0c20": "auto_away_report.inactive_by_target_temperature",
+		  "0c21": "auto_away_report.active_by_target_temperature",
+		  "0c22": "auto_away_report.inactive_by_target_valve_opening",
+		  "0c23": "auto_away_report.active_by_target_valve_opening",
 		  "0d": "window_opening_alarm",
+		  "0d20": "window_opening_alarm.release",
+		  "0d21": "window_opening_alarm.trigger",
 		  "0e": "periodic_reporting",
+		  "0e00": "periodic_reporting.non_heating_season",
+		  "0e01": "periodic_reporting.target_temperature_for_heating",
+		  "0e02": "periodic_reporting.target_valve_opening_for_heating",
+		  "0e03": "periodic_reporting.integrated_control_for_heating",
 		  "c9": "random_key",
 		  "c4": "auto_p_enable",
 		  "6a": "child_lock",
@@ -1034,4 +1158,153 @@ function cmdMap() {
 		  "bf": "reset",
 		  "be": "reboot"
 	};
+}
+function processTemperature(decoded) {
+	var allTemperatureProperties = {
+    "temperature": {
+        "precision": 1
+    },
+    "target_temperature": {
+        "precision": 1
+    },
+    "temperature_alarm.lower_range_alarm_deactivation.temperature": {
+        "precision": 1
+    },
+    "temperature_alarm.lower_range_alarm_trigger.temperature": {
+        "precision": 1
+    },
+    "temperature_alarm.over_range_alarm_deactivation.temperature": {
+        "precision": 1
+    },
+    "temperature_alarm.over_range_alarm_trigger.temperature": {
+        "precision": 1
+    },
+    "anti_freeze_protection_alarm.lifted.environment_temperature": {
+        "precision": 1
+    },
+    "anti_freeze_protection_alarm.trigger.environment_temperature": {
+        "precision": 1
+    },
+    "mandatory_heating_alarm.exit.environment_temperature": {
+        "precision": 1
+    },
+    "mandatory_heating_alarm.enter.environment_temperature": {
+        "precision": 1
+    },
+    "auto_away_report.inactive_by_target_temperature.environment_temperature": {
+        "precision": 1
+    },
+    "auto_away_report.inactive_by_target_temperature.target_temperature": {
+        "precision": 1
+    },
+    "auto_away_report.active_by_target_temperature.environment_temperature": {
+        "precision": 1
+    },
+    "auto_away_report.active_by_target_temperature.target_temperature": {
+        "precision": 1
+    },
+    "auto_away_report.inactive_by_target_valve_opening.environment_temperature": {
+        "precision": 1
+    },
+    "auto_away_report.active_by_target_valve_opening.environment_temperature": {
+        "precision": 1
+    },
+    "window_opening_alarm.release.environment_temperature": {
+        "precision": 1
+    },
+    "window_opening_alarm.trigger.environment_temperature": {
+        "precision": 1
+    },
+    "periodic_reporting.target_temperature_for_heating.environment_temperature": {
+        "precision": 1
+    },
+    "periodic_reporting.target_temperature_for_heating.target_temperature": {
+        "precision": 1
+    },
+    "periodic_reporting.target_valve_opening_for_heating.environment_temperature": {
+        "precision": 1
+    },
+    "periodic_reporting.integrated_control_for_heating.environment_temperature": {
+        "precision": 1
+    },
+    "periodic_reporting.integrated_control_for_heating.target_temperature": {
+        "precision": 1
+    },
+    "temp_control.target_temperature_resolution": {
+        "precision": null
+    },
+    "temp_control.under_temperature_side_deadband": {
+        "precision": 1
+    },
+    "temp_control.over_temperature_side_deadband": {
+        "precision": 1
+    },
+    "temp_control.target_temperature_adjustment_range_min": {
+        "precision": 1
+    },
+    "temp_control.target_temperature_adjustment_range_max": {
+        "precision": 1
+    },
+    "temp_control.mode_settings.auto_control.target_temperature": {
+        "precision": 1
+    },
+    "temp_control.mode_settings.intergrated_control.target_temperature": {
+        "precision": 1
+    },
+    "window_opening_detection_settings.cooling_rate": {
+        "precision": 1
+    },
+    "auto_away_settings.energy_saving_settings.energy_saving_temperature": {
+        "precision": 1
+    },
+    "anti_freeze_protection_setting.temperature_value": {
+        "precision": 1
+    },
+    "temperature_calibration_settings.calibration_value": {
+        "precision": 1
+    },
+    "temperature_alarm_settings.threshold_min": {
+        "precision": 1
+    },
+    "temperature_alarm_settings.threshold_max": {
+        "precision": 1
+    },
+    "schedule_settings._item.target_temperature": {
+        "precision": 1
+    },
+    "set_target_temperature.value": {
+        "precision": 1
+    },
+    "set_temperature.value": {
+        "precision": 1
+    }
+};
+	var leafPaths = getAllLeafPaths(decoded);
+	for (var i = 0; i < leafPaths.length; i++) {
+		var propertyId = leafPaths[i];
+		var propertyParts = propertyId.split('.');
+		var newPropertyParts = []
+		for (var j = 0; j < propertyParts.length; j++) {
+			var part = propertyParts[j];
+			if (isInteger(part)) {
+				newPropertyParts.push('_item');
+			} else {
+				newPropertyParts.push(part);
+			}
+		}
+		var newPropertyId = newPropertyParts.join('.');
+		newPropertyId = recoverName(newPropertyId, 'fahrenheit');
+		newPropertyId = recoverName(newPropertyId, 'celsius');
+		propertyId = recoverName(propertyId, 'fahrenheit');
+		propertyId = recoverName(propertyId, 'celsius');
+		if (allTemperatureProperties[newPropertyId]) {
+			var fahrenheitProperty = convertName(propertyId, 'fahrenheit');
+			var celsiusProperty = convertName(propertyId, 'celsius');
+			if (hasPath(decoded, propertyId)) {
+				setPath(decoded, fahrenheitProperty,  Number((getPath(decoded, propertyId) * 1.8 + 32).toFixed(allTemperatureProperties[newPropertyId].precision)));
+				setPath(decoded, celsiusProperty,  Number(getPath(decoded, propertyId).toFixed(allTemperatureProperties[newPropertyId].precision)));
+			}
+		}	
+	}	
+	return decoded;
 }
