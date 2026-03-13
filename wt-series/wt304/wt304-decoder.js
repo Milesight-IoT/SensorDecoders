@@ -108,6 +108,14 @@ function milesightDeviceDecode(bytes) {
 				break;
 			case 0x03:
 				decoded.target_temperature = readInt16LE(bytes, counterObj, 2) / 100;
+				if (decoded.temperature_control_info) {
+					if (decoded.temperature_control_info.mode == 0x01) {
+						decoded.heating_target_temperature = decoded.target_temperature;
+					}
+					if (decoded.temperature_control_info.mode == 0x02) {
+						decoded.cooling_target_temperature = decoded.target_temperature;
+					}
+				}
 				break;
 			case 0x05:
 				decoded.temperature_control_info = decoded.temperature_control_info || {};
@@ -116,6 +124,14 @@ function milesightDeviceDecode(bytes) {
 				decoded.temperature_control_info.mode = extractBits(bitOptions, 4, 8);
 				// 0：Standby, 1:Heat, 2:Cool
 				decoded.temperature_control_info.status = extractBits(bitOptions, 0, 4);
+				if (decoded.temperature_control_info) {
+					if (decoded.temperature_control_info.mode == 0x01) {
+						decoded.heating_target_temperature = decoded.target_temperature;
+					}
+					if (decoded.temperature_control_info.mode == 0x02) {
+						decoded.cooling_target_temperature = decoded.target_temperature;
+					}
+				}
 				break;
 			case 0x06:
 				decoded.temperature_control_valve_status = readUInt8(bytes, counterObj, 1);
