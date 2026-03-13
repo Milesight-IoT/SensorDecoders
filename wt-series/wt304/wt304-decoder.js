@@ -122,6 +122,7 @@ function milesightDeviceDecode(bytes) {
 				var bitOptions = readUInt8(bytes, counterObj, 1);
 				// 0：Ventilation, 1：Heat, 2：Cool
 				decoded.temperature_control_info.mode = extractBits(bitOptions, 4, 8);
+				decoded.temperature_control_mode = decoded.temperature_control_info.mode;
 				// 0：Standby, 1:Heat, 2:Cool
 				decoded.temperature_control_info.status = extractBits(bitOptions, 0, 4);
 				if (decoded.temperature_control_info) {
