@@ -108,14 +108,6 @@ function milesightDeviceDecode(bytes) {
 				break;
 			case 0x03:
 				decoded.target_temperature = readInt16LE(bytes, counterObj, 2) / 100;
-				if (decoded.temperature_control_info) {
-					if (decoded.temperature_control_info.mode == 0x01) {
-						decoded.heating_target_temperature = decoded.target_temperature;
-					}
-					if (decoded.temperature_control_info.mode == 0x02) {
-						decoded.cooling_target_temperature = decoded.target_temperature;
-					}
-				}
 				break;
 			case 0x05:
 				decoded.temperature_control_info = decoded.temperature_control_info || {};
