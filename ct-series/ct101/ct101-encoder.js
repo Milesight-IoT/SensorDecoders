@@ -53,6 +53,9 @@ function milesightDeviceEncode(payload) {
     if ("temperature_alarm_config" in payload) {
         encoded = encoded.concat(setTemperatureThresholdAlarmConfig(payload.temperature_alarm_config));
     }
+    if ("battery" in payload) {
+        encoded = encoded.concat(setBattery(payload.battery));
+    }
 
     return encoded;
 }
@@ -199,6 +202,20 @@ function setTemperatureThresholdAlarmConfig(temperature_alarm_config) {
     buffer.writeInt16LE(threshold_min * 10);
     buffer.writeInt16LE(threshold_max * 10);
     buffer.writeUInt32LE(0x00); // reserved
+    return buffer.toBytes();
+}
+
+function setBattery(battery) {
+    if (typeof battery !== "number") {
+        throw new Error("battery must be a number");
+    }
+    if (battery < 0 || battery > 100) {
+        throw new Error("battery must be between 0 and 100");
+    }
+    var buffer = new Buffer(2);
+    buffer.writeUInt8(0x01);
+    buffer.writeUInt8(0x75);
+    buffer.writeUInt8(battery);
     return buffer.toBytes();
 }
 

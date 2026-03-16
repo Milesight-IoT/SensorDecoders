@@ -118,6 +118,10 @@ function milesightDeviceDecode(bytes) {
             var result = handle_downlink_response(channel_type, bytes, i);
             decoded = Object.assign(decoded, result.data);
             i = result.offset;
+        }
+        else if (channel_id === 0x01 && channel_type === 0x75) {
+            decoded.battery = readUInt8(bytes.slice(i, i + 1));
+            i += 1;
         } else {
             break;
         }
