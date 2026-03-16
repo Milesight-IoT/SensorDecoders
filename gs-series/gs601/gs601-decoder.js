@@ -27,7 +27,7 @@ function Decoder(bytes, port) {
 
 function milesightDeviceDecode(bytes) {
 	var decoded = {};
-  var result = {};
+	var result = {};
 	var history = [];
 
 	var unknown_command = 0;
@@ -309,58 +309,58 @@ function milesightDeviceDecode(bytes) {
 				break;
 			case 0x20:
 				decoded.tvoc_raw_data_1 = decoded.tvoc_raw_data_1 || {};
-				decoded.tvoc_raw_data_1.rmox_0 = readUnknownDataType(bytes, counterObj, 4);
-				decoded.tvoc_raw_data_1.rmox_1 = readUnknownDataType(bytes, counterObj, 4);
+				decoded.tvoc_raw_data_1.rmox_0 = readFloatLE(bytes, counterObj, 4);
+				decoded.tvoc_raw_data_1.rmox_1 = readFloatLE(bytes, counterObj, 4);
 				break;
 			case 0x21:
 				decoded.tvoc_raw_data_2 = decoded.tvoc_raw_data_2 || {};
-				decoded.tvoc_raw_data_2.rmox_2 = readUnknownDataType(bytes, counterObj, 4);
-				decoded.tvoc_raw_data_2.rmox_3 = readUnknownDataType(bytes, counterObj, 4);
+				decoded.tvoc_raw_data_2.rmox_2 = readFloatLE(bytes, counterObj, 4);
+				decoded.tvoc_raw_data_2.rmox_3 = readFloatLE(bytes, counterObj, 4);
 				break;
 			case 0x22:
 				decoded.tvoc_raw_data_3 = decoded.tvoc_raw_data_3 || {};
-				decoded.tvoc_raw_data_3.rmox_4 = readUnknownDataType(bytes, counterObj, 4);
-				decoded.tvoc_raw_data_3.rmox_5 = readUnknownDataType(bytes, counterObj, 4);
+				decoded.tvoc_raw_data_3.rmox_4 = readFloatLE(bytes, counterObj, 4);
+				decoded.tvoc_raw_data_3.rmox_5 = readFloatLE(bytes, counterObj, 4);
 				break;
 			case 0x23:
 				decoded.tvoc_raw_data_4 = decoded.tvoc_raw_data_4 || {};
-				decoded.tvoc_raw_data_4.rmox_6 = readUnknownDataType(bytes, counterObj, 4);
-				decoded.tvoc_raw_data_4.rmox_7 = readUnknownDataType(bytes, counterObj, 4);
+				decoded.tvoc_raw_data_4.rmox_6 = readFloatLE(bytes, counterObj, 4);
+				decoded.tvoc_raw_data_4.rmox_7 = readFloatLE(bytes, counterObj, 4);
 				break;
 			case 0x24:
 				decoded.tvoc_raw_data_5 = decoded.tvoc_raw_data_5 || {};
-				decoded.tvoc_raw_data_5.rmox_8 = readUnknownDataType(bytes, counterObj, 4);
-				decoded.tvoc_raw_data_5.rmox_9 = readUnknownDataType(bytes, counterObj, 4);
+				decoded.tvoc_raw_data_5.rmox_8 = readFloatLE(bytes, counterObj, 4);
+				decoded.tvoc_raw_data_5.rmox_9 = readFloatLE(bytes, counterObj, 4);
 				break;
 			case 0x25:
 				decoded.tvoc_raw_data_6 = decoded.tvoc_raw_data_6 || {};
-				decoded.tvoc_raw_data_6.rmox_10 = readUnknownDataType(bytes, counterObj, 4);
-				decoded.tvoc_raw_data_6.rmox_11 = readUnknownDataType(bytes, counterObj, 4);
+				decoded.tvoc_raw_data_6.rmox_10 = readFloatLE(bytes, counterObj, 4);
+				decoded.tvoc_raw_data_6.rmox_11 = readFloatLE(bytes, counterObj, 4);
 				break;
 			case 0x26:
 				decoded.tvoc_raw_data_7 = decoded.tvoc_raw_data_7 || {};
-				decoded.tvoc_raw_data_7.rmox_12 = readUnknownDataType(bytes, counterObj, 4);
-				decoded.tvoc_raw_data_7.zmod4510_rmox_3 = readUnknownDataType(bytes, counterObj, 4);
+				decoded.tvoc_raw_data_7.rmox_12 = readFloatLE(bytes, counterObj, 4);
+				decoded.tvoc_raw_data_7.zmod4510_rmox_3 = readFloatLE(bytes, counterObj, 4);
 				break;
 			case 0x27:
 				decoded.tvoc_raw_data_8 = decoded.tvoc_raw_data_8 || {};
-				decoded.tvoc_raw_data_8.log_rcda = readUnknownDataType(bytes, counterObj, 4);
-				decoded.tvoc_raw_data_8.rhtr = readUnknownDataType(bytes, counterObj, 4);
+				decoded.tvoc_raw_data_8.log_rcda = readFloatLE(bytes, counterObj, 4);
+				decoded.tvoc_raw_data_8.rhtr = readFloatLE(bytes, counterObj, 4);
 				break;
 			case 0x28:
 				decoded.tvoc_raw_data_9 = decoded.tvoc_raw_data_9 || {};
-				decoded.tvoc_raw_data_9.temperature = readUnknownDataType(bytes, counterObj, 4);
-				decoded.tvoc_raw_data_9.iaq = readUnknownDataType(bytes, counterObj, 4);
+				decoded.tvoc_raw_data_9.temperature = readFloatLE(bytes, counterObj, 4);
+				decoded.tvoc_raw_data_9.iaq = readFloatLE(bytes, counterObj, 4);
 				break;
 			case 0x29:
 				decoded.tvoc_raw_data_10 = decoded.tvoc_raw_data_10 || {};
-				decoded.tvoc_raw_data_10.tvoc = readUnknownDataType(bytes, counterObj, 4);
-				decoded.tvoc_raw_data_10.etoh = readUnknownDataType(bytes, counterObj, 4);
+				decoded.tvoc_raw_data_10.tvoc = readFloatLE(bytes, counterObj, 4);
+				decoded.tvoc_raw_data_10.etoh = readFloatLE(bytes, counterObj, 4);
 				break;
 			case 0x2a:
 				decoded.tvoc_raw_data_11 = decoded.tvoc_raw_data_11 || {};
-				decoded.tvoc_raw_data_11.eco2 = readUnknownDataType(bytes, counterObj, 4);
-				decoded.tvoc_raw_data_11.rel_iaq = readUnknownDataType(bytes, counterObj, 4);
+				decoded.tvoc_raw_data_11.eco2 = readFloatLE(bytes, counterObj, 4);
+				decoded.tvoc_raw_data_11.rel_iaq = readFloatLE(bytes, counterObj, 4);
 				break;
 			case 0x2b:
 				decoded.pm_sensor_working_time = readUInt32LE(bytes, counterObj, 4);
@@ -613,6 +613,8 @@ function milesightDeviceDecode(bytes) {
 		}
 	}
 
+	processTemperature(result);
+
 	return result;
 }
 
@@ -681,14 +683,14 @@ function readInt16LE(allBytes, counterObj, end) {
 }
 
 function readUInt24LE(allBytes, counterObj, end) {
-    var bytes = readBytes(allBytes, counterObj, end); // 3 bytes expected
-    var value = (bytes[2] << 16) + (bytes[1] << 8) + bytes[0];
-    return value & 0xffffff;
+	var bytes = readBytes(allBytes, counterObj, end); // 3 bytes expected
+	var value = (bytes[2] << 16) + (bytes[1] << 8) + bytes[0];
+	return value & 0xffffff;
 }
 
 function readInt24LE(allBytes, counterObj, end) {
-    var ref = readUInt24LE(allBytes, counterObj, end);
-    return ref > 0x7fffff ? ref - 0x1000000 : ref;
+	var ref = readUInt24LE(allBytes, counterObj, end);
+	return ref > 0x7fffff ? ref - 0x1000000 : ref;
 }
 
 function readUInt32LE(allBytes, counterObj, end) {
@@ -805,49 +807,145 @@ function insertArrayItem(array, item, idName) {
 }
 
 function readCommand(allBytes, counterObj, end) {
-    var bytes = readBytes(allBytes, counterObj, end);
-    var cmd = bytes
-        .map(function(b) {
-            var hex = b.toString(16);
-            return hex.length === 1 ? '0' + hex : hex;
-        })
-        .join('')
-        .toLowerCase();
+	var bytes = readBytes(allBytes, counterObj, end);
+	var cmd = bytes
+		.map(function(b) {
+			var hex = b.toString(16);
+			return hex.length === 1 ? '0' + hex : hex;
+		})
+		.join('')
+		.toLowerCase();
 
-    var map = cmdMap();
-    for (var key in map) {
-        var xxs = [];
-        var isMatch = false;
-        if (key.length !== cmd.length) {
-            continue;
-        }
-        for (var i = 0; i < key.length; i += 2) {
-            var hexString = key.slice(i, i + 2);
-            var cmdString = cmd.slice(i, i + 2);
-            if (hexString === cmdString || hexString === 'xx') {
-                if (hexString === 'xx') {
-                    xxs.push('.' + parseInt(cmdString, 16));
-                }
-                isMatch = true;
-                continue;
-            } else {
-                isMatch = false;
-                break;
-            }
-        }
-        if (isMatch) {
-            var propertyId = map[key];
-            if (propertyId.indexOf('._item') === -1) {
-                return propertyId;
-            }
-            var j = 0;
-            var result = propertyId.replace(/\._item/g, function() {
-                return xxs[j++];
-            });
-            return result;
-        }
-    }
-    return null;
+	var map = cmdMap();
+	for (var key in map) {
+		var xxs = [];
+		var isMatch = false;
+		if (key.length !== cmd.length) {
+			continue;
+		}
+		for (var i = 0; i < key.length; i += 2) {
+			var hexString = key.slice(i, i + 2);
+			var cmdString = cmd.slice(i, i + 2);
+			if (hexString === cmdString || hexString === 'xx') {
+				if (hexString === 'xx') {
+					xxs.push('.' + parseInt(cmdString, 16));
+				}
+				isMatch = true;
+				continue;
+			} else {
+				isMatch = false;
+				break;
+			}
+		}
+		if (isMatch) {
+			var propertyId = map[key];
+			if (propertyId.indexOf('._item') === -1) {
+				return propertyId;
+			}
+			var j = 0;
+			var result = propertyId.replace(/\._item/g, function() {
+				return xxs[j++];
+			});
+			return result;
+		}
+	}
+	return null;
+}
+
+function hasPath(obj, path) {
+	var parts = path.split('.');
+	var current = obj;
+  
+	for (var i = 0; i < parts.length; i++) {
+	  	if (!current || !(parts[i] in current)) {
+			return false;
+	  	}
+	  	current = current[parts[i]];
+	}
+  
+	return true;
+}
+
+function getPath(obj, path) {
+	var parts = path.split('.');
+	var current = obj;
+  
+	for (var i = 0; i < parts.length; i++) {
+	  	var key = parts[i];
+  
+	  	if (!current || !(key in current)) {
+			return null;
+	  	}
+  
+	  	current = current[key];
+	}
+  
+	return current;
+}
+  
+
+function setPath(obj, path, value) {
+	var parts = path.split('.');
+	var current = obj;
+  
+	for (var i = 0; i < parts.length - 1; i++) {
+	  	var key = parts[i];
+  
+	  	if (!(key in current) || typeof current[key] !== 'object') {
+			current[key] = {};
+	  	}
+  
+	  	current = current[key];
+	}
+
+	current[parts[parts.length - 1]] = value;
+	return obj;
+}
+
+function convertName(propertyId, prefix) {
+	var parts = propertyId.split('.');
+	var lastPart = parts[parts.length - 1];
+	parts[parts.length - 1] = prefix + '_' + lastPart;
+	return parts.join('.');
+}
+
+function recoverName(propertyId, prefix) {
+	var parts = propertyId.split('.');
+	var lastPart = parts[parts.length - 1];
+	parts[parts.length - 1] = lastPart.replace(prefix + '_', '');
+	return parts.join('.');
+}
+
+function getAllLeafPaths(obj, prefix) {
+	var paths = [];
+
+	function recurse(current, path) {
+	  if (Array.isArray(current)) {
+		current.forEach(function (item, index) {
+		  var newPath = path ? (path + "." + index) : String(index);
+		  recurse(item, newPath);
+		});
+  
+	  } else if (typeof current === 'object' && current !== null) {
+		for (var key in current) {
+		  if (Object.prototype.hasOwnProperty.call(current, key)) {
+			var newPath = path ? (path + "." + key) : key;
+			recurse(current[key], newPath);
+		  }
+		}
+  
+	  } else {
+		paths.push(path);
+	  }
+	}
+  
+	recurse(obj, "");
+	return paths;
+  
+}
+
+function isInteger(str) {
+	return typeof str === 'string' && /^[0-9]+$/.test(str);
 }
 
 function cmdMap() {
@@ -883,6 +981,10 @@ function cmdMap() {
 		  "75": "pm10_calibration_settings",
 		  "76": "tvoc_calibration_settings",
 		  "77": "vaping_index_calibration_settings",
+		  "1020": "tamper_status_alarm.normal",
+		  "1021": "tamper_status_alarm.trigger",
+		  "6000": "reporting_interval.seconds_of_time",
+		  "6001": "reporting_interval.minutes_of_time",
 		  "6401": "buzzer_sleep.item_1",
 		  "6402": "buzzer_sleep.item_2",
 		  "fe": "request_check_order",
@@ -902,18 +1004,55 @@ function cmdMap() {
 		  "00": "battery",
 		  "01": "vaping_index",
 		  "02": "vaping_index_alarm",
+		  "0200": "vaping_index_alarm.collection_error",
+		  "0201": "vaping_index_alarm.lower_range_error",
+		  "0202": "vaping_index_alarm.over_range_error",
+		  "0210": "vaping_index_alarm.alarm_deactivation",
+		  "0211": "vaping_index_alarm.alarm_trigger",
+		  "0220": "vaping_index_alarm.interference_alarm_deactivation",
+		  "0221": "vaping_index_alarm.interference_alarm_trigger",
 		  "03": "pm1_0",
 		  "04": "pm1_0_alarm",
+		  "0400": "pm1_0_alarm.collection_error",
+		  "0401": "pm1_0_alarm.lower_range_error",
+		  "0402": "pm1_0_alarm.over_range_error",
+		  "0410": "pm1_0_alarm.alarm_deactivation",
+		  "0411": "pm1_0_alarm.alarm_trigger",
 		  "05": "pm2_5",
 		  "06": "pm2_5_alarm",
+		  "0600": "pm2_5_alarm.collection_error",
+		  "0601": "pm2_5_alarm.lower_range_error",
+		  "0602": "pm2_5_alarm.over_range_error",
+		  "0610": "pm2_5_alarm.alarm_deactivation",
+		  "0611": "pm2_5_alarm.alarm_trigger",
 		  "07": "pm10",
 		  "08": "pm10_alarm",
+		  "0800": "pm10_alarm.collection_error",
+		  "0801": "pm10_alarm.lower_range_error",
+		  "0802": "pm10_alarm.over_range_error",
+		  "0810": "pm10_alarm.alarm_deactivation",
+		  "0811": "pm10_alarm.alarm_trigger",
 		  "09": "temperature",
 		  "0a": "temperature_alarm",
+		  "0a00": "temperature_alarm.collection_error",
+		  "0a01": "temperature_alarm.lower_range_error",
+		  "0a02": "temperature_alarm.over_range_error",
+		  "0a10": "temperature_alarm.alarm_deactivation",
+		  "0a11": "temperature_alarm.alarm_trigger",
+		  "0a20": "temperature_alarm.burning_alarm_deactivation",
+		  "0a21": "temperature_alarm.burning_alarm_trigger",
 		  "0b": "humidity",
 		  "0c": "humidity_alarm",
+		  "0c00": "humidity_alarm.collection_error",
+		  "0c01": "humidity_alarm.lower_range_error",
+		  "0c02": "humidity_alarm.over_range_error",
 		  "0d": "tvoc",
 		  "0e": "tvoc_alarm",
+		  "0e00": "tvoc_alarm.collection_error",
+		  "0e01": "tvoc_alarm.lower_range_error",
+		  "0e02": "tvoc_alarm.over_range_error",
+		  "0e10": "tvoc_alarm.alarm_deactivation",
+		  "0e11": "tvoc_alarm.alarm_trigger",
 		  "0f": "tamper_status",
 		  "2a": "tvoc_raw_data_11",
 		  "2b": "pm_sensor_working_time",
@@ -940,4 +1079,54 @@ function cmdMap() {
 		  "5f": "stop_buzzer_alarm",
 		  "5e": "execute_tvoc_self_clean"
 	};
+}
+function processTemperature(decoded) {
+	var allTemperatureProperties = {
+    "temperature": {
+        "precision": 1
+    },
+    "temperature_alarm.alarm_deactivation.temperature": {
+        "precision": 1
+    },
+    "temperature_alarm.alarm_trigger.temperature": {
+        "precision": 1
+    },
+    "temperature_alarm_settings.threshold_min": {
+        "precision": 1
+    },
+    "temperature_alarm_settings.threshold_max": {
+        "precision": 1
+    },
+    "temperature_calibration_settings.calibration_value": {
+        "precision": 1
+    }
+};
+	var leafPaths = getAllLeafPaths(decoded);
+	for (var i = 0; i < leafPaths.length; i++) {
+		var propertyId = leafPaths[i];
+		var propertyParts = propertyId.split('.');
+		var newPropertyParts = []
+		for (var j = 0; j < propertyParts.length; j++) {
+			var part = propertyParts[j];
+			if (isInteger(part)) {
+				newPropertyParts.push('_item');
+			} else {
+				newPropertyParts.push(part);
+			}
+		}
+		var newPropertyId = newPropertyParts.join('.');
+		newPropertyId = recoverName(newPropertyId, 'fahrenheit');
+		newPropertyId = recoverName(newPropertyId, 'celsius');
+		propertyId = recoverName(propertyId, 'fahrenheit');
+		propertyId = recoverName(propertyId, 'celsius');
+		if (allTemperatureProperties[newPropertyId]) {
+			var fahrenheitProperty = convertName(propertyId, 'fahrenheit');
+			var celsiusProperty = convertName(propertyId, 'celsius');
+			if (hasPath(decoded, propertyId)) {
+				setPath(decoded, fahrenheitProperty,  Number((getPath(decoded, propertyId) * 1.8 + 32).toFixed(allTemperatureProperties[newPropertyId].precision)));
+				setPath(decoded, celsiusProperty,  Number(getPath(decoded, propertyId).toFixed(allTemperatureProperties[newPropertyId].precision)));
+			}
+		}	
+	}	
+	return decoded;
 }
