@@ -28,6 +28,7 @@ function Encoder(obj, port) {
 /* eslint-enable */
 
 function milesightDeviceEncode(payload) {
+    processTemperature(payload);
     var encoded = [];
 
     if ("reboot" in payload) {
@@ -36,14 +37,14 @@ function milesightDeviceEncode(payload) {
     if ("report_status" in payload) {
         encoded = encoded.concat(reportStatus(payload.report_status));
     }
-    if ("report_interval" in payload) {
-        encoded = encoded.concat(setReportInterval(payload.report_interval));
+    if ("reporting_interval_settings" in payload) {
+        encoded = encoded.concat(setReportInterval(payload.reporting_interval_settings.time));
     }
     if ("collection_interval" in payload) {
         encoded = encoded.concat(setCollectionInterval(payload.collection_interval));
     }
-    if ("sync_time" in payload) {
-        encoded = encoded.concat(syncTime(payload.sync_time));
+    if ("synchronize_time" in payload) {
+        encoded = encoded.concat(synchronizeTime(payload.synchronize_time));
     }
     if ("time_zone" in payload) {
         encoded = encoded.concat(setTimeZone(payload.time_zone));
@@ -143,9 +144,10 @@ function milesightDeviceEncode(payload) {
     if ("ob_mode" in payload) {
         if ("wires" in payload) {
             encoded = encoded.concat(setWires(payload.wires, payload.ob_mode));
-        } else {
-            encoded = encoded.concat(setOBMode(payload.ob_mode));
         }
+    }
+    if("reversing_valve" in payload) {
+        encoded = encoded.concat(setReversingValve(payload.reversing_valve));
     }
     if ("multicast_group_config" in payload) {
         encoded = encoded.concat(setMulticastGroupConfig(payload.multicast_group_config));
@@ -183,7 +185,7 @@ function milesightDeviceEncode(payload) {
 
     // fireware version 1.4
     if ("offline_timeout" in payload) {
-        encoded = encoded.concat(setOfflineTimeout(payload.offline_timeout));
+        encoded = encoded.concat(setConfigValueTime(payload.offline_timeout, "offline_timeout", 0x29));
     }
     if ("down_heart" in payload) {
         encoded = encoded.concat(setDownHeart(payload.down_heart));
@@ -193,7 +195,7 @@ function milesightDeviceEncode(payload) {
         encoded = encoded.concat(setWiresRelayConfig(payload.wires_relay_config));
     }
     if ("wires_relay_change_report_enable" in payload) {
-        encoded = encoded.concat(setWiresRelayChangeReport(payload.wires_relay_change_report_enable));
+        encoded = encoded.concat(setEnableStatus(payload.wires_relay_change_report_enable, "wires_relay_change_report_enable", 0x3a));
     }
     if ("aux_control_config" in payload) {
         encoded = encoded.concat(setAuxControlConfig(payload.aux_control_config));
@@ -217,10 +219,10 @@ function milesightDeviceEncode(payload) {
         }
     }
     if ("target_temperature_dual_enable" in payload) {
-        encoded = encoded.concat(setTargetTemperatureDual(payload.target_temperature_dual_enable));
+        encoded = encoded.concat(setEnableStatus(payload.target_temperature_dual_enable, "target_temperature_dual_enable", 0x58));
     }
     if ("compressor_aux_combine_enable" in payload) {
-        encoded = encoded.concat(setCompressorAndAuxCombineEnable(payload.compressor_aux_combine_enable));
+        encoded = encoded.concat(setEnableStatus(payload.compressor_aux_combine_enable, "compressor_aux_combine_enable", 0x46));
     }
     if ("unlock_config" in payload) {
         encoded = encoded.concat(setUnlockConfig(payload.unlock_config));
@@ -237,8 +239,136 @@ function milesightDeviceEncode(payload) {
     if ("temperature_up_down_enable" in payload) {
         encoded = encoded.concat(setTemperatureUpDownEnable(payload.temperature_up_down_enable));
     }
-    if ("temperature_control_forbidden_config" in payload) {
-        encoded = encoded.concat(setTemperatureControlForbiddenConfig(payload.temperature_control_forbidden_config));
+
+    // fireware version 1.5
+    if ("temperature_control_enable_setting" in payload) {
+        encoded = encoded.concat(setTemperatureControlEnableSetting(payload.temperature_control_enable_setting));
+    }
+    if ("current_temperature_control_mode" in payload) {
+        encoded = encoded.concat(setCurrentTemperatureControlMode(payload.current_temperature_control_mode));
+    }
+    if ("fan_delay_config_enable" in payload) {
+        encoded = encoded.concat(setEnableStatus(payload.fan_delay_config_enable, "fan_delay_config_enable", 0x20));
+    }
+    if ("fan_delay_config_delay_time" in payload) {
+        encoded = encoded.concat(setFanDelayConfigDelayTime(payload.fan_delay_config_delay_time));
+    }
+    if ("temporary_unlock_settings" in payload) {
+        encoded = encoded.concat(setTemporaryUnlockSettings(payload.temporary_unlock_settings));
+    }
+    if ("temperature_control_delta1" in payload) {
+        encoded = encoded.concat(setTemperatureSettingValue(payload.temperature_control_delta1, [1, 10], "temperature_control_delta1", 0x23));
+    }
+    if ("temperature_control_delta2" in payload) {
+        encoded = encoded.concat(setTemperatureSettingValue(payload.temperature_control_delta2, [1, 10], "temperature_control_delta2", 0x24));
+    }
+    if ("occupied_mode" in payload) {
+        encoded = encoded.concat(setOccupiedMode(payload.occupied_mode));
+    }
+    if ("occupied_delay" in payload) {
+        encoded = encoded.concat(setConfigValueTime(payload.occupied_delay, "occupied_delay", 0x28));
+    }
+    if ("unilateral_tolerance" in payload) {
+        encoded = encoded.concat(setEnableStatus(payload.unilateral_tolerance, "unilateral_tolerance", 0x2b));
+    }
+    if ("time_format" in payload) {
+        encoded = encoded.concat(setTimeFormat(payload.time_format));
+    }
+    if ("wire_mode" in payload) {
+        encoded = encoded.concat(setWireMode(payload.wire_mode));
+    }
+    if ("temperature_humidity_source" in payload) {
+        encoded = encoded.concat(setTemperatureHumiditySource(payload.temperature_humidity_source));
+    }
+    if ("timezone_index" in payload) {
+        encoded = encoded.concat(setTimeZoneIndex(payload.timezone_index));
+    }
+    if ("timezone_offset" in payload) {
+        encoded = encoded.concat(setTimeZoneOffset(payload.timezone_offset));
+    }
+    if ("children_locks_enable" in payload) {
+        encoded = encoded.concat(setEnableStatus(payload.children_locks_enable, "children_locks_enable", 0x31));
+    }
+    if ("target_deadband" in payload) {
+        encoded = encoded.concat(setTemperatureSettingValue(payload.target_deadband, [1, 10], "target_deadband", 0x32));
+    }
+    if ("sharing_mode_enable" in payload) {
+        encoded = encoded.concat(setEnableStatus(payload.sharing_mode_enable, "sharing_mode_enable", 0x33));
+    }
+    if ("occupied_cooling_setpoint" in payload) {
+        encoded = encoded.concat(setTemperatureSettingValue(payload.occupied_cooling_setpoint, [5, 35], "occupied_cooling_setpoint", 0x64));
+    }
+    if ("occupied_heating_setpoint" in payload) {
+        encoded = encoded.concat(setTemperatureSettingValue(payload.occupied_heating_setpoint, [5, 35], "occupied_heating_setpoint", 0x65));
+    }
+    if ("unoccupied_cooling_setpoint" in payload) {
+        encoded = encoded.concat(setTemperatureSettingValue(payload.unoccupied_cooling_setpoint, [5, 35], "unoccupied_cooling_setpoint", 0x66));
+    }
+    if ("unoccupied_heating_setpoint" in payload) {
+        encoded = encoded.concat(setTemperatureSettingValue(payload.unoccupied_heating_setpoint, [5, 35], "unoccupied_heating_setpoint", 0x67));
+    }
+    if ("cooling_setpoint" in payload) {
+        encoded = encoded.concat(setTemperatureSettingValue(payload.cooling_setpoint, [5, 35], "cooling_setpoint", 0x68));
+    }
+    if ("heating_setpoint" in payload) {
+        encoded = encoded.concat(setTemperatureSettingValue(payload.heating_setpoint, [5, 35], "heating_setpoint", 0x69));
+    }
+    if ("occupied_cooling_setpoint_tolerance" in payload) {
+        encoded = encoded.concat(setTemperatureSettingValue(payload.occupied_cooling_setpoint_tolerance, [0.1, 5], "occupied_cooling_setpoint_tolerance", 0x6a));
+    }
+    if ("occupied_heating_setpoint_tolerance" in payload) {
+        encoded = encoded.concat(setTemperatureSettingValue(payload.occupied_heating_setpoint_tolerance, [0.1, 5], "occupied_heating_setpoint_tolerance", 0x6b));
+    }
+    if ("unoccupied_cooling_setpoint_tolerance" in payload) {
+        encoded = encoded.concat(setTemperatureSettingValue(payload.unoccupied_cooling_setpoint_tolerance, [0.1, 5], "unoccupied_cooling_setpoint_tolerance", 0x6c));
+    }
+    if ("unoccupied_heating_setpoint_tolerance" in payload) {
+        encoded = encoded.concat(setTemperatureSettingValue(payload.unoccupied_heating_setpoint_tolerance, [0.1, 5], "unoccupied_heating_setpoint_tolerance", 0x6d));
+    }
+    if ("cooling_setpoint_tolerance" in payload) {
+        encoded = encoded.concat(setTemperatureSettingValue(payload.cooling_setpoint_tolerance, [0.1, 5], "cooling_setpoint_tolerance", 0x6e));
+    }
+    if ("heating_setpoint_tolerance" in payload) {
+        encoded = encoded.concat(setTemperatureSettingValue(payload.heating_setpoint_tolerance, [0.1, 5], "heating_setpoint_tolerance", 0x6f));
+    }
+    if ("center_cool_temp" in payload) {
+        encoded = encoded.concat(setTemperatureSettingValue(payload.center_cool_temp, [5, 35], "center_cool_temp", 0x72));
+    }
+    if ("center_heat_temp" in payload) {
+        encoded = encoded.concat(setTemperatureSettingValue(payload.center_heat_temp, [5, 35], "center_heat_temp", 0x73));
+    }
+    if ("cooling_adjust_tolerance" in payload) {
+        encoded = encoded.concat(setTemperatureSettingValue(payload.cooling_adjust_tolerance, [0.5, 16], "cooling_adjust_tolerance", 0x74));
+    }
+    if ("heating_adjust_tolerance" in payload) {
+        encoded = encoded.concat(setTemperatureSettingValue(payload.heating_adjust_tolerance, [0.5, 16], "heating_adjust_tolerance", 0x75));
+    }
+    if ("heating_stage1" in payload) {
+        encoded = encoded.concat(setTemperatureControlStage(payload.heating_stage1, "heating_stage1", 0x81));
+    }
+    if ("heating_stage2" in payload) {
+        encoded = encoded.concat(setTemperatureControlStage(payload.heating_stage2, "heating_stage2", 0x82));
+    }
+    if ("heating_stage3" in payload) {
+        encoded = encoded.concat(setTemperatureControlStage(payload.heating_stage3, "heating_stage3", 0x83));
+    }
+    if ("heating_stage4" in payload) {
+        encoded = encoded.concat(setTemperatureControlStage(payload.heating_stage4, "heating_stage4", 0x84));
+    }
+    if ("heating_stage5" in payload) {
+        encoded = encoded.concat(setTemperatureControlStage(payload.heating_stage5, "heating_stage5", 0x85));
+    }
+    if ("emergency_heating" in payload) {
+        encoded = encoded.concat(setTemperatureControlStage(payload.emergency_heating, "emergency_heating", 0x86));
+    }
+    if ("cooling_stage1" in payload) {
+        encoded = encoded.concat(setTemperatureControlStage(payload.cooling_stage1, "cooling_stage1", 0x87));
+    }
+    if ("cooling_stage2" in payload) {
+        encoded = encoded.concat(setTemperatureControlStage(payload.cooling_stage2, "cooling_stage2", 0x88));
+    }
+    if ("cooling_stage3" in payload) {
+        encoded = encoded.concat(setTemperatureControlStage(payload.cooling_stage3, "cooling_stage3", 0x89));
     }
 
     return encoded;
@@ -324,20 +454,17 @@ function setCollectionInterval(collection_interval) {
 
 /**
  * sync time
- * @param {number} sync_time values: (0: no, 1: yes)
- * @example { "sync_time": 1 }
+ * @param {number} synchronize_time range: [0, 255]
+ * @example { "synchronize_time": 1 }
  */
-function syncTime(sync_time) {
-    var yes_no_map = { 0: "no", 1: "yes" };
-    var yes_no_values = getValues(yes_no_map);
-    if (yes_no_values.indexOf(sync_time) === -1) {
-        throw new Error("sync_time must be one of " + yes_no_values.join(", "));
+function synchronizeTime(synchronize_time) {
+    if (typeof synchronize_time !== "number") {
+        throw new Error("synchronize_time must be a number");
     }
-
-    if (sync_time === 0) {
-        return [];
+    if (synchronize_time < 0 || synchronize_time > 255) {
+        throw new Error("synchronize_time must be in range [0, 255]");
     }
-    return [0xff, 0x4a, 0xff];
+    return [0xff, 0x4a, synchronize_time];
 }
 
 /**
@@ -761,6 +888,366 @@ function setTemperatureControlMode(temperature_control_mode) {
 }
 
 /**
+ * set current temperature control mode
+ * @since v2.0
+ * @param {object} current_temperature_control_mode
+ * @param {number} current_temperature_control_mode.value values: (1: heat, 2: em heat, 3: cool, 4: auto)
+ * @param {string} current_temperature_control_mode.mode values: (heat, em heat, cool, auto)
+ * @example { "current_temperature_control_mode": { "value": 1, "mode": "heat" } }
+ */
+function setCurrentTemperatureControlMode(current_temperature_control_mode) {
+    var value = current_temperature_control_mode.value;
+    var mode = current_temperature_control_mode.mode;
+    var temperature_mode_map = { 1: "heat", 2: "em_heat", 3: "cool", 4: "auto" };
+    var temperature_mode_values = getValues(temperature_mode_map);
+
+    if (RAW_VALUE) {
+        if (temperature_mode_values.indexOf(value) === -1) {
+            throw new Error("current_temperature_control_mode.value must be one of " + temperature_mode_values.join(", "));
+        }
+
+        return [0xf9, 0xfb, value - 1];
+    } else {
+        if (temperature_mode_values.indexOf(mode) === -1) {
+            throw new Error("current_temperature_control_mode.mode must be one of " + temperature_mode_values.join(", "));
+        }
+
+        return [0xf9, 0xfb, getValue(temperature_mode_map, mode) - 1];
+    }
+}
+
+/**
+ * set enable status
+ * @since v1.5
+ * @param {number} enable_status values: (0: disable, 1: enable)
+ * @example { "enable_status": 1 }
+ */
+function setEnableStatus(enable_status, key, channel_type) {
+    var enable_map = { 0: "disable", 1: "enable" };
+    var enable_values = getValues(enable_map);
+    if (enable_values.indexOf(enable_status) === -1) {
+        throw new Error(key + " must be one of " + enable_values.join(", "));
+    }
+
+    return [0xf9, channel_type, getValue(enable_map, enable_status)];
+}
+
+/**
+ * set fan delay config delay time
+ * @since v1.5
+ * @param {number} fan_delay_config_delay_time range: [1, 3600]
+ * @example { "fan_delay_config_delay_time": 10 }
+ */
+function setFanDelayConfigDelayTime(fan_delay_config_delay_time) {
+    if (typeof fan_delay_config_delay_time !== "number") {
+        throw new Error("fan_delay_config_delay_time must be a number");
+    }
+    if (fan_delay_config_delay_time < 1 || fan_delay_config_delay_time > 3600) {
+        throw new Error("fan_delay_config_delay_time must be in range [1, 3600]");
+    }
+
+    var buffer = new Buffer(4);
+    buffer.writeUInt8(0xf9);
+    buffer.writeUInt8(0x21);
+    buffer.writeUInt16LE(fan_delay_config_delay_time);
+    return buffer.toBytes();
+}
+
+/**
+ * set temporary unlock settings
+ * @since v2.0
+ * @param {object} temporary_unlock_settings
+ * @param {number} temporary_unlock_settings.value
+ * @param {string} temporary_unlock_settings.settings
+ * @example { "temporary_unlock_settings": { "value": 3, "settings": "System On/Off&Temperature +" } }
+ */
+function setTemporaryUnlockSettings(temporary_unlock_settings) {
+    var value = temporary_unlock_settings.value;
+    var settings = temporary_unlock_settings.settings;
+
+    var temporary_unlock_settings_map = { 
+        1: "disable",
+        2: "System On/Off&Temperature +",
+        3: "System On/Off&Temperature -",
+        4: "System On/Off&Fan Mode",
+        5: "System On/Off&Temperature Control Mode",
+        6: "Temperature +&Temperature -",
+        7: "Temperature +&Fan Mode",
+        8: "Temperature +&Temperature Control Mode",
+        9: "Temperature -&Fan Mode",
+        10: "Temperature -&Temperature Control Mode",
+        11: "Fan Mode&Temperature Control Mode",
+        12: "System On/Off&Temperature +&Temperature -",
+        13: "System On/Off&Temperature +&Fan Mode",
+        14: "System On/Off&Temperature +&Temperature Control Mode",
+        15: "System On/Off&Temperature -&Fan Mode",
+        16: "System On/Off&Temperature -&Temperature Control Mode",
+        17: "System On/Off&Fan Mode&Temperature Control Mode",
+        18: "Temperature +&Temperature -&Fan Mode",
+        19: "Temperature +&Temperature -&Temperature Control Mode",
+        20: "Temperature +&Fan Mode&Temperature Control Mode",
+        21: "Temperature -&Fan Mode&Temperature Control Mode",
+        22: "System On/Off&Temperature +&Temperature -&Fan Mode",
+        23: "System On/Off&Temperature +&Temperature -&Temperature Control Mode",
+        24: "System On/Off&Temperature +&Fan Mode&Temperature Control Mode",
+        25: "System On/Off&Temperature -&Fan Mode&Temperature Control Mode",
+        26: "Temperature +&Temperature -&Fan Mode&Temperature Control Mode",
+        27: "System On/Off&Temperature +&Temperature -&Fan Mode&Temperature Control Mode"
+    };
+
+    function getDataValue(setting) {
+        var buttons_array = [ "System On/Off", "Temperature +", "Temperature -", "Fan Mode", "Temperature Control Mode" ];
+        var buttons = setting.split("&");
+        var values = 0x00;
+        for (var i = 0; i < buttons.length; i++) {
+            if (buttons_array.indexOf(buttons[i]) === -1) {
+                throw new Error("temporary_unlock_settings.settings must be one of " + buttons_array.join(", "));
+            }
+            values |= 1 << buttons_array.indexOf(buttons[i]);
+        }
+
+        return values;
+    }
+    
+    if(RAW_VALUE) {
+        var rawValue_temporary_unlock_settings_values = getValues(temporary_unlock_settings_map);
+        if (rawValue_temporary_unlock_settings_values.indexOf(value) === -1) {
+            throw new Error("temporary_unlock_settings.value must be one of " + rawValue_temporary_unlock_settings_values.join(", "));
+        }
+    }
+
+    return [0xf9, 0x22, settings === 'disable' ? 0x00 : getDataValue(settings)];
+}
+
+/**
+ * set occupied mode
+ * @since v2.0
+ * @param {number} occupied_mode values: (1: off, 2: occupied, 3: unoccupied)
+ * @example { "occupied_mode": 1 }
+ */
+function setOccupiedMode(occupied_mode) {
+    var value = occupied_mode.value;
+    var mode = occupied_mode.mode;
+    var occupied_mode_map = { 1: "off", 2: "occupied", 3: "unoccupied" };
+    var occupied_mode_values = getValues(occupied_mode_map);
+
+    if (RAW_VALUE) {
+        if (occupied_mode_values.indexOf(value) === -1) {
+            throw new Error("occupied_mode.value must be one of " + occupied_mode_values.join(", "));
+        }
+
+        return [0xf9, 0x27, value];
+    } else {
+        if (occupied_mode_values.indexOf(mode) === -1) {
+            throw new Error("occupied_mode.mode must be one of " + occupied_mode_values.join(", "));
+        }
+
+        return [0xf9, 0x27, getValue(occupied_mode_map, mode)];
+    }
+}
+
+/**
+ * set occupied delay
+ * @since v1.5
+ * @param {number} occupied_delay range: [1, 60]
+ * @example { "occupied_delay": 10 }
+ */
+function setOccupiedDelay(occupied_delay) {
+    if (typeof occupied_delay !== "number") {
+        throw new Error("occupied_delay must be a number");
+    }
+    if (occupied_delay < 1 || occupied_delay > 60) {
+        throw new Error("occupied_delay must be in range [1, 60]");
+    }
+    return [0xf9, 0x28, occupied_delay];
+}
+
+/**
+ * set time format
+ * @since v1.5
+ * @param {number} time_format values: (1: 12-hour, 2: 24-hour)
+ * @example { "time_format": 1 }
+ */
+function setTimeFormat(time_format) {
+    var value = time_format.value;
+    var mode = time_format.mode;
+    var time_format_map = { 1: "12-hour", 2: "24-hour" };
+    var time_format_values = getValues(time_format_map);
+
+    if (RAW_VALUE) {
+        if (time_format_values.indexOf(value) === -1) {
+            throw new Error("time_format.value must be one of " + time_format_values.join(", "));
+        }
+
+        return [0xf9, 0x2c, value];
+    } else {
+        if (time_format_values.indexOf(mode) === -1) {
+            throw new Error("time_format.mode must be one of " + time_format_values.join(", "));
+        }
+
+        return [0xf9, 0x2c, getValue(time_format_map, mode)];
+    }
+}
+
+/**
+ * set wire mode
+ * @since firmware v1.5
+ * @param {number} wire_mode values: (1: standard, 2: custom)
+ * @example { "wire_mode": 1 }
+ */
+function setWireMode(wire_mode) {
+    var value = wire_mode.value;
+    var mode = wire_mode.mode;
+    var wire_mode_map = { 1: "standard", 2: "custom" };
+    var wire_mode_values = getValues(wire_mode_map);
+
+    if (RAW_VALUE) {
+        if (wire_mode_values.indexOf(value) === -1) {
+            throw new Error("wire_mode.value must be one of " + wire_mode_values.join(", "));
+        }
+
+        return [0xf9, 0x2d, value];
+    } else {
+        if (wire_mode_values.indexOf(mode) === -1) {
+            throw new Error("wire_mode.mode must be one of " + wire_mode_values.join(", "));
+        }
+
+        return [0xf9, 0x2d, getValue(wire_mode_map, mode)];
+    }
+}
+
+/**
+ * set temperature humidity source
+ * @since firmware v1.5
+ * @param {number} temperature_humidity_source values: (1: embedded, 3: lora, 4: d2d)
+ * @example { "temperature_humidity_source": 1 }
+ */
+function setTemperatureHumiditySource(temperature_humidity_source) {
+    var value = temperature_humidity_source.value;
+    var mode = temperature_humidity_source.mode;
+    var temperature_humidity_source_map = { 1: "embedded", 3: "lora", 4: "d2d" };
+    var temperature_humidity_source_values = getValues(temperature_humidity_source_map);
+
+    if (RAW_VALUE) {
+        if (temperature_humidity_source_values.indexOf(value) === -1) {
+            throw new Error("temperature_humidity_source.value must be one of " + temperature_humidity_source_values.join(", "));
+        }
+
+        return [0xf9, 0x2e, value];
+    } else {
+        if (temperature_humidity_source_values.indexOf(mode) === -1) {
+            throw new Error("temperature_humidity_source.mode must be one of " + temperature_humidity_source_values.join(", "));
+        }
+
+        return [0xf9, 0x2e, getValue(temperature_humidity_source_map, mode)];
+    }
+}
+
+/**
+ * set time zone index
+ * @since firmware v1.5
+ * @param {number} timezone_index values: (1: UTC-12, 2: UTC-11, 3: UTC-10, 4: UTC-9:30, 5: UTC-9, 6: UTC-8, 7: UTC-7, 8: UTC-6, 9: UTC-5, 10: UTC-4, 11: UTC-3:30, 12: UTC-3, 13: UTC-2, 14: UTC-1, 15: UTC, 16: UTC+1, 17: UTC+2, 18: UTC+3, 19: UTC+3:30, 20: UTC+4, 21: UTC+4:30, 22: UTC+5, 23: UTC+5:30, 24: UTC+5:45, 25: UTC+6, 26: UTC+6:30, 27: UTC+7, 28: UTC+8, 29: UTC+9, 30: UTC+9:30, 31: UTC+10, 32: UTC+10:30, 33: UTC+11, 34: UTC+12, 35: UTC+12:45, 36: UTC+13, 37: UTC+14)
+ * @example { "timezone_index": { "value": 1, "timezone": "UTC-12" } }
+ */
+function setTimeZoneIndex(timezone_index) {
+    var value = timezone_index.value;
+    var timezone = timezone_index.timezone;
+    var timezone_index_map = { 1: "UTC-12", 2: "UTC-11", 3: "UTC-10", 4: "UTC-9:30", 5: "UTC-9", 6: "UTC-8", 7: "UTC-7", 8: "UTC-6", 9: "UTC-5", 10: "UTC-4", 11: "UTC-3:30", 12: "UTC-3", 13: "UTC-2", 14: "UTC-1", 15: "UTC", 16: "UTC+1", 17: "UTC+2", 18: "UTC+3", 19: "UTC+3:30", 20: "UTC+4", 21: "UTC+4:30", 22: "UTC+5", 23: "UTC+5:30", 24: "UTC+5:45", 25: "UTC+6", 26: "UTC+6:30", 27: "UTC+7", 28: "UTC+8", 29: "UTC+9", 30: "UTC+9:30", 31: "UTC+10", 32: "UTC+10:30", 33: "UTC+11", 34: "UTC+12", 35: "UTC+12:45", 36: "UTC+13", 37: "UTC+14" };
+    var timezone_index_values = getValues(timezone_index_map);
+
+    if (RAW_VALUE) {
+        if (timezone_index_values.indexOf(value) === -1) {
+            throw new Error("timezone_index.value must be one of " + timezone_index_values.join(", "));
+        }
+
+        return [0xf9, 0x2f, value];
+    } else {
+        if (timezone_index_values.indexOf(timezone) === -1) {
+            throw new Error("timezone_index.timezone must be one of " + timezone_index_values.join(", "));
+        }
+
+        return [0xf9, 0x2f, getValue(timezone_index_map, timezone)];
+    }
+}
+
+/**
+ * set time zone offset
+ * @since firmware v1.5
+ * @param {number} timezone_offset unit: minute, range: [-1440, 1440]
+ * @example { "timezone_offset": 480 }
+ */
+function setTimeZoneOffset(timezone_offset) {
+    if (typeof timezone_offset !== "number") {
+        throw new Error("timezone_offset must be a number");
+    }
+    if (timezone_offset < -1440 || timezone_offset > 1440) {
+        throw new Error("timezone_offset must be in range [-1440, 1440]");
+    }
+
+    var buffer = new Buffer(4);
+    buffer.writeUInt8(0xf9);
+    buffer.writeUInt8(0x30);
+    buffer.writeInt16LE(timezone_offset);
+    return buffer.toBytes();
+}
+
+function setTemperatureSettingValue(value, range, key, channel_type) {
+    if (typeof value !== "number") {
+        throw new Error(key + " must be a number");
+    }
+    if (value < range[0] || value > range[1]) {
+        throw new Error(key + " must be in range " + range.join(", "));
+    }
+    return [0xf9, channel_type, value * 10];
+}
+
+function setTemperatureControlStage(stage, key, channel_type) {
+    var value = stage.value;
+    var wire = stage.wire;
+    var wires_map = { 
+        1: "disable",
+        2: "Y1",
+        3: "Y2",
+        4: "W1",
+        5: "W2(AUX)",
+        6: "Y1+Y2",
+        7: "Y1+Y2+W1",
+        8: "Y1+Y2+W1+W2(AUX)",
+        9: "Y1+W1",
+        10: "Y1+W1+W2(AUX)",
+        11: "W1+W2(AUX)",
+        12: "E"
+     };
+    var wires_values = getValues(wires_map);
+
+    function getDataValue(wire_setting) {
+        var values = 0x00;
+        if (wire_setting === "disable") return values;
+        var wires = [ "Y1", "Y2", "W1", "W2(AUX)", "E" ];
+        var wires_array = wire_setting.split("+");
+        for (var i = 0; i < wires_array.length; i++) {
+            if (wires.indexOf(wires_array[i]) === -1) {
+                throw new Error(key + ".wire must be one of " + wires.join(", "));
+            }
+            values |= 1 << wires.indexOf(wires_array[i]);
+        }
+
+        return values;
+    }
+
+    if (RAW_VALUE) {
+        if (wires_values.indexOf(value) === -1) {
+            throw new Error(key + ".value must be one of " + wires_values.join(", "));
+        }
+
+        return [0xf9, channel_type, getDataValue(wires_map[value])];
+    } else {
+
+        return [0xf9, channel_type, getDataValue(wire)];
+    }
+}
+
+/**
  * set temperature source config
  * @param {object} temperature_source_config
  * @param {number} temperature_source_config.source values: (0: disable, 1: lora, 2: d2d)
@@ -962,21 +1449,30 @@ function setFreezeProtection(freeze_protection_config) {
 }
 
 /**
- * @param {string} fan_mode values: (0: auto, 1: on, 2: circulate)
- * @example { "fan_mode": 0 }
+ * @param {string} fan_mode values: (0: "auto", 1: "always on", 2: "circulate", 3: "low speed", 4: "medium speed", 5: "high speed", 6: "disable")
+ * @example { "fan_mode": { "value": 0, "mode": "auto" } }
  */
 function setFanMode(fan_mode) {
-    var fan_mode_map = { 0: "auto", 1: "on", 2: "circulate" };
-    var fan_mode_values = getValues(fan_mode_map);
-    if (fan_mode_values.indexOf(fan_mode) === -1) {
-        throw new Error("fan_mode must be one of " + fan_mode_values.join(", "));
-    }
+    var value = fan_mode.value;
+    var mode = fan_mode.mode;
+    var fan_mode_map = { 0: "auto", 1: "always on", 2: "circulate", 3: "low speed", 4: "medium speed", 5: "high speed", 6: "disable" };
 
-    var buffer = new Buffer(3);
-    buffer.writeUInt8(0xff);
-    buffer.writeUInt8(0xb6);
-    buffer.writeUInt8(getValue(fan_mode_map, fan_mode));
-    return buffer.toBytes();
+    if(RAW_VALUE) {
+        var fan_mode_value_map = { 1: "auto", 2: "always on", 3: "circulate" };
+        var fan_mode_value_values = getValues(fan_mode_value_map);
+        if (fan_mode_value_values.indexOf(value) === -1) {
+            throw new Error("fan_mode.value must be one of " + fan_mode_value_values.join(", "));
+        }
+        
+        return [0xff, 0xb6, getObjValue(fan_mode_map, fan_mode_value_map[value])];
+    } else {
+        var fan_mode_values = getValues(fan_mode_map);
+        if (fan_mode_values.indexOf(mode) === -1) {
+            throw new Error("fan_mode.mode must be one of " + fan_mode_values.join(", "));
+        }
+
+        return [0xff, 0xb6, getValue(fan_mode_map, mode)];
+    }
 }
 
 /**
@@ -1215,25 +1711,6 @@ function setWiresRelayConfig(wires_relay_config) {
 }
 
 /**
- * set wires relay change report
- * @param {number} wires_relay_change_report_enable values: (0: disable, 1: enable)
- * @example { "wires_relay_change_report_enable": 1 }
- */
-function setWiresRelayChangeReport(wires_relay_change_report_enable) {
-    var enable_map = { 0: "disable", 1: "enable" };
-    var enable_values = getValues(enable_map);
-    if (enable_values.indexOf(wires_relay_change_report_enable) === -1) {
-        throw new Error("wires_relay_change_report_enable must be one of " + enable_values.join(", "));
-    }
-
-    var buffer = new Buffer(3);
-    buffer.writeUInt8(0xf9);
-    buffer.writeUInt8(0x3a);
-    buffer.writeUInt8(getValue(enable_map, wires_relay_change_report_enable));
-    return buffer.toBytes();
-}
-
-/**
  * set aux config
  * @param {object} aux_control_config
  * @param {number} aux_control_config.y2_enable values: (0: disable, 1: enable)
@@ -1290,26 +1767,6 @@ function setFanDelayConfig(fan_delay_config) {
     buffer.writeUInt8(0x44);
     buffer.writeUInt8(getValue(enable_map, enable));
     buffer.writeUInt16LE(delay_time);
-    return buffer.toBytes();
-}
-
-/**
- * set compressor and aux combine enable
- * @param {number} compressor_aux_combine_enable values: (0: disable, 1: enable)
- * @example { "compressor_aux_combine_enable": 1 }
- * @since v2.0
- */
-function setCompressorAndAuxCombineEnable(compressor_aux_combine_enable) {
-    var enable_map = { 0: "disable", 1: "enable" };
-    var enable_values = getValues(enable_map);
-    if (enable_values.indexOf(compressor_aux_combine_enable) === -1) {
-        throw new Error("compressor_aux_combine_enable must be one of " + enable_values.join(", "));
-    }
-
-    var buffer = new Buffer(3);
-    buffer.writeUInt8(0xf9);
-    buffer.writeUInt8(0x46);
-    buffer.writeUInt8(getValue(enable_map, compressor_aux_combine_enable));
     return buffer.toBytes();
 }
 
@@ -1506,22 +1963,29 @@ function setWires(wires, ob_mode) {
 }
 
 /**
- * set ob directive mode
- * @param {number} ob_mode values: (0: on cool, 1: on heat)
- * @example { "ob_mode": 0 }
+ * set reversing valve
+ * @param {number} reversing_valve values: (1: energize on heat, 2: energize on cool)
+ * @example { "reversing_valve": 1 }
  */
-function setOBMode(ob_mode) {
-    var ob_mode_map = { 0: "on cool", 1: "on heat" };
-    var ob_mode_values = getValues(ob_mode_map);
-    if (ob_mode_values.indexOf(ob_mode) === -1) {
-        throw new Error("ob_mode must be one of " + ob_mode_values.join(", "));
-    }
+function setReversingValve(reversing_valve) {
+    var value = reversing_valve.value;
+    var mode = reversing_valve.mode;
+    var reversing_valve_map = { 1: "energize on heat", 2: "energize on cool" };
+    var reversing_valve_values = getValues(reversing_valve_map);
 
-    var buffer = new Buffer(3);
-    buffer.writeUInt8(0xff);
-    buffer.writeUInt8(0xb5);
-    buffer.writeUInt8(getValue(ob_mode_map, ob_mode));
-    return buffer.toBytes();
+    if (RAW_VALUE) {
+        if (reversing_valve_values.indexOf(value) === -1) {
+            throw new Error("reversing_valve.value must be one of " + reversing_valve_values.join(", "));
+        }
+
+        return [0xff, 0xb5, value - 1];
+    } else {
+        if (reversing_valve_values.indexOf(mode) === -1) {
+            throw new Error("reversing_valve.mode must be one of " + reversing_valve_values.join(", "));
+        }
+
+        return [0xff, 0xb5, getValue(reversing_valve_map, mode) - 1];
+    }
 }
 
 /**
@@ -1713,36 +2177,36 @@ function setOfflineControlMode(offline_control_mode) {
 }
 
 /**
- * set offline timeout
+ * set config value and time
  * @since firmware version 1.4
- * @param {object} offline_timeout
- * @param {number} offline_timeout.value values: [ 1, 2, 3, 4, 5, 6, 7, 8 ]
- * @param {string} offline_timeout.time values: [ 'disable', 5, 10, 20, 30, 40, 50, 60 ]
- * @example { "offline_timeout": { "value": 2, "time": 5 } }
+ * @param {object} offline_timeout/occupied_delay
+ * @param {number} [offline_timeout/occupied_delay].value values: [ 1, 2, 3, 4, 5, 6, 7, 8 ]
+ * @param {string} [offline_timeout/occupied_delay].time values: [ 'disable', 5, 10, 20, 30, 40, 50, 60 ]
+ * @example { "offline_timeout/occupied_delay": { "value": 2, "time": 5 } }
  */
-function setOfflineTimeout(offline_timeout) { 
-    var offline_timeout_value_map = [ 1, 2, 3, 4, 5, 6, 7, 8 ];
-    var offline_timeout_time_map = [ 'disable', 5, 10, 20, 30, 40, 50, 60 ];
+function setConfigValueTime(config, key, channel_type) { 
+    var value = config.value;
+    var config_value_map = { 1: "disable", 2: 5, 3: 10, 4: 20, 5: 30, 6: 40, 7: 50, 8: 60 };
+    var config_value_values = getValues(config_value_map);
+
     var buffer = new Buffer(3);
     buffer.writeUInt8(0xf9);
-    buffer.writeUInt8(0x29);
+    buffer.writeUInt8(channel_type);
 
     if(RAW_VALUE) {
-        var value = offline_timeout.value;
-    
-        if (offline_timeout_value_map.indexOf(value) === -1) {
-            throw new Error("offline_timeout.value must be one of " + offline_timeout_value_map.join(", "));
+        if (config_value_values.indexOf(value) === -1) {
+            throw new Error(key + ".value must be one of " + config_value_map.join(", "));
         }
 
-        buffer.writeUInt8(offline_timeout_time_map[value - 1] === 'disable' ? 255 : offline_timeout_time_map[value - 1]);
+        buffer.writeUInt8(config_value_map[value] === 'disable' ? 255 : config_value_map[value]);
     } else {
-        var time = offline_timeout.time === 'disable' ? 255 : offline_timeout.time;
+        var time = config.time === 'disable' ? 255 : config.time;
     
         if (typeof time !== "number") {
-            throw new Error("offline_timeout.time must be a number");
+            throw new Error(key + ".time must be a number");
         }
-        if (time < 1 || time > 255) {
-            throw new Error("offline_timeout.time must be in range [1, 255]");
+        if ((time < 1 || time > 60) && time !== 255) {
+            throw new Error(key + ".time must be in range [1, 60] or 255");
         }
 
         buffer.writeUInt8(time);
@@ -1893,35 +2357,40 @@ function setUnlockConfig(unlock_config) {
 }
 
 /**
- * set temperature control forbidden config
+ * set temperature control enable setting
  * @since v2.0
- * @param {object} temperature_control_forbidden_config
- * @param {number} temperature_control_forbidden_config.heat_enable values: (0: disable, 1: enable)
- * @param {number} temperature_control_forbidden_config.em_heat_enable values: (0: disable, 1: enable)
- * @param {number} temperature_control_forbidden_config.cool_enable values: (0: disable, 1: enable)
- * @param {number} temperature_control_forbidden_config.auto_enable values: (0: disable, 1: enable)
- * @example { "temperature_control_forbidden_config": { "heat_enable": 1, "em_heat_enable": 1, "cool_enable": 1, "auto_enable": 1 } }
+ * @param {object} temperature_control_enable_setting
+ * @param {number} temperature_control_enable_setting.value values: (1: auto/cool/em heat/heat, 2: heat, 3: cool, 4: cool/heat, 5: auto/cool/heat)
+ * @param {number} temperature_control_enable_setting.mode values: (auto/cool/em heat/heat, heat, cool, cool/heat, auto/cool/heat)
+ * @example { "temperature_control_enable_setting": { "value": 1, "mode": "auto/cool/em heat/heat" } }
  */
-function setTemperatureControlForbiddenConfig(temperature_control_forbidden_config) {
-    var bit_offset = { heat_enable: 0, em_heat_enable: 1, cool_enable: 2, auto_enable: 3 };
+function setTemperatureControlEnableSetting(temperature_control_enable_setting) {
+    var value = temperature_control_enable_setting.value;
+    var mode = temperature_control_enable_setting.mode;
+    var value_map = { 1: "auto/cool/em heat/heat", 2: "heat", 3: "cool", 4: "cool/heat", 5: "auto/cool/heat" };
+    var value_values = getValues(value_map);
 
-    var data = 0x00;
-    var enable_map = { 0: "disable", 1: "enable" };
-    var enable_values = getValues(enable_map);
-    for (var key in bit_offset) {
-        if (key in temperature_control_forbidden_config) {
-            if (enable_values.indexOf(temperature_control_forbidden_config[key]) === -1) {
-                throw new Error("temperature_control_forbidden_config." + key + " must be one of " + enable_values.join(", "));
+    function getDataValue(setting) {
+        var values = 0x00;
+        var buttons = [ "heat", "em heat", "cool", "auto" ];
+        var buttons_array = setting.split("/");
+        for (var i = 0; i < buttons_array.length; i++) {
+            if (buttons.indexOf(buttons_array[i]) === -1) {
+                throw new Error("temperature_control_enable_setting.mode must be one of " + buttons.join(", "));
             }
-            data |= getValue(enable_map, temperature_control_forbidden_config[key]) << bit_offset[key];
+            values |= 1 << buttons.indexOf(buttons_array[i]);
+        }
+
+        return values;
+    }
+
+    if(RAW_VALUE) { 
+        if (value_values.indexOf(value) === -1) {
+            throw new Error("temperature_control_enable_setting.value must be one of " + value_values.join(", "));
         }
     }
 
-    var buffer = new Buffer(3);
-    buffer.writeUInt8(0xf9);
-    buffer.writeUInt8(0x5d);
-    buffer.writeUInt8(data);
-    return buffer.toBytes();
+    return [0xf9, 0x5d, mode === 'disable' ? 0x00 : getDataValue(mode)];
 }
 
 /**
@@ -2084,25 +2553,6 @@ function setDoublePointTargetTolerance(double_point_target_tolerance) {
     return buffer.toBytes();
 }
 
-/**
- * set target temperature dual enable
- * @param {number} target_temperature_dual_enable values: (0: disable, 1: enable)
- * @example { "target_temperature_dual_enable": 1 }
- */
-function setTargetTemperatureDual(target_temperature_dual_enable) {
-    var enable_map = { 0: "disable", 1: "enable" };
-    var enable_values = getValues(enable_map);
-    if (enable_values.indexOf(target_temperature_dual_enable) === -1) {
-        throw new Error("target_temperature_dual_enable must be one of " + enable_values.join(", "));
-    }
-
-    var buffer = new Buffer(3);
-    buffer.writeUInt8(0xf9);
-    buffer.writeUInt8(0x58);
-    buffer.writeUInt8(getValue(enable_map, target_temperature_dual_enable));
-    return buffer.toBytes();
-}
-
 function getValues(map) {
     var values = [];
     for (var key in map) {
@@ -2120,6 +2570,15 @@ function getValue(map, value) {
         }
     }
 
+    throw new Error("not match in " + JSON.stringify(map));
+}
+
+function getObjValue(map, value) {
+    for (var key in map) {
+        if (map[key] === value) {
+            return parseInt(key);
+        }
+    }
     throw new Error("not match in " + JSON.stringify(map));
 }
 
@@ -2209,4 +2668,198 @@ function hexStringToBytes(hex) {
         bytes.push(parseInt(hex.substr(c, 2), 16));
     }
     return bytes;
+}
+
+function hasPath(obj, path) {
+	var parts = path.split('.');
+	var current = obj;
+  
+	for (var i = 0; i < parts.length; i++) {
+	  	if (!current || !(parts[i] in current)) {
+			return false;
+	  	}
+	  	current = current[parts[i]];
+	}
+  
+	return true;
+}
+
+function getPath(obj, path) {
+	var parts = path.split('.');
+	var current = obj;
+  
+	for (var i = 0; i < parts.length; i++) {
+	  	var key = parts[i];
+  
+	  	if (!current || !(key in current)) {
+			return null;
+	  	}
+  
+	  	current = current[key];
+	}
+  
+	return current;
+}
+  
+
+function setPath(obj, path, value) {
+	var parts = path.split('.');
+	var current = obj;
+  
+	for (var i = 0; i < parts.length - 1; i++) {
+	  	var key = parts[i];
+  
+	  	if (!(key in current) || typeof current[key] !== 'object') {
+			current[key] = {};
+	  	}
+  
+	  	current = current[key];
+	}
+
+	current[parts[parts.length - 1]] = value;
+	return obj;
+}
+
+function convertName(propertyId, prefix) {
+	var parts = propertyId.split('.');
+	var lastPart = parts[parts.length - 1];
+	parts[parts.length - 1] = prefix + '_' + lastPart;
+	return parts.join('.');
+}
+
+function recoverName(propertyId, prefix) {
+	var parts = propertyId.split('.');
+	var lastPart = parts[parts.length - 1];
+	parts[parts.length - 1] = lastPart.replace(prefix + '_', '');
+	return parts.join('.');
+}
+
+function getAllLeafPaths(obj, prefix) {
+    var paths = [];
+
+    function recurse(current, path) {
+      if (Array.isArray(current)) {
+        current.forEach(function (item, index) {
+          var newPath = path ? (path + "." + index) : String(index);
+          recurse(item, newPath);
+        });
+  
+      } else if (typeof current === 'object' && current !== null) {
+        for (var key in current) {
+          if (Object.prototype.hasOwnProperty.call(current, key)) {
+            var newPath = path ? (path + "." + key) : key;
+            recurse(current[key], newPath);
+          }
+        }
+  
+      } else {
+        paths.push(path);
+      }
+    }
+  
+    recurse(obj, "");
+    return paths;  
+}
+
+function isInteger(str) {
+    return typeof str === 'string' && /^[0-9]+$/.test(str);
+}
+
+function processTemperature(payload) {
+	var allTemperatureProperties = {
+        "temperature_control_delta1": {
+            "coefficient": 0.1
+        },
+        "temperature_control_delta2": {
+            "coefficient": 0.1
+        },
+        "target_deadband": {
+            "coefficient": 0.1
+        },
+        "occupied_cooling_setpoint": {
+            "coefficient": 0.1
+        },
+        "occupied_heating_setpoint": {
+            "coefficient": 0.1
+        },
+        "unoccupied_cooling_setpoint": {
+            "coefficient": 0.1
+        },
+        "unoccupied_heating_setpoint": {
+            "coefficient": 0.1
+        },
+        "cooling_setpoint": {
+            "coefficient": 0.1
+        },
+        "heating_setpoint": {
+            "coefficient": 0.1
+        },
+        "occupied_cooling_setpoint_tolerance": {
+            "coefficient": 0.1
+        },
+        "occupied_heating_setpoint_tolerance": {
+            "coefficient": 0.1
+        },
+        "unoccupied_cooling_setpoint_tolerance": {
+            "coefficient": 0.1
+        },
+        "unoccupied_heating_setpoint_tolerance": {
+            "coefficient": 0.1
+        },
+        "cooling_setpoint_tolerance": {
+            "coefficient": 0.1
+        },
+        "heating_setpoint_tolerance": {
+            "coefficient": 0.1
+        },
+        "center_cool_temp": {
+            "coefficient": 0.1
+        },
+        "center_heat_temp": {
+            "coefficient": 0.1
+        },
+        "cooling_adjust_tolerance": {
+            "coefficient": 0.1
+        },
+        "heating_adjust_tolerance": {
+            "coefficient": 0.1
+        }
+    };
+    var leafPaths = getAllLeafPaths(payload);    
+	for (var i = 0; i < leafPaths.length; i++) {
+        var propertyId = leafPaths[i];
+        var propertyParts = propertyId.split('.');        
+        var newPropertyParts = []
+        for (var j = 0; j < propertyParts.length; j++) {
+            var part = propertyParts[j];
+            if (isInteger(part)) {
+                newPropertyParts.push('_item');
+            } else {
+                newPropertyParts.push(part);
+            }
+        }
+        var newPropertyId = newPropertyParts.join('.');
+        newPropertyId = recoverName(newPropertyId, 'fahrenheit');
+        newPropertyId = recoverName(newPropertyId, 'celsius');
+        propertyId = recoverName(propertyId, 'fahrenheit');
+        propertyId = recoverName(propertyId, 'celsius');
+        if (allTemperatureProperties[newPropertyId]) {            
+            var fahrenheitProperty = convertName(propertyId, 'fahrenheit');
+            var celsiusProperty = convertName(propertyId, 'celsius');
+            var stringCoefficient = String(allTemperatureProperties[newPropertyId].coefficient);
+            var dotIndex = stringCoefficient.indexOf('.');
+            var precision = dotIndex != -1 ? stringCoefficient.length - dotIndex - 1 : 0;
+            if (!hasPath(payload, propertyId)) {
+                if (hasPath(payload, fahrenheitProperty) && hasPath(payload, celsiusProperty)) { 
+                    throw new Error(fahrenheitProperty + ' and ' + celsiusProperty + ' cannot be in payload at the same time');
+                }
+                if (hasPath(payload, fahrenheitProperty)) {
+                    setPath(payload, propertyId, Number(((getPath(payload, fahrenheitProperty) - 32) / 1.8).toFixed(precision)));
+                } else if (hasPath(payload, celsiusProperty)) {
+                    setPath(payload, propertyId, Number(getPath(payload, celsiusProperty).toFixed(precision)));
+                }
+            }
+        }
+	}	
+	return payload;
 }
