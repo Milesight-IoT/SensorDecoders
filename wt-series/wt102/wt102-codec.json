@@ -1310,28 +1310,6 @@
             ]
         },
         {
-            "id": "auto_p_enable",
-            "name": "Auto-P",
-            "value": "1",
-            "unit": "",
-            "access_mode": "RW",
-            "data_type": "BOOL",
-            "value_type": "UINT8",
-            "values": [
-                {
-                    "value": 0,
-                    "name": "Disable"
-                },
-                {
-                    "value": 1,
-                    "name": "Enable"
-                }
-            ],
-            "bacnet_type": "binary_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS"
-        },
-        {
             "id": "battery",
             "name": "Battery",
             "value": "",
@@ -2629,7 +2607,7 @@
             "data_type": "NUMBER",
             "value_type": "UINT16",
             "range": [
-                1,
+                5,
                 1440
             ],
             "bacnet_type": "analog_value_object",
@@ -2690,7 +2668,7 @@
             "data_type": "NUMBER",
             "value_type": "UINT16",
             "range": [
-                1,
+                5,
                 1440
             ],
             "bacnet_type": "analog_value_object",
@@ -3103,50 +3081,6 @@
             "reference": []
         },
         {
-            "id": "motor_controllable_range.distance",
-            "name": "Motor Controllable Distance",
-            "value": "666",
-            "unit": "mm",
-            "access_mode": "RW",
-            "data_type": "NUMBER",
-            "value_type": "FLOAT",
-            "range": [
-                0,
-                666
-            ],
-            "bacnet_type": "analog_value_object",
-            "bacnet_unit_type_id": 30,
-            "bacnet_unit_type": "UNITS_MILLIMETERS",
-            "reference": [
-                "motor_controllable_range.enable"
-            ]
-        },
-        {
-            "id": "motor_controllable_range.enable",
-            "name": "Motor Controllable Distance Enable",
-            "value": "0",
-            "unit": "",
-            "access_mode": "RW",
-            "data_type": "BOOL",
-            "value_type": "UINT8",
-            "values": [
-                {
-                    "value": 0,
-                    "name": "Disable"
-                },
-                {
-                    "value": 1,
-                    "name": "Enable"
-                }
-            ],
-            "bacnet_type": "binary_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": [
-                "motor_controllable_range.distance"
-            ]
-        },
-        {
             "id": "motor_position",
             "name": "Motor Position",
             "value": "",
@@ -3442,6 +3376,37 @@
             "reference": [
                 "periodic_reporting.non_heating_season.battery_level"
             ]
+        },
+        {
+            "id": "periodic_reporting.report_type",
+            "name": "Reporting Type",
+            "value": "",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "Non-heating Period Reporting"
+                },
+                {
+                    "value": 1,
+                    "name": "Heating Period Temperature Control Reporting"
+                },
+                {
+                    "value": 2,
+                    "name": "Heating Period Valve Opening Control Reporting"
+                },
+                {
+                    "value": 3,
+                    "name": "Heating Period Integrated Control Reporting"
+                }
+            ],
+            "bacnet_type": "multistate_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": []
         },
         {
             "id": "periodic_reporting.target_temperature_for_heating.battery_level",
@@ -3793,28 +3758,6 @@
                     "name": "yes"
                 }
             ]
-        },
-        {
-            "id": "random_key",
-            "name": "Random key",
-            "value": "0",
-            "unit": "",
-            "access_mode": "RW",
-            "data_type": "BOOL",
-            "value_type": "UINT8",
-            "values": [
-                {
-                    "value": 0,
-                    "name": "Disable"
-                },
-                {
-                    "value": 1,
-                    "name": "Enable"
-                }
-            ],
-            "bacnet_type": "binary_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS"
         },
         {
             "id": "reboot",
@@ -4186,7 +4129,7 @@
             "bacnet_unit_type": "UNITS_DEGREES_CELSIUS"
         },
         {
-            "id": "temp_control.celsius_over_temperature_side_deadband",
+            "id": "target_temperature_control_settings.celsius_over_temperature_side_deadband",
             "name": "Celsius Over-temperature Side Deadband",
             "value": "0.1",
             "unit": "°C",

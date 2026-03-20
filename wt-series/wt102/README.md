@@ -52,11 +52,11 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Heating Period Reporting Interval | 0x63 | 4 | rw |  |  |  |
 | Heating Period Reporting Interval Unit | 0x63 | 2 | rw | 1 |  | 0：second<br>1：min |
 | Heating Period Reporting Interval | 0x63 | 3 | rw | 600 | 10 - 64800 |  |
-| Heating Period Reporting Interval | 0x63 | 3 | rw | 10 | 1 - 1440 |  |
+| Heating Period Reporting Interval | 0x63 | 3 | rw | 10 | 5 - 1440 |  |
 | Non-heating Period Reporting Interval | 0x63 | 4 | rw |  |  |  |
 | Non-heating Period Reporting Interval Unit | 0x63 | 2 | rw | 1 |  | 0：second<br>1：min |
 | Non-heating Period Reporting Interval | 0x63 | 3 | rw | 64800 | 10 - 64800 |  |
-| Non-heating Period Reporting Interval | 0x63 | 3 | rw | 1440 | 1 - 1440 |  |
+| Non-heating Period Reporting Interval | 0x63 | 3 | rw | 1440 | 5 - 1440 |  |
 | Non-heating Period Valve Status | 0x63 | 2 | rw | 1 |  | 0：Fully Close<br>1：Fully Open |
 | Temperature Control | 0x65 | 1 | rw |  |  |  |
 | Sub-command | 0x65 | 2 | rw | 0 |  |  |

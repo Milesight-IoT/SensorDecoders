@@ -598,8 +598,8 @@ function milesightDeviceEncode(payload) {
 				buffer.writeUInt16LE(payload.heating_period_settings.heating_period_reporting_interval.seconds_of_time);
 			}
 			if (payload.heating_period_settings.heating_period_reporting_interval.unit == 0x01) {
-				if (payload.heating_period_settings.heating_period_reporting_interval.minutes_of_time < 1 || payload.heating_period_settings.heating_period_reporting_interval.minutes_of_time > 1440) {
-					throw new Error('heating_period_settings.heating_period_reporting_interval.minutes_of_time must be between 1 and 1440');
+				if (payload.heating_period_settings.heating_period_reporting_interval.minutes_of_time < 5 || payload.heating_period_settings.heating_period_reporting_interval.minutes_of_time > 1440) {
+					throw new Error('heating_period_settings.heating_period_reporting_interval.minutes_of_time must be between 5 and 1440');
 				}
 				buffer.writeUInt16LE(payload.heating_period_settings.heating_period_reporting_interval.minutes_of_time);
 			}
@@ -616,8 +616,8 @@ function milesightDeviceEncode(payload) {
 				buffer.writeUInt16LE(payload.heating_period_settings.non_heating_period_reporting_interval.seconds_of_time);
 			}
 			if (payload.heating_period_settings.non_heating_period_reporting_interval.unit == 0x01) {
-				if (payload.heating_period_settings.non_heating_period_reporting_interval.minutes_of_time < 1 || payload.heating_period_settings.non_heating_period_reporting_interval.minutes_of_time > 1440) {
-					throw new Error('heating_period_settings.non_heating_period_reporting_interval.minutes_of_time must be between 1 and 1440');
+				if (payload.heating_period_settings.non_heating_period_reporting_interval.minutes_of_time < 5 || payload.heating_period_settings.non_heating_period_reporting_interval.minutes_of_time > 1440) {
+					throw new Error('heating_period_settings.non_heating_period_reporting_interval.minutes_of_time must be between 5 and 1440');
 				}
 				buffer.writeUInt16LE(payload.heating_period_settings.non_heating_period_reporting_interval.minutes_of_time);
 			}

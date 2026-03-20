@@ -1162,7 +1162,7 @@ function cmdMap() {
 function processTemperature(decoded) {
 	var allTemperatureProperties = {
     "temperature": {
-        "precision": 1
+        "precision": 2
     },
     "target_temperature": {
         "precision": 1
