@@ -383,6 +383,16 @@ function handle_downlink_response_ext(code, channel_type, bytes, offset) {
             decoded.password = readString(bytes.slice(offset, offset + 6));
             offset += 6;
             break;
+        case 0xcb:
+            decoded.voltage_data_reporting_config = {}
+            decoded.voltage_data_reporting_config.enable = readEnableStatus(readUInt8(bytes[offset]));
+            decoded.voltage_data_reporting_config.period = readUInt16LE(bytes.slice(offset + 1, offset + 3));
+            offset += 3;
+            break;
+        case 0xcc:
+            decoded.distance_report_quantity = readUInt8(bytes[offset]);
+            offset += 1;
+            break;
         default:
             throw new Error("unknown downlink response");
     }
