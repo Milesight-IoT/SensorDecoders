@@ -131,7 +131,7 @@ function milesightDeviceDecode(bytes) {
 			case 0x08:
 				decoded.low_battery_alarm = decoded.low_battery_alarm || {};
 				decoded.low_battery_alarm.value = readUInt8(bytes, counterObj, 1);
-				// decoded.battery = decoded.low_battery_alarm.value;
+				decoded.battery = decoded.low_battery_alarm.value;
 				break;
 			case 0x09:
 				decoded.temperature_alarm = decoded.temperature_alarm || {};
@@ -139,22 +139,22 @@ function milesightDeviceDecode(bytes) {
 				if (decoded.temperature_alarm.type == 0x10) {
 					decoded.temperature_alarm.lower_range_alarm_deactivation = decoded.temperature_alarm.lower_range_alarm_deactivation || {};
 					decoded.temperature_alarm.lower_range_alarm_deactivation.temperature = readInt16LE(bytes, counterObj, 2) / 100;
-					// decoded.temperature = decoded.temperature_alarm.lower_range_alarm_deactivation.temperature;
+					decoded.temperature = decoded.temperature_alarm.lower_range_alarm_deactivation.temperature;
 				}
 				if (decoded.temperature_alarm.type == 0x11) {
 					decoded.temperature_alarm.lower_range_alarm_trigger = decoded.temperature_alarm.lower_range_alarm_trigger || {};
 					decoded.temperature_alarm.lower_range_alarm_trigger.temperature = readInt16LE(bytes, counterObj, 2) / 100;
-					// decoded.temperature = decoded.temperature_alarm.lower_range_alarm_trigger.temperature;
+					decoded.temperature = decoded.temperature_alarm.lower_range_alarm_trigger.temperature;
 				}
 				if (decoded.temperature_alarm.type == 0x12) {
 					decoded.temperature_alarm.over_range_alarm_deactivation = decoded.temperature_alarm.over_range_alarm_deactivation || {};
 					decoded.temperature_alarm.over_range_alarm_deactivation.temperature = readInt16LE(bytes, counterObj, 2) / 100;
-					// decoded.temperature = decoded.temperature_alarm.over_range_alarm_deactivation.temperature;
+					decoded.temperature = decoded.temperature_alarm.over_range_alarm_deactivation.temperature;
 				}
 				if (decoded.temperature_alarm.type == 0x13) {
 					decoded.temperature_alarm.over_range_alarm_trigger = decoded.temperature_alarm.over_range_alarm_trigger || {};
 					decoded.temperature_alarm.over_range_alarm_trigger.temperature = readInt16LE(bytes, counterObj, 2) / 100;
-					// decoded.temperature = decoded.temperature_alarm.over_range_alarm_trigger.temperature;
+					decoded.temperature = decoded.temperature_alarm.over_range_alarm_trigger.temperature;
 				}
 				break;
 			case 0x0a:
@@ -163,16 +163,16 @@ function milesightDeviceDecode(bytes) {
 				if (decoded.anti_freeze_protection_alarm.type == 0x20) {
 					decoded.anti_freeze_protection_alarm.lifted = decoded.anti_freeze_protection_alarm.lifted || {};
 					decoded.anti_freeze_protection_alarm.lifted.environment_temperature = readInt16LE(bytes, counterObj, 2) / 100;
-					// decoded.temperature = decoded.anti_freeze_protection_alarm.lifted.environment_temperature;
+					decoded.temperature = decoded.anti_freeze_protection_alarm.lifted.environment_temperature;
 					decoded.anti_freeze_protection_alarm.lifted.current_valve_status = readUInt8(bytes, counterObj, 1);
-					// decoded.valve_opening_degree = decoded.anti_freeze_protection_alarm.lifted.current_valve_status;
+					decoded.valve_opening_degree = decoded.anti_freeze_protection_alarm.lifted.current_valve_status;
 				}
 				if (decoded.anti_freeze_protection_alarm.type == 0x21) {
 					decoded.anti_freeze_protection_alarm.trigger = decoded.anti_freeze_protection_alarm.trigger || {};
 					decoded.anti_freeze_protection_alarm.trigger.environment_temperature = readInt16LE(bytes, counterObj, 2) / 100;
-					// decoded.temperature = decoded.anti_freeze_protection_alarm.trigger.environment_temperature;
+					decoded.temperature = decoded.anti_freeze_protection_alarm.trigger.environment_temperature;
 					decoded.anti_freeze_protection_alarm.trigger.current_valve_status = readUInt8(bytes, counterObj, 1);
-					// decoded.valve_opening_degree = decoded.anti_freeze_protection_alarm.trigger.current_valve_status;
+					decoded.valve_opening_degree = decoded.anti_freeze_protection_alarm.trigger.current_valve_status;
 				}
 				break;
 			case 0x0b:
@@ -181,20 +181,20 @@ function milesightDeviceDecode(bytes) {
 				if (decoded.mandatory_heating_alarm.type == 0x20) {
 					decoded.mandatory_heating_alarm.exit = decoded.mandatory_heating_alarm.exit || {};
 					decoded.mandatory_heating_alarm.exit.environment_temperature = readInt16LE(bytes, counterObj, 2) / 100;
-					// decoded.temperature = decoded.mandatory_heating_alarm.exit.environment_temperature;
+					decoded.temperature = decoded.mandatory_heating_alarm.exit.environment_temperature;
 					decoded.mandatory_heating_alarm.exit.current_valve_status = readUInt8(bytes, counterObj, 1);
-					// decoded.valve_opening_degree = decoded.mandatory_heating_alarm.exit.current_valve_status;
+					decoded.valve_opening_degree = decoded.mandatory_heating_alarm.exit.current_valve_status;
 					decoded.mandatory_heating_alarm.exit.battery_level = readUInt8(bytes, counterObj, 1);
-					// decoded.battery = decoded.mandatory_heating_alarm.exit.battery_level;
+					decoded.battery = decoded.mandatory_heating_alarm.exit.battery_level;
 				}
 				if (decoded.mandatory_heating_alarm.type == 0x21) {
 					decoded.mandatory_heating_alarm.enter = decoded.mandatory_heating_alarm.enter || {};
 					decoded.mandatory_heating_alarm.enter.environment_temperature = readInt16LE(bytes, counterObj, 2) / 100;
-					// decoded.temperature = decoded.mandatory_heating_alarm.enter.environment_temperature;
+					decoded.temperature = decoded.mandatory_heating_alarm.enter.environment_temperature;
 					decoded.mandatory_heating_alarm.enter.current_valve_status = readUInt8(bytes, counterObj, 1);
-					// decoded.valve_opening_degree = decoded.mandatory_heating_alarm.enter.current_valve_status;
+					decoded.valve_opening_degree = decoded.mandatory_heating_alarm.enter.current_valve_status;
 					decoded.mandatory_heating_alarm.enter.battery_level = readUInt8(bytes, counterObj, 1);
-					// decoded.battery = decoded.mandatory_heating_alarm.enter.battery_level;
+					decoded.battery = decoded.mandatory_heating_alarm.enter.battery_level;
 				}
 				break;
 			case 0x0c:
@@ -243,14 +243,14 @@ function milesightDeviceDecode(bytes) {
 					// 0：Normal, 1：Open
 					decoded.window_opening_alarm.release.state = readUInt8(bytes, counterObj, 1);
 					decoded.window_opening_alarm.release.environment_temperature = readInt16LE(bytes, counterObj, 2) / 100;
-					// decoded.temperature = decoded.window_opening_alarm.release.environment_temperature;
+					decoded.temperature = decoded.window_opening_alarm.release.environment_temperature;
 				}
 				if (decoded.window_opening_alarm.type == 0x21) {
 					decoded.window_opening_alarm.trigger = decoded.window_opening_alarm.trigger || {};
 					// 0：Normal, 1：Open
 					decoded.window_opening_alarm.trigger.state = readUInt8(bytes, counterObj, 1);
 					decoded.window_opening_alarm.trigger.environment_temperature = readInt16LE(bytes, counterObj, 2) / 100;
-					// decoded.temperature = decoded.window_opening_alarm.trigger.environment_temperature;
+					decoded.temperature = decoded.window_opening_alarm.trigger.environment_temperature;
 				}
 				break;
 			case 0x0e:
@@ -259,44 +259,44 @@ function milesightDeviceDecode(bytes) {
 				if (decoded.periodic_reporting.report_type == 0x00) {
 					decoded.periodic_reporting.non_heating_season = decoded.periodic_reporting.non_heating_season || {};
 					decoded.periodic_reporting.non_heating_season.target_valve_opening = readUInt8(bytes, counterObj, 1);
-					// decoded.target_valve_opening_degree = decoded.periodic_reporting.non_heating_season.target_valve_opening;
+					decoded.target_valve_opening_degree = decoded.periodic_reporting.non_heating_season.target_valve_opening;
 					decoded.periodic_reporting.non_heating_season.battery_level = readUInt8(bytes, counterObj, 1);
-					// decoded.battery = decoded.periodic_reporting.non_heating_season.battery_level;
+					decoded.battery = decoded.periodic_reporting.non_heating_season.battery_level;
 				}
 				if (decoded.periodic_reporting.report_type == 0x01) {
 					decoded.periodic_reporting.target_temperature_for_heating = decoded.periodic_reporting.target_temperature_for_heating || {};
 					decoded.periodic_reporting.target_temperature_for_heating.environment_temperature = readInt16LE(bytes, counterObj, 2) / 100;
-					// decoded.temperature = decoded.periodic_reporting.target_temperature_for_heating.environment_temperature;
+					decoded.temperature = decoded.periodic_reporting.target_temperature_for_heating.environment_temperature;
 					decoded.periodic_reporting.target_temperature_for_heating.current_valve_opening = readUInt8(bytes, counterObj, 1);
-					// decoded.valve_opening_degree = decoded.periodic_reporting.target_temperature_for_heating.current_valve_opening;
+					decoded.valve_opening_degree = decoded.periodic_reporting.target_temperature_for_heating.current_valve_opening;
 					decoded.periodic_reporting.target_temperature_for_heating.target_temperature = readInt16LE(bytes, counterObj, 2) / 100;
-					// decoded.target_temperature = decoded.periodic_reporting.target_temperature_for_heating.target_temperature;
+					decoded.target_temperature = decoded.periodic_reporting.target_temperature_for_heating.target_temperature;
 					decoded.periodic_reporting.target_temperature_for_heating.battery_level = readUInt8(bytes, counterObj, 1);
-					// decoded.battery = decoded.periodic_reporting.target_temperature_for_heating.battery_level;
+					decoded.battery = decoded.periodic_reporting.target_temperature_for_heating.battery_level;
 				}
 				if (decoded.periodic_reporting.report_type == 0x02) {
 					decoded.periodic_reporting.target_valve_opening_for_heating = decoded.periodic_reporting.target_valve_opening_for_heating || {};
 					decoded.periodic_reporting.target_valve_opening_for_heating.environment_temperature = readInt16LE(bytes, counterObj, 2) / 100;
-					// decoded.temperature = decoded.periodic_reporting.target_valve_opening_for_heating.environment_temperature;
+					decoded.temperature = decoded.periodic_reporting.target_valve_opening_for_heating.environment_temperature;
 					decoded.periodic_reporting.target_valve_opening_for_heating.current_valve_opening = readUInt8(bytes, counterObj, 1);
-					// decoded.valve_opening_degree = decoded.periodic_reporting.target_valve_opening_for_heating.current_valve_opening;
+					decoded.valve_opening_degree = decoded.periodic_reporting.target_valve_opening_for_heating.current_valve_opening;
 					decoded.periodic_reporting.target_valve_opening_for_heating.target_valve_opening = readUInt8(bytes, counterObj, 1);
-					// decoded.target_valve_opening_degree = decoded.periodic_reporting.target_valve_opening_for_heating.target_valve_opening;
+					decoded.target_valve_opening_degree = decoded.periodic_reporting.target_valve_opening_for_heating.target_valve_opening;
 					decoded.periodic_reporting.target_valve_opening_for_heating.battery_level = readUInt8(bytes, counterObj, 1);
-					// decoded.battery = decoded.periodic_reporting.target_valve_opening_for_heating.battery_level;
+					decoded.battery = decoded.periodic_reporting.target_valve_opening_for_heating.battery_level;
 				}
 				if (decoded.periodic_reporting.report_type == 0x03) {
 					decoded.periodic_reporting.integrated_control_for_heating = decoded.periodic_reporting.integrated_control_for_heating || {};
 					decoded.periodic_reporting.integrated_control_for_heating.environment_temperature = readInt16LE(bytes, counterObj, 2) / 100;
-					// decoded.temperature = decoded.periodic_reporting.integrated_control_for_heating.environment_temperature;
+					decoded.temperature = decoded.periodic_reporting.integrated_control_for_heating.environment_temperature;
 					decoded.periodic_reporting.integrated_control_for_heating.current_valve_opening = readUInt8(bytes, counterObj, 1);
-					// decoded.valve_opening_degree = decoded.periodic_reporting.integrated_control_for_heating.current_valve_opening;
+					decoded.valve_opening_degree = decoded.periodic_reporting.integrated_control_for_heating.current_valve_opening;
 					decoded.periodic_reporting.integrated_control_for_heating.target_temperature = readInt16LE(bytes, counterObj, 2) / 100;
-					// decoded.target_temperature = decoded.periodic_reporting.integrated_control_for_heating.target_temperature;
+					decoded.target_temperature = decoded.periodic_reporting.integrated_control_for_heating.target_temperature;
 					decoded.periodic_reporting.integrated_control_for_heating.target_valve_opening = readUInt8(bytes, counterObj, 1);
-					// decoded.target_valve_opening_degree = decoded.periodic_reporting.integrated_control_for_heating.target_valve_opening;
+					decoded.target_valve_opening_degree = decoded.periodic_reporting.integrated_control_for_heating.target_valve_opening;
 					decoded.periodic_reporting.integrated_control_for_heating.battery_level = readUInt8(bytes, counterObj, 1);
-					// decoded.battery = decoded.periodic_reporting.integrated_control_for_heating.battery_level;
+					decoded.battery = decoded.periodic_reporting.integrated_control_for_heating.battery_level;
 				}
 				break;
 			case 0xc9:
