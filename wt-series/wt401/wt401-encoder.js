@@ -97,439 +97,12 @@ function milesightDeviceEncode(payload) {
 	//0xcf
 	if ('lorawan_configuration_settings' in payload) {
 		var buffer = new Buffer();
-		if (isValid(payload.lorawan_configuration_settings.appeui)) {
-			buffer.writeUInt8(0xcf);
-			buffer.writeUInt8(0x13);
-			buffer.writeHexString(payload.lorawan_configuration_settings.appeui, 8);
-		}
-		if (isValid(payload.lorawan_configuration_settings.netid)) {
-			buffer.writeUInt8(0xcf);
-			buffer.writeUInt8(0x03);
-			buffer.writeHexString(payload.lorawan_configuration_settings.netid, 3);
-		}
-		if (isValid(payload.lorawan_configuration_settings.app_port)) {
-			buffer.writeUInt8(0xcf);
-			buffer.writeUInt8(0x5c);
-			if (payload.lorawan_configuration_settings.app_port < 1 || payload.lorawan_configuration_settings.app_port > 223) {
-				throw new Error('lorawan_configuration_settings.app_port must be between 1 and 223');
-			}
-			buffer.writeUInt8(payload.lorawan_configuration_settings.app_port);
-		}
-		if (isValid(payload.lorawan_configuration_settings.version)) {
-			buffer.writeUInt8(0xcf);
-			// 1：1.0.2, 2：1.0.3, 3：1.0.3, 4：1.0.4
-			buffer.writeUInt8(0xd8);
-			// 1：1.0.2, 2：1.0.3, 3：1.0.3, 4：1.0.4
-			buffer.writeUInt8(payload.lorawan_configuration_settings.version);
-		}
 		if (isValid(payload.lorawan_configuration_settings.mode)) {
 			buffer.writeUInt8(0xcf);
 			// 0:ClassA, 1:ClassB, 2:ClassC, 3:ClassC to B
 			buffer.writeUInt8(0x00);
 			// 0:ClassA, 1:ClassB, 2:ClassC, 3:ClassC to B
 			buffer.writeUInt8(payload.lorawan_configuration_settings.mode);
-		}
-		if (isValid(payload.lorawan_configuration_settings.confirmed_mode)) {
-			buffer.writeUInt8(0xcf);
-			// 0：disable, 1：enable
-			buffer.writeUInt8(0x5d);
-			// 0：disable, 1：enable
-			buffer.writeUInt8(payload.lorawan_configuration_settings.confirmed_mode);
-		}
-		if (isValid(payload.lorawan_configuration_settings.ack_retry_times)) {
-			buffer.writeUInt8(0xcf);
-			buffer.writeUInt8(0xc6);
-			if (payload.lorawan_configuration_settings.ack_retry_times < 1 || payload.lorawan_configuration_settings.ack_retry_times > 15) {
-				throw new Error('lorawan_configuration_settings.ack_retry_times must be between 1 and 15');
-			}
-			buffer.writeUInt8(payload.lorawan_configuration_settings.ack_retry_times);
-		}
-		if (isValid(payload.lorawan_configuration_settings.join_type)) {
-			buffer.writeUInt8(0xcf);
-			// 0：ABP, 1：OTAA
-			buffer.writeUInt8(0x01);
-			// 0：ABP, 1：OTAA
-			buffer.writeUInt8(payload.lorawan_configuration_settings.join_type);
-		}
-		if (isValid(payload.lorawan_configuration_settings.appkey)) {
-			buffer.writeUInt8(0xcf);
-			buffer.writeUInt8(0x3b);
-			buffer.writeHexString(payload.lorawan_configuration_settings.appkey, 16);
-		}
-		if (isValid(payload.lorawan_configuration_settings.nwkskey)) {
-			buffer.writeUInt8(0xcf);
-			buffer.writeUInt8(0x1b);
-			buffer.writeHexString(payload.lorawan_configuration_settings.nwkskey, 16);
-		}
-		if (isValid(payload.lorawan_configuration_settings.appskey)) {
-			buffer.writeUInt8(0xcf);
-			buffer.writeUInt8(0x2b);
-			buffer.writeHexString(payload.lorawan_configuration_settings.appskey, 16);
-		}
-		if (isValid(payload.lorawan_configuration_settings.devaddr)) {
-			buffer.writeUInt8(0xcf);
-			buffer.writeUInt8(0x07);
-			buffer.writeHexString(payload.lorawan_configuration_settings.devaddr, 4);
-		}
-		if (isValid(payload.lorawan_configuration_settings.rejoin_mode_enable)) {
-			buffer.writeUInt8(0xcf);
-			// 0：disable, 1：enable
-			buffer.writeUInt8(0xda);
-			// 0：disable, 1：enable
-			buffer.writeUInt8(payload.lorawan_configuration_settings.rejoin_mode_enable);
-		}
-		if (isValid(payload.lorawan_configuration_settings.number_of_link_detection_signals)) {
-			buffer.writeUInt8(0xcf);
-			buffer.writeUInt8(0xd9);
-			if (payload.lorawan_configuration_settings.number_of_link_detection_signals < 4 || payload.lorawan_configuration_settings.number_of_link_detection_signals > 32) {
-				throw new Error('lorawan_configuration_settings.number_of_link_detection_signals must be between 4 and 32');
-			}
-			buffer.writeUInt8(payload.lorawan_configuration_settings.number_of_link_detection_signals);
-		}
-		if (isValid(payload.lorawan_configuration_settings.frequency_band)) {
-			buffer.writeUInt8(0xcf);
-			// 0：CN470, 2：AS923, 3：AU915, 4：EU868, 5：KR920, 6：IN865, 7：US915, 10：RU864
-			buffer.writeUInt8(0xcd);
-			// 0：CN470, 2：AS923, 3：AU915, 4：EU868, 5：KR920, 6：IN865, 7：US915, 10：RU864
-			buffer.writeUInt8(payload.lorawan_configuration_settings.frequency_band);
-		}
-		if (isValid(payload.lorawan_configuration_settings.AS923_frequency_band_in_use)) {
-			buffer.writeUInt8(0xcf);
-			// 0：AS923-1, 1：AS923-2, 2：AS923-3, 3：AS923-4
-			buffer.writeUInt8(0xdc);
-			// 0：AS923-1, 1：AS923-2, 2：AS923-3, 3：AS923-4
-			buffer.writeUInt8(payload.lorawan_configuration_settings.AS923_frequency_band_in_use);
-		}
-		if (isValid(payload.lorawan_configuration_settings.channel_mask)) {
-			buffer.writeUInt8(0xcf);
-			buffer.writeUInt8(0x5e);
-			buffer.writeHexString(payload.lorawan_configuration_settings.channel_mask, 12);
-		}
-		for (var channels_settings_id = 0; channels_settings_id < (payload.lorawan_configuration_settings.channels_settings && payload.lorawan_configuration_settings.channels_settings.length); channels_settings_id++) {
-			var channels_settings_item = payload.lorawan_configuration_settings.channels_settings[channels_settings_id];
-			var channels_settings_item_id = channels_settings_item.index;
-			buffer.writeUInt8(0xcf);
-			buffer.writeUInt8(0x6a);
-			// 0：disable, 1：enable
-			buffer.writeUInt8(channels_settings_item.enable);
-			buffer.writeUInt32LE(channels_settings_item.frequency * 1000000);
-			var bitOptions = 0;
-			// 0：DR0(SF12,125kHz), 1：DR1(SF11,125kHz), 2：DR2(SF10,125kHz), 3：DR3(SF9,125kHz), 4：DR4(SF8,125kHz), 5：DR5(SF7,125kHz)
-			bitOptions |= channels_settings_item.data_rate_max << 4;
-
-			// 0：DR0(SF12,125kHz), 1：DR1(SF11,125kHz), 2：DR2(SF10,125kHz), 3：DR3(SF9,125kHz), 4：DR4(SF8,125kHz), 5：DR5(SF7,125kHz)
-			bitOptions |= channels_settings_item.data_rate_min << 0;
-			buffer.writeUInt8(bitOptions);
-
-		}
-		if (isValid(payload.lorawan_configuration_settings.adr_mode)) {
-			buffer.writeUInt8(0xcf);
-			// 0：disable, 1：enable
-			buffer.writeUInt8(0x02);
-			// 0：disable, 1：enable
-			buffer.writeUInt8(payload.lorawan_configuration_settings.adr_mode);
-		}
-		if (isValid(payload.lorawan_configuration_settings.tx_data_rate)) {
-			buffer.writeUInt8(0xcf);
-			// 0：DR0(SF12,125kHz), 1：DR1(SF11,125kHz), 2：DR2(SF10,125kHz), 3：DR3(SF9,125kHz), 4：DR4(SF8,125kHz), 5：DR5(SF7,125kHz)
-			buffer.writeUInt8(0xba);
-			// 0：DR0(SF12,125kHz), 1：DR1(SF11,125kHz), 2：DR2(SF10,125kHz), 3：DR3(SF9,125kHz), 4：DR4(SF8,125kHz), 5：DR5(SF7,125kHz)
-			buffer.writeUInt8(payload.lorawan_configuration_settings.tx_data_rate);
-		}
-		if (isValid(payload.lorawan_configuration_settings.tx_power)) {
-			buffer.writeUInt8(0xcf);
-			// 0：TXPOWER0-16dBm, 1：TXPOWER1-14dBm, 2：TXPOWER2-12dBm, 3：TXPOWER3-10dBm, 4：TXPOWER4-8dBm, 5：TXPOWER5-6dBm, 6：TXPOWER6-4dBm, 7：TXPOWER7-2dBm
-			buffer.writeUInt8(0x5b);
-			// 0：TXPOWER0-16dBm, 1：TXPOWER1-14dBm, 2：TXPOWER2-12dBm, 3：TXPOWER3-10dBm, 4：TXPOWER4-8dBm, 5：TXPOWER5-6dBm, 6：TXPOWER6-4dBm, 7：TXPOWER7-2dBm
-			buffer.writeUInt8(payload.lorawan_configuration_settings.tx_power);
-		}
-		if (isValid(payload.lorawan_configuration_settings.rx2_data_rate)) {
-			buffer.writeUInt8(0xcf);
-			// 0：DR0(SF12,125kHz), 1：DR1(SF11,125kHz), 2：DR2(SF10,125kHz), 3：DR3(SF9,125kHz), 4：DR4(SF8,125kHz), 5：DR5(SF7,125kHz)
-			buffer.writeUInt8(0xbf);
-			// 0：DR0(SF12,125kHz), 1：DR1(SF11,125kHz), 2：DR2(SF10,125kHz), 3：DR3(SF9,125kHz), 4：DR4(SF8,125kHz), 5：DR5(SF7,125kHz)
-			buffer.writeUInt8(payload.lorawan_configuration_settings.rx2_data_rate);
-		}
-		if (isValid(payload.lorawan_configuration_settings.rx2_frequency)) {
-			buffer.writeUInt8(0xcf);
-			buffer.writeUInt8(0xbb);
-			buffer.writeUInt32LE(payload.lorawan_configuration_settings.rx2_frequency * 1000000);
-		}
-		if (isValid(payload.lorawan_configuration_settings.pingslot_periodicity)) {
-			buffer.writeUInt8(0xcf);
-			// 0：1s, 1：2s, 2：4s, 3：8s, 4：16s, 5：32s, 6：64s, 7：128s
-			buffer.writeUInt8(0xdd);
-			// 0：1s, 1：2s, 2：4s, 3：8s, 4：16s, 5：32s, 6：64s, 7：128s
-			buffer.writeUInt8(payload.lorawan_configuration_settings.pingslot_periodicity);
-		}
-		if (isValid(payload.lorawan_configuration_settings.rx1_open_delay)) {
-			buffer.writeUInt8(0xcf);
-			buffer.writeUInt8(0x4b);
-			if (payload.lorawan_configuration_settings.rx1_open_delay < 1 || payload.lorawan_configuration_settings.rx1_open_delay > 60) {
-				throw new Error('lorawan_configuration_settings.rx1_open_delay must be between 1 and 60');
-			}
-			buffer.writeUInt32LE(payload.lorawan_configuration_settings.rx1_open_delay * 1000);
-		}
-		if (isValid(payload.lorawan_configuration_settings.rx2_open_delay)) {
-			buffer.writeUInt8(0xcf);
-			buffer.writeUInt8(0x4f);
-			if (payload.lorawan_configuration_settings.rx2_open_delay < 1 || payload.lorawan_configuration_settings.rx2_open_delay > 60) {
-				throw new Error('lorawan_configuration_settings.rx2_open_delay must be between 1 and 60');
-			}
-			buffer.writeUInt32LE(payload.lorawan_configuration_settings.rx2_open_delay * 1000);
-		}
-		if (isValid(payload.lorawan_configuration_settings.join_rx1_open_delay)) {
-			buffer.writeUInt8(0xcf);
-			buffer.writeUInt8(0x53);
-			if (payload.lorawan_configuration_settings.join_rx1_open_delay < 1 || payload.lorawan_configuration_settings.join_rx1_open_delay > 60) {
-				throw new Error('lorawan_configuration_settings.join_rx1_open_delay must be between 1 and 60');
-			}
-			buffer.writeUInt32LE(payload.lorawan_configuration_settings.join_rx1_open_delay * 1000);
-		}
-		if (isValid(payload.lorawan_configuration_settings.join_rx2_open_delay)) {
-			buffer.writeUInt8(0xcf);
-			buffer.writeUInt8(0x57);
-			if (payload.lorawan_configuration_settings.join_rx2_open_delay < 1 || payload.lorawan_configuration_settings.join_rx2_open_delay > 60) {
-				throw new Error('lorawan_configuration_settings.join_rx2_open_delay must be between 1 and 60');
-			}
-			buffer.writeUInt32LE(payload.lorawan_configuration_settings.join_rx2_open_delay * 1000);
-		}
-		if (isValid(payload.lorawan_configuration_settings.multicast_group_settings)) {
-			if (isValid(payload.lorawan_configuration_settings.multicast_group_settings.group_1_enable)) {
-				buffer.writeUInt8(0xcf);
-				// 0：disable, 1：enable
-				buffer.writeUInt8(0xf9);
-				// 0：disable, 1：enable
-				buffer.writeUInt8(0x0d);
-				// 0：disable, 1：enable
-				buffer.writeUInt8(payload.lorawan_configuration_settings.multicast_group_settings.group_1_enable);
-			}
-			if (isValid(payload.lorawan_configuration_settings.multicast_group_settings.group_1_devaddr)) {
-				buffer.writeUInt8(0xcf);
-				buffer.writeUInt8(0xf9);
-				buffer.writeUInt8(0x14);
-				buffer.writeHexString(payload.lorawan_configuration_settings.multicast_group_settings.group_1_devaddr, 4);
-			}
-			if (isValid(payload.lorawan_configuration_settings.multicast_group_settings.group_1_appskey)) {
-				buffer.writeUInt8(0xcf);
-				buffer.writeUInt8(0xf9);
-				buffer.writeUInt8(0x28);
-				buffer.writeHexString(payload.lorawan_configuration_settings.multicast_group_settings.group_1_appskey, 16);
-			}
-			if (isValid(payload.lorawan_configuration_settings.multicast_group_settings.group_1_nwkskey)) {
-				buffer.writeUInt8(0xcf);
-				buffer.writeUInt8(0xf9);
-				buffer.writeUInt8(0x18);
-				buffer.writeHexString(payload.lorawan_configuration_settings.multicast_group_settings.group_1_nwkskey, 16);
-			}
-			if (isValid(payload.lorawan_configuration_settings.multicast_group_settings.group_1_pingslot_periodicity)) {
-				buffer.writeUInt8(0xcf);
-				// 0：1s, 1：2s, 2：4s, 3：8s, 4：16s, 5：32s, 6：64s, 7：128s
-				buffer.writeUInt8(0xf9);
-				// 0：1s, 1：2s, 2：4s, 3：8s, 4：16s, 5：32s, 6：64s, 7：128s
-				buffer.writeUInt8(0x0e);
-				// 0：1s, 1：2s, 2：4s, 3：8s, 4：16s, 5：32s, 6：64s, 7：128s
-				buffer.writeUInt8(payload.lorawan_configuration_settings.multicast_group_settings.group_1_pingslot_periodicity);
-			}
-			if (isValid(payload.lorawan_configuration_settings.multicast_group_settings.group_1_data_rate)) {
-				buffer.writeUInt8(0xcf);
-				// 0：DR0(SF12,125kHz), 1：DR1(SF11,125kHz), 2：DR2(SF10,125kHz), 3：DR3(SF9,125kHz), 4：DR4(SF8,125kHz), 5：DR5(SF7,125kHz)
-				buffer.writeUInt8(0xf9);
-				// 0：DR0(SF12,125kHz), 1：DR1(SF11,125kHz), 2：DR2(SF10,125kHz), 3：DR3(SF9,125kHz), 4：DR4(SF8,125kHz), 5：DR5(SF7,125kHz)
-				buffer.writeUInt8(0x0f);
-				// 0：DR0(SF12,125kHz), 1：DR1(SF11,125kHz), 2：DR2(SF10,125kHz), 3：DR3(SF9,125kHz), 4：DR4(SF8,125kHz), 5：DR5(SF7,125kHz)
-				buffer.writeUInt8(payload.lorawan_configuration_settings.multicast_group_settings.group_1_data_rate);
-			}
-			if (isValid(payload.lorawan_configuration_settings.multicast_group_settings.group_1_frequency)) {
-				buffer.writeUInt8(0xcf);
-				buffer.writeUInt8(0xf9);
-				buffer.writeUInt8(0x10);
-				buffer.writeUInt32LE(payload.lorawan_configuration_settings.multicast_group_settings.group_1_frequency * 1000000);
-			}
-			if (isValid(payload.lorawan_configuration_settings.multicast_group_settings.group_2_enable)) {
-				buffer.writeUInt8(0xcf);
-				// 0：disable, 1：enable
-				buffer.writeUInt8(0xf9);
-				// 0：disable, 1：enable
-				buffer.writeUInt8(0x3a);
-				// 0：disable, 1：enable
-				buffer.writeUInt8(payload.lorawan_configuration_settings.multicast_group_settings.group_2_enable);
-			}
-			if (isValid(payload.lorawan_configuration_settings.multicast_group_settings.group_2_devaddr)) {
-				buffer.writeUInt8(0xcf);
-				buffer.writeUInt8(0xf9);
-				buffer.writeUInt8(0x41);
-				buffer.writeHexString(payload.lorawan_configuration_settings.multicast_group_settings.group_2_devaddr, 4);
-			}
-			if (isValid(payload.lorawan_configuration_settings.multicast_group_settings.group_2_appskey)) {
-				buffer.writeUInt8(0xcf);
-				buffer.writeUInt8(0xf9);
-				buffer.writeUInt8(0x55);
-				buffer.writeHexString(payload.lorawan_configuration_settings.multicast_group_settings.group_2_appskey, 16);
-			}
-			if (isValid(payload.lorawan_configuration_settings.multicast_group_settings.group_2_nwkskey)) {
-				buffer.writeUInt8(0xcf);
-				buffer.writeUInt8(0xf9);
-				buffer.writeUInt8(0x45);
-				buffer.writeHexString(payload.lorawan_configuration_settings.multicast_group_settings.group_2_nwkskey, 16);
-			}
-			if (isValid(payload.lorawan_configuration_settings.multicast_group_settings.group_2_pingslot_periodicity)) {
-				buffer.writeUInt8(0xcf);
-				// 0：1s, 1：2s, 2：4s, 3：8s, 4：16s, 5：32s, 6：64s, 7：128s
-				buffer.writeUInt8(0xf9);
-				// 0：1s, 1：2s, 2：4s, 3：8s, 4：16s, 5：32s, 6：64s, 7：128s
-				buffer.writeUInt8(0x3b);
-				// 0：1s, 1：2s, 2：4s, 3：8s, 4：16s, 5：32s, 6：64s, 7：128s
-				buffer.writeUInt8(payload.lorawan_configuration_settings.multicast_group_settings.group_2_pingslot_periodicity);
-			}
-			if (isValid(payload.lorawan_configuration_settings.multicast_group_settings.group_2_data_rate)) {
-				buffer.writeUInt8(0xcf);
-				// 0：DR0(SF12,125kHz), 1：DR1(SF11,125kHz), 2：DR2(SF10,125kHz), 3：DR3(SF9,125kHz), 4：DR4(SF8,125kHz), 5：DR5(SF7,125kHz)
-				buffer.writeUInt8(0xf9);
-				// 0：DR0(SF12,125kHz), 1：DR1(SF11,125kHz), 2：DR2(SF10,125kHz), 3：DR3(SF9,125kHz), 4：DR4(SF8,125kHz), 5：DR5(SF7,125kHz)
-				buffer.writeUInt8(0x3c);
-				// 0：DR0(SF12,125kHz), 1：DR1(SF11,125kHz), 2：DR2(SF10,125kHz), 3：DR3(SF9,125kHz), 4：DR4(SF8,125kHz), 5：DR5(SF7,125kHz)
-				buffer.writeUInt8(payload.lorawan_configuration_settings.multicast_group_settings.group_2_data_rate);
-			}
-			if (isValid(payload.lorawan_configuration_settings.multicast_group_settings.group_2_frequency)) {
-				buffer.writeUInt8(0xcf);
-				buffer.writeUInt8(0xf9);
-				buffer.writeUInt8(0x3d);
-				buffer.writeUInt32LE(payload.lorawan_configuration_settings.multicast_group_settings.group_2_frequency * 1000000);
-			}
-			if (isValid(payload.lorawan_configuration_settings.multicast_group_settings.group_3_enable)) {
-				buffer.writeUInt8(0xcf);
-				// 0：disable, 1：enable
-				buffer.writeUInt8(0xf9);
-				// 0：disable, 1：enable
-				buffer.writeUInt8(0x67);
-				// 0：disable, 1：enable
-				buffer.writeUInt8(payload.lorawan_configuration_settings.multicast_group_settings.group_3_enable);
-			}
-			if (isValid(payload.lorawan_configuration_settings.multicast_group_settings.group_3_devaddr)) {
-				buffer.writeUInt8(0xcf);
-				buffer.writeUInt8(0xf9);
-				buffer.writeUInt8(0x6e);
-				buffer.writeHexString(payload.lorawan_configuration_settings.multicast_group_settings.group_3_devaddr, 4);
-			}
-			if (isValid(payload.lorawan_configuration_settings.multicast_group_settings.group_3_appskey)) {
-				buffer.writeUInt8(0xcf);
-				buffer.writeUInt8(0xf9);
-				buffer.writeUInt8(0x82);
-				buffer.writeHexString(payload.lorawan_configuration_settings.multicast_group_settings.group_3_appskey, 16);
-			}
-			if (isValid(payload.lorawan_configuration_settings.multicast_group_settings.group_3_nwkskey)) {
-				buffer.writeUInt8(0xcf);
-				buffer.writeUInt8(0xf9);
-				buffer.writeUInt8(0x72);
-				buffer.writeHexString(payload.lorawan_configuration_settings.multicast_group_settings.group_3_nwkskey, 16);
-			}
-			if (isValid(payload.lorawan_configuration_settings.multicast_group_settings.group_3_pingslot_periodicity)) {
-				buffer.writeUInt8(0xcf);
-				// 0：1s, 1：2s, 2：4s, 3：8s, 4：16s, 5：32s, 6：64s, 7：128s
-				buffer.writeUInt8(0xf9);
-				// 0：1s, 1：2s, 2：4s, 3：8s, 4：16s, 5：32s, 6：64s, 7：128s
-				buffer.writeUInt8(0x68);
-				// 0：1s, 1：2s, 2：4s, 3：8s, 4：16s, 5：32s, 6：64s, 7：128s
-				buffer.writeUInt8(payload.lorawan_configuration_settings.multicast_group_settings.group_3_pingslot_periodicity);
-			}
-			if (isValid(payload.lorawan_configuration_settings.multicast_group_settings.group_3_data_rate)) {
-				buffer.writeUInt8(0xcf);
-				// 0：DR0(SF12,125kHz), 1：DR1(SF11,125kHz), 2：DR2(SF10,125kHz), 3：DR3(SF9,125kHz), 4：DR4(SF8,125kHz), 5：DR5(SF7,125kHz)
-				buffer.writeUInt8(0xf9);
-				// 0：DR0(SF12,125kHz), 1：DR1(SF11,125kHz), 2：DR2(SF10,125kHz), 3：DR3(SF9,125kHz), 4：DR4(SF8,125kHz), 5：DR5(SF7,125kHz)
-				buffer.writeUInt8(0x69);
-				// 0：DR0(SF12,125kHz), 1：DR1(SF11,125kHz), 2：DR2(SF10,125kHz), 3：DR3(SF9,125kHz), 4：DR4(SF8,125kHz), 5：DR5(SF7,125kHz)
-				buffer.writeUInt8(payload.lorawan_configuration_settings.multicast_group_settings.group_3_data_rate);
-			}
-			if (isValid(payload.lorawan_configuration_settings.multicast_group_settings.group_3_frequency)) {
-				buffer.writeUInt8(0xcf);
-				buffer.writeUInt8(0xf9);
-				buffer.writeUInt8(0x6a);
-				buffer.writeUInt32LE(payload.lorawan_configuration_settings.multicast_group_settings.group_3_frequency * 1000000);
-			}
-			if (isValid(payload.lorawan_configuration_settings.multicast_group_settings.group_4_enable)) {
-				buffer.writeUInt8(0xcf);
-				// 0：disable, 1：enable
-				buffer.writeUInt8(0xf9);
-				// 0：disable, 1：enable
-				buffer.writeUInt8(0x94);
-				// 0：disable, 1：enable
-				buffer.writeUInt8(payload.lorawan_configuration_settings.multicast_group_settings.group_4_enable);
-			}
-			if (isValid(payload.lorawan_configuration_settings.multicast_group_settings.group_4_devaddr)) {
-				buffer.writeUInt8(0xcf);
-				buffer.writeUInt8(0xf9);
-				buffer.writeUInt8(0x9b);
-				buffer.writeHexString(payload.lorawan_configuration_settings.multicast_group_settings.group_4_devaddr, 4);
-			}
-			if (isValid(payload.lorawan_configuration_settings.multicast_group_settings.group_4_appskey)) {
-				buffer.writeUInt8(0xcf);
-				buffer.writeUInt8(0xf9);
-				buffer.writeUInt8(0xaf);
-				buffer.writeHexString(payload.lorawan_configuration_settings.multicast_group_settings.group_4_appskey, 16);
-			}
-			if (isValid(payload.lorawan_configuration_settings.multicast_group_settings.group_4_nwkskey)) {
-				buffer.writeUInt8(0xcf);
-				buffer.writeUInt8(0xf9);
-				buffer.writeUInt8(0x9f);
-				buffer.writeHexString(payload.lorawan_configuration_settings.multicast_group_settings.group_4_nwkskey, 16);
-			}
-			if (isValid(payload.lorawan_configuration_settings.multicast_group_settings.group_4_pingslot_periodicity)) {
-				buffer.writeUInt8(0xcf);
-				// 0：1s, 1：2s, 2：4s, 3：8s, 4：16s, 5：32s, 6：64s, 7：128s
-				buffer.writeUInt8(0xf9);
-				// 0：1s, 1：2s, 2：4s, 3：8s, 4：16s, 5：32s, 6：64s, 7：128s
-				buffer.writeUInt8(0x95);
-				// 0：1s, 1：2s, 2：4s, 3：8s, 4：16s, 5：32s, 6：64s, 7：128s
-				buffer.writeUInt8(payload.lorawan_configuration_settings.multicast_group_settings.group_4_pingslot_periodicity);
-			}
-			if (isValid(payload.lorawan_configuration_settings.multicast_group_settings.group_4_data_rate)) {
-				buffer.writeUInt8(0xcf);
-				// 0：DR0(SF12,125kHz), 1：DR1(SF11,125kHz), 2：DR2(SF10,125kHz), 3：DR3(SF9,125kHz), 4：DR4(SF8,125kHz), 5：DR5(SF7,125kHz)
-				buffer.writeUInt8(0xf9);
-				// 0：DR0(SF12,125kHz), 1：DR1(SF11,125kHz), 2：DR2(SF10,125kHz), 3：DR3(SF9,125kHz), 4：DR4(SF8,125kHz), 5：DR5(SF7,125kHz)
-				buffer.writeUInt8(0x96);
-				// 0：DR0(SF12,125kHz), 1：DR1(SF11,125kHz), 2：DR2(SF10,125kHz), 3：DR3(SF9,125kHz), 4：DR4(SF8,125kHz), 5：DR5(SF7,125kHz)
-				buffer.writeUInt8(payload.lorawan_configuration_settings.multicast_group_settings.group_4_data_rate);
-			}
-			if (isValid(payload.lorawan_configuration_settings.multicast_group_settings.group_4_frequency)) {
-				buffer.writeUInt8(0xcf);
-				buffer.writeUInt8(0xf9);
-				buffer.writeUInt8(0x97);
-				buffer.writeUInt32LE(payload.lorawan_configuration_settings.multicast_group_settings.group_4_frequency * 1000000);
-			}
-		}
-		if (isValid(payload.lorawan_configuration_settings.d2d_key)) {
-			buffer.writeUInt8(0xcf);
-			buffer.writeUInt8(0xe0);
-			buffer.writeHexString(payload.lorawan_configuration_settings.d2d_key, 16);
-		}
-		if (isValid(payload.lorawan_configuration_settings.d2d_master_enable)) {
-			buffer.writeUInt8(0xcf);
-			// 0：disable, 1：enable
-			buffer.writeUInt8(0xf6);
-			// 0：disable, 1：enable
-			buffer.writeUInt8(payload.lorawan_configuration_settings.d2d_master_enable);
-		}
-		if (isValid(payload.lorawan_configuration_settings.d2d_slave_enable)) {
-			buffer.writeUInt8(0xcf);
-			// 0：disable, 1：enable
-			buffer.writeUInt8(0xf5);
-			// 0：disable, 1：enable
-			buffer.writeUInt8(payload.lorawan_configuration_settings.d2d_slave_enable);
-		}
-		if (isValid(payload.lorawan_configuration_settings.duty_cycle_enable)) {
-			buffer.writeUInt8(0xcf);
-			// 0：disable, 1：enable
-			buffer.writeUInt8(0xc4);
-			// 0：disable, 1：enable
-			buffer.writeUInt8(payload.lorawan_configuration_settings.duty_cycle_enable);
-		}
-		if (isValid(payload.lorawan_configuration_settings.duty_cycle)) {
-			buffer.writeUInt8(0xcf);
-			buffer.writeUInt8(0xc0);
-			buffer.writeUInt32LE(payload.lorawan_configuration_settings.duty_cycle);
 		}
 		encoded = encoded.concat(buffer.toBytes());
 	}
@@ -672,14 +245,6 @@ function milesightDeviceEncode(payload) {
 		var buffer = new Buffer();
 		buffer.writeUInt8(0x0b);
 		buffer.writeUInt8(payload.temperature_alarm.type);
-		if (payload.temperature_alarm.type == 0x00) {
-		}
-		if (payload.temperature_alarm.type == 0x01) {
-		}
-		if (payload.temperature_alarm.type == 0x02) {
-		}
-		if (payload.temperature_alarm.type == 0x03) {
-		}
 		encoded = encoded.concat(buffer.toBytes());
 	}
 	//0x0c
@@ -687,14 +252,6 @@ function milesightDeviceEncode(payload) {
 		var buffer = new Buffer();
 		buffer.writeUInt8(0x0c);
 		buffer.writeUInt8(payload.humidity_alarm.type);
-		if (payload.humidity_alarm.type == 0x00) {
-		}
-		if (payload.humidity_alarm.type == 0x01) {
-		}
-		if (payload.humidity_alarm.type == 0x02) {
-		}
-		if (payload.humidity_alarm.type == 0x03) {
-		}
 		encoded = encoded.concat(buffer.toBytes());
 	}
 	//0x09
@@ -702,12 +259,6 @@ function milesightDeviceEncode(payload) {
 		var buffer = new Buffer();
 		buffer.writeUInt8(0x09);
 		buffer.writeUInt8(payload.ble_event.type);
-		if (payload.ble_event.type == 0x00) {
-		}
-		if (payload.ble_event.type == 0x01) {
-		}
-		if (payload.ble_event.type == 0x02) {
-		}
 		encoded = encoded.concat(buffer.toBytes());
 	}
 	//0x0a
@@ -715,10 +266,6 @@ function milesightDeviceEncode(payload) {
 		var buffer = new Buffer();
 		buffer.writeUInt8(0x0a);
 		buffer.writeUInt8(payload.power_bus_event.type);
-		if (payload.power_bus_event.type == 0x00) {
-		}
-		if (payload.power_bus_event.type == 0x01) {
-		}
 		encoded = encoded.concat(buffer.toBytes());
 	}
 	//0x0d
@@ -739,8 +286,6 @@ function milesightDeviceEncode(payload) {
 		var buffer = new Buffer();
 		buffer.writeUInt8(0x0f);
 		buffer.writeUInt8(payload.battery_event.type);
-		if (payload.battery_event.type == 0x00) {
-		}
 		encoded = encoded.concat(buffer.toBytes());
 	}
 	//0x60
@@ -1002,7 +547,7 @@ function milesightDeviceEncode(payload) {
 		// 0：disable, 1：enable
 		bitOptions |= payload.mode_enable.auto << 3;
 
-		bitOptions |= payload.mode_enable.reserved << 4;
+		bitOptions |= payload.mode_enable.reserved << 6;
 		buffer.writeUInt8(bitOptions);
 
 		encoded = encoded.concat(buffer.toBytes());
@@ -1124,22 +669,6 @@ function milesightDeviceEncode(payload) {
 			}
 			buffer.writeInt16LE(payload.target_temperature_settings.auto_cool * 100);
 		}
-		if (isValid(payload.target_temperature_settings.dehumidify)) {
-			buffer.writeUInt8(0x69);
-			buffer.writeUInt8(0x06);
-			if (payload.target_temperature_settings.dehumidify < 5 || payload.target_temperature_settings.dehumidify > 35) {
-				throw new Error('target_temperature_settings.dehumidify must be between 5 and 35');
-			}
-			buffer.writeInt16LE(payload.target_temperature_settings.dehumidify * 100);
-		}
-		if (isValid(payload.target_temperature_settings.ventilation)) {
-			buffer.writeUInt8(0x69);
-			buffer.writeUInt8(0x07);
-			if (payload.target_temperature_settings.ventilation < 5 || payload.target_temperature_settings.ventilation > 35) {
-				throw new Error('target_temperature_settings.ventilation must be between 5 and 35');
-			}
-			buffer.writeInt16LE(payload.target_temperature_settings.ventilation * 100);
-		}
 		encoded = encoded.concat(buffer.toBytes());
 	}
 	//0x6a
@@ -1202,30 +731,6 @@ function milesightDeviceEncode(payload) {
 				throw new Error('target_temperature_range.auto.max must be between 5 and 35');
 			}
 			buffer.writeInt16LE(payload.target_temperature_range.auto.max * 100);
-		}
-		if (isValid(payload.target_temperature_range.dehumidify)) {
-			buffer.writeUInt8(0x6b);
-			buffer.writeUInt8(0x04);
-			if (payload.target_temperature_range.dehumidify.min < 5 || payload.target_temperature_range.dehumidify.min > 35) {
-				throw new Error('target_temperature_range.dehumidify.min must be between 5 and 35');
-			}
-			buffer.writeInt16LE(payload.target_temperature_range.dehumidify.min * 100);
-			if (payload.target_temperature_range.dehumidify.max < 5 || payload.target_temperature_range.dehumidify.max > 35) {
-				throw new Error('target_temperature_range.dehumidify.max must be between 5 and 35');
-			}
-			buffer.writeInt16LE(payload.target_temperature_range.dehumidify.max * 100);
-		}
-		if (isValid(payload.target_temperature_range.ventilation)) {
-			buffer.writeUInt8(0x6b);
-			buffer.writeUInt8(0x05);
-			if (payload.target_temperature_range.ventilation.min < 5 || payload.target_temperature_range.ventilation.min > 35) {
-				throw new Error('target_temperature_range.ventilation.min must be between 5 and 35');
-			}
-			buffer.writeInt16LE(payload.target_temperature_range.ventilation.min * 100);
-			if (payload.target_temperature_range.ventilation.max < 5 || payload.target_temperature_range.ventilation.max > 35) {
-				throw new Error('target_temperature_range.ventilation.max must be between 5 and 35');
-			}
-			buffer.writeInt16LE(payload.target_temperature_range.ventilation.max * 100);
 		}
 		encoded = encoded.concat(buffer.toBytes());
 	}
@@ -2071,70 +1576,7 @@ function cmdMap() {
 		  "request_command_queries": "ef",
 		  "request_query_all_configurations": "ee",
 		  "lorawan_configuration_settings": "cf",
-		  "lorawan_configuration_settings.deveui": "cf0b",
-		  "lorawan_configuration_settings.appeui": "cf13",
-		  "lorawan_configuration_settings.netid": "cf03",
-		  "lorawan_configuration_settings.app_port": "cf5c",
-		  "lorawan_configuration_settings.version": "cfd8",
 		  "lorawan_configuration_settings.mode": "cf00",
-		  "lorawan_configuration_settings.confirmed_mode": "cf5d",
-		  "lorawan_configuration_settings.ack_retry_times": "cfc6",
-		  "lorawan_configuration_settings.join_type": "cf01",
-		  "lorawan_configuration_settings.appkey": "cf3b",
-		  "lorawan_configuration_settings.nwkskey": "cf1b",
-		  "lorawan_configuration_settings.appskey": "cf2b",
-		  "lorawan_configuration_settings.devaddr": "cf07",
-		  "lorawan_configuration_settings.rejoin_mode_enable": "cfda",
-		  "lorawan_configuration_settings.number_of_link_detection_signals": "cfd9",
-		  "lorawan_configuration_settings.frequency_band": "cfcd",
-		  "lorawan_configuration_settings.AS923_frequency_band_in_use": "cfdc",
-		  "lorawan_configuration_settings.channel_mask": "cf5e",
-		  "lorawan_configuration_settings.channels_settings": "cf6a",
-		  "lorawan_configuration_settings.channels_settings._item": "cf6axx",
-		  "lorawan_configuration_settings.adr_mode": "cf02",
-		  "lorawan_configuration_settings.tx_data_rate": "cfba",
-		  "lorawan_configuration_settings.tx_power": "cf5b",
-		  "lorawan_configuration_settings.rx2_data_rate": "cfbf",
-		  "lorawan_configuration_settings.rx2_frequency": "cfbb",
-		  "lorawan_configuration_settings.pingslot_periodicity": "cfdd",
-		  "lorawan_configuration_settings.rx1_open_delay": "cf4b",
-		  "lorawan_configuration_settings.rx2_open_delay": "cf4f",
-		  "lorawan_configuration_settings.join_rx1_open_delay": "cf53",
-		  "lorawan_configuration_settings.join_rx2_open_delay": "cf57",
-		  "lorawan_configuration_settings.multicast_group_settings": "cff9",
-		  "lorawan_configuration_settings.multicast_group_settings.group_1_enable": "cff90d",
-		  "lorawan_configuration_settings.multicast_group_settings.group_1_devaddr": "cff914",
-		  "lorawan_configuration_settings.multicast_group_settings.group_1_appskey": "cff928",
-		  "lorawan_configuration_settings.multicast_group_settings.group_1_nwkskey": "cff918",
-		  "lorawan_configuration_settings.multicast_group_settings.group_1_pingslot_periodicity": "cff90e",
-		  "lorawan_configuration_settings.multicast_group_settings.group_1_data_rate": "cff90f",
-		  "lorawan_configuration_settings.multicast_group_settings.group_1_frequency": "cff910",
-		  "lorawan_configuration_settings.multicast_group_settings.group_2_enable": "cff93a",
-		  "lorawan_configuration_settings.multicast_group_settings.group_2_devaddr": "cff941",
-		  "lorawan_configuration_settings.multicast_group_settings.group_2_appskey": "cff955",
-		  "lorawan_configuration_settings.multicast_group_settings.group_2_nwkskey": "cff945",
-		  "lorawan_configuration_settings.multicast_group_settings.group_2_pingslot_periodicity": "cff93b",
-		  "lorawan_configuration_settings.multicast_group_settings.group_2_data_rate": "cff93c",
-		  "lorawan_configuration_settings.multicast_group_settings.group_2_frequency": "cff93d",
-		  "lorawan_configuration_settings.multicast_group_settings.group_3_enable": "cff967",
-		  "lorawan_configuration_settings.multicast_group_settings.group_3_devaddr": "cff96e",
-		  "lorawan_configuration_settings.multicast_group_settings.group_3_appskey": "cff982",
-		  "lorawan_configuration_settings.multicast_group_settings.group_3_nwkskey": "cff972",
-		  "lorawan_configuration_settings.multicast_group_settings.group_3_pingslot_periodicity": "cff968",
-		  "lorawan_configuration_settings.multicast_group_settings.group_3_data_rate": "cff969",
-		  "lorawan_configuration_settings.multicast_group_settings.group_3_frequency": "cff96a",
-		  "lorawan_configuration_settings.multicast_group_settings.group_4_enable": "cff994",
-		  "lorawan_configuration_settings.multicast_group_settings.group_4_devaddr": "cff99b",
-		  "lorawan_configuration_settings.multicast_group_settings.group_4_appskey": "cff9af",
-		  "lorawan_configuration_settings.multicast_group_settings.group_4_nwkskey": "cff99f",
-		  "lorawan_configuration_settings.multicast_group_settings.group_4_pingslot_periodicity": "cff995",
-		  "lorawan_configuration_settings.multicast_group_settings.group_4_data_rate": "cff996",
-		  "lorawan_configuration_settings.multicast_group_settings.group_4_frequency": "cff997",
-		  "lorawan_configuration_settings.d2d_key": "cfe0",
-		  "lorawan_configuration_settings.d2d_master_enable": "cff6",
-		  "lorawan_configuration_settings.d2d_slave_enable": "cff5",
-		  "lorawan_configuration_settings.duty_cycle_enable": "cfc4",
-		  "lorawan_configuration_settings.duty_cycle": "cfc0",
 		  "tsl_version": "df",
 		  "product_name": "de",
 		  "product_pn": "dd",
@@ -2153,28 +1595,14 @@ function cmdMap() {
 		  "fan_mode": "04",
 		  "execution_plan_id": "05",
 		  "temperature_alarm": "0b",
-		  "temperature_alarm.collection_error": "0b00",
-		  "temperature_alarm.lower_range_error": "0b01",
-		  "temperature_alarm.over_range_error": "0b02",
-		  "temperature_alarm.no_data": "0b03",
 		  "humidity_alarm": "0c",
-		  "humidity_alarm.collection_error": "0c00",
-		  "humidity_alarm.lower_range_error": "0c01",
-		  "humidity_alarm.over_range_error": "0c02",
-		  "humidity_alarm.no_data": "0c03",
 		  "ble_event": "09",
-		  "ble_event.none": "0900",
-		  "ble_event.pair_cancel": "0901",
-		  "ble_event.disconnect": "0902",
 		  "power_bus_event": "0a",
-		  "power_bus_event.none": "0a00",
-		  "power_bus_event.disconnect": "0a01",
 		  "key_event": "0d",
 		  "key_event.f1": "0d00",
 		  "key_event.f2": "0d01",
 		  "key_event.f3": "0d02",
 		  "battery_event": "0f",
-		  "battery_event.recover": "0f00",
 		  "collection_interval": "60",
 		  "collection_interval.seconds_of_time": "6000",
 		  "collection_interval.minutes_of_time": "6001",
@@ -2226,16 +1654,12 @@ function cmdMap() {
 		  "target_temperature_settings.auto": "6903",
 		  "target_temperature_settings.auto_heat": "6904",
 		  "target_temperature_settings.auto_cool": "6905",
-		  "target_temperature_settings.dehumidify": "6906",
-		  "target_temperature_settings.ventilation": "6907",
 		  "minimum_dead_zone": "6a",
 		  "target_temperature_range": "6b",
 		  "target_temperature_range.heat": "6b00",
 		  "target_temperature_range.em_heat": "6b01",
 		  "target_temperature_range.cool": "6b02",
 		  "target_temperature_range.auto": "6b03",
-		  "target_temperature_range.dehumidify": "6b04",
-		  "target_temperature_range.ventilation": "6b05",
 		  "fan_control_mode": "74",
 		  "pir_common": "82",
 		  "pir_common.enable": "8201",
@@ -2317,12 +1741,6 @@ function processTemperature(payload) {
     "target_temperature_settings.auto_cool": {
         "coefficient": 0.01
     },
-    "target_temperature_settings.dehumidify": {
-        "coefficient": 0.01
-    },
-    "target_temperature_settings.ventilation": {
-        "coefficient": 0.01
-    },
     "minimum_dead_zone": {
         "coefficient": 0.01
     },
@@ -2348,18 +1766,6 @@ function processTemperature(payload) {
         "coefficient": 0.01
     },
     "target_temperature_range.auto.max": {
-        "coefficient": 0.01
-    },
-    "target_temperature_range.dehumidify.min": {
-        "coefficient": 0.01
-    },
-    "target_temperature_range.dehumidify.max": {
-        "coefficient": 0.01
-    },
-    "target_temperature_range.ventilation.min": {
-        "coefficient": 0.01
-    },
-    "target_temperature_range.ventilation.max": {
         "coefficient": 0.01
     },
     "temperature_calibration_settings.calibration_value": {
