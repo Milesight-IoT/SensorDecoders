@@ -25,7 +25,7 @@
         },
         {
             "id": "airplane_mode_time_period_settings.command",
-            "name": "Data Type",
+            "name": "Data Type(Airplane Mode Time Period)",
             "value": "",
             "unit": "",
             "access_mode": "RW",
@@ -52,7 +52,7 @@
         },
         {
             "id": "airplane_mode_time_period_settings.enable",
-            "name": "Flight Mode Enable Mode",
+            "name": "Flight Mode Enable Mode(Airplane Mode Time Period)",
             "value": "0",
             "unit": "",
             "access_mode": "RW",
@@ -75,7 +75,7 @@
         },
         {
             "id": "airplane_mode_time_period_settings.end_timestamp.day",
-            "name": "End Day",
+            "name": "End Day(End Time)",
             "value": "1",
             "unit": "",
             "access_mode": "RW",
@@ -98,7 +98,7 @@
         },
         {
             "id": "airplane_mode_time_period_settings.end_timestamp.hour",
-            "name": "End Hour",
+            "name": "End Hour(End Time)",
             "value": "0",
             "unit": "",
             "access_mode": "RW",
@@ -121,7 +121,7 @@
         },
         {
             "id": "airplane_mode_time_period_settings.end_timestamp.minute",
-            "name": "End Minute",
+            "name": "End Minute(End Time)",
             "value": "0",
             "unit": "",
             "access_mode": "RW",
@@ -144,7 +144,7 @@
         },
         {
             "id": "airplane_mode_time_period_settings.end_timestamp.month",
-            "name": "End Month",
+            "name": "End Month(End Time)",
             "value": "1",
             "unit": "",
             "access_mode": "RW",
@@ -167,7 +167,7 @@
         },
         {
             "id": "airplane_mode_time_period_settings.end_timestamp.second",
-            "name": "End Second",
+            "name": "End Second(End Time)",
             "value": "0",
             "unit": "",
             "access_mode": "RW",
@@ -190,7 +190,7 @@
         },
         {
             "id": "airplane_mode_time_period_settings.end_timestamp.year",
-            "name": "End Year",
+            "name": "End Year(End Time)",
             "value": "0",
             "unit": "",
             "access_mode": "RW",
@@ -213,7 +213,7 @@
         },
         {
             "id": "airplane_mode_time_period_settings.start_timestamp.day",
-            "name": "Start  Day",
+            "name": "Start  Day(Start Time)",
             "value": "1",
             "unit": "",
             "access_mode": "RW",
@@ -236,7 +236,7 @@
         },
         {
             "id": "airplane_mode_time_period_settings.start_timestamp.hour",
-            "name": "Start  Hour",
+            "name": "Start  Hour(Start Time)",
             "value": "0",
             "unit": "",
             "access_mode": "RW",
@@ -259,7 +259,7 @@
         },
         {
             "id": "airplane_mode_time_period_settings.start_timestamp.minute",
-            "name": "Start  Minute",
+            "name": "Start  Minute(Start Time)",
             "value": "0",
             "unit": "",
             "access_mode": "RW",
@@ -282,7 +282,7 @@
         },
         {
             "id": "airplane_mode_time_period_settings.start_timestamp.month",
-            "name": "Start Month",
+            "name": "Start Month(Start Time)",
             "value": "1",
             "unit": "",
             "access_mode": "RW",
@@ -305,7 +305,7 @@
         },
         {
             "id": "airplane_mode_time_period_settings.start_timestamp.second",
-            "name": "Start Second",
+            "name": "Start Second(Start Time)",
             "value": "0",
             "unit": "",
             "access_mode": "RW",
@@ -328,7 +328,7 @@
         },
         {
             "id": "airplane_mode_time_period_settings.start_timestamp.year",
-            "name": "Start Year",
+            "name": "Start Year(Start Time)",
             "value": "0",
             "unit": "",
             "access_mode": "RW",
@@ -410,19 +410,6 @@
             "bacnet_unit_type": "UNITS_NO_UNITS"
         },
         {
-            "id": "base_station_position_auth_token",
-            "name": "Base Station Positioning Authentication Token",
-            "value": "",
-            "unit": "",
-            "access_mode": "RW",
-            "data_type": "TEXT",
-            "value_type": "STRING",
-            "max_length": 16,
-            "bacnet_type": "character_string_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS"
-        },
-        {
             "id": "base_station_position_enable",
             "name": "Base Station Positioning",
             "value": "0",
@@ -446,7 +433,7 @@
         },
         {
             "id": "base_station_position.latitude",
-            "name": "Latitude",
+            "name": "Latitude(Base station positioning)",
             "value": "",
             "unit": "°",
             "access_mode": "R",
@@ -465,7 +452,7 @@
         },
         {
             "id": "base_station_position.longitude",
-            "name": "Longitude",
+            "name": "Longitude(Base station positioning)",
             "value": "",
             "unit": "°",
             "access_mode": "R",
@@ -500,7 +487,7 @@
         },
         {
             "id": "battery_alarm.lower_battery_alarm.battery",
-            "name": "Current Battery Left",
+            "name": "Current Battery Left(Low Battery Alarm)",
             "value": "",
             "unit": "",
             "access_mode": "R",
@@ -513,7 +500,7 @@
         },
         {
             "id": "battery_alarm.type",
-            "name": "Alarm Type",
+            "name": "Alarm Type(Battery Alarm)",
             "value": "",
             "unit": "",
             "access_mode": "R",
@@ -536,7 +523,7 @@
         },
         {
             "id": "button_lock.collect_report_enable",
-            "name": "Collect And Report",
+            "name": "Collect And Report(Button\nLock)",
             "value": "0",
             "unit": "",
             "access_mode": "RW",
@@ -562,7 +549,7 @@
         },
         {
             "id": "button_lock.enable",
-            "name": "Button\nLock Enable",
+            "name": "Button\nLock Enable(Button\nLock)",
             "value": "1",
             "unit": "",
             "access_mode": "RW",
@@ -588,7 +575,7 @@
         },
         {
             "id": "button_lock.power_off_enable",
-            "name": "Turn off",
+            "name": "Turn off(Button\nLock)",
             "value": "1",
             "unit": "",
             "access_mode": "RW",
@@ -614,7 +601,7 @@
         },
         {
             "id": "cellular_status.command",
-            "name": "Cellular Status",
+            "name": "Cellular Status(Cellular Status)",
             "value": "",
             "unit": "",
             "access_mode": "R",
@@ -665,7 +652,7 @@
         },
         {
             "id": "cellular_status.connected_status",
-            "name": "Server Status",
+            "name": "Server Status(Cellular Status)",
             "value": "",
             "unit": "",
             "access_mode": "R",
@@ -688,7 +675,7 @@
         },
         {
             "id": "cellular_status.csq",
-            "name": "Signal Strength",
+            "name": "Signal Strength(Cellular Status)",
             "value": "",
             "unit": "",
             "access_mode": "R",
@@ -701,7 +688,7 @@
         },
         {
             "id": "cellular_status.iccid",
-            "name": "ICCID",
+            "name": "ICCID(Cellular Status)",
             "value": "",
             "unit": "",
             "access_mode": "R",
@@ -715,7 +702,7 @@
         },
         {
             "id": "cellular_status.imei",
-            "name": "IMEI",
+            "name": "IMEI(Cellular Status)",
             "value": "",
             "unit": "",
             "access_mode": "R",
@@ -729,7 +716,7 @@
         },
         {
             "id": "cellular_status.imsi",
-            "name": "IMSI",
+            "name": "IMSI(Cellular Status)",
             "value": "",
             "unit": "",
             "access_mode": "R",
@@ -743,7 +730,7 @@
         },
         {
             "id": "cellular_status.milesight_dtls_status",
-            "name": "Milesight DTLS Status",
+            "name": "Milesight DTLS Status(Cellular Status)",
             "value": "",
             "unit": "",
             "access_mode": "R",
@@ -766,7 +753,7 @@
         },
         {
             "id": "cellular_status.milesight_mqtt_status",
-            "name": "Milesight MQTT Status",
+            "name": "Milesight MQTT Status(Cellular Status)",
             "value": "",
             "unit": "",
             "access_mode": "R",
@@ -789,7 +776,7 @@
         },
         {
             "id": "cellular_status.register_status",
-            "name": "Register Status",
+            "name": "Register Status(Cellular Status)",
             "value": "",
             "unit": "",
             "access_mode": "R",
@@ -812,7 +799,7 @@
         },
         {
             "id": "cellular_status.sim_status",
-            "name": "SIM State",
+            "name": "SIM State(Cellular Status)",
             "value": "",
             "unit": "",
             "access_mode": "R",
@@ -852,6 +839,22 @@
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": []
+        },
+        {
+            "id": "celsius_temperature",
+            "name": "Celsius Temperature",
+            "value": "",
+            "unit": "°C",
+            "access_mode": "R",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "range": [
+                -200,
+                800
+            ],
+            "bacnet_type": "analog_input_object",
+            "bacnet_unit_type_id": 62,
+            "bacnet_unit_type": "UNITS_DEGREES_CELSIUS"
         },
         {
             "id": "clear_alarm_item",
@@ -899,7 +902,7 @@
         },
         {
             "id": "collection_interval.minutes_of_time",
-            "name": "Collecting Interval",
+            "name": "Collecting Interval(Collecting Interval)",
             "value": "15",
             "unit": "min",
             "access_mode": "RW",
@@ -918,7 +921,7 @@
         },
         {
             "id": "collection_interval.seconds_of_time",
-            "name": "Collecting Interval",
+            "name": "Collecting Interval(Collecting Interval)",
             "value": "900",
             "unit": "s",
             "access_mode": "RW",
@@ -937,7 +940,7 @@
         },
         {
             "id": "collection_interval.unit",
-            "name": "Collecting Interval Unit",
+            "name": "Collecting Interval Unit(Collecting Interval)",
             "value": "1",
             "unit": "",
             "access_mode": "RW",
@@ -976,7 +979,7 @@
         },
         {
             "id": "data_storage_settings.command",
-            "name": "Sub-command",
+            "name": "Sub-command(Data Storage Settings)",
             "value": "0",
             "unit": "",
             "access_mode": "RW",
@@ -1007,7 +1010,7 @@
         },
         {
             "id": "data_storage_settings.enable",
-            "name": "Data Storage Enable",
+            "name": "Data Storage Enable(Data Storage Settings)",
             "value": "1",
             "unit": "",
             "access_mode": "RW",
@@ -1030,7 +1033,7 @@
         },
         {
             "id": "data_storage_settings.retransmission_enable",
-            "name": "Data Retransmission Enable",
+            "name": "Data Retransmission Enable(Data Storage Settings)",
             "value": "1",
             "unit": "",
             "access_mode": "RW",
@@ -1053,7 +1056,7 @@
         },
         {
             "id": "data_storage_settings.retransmission_interval",
-            "name": "Retransmission Interval",
+            "name": "Retransmission Interval(Data Storage Settings)",
             "value": "600",
             "unit": "s",
             "access_mode": "RW",
@@ -1070,7 +1073,7 @@
         },
         {
             "id": "daylight_saving_time.daylight_saving_time_offset",
-            "name": "DST Bias",
+            "name": "DST Bias(Daylight Saving Time)",
             "value": "60",
             "unit": "min",
             "access_mode": "RW",
@@ -1097,7 +1100,7 @@
         },
         {
             "id": "daylight_saving_time.enable",
-            "name": "Daylight Saving Time",
+            "name": "Daylight Saving Time(Daylight Saving Time)",
             "value": "0",
             "unit": "",
             "access_mode": "RW",
@@ -1130,7 +1133,7 @@
         },
         {
             "id": "daylight_saving_time.end_hour_min",
-            "name": "Time",
+            "name": "Time(Daylight Saving Time)",
             "value": "0",
             "unit": "min",
             "access_mode": "RW",
@@ -1251,8 +1254,8 @@
         },
         {
             "id": "daylight_saving_time.end_month",
-            "name": "Month",
-            "value": "2",
+            "name": "Month(Daylight Saving Time)",
+            "value": "1",
             "unit": "",
             "access_mode": "RW",
             "data_type": "ENUM",
@@ -1324,8 +1327,8 @@
         },
         {
             "id": "daylight_saving_time.end_week_day",
-            "name": "Week",
-            "value": "1",
+            "name": "Week(Daylight Saving Time)",
+            "value": "7",
             "unit": "",
             "access_mode": "RW",
             "data_type": "ENUM",
@@ -1377,7 +1380,7 @@
         },
         {
             "id": "daylight_saving_time.end_week_num",
-            "name": "Number of Week",
+            "name": "Number of Week(Daylight Saving Time)",
             "value": "1",
             "unit": "",
             "access_mode": "RW",
@@ -1422,7 +1425,7 @@
         },
         {
             "id": "daylight_saving_time.start_hour_min",
-            "name": "Time",
+            "name": "Time(Daylight Saving Time)",
             "value": "0",
             "unit": "min",
             "access_mode": "RW",
@@ -1543,7 +1546,7 @@
         },
         {
             "id": "daylight_saving_time.start_month",
-            "name": "Month",
+            "name": "Month(Daylight Saving Time)",
             "value": "1",
             "unit": "",
             "access_mode": "RW",
@@ -1616,8 +1619,8 @@
         },
         {
             "id": "daylight_saving_time.start_week_day",
-            "name": "Week",
-            "value": "1",
+            "name": "Week(Daylight Saving Time)",
+            "value": "7",
             "unit": "",
             "access_mode": "RW",
             "data_type": "ENUM",
@@ -1669,7 +1672,7 @@
         },
         {
             "id": "daylight_saving_time.start_week_num",
-            "name": "Number of Week",
+            "name": "Number of Week(Daylight Saving Time)",
             "value": "1",
             "unit": "",
             "access_mode": "RW",
@@ -1713,8 +1716,24 @@
             ]
         },
         {
+            "id": "fahrenheit_temperature",
+            "name": "Fahrenheit Temperature",
+            "value": "",
+            "unit": "℉",
+            "access_mode": "R",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "range": [
+                -328,
+                1472
+            ],
+            "bacnet_type": "analog_input_object",
+            "bacnet_unit_type_id": 64,
+            "bacnet_unit_type": "UNITS_DEGREES_FAHRENHEIT"
+        },
+        {
             "id": "falling_alarm_settings.enable",
-            "name": "Falling Alarm Enable",
+            "name": "Falling Alarm Enable(Falling Alarm Config)",
             "value": "0",
             "unit": "",
             "access_mode": "RW",
@@ -1734,74 +1753,6 @@
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": []
-        },
-        {
-            "id": "falling_threshold_alarm_settings.threshold_level",
-            "name": "Free Fall Level",
-            "value": "7",
-            "unit": "",
-            "access_mode": "RW",
-            "data_type": "ENUM",
-            "value_type": "UINT8",
-            "values": [
-                {
-                    "value": 0,
-                    "name": "FREE_FALL_LEVEL_156"
-                },
-                {
-                    "value": 1,
-                    "name": "FREE_FALL_LEVEL_219"
-                },
-                {
-                    "value": 2,
-                    "name": "FREE_FALL_LEVEL_250"
-                },
-                {
-                    "value": 3,
-                    "name": "FREE_FALL_LEVEL_312"
-                },
-                {
-                    "value": 4,
-                    "name": "FREE_FALL_LEVEL_344"
-                },
-                {
-                    "value": 5,
-                    "name": "FREE_FALL_LEVEL_406"
-                },
-                {
-                    "value": 6,
-                    "name": "FREE_FALL_LEVEL_469"
-                },
-                {
-                    "value": 7,
-                    "name": "FREE_FALL_LEVEL_500"
-                }
-            ],
-            "bacnet_type": "multistate_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": [
-                "falling_threshold_alarm_settings.time_level"
-            ]
-        },
-        {
-            "id": "falling_threshold_alarm_settings.time_level",
-            "name": "Continue Level",
-            "value": "32",
-            "unit": "",
-            "access_mode": "RW",
-            "data_type": "NUMBER",
-            "value_type": "UINT8",
-            "range": [
-                1,
-                32
-            ],
-            "bacnet_type": "analog_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": [
-                "falling_threshold_alarm_settings.threshold_level"
-            ]
         },
         {
             "id": "get_sensor_id",
@@ -1827,7 +1778,7 @@
         },
         {
             "id": "historical_data_report.mode",
-            "name": "Historical Data Mode",
+            "name": "Historical Data Mode(Historical Data)",
             "value": "",
             "unit": "",
             "access_mode": "R",
@@ -1852,7 +1803,7 @@
         },
         {
             "id": "historical_data_report.timestamp",
-            "name": "Historical Data Timestamps",
+            "name": "Historical Data Timestamps(Historical Data)",
             "value": "",
             "unit": "",
             "access_mode": "R",
@@ -1883,7 +1834,7 @@
         },
         {
             "id": "humidity_alarm_settings.enable",
-            "name": "Humidity Threshold Alarm",
+            "name": "Humidity Threshold Alarm(Humidity Threshold Alarm)",
             "value": "0",
             "unit": "",
             "access_mode": "RW",
@@ -1910,7 +1861,7 @@
         },
         {
             "id": "humidity_alarm_settings.threshold_condition",
-            "name": "Threshold Condition",
+            "name": "Threshold Condition(Humidity Threshold Alarm)",
             "value": "0",
             "unit": "",
             "access_mode": "RW",
@@ -1949,7 +1900,7 @@
         },
         {
             "id": "humidity_alarm_settings.threshold_max",
-            "name": "Value B",
+            "name": "Value B(Humidity Threshold Alarm)",
             "value": "0",
             "unit": "%RH",
             "access_mode": "RW",
@@ -1970,7 +1921,7 @@
         },
         {
             "id": "humidity_alarm_settings.threshold_min",
-            "name": "Value A",
+            "name": "Value A(Humidity Threshold Alarm)",
             "value": "0",
             "unit": "%RH",
             "access_mode": "RW",
@@ -1998,6 +1949,18 @@
             "data_type": "ENUM",
             "value_type": "UINT8",
             "values": [
+                {
+                    "value": 0,
+                    "name": "Collection Error"
+                },
+                {
+                    "value": 1,
+                    "name": "Out of Low Range"
+                },
+                {
+                    "value": 2,
+                    "name": "Out of High Range"
+                },
                 {
                     "value": 3,
                     "name": "No Data"
@@ -2048,253 +2011,8 @@
             "bacnet_unit_type": "UNITS_NO_UNITS"
         },
         {
-            "id": "humidity_alarm.exceed_range_alarm_deactivation.humidity",
-            "name": "Humidity",
-            "value": "",
-            "unit": "%RH",
-            "access_mode": "R",
-            "data_type": "NUMBER",
-            "value_type": "FLOAT",
-            "range": [
-                0,
-                100
-            ],
-            "bacnet_type": "analog_input_object",
-            "bacnet_unit_type_id": 29,
-            "bacnet_unit_type": "UNITS_PERCENT_RELATIVE_HUMIDITY",
-            "reference": []
-        },
-        {
-            "id": "humidity_alarm.exceed_range_alarm_trigger.humidity",
-            "name": "Humidity",
-            "value": "",
-            "unit": "%RH",
-            "access_mode": "R",
-            "data_type": "NUMBER",
-            "value_type": "FLOAT",
-            "range": [
-                0,
-                100
-            ],
-            "bacnet_type": "analog_input_object",
-            "bacnet_unit_type_id": 29,
-            "bacnet_unit_type": "UNITS_PERCENT_RELATIVE_HUMIDITY",
-            "reference": []
-        },
-        {
-            "id": "humidity_alarm.lower_range_alarm_deactivation.humidity",
-            "name": "Humidity",
-            "value": "",
-            "unit": "%RH",
-            "access_mode": "R",
-            "data_type": "NUMBER",
-            "value_type": "FLOAT",
-            "range": [
-                0,
-                100
-            ],
-            "bacnet_type": "analog_input_object",
-            "bacnet_unit_type_id": 29,
-            "bacnet_unit_type": "UNITS_PERCENT_RELATIVE_HUMIDITY",
-            "reference": []
-        },
-        {
-            "id": "humidity_alarm.lower_range_alarm_trigger.humidity",
-            "name": "Humidity",
-            "value": "",
-            "unit": "%RH",
-            "access_mode": "R",
-            "data_type": "NUMBER",
-            "value_type": "FLOAT",
-            "range": [
-                0,
-                100
-            ],
-            "bacnet_type": "analog_input_object",
-            "bacnet_unit_type_id": 29,
-            "bacnet_unit_type": "UNITS_PERCENT_RELATIVE_HUMIDITY",
-            "reference": []
-        },
-        {
-            "id": "humidity_alarm.mutation_alarm_trigger_no_mutation.humidity",
-            "name": "Humidity",
-            "value": "",
-            "unit": "%RH",
-            "access_mode": "R",
-            "data_type": "NUMBER",
-            "value_type": "FLOAT",
-            "range": [
-                0,
-                100
-            ],
-            "bacnet_type": "analog_input_object",
-            "bacnet_unit_type_id": 29,
-            "bacnet_unit_type": "UNITS_PERCENT_RELATIVE_HUMIDITY",
-            "reference": []
-        },
-        {
-            "id": "humidity_alarm.mutation_alarm_trigger.humidity",
-            "name": "Humidity",
-            "value": "",
-            "unit": "%RH",
-            "access_mode": "R",
-            "data_type": "NUMBER",
-            "value_type": "FLOAT",
-            "range": [
-                0,
-                100
-            ],
-            "bacnet_type": "analog_input_object",
-            "bacnet_unit_type_id": 29,
-            "bacnet_unit_type": "UNITS_PERCENT_RELATIVE_HUMIDITY",
-            "reference": [
-                "humidity_alarm.mutation_alarm_trigger.saltation"
-            ]
-        },
-        {
             "id": "humidity_alarm.mutation_alarm_trigger.saltation",
-            "name": "Shift Humidity",
-            "value": "",
-            "unit": "%RH",
-            "access_mode": "R",
-            "data_type": "NUMBER",
-            "value_type": "FLOAT",
-            "range": [
-                0,
-                100
-            ],
-            "bacnet_type": "analog_input_object",
-            "bacnet_unit_type_id": 29,
-            "bacnet_unit_type": "UNITS_PERCENT_RELATIVE_HUMIDITY",
-            "reference": [
-                "humidity_alarm.mutation_alarm_trigger.humidity"
-            ]
-        },
-        {
-            "id": "humidity_alarm.over_range_alarm_deactivation.humidity",
-            "name": "Humidity",
-            "value": "",
-            "unit": "%RH",
-            "access_mode": "R",
-            "data_type": "NUMBER",
-            "value_type": "FLOAT",
-            "range": [
-                0,
-                100
-            ],
-            "bacnet_type": "analog_input_object",
-            "bacnet_unit_type_id": 29,
-            "bacnet_unit_type": "UNITS_PERCENT_RELATIVE_HUMIDITY",
-            "reference": []
-        },
-        {
-            "id": "humidity_alarm.over_range_alarm_trigger.humidity",
-            "name": "Humidity",
-            "value": "",
-            "unit": "%RH",
-            "access_mode": "R",
-            "data_type": "NUMBER",
-            "value_type": "FLOAT",
-            "range": [
-                0,
-                100
-            ],
-            "bacnet_type": "analog_input_object",
-            "bacnet_unit_type_id": 29,
-            "bacnet_unit_type": "UNITS_PERCENT_RELATIVE_HUMIDITY",
-            "reference": []
-        },
-        {
-            "id": "humidity_alarm.type",
-            "name": "Alarm Type",
-            "value": "",
-            "unit": "",
-            "access_mode": "R",
-            "data_type": "ENUM",
-            "value_type": "UINT8",
-            "values": [
-                {
-                    "value": 0,
-                    "name": "Collection Error"
-                },
-                {
-                    "value": 1,
-                    "name": "Out of The Low Range"
-                },
-                {
-                    "value": 2,
-                    "name": "Out of The High Range"
-                },
-                {
-                    "value": 3,
-                    "name": "No Data"
-                },
-                {
-                    "value": 16,
-                    "name": "Humidity Below Alarm Released"
-                },
-                {
-                    "value": 17,
-                    "name": "Humidity Below Alarm"
-                },
-                {
-                    "value": 18,
-                    "name": "Humidity Above Alarm Released"
-                },
-                {
-                    "value": 19,
-                    "name": "Humidity Above Alarm"
-                },
-                {
-                    "value": 20,
-                    "name": "Humidity Between Alarm Released"
-                },
-                {
-                    "value": 21,
-                    "name": "Humidity Between Alarm"
-                },
-                {
-                    "value": 22,
-                    "name": "Humidity Exceed Tolerance Alarm Released"
-                },
-                {
-                    "value": 23,
-                    "name": "Humidity Exceed Tolerance Alarm"
-                },
-                {
-                    "value": 48,
-                    "name": "Humidity Shift Threshold"
-                },
-                {
-                    "value": 32,
-                    "name": "Humidity Shift Threshold"
-                }
-            ],
-            "bacnet_type": "multistate_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": []
-        },
-        {
-            "id": "humidity_alarm.within_range_alarm_deactivation.humidity",
-            "name": "Humidity",
-            "value": "",
-            "unit": "%RH",
-            "access_mode": "R",
-            "data_type": "NUMBER",
-            "value_type": "FLOAT",
-            "range": [
-                0,
-                100
-            ],
-            "bacnet_type": "analog_input_object",
-            "bacnet_unit_type_id": 29,
-            "bacnet_unit_type": "UNITS_PERCENT_RELATIVE_HUMIDITY",
-            "reference": []
-        },
-        {
-            "id": "humidity_alarm.within_range_alarm_trigger.humidity",
-            "name": "Humidity",
+            "name": "Shift Humidity(Humidity Shift Threshold)",
             "value": "",
             "unit": "%RH",
             "access_mode": "R",
@@ -2311,7 +2029,7 @@
         },
         {
             "id": "humidity_calibration_settings.calibration_value",
-            "name": "Calibration Value",
+            "name": "Calibration Value(Humidity Calibration)",
             "value": "0",
             "unit": "%RH",
             "access_mode": "RW",
@@ -2330,7 +2048,7 @@
         },
         {
             "id": "humidity_calibration_settings.enable",
-            "name": "Calibration Enable",
+            "name": "Calibration Enable(Humidity Calibration)",
             "value": "0",
             "unit": "",
             "access_mode": "RW",
@@ -2355,7 +2073,7 @@
         },
         {
             "id": "humidity_mutation_alarm_settings.enable",
-            "name": "Humidity Shift Threshold",
+            "name": "Humidity Shift Threshold(Humidity Mutation Alarm Config)",
             "value": "0",
             "unit": "",
             "access_mode": "RW",
@@ -2380,7 +2098,7 @@
         },
         {
             "id": "humidity_mutation_alarm_settings.mutation_max",
-            "name": "Humidity change greater than",
+            "name": "Humidity change greater than(Humidity Mutation Alarm Config)",
             "value": "10",
             "unit": "%RH",
             "access_mode": "RW",
@@ -2398,9 +2116,68 @@
             ]
         },
         {
+            "id": "ipso_device_upgrade_result.value",
+            "name": "OTA Response(OTA Response)",
+            "value": "0",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "Upgrade Successfully"
+                },
+                {
+                    "value": 1,
+                    "name": "URL Error"
+                },
+                {
+                    "value": 2,
+                    "name": "Download Failed"
+                },
+                {
+                    "value": 3,
+                    "name": "Packet Too Big"
+                },
+                {
+                    "value": 4,
+                    "name": "Version Error"
+                },
+                {
+                    "value": 5,
+                    "name": "Device Error"
+                },
+                {
+                    "value": 6,
+                    "name": "Patch Format Error"
+                },
+                {
+                    "value": 7,
+                    "name": "CRC Check Failed"
+                },
+                {
+                    "value": 8,
+                    "name": "Product Error"
+                },
+                {
+                    "value": 9,
+                    "name": "Patch Upgrade Failed"
+                },
+                {
+                    "value": 255,
+                    "name": "Upgrade Pending"
+                }
+            ],
+            "bacnet_type": "multistate_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": []
+        },
+        {
             "id": "light_alarm_settings.enable",
-            "name": "Threshold Alarm Config Enable",
-            "value": "1",
+            "name": "Threshold Alarm Config Enable(Light  Threshold Alarm Config)",
+            "value": "0",
             "unit": "",
             "access_mode": "RW",
             "data_type": "BOOL",
@@ -2425,7 +2202,7 @@
         },
         {
             "id": "light_alarm_settings.threshold_condition",
-            "name": "Threshold Condition",
+            "name": "Threshold Condition(Light  Threshold Alarm Config)",
             "value": "0",
             "unit": "",
             "access_mode": "RW",
@@ -2451,8 +2228,8 @@
         },
         {
             "id": "light_alarm_settings.threshold_max",
-            "name": "Threshold Value",
-            "value": "10",
+            "name": "Threshold Value(Light  Threshold Alarm Config)",
+            "value": "1",
             "unit": "lx",
             "access_mode": "RW",
             "data_type": "NUMBER",
@@ -2479,6 +2256,10 @@
             "value_type": "UINT8",
             "values": [
                 {
+                    "value": 0,
+                    "name": "Collection Error"
+                },
+                {
                     "value": 1,
                     "name": "Exceed the Range Lower Limit"
                 },
@@ -2502,122 +2283,6 @@
             "bacnet_type": "multistate_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS"
-        },
-        {
-            "id": "light_alarm.type",
-            "name": "Alarm Type",
-            "value": "",
-            "unit": "",
-            "access_mode": "R",
-            "data_type": "ENUM",
-            "value_type": "UINT8",
-            "values": [
-                {
-                    "value": 0,
-                    "name": "Collection Error"
-                },
-                {
-                    "value": 1,
-                    "name": "Out of The Low Range"
-                },
-                {
-                    "value": 2,
-                    "name": "Out of The High Range"
-                },
-                {
-                    "value": 3,
-                    "name": "No Data"
-                },
-                {
-                    "value": 16,
-                    "name": "Bright to dark"
-                },
-                {
-                    "value": 17,
-                    "name": "Dark to bright"
-                }
-            ],
-            "bacnet_type": "multistate_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": []
-        },
-        {
-            "id": "light_collection_interval.minutes_of_time",
-            "name": "Light  Collecting Interval",
-            "value": "1",
-            "unit": "min",
-            "access_mode": "RW",
-            "data_type": "NUMBER",
-            "value_type": "UINT16",
-            "range": [
-                1,
-                1440
-            ],
-            "bacnet_type": "analog_value_object",
-            "bacnet_unit_type_id": 72,
-            "bacnet_unit_type": "UNITS_MINUTES",
-            "reference": [
-                "light_collection_interval.unit"
-            ]
-        },
-        {
-            "id": "light_collection_interval.seconds_of_time",
-            "name": "Light  Collecting Interval",
-            "value": "60",
-            "unit": "s",
-            "access_mode": "RW",
-            "data_type": "NUMBER",
-            "value_type": "UINT16",
-            "range": [
-                10,
-                64800
-            ],
-            "bacnet_type": "analog_value_object",
-            "bacnet_unit_type_id": 73,
-            "bacnet_unit_type": "UNITS_SECONDS",
-            "reference": [
-                "light_collection_interval.unit"
-            ]
-        },
-        {
-            "id": "light_collection_interval.unit",
-            "name": "Light Collecting Interval Unit",
-            "value": "1",
-            "unit": "",
-            "access_mode": "RW",
-            "data_type": "ENUM",
-            "value_type": "UINT8",
-            "values": [
-                {
-                    "value": 0,
-                    "name": "second"
-                },
-                {
-                    "value": 1,
-                    "name": "min"
-                }
-            ],
-            "bacnet_type": "multistate_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": []
-        },
-        {
-            "id": "light_tolerance_value",
-            "name": "Light Tolerance Value",
-            "value": "5",
-            "unit": "lx",
-            "access_mode": "RW",
-            "data_type": "NUMBER",
-            "value_type": "UINT8",
-            "range": [
-                0,
-                100
-            ],
-            "bacnet_type": "analog_value_object",
-            "bacnet_unit_type_id": 37,
-            "bacnet_unit_type": "UNITS_LUXES"
         },
         {
             "id": "oem_id",
@@ -2651,22 +2316,6 @@
                 }
             ],
             "bacnet_type": "multistate_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS"
-        },
-        {
-            "id": "probe_id_retransmit_count",
-            "name": "Probe Id Retransmit Count",
-            "value": "1",
-            "unit": "",
-            "access_mode": "RW",
-            "data_type": "NUMBER",
-            "value_type": "UINT8",
-            "range": [
-                1,
-                10
-            ],
-            "bacnet_type": "analog_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS"
         },
@@ -2729,7 +2378,7 @@
         },
         {
             "id": "relative_surface_info.angle_x",
-            "name": "Angle X Value",
+            "name": "Angle X Value(Get The Relative Initial Surface Angle Value)",
             "value": "",
             "unit": "°",
             "access_mode": "R",
@@ -2749,7 +2398,7 @@
         },
         {
             "id": "relative_surface_info.angle_y",
-            "name": "Angle X Value",
+            "name": "Angle X Value(Get The Relative Initial Surface Angle Value)",
             "value": "",
             "unit": "°",
             "access_mode": "R",
@@ -2769,7 +2418,7 @@
         },
         {
             "id": "relative_surface_info.angle_z",
-            "name": "Angle Z Value",
+            "name": "Angle Z Value(Get The Relative Initial Surface Angle Value)",
             "value": "",
             "unit": "°",
             "access_mode": "R",
@@ -2811,7 +2460,7 @@
         },
         {
             "id": "reporting_interval.minutes_of_time",
-            "name": "Reporting Interval",
+            "name": "Reporting Interval(Reporting Interval)",
             "value": "30",
             "unit": "",
             "access_mode": "RW",
@@ -2826,7 +2475,7 @@
         },
         {
             "id": "reporting_interval.seconds_of_time",
-            "name": "Reporting Interval",
+            "name": "Reporting Interval(Reporting Interval)",
             "value": "1800",
             "unit": "",
             "access_mode": "RW",
@@ -2841,7 +2490,7 @@
         },
         {
             "id": "reporting_interval.unit",
-            "name": "Reporting Interval Unit",
+            "name": "Reporting Interval Unit(Reporting Interval)",
             "value": "1",
             "unit": "",
             "access_mode": "RW",
@@ -2863,52 +2512,8 @@
             "reference": []
         },
         {
-            "id": "request_query_all_configurations",
-            "name": "Request to Query All Configurations",
-            "access_mode": "W",
-            "data_type": "BOOL",
-            "value_type": "UINT8",
-            "unit": "",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "bacnet_type": "binary_output_object",
-            "value": "",
-            "values": [
-                {
-                    "value": 0,
-                    "name": "no"
-                },
-                {
-                    "value": 1,
-                    "name": "yes"
-                }
-            ]
-        },
-        {
-            "id": "reset",
-            "name": "Reset",
-            "access_mode": "W",
-            "data_type": "BOOL",
-            "value_type": "UINT8",
-            "unit": "",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "bacnet_type": "binary_output_object",
-            "value": "",
-            "values": [
-                {
-                    "value": 0,
-                    "name": "no"
-                },
-                {
-                    "value": 1,
-                    "name": "yes"
-                }
-            ]
-        },
-        {
             "id": "retrieve_historical_data_by_time_range.end_time",
-            "name": "End Time",
+            "name": "End Time(Retrieval(Time Period))",
             "value": "",
             "unit": "",
             "access_mode": "W",
@@ -2923,7 +2528,7 @@
         },
         {
             "id": "retrieve_historical_data_by_time_range.start_time",
-            "name": "Start Time",
+            "name": "Start Time(Retrieval(Time Period))",
             "value": "",
             "unit": "",
             "access_mode": "W",
@@ -2938,7 +2543,7 @@
         },
         {
             "id": "retrieve_historical_data_by_time.time",
-            "name": "Time Point",
+            "name": "Time Point(Retrieval(Time Period))",
             "value": "",
             "unit": "",
             "access_mode": "W",
@@ -2951,7 +2556,7 @@
         },
         {
             "id": "sensor_id.id",
-            "name": "Sensor ID",
+            "name": "Sensor ID(Sensor ID)",
             "value": "",
             "unit": "",
             "access_mode": "R",
@@ -2967,7 +2572,7 @@
         },
         {
             "id": "sensor_id.type",
-            "name": "Sensor Type",
+            "name": "Sensor Type(Sensor ID)",
             "value": "0",
             "unit": "",
             "access_mode": "R",
@@ -3000,7 +2605,7 @@
         },
         {
             "id": "set_retrieval_initial_surface.operation",
-            "name": "Set Relative Initial Surface",
+            "name": "Set Relative Initial Surface(Set Relative Initial Surface)",
             "value": "",
             "unit": "",
             "access_mode": "W",
@@ -3023,7 +2628,7 @@
         },
         {
             "id": "set_zero_calibration.operation",
-            "name": "Zero Calibration",
+            "name": "Zero Calibration(Zero Calibration)",
             "value": "1",
             "unit": "",
             "access_mode": "W",
@@ -3105,8 +2710,50 @@
             "bacnet_unit_type": "UNITS_DEGREES_CELSIUS"
         },
         {
+            "id": "temperature_alarm_settings.celsius_threshold_max",
+            "name": "Celsius Value B(Temperature Threshold Alarm Config)",
+            "value": "0",
+            "unit": "°C",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "range": [
+                -200,
+                800
+            ],
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 62,
+            "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
+            "reference": [
+                "temperature_alarm_settings.enable",
+                "temperature_alarm_settings.threshold_condition",
+                "temperature_alarm_settings.threshold_min"
+            ]
+        },
+        {
+            "id": "temperature_alarm_settings.celsius_threshold_min",
+            "name": "Celsius Value A(Temperature Threshold Alarm Config)",
+            "value": "0",
+            "unit": "°C",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "range": [
+                -200,
+                800
+            ],
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 62,
+            "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
+            "reference": [
+                "temperature_alarm_settings.enable",
+                "temperature_alarm_settings.threshold_condition",
+                "temperature_alarm_settings.threshold_max"
+            ]
+        },
+        {
             "id": "temperature_alarm_settings.enable",
-            "name": "Temperature Threshold Alarm",
+            "name": "Temperature Threshold Alarm(Temperature Threshold Alarm Config)",
             "value": "0",
             "unit": "",
             "access_mode": "RW",
@@ -3132,8 +2779,50 @@
             ]
         },
         {
+            "id": "temperature_alarm_settings.fahrenheit_threshold_max",
+            "name": "Fahrenheit Value B(Temperature Threshold Alarm Config)",
+            "value": "32",
+            "unit": "℉",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "range": [
+                -328,
+                1472
+            ],
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 64,
+            "bacnet_unit_type": "UNITS_DEGREES_FAHRENHEIT",
+            "reference": [
+                "temperature_alarm_settings.enable",
+                "temperature_alarm_settings.threshold_condition",
+                "temperature_alarm_settings.threshold_min"
+            ]
+        },
+        {
+            "id": "temperature_alarm_settings.fahrenheit_threshold_min",
+            "name": "Fahrenheit Value A(Temperature Threshold Alarm Config)",
+            "value": "32",
+            "unit": "℉",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "range": [
+                -328,
+                1472
+            ],
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 64,
+            "bacnet_unit_type": "UNITS_DEGREES_FAHRENHEIT",
+            "reference": [
+                "temperature_alarm_settings.enable",
+                "temperature_alarm_settings.threshold_condition",
+                "temperature_alarm_settings.threshold_max"
+            ]
+        },
+        {
             "id": "temperature_alarm_settings.threshold_condition",
-            "name": "Threshold Condition",
+            "name": "Threshold Condition(Temperature Threshold Alarm Config)",
             "value": "0",
             "unit": "",
             "access_mode": "RW",
@@ -3172,7 +2861,7 @@
         },
         {
             "id": "temperature_alarm_settings.threshold_max",
-            "name": "Value B",
+            "name": "Value B(Temperature Threshold Alarm Config)",
             "value": "0",
             "unit": "°C",
             "access_mode": "RW",
@@ -3193,7 +2882,7 @@
         },
         {
             "id": "temperature_alarm_settings.threshold_min",
-            "name": "Value A",
+            "name": "Value A(Temperature Threshold Alarm Config)",
             "value": "0",
             "unit": "°C",
             "access_mode": "RW",
@@ -3221,6 +2910,18 @@
             "data_type": "ENUM",
             "value_type": "UINT8",
             "values": [
+                {
+                    "value": 0,
+                    "name": "Collection Error"
+                },
+                {
+                    "value": 1,
+                    "name": "Out of Low Range"
+                },
+                {
+                    "value": 2,
+                    "name": "Out of High Range"
+                },
                 {
                     "value": 3,
                     "name": "No Data"
@@ -3271,270 +2972,27 @@
             "bacnet_unit_type": "UNITS_NO_UNITS"
         },
         {
-            "id": "temperature_alarm.exceed_range_alarm_deactivation.temperature",
-            "name": "Temperature",
-            "value": "",
-            "unit": "°C",
-            "access_mode": "R",
-            "data_type": "NUMBER",
-            "value_type": "FLOAT",
-            "range": [
-                -200,
-                800
-            ],
-            "bacnet_type": "analog_input_object",
-            "bacnet_unit_type_id": 62,
-            "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
-            "reference": []
-        },
-        {
-            "id": "temperature_alarm.exceed_range_alarm_trigger.temperature",
-            "name": "Temperature",
-            "value": "",
-            "unit": "°C",
-            "access_mode": "R",
-            "data_type": "NUMBER",
-            "value_type": "FLOAT",
-            "range": [
-                -200,
-                800
-            ],
-            "bacnet_type": "analog_input_object",
-            "bacnet_unit_type_id": 62,
-            "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
-            "reference": []
-        },
-        {
-            "id": "temperature_alarm.lower_range_alarm_deactivation.temperature",
-            "name": "Temperature",
-            "value": "",
-            "unit": "°C",
-            "access_mode": "R",
-            "data_type": "NUMBER",
-            "value_type": "FLOAT",
-            "range": [
-                -200,
-                800
-            ],
-            "bacnet_type": "analog_input_object",
-            "bacnet_unit_type_id": 62,
-            "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
-            "reference": []
-        },
-        {
-            "id": "temperature_alarm.lower_range_alarm_trigger.temperature",
-            "name": "Temperature",
-            "value": "",
-            "unit": "°C",
-            "access_mode": "R",
-            "data_type": "NUMBER",
-            "value_type": "FLOAT",
-            "range": [
-                -200,
-                800
-            ],
-            "bacnet_type": "analog_input_object",
-            "bacnet_unit_type_id": 62,
-            "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
-            "reference": []
-        },
-        {
-            "id": "temperature_alarm.mutation_alarm_trigger_no_mutation.temperature",
-            "name": "Temperature",
-            "value": "",
-            "unit": "°C",
-            "access_mode": "R",
-            "data_type": "NUMBER",
-            "value_type": "FLOAT",
-            "range": [
-                -200,
-                800
-            ],
-            "bacnet_type": "analog_input_object",
-            "bacnet_unit_type_id": 62,
-            "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
-            "reference": []
-        },
-        {
-            "id": "temperature_alarm.mutation_alarm_trigger.saltation",
-            "name": "Shift Temperature",
-            "value": "",
-            "unit": "°C",
-            "access_mode": "R",
-            "data_type": "NUMBER",
-            "value_type": "FLOAT",
-            "range": [
-                -200,
-                800
-            ],
-            "bacnet_type": "analog_input_object",
-            "bacnet_unit_type_id": 62,
-            "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
-            "reference": [
-                "temperature_alarm.mutation_alarm_trigger.temperature"
-            ]
-        },
-        {
-            "id": "temperature_alarm.mutation_alarm_trigger.temperature",
-            "name": "Temperature",
-            "value": "",
-            "unit": "°C",
-            "access_mode": "R",
-            "data_type": "NUMBER",
-            "value_type": "FLOAT",
-            "range": [
-                -200,
-                800
-            ],
-            "bacnet_type": "analog_input_object",
-            "bacnet_unit_type_id": 62,
-            "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
-            "reference": [
-                "temperature_alarm.mutation_alarm_trigger.saltation"
-            ]
-        },
-        {
-            "id": "temperature_alarm.over_range_alarm_deactivation.temperature",
-            "name": "Temperature",
-            "value": "",
-            "unit": "°C",
-            "access_mode": "R",
-            "data_type": "NUMBER",
-            "value_type": "FLOAT",
-            "range": [
-                -200,
-                800
-            ],
-            "bacnet_type": "analog_input_object",
-            "bacnet_unit_type_id": 62,
-            "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
-            "reference": []
-        },
-        {
-            "id": "temperature_alarm.over_range_alarm_trigger.temperature",
-            "name": "Temperature",
-            "value": "",
-            "unit": "°C",
-            "access_mode": "R",
-            "data_type": "NUMBER",
-            "value_type": "FLOAT",
-            "range": [
-                -200,
-                800
-            ],
-            "bacnet_type": "analog_input_object",
-            "bacnet_unit_type_id": 62,
-            "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
-            "reference": []
-        },
-        {
-            "id": "temperature_alarm.type",
-            "name": "Alarm Type",
-            "value": "",
-            "unit": "",
-            "access_mode": "R",
-            "data_type": "ENUM",
-            "value_type": "UINT8",
-            "values": [
-                {
-                    "value": 0,
-                    "name": "Collection Error"
-                },
-                {
-                    "value": 1,
-                    "name": "Out of The Low Range"
-                },
-                {
-                    "value": 2,
-                    "name": "Out of The High Range"
-                },
-                {
-                    "value": 3,
-                    "name": "No Data"
-                },
-                {
-                    "value": 16,
-                    "name": "Temperature Below Alarm Released"
-                },
-                {
-                    "value": 17,
-                    "name": "Temperature Below Alarm"
-                },
-                {
-                    "value": 18,
-                    "name": "Temperature Above Alarm Released"
-                },
-                {
-                    "value": 19,
-                    "name": "Temperature Above Alarm"
-                },
-                {
-                    "value": 20,
-                    "name": "Temperature Between Alarm Released"
-                },
-                {
-                    "value": 21,
-                    "name": "Temperature Between Alarm"
-                },
-                {
-                    "value": 22,
-                    "name": "Temperature Exceed Tolerance Alarm Released"
-                },
-                {
-                    "value": 23,
-                    "name": "Temperature Exceed Tolerance Alarm"
-                },
-                {
-                    "value": 48,
-                    "name": "Temperature Shift Threshold"
-                },
-                {
-                    "value": 32,
-                    "name": "Temperature Shift Threshold"
-                }
-            ],
-            "bacnet_type": "multistate_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": []
-        },
-        {
-            "id": "temperature_alarm.within_range_alarm_deactivation.temperature",
-            "name": "Temperature",
-            "value": "",
-            "unit": "°C",
-            "access_mode": "R",
-            "data_type": "NUMBER",
-            "value_type": "FLOAT",
-            "range": [
-                -200,
-                800
-            ],
-            "bacnet_type": "analog_input_object",
-            "bacnet_unit_type_id": 62,
-            "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
-            "reference": []
-        },
-        {
-            "id": "temperature_alarm.within_range_alarm_trigger.temperature",
-            "name": "Temperature",
-            "value": "",
-            "unit": "°C",
-            "access_mode": "R",
-            "data_type": "NUMBER",
-            "value_type": "FLOAT",
-            "range": [
-                -200,
-                800
-            ],
-            "bacnet_type": "analog_input_object",
-            "bacnet_unit_type_id": 62,
-            "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
-            "reference": []
-        },
-        {
             "id": "temperature_calibration_settings.calibration_value",
-            "name": "Calibration Value",
+            "name": "Calibration Value(Temperature Calibration)",
+            "value": "0",
+            "unit": "°C",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "range": [
+                -1000,
+                1000
+            ],
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 62,
+            "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
+            "reference": [
+                "temperature_calibration_settings.enable"
+            ]
+        },
+        {
+            "id": "temperature_calibration_settings.celsius_calibration_value",
+            "name": "Celsius Calibration Value(Temperature Calibration)",
             "value": "0",
             "unit": "°C",
             "access_mode": "RW",
@@ -3553,7 +3011,7 @@
         },
         {
             "id": "temperature_calibration_settings.enable",
-            "name": "Calibration Enable",
+            "name": "Calibration Enable(Temperature Calibration)",
             "value": "0",
             "unit": "",
             "access_mode": "RW",
@@ -3577,8 +3035,27 @@
             ]
         },
         {
+            "id": "temperature_calibration_settings.fahrenheit_calibration_value",
+            "name": "Fahrenheit Calibration Value(Temperature Calibration)",
+            "value": "32",
+            "unit": "℉",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "range": [
+                -1768,
+                1832
+            ],
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 64,
+            "bacnet_unit_type": "UNITS_DEGREES_FAHRENHEIT",
+            "reference": [
+                "temperature_calibration_settings.enable"
+            ]
+        },
+        {
             "id": "temperature_humidity_display_switch.switch",
-            "name": "Temperature And Humidity Display Switch on Device Screen",
+            "name": "Temperature And Humidity Display Switch on Device Screen(Temperature And Humidity Display Switch on Device Screen)",
             "value": "",
             "unit": "",
             "access_mode": "W",
@@ -3600,8 +3077,27 @@
             "reference": []
         },
         {
+            "id": "temperature_mutation_alarm_settings.celsius_mutation_max",
+            "name": "Celsius Temperature change greater than(Temperature Shift Threshold)",
+            "value": "10",
+            "unit": "°C",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "range": [
+                0,
+                100
+            ],
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 62,
+            "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
+            "reference": [
+                "temperature_mutation_alarm_settings.enable"
+            ]
+        },
+        {
             "id": "temperature_mutation_alarm_settings.enable",
-            "name": "Temperature Shift Threshold",
+            "name": "Temperature Shift Threshold(Temperature Shift Threshold)",
             "value": "0",
             "unit": "",
             "access_mode": "RW",
@@ -3625,8 +3121,27 @@
             ]
         },
         {
+            "id": "temperature_mutation_alarm_settings.fahrenheit_mutation_max",
+            "name": "Fahrenheit Temperature change greater than(Temperature Shift Threshold)",
+            "value": "50",
+            "unit": "℉",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "range": [
+                32,
+                212
+            ],
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 64,
+            "bacnet_unit_type": "UNITS_DEGREES_FAHRENHEIT",
+            "reference": [
+                "temperature_mutation_alarm_settings.enable"
+            ]
+        },
+        {
             "id": "temperature_mutation_alarm_settings.mutation_max",
-            "name": "Temperature change greater than",
+            "name": "Temperature change greater than(Temperature Shift Threshold)",
             "value": "10",
             "unit": "°C",
             "access_mode": "RW",
@@ -3667,7 +3182,7 @@
         },
         {
             "id": "tilt_alarm_settings.duration",
-            "name": "Duration",
+            "name": "Duration(Tilt Threshold Alarm Config)",
             "value": "10",
             "unit": "s",
             "access_mode": "RW",
@@ -3688,7 +3203,7 @@
         },
         {
             "id": "tilt_alarm_settings.enable",
-            "name": "Threshold Alarm Config Enable",
+            "name": "Threshold Alarm Config Enable(Tilt Threshold Alarm Config)",
             "value": "0",
             "unit": "",
             "access_mode": "RW",
@@ -3715,7 +3230,7 @@
         },
         {
             "id": "tilt_alarm_settings.threshold_condition",
-            "name": "Threshold Condition",
+            "name": "Threshold Condition(Tilt Threshold Alarm Config)",
             "value": "0",
             "unit": "",
             "access_mode": "RW",
@@ -3742,7 +3257,7 @@
         },
         {
             "id": "tilt_alarm_settings.threshold_max",
-            "name": "Threshold Value",
+            "name": "Threshold Value(Tilt Threshold Alarm Config)",
             "value": "20",
             "unit": "°",
             "access_mode": "RW",
@@ -3765,44 +3280,6 @@
             "id": "tilt_alarm_types",
             "name": "Tilt  Alarm Type",
             "value": "3",
-            "unit": "",
-            "access_mode": "R",
-            "data_type": "ENUM",
-            "value_type": "UINT8",
-            "values": [
-                {
-                    "value": 1,
-                    "name": "Exceed the Range Lower Limit"
-                },
-                {
-                    "value": 2,
-                    "name": "Exceed the Range Upper Limit"
-                },
-                {
-                    "value": 3,
-                    "name": "No Data"
-                },
-                {
-                    "value": 16,
-                    "name": "Tilt  Alam Release"
-                },
-                {
-                    "value": 17,
-                    "name": "Tilt Alam"
-                },
-                {
-                    "value": 33,
-                    "name": "Falling  Alam"
-                }
-            ],
-            "bacnet_type": "multistate_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS"
-        },
-        {
-            "id": "tilt_alarm.type",
-            "name": "Alarm Type",
-            "value": "",
             "unit": "",
             "access_mode": "R",
             "data_type": "ENUM",
@@ -3839,8 +3316,7 @@
             ],
             "bacnet_type": "multistate_value_object",
             "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": []
+            "bacnet_unit_type": "UNITS_NO_UNITS"
         },
         {
             "id": "time_zone",
@@ -4019,7 +3495,7 @@
         },
         {
             "id": "version.firmware_version",
-            "name": "Firmware Version",
+            "name": "Firmware Version(Product Version)",
             "value": "",
             "unit": "",
             "access_mode": "R",
@@ -4035,7 +3511,7 @@
         },
         {
             "id": "version.hardware_version",
-            "name": "Hardware Version",
+            "name": "Hardware Version(Product Version)",
             "value": "",
             "unit": "",
             "access_mode": "R",

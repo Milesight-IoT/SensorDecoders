@@ -27,7 +27,7 @@ function Decoder(bytes, port) {
 
 function milesightDeviceDecode(bytes) {
 	var decoded = {};
-    var result = {};
+	var result = {};
 	var history = [];
 
 	var unknown_command = 0;
@@ -65,7 +65,6 @@ function milesightDeviceDecode(bytes) {
 				readUInt8(bytes, counterObj, 1);
 				decoded.timestamp = readUInt32LE(bytes, counterObj, 4);
 				history.push(decoded);
-				break;
 				break;
 			case 0xdf:
 				decoded.tsl_version = readProtocolVersion(readBytes(bytes, counterObj, 2));
@@ -135,7 +134,7 @@ function milesightDeviceDecode(bytes) {
 				decoded.airplane_mode_state = readUInt8(bytes, counterObj, 1);
 				break;
 			case 0x1a:
-				// 3：No Data, 16：Temperature Below Alarm Released, 17：Temperature Below Alarm, 18：Temperature Above Alarm Released, 19：Temperature Above Alarm, 20：Temperature Between Alarm Released, 21：Temperature Between Alarm, 22：Temperature Exceed Tolerance Alarm Released, 23：Temperature Exceed Tolerance Alarm, 48：Temperature Shift Threshold, 32：Temperature Shift Threshold, 
+				// 0: Collection Error, 1: Out of Low Range, 2: Out of High Range, 3：No Data, 16：Temperature Below Alarm Released, 17：Temperature Below Alarm, 18：Temperature Above Alarm Released, 19：Temperature Above Alarm, 20：Temperature Between Alarm Released, 21：Temperature Between Alarm, 22：Temperature Exceed Tolerance Alarm Released, 23：Temperature Exceed Tolerance Alarm, 48：Temperature Shift Threshold, 32：Temperature Shift Threshold, 
 				decoded.temperature_alarm_types = readUInt8(bytes, counterObj, 1);
 				break;
 			case 0x11:
@@ -216,7 +215,7 @@ function milesightDeviceDecode(bytes) {
 				}
 				break;
 			case 0x1b:
-				// 3: No Data, 16:humidity Below Alarm Released, 17:humidity Below Alarm, 18:humidity Above Alarm Released, 19:humidity Above Alarm, 20:humidity Between Alarm Released, 21:humidity Between Alarm, 22:humidity Exceed Tolerance Alarm Released, 23:humidity Exceed Tolerance Alarm, 48:humidity Shift Threshold, 32:humidity Shift Threshold
+				// 0: Collection Error, 1: Out of Low Range, 2: Out of High Range, 3: No Data, 16:humidity Below Alarm Released, 17:humidity Below Alarm, 18:humidity Above Alarm Released, 19:humidity Above Alarm, 20:humidity Between Alarm Released, 21:humidity Between Alarm, 22:humidity Exceed Tolerance Alarm Released, 23:humidity Exceed Tolerance Alarm, 48:humidity Shift Threshold, 32:humidity Shift Threshold
 				decoded.humidity_alarm_types = readUInt8(bytes, counterObj, 1);
 				break;
 			case 0x09:
@@ -288,7 +287,7 @@ function milesightDeviceDecode(bytes) {
 				}
 				break;
 			case 0x1c:
-				// 1：Exceed the Range Lower Limit, 2：Exceed the Range Upper Limit, 3：No Data, 16：Tilt  Alam Release, 17：Tilt Alam, 33：Falling  Alam
+				// 0：Collection Error, 1：Exceed the Range Lower Limit, 2：Exceed the Range Upper Limit, 3：No Data, 16：Tilt  Alam Release, 17：Tilt Alam, 33：Falling  Alam
 				decoded.tilt_alarm_types = readUInt8(bytes, counterObj, 1);
 				break;
 			case 0x0a:
@@ -318,7 +317,7 @@ function milesightDeviceDecode(bytes) {
 				}
 				break;
 			case 0x1d:
-				// 1：Exceed the Range Lower Limit, 2：Exceed the Range Upper Limit, 3：No Data, 16：Bright to dark, 17：Dark to bright
+				// 0：Collection Error, 1：Exceed the Range Lower Limit, 2：Exceed the Range Upper Limit, 3：No Data, 16：Bright to dark, 17：Dark to bright
 				decoded.light_alarm_types = readUInt8(bytes, counterObj, 1);
 				break;
 			case 0x0b:
@@ -681,7 +680,7 @@ function milesightDeviceDecode(bytes) {
 						decoded.cellular_settings.network.apn = readString(bytes, counterObj, 31);
 					}
 					if (cellular_settings_network_command == 0x01) {
-						// 0：None, 1：PAP, 3：CHAP
+						// 0：None, 1：PAP, 2：CHAP
 						decoded.cellular_settings.network.auth_mode = readUInt8(bytes, counterObj, 1);
 					}
 					if (cellular_settings_network_command == 0x02) {
@@ -694,7 +693,7 @@ function milesightDeviceDecode(bytes) {
 						decoded.cellular_settings.network.pin = readString(bytes, counterObj, 8);
 					}
 					if (cellular_settings_network_command == 0x05) {
-						// 0：Auto, 1：Cat-N, 3：NB-IOT
+						// 0：Auto, 1：Cat-N, 2：NB-IOT
 						decoded.cellular_settings.network.type = readUInt8(bytes, counterObj, 1);
 					}
 				}
@@ -893,6 +892,11 @@ function milesightDeviceDecode(bytes) {
 					}
 				}
 				break;
+			case 0xec:
+				decoded.ipso_device_upgrade_result = decoded.ipso_device_upgrade_result || {};
+				// 0: Upgrade Successfully, 1: URL Error, 2: Download Failed, 3: Packet Too Big, 4: Version Error, 5: Device Error, 6: Patch Format Error, 7: CRC Check Failed, 8: Product Error, 9: Patch Upgrade Failed, 255: Upgrade Pending
+				decoded.ipso_device_upgrade_result.value = readUInt8(bytes, counterObj, 1);
+				break;
 		}
 		if (unknown_command) {
 			throw new Error('unknown command: ' + command_id);
@@ -908,6 +912,8 @@ function milesightDeviceDecode(bytes) {
 			}
 		}
 	}
+
+	processTemperature(result);
 
 	return result;
 }
@@ -977,14 +983,14 @@ function readInt16LE(allBytes, counterObj, end) {
 }
 
 function readUInt24LE(allBytes, counterObj, end) {
-    var bytes = readBytes(allBytes, counterObj, end); // 3 bytes expected
-    var value = (bytes[2] << 16) + (bytes[1] << 8) + bytes[0];
-    return value & 0xffffff;
+	var bytes = readBytes(allBytes, counterObj, end); // 3 bytes expected
+	var value = (bytes[2] << 16) + (bytes[1] << 8) + bytes[0];
+	return value & 0xffffff;
 }
 
 function readInt24LE(allBytes, counterObj, end) {
-    var ref = readUInt24LE(allBytes, counterObj, end);
-    return ref > 0x7fffff ? ref - 0x1000000 : ref;
+	var ref = readUInt24LE(allBytes, counterObj, end);
+	return ref > 0x7fffff ? ref - 0x1000000 : ref;
 }
 
 function readUInt32LE(allBytes, counterObj, end) {
@@ -1101,49 +1107,145 @@ function insertArrayItem(array, item, idName) {
 }
 
 function readCommand(allBytes, counterObj, end) {
-    var bytes = readBytes(allBytes, counterObj, end);
-    var cmd = bytes
-        .map(function(b) {
-            var hex = b.toString(16);
-            return hex.length === 1 ? '0' + hex : hex;
-        })
-        .join('')
-        .toLowerCase();
+	var bytes = readBytes(allBytes, counterObj, end);
+	var cmd = bytes
+		.map(function(b) {
+			var hex = b.toString(16);
+			return hex.length === 1 ? '0' + hex : hex;
+		})
+		.join('')
+		.toLowerCase();
 
-    var map = cmdMap();
-    for (var key in map) {
-        var xxs = [];
-        var isMatch = false;
-        if (key.length !== cmd.length) {
-            continue;
-        }
-        for (var i = 0; i < key.length; i += 2) {
-            var hexString = key.slice(i, i + 2);
-            var cmdString = cmd.slice(i, i + 2);
-            if (hexString === cmdString || hexString === 'xx') {
-                if (hexString === 'xx') {
-                    xxs.push('.' + parseInt(cmdString, 16));
-                }
-                isMatch = true;
-                continue;
-            } else {
-                isMatch = false;
-                break;
-            }
-        }
-        if (isMatch) {
-            var propertyId = map[key];
-            if (propertyId.indexOf('._item') === -1) {
-                return propertyId;
-            }
-            var j = 0;
-            var result = propertyId.replace(/\._item/g, function() {
-                return xxs[j++];
-            });
-            return result;
-        }
-    }
-    return null;
+	var map = cmdMap();
+	for (var key in map) {
+		var xxs = [];
+		var isMatch = false;
+		if (key.length !== cmd.length) {
+			continue;
+		}
+		for (var i = 0; i < key.length; i += 2) {
+			var hexString = key.slice(i, i + 2);
+			var cmdString = cmd.slice(i, i + 2);
+			if (hexString === cmdString || hexString === 'xx') {
+				if (hexString === 'xx') {
+					xxs.push('.' + parseInt(cmdString, 16));
+				}
+				isMatch = true;
+				continue;
+			} else {
+				isMatch = false;
+				break;
+			}
+		}
+		if (isMatch) {
+			var propertyId = map[key];
+			if (propertyId.indexOf('._item') === -1) {
+				return propertyId;
+			}
+			var j = 0;
+			var result = propertyId.replace(/\._item/g, function() {
+				return xxs[j++];
+			});
+			return result;
+		}
+	}
+	return null;
+}
+
+function hasPath(obj, path) {
+	var parts = path.split('.');
+	var current = obj;
+  
+	for (var i = 0; i < parts.length; i++) {
+	  	if (!current || !(parts[i] in current)) {
+			return false;
+	  	}
+	  	current = current[parts[i]];
+	}
+  
+	return true;
+}
+
+function getPath(obj, path) {
+	var parts = path.split('.');
+	var current = obj;
+  
+	for (var i = 0; i < parts.length; i++) {
+	  	var key = parts[i];
+  
+	  	if (!current || !(key in current)) {
+			return null;
+	  	}
+  
+	  	current = current[key];
+	}
+  
+	return current;
+}
+  
+
+function setPath(obj, path, value) {
+	var parts = path.split('.');
+	var current = obj;
+  
+	for (var i = 0; i < parts.length - 1; i++) {
+	  	var key = parts[i];
+  
+	  	if (!(key in current) || typeof current[key] !== 'object') {
+			current[key] = {};
+	  	}
+  
+	  	current = current[key];
+	}
+
+	current[parts[parts.length - 1]] = value;
+	return obj;
+}
+
+function convertName(propertyId, prefix) {
+	var parts = propertyId.split('.');
+	var lastPart = parts[parts.length - 1];
+	parts[parts.length - 1] = prefix + '_' + lastPart;
+	return parts.join('.');
+}
+
+function recoverName(propertyId, prefix) {
+	var parts = propertyId.split('.');
+	var lastPart = parts[parts.length - 1];
+	parts[parts.length - 1] = lastPart.replace(prefix + '_', '');
+	return parts.join('.');
+}
+
+function getAllLeafPaths(obj, prefix) {
+	var paths = [];
+
+	function recurse(current, path) {
+	  if (Array.isArray(current)) {
+		current.forEach(function (item, index) {
+		  var newPath = path ? (path + "." + index) : String(index);
+		  recurse(item, newPath);
+		});
+  
+	  } else if (typeof current === 'object' && current !== null) {
+		for (var key in current) {
+		  if (Object.prototype.hasOwnProperty.call(current, key)) {
+			var newPath = path ? (path + "." + key) : key;
+			recurse(current[key], newPath);
+		  }
+		}
+  
+	  } else {
+		paths.push(path);
+	  }
+	}
+  
+	recurse(obj, "");
+	return paths;
+  
+}
+
+function isInteger(str) {
+	return typeof str === 'string' && /^[0-9]+$/.test(str);
 }
 
 function cmdMap() {
@@ -1172,11 +1274,17 @@ function cmdMap() {
 		  "81": "falling_threshold_alarm_settings",
 		  "82": "probe_id_retransmit_count",
 		  "1110": "battery_alarm.lower_battery_alarm",
+		  "6000": "reporting_interval.seconds_of_time",
+		  "6001": "reporting_interval.minutes_of_time",
+		  "6200": "collection_interval.seconds_of_time",
+		  "6201": "collection_interval.minutes_of_time",
+		  "6400": "light_collection_interval.seconds_of_time",
+		  "6401": "light_collection_interval.minutes_of_time",
 		  "7300": "airplane_mode_time_period_settings.enable",
 		  "7301": "airplane_mode_time_period_settings.start_timestamp",
 		  "7302": "airplane_mode_time_period_settings.end_timestamp",
 		  "fe": "request_check_order",
-		  "ef": "request_command_queries",
+		  "ef": "command_queries_reply",
 		  "ee": "request_query_all_configurations",
 		  "ed": "historical_data_report",
 		  "df": "tsl_version",
@@ -1197,12 +1305,53 @@ function cmdMap() {
 		  "07": "airplane_mode_state",
 		  "1a": "temperature_alarm_types",
 		  "08": "temperature_alarm",
+		  "0800": "temperature_alarm.collection_error",
+		  "0801": "temperature_alarm.lower_range_error",
+		  "0802": "temperature_alarm.over_range_error",
+		  "0803": "temperature_alarm.no_data",
+		  "0810": "temperature_alarm.lower_range_alarm_deactivation",
+		  "0811": "temperature_alarm.lower_range_alarm_trigger",
+		  "0812": "temperature_alarm.over_range_alarm_deactivation",
+		  "0813": "temperature_alarm.over_range_alarm_trigger",
+		  "0814": "temperature_alarm.within_range_alarm_deactivation",
+		  "0815": "temperature_alarm.within_range_alarm_trigger",
+		  "0816": "temperature_alarm.exceed_range_alarm_deactivation",
+		  "0817": "temperature_alarm.exceed_range_alarm_trigger",
+		  "0830": "temperature_alarm.mutation_alarm_trigger_no_mutation",
+		  "0820": "temperature_alarm.mutation_alarm_trigger",
 		  "1b": "humidity_alarm_types",
 		  "09": "humidity_alarm",
+		  "0900": "humidity_alarm.collection_error",
+		  "0901": "humidity_alarm.lower_range_error",
+		  "0902": "humidity_alarm.over_range_error",
+		  "0903": "humidity_alarm.no_data",
+		  "0910": "humidity_alarm.lower_range_alarm_deactivation",
+		  "0911": "humidity_alarm.lower_range_alarm_trigger",
+		  "0912": "humidity_alarm.over_range_alarm_deactivation",
+		  "0913": "humidity_alarm.over_range_alarm_trigger",
+		  "0914": "humidity_alarm.within_range_alarm_deactivation",
+		  "0915": "humidity_alarm.within_range_alarm_trigger",
+		  "0916": "humidity_alarm.exceed_range_alarm_deactivation",
+		  "0917": "humidity_alarm.exceed_range_alarm_trigger",
+		  "0930": "humidity_alarm.mutation_alarm_trigger_no_mutation",
+		  "0920": "humidity_alarm.mutation_alarm_trigger",
 		  "1c": "tilt_alarm_types",
 		  "0a": "tilt_alarm",
+		  "0a00": "tilt_alarm.collection_error",
+		  "0a01": "tilt_alarm.lower_range_error",
+		  "0a02": "tilt_alarm.over_range_error",
+		  "0a03": "tilt_alarm.no_data",
+		  "0a10": "tilt_alarm.threshold_alarm_deactivation",
+		  "0a11": "tilt_alarm.threshold_alarm_trigger",
+		  "0a21": "tilt_alarm.falling_alarm_trigger",
 		  "1d": "light_alarm_types",
 		  "0b": "light_alarm",
+		  "0b00": "light_alarm.collection_error",
+		  "0b01": "light_alarm.lower_range_error",
+		  "0b02": "light_alarm.over_range_error",
+		  "0b03": "light_alarm.no_data",
+		  "0b10": "light_alarm.threshold_alarm_deactivation",
+		  "0b11": "light_alarm.threshold_alarm_trigger",
 		  "0c": "probe_connect_status",
 		  "0d": "relative_surface_info",
 		  "0e": "report_package_type",
@@ -1295,6 +1444,87 @@ function cmdMap() {
 		  "ce01": "cellular_settings.milesight_mqtt_settings",
 		  "ce0121": "cellular_settings.milesight_mqtt_settings.status",
 		  "ce19": "cellular_settings.milesight_dtls_settings",
-		  "ce1900": "cellular_settings.milesight_dtls_settings.status"
+		  "ce1900": "cellular_settings.milesight_dtls_settings.status",
+		  "ec": "ipso_device_upgrade_result"
 	};
+}
+function processTemperature(decoded) {
+	var allTemperatureProperties = {
+    "temperature": {
+        "precision": 1
+    },
+    "temperature_alarm.lower_range_alarm_deactivation.temperature": {
+        "precision": 1
+    },
+    "temperature_alarm.lower_range_alarm_trigger.temperature": {
+        "precision": 1
+    },
+    "temperature_alarm.over_range_alarm_deactivation.temperature": {
+        "precision": 1
+    },
+    "temperature_alarm.over_range_alarm_trigger.temperature": {
+        "precision": 1
+    },
+    "temperature_alarm.within_range_alarm_deactivation.temperature": {
+        "precision": 1
+    },
+    "temperature_alarm.within_range_alarm_trigger.temperature": {
+        "precision": 1
+    },
+    "temperature_alarm.exceed_range_alarm_deactivation.temperature": {
+        "precision": 1
+    },
+    "temperature_alarm.exceed_range_alarm_trigger.temperature": {
+        "precision": 1
+    },
+    "temperature_alarm.mutation_alarm_trigger_no_mutation.temperature": {
+        "precision": 1
+    },
+    "temperature_alarm.mutation_alarm_trigger.temperature": {
+        "precision": 1
+    },
+    "temperature_alarm.mutation_alarm_trigger.saltation": {
+        "precision": 1
+    },
+    "temperature_alarm_settings.threshold_min": {
+        "precision": 1
+    },
+    "temperature_alarm_settings.threshold_max": {
+        "precision": 1
+    },
+    "temperature_mutation_alarm_settings.mutation_max": {
+        "precision": 1
+    },
+    "temperature_calibration_settings.calibration_value": {
+        "precision": 1
+    }
+};
+	var leafPaths = getAllLeafPaths(decoded);
+	for (var i = 0; i < leafPaths.length; i++) {
+		var propertyId = leafPaths[i];
+		var propertyParts = propertyId.split('.');
+		var newPropertyParts = []
+		for (var j = 0; j < propertyParts.length; j++) {
+			var part = propertyParts[j];
+			if (isInteger(part)) {
+				newPropertyParts.push('_item');
+			} else {
+				newPropertyParts.push(part);
+			}
+		}
+		var newPropertyId = newPropertyParts.join('.');
+		newPropertyId = recoverName(newPropertyId, 'fahrenheit');
+		newPropertyId = recoverName(newPropertyId, 'celsius');
+		propertyId = recoverName(propertyId, 'fahrenheit');
+		propertyId = recoverName(propertyId, 'celsius');
+		if (allTemperatureProperties[newPropertyId]) {
+			var fahrenheitProperty = convertName(propertyId, 'fahrenheit');
+			var celsiusProperty = convertName(propertyId, 'celsius');
+			if (hasPath(decoded, propertyId)) {
+				setPath(decoded, fahrenheitProperty,  Number((getPath(decoded, propertyId) * 1.8 + 32).toFixed(allTemperatureProperties[newPropertyId].precision)));
+				setPath(decoded, celsiusProperty,  Number(getPath(decoded, propertyId).toFixed(allTemperatureProperties[newPropertyId].precision)));
+			}
+		}	
+	}	
+	return decoded;
 }
