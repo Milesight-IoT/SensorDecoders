@@ -63,7 +63,6 @@ function milesightDeviceEncode(payload) {
 					var hex = Number(part).toString(16);
 					while (hex.length < 2) { hex = '0' + hex; }
 					pureNumber.push(hex);
-					console.log(pureNumber);
 					formateStrParts.push('_item');
 				} else {
 					formateStrParts.push(part);
@@ -1252,6 +1251,55 @@ Buffer.prototype.writeInt32LE = function(value) {
 	this._write(value < 0 ? value + 0x100000000 : value, 4, true);
 };
 
+Buffer.prototype.writeFloatLE = function(value) {
+	var sign = (value < 0 || (value === 0 && 1 / value === -Infinity)) ? 1 : 0;
+	var absValue = Math.abs(value);
+
+	if (absValue === 0) {
+		this._write(sign ? 0x80000000 : 0, 4, true);
+		return;
+	} else if (value !== value) {
+		this._write(0x7fc00000, 4, true);
+		return;
+	} else if (absValue === Infinity) {
+		this._write((((sign << 31) >>> 0) | 0x7f800000) >>> 0, 4, true);
+		return;
+	}
+
+	var exponent = Math.floor(Math.log(absValue) / Math.LN2);
+	var normalized = absValue / Math.pow(2, exponent);
+	if (normalized < 1) {
+		exponent -= 1;
+		normalized *= 2;
+	} else if (normalized >= 2) {
+		exponent += 1;
+		normalized /= 2;
+	}
+
+	var biasedExponent = exponent + 127;
+	var mantissaBits = 0;
+	if (biasedExponent <= 0) {
+		biasedExponent = 0;
+		mantissaBits = Math.round(absValue / Math.pow(2, -149));
+		if (mantissaBits > 0x7fffff) {
+			mantissaBits = 0x7fffff;
+		}
+	} else {
+		mantissaBits = Math.round((normalized - 1) * 0x800000);
+		if (mantissaBits === 0x800000) {
+			biasedExponent += 1;
+			mantissaBits = 0;
+		}
+		if (biasedExponent >= 0xff) {
+			this._write((((sign << 31) >>> 0) | 0x7f800000) >>> 0, 4, true);
+			return;
+		}
+	}
+
+	var floatBits = ((((sign << 31) >>> 0) | ((biasedExponent & 0xff) << 23) | (mantissaBits & 0x7fffff)) >>> 0);
+	this._write(floatBits, 4, true);
+};
+
 Buffer.prototype.writeBytes = function(bytes, length, mustEqual) {
 	if (mustEqual === undefined) mustEqual = false;
 	if (length < bytes.length) {
@@ -1439,7 +1487,7 @@ function cmdMap() {
 	return {
 		  "request_check_sequence_number": "ff",
 		  "request_check_order": "fe",
-		  "request_command_queries": "ef",
+		  "command_queries_reply": "ef",
 		  "request_query_all_configurations": "ee",
 		  "historical_data_report": "ed",
 		  "lorawan_configuration_settings": "cf",
@@ -1651,7 +1699,7 @@ function processTemperature(payload) {
     "temp_control.mode_settings.auto_control.target_temperature": {
         "coefficient": 0.01
     },
-    "temp_control.mode_settings.intergrated_control.target_temperature": {
+    "temp_control.mode_settings.intergrated_control.target_temp": {
         "coefficient": 0.01
     },
     "window_opening_detection_settings.cooling_rate": {

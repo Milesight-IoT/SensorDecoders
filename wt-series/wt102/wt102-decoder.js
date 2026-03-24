@@ -69,7 +69,6 @@ function milesightDeviceDecode(bytes) {
 				decoded.timestamp = readUInt32LE(bytes, counterObj, 4);
 				history.push(decoded);
 				break;
-				break;
 			case 0xcf:
 				// skip 1 byte
 				counterObj.i++;
@@ -371,28 +370,28 @@ function milesightDeviceDecode(bytes) {
 				break;
 			case 0x65:
 				decoded.temp_control = decoded.temp_control || {};
-				var target_temperature_control_settings_command = readUInt8(bytes, counterObj, 1);
-				if (target_temperature_control_settings_command == 0x00) {
+				var temp_control_command = readUInt8(bytes, counterObj, 1);
+				if (temp_control_command == 0x00) {
 					// 0：Disable, 1：Enable
 					decoded.temp_control.enable = readUInt8(bytes, counterObj, 1);
 				}
-				if (target_temperature_control_settings_command == 0x01) {
+				if (temp_control_command == 0x01) {
 					// 0：0.5, 1：1
 					decoded.temp_control.target_temperature_resolution = readUInt8(bytes, counterObj, 1);
 				}
-				if (target_temperature_control_settings_command == 0x02) {
+				if (temp_control_command == 0x02) {
 					decoded.temp_control.under_temperature_side_deadband = readInt16LE(bytes, counterObj, 2) / 100;
 				}
-				if (target_temperature_control_settings_command == 0x03) {
+				if (temp_control_command == 0x03) {
 					decoded.temp_control.over_temperature_side_deadband = readInt16LE(bytes, counterObj, 2) / 100;
 				}
-				if (target_temperature_control_settings_command == 0x04) {
+				if (temp_control_command == 0x04) {
 					decoded.temp_control.target_temperature_adjustment_range_min = readInt16LE(bytes, counterObj, 2) / 100;
 				}
-				if (target_temperature_control_settings_command == 0x05) {
+				if (temp_control_command == 0x05) {
 					decoded.temp_control.target_temperature_adjustment_range_max = readInt16LE(bytes, counterObj, 2) / 100;
 				}
-				if (target_temperature_control_settings_command == 0x06) {
+				if (temp_control_command == 0x06) {
 					decoded.temp_control.mode_settings = decoded.temp_control.mode_settings || {};
 					// 0：Automatic Temperature Control, 1：Valve Opening Control, 2：Integrated Control
 					decoded.temp_control.mode_settings.mode = readUInt8(bytes, counterObj, 1);
@@ -671,6 +670,9 @@ function milesightDeviceDecode(bytes) {
 			case 0xbe:
 				decoded.reboot = readOnlyCommand(bytes, counterObj, 0);
 				break;
+			default:
+				unknown_command = 1;
+				break;
 		}
 		if (unknown_command) {
 			throw new Error('unknown command: ' + command_id);
@@ -729,18 +731,18 @@ function readHardwareVersion(bytes) {
 }
 
 function readFirmwareVersion(bytes) {
-	var major = (bytes[0] & 0xff).toString(16);
-	var minor = (bytes[1] & 0xff).toString(16);
-	var release = (bytes[2] & 0xff).toString(16);
-	var alpha = (bytes[3] & 0xff).toString(16);
-	var unit_test = (bytes[4] & 0xff).toString(16);
-	var test = (bytes[5] & 0xff).toString(16);
+	var major = bytes[0] & 0xff;
+	var minor = bytes[1] & 0xff;
+	var release = bytes[2] & 0xff;
+	var alpha = bytes[3] & 0xff;
+	var unit_test = bytes[4] & 0xff;
+	var test = bytes[5] & 0xff;
 
-	var version = "v" + major + "." + minor;
-	if (release !== "0") version += "-r" + release;
-	if (alpha !== "0") version += "-a" + alpha;
-	if (unit_test !== "0") version += "-u" + unit_test;
-	if (test !== "0") version += "-t" + test;
+	var version = 'v' + major + '.' + minor;
+	if (release !== 0) version += '-r' + release;
+	if (alpha !== 0) version += '-a' + alpha;
+	if (unit_test !== 0) version += '-u' + unit_test;
+	if (test !== 0) version += '-t' + test;
 	return version;
 }
 
@@ -1069,7 +1071,7 @@ function cmdMap() {
 		  "650602": "temp_control.mode_settings.intergrated_control",
 		  "ff": "request_check_sequence_number",
 		  "fe": "request_check_order",
-		  "ef": "request_command_queries",
+		  "ef": "command_queries_reply",
 		  "ee": "request_query_all_configurations",
 		  "ed": "historical_data_report",
 		  "cf": "lorawan_configuration_settings",
@@ -1248,7 +1250,7 @@ function processTemperature(decoded) {
     "temp_control.mode_settings.auto_control.target_temperature": {
         "precision": 1
     },
-    "temp_control.mode_settings.intergrated_control.target_temperature": {
+    "temp_control.mode_settings.intergrated_control.target_temp": {
         "precision": 1
     },
     "window_opening_detection_settings.cooling_rate": {
