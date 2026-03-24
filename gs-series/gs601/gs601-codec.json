@@ -123,7 +123,7 @@
         },
         {
             "id": "buzzer_sleep.item_1.enable",
-            "name": "Hibernate Period 1",
+            "name": "Hibernate Period 1(Hibernate Period)",
             "value": "0",
             "unit": "",
             "access_mode": "RW",
@@ -149,7 +149,7 @@
         },
         {
             "id": "buzzer_sleep.item_1.end_time",
-            "name": "End Time",
+            "name": "End Time(Hibernate Period)",
             "value": "480",
             "unit": "min",
             "access_mode": "RW",
@@ -169,7 +169,7 @@
         },
         {
             "id": "buzzer_sleep.item_1.start_time",
-            "name": "Start Time",
+            "name": "Start Time(Hibernate Period)",
             "value": "420",
             "unit": "min",
             "access_mode": "RW",
@@ -189,7 +189,7 @@
         },
         {
             "id": "buzzer_sleep.item_2.enable",
-            "name": "Hibernate Period 2",
+            "name": "Hibernate Period 2(Hibernate Period)",
             "value": "0",
             "unit": "",
             "access_mode": "RW",
@@ -215,7 +215,7 @@
         },
         {
             "id": "buzzer_sleep.item_2.end_time",
-            "name": "End Time",
+            "name": "End Time(Hibernate Period)",
             "value": "1140",
             "unit": "min",
             "access_mode": "RW",
@@ -235,7 +235,7 @@
         },
         {
             "id": "buzzer_sleep.item_2.start_time",
-            "name": "Start Time",
+            "name": "Start Time(Hibernate Period)",
             "value": "1080",
             "unit": "min",
             "access_mode": "RW",
@@ -255,7 +255,7 @@
         },
         {
             "id": "buzzer_sleep.type",
-            "name": "Number",
+            "name": "Number(Hibernate Period)",
             "value": "",
             "unit": "",
             "access_mode": "RW",
@@ -293,30 +293,8 @@
             "bacnet_unit_type": "UNITS_DEGREES_CELSIUS"
         },
         {
-            "id": "clear_historical_data",
-            "name": "Clear Data",
-            "access_mode": "W",
-            "data_type": "BOOL",
-            "value_type": "UINT8",
-            "unit": "",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "bacnet_type": "binary_output_object",
-            "value": "",
-            "values": [
-                {
-                    "value": 0,
-                    "name": "no"
-                },
-                {
-                    "value": 1,
-                    "name": "yes"
-                }
-            ]
-        },
-        {
             "id": "daylight_saving_time.daylight_saving_time_offset",
-            "name": "DST Bias",
+            "name": "DST Bias(Daylight Saving Time)",
             "value": "60",
             "unit": "min",
             "access_mode": "RW",
@@ -343,7 +321,7 @@
         },
         {
             "id": "daylight_saving_time.enable",
-            "name": "Daylight Saving Time",
+            "name": "Daylight Saving Time(Daylight Saving Time)",
             "value": "0",
             "unit": "",
             "access_mode": "RW",
@@ -376,7 +354,7 @@
         },
         {
             "id": "daylight_saving_time.end_hour_min",
-            "name": "Time",
+            "name": "Time(Daylight Saving Time)",
             "value": "0",
             "unit": "min",
             "access_mode": "RW",
@@ -497,7 +475,7 @@
         },
         {
             "id": "daylight_saving_time.end_month",
-            "name": "Month",
+            "name": "Month(Daylight Saving Time)",
             "value": "11",
             "unit": "",
             "access_mode": "RW",
@@ -570,7 +548,7 @@
         },
         {
             "id": "daylight_saving_time.end_week_day",
-            "name": "Week",
+            "name": "Week(Daylight Saving Time)",
             "value": "1",
             "unit": "",
             "access_mode": "RW",
@@ -623,7 +601,7 @@
         },
         {
             "id": "daylight_saving_time.end_week_num",
-            "name": "Number of Week",
+            "name": "Number of Week(Daylight Saving Time)",
             "value": "1",
             "unit": "",
             "access_mode": "RW",
@@ -668,7 +646,7 @@
         },
         {
             "id": "daylight_saving_time.start_hour_min",
-            "name": "Time",
+            "name": "Time(Daylight Saving Time)",
             "value": "0",
             "unit": "min",
             "access_mode": "RW",
@@ -789,7 +767,7 @@
         },
         {
             "id": "daylight_saving_time.start_month",
-            "name": "Month",
+            "name": "Month(Daylight Saving Time)",
             "value": "3",
             "unit": "",
             "access_mode": "RW",
@@ -862,7 +840,7 @@
         },
         {
             "id": "daylight_saving_time.start_week_day",
-            "name": "Week",
+            "name": "Week(Daylight Saving Time)",
             "value": "7",
             "unit": "",
             "access_mode": "RW",
@@ -915,7 +893,7 @@
         },
         {
             "id": "daylight_saving_time.start_week_num",
-            "name": "Number of Week",
+            "name": "Number of Week(Daylight Saving Time)",
             "value": "2",
             "unit": "",
             "access_mode": "RW",
@@ -1036,7 +1014,7 @@
         },
         {
             "id": "humidity_alarm.type",
-            "name": "Alarm Type",
+            "name": "Alarm Type(Humidity Alarm)",
             "value": "",
             "unit": "",
             "access_mode": "R",
@@ -1063,7 +1041,7 @@
         },
         {
             "id": "humidity_calibration_settings.calibration_value",
-            "name": "Calibration Value",
+            "name": "Calibration Value(Humidity Calibration Settings)",
             "value": "0",
             "unit": "%",
             "access_mode": "RW",
@@ -1082,7 +1060,7 @@
         },
         {
             "id": "humidity_calibration_settings.enable",
-            "name": "Humidity Calibration",
+            "name": "Humidity Calibration(Humidity Calibration Settings)",
             "value": "0",
             "unit": "",
             "access_mode": "RW",
@@ -1129,7 +1107,7 @@
         },
         {
             "id": "lorawan_configuration_settings.mode",
-            "name": "LoRaWAN Work Mode",
+            "name": "LoRaWAN Work Mode(LoRaWAN  Settings)",
             "value": "0",
             "unit": "",
             "access_mode": "RW",
@@ -1223,7 +1201,7 @@
         },
         {
             "id": "pm1_0_alarm_settings.enable",
-            "name": "PM1.0 Threshold Alarm",
+            "name": "PM1.0 Threshold Alarm(PM1.0 Threshold Alarm)",
             "value": "0",
             "unit": "",
             "access_mode": "RW",
@@ -1250,7 +1228,7 @@
         },
         {
             "id": "pm1_0_alarm_settings.threshold_condition",
-            "name": "Threshold Condition",
+            "name": "Threshold Condition(PM1.0 Threshold Alarm)",
             "value": "",
             "unit": "",
             "access_mode": "RW",
@@ -1289,7 +1267,7 @@
         },
         {
             "id": "pm1_0_alarm_settings.threshold_max",
-            "name": "Over",
+            "name": "Over(PM1.0 Threshold Alarm)",
             "value": "0",
             "unit": "µg/m³",
             "access_mode": "RW",
@@ -1310,7 +1288,7 @@
         },
         {
             "id": "pm1_0_alarm_settings.threshold_min",
-            "name": "Value A",
+            "name": "Value A(PM1.0 Threshold Alarm)",
             "value": "0",
             "unit": "µg/m³",
             "access_mode": "RW",
@@ -1330,42 +1308,8 @@
             ]
         },
         {
-            "id": "pm1_0_alarm.alarm_deactivation.pm1_0",
-            "name": "PM1.0",
-            "value": "",
-            "unit": "µg/m³",
-            "access_mode": "R",
-            "data_type": "NUMBER",
-            "value_type": "UINT16",
-            "range": [
-                0,
-                1000
-            ],
-            "bacnet_type": "analog_input_object",
-            "bacnet_unit_type_id": 219,
-            "bacnet_unit_type": "UNITS_MICROGRAMS_PER_CUBIC_METER",
-            "reference": []
-        },
-        {
-            "id": "pm1_0_alarm.alarm_trigger.pm1_0",
-            "name": "PM1.0",
-            "value": "",
-            "unit": "µg/m³",
-            "access_mode": "R",
-            "data_type": "NUMBER",
-            "value_type": "UINT16",
-            "range": [
-                0,
-                1000
-            ],
-            "bacnet_type": "analog_input_object",
-            "bacnet_unit_type_id": 219,
-            "bacnet_unit_type": "UNITS_MICROGRAMS_PER_CUBIC_METER",
-            "reference": []
-        },
-        {
             "id": "pm1_0_alarm.type",
-            "name": "Alarm Type",
+            "name": "Alarm Type(PM1.0 Alarm)",
             "value": "",
             "unit": "",
             "access_mode": "R",
@@ -1400,7 +1344,7 @@
         },
         {
             "id": "pm1_0_calibration_settings.calibration_value",
-            "name": "Calibration Value",
+            "name": "Calibration Value(PM1.0 Calibration Settings)",
             "value": "0",
             "unit": "µg/m³",
             "access_mode": "RW",
@@ -1419,7 +1363,7 @@
         },
         {
             "id": "pm1_0_calibration_settings.enable",
-            "name": "PM1.0 Calibration",
+            "name": "PM1.0 Calibration(PM1.0 Calibration Settings)",
             "value": "0",
             "unit": "",
             "access_mode": "RW",
@@ -1460,7 +1404,7 @@
         },
         {
             "id": "pm10_alarm_settings.enable",
-            "name": "PM10 Threshold Alarm",
+            "name": "PM10 Threshold Alarm(PM10 Threshold Alarm)",
             "value": "0",
             "unit": "",
             "access_mode": "RW",
@@ -1487,7 +1431,7 @@
         },
         {
             "id": "pm10_alarm_settings.threshold_condition",
-            "name": "Threshold Condition",
+            "name": "Threshold Condition(PM10 Threshold Alarm)",
             "value": "",
             "unit": "",
             "access_mode": "RW",
@@ -1526,7 +1470,7 @@
         },
         {
             "id": "pm10_alarm_settings.threshold_max",
-            "name": "Over",
+            "name": "Over(PM10 Threshold Alarm)",
             "value": "0",
             "unit": "µg/m³",
             "access_mode": "RW",
@@ -1547,7 +1491,7 @@
         },
         {
             "id": "pm10_alarm_settings.threshold_min",
-            "name": "Value A",
+            "name": "Value A(PM10 Threshold Alarm)",
             "value": "0",
             "unit": "µg/m³",
             "access_mode": "RW",
@@ -1567,42 +1511,8 @@
             ]
         },
         {
-            "id": "pm10_alarm.alarm_deactivation.pm10",
-            "name": "PM10",
-            "value": "",
-            "unit": "µg/m³",
-            "access_mode": "R",
-            "data_type": "NUMBER",
-            "value_type": "UINT16",
-            "range": [
-                0,
-                1000
-            ],
-            "bacnet_type": "analog_input_object",
-            "bacnet_unit_type_id": 219,
-            "bacnet_unit_type": "UNITS_MICROGRAMS_PER_CUBIC_METER",
-            "reference": []
-        },
-        {
-            "id": "pm10_alarm.alarm_trigger.pm10",
-            "name": "PM10",
-            "value": "",
-            "unit": "µg/m³",
-            "access_mode": "R",
-            "data_type": "NUMBER",
-            "value_type": "UINT16",
-            "range": [
-                0,
-                1000
-            ],
-            "bacnet_type": "analog_input_object",
-            "bacnet_unit_type_id": 219,
-            "bacnet_unit_type": "UNITS_MICROGRAMS_PER_CUBIC_METER",
-            "reference": []
-        },
-        {
             "id": "pm10_alarm.type",
-            "name": "Alarm Type",
+            "name": "Alarm Type(PM10 Alarm)",
             "value": "",
             "unit": "",
             "access_mode": "R",
@@ -1637,7 +1547,7 @@
         },
         {
             "id": "pm10_calibration_settings.calibration_value",
-            "name": "Calibration Value",
+            "name": "Calibration Value(PM10 Calibration Settings)",
             "value": "0",
             "unit": "µg/m³",
             "access_mode": "RW",
@@ -1656,7 +1566,7 @@
         },
         {
             "id": "pm10_calibration_settings.enable",
-            "name": "PM10 Calibration",
+            "name": "PM10 Calibration(PM10 Calibration Settings)",
             "value": "0",
             "unit": "",
             "access_mode": "RW",
@@ -1697,7 +1607,7 @@
         },
         {
             "id": "pm2_5_alarm_settings.enable",
-            "name": "PM2.5 Threshold Alarm",
+            "name": "PM2.5 Threshold Alarm(PM2.5 Threshold Alarm)",
             "value": "0",
             "unit": "",
             "access_mode": "RW",
@@ -1724,7 +1634,7 @@
         },
         {
             "id": "pm2_5_alarm_settings.threshold_condition",
-            "name": "Threshold Condition",
+            "name": "Threshold Condition(PM2.5 Threshold Alarm)",
             "value": "",
             "unit": "",
             "access_mode": "RW",
@@ -1763,7 +1673,7 @@
         },
         {
             "id": "pm2_5_alarm_settings.threshold_max",
-            "name": "Over",
+            "name": "Over(PM2.5 Threshold Alarm)",
             "value": "0",
             "unit": "µg/m³",
             "access_mode": "RW",
@@ -1784,7 +1694,7 @@
         },
         {
             "id": "pm2_5_alarm_settings.threshold_min",
-            "name": "Value A",
+            "name": "Value A(PM2.5 Threshold Alarm)",
             "value": "0",
             "unit": "µg/m³",
             "access_mode": "RW",
@@ -1804,42 +1714,8 @@
             ]
         },
         {
-            "id": "pm2_5_alarm.alarm_deactivation.pm2_5",
-            "name": "PM2.5",
-            "value": "",
-            "unit": "µg/m³",
-            "access_mode": "R",
-            "data_type": "NUMBER",
-            "value_type": "UINT16",
-            "range": [
-                0,
-                1000
-            ],
-            "bacnet_type": "analog_input_object",
-            "bacnet_unit_type_id": 219,
-            "bacnet_unit_type": "UNITS_MICROGRAMS_PER_CUBIC_METER",
-            "reference": []
-        },
-        {
-            "id": "pm2_5_alarm.alarm_trigger.pm2_5",
-            "name": "PM2.5",
-            "value": "",
-            "unit": "µg/m³",
-            "access_mode": "R",
-            "data_type": "NUMBER",
-            "value_type": "UINT16",
-            "range": [
-                0,
-                1000
-            ],
-            "bacnet_type": "analog_input_object",
-            "bacnet_unit_type_id": 219,
-            "bacnet_unit_type": "UNITS_MICROGRAMS_PER_CUBIC_METER",
-            "reference": []
-        },
-        {
             "id": "pm2_5_alarm.type",
-            "name": "Alarm Type",
+            "name": "Alarm Type(PM2.5 Alarm)",
             "value": "",
             "unit": "",
             "access_mode": "R",
@@ -1874,7 +1750,7 @@
         },
         {
             "id": "pm2_5_calibration_settings.calibration_value",
-            "name": "Calibration Value",
+            "name": "Calibration Value(PM2.5 Calibration Settings)",
             "value": "0",
             "unit": "µg/m³",
             "access_mode": "RW",
@@ -1893,7 +1769,7 @@
         },
         {
             "id": "pm2_5_calibration_settings.enable",
-            "name": "PM2.5 Calibration",
+            "name": "PM2.5 Calibration(PM2.5 Calibration Settings)",
             "value": "0",
             "unit": "",
             "access_mode": "RW",
@@ -1997,7 +1873,7 @@
         },
         {
             "id": "reporting_interval.minutes_of_time",
-            "name": "Reporting Interval",
+            "name": "Reporting Interval(Reporting Interval)",
             "value": "10",
             "unit": "min",
             "access_mode": "RW",
@@ -2016,7 +1892,7 @@
         },
         {
             "id": "reporting_interval.seconds_of_time",
-            "name": "Reporting Interval",
+            "name": "Reporting Interval(Reporting Interval)",
             "value": "600",
             "unit": "s",
             "access_mode": "RW",
@@ -2035,7 +1911,7 @@
         },
         {
             "id": "reporting_interval.unit",
-            "name": "Reporting Interval Unit",
+            "name": "Reporting Interval Unit(Reporting Interval)",
             "value": "1",
             "unit": "",
             "access_mode": "RW",
@@ -2057,74 +1933,8 @@
             "reference": []
         },
         {
-            "id": "request_query_all_configurations",
-            "name": "Request to Query All Configurations",
-            "access_mode": "W",
-            "data_type": "BOOL",
-            "value_type": "UINT8",
-            "unit": "",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "bacnet_type": "binary_output_object",
-            "value": "",
-            "values": [
-                {
-                    "value": 0,
-                    "name": "no"
-                },
-                {
-                    "value": 1,
-                    "name": "yes"
-                }
-            ]
-        },
-        {
-            "id": "reset",
-            "name": "Reset",
-            "access_mode": "W",
-            "data_type": "BOOL",
-            "value_type": "UINT8",
-            "unit": "",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "bacnet_type": "binary_output_object",
-            "value": "",
-            "values": [
-                {
-                    "value": 0,
-                    "name": "no"
-                },
-                {
-                    "value": 1,
-                    "name": "yes"
-                }
-            ]
-        },
-        {
             "id": "stop_buzzer_alarm",
             "name": "Stop Buzzer",
-            "access_mode": "W",
-            "data_type": "BOOL",
-            "value_type": "UINT8",
-            "unit": "",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "bacnet_type": "binary_output_object",
-            "value": "",
-            "values": [
-                {
-                    "value": 0,
-                    "name": "no"
-                },
-                {
-                    "value": 1,
-                    "name": "yes"
-                }
-            ]
-        },
-        {
-            "id": "stop_historical_data_retrieval",
-            "name": "Stop Retrieval",
             "access_mode": "W",
             "data_type": "BOOL",
             "value_type": "UINT8",
@@ -2212,7 +2022,7 @@
         },
         {
             "id": "tamper_status_alarm.type",
-            "name": "Alarm Type",
+            "name": "Alarm Type(Tamper Status)",
             "value": "",
             "unit": "",
             "access_mode": "R",
@@ -2251,7 +2061,7 @@
         },
         {
             "id": "temperature_alarm_settings.celsius_threshold_max",
-            "name": "Celsius Value B",
+            "name": "Celsius Value B(Temperature Threshold Alarm)",
             "value": "0",
             "unit": "°C",
             "access_mode": "RW",
@@ -2272,7 +2082,7 @@
         },
         {
             "id": "temperature_alarm_settings.celsius_threshold_min",
-            "name": "Celsius Value A",
+            "name": "Celsius Value A(Temperature Threshold Alarm)",
             "value": "0",
             "unit": "°C",
             "access_mode": "RW",
@@ -2293,7 +2103,7 @@
         },
         {
             "id": "temperature_alarm_settings.enable",
-            "name": "Temperature Threshold Alarm",
+            "name": "Temperature Threshold Alarm(Temperature Threshold Alarm)",
             "value": "0",
             "unit": "",
             "access_mode": "RW",
@@ -2320,7 +2130,7 @@
         },
         {
             "id": "temperature_alarm_settings.fahrenheit_threshold_max",
-            "name": "Fahrenheit Value B",
+            "name": "Fahrenheit Value B(Temperature Threshold Alarm)",
             "value": "32",
             "unit": "℉",
             "access_mode": "RW",
@@ -2341,7 +2151,7 @@
         },
         {
             "id": "temperature_alarm_settings.fahrenheit_threshold_min",
-            "name": "Fahrenheit Value A",
+            "name": "Fahrenheit Value A(Temperature Threshold Alarm)",
             "value": "32",
             "unit": "℉",
             "access_mode": "RW",
@@ -2362,7 +2172,7 @@
         },
         {
             "id": "temperature_alarm_settings.threshold_condition",
-            "name": "Threshold Condition",
+            "name": "Threshold Condition(Temperature Threshold Alarm)",
             "value": "0",
             "unit": "",
             "access_mode": "RW",
@@ -2401,7 +2211,7 @@
         },
         {
             "id": "temperature_alarm_settings.threshold_max",
-            "name": "Value B",
+            "name": "Value B(Temperature Threshold Alarm)",
             "value": "0",
             "unit": "°C",
             "access_mode": "RW",
@@ -2422,7 +2232,7 @@
         },
         {
             "id": "temperature_alarm_settings.threshold_min",
-            "name": "Value A",
+            "name": "Value A(Temperature Threshold Alarm)",
             "value": "0",
             "unit": "°C",
             "access_mode": "RW",
@@ -2442,110 +2252,8 @@
             ]
         },
         {
-            "id": "temperature_alarm.alarm_deactivation.celsius_temperature",
-            "name": "Celsius Temperature",
-            "value": "",
-            "unit": "°C",
-            "access_mode": "R",
-            "data_type": "NUMBER",
-            "value_type": "FLOAT",
-            "range": [
-                -20,
-                60
-            ],
-            "bacnet_type": "analog_input_object",
-            "bacnet_unit_type_id": 62,
-            "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
-            "reference": []
-        },
-        {
-            "id": "temperature_alarm.alarm_deactivation.fahrenheit_temperature",
-            "name": "Fahrenheit Temperature",
-            "value": "",
-            "unit": "℉",
-            "access_mode": "R",
-            "data_type": "NUMBER",
-            "value_type": "FLOAT",
-            "range": [
-                -4,
-                140
-            ],
-            "bacnet_type": "analog_input_object",
-            "bacnet_unit_type_id": 64,
-            "bacnet_unit_type": "UNITS_DEGREES_FAHRENHEIT",
-            "reference": []
-        },
-        {
-            "id": "temperature_alarm.alarm_deactivation.temperature",
-            "name": "Temperature",
-            "value": "",
-            "unit": "°C",
-            "access_mode": "R",
-            "data_type": "NUMBER",
-            "value_type": "FLOAT",
-            "range": [
-                -20,
-                60
-            ],
-            "bacnet_type": "analog_input_object",
-            "bacnet_unit_type_id": 62,
-            "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
-            "reference": []
-        },
-        {
-            "id": "temperature_alarm.alarm_trigger.celsius_temperature",
-            "name": "Celsius Temperature",
-            "value": "",
-            "unit": "°C",
-            "access_mode": "R",
-            "data_type": "NUMBER",
-            "value_type": "FLOAT",
-            "range": [
-                -20,
-                60
-            ],
-            "bacnet_type": "analog_input_object",
-            "bacnet_unit_type_id": 62,
-            "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
-            "reference": []
-        },
-        {
-            "id": "temperature_alarm.alarm_trigger.fahrenheit_temperature",
-            "name": "Fahrenheit Temperature",
-            "value": "",
-            "unit": "℉",
-            "access_mode": "R",
-            "data_type": "NUMBER",
-            "value_type": "FLOAT",
-            "range": [
-                -4,
-                140
-            ],
-            "bacnet_type": "analog_input_object",
-            "bacnet_unit_type_id": 64,
-            "bacnet_unit_type": "UNITS_DEGREES_FAHRENHEIT",
-            "reference": []
-        },
-        {
-            "id": "temperature_alarm.alarm_trigger.temperature",
-            "name": "Temperature",
-            "value": "",
-            "unit": "°C",
-            "access_mode": "R",
-            "data_type": "NUMBER",
-            "value_type": "FLOAT",
-            "range": [
-                -20,
-                60
-            ],
-            "bacnet_type": "analog_input_object",
-            "bacnet_unit_type_id": 62,
-            "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
-            "reference": []
-        },
-        {
             "id": "temperature_alarm.type",
-            "name": "Alarm Type",
+            "name": "Alarm Type(Temperature  Alarm)",
             "value": "",
             "unit": "",
             "access_mode": "R",
@@ -2588,7 +2296,7 @@
         },
         {
             "id": "temperature_calibration_settings.calibration_value",
-            "name": "Calibration Value",
+            "name": "Calibration Value(Temperature Calibration Settings)",
             "value": "0",
             "unit": "°C",
             "access_mode": "RW",
@@ -2607,7 +2315,7 @@
         },
         {
             "id": "temperature_calibration_settings.celsius_calibration_value",
-            "name": "Celsius Calibration Value",
+            "name": "Celsius Calibration Value(Temperature Calibration Settings)",
             "value": "0",
             "unit": "°C",
             "access_mode": "RW",
@@ -2626,7 +2334,7 @@
         },
         {
             "id": "temperature_calibration_settings.enable",
-            "name": "Temperature Calibration",
+            "name": "Temperature Calibration(Temperature Calibration Settings)",
             "value": "0",
             "unit": "",
             "access_mode": "RW",
@@ -2651,7 +2359,7 @@
         },
         {
             "id": "temperature_calibration_settings.fahrenheit_calibration_value",
-            "name": "Fahrenheit Calibration Value",
+            "name": "Fahrenheit Calibration Value(Temperature Calibration Settings)",
             "value": "32",
             "unit": "℉",
             "access_mode": "RW",
@@ -2883,7 +2591,7 @@
         },
         {
             "id": "tvoc_alarm_settings.enable",
-            "name": "TVOC Threshold Alarm",
+            "name": "TVOC Threshold Alarm(TVOC Threshold Alarm)",
             "value": "0",
             "unit": "",
             "access_mode": "RW",
@@ -2910,7 +2618,7 @@
         },
         {
             "id": "tvoc_alarm_settings.threshold_condition",
-            "name": "Threshold Condition",
+            "name": "Threshold Condition(TVOC Threshold Alarm)",
             "value": "",
             "unit": "",
             "access_mode": "RW",
@@ -2949,7 +2657,7 @@
         },
         {
             "id": "tvoc_alarm_settings.threshold_max",
-            "name": "Over",
+            "name": "Over(TVOC Threshold Alarm)",
             "value": "0",
             "unit": "µg/m³",
             "access_mode": "RW",
@@ -2970,7 +2678,7 @@
         },
         {
             "id": "tvoc_alarm_settings.threshold_min",
-            "name": "Value A",
+            "name": "Value A(TVOC Threshold Alarm)",
             "value": "0",
             "unit": "µg/m³",
             "access_mode": "RW",
@@ -2990,42 +2698,8 @@
             ]
         },
         {
-            "id": "tvoc_alarm.alarm_deactivation.tvoc",
-            "name": "TVOC",
-            "value": "",
-            "unit": "µg/m³",
-            "access_mode": "R",
-            "data_type": "NUMBER",
-            "value_type": "UINT16",
-            "range": [
-                0,
-                2000
-            ],
-            "bacnet_type": "analog_input_object",
-            "bacnet_unit_type_id": 219,
-            "bacnet_unit_type": "UNITS_MICROGRAMS_PER_CUBIC_METER",
-            "reference": []
-        },
-        {
-            "id": "tvoc_alarm.alarm_trigger.tvoc",
-            "name": "TVOC",
-            "value": "",
-            "unit": "µg/m³",
-            "access_mode": "R",
-            "data_type": "NUMBER",
-            "value_type": "UINT16",
-            "range": [
-                0,
-                2000
-            ],
-            "bacnet_type": "analog_input_object",
-            "bacnet_unit_type_id": 219,
-            "bacnet_unit_type": "UNITS_MICROGRAMS_PER_CUBIC_METER",
-            "reference": []
-        },
-        {
             "id": "tvoc_alarm.type",
-            "name": "Alarm Type",
+            "name": "Alarm Type(TVOC Alarm)",
             "value": "",
             "unit": "",
             "access_mode": "R",
@@ -3060,7 +2734,7 @@
         },
         {
             "id": "tvoc_calibration_settings.calibration_value",
-            "name": "Calibration Value",
+            "name": "Calibration Value(TVOC Calibration Settings)",
             "value": "0",
             "unit": "µg/m³",
             "access_mode": "RW",
@@ -3079,7 +2753,7 @@
         },
         {
             "id": "tvoc_calibration_settings.enable",
-            "name": "TVOC Calibration",
+            "name": "TVOC Calibration(TVOC Calibration Settings)",
             "value": "0",
             "unit": "",
             "access_mode": "RW",
@@ -3104,7 +2778,7 @@
         },
         {
             "id": "tvoc_raw_data_1.rmox_0",
-            "name": "TVOC Data",
+            "name": "TVOC Data( TVOC Data)",
             "value": "",
             "unit": "",
             "access_mode": "R",
@@ -3119,7 +2793,7 @@
         },
         {
             "id": "tvoc_raw_data_1.rmox_1",
-            "name": "TVOC Data",
+            "name": "TVOC Data( TVOC Data)",
             "value": "",
             "unit": "",
             "access_mode": "R",
@@ -3134,7 +2808,7 @@
         },
         {
             "id": "tvoc_raw_data_10.etoh",
-            "name": "TVOC Data",
+            "name": "TVOC Data( TVOC Data)",
             "value": "",
             "unit": "",
             "access_mode": "R",
@@ -3149,7 +2823,7 @@
         },
         {
             "id": "tvoc_raw_data_10.tvoc",
-            "name": "TVOC Data",
+            "name": "TVOC Data( TVOC Data)",
             "value": "",
             "unit": "",
             "access_mode": "R",
@@ -3164,7 +2838,7 @@
         },
         {
             "id": "tvoc_raw_data_11.eco2",
-            "name": "TVOC Data",
+            "name": "TVOC Data( TVOC Data)",
             "value": "",
             "unit": "",
             "access_mode": "R",
@@ -3179,7 +2853,7 @@
         },
         {
             "id": "tvoc_raw_data_11.rel_iaq",
-            "name": "TVOC Data",
+            "name": "TVOC Data( TVOC Data)",
             "value": "",
             "unit": "",
             "access_mode": "R",
@@ -3194,7 +2868,7 @@
         },
         {
             "id": "tvoc_raw_data_2.rmox_2",
-            "name": "TVOC Data",
+            "name": "TVOC Data( TVOC Data)",
             "value": "",
             "unit": "",
             "access_mode": "R",
@@ -3209,7 +2883,7 @@
         },
         {
             "id": "tvoc_raw_data_2.rmox_3",
-            "name": "TVOC Data",
+            "name": "TVOC Data( TVOC Data)",
             "value": "",
             "unit": "",
             "access_mode": "R",
@@ -3224,7 +2898,7 @@
         },
         {
             "id": "tvoc_raw_data_3.rmox_4",
-            "name": "TVOC Data",
+            "name": "TVOC Data( TVOC Data)",
             "value": "",
             "unit": "",
             "access_mode": "R",
@@ -3239,7 +2913,7 @@
         },
         {
             "id": "tvoc_raw_data_3.rmox_5",
-            "name": "TVOC Data",
+            "name": "TVOC Data( TVOC Data)",
             "value": "",
             "unit": "",
             "access_mode": "R",
@@ -3254,7 +2928,7 @@
         },
         {
             "id": "tvoc_raw_data_4.rmox_6",
-            "name": "TVOC Data",
+            "name": "TVOC Data( TVOC Data)",
             "value": "",
             "unit": "",
             "access_mode": "R",
@@ -3269,7 +2943,7 @@
         },
         {
             "id": "tvoc_raw_data_4.rmox_7",
-            "name": "TVOC Data",
+            "name": "TVOC Data( TVOC Data)",
             "value": "",
             "unit": "",
             "access_mode": "R",
@@ -3284,7 +2958,7 @@
         },
         {
             "id": "tvoc_raw_data_5.rmox_8",
-            "name": "TVOC Data",
+            "name": "TVOC Data( TVOC Data)",
             "value": "",
             "unit": "",
             "access_mode": "R",
@@ -3299,7 +2973,7 @@
         },
         {
             "id": "tvoc_raw_data_5.rmox_9",
-            "name": "TVOC Data",
+            "name": "TVOC Data( TVOC Data)",
             "value": "",
             "unit": "",
             "access_mode": "R",
@@ -3314,7 +2988,7 @@
         },
         {
             "id": "tvoc_raw_data_6.rmox_10",
-            "name": "TVOC Data",
+            "name": "TVOC Data( TVOC Data)",
             "value": "",
             "unit": "",
             "access_mode": "R",
@@ -3329,7 +3003,7 @@
         },
         {
             "id": "tvoc_raw_data_6.rmox_11",
-            "name": "TVOC Data",
+            "name": "TVOC Data( TVOC Data)",
             "value": "",
             "unit": "",
             "access_mode": "R",
@@ -3344,7 +3018,7 @@
         },
         {
             "id": "tvoc_raw_data_7.rmox_12",
-            "name": "TVOC Data",
+            "name": "TVOC Data( TVOC Data)",
             "value": "",
             "unit": "",
             "access_mode": "R",
@@ -3359,7 +3033,7 @@
         },
         {
             "id": "tvoc_raw_data_7.zmod4510_rmox_3",
-            "name": "TVOC Data",
+            "name": "TVOC Data( TVOC Data)",
             "value": "",
             "unit": "",
             "access_mode": "R",
@@ -3374,7 +3048,7 @@
         },
         {
             "id": "tvoc_raw_data_8.log_rcda",
-            "name": "TVOC Data",
+            "name": "TVOC Data( TVOC Data)",
             "value": "",
             "unit": "",
             "access_mode": "R",
@@ -3389,7 +3063,7 @@
         },
         {
             "id": "tvoc_raw_data_8.rhtr",
-            "name": "TVOC Data",
+            "name": "TVOC Data( TVOC Data)",
             "value": "",
             "unit": "",
             "access_mode": "R",
@@ -3404,7 +3078,7 @@
         },
         {
             "id": "tvoc_raw_data_9.iaq",
-            "name": "TVOC Data",
+            "name": "TVOC Data( TVOC Data)",
             "value": "",
             "unit": "",
             "access_mode": "R",
@@ -3419,7 +3093,7 @@
         },
         {
             "id": "tvoc_raw_data_9.temperature",
-            "name": "TVOC Data",
+            "name": "TVOC Data( TVOC Data)",
             "value": "",
             "unit": "",
             "access_mode": "R",
@@ -3472,7 +3146,7 @@
         },
         {
             "id": "vaping_index_alarm_settings.enable",
-            "name": "Vaping Threshold Alarm",
+            "name": "Vaping Threshold Alarm(Vaping Threshold Alarm)",
             "value": "1",
             "unit": "",
             "access_mode": "RW",
@@ -3499,7 +3173,7 @@
         },
         {
             "id": "vaping_index_alarm_settings.threshold_condition",
-            "name": "Threshold Condition",
+            "name": "Threshold Condition(Vaping Threshold Alarm)",
             "value": "",
             "unit": "",
             "access_mode": "RW",
@@ -3538,7 +3212,7 @@
         },
         {
             "id": "vaping_index_alarm_settings.threshold_max",
-            "name": "Over",
+            "name": "Over(Vaping Threshold Alarm)",
             "value": "5",
             "unit": "",
             "access_mode": "RW",
@@ -3559,7 +3233,7 @@
         },
         {
             "id": "vaping_index_alarm_settings.threshold_min",
-            "name": "Value A",
+            "name": "Value A(Vaping Threshold Alarm)",
             "value": "0",
             "unit": "",
             "access_mode": "RW",
@@ -3579,42 +3253,8 @@
             ]
         },
         {
-            "id": "vaping_index_alarm.alarm_deactivation.vaping_index",
-            "name": "Vaping Index",
-            "value": "",
-            "unit": "",
-            "access_mode": "R",
-            "data_type": "NUMBER",
-            "value_type": "UINT8",
-            "range": [
-                0,
-                100
-            ],
-            "bacnet_type": "analog_input_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": []
-        },
-        {
-            "id": "vaping_index_alarm.alarm_trigger.vaping_index",
-            "name": "Vaping Index",
-            "value": "",
-            "unit": "",
-            "access_mode": "R",
-            "data_type": "NUMBER",
-            "value_type": "UINT8",
-            "range": [
-                0,
-                100
-            ],
-            "bacnet_type": "analog_input_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": []
-        },
-        {
             "id": "vaping_index_alarm.type",
-            "name": "Alarm Type",
+            "name": "Alarm Type(Vaping Index Alarm)",
             "value": "",
             "unit": "",
             "access_mode": "R",
@@ -3657,7 +3297,7 @@
         },
         {
             "id": "vaping_index_calibration_settings.calibration_value",
-            "name": "Calibration Value",
+            "name": "Calibration Value(Vaping Calibration Settings)",
             "value": "0",
             "unit": "",
             "access_mode": "RW",
@@ -3676,7 +3316,7 @@
         },
         {
             "id": "vaping_index_calibration_settings.enable",
-            "name": "Vaping Calibration",
+            "name": "Vaping Calibration(Vaping Calibration Settings)",
             "value": "0",
             "unit": "",
             "access_mode": "RW",
@@ -3701,7 +3341,7 @@
         },
         {
             "id": "version.firmware_version",
-            "name": "Firmware Version",
+            "name": "Firmware Version(Product Version)",
             "value": "",
             "unit": "",
             "access_mode": "R",
@@ -3717,7 +3357,7 @@
         },
         {
             "id": "version.hardware_version",
-            "name": "Hardware Version",
+            "name": "Hardware Version(Product Version)",
             "value": "",
             "unit": "",
             "access_mode": "R",

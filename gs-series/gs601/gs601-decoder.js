@@ -79,9 +79,198 @@ function milesightDeviceDecode(bytes) {
 			case 0xcf:
 				decoded.lorawan_configuration_settings = decoded.lorawan_configuration_settings || {};
 				var lorawan_configuration_settings_command = readUInt8(bytes, counterObj, 1);
+				if (lorawan_configuration_settings_command == 0x0b) {
+					decoded.lorawan_configuration_settings.deveui = readHexString(bytes, counterObj, 8);
+				}
+				if (lorawan_configuration_settings_command == 0x13) {
+					decoded.lorawan_configuration_settings.appeui = readHexString(bytes, counterObj, 8);
+				}
+				if (lorawan_configuration_settings_command == 0x03) {
+					decoded.lorawan_configuration_settings.netid = readHexString(bytes, counterObj, 3);
+				}
+				if (lorawan_configuration_settings_command == 0x5c) {
+					decoded.lorawan_configuration_settings.app_port = readUInt8(bytes, counterObj, 1);
+				}
+				if (lorawan_configuration_settings_command == 0xd8) {
+					// 1：1.0.2, 2：1.0.3, 3：1.0.3, 4：1.0.4
+					decoded.lorawan_configuration_settings.version = readUInt8(bytes, counterObj, 1);
+				}
 				if (lorawan_configuration_settings_command == 0x00) {
 					// 0:ClassA, 1:ClassB, 2:ClassC, 3:ClassC to B
 					decoded.lorawan_configuration_settings.mode = readUInt8(bytes, counterObj, 1);
+				}
+				if (lorawan_configuration_settings_command == 0x5d) {
+					// 0：disable, 1：enable
+					decoded.lorawan_configuration_settings.confirmed_mode = readUInt8(bytes, counterObj, 1);
+				}
+				if (lorawan_configuration_settings_command == 0xc6) {
+					decoded.lorawan_configuration_settings.ack_retry_times = readUInt8(bytes, counterObj, 1);
+				}
+				if (lorawan_configuration_settings_command == 0x01) {
+					// 0：ABP, 1：OTAA
+					decoded.lorawan_configuration_settings.join_type = readUInt8(bytes, counterObj, 1);
+				}
+				if (lorawan_configuration_settings_command == 0x07) {
+					decoded.lorawan_configuration_settings.devaddr = readHexString(bytes, counterObj, 4);
+				}
+				if (lorawan_configuration_settings_command == 0xda) {
+					// 0：disable, 1：enable
+					decoded.lorawan_configuration_settings.rejoin_mode_enable = readUInt8(bytes, counterObj, 1);
+				}
+				if (lorawan_configuration_settings_command == 0xd9) {
+					decoded.lorawan_configuration_settings.number_of_link_detection_signals = readUInt8(bytes, counterObj, 1);
+				}
+				if (lorawan_configuration_settings_command == 0xcd) {
+					// 0：CN470, 2：AS923, 3：AU915, 4：EU868, 5：KR920, 6：IN865, 7：US915, 10：RU864
+					decoded.lorawan_configuration_settings.frequency_band = readUInt8(bytes, counterObj, 1);
+				}
+				if (lorawan_configuration_settings_command == 0xdc) {
+					// 0：AS923-1, 1：AS923-2, 2：AS923-3, 3：AS923-4
+					decoded.lorawan_configuration_settings.AS923_frequency_band_in_use = readUInt8(bytes, counterObj, 1);
+				}
+				if (lorawan_configuration_settings_command == 0x5e) {
+					decoded.lorawan_configuration_settings.channel_mask = readHexString(bytes, counterObj, 12);
+				}
+				if (lorawan_configuration_settings_command == 0x6a) {
+					decoded.lorawan_configuration_settings.channels_settings = decoded.lorawan_configuration_settings.channels_settings || [];
+					var index = readUInt8(bytes, counterObj, 1);
+					var channels_settings_item = pickArrayItem(decoded.lorawan_configuration_settings.channels_settings, index, 'index');
+					channels_settings_item.index = index;
+					insertArrayItem(decoded.lorawan_configuration_settings.channels_settings, channels_settings_item, 'index');
+					// 0：disable, 1：enable
+					channels_settings_item.enable = readUInt8(bytes, counterObj, 1);
+					channels_settings_item.frequency = readUInt32LE(bytes, counterObj, 4) / 1000000;
+					var bitOptions = readUInt8(bytes, counterObj, 1);
+					// 0：DR0(SF12,125kHz), 1：DR1(SF11,125kHz), 2：DR2(SF10,125kHz), 3：DR3(SF9,125kHz), 4：DR4(SF8,125kHz), 5：DR5(SF7,125kHz)
+					channels_settings_item.data_rate_max = extractBits(bitOptions, 4, 8);
+					// 0：DR0(SF12,125kHz), 1：DR1(SF11,125kHz), 2：DR2(SF10,125kHz), 3：DR3(SF9,125kHz), 4：DR4(SF8,125kHz), 5：DR5(SF7,125kHz)
+					channels_settings_item.data_rate_min = extractBits(bitOptions, 0, 4);
+				}
+				if (lorawan_configuration_settings_command == 0x02) {
+					// 0：disable, 1：enable
+					decoded.lorawan_configuration_settings.adr_mode = readUInt8(bytes, counterObj, 1);
+				}
+				if (lorawan_configuration_settings_command == 0xba) {
+					// 0：DR0(SF12,125kHz), 1：DR1(SF11,125kHz), 2：DR2(SF10,125kHz), 3：DR3(SF9,125kHz), 4：DR4(SF8,125kHz), 5：DR5(SF7,125kHz)
+					decoded.lorawan_configuration_settings.tx_data_rate = readUInt8(bytes, counterObj, 1);
+				}
+				if (lorawan_configuration_settings_command == 0x5b) {
+					// 0：TXPOWER0-16dBm, 1：TXPOWER1-14dBm, 2：TXPOWER2-12dBm, 3：TXPOWER3-10dBm, 4：TXPOWER4-8dBm, 5：TXPOWER5-6dBm, 6：TXPOWER6-4dBm, 7：TXPOWER7-2dBm
+					decoded.lorawan_configuration_settings.tx_power = readUInt8(bytes, counterObj, 1);
+				}
+				if (lorawan_configuration_settings_command == 0xbf) {
+					// 0：DR0(SF12,125kHz), 1：DR1(SF11,125kHz), 2：DR2(SF10,125kHz), 3：DR3(SF9,125kHz), 4：DR4(SF8,125kHz), 5：DR5(SF7,125kHz)
+					decoded.lorawan_configuration_settings.rx2_data_rate = readUInt8(bytes, counterObj, 1);
+				}
+				if (lorawan_configuration_settings_command == 0xbb) {
+					decoded.lorawan_configuration_settings.rx2_frequency = readUInt32LE(bytes, counterObj, 4) / 1000000;
+				}
+				if (lorawan_configuration_settings_command == 0xdd) {
+					// 0：1s, 1：2s, 2：4s, 3：8s, 4：16s, 5：32s, 6：64s, 7：128s
+					decoded.lorawan_configuration_settings.pingslot_periodicity = readUInt8(bytes, counterObj, 1);
+				}
+				if (lorawan_configuration_settings_command == 0x4b) {
+					decoded.lorawan_configuration_settings.rx1_open_delay = readUInt32LE(bytes, counterObj, 4) / 1000;
+				}
+				if (lorawan_configuration_settings_command == 0x4f) {
+					decoded.lorawan_configuration_settings.rx2_open_delay = readUInt32LE(bytes, counterObj, 4) / 1000;
+				}
+				if (lorawan_configuration_settings_command == 0x53) {
+					decoded.lorawan_configuration_settings.join_rx1_open_delay = readUInt32LE(bytes, counterObj, 4) / 1000;
+				}
+				if (lorawan_configuration_settings_command == 0x57) {
+					decoded.lorawan_configuration_settings.join_rx2_open_delay = readUInt32LE(bytes, counterObj, 4) / 1000;
+				}
+				if (lorawan_configuration_settings_command == 0xf9) {
+					decoded.lorawan_configuration_settings.multicast_group_settings = decoded.lorawan_configuration_settings.multicast_group_settings || {};
+					var lorawan_configuration_settings_multicast_group_settings_command = readUInt8(bytes, counterObj, 1);
+					if (lorawan_configuration_settings_multicast_group_settings_command == 0x0d) {
+						// 0：disable, 1：enable
+						decoded.lorawan_configuration_settings.multicast_group_settings.group_1_enable = readUInt8(bytes, counterObj, 1);
+					}
+					if (lorawan_configuration_settings_multicast_group_settings_command == 0x14) {
+						decoded.lorawan_configuration_settings.multicast_group_settings.group_1_devaddr = readHexString(bytes, counterObj, 4);
+					}
+					if (lorawan_configuration_settings_multicast_group_settings_command == 0x0e) {
+						// 0：1s, 1：2s, 2：4s, 3：8s, 4：16s, 5：32s, 6：64s, 7：128s
+						decoded.lorawan_configuration_settings.multicast_group_settings.group_1_pingslot_periodicity = readUInt8(bytes, counterObj, 1);
+					}
+					if (lorawan_configuration_settings_multicast_group_settings_command == 0x0f) {
+						// 0：DR0(SF12,125kHz), 1：DR1(SF11,125kHz), 2：DR2(SF10,125kHz), 3：DR3(SF9,125kHz), 4：DR4(SF8,125kHz), 5：DR5(SF7,125kHz)
+						decoded.lorawan_configuration_settings.multicast_group_settings.group_1_data_rate = readUInt8(bytes, counterObj, 1);
+					}
+					if (lorawan_configuration_settings_multicast_group_settings_command == 0x10) {
+						decoded.lorawan_configuration_settings.multicast_group_settings.group_1_frequency = readUInt32LE(bytes, counterObj, 4) / 1000000;
+					}
+					if (lorawan_configuration_settings_multicast_group_settings_command == 0x3a) {
+						// 0：disable, 1：enable
+						decoded.lorawan_configuration_settings.multicast_group_settings.group_2_enable = readUInt8(bytes, counterObj, 1);
+					}
+					if (lorawan_configuration_settings_multicast_group_settings_command == 0x41) {
+						decoded.lorawan_configuration_settings.multicast_group_settings.group_2_devaddr = readHexString(bytes, counterObj, 4);
+					}
+					if (lorawan_configuration_settings_multicast_group_settings_command == 0x3b) {
+						// 0：1s, 1：2s, 2：4s, 3：8s, 4：16s, 5：32s, 6：64s, 7：128s
+						decoded.lorawan_configuration_settings.multicast_group_settings.group_2_pingslot_periodicity = readUInt8(bytes, counterObj, 1);
+					}
+					if (lorawan_configuration_settings_multicast_group_settings_command == 0x3c) {
+						// 0：DR0(SF12,125kHz), 1：DR1(SF11,125kHz), 2：DR2(SF10,125kHz), 3：DR3(SF9,125kHz), 4：DR4(SF8,125kHz), 5：DR5(SF7,125kHz)
+						decoded.lorawan_configuration_settings.multicast_group_settings.group_2_data_rate = readUInt8(bytes, counterObj, 1);
+					}
+					if (lorawan_configuration_settings_multicast_group_settings_command == 0x3d) {
+						decoded.lorawan_configuration_settings.multicast_group_settings.group_2_frequency = readUInt32LE(bytes, counterObj, 4) / 1000000;
+					}
+					if (lorawan_configuration_settings_multicast_group_settings_command == 0x67) {
+						// 0：disable, 1：enable
+						decoded.lorawan_configuration_settings.multicast_group_settings.group_3_enable = readUInt8(bytes, counterObj, 1);
+					}
+					if (lorawan_configuration_settings_multicast_group_settings_command == 0x6e) {
+						decoded.lorawan_configuration_settings.multicast_group_settings.group_3_devaddr = readHexString(bytes, counterObj, 4);
+					}
+					if (lorawan_configuration_settings_multicast_group_settings_command == 0x68) {
+						// 0：1s, 1：2s, 2：4s, 3：8s, 4：16s, 5：32s, 6：64s, 7：128s
+						decoded.lorawan_configuration_settings.multicast_group_settings.group_3_pingslot_periodicity = readUInt8(bytes, counterObj, 1);
+					}
+					if (lorawan_configuration_settings_multicast_group_settings_command == 0x69) {
+						// 0：DR0(SF12,125kHz), 1：DR1(SF11,125kHz), 2：DR2(SF10,125kHz), 3：DR3(SF9,125kHz), 4：DR4(SF8,125kHz), 5：DR5(SF7,125kHz)
+						decoded.lorawan_configuration_settings.multicast_group_settings.group_3_data_rate = readUInt8(bytes, counterObj, 1);
+					}
+					if (lorawan_configuration_settings_multicast_group_settings_command == 0x6a) {
+						decoded.lorawan_configuration_settings.multicast_group_settings.group_3_frequency = readUInt32LE(bytes, counterObj, 4) / 1000000;
+					}
+					if (lorawan_configuration_settings_multicast_group_settings_command == 0x94) {
+						// 0：disable, 1：enable
+						decoded.lorawan_configuration_settings.multicast_group_settings.group_4_enable = readUInt8(bytes, counterObj, 1);
+					}
+					if (lorawan_configuration_settings_multicast_group_settings_command == 0x9b) {
+						decoded.lorawan_configuration_settings.multicast_group_settings.group_4_devaddr = readHexString(bytes, counterObj, 4);
+					}
+					if (lorawan_configuration_settings_multicast_group_settings_command == 0x95) {
+						// 0：1s, 1：2s, 2：4s, 3：8s, 4：16s, 5：32s, 6：64s, 7：128s
+						decoded.lorawan_configuration_settings.multicast_group_settings.group_4_pingslot_periodicity = readUInt8(bytes, counterObj, 1);
+					}
+					if (lorawan_configuration_settings_multicast_group_settings_command == 0x96) {
+						// 0：DR0(SF12,125kHz), 1：DR1(SF11,125kHz), 2：DR2(SF10,125kHz), 3：DR3(SF9,125kHz), 4：DR4(SF8,125kHz), 5：DR5(SF7,125kHz)
+						decoded.lorawan_configuration_settings.multicast_group_settings.group_4_data_rate = readUInt8(bytes, counterObj, 1);
+					}
+					if (lorawan_configuration_settings_multicast_group_settings_command == 0x97) {
+						decoded.lorawan_configuration_settings.multicast_group_settings.group_4_frequency = readUInt32LE(bytes, counterObj, 4) / 1000000;
+					}
+				}
+				if (lorawan_configuration_settings_command == 0xf6) {
+					// 0：disable, 1：enable
+					decoded.lorawan_configuration_settings.d2d_master_enable = readUInt8(bytes, counterObj, 1);
+				}
+				if (lorawan_configuration_settings_command == 0xf5) {
+					// 0：disable, 1：enable
+					decoded.lorawan_configuration_settings.d2d_slave_enable = readUInt8(bytes, counterObj, 1);
+				}
+				if (lorawan_configuration_settings_command == 0xc4) {
+					// 0：disable, 1：enable
+					decoded.lorawan_configuration_settings.duty_cycle_enable = readUInt8(bytes, counterObj, 1);
+				}
+				if (lorawan_configuration_settings_command == 0xc0) {
+					decoded.lorawan_configuration_settings.duty_cycle = readUInt32LE(bytes, counterObj, 4);
 				}
 				break;
 			case 0xdf:
@@ -996,7 +1185,70 @@ function cmdMap() {
 		  "ef": "request_command_queries",
 		  "ee": "all_configurations_request_by_device",
 		  "cf": "lorawan_configuration_settings",
+		  "cf0b": "lorawan_configuration_settings.deveui",
+		  "cf13": "lorawan_configuration_settings.appeui",
+		  "cf03": "lorawan_configuration_settings.netid",
+		  "cf5c": "lorawan_configuration_settings.app_port",
+		  "cfd8": "lorawan_configuration_settings.version",
 		  "cf00": "lorawan_configuration_settings.mode",
+		  "cf5d": "lorawan_configuration_settings.confirmed_mode",
+		  "cfc6": "lorawan_configuration_settings.ack_retry_times",
+		  "cf01": "lorawan_configuration_settings.join_type",
+		  "cf3b": "lorawan_configuration_settings.appkey",
+		  "cf1b": "lorawan_configuration_settings.nwkskey",
+		  "cf2b": "lorawan_configuration_settings.appskey",
+		  "cf07": "lorawan_configuration_settings.devaddr",
+		  "cfda": "lorawan_configuration_settings.rejoin_mode_enable",
+		  "cfd9": "lorawan_configuration_settings.number_of_link_detection_signals",
+		  "cfcd": "lorawan_configuration_settings.frequency_band",
+		  "cfdc": "lorawan_configuration_settings.AS923_frequency_band_in_use",
+		  "cf5e": "lorawan_configuration_settings.channel_mask",
+		  "cf6a": "lorawan_configuration_settings.channels_settings",
+		  "cf6axx": "lorawan_configuration_settings.channels_settings._item",
+		  "cf02": "lorawan_configuration_settings.adr_mode",
+		  "cfba": "lorawan_configuration_settings.tx_data_rate",
+		  "cf5b": "lorawan_configuration_settings.tx_power",
+		  "cfbf": "lorawan_configuration_settings.rx2_data_rate",
+		  "cfbb": "lorawan_configuration_settings.rx2_frequency",
+		  "cfdd": "lorawan_configuration_settings.pingslot_periodicity",
+		  "cf4b": "lorawan_configuration_settings.rx1_open_delay",
+		  "cf4f": "lorawan_configuration_settings.rx2_open_delay",
+		  "cf53": "lorawan_configuration_settings.join_rx1_open_delay",
+		  "cf57": "lorawan_configuration_settings.join_rx2_open_delay",
+		  "cff9": "lorawan_configuration_settings.multicast_group_settings",
+		  "cff90d": "lorawan_configuration_settings.multicast_group_settings.group_1_enable",
+		  "cff914": "lorawan_configuration_settings.multicast_group_settings.group_1_devaddr",
+		  "cff928": "lorawan_configuration_settings.multicast_group_settings.group_1_appskey",
+		  "cff918": "lorawan_configuration_settings.multicast_group_settings.group_1_nwkskey",
+		  "cff90e": "lorawan_configuration_settings.multicast_group_settings.group_1_pingslot_periodicity",
+		  "cff90f": "lorawan_configuration_settings.multicast_group_settings.group_1_data_rate",
+		  "cff910": "lorawan_configuration_settings.multicast_group_settings.group_1_frequency",
+		  "cff93a": "lorawan_configuration_settings.multicast_group_settings.group_2_enable",
+		  "cff941": "lorawan_configuration_settings.multicast_group_settings.group_2_devaddr",
+		  "cff955": "lorawan_configuration_settings.multicast_group_settings.group_2_appskey",
+		  "cff945": "lorawan_configuration_settings.multicast_group_settings.group_2_nwkskey",
+		  "cff93b": "lorawan_configuration_settings.multicast_group_settings.group_2_pingslot_periodicity",
+		  "cff93c": "lorawan_configuration_settings.multicast_group_settings.group_2_data_rate",
+		  "cff93d": "lorawan_configuration_settings.multicast_group_settings.group_2_frequency",
+		  "cff967": "lorawan_configuration_settings.multicast_group_settings.group_3_enable",
+		  "cff96e": "lorawan_configuration_settings.multicast_group_settings.group_3_devaddr",
+		  "cff982": "lorawan_configuration_settings.multicast_group_settings.group_3_appskey",
+		  "cff972": "lorawan_configuration_settings.multicast_group_settings.group_3_nwkskey",
+		  "cff968": "lorawan_configuration_settings.multicast_group_settings.group_3_pingslot_periodicity",
+		  "cff969": "lorawan_configuration_settings.multicast_group_settings.group_3_data_rate",
+		  "cff96a": "lorawan_configuration_settings.multicast_group_settings.group_3_frequency",
+		  "cff994": "lorawan_configuration_settings.multicast_group_settings.group_4_enable",
+		  "cff99b": "lorawan_configuration_settings.multicast_group_settings.group_4_devaddr",
+		  "cff9af": "lorawan_configuration_settings.multicast_group_settings.group_4_appskey",
+		  "cff99f": "lorawan_configuration_settings.multicast_group_settings.group_4_nwkskey",
+		  "cff995": "lorawan_configuration_settings.multicast_group_settings.group_4_pingslot_periodicity",
+		  "cff996": "lorawan_configuration_settings.multicast_group_settings.group_4_data_rate",
+		  "cff997": "lorawan_configuration_settings.multicast_group_settings.group_4_frequency",
+		  "cfe0": "lorawan_configuration_settings.d2d_key",
+		  "cff6": "lorawan_configuration_settings.d2d_master_enable",
+		  "cff5": "lorawan_configuration_settings.d2d_slave_enable",
+		  "cfc4": "lorawan_configuration_settings.duty_cycle_enable",
+		  "cfc0": "lorawan_configuration_settings.duty_cycle",
 		  "df": "tsl_version",
 		  "db": "product_sn",
 		  "da": "version",

@@ -12,7 +12,76 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | :------ | :--: | :----: | :--------: | :-----: | :---: | :--: |
 | LoRaWAN  Settings | 0xCF | 1 | rw |  |  |  |
 | LoRaWAN Comand | 0xCF | 2 | rw |  |  |  |
+| Device EUI | 0xCF | 9 | r |  |  |  |
+| APP EUI | 0xCF | 9 | rw | 24e124c0002a0001 |  |  |
+| Network ID | 0xCF | 4 | rw | 10203 |  |  |
+| Application Port | 0xCF | 2 | rw | 85 | 1 - 223 |  |
+| LoRaWAN Version | 0xCF | 2 | rw | 2 |  | 1：1.0.2<br>2：1.0.3<br>3：1.0.3<br>4：1.0.4 |
 | LoRaWAN Work Mode | 0xCF | 2 | rw | 0 |  | 0:ClassA<br>1:ClassB<br>2:ClassC<br>3:ClassC to B |
+| Confirmed Mode | 0xCF | 2 | rw | 0 |  | 0：disable<br>1：enable |
+| ACK | 0xCF | 2 | rw | 1 | 1 - 15 |  |
+| Join Type | 0xCF | 2 | rw | 1 |  | 0：ABP<br>1：OTAA |
+| Application Key | 0xCF | 17 | w | 5572404c696e6b4c6f52613230313823 |  |  |
+| Network Session Key | 0xCF | 17 | w | 5572404c696e6b4c6f52613230313823 |  |  |
+| Application Session Key | 0xCF | 17 | w | 5572404c696e6b4c6f52613230313823 |  |  |
+| Device Address | 0xCF | 5 | rw |  |  |  |
+| Rejoin Mode  | 0xCF | 2 | rw | 1 |  | 0：disable<br>1：enable |
+| Set the number of detection signals  sent | 0xCF | 2 | rw | 32 | 4 - 32 |  |
+| Frequency Band | 0xCF | 2 | rw | 0 |  | 0：CN470<br>2：AS923<br>3：AU915<br>4：EU868<br>5：KR920<br>6：IN865<br>7：US915<br>10：RU864 |
+| Channel Plan | 0xCF | 2 | rw | 0 |  | 0：AS923-1<br>1：AS923-2<br>2：AS923-3<br>3：AS923-4 |
+| Channel Mask | 0xCF | 13 | rw | 00000000000000000000ff00 |  |  |
+| Channel Settings | 0xCF | 8 | rw |  |  |  |
+| Channel | 0xCF | 8 | rw |  |  |  |
+| Number | 0xCF | 2 | rw | 1 | 1 - 8 |  |
+| Enable | 0xCF | 2 | rw | 1 |  | 0：disable<br>1：enable |
+| Frequency | 0xCF | 5 | rw | 868.3 |  |  |
+| Max Data Rate | 0xCF | 2 | rw | 5 |  | 0：DR0(SF12<br>125kHz)<br>1：DR1(SF11<br>125kHz)<br>2：DR2(SF10<br>125kHz)<br>3：DR3(SF9<br>125kHz)<br>4：DR4(SF8<br>125kHz)<br>5：DR5(SF7<br>125kHz) |
+| Min Data Rate | 0xCF | 2 | rw | 0 |  | 0：DR0(SF12<br>125kHz)<br>1：DR1(SF11<br>125kHz)<br>2：DR2(SF10<br>125kHz)<br>3：DR3(SF9<br>125kHz)<br>4：DR4(SF8<br>125kHz)<br>5：DR5(SF7<br>125kHz) |
+| ADR Mode | 0xCF | 2 | rw | 1 |  | 0：disable<br>1：enable |
+| TX Data Rate | 0xCF | 2 | rw | 2 |  | 0：DR0(SF12<br>125kHz)<br>1：DR1(SF11<br>125kHz)<br>2：DR2(SF10<br>125kHz)<br>3：DR3(SF9<br>125kHz)<br>4：DR4(SF8<br>125kHz)<br>5：DR5(SF7<br>125kHz) |
+| TX Power | 0xCF | 2 | rw | 0 |  | 0：TXPOWER0-16dBm<br>1：TXPOWER1-14dBm<br>2：TXPOWER2-12dBm<br>3：TXPOWER3-10dBm<br>4：TXPOWER4-8dBm<br>5：TXPOWER5-6dBm<br>6：TXPOWER6-4dBm<br>7：TXPOWER7-2dBm |
+| RX2 Data Rate | 0xCF | 2 | rw | 0 |  | 0：DR0(SF12<br>125kHz)<br>1：DR1(SF11<br>125kHz)<br>2：DR2(SF10<br>125kHz)<br>3：DR3(SF9<br>125kHz)<br>4：DR4(SF8<br>125kHz)<br>5：DR5(SF7<br>125kHz) |
+| RX2 Frequency | 0xCF | 5 | rw | 869.525 |  |  |
+| Ping Slot Periodicity | 0xCF | 2 | rw | 2 |  | 0：1s<br>1：2s<br>2：4s<br>3：8s<br>4：16s<br>5：32s<br>6：64s<br>7：128s |
+| RX1 Open Delay Time | 0xCF | 5 | rw | 1 | 1 - 60 |  |
+| RX2 Open Delay Time | 0xCF | 5 | rw | 2 | 1 - 60 |  |
+| Join RX1 Open Delay Time | 0xCF | 5 | rw | 5 | 1 - 60 |  |
+| Join RX2 Open Delay Time | 0xCF | 5 | rw | 6 | 1 - 60 |  |
+| Multicast Group Settings | 0xCF | 1 | rw |  |  |  |
+| Multicast Comand | 0xCF | 2 | rw |  |  |  |
+| Multicast Group 1 Enable | 0xCF | 2 | rw | 0 |  | 0：disable<br>1：enable |
+| Multicast Address | 0xCF | 5 | rw | 11111111 |  |  |
+| McAppSKey | 0xCF | 17 | w | 5572404c696e6b4c6f52613230313823 |  |  |
+| McNetSKey | 0xCF | 17 | w | 5572404c696e6b4c6f52613230313823 |  |  |
+| Multicast Ping Slot Periodicity | 0xCF | 2 | rw | 2 |  | 0：1s<br>1：2s<br>2：4s<br>3：8s<br>4：16s<br>5：32s<br>6：64s<br>7：128s |
+| Multicast Data Rate | 0xCF | 2 | rw | 2 |  | 0：DR0(SF12<br>125kHz)<br>1：DR1(SF11<br>125kHz)<br>2：DR2(SF10<br>125kHz)<br>3：DR3(SF9<br>125kHz)<br>4：DR4(SF8<br>125kHz)<br>5：DR5(SF7<br>125kHz) |
+| Multicast Frequency | 0xCF | 5 | rw | 869.525 |  |  |
+| Multicast Group 2 Enable | 0xCF | 2 | rw | 0 |  | 0：disable<br>1：enable |
+| Multicast Address | 0xCF | 5 | rw | 22222222 |  |  |
+| McAppSKey | 0xCF | 17 | w | 5572404c696e6b4c6f52613230313824 |  |  |
+| McNetSKey | 0xCF | 17 | w | 5572404c696e6b4c6f52613230313824 |  |  |
+| Ping Slot Periodicity | 0xCF | 2 | rw | 2 |  | 0：1s<br>1：2s<br>2：4s<br>3：8s<br>4：16s<br>5：32s<br>6：64s<br>7：128s |
+| Multicast Data Rate | 0xCF | 2 | rw | 2 |  | 0：DR0(SF12<br>125kHz)<br>1：DR1(SF11<br>125kHz)<br>2：DR2(SF10<br>125kHz)<br>3：DR3(SF9<br>125kHz)<br>4：DR4(SF8<br>125kHz)<br>5：DR5(SF7<br>125kHz) |
+| Multicast Frequency | 0xCF | 5 | rw | 869.525 |  |  |
+| Multicast Group 3 Enable | 0xCF | 2 | rw | 0 |  | 0：disable<br>1：enable |
+| Multicast Address | 0xCF | 5 | rw | 33333333 |  |  |
+| McAppSKey | 0xCF | 17 | w | 5572404c696e6b4c6f52613230313825 |  |  |
+| McNetSKey | 0xCF | 17 | w | 5572404c696e6b4c6f52613230313825 |  |  |
+| Ping Slot Periodicity | 0xCF | 2 | rw | 2 |  | 0：1s<br>1：2s<br>2：4s<br>3：8s<br>4：16s<br>5：32s<br>6：64s<br>7：128s |
+| Multicast Data Rate | 0xCF | 2 | rw | 2 |  | 0：DR0(SF12<br>125kHz)<br>1：DR1(SF11<br>125kHz)<br>2：DR2(SF10<br>125kHz)<br>3：DR3(SF9<br>125kHz)<br>4：DR4(SF8<br>125kHz)<br>5：DR5(SF7<br>125kHz) |
+| Multicast Frequency | 0xCF | 5 | rw | 869.525 |  |  |
+| Multicast Group 4 Enable | 0xCF | 2 | rw | 0 |  | 0：disable<br>1：enable |
+| Multicast Address | 0xCF | 5 | rw | 44444444 |  |  |
+| McAppSKey | 0xCF | 17 | w | 5572404c696e6b4c6f52613230313826 |  |  |
+| McNetSKey | 0xCF | 17 | w | 5572404c696e6b4c6f52613230313826 |  |  |
+| Ping Slot Periodicity | 0xCF | 2 | rw | 2 |  | 0：1s<br>1：2s<br>2：4s<br>3：8s<br>4：16s<br>5：32s<br>6：64s<br>7：128s |
+| Multicast Data Rate | 0xCF | 2 | rw | 2 |  | 0：DR0(SF12<br>125kHz)<br>1：DR1(SF11<br>125kHz)<br>2：DR2(SF10<br>125kHz)<br>3：DR3(SF9<br>125kHz)<br>4：DR4(SF8<br>125kHz)<br>5：DR5(SF7<br>125kHz) |
+| Multicast Frequency | 0xCF | 5 | rw | 869.525 |  |  |
+| D2D Key | 0xCF | 17 | w | 5572404c696e6b4c6f52613230313823 |  |  |
+| D2D Controller Enable | 0xCF | 2 | rw | 0 |  | 0：disable<br>1：enable |
+| D2D Agent Enable | 0xCF | 2 | rw | 0 |  | 0：disable<br>1：enable |
+| Duty Cycle Enable | 0xCF | 2 | rw | 0 |  | 0：disable<br>1：enable |
+| Duty cycle | 0xCF | 5 | rw | 0 |  |  |
 | TSL Version | 0xDF | 3 | r |  |  |  |
 | SN | 0xDB | 9 | r |  |  |  |
 | Product Version | 0xDA | 9 | r |  |  |  |
