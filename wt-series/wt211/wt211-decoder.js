@@ -1691,64 +1691,84 @@ function isInteger(str) {
 function processTemperature(decoded) {
 	var allTemperatureProperties = {
         "ambient_temperature": {
-            "precision": 1
+            "precision": 1,
+            "constant": 32
         },
         "temperature_control_delta1": {
-            "precision": 1
+            "precision": 1,
+            "constant": 0
         },
         "temperature_control_delta2": {
-            "precision": 1
+            "precision": 1,
+            "constant": 0
         },
         "target_deadband": {
-            "precision": 1
+            "precision": 1,
+            "constant": 0
         },
         "occupied_cooling_setpoint": {
-            "precision": 1
+            "precision": 1,
+            "constant": 32
         },
         "occupied_heating_setpoint": {
-            "precision": 1
+            "precision": 1,
+            "constant": 32
         },
         "unoccupied_cooling_setpoint": {
-            "precision": 1
+            "precision": 1,
+            "constant": 32
         },
         "unoccupied_heating_setpoint": {
-            "precision": 1
+            "precision": 1,
+            "constant": 32
         },
         "cooling_setpoint": {
-            "precision": 1
+            "precision": 1,
+            "constant": 32
         },
         "heating_setpoint": {
-            "precision": 1
+            "precision": 1,
+            "constant": 32
         },
         "occupied_cooling_setpoint_tolerance": {
-            "precision": 1
+            "precision": 1,
+            "constant": 0
         },
         "occupied_heating_setpoint_tolerance": {
-            "precision": 1
+            "precision": 1,
+            "constant": 0
         },
         "unoccupied_cooling_setpoint_tolerance": {
-            "precision": 1
+            "precision": 1,
+            "constant": 0
         },
         "unoccupied_heating_setpoint_tolerance": {
-            "precision": 1
+            "precision": 1,
+            "constant": 0
         },
         "cooling_setpoint_tolerance": {
-            "precision": 1
+            "precision": 1,
+            "constant": 0
         },
         "heating_setpoint_tolerance": {
-            "precision": 1
+            "precision": 1,
+            "constant": 0
         },
         "center_cool_temp": {
-            "precision": 1
+            "precision": 1,
+            "constant": 32
         },
         "center_heat_temp": {
-            "precision": 1
+            "precision": 1,
+            "constant": 32
         },
         "cooling_adjust_tolerance": {
-            "precision": 1
+            "precision": 1,
+            "constant": 0
         },
         "heating_adjust_tolerance": {
-            "precision": 1
+            "precision": 1,
+            "constant": 0
         }
     };
 	var leafPaths = getAllLeafPaths(decoded);
@@ -1772,9 +1792,11 @@ function processTemperature(decoded) {
 		if (allTemperatureProperties[newPropertyId]) {
 			var fahrenheitProperty = convertName(propertyId, 'fahrenheit');
 			var celsiusProperty = convertName(propertyId, 'celsius');
+            var precision = allTemperatureProperties[newPropertyId].precision;
+            var constant = allTemperatureProperties[newPropertyId].constant;
 			if (hasPath(decoded, propertyId)) {
-				setPath(decoded, fahrenheitProperty,  Number((getPath(decoded, propertyId) * 1.8 + 32).toFixed(allTemperatureProperties[newPropertyId].precision)));
-				setPath(decoded, celsiusProperty,  Number(getPath(decoded, propertyId).toFixed(allTemperatureProperties[newPropertyId].precision)));
+				setPath(decoded, fahrenheitProperty,  Number((getPath(decoded, propertyId) * 1.8 + constant).toFixed(precision)));
+				setPath(decoded, celsiusProperty,  Number(getPath(decoded, propertyId).toFixed(precision)));
 			}
 		}	
 	}	

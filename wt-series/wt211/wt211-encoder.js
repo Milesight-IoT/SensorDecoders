@@ -2768,61 +2768,80 @@ function isInteger(str) {
 function processTemperature(payload) {
 	var allTemperatureProperties = {
         "temperature_control_delta1": {
-            "coefficient": 0.1
+            "coefficient": 0.1,
+            "constant": 0
         },
         "temperature_control_delta2": {
-            "coefficient": 0.1
+            "coefficient": 0.1,
+            "constant": 0
         },
         "target_deadband": {
-            "coefficient": 0.1
+            "coefficient": 0.1,
+            "constant": 0
         },
         "occupied_cooling_setpoint": {
-            "coefficient": 0.1
+            "coefficient": 0.1,
+            "constant": 32
         },
         "occupied_heating_setpoint": {
-            "coefficient": 0.1
+            "coefficient": 0.1,
+            "constant": 32
         },
         "unoccupied_cooling_setpoint": {
-            "coefficient": 0.1
+            "coefficient": 0.1,
+            "constant": 32
         },
         "unoccupied_heating_setpoint": {
-            "coefficient": 0.1
+            "coefficient": 0.1,
+            "constant": 32
         },
         "cooling_setpoint": {
-            "coefficient": 0.1
+            "coefficient": 0.1,
+            "constant": 32
         },
         "heating_setpoint": {
-            "coefficient": 0.1
+            "coefficient": 0.1,
+            "constant": 32
         },
         "occupied_cooling_setpoint_tolerance": {
-            "coefficient": 0.1
+            "coefficient": 0.1,
+            "constant": 0
         },
         "occupied_heating_setpoint_tolerance": {
-            "coefficient": 0.1
+            "coefficient": 0.1,
+            "constant": 0
         },
         "unoccupied_cooling_setpoint_tolerance": {
-            "coefficient": 0.1
+            "coefficient": 0.1,
+            "constant": 0
         },
         "unoccupied_heating_setpoint_tolerance": {
-            "coefficient": 0.1
+            "coefficient": 0.1,
+            "constant": 0
         },
         "cooling_setpoint_tolerance": {
-            "coefficient": 0.1
+            "coefficient": 0.1,
+            "constant": 0
         },
         "heating_setpoint_tolerance": {
-            "coefficient": 0.1
+            "coefficient": 0.1,
+            "constant": 0
         },
         "center_cool_temp": {
-            "coefficient": 0.1
+            "coefficient": 0.1,
+            "constant": 32
         },
         "center_heat_temp": {
-            "coefficient": 0.1
+            "coefficient": 0.1,
+            "constant": 32
         },
         "cooling_adjust_tolerance": {
-            "coefficient": 0.1
+            "coefficient": 0.1,
+            "constant": 0
         },
         "heating_adjust_tolerance": {
-            "coefficient": 0.1
+            "coefficient": 0.1,
+            "constant": 0
         }
     };
     var leafPaths = getAllLeafPaths(payload);    
@@ -2847,6 +2866,7 @@ function processTemperature(payload) {
             var fahrenheitProperty = convertName(propertyId, 'fahrenheit');
             var celsiusProperty = convertName(propertyId, 'celsius');
             var stringCoefficient = String(allTemperatureProperties[newPropertyId].coefficient);
+            var constant = allTemperatureProperties[newPropertyId].constant;
             var dotIndex = stringCoefficient.indexOf('.');
             var precision = dotIndex != -1 ? stringCoefficient.length - dotIndex - 1 : 0;
             if (!hasPath(payload, propertyId)) {
@@ -2854,7 +2874,7 @@ function processTemperature(payload) {
                     throw new Error(fahrenheitProperty + ' and ' + celsiusProperty + ' cannot be in payload at the same time');
                 }
                 if (hasPath(payload, fahrenheitProperty)) {
-                    setPath(payload, propertyId, Number(((getPath(payload, fahrenheitProperty) - 32) / 1.8).toFixed(precision)));
+                    setPath(payload, propertyId, Number(((getPath(payload, fahrenheitProperty) - constant) / 1.8).toFixed(precision)));
                 } else if (hasPath(payload, celsiusProperty)) {
                     setPath(payload, propertyId, Number(getPath(payload, celsiusProperty).toFixed(precision)));
                 }
