@@ -44,9 +44,6 @@ function milesightDeviceDecode(bytes) {
 					case 0x01:
 						decoded.ipso_version = readUInt8(bytes, counterObj, 1);
 						break;
-					case 0x08:
-						decoded.sn = readHexString(bytes, counterObj, 6);
-						break;
 					case 0x16:
 						decoded.sn = readHexString(bytes, counterObj, 8);
 						break;
