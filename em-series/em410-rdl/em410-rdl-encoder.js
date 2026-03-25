@@ -162,7 +162,7 @@ function reportStatus(report_status) {
     if (getValue(yes_no_map, report_status) === 0) {
         return [];
     }
-    return [0xff, 0x28, 0x01];
+    return [0xff, 0x28, 0x02];
 }
 
 /**
