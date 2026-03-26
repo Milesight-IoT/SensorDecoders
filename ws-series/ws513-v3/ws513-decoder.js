@@ -313,7 +313,7 @@ function milesightDeviceDecode(bytes) {
 						decoded.alarm_settings.alarm_interval = readUInt16LE(bytes, counterObj, 2) / 1;
 						decoded.alarm_settings.alarm_count = readUInt16LE(bytes, counterObj, 2) / 1;
 						// 0: Disable;, 1: Enable;
-						decoded.alarm_settings.release_eanble = readUInt8(bytes, counterObj, 1);
+						decoded.alarm_settings.release_enable = readUInt8(bytes, counterObj, 1);
 						break;
 					case 0x64:
 						decoded.schedule_settings = decoded.schedule_settings || [];

@@ -449,7 +449,7 @@ function milesightDeviceEncode(payload) {
 		}
 		buffer.writeUInt16LE(payload.alarm_settings.alarm_count * 1);
 		// 0: Disable;, 1: Enable;
-		buffer.writeUInt8(payload.alarm_settings.release_eanble);
+		buffer.writeUInt8(payload.alarm_settings.release_enable);
 		encoded = encoded.concat(buffer.toBytes());
 	}
 	//0xf9_0x64

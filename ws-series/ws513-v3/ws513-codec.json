@@ -18,7 +18,7 @@
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": [
                 "alarm_settings.alarm_interval",
-                "alarm_settings.release_eanble"
+                "alarm_settings.release_enable"
             ]
         },
         {
@@ -38,11 +38,11 @@
             "bacnet_unit_type": "UNITS_MINUTES",
             "reference": [
                 "alarm_settings.alarm_count",
-                "alarm_settings.release_eanble"
+                "alarm_settings.release_enable"
             ]
         },
         {
-            "id": "alarm_settings.release_eanble",
+            "id": "alarm_settings.release_enable",
             "name": "Alarm Dismiss Report Enable(Threshold Settings)",
             "value": "0",
             "unit": "",
