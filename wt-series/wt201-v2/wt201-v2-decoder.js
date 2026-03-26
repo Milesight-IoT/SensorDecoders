@@ -986,6 +986,34 @@ function handle_downlink_response_ext(code, channel_type, bytes, offset) {
             decoded.cooling_stage3 = readTemperatureControlStage(readUInt8(bytes[offset]));
             offset += 1;
             break;
+        case 0x90:
+            decoded.screen_display_enable = readEnableStatus(readUInt8(bytes[offset]));
+            offset += 1;
+            break;
+        case 0x91:
+            decoded.screen_time_enable = readEnableStatus(readUInt8(bytes[offset]));
+            offset += 1;
+            break;
+        case 0x92:
+            decoded.screen_target_enable = readEnableStatus(readUInt8(bytes[offset]));
+            offset += 1;
+            break;
+        case 0x93:
+            decoded.screen_temp_enable = readEnableStatus(readUInt8(bytes[offset]));
+            offset += 1;
+            break;
+        case 0x94:
+            decoded.screen_humi_enable = readEnableStatus(readUInt8(bytes[offset]));
+            offset += 1;
+            break;
+        case 0x95:
+            decoded.screen_plan_enable = readEnableStatus(readUInt8(bytes[offset]));
+            offset += 1;
+            break;
+        case 0x96:
+            decoded.screen_target_others_enable = readEnableStatus(readUInt8(bytes[offset]));
+            offset += 1;
+            break;
         default:
             throw new Error("unknown downlink response");
     }
