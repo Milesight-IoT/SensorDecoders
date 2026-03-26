@@ -370,6 +370,27 @@ function milesightDeviceEncode(payload) {
     if ("cooling_stage3" in payload) {
         encoded = encoded.concat(setTemperatureControlStage(payload.cooling_stage3, "cooling_stage3", 0x89));
     }
+    if ("screen_display_enable" in payload) {
+        encoded = encoded.concat(setEnableStatus(payload.screen_display_enable, "screen_display_enable", 0x90));
+    }
+    if ("screen_time_enable" in payload) {
+        encoded = encoded.concat(setEnableStatus(payload.screen_time_enable, "screen_time_enable", 0x91));
+    }
+    if ("screen_target_enable" in payload) {
+        encoded = encoded.concat(setEnableStatus(payload.screen_target_enable, "screen_target_enable", 0x92));
+    }
+    if ("screen_temp_enable" in payload) {
+        encoded = encoded.concat(setEnableStatus(payload.screen_temp_enable, "screen_temp_enable", 0x93));
+    }
+    if ("screen_humi_enable" in payload) {
+        encoded = encoded.concat(setEnableStatus(payload.screen_humi_enable, "screen_humi_enable", 0x94));
+    }
+    if ("screen_plan_enable" in payload) {
+        encoded = encoded.concat(setEnableStatus(payload.screen_plan_enable, "screen_plan_enable", 0x95));
+    }
+    if ("screen_target_others_enable" in payload) {
+        encoded = encoded.concat(setEnableStatus(payload.screen_target_others_enable, "screen_target_others_enable", 0x96));
+    }
 
     return encoded;
 }
