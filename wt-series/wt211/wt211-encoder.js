@@ -257,10 +257,10 @@ function milesightDeviceEncode(payload) {
         encoded = encoded.concat(setTemporaryUnlockSettings(payload.temporary_unlock_settings));
     }
     if ("temperature_control_delta1" in payload) {
-        encoded = encoded.concat(setTemperatureSettingValue(payload.temperature_control_delta1, [1, 10], "temperature_control_delta1", 0x23));
+        encoded = encoded.concat(setTemperatureSettingUInt8Value(payload.temperature_control_delta1, [1, 10], "temperature_control_delta1", 0x23));
     }
     if ("temperature_control_delta2" in payload) {
-        encoded = encoded.concat(setTemperatureSettingValue(payload.temperature_control_delta2, [1, 10], "temperature_control_delta2", 0x24));
+        encoded = encoded.concat(setTemperatureSettingUInt8Value(payload.temperature_control_delta2, [1, 10], "temperature_control_delta2", 0x24));
     }
     if ("occupied_mode" in payload) {
         encoded = encoded.concat(setOccupiedMode(payload.occupied_mode));
@@ -290,58 +290,61 @@ function milesightDeviceEncode(payload) {
         encoded = encoded.concat(setEnableStatus(payload.children_locks_enable, "children_locks_enable", 0x31));
     }
     if ("target_deadband" in payload) {
-        encoded = encoded.concat(setTemperatureSettingValue(payload.target_deadband, [1, 10], "target_deadband", 0x32));
+        encoded = encoded.concat(setTemperatureSettingUInt8Value(payload.target_deadband, [1, 10], "target_deadband", 0x32));
     }
     if ("sharing_mode_enable" in payload) {
         encoded = encoded.concat(setEnableStatus(payload.sharing_mode_enable, "sharing_mode_enable", 0x33));
     }
     if ("occupied_cooling_setpoint" in payload) {
-        encoded = encoded.concat(setTemperatureSettingValue(payload.occupied_cooling_setpoint, [5, 35], "occupied_cooling_setpoint", 0x64));
+        encoded = encoded.concat(setTemperatureSettingUInt16LEValue(payload.occupied_cooling_setpoint, [5, 35], "occupied_cooling_setpoint", 0x64));
     }
     if ("occupied_heating_setpoint" in payload) {
-        encoded = encoded.concat(setTemperatureSettingValue(payload.occupied_heating_setpoint, [5, 35], "occupied_heating_setpoint", 0x65));
+        encoded = encoded.concat(setTemperatureSettingUInt16LEValue(payload.occupied_heating_setpoint, [5, 35], "occupied_heating_setpoint", 0x65));
     }
     if ("unoccupied_cooling_setpoint" in payload) {
-        encoded = encoded.concat(setTemperatureSettingValue(payload.unoccupied_cooling_setpoint, [5, 35], "unoccupied_cooling_setpoint", 0x66));
+        encoded = encoded.concat(setTemperatureSettingUInt16LEValue(payload.unoccupied_cooling_setpoint, [5, 35], "unoccupied_cooling_setpoint", 0x66));
     }
     if ("unoccupied_heating_setpoint" in payload) {
-        encoded = encoded.concat(setTemperatureSettingValue(payload.unoccupied_heating_setpoint, [5, 35], "unoccupied_heating_setpoint", 0x67));
+        encoded = encoded.concat(setTemperatureSettingUInt16LEValue(payload.unoccupied_heating_setpoint, [5, 35], "unoccupied_heating_setpoint", 0x67));
     }
     if ("cooling_setpoint" in payload) {
-        encoded = encoded.concat(setTemperatureSettingValue(payload.cooling_setpoint, [5, 35], "cooling_setpoint", 0x68));
+        encoded = encoded.concat(setTemperatureSettingUInt16LEValue(payload.cooling_setpoint, [5, 35], "cooling_setpoint", 0x68));
     }
     if ("heating_setpoint" in payload) {
-        encoded = encoded.concat(setTemperatureSettingValue(payload.heating_setpoint, [5, 35], "heating_setpoint", 0x69));
+        encoded = encoded.concat(setTemperatureSettingUInt16LEValue(payload.heating_setpoint, [5, 35], "heating_setpoint", 0x69));
     }
     if ("occupied_cooling_setpoint_tolerance" in payload) {
-        encoded = encoded.concat(setTemperatureSettingValue(payload.occupied_cooling_setpoint_tolerance, [0.1, 5], "occupied_cooling_setpoint_tolerance", 0x6a));
+        encoded = encoded.concat(setTemperatureSettingUInt8Value(payload.occupied_cooling_setpoint_tolerance, [0.1, 5], "occupied_cooling_setpoint_tolerance", 0x6a));
     }
     if ("occupied_heating_setpoint_tolerance" in payload) {
-        encoded = encoded.concat(setTemperatureSettingValue(payload.occupied_heating_setpoint_tolerance, [0.1, 5], "occupied_heating_setpoint_tolerance", 0x6b));
+        encoded = encoded.concat(setTemperatureSettingUInt8Value(payload.occupied_heating_setpoint_tolerance, [0.1, 5], "occupied_heating_setpoint_tolerance", 0x6b));
     }
     if ("unoccupied_cooling_setpoint_tolerance" in payload) {
-        encoded = encoded.concat(setTemperatureSettingValue(payload.unoccupied_cooling_setpoint_tolerance, [0.1, 5], "unoccupied_cooling_setpoint_tolerance", 0x6c));
+        encoded = encoded.concat(setTemperatureSettingUInt8Value(payload.unoccupied_cooling_setpoint_tolerance, [0.1, 5], "unoccupied_cooling_setpoint_tolerance", 0x6c));
     }
     if ("unoccupied_heating_setpoint_tolerance" in payload) {
-        encoded = encoded.concat(setTemperatureSettingValue(payload.unoccupied_heating_setpoint_tolerance, [0.1, 5], "unoccupied_heating_setpoint_tolerance", 0x6d));
+        encoded = encoded.concat(setTemperatureSettingUInt8Value(payload.unoccupied_heating_setpoint_tolerance, [0.1, 5], "unoccupied_heating_setpoint_tolerance", 0x6d));
     }
     if ("cooling_setpoint_tolerance" in payload) {
-        encoded = encoded.concat(setTemperatureSettingValue(payload.cooling_setpoint_tolerance, [0.1, 5], "cooling_setpoint_tolerance", 0x6e));
+        encoded = encoded.concat(setTemperatureSettingUInt8Value(payload.cooling_setpoint_tolerance, [0.1, 5], "cooling_setpoint_tolerance", 0x6e));
     }
     if ("heating_setpoint_tolerance" in payload) {
-        encoded = encoded.concat(setTemperatureSettingValue(payload.heating_setpoint_tolerance, [0.1, 5], "heating_setpoint_tolerance", 0x6f));
+        encoded = encoded.concat(setTemperatureSettingUInt8Value(payload.heating_setpoint_tolerance, [0.1, 5], "heating_setpoint_tolerance", 0x6f));
     }
     if ("center_cool_temp" in payload) {
-        encoded = encoded.concat(setTemperatureSettingValue(payload.center_cool_temp, [5, 35], "center_cool_temp", 0x72));
+        encoded = encoded.concat(setTemperatureSettingUInt16LEValue(payload.center_cool_temp, [5, 35], "center_cool_temp", 0x72));
     }
     if ("center_heat_temp" in payload) {
-        encoded = encoded.concat(setTemperatureSettingValue(payload.center_heat_temp, [5, 35], "center_heat_temp", 0x73));
+        encoded = encoded.concat(setTemperatureSettingUInt16LEValue(payload.center_heat_temp, [5, 35], "center_heat_temp", 0x73));
     }
     if ("cooling_adjust_tolerance" in payload) {
-        encoded = encoded.concat(setTemperatureSettingValue(payload.cooling_adjust_tolerance, [0.5, 16], "cooling_adjust_tolerance", 0x74));
+        encoded = encoded.concat(setTemperatureSettingUInt16LEValue(payload.cooling_adjust_tolerance, [0.5, 16], "cooling_adjust_tolerance", 0x74));
     }
     if ("heating_adjust_tolerance" in payload) {
-        encoded = encoded.concat(setTemperatureSettingValue(payload.heating_adjust_tolerance, [0.5, 16], "heating_adjust_tolerance", 0x75));
+        encoded = encoded.concat(setTemperatureSettingUInt16LEValue(payload.heating_adjust_tolerance, [0.5, 16], "heating_adjust_tolerance", 0x75));
+    }
+    if ("custom_wiring_mode" in payload) {
+        encoded = encoded.concat(setEnableStatus(payload.custom_wiring_mode, "custom_wiring_mode", 0x80));
     }
     if ("heating_stage1" in payload) {
         encoded = encoded.concat(setTemperatureControlStage(payload.heating_stage1, "heating_stage1", 0x81));
@@ -1212,7 +1215,21 @@ function setTimeZoneOffset(timezone_offset) {
     return buffer.toBytes();
 }
 
-function setTemperatureSettingValue(value, range, key, channel_type) {
+function setTemperatureSettingUInt16LEValue(value, range, key, channel_type) {
+    if (typeof value !== "number") {
+        throw new Error(key + " must be a number");
+    }
+    if (value < range[0] || value > range[1]) {
+        throw new Error(key + " must be in range " + range.join(", "));
+    }
+    var buffer = new Buffer(4);
+    buffer.writeUInt8(0xf9);
+    buffer.writeUInt8(channel_type);
+    buffer.writeUInt16LE(value * 10);
+    return buffer.toBytes();
+}
+
+function setTemperatureSettingUInt8Value(value, range, key, channel_type) {
     if (typeof value !== "number") {
         throw new Error(key + " must be a number");
     }
@@ -2381,14 +2398,14 @@ function setUnlockConfig(unlock_config) {
  * set temperature control enable setting
  * @since v2.0
  * @param {object} temperature_control_enable_setting
- * @param {number} temperature_control_enable_setting.value values: (1: auto/cool/em heat/heat, 2: heat, 3: cool, 4: cool/heat, 5: auto/cool/heat)
- * @param {number} temperature_control_enable_setting.mode values: (auto/cool/em heat/heat, heat, cool, cool/heat, auto/cool/heat)
+ * @param {number} temperature_control_enable_setting.value
+ * @param {string} temperature_control_enable_setting.mode values: (heat/em heat/cool/auto, heat/cool/auto, heat, cool, heat/cool)
  * @example { "temperature_control_enable_setting": { "value": 1, "mode": "auto/cool/em heat/heat" } }
  */
 function setTemperatureControlEnableSetting(temperature_control_enable_setting) {
     var value = temperature_control_enable_setting.value;
     var mode = temperature_control_enable_setting.mode;
-    var value_map = { 1: "auto/cool/em heat/heat", 2: "heat", 3: "cool", 4: "cool/heat", 5: "auto/cool/heat" };
+    var value_map = { 1: "heat/em heat/cool/auto", 2: "heat/cool/auto", 3: "heat", 4: "cool", 5: "heat/cool" };
     var value_values = getValues(value_map);
 
     function getDataValue(setting) {

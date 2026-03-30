@@ -60,7 +60,18 @@ function milesightDeviceDecode(bytes) {
         }
         // LORAWAN CLASS TYPE
         else if (channel_id === 0xff && channel_type === 0x0f) {
-            decoded.lorawan_class = readLoRaWANClass(bytes[i]);
+            var type = bytes[i];
+            var lorawan_class_map = {
+                0: "Class A",
+                1: "Class B",
+                2: "Class C",
+                3: "Class CtoB"
+            }
+            decoded.lorawan_class = {};
+            decoded.lorawan_class.type = getMapValue(lorawan_class_map, type, type + 1);
+            if (RAW_VALUE) {
+                decoded.lorawan_class.value = getMapKey(lorawan_class_map, type, type + 1);
+            } 
             i += 1;
         }
         // RESET EVENT
@@ -113,17 +124,23 @@ function milesightDeviceDecode(bytes) {
             var fan_data = bytes[i];
             var fan_mode_map = {
                 0: "auto",
-                1: "on",
+                1: "always on",
                 2: "circulate",
                 3: "disable",
             }; 
+            var fan_status_map = {
+                1: "standby",
+                2: "on",
+                3: "low speed",
+                5: "high speed"
+            };
             decoded.fan_control_info = {};
             // value = fan_mode(0..1) + fan_status(2..3)
             decoded.fan_control_info.fan_control_mode = fan_mode_map[(fan_data >>> 0) & 0x03];
             decoded.fan_control_info.fan_control_status = readFanStatus((fan_data >>> 2) & 0x07);
             if (RAW_VALUE) {
                 decoded.fan_control_info.fan_control_mode_value = ((fan_data >>> 0) & 0x03) + 1;
-                decoded.fan_control_info.fan_control_status_value = ((fan_data >>> 2) & 0x07) + 1;
+                decoded.fan_control_info.fan_control_status_value = getValues(fan_status_map, readFanStatus((fan_data >>> 2) & 0x07));
             }
             i += 1;
         }
@@ -141,7 +158,7 @@ function milesightDeviceDecode(bytes) {
         else if (channel_id === 0x87 && channel_type === 0xe9) {
             var sourceResult = readTemperatureHumiditySource(bytes[i]);
             var alarm_map = {
-                1: "Temperature source alarm"
+                1: "source switch alarm"
             }
             decoded.source_alarm = {};
             decoded.source_alarm.source = sourceResult.source;
@@ -172,7 +189,7 @@ function milesightDeviceDecode(bytes) {
         }
         // RELAY STATUS
         else if (channel_id === 0x0a && channel_type === 0x6e) {
-            decoded.wires_relay = readWiresRelay(bytes[i]);
+            decoded.relay_status = readWiresRelay(bytes[i]);
             i += 1;
         }
         // TEMPERATURE MODE SUPPORT
@@ -700,15 +717,15 @@ function handle_downlink_response_ext(code, channel_type, bytes, offset) {
                     buttons.push(buttons_array[i]);
                 }
             }
-            var modes = buttons.reverse().join("/");
+            var modes = buttons.join("/");
             decoded.temperature_control_enable_setting = {};
             if(RAW_VALUE) {
                 var temperature_control_enable_setting_map = { 
-                    1: "auto/cool/em heat/heat", 
-                    2: "heat", 
-                    3: "cool", 
-                    4: "cool/heat", 
-                    5: "auto/cool/heat" 
+                    1: "heat/em heat/cool/auto", 
+                    2: "heat/cool/auto", 
+                    3: "heat", 
+                    4: "cool", 
+                    5: "heat/cool" 
                 };
                 var values = getValues(temperature_control_enable_setting_map, modes);
                 decoded.temperature_control_enable_setting.value = values;
@@ -1252,8 +1269,7 @@ function readFanStatus(type) {
         0: "standby",
         1: "high speed",
         2: "low speed",
-        3: "on",
-        4: "medium speed"
+        3: "on"
     };
     return getMapValue(fan_status_map, type);
 }
@@ -1315,15 +1331,14 @@ function readWires(wire1, wire2, wire3) {
 }
 
 function readWiresRelay(status) {
-    var relay = {};
-    relay.y1 = readOnOffStatus((status >>> 0) & 0x01);
-    relay.y2_gl = readOnOffStatus((status >>> 1) & 0x01);
-    relay.w1 = readOnOffStatus((status >>> 2) & 0x01);
-    relay.w2_aux = readOnOffStatus((status >>> 3) & 0x01);
-    relay.e = readOnOffStatus((status >>> 4) & 0x01);
-    relay.g = readOnOffStatus((status >>> 5) & 0x01);
-    relay.ob = readOnOffStatus((status >>> 6) & 0x01);
-    return relay;
+    var relay = [];
+    var relay_array = [ 'Y1', 'Y2', 'W1', 'W2', 'EH', 'G', 'OB' ];
+    for (var i = 0; i < relay_array.length - 1; i++) {
+        if ((status >>> i) & 0x01) {
+            relay.push(relay_array[i]);
+        }
+    }
+    return relay.length > 0 ? relay.join("&") : "off";
 }
 
 function readObMode(type) {
