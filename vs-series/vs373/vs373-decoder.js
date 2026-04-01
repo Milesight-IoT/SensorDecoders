@@ -136,19 +136,17 @@ function milesightDeviceDecode(bytes) {
         }
         // ALARM
         else if (channel_id === 0x06 && channel_type === 0xfb) {
-            var event = {};
-            event.alarm_id = readUInt16LE(bytes.slice(i, i + 2));
-            event.alarm_type = readAlarmType(bytes[i + 2]);
-            event.alarm_status = readAlarmStatus(bytes[i + 3]);
-            // EVENT TYPE: OUT OF BED
-            var alarm_type = readUInt8(bytes[i + 2]);
-            // out_of_bed, bradynea, tachypnea
-            if (alarm_type === 3 || alarm_type === 6 || alarm_type === 7) {
-                event.region_id = readUInt8(bytes[i + 4]);
+            var alarm_id = readUInt16LE(bytes.slice(i, i + 2));
+            var alarm_type = readAlarmType(bytes[i + 2]);
+            var alarm_status = readUInt8(bytes[i + 3]);
+            var region_id;
+            // REGION ID IS ONLY USED FOR out_of_bed, bradypnea, tachypnea
+            var raw_alarm_type = readUInt8(bytes[i + 2]);
+            if (raw_alarm_type === 3 || raw_alarm_type === 6 || raw_alarm_type === 7) {
+                region_id = readUInt8(bytes[i + 4]);
             }
             i += 5;
-            decoded.events = decoded.events || [];
-            decoded.events.push(event);
+            updateAlarm(decoded, alarm_type, alarm_id, alarm_status, region_id);
         }
         // BREATHING DETECTION
         else if (channel_id === 0x08 && channel_type === 0xb1) {
@@ -164,7 +162,7 @@ function milesightDeviceDecode(bytes) {
             data.alarm_type = readAlarmType(bytes[i + 6]);
             data.alarm_status = readAlarmStatus(bytes[i + 7]);
             var alarm_type = readUInt8(bytes[i + 6]);
-            // EVENT TYPE: OUT OF BED
+            // REGION ID IS ONLY USED FOR out_of_bed, bradypnea, tachypnea
             if (alarm_type === 3 || alarm_type === 6 || alarm_type === 7) {
                 data.region_id = readUInt8(bytes[i + 8]);
             }
@@ -512,17 +510,58 @@ function readOccupancyStatus(status) {
     return getValue(occupancy_status_map, status);
 }
 
+function updateAlarm(decoded, alarm_type, alarm_id, alarm_status, region_id) {
+    var alarm_name = getAlarmName(alarm_type);
+    var alarm = decoded[alarm_name] || {};
+
+    alarm.alarm_id = appendAlarmValue(alarm.alarm_id, alarm_id);
+    alarm.alarm_status = appendAlarmValue(alarm.alarm_status, alarm_status);
+
+    if (hasAlarmRegion(alarm_type) && typeof region_id !== "undefined") {
+        alarm.region_id = appendAlarmValue(alarm.region_id, region_id);
+    }
+
+    decoded[alarm_name] = alarm;
+}
+
+function getAlarmName(alarm_type) {
+    var alarm_name_map = {
+        fall: "fall_alarm",
+        human_in_place: "human_in_place",
+        dwell: "dwell_alarm",
+        out_of_bed: "out_of_bed_alarm",
+        occupied: "occupied",
+        vacant: "vacant",
+        bradypnea: "bradypnea",
+        tachypnea: "tachypnea",
+        lying: "lying_alarm",
+    };
+    return getValue(alarm_name_map, alarm_type);
+}
+
+function hasAlarmRegion(alarm_type) {
+    return alarm_type === "out_of_bed" || alarm_type === "bradypnea" || alarm_type === "tachypnea";
+}
+
+function appendAlarmValue(current_value, next_value) {
+    var next = String(next_value);
+    if (typeof current_value === "undefined" || current_value === "") {
+        return next;
+    }
+    return current_value + ", " + next;
+}
+
 function readAlarmType(type) {
     var alarm_type_map = {
         0: "fall",
-        1: "motionless",
+        1: "human_in_place",
         2: "dwell",
         3: "out_of_bed",
         4: "occupied",
         5: "vacant",
-        6: "bradynea",
+        6: "bradypnea",
         7: "tachypnea",
-        8: "lying_down",
+        8: "lying",
     };
     return getValue(alarm_type_map, type);
 }
