@@ -269,7 +269,7 @@
             "access_mode": "R",
             "data_type": "ENUM",
             "value_type": "UINT8",
-            "values": [{ "value": 1, "name": "sensor error" }],
+            "values": [{ "value": 1, "name": "sensor error" }, { "value": 2, "name": "sensor normal" }],
             "bacnet_type": "multistate_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS"
