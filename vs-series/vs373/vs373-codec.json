@@ -520,20 +520,6 @@
             "reference": ["fall_alarm.alarm_id", "fall_alarm.alarm_status"]
         },
         {
-            "id": "human_in_place.alarm_id",
-            "name": "Human in Place (Alarm ID)",
-            "value": "",
-            "unit": "",
-            "access_mode": "R",
-            "data_type": "TEXT",
-            "value_type": "STRING",
-            "max_length": 64,
-            "bacnet_type": "character_string_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": ["human_in_place.alarm_id", "human_in_place.alarm_status"]
-        },
-        {
             "id": "human_in_place.alarm_status",
             "name": "Human in Place (Alarm Status)",
             "value": "",
@@ -544,8 +530,7 @@
             "max_length": 32,
             "bacnet_type": "character_string_value_object",
             "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": ["human_in_place.alarm_id", "human_in_place.alarm_status"]
+            "bacnet_unit_type": "UNITS_NO_UNITS"
         },
         {
             "id": "dwell_alarm.alarm_id",
@@ -576,20 +561,6 @@
             "reference": ["dwell_alarm.alarm_id", "dwell_alarm.alarm_status"]
         },
         {
-            "id": "occupied.alarm_id",
-            "name": "Occupied (Alarm ID)",
-            "value": "",
-            "unit": "",
-            "access_mode": "R",
-            "data_type": "TEXT",
-            "value_type": "STRING",
-            "max_length": 64,
-            "bacnet_type": "character_string_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": ["occupied.alarm_id", "occupied.alarm_status"]
-        },
-        {
             "id": "occupied.alarm_status",
             "name": "Occupied (Alarm Status)",
             "value": "",
@@ -600,22 +571,7 @@
             "max_length": 32,
             "bacnet_type": "character_string_value_object",
             "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": ["occupied.alarm_id", "occupied.alarm_status"]
-        },
-        {
-            "id": "vacant.alarm_id",
-            "name": "Vacant (Alarm ID)",
-            "value": "",
-            "unit": "",
-            "access_mode": "R",
-            "data_type": "TEXT",
-            "value_type": "STRING",
-            "max_length": 64,
-            "bacnet_type": "character_string_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": ["vacant.alarm_id", "vacant.alarm_status"]
+            "bacnet_unit_type": "UNITS_NO_UNITS"
         },
         {
             "id": "vacant.alarm_status",
@@ -628,8 +584,7 @@
             "max_length": 32,
             "bacnet_type": "character_string_value_object",
             "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": ["vacant.alarm_id", "vacant.alarm_status"]
+            "bacnet_unit_type": "UNITS_NO_UNITS"
         },
         {
             "id": "lying_alarm.alarm_id",
@@ -702,20 +657,6 @@
             "reference": ["out_of_bed_alarm.alarm_id", "out_of_bed_alarm.alarm_status", "out_of_bed_alarm.region_id"]
         },
         {
-            "id": "bradypnea.alarm_id",
-            "name": "Bradypnea (Alarm ID)",
-            "value": "",
-            "unit": "",
-            "access_mode": "R",
-            "data_type": "TEXT",
-            "value_type": "STRING",
-            "max_length": 64,
-            "bacnet_type": "character_string_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": ["bradypnea.alarm_id", "bradypnea.alarm_status", "bradypnea.region_id"]
-        },
-        {
             "id": "bradypnea.alarm_status",
             "name": "Bradypnea (Alarm Status)",
             "value": "",
@@ -727,7 +668,7 @@
             "bacnet_type": "character_string_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": ["bradypnea.alarm_id", "bradypnea.alarm_status", "bradypnea.region_id"]
+            "reference": ["bradypnea.alarm_status", "bradypnea.region_id"]
         },
         {
             "id": "bradypnea.region_id",
@@ -741,21 +682,7 @@
             "bacnet_type": "character_string_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": ["bradypnea.alarm_id", "bradypnea.alarm_status", "bradypnea.region_id"]
-        },
-        {
-            "id": "tachypnea.alarm_id",
-            "name": "Tachypnea (Alarm ID)",
-            "value": "",
-            "unit": "",
-            "access_mode": "R",
-            "data_type": "TEXT",
-            "value_type": "STRING",
-            "max_length": 64,
-            "bacnet_type": "character_string_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": ["tachypnea.alarm_id", "tachypnea.alarm_status", "tachypnea.region_id"]
+            "reference": ["bradypnea.alarm_status", "bradypnea.region_id"]
         },
         {
             "id": "tachypnea.alarm_status",
@@ -769,7 +696,7 @@
             "bacnet_type": "character_string_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": ["tachypnea.alarm_id", "tachypnea.alarm_status", "tachypnea.region_id"]
+            "reference": ["tachypnea.alarm_status", "tachypnea.region_id"]
         },
         {
             "id": "tachypnea.region_id",
@@ -783,7 +710,7 @@
             "bacnet_type": "character_string_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": ["tachypnea.alarm_id", "tachypnea.alarm_status", "tachypnea.region_id"]
+            "reference": ["tachypnea.alarm_status", "tachypnea.region_id"]
         },
         {
             "id": "reboot",

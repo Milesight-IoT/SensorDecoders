@@ -56,7 +56,7 @@ Real-time alarm events are exposed as top-level alarm objects instead of an `eve
 }
 ```
 
-Repeated real-time alarms of the same type append `alarm_id` and `alarm_status` in arrival order using the raw protocol values. `out_of_bed_alarm`, `bradypnea`, and `tachypnea` also append `region_id` as a comma-separated string. Historical alarms still use the `history` array.
+Repeated real-time alarms of the same type append `alarm_id` and `alarm_status` in arrival order using the raw protocol values. `out_of_bed_alarm`, `bradypnea`, and `tachypnea` also append `region_id` as a comma-separated string. Fields whose protocol values are fixed reserved placeholders (`0xFFFF` for `alarm_id`, `0xFF` for `region_id`) are omitted from the decoded output. Historical alarms still use the `history` array.
 
 ```json
 {

@@ -514,10 +514,15 @@ function updateAlarm(decoded, alarm_type, alarm_id, alarm_status, region_id) {
     var alarm_name = getAlarmName(alarm_type);
     var alarm = decoded[alarm_name] || {};
 
-    alarm.alarm_id = appendAlarmValue(alarm.alarm_id, alarm_id);
-    alarm.alarm_status = appendAlarmValue(alarm.alarm_status, alarm_status);
+    if (hasAlarmId(alarm_type) && alarm_id !== 0xffff) {
+        alarm.alarm_id = appendAlarmValue(alarm.alarm_id, alarm_id);
+    }
 
-    if (hasAlarmRegion(alarm_type) && typeof region_id !== "undefined") {
+    if (alarm_status !== 0xff) {
+        alarm.alarm_status = appendAlarmValue(alarm.alarm_status, alarm_status);
+    }
+
+    if (hasAlarmRegion(alarm_type) && typeof region_id !== "undefined" && region_id !== 0xff) {
         alarm.region_id = appendAlarmValue(alarm.region_id, region_id);
     }
 
@@ -541,6 +546,10 @@ function getAlarmName(alarm_type) {
 
 function hasAlarmRegion(alarm_type) {
     return alarm_type === "out_of_bed" || alarm_type === "bradypnea" || alarm_type === "tachypnea";
+}
+
+function hasAlarmId(alarm_type) {
+    return alarm_type === "fall" || alarm_type === "dwell" || alarm_type === "out_of_bed" || alarm_type === "lying";
 }
 
 function appendAlarmValue(current_value, next_value) {
