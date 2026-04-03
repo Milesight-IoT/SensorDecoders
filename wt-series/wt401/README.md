@@ -10,8 +10,6 @@ For more detailed information, please visit [Milesight Official Website](https:/
 
 | CHANNEL |  ID  | LENGTH | READ/WRITE | DEFAULT | RANGE | ENUM |
 | :------ | :--: | :----: | :--------: | :-----: | :---: | :--: |
-| LoRaWAN  Settings | 0xCF | 1 | rw |  |  |  |
-| LoRaWAN Comand | 0xCF | 2 | rw |  |  |  |
 | LoRaWAN Work Mode | 0xCF | 2 | rw | 0 |  | 0:ClassA<br>1:ClassB<br>2:ClassC<br>3:ClassC to B |
 | TSL Version | 0xDF | 3 | r |  |  |  |
 | Product Name | 0xDE | 33 | rw |  |  |  |
@@ -22,9 +20,6 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Firmware Version | 0xDA | 7 | r |  |  |  |
 | OEM ID | 0xD9 | 3 | rw |  |  |  |
 | Product Region | 0xD8 | 17 | r |  |  |  |
-| BLE Phone Name | 0xD5 | 1 | rw |  |  |  |
-| Length | 0xD5 | 2 | rw | 6 | 1 - 64 |  |
-| Name | 0xD5 | 1 | rw | 123456 |  |  |
 | Battery | 0x00 | 2 | r |  | 0 - 100 |  |
 | Temperature | 0x01 | 3 | r |  | -20 - 60 |  |
 | Humidity | 0x02 | 3 | r |  | 0 - 100 |  |
@@ -77,16 +72,21 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | POWERBUS_LORA Communicate Interval | 0x6C | 3 | rw | 1 | 1 - 30 |  |
 | Device Status | 0xC8 | 2 | rw | 0 |  | 0：Power Off<br>1：Power On |
 | Temperature Unit | 0x63 | 2 | rw | 0 |  | 0：℃<br>1：℉ |
-| Temperature &amp; Humidity Data Source | 0x7D | 2 | rw | 0 |  | 0:Embedded Data<br>1:External Receive |
+| Temperature &amp; Humidity Data Source | 0x7D | 2 | rw | 0 |  | 0:Embedded Data<br>1:Receive LORA<br>2:Receive Controller |
 | Data Timeout | 0x7E | 2 | rw | 10 | 1 - 60 |  |
 | Bluetooth Enable | 0x85 | 2 | rw | 1 |  | 0:disable<br>1:enable |
 | Bluetooth Name | 0x8B | 33 | rw |  |  |  |
+| Screen Temp Mode Enable | 0x8A | 2 | rw | 1 |  | 0:disable<br>1:enable |
+| Screen Fan Mode Enable | 0x8C | 2 | rw | 1 |  | 0:disable<br>1:enable |
+| Backlight Enable | 0x89 | 2 | rw | 1 |  | 0:disable<br>1:enable |
 | System On/Off | 0x67 | 2 | rw | 0 |  | 0：Off<br>1：On |
 | Temperature Control Mode Enable | 0x64 | 2 | rw |  |  |  |
 | Heat | 0x64 | 2 | rw | 1 |  | 0：disable<br>1：enable |
 | EM Heat | 0x64 | 2 | rw | 1 |  | 0：disable<br>1：enable |
 | Cool | 0x64 | 2 | rw | 1 |  | 0：disable<br>1：enable |
 | Auto | 0x64 | 2 | rw | 1 |  | 0：disable<br>1：enable |
+| Dehumidity | 0x64 | 2 | rw | 1 |  | 0：disable<br>1：enable |
+| Ventilation | 0x64 | 2 | rw | 1 |  | 0：disable<br>1：enable |
 | Reserved | 0x64 | 2 | rw |  |  |  |
 | Fan Mode Enabled | 0x88 | 2 | rw |  |  |  |
 | Auto | 0x88 | 2 | rw | 1 |  | 0：disable<br>1：enable |
@@ -110,6 +110,8 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Auto Target Temperature | 0x69 | 3 | rw | 23 | 5 - 35 |  |
 | Auto-Heat Target Temperature | 0x69 | 3 | rw | 17 | 5 - 35 |  |
 | Auto-Cool Target Temperature | 0x69 | 3 | rw | 28 | 5 - 35 |  |
+| Dehumidify Target Temperature | 0x69 | 3 | rw | 17 | 5 - 35 |  |
+| Ventilation Target Temperature | 0x69 | 3 | rw | 28 | 5 - 35 |  |
 | DeadBand | 0x6A | 3 | rw | 5 | 1 - 30 |  |
 | Target Temperature Range | 0x6B | 1 | rw |  |  |  |
 | Target Temperature Range ID | 0x6B | 2 | rw | 0 |  | 0：heat<br>1：em heat<br>2：cool<br>3：auto |
@@ -123,6 +125,12 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Min Value | 0x6B | 3 | rw | 23 | 5 - 35 |  |
 | Max Value | 0x6B | 3 | rw | 35 | 5 - 35 |  |
 | Auto Target Temperature Range | 0x6B | 1 | rw |  |  |  |
+| Min Value | 0x6B | 3 | rw | 10 | 5 - 35 |  |
+| Max Value | 0x6B | 3 | rw | 35 | 5 - 35 |  |
+| Dehumidify Target Temperature Range | 0x6B | 1 | rw |  |  |  |
+| Min Value | 0x6B | 3 | rw | 10 | 5 - 35 |  |
+| Max Value | 0x6B | 3 | rw | 35 | 5 - 35 |  |
+| Ventilation Target Temperature Range | 0x6B | 1 | rw |  |  |  |
 | Min Value | 0x6B | 3 | rw | 10 | 5 - 35 |  |
 | Max Value | 0x6B | 3 | rw | 35 | 5 - 35 |  |
 | Fan Mode | 0x74 | 2 | rw | 0 | 0 - 5 | 0：auto<br>1：circulate<br>2：on<br>3：low<br>4：medium<br>5：high |
@@ -233,10 +241,8 @@ For more detailed information, please visit [Milesight Official Website](https:/
 
 | CHANNEL |  ID  | LENGTH | READ/WRITE | DEFAULT | RANGE | ENUM |
 | :------ | :--: | :----: | :--------: | :-----: | :---: | :--: |
-| Sequence Number Check Response | 0xFF | 2 | r |  |  |  |
-| Order Check Response | 0xFE | 2 | r |  |  |  |
-| Command Response | 0xEF | 1 | r |  |  |  |
-| Request to Push All Configurations | 0xEE | 1 | r |  |  |  |
+| Device Time | 0xB9 | M | r |  |  |  |
+| Battery Status | 0xB8 | M | r |  |  |  |
 | Temperature  Alarm | 0x0B | 1 | r |  |  |  |
 | Humidity Alarm | 0x0C | 1 | r |  |  |  |
 | Bluetooth Event | 0x09 | 1 | r |  |  |  |
@@ -248,28 +254,37 @@ For more detailed information, please visit [Milesight Official Website](https:/
 
 | CHANNEL |  ID  | LENGTH | READ/WRITE | DEFAULT | RANGE | ENUM |
 | :------ | :--: | :----: | :--------: | :-----: | :---: | :--: |
-| Sequence Number Check | 0xFF | 2 | w |  |  |  |
-| Sequence Number | 0xFF | 2 | w | 0 | 0 - 255 |  |
-| Sequence Number | 0xFF | 2 | r | 0 | 0 - 255 |  |
-| Order Check | 0xFE | 2 | w |  |  |  |
-| Order | 0xFE | 2 | w | 0 | 0 - 255 |  |
-| Command Queries | 0xEF | 1 | w |  |  |  |
-| Query Information | 0xEF | 2 | w |  |  |  |
-| Command Length | 0xEF | 2 | w | 1 | 1 - 15 |  |
-| The command that was queried | 0xEF | 1 | w |  |  |  |
-| Answer Result | 0xEF | 2 | r | 0 |  | 0：success<br>1：unknow<br>2：error order<br>3：error passwd<br>4：error read params<br>5：error write params<br>6：error read<br>7：error write<br>8：error read apply<br>9：error write apply |
-| Command Length | 0xEF | 2 | r | 1 | 1 - 15 |  |
-| Answered Commands | 0xEF | 1 | r |  |  |  |
-| Request to Query All Configurations | 0xEE | 1 | w |  |  |  |
+| Current Time | 0xB9 | 5 | r |  |  |  |
+| Operation Time | 0xB9 | 5 | r |  |  |  |
+| Power-On Time | 0xB9 | 5 | r |  |  |  |
+| Battery Capacity | 0xB8 | 5 | r |  |  |  |
+| Battery Drain | 0xB8 | 5 | r |  |  |  |
+| Current Battery | 0xB8 | 5 | r |  |  |  |
+| Battery Voltage | 0xB8 | 3 | r |  |  |  |
+| Current Battery Status | 0xB8 | 3 | r |  |  |  |
 | Alarm Type | 0x0B | 2 | r |  |  |  |
+| Collection Error | 0x0B | 1 | r |  |  |  |
+| Exceed the Range Lower Limit | 0x0B | 1 | r |  |  |  |
+| Exceed the Range Upper Limit | 0x0B | 1 | r |  |  |  |
+| No Data | 0x0B | 1 | r |  |  |  |
 | Alarm Type | 0x0C | 2 | r |  |  |  |
+| Humidity  Collection Error | 0x0C | 1 | r |  |  |  |
+| Humidity  Out of The Low Range | 0x0C | 1 | r |  |  |  |
+| Humidity Out of The High Range | 0x0C | 1 | r |  |  |  |
+| No Data | 0x0C | 1 | r |  |  |  |
 | Bluetooth Event Type | 0x09 | 2 | r |  |  |  |
+| None | 0x09 | 1 | r |  |  |  |
+| Pairing Canceled | 0x09 | 1 | r |  |  |  |
+| Disconnected | 0x09 | 1 | r |  |  |  |
 | Powerbus Event Type | 0x0A | 2 | r |  |  |  |
+| None | 0x0A | 1 | r |  |  |  |
+| Communication Error | 0x0A | 1 | r |  |  |  |
 | Event Type | 0x0D | 2 | r |  |  |  |
 | Button 1 Report | 0x0D | 1 | r |  |  |  |
 | Button 2 Report | 0x0D | 1 | r |  |  |  |
 | Button 3 Report | 0x0D | 1 | r |  |  |  |
 | Battery Event Type | 0x0F | 2 | r |  |  |  |
+| Battery Recover | 0x0F | 2 | r |  |  |  |
 | System On/Off | 0x59 | 2 | w | 1 |  | 0：system close<br>1：system open |
 | Temperature Control Mode | 0x59 | 2 | w | 0 | 0 - 5 | 0：heat<br>1：em heat<br>2：cool<br>3：auto<br>4：dehumidify<br>5：ventilation |
 | Heat Temperature | 0x59 | 3 | w | 17 | 5 - 35 |  |
@@ -281,16 +296,8 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Fan Error Alarm | 0x55 | 2 | w |  |  |  |
 | Action | 0x55 | 2 | w | 0 |  | 0：clean alarm<br>1：trigger alarm |
 | Filter Cleaning Alarm | 0x5B | 2 | w |  |  |  |
-| Action | 0x5B | 2 | w | 0 |  | 0：clean alarm<br>1：report alarm |
-| Frost Protection Alarm | 0x57 | 2 | w |  |  |  |
-| Action | 0x57 | 2 | w | 0 |  | 0：clean alarm<br>1：trigger alarm |
-| Open Window Alarm | 0x5A | 2 | w |  |  |  |
-| Action | 0x5A | 2 | w | 0 |  | 0：clean alarm<br>1：report alarm |
-| Not Wired Alarm | 0x58 | 2 | w |  |  |  |
-| Action | 0x58 | 2 | w | 0 |  | 0：clean alarm<br>1：trigger alarm |
+| Action | 0x5B | 2 | w | 0 |  | 0：clean alarm |
 | Reboot | 0xBE | 1 | w |  |  |  |
-| Query Device Status | 0xB9 | 1 | w |  |  |  |
-| Time Synchronize | 0xB8 | 1 | w |  |  |  |
 | Network Reconnection | 0xB6 | 1 | w |  |  |  |
 | Delete Schedule | 0x5F | 2 | w |  |  |  |
 | Delete Schedule | 0x5F | 2 | w | 255 | 0 - 255 | 0：Schedule1<br>1：Schedule2<br>2：Schedule3<br>3：Schedule4<br>4：Schedule5<br>5：Schedule6<br>6：Schedule7<br>7：Schedule8<br>255：Reset All |
