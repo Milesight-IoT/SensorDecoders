@@ -137,7 +137,6 @@ function milesightDeviceDecode(bytes) {
         // ALARM
         else if (channel_id === 0x06 && channel_type === 0xfb) {
             var alarm_id = readUInt16LE(bytes.slice(i, i + 2));
-            var alarm_type = readAlarmType(bytes[i + 2]);
             var alarm_status = readUInt8(bytes[i + 3]);
             var region_id;
             // REGION ID IS ONLY USED FOR out_of_bed, bradypnea, tachypnea
@@ -146,7 +145,7 @@ function milesightDeviceDecode(bytes) {
                 region_id = readUInt8(bytes[i + 4]);
             }
             i += 5;
-            updateAlarm(decoded, alarm_type, alarm_id, alarm_status, region_id);
+            updateAlarm(decoded, raw_alarm_type, alarm_id, alarm_status, region_id);
         }
         // BREATHING DETECTION
         else if (channel_id === 0x08 && channel_type === 0xb1) {
@@ -531,25 +530,27 @@ function updateAlarm(decoded, alarm_type, alarm_id, alarm_status, region_id) {
 
 function getAlarmName(alarm_type) {
     var alarm_name_map = {
-        fall: "fall_alarm",
-        human_in_place: "human_in_place",
-        dwell: "dwell_alarm",
-        out_of_bed: "out_of_bed_alarm",
-        occupied: "occupied",
-        vacant: "vacant",
-        bradypnea: "bradypnea",
-        tachypnea: "tachypnea",
-        lying: "lying_alarm",
+        0: "fall_alarm",
+        1: "human_in_place",
+        2: "dwell_alarm",
+        3: "out_of_bed_alarm",
+        4: "occupied",
+        5: "vacant",
+        6: "bradypnea",
+        7: "tachypnea",
+        8: "lying_alarm",
     };
-    return getValue(alarm_name_map, alarm_type);
+    var alarm_name = alarm_name_map[alarm_type];
+    if (!alarm_name) alarm_name = "unknown";
+    return alarm_name;
 }
 
 function hasAlarmRegion(alarm_type) {
-    return alarm_type === "out_of_bed" || alarm_type === "bradypnea" || alarm_type === "tachypnea";
+    return alarm_type === 3 || alarm_type === 6 || alarm_type === 7;
 }
 
 function hasAlarmId(alarm_type) {
-    return alarm_type === "fall" || alarm_type === "dwell" || alarm_type === "out_of_bed" || alarm_type === "lying";
+    return alarm_type === 0 || alarm_type === 2 || alarm_type === 3 || alarm_type === 8;
 }
 
 function appendAlarmValue(current_value, next_value) {
