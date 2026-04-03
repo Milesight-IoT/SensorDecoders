@@ -10,8 +10,6 @@ For more detailed information, please visit [Milesight Official Website](https:/
 
 | CHANNEL |  ID  | LENGTH | READ/WRITE | DEFAULT | RANGE | ENUM |
 | :------ | :--: | :----: | :--------: | :-----: | :---: | :--: |
-| LoRaWAN  Settings | 0xCF | 1 | rw |  |  |  |
-| LoRaWAN Comand | 0xCF | 2 | rw |  |  |  |
 | LoRaWAN Work Mode | 0xCF | 2 | rw | 0 |  | 0:ClassA<br>1:ClassB<br>2:ClassC<br>3:ClassC to B |
 | TSL Version | 0xDF | 3 | r |  |  |  |
 | SN | 0xDB | 9 | r |  |  |  |
@@ -19,32 +17,78 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Hardware Version | 0xDA | 3 | r |  |  |  |
 | Firmware Version | 0xDA | 7 | r |  |  |  |
 | OEM ID | 0xD9 | 3 | rw |  |  |  |
+| Device Status | 0xC8 | 2 | rw | 1 |  | 0：Off<br>1：On |
+| BLE Phone Name | 0xD5 | 1 | rw |  |  |  |
+| Length | 0xD5 | 2 | rw | 6 | 1 - 64 |  |
+| Name | 0xD5 | 1 | rw | 123456 |  |  |
+| BLE Settings | 0xD4 | 1 | rw |  |  |  |
+| BLE Comand | 0xD4 | 2 | rw | 0 |  |  |
+| Bluetooth Enable | 0xD4 | 2 | rw | 0 |  | 0：disable<br>1：enable |
+| Bluetooth Local Address | 0xD4 | 8 | rw |  |  |  |
+| Address Type | 0xD4 | 2 | rw | 0 |  | 0：public<br>1：private |
+| Address | 0xD4 | 7 | rw | 24e124123456 |  |  |
+| Bluetooth Pair Mac | 0xD4 | 1 | rw |  |  |  |
+| Bluetooth Pair Mac | 0xD4 | 10 | rw |  |  |  |
+| Mac ID | 0xD4 | 2 | rw | 0 |  |  |
+| Mac Data | 0xD4 | 9 | rw | 24e124123456789a |  |  |
+| Bluetooth Pair Address | 0xD4 | 1 | rw |  |  |  |
+| Bluetooth Pair Address | 0xD4 | 9 | rw |  |  |  |
+| Bluetooth Pair Address ID | 0xD4 | 2 | rw | 0 |  |  |
+| Bluetooth Pair Address Type | 0xD4 | 2 | rw | 0 |  | 0：public<br>1：private |
+| Bluetooth Pair Address Data | 0xD4 | 7 | rw | 24e124123456 |  |  |
+| Bluetooth Pair Name | 0xD4 | 1 | rw |  |  |  |
+| Bluetooth Pair Name | 0xD4 | 1 | rw |  |  |  |
+| Name ID | 0xD4 | 2 | rw | 0 |  |  |
+| Name Length | 0xD4 | 2 | rw | 13 | 1 - 13 |  |
+| Name | 0xD4 | 1 | rw |  |  |  |
+| Name (prefix8) | 0xD4 | 9 | rw |  |  |  |
+| Name (suffix5) | 0xD4 | 6 | rw |  |  |  |
+| Bluetooth Pair Info | 0xD4 | 1 | rw |  |  |  |
+| Address Type | 0xD4 | 2 | rw | 0 |  | 0：public<br>1：private |
+| Address | 0xD4 | 7 | rw | 24e124123456 |  |  |
+| Mac | 0xD4 | 9 | rw | 24e124123456789a |  |  |
+| Name Length | 0xD4 | 2 | rw | 13 | 1 - 13 |  |
+| Name | 0xD4 | 1 | rw |  |  |  |
+| Bluetooth Local Info | 0xD4 | 1 | rw |  |  |  |
+| Address Type | 0xD4 | 2 | rw | 0 |  | 0：public<br>1：private |
+| Address | 0xD4 | 7 | rw | 24e124123456 |  |  |
+| Mac | 0xD4 | 9 | rw | 24e124123456789a |  |  |
+| Name Length | 0xD4 | 2 | rw | 13 | 1 - 13 |  |
+| Name | 0xD4 | 1 | rw |  |  |  |
+| Relay Status Change | 0x01 | 2 | r |  |  |  |
+| Y1 | 0x01 | 2 | r | 0 |  | 0: Disconnect<br>1: Close |
+| W1 | 0x01 | 2 | r | 0 |  | 0: Disconnect<br>1: Close |
+| O/B | 0x01 | 2 | r | 0 |  | 0: Disconnect<br>1: Close |
+| GL | 0x01 | 2 | r | 0 |  | 0: Disconnect<br>1: Close |
+| GM | 0x01 | 2 | r | 0 |  | 0: Disconnect<br>1: Close |
+| GH | 0x01 | 2 | r | 0 |  | 0: Disconnect<br>1: Close |
+| Reserved | 0x01 | 2 | r |  |  |  |
+| Temperature And Humidity Source | 0x05 | 2 | rw | 0 |  | 0: External Temperature Sensor<br>1: Issued By Lorawan Gateway<br>2: Lorawan D2D<br>3: HMI(WT401) |
 | Temperature | 0x06 | 3 | r |  | -20 - 60 |  |
 | Humidity | 0x08 | 3 | r |  | 0 - 100 |  |
 | Temperature Control Info | 0x0C | 2 | r |  |  |  |
 | Temperature Control Mode | 0x0C | 2 | r | 0 |  | 0：heat<br>2：cool<br>3：auto<br>15：na |
-| Temperature Control Status | 0x0C | 2 | r | 0 |  | 0：standby<br>1：stage-1 heat<br>2：stage-2 heat<br>3：stage-3 heat<br>4：stage-4 heat<br>5：em heat<br>6：stage-1 cool<br>7：stage-2 cool<br>8：stage-5 heat |
+| Temperature Control Status | 0x0C | 2 | r | 0 |  | 0：standby<br>1：stage-1 heat<br>2：stage-2 heat<br>3：stage-3 heat<br>4：stage-4 heat<br>6：stage-1 cool<br>7：stage-2 cool<br>8：stage-5 heat |
 | Fan Info | 0x0D | 2 | r |  |  |  |
 | Fan Mode | 0x0D | 2 | r | 0 |  | 0：auto<br>1：circulate<br>2：on<br>3：low<br>4：medium<br>5：high<br>15：na |
 | Fan Status | 0x0D | 2 | r | 0 |  | 0：off<br>1：open<br>2：low<br>3:medium<br>4:high |
 | Plan Status | 0x0E | 2 | r | 0 | 0 - 16 |  |
+| System Status | 0x0F | 2 | r |  |  |  |
+| System On/Off | 0x0F | 2 | r | 0 |  | 0：system close<br>1：system open |
+| Occupancy status | 0x0F | 2 | r | 0 |  | 0：idle<br>1：occupy<br>2：night occupy |
+| Reserved | 0x0F | 2 | r |  |  |  |
 | Target Temperature | 0x10 | 3 | r |  | 5 - 35 |  |
-| Auto-P | 0xC4 | 2 | rw | 1 |  | 0：Disable<br>1：Enable |
+| Cool Target Temperature | 0x12 | 3 | r |  | 5 - 35 |  |
 | Data Storage Settings | 0xC5 | 1 | rw |  |  |  |
 | Sub-command | 0xC5 | 2 | rw | 0 |  |  |
 | Data Storage Enable | 0xC5 | 2 | rw | 0 |  | 0：Disable<br>1：Enable |
 | Data Retransmission Enable | 0xC5 | 2 | rw | 0 |  | 0：Disable<br>1：Enable |
 | Data Retransmission Interval | 0xC5 | 3 | rw | 600 | 30 - 1200 |  |
 | Data Retrieval Interval | 0xC5 | 3 | rw | 60 | 30 - 1200 |  |
-| Bluetooth Config | 0xD4 | 1 | rw |  |  |  |
-| Sub-command | 0xD4 | 2 | rw |  |  |  |
-| Bluetooth Name | 0xD4 | 1 | rw |  |  |  |
-| Name Length | 0xD4 | 2 | rw | 13 | 1 - 255 |  |
-| Bluetooth Name | 0xD4 | 1 | rw |  |  |  |
 | Temperature Control Mode | 0x60 | 1 | rw |  |  |  |
 | Sub-command | 0x60 | 2 | rw | 0 |  | 0：Mode<br>1：Plan Temperature Control<br>Mode Enable |
 | Temperature Control Mode | 0x60 | 2 | rw | 0 |  | 0：heat<br>2：cool<br>3：auto |
-| Plan Temperature Control
+| Plan Temperature Control 
 Mode Enable | 0x60 | 2 | rw | 0 |  | 0：disable<br>1：enable |
 | Target Temperature Settings | 0x61 | 1 | rw |  |  |  |
 | Temperature Control Mode | 0x61 | 2 | rw | 0 |  |  |
@@ -53,10 +97,10 @@ Mode Enable | 0x60 | 2 | rw | 0 |  | 0：disable<br>1：enable |
 | Auto Temperature | 0x61 | 3 | rw | 23 | 5 - 35 |  |
 | Target Temperature Tolerance | 0x62 | 1 | rw |  |  |  |
 | Target Temperature Tolerance | 0x62 | 2 | rw | 0 |  |  |
-| Target Temperature Tolerance | 0x62 | 3 | rw | 1 | 0.1 - 5 |  |
-| Temperature Control Tolerance | 0x62 | 3 | rw | 1 | 0.1 - 5 |  |
 | Heat Target Temperature Tolerance | 0x62 | 3 | rw | 1 | 0.1 - 5 |  |
 | Cool Target Temperature Tolerance | 0x62 | 3 | rw | 1 | 0.1 - 5 |  |
+| Auto Target Temperature Tolerance | 0x62 | 3 | rw | 1 | 0.1 - 5 |  |
+| Temperature Control Tolerance | 0x62 | 3 | rw | 1 | 0.1 - 5 |  |
 | Target Temperature Range | 0x63 | 1 | rw |  |  |  |
 | Target Temperature Range ID | 0x63 | 2 | rw | 0 |  |  |
 | Heat Target Temperature Range | 0x63 | 1 | rw |  |  |  |
@@ -81,43 +125,12 @@ Mode Enable | 0x60 | 2 | rw | 0 |  | 0：disable<br>1：enable |
 | Reporting Interval Unit | 0x66 | 2 | rw | 1 |  | 0：second<br>1：min |
 | Reporting Interval | 0x66 | 3 | rw | 600 | 60 - 64800 |  |
 | Reporting Interval | 0x66 | 3 | rw | 10 | 1 - 1440 |  |
-| Schedule Settings | 0x67 | 1 | rw |  |  |  |
-| Schedule Settings | 0x67 | 1 | rw |  |  |  |
-| Schedule ID | 0x67 | 2 | rw | 0 | 0 - 16 |  |
-| Sub-command | 0x67 | 2 | rw | 0 |  |  |
-| Schedule Enable | 0x67 | 2 | rw | 0 |  | 0：Disable<br>1：Enable |
-| Name(prefix6) | 0x67 | 7 | rw |  |  |  |
-| Name(prefix4) | 0x67 | 5 | rw |  |  |  |
-| Fan Mode | 0x67 | 2 | rw | 0 |  | 0：Auto<br>1：Always Open<br>2：Ventilation<br>3：Low<br>4：Medium<br>5：High<br>255：Disabled |
-| Switch On | 0x67 | 2 | rw | 1 |  | 0：Switch Off<br>1：Switch On |
-| Work Mode | 0x67 | 2 | rw | 0 |  | 0：heat<br>2：cool<br>3：auto |
-| Heat Target Temperature | 0x67 | 3 | rw | 17 | 5 - 35 |  |
-| Cool Target Temperature | 0x67 | 3 | rw | 28 | 5 - 35 |  |
-| Auto Target Temperature | 0x67 | 3 | rw | 23 | 5 - 35 |  |
-| Target Temperature Tolerance | 0x67 | 3 | rw | 1 | 0.1 - 5 |  |
-| Temperature Control Tolerance | 0x67 | 3 | rw | 2 | 0.5 - 10 |  |
-| Heat Target Temperature Tolerance | 0x67 | 3 | rw | 1 | 0.1 - 5 |  |
-| Cool Target Temperature Tolerance | 0x67 | 3 | rw | 1 | 0.1 - 5 |  |
-| Time | 0x67 | 6 | rw |  |  |  |
-| Time Configuration | 0x67 | 6 | rw |  |  |  |
-| Time ID | 0x67 | 2 | rw | 0 | 0 - 16 |  |
-| Enable | 0x67 | 2 | rw | 0 |  | 0：disable<br>1：enable |
-| Trigger Time | 0x67 | 3 | rw | 0 |  |  |
-| Sun. | 0x67 | 2 | rw | 0 |  | 0：disable<br>1：enable |
-| Mon. | 0x67 | 2 | rw | 0 |  | 0：disable<br>1：enable |
-| Tues. | 0x67 | 2 | rw | 0 |  | 0：disable<br>1：enable |
-| Wed. | 0x67 | 2 | rw | 0 |  | 0：disable<br>1：enable |
-| Thur. | 0x67 | 2 | rw | 0 |  | 0：disable<br>1：enable |
-| Fri. | 0x67 | 2 | rw | 0 |  | 0：disable<br>1：enable |
-| Sat. | 0x67 | 2 | rw | 0 |  | 0：disable<br>1：enable |
-| Valid | 0x67 | 2 | rw | 0 |  | 0：delete<br>1：valid |
 | Open Window Detection | 0x68 | 2 | rw | 0 |  | 0：disable<br>1：enable |
 | Open Window Detection Settings | 0x69 | 1 | rw |  |  |  |
 | Open Window Detection Method | 0x69 | 2 | rw | 0 |  | 0：temperature<br>1：door |
-| Temperature Detection | 0x69 | 1 | rw |  |  |  |
-| Command | 0x69 | 2 | rw | 0 |  |  |
-| Temperature Variation | 0x69 | 3 | rw | 3 | 1 - 10 |  |
-| Stop Control For | 0x69 | 3 | rw | 30 | 1 - 1440 |  |
+| Temperature Detection | 0x69 | 5 | rw |  |  |  |
+| Temperature Change | 0x69 | 3 | rw | 3 | 1 - 10 |  |
+| Stop Temperature Control For | 0x69 | 3 | rw | 30 | 1 - 1440 |  |
 | Magnetic Contact Switch Detection | 0x69 | 2 | rw |  |  |  |
 | Detection Duration | 0x69 | 2 | rw | 10 | 1 - 60 |  |
 | Temperature Data Source Settings | 0x6A | 1 | rw |  |  |  |
@@ -125,7 +138,10 @@ Mode Enable | 0x60 | 2 | rw | 0 |  | 0：disable<br>1：enable |
 | Data Source | 0x6A | 2 | rw | 3 |  | 0: External Temperature Sensor<br>1: Issued By Lorawan Gateway<br>2: Lorawan D2D<br>3: HMI(WT401) |
 | Time Out | 0x6A | 2 | rw | 10 |  |  |
 | Offline Mode | 0x6A | 2 | rw | 0 |  | 0: Maintain<br>1: Disconnect<br>2: Cut into internal |
-| Data Sync | 0x6A | 2 | rw | 1 |  | 0：disable<br>1：enable |
+| External Temperature Humidity Settings | 0x6B | 1 | rw |  |  |  |
+| Sub-command | 0x6B | 2 | rw | 0 |  |  |
+| Temperature | 0x6B | 3 | rw | 0 | -20 - 60 |  |
+| Humidity | 0x6B | 3 | rw | 0 | 0 - 100 |  |
 | Persistent High Temperature Alarm Settings | 0x6C | 1 | rw |  |  |  |
 | Sub-command | 0x6C | 2 | rw | 0 |  |  |
 | Persistent High Temperature | 0x6C | 2 | rw | 0 |  | 0：Disable<br>1：Enable |
@@ -136,12 +152,18 @@ Mode Enable | 0x60 | 2 | rw | 0 |  | 0：disable<br>1：enable |
 | Persistent Low Temperature | 0x6D | 2 | rw | 0 |  | 0：Disable<br>1：Enable |
 | Difference in Temperature | 0x6D | 3 | rw | 3 | 1 - 10 |  |
 | Duration | 0x6D | 2 | rw | 5 | 0 - 60 |  |
+| Temperature Threshold Alarm | 0x6E | 1 | rw |  |  |  |
+| Sub-command | 0x6E | 2 | rw | 0 |  |  |
+| Enable | 0x6E | 2 | rw | 0 |  | 0：Disable<br>1：Enable |
+| Alarm Mode | 0x6E | 2 | rw | 0 |  | 0:Disable<br>1:Condition: x<A<br>2:Condition: x>B<br>3:Condition: A≤x≤B<br>4:Condition: x<A or x>B |
+| Low Threshold | 0x6E | 3 | rw | -20 | -20 - 60 |  |
+| High Threshold | 0x6E | 3 | rw | 60 | -20 - 60 |  |
 | System Switch | 0x6F | 2 | rw | 0 |  | 0：Switch Off<br>1：Switch On |
 | Fan Settings | 0x70 | 1 | rw |  |  |  |
 | Sub-command | 0x70 | 2 | rw | 0 |  |  |
-| Fan Mode | 0x70 | 2 | rw | 0 |  | 0：Auto<br>1：Always Open<br>2：Ventilation<br>3：Low<br>4：Medium<br>5：High<br>255：Disabled |
+| Fan Mode | 0x70 | 2 | rw | 0 |  | 0：Auto<br>1：Ventilation<br>2：Always Open<br>3：Low<br>4：Medium<br>5：High<br>255：Disabled |
 | Adjust Humidity Enable | 0x70 | 2 | rw | 0 |  | 0：Disable<br>1：Enable |
-| Adjust Period | 0x70 | 2 | rw | 5 | 5 - 55 |  |
+| Adjust Period | 0x70 | 2 | rw | 30 | 5 - 55 |  |
 | Work Time | 0x70 | 2 | rw | 30 | 5 - 55 |  |
 | Anti Freezing | 0x71 | 1 | rw |  |  |  |
 | Sub-command | 0x71 | 2 | rw | 0 |  |  |
@@ -150,13 +172,7 @@ Mode Enable | 0x60 | 2 | rw | 0 |  | 0：disable<br>1：enable |
 | Dehumidify Settings | 0x72 | 1 | rw |  |  |  |
 | Sub-command | 0x72 | 2 | rw | 2 |  |  |
 | Humidify Low Threshold | 0x72 | 3 | rw | 40 | 0 - 100 |  |
-| Humidify High Threshold | 0x72 | 3 | rw | 60 | 0 - 100 |  |
-| Plan Dwell Time Settings | 0x73 | 1 | rw |  |  |  |
-| Schedule Settings | 0x73 | 1 | rw |  |  |  |
-| Schedule ID | 0x73 | 2 | rw | 0 | 0 - 16 |  |
-| Sub-command | 0x73 | 2 | rw | 0 |  |  |
-| Permanent Stay Enable | 0x73 | 2 | rw | 0 |  | 0：Disable<br>1：Enable |
-| Dwell  Time | 0x73 | 2 | rw | 0 | 0 - 120 |  |
+| Humidify High Threshold | 0x72 | 3 | rw | 80 | 0 - 100 |  |
 | System Protect | 0x74 | 1 | rw |  |  |  |
 | Sub-command | 0x74 | 2 | rw | 0 |  |  |
 | Enable | 0x74 | 2 | rw | 0 |  | 0：Disable<br>1：Enable |
@@ -176,6 +192,29 @@ Mode Enable | 0x60 | 2 | rw | 0 |  | 0：disable<br>1：enable |
 | Sub-command | 0x82 | 2 | rw | 0 |  |  |
 | Fan Delay Off Enable | 0x82 | 2 | rw | 1 |  | 0：Disable<br>1：Enable |
 | Fan Delay Off Time | 0x82 | 3 | rw | 60 | 1 - 3600 |  |
+| Temperature Control Level Switch | 0x83 | 1 | rw |  |  |  |
+| Subcmd ID | 0x83 | 2 | rw | 0 |  |  |
+| Setforw Enable | 0x83 | 2 | rw | 1 |  | 0：disable<br>1：enable |
+| Setback Enable | 0x83 | 2 | rw | 1 |  | 0：disable<br>1：enable |
+| Heat Switch Time | 0x83 | 2 | rw | 5 | 1 - 30 |  |
+| Heat Switch Temp | 0x83 | 3 | rw | 1 | 0.5 - 5 |  |
+| Cool Switch Time | 0x83 | 2 | rw | 5 | 1 - 30 |  |
+| Cool Switch Temp | 0x83 | 3 | rw | 1 | 0.5 - 50 |  |
+| level-1 Threshold | 0x83 | 3 | rw | 3 | 0 - 10 |  |
+| level-2 Threshold | 0x83 | 3 | rw | 5 | 0 - 10 |  |
+| Energy-Saving Enable | 0x84 | 2 | rw | 0 |  | 0：Disable<br>1：Enable |
+| Energy-Saving Settings | 0x85 | 1 | rw |  |  |  |
+| Energy-Saving Level | 0x85 | 2 | rw | 0 |  |  |
+| Level 1 Settings | 0x85 | 1 | rw |  |  |  |
+| Sub-command | 0x85 | 2 | rw | 0 |  |  |
+| Enable | 0x85 | 2 | rw | 0 |  | 0：Disable<br>1：Enable |
+| Free Time | 0x85 | 3 | rw | 480 | 1 - 1440 |  |
+| Energy Saving Target Temperature Tolerance | 0x85 | 3 | rw | 2 | 0.1 - 5 |  |
+| Level 2 Settings | 0x85 | 1 | rw |  |  |  |
+| Sub-command | 0x85 | 2 | rw | 0 |  |  |
+| Enable | 0x85 | 2 | rw | 0 |  | 0：Disable<br>1：Enable |
+| Free Time | 0x85 | 3 | rw | 720 | 1 - 1440 |  |
+| Energy Saving Target Temperature Tolerance | 0x85 | 3 | rw | 4 | 0.1 - 5 |  |
 | DI Settings Enable | 0x86 | 2 | rw | 0 |  | 0：Disable<br>1：Enable |
 | DI Settings | 0x87 | 1 | rw |  |  |  |
 | DI Control Object | 0x87 | 2 | rw | 0 |  | 0：card<br>1：door |
@@ -188,6 +227,13 @@ Mode Enable | 0x60 | 2 | rw | 0 |  | 0：disable<br>1：enable |
 | Unplug Card Schedule | 0x87 | 2 | rw | 1 |  | 0：Insert Schedule1<br>1：Insert Schedule2<br>2：Insert Schedule3<br>3：Insert Schedule4<br>4：Insert Schedule5<br>5：Insert Schedule6<br>6：Insert Schedule7<br>7：Insert Schedule8<br>8：Insert Schedule9<br>9：Insert Schedule10<br>10：Insert Schedule11<br>11：Insert Schedule12<br>12：Insert Schedule13<br>13：Insert Schedule14<br>14：Insert Schedule15<br>15：Insert Schedule16 |
 | Magnetic Contact Switch | 0x87 | 2 | rw |  |  |  |
 | Magnetic Contact Switch Type | 0x87 | 2 | rw | 1 |  | 0：normally closed<br>1：normally open |
+| External Temperature Sensor Setting | 0x89 | 1 | rw |  |  |  |
+| Sub-command | 0x89 | 2 | rw | 2 |  |  |
+| Collect Period | 0x89 | 3 | rw | 30 | 1 - 3600 |  |
+| Temperature Calibration Enable | 0x89 | 2 | rw | 0 |  | 0：Disable<br>1：Enable |
+| Temperature Calibration Value | 0x89 | 3 | rw | 0 | -60 - 60 |  |
+| Humidity Calibration Enable | 0x89 | 2 | rw | 0 |  | 0：Disable<br>1：Enable |
+| Humidity Calibration Value | 0x89 | 3 | rw | 0 | -100 - 100 |  |
 | Filter Clean Reminder Setting | 0x8B | 1 | rw |  |  |  |
 | Sub-command | 0x8B | 2 | rw | 0 |  |  |
 | Filter Clean Reminder Enable | 0x8B | 2 | rw | 0 |  | 0：Disable<br>1：Enable |
@@ -208,7 +254,7 @@ Mode Enable | 0x60 | 2 | rw | 0 |  | 0：disable<br>1：enable |
 | NTC | 0x8E | 2 | rw | 0 |  | 0：disable<br>1：enable |
 | Reserved | 0x8E | 2 | rw | 0 |  |  |
 | Reversing Valve Mode | 0x8E | 1 | rw |  |  |  |
-| Reversing Valve Mode | 0x8E | 2 | rw | 0 |  | 0：o/b on cool<br>1：o/b on heat |
+| Reversing Valve Mode | 0x8E | 2 | rw | 1 |  | 0：o/b on heat<br>1：o/b on cool |
 | Compressor and Auxiliary Heat Linkage | 0x8E | 1 | rw |  |  |  |
 | Compressor and Auxiliary Heat Linkage | 0x8E | 2 | rw | 0 |  | 0：disable<br>1：enable |
 | Fan Owner | 0x8E | 1 | rw |  |  |  |
@@ -230,74 +276,82 @@ Mode Enable | 0x60 | 2 | rw | 0 |  | 0：disable<br>1：enable |
 | D2D Pairing Information | 0x96 | 1 | rw |  |  |  |
 | ID | 0x96 | 2 | rw | 0 | 0 - 4 |  |
 | Type | 0x96 | 2 | rw | 0 |  |  |
-| Pairing | 0x96 | 2 | rw | 0 |  | 0：disable<br>1：enable |
-| Device ID | 0x96 | 9 | rw |  |  |  |
+| Enable | 0x96 | 2 | rw | 0 |  | 0：disable<br>1：enable |
+| Device EUI | 0x96 | 9 | rw |  |  |  |
 | Device Name (prefix8) | 0x96 | 9 | rw |  |  |  |
 | Device Name (suffix8) | 0x96 | 9 | rw |  |  |  |
-| D2D Agent Enable | 0x97 | 2 | rw | 0 |  | 0：disable<br>1：enable |
-| D2D Controlled | 0x98 | 1 | rw |  |  |  |
-| D2D Controlled | 0x98 | 1 | rw |  |  |  |
-| D2D Controlled ID | 0x98 | 2 | rw | 0 | 0 - 15 |  |
+| D2D Controller Enable | 0x97 | 2 | rw | 0 |  | 0：disable<br>1：enable |
+| D2D Master Control | 0x98 | 1 | rw |  |  |  |
+| D2D Master Control | 0x98 | 9 | rw |  |  |  |
+| Trigger Mode | 0x98 | 2 | rw | 0 |  | 0: Schedule1<br>1: Schedule2<br>2: Schedule3<br>3: Schedule4<br>4: Schedule5<br>5: Schedule6<br>6: Schedule7<br>7: Schedule8<br>16：System Off<br>17：System On |
 | Enable | 0x98 | 2 | rw | 0 |  | 0：disable<br>1：enable |
 | Control Command | 0x98 | 3 | rw | 0000 |  |  |
-| Action Status | 0x98 | 2 | rw | 16 |  | 0：Schedule1<br>1：Schedule2<br>2：Schedule3<br>3：Schedule4<br>4：Schedule5<br>5：Schedule6<br>6：Schedule7<br>7：Schedule8<br>8：Schedule9<br>9：Schedule10<br>10：Schedule11<br>11：Schedule12<br>12：Schedule13<br>13：Schedule14<br>14：Schedule15<br>15：Schedule16<br>16：System Off<br>17：System On |
+| LoRa Uplink | 0x98 | 2 | rw | 0 |  | 0：disable<br>1：enable |
+| Enable Control Time | 0x98 | 2 | rw | 0 |  | 0：disable<br>1：enable |
+| Control Time | 0x98 | 3 | rw | 5 | 1 - 1440 |  |
+| D2D Agent Enable | 0x99 | 2 | rw | 0 |  | 0：disable<br>1：enable |
+| D2D Controlled | 0x9A | 1 | rw |  |  |  |
+| D2D Controlled | 0x9A | 1 | rw |  |  |  |
+| D2D Controlled ID | 0x9A | 2 | rw | 0 | 0 - 15 |  |
+| Enable | 0x9A | 2 | rw | 0 |  | 0：disable<br>1：enable |
+| Control Command | 0x9A | 3 | rw | 0000 |  |  |
+| Action Status | 0x9A | 2 | rw | 16 |  | 0：Schedule1<br>1：Schedule2<br>2：Schedule3<br>3：Schedule4<br>4：Schedule5<br>5：Schedule6<br>6：Schedule7<br>7：Schedule8<br>16：System Off<br>17：System On |
 
 ### Event
 
 | CHANNEL |  ID  | LENGTH | READ/WRITE | DEFAULT | RANGE | ENUM |
 | :------ | :--: | :----: | :--------: | :-----: | :---: | :--: |
-| Order Check Response | 0xFE | 2 | r |  |  |  |
-| Full Inspection Response | 0xF4 | 1 | r |  |  |  |
-| Command Response | 0xEF | 1 | r |  |  |  |
-| Request to Push All Configurations | 0xEE | 1 | r |  |  |  |
+| Bluetooth New Event | 0xB3 | 1 | r |  |  |  |
+| Temperature  Alarm | 0x02 | 1 | r |  |  |  |
+| Temperature  Abnormal | 0x03 | 1 | r |  |  |  |
+| Filter Clean Remind | 0x04 | 5 | r |  |  |  |
+| Humidity Abnormal | 0x07 | 1 | r |  |  |  |
 
 ### Service
 
 | CHANNEL |  ID  | LENGTH | READ/WRITE | DEFAULT | RANGE | ENUM |
 | :------ | :--: | :----: | :--------: | :-----: | :---: | :--: |
-| Order Check | 0xFE | 2 | w |  |  |  |
-| Order | 0xFE | 2 | w | 0 | 0 - 255 |  |
-| Order | 0xFE | 2 | r | 0 | 0 - 255 |  |
-| Full Inspection Request | 0xF4 | 1 | w |  |  |  |
-| Full Inspection Request Subcommand | 0xF4 | 2 | w |  |  |  |
-| Full Inspection Start | 0xF4 | 1 | w |  |  |  |
-| Full Inspection Control | 0xF4 | 1 | w |  |  |  |
-| Control Command Length | 0xF4 | 3 | w | 0 | 0 - 65535 |  |
-| Control Command Content | 0xF4 | 1 | w |  |  |  |
-| Full Inspection Read | 0xF4 | 1 | w |  |  |  |
-| Read Parameter Length | 0xF4 | 3 | w |  |  |  |
-| Read Parameter Content | 0xF4 | 1 | w | 0 | 0 - 65535 |  |
-| Full Inspection End | 0xF4 | 1 | w |  |  |  |
-| Full Inspection Aging | 0xF4 | 1 | w |  |  |  |
-| Full Inspection Response Subcommand | 0xF4 | 2 | r |  |  |  |
-| Full Inspection Start Response | 0xF4 | 2 | r |  |  |  |
-| Full Inspection Start Response | 0xF4 | 2 | r | 0 |  | 0：success<br>1：failed |
-| Full Inspection Control Response | 0xF4 | 2 | r |  |  |  |
-| Full Inspection Control Response | 0xF4 | 2 | r | 0 |  | 0：success<br>1：failed |
-| Full Inspection Read Response | 0xF4 | 1 | r |  |  |  |
-| Read Response Length | 0xF4 | 3 | r | 0 | 0 - 65535 |  |
-| Read Response Content | 0xF4 | 1 | r |  |  |  |
-| Full Inspection End Response | 0xF4 | 2 | r |  |  |  |
-| Full Inspection End Response | 0xF4 | 2 | r | 0 |  | 0：success<br>1：failed |
-| Full Inspection Aging Response | 0xF4 | 2 | r |  |  |  |
-| Full Inspection Aging Response | 0xF4 | 2 | r | 0 |  | 0：success<br>1：failed |
-| Command Queries | 0xEF | 1 | w |  |  |  |
-| Query Information | 0xEF | 2 | w |  |  |  |
-| Command Length | 0xEF | 2 | w | 1 | 1 - 15 |  |
-| The command that was queried | 0xEF | 1 | w |  |  |  |
-| Answer Result | 0xEF | 2 | r | 0 |  | 0：success<br>1：unknow<br>2：error order<br>3：error passwd<br>4：error read params<br>5：error write params<br>6：error read<br>7：error write<br>8：error read apply<br>9：error write apply |
-| Command Length | 0xEF | 2 | r | 1 | 1 - 15 |  |
-| Answered Commands | 0xEF | 1 | r |  |  |  |
-| Device Status Query | 0xB9 | 1 | w |  |  |  |
-| Time Synchronize | 0xB8 | 1 | w |  |  |  |
-| Clear Data | 0xBD | 1 | w |  |  |  |
-| Stop Retrieval | 0xBC | 1 | w |  |  |  |
-| Retrieval(Periods of Time) | 0xBB | 9 | w |  |  |  |
-| Start Time | 0xBB | 5 | w |  |  |  |
-| End Time | 0xBB | 5 | w |  |  |  |
-| Retrieval(Point-in-Time) | 0xBA | 5 | w |  |  |  |
-| Time Point | 0xBA | 5 | w |  |  |  |
+| Bluetooth New Event Type | 0xB3 | 2 | r |  |  |  |
+| None | 0xB3 | 1 | r |  |  |  |
+| Pairing Canceled | 0xB3 | 1 | r |  |  |  |
+| Disconnected | 0xB3 | 1 | r |  |  |  |
+| BLE Server | 0xB4 | 1 | w |  |  |  |
+| Server Type | 0xB4 | 2 | w | 0 |  | 0：复位名称<br>1：取消配对<br>2：触发配对 |
+| Alarm Type | 0x02 | 2 | r |  |  |  |
+| Close Window | 0x02 | 3 | r |  |  |  |
+| Temperature | 0x02 | 3 | r |  | -20 - 60 |  |
+| Open Window | 0x02 | 3 | r |  |  |  |
+| Temperature | 0x02 | 3 | r |  | -20 - 60 |  |
+| Temperature Above Alarm | 0x02 | 3 | r |  |  |  |
+| Temperature | 0x02 | 3 | r |  | -20 - 60 |  |
+| Temperature Above Alarm Released | 0x02 | 3 | r |  |  |  |
+| Temperature | 0x02 | 3 | r |  | -20 - 60 |  |
+| Temperature Below Alarm | 0x02 | 3 | r |  |  |  |
+| Temperature | 0x02 | 3 | r |  | -20 - 60 |  |
+| Temperature Below Alarm Released | 0x02 | 3 | r |  |  |  |
+| Temperature | 0x02 | 3 | r |  | -20 - 60 |  |
+| Temperature Within Alarm | 0x02 | 3 | r |  |  |  |
+| Temperature | 0x02 | 3 | r |  | -20 - 60 |  |
+| Temperature Within Alarm Released | 0x02 | 3 | r |  |  |  |
+| Temperature | 0x02 | 3 | r |  | -20 - 60 |  |
+| Persistent Low Temp Release | 0x02 | 3 | r |  |  |  |
+| Temperature | 0x02 | 3 | r |  | -20 - 60 |  |
+| Persistent Low Temp Trigger | 0x02 | 3 | r |  |  |  |
+| Temperature | 0x02 | 3 | r |  | -20 - 60 |  |
+| Persistent High Temp Release | 0x02 | 3 | r |  |  |  |
+| Temperature | 0x02 | 3 | r |  | -20 - 60 |  |
+| Persistent High Temp Trigger | 0x02 | 3 | r |  |  |  |
+| Temperature | 0x02 | 3 | r |  | -20 - 60 |  |
+| Alarm Type | 0x03 | 2 | r |  |  |  |
+| Collection Error | 0x03 | 1 | r |  |  |  |
+| Exceed the Range Lower Limit | 0x03 | 1 | r |  |  |  |
+| Exceed the Range Upper Limit | 0x03 | 1 | r |  |  |  |
+| No Data | 0x03 | 1 | r |  |  |  |
+| Usage Time | 0x04 | 5 | r |  |  |  |
+| Alarm Type | 0x07 | 2 | r |  |  |  |
+| Collection Error | 0x07 | 1 | r |  |  |  |
+| Exceed the Range Lower Limit | 0x07 | 1 | r |  |  |  |
+| Exceed the Range Upper Limit | 0x07 | 1 | r |  |  |  |
+| No Data | 0x07 | 1 | r |  |  |  |
 | Reboot | 0xBE | 1 | w |  |  |  |
-| Delete Schedule | 0x5F | 2 | w |  |  |  |
-| Delete Schedule | 0x5F | 2 | w | 255 |  | 0：Schedule1<br>1：Schedule2<br>2：Schedule3<br>3：Schedule4<br>4：Schedule5<br>5：Schedule6<br>6：Schedule7<br>7：Schedule8<br>8：Schedule9<br>9：Schedule10<br>10：Schedule11<br>11：Schedule12<br>12：Schedule13<br>13：Schedule14<br>14：Schedule15<br>15：Schedule16<br>255：All |
 
