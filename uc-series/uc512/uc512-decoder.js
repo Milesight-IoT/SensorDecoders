@@ -695,15 +695,29 @@ function readDeviceStatus(status) {
 }
 
 function readValveIndex(index) {
-    var index_map = {
-        0: "1",
-        1: "2",
-        2: "3",
-        3: "4",
-        4: "5",
-        5: "6",
-        6: "7",
-        7: "all",
+    var index_map;
+    if (RAW_VALUE === 0x00) {
+        index_map = {
+            0: "valve 1",
+            1: "valve 2",
+            2: "valve 3",
+            3: "valve 4",
+            4: "valve 5",
+            5: "valve 6",
+            6: "valve 7",
+            7: "all valves",
+        }
+    } else {
+        index_map = {
+            1: "valve 1",
+            2: "valve 2",
+            3: "valve 3",
+            4: "valve 4",
+            5: "valve 5",
+            6: "valve 6",
+            7: "valve 7",
+            8: "all valves",
+        }
     }
     return getValue(index_map, index);
 }

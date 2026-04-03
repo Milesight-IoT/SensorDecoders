@@ -799,7 +799,12 @@ function setValveTask(valve_task) {
     var valve_status_values = getValues(valve_status_map);
     var enable_map = { 0: "disable", 1: "enable" };
     var enable_values = getValues(enable_map);
-    var index_map = { "1": 0, "2": 1, "3": 2, "4": 3, "5": 4, "6": 5, "7": 6, "all": 7 };
+    var index_map;
+    if (RAW_VALUE === 0x00) {
+        index_map = { 0: "valve 1", 1: "valve 2", 2: "valve 3", 3: "valve 4", 4: "valve 5", 5: "valve 6", 6: "valve 7", 7: "all valves" };
+    } else {
+        index_map = { 1: "valve 1", 2: "valve 2", 3: "valve 3", 4: "valve 4", 5: "valve 5", 6: "valve 6", 7: "valve 7", 8: "all valves" };
+    }
 
     var sequence_id = valve_task.sequence_id;
     var duration = valve_task.duration;
@@ -812,10 +817,14 @@ function setValveTask(valve_task) {
     }
 
     // ctrl bits 0-2: valve_index (1=valve1, 2=valve2, 7=all)
-    if (Object.keys(index_map).indexOf(valve_task.valve_index) === -1) {
-        throw new Error("valve_task.valve_index must be one of " + Object.keys(index_map).join(", "));
+    index_values = getValues(index_map);
+    if (index_values.indexOf(valve_task.valve_index) === -1) {
+        throw new Error("valve_task.valve_index must be one of " + index_values.join(", "));
     }
-    var valve_index_value = index_map[valve_task.valve_index];
+    if (RAW_VALUE === 0x01) {
+        valve_task.valve_index = valve_task.valve_index - 1;
+    }
+    var valve_index_value = getValue(index_map, valve_task.valve_index);
     var valve_status_value = getValue(valve_status_map, valve_task.valve_status);
 
     var ctrl = 0;
