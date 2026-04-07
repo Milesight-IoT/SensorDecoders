@@ -618,7 +618,7 @@
             "bacnet_type": "analog_value_object",
             "bacnet_unit_type_id": 73,
             "bacnet_unit_type": "UNITS_SECONDS",
-            "reference": ["valve_task.valve_index", "valve_task.sequence_id", "valve_task.valve_status", "valve_task.time_rule_enable", "valve_task.pulse_rule_enable", "valve_task.valve_pulse"]
+            "reference": ["valve_task.valve_index", "valve_task.sequence_id", "valve_task.valve_status"]
         },
         {
             "id": "valve_task.valve_pulse",
@@ -648,7 +648,7 @@
             "bacnet_type": "binary_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": ["valve_task.valve_index", "valve_task.sequence_id", "valve_task.valve_status", "valve_task.time_rule_enable", "valve_task.start_time"]
+            "reference": ["valve_task.valve_index", "valve_task.sequence_id", "valve_task.valve_status", "valve_task.duration", "valve_task.start_time"]
         },
         {
             "id": "valve_task.start_time",
@@ -661,7 +661,7 @@
             "bacnet_type": "analog_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": ["valve_task.valve_index", "valve_task.sequence_id", "valve_task.valve_status", "valve_task.rain_stop_plan"]
+            "reference": ["valve_task.valve_index", "valve_task.sequence_id", "valve_task.valve_status"]
         },
         {
             "id": "clear_valve_1_pulse",
