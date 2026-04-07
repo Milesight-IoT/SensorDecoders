@@ -66,8 +66,8 @@ function milesightDeviceEncode(payload) {
             encoded = encoded.concat(setTemperatureControlMode(payload.temperature_control_mode));
         }
     }
-    if ("system_status" in payload) {
-        encoded = encoded.concat(setSystemStatus(payload.system_status));
+    if ("device_status" in payload) {
+        encoded = encoded.concat(setSystemStatus(payload.device_status));
     }
     if ("temperature_calibration_settings" in payload) {
         encoded = encoded.concat(setTemperatureCalibration(payload.temperature_calibration_settings));
@@ -187,8 +187,8 @@ function milesightDeviceEncode(payload) {
     if ("offline_timeout" in payload) {
         encoded = encoded.concat(setConfigValueTime(payload.offline_timeout, "offline_timeout", 0x29));
     }
-    if ("down_heart" in payload) {
-        encoded = encoded.concat(setDownHeart(payload.down_heart));
+    if ("heartbeat" in payload) {
+        encoded = encoded.concat(setDownHeart(payload.heartbeat));
     }
     
     if ("wires_relay_config" in payload) {
@@ -591,21 +591,21 @@ function setTemperatureUnitDisplay(temperature_unit) {
 }
 
 /**
- * set system status
- * @param {number} system_status values: (0: on, 1: off)
- * @example { "system_status": 1 }
+ * set device status
+ * @param {number} device_status values: (0: on, 1: off)
+ * @example { "device_status": 1 }
  */
-function setSystemStatus(system_status) {
+function setSystemStatus(device_status) {
     var on_off_map = { 0: "on", 1: "off" };
     var on_off_values = getValues(on_off_map);
-    if (on_off_values.indexOf(system_status) === -1) {
-        throw new Error("system_status must be one of " + on_off_values.join(", "));
+    if (on_off_values.indexOf(device_status) === -1) {
+        throw new Error("device_status must be one of " + on_off_values.join(", "));
     }
 
     var buffer = new Buffer(3);
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0xc5);
-    buffer.writeUInt8(getValue(on_off_map, system_status));
+    buffer.writeUInt8(getValue(on_off_map, device_status));
     return buffer.toBytes();
 }
 
@@ -930,13 +930,13 @@ function setCurrentTemperatureControlMode(current_temperature_control_mode) {
             throw new Error("current_temperature_control_mode.value must be one of " + temperature_mode_values.join(", "));
         }
 
-        return [0xf9, 0xfb, value - 1];
+        return [0xff, 0xfb, value - 1];
     } else {
         if (temperature_mode_values.indexOf(mode) === -1) {
             throw new Error("current_temperature_control_mode.mode must be one of " + temperature_mode_values.join(", "));
         }
 
-        return [0xf9, 0xfb, getValue(temperature_mode_map, mode) - 1];
+        return [0xff, 0xfb, getValue(temperature_mode_map, mode) - 1];
     }
 }
 
@@ -987,7 +987,6 @@ function setFanDelayConfigDelayTime(fan_delay_config_delay_time) {
  */
 function setTemporaryUnlockSettings(temporary_unlock_settings) {
     var value = temporary_unlock_settings.value;
-    var settings = temporary_unlock_settings.settings;
 
     var temporary_unlock_settings_map = { 
         1: "disable",
@@ -1038,9 +1037,20 @@ function setTemporaryUnlockSettings(temporary_unlock_settings) {
         if (rawValue_temporary_unlock_settings_values.indexOf(value) === -1) {
             throw new Error("temporary_unlock_settings.value must be one of " + rawValue_temporary_unlock_settings_values.join(", "));
         }
+
+        if(temporary_unlock_settings_map[value] === 'disable') {
+            return [0xf9, 0x22, 0x00];
+        }
+
+        return [0xf9, 0x22, getDataValue(temporary_unlock_settings_map[value])];
     }
 
-    return [0xf9, 0x22, settings === 'disable' ? 0x00 : getDataValue(settings)];
+    var settings = temporary_unlock_settings.settings;
+    if (settings === 'disable') {
+        return [0xf9, 0x22, 0x00];
+    }
+
+    return [0xf9, 0x22, getDataValue(settings)];
 }
 
 /**
@@ -1095,7 +1105,7 @@ function setOccupiedDelay(occupied_delay) {
 function setTimeFormat(time_format) {
     var value = time_format.value;
     var mode = time_format.mode;
-    var time_format_map = { 1: "12-hour", 2: "24-hour" };
+    var time_format_map = { 1: "12 Hour (AM-PM)", 2: "24 Hour" };
     var time_format_values = getValues(time_format_map);
 
     if (RAW_VALUE) {
@@ -1149,21 +1159,26 @@ function setWireMode(wire_mode) {
 function setTemperatureHumiditySource(temperature_humidity_source) {
     var value = temperature_humidity_source.value;
     var mode = temperature_humidity_source.mode;
-    var temperature_humidity_source_map = { 1: "embedded", 3: "lora", 4: "d2d" };
-    var temperature_humidity_source_values = getValues(temperature_humidity_source_map);
+    var temperature_humidity_source_map = [
+        { value: 1, name: "embedded" },
+        { value: 3, name: "lora" },
+        { value: 4, name: "d2d" },
+    ];
 
     if (RAW_VALUE) {
-        if (temperature_humidity_source_values.indexOf(value) === -1) {
-            throw new Error("temperature_humidity_source.value must be one of " + temperature_humidity_source_values.join(", "));
+        var values = temperature_humidity_source_map.map(function(item) { return item.value; });
+        if (values.indexOf(value) === -1) {
+            throw new Error("temperature_humidity_source.value must be one of " + values.join(", "));
         }
 
-        return [0xf9, 0x2e, value];
+        return [0xf9, 0x2e, arrayFindIndex(temperature_humidity_source_map, function(item) { return item.value === value; }) + 1];
     } else {
-        if (temperature_humidity_source_values.indexOf(mode) === -1) {
-            throw new Error("temperature_humidity_source.mode must be one of " + temperature_humidity_source_values.join(", "));
+        var modes = temperature_humidity_source_map.map(function(item) { return item.name; });
+        if (modes.indexOf(mode) === -1) {
+            throw new Error("temperature_humidity_source.mode must be one of " + modes.join(", "));
         }
 
-        return [0xf9, 0x2e, getValue(temperature_humidity_source_map, mode)];
+        return [0xf9, 0x2e, arrayFindIndex(temperature_humidity_source_map, function(item) { return item.name === mode; }) + 1];
     }
 }
 
@@ -1487,29 +1502,32 @@ function setFreezeProtection(freeze_protection_config) {
 }
 
 /**
- * @param {string} fan_mode values: (0: "auto", 1: "always on", 2: "circulate", 3: "low speed", 4: "medium speed", 5: "high speed", 6: "disable")
- * @example { "fan_mode": { "value": 0, "mode": "auto" } }
+ * @param {string} fan_mode values: (2: "auto", 3: "always on", 4: "circulate")
+ * @example { "fan_mode": { "value": 2, "mode": "auto" } }
  */
 function setFanMode(fan_mode) {
     var value = fan_mode.value;
     var mode = fan_mode.mode;
-    var fan_mode_map = { 0: "auto", 1: "always on", 2: "circulate", 3: "low speed", 4: "medium speed", 5: "high speed", 6: "disable" };
+    var fan_mode_map = [
+        { value: 2, name: "auto" },
+        { value: 3, name: "always on" },
+        { value: 4, name: "circulate" },
+    ];
 
     if(RAW_VALUE) {
-        var fan_mode_value_map = { 1: "auto", 2: "always on", 3: "circulate" };
-        var fan_mode_value_values = getValues(fan_mode_value_map);
+        var fan_mode_value_values = fan_mode_map.map(function(item) { return item.value; });
         if (fan_mode_value_values.indexOf(value) === -1) {
             throw new Error("fan_mode.value must be one of " + fan_mode_value_values.join(", "));
         }
-        
-        return [0xff, 0xb6, getObjValue(fan_mode_map, fan_mode_value_map[value])];
+
+        return [0xff, 0xb6, arrayFindIndex(fan_mode_map, function(item) { return item.value === value; })];
     } else {
-        var fan_mode_values = getValues(fan_mode_map);
+        var fan_mode_values = fan_mode_map.map(function(item) { return item.name; });
         if (fan_mode_values.indexOf(mode) === -1) {
             throw new Error("fan_mode.mode must be one of " + fan_mode_values.join(", "));
         }
 
-        return [0xff, 0xb6, getValue(fan_mode_map, mode)];
+        return [0xff, 0xb6, arrayFindIndex(fan_mode_map, function(item) { return item.name === mode; })];
     }
 }
 
@@ -2256,21 +2274,21 @@ function setConfigValueTime(config, key, channel_type) {
 /**
  * set down heart
  * @since firmware version 1.4
- * @param {number} down_heart range: [0, 255]
- * @example { "down_heart": 0 }
+ * @param {number} heartbeat range: [0, 255]
+ * @example { "heartbeat": 0 }
  */
-function setDownHeart(down_heart) {
-    if (typeof down_heart !== "number") {
-        throw new Error("down_heart must be a number");
+function setDownHeart(heartbeat) {
+    if (typeof heartbeat !== "number") {
+        throw new Error("heartbeat must be a number");
     }
-    if (down_heart < 0 || down_heart > 255) {
-        throw new Error("down_heart must be in range [0, 255]");
+    if (heartbeat < 0 || heartbeat > 255) {
+        throw new Error("heartbeat must be in range [0, 255]");
     }
 
     var buffer = new Buffer(3);
     buffer.writeUInt8(0xf9);
     buffer.writeUInt8(0x2a);
-    buffer.writeUInt8(down_heart);
+    buffer.writeUInt8(heartbeat);
     return buffer.toBytes();
 }
 
@@ -2404,7 +2422,7 @@ function setUnlockConfig(unlock_config) {
  */
 function setTemperatureControlEnableSetting(temperature_control_enable_setting) {
     var value = temperature_control_enable_setting.value;
-    var mode = temperature_control_enable_setting.mode;
+    
     var value_map = { 1: "heat/em heat/cool/auto", 2: "heat/cool/auto", 3: "heat", 4: "cool", 5: "heat/cool" };
     var value_values = getValues(value_map);
 
@@ -2426,9 +2444,16 @@ function setTemperatureControlEnableSetting(temperature_control_enable_setting) 
         if (value_values.indexOf(value) === -1) {
             throw new Error("temperature_control_enable_setting.value must be one of " + value_values.join(", "));
         }
+
+        return [0xf9, 0x5d, getDataValue(value_map[value])];
     }
 
-    return [0xf9, 0x5d, mode === 'disable' ? 0x00 : getDataValue(mode)];
+    var mode = temperature_control_enable_setting.mode;
+    if(mode === 'disable') {
+        return [0xf9, 0x5d, 0x00];
+    }
+
+    return [0xf9, 0x5d, getDataValue(mode)];
 }
 
 /**
@@ -2618,6 +2643,15 @@ function getObjValue(map, value) {
         }
     }
     throw new Error("not match in " + JSON.stringify(map));
+}
+
+function arrayFindIndex(array, callback) {
+    for (var i = 0; i < array.length; i++) {
+        if (callback(array[i], i, array)) {
+            return i;
+        }
+    }
+    return -1;
 }
 
 function Buffer(size) {

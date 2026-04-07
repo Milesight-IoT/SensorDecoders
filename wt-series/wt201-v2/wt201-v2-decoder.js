@@ -122,25 +122,25 @@ function milesightDeviceDecode(bytes) {
         // FAN CONTROL
         else if (channel_id === 0x06 && channel_type === 0xe8) {
             var fan_data = bytes[i];
-            var fan_mode_map = {
-                0: "auto",
-                1: "always on",
-                2: "circulate",
-                3: "disable",
-            }; 
-            var fan_status_map = {
-                1: "standby",
-                2: "on",
-                3: "low speed",
-                5: "high speed"
-            };
+            var fan_mode_map = [ 
+                { value: 2, name: "auto" },
+                { value: 3, name: "always on" },
+                { value: 4, name: "circulate" },
+                { value: 1, name: "disable" }
+            ]; 
+            var fan_status_map = [
+                { value: 1, name: "standby" },
+                { value: 5, name: "high speed" },
+                { value: 3, name: "low speed" },
+                { value: 2, name: "on" }
+            ];
             decoded.fan_control_info = {};
             // value = fan_mode(0..1) + fan_status(2..3)
-            decoded.fan_control_info.fan_control_mode = fan_mode_map[(fan_data >>> 0) & 0x03];
-            decoded.fan_control_info.fan_control_status = readFanStatus((fan_data >>> 2) & 0x07);
+            decoded.fan_control_info.fan_control_mode = fan_mode_map[(fan_data >>> 0) & 0x03]['name'];
+            decoded.fan_control_info.fan_control_status = fan_status_map[(fan_data >>> 2) & 0x07]['name'];
             if (RAW_VALUE) {
-                decoded.fan_control_info.fan_control_mode_value = ((fan_data >>> 0) & 0x03) + 1;
-                decoded.fan_control_info.fan_control_status_value = getValues(fan_status_map, readFanStatus((fan_data >>> 2) & 0x07));
+                decoded.fan_control_info.fan_control_mode_value = fan_mode_map[(fan_data >>> 0) & 0x03]['value'];
+                decoded.fan_control_info.fan_control_status_value = fan_status_map[(fan_data >>> 2) & 0x07]['value'];
             }
             i += 1;
         }
@@ -179,7 +179,7 @@ function milesightDeviceDecode(bytes) {
         }
         // SYSTEM STATUS
         else if (channel_id === 0x08 && channel_type === 0x8e) {
-            decoded.system_status = readOnOffStatus(bytes[i]);
+            decoded.device_status = readOnOffStatus(bytes[i]);
             i += 1;
         }
         // HUMIDITY
@@ -382,14 +382,15 @@ function handle_downlink_response(channel_type, bytes, offset) {
             break;
         case 0xb6:
             var mode = readUInt8(bytes[offset]);
+            var fan_mode_map = [ 
+                { value: 2, name: "auto" },
+                { value: 3, name: "always on" },
+                { value: 4, name: "circulate" },
+            ];
             decoded.fan_mode = {};
+            decoded.fan_mode.mode = fan_mode_map[mode]['name'];
             if(RAW_VALUE) {
-                var fan_mode_map1 = { 0: "auto", 1: "always on", 2: "circulate" };
-                decoded.fan_mode.value = getMapKey(fan_mode_map1, mode, mode + 1);
-                decoded.fan_mode.mode = getMapValue(fan_mode_map1, mode);
-            } else {
-                var fan_mode_map2 = { 0: "auto", 1: "always on", 2: "circulate", 3: "low speed", 4: "medium speed", 5: "high speed", 6: "disable" };
-                decoded.fan_mode.mode = getMapValue(fan_mode_map2, mode);
+                decoded.fan_mode.value = fan_mode_map[mode]['value'];
             }
             offset += 1;
             break;
@@ -608,7 +609,7 @@ function handle_downlink_response_ext(code, channel_type, bytes, offset) {
             offset += 1;
             break;
         case 0x2a:
-            decoded.down_heart = readUInt8(bytes[offset]);
+            decoded.heartbeat = readUInt8(bytes[offset]);
             offset += 1;
             break;
         
@@ -839,7 +840,7 @@ function handle_downlink_response_ext(code, channel_type, bytes, offset) {
             break;
         case 0x2c:
             var time_format = readUInt8(bytes[offset]);
-            var time_format_map = { 1: "12-hour", 2: "24-hour" };
+            var time_format_map = { 1: "12 Hour (AM-PM)", 2: "24 Hour" };
             decoded.time_format = {};
             if (RAW_VALUE) {
                 decoded.time_format.value = time_format;
@@ -863,15 +864,20 @@ function handle_downlink_response_ext(code, channel_type, bytes, offset) {
             break;
         case 0x2e:
             var temperature_humidity_source = readUInt8(bytes[offset]);
-            var temperature_humidity_source_map = { 1: "embedded", 3: "lora", 4: "d2d" };
+            var temperature_humidity_source_map = [
+                { value: 1, name: "embedded" },
+                { value: 3, name: "lora" },
+                { value: 4, name: "d2d" },
+            ];
             decoded.temperature_humidity_source = {};
             if(RAW_VALUE) {
-                decoded.temperature_humidity_source.value = temperature_humidity_source;
-                decoded.temperature_humidity_source.mode = temperature_humidity_source_map[temperature_humidity_source];
+                decoded.temperature_humidity_source.value = temperature_humidity_source_map[temperature_humidity_source - 1]['value'];
+                decoded.temperature_humidity_source.mode = temperature_humidity_source_map[temperature_humidity_source - 1]['name'];
             } else {
-                decoded.temperature_humidity_source.mode = temperature_humidity_source_map[temperature_humidity_source];
+                decoded.temperature_humidity_source.mode = temperature_humidity_source_map[temperature_humidity_source - 1]['name'];
             }
             offset += 1;
+            break;
         case 0x2f:
             var timezone = readUInt8(bytes[offset]);
             var timezone_map = { 1: "UTC-12", 2: "UTC-11", 3: "UTC-10", 4: "UTC-9:30", 5: "UTC-9", 6: "UTC-8", 7: "UTC-7", 8: "UTC-6", 9: "UTC-5", 10: "UTC-4", 11: "UTC-3:30", 12: "UTC-3", 13: "UTC-2", 14: "UTC-1", 15: "UTC", 16: "UTC+1", 17: "UTC+2", 18: "UTC+3", 19: "UTC+3:30", 20: "UTC+4", 21: "UTC+4:30", 22: "UTC+5", 23: "UTC+5:30", 24: "UTC+5:45", 25: "UTC+6", 26: "UTC+6:30", 27: "UTC+7", 28: "UTC+8", 29: "UTC+9", 30: "UTC+9:30", 31: "UTC+10", 32: "UTC+10:30", 33: "UTC+11", 34: "UTC+12", 35: "UTC+12:45", 36: "UTC+13", 37: "UTC+14" };
@@ -883,6 +889,7 @@ function handle_downlink_response_ext(code, channel_type, bytes, offset) {
                 decoded.timezone_index.timezone = timezone_map[timezone];
             }
             offset += 1;
+            break;
         case 0x30: 
             decoded.timezone_offset = readInt16LE(bytes.slice(offset, offset + 2));
             offset += 2;
@@ -1271,7 +1278,7 @@ function readFanStatus(type) {
         2: "low speed",
         3: "on"
     };
-    return getMapValue(fan_status_map, type);
+    return getValue(fan_status_map, type);
 }
 
 function readControlPermission(type) {
@@ -1397,6 +1404,7 @@ function readTemperatureControlSupportStatus(heat_mode_value, cool_mode_value) {
     enable.stage_5_heat = readEnableStatus((heat_mode_value >>> 4) & 0x01);
     enable.stage_1_cool = readEnableStatus((cool_mode_value >>> 0) & 0x01);
     enable.stage_2_cool = readEnableStatus((cool_mode_value >>> 1) & 0x01);
+    enable.stage_3_cool = readEnableStatus((cool_mode_value >>> 2) & 0x01);
     return enable;
 }
 
