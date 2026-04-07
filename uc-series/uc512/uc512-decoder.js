@@ -439,7 +439,7 @@ function handle_downlink_response(channel_type, bytes, offset) {
             var bit3 = (ctrl >> 3) & 0x01;
             var bit4 = (ctrl >> 4) & 0x01;
             var special_task_mode_value = bit3 ^ bit4;
-            decoded.valve_task.valve_index = readValveIndex(ctrl & 0x07);
+            decoded.valve_task.valve_index = readValveIndex((ctrl & 0x07) + (RAW_VALUE === 0x01 ? 1 : 0));
             decoded.valve_task.valve_status = readValveStatus((ctrl >> 5) & 0x01);
             decoded.valve_task.sequence_id = readUInt8(bytes[offset + 1]);
             offset += 2;
@@ -695,30 +695,16 @@ function readDeviceStatus(status) {
 }
 
 function readValveIndex(index) {
-    var index_map;
-    if (RAW_VALUE === 0x00) {
-        index_map = {
-            0: "valve 1",
-            1: "valve 2",
-            2: "valve 3",
-            3: "valve 4",
-            4: "valve 5",
-            5: "valve 6",
-            6: "valve 7",
-            7: "all valves",
-        }
-    } else {
-        index_map = {
-            1: "valve 1",
-            2: "valve 2",
-            3: "valve 3",
-            4: "valve 4",
-            5: "valve 5",
-            6: "valve 6",
-            7: "valve 7",
-            8: "all valves",
-        }
-    }
+    var index_map = {
+        0: "valve 1",
+        1: "valve 2",
+        2: "valve 3",
+        3: "valve 4",
+        4: "valve 5",
+        5: "valve 6",
+        6: "valve 7",
+        7: "all valves"
+    };
     return getValue(index_map, index);
 }
 
