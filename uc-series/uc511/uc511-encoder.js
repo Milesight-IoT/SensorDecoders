@@ -813,7 +813,7 @@ function setValveTask(valve_task) {
 
     // ctrl bits 0-2: valve_index (1=valve1, 2=valve2, 7=all)
     index_values = getValues(index_map);
-    if (index_values.indexOf(valve_task.valve_index - (RAW_VALUE === 0x01 ? 1 : 0)) === -1) {
+    if (index_values.indexOf(RAW_VALUE === 0x01 ? valve_task.valve_index - 1 : valve_task.valve_index) === -1) {
         throw new Error("valve_task.valve_index must be one of " + index_values.join(", "));
     }
     var valve_index_value = getValue(index_map, valve_task.valve_index);

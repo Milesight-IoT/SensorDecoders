@@ -539,7 +539,8 @@
                 { "value": 4, "name": "valve 4" },
                 { "value": 5, "name": "valve 5" },
                 { "value": 6, "name": "valve 6" },
-                { "value": 7, "name": "all valves" }
+                { "value": 7, "name": "valve 7" },
+                { "value": 8, "name": "all valves" }
             ],
             "bacnet_type": "multistate_value_object",
             "bacnet_unit_type_id": 95,
