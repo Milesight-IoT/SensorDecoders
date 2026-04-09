@@ -92,7 +92,33 @@ function milesightDeviceDecode(bytes) {
         else if (channel_id === 0x04 && channel_type === 0x8e) {
             decoded.calibration_status = readCalibrationStatus(bytes[i]);
             i += 1;
-        } // DOWNLINK RESPONSE
+        }
+        // PIR STATUS
+        else if (channel_id === 0x05 && channel_type === 0x8e) {
+            decoded.pir_status = readPirStatus(bytes[i]);
+            i += 1;
+        }
+        // TOF STATUS
+        else if (channel_id === 0x06 && channel_type === 0x8e) {
+            decoded.tof_status = readTofStatus(bytes[i]);
+            i += 1;
+        }
+        // STANDARDIZATION DISTANCE
+        else if (channel_id === 0x06 && channel_type === 0x82) {
+            decoded.standardization = readUInt16LE(bytes.slice(i, i + 2));
+            i += 2;
+        }
+        // STANDARDIZATION SIGNAL
+        else if (channel_id === 0x07 && channel_type === 0x82) {
+            decoded.signal = readUInt16LE(bytes.slice(i, i + 2));
+            i += 2;
+        }
+        // BODY HEIGHT
+        else if (channel_id === 0x08 && channel_type === 0x82) {
+            decoded.body_height = readUInt16LE(bytes.slice(i, i + 2));
+            i += 2;
+        }
+        // DOWNLINK RESPONSE
         else if (channel_id === 0xfe || channel_id === 0xff) {
             var result = handle_downlink_response(channel_type, bytes, i);
             decoded = Object.assign(decoded, result.data);
@@ -138,6 +164,17 @@ function handle_downlink_response(channel_type, bytes, offset) {
             decoded.back_test_config.enable = readEnableStatus(bytes[offset]);
             decoded.back_test_config.distance = readUInt16LE(bytes.slice(offset + 1, offset + 3));
             offset += 3;
+            break;
+        case 0x73:
+            decoded.debug_roi_config = {};
+            var config = readUInt8(bytes[offset]);
+            decoded.debug_roi_config.debug_enable = readEnableStatus((config >> 4) & 0x01);
+            decoded.debug_roi_config.roi = (config & 0x0f) + 1;
+            offset += 1;
+            break;
+        case 0x76:
+            decoded.standardization = readUInt16LE(bytes.slice(offset, offset + 2));
+            offset += 2;
             break;
         default:
             throw new Error("unknown downlink response");
@@ -216,6 +253,17 @@ function readOccupancyStatus(status) {
 function readCalibrationStatus(status) {
     var status_map = { 0: "failed", 1: "success" };
     return getValue(status_map, status);
+}
+
+function readPirStatus(status) {
+    var status_map = { 0: "idle", 1: "triggered", 2: "delayed_triggered" };
+    return getValue(status_map, status);
+}
+
+function readTofStatus(status) {
+    if (RAW_VALUE) return status;
+
+    return status === 0 || status === 1 || status === 7 ? "valid" : "invalid";
 }
 
 /* eslint-disable */

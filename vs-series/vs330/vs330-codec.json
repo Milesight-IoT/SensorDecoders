@@ -174,6 +174,75 @@
             "bacnet_unit_type": "UNITS_NO_UNITS"
         },
         {
+            "id": "pir_status",
+            "name": "PIR Status",
+            "value": "1",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [
+                { "value": 0, "name": "idle" },
+                { "value": 1, "name": "triggered" },
+                { "value": 2, "name": "delayed_triggered" }
+            ],
+            "bacnet_type": "multistate_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS"
+        },
+        {
+            "id": "tof_status",
+            "name": "TOF Status",
+            "value": "1",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                { "value": 0, "name": "invalid" },
+                { "value": 1, "name": "valid" }
+            ],
+            "bacnet_type": "binary_input_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS"
+        },
+        {
+            "id": "standardization",
+            "name": "Standardization",
+            "value": "16",
+            "unit": "mm",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "UINT16",
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 30,
+            "bacnet_unit_type": "UNITS_MILLIMETERS"
+        },
+        {
+            "id": "signal",
+            "name": "Signal",
+            "value": "16",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "NUMBER",
+            "value_type": "UINT16",
+            "bacnet_type": "analog_input_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS"
+        },
+        {
+            "id": "body_height",
+            "name": "Body Height",
+            "value": "16",
+            "unit": "mm",
+            "access_mode": "R",
+            "data_type": "NUMBER",
+            "value_type": "UINT16",
+            "bacnet_type": "analog_input_object",
+            "bacnet_unit_type_id": 30,
+            "bacnet_unit_type": "UNITS_MILLIMETERS"
+        },
+        {
             "id": "reboot",
             "name": "Reboot",
             "value": "",
@@ -252,6 +321,36 @@
             "bacnet_type": "analog_value_object",
             "bacnet_unit_type_id": 72,
             "bacnet_unit_type": "UNITS_MINUTES"
+        },
+        {
+            "id": "debug_roi_config.debug_enable",
+            "name": "Debug ROI Config (Enable)",
+            "value": "",
+            "unit": "",
+            "access_mode": "RW",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                { "value": 0, "name": "disable" },
+                { "value": 1, "name": "enable" }
+            ],
+            "bacnet_type": "binary_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": ["debug_roi_config.debug_enable", "debug_roi_config.roi"]
+        },
+        {
+            "id": "debug_roi_config.roi",
+            "name": "Debug ROI Config (ROI)",
+            "value": "16",
+            "unit": "",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "UINT8",
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": ["debug_roi_config.debug_enable", "debug_roi_config.roi"]
         },
         {
             "id": "back_test_config.enable",

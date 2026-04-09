@@ -50,6 +50,12 @@ function milesightDeviceEncode(payload) {
     if ("back_test_config" in payload) {
         encoded = encoded.concat(setBackTestMode(payload.back_test_config));
     }
+    if ("debug_roi_config" in payload) {
+        encoded = encoded.concat(setDebugROIConfig(payload.debug_roi_config));
+    }
+    if ("standardization" in payload) {
+        encoded = encoded.concat(setStandardization(payload.standardization));
+    }
 
     return encoded;
 }
@@ -196,6 +202,59 @@ function setBackTestMode(back_test_config) {
     buffer.writeUInt8(0x7a);
     buffer.writeUInt8(getValue(enable_map, enable));
     buffer.writeUInt16LE(distance);
+    return buffer.toBytes();
+}
+
+/**
+ * set debug mode and roi
+ * @param {object} debug_roi_config
+ * @param {number} debug_roi_config.debug_enable values: (0: disable, 1: enable)
+ * @param {number} debug_roi_config.roi range: [4, 16]
+ * @example { "debug_roi_config": { "debug_enable": 1, "roi": 16 } }
+ */
+function setDebugROIConfig(debug_roi_config) {
+    var debug_enable = debug_roi_config.debug_enable;
+    var roi = debug_roi_config.roi;
+
+    var enable_map = { 0: "disable", 1: "enable" };
+    var enable_values = getValues(enable_map);
+    if (enable_values.indexOf(debug_enable) === -1) {
+        throw new Error("debug_roi_config.debug_enable must be one of " + enable_values.join(", "));
+    }
+    if (typeof roi !== "number") {
+        throw new Error("debug_roi_config.roi must be a number");
+    }
+    if (roi < 4 || roi > 16) {
+        throw new Error("debug_roi_config.roi must be in range [4, 16]");
+    }
+
+    var roi_input = roi - 1;
+    var value = (getValue(enable_map, debug_enable) << 4) | (roi_input & 0x0f);
+
+    var buffer = new Buffer(3);
+    buffer.writeUInt8(0xff);
+    buffer.writeUInt8(0x73);
+    buffer.writeUInt8(value);
+    return buffer.toBytes();
+}
+
+/**
+ * set standardization height
+ * @param {number} standardization unit: mm, range: [0, 65535]
+ * @example { "standardization": 16 }
+ */
+function setStandardization(standardization) {
+    if (typeof standardization !== "number") {
+        throw new Error("standardization must be a number");
+    }
+    if (standardization < 0 || standardization > 65535) {
+        throw new Error("standardization must be in range [0, 65535]");
+    }
+
+    var buffer = new Buffer(4);
+    buffer.writeUInt8(0xff);
+    buffer.writeUInt8(0x76);
+    buffer.writeUInt16LE(standardization);
     return buffer.toBytes();
 }
 
