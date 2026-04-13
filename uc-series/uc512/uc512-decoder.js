@@ -288,17 +288,9 @@ function readQueryValveTaskStatusResponseCode(code) {
     return getValue(code_map, code);
 }
 
-function readValveIndex(index) {
-    var index_map = {
-        0: "valve 1",
-        1: "valve 2",
-    };
-    return getValue(index_map, index);
-}
-
 function readQueryValveTaskStatusResponse(bytes) {
     var response = {};
-    response.valve_index = readValveIndex(readUInt8(bytes[0]));
+    response.valve_index = readUInt8(bytes[0]) + 1;
     response.code = readQueryValveTaskStatusResponseCode(readUInt8(bytes[1]));
     return response;
 }
@@ -417,7 +409,7 @@ function readMulticastCommandResponseCode(code) {
 
 function readMulticastCommandResponse(bytes) {
     var response = {};
-    response.EUI = bytesToHexString(bytes.slice(0, 8));
+    response.eui = bytesToHexString(bytes.slice(0, 8));
     response.code = readMulticastCommandResponseCode(readUInt8(bytes[9]));
     return response;
 }
@@ -440,36 +432,32 @@ function handle_downlink_response(channel_type, bytes, offset) {
             offset += 2;
             break;
         case 0x1d:
-            var data = readUInt8(bytes[offset]);
-            var bit0 = ((data >> 0) & 0x01);
-            var bit1 = ((data >> 1) & 0x01);
-            var bit2 = ((data >> 2) & 0x01);
-            var bit3 = ((data >> 3) & 0x01);
-            var bit4 = ((data >> 4) & 0x01);
-            var index = bit0 + bit1 * 2 + bit2 * 4;
-            var valve_status_value = (data >> 5) & 0x01;
-            var time_rule_enable_value = (data >> 7) & 0x01;
-            var pulse_rule_enable_value = (data >> 6) & 0x01;
+            decoded.valve_task = {};
+            var ctrl = readUInt8(bytes[offset]);
+            var time_rule_enable_value = (ctrl >> 7) & 0x01;
+            var pulse_rule_enable_value = (ctrl >> 6) & 0x01;
+            var bit3 = (ctrl >> 3) & 0x01;
+            var bit4 = (ctrl >> 4) & 0x01;
             var special_task_mode_value = bit3 ^ bit4;
-            var valve_name = index === 7 ? "valve_all_task" : "valve_" + (index + 1) + "_task";
-
-            decoded[valve_name] = {};
-            decoded[valve_name].time_rule_enable = readEnableStatus(time_rule_enable_value);
-            decoded[valve_name].pulse_rule_enable = readEnableStatus(pulse_rule_enable_value);
-            decoded[valve_name].valve_status = readValveStatus(valve_status_value);
-            decoded[valve_name].special_task_mode = readSpecialTaskMode(special_task_mode_value);
-            decoded[valve_name].sequence_id = readUInt8(bytes[offset + 1]);
+            decoded.valve_task.valve_index = readValveIndex((ctrl & 0x07) + (RAW_VALUE === 0x01 ? 1 : 0));
+            decoded.valve_task.valve_status = readValveStatus((ctrl >> 5) & 0x01);
+            decoded.valve_task.sequence_id = readUInt8(bytes[offset + 1]);
             offset += 2;
-    
+            // time task and pulse task can be enabled at the same time, but the rain stop plan is mutually exclusive
             if (special_task_mode_value === 1) {
-                decoded[valve_name].duration = readUInt32LE(bytes.slice(offset, offset + 4));
-                decoded[valve_name].start_time = readUInt32LE(bytes.slice(offset + 4, offset + 8));
-                offset += 8;
-            } else if (time_rule_enable_value === 1) {
-                decoded[valve_name].duration = readUInt32LE(bytes.slice(offset, offset + 4));
+                decoded.valve_task.rain_stop_plan = readEnableStatus(bit3 === 0 ? 1 : 0);
+                decoded.valve_task.duration = readUInt24LE(bytes.slice(offset, offset + 3));
+                offset += 3;
+                decoded.valve_task.start_time = readUInt32LE(bytes.slice(offset, offset + 4));
                 offset += 4;
-            } else if (pulse_rule_enable_value === 1) {
-                decoded[valve_name].valve_pulse = readUInt32LE(bytes.slice(offset, offset + 4));
+            } else {
+                var time_rule_enable = readEnableStatus(time_rule_enable_value);
+                decoded.valve_task.time_rule_enable = time_rule_enable;
+                decoded.valve_task.duration = readUInt24LE(bytes.slice(offset, offset + 3));
+                offset += 3;
+                var pulse_rule_enable = readEnableStatus(pulse_rule_enable_value);
+                decoded.valve_task.pulse_rule_enable = pulse_rule_enable;
+                decoded.valve_task.valve_pulse = readUInt32LE(bytes.slice(offset, offset + 4));
                 offset += 4;
             }
             break;
@@ -704,6 +692,20 @@ function readResetEvent(status) {
 function readDeviceStatus(status) {
     var status_map = { 0: "off", 1: "on" };
     return getValue(status_map, status);
+}
+
+function readValveIndex(index) {
+    var index_map = {
+        0: "valve 1",
+        1: "valve 2",
+        2: "valve 3",
+        3: "valve 4",
+        4: "valve 5",
+        5: "valve 6",
+        6: "valve 7",
+        7: "all valves"
+    };
+    return getValue(index_map, index);
 }
 
 function readValveStatus(status) {
