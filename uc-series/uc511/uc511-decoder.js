@@ -409,7 +409,7 @@ function readMulticastCommandResponseCode(code) {
 
 function readMulticastCommandResponse(bytes) {
     var response = {};
-    response.EUI = bytesToHexString(bytes.slice(0, 8));
+    response.eui = bytesToHexString(bytes.slice(0, 8));
     response.code = readMulticastCommandResponseCode(readUInt8(bytes[9]));
     return response;
 }

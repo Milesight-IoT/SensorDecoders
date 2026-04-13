@@ -1527,7 +1527,7 @@
             "bacnet_unit_type": "UNITS_NO_UNITS"
         },
         {
-            "id": "multicast_command_response.EUI",
+            "id": "multicast_command_response.eui",
             "name": "Multicast Command Response (EUI)",
             "value": "",
             "unit": "",
