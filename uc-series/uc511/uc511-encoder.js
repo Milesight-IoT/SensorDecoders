@@ -77,26 +77,8 @@ function milesightDeviceEncode(payload) {
     if ("valve_2_pulse" in payload) {
         encoded = encoded.concat(setValvePulse2(payload.valve_2_pulse));
     }
-    if ("valve_1_task" in payload) {
-        encoded = encoded.concat(setValveTask(1, payload.valve_1_task));
-    }
-    if ("valve_2_task" in payload) {
-        encoded = encoded.concat(setValveTask(2, payload.valve_2_task));
-    }
-    if ("valve_3_task" in payload) {
-        encoded = encoded.concat(setValveTask(3, payload.valve_3_task));
-    }
-    if ("valve_4_task" in payload) {
-        encoded = encoded.concat(setValveTask(4, payload.valve_4_task));
-    }
-    if ("valve_5_task" in payload) {
-        encoded = encoded.concat(setValveTask(5, payload.valve_5_task));
-    }
-    if ("valve_6_task" in payload) {
-        encoded = encoded.concat(setValveTask(6, payload.valve_6_task));
-    }
-    if ("valve_all_task" in payload) {
-        encoded = encoded.concat(setValveTask(7, payload.valve_all_task));
+    if ("valve_task" in payload) {
+        encoded = encoded.concat(setValveTask(payload.valve_task));
     }
     if ("batch_read_rules" in payload) {
         encoded = encoded.concat(batchReadRules(payload.batch_read_rules));
@@ -481,6 +463,7 @@ function setNeedResponseMulticastCommand(need_response_multicast_command) {
     if (time < 1 || time > 200) {
         throw new Error("need_response_multicast_command.time must be in range 1-200");
     }
+    var buffer = new Buffer(5 + bytes.length);
     buffer.writeUInt8(0xfb);
     buffer.writeUInt8(0x01);
     buffer.writeUInt16LE(time);
@@ -800,100 +783,90 @@ function setValvePulse2(valve_2_pulse) {
 /**
  * set valve task
  * @since hardware_version>=v4.0, firmware_version>=v1.1
- * @param {number} index
  * @param {object} valve_task
- * @param {number} valve_task.time_rule_enable values: (0: disable, 1: enable)
- * @param {number} valve_task.pulse_rule_enable values: (0: disable, 1: enable)
+ * @param {number} valve_task.valve_index values: (1: valve 1, 2: valve 2, 7: all valves)
  * @param {number} valve_task.sequence_id values: (0: force execute, 1-255: sequence execute)
- * @param {number} valve_task.valve_status values: (0: close, 1: open)
+ * @param {string} valve_task.valve_status values: (close, open)
+ * @param {string} valve_task.time_rule_enable values: (disable, enable) - normal mode only
+ * @param {string} valve_task.pulse_rule_enable values: (disable, enable) - normal mode only
  * @param {number} valve_task.duration
- * @param {number} valve_task.valve_pulse
- * @param {number} valve_task.start_time
- * @param {number} valve_task.special_task_mode values: (0: normal, 1: enable rain stop, 2: disable rain stop)
- * @example { "valve_1_task": { "time_rule_enable": 1, "pulse_rule_enable": 1, "sequence_id": 0, "valve_status": 0, "duration": 100, "pulse": 100, "special_task_mode": 0 } }
+ * @param {number} valve_task.valve_pulse - normal mode only
+ * @param {string} valve_task.rain_stop_plan values: (disable, enable) - rain stop plan mode only
+ * @param {number} valve_task.start_time - rain stop plan mode only
  */
-function setValveTask(index, valve_task) {
-    var time_rule_enable = valve_task.time_rule_enable;
-    var pulse_rule_enable = valve_task.pulse_rule_enable;
-    var sequence_id = valve_task.sequence_id;
-    var valve_status = valve_task.valve_status;
-    var duration = valve_task.duration;
-    var valve_pulse = valve_task.valve_pulse;
-    var start_time = valve_task.start_time;
-    var special_task_mode = valve_task.special_task_mode || 0;
-
+function setValveTask(valve_task) {
+    var valve_status_map = { 0: "close", 1: "open" };
+    var valve_status_values = getValues(valve_status_map);
     var enable_map = { 0: "disable", 1: "enable" };
     var enable_values = getValues(enable_map);
-    var status_map = { 0: "close", 1: "open" };
-    var status_values = getValues(status_map);
-    
-    var special_task_map = { 0: "normal", 1: "enable_rain_stop", 2: "disable_rain_stop" };
-    var special_task_values = getValues(special_task_map);
-    
-    if (sequence_id === undefined) {
-        sequence_id = 0x00;
+    var index_map = { 0: "valve 1", 1: "valve 2", 2: "valve 3", 3: "valve 4", 4: "valve 5", 5: "valve 6", 6: "valve 7", 7: "all valves" };
+
+    var sequence_id = valve_task.sequence_id;
+    var duration = valve_task.duration;
+
+    if (valve_status_values.indexOf(valve_task.valve_status) === -1) {
+        throw new Error("valve_task.valve_status must be one of " + valve_status_values.join(", "));
     }
-    if (enable_values.indexOf(time_rule_enable) === -1) {
-        throw new Error("valve_" + index + "_task.time_rule_enable must be one of " + enable_values.join(", "));
-    }
-    if (enable_values.indexOf(pulse_rule_enable) === -1) {
-        throw new Error("valve_" + index + "_task.pulse_rule_enable must be one of " + enable_values.join(", "));
-    }
-    if (status_values.indexOf(valve_status) === -1) {
-        throw new Error("valve_" + index + "_task.valve_status must be one of " + status_values.join(", "));
-    }
-    
-    if (special_task_values.indexOf(special_task_mode) === -1) {
-        throw new Error("valve_" + index + "_task.special_task_mode must be one of " + special_task_values.join(", "));
+    if (sequence_id < 0 || sequence_id > 255 || typeof sequence_id !== "number") {
+        throw new Error("valve_task.sequence_id must be in the range of 0 to 255");
     }
 
-    var time_rule_enable_value = getValue(enable_map, time_rule_enable);
-    var pulse_rule_enable_value = getValue(enable_map, pulse_rule_enable);
-    var valve_status_value = getValue(status_map, valve_status);
-    var special_task_mode_value = getValue(special_task_map, special_task_mode);
+    // ctrl bits 0-2: valve_index (1=valve1, 2=valve2, 7=all)
+    index_values = getValues(index_map);
+    if (index_values.indexOf(RAW_VALUE === 0x01 ? valve_task.valve_index - 1 : valve_task.valve_index) === -1) {
+        throw new Error("valve_task.valve_index must be one of " + index_values.join(", "));
+    }
+    var valve_index_value = getValue(index_map, valve_task.valve_index);
+    if (RAW_VALUE === 0x01) {
+        valve_index_value = valve_index_value - 1;
+    }
+    var valve_status_value = getValue(valve_status_map, valve_task.valve_status);
 
-    var data = 0x00;
-    data |= time_rule_enable_value << 7;
-    data |= pulse_rule_enable_value << 6;
-    data |= valve_status_value << 5;
-    
-    data |= (special_task_mode_value === 0 ? 0x00 : special_task_mode === 1 ? 0x00 : 0x01) << 3;
-    data |= (special_task_mode_value === 0 ? 0x00: special_task_mode === 1 ? 0x01 : 0x00) << 4;
-    
-    data |= ((index >> 0) & 0x01) << 0;
-    data |= ((index >> 1) & 0x01) << 1;
-    data |= ((index >> 2) & 0x01) << 2;
+    var ctrl = 0;
+    ctrl |= valve_index_value;
+    ctrl |= valve_status_value << 5;
 
-    var length = 4;
-    if (special_task_mode === 1) {
-        length += 4;
-    }
-    
-    if (special_task_mode === 1 && (start_time === undefined || duration === undefined)) {
-        throw new Error("special_task_mode is 1, start_time and duration must be defined");
-    }
-    if (time_rule_enable_value === 1 && duration === undefined) {
-        throw new Error("time_rule_enable is 1, duration must be defined");
-    }
-    if (pulse_rule_enable_value === 1 && valve_pulse === undefined) {
-        throw new Error("pulse_rule_enable is 1, valve_pulse must be defined");
-    }
+    if ("rain_stop_plan" in valve_task) {
+        // rain stop plan mode: bit3 XOR bit4 = 1
+        // enable → bit3=0, bit4=1; disable → bit3=1, bit4=0
+        var rain_stop_plan = valve_task.rain_stop_plan;
+        if (enable_values.indexOf(rain_stop_plan) === -1) {
+            throw new Error("valve_task.rain_stop_plan must be one of " + enable_values.join(", "));
+        }
+        var rain_stop_plan_value = getValue(enable_map, rain_stop_plan);
+        ctrl |= (rain_stop_plan_value === 1 ? 0 : 1) << 3; // bit3
+        ctrl |= (rain_stop_plan_value === 1 ? 1 : 0) << 4; // bit4
 
-    var buffer = new Buffer(length);
-    buffer.writeUInt8(0xff);
-    buffer.writeUInt8(0x1d);
-    buffer.writeUInt8(data);
-    buffer.writeUInt8(sequence_id);
-    
-    if (special_task_mode === 1) {
-        buffer.writeUInt32LE(duration);
-        buffer.writeUInt32LE(start_time);
-    } else if (time_rule_enable_value === 1) {
-        buffer.writeUInt32LE(duration);
-    } else if (pulse_rule_enable_value === 1) {
-        buffer.writeUInt32LE(valve_pulse);
+        var buffer = new Buffer(11);
+        buffer.writeUInt8(0xff);
+        buffer.writeUInt8(0x1d);
+        buffer.writeUInt8(ctrl);
+        buffer.writeUInt8(sequence_id);
+        buffer.writeUInt24LE(duration);
+        buffer.writeUInt32LE(valve_task.start_time);
+        return buffer.toBytes();
+    } else {
+        // normal mode: bit3=0, bit4=0 (special_task_mode=0)
+        var time_rule_enable = valve_task.time_rule_enable;
+        var pulse_rule_enable = valve_task.pulse_rule_enable;
+        if (enable_values.indexOf(time_rule_enable) === -1) {
+            throw new Error("valve_task.time_rule_enable must be one of " + enable_values.join(", "));
+        }
+        if (enable_values.indexOf(pulse_rule_enable) === -1) {
+            throw new Error("valve_task.pulse_rule_enable must be one of " + enable_values.join(", "));
+        }
+        ctrl |= getValue(enable_map, time_rule_enable) << 7;
+        ctrl |= getValue(enable_map, pulse_rule_enable) << 6;
+
+        var buffer = new Buffer(11);
+        buffer.writeUInt8(0xff);
+        buffer.writeUInt8(0x1d);
+        buffer.writeUInt8(ctrl);
+        buffer.writeUInt8(sequence_id);
+        buffer.writeUInt24LE(duration);
+        buffer.writeUInt32LE(valve_task.valve_pulse);
+        return buffer.toBytes();
     }
-    return buffer.toBytes();
 }
 
 /**
