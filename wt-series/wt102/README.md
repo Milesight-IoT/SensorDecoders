@@ -1,6 +1,6 @@
 # WT102 Sensor
 
-![WT102](WT102.png)
+![WT102](wt102.png)
 
 For more detailed information, please visit [Milesight Official Website](https://www.milesight.com/iot/product/lorawan-sensor/wt102)
 
@@ -52,11 +52,11 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Heating Period Reporting Interval | 0x63 | 4 | rw |  |  |  |
 | Heating Period Reporting Interval Unit | 0x63 | 2 | rw | 1 |  | 0：second<br>1：min |
 | Heating Period Reporting Interval | 0x63 | 3 | rw | 600 | 10 - 64800 |  |
-| Heating Period Reporting Interval | 0x63 | 3 | rw | 10 | 1 - 1440 |  |
+| Heating Period Reporting Interval | 0x63 | 3 | rw | 10 | 5 - 1440 |  |
 | Non-heating Period Reporting Interval | 0x63 | 4 | rw |  |  |  |
 | Non-heating Period Reporting Interval Unit | 0x63 | 2 | rw | 1 |  | 0：second<br>1：min |
 | Non-heating Period Reporting Interval | 0x63 | 3 | rw | 64800 | 10 - 64800 |  |
-| Non-heating Period Reporting Interval | 0x63 | 3 | rw | 1440 | 1 - 1440 |  |
+| Non-heating Period Reporting Interval | 0x63 | 3 | rw | 1440 | 5 - 1440 |  |
 | Non-heating Period Valve Status | 0x63 | 2 | rw | 1 |  | 0：Fully Close<br>1：Fully Open |
 | Temperature Control | 0x65 | 1 | rw |  |  |  |
 | Sub-command | 0x65 | 2 | rw | 0 |  |  |
@@ -185,13 +185,13 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Sequence Number | 0xFF | 2 | r | 0 | 0 - 255 |  |
 | Order Check | 0xFE | 2 | w |  |  |  |
 | Order | 0xFE | 2 | w | 0 | 0 - 255 |  |
-| Command Queries | 0xEF | 1 | w |  |  |  |
-| Query Information | 0xEF | 2 | w |  |  |  |
-| Command Length | 0xEF | 2 | w | 1 | 1 - 15 |  |
-| The command that was queried | 0xEF | 1 | w |  |  |  |
 | Answer Result | 0xEF | 2 | r | 0 |  | 0：success<br>1：unknow<br>2：error order<br>3：error passwd<br>4：error read params<br>5：error write params<br>6：error read<br>7：error write<br>8：error read apply<br>9：error write apply |
 | Command Length | 0xEF | 2 | r | 1 | 1 - 15 |  |
 | Answered Commands | 0xEF | 1 | r |  |  |  |
+| Command Queries | 0xEF | 1 | w |  |  |  |
+| Query Information | 0xEF | 2 | w |  |  |  |
+| Command Length | 0xEF | 2 | w | 1 | 1 - 15 |  |
+| The command that was queried | 0xEF | 1 | w |  |  | 0XDA:Product Version<br>0XD9:OEM ID<br>0XC8:Device Status<br>0X00:Battery<br>0X02:Motor Stroke<br>0X03:Motor Position<br>0X04:Current Valve Opening<br>0X60:Temperature Unit<br>0X61:Ambient Temperature Source Setting<br>0X62:Ambient Temperature Display Enable<br>0X6300:Heating Date<br>0X6301:Heating Period Reporting Interval<br>0X6302:Non-heating Period Reporting Interval<br>0X6303:Non-heating Period Valve Status<br>0X6500:Temperature Control Enable<br>0X6501:Target Temperature Resolution<br>0X6504:Minimum of Target Temperature Adjustment Range<br>0X6505:Maximum of Target Temperature Adjustment Range<br>0X6506:Temperature Control Mode Settings<br>0X66:Open Window Detection<br>0X68:Freeze Protection<br>0X69:Forced Heating Enable<br>0X6A:Child Lock<br>0X6B:Effective Stroke<br>0X6C:Temperature Calibration Settings<br>0X6D:Temperature Threshold Alarm<br>0X6E00:Schedule Enable<br>0X6E01:Schedule Time<br>0X6E02:Schedule Repeat Day<br>0X6E03:Schedule Temperature Control Mode<br>0X6E04:Schedule Target Temperature<br>0X6E05:Schedule Target Valve Opening<br>0X6E09:Schedule Reporting Interval<br>0X6F:Local Modification Report<br>0XC7:Time Zone<br>0XC6:Daylight Saving Time<br>0XC500:Data Storage Enable<br>0XC501:Data Retransmission Enable<br>0XC502:Data Retransmission Interval<br>0XC503:Data Retrieval Interval |
 | Request to Query All Configurations | 0xEE | 1 | w |  |  |  |
 | Historical Data Mode | 0xED | 2 | r |  |  | 0：target time<br>1：historical time |
 | Historical Data Timestamps | 0xED | 5 | r |  |  |  |

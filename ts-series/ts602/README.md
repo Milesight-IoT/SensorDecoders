@@ -41,10 +41,10 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Latitude | 0x06 | 5 | r |  | -90 - 90 |  |
 | Longitude | 0x06 | 5 | r |  | -180 - 180 |  |
 | Airplane Mode State | 0x07 | 2 | r | 0 |  | 0: enter airplane mode<br>1: exit airplane mode |
-| Temperature  Alarm Type | 0x1A | 2 | r | 3 |  | 3：No Data<br>16：Temperature Below Alarm Released<br>17：Temperature Below Alarm<br>18：Temperature Above Alarm Released<br>19：Temperature Above Alarm<br>20：Temperature Between Alarm Released<br>21：Temperature Between Alarm<br>22：Temperature Exceed Tolerance Alarm Released<br>23：Temperature Exceed Tolerance Alarm<br>48：Temperature Shift Threshold<br>32：Temperature Shift Threshold |
-| Humidity  Alarm Type | 0x1B | 2 | r | 3 |  | 3: No Data<br>16:humidity Below Alarm Released<br>17:humidity Below Alarm<br>18:humidity Above Alarm Released<br>19:humidity Above Alarm<br>20:humidity Between Alarm Released<br>21:humidity Between Alarm<br>22:humidity Exceed Tolerance Alarm Released<br>23:humidity Exceed Tolerance Alarm<br>48:humidity Shift Threshold<br>32:humidity Shift Threshold |
-| Tilt  Alarm Type | 0x1C | 2 | r | 3 |  | 1：Exceed the Range Lower Limit<br>2：Exceed the Range Upper Limit<br>3：No Data<br>16：Tilt  Alam Release<br>17：Tilt Alam<br>33：Falling  Alam |
-| Light  Alarm Type | 0x1D | 2 | r | 3 |  | 1：Exceed the Range Lower Limit<br>2：Exceed the Range Upper Limit<br>3：No Data<br>16：Bright to dark<br>17：Dark to bright |
+| Temperature  Alarm Type | 0x1A | 2 | r | 3 |  | 0: Collection Error<br>1: Out of Low Range<br>2: Out of High Range<br>3：No Data<br>16：Temperature Below Alarm Released<br>17：Temperature Below Alarm<br>18：Temperature Above Alarm Released<br>19：Temperature Above Alarm<br>20：Temperature Between Alarm Released<br>21：Temperature Between Alarm<br>22：Temperature Exceed Tolerance Alarm Released<br>23：Temperature Exceed Tolerance Alarm<br>48：Temperature Shift Threshold<br>32：Temperature Shift Threshold |
+| Humidity  Alarm Type | 0x1B | 2 | r | 3 |  | 0: Collection Error<br>1: Out of Low Range<br>2: Out of High Range<br>3: No Data<br>16:humidity Below Alarm Released<br>17:humidity Below Alarm<br>18:humidity Above Alarm Released<br>19:humidity Above Alarm<br>20:humidity Between Alarm Released<br>21:humidity Between Alarm<br>22:humidity Exceed Tolerance Alarm Released<br>23:humidity Exceed Tolerance Alarm<br>48:humidity Shift Threshold<br>32:humidity Shift Threshold |
+| Tilt  Alarm Type | 0x1C | 2 | r | 3 |  | 0：Collection Error<br>1：Exceed the Range Lower Limit<br>2：Exceed the Range Upper Limit<br>3：No Data<br>16：Tilt  Alam Release<br>17：Tilt Alam<br>33：Falling  Alam |
+| Light  Alarm Type | 0x1D | 2 | r | 3 |  | 0：Collection Error<br>1：Exceed the Range Lower Limit<br>2：Exceed the Range Upper Limit<br>3：No Data<br>16：Bright to dark<br>17：Dark to bright |
 | Probe Connect Status Alarm | 0x0C | 2 | r |  |  | 0：disconnect<br>1：connect |
 | Get The Relative Initial Surface Angle Value | 0x0D | 7 | r |  |  |  |
 | Angle X Value | 0x0D | 3 | r |  | -90 - 90 |  |
@@ -89,11 +89,11 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | DST Bias | 0xC6 | 2 | rw | 60 | 1 - 120 |  |
 |  Month | 0xC6 | 2 | rw | 1 |  | 1:Jan.<br>2:Feb.<br>3:Mar.<br>4:Apr.<br>5:May<br>6:Jun.<br>7:Jul.<br>8:Aug.<br>9:Sep.<br>10:Oct.<br>11:Nov.<br>12:Dec. |
 |  Number of Week | 0xC6 | 2 | rw | 1 |  | 1:1st<br>2: 2nd<br>3: 3rd<br>4: 4th<br>5: last |
-| Week | 0xC6 | 2 | rw | 1 |  | 1：Mon.<br>2：Tues.<br>3：Wed.<br>4：Thurs.<br>5：Fri.<br>6：Sat.<br>7：Sun. |
+| Week | 0xC6 | 2 | rw | 7 |  | 1：Mon.<br>2：Tues.<br>3：Wed.<br>4：Thurs.<br>5：Fri.<br>6：Sat.<br>7：Sun. |
 | Time | 0xC6 | 3 | rw | 0 |  | 0：00:00<br>60：01:00<br>120：02:00<br>180：03:00<br>240：04:00<br>300：05:00<br>360：06:00<br>420：07:00<br>480：08:00<br>540：09:00<br>600：10:00<br>660：11:00<br>720：12:00<br>780：13:00<br>840：14:00<br>900：15:00<br>960：16:00<br>1020：17:00<br>1080：18:00<br>1140：19:00<br>1200：20:00<br>1260：21:00<br>1320：22:00<br>1380：23:00 |
-|  Month | 0xC6 | 2 | rw | 2 |  | 1:Jan.<br>2:Feb.<br>3:Mar.<br>4:Apr.<br>5:May<br>6:Jun.<br>7:Jul.<br>8:Aug.<br>9:Sep.<br>10:Oct.<br>11:Nov.<br>12:Dec. |
+|  Month | 0xC6 | 2 | rw | 1 |  | 1:Jan.<br>2:Feb.<br>3:Mar.<br>4:Apr.<br>5:May<br>6:Jun.<br>7:Jul.<br>8:Aug.<br>9:Sep.<br>10:Oct.<br>11:Nov.<br>12:Dec. |
 |  Number of Week | 0xC6 | 2 | rw | 1 |  | 1:1st<br>2: 2nd<br>3: 3rd<br>4: 4th<br>5: last |
-| Week | 0xC6 | 2 | rw | 1 |  | 1：Mon.<br>2：Tues.<br>3：Wed.<br>4：Thurs.<br>5：Fri.<br>6：Sat.<br>7：Sun. |
+| Week | 0xC6 | 2 | rw | 7 |  | 1：Mon.<br>2：Tues.<br>3：Wed.<br>4：Thurs.<br>5：Fri.<br>6：Sat.<br>7：Sun. |
 | Time | 0xC6 | 3 | rw | 0 |  | 0：00:00<br>60：01:00<br>120：02:00<br>180：03:00<br>240：04:00<br>300：05:00<br>360：06:00<br>420：07:00<br>480：08:00<br>540：09:00<br>600：10:00<br>660：11:00<br>720：12:00<br>780：13:00<br>840：14:00<br>900：15:00<br>960：16:00<br>1020：17:00<br>1080：18:00<br>1140：19:00<br>1200：20:00<br>1260：21:00<br>1320：22:00<br>1380：23:00 |
 | Data Storage Settings | 0xC5 | 1 | rw |  |  |  |
 | Sub-command | 0xC5 | 2 | rw | 0 |  |  |
@@ -135,9 +135,9 @@ Lock Enable | 0x76 | 2 | rw | 1 |  | 0: disable<br>1:enable |
 | Light  Collecting Interval | 0x64 | 3 | rw | 60 | 10 - 64800 |  |
 | Light  Collecting Interval | 0x64 | 3 | rw | 1 | 1 - 1440 |  |
 | Light  Threshold Alarm Config | 0x7D | 5 | rw |  |  |  |
-|  Threshold Alarm Config Enable | 0x7D | 2 | rw | 1 |  | 0: disable<br>1:enable |
+|  Threshold Alarm Config Enable | 0x7D | 2 | rw | 0 |  | 0: disable<br>1:enable |
 | Threshold Condition | 0x7D | 2 | rw | 0 |  | 0:disable<br>2:condition: x>B |
-| Threshold Value | 0x7D | 3 | rw | 10 | 0 - 600 |  |
+| Threshold Value | 0x7D | 3 | rw | 1 | 0 - 600 |  |
 | Light Tolerance Value | 0x7E | 2 | rw | 5 | 0 - 100 |  |
 | Tilt Threshold Alarm Config | 0x7F | 5 | rw |  |  |  |
 |  Threshold Alarm Config Enable | 0x7F | 2 | rw | 0 |  | 0: disable<br>1:enable |
@@ -168,15 +168,15 @@ Lock Enable | 0x76 | 2 | rw | 1 |  | 0: disable<br>1:enable |
 | Network Config | 0xCE | 1 | rw |  |  |  |
 | Network Command | 0xCE | 2 | rw | 0 |  |  |
 | APN | 0xCE | 32 | rw |  |  |  |
-| Authentication Mode | 0xCE | 2 | rw | 0 |  | 0：None<br>1：PAP<br>3：CHAP |
+| Authentication Mode | 0xCE | 2 | rw | 0 |  | 0：None<br>1：PAP<br>2：CHAP |
 | Username | 0xCE | 64 | rw |  |  |  |
 | Password | 0xCE | 64 | rw |  |  |  |
 | PIN | 0xCE | 9 | rw |  |  |  |
-| Network Type | 0xCE | 2 | rw | 0 |  | 0：Auto<br>1：Cat-N<br>3：NB-IOT |
+| Network Type | 0xCE | 2 | rw | 0 |  | 0：Auto<br>1：Cat-N<br>2：NB-IOT |
 | MQTT Settings | 0xCE | 1 | rw |  |  |  |
 | MQTT Command | 0xCE | 2 | rw | 0 |  |  |
 | Broker Address | 0xCE | 128 | rw |  |  |  |
-| Port | 0xCE | 3 | rw | 8883 | 1 - 65535 |  |
+| Port | 0xCE | 3 | rw | 1883 | 1 - 65535 |  |
 | Keepalive Interval | 0xCE | 3 | rw | 300 | 10 - 65535 |  |
 | Client ID | 0xCE | 64 | rw | [sn] |  |  |
 | User Credentials Enable | 0xCE | 2 | rw | 0 |  | 0：disable<br>1：enable |
@@ -216,7 +216,7 @@ Lock Enable | 0x76 | 2 | rw | 1 |  | 0: disable<br>1:enable |
 | TCP Settings | 0xCE | 1 | rw |  |  |  |
 | TCP ID | 0xCE | 2 | rw | 0 |  |  |
 | TCP Command | 0xCE | 2 | rw |  |  |  |
-| Enable | 0xCE | 2 | rw | 0 |  | 0：disable<br>1：enable |
+| Enable | 0xCE | 2 | rw | 1 |  | 0：disable<br>1：enable |
 | Server Address | 0xCE | 128 | rw |  |  |  |
 | Port | 0xCE | 3 | rw | 1000 | 1 - 65535 |  |
 | Retry Times | 0xCE | 2 | rw | 1 | 0 - 3 |  |
@@ -226,8 +226,8 @@ Lock Enable | 0x76 | 2 | rw | 1 |  | 0: disable<br>1:enable |
 | UDP Settings | 0xCE | 1 | rw |  |  |  |
 | UDP Settings | 0xCE | 1 | rw |  |  |  |
 | UDP ID | 0xCE | 2 | rw | 0 |  |  |
-| UDP Command | 0xCE | 2 | rw | 0 |  |  |
-| Enable | 0xCE | 2 | rw | 0 |  | 0：disable<br>1：enable |
+| UDP Command | 0xCE | 2 | rw |  |  |  |
+| Enable | 0xCE | 2 | rw | 1 |  | 0：disable<br>1：enable |
 | Server Address | 0xCE | 128 | rw |  |  |  |
 | Port | 0xCE | 3 | rw | 1000 | 1 - 65535 |  |
 | UDP Status | 0xCE | 2 | r |  |  | 0：Connect Failed<br>1：Connect Success |
@@ -251,6 +251,7 @@ Lock Enable | 0x76 | 2 | rw | 1 |  | 0: disable<br>1:enable |
 | Humidity  Alarm | 0x09 | 1 | r |  |  |  |
 | Tilt  Alarm | 0x0A | 1 | r |  |  |  |
 | Light  Alarm | 0x0B | 1 | r |  |  |  |
+| OTA Response | 0xEC | 2 | r |  |  |  |
 
 ### Service
 
@@ -259,13 +260,13 @@ Lock Enable | 0x76 | 2 | rw | 1 |  | 0: disable<br>1:enable |
 | Order Check | 0xFE | 2 | w |  |  |  |
 | Order | 0xFE | 2 | w | 0 | 0 - 255 |  |
 | Order | 0xFE | 2 | r | 0 | 0 - 255 |  |
-| Command Queries | 0xEF | 1 | w |  |  |  |
-| Query Information | 0xEF | 2 | w |  |  |  |
-| Command Length | 0xEF | 2 | w | 1 | 1 - 15 |  |
-| The command that was queried | 0xEF | 1 | w |  |  |  |
 | Answer Result | 0xEF | 2 | r | 0 |  | 0：success<br>1：unknow<br>2：error order<br>3：error passwd<br>4：error read params<br>5：error write params<br>6：error read<br>7：error write<br>8：error read apply<br>9：error write apply |
 | Command Length | 0xEF | 2 | r | 1 | 1 - 15 |  |
 | Answered Commands | 0xEF | 1 | r |  |  |  |
+| Command Queries | 0xEF | 1 | w |  |  |  |
+| Query Information | 0xEF | 2 | w |  |  |  |
+| Command Length | 0xEF | 2 | w | 1 | 1 - 15 |  |
+| The command that was queried | 0xEF | 1 | w |  |  | 0XDF:TSL Version<br>0XDB:SN<br>0XDA:Product Version<br>0XD9:OEM ID<br>0XC8:Device Status<br>0X01:Battery<br>0X03:Sensor ID<br>0X04:Temperature<br>0X05:Humidity<br>0X06:Base station positioning<br>0X07:Airplane Mode State<br>0X1A:Temperature  Alarm Type<br>0X1110:Battery AlarmLow Battery Alarm<br>0X1B:Humidity  Alarm Type<br>0X1C:Tilt  Alarm Type<br>0X1D:Light  Alarm Type<br>0X0C:Probe Connect Status Alarm<br>0X0D:Get The Relative Initial Surface Angle Value<br>0X0E:Report package type<br>0X60:Reporting Interval<br>0X61:Cumulative Numbers<br>0X62:Collecting Interval<br>0X63:Alarm Max Count<br>0X75:Alarm Threshold Release<br>0X65:Temperature Unit<br>0XC4:AutoP Enable<br>0X71:Base Station Positioning<br>0X7300:Airplane Mode Time PeriodFlight Mode Enable Mode<br>0X7301:Airplane Mode Time PeriodStart Time<br>0X7302:Airplane Mode Time PeriodEnd Time<br>0XC7:Time Zone<br>0XC6:Daylight Saving Time<br>0XC500:Data Storage SettingsData Storage Enable<br>0XC501:Data Storage SettingsData Retransmission Enable<br>0XC502:Data Storage SettingsRetransmission Interval<br>0X76:Button Lock<br>0X77:Temperature Threshold Alarm Config<br>0X78:Temperature Shift Threshold<br>0X79:Humidity Threshold Alarm<br>0X7A:Humidity Mutation Alarm Config<br>0X7B:Temperature Calibration<br>0X7C:Humidity Calibration<br>0X7D:Light  Threshold Alarm Config<br>0X7E:Light Tolerance Value<br>0X7F:Tilt Threshold Alarm Config<br>0X80:Falling Alarm Config<br>0X82:Probe Id Retransmit Count<br>0XBE00:Cellular StatusRegister Status<br>0XBE01:Cellular StatusSIM State<br>0XBE02:Cellular StatusIMEI<br>0XBE03:Cellular StatusIMSI<br>0XBE04:Cellular StatusICCID<br>0XBE05:Cellular StatusSignal Strength<br>0XBE06:Cellular StatusServer Status<br>0XBE11:Cellular StatusMilesight MQTT Status<br>0XBE15:Cellular StatusMilesight DTLS Status<br>0XCE3F:Cellular SettingsWork Mode<br>0XCE42:Cellular SettingsTransport Type<br>0XCE4100:Cellular SettingsAPN<br>0XCE4101:Cellular SettingsAuthentication Mode<br>0XCE4102:Cellular SettingsUsername<br>0XCE4103:Cellular SettingsPassword<br>0XCE4104:Cellular SettingsPIN<br>0XCE4105:Cellular SettingsNetwork Type<br>0XCE0000:Cellular SettingsBroker Address<br>0XCE0001:Cellular SettingsPort<br>0XCE0002:Cellular SettingsKeepalive Interval<br>0XCE0003:Cellular SettingsClient ID<br>0XCE0004:Cellular SettingsUser Credentials Enable<br>0XCE0005:Cellular SettingsUsername<br>0XCE0006:Cellular SettingsPassword<br>0XCE0007:Cellular SettingsTLS Enable<br>0XCE0008:Cellular SettingsCA File Enable<br>0XCE0009:Cellular SettingsCA File Length<br>0XCE000A:Cellular SettingsCA File<br>0XCE000B:Cellular SettingsClient Certificate Enable<br>0XCE000C:Cellular SettingsClient Certificate Length<br>0XCE000D:Cellular SettingsClient Certificate<br>0XCE000E:Cellular SettingsClient Key Enable<br>0XCE000F:Cellular SettingsClient Key Length<br>0XCE0010:Cellular SettingsClient Key<br>0XCE0011:Cellular SettingsUplink Topic<br>0XCE0012:Cellular SettingsUplink QoS<br>0XCE0013:Cellular SettingsDownlink Topic<br>0XCE0014:Cellular SettingsDownlink QoS<br>0XCE0021:Cellular SettingsMQTT Status<br>0XCE0200:Cellular SettingsBroker Address<br>0XCE0201:Cellular SettingsPort<br>0XCE0202:Cellular SettingsKeepAlive Interval<br>0XCE0209:Cellular SettingsCA File Length<br>0XCE020A:Cellular SettingsCA Certificate<br>0XCE020C:Cellular SettingsClient Certificate Length<br>0XCE020D:Cellular SettingsClient Certificate<br>0XCE020F:Cellular SettingsClient Key Length<br>0XCE0210:Cellular SettingsClient Key<br>0XCE0221:Cellular SettingsAWS Status<br>0XCE0121:Cellular SettingsMilesight MQTT Status<br>0XCE1900:Cellular SettingsMilesight DTLS Status |
 | Request to Query All Configurations | 0xEE | 1 | w |  |  |  |
 | Historical Data Mode | 0xED | 2 | r |  |  | 0：target time<br>1：historical time |
 | Historical Data Timestamps | 0xED | 5 | r |  |  |  |
@@ -363,4 +364,5 @@ Lock Enable | 0x76 | 2 | rw | 1 |  | 0: disable<br>1:enable |
 | Get Sensor ID | 0x53 | 1 | w |  |  |  |
 | Temperature And Humidity Display Switch on Device Screen | 0x55 | 2 | w |  |  |  |
 | Temperature And Humidity Display Switch on Device Screen | 0x55 | 2 | w |  |  | 0： temperature<br>1: humidity |
+| OTA Response | 0xEC | 2 | r | 0 |  | 0: Upgrade Successfully<br>1: URL Error<br>2: Download Failed<br>3: Packet Too Big<br>4: Version Error<br>5: Device Error<br>6: Patch Format Error<br>7: CRC Check Failed<br>8: Product Error<br>9: Patch Upgrade Failed<br>255: Upgrade Pending |
 
