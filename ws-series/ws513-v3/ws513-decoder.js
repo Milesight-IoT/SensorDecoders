@@ -39,10 +39,11 @@ function milesightDeviceDecode(bytes) {
 				var ipso_type_v1 = bytes[counterObj.i++];
 				switch (ipso_type_v1) {
 					case 0x0b:
-						decoded.device_status = readUInt8(bytes, counterObj, 1);
+						decoded.device_status = 0x01;
+						counterObj.i++;
 						break;
 					case 0x01:
-						decoded.ipso_version = readUInt8(bytes, counterObj, 1);
+						decoded.ipso_version = readProtocolVersion(readBytes(bytes, counterObj, 1));
 						break;
 					case 0x16:
 						decoded.sn = readHexString(bytes, counterObj, 8);
@@ -67,7 +68,8 @@ function milesightDeviceDecode(bytes) {
 						decoded.power_consumption_enable = readUInt8(bytes, counterObj, 1);
 						break;
 					case 0x2f:
-						decoded.led_indicator_mode = readUInt16LE(bytes, counterObj, 2);
+						// 0：disable, 1：enable
+						decoded.led_indicator_mode = readUInt8(bytes, counterObj, 1);
 						break;
 					case 0x67:
 						// 2：Return to Previous Working State, 0：Turn to Off, 1：Turn to On
@@ -80,21 +82,15 @@ function milesightDeviceDecode(bytes) {
 						decoded.overcurrent_alarm_settings.threshold = readUInt8(bytes, counterObj, 1);
 						break;
 					case 0x30:
-						decoded.overcurrent_protection_settings = decoded.overcurrent_protection_settings || {};
+						decoded.overcurrent_protection = decoded.overcurrent_protection || {};
 						// 0：disable, 1：enable
-						decoded.overcurrent_protection_settings.enable = readUInt8(bytes, counterObj, 1);
-						decoded.overcurrent_protection_settings.current = readUInt8(bytes, counterObj, 1);
+						decoded.overcurrent_protection.enable = readUInt8(bytes, counterObj, 1);
+						decoded.overcurrent_protection.threshold = readUInt8(bytes, counterObj, 1);
 						break;
 					case 0x8d:
-						var fixed_value = bytes[counterObj.i + 0];
-						switch (fixed_value) {
-							case 0x01: // high_current_protection.enable
-								decoded.high_current_protection = decoded.high_current_protection || {};
-								// 0：disable, 1：enable
-								decoded.high_current_protection.enable = readUInt8(bytes, counterObj, 1);
-								decoded.high_current_protection.enable = undefined;
-								break;
-						}
+						decoded.high_current_protection = decoded.high_current_protection || {};
+						// 0：disable, 1：enable
+						decoded.high_current_protection.enable = readUInt8(bytes, counterObj, 1);
 						break;
 					case 0xab:
 						decoded.temperature_calibration_settings = decoded.temperature_calibration_settings || {};
@@ -119,15 +115,15 @@ function milesightDeviceDecode(bytes) {
 						insertArrayItem(decoded.d2d_agent_settings_array, d2d_agent_settings_array_item, 'd2d_agent_id');
 						// 0：disable, 1：enable
 						d2d_agent_settings_array_item.d2d_agent_enable = readUInt8(bytes, counterObj, 1);
-						d2d_agent_settings_array_item.d2d_agent_command = readHexString(bytes, counterObj, 2);
+						d2d_agent_settings_array_item.d2d_agent_command = readHexStringLE(bytes, counterObj, 2);
 						// 1:On, 0:Off,       2:Inverse
 						d2d_agent_settings_array_item.d2d_agent_action = readUInt8(bytes, counterObj, 1);
 						break;
 					case 0x29:
-						decoded.socket_settings = decoded.socket_settings || {};
+						decoded.set_socket = decoded.set_socket || {};
 						var bitOptions = readUInt8(bytes, counterObj, 1);
 						// 0：off, 1：on
-						decoded.socket_settings.status_1 = extractBits(bitOptions, 0, 1);
+						decoded.set_socket.status_1 = extractBits(bitOptions, 0, 1);
 						break;
 					case 0xa5:
 						decoded.invert_socket_status = readUInt8(bytes, counterObj, 1);
@@ -140,6 +136,12 @@ function milesightDeviceDecode(bytes) {
 						break;
 					case 0x10:
 						decoded.reboot = readUInt8(bytes, counterObj, 1);
+						break;
+					case 0xfe:
+						decoded.reset_event = readUInt8(bytes, counterObj, 1);
+						break;
+					case 0xff:
+						decoded.tsl_version = readTslVersion(readBytes(bytes, counterObj, 2));
 						break;
 				}
 				break;
@@ -187,7 +189,15 @@ function milesightDeviceDecode(bytes) {
 				var ipso_type_v1 = bytes[counterObj.i++];
 				switch (ipso_type_v1) {
 					case 0x67:
-						decoded.temperature = readInt16LE(bytes, counterObj, 2) / 10;
+						var temperature_value = readUInt16LE(bytes, counterObj, 2);
+						if (temperature_value === 0xffff) {
+							decoded.temperature_error = readSensorStatus(1);
+						} else if (temperature_value === 0xfffd) {
+							decoded.temperature_error = readSensorStatus(2);
+						} else {
+							counterObj.i -= 2;
+							decoded.temperature = readInt16LE(bytes, counterObj, 2) / 10;
+						}
 						break;
 				}
 				break;
@@ -238,9 +248,9 @@ function milesightDeviceDecode(bytes) {
 				var ipso_type_v1 = bytes[counterObj.i++];
 				switch (ipso_type_v1) {
 					case 0x74:
-						decoded.voltage_collect_error = decoded.voltage_collect_error || {};
+						decoded.voltage_collection_error_report = decoded.voltage_collection_error_report || {};
 						// 1：Collect_error
-						decoded.voltage_collect_error.type = readUInt8(bytes, counterObj, 1);
+						decoded.voltage_collection_error_report.type = readUInt8(bytes, counterObj, 1);
 						break;
 				}
 				break;
@@ -248,9 +258,9 @@ function milesightDeviceDecode(bytes) {
 				var ipso_type_v1 = bytes[counterObj.i++];
 				switch (ipso_type_v1) {
 					case 0x80:
-						decoded.electric_power_collect_error = decoded.electric_power_collect_error || {};
+						decoded.electric_power_collection_error_report = decoded.electric_power_collection_error_report || {};
 						// 1：Collect_error
-						decoded.electric_power_collect_error.type = readUInt8(bytes, counterObj, 1);
+						decoded.electric_power_collection_error_report.type = readUInt8(bytes, counterObj, 1);
 						break;
 				}
 				break;
@@ -258,9 +268,9 @@ function milesightDeviceDecode(bytes) {
 				var ipso_type_v1 = bytes[counterObj.i++];
 				switch (ipso_type_v1) {
 					case 0x81:
-						decoded.power_factor_collect_error = decoded.power_factor_collect_error || {};
+						decoded.power_factor_collection_error_report = decoded.power_factor_collection_error_report || {};
 						// 1：Collect_error
-						decoded.power_factor_collect_error.type = readUInt8(bytes, counterObj, 1);
+						decoded.power_factor_collection_error_report.type = readUInt8(bytes, counterObj, 1);
 						break;
 				}
 				break;
@@ -268,9 +278,9 @@ function milesightDeviceDecode(bytes) {
 				var ipso_type_v1 = bytes[counterObj.i++];
 				switch (ipso_type_v1) {
 					case 0x83:
-						decoded.power_consumption_collect_error = decoded.power_consumption_collect_error || {};
+						decoded.power_consumption_collection_error_report = decoded.power_consumption_collection_error_report || {};
 						// 1：Collect_error
-						decoded.power_consumption_collect_error.type = readUInt8(bytes, counterObj, 1);
+						decoded.power_consumption_collection_error_report.type = readUInt8(bytes, counterObj, 1);
 						break;
 				}
 				break;
@@ -278,17 +288,50 @@ function milesightDeviceDecode(bytes) {
 				var ipso_type_v1 = bytes[counterObj.i++];
 				switch (ipso_type_v1) {
 					case 0xc9:
-						decoded.current_collect_error = decoded.current_collect_error || {};
+						decoded.current_collection_error_report = decoded.current_collection_error_report || {};
 						// 1：Collect_error
-						decoded.current_collect_error.type = readUInt8(bytes, counterObj, 1);
+						decoded.current_collection_error_report.type = readUInt8(bytes, counterObj, 1);
 						break;
 				}
 				break;
 			case 0xf9:
 				var ipso_type_v1 = bytes[counterObj.i++];
 				switch (ipso_type_v1) {
+					case 0x67:
+						decoded.schedule_report = decoded.schedule_report || [];
+						// 1:1;, 2:2;, 3:3;, 4:4;, 5:5;, 6:6;, 7:7;, 8:8;, 9:9;, 10:10;, 11:11;, 12:12;, 13:13;, 14:14;, 15:15;, 16:16;
+						var schedule_id = readUInt8(bytes, counterObj, 1);
+						var schedule_report_item = pickArrayItem(decoded.schedule_report, schedule_id, 'schedule_id');
+						schedule_report_item.schedule_id = schedule_id;
+						insertArrayItem(decoded.schedule_report, schedule_report_item, 'schedule_id');
+						var bitOptions = readUInt8(bytes, counterObj, 1);
+						// 0:Not config;, 1:Enable;, 2:Disable;
+						schedule_report_item.enable = extractBits(bitOptions, 0, 4);
+						schedule_report_item.use_config = extractBits(bitOptions, 4, 8);
+						var bitOptions = readUInt8(bytes, counterObj, 1);
+						// 0: Disable;, 1: Enable;
+						schedule_report_item.execution_day_mon = extractBits(bitOptions, 0, 1);
+						// 0: Disable;, 1: Enable;
+						schedule_report_item.execution_day_tues = extractBits(bitOptions, 1, 2);
+						// 0: Disable;, 1: Enable;
+						schedule_report_item.execution_day_wed = extractBits(bitOptions, 2, 3);
+						// 0: Disable;, 1: Enable;
+						schedule_report_item.execution_day_thu = extractBits(bitOptions, 3, 4);
+						// 0: Disable;, 1: Enable;
+						schedule_report_item.execution_day_fri = extractBits(bitOptions, 4, 5);
+						// 0: Disable;, 1: Enable;
+						schedule_report_item.execution_day_sat = extractBits(bitOptions, 5, 6);
+						// 0: Disable;, 1: Enable;
+						schedule_report_item.execution_day_sun = extractBits(bitOptions, 6, 7);
+						schedule_report_item.execut_hour = readUInt8(bytes, counterObj, 1);
+						schedule_report_item.execut_min = readUInt8(bytes, counterObj, 1);
+						// 1:On;, 2:Off;, 3:Inverse, 0:Keep;
+						schedule_report_item.button_status = readUInt8(bytes, counterObj, 1);
+						// 1:Lock;, 2:Unlock;, 0:Keep;
+						schedule_report_item.lock_status = readUInt8(bytes, counterObj, 1);
+						break;
 					case 0xca:
-						decoded.bluetooth_name = readString(bytes, counterObj, 32);
+						decoded.bluetooth_name = readString(bytes, counterObj, 13);
 						break;
 					case 0x69:
 						decoded.button_lock_settings = decoded.button_lock_settings || {};
@@ -303,8 +346,8 @@ function milesightDeviceDecode(bytes) {
 						counterObj.i++;
 						// 0：disable, 1:condition: x<A, 2:condition: x>B, 3:condition: A<x<B, 4:condition: x<A or x>B
 						decoded.temperature_alarm_rule.condition = readUInt8(bytes, counterObj, 1);
-						decoded.temperature_alarm_rule.threshold_min = readInt16LE(bytes, counterObj, 2) / 10;
 						decoded.temperature_alarm_rule.threshold_max = readInt16LE(bytes, counterObj, 2) / 10;
+						decoded.temperature_alarm_rule.threshold_min = readInt16LE(bytes, counterObj, 2) / 10;
 						// 0: Disable;, 1: Enable;
 						decoded.temperature_alarm_rule.threshold_enable = readUInt8(bytes, counterObj, 1);
 						break;
@@ -325,6 +368,7 @@ function milesightDeviceDecode(bytes) {
 						var bitOptions = readUInt8(bytes, counterObj, 1);
 						// 0:Not config;, 1:Enable;, 2:Disable;
 						schedule_settings_item.enable = extractBits(bitOptions, 0, 4);
+						schedule_settings_item.use_config = extractBits(bitOptions, 4, 8);
 						var bitOptions = readUInt8(bytes, counterObj, 1);
 						// 0: Disable;, 1: Enable;
 						schedule_settings_item.execution_day_mon = extractBits(bitOptions, 0, 1);
@@ -340,10 +384,10 @@ function milesightDeviceDecode(bytes) {
 						schedule_settings_item.execution_day_sat = extractBits(bitOptions, 5, 6);
 						// 0: Disable;, 1: Enable;
 						schedule_settings_item.execution_day_sun = extractBits(bitOptions, 6, 7);
-						schedule_settings_item.execut_hour = readUInt8(bytes, counterObj, 1);
-						schedule_settings_item.execut_min = readUInt8(bytes, counterObj, 1);
+						schedule_settings_item.execution_hour = readUInt8(bytes, counterObj, 1);
+						schedule_settings_item.execution_min = readUInt8(bytes, counterObj, 1);
 						// 1:On;, 2:Off;, 3:Inverse, 0:Keep;
-						schedule_settings_item.button_status1 = readUInt8(bytes, counterObj, 1);
+						schedule_settings_item.button_status_1 = readUInt8(bytes, counterObj, 1);
 						// 1:Lock;, 2:Unlock;, 0:Keep;
 						schedule_settings_item.lock_status = readUInt8(bytes, counterObj, 1);
 						break;
@@ -372,7 +416,10 @@ function milesightDeviceDecode(bytes) {
 						break;
 					case 0x65:
 						decoded.get_schedule = decoded.get_schedule || {};
-						decoded.get_schedule.schedule_id = readInt8(bytes, counterObj, 1);
+						decoded.get_schedule.schedule_id = readUInt8(bytes, counterObj, 1);
+						break;
+					case 0xc6:
+						decoded.lora_tx_rdt_max = readUInt16LE(bytes, counterObj, 2);
 						break;
 				}
 				break;
@@ -416,8 +463,7 @@ function readBytes(allBytes, counterObj, end) {
 
 function readProtocolVersion(bytes) {
 	var major = bytes[0] & 0xff;
-	var minor = bytes[1] & 0xff;
-	return 'v' + major + '.' + minor;
+	return 'v0.' + major;
 }
 
 function readHardwareVersion(bytes) {
@@ -440,6 +486,17 @@ function readFirmwareVersion(bytes) {
 	if (unit_test !== 0) version += '-u' + unit_test;
 	if (test !== 0) version += '-t' + test;
 	return version;
+}
+
+function readTslVersion(bytes) {
+    var major = bytes[0] & 0xff;
+    var minor = bytes[1] & 0xff;
+    return "v" + major + "." + minor;
+}
+
+function readSensorStatus(status) {
+    var status_map = { 1: "sensor not recognized", 2: "out of range" };
+    return status_map[status];
 }
 
 /* eslint-disable */
@@ -748,19 +805,22 @@ function cmdMap() {
 		  "89_0x67": "temperature_alarm",
 		  "87_0xc9": "overcurrent_alarm",
 		  "88_0x29": "device_abnormal_alarm",
-		  "b3_0x74": "voltage_collect_error",
-		  "b4_0x80": "electric_power_collect_error",
-		  "b5_0x81": "power_factor_collect_error",
-		  "b6_0x83": "power_consumption_collect_error",
-		  "b7_0xc9": "current_collect_error",
+		  "b3_0x74": "voltage_collection_error_report",
+		  "b4_0x80": "electric_power_collection_error_report",
+		  "b5_0x81": "power_factor_collection_error_report",
+		  "b6_0x83": "power_consumption_collection_error_report",
+		  "b7_0xc9": "current_collection_error_report",
+		  "f9_0x67": "schedule_report",
+		  "f9_0x67xx": "schedule_report._item",
 		  "ff_0x8e": "reporting_interval_settings",
 		  "ff_0x26": "power_consumption_enable",
 		  "ff_0x2f": "led_indicator_mode",
 		  "ff_0x67": "power_switch_mode",
+		  "ff_0xc6": "lora_tx_rdt_max",
 		  "f9_0xca": "bluetooth_name",
 		  "f9_0x69": "button_lock_settings",
 		  "ff_0x24": "overcurrent_alarm_settings",
-		  "ff_0x30": "overcurrent_protection_settings",
+		  "ff_0x30": "overcurrent_protection",
 		  "ff_0x8d": "high_current_protection",
 		  "f9_0x0b": "temperature_alarm_rule",
 		  "f9_0xb6": "alarm_settings",
@@ -773,11 +833,12 @@ function cmdMap() {
 		  "ff_0x83": "d2d_agent_settings_array",
 		  "ff_0x83xx": "d2d_agent_settings_array._item",
 		  "f9_0x65": "get_schedule",
-		  "ff_0x29": "socket_settings",
+		  "ff_0x29": "set_socket",
 		  "ff_0xa5": "invert_socket_status",
 		  "ff_0x28": "query_device_status",
 		  "ff_0x27": "clear_power_consumption",
-		  "ff_0x10": "reboot"
+		  "ff_0x10": "reboot",
+		  "ff_0xfe": "reset_event"
 	};
 }
 function processTemperature(decoded) {

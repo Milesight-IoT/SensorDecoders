@@ -169,7 +169,7 @@
             ]
         },
         {
-            "id": "current_collect_error.type",
+            "id": "current_collection_error_report.type",
             "name": "Type(Current Collect Error)",
             "value": "",
             "unit": "",
@@ -186,7 +186,7 @@
                     "name": "Collect_error"
                 }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": []
@@ -888,7 +888,7 @@
                     "name": "Abnormal"
                 }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": []
@@ -922,7 +922,7 @@
             "bacnet_unit_type": "UNITS_WATTS"
         },
         {
-            "id": "electric_power_collect_error.type",
+            "id": "electric_power_collection_error_report.type",
             "name": "Type(Electric Power Collect Error)",
             "value": "",
             "unit": "",
@@ -939,7 +939,7 @@
                     "name": "Collect_error"
                 }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": []
@@ -984,74 +984,74 @@
             "values": [
                 {
                     "value": 1,
-                    "name": "1;"
+                    "name": "1"
                 },
                 {
                     "value": 2,
-                    "name": "2;"
+                    "name": "2"
                 },
                 {
                     "value": 3,
-                    "name": "3;"
+                    "name": "3"
                 },
                 {
                     "value": 4,
-                    "name": "4;"
+                    "name": "4"
                 },
                 {
                     "value": 5,
-                    "name": "5;"
+                    "name": "5"
                 },
                 {
                     "value": 6,
-                    "name": "6;"
+                    "name": "6"
                 },
                 {
                     "value": 7,
-                    "name": "7;"
+                    "name": "7"
                 },
                 {
                     "value": 8,
-                    "name": "8;"
+                    "name": "8"
                 },
                 {
                     "value": 9,
-                    "name": "9;"
+                    "name": "9"
                 },
                 {
                     "value": 10,
-                    "name": "10;"
+                    "name": "10"
                 },
                 {
                     "value": 11,
-                    "name": "11;"
+                    "name": "11"
                 },
                 {
                     "value": 12,
-                    "name": "12;"
+                    "name": "12"
                 },
                 {
                     "value": 13,
-                    "name": "13;"
+                    "name": "13"
                 },
                 {
                     "value": 14,
-                    "name": "14;"
+                    "name": "14"
                 },
                 {
                     "value": 15,
-                    "name": "15;"
+                    "name": "15"
                 },
                 {
                     "value": 16,
-                    "name": "16;"
+                    "name": "16"
                 },
                 {
                     "value": 255,
-                    "name": "All schedules;"
+                    "name": "All schedules"
                 }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_output_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": []
@@ -1166,7 +1166,7 @@
                     "name": "class_c"
                 }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS"
         },
@@ -1247,7 +1247,7 @@
                     "name": "Overcurrent alarm release"
                 }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": [
@@ -1255,7 +1255,7 @@
             ]
         },
         {
-            "id": "overcurrent_protection_settings.enable",
+            "id": "overcurrent_protection.enable",
             "name": "Overcurrent Protection Enable(Overcurrent Protection)",
             "value": "1",
             "unit": "",
@@ -1276,11 +1276,11 @@
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": [
-                "overcurrent_protection_settings.threshold"
+                "overcurrent_protection.threshold"
             ]
         },
         {
-            "id": "overcurrent_protection_settings.threshold",
+            "id": "overcurrent_protection.threshold",
             "name": "Overcurrent Protection Value(Overcurrent Protection)",
             "value": "16",
             "unit": "a",
@@ -1295,7 +1295,7 @@
             "bacnet_unit_type_id": 67,
             "bacnet_unit_type": "UNITS_YEARS",
             "reference": [
-                "overcurrent_protection_settings.enable"
+                "overcurrent_protection.enable"
             ]
         },
         {
@@ -1311,7 +1311,7 @@
             "bacnet_unit_type": "UNITS_KILOWATT_HOURS"
         },
         {
-            "id": "power_consumption_collect_error.type",
+            "id": "power_consumption_collection_error_report.type",
             "name": "Type(Power Consumption Collect Error)",
             "value": "",
             "unit": "",
@@ -1328,7 +1328,7 @@
                     "name": "Collect_error"
                 }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": []
@@ -1372,7 +1372,7 @@
             "bacnet_unit_type": "UNITS_PERCENT"
         },
         {
-            "id": "power_factor_collect_error.type",
+            "id": "power_factor_collection_error_report.type",
             "name": "Type(Power Factor Collect Error)",
             "value": "",
             "unit": "",
@@ -1389,7 +1389,7 @@
                     "name": "Collect_error"
                 }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": []
@@ -1495,7 +1495,7 @@
             "bacnet_unit_type": "UNITS_NO_UNITS"
         },
         {
-            "id": "socket_settings.status_1",
+            "id": "set_socket.status_1",
             "name": "Socket Switch Status(Socket Status)",
             "value": "0",
             "unit": "",
@@ -1512,7 +1512,7 @@
                     "name": "on"
                 }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_output_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": []
@@ -1535,7 +1535,7 @@
                     "name": "on"
                 }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": []
@@ -1770,7 +1770,7 @@
                     "name": "overheat alarm"
                 }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": [
@@ -2067,6 +2067,19 @@
             "bacnet_unit_type": "UNITS_NO_UNITS"
         },
         {
+            "id": "tsl_version",
+            "name": "TSL Version",
+            "value": "",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "TEXT",
+            "value_type": "STRING",
+            "max_length": 6,
+            "bacnet_type": "character_string_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS"
+        },
+        {
             "id": "voltage",
             "name": "Voltage",
             "value": "",
@@ -2079,7 +2092,7 @@
             "bacnet_unit_type": "UNITS_VOLTS"
         },
         {
-            "id": "voltage_collect_error.type",
+            "id": "voltage_collection_error_report.type",
             "name": "Type(Voltage Collect Error)",
             "value": "",
             "unit": "",
@@ -2096,10 +2109,39 @@
                     "name": "Collect_error"
                 }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": []
+        },
+        {
+            "id": "reset_event",
+            "name": "Reset Event",
+            "value": "",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                { "value": 0, "name": "normal" },
+                { "value": 1, "name": "reset" }
+            ],
+            "bacnet_type": "binary_input_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS"
+        },
+        {
+            "id": "lora_tx_rdt_max",
+            "name": "LoRa TX RDT Max",
+            "value": "5",
+            "unit": "s",
+            "access_mode": "W",
+            "data_type": "NUMBER",
+            "value_type": "UINT16",
+            "range": [0, 60],
+            "bacnet_type": "analog_output_object",
+            "bacnet_unit_type_id": 73,
+            "bacnet_unit_type": "UNITS_SECONDS"
         }
     ]
 }
