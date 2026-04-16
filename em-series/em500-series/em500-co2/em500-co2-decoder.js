@@ -89,6 +89,10 @@ function milesightDeviceDecode(bytes) {
             decoded.voc = readUInt16LE(bytes.slice(i, i + 2)) / 100;
             i += 2;
         }
+        else if (channel_id === 0x11 && channel_type === 0x7d) {
+            decoded.smell = readUInt16LE(bytes.slice(i, i + 2)) / 100;
+            i += 2;
+        }
         else if (channel_id === 0x01 && channel_type === 0x18) {
             decoded.status = readSensorStatus(bytes.slice(i + 1, i + 2));
             i += 2;
@@ -140,6 +144,9 @@ function milesightDeviceDecode(bytes) {
                     break;
                 case 0x10:
                     data.voc = readUInt16LE(bytes.slice(i + 4, i + 6)) / 100;
+                    break;
+                case 0x11:
+                    data.smell = readUInt16LE(bytes.slice(i + 4, i + 6));
                     break;
             }
             data.status = readSensorStatus(bytes.slice(i + 6, i + 7));
@@ -390,7 +397,8 @@ function readGasType(type) {
         0x03: "H2S",
         0x05: "NH3",
         0x0f: "C2H4",
-        0x10: "VOC"
+        0x10: "VOC",
+        0x11: "SMELL",
     };
     return getValue(type_map, type);
 }
