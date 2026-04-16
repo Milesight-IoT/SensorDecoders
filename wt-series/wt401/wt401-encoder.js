@@ -5,2378 +5,1829 @@
  *
  * @product WT401
  */
-var RAW_VALUE = 0x00;
-var WITH_QUERY_CMD = 0x00;
 
 /* eslint no-redeclare: "off" */
 /* eslint-disable */
 // Chirpstack v4
 function encodeDownlink(input) {
-    var encoded = milesightDeviceEncode(input.data);
-    return { bytes: encoded };
+	var encoded = milesightDeviceEncode(input.data);
+	return { bytes: encoded };
 }
 
 // Chirpstack v3
 function Encode(fPort, obj) {
-    return milesightDeviceEncode(obj);
+	return milesightDeviceEncode(obj);
 }
 
 // The Things Network
 function Encoder(obj, port) {
-    return milesightDeviceEncode(obj);
+	return milesightDeviceEncode(obj);
 }
 /* eslint-enable */
 
 function milesightDeviceEncode(payload) {
-    var encoded = [];
+	processTemperature(payload);
+	var encoded = [];
+	//0xff
+	if ('request_check_sequence_number' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0xff);
+		if (payload.request_check_sequence_number.sequence_number < 0 || payload.request_check_sequence_number.sequence_number > 255) {
+			throw new Error('request_check_sequence_number.sequence_number must be between 0 and 255');
+		}
+		buffer.writeUInt8(payload.request_check_sequence_number.sequence_number);
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0xfe
+	if ('request_check_order' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0xfe);
+		if (payload.request_check_order.order < 0 || payload.request_check_order.order > 255) {
+			throw new Error('request_check_order.order must be between 0 and 255');
+		}
+		buffer.writeUInt8(payload.request_check_order.order);
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0xef
+	if ('req' in payload) {
+		var buffer = new Buffer();
+		var reqList = payload.req;
+		for (var idx = 0; idx < reqList.length; idx++) {
+			var req_command = reqList[idx];
+			var pureNumber = [];
+			var formateStrParts = [];
+		
+			req_command.split('.').forEach(function(part) {
+				if (/^[0-9]+$/.test(part)) {
+					// padStart ES5 兼容
+					var hex = Number(part).toString(16);
+					while (hex.length < 2) { hex = '0' + hex; }
+					pureNumber.push(hex);
+					formateStrParts.push('_item');
+				} else {
+					formateStrParts.push(part);
+				}
+			});
+		
+			var formateStr = formateStrParts.join('.');
+			var hexString = cmdMap()[formateStr];
+		
+			if (hexString && hexString.indexOf('xx') !== -1) {
+				var i = 0;
+				hexString = hexString.replace(/xx/g, function() {
+					return pureNumber[i++];
+				});
+			}
+		
+			if (hexString) {
+				var length = hexString.length / 2;
+				buffer.writeUInt8(0xef);
+				buffer.writeUInt8(length);
+				buffer.writeHexString(hexString, length, true);
+			}
+		}
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0xee
+	if ('request_query_all_configurations' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0xee);
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0xcf
+	if ('lorawan_configuration_settings' in payload) {
+		var buffer = new Buffer();
+		if (isValid(payload.lorawan_configuration_settings.mode)) {
+			buffer.writeUInt8(0xcf);
+			// 0:ClassA, 1:ClassB, 2:ClassC, 3:ClassC to B
+			buffer.writeUInt8(0x00);
+			// 0:ClassA, 1:ClassB, 2:ClassC, 3:ClassC to B
+			buffer.writeUInt8(payload.lorawan_configuration_settings.mode);
+		}
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0xde
+	if ('product_name' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0xde);
+		buffer.writeString(payload.product_name, 32);
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0xdd
+	if ('product_pn' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0xdd);
+		buffer.writeString(payload.product_pn, 32);
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0xdb
+	if ('product_sn' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0xdb);
+		buffer.writeHexString(payload.product_sn, 8);
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0xd9
+	if ('oem_id' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0xd9);
+		buffer.writeHexString(payload.oem_id, 2);
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0xd8
+	if ('product_frequency_band' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0xd8);
+		buffer.writeString(payload.product_frequency_band, 16);
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0xd5
+	if ('ble_phone_name' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0xd5);
+		if (payload.ble_phone_name.length < 1 || payload.ble_phone_name.length > 64) {
+			throw new Error('ble_phone_name.length must be between 1 and 64');
+		}
+		buffer.writeUInt8(payload.ble_phone_name.length);
+		buffer.writeString(payload.ble_phone_name.value, payload.ble_phone_name.length, true);
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0x00
+	if ('battery' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0x00);
+		if (payload.battery < 0 || payload.battery > 100) {
+			throw new Error('battery must be between 0 and 100');
+		}
+		buffer.writeUInt8(payload.battery);
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0x01
+	if ('temperature' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0x01);
+		if (payload.temperature < -20 || payload.temperature > 60) {
+			throw new Error('temperature must be between -20 and 60');
+		}
+		buffer.writeInt16LE(payload.temperature * 100);
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0x02
+	if ('humidity' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0x02);
+		if (payload.humidity < 0 || payload.humidity > 100) {
+			throw new Error('humidity must be between 0 and 100');
+		}
+		buffer.writeUInt16LE(payload.humidity * 10);
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0x08
+	if ('pir_status' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0x08);
+		if (payload.pir_status < 0 || payload.pir_status > 2) {
+			throw new Error('pir_status must be between 0 and 2');
+		}
+		// 0：Vacant, 1：Occupied, 2：Night Occupied
+		buffer.writeUInt8(payload.pir_status);
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0x03
+	if ('temperature_mode' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0x03);
+		// 0：heat, 1：em heat, 2：cool, 3：auto, 4：dehumidify, 5：ventilation, 10：off, 11：none
+		buffer.writeUInt8(payload.temperature_mode);
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0x06
+	if ('target_temperature1' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0x06);
+		if (payload.target_temperature1 < 5 || payload.target_temperature1 > 35) {
+			throw new Error('target_temperature1 must be between 5 and 35');
+		}
+		buffer.writeInt16LE(payload.target_temperature1 * 100);
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0x07
+	if ('target_temperature2' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0x07);
+		if (payload.target_temperature2 < 5 || payload.target_temperature2 > 35) {
+			throw new Error('target_temperature2 must be between 5 and 35');
+		}
+		buffer.writeInt16LE(payload.target_temperature2 * 100);
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0x04
+	if ('fan_mode' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0x04);
+		// 0：auto, 1：circulate, 2：on, 3：low, 4：medium, 5：high, 10：off, 11：none/keep
+		buffer.writeUInt8(payload.fan_mode);
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0x05
+	if ('execution_plan_id' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0x05);
+		if (payload.execution_plan_id < 0 || payload.execution_plan_id > 16) {
+			throw new Error('execution_plan_id must be between 0 and 16');
+		}
+		// 0:plan0, 1:plan1, 2:plan2, 3:plan3, 4:plan4, 5:plan5, 6:plan6, 7:plan7, 8:plan8, 9:plan9, 10:plan10, 11:plan11, 12:plan12, 13:plan13, 14:plan14, 15:plan15, 255:Not executed
+		buffer.writeUInt8(payload.execution_plan_id);
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0x0b
+	if ('temperature_alarm' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0x0b);
+		buffer.writeUInt8(payload.temperature_alarm.type);
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0x0c
+	if ('humidity_alarm' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0x0c);
+		buffer.writeUInt8(payload.humidity_alarm.type);
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0x09
+	if ('ble_event' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0x09);
+		buffer.writeUInt8(payload.ble_event.type);
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0x0a
+	if ('power_bus_event' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0x0a);
+		buffer.writeUInt8(payload.power_bus_event.type);
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0x0d
+	if ('key_event' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0x0d);
+		buffer.writeUInt8(payload.key_event.type);
+		if (payload.key_event.type == 0x00) {
+		}
+		if (payload.key_event.type == 0x01) {
+		}
+		if (payload.key_event.type == 0x02) {
+		}
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0x0f
+	if ('battery_event' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0x0f);
+		buffer.writeUInt8(payload.battery_event.type);
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0x60
+	if ('collection_interval' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0x60);
+		// 0：second, 1：min
+		buffer.writeUInt8(payload.collection_interval.unit);
+		if (payload.collection_interval.unit == 0x00) {
+			if (payload.collection_interval.seconds_of_time < 1 || payload.collection_interval.seconds_of_time > 3600) {
+				throw new Error('collection_interval.seconds_of_time must be between 1 and 3600');
+			}
+			buffer.writeUInt16LE(payload.collection_interval.seconds_of_time);
+		}
+		if (payload.collection_interval.unit == 0x01) {
+			if (payload.collection_interval.minutes_of_time < 1 || payload.collection_interval.minutes_of_time > 1440) {
+				throw new Error('collection_interval.minutes_of_time must be between 1 and 1440');
+			}
+			buffer.writeUInt16LE(payload.collection_interval.minutes_of_time);
+		}
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0x8d
+	if ('communication_mode' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0x8d);
+		if (payload.communication_mode < 0 || payload.communication_mode > 3) {
+			throw new Error('communication_mode must be between 0 and 3');
+		}
+		// 0：BLE, 1：LoRa, 2：BLE+LoRa, 3：PowerBus+LoRa
+		buffer.writeUInt8(payload.communication_mode);
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0x61
+	if ('reporting_interval' in payload) {
+		var buffer = new Buffer();
+		if (isValid(payload.reporting_interval.ble)) {
+			buffer.writeUInt8(0x61);
+			buffer.writeUInt8(0x00);
+			// 0：second, 1：min
+			buffer.writeUInt8(payload.reporting_interval.ble.unit);
+			if (payload.reporting_interval.ble.unit == 0x00) {
+				if (payload.reporting_interval.ble.seconds_of_time < 10 || payload.reporting_interval.ble.seconds_of_time > 64800) {
+					throw new Error('reporting_interval.ble.seconds_of_time must be between 10 and 64800');
+				}
+				buffer.writeUInt16LE(payload.reporting_interval.ble.seconds_of_time);
+			}
+			if (payload.reporting_interval.ble.unit == 0x01) {
+				if (payload.reporting_interval.ble.minutes_of_time < 1 || payload.reporting_interval.ble.minutes_of_time > 1440) {
+					throw new Error('reporting_interval.ble.minutes_of_time must be between 1 and 1440');
+				}
+				buffer.writeUInt16LE(payload.reporting_interval.ble.minutes_of_time);
+			}
+		}
+		if (isValid(payload.reporting_interval.lora)) {
+			buffer.writeUInt8(0x61);
+			buffer.writeUInt8(0x01);
+			// 0：second, 1：min
+			buffer.writeUInt8(payload.reporting_interval.lora.unit);
+			if (payload.reporting_interval.lora.unit == 0x00) {
+				if (payload.reporting_interval.lora.seconds_of_time < 10 || payload.reporting_interval.lora.seconds_of_time > 64800) {
+					throw new Error('reporting_interval.lora.seconds_of_time must be between 10 and 64800');
+				}
+				buffer.writeUInt16LE(payload.reporting_interval.lora.seconds_of_time);
+			}
+			if (payload.reporting_interval.lora.unit == 0x01) {
+				if (payload.reporting_interval.lora.minutes_of_time < 1 || payload.reporting_interval.lora.minutes_of_time > 1440) {
+					throw new Error('reporting_interval.lora.minutes_of_time must be between 1 and 1440');
+				}
+				buffer.writeUInt16LE(payload.reporting_interval.lora.minutes_of_time);
+			}
+		}
+		if (isValid(payload.reporting_interval.ble_lora)) {
+			buffer.writeUInt8(0x61);
+			buffer.writeUInt8(0x02);
+			// 0：second, 1：min
+			buffer.writeUInt8(payload.reporting_interval.ble_lora.unit);
+			if (payload.reporting_interval.ble_lora.unit == 0x00) {
+				if (payload.reporting_interval.ble_lora.seconds_of_time < 10 || payload.reporting_interval.ble_lora.seconds_of_time > 64800) {
+					throw new Error('reporting_interval.ble_lora.seconds_of_time must be between 10 and 64800');
+				}
+				buffer.writeUInt16LE(payload.reporting_interval.ble_lora.seconds_of_time);
+			}
+			if (payload.reporting_interval.ble_lora.unit == 0x01) {
+				if (payload.reporting_interval.ble_lora.minutes_of_time < 1 || payload.reporting_interval.ble_lora.minutes_of_time > 1440) {
+					throw new Error('reporting_interval.ble_lora.minutes_of_time must be between 1 and 1440');
+				}
+				buffer.writeUInt16LE(payload.reporting_interval.ble_lora.minutes_of_time);
+			}
+		}
+		if (isValid(payload.reporting_interval.power_lora)) {
+			buffer.writeUInt8(0x61);
+			buffer.writeUInt8(0x03);
+			// 0：second, 1：min
+			buffer.writeUInt8(payload.reporting_interval.power_lora.unit);
+			if (payload.reporting_interval.power_lora.unit == 0x00) {
+				if (payload.reporting_interval.power_lora.seconds_of_time < 10 || payload.reporting_interval.power_lora.seconds_of_time > 64800) {
+					throw new Error('reporting_interval.power_lora.seconds_of_time must be between 10 and 64800');
+				}
+				buffer.writeUInt16LE(payload.reporting_interval.power_lora.seconds_of_time);
+			}
+			if (payload.reporting_interval.power_lora.unit == 0x01) {
+				if (payload.reporting_interval.power_lora.minutes_of_time < 1 || payload.reporting_interval.power_lora.minutes_of_time > 1440) {
+					throw new Error('reporting_interval.power_lora.minutes_of_time must be between 1 and 1440');
+				}
+				buffer.writeUInt16LE(payload.reporting_interval.power_lora.minutes_of_time);
+			}
+		}
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0x6c
+	if ('communicate_interval' in payload) {
+		var buffer = new Buffer();
+		if (isValid(payload.communicate_interval.ble)) {
+			buffer.writeUInt8(0x6c);
+			buffer.writeUInt8(0x00);
+			// 0：second, 1：min
+			buffer.writeUInt8(payload.communicate_interval.ble.unit);
+			if (payload.communicate_interval.ble.unit == 0x00) {
+				if (payload.communicate_interval.ble.seconds_of_time < 10 || payload.communicate_interval.ble.seconds_of_time > 1800) {
+					throw new Error('communicate_interval.ble.seconds_of_time must be between 10 and 1800');
+				}
+				buffer.writeUInt16LE(payload.communicate_interval.ble.seconds_of_time);
+			}
+			if (payload.communicate_interval.ble.unit == 0x01) {
+				if (payload.communicate_interval.ble.minutes_of_time < 1 || payload.communicate_interval.ble.minutes_of_time > 30) {
+					throw new Error('communicate_interval.ble.minutes_of_time must be between 1 and 30');
+				}
+				buffer.writeUInt16LE(payload.communicate_interval.ble.minutes_of_time);
+			}
+		}
+		if (isValid(payload.communicate_interval.lora)) {
+			buffer.writeUInt8(0x6c);
+			buffer.writeUInt8(0x01);
+			// 0：second, 1：min
+			buffer.writeUInt8(payload.communicate_interval.lora.unit);
+			if (payload.communicate_interval.lora.unit == 0x00) {
+				if (payload.communicate_interval.lora.seconds_of_time < 10 || payload.communicate_interval.lora.seconds_of_time > 1800) {
+					throw new Error('communicate_interval.lora.seconds_of_time must be between 10 and 1800');
+				}
+				buffer.writeUInt16LE(payload.communicate_interval.lora.seconds_of_time);
+			}
+			if (payload.communicate_interval.lora.unit == 0x01) {
+				if (payload.communicate_interval.lora.minutes_of_time < 1 || payload.communicate_interval.lora.minutes_of_time > 30) {
+					throw new Error('communicate_interval.lora.minutes_of_time must be between 1 and 30');
+				}
+				buffer.writeUInt16LE(payload.communicate_interval.lora.minutes_of_time);
+			}
+		}
+		if (isValid(payload.communicate_interval.ble_lora)) {
+			buffer.writeUInt8(0x6c);
+			buffer.writeUInt8(0x02);
+			// 0：second, 1：min
+			buffer.writeUInt8(payload.communicate_interval.ble_lora.unit);
+			if (payload.communicate_interval.ble_lora.unit == 0x00) {
+				if (payload.communicate_interval.ble_lora.seconds_of_time < 10 || payload.communicate_interval.ble_lora.seconds_of_time > 1800) {
+					throw new Error('communicate_interval.ble_lora.seconds_of_time must be between 10 and 1800');
+				}
+				buffer.writeUInt16LE(payload.communicate_interval.ble_lora.seconds_of_time);
+			}
+			if (payload.communicate_interval.ble_lora.unit == 0x01) {
+				if (payload.communicate_interval.ble_lora.minutes_of_time < 1 || payload.communicate_interval.ble_lora.minutes_of_time > 30) {
+					throw new Error('communicate_interval.ble_lora.minutes_of_time must be between 1 and 30');
+				}
+				buffer.writeUInt16LE(payload.communicate_interval.ble_lora.minutes_of_time);
+			}
+		}
+		if (isValid(payload.communicate_interval.power_bus)) {
+			buffer.writeUInt8(0x6c);
+			buffer.writeUInt8(0x03);
+			// 0：second, 1：min
+			buffer.writeUInt8(payload.communicate_interval.power_bus.unit);
+			if (payload.communicate_interval.power_bus.unit == 0x00) {
+				if (payload.communicate_interval.power_bus.seconds_of_time < 10 || payload.communicate_interval.power_bus.seconds_of_time > 1800) {
+					throw new Error('communicate_interval.power_bus.seconds_of_time must be between 10 and 1800');
+				}
+				buffer.writeUInt16LE(payload.communicate_interval.power_bus.seconds_of_time);
+			}
+			if (payload.communicate_interval.power_bus.unit == 0x01) {
+				if (payload.communicate_interval.power_bus.minutes_of_time < 1 || payload.communicate_interval.power_bus.minutes_of_time > 30) {
+					throw new Error('communicate_interval.power_bus.minutes_of_time must be between 1 and 30');
+				}
+				buffer.writeUInt16LE(payload.communicate_interval.power_bus.minutes_of_time);
+			}
+		}
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0xc8
+	if ('device_status' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0xc8);
+		// 0：Power Off, 1：Power On
+		buffer.writeUInt8(payload.device_status);
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0x63
+	if ('temperature_unit' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0x63);
+		// 0：℃, 1：℉
+		buffer.writeUInt8(payload.temperature_unit);
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0x7d
+	if ('data_sync_to_peer' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0x7d);
+		// 0:Embedded Data, 1:External Receive
+		buffer.writeUInt8(payload.data_sync_to_peer);
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0x7e
+	if ('data_sync_timeout' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0x7e);
+		if (payload.data_sync_timeout < 1 || payload.data_sync_timeout > 60) {
+			throw new Error('data_sync_timeout must be between 1 and 60');
+		}
+		buffer.writeUInt8(payload.data_sync_timeout);
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0x85
+	if ('ble_enable' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0x85);
+		// 0:disable, 1:enable
+		buffer.writeUInt8(payload.ble_enable);
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0x8b
+	if ('ble_name' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0x8b);
+		buffer.writeString(payload.ble_name, 32);
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0x67
+	if ('system_status' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0x67);
+		// 0：Off, 1：On
+		buffer.writeUInt8(payload.system_status);
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0x64
+	if ('mode_enable' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0x64);
+		var bitOptions = 0;
+		// 0：disable, 1：enable
+		bitOptions |= payload.mode_enable.heat << 0;
 
-    if ("frame" in payload) {
-        encoded = encoded.concat(setFrame(payload.frame));
-    }
-    if ("collection_interval" in payload) {
-        var cmd_buffer = setCollectionInterval(payload.collection_interval);
-        encoded = encoded.concat(cmd_buffer);
-        encoded = WITH_QUERY_CMD ? encoded.concat(setQueryCmd(cmd_buffer)) : encoded;
-    }
-    if ("reporting_interval" in payload) {
-        var cmd_buffer = setReportingInterval(payload.reporting_interval);
-        encoded = encoded.concat(cmd_buffer);
-        encoded = WITH_QUERY_CMD ? encoded.concat(setQueryCmd(cmd_buffer)) : encoded;
-    }
-    if ("intelligent_display_enable" in payload) {
-        var cmd_buffer = setIntelligentDisplayEnable(payload.intelligent_display_enable);
-        encoded = encoded.concat(cmd_buffer);
-        encoded = WITH_QUERY_CMD ? encoded.concat(setQueryCmd(cmd_buffer)) : encoded;
-    }
-    if ("temperature_unit" in payload) {
-        var cmd_buffer = setTemperatureUnit(payload.temperature_unit);
-        encoded = encoded.concat(cmd_buffer);
-        encoded = WITH_QUERY_CMD ? encoded.concat(setQueryCmd(cmd_buffer)) : encoded;
-    }
-    if ("temperature_control_mode_support" in payload) {
-        var cmd_buffer = setTemperatureControlModeSupport(payload.temperature_control_mode_support);
-        encoded = encoded.concat(cmd_buffer);
-        encoded = WITH_QUERY_CMD ? encoded.concat(setQueryCmd(cmd_buffer)) : encoded;
-    }
-    if ("target_temperature_mode" in payload) {
-        var cmd_buffer = setTargetTemperatureMode(payload.target_temperature_mode);
-        encoded = encoded.concat(cmd_buffer);
-        encoded = WITH_QUERY_CMD ? encoded.concat(setQueryCmd(cmd_buffer)) : encoded;
-    }
-    if ("target_temperature_resolution" in payload) {
-        var cmd_buffer = setTargetTemperatureResolution(payload.target_temperature_resolution);
-        encoded = encoded.concat(cmd_buffer);
-        encoded = WITH_QUERY_CMD ? encoded.concat(setQueryCmd(cmd_buffer)) : encoded;
-    }
-    if ("system_status" in payload) {
-        var cmd_buffer = setSystemStatus(payload.system_status);
-        encoded = encoded.concat(cmd_buffer);
-        encoded = WITH_QUERY_CMD ? encoded.concat(setQueryCmd(cmd_buffer)) : encoded;
-    }
-    if ("temperature_control_mode" in payload) {
-        var cmd_buffer = setTemperatureControlMode(payload.temperature_control_mode);
-        encoded = encoded.concat(cmd_buffer);
-        encoded = WITH_QUERY_CMD ? encoded.concat(setQueryCmd(cmd_buffer)) : encoded;
-    }
-    if ("temperature_control_mode_in_plan_enable" in payload) {
-        var cmd_buffer = setTemperatureControlModeInPlanEnable(payload.temperature_control_mode_in_plan_enable);
-        encoded = encoded.concat(cmd_buffer);
-        encoded = WITH_QUERY_CMD ? encoded.concat(setQueryCmd(cmd_buffer)) : encoded;
-    }
-    if ("target_temperature_settings" in payload) {
-        var cmd_buffer = setTargetTemperature(payload.target_temperature_settings);
-        encoded = encoded.concat(cmd_buffer);
-        encoded = WITH_QUERY_CMD ? encoded.concat(setQueryCmd(cmd_buffer)) : encoded;
-    }
-    if ("dead_band" in payload) {
-        var cmd_buffer = setDeadBand(payload.dead_band);
-        encoded = encoded.concat(cmd_buffer);
-        encoded = WITH_QUERY_CMD ? encoded.concat(setQueryCmd(cmd_buffer)) : encoded;
-    }
-    if ("target_temperature_range" in payload) {
-        var cmd_buffer = setTargetTemperatureRange(payload.target_temperature_range);
-        encoded = encoded.concat(cmd_buffer);
-        encoded = WITH_QUERY_CMD ? encoded.concat(setQueryCmd(cmd_buffer)) : encoded;
-    }
-    if ("communicate_interval" in payload) {
-        var cmd_buffer = setCommunicateInterval(payload.communicate_interval);
-        encoded = encoded.concat(cmd_buffer);
-        encoded = WITH_QUERY_CMD ? encoded.concat(setQueryCmd(cmd_buffer)) : encoded;
-    }
-    if ("button_custom_function" in payload) {
-        var cmd_buffer = setButtonCustomFunction(payload.button_custom_function);
-        encoded = encoded.concat(cmd_buffer);
-        encoded = WITH_QUERY_CMD ? encoded.concat(setQueryCmd(cmd_buffer)) : encoded;
-    }
-    if ("child_lock_settings" in payload) {
-        var cmd_buffer = setChildLockSettings(payload.child_lock_settings);
-        encoded = encoded.concat(cmd_buffer);
-        encoded = WITH_QUERY_CMD ? encoded.concat(setQueryCmd(cmd_buffer)) : encoded;
-    }
-    if ("fan_mode" in payload) {
-        var cmd_buffer = setFanMode(payload.fan_mode);
-        encoded = encoded.concat(cmd_buffer);
-        encoded = WITH_QUERY_CMD ? encoded.concat(setQueryCmd(cmd_buffer)) : encoded;
-    }
-    if ("screen_display_settings" in payload) {
-        var cmd_buffer = setScreenObjectSettings(payload.screen_display_settings);
-        encoded = encoded.concat(cmd_buffer);
-        encoded = WITH_QUERY_CMD ? encoded.concat(setQueryCmd(cmd_buffer)) : encoded;
-    }
-    if ("temperature_calibration_settings" in payload) {
-        var cmd_buffer = setTemperatureCalibrationSettings(payload.temperature_calibration_settings);
-        encoded = encoded.concat(cmd_buffer);
-        encoded = WITH_QUERY_CMD ? encoded.concat(setQueryCmd(cmd_buffer)) : encoded;
-    }
-    if ("humidity_calibration_settings" in payload) {
-        var cmd_buffer = setHumidityCalibrationSettings(payload.humidity_calibration_settings);
-        encoded = encoded.concat(cmd_buffer);
-        encoded = WITH_QUERY_CMD ? encoded.concat(setQueryCmd(cmd_buffer)) : encoded;
-    }
-    if ("plan_config" in payload) {
-        for (var i = 0; i < payload.plan_config.length; i++) {
-            var cmd_buffer = setPlanConfig(payload.plan_config[i]);
-            encoded = encoded.concat(cmd_buffer);
-            encoded = WITH_QUERY_CMD ? encoded.concat(setQueryCmd(cmd_buffer)) : encoded;
-        }
-    }
-    if ('system_status_control' in payload) {
-		var buffer = new Buffer(7);
+		// 0：disable, 1：enable
+		bitOptions |= payload.mode_enable.em_heat << 1;
+
+		// 0：disable, 1：enable
+		bitOptions |= payload.mode_enable.cool << 2;
+
+		// 0：disable, 1：enable
+		bitOptions |= payload.mode_enable.auto << 3;
+
+		bitOptions |= payload.mode_enable.reserved << 6;
+		buffer.writeUInt8(bitOptions);
+
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0x88
+	if ('fan_enable' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0x88);
+		var bitOptions = 0;
+		// 0：disable, 1：enable
+		bitOptions |= payload.fan_enable.auto << 0;
+
+		// 0：disable, 1：enable
+		bitOptions |= payload.fan_enable.circul << 1;
+
+		// 0：disable, 1：enable
+		bitOptions |= payload.fan_enable.on << 2;
+
+		// 0：disable, 1：enable
+		bitOptions |= payload.fan_enable.low << 3;
+
+		// 0：disable, 1：enable
+		bitOptions |= payload.fan_enable.medium << 4;
+
+		// 0：disable, 1：enable
+		bitOptions |= payload.fan_enable.high << 5;
+
+		bitOptions |= payload.fan_enable.reserved << 6;
+		buffer.writeUInt8(bitOptions);
+
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0x68
+	if ('temperature_control_mode' in payload) {
+		var buffer = new Buffer();
+		if (isValid(payload.temperature_control_mode.mode)) {
+			buffer.writeUInt8(0x68);
+			// 0：heat, 1：em heat, 2：cool, 3：auto, 4：dehumidify, 5：ventilation
+			buffer.writeUInt8(0x00);
+			if (payload.temperature_control_mode.mode < 0 || payload.temperature_control_mode.mode > 5) {
+				throw new Error('temperature_control_mode.mode must be between 0 and 5');
+			}
+			// 0：heat, 1：em heat, 2：cool, 3：auto, 4：dehumidify, 5：ventilation
+			buffer.writeUInt8(payload.temperature_control_mode.mode);
+		}
+		if (isValid(payload.temperature_control_mode.plan_mode_enable)) {
+			buffer.writeUInt8(0x68);
+			// 0：disable, 1：enable
+			buffer.writeUInt8(0x01);
+			// 0：disable, 1：enable
+			buffer.writeUInt8(payload.temperature_control_mode.plan_mode_enable);
+		}
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0x65
+	if ('target_temperature_mode' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0x65);
+		// 0：single, 1：dual
+		buffer.writeUInt8(payload.target_temperature_mode);
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0x66
+	if ('target_temperature_resolution' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0x66);
+		// 0：0.5, 1：1
+		buffer.writeUInt8(payload.target_temperature_resolution);
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0x69
+	if ('target_temperature_settings' in payload) {
+		var buffer = new Buffer();
+		if (isValid(payload.target_temperature_settings.heat)) {
+			buffer.writeUInt8(0x69);
+			buffer.writeUInt8(0x00);
+			if (payload.target_temperature_settings.heat < 5 || payload.target_temperature_settings.heat > 35) {
+				throw new Error('target_temperature_settings.heat must be between 5 and 35');
+			}
+			buffer.writeInt16LE(payload.target_temperature_settings.heat * 100);
+		}
+		if (isValid(payload.target_temperature_settings.em_heat)) {
+			buffer.writeUInt8(0x69);
+			buffer.writeUInt8(0x01);
+			if (payload.target_temperature_settings.em_heat < 5 || payload.target_temperature_settings.em_heat > 35) {
+				throw new Error('target_temperature_settings.em_heat must be between 5 and 35');
+			}
+			buffer.writeInt16LE(payload.target_temperature_settings.em_heat * 100);
+		}
+		if (isValid(payload.target_temperature_settings.cool)) {
+			buffer.writeUInt8(0x69);
+			buffer.writeUInt8(0x02);
+			if (payload.target_temperature_settings.cool < 5 || payload.target_temperature_settings.cool > 35) {
+				throw new Error('target_temperature_settings.cool must be between 5 and 35');
+			}
+			buffer.writeInt16LE(payload.target_temperature_settings.cool * 100);
+		}
+		if (isValid(payload.target_temperature_settings.auto)) {
+			buffer.writeUInt8(0x69);
+			buffer.writeUInt8(0x03);
+			if (payload.target_temperature_settings.auto < 5 || payload.target_temperature_settings.auto > 35) {
+				throw new Error('target_temperature_settings.auto must be between 5 and 35');
+			}
+			buffer.writeInt16LE(payload.target_temperature_settings.auto * 100);
+		}
+		if (isValid(payload.target_temperature_settings.auto_heat)) {
+			buffer.writeUInt8(0x69);
+			buffer.writeUInt8(0x04);
+			if (payload.target_temperature_settings.auto_heat < 5 || payload.target_temperature_settings.auto_heat > 35) {
+				throw new Error('target_temperature_settings.auto_heat must be between 5 and 35');
+			}
+			buffer.writeInt16LE(payload.target_temperature_settings.auto_heat * 100);
+		}
+		if (isValid(payload.target_temperature_settings.auto_cool)) {
+			buffer.writeUInt8(0x69);
+			buffer.writeUInt8(0x05);
+			if (payload.target_temperature_settings.auto_cool < 5 || payload.target_temperature_settings.auto_cool > 35) {
+				throw new Error('target_temperature_settings.auto_cool must be between 5 and 35');
+			}
+			buffer.writeInt16LE(payload.target_temperature_settings.auto_cool * 100);
+		}
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0x6a
+	if ('minimum_dead_zone' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0x6a);
+		if (payload.minimum_dead_zone < 1 || payload.minimum_dead_zone > 30) {
+			throw new Error('minimum_dead_zone must be between 1 and 30');
+		}
+		buffer.writeUInt16LE(payload.minimum_dead_zone * 100);
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0x6b
+	if ('target_temperature_range' in payload) {
+		var buffer = new Buffer();
+		if (isValid(payload.target_temperature_range.heat)) {
+			buffer.writeUInt8(0x6b);
+			buffer.writeUInt8(0x00);
+			if (payload.target_temperature_range.heat.min < 5 || payload.target_temperature_range.heat.min > 35) {
+				throw new Error('target_temperature_range.heat.min must be between 5 and 35');
+			}
+			buffer.writeInt16LE(payload.target_temperature_range.heat.min * 100);
+			if (payload.target_temperature_range.heat.max < 5 || payload.target_temperature_range.heat.max > 35) {
+				throw new Error('target_temperature_range.heat.max must be between 5 and 35');
+			}
+			buffer.writeInt16LE(payload.target_temperature_range.heat.max * 100);
+		}
+		if (isValid(payload.target_temperature_range.em_heat)) {
+			buffer.writeUInt8(0x6b);
+			buffer.writeUInt8(0x01);
+			if (payload.target_temperature_range.em_heat.min < 5 || payload.target_temperature_range.em_heat.min > 35) {
+				throw new Error('target_temperature_range.em_heat.min must be between 5 and 35');
+			}
+			buffer.writeInt16LE(payload.target_temperature_range.em_heat.min * 100);
+			if (payload.target_temperature_range.em_heat.max < 5 || payload.target_temperature_range.em_heat.max > 35) {
+				throw new Error('target_temperature_range.em_heat.max must be between 5 and 35');
+			}
+			buffer.writeInt16LE(payload.target_temperature_range.em_heat.max * 100);
+		}
+		if (isValid(payload.target_temperature_range.cool)) {
+			buffer.writeUInt8(0x6b);
+			buffer.writeUInt8(0x02);
+			if (payload.target_temperature_range.cool.min < 5 || payload.target_temperature_range.cool.min > 35) {
+				throw new Error('target_temperature_range.cool.min must be between 5 and 35');
+			}
+			buffer.writeInt16LE(payload.target_temperature_range.cool.min * 100);
+			if (payload.target_temperature_range.cool.max < 5 || payload.target_temperature_range.cool.max > 35) {
+				throw new Error('target_temperature_range.cool.max must be between 5 and 35');
+			}
+			buffer.writeInt16LE(payload.target_temperature_range.cool.max * 100);
+		}
+		if (isValid(payload.target_temperature_range.auto)) {
+			buffer.writeUInt8(0x6b);
+			buffer.writeUInt8(0x03);
+			if (payload.target_temperature_range.auto.min < 5 || payload.target_temperature_range.auto.min > 35) {
+				throw new Error('target_temperature_range.auto.min must be between 5 and 35');
+			}
+			buffer.writeInt16LE(payload.target_temperature_range.auto.min * 100);
+			if (payload.target_temperature_range.auto.max < 5 || payload.target_temperature_range.auto.max > 35) {
+				throw new Error('target_temperature_range.auto.max must be between 5 and 35');
+			}
+			buffer.writeInt16LE(payload.target_temperature_range.auto.max * 100);
+		}
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0x74
+	if ('fan_control_mode' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0x74);
+		if (payload.fan_control_mode < 0 || payload.fan_control_mode > 5) {
+			throw new Error('fan_control_mode must be between 0 and 5');
+		}
+		// 0：auto, 1：circulate, 2：on, 3：low, 4：medium, 5：high
+		buffer.writeUInt8(payload.fan_control_mode);
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0x82
+	if ('pir_common' in payload) {
+		var buffer = new Buffer();
+		if (isValid(payload.pir_common.enable)) {
+			buffer.writeUInt8(0x82);
+			// 0:disable, 1:enable
+			buffer.writeUInt8(0x01);
+			if (payload.pir_common.enable < 0 || payload.pir_common.enable > 1) {
+				throw new Error('pir_common.enable must be between 0 and 1');
+			}
+			// 0:disable, 1:enable
+			buffer.writeUInt8(payload.pir_common.enable);
+		}
+		if (isValid(payload.pir_common.release_time)) {
+			buffer.writeUInt8(0x82);
+			buffer.writeUInt8(0x02);
+			if (payload.pir_common.release_time < 1 || payload.pir_common.release_time > 360) {
+				throw new Error('pir_common.release_time must be between 1 and 360');
+			}
+			buffer.writeUInt16LE(payload.pir_common.release_time);
+		}
+		if (isValid(payload.pir_common.mode)) {
+			buffer.writeUInt8(0x82);
+			// 0:Immediate Trigger, 1:Rule Trigger
+			buffer.writeUInt8(0x03);
+			// 0:Immediate Trigger, 1:Rule Trigger
+			buffer.writeUInt8(payload.pir_common.mode);
+		}
+		if (isValid(payload.pir_common.check)) {
+			buffer.writeUInt8(0x82);
+			buffer.writeUInt8(0x04);
+			if (payload.pir_common.check.period < 1 || payload.pir_common.check.period > 60) {
+				throw new Error('pir_common.check.period must be between 1 and 60');
+			}
+			buffer.writeUInt8(payload.pir_common.check.period);
+			if (payload.pir_common.check.rate < 1 || payload.pir_common.check.rate > 100) {
+				throw new Error('pir_common.check.rate must be between 1 and 100');
+			}
+			buffer.writeUInt8(payload.pir_common.check.rate);
+		}
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0x83
+	if ('pir_energy' in payload) {
+		var buffer = new Buffer();
+		if (isValid(payload.pir_energy.enable)) {
+			buffer.writeUInt8(0x83);
+			// 0:disable, 1:enable
+			buffer.writeUInt8(0x01);
+			if (payload.pir_energy.enable < 0 || payload.pir_energy.enable > 1) {
+				throw new Error('pir_energy.enable must be between 0 and 1');
+			}
+			// 0:disable, 1:enable
+			buffer.writeUInt8(payload.pir_energy.enable);
+		}
+		if (isValid(payload.pir_energy.plan)) {
+			buffer.writeUInt8(0x83);
+			buffer.writeUInt8(0x02);
+			if (payload.pir_energy.plan.occupied < 0 || payload.pir_energy.plan.occupied > 255) {
+				throw new Error('pir_energy.plan.occupied must be between 0 and 255');
+			}
+			// 0:plan0, 1:plan1, 2:plan2, 3:plan3, 4:plan4, 5:plan5, 6:plan6, 7:plan7, 255:Not executed
+			buffer.writeUInt8(payload.pir_energy.plan.occupied);
+			if (payload.pir_energy.plan.unoccupied < 0 || payload.pir_energy.plan.unoccupied > 255) {
+				throw new Error('pir_energy.plan.unoccupied must be between 0 and 255');
+			}
+			// 0:plan0, 1:plan1, 2:plan2, 3:plan3, 4:plan4, 5:plan5, 6:plan6, 7:plan7, 255:Not executed
+			buffer.writeUInt8(payload.pir_energy.plan.unoccupied);
+		}
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0x84
+	if ('pir_night' in payload) {
+		var buffer = new Buffer();
+		if (isValid(payload.pir_night.enable)) {
+			buffer.writeUInt8(0x84);
+			// 0:disable, 1:enable
+			buffer.writeUInt8(0x01);
+			if (payload.pir_night.enable < 0 || payload.pir_night.enable > 1) {
+				throw new Error('pir_night.enable must be between 0 and 1');
+			}
+			// 0:disable, 1:enable
+			buffer.writeUInt8(payload.pir_night.enable);
+		}
+		if (isValid(payload.pir_night.night_time)) {
+			buffer.writeUInt8(0x84);
+			buffer.writeUInt8(0x04);
+			if (payload.pir_night.night_time.start < 0 || payload.pir_night.night_time.start > 1439) {
+				throw new Error('pir_night.night_time.start must be between 0 and 1439');
+			}
+			buffer.writeUInt16LE(payload.pir_night.night_time.start);
+			if (payload.pir_night.night_time.stop < 0 || payload.pir_night.night_time.stop > 1439) {
+				throw new Error('pir_night.night_time.stop must be between 0 and 1439');
+			}
+			buffer.writeUInt16LE(payload.pir_night.night_time.stop);
+		}
+		if (isValid(payload.pir_night.occupied)) {
+			buffer.writeUInt8(0x84);
+			// 0:plan0, 1:plan1, 2:plan2, 3:plan3, 4:plan4, 5:plan5, 6:plan6, 7:plan7, 255:Not executed
+			buffer.writeUInt8(0x05);
+			if (payload.pir_night.occupied < 0 || payload.pir_night.occupied > 255) {
+				throw new Error('pir_night.occupied must be between 0 and 255');
+			}
+			// 0:plan0, 1:plan1, 2:plan2, 3:plan3, 4:plan4, 5:plan5, 6:plan6, 7:plan7, 255:Not executed
+			buffer.writeUInt8(payload.pir_night.occupied);
+		}
+		if (isValid(payload.pir_night.mode)) {
+			buffer.writeUInt8(0x84);
+			// 0:Immediate Trigger, 1:Rule Trigger
+			buffer.writeUInt8(0x02);
+			// 0:Immediate Trigger, 1:Rule Trigger
+			buffer.writeUInt8(payload.pir_night.mode);
+		}
+		if (isValid(payload.pir_night.check)) {
+			buffer.writeUInt8(0x84);
+			buffer.writeUInt8(0x03);
+			if (payload.pir_night.check.period < 1 || payload.pir_night.check.period > 60) {
+				throw new Error('pir_night.check.period must be between 1 and 60');
+			}
+			buffer.writeUInt8(payload.pir_night.check.period);
+			if (payload.pir_night.check.rate < 1 || payload.pir_night.check.rate > 100) {
+				throw new Error('pir_night.check.rate must be between 1 and 100');
+			}
+			buffer.writeUInt8(payload.pir_night.check.rate);
+		}
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0x75
+	if ('screen_display_settings' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0x75);
+		var bitOptions = 0;
+		// 0:disable, 1:enable
+		bitOptions |= payload.screen_display_settings.plan_name << 0;
+
+		// 0:disable, 1:enable
+		bitOptions |= payload.screen_display_settings.ambient_temp << 1;
+
+		// 0:disable, 1:enable
+		bitOptions |= payload.screen_display_settings.ambient_humi << 2;
+
+		// 0:disable, 1:enable
+		bitOptions |= payload.screen_display_settings.target_temp << 3;
+
+		bitOptions |= payload.screen_display_settings.reserved << 4;
+		buffer.writeUInt8(bitOptions);
+
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0x71
+	if ('button_custom_function' in payload) {
+		var buffer = new Buffer();
+		if (isValid(payload.button_custom_function.enable)) {
+			buffer.writeUInt8(0x71);
+			// 0：disable, 1：enable
+			buffer.writeUInt8(0x00);
+			buffer.writeInt8(payload.button_custom_function.enable);
+		}
+		if (isValid(payload.button_custom_function.mode1)) {
+			buffer.writeUInt8(0x71);
+			// 1：Temperature Control Mode, 2：Fan Mode, 3：Schedule Switch, 4：Status Report, 5：Filter Cleaning Reset, 6：Button Event1, 7：Temperature Unit Switch
+			buffer.writeUInt8(0x01);
+			// 1：Temperature Control Mode, 2：Fan Mode, 3：Schedule Switch, 4：Status Report, 5：Filter Cleaning Reset, 6：Button Event1, 7：Temperature Unit Switch
+			buffer.writeUInt8(payload.button_custom_function.mode1);
+		}
+		if (isValid(payload.button_custom_function.mode2)) {
+			buffer.writeUInt8(0x71);
+			// 1：Temperature Control Mode, 2：Fan Mode, 3：Schedule Switch, 4：Status Report, 5：Filter Cleaning Reset, 6：Button Event2, 7：Temperature Unit Switch
+			buffer.writeUInt8(0x02);
+			// 1：Temperature Control Mode, 2：Fan Mode, 3：Schedule Switch, 4：Status Report, 5：Filter Cleaning Reset, 6：Button Event2, 7：Temperature Unit Switch
+			buffer.writeUInt8(payload.button_custom_function.mode2);
+		}
+		if (isValid(payload.button_custom_function.mode3)) {
+			buffer.writeUInt8(0x71);
+			// 0：System On/Off, 3：Schedule Switch, 4：Status Report, 5：Filter Cleaning Reset, 6：Button Event3, 7：Temperature Unit Switch
+			buffer.writeUInt8(0x03);
+			// 0：System On/Off, 3：Schedule Switch, 4：Status Report, 5：Filter Cleaning Reset, 6：Button Event3, 7：Temperature Unit Switch
+			buffer.writeUInt8(payload.button_custom_function.mode3);
+		}
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0x72
+	if ('children_lock_settings' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0x72);
+		// 0:disable, 1:enable
+		buffer.writeUInt8(payload.children_lock_settings.enable);
+		var bitOptions = 0;
+		bitOptions |= payload.children_lock_settings.temp_up << 0;
+
+		bitOptions |= payload.children_lock_settings.temp_down << 1;
+
+		bitOptions |= payload.children_lock_settings.system_on_off << 2;
+
+		bitOptions |= payload.children_lock_settings.fan_mode << 3;
+
+		bitOptions |= payload.children_lock_settings.temperature_control_mode << 4;
+
+		bitOptions |= payload.children_lock_settings.reboot_reset << 5;
+
+		bitOptions |= payload.children_lock_settings.power_on_off << 6;
+
+		bitOptions |= payload.children_lock_settings.cancel_pair << 7;
+
+		bitOptions |= payload.children_lock_settings.plan_switch << 8;
+
+		bitOptions |= payload.children_lock_settings.status_report << 9;
+
+		bitOptions |= payload.children_lock_settings.filter_clean_alarm_release << 10;
+
+		bitOptions |= payload.children_lock_settings.button1_event << 11;
+
+		bitOptions |= payload.children_lock_settings.button2_event << 12;
+
+		bitOptions |= payload.children_lock_settings.button3_event << 13;
+
+		bitOptions |= payload.children_lock_settings.temperature_unit_switch << 14;
+
+		bitOptions |= payload.children_lock_settings.reserved << 15;
+		buffer.writeUInt16LE(bitOptions);
+
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0x81
+	if ('unlock_button' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0x81);
+		// 0：disable, 1：enable
+		buffer.writeUInt8(payload.unlock_button.enable);
+		if (payload.unlock_button.timeout < 1 || payload.unlock_button.timeout > 3600) {
+			throw new Error('unlock_button.timeout must be between 1 and 3600');
+		}
+		buffer.writeUInt16LE(payload.unlock_button.timeout);
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0x80
+	if ('unlock_combination_button_settings' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0x80);
+		var bitOptions = 0;
+		// 0：disable, 1：enable
+		bitOptions |= payload.unlock_combination_button_settings.button1 << 0;
+
+		// 0：disable, 1：enable
+		bitOptions |= payload.unlock_combination_button_settings.button2 << 1;
+
+		// 0：disable, 1：enable
+		bitOptions |= payload.unlock_combination_button_settings.button3 << 2;
+
+		// 0：disable, 1：enable
+		bitOptions |= payload.unlock_combination_button_settings.button4 << 3;
+
+		// 0：disable, 1：enable
+		bitOptions |= payload.unlock_combination_button_settings.button5 << 4;
+
+		bitOptions |= payload.unlock_combination_button_settings.reserved << 5;
+		buffer.writeUInt8(bitOptions);
+
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0x62
+	if ('intelligent_display_enable' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0x62);
+		// 0：disable, 1：enable
+		buffer.writeUInt8(payload.intelligent_display_enable);
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0xc7
+	if ('time_zone' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0xc7);
+		if (payload.time_zone < -720 || payload.time_zone > 840) {
+			throw new Error('time_zone must be between -720 and 840');
+		}
+		buffer.writeInt16LE(payload.time_zone);
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0xc6
+	if ('daylight_saving_time' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0xc6);
+		// 0：disable, 1：enable
+		buffer.writeUInt8(payload.daylight_saving_time.enable);
+		if (payload.daylight_saving_time.daylight_saving_time_offset < 1 || payload.daylight_saving_time.daylight_saving_time_offset > 120) {
+			throw new Error('daylight_saving_time.daylight_saving_time_offset must be between 1 and 120');
+		}
+		buffer.writeUInt8(payload.daylight_saving_time.daylight_saving_time_offset);
+		if (payload.daylight_saving_time.start_month < 1 || payload.daylight_saving_time.start_month > 12) {
+			throw new Error('daylight_saving_time.start_month must be between 1 and 12');
+		}
+		// 1:Jan., 2:Feb., 3:Mar., 4:Apr., 5:May, 6:Jun., 7:Jul., 8:Aug., 9:Sep., 10:Oct., 11:Nov., 12:Dec.
+		buffer.writeUInt8(payload.daylight_saving_time.start_month);
+		var bitOptions = 0;
+		// 1:1st, 2: 2nd, 3: 3rd, 4: 4th, 5: last
+		bitOptions |= payload.daylight_saving_time.start_week_num << 4;
+
+		// 1：Mon., 2：Tues., 3：Wed., 4：Thurs., 5：Fri., 6：Sat., 7：Sun.
+		bitOptions |= payload.daylight_saving_time.start_week_day << 0;
+		buffer.writeUInt8(bitOptions);
+
+		if (payload.daylight_saving_time.start_hour_min < 0 || payload.daylight_saving_time.start_hour_min > 1380) {
+			throw new Error('daylight_saving_time.start_hour_min must be between 0 and 1380');
+		}
+		buffer.writeUInt16LE(payload.daylight_saving_time.start_hour_min);
+		if (payload.daylight_saving_time.end_month < 1 || payload.daylight_saving_time.end_month > 12) {
+			throw new Error('daylight_saving_time.end_month must be between 1 and 12');
+		}
+		// 1:Jan., 2:Feb., 3:Mar., 4:Apr., 5:May, 6:Jun., 7:Jul., 8:Aug., 9:Sep., 10:Oct., 11:Nov., 12:Dec.
+		buffer.writeUInt8(payload.daylight_saving_time.end_month);
+		var bitOptions = 0;
+		// 1:1st, 2: 2nd, 3: 3rd, 4: 4th, 5: last
+		bitOptions |= payload.daylight_saving_time.end_week_num << 4;
+
+		// 1：Mon., 2：Tues., 3：Wed., 4：Thurs., 5：Fri., 6：Sat., 7：Sun.
+		bitOptions |= payload.daylight_saving_time.end_week_day << 0;
+		buffer.writeUInt8(bitOptions);
+
+		if (payload.daylight_saving_time.end_hour_min < 0 || payload.daylight_saving_time.end_hour_min > 1380) {
+			throw new Error('daylight_saving_time.end_hour_min must be between 0 and 1380');
+		}
+		buffer.writeUInt16LE(payload.daylight_saving_time.end_hour_min);
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0x76
+	if ('temperature_calibration_settings' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0x76);
+		// 0：disable, 1：enable
+		buffer.writeUInt8(payload.temperature_calibration_settings.enable);
+		if (payload.temperature_calibration_settings.calibration_value < -80 || payload.temperature_calibration_settings.calibration_value > 80) {
+			throw new Error('temperature_calibration_settings.calibration_value must be between -80 and 80');
+		}
+		buffer.writeInt16LE(payload.temperature_calibration_settings.calibration_value * 100);
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0x77
+	if ('humidity_calibration_settings' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0x77);
+		// 0：disable, 1：enable
+		buffer.writeUInt8(payload.humidity_calibration_settings.enable);
+		if (payload.humidity_calibration_settings.calibration_value < -100 || payload.humidity_calibration_settings.calibration_value > 100) {
+			throw new Error('humidity_calibration_settings.calibration_value must be between -100 and 100');
+		}
+		buffer.writeInt16LE(payload.humidity_calibration_settings.calibration_value * 10);
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0x7b
+	if ('schedule_settings' in payload) {
+		var buffer = new Buffer();
+		for (var schedule_settings_id = 0; schedule_settings_id < (payload.schedule_settings && payload.schedule_settings.length); schedule_settings_id++) {
+			var schedule_settings_item = payload.schedule_settings[schedule_settings_id];
+			var schedule_settings_item_id = schedule_settings_item.id;
+			if (isValid(schedule_settings_item.enable)) {
+				buffer.writeUInt8(0x7b);
+				buffer.writeUInt8(schedule_settings_item_id);
+				// 0：disable, 1：enable
+				buffer.writeUInt8(0x00);
+				// 0：disable, 1：enable
+				buffer.writeUInt8(schedule_settings_item.enable);
+			}
+			if (isValid(schedule_settings_item.name_first)) {
+				buffer.writeUInt8(0x7b);
+				buffer.writeUInt8(schedule_settings_item_id);
+				buffer.writeUInt8(0x01);
+				buffer.writeString(schedule_settings_item.name_first, 6);
+			}
+			if (isValid(schedule_settings_item.name_last)) {
+				buffer.writeUInt8(0x7b);
+				buffer.writeUInt8(schedule_settings_item_id);
+				buffer.writeUInt8(0x02);
+				buffer.writeString(schedule_settings_item.name_last, 4);
+			}
+			if (isValid(schedule_settings_item.content1)) {
+				buffer.writeUInt8(0x7b);
+				buffer.writeUInt8(schedule_settings_item_id);
+				buffer.writeUInt8(0x03);
+				if (schedule_settings_item.content1.tstat_mode < 0 || schedule_settings_item.content1.tstat_mode > 255) {
+					throw new Error('content1.tstat_mode must be between 0 and 255');
+				}
+				// 0：heat, 1：em heat, 2：cool, 3：auto, 10：off
+				buffer.writeUInt8(schedule_settings_item.content1.tstat_mode);
+				if (schedule_settings_item.content1.heat_target_temperature < 5 || schedule_settings_item.content1.heat_target_temperature > 35) {
+					throw new Error('content1.heat_target_temperature must be between 5 and 35');
+				}
+				buffer.writeInt16LE(schedule_settings_item.content1.heat_target_temperature * 100);
+				if (schedule_settings_item.content1.em_heat_target_temperature < 5 || schedule_settings_item.content1.em_heat_target_temperature > 35) {
+					throw new Error('content1.em_heat_target_temperature must be between 5 and 35');
+				}
+				buffer.writeInt16LE(schedule_settings_item.content1.em_heat_target_temperature * 100);
+				if (schedule_settings_item.content1.cool_target_temperature < 5 || schedule_settings_item.content1.cool_target_temperature > 35) {
+					throw new Error('content1.cool_target_temperature must be between 5 and 35');
+				}
+				buffer.writeInt16LE(schedule_settings_item.content1.cool_target_temperature * 100);
+			}
+			if (isValid(schedule_settings_item.content2)) {
+				buffer.writeUInt8(0x7b);
+				buffer.writeUInt8(schedule_settings_item_id);
+				buffer.writeUInt8(0x04);
+				if (schedule_settings_item.content2.fan_mode < 0 || schedule_settings_item.content2.fan_mode > 255) {
+					throw new Error('content2.fan_mode must be between 0 and 255');
+				}
+				// 0：auto, 1：circulate, 2：on, 3：low, 4：medium, 5：high, 10：off
+				buffer.writeUInt8(schedule_settings_item.content2.fan_mode);
+				if (schedule_settings_item.content2.auto_target_temperature < 5 || schedule_settings_item.content2.auto_target_temperature > 35) {
+					throw new Error('content2.auto_target_temperature must be between 5 and 35');
+				}
+				buffer.writeInt16LE(schedule_settings_item.content2.auto_target_temperature * 100);
+				if (schedule_settings_item.content2.auto_heat_target_temperature < 5 || schedule_settings_item.content2.auto_heat_target_temperature > 35) {
+					throw new Error('content2.auto_heat_target_temperature must be between 5 and 35');
+				}
+				buffer.writeInt16LE(schedule_settings_item.content2.auto_heat_target_temperature * 100);
+				if (schedule_settings_item.content2.auto_cool_target_temperature < 5 || schedule_settings_item.content2.auto_cool_target_temperature > 35) {
+					throw new Error('content2.auto_cool_target_temperature must be between 5 and 35');
+				}
+				buffer.writeInt16LE(schedule_settings_item.content2.auto_cool_target_temperature * 100);
+			}
+		}
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0x59
+	if ('system_status_control' in payload) {
+		var buffer = new Buffer();
 		buffer.writeUInt8(0x59);
 		// 0：system close, 1：system open
 		buffer.writeUInt8(payload.system_status_control.on_off);
-		// 0：heat, 1：em heat, 2：cool, 3：auto
+		if (payload.system_status_control.mode < 0 || payload.system_status_control.mode > 5) {
+			throw new Error('system_status_control.mode must be between 0 and 5');
+		}
+		// 0：heat, 1：em heat, 2：cool, 3：auto, 4：dehumidify, 5：ventilation
 		buffer.writeUInt8(payload.system_status_control.mode);
+		if (payload.system_status_control.temperature1 < 5 || payload.system_status_control.temperature1 > 35) {
+			throw new Error('system_status_control.temperature1 must be between 5 and 35');
+		}
 		buffer.writeInt16LE(payload.system_status_control.temperature1 * 100);
 		buffer.writeInt16LE(payload.system_status_control.temperature2 * 100);
-        encoded = encoded.concat(buffer.toBytes());
-		encoded = WITH_QUERY_CMD ? encoded.concat(setQueryCmd(buffer.toBytes())) : encoded;
+		encoded = encoded.concat(buffer.toBytes());
 	}
-    if ("data_sync_to_peer" in payload) {
-        var cmd_buffer = setDataSyncToPeer(payload.data_sync_to_peer);
-        encoded = encoded.concat(cmd_buffer);
-        encoded = WITH_QUERY_CMD ? encoded.concat(setQueryCmd(cmd_buffer)) : encoded;
-    }
-    if ("data_sync_timeout" in payload) {
-        var cmd_buffer = setDataSyncTimeout(payload.data_sync_timeout);
-        encoded = encoded.concat(cmd_buffer);
-        encoded = WITH_QUERY_CMD ? encoded.concat(setQueryCmd(cmd_buffer)) : encoded;
-    }
-    if ("unlock_combination_button_settings" in payload) {
-        var cmd_buffer = setUnlockCombinationButtonSettings(payload.unlock_combination_button_settings);
-        encoded = encoded.concat(cmd_buffer);
-        encoded = WITH_QUERY_CMD ? encoded.concat(setQueryCmd(cmd_buffer)) : encoded;
-    }
-    if ("temporary_unlock_settings" in payload) {
-        var cmd_buffer = setTemporaryUnlockSettings(payload.temporary_unlock_settings);
-        encoded = encoded.concat(cmd_buffer);
-        encoded = WITH_QUERY_CMD ? encoded.concat(setQueryCmd(cmd_buffer)) : encoded;
-    }
-    if ("pir_config" in payload) {
-        var cmd_buffer = setPirConfig(payload.pir_config);
-        encoded = encoded.concat(cmd_buffer);
-        encoded = WITH_QUERY_CMD ? encoded.concat(setQueryCmd(cmd_buffer)) : encoded;
-    }
-    if ("ble_enable" in payload) {
-        var cmd_buffer = setBleEnable(payload.ble_enable);
-        encoded = encoded.concat(cmd_buffer);
-        encoded = WITH_QUERY_CMD ? encoded.concat(setQueryCmd(cmd_buffer)) : encoded;
-    }
-    if ("external_temperature" in payload) {
-        var cmd_buffer = setExternalTemperature(payload.external_temperature);
-        encoded = encoded.concat(cmd_buffer);
-        encoded = WITH_QUERY_CMD ? encoded.concat(setQueryCmd(cmd_buffer)) : encoded;
-    }
-    if ("external_humidity" in payload) {
-        var cmd_buffer = setExternalHumidity(payload.external_humidity);
-        encoded = encoded.concat(cmd_buffer);
-        encoded = WITH_QUERY_CMD ? encoded.concat(setQueryCmd(cmd_buffer)) : encoded;
-    }
-    if ("fan_support_mode" in payload) {
-        var cmd_buffer = setFanSupportMode(payload.fan_support_mode);
-        encoded = encoded.concat(cmd_buffer);
-        encoded = WITH_QUERY_CMD ? encoded.concat(setQueryCmd(cmd_buffer)) : encoded;
-    }
-    if ("ble_name" in payload) {
-        var cmd_buffer = setBleName(payload.ble_name);
-        encoded = encoded.concat(cmd_buffer);
-        encoded = WITH_QUERY_CMD ? encoded.concat(setQueryCmd(cmd_buffer)) : encoded;
-    }
-    if ("ble_pair_info" in payload) {
-        var cmd_buffer = setBlePairInfo(payload.ble_pair_info);
-        encoded = encoded.concat(cmd_buffer);
-        encoded = WITH_QUERY_CMD ? encoded.concat(setQueryCmd(cmd_buffer)) : encoded;
-    }
-    if ("communication_mode" in payload) {
-        var cmd_buffer = setCommunicationMode(payload.communication_mode);
-        encoded = encoded.concat(cmd_buffer);
-        encoded = WITH_QUERY_CMD ? encoded.concat(setQueryCmd(cmd_buffer)) : encoded;
-    }
-    if ("daylight_saving_time" in payload) {
-        var cmd_buffer = setDaylightSavingTimeSettings(payload.daylight_saving_time);
-        encoded = encoded.concat(cmd_buffer);
-        encoded = WITH_QUERY_CMD ? encoded.concat(setQueryCmd(cmd_buffer)) : encoded;
-    }
-    if ("time_zone" in payload) {
-        var cmd_buffer = setTimeZone(payload.time_zone);
-        encoded = encoded.concat(cmd_buffer);
-        encoded = WITH_QUERY_CMD ? encoded.concat(setQueryCmd(cmd_buffer)) : encoded;
-    }
-    if ("reset_ble_name" in payload) {
-        var cmd_buffer = resetBleName(payload.reset_ble_name);
-        encoded = encoded.concat(cmd_buffer);
-    }
-    if ("trigger_fan_alarm" in payload) {
-        var cmd_buffer = triggerFanAlarm(payload.trigger_fan_alarm);
-        encoded = encoded.concat(cmd_buffer);
-    }
-    if ("release_fan_alarm" in payload) {
-        var cmd_buffer = releaseFanAlarm(payload.release_fan_alarm);
-        encoded = encoded.concat(cmd_buffer);
-    }
-    if ("trigger_freeze_alarm" in payload) {
-        var cmd_buffer = triggerFreezeAlarm(payload.trigger_freeze_alarm);
-        encoded = encoded.concat(cmd_buffer);
-    }
-    if ("release_freeze_alarm" in payload) {
-        var cmd_buffer = releaseFreezeAlarm(payload.release_freeze_alarm);
-        encoded = encoded.concat(cmd_buffer);
-    }
-    if ("peer_ble_pair_info" in payload) {
-        var cmd_buffer = setPeerBlePairInfo(payload.peer_ble_pair_info);
-        encoded = encoded.concat(cmd_buffer);
-    }
-    if ("trigger_no_wire_alarm" in payload) {
-        var cmd_buffer = triggerNoWireAlarm(payload.trigger_no_wire_alarm);
-        encoded = encoded.concat(cmd_buffer);
-    }
-    if ("release_no_wire_alarm" in payload) {
-        var cmd_buffer = releaseNoWireAlarm(payload.release_no_wire_alarm);
-        encoded = encoded.concat(cmd_buffer);
-    }
-    if ("trigger_window_open_alarm" in payload) {
-        var cmd_buffer = triggerWindowOpenAlarm(payload.trigger_window_open_alarm);
-        encoded = encoded.concat(cmd_buffer);
-    }
-    if ("release_window_open_alarm" in payload) {
-        var cmd_buffer = releaseWindowOpenAlarm(payload.release_window_open_alarm);
-        encoded = encoded.concat(cmd_buffer);
-    }
-    if ("trigger_filter_alarm" in payload) {
-        var cmd_buffer = triggerFilterAlarm(payload.trigger_filter_alarm);
-        encoded = encoded.concat(cmd_buffer);
-    }
-    if ("release_filter_alarm" in payload) {
-        var cmd_buffer = releaseFilterAlarm(payload.release_filter_alarm);
-        encoded = encoded.concat(cmd_buffer);
-    }
-    if ("insert_plan" in payload) {
-        var cmd_buffer = insertPlan(payload.insert_plan);
-        encoded = encoded.concat(cmd_buffer);
-    }
-    if ("trigger_ble_pair" in payload) {
-        var cmd_buffer = triggerBlePair(payload.trigger_ble_pair);
-        encoded = encoded.concat(cmd_buffer);
-    }
-    if ("cancel_ble_pair" in payload) {
-        var cmd_buffer = cancelBlePair(payload.cancel_ble_pair);
-        encoded = encoded.concat(cmd_buffer);
-    }
-    if ("remove_plan" in payload) {
-        var cmd_buffer = removePlan(payload.remove_plan);
-        encoded = encoded.concat(cmd_buffer);
-    }
-    if ("reconnect" in payload) {
-        var cmd_buffer = reconnect(payload.reconnect);
-        encoded = encoded.concat(cmd_buffer);
-    }
-    if ("synchronize_time" in payload) {
-        var cmd_buffer = synchronizeTime(payload.synchronize_time);
-        encoded = encoded.concat(cmd_buffer);
-    }
-    if ("query_device_status" in payload) {
-        var cmd_buffer = queryDeviceStatus(payload.query_device_status);
-        encoded = encoded.concat(cmd_buffer);
-    }
-    if ("reboot" in payload) {
-        var cmd_buffer = reboot(payload.reboot);
-        encoded = encoded.concat(cmd_buffer);
-    }
-
-    return encoded;
-}
-
-/**
- * Set frame
- * @param {number} frame values: (0: normal, 1: debug)
- * @example { "frame": 0 }
- */
-function setFrame(frame) {
-    var buffer = new Buffer(2);
-    buffer.writeUInt8(0xfe);
-    buffer.writeUInt8(frame);
-    return buffer.toBytes();
-}
-
-/**
- * Set collection interval
- * @param {object} collection_interval
- * @param {number} collection_interval.unit values: (0: second, 1: minute)
- * @param {number} collection_interval.seconds_of_time unit: second, range: [1, 2600], default: 30s
- * @param {number} collection_interval.minutes_of_time unit: minute, range: [1, 1440], default: 1min
- * @example { "collection_interval": { "unit": 0, "seconds_of_time": 300 } }
- */
-function setCollectionInterval(collection_interval) {
-    var unit = collection_interval.unit;
-    var seconds_of_time = collection_interval.seconds_of_time;
-    var minutes_of_time = collection_interval.minutes_of_time;
-
-    var unit_map = { 0: "second", 1: "minute" };
-    var unit_values = getValues(unit_map);
-    if (unit_values.indexOf(unit) === -1) {
-        throw new Error("collection_interval.unit must be one of " + unit_values.join(", "));
-    }
-    if (getValue(unit_map, unit) === 0 && (seconds_of_time < 1 || seconds_of_time > 3600)) {
-        throw new Error("collection_interval.seconds_of_time must be between 1 and 3600 when collection_interval.unit is second");
-    }
-    if (getValue(unit_map, unit) === 1 && (minutes_of_time < 1 || minutes_of_time > 1440)) {
-        throw new Error("collection_interval.minutes_of_time must be between 1 and 1440 when collection_interval.unit is minute");
-    }
-
-    var buffer = new Buffer(4);
-    buffer.writeUInt8(0x60);
-    buffer.writeUInt8(getValue(unit_map, unit));
-    buffer.writeUInt16LE(getValue(unit_map, unit) === 0 ? seconds_of_time : minutes_of_time);
-    return buffer.toBytes();
-}
-
-/**
- * Set report interval
- * @param {object} reporting_interval
- * @param {object} reporting_interval.mode values: (0: ble, 1: lora, 2: ble_and_lora, 3: power_bus_and_lora)
- * @param {number} reporting_interval.minutes_of_time unit: minute, range: [1, 1440], default: 10min
- * @example { "reporting_interval": { "mode": 0, "minutes_of_time": 10 } }
- */
-function setReportingInterval(reporting_interval) {
-    var mode = reporting_interval.mode;
-    var minutes_of_time = reporting_interval.minutes_of_time;
-
-    var mode_map = { 0: "ble", 1: "lora", 2: "ble_and_lora", 3: "power_bus_and_lora" };
-    var mode_values = getValues(mode_map);
-    if (mode_values.indexOf(mode) === -1) {
-        throw new Error("reporting_interval.mode must be one of " + mode_values.join(", "));
-    }
-
-    if ((minutes_of_time < 1 || minutes_of_time > 1440)) {
-        throw new Error("reporting_interval.minutes_of_time must be between 1 and 1440 when reporting_interval.mode is ble");
-    }
-
-    var buffer = new Buffer(5);
-    buffer.writeUInt8(0x61);
-    buffer.writeUInt8(getValue(mode_map, mode));
-    buffer.writeUInt8(0x01); // minute
-    buffer.writeUInt16LE(minutes_of_time);
-    return buffer.toBytes();
-}
-
-/**
- * Set intelligent display enable
- * @param {number} intelligent_display_enable values: (0: disable, 1: enable)
- * @example { "intelligent_display_enable": 1 }
- */
-function setIntelligentDisplayEnable(intelligent_display_enable) {
-    var enable_map = { 0: "disable", 1: "enable" };
-    var enable_values = getValues(enable_map);
-    if (enable_values.indexOf(intelligent_display_enable) === -1) {
-        throw new Error("intelligent_display_enable must be one of " + enable_values.join(", "));
-    }
-
-    var buffer = new Buffer(2);
-    buffer.writeUInt8(0x62);
-    buffer.writeUInt8(getValue(enable_map, intelligent_display_enable));
-    return buffer.toBytes();
-}
-
-/**
- * Set temperature unit
- * @param {number} temperature_unit values: (0: celsius, 1: fahrenheit)
- * @example { "temperature_unit": 0 }
- */
-function setTemperatureUnit(temperature_unit) {
-    var unit_map = { 0: "celsius", 1: "fahrenheit" };
-    var unit_values = getValues(unit_map);
-    if (unit_values.indexOf(temperature_unit) === -1) {
-        throw new Error("temperature_unit must be one of " + unit_values.join(", "));
-    }
-
-    var buffer = new Buffer(2);
-    buffer.writeUInt8(0x63);
-    buffer.writeUInt8(getValue(unit_map, temperature_unit));
-    return buffer.toBytes();
-}
-
-/**
- * Set temperature control mode support
- * @param {object} temperature_control_mode_support
- * @param {number} temperature_control_mode_support.heat values: (0: disable, 1: enable)
- * @param {number} temperature_control_mode_support.em_heat values: (0: disable, 1: enable)
- * @param {number} temperature_control_mode_support.cool values: (0: disable, 1: enable)
- * @param {number} temperature_control_mode_support.auto values: (0: disable, 1: enable)
- * @example { "temperature_control_mode_support": { "heat": 1, "em_heat": 1, "cool": 1, "auto": 1 } }
- */
-function setTemperatureControlModeSupport(temperature_control_mode_support) {
-    var enable_map = { 0: "disable", 1: "enable" };
-    var enable_values = getValues(enable_map);
-
-    var data = 0x00;
-    var mode_bit_offset = { heat: 0, em_heat: 1, cool: 2, auto: 3 };
-    for (var mode in mode_bit_offset) {
-        if (enable_values.indexOf(temperature_control_mode_support[mode]) === -1) {
-            throw new Error("temperature_control_mode_support[" + mode + "] must be one of " + enable_values.join(", "));
-        }
-        data |= getValue(enable_map, temperature_control_mode_support[mode]) << mode_bit_offset[mode];
-    }
-
-    var buffer = new Buffer(2);
-    buffer.writeUInt8(0x64);
-    buffer.writeUInt8(data);
-    return buffer.toBytes();
-}
-
-/**
- * Set target temperature mode
- * @param {number} target_temperature_mode values: (0: single_point, 1: dual_point)
- * @example { "target_temperature_mode": 0 }
- */
-function setTargetTemperatureMode(target_temperature_mode) {
-    var mode_map = { 0: "single_point", 1: "dual_point" };
-    var mode_values = getValues(mode_map);
-    if (mode_values.indexOf(target_temperature_mode) === -1) {
-        throw new Error("target_temperature_mode must be one of " + mode_values.join(", "));
-    }
-
-    var buffer = new Buffer(2);
-    buffer.writeUInt8(0x65);
-    buffer.writeUInt8(getValue(mode_map, target_temperature_mode));
-    return buffer.toBytes();
-}
-
-/**
- * Set target temperature resolution
- * @param {number} target_temperature_resolution values: (0: 0.5, 1: 1)
- * @example { "target_temperature_resolution": 0 }
- */
-function setTargetTemperatureResolution(target_temperature_resolution) {
-    var resolution_map = { 0: "0.5", 1: "1" };
-    var resolution_values = getValues(resolution_map);
-    if (resolution_values.indexOf(target_temperature_resolution) === -1) {
-        throw new Error("target_temperature_resolution must be one of " + resolution_values.join(", "));
-    }
-
-    var buffer = new Buffer(2);
-    buffer.writeUInt8(0x66);
-    buffer.writeUInt8(getValue(resolution_map, target_temperature_resolution));
-    return buffer.toBytes();
-}
-
-/**
- * Set system status
- * @param {number} system_status values: (0: off, 1: on)
- * @example { "system_status": 0 }
- */
-function setSystemStatus(system_status) {
-    var on_off_status = { 0: "off", 1: "on" };
-    var on_off_values = getValues(on_off_status);
-    if (on_off_values.indexOf(system_status) === -1) {
-        throw new Error("system_status must be one of " + on_off_values.join(", "));
-    }
-
-    var buffer = new Buffer(2);
-    buffer.writeUInt8(0x67);
-    buffer.writeUInt8(getValue(on_off_status, system_status));
-    return buffer.toBytes();
-}
-
-/**
- * Set temperature control mode
- * @param {number} temperature_control_mode values: (0: heat, 1: em_heat, 2: cool, 3: auto)
- * @example { "temperature_control_mode": 0 }
- */
-function setTemperatureControlMode(temperature_control_mode) {
-    var mode_map = { 0: "heat", 1: "em_heat", 2: "cool", 3: "auto" };
-    var mode_values = getValues(mode_map);
-    if (mode_values.indexOf(temperature_control_mode) === -1) {
-        throw new Error("temperature_control_mode must be one of " + mode_values.join(", "));
-    }
-
-    var buffer = new Buffer(3);
-    buffer.writeUInt8(0x68);
-    buffer.writeUInt8(0x00);
-    buffer.writeUInt8(getValue(mode_map, temperature_control_mode));
-    return buffer.toBytes();
-}
-
-/**
- * Set temperature control mode in plan enable
- * @param {number} temperature_control_mode_in_plan_enable values: (0: disable, 1: enable)
- * @example { "temperature_control_mode_in_plan_enable": 0 }
- */
-function setTemperatureControlModeInPlanEnable(temperature_control_mode_in_plan_enable) {
-    var enable_map = { 0: "disable", 1: "enable" };
-    var enable_values = getValues(enable_map);
-    if (enable_values.indexOf(temperature_control_mode_in_plan_enable) === -1) {
-        throw new Error("temperature_control_mode_in_plan_enable must be one of " + enable_values.join(", "));
-    }
-
-    var buffer = new Buffer(3);
-    buffer.writeUInt8(0x68);
-    buffer.writeUInt8(0x01);
-    buffer.writeUInt8(getValue(enable_map, temperature_control_mode_in_plan_enable));
-    return buffer.toBytes();
-}
-
-/**
- * Set target temperature
- * @param {object} target_temperature_settings
- * @param {number} target_temperature_settings.heat unit: celsius, range: [5, 35]
- * @param {number} target_temperature_settings.em_heat unit: celsius, range: [5, 35]
- * @param {number} target_temperature_settings.cool unit: celsius, range: [5, 35]
- * @param {number} target_temperature_settings.auto unit: celsius, range: [5, 35]
- * @param {number} target_temperature_settings.auto_heat unit: celsius, range: [5, 35]
- * @param {number} target_temperature_settings.auto_cool unit: celsius, range: [5, 35]
- * @example { "target_temperature_settings": { "heat": 20, "em_heat": 20, "cool": 20, "auto": 20 } }
- */
-function setTargetTemperature(target_temperature_settings) {
-    var data = [];
-    if ("heat" in target_temperature_settings) {
-        if (target_temperature_settings.heat < 5 || target_temperature_settings.heat > 35) {
-            throw new Error("target_temperature_settings.heat must be between 5 and 35");
-        }
-        var buffer = new Buffer(4);
-        buffer.writeUInt8(0x69);
-        buffer.writeUInt8(0x00); // heat mode
-        buffer.writeInt16LE(target_temperature_settings.heat * 100);
-        data = data.concat(buffer.toBytes());
-    }
-    if ("em_heat" in target_temperature_settings) {
-        if (target_temperature_settings.em_heat < 5 || target_temperature_settings.em_heat > 35) {
-            throw new Error("target_temperature_settings.em_heat must be between 5 and 35");
-        }
-        var buffer = new Buffer(4);
-        buffer.writeUInt8(0x69);
-        buffer.writeUInt8(0x01); // em heat mode
-        buffer.writeInt16LE(target_temperature_settings.em_heat * 100);
-        data = data.concat(buffer.toBytes());
-    }
-    if ("cool" in target_temperature_settings) {
-        if (target_temperature_settings.cool < 5 || target_temperature_settings.cool > 35) {
-            throw new Error("target_temperature_settings.cool must be between 5 and 35");
-        }
-        var buffer = new Buffer(4);
-        buffer.writeUInt8(0x69);
-        buffer.writeUInt8(0x02); // cool mode
-        buffer.writeInt16LE(target_temperature_settings.cool * 100);
-        data = data.concat(buffer.toBytes());
-    }
-    if ("auto" in target_temperature_settings) {
-        if (target_temperature_settings.auto < 5 || target_temperature_settings.auto > 35) {
-            throw new Error("target_temperature_settings.auto must be between 5 and 35");
-        }
-        var buffer = new Buffer(4);
-        buffer.writeUInt8(0x69);
-        buffer.writeUInt8(0x03); // auto mode
-        buffer.writeInt16LE(target_temperature_settings.auto * 100);
-        data = data.concat(buffer.toBytes());
-    }
-    if ("auto_heat" in target_temperature_settings) {
-        if (target_temperature_settings.auto_heat < 5 || target_temperature_settings.auto_heat > 35) {
-            throw new Error("target_temperature_settings.auto_heat must be between 5 and 35");
-        }
-        var buffer = new Buffer(4);
-        buffer.writeUInt8(0x69);
-        buffer.writeUInt8(0x04); // auto heat mode
-        buffer.writeInt16LE(target_temperature_settings.auto_heat * 100);
-        data = data.concat(buffer.toBytes());
-    }
-    if ("auto_cool" in target_temperature_settings) {
-        if (target_temperature_settings.auto_cool < 5 || target_temperature_settings.auto_cool > 35) {
-            throw new Error("target_temperature_settings.auto_cool must be between 5 and 35");
-        }
-        var buffer = new Buffer(4);
-        buffer.writeUInt8(0x69);
-        buffer.writeUInt8(0x05); // auto cool mode
-        buffer.writeInt16LE(target_temperature_settings.auto_cool * 100);
-        data = data.concat(buffer.toBytes());
-    }
-    return data;
-}
-
-/**
- * Set dead band
- * @param {number} dead_band unit: celsius, range: [1, 30]
- * @example { "dead_band": 1 }
- */
-function setDeadBand(dead_band) {
-    if (dead_band < 1 || dead_band > 30) {
-        throw new Error("dead_band must be between 1 and 30");
-    }
-
-    var buffer = new Buffer(2);
-    buffer.writeUInt8(0x6a);
-    buffer.writeInt16LE(dead_band * 100);
-    return buffer.toBytes();
-}
-
-/**
- * Set target temperature range
- * @param {object} target_temperature_range
- * @param {object} target_temperature_range.heat
- * @param {number} target_temperature_range.heat.min unit: celsius, range: [5, 35]
- * @param {number} target_temperature_range.heat.max unit: celsius, range: [5, 35]
- * @param {object} target_temperature_range.em_heat
- * @param {number} target_temperature_range.em_heat.min unit: celsius, range: [5, 35]
- * @param {number} target_temperature_range.em_heat.max unit: celsius, range: [5, 35]
- * @param {object} target_temperature_range.cool
- * @param {number} target_temperature_range.cool.min unit: celsius, range: [5, 35]
- * @param {number} target_temperature_range.cool.max unit: celsius, range: [5, 35]
- * @param {object} target_temperature_range.auto
- * @param {number} target_temperature_range.auto.min unit: celsius, range: [5, 35]
- * @param {number} target_temperature_range.auto.max unit: celsius, range: [5, 35]
- * @example { "target_temperature_range": { "heat": { "min": 5, "max": 35 }, "em_heat": { "min": 5, "max": 35 }, "cool": { "min": 5, "max": 35 }, "auto": { "min": 5, "max": 35 } } }
- */
-function setTargetTemperatureRange(target_temperature_range) {
-    var data = [];
-    if ("heat" in target_temperature_range) {
-        if (target_temperature_range.heat.min < 5 || target_temperature_range.heat.min > 35) {
-            throw new Error("target_temperature_range.heat.min must be between 5 and 35");
-        }
-        if (target_temperature_range.heat.max < 5 || target_temperature_range.heat.max > 35) {
-            throw new Error("target_temperature_range.heat.max must be between 5 and 35");
-        }
-        var buffer = new Buffer(6);
-        buffer.writeUInt8(0x6b);
-        buffer.writeUInt8(0x00); // heat mode
-        buffer.writeInt16LE(target_temperature_range.heat.min * 100);
-        buffer.writeInt16LE(target_temperature_range.heat.max * 100);
-        data = data.concat(buffer.toBytes());
-    }
-    if ("em_heat" in target_temperature_range) {
-        if (target_temperature_range.em_heat.min < 5 || target_temperature_range.em_heat.min > 35) {
-            throw new Error("target_temperature_range.em_heat.min must be between 5 and 35");
-        }
-        if (target_temperature_range.em_heat.max < 5 || target_temperature_range.em_heat.max > 35) {
-            throw new Error("target_temperature_range.em_heat.max must be between 5 and 35");
-        }
-        var buffer = new Buffer(6);
-        buffer.writeUInt8(0x6b);
-        buffer.writeUInt8(0x01); // em heat mode
-        buffer.writeInt16LE(target_temperature_range.em_heat.min * 100);
-        buffer.writeInt16LE(target_temperature_range.em_heat.max * 100);
-        data = data.concat(buffer.toBytes());
-    }
-    if ("cool" in target_temperature_range) {
-        if (target_temperature_range.cool.min < 5 || target_temperature_range.cool.min > 35) {
-            throw new Error("target_temperature_range.cool.min must be between 5 and 35");
-        }
-        if (target_temperature_range.cool.max < 5 || target_temperature_range.cool.max > 35) {
-            throw new Error("target_temperature_range.cool.max must be between 5 and 35");
-        }
-        var buffer = new Buffer(6);
-        buffer.writeUInt8(0x6b);
-        buffer.writeUInt8(0x02); // cool mode
-        buffer.writeInt16LE(target_temperature_range.cool.min * 100);
-        buffer.writeInt16LE(target_temperature_range.cool.max * 100);
-        data = data.concat(buffer.toBytes());
-    }
-    if ("auto" in target_temperature_range) {
-        if (target_temperature_range.auto.min < 5 || target_temperature_range.auto.min > 35) {
-            throw new Error("target_temperature_range.auto.min must be between 5 and 35");
-        }
-        if (target_temperature_range.auto.max < 5 || target_temperature_range.auto.max > 35) {
-            throw new Error("target_temperature_range.auto.max must be between 5 and 35");
-        }
-        var buffer = new Buffer(6);
-        buffer.writeUInt8(0x6b);
-        buffer.writeUInt8(0x03); // auto mode
-        buffer.writeInt16LE(target_temperature_range.auto.min * 100);
-        buffer.writeInt16LE(target_temperature_range.auto.max * 100);
-        data = data.concat(buffer.toBytes());
-    }
-
-    return data;
-}
-
-/**
- * Set communicate interval
- * @param {object} communicate_interval
- * @param {object} communicate_interval.mode values: (0: ble, 1: lora, 2: ble_and_lora, 3: power_bus_and_lora)
- * @param {number} communicate_interval.minutes_of_time unit: minute, range: [1, 30]
- * @example { "communicate_interval": { "mode": 0, "minutes_of_time": 10 } }
- */
-function setCommunicateInterval(communicate_interval) {
-    var mode = communicate_interval.mode;
-    var minutes_of_time = communicate_interval.minutes_of_time || 0;
-
-    var mode_map = { 0: "ble", 1: "lora", 2: "ble_and_lora", 3: "power_bus_and_lora" };
-    var mode_values = getValues(mode_map);
-    if (mode_values.indexOf(mode) === -1) {
-        throw new Error("communicate_interval.mode must be one of " + mode_values.join(", "));
-    }
-    if (minutes_of_time < 1 || minutes_of_time > 30) {
-        throw new Error("communicate_interval.minutes_of_time must be between 1 and 30");
-    }
-
-    var buffer = new Buffer(5);
-    buffer.writeUInt8(0x6c);
-    buffer.writeUInt8(getValue(mode_map, mode));
-    buffer.writeUInt8(0x01); // minute
-    buffer.writeUInt16LE(minutes_of_time);
-    return buffer.toBytes();
-}
-
-/**
- * Set button custom function
- * @param {object} button_custom_function
- * @param {number} button_custom_function.enable values: (0: disable, 1: enable)
- * @param {number} button_custom_function.button_1 values: (1: temperature_control_mode, 2: fan_mode, 3: plan_switch, 4: status_report, 5: release_filter_alarm, 6: button_value, 7: temperature_unit_switch)
- * @param {number} button_custom_function.button_2 values: (1: temperature_control_mode, 2: fan_mode, 3: plan_switch, 4: status_report, 5: release_filter_alarm, 6: button_value, 7: temperature_unit_switch)
- * @param {number} button_custom_function.button_3 values: (1: temperature_control_mode, 2: fan_mode, 3: plan_switch, 4: status_report, 5: release_filter_alarm, 6: button_value, 7: temperature_unit_switch)
- * @example { "button_custom_function": { "enable": 0, "button_1": 0, "button_2": 0, "button_3": 0 } }
- */
-function setButtonCustomFunction(button_custom_function) {
-    var data = [];
-    if ("enable" in button_custom_function) {
-        var enable_map = { 0: "disable", 1: "enable" };
-        var enable_values = getValues(enable_map);
-        if (enable_values.indexOf(button_custom_function.enable) === -1) {
-            throw new Error("button_custom_function.enable must be one of " + enable_values.join(", "));
-        }
-
-        var buffer = new Buffer(3);
-        buffer.writeUInt8(0x71);
-        buffer.writeUInt8(0x00); // enable
-        buffer.writeUInt8(getValue(enable_map, button_custom_function.enable));
-        data = data.concat(buffer.toBytes());
-    }
-    var function_map = { 1: "temperature_control_mode", 2: "fan_mode", 3: "plan_switch", 4: "status_report", 5: "release_filter_alarm", 6: "button_value", 7: "temperature_unit_switch" };
-    var function_values = getValues(function_map);
-    if ("button_1" in button_custom_function) {
-        if (function_values.indexOf(button_custom_function.button_1) === -1) {
-            throw new Error("button_custom_function.button_1 must be one of " + function_values.join(", "));
-        }
-
-        var buffer = new Buffer(3);
-        buffer.writeUInt8(0x71);
-        buffer.writeUInt8(0x01); // button 1
-        buffer.writeUInt8(getValue(function_map, button_custom_function.button_1));
-        data = data.concat(buffer.toBytes());
-    }
-    if ("button_2" in button_custom_function) {
-        if (function_values.indexOf(button_custom_function.button_2) === -1) {
-            throw new Error("button_custom_function.button_2 must be one of " + function_values.join(", "));
-        }
-
-        var buffer = new Buffer(3);
-        buffer.writeUInt8(0x71);
-        buffer.writeUInt8(0x02); // button 2
-        buffer.writeUInt8(getValue(function_map, button_custom_function.button_2));
-        data = data.concat(buffer.toBytes());
-    }
-    var function_2_map = { 0: "system_status", 3: "plan_switch", 4: "status_report", 5: "release_filter_alarm", 6: "button_value", 7: "temperature_unit_switch" };
-    var function_2_values = getValues(function_2_map);
-    if ("button_3" in button_custom_function) {
-        if (function_2_values.indexOf(button_custom_function.button_3) === -1) {
-            throw new Error("button_custom_function.button_3 must be one of " + function_2_values.join(", "));
-        }
-
-        var buffer = new Buffer(3);
-        buffer.writeUInt8(0x71);
-        buffer.writeUInt8(0x03); // button 3s
-        buffer.writeUInt8(getValue(function_2_map, button_custom_function.button_3));
-        data = data.concat(buffer.toBytes());
-    }
-    return data;
-}
-
-/**
- * Set child lock settings
- * @param {object} child_lock_settings
- * @param {number} child_lock_settings.enable values: (0: disable, 1: enable)
- * @param {number} child_lock_settings.temperature_up values: (0: disable, 1: enable)
- * @param {number} child_lock_settings.temperature_down values: (0: disable, 1: enable)
- * @param {number} child_lock_settings.system_on_off values: (0: disable, 1: enable)
- * @param {number} child_lock_settings.fan_mode values: (0: disable, 1: enable)
- * @param {number} child_lock_settings.temperature_control_mode values: (0: disable, 1: enable)
- * @param {number} child_lock_settings.reboot_reset values: (0: disable, 1: enable)
- * @param {number} child_lock_settings.power_on_off values: (0: disable, 1: enable)
- * @param {number} child_lock_settings.cancel_pair values: (0: disable, 1: enable)
- * @param {number} child_lock_settings.plan_switch values: (0: disable, 1: enable)
- * @param {number} child_lock_settings.status_report values: (0: disable, 1: enable)
- * @param {number} child_lock_settings.release_filter_alarm values: (0: disable, 1: enable)
- * @param {number} child_lock_settings.button_report_1 values: (0: disable, 1: enable)
- * @param {number} child_lock_settings.button_report_2 values: (0: disable, 1: enable)
- * @param {number} child_lock_settings.button_report_3 values: (0: disable, 1: enable)
- * @param {number} child_lock_settings.temperature_unit_switch values: (0: disable, 1: enable)
- * @example { "child_lock_settings": { "enable": 0, "button_1": 0, "button_2": 0, "button_3": 0 } }
- */
-function setChildLockSettings(child_lock_settings) {
-    var enable = child_lock_settings.enable;
-
-    var enable_map = { 0: "disable", 1: "enable" };
-    var enable_values = getValues(enable_map);
-    if (enable_values.indexOf(enable) === -1) {
-        throw new Error("child_lock_settings.enable must be one of " + enable_values.join(", "));
-    }
-
-    var data = 0x00;
-    var button_bit_offset = { temperature_up: 0, temperature_down: 1, system_on_off: 2, fan_mode: 3, temperature_control_mode: 4, reboot_reset: 5, power_on_off: 6, cancel_pair: 7, plan_switch: 8, status_report: 9, release_filter_alarm: 10, button_report_1: 11, button_report_2: 12, button_report_3: 13, temperature_unit_switch: 14 };
-    for (var button in button_bit_offset) {
-        if (button in child_lock_settings) {
-            if (enable_values.indexOf(child_lock_settings[button]) === -1) {
-                throw new Error("child_lock_settings." + button + " must be one of " + enable_values.join(", "));
-            }
-            data |= getValue(enable_map, child_lock_settings[button]) << button_bit_offset[button];
-        }
-    }
-
-    var buffer = new Buffer(4);
-    buffer.writeUInt8(0x72);
-    buffer.writeUInt8(getValue(enable_map, enable));
-    buffer.writeUInt16LE(data);
-    return buffer.toBytes();
-}
-
-/**
- * Set fan mode
- * @param {number} fan_mode values: (0: auto, 1: circulate, 2: on, 3: low, 4: medium, 5: high)
- * @example { "fan_mode": 0 }
- */
-function setFanMode(fan_mode) {
-    var fan_mode_map = { 0: "auto", 1: "circulate", 2: "on", 3: "low", 4: "medium", 5: "high" };
-    var fan_mode_values = getValues(fan_mode_map);
-    if (fan_mode_values.indexOf(fan_mode) === -1) {
-        throw new Error("fan_mode must be one of " + fan_mode_values.join(", "));
-    }
-
-    var buffer = new Buffer(2);
-    buffer.writeUInt8(0x74);
-    buffer.writeUInt8(getValue(fan_mode_map, fan_mode));
-    return buffer.toBytes();
-}
-
-/**
- * Set screen object settings
- * @param {object} screen_display_settings
- * @param {number} screen_display_settings.plan_name values: (0: disable, 1: enable)
- * @param {number} screen_display_settings.ambient_temperature values: (0: disable, 1: enable)
- * @param {number} screen_display_settings.ambient_humidity values: (0: disable, 1: enable)
- * @param {number} screen_display_settings.target_temperature values: (0: disable, 1: enable)
- * @example { "screen_display_settings": { "plan_name": 0, "ambient_temperature": 0, "ambient_humidity": 0, "target_temperature": 0 } }
- */
-function setScreenObjectSettings(screen_display_settings) {
-    var enable_map = { 0: "disable", 1: "enable" };
-    var enable_values = getValues(enable_map);
-
-    var data = 0x00;
-    var object_bit_offset = { plan_name: 0, ambient_temperature: 1, ambient_humidity: 2, target_temperature: 3 };
-    for (var object in object_bit_offset) {
-        if (object in screen_display_settings) {
-            if (enable_values.indexOf(screen_display_settings[object]) === -1) {
-                throw new Error("screen_display_settings." + object + " must be one of " + enable_values.join(", "));
-            }
-            data |= getValue(enable_map, screen_display_settings[object]) << object_bit_offset[object];
-        }
-    }
-
-    var buffer = new Buffer(2);
-    buffer.writeUInt8(0x75);
-    buffer.writeUInt8(data);
-    return buffer.toBytes();
-}
-
-/**
- * Set temperature calibration settings
- * @param {object} temperature_calibration_settings
- * @param {number} temperature_calibration_settings.enable values: (0: disable, 1: enable)
- * @param {number} temperature_calibration_settings.calibration_value unit: celsius, range: [-80, 80]
- * @example { "temperature_calibration_settings": { "enable": 0, "calibration_value": 0 } }
- */
-function setTemperatureCalibrationSettings(temperature_calibration_settings) {
-    var enable = temperature_calibration_settings.enable;
-    var calibration_value = temperature_calibration_settings.calibration_value;
-
-    var enable_map = { 0: "disable", 1: "enable" };
-    var enable_values = getValues(enable_map);
-    if (enable_values.indexOf(enable) === -1) {
-        throw new Error("temperature_calibration_settings.enable must be one of " + enable_values.join(", "));
-    }
-    if (calibration_value < -80 || calibration_value > 80) {
-        throw new Error("temperature_calibration_settings.calibration_value must be between -80 and 80");
-    }
-
-    var buffer = new Buffer(4);
-    buffer.writeUInt8(0x76);
-    buffer.writeUInt8(getValue(enable_map, enable));
-    buffer.writeInt16LE(calibration_value * 100);
-    return buffer.toBytes();
-}
-
-/**
- * Set humidity calibration settings
- * @param {object} humidity_calibration_settings
- * @param {number} humidity_calibration_settings.enable values: (0: disable, 1: enable)
- * @param {number} humidity_calibration_settings.calibration_value unit: %RH, range: [-100, 100]
- * @example { "humidity_calibration_settings": { "enable": 0, "calibration_value": 0 } }
- */
-function setHumidityCalibrationSettings(humidity_calibration_settings) {
-    var enable = humidity_calibration_settings.enable;
-    var calibration_value = humidity_calibration_settings.calibration_value;
-
-    var enable_map = { 0: "disable", 1: "enable" };
-    var enable_values = getValues(enable_map);
-    if (enable_values.indexOf(enable) === -1) {
-        throw new Error("humidity_calibration_settings.enable must be one of " + enable_values.join(", "));
-    }
-    if (calibration_value < -100 || calibration_value > 100) {
-        throw new Error("humidity_calibration_settings.calibration_value must be between -100 and 100");
-    }
-
-    var buffer = new Buffer(4);
-    buffer.writeUInt8(0x77);
-    buffer.writeUInt8(getValue(enable_map, enable));
-    buffer.writeInt16LE(calibration_value * 10);
-    return buffer.toBytes();
-}
-
-/**
- * Set plan config
- * @param {object} plan_config
- * @param {number} plan_config.plan_id range: [1, 16]
- * @param {number} plan_config.enable values: (0: disable, 1: enable)
- * @param {string} plan_config.name_first range: [0, 10]
- * @param {string} plan_config.name_last range: [0, 10]
- * @param {number} plan_config.temperature_control_mode values: (0: heat, 1: em_heat, 2: cool, 3: auto, 10: off)
- * @param {number} plan_config.heat_target_temperature range: [5, 35]
- * @param {number} plan_config.em_heat_target_temperature range: [5, 35]
- * @param {number} plan_config.cool_target_temperature range: [5, 35]
- * @param {number} plan_config.fan_mode values: (0: auto, 1: circulate, 2: on, 3: low, 4: medium, 5: high, 10: off)
- * @param {number} plan_config.auto_target_temperature range: [5, 35]
- * @param {number} plan_config.auto_heat_target_temperature range: [5, 35]
- * @param {number} plan_config.auto_cool_target_temperature range: [5, 35]
- * @example { "plan_config": [{ "plan_id": 1, "enable": 0, "name_first": "plan 1", "name_last": "plan 1", "temperature_control_mode": 0, "heat_target_temperature": 5, "em_heat_target_temperature": 5, "cool_target_temperature": 5, "fan_mode": 0, "auto_target_temperature": 5, "auto_heat_target_temperature": 5, "auto_cool_target_temperature": 5 }] }
- */
-function setPlanConfig(plan_config) {
-    var plan_id = plan_config.plan_id;
-    if (plan_id < 1 || plan_id > 16) {
-        throw new Error("plan_config.plan_id must be between 1 and 16");
-    }
-
-    var data = [];
-    if ("enable" in plan_config) {
-        data = data.concat(setPlanEnable(plan_id - 1, plan_config.enable));
-    }
-    if ("name_first" in plan_config) {
-        data = data.concat(setPlanNameFirst(plan_id - 1, plan_config.name_first));
-    }
-    if ("name_last" in plan_config) {
-        data = data.concat(setPlanNameLast(plan_id - 1, plan_config.name_last));
-    }
-    if ("temperature_control_mode" in plan_config && "heat_target_temperature" in plan_config && "em_heat_target_temperature" in plan_config && "cool_target_temperature" in plan_config) {
-        data = data.concat(setPlanTargetTemperature1(plan_id - 1, plan_config));
-    }
-    if ("fan_mode" in plan_config && "auto_target_temperature" in plan_config && "auto_heat_target_temperature" in plan_config && "auto_cool_target_temperature" in plan_config) {
-        data = data.concat(setPlanTargetTemperature2(plan_id - 1, plan_config));
-    }
-
-    return data;
-}
-
-/**
- * Set plan enable
- * @param {number} plan_id range: [1, 16]
- * @param {number} enable values: (0: disable, 1: enable)
- */
-function setPlanEnable(plan_id, enable) {
-    var enable_map = { 0: "disable", 1: "enable" };
-    var enable_values = getValues(enable_map);
-    if (enable_values.indexOf(enable) === -1) {
-        throw new Error("plan_config._item.enable must be one of " + enable_values.join(", "));
-    }
-    var buffer = new Buffer(4);
-    buffer.writeUInt8(0x7b);
-    buffer.writeUInt8(plan_id);
-    buffer.writeUInt8(0x00); // enable sub-command
-    buffer.writeUInt8(getValue(enable_map, enable));
-    return buffer.toBytes();
-}
-
-/**
- * Set plan name first
- * @param {number} plan_id range: [1, 16]
- * @param {string} name_first range: [0, 10]
- */
-function setPlanNameFirst(plan_id, name_first) {
-    var name = encodeUtf8(name_first);
-    if (name.length > 12) {
-        throw new Error("plan_config._item.name_first must be less than 12 characters");
-    }
-
-    var buffer = new Buffer(9);
-    buffer.writeUInt8(0x7b);
-    buffer.writeUInt8(plan_id);
-    buffer.writeUInt8(0x01); // name1 sub-command
-    buffer.writeBytes(name);
-    return buffer.toBytes();
-}
-
-/**
- * Set plan name last
- * @param {number} plan_id range: [1, 16]
- * @param {string} name_last range: [0, 10]
- */
-function setPlanNameLast(plan_id, name_last) {
-    var name = encodeUtf8(name_last);
-    if (name.length > 8) {
-        throw new Error("plan_config._item.name_last must be less than 8 characters");
-    }
-
-    var buffer = new Buffer(7);
-    buffer.writeUInt8(0x7b);
-    buffer.writeUInt8(plan_id);
-    buffer.writeUInt8(0x02); // name2 sub-command
-    buffer.writeBytes(name);
-    return buffer.toBytes();
-}
-
-/**
- * Set plan target temperature 1
- * @param {number} plan_id range: [1, 16]
- * @param {object} plan_config
- * @param {number} plan_config.temperature_control_mode values: (0: heat, 1: em_heat, 2: cool, 3: auto, 10: off)
- * @param {number} plan_config.heat_target_temperature range: [5, 35]
- * @param {number} plan_config.em_heat_target_temperature range: [5, 35]
- * @param {number} plan_config.cool_target_temperature range: [5, 35]
- */
-function setPlanTargetTemperature1(plan_id, plan_config) {
-    var temperature_control_mode = plan_config.temperature_control_mode;
-    var heat_target_temperature = plan_config.heat_target_temperature;
-    var em_heat_target_temperature = plan_config.em_heat_target_temperature;
-    var cool_target_temperature = plan_config.cool_target_temperature;
-
-    var temperature_control_map = { 0: "heat", 1: "em_heat", 2: "cool", 3: "auto", 10: "off" };
-    var temperature_control_values = getValues(temperature_control_map);
-    if (temperature_control_values.indexOf(temperature_control_mode) === -1) {
-        throw new Error("plan_config._item.temperature_control_mode must be one of " + temperature_control_values.join(", "));
-    }
-    if (heat_target_temperature < 5 || heat_target_temperature > 35) {
-        throw new Error("plan_config._item.heat_target_temperature must be between 5 and 35");
-    }
-    if (em_heat_target_temperature < 5 || em_heat_target_temperature > 35) {
-        throw new Error("plan_config._item.em_heat_target_temperature must be between 5 and 35");
-    }
-    if (cool_target_temperature < 5 || cool_target_temperature > 35) {
-        throw new Error("plan_config._item.cool_target_temperature must be between 5 and 35");
-    }
-
-    var buffer = new Buffer(10);
-    buffer.writeUInt8(0x7b);
-    buffer.writeUInt8(plan_id);
-    buffer.writeUInt8(0x03); // target temperature1 sub-command
-    buffer.writeUInt8(getValue(temperature_control_map, temperature_control_mode));
-    buffer.writeInt16LE(heat_target_temperature * 100);
-    buffer.writeInt16LE(em_heat_target_temperature * 100);
-    buffer.writeInt16LE(cool_target_temperature * 100);
-    return buffer.toBytes();
-}
-
-/**
- * Set plan target temperature 2
- * @param {number} plan_id range: [1, 16]
- * @param {object} plan_config
- * @param {number} plan_config.fan_mode values: (0: auto, 1: circulate, 2: on, 3: low, 4: medium, 5: high, 10: off)
- * @param {number} plan_config.auto_target_temperature range: [5, 35]
- * @param {number} plan_config.auto_heat_target_temperature range: [5, 35]
- * @param {number} plan_config.auto_cool_target_temperature range: [5, 35]
- */
-function setPlanTargetTemperature2(plan_id, plan_config) {
-    var fan_mode = plan_config.fan_mode;
-    var auto_target_temperature = plan_config.auto_target_temperature;
-    var auto_heat_target_temperature = plan_config.auto_heat_target_temperature;
-    var auto_cool_target_temperature = plan_config.auto_cool_target_temperature;
-
-    var fan_mode_map = { 0: "auto", 1: "circulate", 2: "on", 3: "low", 4: "medium", 5: "high", 10: "off" };
-    var fan_mode_values = getValues(fan_mode_map);
-    if (fan_mode_values.indexOf(fan_mode) === -1) {
-        throw new Error("plan_config._item.fan_mode must be one of " + fan_mode_values.join(", "));
-    }
-    if (auto_target_temperature < 5 || auto_target_temperature > 35) {
-        throw new Error("plan_config._item.auto_target_temperature must be between 5 and 35");
-    }
-    if (auto_heat_target_temperature < 5 || auto_heat_target_temperature > 35) {
-        throw new Error("plan_config._item.auto_heat_target_temperature must be between 5 and 35");
-    }
-    if (auto_cool_target_temperature < 5 || auto_cool_target_temperature > 35) {
-        throw new Error("plan_config._item.auto_cool_target_temperature must be between 5 and 35");
-    }
-
-    var buffer = new Buffer(10);
-    buffer.writeUInt8(0x7b);
-    buffer.writeUInt8(plan_id);
-    buffer.writeUInt8(0x04); // target temperature2 sub-command
-    buffer.writeUInt8(getValue(fan_mode_map, fan_mode));
-    buffer.writeInt16LE(auto_target_temperature * 100);
-    buffer.writeInt16LE(auto_heat_target_temperature * 100);
-    buffer.writeInt16LE(auto_cool_target_temperature * 100);
-    return buffer.toBytes();
-}
-
-/**
- * Set data sync to peer
- * @param {number} data_sync_to_peer values: (0: embedded_data, 1: external_receive)
- * @example { "data_sync_to_peer": 0 }
- */
-function setDataSyncToPeer(data_sync_to_peer) {
-    var data_sync_to_peer_map = { 0: "embedded_data", 1: "external_receive" };
-    var data_sync_to_peer_values = getValues(data_sync_to_peer_map);
-    if (data_sync_to_peer_values.indexOf(data_sync_to_peer) === -1) {
-        throw new Error("data_sync_to_peer must be one of " + data_sync_to_peer_values.join(", "));
-    }
-
-    var buffer = new Buffer(2);
-    buffer.writeUInt8(0x7d);
-    buffer.writeUInt8(getValue(data_sync_to_peer_map, data_sync_to_peer));
-    return buffer.toBytes();
-}
-
-/**
- * Set data sync timeout
- * @param {number} data_sync_timeout unit: minute, range: [1, 60]
- * @example { "data_sync_timeout": 1 }
- */
-function setDataSyncTimeout(data_sync_timeout) {
-    if (data_sync_timeout < 1 || data_sync_timeout > 60) {
-        throw new Error("data_sync_timeout must be between 1 and 60");
-    }
-
-    var buffer = new Buffer(2);
-    buffer.writeUInt8(0x7e);
-    buffer.writeUInt8(data_sync_timeout);
-    return buffer.toBytes();
-}
-
-/**
- * Set unlock combination button settings
- * @param {object} unlock_combination_button_settings
- * @param {number} unlock_combination_button_settings.button_1 values: (0: disable, 1: enable)
- * @param {number} unlock_combination_button_settings.button_2 values: (0: disable, 1: enable)
- * @param {number} unlock_combination_button_settings.button_3 values: (0: disable, 1: enable)
- * @param {number} unlock_combination_button_settings.button_4 values: (0: disable, 1: enable)
- * @param {number} unlock_combination_button_settings.button_5 values: (0: disable, 1: enable)
- * @example { "unlock_combination_button_settings": { "button_1": 0, "button_2": 0, "button_3": 0, "button_4": 0, "button_5": 0 } }
- */
-function setUnlockCombinationButtonSettings(unlock_combination_button_settings) {
-    var enable_map = { 0: "disable", 1: "enable" };
-    var enable_values = getValues(enable_map);
-
-    var data = 0x00;
-    var button_bit_offset = { button_1: 0, button_2: 1, button_3: 2, button_4: 3, button_5: 4 };
-    for (var button in button_bit_offset) {
-        if (button in unlock_combination_button_settings) {
-            if (enable_values.indexOf(unlock_combination_button_settings[button]) === -1) {
-                throw new Error("unlock_combination_button_settings." + button + " must be one of " + enable_values.join(", "));
-            }
-            data |= getValue(enable_map, unlock_combination_button_settings[button]) << button_bit_offset[button];
-        }
-    }
-
-    var buffer = new Buffer(2);
-    buffer.writeUInt8(0x80);
-    buffer.writeUInt8(data);
-    return buffer.toBytes();
-}
-
-/**
- * Set temporary unlock settings
- * @param {object} temporary_unlock_settings
- * @param {number} temporary_unlock_settings.enable values: (0: disable, 1: enable)
- * @param {number} temporary_unlock_settings.timeout unit: second, range: [1, 3600]
- * @example { "temporary_unlock_settings": { "enable": 0, "timeout": 1 } }
- */
-function setTemporaryUnlockSettings(temporary_unlock_settings) {
-    var enable = temporary_unlock_settings.enable;
-    var timeout = temporary_unlock_settings.timeout;
-
-    var enable_map = { 0: "disable", 1: "enable" };
-    var enable_values = getValues(enable_map);
-    if (enable_values.indexOf(enable) === -1) {
-        throw new Error("temporary_unlock_settings.enable must be one of " + enable_values.join(", "));
-    }
-    if (timeout < 1 || timeout > 3600) {
-        throw new Error("temporary_unlock_settings.timeout must be between 1 and 3600");
-    }
-
-    var buffer = new Buffer(4);
-    buffer.writeUInt8(0x81);
-    buffer.writeUInt8(getValue(enable_map, enable));
-    buffer.writeUInt16LE(timeout);
-    return buffer.toBytes();
-}
-
-/**
- * Set PIR config
- * @param {object} pir_config
- * @param {number} pir_config.enable values: (0: disable, 1: enable)
- * @param {number} pir_config.release_time unit: second, range: [1, 3600]
- * @param {object} pir_config.general_mode
- * @param {object} pir_config.eco_mode
- * @param {object} pir_config.night_mode
- */
-function setPirConfig(pir_config) {
-    var data = [];
-    if ("enable" in pir_config) {
-        data = data.concat(setPirEnable(pir_config));
-    }
-    if ("release_time" in pir_config) {
-        data = data.concat(setPirReleaseTime(pir_config));
-    }
-    if ("general_mode" in pir_config) {
-        data = data.concat(setPirGeneralMode(pir_config));
-    }
-    if ("eco_mode" in pir_config) {
-        data = data.concat(setPirEcoMode(pir_config));
-    }
-    if ("night_mode" in pir_config) {
-        data = data.concat(setPirNightMode(pir_config));
-    }
-    return data;
-}
-
-/**
- * Set PIR enable
- * @param {object} pir_config
- * @param {number} pir_config.enable values: (0: disable, 1: enable)
- * @example { "pir_config": { "enable": 0 } }
- */
-function setPirEnable(pir_config) {
-    var enable = pir_config.enable;
-
-    var enable_map = { 0: "disable", 1: "enable" };
-    var enable_values = getValues(enable_map);
-    if (enable_values.indexOf(enable) === -1) {
-        throw new Error("pir_config.enable must be one of " + enable_values.join(", "));
-    }
-
-    var buffer = new Buffer(3);
-    buffer.writeUInt8(0x82);
-    buffer.writeUInt8(0x01); // enable
-    buffer.writeUInt8(getValue(enable_map, enable));
-    return buffer.toBytes();
-}
-
-/**
- * Set PIR release time
- * @param {object} pir_config
- * @param {number} pir_config.release_time unit: minute, range: [1, 360]
- */
-function setPirReleaseTime(pir_config) {
-    var release_time = pir_config.release_time;
-    if (release_time < 1 || release_time > 360) {
-        throw new Error("pir_config.release_time must be between 1 and 360");
-    }
-
-    var buffer = new Buffer(4);
-    buffer.writeUInt8(0x82);
-    buffer.writeUInt8(0x02); // release time
-    buffer.writeUInt16LE(release_time);
-    return buffer.toBytes();
-}
-
-/**
- * Set PIR general mode
- * @param {object} pir_config
- * @param {number} pir_config.general_mode.detection_mode values: (0: single, 1: multiple)
- * @example { "pir_config": { "general_mode": { "detection_mode": 0 } } }
- */
-function setPirGeneralMode(pir_config) {
-    var data = [];
-    if ("detection_mode" in pir_config.general_mode) {
-        data = data.concat(setPirGeneralModeDetectionMode(pir_config));
-    }
-    if ("period" in pir_config.general_mode && "rate" in pir_config.general_mode) {
-        data = data.concat(setPirGeneralModePeriodAndRate(pir_config));
-    }
-    return data;
-}
-
-function setPirGeneralModeDetectionMode(pir_config) {
-    var general_mode = pir_config.general_mode;
-    var detection_mode = general_mode.detection_mode;
-    var detection_mode_map = { 0: "single", 1: "multiple" };
-    var detection_mode_values = getValues(detection_mode_map);
-    if (detection_mode_values.indexOf(detection_mode) === -1) {
-        throw new Error("pir_config.general_mode.detection_mode must be one of " + detection_mode_values.join(", "));
-    }
-
-    var buffer = new Buffer(3);
-    buffer.writeUInt8(0x82);
-    buffer.writeUInt8(0x03); // general mode
-    buffer.writeUInt8(getValue(detection_mode_map, detection_mode));
-    return buffer.toBytes();
-}
-
-/**
- * Set PIR general mode period and rate
- * @param {object} pir_config
- * @param {number} pir_config.general_mode.period unit: second, range: [1, 60]
- * @param {number} pir_config.general_mode.rate unit: %, range: [1, 100]
- * @example { "pir_config": { "general_mode": { "period": 1, "rate": 0 } } }
- */
-function setPirGeneralModePeriodAndRate(pir_config) {
-    var general_mode = pir_config.general_mode;
-    var period = general_mode.period;
-    var rate = general_mode.rate;
-
-    if (period < 1 || period > 60) {
-        throw new Error("pir_config.general_mode.period must be between 1 and 60");
-    }
-    if (rate < 1 || rate > 100) {
-        throw new Error("pir_config.general_mode.rate must be between 1 and 100");
-    }
-
-    var buffer = new Buffer(4);
-    buffer.writeUInt8(0x82);
-    buffer.writeUInt8(0x04); // general mode
-    buffer.writeUInt8(period);
-    buffer.writeUInt8(rate);
-    return buffer.toBytes();
-}
-
-/**
- * Set PIR eco mode
- * @param {object} pir_config
- * @param {number} pir_config.eco_mode.enable values: (0: disable, 1: enable)
- * @param {number} pir_config.eco_mode.occupied_plan values: (0: disable, 1: enable)
- * @param {number} pir_config.eco_mode.vacant_plan values: (0: disable, 1: enable)
- * @example { "pir_config": { "eco_mode": { "enable": 0, "occupied_plan": 0, "vacant_plan": 0 } } }
- */
-function setPirEcoMode(pir_config) {
-    var data = [];
-    if ("enable" in pir_config.eco_mode) {
-        data = data.concat(setPirEcoModeEnable(pir_config));
-    }
-    if ("occupied_plan" in pir_config.eco_mode && "vacant_plan" in pir_config.eco_mode) {
-        data = data.concat(setPirEcoModeOccupiedAndVacantPlan(pir_config));
-    }
-    return data;
-}
-
-/**
- * Set PIR eco mode enable
- * @param {object} pir_config
- * @param {number} pir_config.eco_mode.enable values: (0: disable, 1: enable)
- * @example { "pir_config": { "eco_mode": { "enable": 0 } } }
- */
-function setPirEcoModeEnable(pir_config) {
-    var eco_mode = pir_config.eco_mode;
-    var enable = eco_mode.enable;
-    var enable_map = { 0: "disable", 1: "enable" };
-    var enable_values = getValues(enable_map);
-    if (enable_values.indexOf(enable) === -1) {
-        throw new Error("pir_config.eco_mode.enable must be one of " + enable_values.join(", "));
-    }
-
-    var buffer = new Buffer(3);
-    buffer.writeUInt8(0x83);
-    buffer.writeUInt8(0x01); // enable
-    buffer.writeUInt8(getValue(enable_map, enable));
-    return buffer.toBytes();
-}
-
-/**
- * Set PIR eco mode occupied and vacant plan
- * @param {object} pir_config
- * @param {number} pir_config.eco_mode.occupied_plan values: (0: plan_1, 1: plan_2, 2: plan_3, 3: plan_4, 4: plan_5, 5: plan_6, 6: plan_7, 7: plan_8, 8: plan_9, 9: plan_10, 10: plan_11, 11: plan_12, 12: plan_13, 13: plan_14, 14: plan_15, 15: plan_16, 255: none)
- * @param {number} pir_config.eco_mode.vacant_plan values: (0: plan_1, 1: plan_2, 2: plan_3, 3: plan_4, 4: plan_5, 5: plan_6, 6: plan_7, 7: plan_8, 8: plan_9, 9: plan_10, 10: plan_11, 11: plan_12, 12: plan_13, 13: plan_14, 14: plan_15, 15: plan_16)
- * @example { "pir_config": { "eco_mode": { "occupied_plan": 0, "vacant_plan": 0 } } }
- */
-function setPirEcoModeOccupiedAndVacantPlan(pir_config) {
-    var eco_mode = pir_config.eco_mode;
-    var occupied_plan = eco_mode.occupied_plan;
-    var vacant_plan = eco_mode.vacant_plan;
-
-    var plan_map = { 0: "plan_1", 1: "plan_2", 2: "plan_3", 3: "plan_4", 4: "plan_5", 5: "plan_6", 6: "plan_7", 7: "plan_8", 8: "plan_9", 9: "plan_10", 10: "plan_11", 11: "plan_12", 12: "plan_13", 13: "plan_14", 14: "plan_15", 15: "plan_16", 255: "none" };
-    var plan_values = getValues(plan_map);
-    if (plan_values.indexOf(occupied_plan) === -1 || plan_values.indexOf(vacant_plan) === -1) {
-        throw new Error("pir_config.eco_mode.occupied_plan and pir_config.eco_mode.vacant_plan must be one of " + plan_values.join(", "));
-    }
-
-    var buffer = new Buffer(4);
-    buffer.writeUInt8(0x83);
-    buffer.writeUInt8(0x02); // occupied and vacant plan
-    buffer.writeUInt8(getValue(plan_map, occupied_plan));
-    buffer.writeUInt8(getValue(plan_map, vacant_plan));
-    return buffer.toBytes();
-}
-
-function setPirNightMode(pir_config) {
-    var data = [];
-    if ("enable" in pir_config.night_mode) {
-        data = data.concat(setPirNightModeEnable(pir_config));
-    }
-    if ("detection_mode" in pir_config.night_mode) {
-        data = data.concat(setPirNightModeDetectionMode(pir_config));
-    }
-    if ("period" in pir_config.night_mode && "rate" in pir_config.night_mode) {
-        data = data.concat(setPirNightModePeriodAndRate(pir_config));
-    }
-    if ("start_time" in pir_config.night_mode && "end_time" in pir_config.night_mode) {
-        data = data.concat(setPirNightModeStartTimeAndEndTime(pir_config));
-    }
-    if ("occupied_plan" in pir_config.night_mode) {
-        data = data.concat(setPirNightModeOccupiedPlan(pir_config));
-    }
-    return data;
-}
-
-/**
- * Set PIR night mode enable
- * @param {object} pir_config
- * @param {number} pir_config.night_mode.enable values: (0: disable, 1: enable)
- * @example { "pir_config": { "night_mode": { "enable": 0 } } }
- */
-function setPirNightModeEnable(pir_config) {
-    var night_mode = pir_config.night_mode;
-    var enable = night_mode.enable;
-    var enable_map = { 0: "disable", 1: "enable" };
-    var enable_values = getValues(enable_map);
-    if (enable_values.indexOf(enable) === -1) {
-        throw new Error("pir_config.night_mode.enable must be one of " + enable_values.join(", "));
-    }
-
-    var buffer = new Buffer(3);
-    buffer.writeUInt8(0x84);
-    buffer.writeUInt8(0x01); // enable
-    buffer.writeUInt8(getValue(enable_map, enable));
-    return buffer.toBytes();
-}
-
-/**
- * Set PIR night mode detection mode
- * @param {object} pir_config
- * @param {number} pir_config.night_mode.detection_mode values: (0: single, 1: multiple)
- * @example { "pir_config": { "night_mode": { "detection_mode": 0 } } }
- */
-function setPirNightModeDetectionMode(pir_config) {
-    var night_mode = pir_config.night_mode;
-    var detection_mode = night_mode.detection_mode;
-    var detection_mode_map = { 0: "single", 1: "multiple" };
-    var detection_mode_values = getValues(detection_mode_map);
-    if (detection_mode_values.indexOf(detection_mode) === -1) {
-        throw new Error("pir_config.night_mode.detection_mode must be one of " + detection_mode_values.join(", "));
-    }
-
-    var buffer = new Buffer(3);
-    buffer.writeUInt8(0x84);
-    buffer.writeUInt8(0x02); // detection mode
-    buffer.writeUInt8(getValue(detection_mode_map, detection_mode));
-    return buffer.toBytes();
-}
-
-/**
- * Set PIR night mode period and rate
- * @param {object} pir_config
- * @param {number} pir_config.night_mode.period unit: second, range: [1, 60]
- * @param {number} pir_config.night_mode.rate unit: %, range: [1, 100]
- * @example { "pir_config": { "night_mode": { "period": 1, "rate": 0 } } }
- */
-function setPirNightModePeriodAndRate(pir_config) {
-    var night_mode = pir_config.night_mode;
-    var period = night_mode.period;
-    var rate = night_mode.rate;
-
-    if (period < 1 || period > 60) {
-        throw new Error("pir_config.night_mode.period must be between 1 and 60");
-    }
-    if (rate < 1 || rate > 100) {
-        throw new Error("pir_config.night_mode.rate must be between 1 and 100");
-    }
-
-    var buffer = new Buffer(4);
-    buffer.writeUInt8(0x84);
-    buffer.writeUInt8(0x03); // period and rate
-    buffer.writeUInt8(period);
-    buffer.writeUInt8(rate);
-    return buffer.toBytes();
-}
-
-/**
- * Set PIR night mode start and end time
- * @param {object} pir_config
- * @param {number} pir_config.night_mode.start_time unit: minute, range: [0, 1439]
- * @param {number} pir_config.night_mode.end_time unit: minute, range: [0, 1439]
- * @example { "pir_config": { "night_mode": { "start_time": 0, "end_time": 1439 } } }
- */
-function setPirNightModeStartTimeAndEndTime(pir_config) {
-    var night_mode = pir_config.night_mode;
-    var start_time = night_mode.start_time;
-    var end_time = night_mode.end_time;
-
-    if (start_time < 0 || start_time > 1439) {
-        throw new Error("pir_config.night_mode.start_time must be between 0 and 1439");
-    }
-    if (end_time < 0 || end_time > 1439) {
-        throw new Error("pir_config.night_mode.end_time must be between 0 and 1439");
-    }
-
-    var buffer = new Buffer(6);
-    buffer.writeUInt8(0x84);
-    buffer.writeUInt8(0x04); // start and end time
-    buffer.writeUInt16LE(start_time);
-    buffer.writeUInt16LE(end_time);
-    return buffer.toBytes();
-}
-
-/**
- * Set PIR night mode occupied plan
- * @param {object} pir_config
- * @param {number} pir_config.night_mode.occupied_plan values: (0: plan_1, 1: plan_2, 2: plan_3, 3: plan_4, 4: plan_5, 5: plan_6, 6: plan_7, 7: plan_8, 8: plan_9, 9: plan_10, 10: plan_11, 11: plan_12, 12: plan_13, 13: plan_14, 14: plan_15, 15: plan_16, 255: none)
- * @example { "pir_config": { "night_mode": { "occupied_plan": 0 } } }
- */
-function setPirNightModeOccupiedPlan(pir_config) {
-    var night_mode = pir_config.night_mode;
-    var occupied_plan = night_mode.occupied_plan;
-
-    var plan_map = { 0: "plan_1", 1: "plan_2", 2: "plan_3", 3: "plan_4", 4: "plan_5", 5: "plan_6", 6: "plan_7", 7: "plan_8", 8: "plan_9", 9: "plan_10", 10: "plan_11", 11: "plan_12", 12: "plan_13", 13: "plan_14", 14: "plan_15", 15: "plan_16", 255: "none" };
-    var plan_values = getValues(plan_map);
-    if (plan_values.indexOf(occupied_plan) === -1) {
-        throw new Error("pir_config.night_mode.occupied_plan must be one of " + plan_values.join(", "));
-    }
-
-    var buffer = new Buffer(3);
-    buffer.writeUInt8(0x84);
-    buffer.writeUInt8(0x05); // occupied plan
-    buffer.writeUInt8(getValue(plan_map, occupied_plan));
-    return buffer.toBytes();
-}
-
-/**
- * Set BLE enable
- * @param {number} ble_enable values: (0: disable, 1: enable)
- * @example { "ble_enable": 0 }
- */
-function setBleEnable(ble_enable) {
-    var enable_map = { 0: "disable", 1: "enable" };
-    var enable_values = getValues(enable_map);
-    if (enable_values.indexOf(ble_enable) === -1) {
-        throw new Error("ble_enable must be one of " + enable_values.join(", "));
-    }
-
-    var buffer = new Buffer(2);
-    buffer.writeUInt8(0x85);
-    buffer.writeUInt8(getValue(enable_map, ble_enable));
-    return buffer.toBytes();
-}
-
-/**
- * Set external temperature
- * @param {number} external_temperature unit: °C, range: [-20, 60]
- * @example { "external_temperature": 20 }
- */
-function setExternalTemperature(external_temperature) {
-    if (external_temperature < -20 || external_temperature > 60) {
-        throw new Error("external_temperature must be between -20 and 60");
-    }
-
-    var buffer = new Buffer(3);
-    buffer.writeUInt8(0x86);
-    buffer.writeInt16LE(external_temperature * 100);
-    return buffer.toBytes();
-}
-
-/**
- * Set external humidity
- * @param {number} external_humidity unit: %r.h., range: [0, 100]
- * @example { "external_humidity": 50 }
- */
-function setExternalHumidity(external_humidity) {
-    if (external_humidity < 0 || external_humidity > 100) {
-        throw new Error("external_humidity must be between 0 and 100");
-    }
-
-    var buffer = new Buffer(3);
-    buffer.writeUInt8(0x87);
-    buffer.writeInt16LE(external_humidity * 10);
-    return buffer.toBytes();
-}
-
-/**
- * Set fan support mode
- * @param {object} fan_support_mode
- * @param {number} fan_support_mode.auto values: (0: disable, 1: enable)
- * @param {number} fan_support_mode.circulate values: (0: disable, 1: enable)
- * @param {number} fan_support_mode.on values: (0: disable, 1: enable)
- * @param {number} fan_support_mode.low values: (0: disable, 1: enable)
- * @param {number} fan_support_mode.medium values: (0: disable, 1: enable)
- * @param {number} fan_support_mode.high values: (0: disable, 1: enable)
- * @example { "fan_support_mode": { "auto": 0, "circulate": 0, "on": 0, "low": 0, "medium": 0, "high": 0 } }
- */
-function setFanSupportMode(fan_support_mode) {
-    var enable_map = { 0: "disable", 1: "enable" };
-    var enable_values = getValues(enable_map);
-
-    var data = 0x00;
-    var mode_offset = { auto: 0, circulate: 1, on: 2, low: 3, medium: 4, high: 5 };
-    for (var mode in mode_offset) {
-        if (mode in fan_support_mode) {
-            if (enable_values.indexOf(fan_support_mode[mode]) === -1) {
-                throw new Error("fan_support_mode." + mode + " must be one of " + enable_values.join(", "));
-            }
-            data |= getValue(enable_map, fan_support_mode[mode]) << mode_offset[mode];
-        }
-    }
-
-    var buffer = new Buffer(2);
-    buffer.writeUInt8(0x88);
-    buffer.writeUInt8(data);
-    return buffer.toBytes();
-}
-
-/**
- * Set BLE name
- * @param {string} ble_name length: [0, 32]
- * @example { "ble_name": "WT401-123456" }
- */
-function setBleName(ble_name) {
-    var name = encodeUtf8(ble_name);
-    if (name.length > 32) {
-        throw new Error("ble_name must be less than 32 characters");
-    }
-
-    var buffer = new Buffer(33);
-    buffer.writeUInt8(0x8b);
-    buffer.writeBytes(name);
-    return buffer.toBytes();
-}
-
-/**
- * Set BLE pair info
- * @param {object} ble_pair_info
- * @param {number} ble_pair_info.address_type values: (0: public, 1: random)
- * @param {string} ble_pair_info.address length: 12
- * @param {string} ble_pair_info.name length: [0, 32]
- * @example { "ble_pair_info": { "address_type": 0, "address": "123456789012", "name": "WT401-123456" } }
- */
-function setBlePairInfo(ble_pair_info) {
-    var address_type = ble_pair_info.address_type;
-    var address = ble_pair_info.address;
-    var name = ble_pair_info.name;
-
-    var address_type_map = { 0: "public", 1: "random" };
-    var address_type_values = getValues(address_type_map);
-    if (address_type_values.indexOf(address_type) === -1) {
-        throw new Error("ble_pair_info.address_type must be one of " + address_type_values.join(", "));
-    }
-    if (address.length !== 12) {
-        throw new Error("ble_pair_info.address must be 12 characters");
-    }
-    var ble_name = encodeUtf8(name);
-    if (ble_name.length > 32) {
-        throw new Error("ble_pair_info.name must be less than 32 characters");
-    }
-
-    var buffer = new Buffer(40);
-    buffer.writeUInt8(0x8c);
-    buffer.writeUInt8(getValue(address_type_map, address_type));
-    buffer.writeHexString(address);
-    buffer.writeBytes(ble_name);
-    return buffer.toBytes();
-}
-
-/**
- * Set communication mode
- * @param {number} communication_mode values: (0: ble, 1: lora, 2: ble_and_lora, 3: power_bus_and_lora)
- * @example { "communication_mode": 0 }
- */
-function setCommunicationMode(communication_mode) {
-    var mode_map = { 0: "ble", 1: "lora", 2: "ble_and_lora", 3: "power_bus_and_lora" };
-    var mode_values = getValues(mode_map);
-    if (mode_values.indexOf(communication_mode) === -1) {
-        throw new Error("communication_mode must be one of " + mode_values.join(", "));
-    }
-
-    var buffer = new Buffer(2);
-    buffer.writeUInt8(0x8d);
-    buffer.writeUInt8(getValue(mode_map, communication_mode));
-    return buffer.toBytes();
-}
-
-/**
- * Set daylight saving time settings
- * @param {object} daylight_saving_time
- * @param {number} daylight_saving_time.enable values: (0: disable, 1: enable)
- * @param {number} daylight_saving_time.offset unit: minute
- * @param {number} daylight_saving_time.start_month values: (1: January, 2: February, 3: March, 4: April, 5: May, 6: June, 7: July, 8: August, 9: September, 10: October, 11: November, 12: December)
- * @param {number} daylight_saving_time.start_week_num values: (1: First week, 2: Second week, 3: Third week, 4: Fourth week, 5: Last week)
- * @param {number} daylight_saving_time.start_week_day values: (1: Monday, 2: Tuesday, 3: Wednesday, 4: Thursday, 5: Friday, 6: Saturday, 7: Sunday)
- * @param {number} daylight_saving_time.start_hour_min unit: minutes
- * @param {number} daylight_saving_time.end_month values: (1: January, 2: February, 3: March, 4: April, 5: May, 6: June, 7: July, 8: August, 9: September, 10: October, 11: November, 12: December)
- * @param {number} daylight_saving_time.end_week_num values: (1: First week, 2: Second week, 3: Third week, 4: Fourth week, 5: Last week)
- * @param {number} daylight_saving_time.end_week_day values: (1: Monday, 2: Tuesday, 3: Wednesday, 4: Thursday, 5: Friday, 6: Saturday, 7: Sunday)
- * @param {number} daylight_saving_time.end_hour_min unit: minute
- * @example { "daylight_saving_time": { "enable": 1, "offset": 60, "start_month": 3, "start_week": 1, "start_day": 1, "start_time": 0, "end_month": 11, "end_week": 4, "end_day": 7, "end_time": 120 } }
- */
-function setDaylightSavingTimeSettings(daylight_saving_time) {
-    var enable = daylight_saving_time.enable;
-    var offset = daylight_saving_time.offset;
-    var start_month = daylight_saving_time.start_month;
-    var start_week_num = daylight_saving_time.start_week_num;
-    var start_week_day = daylight_saving_time.start_week_day;
-    var start_hour_min = daylight_saving_time.start_hour_min;
-    var end_month = daylight_saving_time.end_month;
-    var end_week_num = daylight_saving_time.end_week_num;
-    var end_week_day = daylight_saving_time.end_week_day;
-    var end_hour_min = daylight_saving_time.end_hour_min;
-
-    if (offset < 1 || offset > 120) {
-        throw new Error('daylight_saving_time.offset must be between 1 and 120');
-    }
-
-    var enable_map = { 0: "disable", 1: "enable" };
-    var enable_values = getValues(enable_map);
-    if (enable_values.indexOf(enable) === -1) {
-        throw new Error("daylight_saving_time.enable must be one of " + enable_values.join(", "));
-    }
-    var month_values = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
-    if (month_values.indexOf(start_month) === -1 || month_values.indexOf(end_month) === -1) {
-        throw new Error("daylight_saving_time.start_month and end_month must be one of " + month_values.join(", "));
-    }
-    var week_values = [1, 2, 3, 4, 5];
-    if (week_values.indexOf(start_week_num) === -1 || week_values.indexOf(end_week_num) === -1) {
-        throw new Error("daylight_saving_time.start_week_num and end_week_num must be one of " + week_values.join(", "));
-    }
-    var day_values = [1, 2, 3, 4, 5, 6, 7];
-    if (day_values.indexOf(start_week_day) === -1 || day_values.indexOf(end_week_day) === -1) {
-        throw new Error("daylight_saving_time.start_week_day and end_week_day must be one of " + day_values.join(", "));
-    }
-
-    if (start_hour_min < 0 || start_hour_min > 1380) {
-        throw new Error('daylight_saving_time.start_hour_min must be between 0 and 1380');
-    }
-
-    if (end_month < 1 || end_month > 12) {
-        throw new Error('daylight_saving_time.end_month must be between 1 and 12');
-    }
-
-    if (end_hour_min < 0 || end_hour_min > 1380) {
-        throw new Error('daylight_saving_time.end_hour_min must be between 0 and 1380');
-    }
-
-    var start_day_value = (start_week_num << 4) | start_week_day;
-    var end_day_value = (end_week_num << 4) | end_week_day;
-
-    var buffer = new Buffer(11);
-    buffer.writeUInt8(0xc6);
-    buffer.writeUInt8(getValue(enable_map, enable));
-    buffer.writeUInt8(offset);
-    buffer.writeUInt8(start_month);
-    buffer.writeUInt8(start_day_value);
-    buffer.writeUInt16LE(start_hour_min);
-    buffer.writeUInt8(end_month);
-    buffer.writeUInt8(end_day_value);
-    buffer.writeUInt16LE(end_hour_min);
-    return buffer.toBytes();
-}
-
-/**
- * Set time zone
- * @param {number} time_zone unit: minute, convert: "hh:mm" -> "hh * 60 + mm", values: ( -720: UTC-12, -660: UTC-11, -600: UTC-10, -570: UTC-9:30, -540: UTC-9, -480: UTC-8, -420: UTC-7, -360: UTC-6, -300: UTC-5, -240: UTC-4, -210: UTC-3:30, -180: UTC-3, -120: UTC-2, -60: UTC-1, 0: UTC, 60: UTC+1, 120: UTC+2, 180: UTC+3, 240: UTC+4, 300: UTC+5, 360: UTC+6, 420: UTC+7, 480: UTC+8, 540: UTC+9, 570: UTC+9:30, 600: UTC+10, 660: UTC+11, 720: UTC+12, 765: UTC+12:45, 780: UTC+13, 840: UTC+14 )
- * @example { "time_zone": 480 }
- */
-function setTimeZone(time_zone) {
-    var timezone_map = { "-720": "UTC-12", "-660": "UTC-11", "-600": "UTC-10", "-570": "UTC-9:30", "-540": "UTC-9", "-480": "UTC-8", "-420": "UTC-7", "-360": "UTC-6", "-300": "UTC-5", "-240": "UTC-4", "-210": "UTC-3:30", "-180": "UTC-3", "-120": "UTC-2", "-60": "UTC-1", 0: "UTC", 60: "UTC+1", 120: "UTC+2", 180: "UTC+3", 210: "UTC+3:30", 240: "UTC+4", 270: "UTC+4:30", 300: "UTC+5", 330: "UTC+5:30", 345: "UTC+5:45", 360: "UTC+6", 390: "UTC+6:30", 420: "UTC+7", 480: "UTC+8", 540: "UTC+9", 570: "UTC+9:30", 600: "UTC+10", 630: "UTC+10:30", 660: "UTC+11", 720: "UTC+12", 765: "UTC+12:45", 780: "UTC+13", 840: "UTC+14" };
-    var timezone_values = getValues(timezone_map);
-    if (timezone_values.indexOf(time_zone) === -1) {
-        throw new Error("time_zone must be one of " + timezone_values.join(", "));
-    }
-
-    var buffer = new Buffer(3);
-    buffer.writeUInt8(0xc7);
-    buffer.writeInt16LE(getValue(timezone_map, time_zone));
-    return buffer.toBytes();
-}
-
-/**
- * Reset BLE name
- * @param {number} reset_ble_name values: (0: no, 1: yes)
- * @example { "reset_ble_name": 0 }
- */
-function resetBleName(reset_ble_name) {
-    var yes_no_map = { 0: "no", 1: "yes" };
-    var yes_no_values = getValues(yes_no_map);
-    if (yes_no_values.indexOf(reset_ble_name) === -1) {
-        throw new Error("reset_ble_name must be one of " + yes_no_values.join(", "));
-    }
-
-    if (getValue(yes_no_map, reset_ble_name) === 0) {
-        return [];
-    }
-    return [0x54];
-}
-
-/**
- * Set trigger fan alarm
- * @param {number} trigger_fan_alarm values: (0: no, 1: yes)
- * @example { "trigger_fan_alarm": 1 }
- */
-function triggerFanAlarm(trigger_fan_alarm) {
-    var yes_no_map = { 0: "no", 1: "yes" };
-    var yes_no_values = getValues(yes_no_map);
-    if (yes_no_values.indexOf(trigger_fan_alarm) === -1) {
-        throw new Error("trigger_fan_alarm must be one of " + yes_no_values.join(", "));
-    }
-
-    if (getValue(yes_no_map, trigger_fan_alarm) === 0) {
-        return [];
-    }
-    return [0x55, 0x01];
-}
-
-/**
- * Release fan alarm
- * @param {number} release_fan_alarm values: (0: no, 1: yes)
- * @example { "release_fan_alarm": 1 }
- */
-function releaseFanAlarm(release_fan_alarm) {
-    var yes_no_map = { 0: "no", 1: "yes" };
-    var yes_no_values = getValues(yes_no_map);
-    if (yes_no_values.indexOf(release_fan_alarm) === -1) {
-        throw new Error("release_fan_alarm must be one of " + yes_no_values.join(", "));
-    }
-
-    if (getValue(yes_no_map, release_fan_alarm) === 0) {
-        return [];
-    }
-    return [0x55, 0x00];
-}
-
-/**
- * Set peer BLE pair info
- * @param {object} peer_ble_pair_info
- * @param {number} peer_ble_pair_info.address_type values: (0: public, 1: random)
- * @param {string} peer_ble_pair_info.address length: 12
- * @param {string} peer_ble_pair_info.name length: [0, 32]
- * @example { "peer_ble_pair_info": { "address_type": 0, "address": "123456789012", "name": "WT401-123456" } }
- */
-function setPeerBlePairInfo(peer_ble_pair_info) {
-    var address_type = peer_ble_pair_info.address_type;
-    var address = peer_ble_pair_info.address;
-    var name = peer_ble_pair_info.name;
-
-    var address_type_map = { 0: "public", 1: "random" };
-    var address_type_values = getValues(address_type_map);
-    if (address_type_values.indexOf(address_type) === -1) {
-        throw new Error("peer_ble_pair_info.address_type must be one of " + address_type_values.join(", "));
-    }
-    if (address.length !== 12) {
-        throw new Error("peer_ble_pair_info.address must be 12 characters");
-    }
-    var ble_name = encodeUtf8(name);
-    if (ble_name.length > 32) {
-        throw new Error("peer_ble_pair_info.name must be less than 32 characters");
-    }
-
-    var buffer = new Buffer(40);
-    buffer.writeUInt8(0x56);
-    buffer.writeUInt8(getValue(address_type_map, address_type));
-    buffer.writeHexString(address);
-    buffer.writeBytes(ble_name);
-    return buffer.toBytes();
-}
-
-/**
- * Trigger freeze alarm
- * @param {number} trigger_freeze_alarm values: (0: no, 1: yes)
- * @example { "trigger_freeze_alarm": 1 }
- */
-function triggerFreezeAlarm(trigger_freeze_alarm) {
-    var yes_no_map = { 0: "no", 1: "yes" };
-    var yes_no_values = getValues(yes_no_map);
-    if (yes_no_values.indexOf(trigger_freeze_alarm) === -1) {
-        throw new Error("trigger_freeze_alarm must be one of " + yes_no_values.join(", "));
-    }
-
-    if (getValue(yes_no_map, trigger_freeze_alarm) === 0) {
-        return [];
-    }
-    return [0x57, 0x01];
-}
-
-/**
- * Release freeze alarm
- * @param {number} release_freeze_alarm values: (0: no, 1: yes)
- * @example { "release_freeze_alarm": 1 }
- */
-function releaseFreezeAlarm(release_freeze_alarm) {
-    var yes_no_map = { 0: "no", 1: "yes" };
-    var yes_no_values = getValues(yes_no_map);
-    if (yes_no_values.indexOf(release_freeze_alarm) === -1) {
-        throw new Error("release_freeze_alarm must be one of " + yes_no_values.join(", "));
-    }
-
-    if (getValue(yes_no_map, release_freeze_alarm) === 0) {
-        return [];
-    }
-    return [0x57, 0x00];
-}
-
-/**
- * Trigger no wire alarm
- * @param {number} trigger_no_wire_alarm values: (0: no, 1: yes)
- * @example { "trigger_no_wire_alarm": 1 }
- */
-function triggerNoWireAlarm(trigger_no_wire_alarm) {
-    var yes_no_map = { 0: "no", 1: "yes" };
-    var yes_no_values = getValues(yes_no_map);
-    if (yes_no_values.indexOf(trigger_no_wire_alarm) === -1) {
-        throw new Error("trigger_no_wire_alarm must be one of " + yes_no_values.join(", "));
-    }
-
-    if (getValue(yes_no_map, trigger_no_wire_alarm) === 0) {
-        return [];
-    }
-    return [0x58, 0x01];
-}
-
-/**
- * Release no wire alarm
- * @param {number} release_no_wire_alarm values: (0: no, 1: yes)
- * @example { "release_no_wire_alarm": 1 }
- */
-function releaseNoWireAlarm(release_no_wire_alarm) {
-    var yes_no_map = { 0: "no", 1: "yes" };
-    var yes_no_values = getValues(yes_no_map);
-    if (yes_no_values.indexOf(release_no_wire_alarm) === -1) {
-        throw new Error("release_no_wire_alarm must be one of " + yes_no_values.join(", "));
-    }
-
-    if (getValue(yes_no_map, release_no_wire_alarm) === 0) {
-        return [];
-    }
-    return [0x58, 0x00];
-}
-
-/**
- * Trigger window open alarm
- * @param {number} trigger_window_open_alarm values: (0: no, 1: yes)
- * @example { "trigger_window_open_alarm": 1 }
- */
-function triggerWindowOpenAlarm(trigger_window_open_alarm) {
-    var yes_no_map = { 0: "no", 1: "yes" };
-    var yes_no_values = getValues(yes_no_map);
-    if (yes_no_values.indexOf(trigger_window_open_alarm) === -1) {
-        throw new Error("trigger_window_open_alarm must be one of " + yes_no_values.join(", "));
-    }
-
-    if (getValue(yes_no_map, trigger_window_open_alarm) === 0) {
-        return [];
-    }
-    return [0x5a, 0x01];
-}
-
-/**
- * Release window open alarm
- * @param {number} release_window_open_alarm values: (0: no, 1: yes)
- * @example { "release_window_open_alarm": 1 }
- */
-function releaseWindowOpenAlarm(release_window_open_alarm) {
-    var yes_no_map = { 0: "no", 1: "yes" };
-    var yes_no_values = getValues(yes_no_map);
-    if (yes_no_values.indexOf(release_window_open_alarm) === -1) {
-        throw new Error("release_window_open_alarm must be one of " + yes_no_values.join(", "));
-    }
-
-    if (getValue(yes_no_map, release_window_open_alarm) === 0) {
-        return [];
-    }
-    return [0x5a, 0x00];
-}
-
-/**
- * Trigger filter alarm
- * @param {number} trigger_filter_alarm values: (0: no, 1: yes)
- * @example { "trigger_filter_alarm": 1 }
- */
-function triggerFilterAlarm(trigger_filter_alarm) {
-    var yes_no_map = { 0: "no", 1: "yes" };
-    var yes_no_values = getValues(yes_no_map);
-    if (yes_no_values.indexOf(trigger_filter_alarm) === -1) {
-        throw new Error("trigger_filter_alarm must be one of " + yes_no_values.join(", "));
-    }
-
-    if (getValue(yes_no_map, trigger_filter_alarm) === 0) {
-        return [];
-    }
-    return [0x5b, 0x01];
-}
-
-/**
- * Release filter alarm
- * @param {number} release_filter_alarm values: (0: no, 1: yes)
- * @example { "release_filter_alarm": 1 }
- */
-function releaseFilterAlarm(release_filter_alarm) {
-    var yes_no_map = { 0: "no", 1: "yes" };
-    var yes_no_values = getValues(yes_no_map);
-    if (yes_no_values.indexOf(release_filter_alarm) === -1) {
-        throw new Error("release_filter_alarm must be one of " + yes_no_values.join(", "));
-    }
-
-    if (getValue(yes_no_map, release_filter_alarm) === 0) {
-        return [];
-    }
-    return [0x5b, 0x00];
-}
-
-/**
- * Insert plan id
- * @param {number} insert_plan values: (0: plan_1, 1: plan_2, 2: plan_3, 3: plan_4, 4: plan_5, 5: plan_6, 6: plan_7, 7: plan_8, 8: plan_9, 9: plan_10, 10: plan_11, 11: plan_12, 12: plan_13, 13: plan_14, 14: plan_15, 15: plan_16)
- * @example { "insert_plan": 0 }
- */
-function insertPlan(insert_plan) {
-    var plan_id_map = { 0: "plan_1", 1: "plan_2", 2: "plan_3", 3: "plan_4", 4: "plan_5", 5: "plan_6", 6: "plan_7", 7: "plan_8", 8: "plan_9", 9: "plan_10", 10: "plan_11", 11: "plan_12", 12: "plan_13", 13: "plan_14", 14: "plan_15", 15: "plan_16" };
-    var plan_id_values = getValues(plan_id_map);
-    if (plan_id_values.indexOf(insert_plan) === -1) {
-        throw new Error("insert_plan must be one of " + plan_id_values.join(", "));
-    }
-
-    var buffer = new Buffer(2);
-    buffer.writeUInt8(0x5c);
-    buffer.writeUInt8(getValue(plan_id_map, insert_plan));
-    return buffer.toBytes();
-}
-
-/**
- * Trigger BLE pair
- * @param {number} trigger_ble_pair values: (0: no, 1: yes)
- * @example { "trigger_ble_pair": 1 }
- */
-function triggerBlePair(trigger_ble_pair) {
-    var yes_no_map = { 0: "no", 1: "yes" };
-    var yes_no_values = getValues(yes_no_map);
-    if (yes_no_values.indexOf(trigger_ble_pair) === -1) {
-        throw new Error("trigger_ble_pair must be one of " + yes_no_values.join(", "));
-    }
-
-    if (getValue(yes_no_map, trigger_ble_pair) === 0) {
-        return [];
-    }
-    return [0x5e, 0x01];
-}
-
-/**
- * Cancel BLE pair
- * @param {number} cancel_ble_pair values: (0: no, 1: yes)
- * @example { "cancel_ble_pair": 1 }
- */
-function cancelBlePair(cancel_ble_pair) {
-    var yes_no_map = { 0: "no", 1: "yes" };
-    var yes_no_values = getValues(yes_no_map);
-    if (yes_no_values.indexOf(cancel_ble_pair) === -1) {
-        throw new Error("cancel_ble_pair must be one of " + yes_no_values.join(", "));
-    }
-
-    if (getValue(yes_no_map, cancel_ble_pair) === 0) {
-        return [];
-    }
-    return [0x5e, 0x00];
-}
-
-/**
- * Remove plan
- * @param {object} remove_plan
- * @param {number} remove_plan.plan_1 values: (0: no, 1: yes)
- * @param {number} remove_plan.plan_2 values: (0: no, 1: yes)
- * @param {number} remove_plan.plan_3 values: (0: no, 1: yes)
- * @param {number} remove_plan.plan_4 values: (0: no, 1: yes)
- * @param {number} remove_plan.plan_5 values: (0: no, 1: yes)
- * @param {number} remove_plan.plan_6 values: (0: no, 1: yes)
- * @param {number} remove_plan.plan_7 values: (0: no, 1: yes)
- * @param {number} remove_plan.plan_8 values: (0: no, 1: yes)
- * @param {number} remove_plan.plan_9 values: (0: no, 1: yes)
- * @param {number} remove_plan.plan_10 values: (0: no, 1: yes)
- * @param {number} remove_plan.plan_11 values: (0: no, 1: yes)
- * @param {number} remove_plan.plan_12 values: (0: no, 1: yes)
- * @param {number} remove_plan.plan_13 values: (0: no, 1: yes)
- * @param {number} remove_plan.plan_14 values: (0: no, 1: yes)
- * @param {number} remove_plan.plan_15 values: (0: no, 1: yes)
- * @param {number} remove_plan.plan_16 values: (0: no, 1: yes)
- * @param {number} remove_plan.all values: (0: no, 1: yes)
- * @example { "remove_plan": { "plan_1": 1, "plan_2": 0, "plan_3": 1, "plan_4": 0, "plan_5": 1, "plan_6": 0, "plan_7": 1, "plan_8": 0, "plan_9": 1, "plan_10": 0, "plan_11": 1, "plan_12": 0, "plan_13": 1, "plan_14": 0, "plan_15": 1, "plan_16": 0, "reset": 1 } }
- * @example { "remove_plan": { "all": 1 } }
- */
-function removePlan(remove_plan) {
-    var yes_no_map = { 0: "no", 1: "yes" };
-    var yes_no_values = getValues(yes_no_map);
-
-    var data = [];
-    var plan_offset = { plan_1: 0, plan_2: 1, plan_3: 2, plan_4: 3, plan_5: 4, plan_6: 5, plan_7: 6, plan_8: 7, plan_9: 8, plan_10: 9, plan_11: 10, plan_12: 11, plan_13: 12, plan_14: 13, plan_15: 14, plan_16: 15, reset: 255 };
-    for (var plan in plan_offset) {
-        if (plan in remove_plan) {
-            if (yes_no_values.indexOf(remove_plan[plan]) === -1) {
-                throw new Error("remove_plan." + plan + " must be one of " + yes_no_values.join(", "));
-            }
-            if (getValue(yes_no_map, remove_plan[plan]) === 0) {
-                continue;
-            }
-            data = data.concat([0x5f, plan_offset[plan]]);
-        }
-    }
-
-    return data;
-}
-
-/**
- * Reconnect
- * @param {number} reconnect values: (0: no, 1: yes)
- * @example { "reconnect": 1 }
- */
-function reconnect(reconnect) {
-    var yes_no_map = { 0: "no", 1: "yes" };
-    var yes_no_values = getValues(yes_no_map);
-    if (yes_no_values.indexOf(reconnect) === -1) {
-        throw new Error("reconnect must be one of " + yes_no_values.join(", "));
-    }
-
-    if (getValue(yes_no_map, reconnect) === 0) {
-        return [];
-    }
-    return [0xb6];
-}
-
-/**
- * Synchronize time
- * @param {number} synchronize_time values: (0: no, 1: yes)
- * @example { "synchronize_time": 1 }
- */
-function synchronizeTime(synchronize_time) {
-    var yes_no_map = { 0: "no", 1: "yes" };
-    var yes_no_values = getValues(yes_no_map);
-    if (yes_no_values.indexOf(synchronize_time) === -1) {
-        throw new Error("synchronize_time must be one of " + yes_no_values.join(", "));
-    }
-
-    if (getValue(yes_no_map, synchronize_time) === 0) {
-        return [];
-    }
-    return [0xb8];
-}
-
-/**
- * Query device status
- * @param {number} query_device_status values: (0: no, 1: yes)
- * @example { "query_device_status": 1 }
- */
-function queryDeviceStatus(query_device_status) {
-    var yes_no_map = { 0: "no", 1: "yes" };
-    var yes_no_values = getValues(yes_no_map);
-    if (yes_no_values.indexOf(query_device_status) === -1) {
-        throw new Error("query_device_status must be one of " + yes_no_values.join(", "));
-    }
-
-    if (getValue(yes_no_map, query_device_status) === 0) {
-        return [];
-    }
-    return [0xb9];
-}
-
-/**
- * Reboot
- * @param {number} reboot values: (0: no, 1: yes)
- * @example { "reboot": 1 }
- */
-function reboot(reboot) {
-    var yes_no_map = { 0: "no", 1: "yes" };
-    var yes_no_values = getValues(yes_no_map);
-    if (yes_no_values.indexOf(reboot) === -1) {
-        throw new Error("reboot must be one of " + yes_no_values.join(", "));
-    }
-
-    if (getValue(yes_no_map, reboot) === 0) {
-        return [];
-    }
-    return [0xbe];
-}
-
-function setQueryCmd(bytes) {
-    var name_map = {
-        "56": { level: 1, name: "combine_command" },
-        "60": { level: 1, name: "collection_interval" },
-        "61": { level: 1, name: "reporting_interval" },
-        "62": { level: 1, name: "intelligent_display_enable" },
-        "63": { level: 1, name: "temperature_unit" },
-        "64": { level: 1, name: "temperature_control_mode_support" },
-        "65": { level: 1, name: "target_temperature_mode" },
-        "66": { level: 1, name: "target_temperature_resolution" },
-        "67": { level: 1, name: "system_status" },
-        "68": { level: 2, name: "temperature_control_mode" },
-        "69": { level: 2, name: "target_temperature_settings" },
-        "6a": { level: 1, name: "dead_band" },
-        "6b": { level: 2, name: "target_temperature_range" },
-        "71": { level: 2, name: "button_custom_function" },
-        "72": { level: 1, name: "child_lock_settings" },
-        "74": { level: 1, name: "fan_mode" },
-        "75": { level: 1, name: "screen_display_settings" },
-        "76": { level: 1, name: "temperature_calibration_settings" },
-        "77": { level: 1, name: "humidity_calibration_settings" },
-        "7d": { level: 1, name: "data_sync_to_peer" },
-        "7e": { level: 1, name: "data_sync_timeout" },
-        "80": { level: 1, name: "unlock_combination_button_settings" },
-        "81": { level: 1, name: "temporary_unlock_settings" },
-        "82": { level: 2, name: "pir_config" },
-        "85": { level: 1, name: "ble_enable" },
-        "86": { level: 1, name: "external_temperature" },
-        "87": { level: 1, name: "external_humidity" },
-        "88": { level: 1, name: "fan_support_mode" },
-        "8b": { level: 1, name: "ble_name" },
-        "8c": { level: 1, name: "ble_pair_info" },
-        "8d": { level: 1, name: "communication_mode" },
-        "c6": { level: 1, name: "daylight_saving_time" },
-        "c7": { level: 1, name: "time_zone" },
-    };
-
-    var cmd = readHexString(bytes.slice(0, 1));
-    var cmd_level = name_map[cmd].level;
-
-    if (cmd_level != 0) {
-        var buffer = new Buffer(2 + cmd_level);
-        buffer.writeUInt8(0xef);
-        buffer.writeUInt8(cmd_level);
-        buffer.writeBytes(bytes.slice(0, cmd_level));
-        return buffer.toBytes();
-    }
-    return [];
-}
-
-function getValues(map) {
-    var values = [];
-    for (var key in map) {
-        values.push(RAW_VALUE ? parseInt(key) : map[key]);
-    }
-    return values;
-}
-
-function getValue(map, value) {
-    if (RAW_VALUE) return value;
-    for (var key in map) {
-        if (map[key] === value) {
-            return parseInt(key);
-        }
-    }
-    throw new Error("not match in " + JSON.stringify(map));
-}
-
-function Buffer(size) {
-    this.buffer = new Array(size);
-    this.offset = 0;
-
-    for (var i = 0; i < size; i++) {
-        this.buffer[i] = 0;
-    }
-}
-
-Buffer.prototype._write = function (value, byteLength, isLittleEndian) {
-    value = Math.round(value);
-    var offset = 0;
-    for (var index = 0; index < byteLength; index++) {
-        offset = isLittleEndian ? index << 3 : (byteLength - 1 - index) << 3;
-        this.buffer[this.offset + index] = (value >> offset) & 0xff;
-    }
+	//0x86
+	if ('origin_temperature' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0x86);
+		if (payload.origin_temperature < -20 || payload.origin_temperature > 60) {
+			throw new Error('origin_temperature must be between -20 and 60');
+		}
+		buffer.writeInt16LE(payload.origin_temperature * 100);
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0x87
+	if ('origin_humidity' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0x87);
+		if (payload.origin_humidity < 0 || payload.origin_humidity > 100) {
+			throw new Error('origin_humidity must be between 0 and 100');
+		}
+		buffer.writeUInt16LE(payload.origin_humidity * 10);
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0x5c
+	if ('insert_temporary_plan' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0x5c);
+		if (payload.insert_temporary_plan.id < 0 || payload.insert_temporary_plan.id > 15) {
+			throw new Error('insert_temporary_plan.id must be between 0 and 15');
+		}
+		buffer.writeUInt8(payload.insert_temporary_plan.id);
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0x55
+	if ('fan_error_alarm' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0x55);
+		// 0：clean alarm, 1：trigger alarm
+		buffer.writeUInt8(payload.fan_error_alarm.mode);
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0x5b
+	if ('filter_clean_alarm' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0x5b);
+		// 0：clean alarm, 1：report alarm
+		buffer.writeUInt8(payload.filter_clean_alarm.mode);
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0x57
+	if ('frost_protection_alarm' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0x57);
+		// 0：clean alarm, 1：trigger alarm
+		buffer.writeUInt8(payload.frost_protection_alarm.mode);
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0x5a
+	if ('open_window_alarm' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0x5a);
+		// 0：clean alarm, 1：report alarm
+		buffer.writeUInt8(payload.open_window_alarm.mode);
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0x58
+	if ('not_wired_alarm' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0x58);
+		// 0：clean alarm, 1：trigger alarm
+		buffer.writeUInt8(payload.not_wired_alarm.mode);
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0xbe
+	if ('reboot' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0xbe);
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0xb9
+	if ('query_device_status' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0xb9);
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0xb8
+	if ('synchronize_time' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0xb8);
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0xb6
+	if ('reconnect' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0xb6);
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0x5f
+	if ('delete_task_plan' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0x5f);
+		if (payload.delete_task_plan.type < 0 || payload.delete_task_plan.type > 255) {
+			throw new Error('delete_task_plan.type must be between 0 and 255');
+		}
+		// 0：Schedule1, 1：Schedule2, 2：Schedule3, 3：Schedule4, 4：Schedule5, 5：Schedule6, 6：Schedule7, 7：Schedule8, 255：Reset All
+		buffer.writeUInt8(payload.delete_task_plan.type);
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	return encoded;
+}
+
+function Buffer() {
+	this.buffer = new Array();
+}
+
+Buffer.prototype._write = function(value, byteLength, isLittleEndian) {
+	value = Math.round(value);
+	var offset = 0;
+	for (var index = 0; index < byteLength; index++) {
+		offset = isLittleEndian ? index << 3 : (byteLength - 1 - index) << 3;
+		this.buffer.push((value >> offset) & 0xff);
+	}
 };
 
-Buffer.prototype.writeUInt8 = function (value) {
-    this._write(value, 1, true);
-    this.offset += 1;
+Buffer.prototype.writeUInt8 = function(value) {
+	this._write(value, 1, true);
 };
 
-Buffer.prototype.writeInt8 = function (value) {
-    this._write(value < 0 ? value + 0x100 : value, 1, true);
-    this.offset += 1;
+Buffer.prototype.writeInt8 = function(value) {
+	this._write(value < 0 ? value + 0x100 : value, 1, true);
 };
 
-Buffer.prototype.writeUInt16LE = function (value) {
-    this._write(value, 2, true);
-    this.offset += 2;
+Buffer.prototype.writeUInt16LE = function(value) {
+	this._write(value, 2, true);
 };
 
-Buffer.prototype.writeInt16LE = function (value) {
-    this._write(value < 0 ? value + 0x10000 : value, 2, true);
-    this.offset += 2;
+Buffer.prototype.writeInt16LE = function(value) {
+	this._write(value < 0 ? value + 0x10000 : value, 2, true);
 };
 
-Buffer.prototype.writeUInt32LE = function (value) {
-    this._write(value, 4, true);
-    this.offset += 4;
+Buffer.prototype.writeUInt24LE = function(value) {
+	this._write(value, 3, true);
 };
 
-Buffer.prototype.writeInt32LE = function (value) {
-    this._write(value < 0 ? value + 0x100000000 : value, 4, true);
-    this.offset += 4;
+Buffer.prototype.writeInt24LE = function(value) {
+	this._write(value < 0 ? value + 0x1000000 : value, 3, true);
 };
 
-Buffer.prototype.writeBytes = function (bytes) {
-    for (var i = 0; i < bytes.length; i++) {
-        this.buffer[this.offset + i] = bytes[i];
-    }
-    this.offset += bytes.length;
+Buffer.prototype.writeUInt32LE = function(value) {
+	this._write(value, 4, true);
 };
 
-Buffer.prototype.writeHexString = function (hexString) {
-    var bytes = [];
-    for (var i = 0; i < hexString.length; i += 2) {
-        bytes.push(parseInt(hexString.substr(i, 2), 16));
-    }
-    this.writeBytes(bytes);
+Buffer.prototype.writeInt32LE = function(value) {
+	this._write(value < 0 ? value + 0x100000000 : value, 4, true);
 };
 
-Buffer.prototype.writeHexStringReverse = function (hexString) {
-    var bytes = [];
-    for (var i = hexString.length - 2; i >= 0; i -= 2) {
-        bytes.push(parseInt(hexString.substr(i, 2), 16));
-    }
-    this.writeBytes(bytes);
+Buffer.prototype.writeFloatLE = function(value) {
+	var sign = (value < 0 || (value === 0 && 1 / value === -Infinity)) ? 1 : 0;
+	var absValue = Math.abs(value);
+
+	if (absValue === 0) {
+		this._write(sign ? 0x80000000 : 0, 4, true);
+		return;
+	} else if (value !== value) {
+		this._write(0x7fc00000, 4, true);
+		return;
+	} else if (absValue === Infinity) {
+		this._write((((sign << 31) >>> 0) | 0x7f800000) >>> 0, 4, true);
+		return;
+	}
+
+	var exponent = Math.floor(Math.log(absValue) / Math.LN2);
+	var normalized = absValue / Math.pow(2, exponent);
+	if (normalized < 1) {
+		exponent -= 1;
+		normalized *= 2;
+	} else if (normalized >= 2) {
+		exponent += 1;
+		normalized /= 2;
+	}
+
+	var biasedExponent = exponent + 127;
+	var mantissaBits = 0;
+	if (biasedExponent <= 0) {
+		biasedExponent = 0;
+		mantissaBits = Math.round(absValue / Math.pow(2, -149));
+		if (mantissaBits > 0x7fffff) {
+			mantissaBits = 0x7fffff;
+		}
+	} else {
+		mantissaBits = Math.round((normalized - 1) * 0x800000);
+		if (mantissaBits === 0x800000) {
+			biasedExponent += 1;
+			mantissaBits = 0;
+		}
+		if (biasedExponent >= 0xff) {
+			this._write((((sign << 31) >>> 0) | 0x7f800000) >>> 0, 4, true);
+			return;
+		}
+	}
+
+	var floatBits = ((((sign << 31) >>> 0) | ((biasedExponent & 0xff) << 23) | (mantissaBits & 0x7fffff)) >>> 0);
+	this._write(floatBits, 4, true);
 };
 
-Buffer.prototype.toBytes = function () {
-    return this.buffer;
+Buffer.prototype.writeBytes = function(bytes, length, mustEqual) {
+	if (mustEqual === undefined) mustEqual = false;
+	if (length < bytes.length) {
+		throw new Error('bytes length is greater than length');
+	}
+	if (mustEqual && bytes.length != length) {
+		throw new Error('bytes length is not equal to length');
+	}
+
+	for (var i = 0; i < bytes.length; i++) {
+		this.buffer.push(bytes[i]);
+	}
+
+	if (length > bytes.length) {
+		for (var i = bytes.length; i < length; i++) {
+			this.buffer.push(0);
+		}
+	}
+};
+
+Buffer.prototype.writeHexString = function(hexString, length, mustEqual) {
+	if (mustEqual === undefined) mustEqual = false;
+	var bytes = [];
+	for (var i = 0; i < hexString.length; i += 2) {
+		bytes.push(parseInt(hexString.substr(i, 2), 16));
+	}
+	if (mustEqual && bytes.length != length) {
+		throw new Error('hex string length is not equal to length');
+	}
+	this.writeBytes(bytes, length);
+};
+
+Buffer.prototype.writeString = function(str, length, mustEqual) {
+	if (mustEqual === undefined) mustEqual = false;
+	var bytes = encodeUtf8(str);
+	if (mustEqual && bytes.length != length) {
+		throw new Error('string length is not equal to length');
+	}
+	this.writeBytes(bytes, length);
+};
+
+Buffer.prototype.writeUnknownDataType = function(val) {
+	throw new Error('Unknown data type encountered. Please Contact Developer.');
+};
+
+Buffer.prototype.writeHexStringReverse = function(hexString, length, mustEqual) {
+	if (mustEqual === undefined) mustEqual = false;
+	var bytes = [];
+	for (var i = hexString.length - 2; i >= 0; i -= 2) {
+		bytes.push(parseInt(hexString.substr(i, 2), 16));
+	}
+	if (mustEqual && bytes.length != length) {
+		throw new Error('hex string length is not equal to length');
+	}
+	this.writeBytes(bytes, length);
+};
+
+Buffer.prototype.toBytes = function() {
+	return this.buffer;
 };
 
 function encodeUtf8(str) {
-    var byteArray = [];
-    for (var i = 0; i < str.length; i++) {
-        var charCode = str.charCodeAt(i);
-        if (charCode < 0x80) {
-            byteArray.push(charCode);
-        } else if (charCode < 0x800) {
-            byteArray.push(0xc0 | (charCode >> 6));
-            byteArray.push(0x80 | (charCode & 0x3f));
-        } else if (charCode < 0x10000) {
-            byteArray.push(0xe0 | (charCode >> 12));
-            byteArray.push(0x80 | ((charCode >> 6) & 0x3f));
-            byteArray.push(0x80 | (charCode & 0x3f));
-        } else if (charCode < 0x200000) {
-            byteArray.push(0xf0 | (charCode >> 18));
-            byteArray.push(0x80 | ((charCode >> 12) & 0x3f));
-            byteArray.push(0x80 | ((charCode >> 6) & 0x3f));
-            byteArray.push(0x80 | (charCode & 0x3f));
-        }
-    }
-    return byteArray;
+	var byteArray = [];
+	for (var i = 0; i < str.length; i++) {
+		var charCode = str.charCodeAt(i);
+		if (charCode < 0x80) {
+			byteArray.push(charCode);
+		} else if (charCode < 0x800) {
+			byteArray.push(0xc0 | (charCode >> 6));
+			byteArray.push(0x80 | (charCode & 0x3f));
+		} else if (charCode < 0x10000) {
+			byteArray.push(0xe0 | (charCode >> 12));
+			byteArray.push(0x80 | ((charCode >> 6) & 0x3f));
+			byteArray.push(0x80 | (charCode & 0x3f));
+		} else if (charCode < 0x200000) {
+			byteArray.push(0xf0 | (charCode >> 18));
+			byteArray.push(0x80 | ((charCode >> 12) & 0x3f));
+			byteArray.push(0x80 | ((charCode >> 6) & 0x3f));
+			byteArray.push(0x80 | (charCode & 0x3f));
+		}
+	}
+	return byteArray;
 }
 
-function readHexString(bytes) {
-    var temp = [];
-    for (var idx = 0; idx < bytes.length; idx++) {
-        temp.push(("0" + (bytes[idx] & 0xff).toString(16)).slice(-2));
+function isValid(value) {
+	return value !== undefined && value !== null && value !== '';
+}
+
+function hasPath(obj, path) {
+	var parts = path.split('.');
+	var current = obj;
+  
+	for (var i = 0; i < parts.length; i++) {
+	  	if (!current || !(parts[i] in current)) {
+			return false;
+	  	}
+	  	current = current[parts[i]];
+	}
+  
+	return true;
+}
+
+function getPath(obj, path) {
+	var parts = path.split('.');
+	var current = obj;
+  
+	for (var i = 0; i < parts.length; i++) {
+	  	var key = parts[i];
+  
+	  	if (!current || !(key in current)) {
+			return null;
+	  	}
+  
+	  	current = current[key];
+	}
+  
+	return current;
+}
+  
+
+function setPath(obj, path, value) {
+	var parts = path.split('.');
+	var current = obj;
+  
+	for (var i = 0; i < parts.length - 1; i++) {
+	  	var key = parts[i];
+  
+	  	if (!(key in current) || typeof current[key] !== 'object') {
+			current[key] = {};
+	  	}
+  
+	  	current = current[key];
+	}
+
+	current[parts[parts.length - 1]] = value;
+	return obj;
+}
+
+function convertName(propertyId, prefix) {
+	var parts = propertyId.split('.');
+	var lastPart = parts[parts.length - 1];
+	parts[parts.length - 1] = prefix + '_' + lastPart;
+	return parts.join('.');
+}
+
+function recoverName(propertyId, prefix) {
+	var parts = propertyId.split('.');
+	var lastPart = parts[parts.length - 1];
+	parts[parts.length - 1] = lastPart.replace(prefix + '_', '');
+	return parts.join('.');
+}
+
+function getAllLeafPaths(obj, prefix) {
+    var paths = [];
+
+    function recurse(current, path) {
+      if (Array.isArray(current)) {
+        current.forEach(function (item, index) {
+          var newPath = path ? (path + "." + index) : String(index);
+          recurse(item, newPath);
+        });
+  
+      } else if (typeof current === 'object' && current !== null) {
+        for (var key in current) {
+          if (Object.prototype.hasOwnProperty.call(current, key)) {
+            var newPath = path ? (path + "." + key) : key;
+            recurse(current[key], newPath);
+          }
+        }
+  
+      } else {
+        paths.push(path);
+      }
     }
-    return temp.join("");
+  
+    recurse(obj, "");
+    return paths;  
+}
+
+function isInteger(str) {
+    return typeof str === 'string' && /^[0-9]+$/.test(str);
+}
+
+function cmdMap() {
+	return {
+		  "request_check_sequence_number": "ff",
+		  "request_check_order": "fe",
+		  "request_command_queries": "ef",
+		  "request_query_all_configurations": "ee",
+		  "lorawan_configuration_settings": "cf",
+		  "lorawan_configuration_settings.mode": "cf00",
+		  "tsl_version": "df",
+		  "product_name": "de",
+		  "product_pn": "dd",
+		  "product_sn": "db",
+		  "version": "da",
+		  "oem_id": "d9",
+		  "product_frequency_band": "d8",
+		  "ble_phone_name": "d5",
+		  "battery": "00",
+		  "temperature": "01",
+		  "humidity": "02",
+		  "pir_status": "08",
+		  "temperature_mode": "03",
+		  "target_temperature1": "06",
+		  "target_temperature2": "07",
+		  "fan_mode": "04",
+		  "execution_plan_id": "05",
+		  "temperature_alarm": "0b",
+		  "humidity_alarm": "0c",
+		  "ble_event": "09",
+		  "power_bus_event": "0a",
+		  "key_event": "0d",
+		  "key_event.f1": "0d00",
+		  "key_event.f2": "0d01",
+		  "key_event.f3": "0d02",
+		  "battery_event": "0f",
+		  "collection_interval": "60",
+		  "collection_interval.seconds_of_time": "6000",
+		  "collection_interval.minutes_of_time": "6001",
+		  "communication_mode": "8d",
+		  "reporting_interval": "61",
+		  "reporting_interval.ble": "6100",
+		  "reporting_interval.ble.seconds_of_time": "610000",
+		  "reporting_interval.ble.minutes_of_time": "610001",
+		  "reporting_interval.lora": "6101",
+		  "reporting_interval.lora.seconds_of_time": "610100",
+		  "reporting_interval.lora.minutes_of_time": "610101",
+		  "reporting_interval.ble_lora": "6102",
+		  "reporting_interval.ble_lora.seconds_of_time": "610200",
+		  "reporting_interval.ble_lora.minutes_of_time": "610201",
+		  "reporting_interval.power_lora": "6103",
+		  "reporting_interval.power_lora.seconds_of_time": "610300",
+		  "reporting_interval.power_lora.minutes_of_time": "610301",
+		  "communicate_interval": "6c",
+		  "communicate_interval.ble": "6c00",
+		  "communicate_interval.ble.seconds_of_time": "6c0000",
+		  "communicate_interval.ble.minutes_of_time": "6c0001",
+		  "communicate_interval.lora": "6c01",
+		  "communicate_interval.lora.seconds_of_time": "6c0100",
+		  "communicate_interval.lora.minutes_of_time": "6c0101",
+		  "communicate_interval.ble_lora": "6c02",
+		  "communicate_interval.ble_lora.seconds_of_time": "6c0200",
+		  "communicate_interval.ble_lora.minutes_of_time": "6c0201",
+		  "communicate_interval.power_bus": "6c03",
+		  "communicate_interval.power_bus.seconds_of_time": "6c0300",
+		  "communicate_interval.power_bus.minutes_of_time": "6c0301",
+		  "device_status": "c8",
+		  "temperature_unit": "63",
+		  "data_sync_to_peer": "7d",
+		  "data_sync_timeout": "7e",
+		  "ble_enable": "85",
+		  "ble_name": "8b",
+		  "system_status": "67",
+		  "mode_enable": "64",
+		  "fan_enable": "88",
+		  "temperature_control_mode": "68",
+		  "temperature_control_mode.mode": "6800",
+		  "temperature_control_mode.plan_mode_enable": "6801",
+		  "target_temperature_mode": "65",
+		  "target_temperature_resolution": "66",
+		  "target_temperature_settings": "69",
+		  "target_temperature_settings.heat": "6900",
+		  "target_temperature_settings.em_heat": "6901",
+		  "target_temperature_settings.cool": "6902",
+		  "target_temperature_settings.auto": "6903",
+		  "target_temperature_settings.auto_heat": "6904",
+		  "target_temperature_settings.auto_cool": "6905",
+		  "minimum_dead_zone": "6a",
+		  "target_temperature_range": "6b",
+		  "target_temperature_range.heat": "6b00",
+		  "target_temperature_range.em_heat": "6b01",
+		  "target_temperature_range.cool": "6b02",
+		  "target_temperature_range.auto": "6b03",
+		  "fan_control_mode": "74",
+		  "pir_common": "82",
+		  "pir_common.enable": "8201",
+		  "pir_common.release_time": "8202",
+		  "pir_common.mode": "8203",
+		  "pir_common.check": "8204",
+		  "pir_energy": "83",
+		  "pir_energy.enable": "8301",
+		  "pir_energy.plan": "8302",
+		  "pir_night": "84",
+		  "pir_night.enable": "8401",
+		  "pir_night.night_time": "8404",
+		  "pir_night.occupied": "8405",
+		  "pir_night.mode": "8402",
+		  "pir_night.check": "8403",
+		  "screen_display_settings": "75",
+		  "button_custom_function": "71",
+		  "button_custom_function.enable": "7100",
+		  "button_custom_function.mode1": "7101",
+		  "button_custom_function.mode2": "7102",
+		  "button_custom_function.mode3": "7103",
+		  "children_lock_settings": "72",
+		  "unlock_button": "81",
+		  "unlock_combination_button_settings": "80",
+		  "intelligent_display_enable": "62",
+		  "time_zone": "c7",
+		  "daylight_saving_time": "c6",
+		  "temperature_calibration_settings": "76",
+		  "humidity_calibration_settings": "77",
+		  "schedule_settings": "7b",
+		  "schedule_settings._item": "7bxx",
+		  "schedule_settings._item.enable": "7bxx00",
+		  "schedule_settings._item.name_first": "7bxx01",
+		  "schedule_settings._item.name_last": "7bxx02",
+		  "schedule_settings._item.content1": "7bxx03",
+		  "schedule_settings._item.content2": "7bxx04",
+		  "system_status_control": "59",
+		  "origin_temperature": "86",
+		  "origin_humidity": "87",
+		  "insert_temporary_plan": "5c",
+		  "fan_error_alarm": "55",
+		  "filter_clean_alarm": "5b",
+		  "frost_protection_alarm": "57",
+		  "open_window_alarm": "5a",
+		  "not_wired_alarm": "58",
+		  "reboot": "be",
+		  "query_device_status": "b9",
+		  "synchronize_time": "b8",
+		  "reconnect": "b6",
+		  "delete_task_plan": "5f"
+	};
+}
+function processTemperature(payload) {
+	var allTemperatureProperties = {
+    "temperature": {
+        "coefficient": 0.01
+    },
+    "target_temperature1": {
+        "coefficient": 0.01
+    },
+    "target_temperature2": {
+        "coefficient": 0.01
+    },
+    "target_temperature_settings.heat": {
+        "coefficient": 0.01
+    },
+    "target_temperature_settings.em_heat": {
+        "coefficient": 0.01
+    },
+    "target_temperature_settings.cool": {
+        "coefficient": 0.01
+    },
+    "target_temperature_settings.auto": {
+        "coefficient": 0.01
+    },
+    "target_temperature_settings.auto_heat": {
+        "coefficient": 0.01
+    },
+    "target_temperature_settings.auto_cool": {
+        "coefficient": 0.01
+    },
+    "minimum_dead_zone": {
+        "coefficient": 0.01
+    },
+    "target_temperature_range.heat.min": {
+        "coefficient": 0.01
+    },
+    "target_temperature_range.heat.max": {
+        "coefficient": 0.01
+    },
+    "target_temperature_range.em_heat.min": {
+        "coefficient": 0.01
+    },
+    "target_temperature_range.em_heat.max": {
+        "coefficient": 0.01
+    },
+    "target_temperature_range.cool.min": {
+        "coefficient": 0.01
+    },
+    "target_temperature_range.cool.max": {
+        "coefficient": 0.01
+    },
+    "target_temperature_range.auto.min": {
+        "coefficient": 0.01
+    },
+    "target_temperature_range.auto.max": {
+        "coefficient": 0.01
+    },
+    "temperature_calibration_settings.calibration_value": {
+        "coefficient": 0.01
+    },
+    "schedule_settings._item.content1.heat_target_temperature": {
+        "coefficient": 0.01
+    },
+    "schedule_settings._item.content1.em_heat_target_temperature": {
+        "coefficient": 0.01
+    },
+    "schedule_settings._item.content1.cool_target_temperature": {
+        "coefficient": 0.01
+    },
+    "schedule_settings._item.content2.auto_target_temperature": {
+        "coefficient": 0.01
+    },
+    "schedule_settings._item.content2.auto_heat_target_temperature": {
+        "coefficient": 0.01
+    },
+    "schedule_settings._item.content2.auto_cool_target_temperature": {
+        "coefficient": 0.01
+    },
+    "origin_temperature": {
+        "coefficient": 0.01
+    }
+};
+    var leafPaths = getAllLeafPaths(payload);    
+	for (var i = 0; i < leafPaths.length; i++) {
+        var propertyId = leafPaths[i];
+        var propertyParts = propertyId.split('.');        
+        var newPropertyParts = []
+        for (var j = 0; j < propertyParts.length; j++) {
+            var part = propertyParts[j];
+            if (isInteger(part)) {
+                newPropertyParts.push('_item');
+            } else {
+                newPropertyParts.push(part);
+            }
+        }
+        var newPropertyId = newPropertyParts.join('.');
+        newPropertyId = recoverName(newPropertyId, 'fahrenheit');
+        newPropertyId = recoverName(newPropertyId, 'celsius');
+        propertyId = recoverName(propertyId, 'fahrenheit');
+        propertyId = recoverName(propertyId, 'celsius');
+        if (allTemperatureProperties[newPropertyId]) {            
+            var fahrenheitProperty = convertName(propertyId, 'fahrenheit');
+            var celsiusProperty = convertName(propertyId, 'celsius');
+            var stringCoefficient = String(allTemperatureProperties[newPropertyId].coefficient);
+            var dotIndex = stringCoefficient.indexOf('.');
+            var precision = dotIndex != -1 ? stringCoefficient.length - dotIndex - 1 : 0;
+            if (!hasPath(payload, propertyId)) {
+                if (hasPath(payload, fahrenheitProperty) && hasPath(payload, celsiusProperty)) { 
+                    throw new Error(fahrenheitProperty + ' and ' + celsiusProperty + ' cannot be in payload at the same time');
+                }
+                if (hasPath(payload, fahrenheitProperty)) {
+                    setPath(payload, propertyId, Number(((getPath(payload, fahrenheitProperty) - 32) / 1.8).toFixed(precision)));
+                } else if (hasPath(payload, celsiusProperty)) {
+                    setPath(payload, propertyId, Number(getPath(payload, celsiusProperty).toFixed(precision)));
+                }
+            }
+        }
+	}	
+	return payload;
 }

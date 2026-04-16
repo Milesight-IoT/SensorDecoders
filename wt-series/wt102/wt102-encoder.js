@@ -26,6 +26,7 @@ function Encoder(obj, port) {
 /* eslint-enable */
 
 function milesightDeviceEncode(payload) {
+	processTemperature(payload);
 	var encoded = [];
 	//0xff
 	if ('request_check_sequence_number' in payload) {
@@ -62,7 +63,6 @@ function milesightDeviceEncode(payload) {
 					var hex = Number(part).toString(16);
 					while (hex.length < 2) { hex = '0' + hex; }
 					pureNumber.push(hex);
-					console.log(pureNumber);
 					formateStrParts.push('_item');
 				} else {
 					formateStrParts.push(part);
@@ -597,8 +597,8 @@ function milesightDeviceEncode(payload) {
 				buffer.writeUInt16LE(payload.heating_period_settings.heating_period_reporting_interval.seconds_of_time);
 			}
 			if (payload.heating_period_settings.heating_period_reporting_interval.unit == 0x01) {
-				if (payload.heating_period_settings.heating_period_reporting_interval.minutes_of_time < 1 || payload.heating_period_settings.heating_period_reporting_interval.minutes_of_time > 1440) {
-					throw new Error('heating_period_settings.heating_period_reporting_interval.minutes_of_time must be between 1 and 1440');
+				if (payload.heating_period_settings.heating_period_reporting_interval.minutes_of_time < 5 || payload.heating_period_settings.heating_period_reporting_interval.minutes_of_time > 1440) {
+					throw new Error('heating_period_settings.heating_period_reporting_interval.minutes_of_time must be between 5 and 1440');
 				}
 				buffer.writeUInt16LE(payload.heating_period_settings.heating_period_reporting_interval.minutes_of_time);
 			}
@@ -615,8 +615,8 @@ function milesightDeviceEncode(payload) {
 				buffer.writeUInt16LE(payload.heating_period_settings.non_heating_period_reporting_interval.seconds_of_time);
 			}
 			if (payload.heating_period_settings.non_heating_period_reporting_interval.unit == 0x01) {
-				if (payload.heating_period_settings.non_heating_period_reporting_interval.minutes_of_time < 1 || payload.heating_period_settings.non_heating_period_reporting_interval.minutes_of_time > 1440) {
-					throw new Error('heating_period_settings.non_heating_period_reporting_interval.minutes_of_time must be between 1 and 1440');
+				if (payload.heating_period_settings.non_heating_period_reporting_interval.minutes_of_time < 5 || payload.heating_period_settings.non_heating_period_reporting_interval.minutes_of_time > 1440) {
+					throw new Error('heating_period_settings.non_heating_period_reporting_interval.minutes_of_time must be between 5 and 1440');
 				}
 				buffer.writeUInt16LE(payload.heating_period_settings.non_heating_period_reporting_interval.minutes_of_time);
 			}
@@ -1236,11 +1236,11 @@ Buffer.prototype.writeInt16LE = function(value) {
 };
 
 Buffer.prototype.writeUInt24LE = function(value) {
-    this._write(value, 3, true);
+	this._write(value, 3, true);
 };
 
 Buffer.prototype.writeInt24LE = function(value) {
-    this._write(value < 0 ? value + 0x1000000 : value, 3, true);
+	this._write(value < 0 ? value + 0x1000000 : value, 3, true);
 };
 
 Buffer.prototype.writeUInt32LE = function(value) {
@@ -1249,6 +1249,55 @@ Buffer.prototype.writeUInt32LE = function(value) {
 
 Buffer.prototype.writeInt32LE = function(value) {
 	this._write(value < 0 ? value + 0x100000000 : value, 4, true);
+};
+
+Buffer.prototype.writeFloatLE = function(value) {
+	var sign = (value < 0 || (value === 0 && 1 / value === -Infinity)) ? 1 : 0;
+	var absValue = Math.abs(value);
+
+	if (absValue === 0) {
+		this._write(sign ? 0x80000000 : 0, 4, true);
+		return;
+	} else if (value !== value) {
+		this._write(0x7fc00000, 4, true);
+		return;
+	} else if (absValue === Infinity) {
+		this._write((((sign << 31) >>> 0) | 0x7f800000) >>> 0, 4, true);
+		return;
+	}
+
+	var exponent = Math.floor(Math.log(absValue) / Math.LN2);
+	var normalized = absValue / Math.pow(2, exponent);
+	if (normalized < 1) {
+		exponent -= 1;
+		normalized *= 2;
+	} else if (normalized >= 2) {
+		exponent += 1;
+		normalized /= 2;
+	}
+
+	var biasedExponent = exponent + 127;
+	var mantissaBits = 0;
+	if (biasedExponent <= 0) {
+		biasedExponent = 0;
+		mantissaBits = Math.round(absValue / Math.pow(2, -149));
+		if (mantissaBits > 0x7fffff) {
+			mantissaBits = 0x7fffff;
+		}
+	} else {
+		mantissaBits = Math.round((normalized - 1) * 0x800000);
+		if (mantissaBits === 0x800000) {
+			biasedExponent += 1;
+			mantissaBits = 0;
+		}
+		if (biasedExponent >= 0xff) {
+			this._write((((sign << 31) >>> 0) | 0x7f800000) >>> 0, 4, true);
+			return;
+		}
+	}
+
+	var floatBits = ((((sign << 31) >>> 0) | ((biasedExponent & 0xff) << 23) | (mantissaBits & 0x7fffff)) >>> 0);
+	this._write(floatBits, 4, true);
 };
 
 Buffer.prototype.writeBytes = function(bytes, length, mustEqual) {
@@ -1339,12 +1388,106 @@ function isValid(value) {
 	return value !== undefined && value !== null && value !== '';
 }
 
+function hasPath(obj, path) {
+	var parts = path.split('.');
+	var current = obj;
+  
+	for (var i = 0; i < parts.length; i++) {
+	  	if (!current || !(parts[i] in current)) {
+			return false;
+	  	}
+	  	current = current[parts[i]];
+	}
+  
+	return true;
+}
+
+function getPath(obj, path) {
+	var parts = path.split('.');
+	var current = obj;
+  
+	for (var i = 0; i < parts.length; i++) {
+	  	var key = parts[i];
+  
+	  	if (!current || !(key in current)) {
+			return null;
+	  	}
+  
+	  	current = current[key];
+	}
+  
+	return current;
+}
+  
+
+function setPath(obj, path, value) {
+	var parts = path.split('.');
+	var current = obj;
+  
+	for (var i = 0; i < parts.length - 1; i++) {
+	  	var key = parts[i];
+  
+	  	if (!(key in current) || typeof current[key] !== 'object') {
+			current[key] = {};
+	  	}
+  
+	  	current = current[key];
+	}
+
+	current[parts[parts.length - 1]] = value;
+	return obj;
+}
+
+function convertName(propertyId, prefix) {
+	var parts = propertyId.split('.');
+	var lastPart = parts[parts.length - 1];
+	parts[parts.length - 1] = prefix + '_' + lastPart;
+	return parts.join('.');
+}
+
+function recoverName(propertyId, prefix) {
+	var parts = propertyId.split('.');
+	var lastPart = parts[parts.length - 1];
+	parts[parts.length - 1] = lastPart.replace(prefix + '_', '');
+	return parts.join('.');
+}
+
+function getAllLeafPaths(obj, prefix) {
+    var paths = [];
+
+    function recurse(current, path) {
+      if (Array.isArray(current)) {
+        current.forEach(function (item, index) {
+          var newPath = path ? (path + "." + index) : String(index);
+          recurse(item, newPath);
+        });
+  
+      } else if (typeof current === 'object' && current !== null) {
+        for (var key in current) {
+          if (Object.prototype.hasOwnProperty.call(current, key)) {
+            var newPath = path ? (path + "." + key) : key;
+            recurse(current[key], newPath);
+          }
+        }
+  
+      } else {
+        paths.push(path);
+      }
+    }
+  
+    recurse(obj, "");
+    return paths;  
+}
+
+function isInteger(str) {
+    return typeof str === 'string' && /^[0-9]+$/.test(str);
+}
 
 function cmdMap() {
 	return {
 		  "request_check_sequence_number": "ff",
 		  "request_check_order": "fe",
-		  "request_command_queries": "ef",
+		  "command_queries_reply": "ef",
 		  "request_query_all_configurations": "ee",
 		  "historical_data_report": "ed",
 		  "lorawan_configuration_settings": "cf",
@@ -1367,29 +1510,56 @@ function cmdMap() {
 		  "target_valve_opening_degree": "07",
 		  "low_battery_alarm": "08",
 		  "temperature_alarm": "09",
+		  "temperature_alarm.lower_range_alarm_deactivation": "0910",
+		  "temperature_alarm.lower_range_alarm_trigger": "0911",
+		  "temperature_alarm.over_range_alarm_deactivation": "0912",
+		  "temperature_alarm.over_range_alarm_trigger": "0913",
 		  "anti_freeze_protection_alarm": "0a",
+		  "anti_freeze_protection_alarm.lifted": "0a20",
+		  "anti_freeze_protection_alarm.trigger": "0a21",
 		  "mandatory_heating_alarm": "0b",
+		  "mandatory_heating_alarm.exit": "0b20",
+		  "mandatory_heating_alarm.enter": "0b21",
 		  "auto_away_report": "0c",
+		  "auto_away_report.inactive_by_target_temperature": "0c20",
+		  "auto_away_report.active_by_target_temperature": "0c21",
+		  "auto_away_report.inactive_by_target_valve_opening": "0c22",
+		  "auto_away_report.active_by_target_valve_opening": "0c23",
 		  "window_opening_alarm": "0d",
+		  "window_opening_alarm.release": "0d20",
+		  "window_opening_alarm.trigger": "0d21",
 		  "periodic_reporting": "0e",
+		  "periodic_reporting.non_heating_season": "0e00",
+		  "periodic_reporting.target_temperature_for_heating": "0e01",
+		  "periodic_reporting.target_valve_opening_for_heating": "0e02",
+		  "periodic_reporting.integrated_control_for_heating": "0e03",
 		  "random_key": "c9",
 		  "auto_p_enable": "c4",
 		  "temperature_unit": "60",
 		  "temperature_source_settings": "61",
+		  "temperature_source_settings.external_ntc_reception": "6101",
+		  "temperature_source_settings.lorawan_reception": "6102",
 		  "environment_temperature_display_enable": "62",
 		  "heating_period_settings": "63",
 		  "heating_period_settings.heating_date_settings": "6300",
 		  "heating_period_settings.heating_period_reporting_interval": "6301",
+		  "heating_period_settings.heating_period_reporting_interval.seconds_of_time": "630100",
+		  "heating_period_settings.heating_period_reporting_interval.minutes_of_time": "630101",
 		  "heating_period_settings.non_heating_period_reporting_interval": "6302",
+		  "heating_period_settings.non_heating_period_reporting_interval.seconds_of_time": "630200",
+		  "heating_period_settings.non_heating_period_reporting_interval.minutes_of_time": "630201",
 		  "heating_period_settings.valve_status_control": "6303",
-		  "target_temperature_control_settings": "65",
-		  "target_temperature_control_settings.enable": "6500",
-		  "target_temperature_control_settings.target_temperature_resolution": "6501",
-		  "target_temperature_control_settings.under_temperature_side_deadband": "6502",
-		  "target_temperature_control_settings.over_temperature_side_deadband": "6503",
-		  "target_temperature_control_settings.target_temperature_adjustment_range_min": "6504",
-		  "target_temperature_control_settings.target_temperature_adjustment_range_max": "6505",
-		  "target_temperature_control_settings.mode_settings": "6506",
+		  "temp_control": "65",
+		  "temp_control.enable": "6500",
+		  "temp_control.target_temperature_resolution": "6501",
+		  "temp_control.under_temperature_side_deadband": "6502",
+		  "temp_control.over_temperature_side_deadband": "6503",
+		  "temp_control.target_temperature_adjustment_range_min": "6504",
+		  "temp_control.target_temperature_adjustment_range_max": "6505",
+		  "temp_control.mode_settings": "6506",
+		  "temp_control.mode_settings.auto_control": "650600",
+		  "temp_control.mode_settings.valve_control": "650601",
+		  "temp_control.mode_settings.intergrated_control": "650602",
 		  "window_opening_detection_settings": "66",
 		  "auto_away_settings": "67",
 		  "anti_freeze_protection_setting": "68",
@@ -1439,4 +1609,162 @@ function cmdMap() {
 		  "reset": "bf",
 		  "reboot": "be"
 	};
+}
+function processTemperature(payload) {
+	var allTemperatureProperties = {
+    "temperature": {
+        "coefficient": 0.01
+    },
+    "target_temperature": {
+        "coefficient": 0.01
+    },
+    "temperature_alarm.lower_range_alarm_deactivation.temperature": {
+        "coefficient": 0.01
+    },
+    "temperature_alarm.lower_range_alarm_trigger.temperature": {
+        "coefficient": 0.01
+    },
+    "temperature_alarm.over_range_alarm_deactivation.temperature": {
+        "coefficient": 0.01
+    },
+    "temperature_alarm.over_range_alarm_trigger.temperature": {
+        "coefficient": 0.01
+    },
+    "anti_freeze_protection_alarm.lifted.environment_temperature": {
+        "coefficient": 0.01
+    },
+    "anti_freeze_protection_alarm.trigger.environment_temperature": {
+        "coefficient": 0.01
+    },
+    "mandatory_heating_alarm.exit.environment_temperature": {
+        "coefficient": 0.01
+    },
+    "mandatory_heating_alarm.enter.environment_temperature": {
+        "coefficient": 0.01
+    },
+    "auto_away_report.inactive_by_target_temperature.environment_temperature": {
+        "coefficient": 0.01
+    },
+    "auto_away_report.inactive_by_target_temperature.target_temperature": {
+        "coefficient": 0.01
+    },
+    "auto_away_report.active_by_target_temperature.environment_temperature": {
+        "coefficient": 0.01
+    },
+    "auto_away_report.active_by_target_temperature.target_temperature": {
+        "coefficient": 0.01
+    },
+    "auto_away_report.inactive_by_target_valve_opening.environment_temperature": {
+        "coefficient": 0.01
+    },
+    "auto_away_report.active_by_target_valve_opening.environment_temperature": {
+        "coefficient": 0.01
+    },
+    "window_opening_alarm.release.environment_temperature": {
+        "coefficient": 0.01
+    },
+    "window_opening_alarm.trigger.environment_temperature": {
+        "coefficient": 0.01
+    },
+    "periodic_reporting.target_temperature_for_heating.environment_temperature": {
+        "coefficient": 0.01
+    },
+    "periodic_reporting.target_temperature_for_heating.target_temperature": {
+        "coefficient": 0.01
+    },
+    "periodic_reporting.target_valve_opening_for_heating.environment_temperature": {
+        "coefficient": 0.01
+    },
+    "periodic_reporting.integrated_control_for_heating.environment_temperature": {
+        "coefficient": 0.01
+    },
+    "periodic_reporting.integrated_control_for_heating.target_temperature": {
+        "coefficient": 0.01
+    },
+    "temp_control.target_temperature_resolution": {
+        "coefficient": null
+    },
+    "temp_control.under_temperature_side_deadband": {
+        "coefficient": 0.01
+    },
+    "temp_control.over_temperature_side_deadband": {
+        "coefficient": 0.01
+    },
+    "temp_control.target_temperature_adjustment_range_min": {
+        "coefficient": 0.01
+    },
+    "temp_control.target_temperature_adjustment_range_max": {
+        "coefficient": 0.01
+    },
+    "temp_control.mode_settings.auto_control.target_temperature": {
+        "coefficient": 0.01
+    },
+    "temp_control.mode_settings.intergrated_control.target_temp": {
+        "coefficient": 0.01
+    },
+    "window_opening_detection_settings.cooling_rate": {
+        "coefficient": 0.01
+    },
+    "auto_away_settings.energy_saving_settings.energy_saving_temperature": {
+        "coefficient": 0.01
+    },
+    "anti_freeze_protection_setting.temperature_value": {
+        "coefficient": 0.01
+    },
+    "temperature_calibration_settings.calibration_value": {
+        "coefficient": 0.01
+    },
+    "temperature_alarm_settings.threshold_min": {
+        "coefficient": 0.01
+    },
+    "temperature_alarm_settings.threshold_max": {
+        "coefficient": 0.01
+    },
+    "schedule_settings._item.target_temperature": {
+        "coefficient": 0.01
+    },
+    "set_target_temperature.value": {
+        "coefficient": 0.01
+    },
+    "set_temperature.value": {
+        "coefficient": 0.01
+    }
+};
+    var leafPaths = getAllLeafPaths(payload);    
+	for (var i = 0; i < leafPaths.length; i++) {
+        var propertyId = leafPaths[i];
+        var propertyParts = propertyId.split('.');        
+        var newPropertyParts = []
+        for (var j = 0; j < propertyParts.length; j++) {
+            var part = propertyParts[j];
+            if (isInteger(part)) {
+                newPropertyParts.push('_item');
+            } else {
+                newPropertyParts.push(part);
+            }
+        }
+        var newPropertyId = newPropertyParts.join('.');
+        newPropertyId = recoverName(newPropertyId, 'fahrenheit');
+        newPropertyId = recoverName(newPropertyId, 'celsius');
+        propertyId = recoverName(propertyId, 'fahrenheit');
+        propertyId = recoverName(propertyId, 'celsius');
+        if (allTemperatureProperties[newPropertyId]) {            
+            var fahrenheitProperty = convertName(propertyId, 'fahrenheit');
+            var celsiusProperty = convertName(propertyId, 'celsius');
+            var stringCoefficient = String(allTemperatureProperties[newPropertyId].coefficient);
+            var dotIndex = stringCoefficient.indexOf('.');
+            var precision = dotIndex != -1 ? stringCoefficient.length - dotIndex - 1 : 0;
+            if (!hasPath(payload, propertyId)) {
+                if (hasPath(payload, fahrenheitProperty) && hasPath(payload, celsiusProperty)) { 
+                    throw new Error(fahrenheitProperty + ' and ' + celsiusProperty + ' cannot be in payload at the same time');
+                }
+                if (hasPath(payload, fahrenheitProperty)) {
+                    setPath(payload, propertyId, Number(((getPath(payload, fahrenheitProperty) - 32) / 1.8).toFixed(precision)));
+                } else if (hasPath(payload, celsiusProperty)) {
+                    setPath(payload, propertyId, Number(getPath(payload, celsiusProperty).toFixed(precision)));
+                }
+            }
+        }
+	}	
+	return payload;
 }
