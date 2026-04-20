@@ -106,6 +106,11 @@ function milesightDeviceDecode(bytes) {
             decoded.distance_alarm = readAlarmType(bytes[i + 2]);
             i += 3;
         }
+        // DISASSEMBLY ALARM
+        else if (channel_id === 0x88 && channel_type === 0x00) {
+            decoded.disassembly_alarm = readDisassemblyAlarmType(bytes[i]);
+            i += 1;
+        }
         // DOWNLINK RESPONSE
         else if (channel_id === 0xfe || channel_id === 0xff) {
             var result = handle_downlink_response(channel_type, bytes, i);
@@ -190,6 +195,30 @@ function handle_downlink_response(channel_type, bytes, offset) {
             decoded.install_height = readUInt16LE(bytes.slice(offset, offset + 2));
             offset += 2;
             break;
+        case 0xa1:
+            decoded.tilt_report_enable = readEnableStatus(bytes[offset]);
+            offset += 1;
+            break;
+        case 0xa2:
+            decoded.disassembly_alarm_config = {};
+            decoded.disassembly_alarm_config.enable = readEnableStatus(bytes[offset]);
+            decoded.disassembly_alarm_config.duration = readUInt8(bytes[offset + 1]);
+            offset += 2;
+            break;
+        case 0xa3:
+            decoded.sim_card_priority = readSimCardPriority(bytes[offset]);
+            offset += 1;
+            break;
+        case 0xa4:
+            decoded.background_convergence_interval = readUInt8(bytes[offset]);
+            offset += 1;
+            break;
+        case 0xa5:
+            decoded.tilt_calibration = readYesNoStatus(1);
+            break;
+        case 0xa6:
+            decoded.sensor_convergence = readYesNoStatus(1);
+            break;
         default:
             throw new Error("unknown downlink response");
     }
@@ -269,6 +298,11 @@ function readAlarmType(type) {
     return getValue(type_map, type);
 }
 
+function readDisassemblyAlarmType(type) {
+    var type_map = { 1: "device_abnormal_movement" };
+    return getValue(type_map, type);
+}
+
 function readMathConditionType(type) {
     var type_map = { 0: "disable", 1: "below", 2: "above", 3: "between", 4: "outside" };
     return getValue(type_map, type);
@@ -276,6 +310,11 @@ function readMathConditionType(type) {
 
 function readWorkingMode(type) {
     var type_map = { 0: "standard", 1: "bin" };
+    return getValue(type_map, type);
+}
+
+function readSimCardPriority(type) {
+    var type_map = { 0: "esim_first", 1: "physical_sim_first" };
     return getValue(type_map, type);
 }
 

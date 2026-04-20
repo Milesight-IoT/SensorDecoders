@@ -59,8 +59,26 @@ function milesightDeviceEncode(payload) {
     if ("tilt_linkage_distance_enable" in payload) {
         encoded = encoded.concat(setTiltLinkageDistanceEnable(payload.tilt_linkage_distance_enable));
     }
+    if ("tilt_report_enable" in payload) {
+        encoded = encoded.concat(setTiltReportEnable(payload.tilt_report_enable));
+    }
     if ("tof_detection_enable" in payload) {
         encoded = encoded.concat(setToFDetectionEnable(payload.tof_detection_enable));
+    }
+    if ("disassembly_alarm_config" in payload) {
+        encoded = encoded.concat(setDisassemblyAlarmConfig(payload.disassembly_alarm_config));
+    }
+    if ("sim_card_priority" in payload) {
+        encoded = encoded.concat(setSimCardPriority(payload.sim_card_priority));
+    }
+    if ("tilt_calibration" in payload) {
+        encoded = encoded.concat(setTiltCalibration(payload.tilt_calibration));
+    }
+    if ("sensor_convergence" in payload) {
+        encoded = encoded.concat(setSensorConvergence(payload.sensor_convergence));
+    }
+    if ("background_convergence_interval" in payload) {
+        encoded = encoded.concat(setBackgroundConvergenceInterval(payload.background_convergence_interval));
     }
     if ("standard_mode_alarm_config" in payload) {
         encoded = encoded.concat(setStandardModeAlarmConfig(payload.standard_mode_alarm_config));
@@ -251,6 +269,25 @@ function setTiltLinkageDistanceEnable(tilt_linkage_distance_enable) {
 }
 
 /**
+ * tilt report enable
+ * @param {number} tilt_report_enable values: (0: disable, 1: enable)
+ * @example { "tilt_report_enable": 1 }
+ */
+function setTiltReportEnable(tilt_report_enable) {
+    var enable_map = { 0: "disable", 1: "enable" };
+    var enable_values = getValues(enable_map);
+    if (enable_values.indexOf(tilt_report_enable) === -1) {
+        throw new Error("tilt_report_enable must be one of " + enable_values.join(", "));
+    }
+
+    var buffer = new Buffer(3);
+    buffer.writeUInt8(0xff);
+    buffer.writeUInt8(0xa1);
+    buffer.writeUInt8(getValue(enable_map, tilt_report_enable));
+    return buffer.toBytes();
+}
+
+/**
  * tof detection enable
  * @param {number} tof_detection_enable values: (0: disable, 1: enable)
  * @example { "tof_detection_enable": 1 }
@@ -266,6 +303,102 @@ function setToFDetectionEnable(tof_detection_enable) {
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0x56);
     buffer.writeUInt8(getValue(enable_map, tof_detection_enable));
+    return buffer.toBytes();
+}
+
+/**
+ * disassembly alarm config
+ * @param {object} disassembly_alarm_config
+ * @param {number} disassembly_alarm_config.enable values: (0: disable, 1: enable)
+ * @param {number} disassembly_alarm_config.duration unit: s, range: [1, 60]
+ * @example { "disassembly_alarm_config": { "enable": 1, "duration": 10 } }
+ */
+function setDisassemblyAlarmConfig(disassembly_alarm_config) {
+    var enable = disassembly_alarm_config.enable;
+    var duration = disassembly_alarm_config.duration;
+
+    var enable_map = { 0: "disable", 1: "enable" };
+    var enable_values = getValues(enable_map);
+    if (enable_values.indexOf(enable) === -1) {
+        throw new Error("disassembly_alarm_config.enable must be one of " + enable_values.join(", "));
+    }
+    if (duration < 1 || duration > 60) {
+        throw new Error("disassembly_alarm_config.duration must be in range [1, 60]");
+    }
+
+    var buffer = new Buffer(4);
+    buffer.writeUInt8(0xff);
+    buffer.writeUInt8(0xa2);
+    buffer.writeUInt8(getValue(enable_map, enable));
+    buffer.writeUInt8(duration);
+    return buffer.toBytes();
+}
+
+/**
+ * sim card priority
+ * @param {number} sim_card_priority values: (0: esim_first, 1: physical_sim_first)
+ * @example { "sim_card_priority": 1 }
+ */
+function setSimCardPriority(sim_card_priority) {
+    var priority_map = { 0: "esim_first", 1: "physical_sim_first" };
+    var priority_values = getValues(priority_map);
+    if (priority_values.indexOf(sim_card_priority) === -1) {
+        throw new Error("sim_card_priority must be one of " + priority_values.join(", "));
+    }
+
+    var buffer = new Buffer(3);
+    buffer.writeUInt8(0xff);
+    buffer.writeUInt8(0xa3);
+    buffer.writeUInt8(getValue(priority_map, sim_card_priority));
+    return buffer.toBytes();
+}
+
+/**
+ * tilt calibration
+ * @param {number} tilt_calibration values: (0: no, 1: yes)
+ * @example { "tilt_calibration": 1 }
+ */
+function setTiltCalibration(tilt_calibration) {
+    var yes_no_map = { 0: "no", 1: "yes" };
+    var yes_no_values = getValues(yes_no_map);
+    if (yes_no_values.indexOf(tilt_calibration) === -1) {
+        throw new Error("tilt_calibration must be one of " + yes_no_values.join(", "));
+    }
+
+    if (getValue(yes_no_map, tilt_calibration) === 0) {
+        return [];
+    }
+    return [0xff, 0xa5];
+}
+
+/**
+ * sensor convergence
+ * @param {number} sensor_convergence values: (0: no, 1: yes)
+ * @example { "sensor_convergence": 1 }
+ */
+function setSensorConvergence(sensor_convergence) {
+    var yes_no_map = { 0: "no", 1: "yes" };
+    var yes_no_values = getValues(yes_no_map);
+    if (yes_no_values.indexOf(sensor_convergence) === -1) {
+        throw new Error("sensor_convergence must be one of " + yes_no_values.join(", "));
+    }
+
+    if (getValue(yes_no_map, sensor_convergence) === 0) {
+        return [];
+    }
+    return [0xff, 0xa6];
+}
+
+/**
+ * background convergence interval
+ * @param {number} background_convergence_interval unit: h
+ * @example { "background_convergence_interval": 24 }
+ */
+function setBackgroundConvergenceInterval(background_convergence_interval) {
+    var buffer = new Buffer(3);
+    buffer.writeUInt8(0xff);
+    buffer.writeUInt8(0xa4);
+    buffer.writeUInt8(background_convergence_interval);
     return buffer.toBytes();
 }
 
