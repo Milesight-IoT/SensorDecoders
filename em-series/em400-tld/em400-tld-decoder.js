@@ -1,7 +1,7 @@
 /**
  * Payload Decoder
  *
- * Copyright 2024 Milesight IoT
+ * Copyright 2026 Milesight IoT
  *
  * @product EM400-TLD
  */
@@ -27,191 +27,174 @@ function Decoder(bytes, port) {
 /* eslint-enable */
 
 function milesightDeviceDecode(bytes) {
+    var buffer = new Buffer(bytes);
     var decoded = {};
 
-    for (var i = 0; i < bytes.length; ) {
-        var channel_id = bytes[i++];
-        var channel_type = bytes[i++];
+    decoded.start_flag = buffer.readUInt8();
+    decoded.id = buffer.readUInt16BE();
+    decoded.length = buffer.readUInt16BE();
+    decoded.flag = buffer.readUInt8();
+    decoded.frame_count = buffer.readUInt16BE();
+    decoded.protocol_version = buffer.readUInt8();
+    decoded.firmware_version = readNBIoTVersion(buffer.readAscii(4));
+    decoded.hardware_version = readNBIoTVersion(buffer.readAscii(4));
+    decoded.sn = buffer.readAscii(16);
+    decoded.imei = buffer.readAscii(15);
+    decoded.imsi = buffer.readAscii(15);
+    decoded.iccid = buffer.readAscii(20);
+    decoded.csq = buffer.readUInt8();
+    decoded.data_length = buffer.readUInt16BE();
+    decoded.data = decodeSensorData(buffer.slice(decoded.data_length));
 
-        // IPSO VERSION
-        if (channel_id === 0xff && channel_type === 0x01) {
-            decoded.ipso_version = readProtocolVersion(bytes[i]);
-            i += 1;
-        }
-        // HARDWARE VERSION
-        else if (channel_id === 0xff && channel_type === 0x09) {
-            decoded.hardware_version = readHardwareVersion(bytes.slice(i, i + 2));
-            i += 2;
-        }
-        // FIRMWARE VERSION
-        else if (channel_id === 0xff && channel_type === 0x0a) {
-            decoded.firmware_version = readFirmwareVersion(bytes.slice(i, i + 2));
-            i += 2;
-        }
-        // TSL VERSION
-        else if (channel_id === 0xff && channel_type === 0xff) {
-            decoded.tsl_version = readTslVersion(bytes.slice(i, i + 2));
-            i += 2;
-        }
-        // SERIAL NUMBER
-        else if (channel_id === 0xff && channel_type === 0x16) {
-            decoded.sn = readSerialNumber(bytes.slice(i, i + 8));
-            i += 8;
-        }
-        // LORAWAN CLASS TYPE
-        else if (channel_id === 0xff && channel_type === 0x0f) {
-            decoded.lorawan_class = readLoRaWANClass(bytes[i]);
-            i += 1;
-        }
-        // RESET EVENT
-        else if (channel_id === 0xff && channel_type === 0xfe) {
-            decoded.reset_event = readResetEvent(1);
-            i += 1;
-        }
-        // DEVICE STATUS
-        else if (channel_id === 0xff && channel_type === 0x0b) {
-            decoded.device_status = readDeviceStatus(1);
-            i += 1;
-        }
+    return decoded;
+}
 
-        // BATTERY
-        else if (channel_id === 0x01 && channel_type === 0x75) {
-            decoded.battery = readUInt8(bytes[i]);
-            i += 1;
-        }
-        // TEMPERATURE
-        else if (channel_id === 0x03 && channel_type === 0x67) {
-            decoded.temperature = readInt16LE(bytes.slice(i, i + 2)) / 10;
-            i += 2;
-        }
-        // DISTANCE
-        else if (channel_id === 0x04 && channel_type === 0x82) {
-            decoded.distance = readUInt16LE(bytes.slice(i, i + 2));
-            i += 2;
-        }
-        // POSITION
-        else if (channel_id === 0x05 && channel_type === 0x00) {
-            decoded.position = readPositionType(bytes[i]);
-            i += 1;
-        }
-        // TEMPERATURE WITH ABNORMAL
-        else if (channel_id === 0x83 && channel_type === 0x67) {
-            decoded.temperature = readInt16LE(bytes.slice(i, i + 2)) / 10;
-            decoded.temperature_alarm = readAlarmType(bytes[i + 2]);
-            i += 3;
-        }
-        // DISTANCE WITH ALARMING
-        else if (channel_id === 0x84 && channel_type === 0x82) {
-            decoded.distance = readUInt16LE(bytes.slice(i, i + 2));
-            decoded.distance_alarm = readAlarmType(bytes[i + 2]);
-            i += 3;
-        }
-        // DISASSEMBLY ALARM
-        else if (channel_id === 0x88 && channel_type === 0x00) {
-            decoded.disassembly_alarm = readDisassemblyAlarmType(bytes[i]);
-            i += 1;
-        }
-        // DOWNLINK RESPONSE
-        else if (channel_id === 0xfe || channel_id === 0xff) {
-            var result = handle_downlink_response(channel_type, bytes, i);
-            decoded = Object.assign(decoded, result.data);
-            i = result.offset;
+function decodeSensorData(bytes) {
+    var decoded = {};
+    var buffer = new Buffer(bytes);
+
+    if (bytes.length === 0) {
+        return [];
+    }
+
+    while (buffer.remaining() > 0) {
+        var channel_id = buffer.readUInt8();
+        var channel_type = buffer.readUInt8();
+
+        if (channel_id === 0x01 && channel_type === 0x75) {
+            decoded.battery = buffer.readUInt8();
+        } else if (channel_id === 0x03 && channel_type === 0x67) {
+            decoded.temperature = buffer.readInt16LE() / 10;
+        } else if (channel_id === 0x04 && channel_type === 0x82) {
+            decoded.distances = readDistances(buffer, 16);
+        } else if (channel_id === 0x05 && channel_type === 0x00) {
+            decoded.position = readPositionType(buffer.readUInt8());
+        } else if (channel_id === 0x06 && channel_type === 0x88) {
+            var latitude_raw = buffer.readInt32LE();
+            var longitude_raw = buffer.readInt32LE();
+            var status = buffer.readUInt8();
+
+            decoded.latitude = latitude_raw === -1 ? null : latitude_raw / 1000000;
+            decoded.longitude = longitude_raw === -1 ? null : longitude_raw / 1000000;
+            decoded.motion_status = readMotionStatus(status & 0x0f);
+            decoded.geofence_status = readGeofenceStatus((status >> 4) & 0x0f);
+        } else if (channel_id === 0x08 && channel_type === 0xef) {
+            decoded.timestamp = buffer.readUInt32LE();
+        } else if (channel_id === 0x09 && channel_type === 0xa1) {
+            decoded.mnc = readAsciiString(buffer, 4);
+        } else if (channel_id === 0x0a && channel_type === 0xa2) {
+            decoded.mcc = readAsciiString(buffer, 4);
+        } else if (channel_id === 0x0b && channel_type === 0xa3) {
+            decoded.cell_id = readAsciiString(buffer, 8);
+        } else if (channel_id === 0x0c && channel_type === 0xa4) {
+            decoded.lac = readAsciiString(buffer, 8);
+        } else if (channel_id === 0x0d && channel_type === 0xa5) {
+            decoded.package_status = readPackageStatus(buffer.readUInt8());
+        } else if (channel_id === 0x83 && channel_type === 0x67) {
+            decoded.temperature = buffer.readInt16LE() / 10;
+            decoded.temperature_alarm = readAlarmType(buffer.readUInt8());
+        } else if (channel_id === 0x84 && channel_type === 0x82) {
+            decoded.distances = readDistances(buffer, 16);
+            decoded.distance_alarm = readAlarmType(buffer.readUInt8());
+        } else if (channel_id === 0x85 && channel_type === 0x00) {
+            decoded.position_alarm = readPositionType(buffer.readUInt8());
+        } else if (channel_id === 0x88 && channel_type === 0x00) {
+            decoded.disassembly_alarm = readDisassemblyAlarmType(buffer.readUInt8());
+        } else if (channel_id === 0xfe || channel_id === 0xff) {
+            var result = handleDownlinkResponse(channel_id, channel_type, buffer);
+            decoded = Object.assign(decoded, result);
         } else {
             break;
         }
     }
 
-    return decoded;
+    return Object.keys(decoded).length > 0 ? [decoded] : [];
 }
 
-function handle_downlink_response(channel_type, bytes, offset) {
+function handleDownlinkResponse(channel_id, channel_type, buffer) {
     var decoded = {};
 
     switch (channel_type) {
         case 0x02:
-            decoded.collection_interval = readUInt16LE(bytes.slice(offset, offset + 2));
-            offset += 2;
+            decoded.collection_interval = buffer.readUInt32LE();
             break;
         case 0x03:
-            decoded.report_interval = readUInt16LE(bytes.slice(offset, offset + 2));
-            offset += 2;
+            decoded.report_interval = buffer.readUInt32LE();
             break;
         case 0x06:
-            var value = readUInt8(bytes[offset]);
-            var alarm_type = (value >>> 3) & 0x07;
-            var condition_type = value & 0x07;
-            var config = {};
-            config.condition = readMathConditionType(condition_type);
-            config.alarm_release_enable = readEnableStatus((value >>> 7) & 0x01);
-            config.threshold_min = readUInt16LE(bytes.slice(offset + 1, offset + 3));
-            config.threshold_max = readUInt16LE(bytes.slice(offset + 3, offset + 5));
-            // skip 4 bytes
-            offset += 9;
-            if (alarm_type === 1) {
-                decoded.standard_mode_alarm_config = config;
-            } else if (alarm_type === 2) {
-                decoded.bin_mode_alarm_config = config;
-            }
+            decoded.threshold_alarm_config = readThresholdAlarmConfig(buffer);
             break;
         case 0x10:
-            decoded.reboot = readYesNoStatus(1);
-            offset += 1;
+            decoded.reboot = readYesNoStatus(readActionStatus(channel_id, buffer, 0xff));
             break;
         case 0x13:
-            decoded.install_height_enable = readEnableStatus(bytes[offset]);
-            offset += 1;
+            decoded.bin_install_height_enable = readEnableStatus(buffer.readUInt8());
             break;
         case 0x1c:
-            decoded.recollection_config = {};
-            decoded.recollection_config.counts = bytes[offset];
-            decoded.recollection_config.interval = bytes[offset + 1];
-            offset += 2;
-            break;
-        case 0x28:
-            decoded.query_device_status = readYesNoStatus(1);
-            offset += 1;
+            decoded.recollection_time = buffer.readUInt8();
             break;
         case 0x3e:
-            decoded.tilt_linkage_distance_enable = readEnableStatus(bytes[offset]);
-            offset += 1;
-            break;
-        case 0x4a:
-            decoded.sync_time = readYesNoStatus(1);
-            offset += 1;
+            decoded.tilt_linkage_enable = readEnableStatus(buffer.readUInt8());
             break;
         case 0x56:
-            decoded.tof_detection_enable = readEnableStatus(bytes[offset]);
-            offset += 1;
+            decoded.tof_enable = readEnableStatus(buffer.readUInt8());
+            break;
+        case 0x58:
+            decoded.motion_detect_condition = {
+                move_holding_time: buffer.readUInt8(),
+                stop_holding_time: buffer.readUInt32LE(),
+            };
             break;
         case 0x70:
-            decoded.people_existing_height = readUInt16LE(bytes.slice(offset, offset + 2));
-            offset += 2;
+            decoded.existing_height = buffer.readUInt16LE();
             break;
         case 0x71:
-            decoded.working_mode = readWorkingMode(bytes[offset]);
-            offset += 1;
+            decoded.working_mode = readWorkingMode(buffer.readUInt8());
             break;
         case 0x77:
-            decoded.install_height = readUInt16LE(bytes.slice(offset, offset + 2));
-            offset += 2;
+            decoded.install_height = buffer.readUInt16LE();
+            break;
+        case 0x8e:
+            decoded.motion_report_config = {
+                enable: readEnableStatus(buffer.readUInt8()),
+                period: buffer.readUInt32LE(),
+            };
+            break;
+        case 0x9b:
+            decoded.galaxy_type = readGalaxyType(buffer.readUInt8());
+            break;
+        case 0x9c:
+            decoded.query_device_status = readYesNoStatus(1);
+            break;
+        case 0x9d:
+            decoded.query_device_position = readYesNoStatus(1);
+            break;
+        case 0x9e:
+            decoded.accumulated_packet_config = {
+                enable: readEnableStatus(buffer.readUInt8()),
+                count: buffer.readUInt8(),
+            };
+            break;
+        case 0x9f:
+            decoded.ack_enable = readEnableStatus(buffer.readUInt8());
+            break;
+        case 0xa0:
+            decoded.gps_enable = readEnableStatus(buffer.readUInt8());
             break;
         case 0xa1:
-            decoded.tilt_report_enable = readEnableStatus(bytes[offset]);
-            offset += 1;
+            decoded.tilt_report_enable = readEnableStatus(buffer.readUInt8());
             break;
         case 0xa2:
-            decoded.disassembly_alarm_config = {};
-            decoded.disassembly_alarm_config.enable = readEnableStatus(bytes[offset]);
-            decoded.disassembly_alarm_config.duration = readUInt8(bytes[offset + 1]);
-            offset += 2;
+            decoded.disassembly_alarm_config = {
+                enable: readEnableStatus(buffer.readUInt8()),
+                duration: buffer.readUInt8(),
+            };
             break;
         case 0xa3:
-            decoded.sim_card_priority = readSimCardPriority(bytes[offset]);
-            offset += 1;
+            decoded.sim_card_priority = readSimCardPriority(buffer.readUInt8());
             break;
         case 0xa4:
-            decoded.background_convergence_interval = readUInt8(bytes[offset]);
-            offset += 1;
+            decoded.background_convergence_interval = buffer.readUInt8();
             break;
         case 0xa5:
             decoded.tilt_calibration = readYesNoStatus(1);
@@ -223,59 +206,49 @@ function handle_downlink_response(channel_type, bytes, offset) {
             throw new Error("unknown downlink response");
     }
 
-    return { data: decoded, offset: offset };
+    return decoded;
 }
 
-function readProtocolVersion(bytes) {
-    var major = (bytes & 0xf0) >> 4;
-    var minor = bytes & 0x0f;
-    return "v" + major + "." + minor;
-}
+function readThresholdAlarmConfig(buffer) {
+    var ctrl = buffer.readUInt8();
 
-function readHardwareVersion(bytes) {
-    var major = (bytes[0] & 0xff).toString(16);
-    var minor = (bytes[1] & 0xff) >> 4;
-    return "v" + major + "." + minor;
-}
-
-function readFirmwareVersion(bytes) {
-    var major = (bytes[0] & 0xff).toString(16);
-    var minor = (bytes[1] & 0xff).toString(16);
-    return "v" + major + "." + minor;
-}
-
-function readTslVersion(bytes) {
-    var major = bytes[0] & 0xff;
-    var minor = bytes[1] & 0xff;
-    return "v" + major + "." + minor;
-}
-
-function readSerialNumber(bytes) {
-    var temp = [];
-    for (var idx = 0; idx < bytes.length; idx++) {
-        temp.push(("0" + (bytes[idx] & 0xff).toString(16)).slice(-2));
-    }
-    return temp.join("");
-}
-
-function readLoRaWANClass(type) {
-    var class_map = {
-        0: "Class A",
-        1: "Class B",
-        2: "Class C",
-        3: "Class CtoB",
+    return {
+        condition: readMathConditionType(ctrl & 0x07),
+        id: (ctrl >> 3) & 0x07,
+        renew_alert: readEnableStatus((ctrl >> 7) & 0x01),
+        min: buffer.readUInt16LE(),
+        max: buffer.readUInt16LE(),
+        lock_time: buffer.readUInt16LE(),
+        continue_time: buffer.readUInt16LE(),
     };
-    return getValue(class_map, type);
 }
 
-function readResetEvent(status) {
-    var status_map = { 0: "normal", 1: "reset" };
-    return getValue(status_map, status);
+function readActionStatus(channel_id, buffer, success_value) {
+    var value = buffer.readUInt8();
+    if (channel_id === 0xfe) {
+        return value === success_value ? 1 : 0;
+    }
+
+    return value === success_value ? 1 : 0;
 }
 
-function readDeviceStatus(status) {
-    var status_map = { 0: "off", 1: "on" };
-    return getValue(status_map, status);
+function readDistances(buffer, count) {
+    var distances = [];
+    for (var i = 0; i < count; i++) {
+        distances.push(buffer.readUInt16LE());
+    }
+    return distances;
+}
+
+function readNBIoTVersion(version) {
+    var major = parseInt(version.slice(0, 2), 10);
+    var minor = parseInt(version.slice(2, 4), 10);
+    if (isNaN(major) || isNaN(minor)) return version;
+    return "v" + major + "." + minor;
+}
+
+function readAsciiString(buffer, length) {
+    return buffer.readAscii(length).replace(/\u0000.*$/, "");
 }
 
 function readYesNoStatus(status) {
@@ -298,18 +271,33 @@ function readAlarmType(type) {
     return getValue(type_map, type);
 }
 
+function readMotionStatus(status) {
+    var status_map = { 0: "unknown", 1: "start", 2: "moving", 3: "stop" };
+    return getValue(status_map, status);
+}
+
+function readGeofenceStatus(status) {
+    var status_map = { 0: "inside", 1: "outside", 2: "unset", 3: "unknown" };
+    return getValue(status_map, status);
+}
+
+function readPackageStatus(status) {
+    var status_map = { 0: "no_package", 1: "package_inserted" };
+    return getValue(status_map, status);
+}
+
 function readDisassemblyAlarmType(type) {
-    var type_map = { 1: "device_abnormal_movement" };
+    var type_map = { 0: "normal", 1: "device_abnormal_movement" };
     return getValue(type_map, type);
 }
 
 function readMathConditionType(type) {
-    var type_map = { 0: "disable", 1: "below", 2: "above", 3: "between", 4: "outside" };
+    var type_map = { 0: "disable", 1: "below", 2: "above", 3: "within", 4: "outside" };
     return getValue(type_map, type);
 }
 
 function readWorkingMode(type) {
-    var type_map = { 0: "standard", 1: "bin" };
+    var type_map = { 0: "standard", 1: "bin", 2: "parking" };
     return getValue(type_map, type);
 }
 
@@ -318,34 +306,15 @@ function readSimCardPriority(type) {
     return getValue(type_map, type);
 }
 
-/* eslint-disable */
-function readUInt8(bytes) {
-    return bytes & 0xff;
-}
-
-function readInt8(bytes) {
-    var ref = readUInt8(bytes);
-    return ref > 0x7f ? ref - 0x100 : ref;
-}
-
-function readUInt16LE(bytes) {
-    var value = (bytes[1] << 8) + bytes[0];
-    return value & 0xffff;
-}
-
-function readInt16LE(bytes) {
-    var ref = readUInt16LE(bytes);
-    return ref > 0x7fff ? ref - 0x10000 : ref;
-}
-
-function readUInt32LE(bytes) {
-    var value = (bytes[3] << 24) + (bytes[2] << 16) + (bytes[1] << 8) + bytes[0];
-    return (value & 0xffffffff) >>> 0;
-}
-
-function readInt32LE(bytes) {
-    var ref = readUInt32LE(bytes);
-    return ref > 0x7fffffff ? ref - 0x100000000 : ref;
+function readGalaxyType(type) {
+    var type_map = {
+        1: "beidou",
+        2: "glonass_galileo",
+        3: "glonass_qzss",
+        4: "glonass",
+        5: "auto_base_mcc",
+    };
+    return getValue(type_map, type);
 }
 
 function getValue(map, key) {
@@ -356,40 +325,102 @@ function getValue(map, key) {
     return value;
 }
 
-//if (!Object.assign) {
-    Object.defineProperty(Object, "assign", {
-        enumerable: false,
-        configurable: true,
-        writable: true,
-        value: function (target) {
-            "use strict";
-            if (target == null) {
-                throw new TypeError("Cannot convert first argument to object");
+function Buffer(bytes) {
+    this.bytes = bytes;
+    this.length = bytes.length;
+    this.offset = 0;
+}
+
+Buffer.prototype.readUInt8 = function () {
+    var value = this.bytes[this.offset];
+    this.offset += 1;
+    return value & 0xff;
+};
+
+Buffer.prototype.readUInt16LE = function () {
+    var value = (this.bytes[this.offset + 1] << 8) + this.bytes[this.offset];
+    this.offset += 2;
+    return value & 0xffff;
+};
+
+Buffer.prototype.readInt16LE = function () {
+    var value = this.readUInt16LE();
+    return value > 0x7fff ? value - 0x10000 : value;
+};
+
+Buffer.prototype.readUInt16BE = function () {
+    var value = (this.bytes[this.offset] << 8) + this.bytes[this.offset + 1];
+    this.offset += 2;
+    return value & 0xffff;
+};
+
+Buffer.prototype.readUInt32LE = function () {
+    var value = (this.bytes[this.offset + 3] << 24) + (this.bytes[this.offset + 2] << 16) + (this.bytes[this.offset + 1] << 8) + this.bytes[this.offset];
+    this.offset += 4;
+    return (value & 0xffffffff) >>> 0;
+};
+
+Buffer.prototype.readInt32LE = function () {
+    var value = this.readUInt32LE();
+    return value > 0x7fffffff ? value - 0x100000000 : value;
+};
+
+Buffer.prototype.readAscii = function (length) {
+    var str = String.fromCharCode.apply(null, this.bytes.slice(this.offset, this.offset + length));
+    this.offset += length;
+    return str;
+};
+
+Buffer.prototype.readHex = function (length) {
+    var result = [];
+    for (var i = 0; i < length; i++) {
+        result.push(("0" + this.bytes[this.offset + i].toString(16)).slice(-2));
+    }
+    this.offset += length;
+    return result.join("");
+};
+
+Buffer.prototype.slice = function (length) {
+    return this.bytes.slice(this.offset, this.offset + length);
+};
+
+Buffer.prototype.remaining = function () {
+    return this.bytes.length - this.offset;
+};
+
+/* eslint-disable */
+Object.defineProperty(Object, "assign", {
+    enumerable: false,
+    configurable: true,
+    writable: true,
+    value: function (target) {
+        "use strict";
+        if (target == null) {
+            throw new TypeError("Cannot convert first argument to object");
+        }
+
+        var to = Object(target);
+        for (var i = 1; i < arguments.length; i++) {
+            var nextSource = arguments[i];
+            if (nextSource == null) {
+                continue;
             }
+            nextSource = Object(nextSource);
 
-            var to = Object(target);
-            for (var i = 1; i < arguments.length; i++) {
-                var nextSource = arguments[i];
-                if (nextSource == null) {
-                    continue;
-                }
-                nextSource = Object(nextSource);
-
-                var keysArray = Object.keys(Object(nextSource));
-                for (var nextIndex = 0, len = keysArray.length; nextIndex < len; nextIndex++) {
-                    var nextKey = keysArray[nextIndex];
-                    var desc = Object.getOwnPropertyDescriptor(nextSource, nextKey);
-                    if (desc !== undefined && desc.enumerable) {
-                        // concat array
-                        if (Array.isArray(to[nextKey]) && Array.isArray(nextSource[nextKey])) {
-                            to[nextKey] = to[nextKey].concat(nextSource[nextKey]);
-                        } else {
-                            to[nextKey] = nextSource[nextKey];
-                        }
+            var keysArray = Object.keys(Object(nextSource));
+            for (var nextIndex = 0, len = keysArray.length; nextIndex < len; nextIndex++) {
+                var nextKey = keysArray[nextIndex];
+                var desc = Object.getOwnPropertyDescriptor(nextSource, nextKey);
+                if (desc !== undefined && desc.enumerable) {
+                    if (Array.isArray(to[nextKey]) && Array.isArray(nextSource[nextKey])) {
+                        to[nextKey] = to[nextKey].concat(nextSource[nextKey]);
+                    } else {
+                        to[nextKey] = nextSource[nextKey];
                     }
                 }
             }
-            return to;
-        },
-    });
-//}
+        }
+        return to;
+    },
+});
+/* eslint-enable */

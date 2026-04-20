@@ -1,7 +1,7 @@
 /**
  * Payload Encoder
  *
- * Copyright 2025 Milesight IoT
+ * Copyright 2026 Milesight IoT
  *
  * @product EM400-TLD
  */
@@ -30,40 +30,64 @@ function milesightDeviceEncode(payload) {
     var encoded = [];
 
     if ("reboot" in payload) {
-        encoded = encoded.concat(reboot(payload.reboot));
-    }
-    if ("sync_time" in payload) {
-        encoded = encoded.concat(syncTime(payload.sync_time));
-    }
-    if ("query_device_status" in payload) {
-        encoded = encoded.concat(queryDeviceStatus(payload.query_device_status));
-    }
-    if ("collection_interval" in payload) {
-        encoded = encoded.concat(setCollectionInterval(payload.collection_interval));
+        encoded = encoded.concat(setReboot(payload.reboot));
     }
     if ("report_interval" in payload) {
         encoded = encoded.concat(setReportInterval(payload.report_interval));
     }
-    if ("people_existing_height" in payload) {
-        encoded = encoded.concat(setPeopleExistingHeight(payload.people_existing_height));
+    if ("collection_interval" in payload) {
+        encoded = encoded.concat(setCollectionInterval(payload.collection_interval));
+    }
+    if ("existing_height" in payload) {
+        encoded = encoded.concat(setExistingHeight(payload.existing_height));
     }
     if ("install_height" in payload) {
         encoded = encoded.concat(setInstallHeight(payload.install_height));
     }
-    if ("install_height_enable" in payload) {
-        encoded = encoded.concat(setInstallHeightEnable(payload.install_height_enable));
-    }
     if ("working_mode" in payload) {
         encoded = encoded.concat(setWorkingMode(payload.working_mode));
     }
-    if ("tilt_linkage_distance_enable" in payload) {
-        encoded = encoded.concat(setTiltLinkageDistanceEnable(payload.tilt_linkage_distance_enable));
+    if ("tilt_linkage_enable" in payload) {
+        encoded = encoded.concat(setTiltLinkageEnable(payload.tilt_linkage_enable));
+    }
+    if ("tof_enable" in payload) {
+        encoded = encoded.concat(setTofEnable(payload.tof_enable));
+    }
+    if ("threshold_alarm_config" in payload) {
+        encoded = encoded.concat(setThresholdAlarmConfig(payload.threshold_alarm_config));
+    }
+    if ("recollection_time" in payload) {
+        encoded = encoded.concat(setRecollectionTime(payload.recollection_time));
+    }
+    if ("bin_install_height_enable" in payload) {
+        encoded = encoded.concat(setBinInstallHeightEnable(payload.bin_install_height_enable));
+    }
+    if ("motion_report_config" in payload) {
+        encoded = encoded.concat(setMotionReportConfig(payload.motion_report_config));
+    }
+    if ("motion_detect_condition" in payload) {
+        encoded = encoded.concat(setMotionDetectCondition(payload.motion_detect_condition));
+    }
+    if ("accumulated_packet_config" in payload) {
+        encoded = encoded.concat(setAccumulatedPacketConfig(payload.accumulated_packet_config));
+    }
+    if ("query_device_status" in payload) {
+        encoded = encoded.concat(setQueryDeviceStatus(payload.query_device_status));
+    }
+    if ("query_device_position" in payload) {
+        encoded = encoded.concat(setQueryDevicePosition(payload.query_device_position));
+    }
+    if ("galaxy_type" in payload) {
+        encoded = encoded.concat(setGalaxyType(payload.galaxy_type));
+    }
+    if ("ack_enable" in payload) {
+        encoded = encoded.concat(setAckEnable(payload.ack_enable));
+    }
+    if ("gps_enable" in payload) {
+        encoded = encoded.concat(setGpsEnable(payload.gps_enable));
     }
     if ("tilt_report_enable" in payload) {
         encoded = encoded.concat(setTiltReportEnable(payload.tilt_report_enable));
-    }
-    if ("tof_detection_enable" in payload) {
-        encoded = encoded.concat(setToFDetectionEnable(payload.tof_detection_enable));
     }
     if ("disassembly_alarm_config" in payload) {
         encoded = encoded.concat(setDisassemblyAlarmConfig(payload.disassembly_alarm_config));
@@ -71,138 +95,57 @@ function milesightDeviceEncode(payload) {
     if ("sim_card_priority" in payload) {
         encoded = encoded.concat(setSimCardPriority(payload.sim_card_priority));
     }
+    if ("background_convergence_interval" in payload) {
+        encoded = encoded.concat(setBackgroundConvergenceInterval(payload.background_convergence_interval));
+    }
     if ("tilt_calibration" in payload) {
         encoded = encoded.concat(setTiltCalibration(payload.tilt_calibration));
     }
     if ("sensor_convergence" in payload) {
         encoded = encoded.concat(setSensorConvergence(payload.sensor_convergence));
     }
-    if ("background_convergence_interval" in payload) {
-        encoded = encoded.concat(setBackgroundConvergenceInterval(payload.background_convergence_interval));
-    }
-    if ("standard_mode_alarm_config" in payload) {
-        encoded = encoded.concat(setStandardModeAlarmConfig(payload.standard_mode_alarm_config));
-    }
-    if ("bin_mode_alarm_config" in payload) {
-        encoded = encoded.concat(setBinModeAlarmConfig(payload.bin_mode_alarm_config));
-    }
-    if ("recollection_config" in payload) {
-        encoded = encoded.concat(setRecollectionConfig(payload.recollection_config));
-    }
 
     return encoded;
 }
 
-/**
- * reboot
- * @param {number} reboot values: (0: no, 1: yes)
- * @example { "reboot": 1 }
- */
-function reboot(reboot) {
-    var yes_no_map = { 0: "no", 1: "yes" };
-    var reboot_values = getValues(yes_no_map);
-    if (reboot_values.indexOf(reboot) === -1) {
-        throw new Error("reboot must be one of " + reboot_values.join(", "));
-    }
-
-    if (getValue(yes_no_map, reboot) === 0) {
-        return [];
-    }
+function setReboot(reboot) {
+    validateEnum("reboot", reboot, ["no", "yes"]);
+    if (reboot === "no") return [];
     return [0xff, 0x10, 0xff];
 }
 
-/**
- * sync time
- * @param {number} sync_time values: (0: no, 1: yes)
- * @example { "sync_time": 1 }
- */
-function syncTime(sync_time) {
-    var yes_no_map = { 0: "no", 1: "yes" };
-    var yes_no_values = getValues(yes_no_map);
-    if (yes_no_values.indexOf(sync_time) === -1) {
-        throw new Error("sync_time must be one of " + yes_no_values.join(", "));
-    }
-
-    if (getValue(yes_no_map, sync_time) === 0) {
-        return [];
-    }
-    return [0xff, 0x4a, 0x00];
-}
-
-/**
- * query device status
- * @param {number} query_device_status values: (0: no, 1: yes)
- * @example { "query_device_status": 1 }
- */
-function queryDeviceStatus(query_device_status) {
-    var yes_no_map = { 0: "no", 1: "yes" };
-    var yes_no_values = getValues(yes_no_map);
-    if (yes_no_values.indexOf(query_device_status) === -1) {
-        throw new Error("query_device_status must be one of " + yes_no_values.join(", "));
-    }
-
-    if (getValue(yes_no_map, query_device_status) === 0) {
-        return [];
-    }
-    return [0xff, 0x28, 0xff];
-}
-
-/**
- * collection interval
- * @param {number} collection_interval unit: second, range: [60, 64800]
- * @example { "collection_interval": 60 }
- */
-function setCollectionInterval(collection_interval) {
-    if (collection_interval < 60 || collection_interval > 64800) {
-        throw new Error("collection_interval must be in range [60, 64800]");
-    }
-
-    var buffer = new Buffer(4);
-    buffer.writeUInt8(0xff);
-    buffer.writeUInt8(0x02);
-    buffer.writeUInt16LE(collection_interval);
-    return buffer.toBytes();
-}
-
-/**
- * report interval
- * @param {number} report_interval uint: second, range: [60, 64800]
- * @example payload: { "report_interval": 600 }
- */
 function setReportInterval(report_interval) {
-    if (report_interval < 60 || report_interval > 64800) {
-        throw new Error("report_interval must be between 60 and 64800");
-    }
+    validateUInt32("report_interval", report_interval);
 
-    var buffer = new Buffer(4);
+    var buffer = new Buffer(6);
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0x03);
-    buffer.writeUInt16LE(report_interval);
+    buffer.writeUInt32LE(report_interval);
     return buffer.toBytes();
 }
 
-/**
- * people existing height
- * @param {number} people_existing_height unit: mm
- * @example { "people_existing_height": 20 }
- */
-function setPeopleExistingHeight(people_existing_height) {
+function setCollectionInterval(collection_interval) {
+    validateUInt32("collection_interval", collection_interval);
+
+    var buffer = new Buffer(6);
+    buffer.writeUInt8(0xff);
+    buffer.writeUInt8(0x02);
+    buffer.writeUInt32LE(collection_interval);
+    return buffer.toBytes();
+}
+
+function setExistingHeight(existing_height) {
+    validateUInt16("existing_height", existing_height);
+
     var buffer = new Buffer(4);
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0x70);
-    buffer.writeUInt16LE(people_existing_height);
+    buffer.writeUInt16LE(existing_height);
     return buffer.toBytes();
 }
 
-/**
- * install height
- * @param {number} install_height unit: mm, range: [20, 3500]
- * @example { "install_height": 20 }
- */
 function setInstallHeight(install_height) {
-    if (install_height < 20 || install_height > 3500) {
-        throw new Error("install_height must be in range [20, 3500]");
-    }
+    validateUInt16("install_height", install_height);
 
     var buffer = new Buffer(4);
     buffer.writeUInt8(0xff);
@@ -211,190 +154,196 @@ function setInstallHeight(install_height) {
     return buffer.toBytes();
 }
 
-/**
- * install height enable
- * @param {number} install_height_enable values: (0: disable, 1: enable)
- * @example { "install_height_enable": 1 }
- */
-function setInstallHeightEnable(install_height_enable) {
-    var enable_map = { 0: "disable", 1: "enable" };
-    var enable_values = getValues(enable_map);
-    if (enable_values.indexOf(install_height_enable) === -1) {
-        throw new Error("install_height_enable must be one of " + enable_values.join(", "));
-    }
-
-    var buffer = new Buffer(3);
-    buffer.writeUInt8(0xff);
-    buffer.writeUInt8(0x13);
-    buffer.writeUInt8(getValue(enable_map, install_height_enable));
-    return buffer.toBytes();
-}
-
-/**
- * working mode
- * @param {number} working_mode values: (0: standard, 1: bin)
- * @example { "working_mode": 0 }
- */
 function setWorkingMode(working_mode) {
-    var working_mode_map = { 0: "standard", 1: "bin" };
-    var working_mode_values = getValues(working_mode_map);
-    if (working_mode_values.indexOf(working_mode) === -1) {
-        throw new Error("working_mode must be one of " + working_mode_values.join(", "));
-    }
+    validateEnum("working_mode", working_mode, ["standard", "bin"]);
 
     var buffer = new Buffer(3);
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0x71);
-    buffer.writeUInt8(getValue(working_mode_map, working_mode));
+    buffer.writeUInt8(getValue({ 0: "standard", 1: "bin" }, working_mode));
     return buffer.toBytes();
 }
 
-/**
- * tilt linkage distance enable
- * @param {number} tilt_linkage_distance_enable values: (0: disable, 1: enable)
- * @example { "tilt_linkage_distance_enable": 1 }
- */
-function setTiltLinkageDistanceEnable(tilt_linkage_distance_enable) {
-    var enable_map = { 0: "disable", 1: "enable" };
-    var enable_values = getValues(enable_map);
-    if (enable_values.indexOf(tilt_linkage_distance_enable) === -1) {
-        throw new Error("tilt_linkage_distance_enable must be one of " + enable_values.join(", "));
-    }
-
+function setTiltLinkageEnable(tilt_linkage_enable) {
     var buffer = new Buffer(3);
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0x3e);
-    buffer.writeUInt8(getValue(enable_map, tilt_linkage_distance_enable));
+    buffer.writeUInt8(readEnableValue("tilt_linkage_enable", tilt_linkage_enable));
     return buffer.toBytes();
 }
 
-/**
- * tilt report enable
- * @param {number} tilt_report_enable values: (0: disable, 1: enable)
- * @example { "tilt_report_enable": 1 }
- */
-function setTiltReportEnable(tilt_report_enable) {
-    var enable_map = { 0: "disable", 1: "enable" };
-    var enable_values = getValues(enable_map);
-    if (enable_values.indexOf(tilt_report_enable) === -1) {
-        throw new Error("tilt_report_enable must be one of " + enable_values.join(", "));
-    }
-
-    var buffer = new Buffer(3);
-    buffer.writeUInt8(0xff);
-    buffer.writeUInt8(0xa1);
-    buffer.writeUInt8(getValue(enable_map, tilt_report_enable));
-    return buffer.toBytes();
-}
-
-/**
- * tof detection enable
- * @param {number} tof_detection_enable values: (0: disable, 1: enable)
- * @example { "tof_detection_enable": 1 }
- */
-function setToFDetectionEnable(tof_detection_enable) {
-    var enable_map = { 0: "disable", 1: "enable" };
-    var enable_values = getValues(enable_map);
-    if (enable_values.indexOf(tof_detection_enable) === -1) {
-        throw new Error("tof_detection_enable must be one of " + enable_values.join(", "));
-    }
-
+function setTofEnable(tof_enable) {
     var buffer = new Buffer(3);
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0x56);
-    buffer.writeUInt8(getValue(enable_map, tof_detection_enable));
+    buffer.writeUInt8(readEnableValue("tof_enable", tof_enable));
     return buffer.toBytes();
 }
 
-/**
- * disassembly alarm config
- * @param {object} disassembly_alarm_config
- * @param {number} disassembly_alarm_config.enable values: (0: disable, 1: enable)
- * @param {number} disassembly_alarm_config.duration unit: s, range: [1, 60]
- * @example { "disassembly_alarm_config": { "enable": 1, "duration": 10 } }
- */
-function setDisassemblyAlarmConfig(disassembly_alarm_config) {
-    var enable = disassembly_alarm_config.enable;
-    var duration = disassembly_alarm_config.duration;
+function setThresholdAlarmConfig(threshold_alarm_config) {
+    var condition = threshold_alarm_config.condition;
+    var id = threshold_alarm_config.id;
+    var renew_alert = threshold_alarm_config.renew_alert;
+    var min = threshold_alarm_config.min;
+    var max = threshold_alarm_config.max;
+    var lock_time = threshold_alarm_config.lock_time;
+    var continue_time = threshold_alarm_config.continue_time;
 
-    var enable_map = { 0: "disable", 1: "enable" };
-    var enable_values = getValues(enable_map);
-    if (enable_values.indexOf(enable) === -1) {
-        throw new Error("disassembly_alarm_config.enable must be one of " + enable_values.join(", "));
-    }
-    if (duration < 1 || duration > 60) {
-        throw new Error("disassembly_alarm_config.duration must be in range [1, 60]");
-    }
+    validateEnum("threshold_alarm_config.condition", condition, ["disable", "below", "above", "within", "outside"]);
+    validateRange("threshold_alarm_config.id", id, 0, 7);
+    validateEnable("threshold_alarm_config.renew_alert", renew_alert);
+    validateUInt16("threshold_alarm_config.min", min);
+    validateUInt16("threshold_alarm_config.max", max);
+    validateUInt16("threshold_alarm_config.lock_time", lock_time);
+    validateUInt16("threshold_alarm_config.continue_time", continue_time);
+
+    var ctrl = 0x00;
+    ctrl |= getValue({ 0: "disable", 1: "below", 2: "above", 3: "within", 4: "outside" }, condition);
+    ctrl |= (id & 0x07) << 3;
+    ctrl |= readEnableValue("threshold_alarm_config.renew_alert", renew_alert) << 7;
+
+    var buffer = new Buffer(11);
+    buffer.writeUInt8(0xff);
+    buffer.writeUInt8(0x06);
+    buffer.writeUInt8(ctrl);
+    buffer.writeUInt16LE(min);
+    buffer.writeUInt16LE(max);
+    buffer.writeUInt16LE(lock_time);
+    buffer.writeUInt16LE(continue_time);
+    return buffer.toBytes();
+}
+
+function setRecollectionTime(recollection_time) {
+    validateRange("recollection_time", recollection_time, 0, 255);
+
+    var buffer = new Buffer(3);
+    buffer.writeUInt8(0xff);
+    buffer.writeUInt8(0x1c);
+    buffer.writeUInt8(recollection_time);
+    return buffer.toBytes();
+}
+
+function setBinInstallHeightEnable(bin_install_height_enable) {
+    var buffer = new Buffer(3);
+    buffer.writeUInt8(0xff);
+    buffer.writeUInt8(0x13);
+    buffer.writeUInt8(readEnableValue("bin_install_height_enable", bin_install_height_enable));
+    return buffer.toBytes();
+}
+
+function setMotionReportConfig(motion_report_config) {
+    validateEnable("motion_report_config.enable", motion_report_config.enable);
+    validateUInt32("motion_report_config.period", motion_report_config.period);
+
+    var buffer = new Buffer(7);
+    buffer.writeUInt8(0xff);
+    buffer.writeUInt8(0x8e);
+    buffer.writeUInt8(readEnableValue("motion_report_config.enable", motion_report_config.enable));
+    buffer.writeUInt32LE(motion_report_config.period);
+    return buffer.toBytes();
+}
+
+function setMotionDetectCondition(motion_detect_condition) {
+    validateRange("motion_detect_condition.move_holding_time", motion_detect_condition.move_holding_time, 0, 255);
+    validateUInt32("motion_detect_condition.stop_holding_time", motion_detect_condition.stop_holding_time);
+
+    var buffer = new Buffer(7);
+    buffer.writeUInt8(0xff);
+    buffer.writeUInt8(0x58);
+    buffer.writeUInt8(motion_detect_condition.move_holding_time);
+    buffer.writeUInt32LE(motion_detect_condition.stop_holding_time);
+    return buffer.toBytes();
+}
+
+function setAccumulatedPacketConfig(accumulated_packet_config) {
+    validateEnable("accumulated_packet_config.enable", accumulated_packet_config.enable);
+    validateRange("accumulated_packet_config.count", accumulated_packet_config.count, 0, 255);
+
+    var buffer = new Buffer(4);
+    buffer.writeUInt8(0xff);
+    buffer.writeUInt8(0x9e);
+    buffer.writeUInt8(readEnableValue("accumulated_packet_config.enable", accumulated_packet_config.enable));
+    buffer.writeUInt8(accumulated_packet_config.count);
+    return buffer.toBytes();
+}
+
+function setQueryDeviceStatus(query_device_status) {
+    validateEnum("query_device_status", query_device_status, ["no", "yes"]);
+    if (query_device_status === "no") return [];
+    return [0xff, 0x9c];
+}
+
+function setQueryDevicePosition(query_device_position) {
+    validateEnum("query_device_position", query_device_position, ["no", "yes"]);
+    if (query_device_position === "no") return [];
+    return [0xff, 0x9d];
+}
+
+function setGalaxyType(galaxy_type) {
+    validateEnum("galaxy_type", galaxy_type, ["beidou", "glonass_galileo", "glonass_qzss", "glonass", "auto_base_mcc"]);
+
+    var buffer = new Buffer(3);
+    buffer.writeUInt8(0xff);
+    buffer.writeUInt8(0x9b);
+    buffer.writeUInt8(getValue({
+        1: "beidou",
+        2: "glonass_galileo",
+        3: "glonass_qzss",
+        4: "glonass",
+        5: "auto_base_mcc",
+    }, galaxy_type));
+    return buffer.toBytes();
+}
+
+function setAckEnable(ack_enable) {
+    var buffer = new Buffer(3);
+    buffer.writeUInt8(0xff);
+    buffer.writeUInt8(0x9f);
+    buffer.writeUInt8(readEnableValue("ack_enable", ack_enable));
+    return buffer.toBytes();
+}
+
+function setGpsEnable(gps_enable) {
+    var buffer = new Buffer(3);
+    buffer.writeUInt8(0xff);
+    buffer.writeUInt8(0xa0);
+    buffer.writeUInt8(readEnableValue("gps_enable", gps_enable));
+    return buffer.toBytes();
+}
+
+function setTiltReportEnable(tilt_report_enable) {
+    var buffer = new Buffer(3);
+    buffer.writeUInt8(0xff);
+    buffer.writeUInt8(0xa1);
+    buffer.writeUInt8(readEnableValue("tilt_report_enable", tilt_report_enable));
+    return buffer.toBytes();
+}
+
+function setDisassemblyAlarmConfig(disassembly_alarm_config) {
+    validateEnable("disassembly_alarm_config.enable", disassembly_alarm_config.enable);
+    validateRange("disassembly_alarm_config.duration", disassembly_alarm_config.duration, 1, 60);
 
     var buffer = new Buffer(4);
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0xa2);
-    buffer.writeUInt8(getValue(enable_map, enable));
-    buffer.writeUInt8(duration);
+    buffer.writeUInt8(readEnableValue("disassembly_alarm_config.enable", disassembly_alarm_config.enable));
+    buffer.writeUInt8(disassembly_alarm_config.duration);
     return buffer.toBytes();
 }
 
-/**
- * sim card priority
- * @param {number} sim_card_priority values: (0: esim_first, 1: physical_sim_first)
- * @example { "sim_card_priority": 1 }
- */
 function setSimCardPriority(sim_card_priority) {
-    var priority_map = { 0: "esim_first", 1: "physical_sim_first" };
-    var priority_values = getValues(priority_map);
-    if (priority_values.indexOf(sim_card_priority) === -1) {
-        throw new Error("sim_card_priority must be one of " + priority_values.join(", "));
-    }
+    validateEnum("sim_card_priority", sim_card_priority, ["esim_first", "physical_sim_first"]);
 
     var buffer = new Buffer(3);
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0xa3);
-    buffer.writeUInt8(getValue(priority_map, sim_card_priority));
+    buffer.writeUInt8(getValue({ 0: "esim_first", 1: "physical_sim_first" }, sim_card_priority));
     return buffer.toBytes();
 }
 
-/**
- * tilt calibration
- * @param {number} tilt_calibration values: (0: no, 1: yes)
- * @example { "tilt_calibration": 1 }
- */
-function setTiltCalibration(tilt_calibration) {
-    var yes_no_map = { 0: "no", 1: "yes" };
-    var yes_no_values = getValues(yes_no_map);
-    if (yes_no_values.indexOf(tilt_calibration) === -1) {
-        throw new Error("tilt_calibration must be one of " + yes_no_values.join(", "));
-    }
-
-    if (getValue(yes_no_map, tilt_calibration) === 0) {
-        return [];
-    }
-    return [0xff, 0xa5];
-}
-
-/**
- * sensor convergence
- * @param {number} sensor_convergence values: (0: no, 1: yes)
- * @example { "sensor_convergence": 1 }
- */
-function setSensorConvergence(sensor_convergence) {
-    var yes_no_map = { 0: "no", 1: "yes" };
-    var yes_no_values = getValues(yes_no_map);
-    if (yes_no_values.indexOf(sensor_convergence) === -1) {
-        throw new Error("sensor_convergence must be one of " + yes_no_values.join(", "));
-    }
-
-    if (getValue(yes_no_map, sensor_convergence) === 0) {
-        return [];
-    }
-    return [0xff, 0xa6];
-}
-
-/**
- * background convergence interval
- * @param {number} background_convergence_interval unit: h
- * @example { "background_convergence_interval": 24 }
- */
 function setBackgroundConvergenceInterval(background_convergence_interval) {
+    validateRange("background_convergence_interval", background_convergence_interval, 0, 255);
+
     var buffer = new Buffer(3);
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0xa4);
@@ -402,127 +351,45 @@ function setBackgroundConvergenceInterval(background_convergence_interval) {
     return buffer.toBytes();
 }
 
-/**
- * standard mode alarm config
- * @param {object} standard_mode_alarm_config
- * @param {number} standard_mode_alarm_config.condition values: (0: disable, 1: below, 2: above, 3: between, 4: outside)
- * @param {number} standard_mode_alarm_config.alarm_release_enable values: (0: disable, 1: enable)
- * @param {number} standard_mode_alarm_config.threshold_min unit: mm, range: [20, 3500]
- * @param {number} standard_mode_alarm_config.threshold_max unit: mm, range: [20, 3500]
- * @example { "standard_mode_alarm_config": { "condition": 1, "threshold_min": 10, "threshold_max": 20 } }
- */
-function setStandardModeAlarmConfig(standard_mode_alarm_config) {
-    var condition = standard_mode_alarm_config.condition;
-    var alarm_release_enable = standard_mode_alarm_config.alarm_release_enable;
-    var threshold_min = standard_mode_alarm_config.threshold_min;
-    var threshold_max = standard_mode_alarm_config.threshold_max;
-
-    var condition_map = { 0: "disable", 1: "below", 2: "above", 3: "between", 4: "outside" };
-    var condition_values = getValues(condition_map);
-    if (condition_values.indexOf(condition) === -1) {
-        throw new Error("standard_mode_alarm_config.condition must be one of " + condition_values.join(", "));
-    }
-    var enable_map = { 0: "disable", 1: "enable" };
-    var enable_values = getValues(enable_map);
-    if (enable_values.indexOf(alarm_release_enable) === -1) {
-        throw new Error("standard_mode_alarm_config.alarm_release_enable must be one of " + enable_values.join(", "));
-    }
-    if (threshold_min < 20 || threshold_min > 3500) {
-        throw new Error("standard_mode_alarm_config.threshold_min must be in range [20, 3500]");
-    }
-    if (threshold_max < 20 || threshold_max > 3500) {
-        throw new Error("standard_mode_alarm_config.threshold_max must be in range [20, 3500]");
-    }
-
-    var data = 0x00;
-    data |= getValue(condition_map, condition) << 0;
-    data |= 1 << 3; // standard mode
-    data |= getValue(enable_map, alarm_release_enable) << 7;
-
-    var buffer = new Buffer(11);
-    buffer.writeUInt8(0xff);
-    buffer.writeUInt8(0x06);
-    buffer.writeUInt8(data);
-    buffer.writeUInt16LE(threshold_min);
-    buffer.writeUInt16LE(threshold_max);
-    buffer.writeUInt16LE(0x00);
-    buffer.writeUInt16LE(0x00);
-    return buffer.toBytes();
+function setTiltCalibration(tilt_calibration) {
+    validateEnum("tilt_calibration", tilt_calibration, ["no", "yes"]);
+    if (tilt_calibration === "no") return [];
+    return [0xff, 0xa5];
 }
 
-/**
- * bin mode alarm config
- * @param {object} bin_mode_alarm_config
- * @param {number} bin_mode_alarm_config.condition values: (0: disable, 1: below, 2: above, 3: between, 4: outside)
- * @param {number} bin_mode_alarm_config.alarm_release_enable values: (0: disable, 1: enable)
- * @param {number} bin_mode_alarm_config.threshold_min unit: mm, range: [20, 3500]
- * @param {number} bin_mode_alarm_config.threshold_max unit: mm, range: [20, 3500]
- * @example { "bin_mode_alarm_config": { "condition": 1, "threshold_min": 10, "threshold_max": 20 } }
- */
-function setBinModeAlarmConfig(bin_mode_alarm_config) {
-    var condition = bin_mode_alarm_config.condition;
-    var alarm_release_enable = bin_mode_alarm_config.alarm_release_enable;
-    var threshold_min = bin_mode_alarm_config.threshold_min;
-    var threshold_max = bin_mode_alarm_config.threshold_max;
-
-    var condition_map = { 0: "disable", 1: "below", 2: "above", 3: "between", 4: "outside" };
-    var condition_values = getValues(condition_map);
-    if (condition_values.indexOf(condition) === -1) {
-        throw new Error("bin_mode_alarm_config.condition must be one of " + condition_values.join(", "));
-    }
-    var enable_map = { 0: "disable", 1: "enable" };
-    var enable_values = getValues(enable_map);
-    if (enable_values.indexOf(alarm_release_enable) === -1) {
-        throw new Error("bin_mode_alarm_config.alarm_release_enable must be one of " + enable_values.join(", "));
-    }
-    if (threshold_min < 20 || threshold_min > 3500) {
-        throw new Error("bin_mode_alarm_config.threshold_min must be in range [20, 3500]");
-    }
-    if (threshold_max < 20 || threshold_max > 3500) {
-        throw new Error("bin_mode_alarm_config.threshold_max must be in range [20, 3500]");
-    }
-
-    var data = 0x00;
-    data |= getValue(condition_map, condition) << 0;
-    data |= 2 << 3; // bin mode
-    data |= getValue(enable_map, alarm_release_enable) << 7;
-
-    var buffer = new Buffer(11);
-    buffer.writeUInt8(0xff);
-    buffer.writeUInt8(0x06);
-    buffer.writeUInt8(data);
-    buffer.writeUInt16LE(threshold_min);
-    buffer.writeUInt16LE(threshold_max);
-    buffer.writeUInt16LE(0x00);
-    buffer.writeUInt16LE(0x00);
-    return buffer.toBytes();
+function setSensorConvergence(sensor_convergence) {
+    validateEnum("sensor_convergence", sensor_convergence, ["no", "yes"]);
+    if (sensor_convergence === "no") return [];
+    return [0xff, 0xa6];
 }
 
-/**
- * recollection config
- * @param {object} recollection_config
- * @param {number} recollection_config.counts
- * @param {number} recollection_config.interval unit: s
- * @example { "recollection_config": { "counts": 1, "interval": 5 } }
- */
-function setRecollectionConfig(recollection_config) {
-    var counts = recollection_config.counts;
-    var interval = recollection_config.interval;
-
-    var buffer = new Buffer(4);
-    buffer.writeUInt8(0xff);
-    buffer.writeUInt8(0x1c);
-    buffer.writeUInt8(counts);
-    buffer.writeUInt8(interval);
-    return buffer.toBytes();
+function readEnableValue(key, value) {
+    validateEnable(key, value);
+    return getValue({ 0: "disable", 1: "enable" }, value);
 }
 
-function getValues(map) {
-    var values = [];
-    for (var key in map) {
-        values.push(RAW_VALUE ? parseInt(key) : map[key]);
+function validateEnable(key, value) {
+    validateEnum(key, value, ["disable", "enable"]);
+}
+
+function validateEnum(key, value, candidates) {
+    if (candidates.indexOf(value) === -1) {
+        throw new Error(key + " must be one of " + candidates.join(", "));
     }
-    return values;
+}
+
+function validateRange(key, value, min, max) {
+    if (typeof value !== "number" || value < min || value > max) {
+        throw new Error(key + " must be in range [" + min + ", " + max + "]");
+    }
+}
+
+function validateUInt16(key, value) {
+    validateRange(key, value, 0, 0xffff);
+}
+
+function validateUInt32(key, value) {
+    validateRange(key, value, 0, 0xffffffff);
 }
 
 function getValue(map, value) {
@@ -546,10 +413,10 @@ function Buffer(size) {
     }
 }
 
-Buffer.prototype._write = function (value, byteLength, isLittleEndian) {
+Buffer.prototype._write = function (value, byte_length, is_little_endian) {
     var offset = 0;
-    for (var index = 0; index < byteLength; index++) {
-        offset = isLittleEndian ? index << 3 : (byteLength - 1 - index) << 3;
+    for (var index = 0; index < byte_length; index++) {
+        offset = is_little_endian ? index << 3 : (byte_length - 1 - index) << 3;
         this.buffer[this.offset + index] = (value >> offset) & 0xff;
     }
 };
@@ -559,38 +426,13 @@ Buffer.prototype.writeUInt8 = function (value) {
     this.offset += 1;
 };
 
-Buffer.prototype.writeInt8 = function (value) {
-    this._write(value < 0 ? value + 0x100 : value, 1, true);
-    this.offset += 1;
-};
-
 Buffer.prototype.writeUInt16LE = function (value) {
     this._write(value, 2, true);
     this.offset += 2;
 };
 
-Buffer.prototype.writeInt16LE = function (value) {
-    this._write(value < 0 ? value + 0x10000 : value, 2, true);
-    this.offset += 2;
-};
-
-Buffer.prototype.writeUInt24LE = function (value) {
-    this._write(value, 3, true);
-    this.offset += 3;
-};
-
-Buffer.prototype.writeInt24LE = function (value) {
-    this._write(value < 0 ? value + 0x1000000 : value, 3, true);
-    this.offset += 3;
-};
-
 Buffer.prototype.writeUInt32LE = function (value) {
     this._write(value, 4, true);
-    this.offset += 4;
-};
-
-Buffer.prototype.writeInt32LE = function (value) {
-    this._write(value < 0 ? value + 0x100000000 : value, 4, true);
     this.offset += 4;
 };
 
