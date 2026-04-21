@@ -108,13 +108,13 @@ function milesightDeviceDecode(bytes) {
                 2: "cool",
                 3: "auto"
             };
-            decoded.temperature_control_info = {};
+            decoded.current_temperature_control_mode = {};
             // value = temperature_control_mode(0..1) + temperature_control_status(4..7)
-            decoded.temperature_control_info.temperature_control_mode = temperature_control_mode_map[(value >>> 0) & 0x03];
-            decoded.temperature_control_info.temperature_control_status = readTemperatureControlStatus((value >>> 4) & 0x0f);
+            decoded.current_temperature_control_mode.mode = temperature_control_mode_map[(value >>> 0) & 0x03];
+            decoded.current_temperature_control_mode.status = readTemperatureControlStatus((value >>> 4) & 0x0f);
             if (RAW_VALUE) {
-                decoded.temperature_control_info.temperature_control_mode_value = ((value >>> 0) & 0x03) + 1;
-                decoded.temperature_control_info.temperature_control_status_value = ((value >>> 4) & 0x0f) + 1;
+                decoded.current_temperature_control_mode.mode_value = ((value >>> 0) & 0x03) + 1;
+                decoded.current_temperature_control_mode.status_value = ((value >>> 4) & 0x0f) + 1;
             }
 
             i += 1;
@@ -134,13 +134,13 @@ function milesightDeviceDecode(bytes) {
                 { value: 3, name: "low speed" },
                 { value: 2, name: "on" }
             ];
-            decoded.fan_control_info = {};
+            decoded.fan_mode_setting = {};
             // value = fan_mode(0..1) + fan_status(2..3)
-            decoded.fan_control_info.fan_control_mode = fan_mode_map[(fan_data >>> 0) & 0x03]['name'];
-            decoded.fan_control_info.fan_control_status = fan_status_map[(fan_data >>> 2) & 0x07]['name'];
+            decoded.fan_mode_setting.mode = fan_mode_map[(fan_data >>> 0) & 0x03]['name'];
+            decoded.fan_mode_setting.status = fan_status_map[(fan_data >>> 2) & 0x07]['name'];
             if (RAW_VALUE) {
-                decoded.fan_control_info.fan_control_mode_value = fan_mode_map[(fan_data >>> 0) & 0x03]['value'];
-                decoded.fan_control_info.fan_control_status_value = fan_status_map[(fan_data >>> 2) & 0x07]['value'];
+                decoded.fan_mode_setting.mode_value = fan_mode_map[(fan_data >>> 0) & 0x03]['value'];
+                decoded.fan_mode_setting.status_value = fan_status_map[(fan_data >>> 2) & 0x07]['value'];
             }
             i += 1;
         }
@@ -387,10 +387,10 @@ function handle_downlink_response(channel_type, bytes, offset) {
                 { value: 3, name: "always on" },
                 { value: 4, name: "circulate" },
             ];
-            decoded.fan_mode = {};
-            decoded.fan_mode.mode = fan_mode_map[mode]['name'];
+            decoded.fan_mode_setting = {};
+            decoded.fan_mode_setting.mode = fan_mode_map[mode]['name'];
             if(RAW_VALUE) {
-                decoded.fan_mode.value = fan_mode_map[mode]['value'];
+                decoded.fan_mode_setting.mode_value = fan_mode_map[mode]['value'];
             }
             offset += 1;
             break;
@@ -531,7 +531,7 @@ function handle_downlink_response(channel_type, bytes, offset) {
             decoded.current_temperature_control_mode = {};
 
             if (RAW_VALUE) {
-                decoded.current_temperature_control_mode.value = mode + 1;
+                decoded.current_temperature_control_mode.mode_value = mode + 1;
                 decoded.current_temperature_control_mode.mode = mode_map[mode + 1];
             } else {
                 decoded.current_temperature_control_mode.mode = mode_map[mode + 1];
@@ -955,11 +955,11 @@ function handle_downlink_response_ext(code, channel_type, bytes, offset) {
             offset += 1;
             break;
         case 0x72:
-            decoded.center_cool_temp = readUInt16LE(bytes.slice(offset, offset + 2)) / 10;
+            decoded.cooling_setpoint = readUInt16LE(bytes.slice(offset, offset + 2)) / 10;
             offset += 2;
             break;
         case 0x73:
-            decoded.center_heat_temp = readUInt16LE(bytes.slice(offset, offset + 2)) / 10;
+            decoded.heating_setpoint = readUInt16LE(bytes.slice(offset, offset + 2)) / 10;
             offset += 2;
             break;
         case 0x74:
@@ -1340,7 +1340,7 @@ function readWires(wire1, wire2, wire3) {
 function readWiresRelay(status) {
     var relay = [];
     var relay_array = [ 'Y1', 'Y2', 'W1', 'W2', 'EH', 'G', 'OB' ];
-    for (var i = 0; i < relay_array.length - 1; i++) {
+    for (var i = 0; i < relay_array.length; i++) {
         if ((status >>> i) & 0x01) {
             relay.push(relay_array[i]);
         }
@@ -1404,7 +1404,7 @@ function readTemperatureControlSupportStatus(heat_mode_value, cool_mode_value) {
     enable.stage_5_heat = readEnableStatus((heat_mode_value >>> 4) & 0x01);
     enable.stage_1_cool = readEnableStatus((cool_mode_value >>> 0) & 0x01);
     enable.stage_2_cool = readEnableStatus((cool_mode_value >>> 1) & 0x01);
-    enable.stage_3_cool = readEnableStatus((cool_mode_value >>> 1) & 0x02);
+    enable.stage_3_cool = readEnableStatus((cool_mode_value >>> 2) & 0x01);
     return enable;
 }
 
@@ -1805,11 +1805,11 @@ function processTemperature(decoded) {
             "precision": 1,
             "constant": 0
         },
-        "center_cool_temp": {
+        "cooling_setpoint": {
             "precision": 1,
             "constant": 32
         },
-        "center_heat_temp": {
+        "heating_setpoint": {
             "precision": 1,
             "constant": 32
         },
