@@ -159,40 +159,7 @@
             "bacnet_unit_type": "UNITS_PERCENT_RELATIVE_HUMIDITY"
         },
         {
-            "id": "temperature_control_info.temperature_control_mode_value",
-            "name": "Temperature Control Mode (Value)",
-            "value": "1",
-            "unit": "",
-            "access_mode": "R",
-            "data_type": "ENUM",
-            "value_type": "UINT8",
-            "values": [
-                {
-                    "value": 1,
-                    "name": "heat"
-                },
-                {
-                    "value": 2,
-                    "name": "em heat"
-                },
-                {
-                    "value": 3,
-                    "name": "cool"
-                },
-                {
-                    "value": 4,
-                    "name": "auto"
-                }
-            ],
-            "bacnet_type": "multistate_input_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": [
-                "temperature_control_info.temperature_control_status_value"
-            ]
-        },
-        {
-            "id": "temperature_control_info.temperature_control_status_value",
+            "id": "current_temperature_control_mode.status_value",
             "name": "Temperature Control Status",
             "value": "",
             "unit": "",
@@ -245,44 +212,11 @@
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": [
-                "temperature_control_info.temperature_control_mode_value"
+                "current_temperature_control_mode.mode_value"
             ]
         },
         {
-            "id": "fan_control_info.fan_control_mode_value",
-            "name": "Fan Mode (Value)",
-            "value": "",
-            "unit": "",
-            "access_mode": "R",
-            "data_type": "ENUM",
-            "value_type": "UINT8",
-            "values": [
-                {
-                    "value": 1,
-                    "name": "disable"
-                },
-                {
-                    "value": 2,
-                    "name": "auto"
-                },
-                {
-                    "value": 3,
-                    "name": "always on"
-                },
-                {
-                    "value": 4,
-                    "name": "circulate"
-                }
-            ],
-            "bacnet_type": "multistate_input_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": [
-                "fan_control_info.fan_control_status_value"
-            ]
-        },
-        {
-            "id": "fan_control_info.fan_control_status_value",
+            "id": "fan_mode_setting.status_value",
             "name": "Fan Control Status (Value)",
             "value": "",
             "unit": "",
@@ -311,7 +245,7 @@
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": [
-                "fan_control_info.fan_control_mode_value"
+                "fan_mode_setting.mode_value"
             ]
         },
         {
@@ -426,8 +360,8 @@
             "bacnet_unit_type": "UNITS_NO_UNITS"
         },
         {
-            "id": "current_temperature_control_mode.value",
-            "name": "Current Temperature Control Mode (Value)",
+            "id": "current_temperature_control_mode.mode_value",
+            "name": "Temperature Control Mode (Value)",
             "value": "1",
             "unit": "",
             "access_mode": "RW",
@@ -456,14 +390,18 @@
             "bacnet_unit_type": "UNITS_NO_UNITS"
         },
         {
-            "id": "fan_mode.value",
-            "name": "Fan Mode (Value)",
+            "id": "fan_mode_setting.mode_value",
+            "name": "Fan Control Mode (Value)",
             "value": "2",
             "unit": "",
             "access_mode": "RW",
             "data_type": "ENUM",
             "value_type": "UINT8",
             "values": [
+                {
+                    "value": 1,
+                    "name": "disable"
+                },
                 {
                     "value": 2,
                     "name": "auto"
@@ -1339,8 +1277,8 @@
             "bacnet_unit_type": "UNITS_DELTA_DEGREES_FAHRENHEIT"
         },
         {
-            "id": "celsius_center_cool_temp",
-            "name": "Celsius Center Cool Temp",
+            "id": "celsius_cooling_setpoint",
+            "name": "Celsius Cooling Setpoint",
             "value": "29",
             "unit": "°C",
             "access_mode": "RW",
@@ -1352,8 +1290,8 @@
             "bacnet_unit_type": "UNITS_DEGREES_CELSIUS"
         },
         {
-            "id": "fahrenheit_center_cool_temp",
-            "name": "Fahrenheit Center Cool Temp",
+            "id": "fahrenheit_cooling_setpoint",
+            "name": "Fahrenheit Cooling Setpoint",
             "value": "84.2",
             "unit": "℉",
             "access_mode": "RW",
@@ -1365,8 +1303,8 @@
             "bacnet_unit_type": "UNITS_DEGREES_FAHRENHEIT"
         },
         {
-            "id": "celsius_center_heat_temp",
-            "name": "Celsius Center Heat Temp",
+            "id": "celsius_heating_setpoint",
+            "name": "Celsius Heating Setpoint",
             "value": "14.5",
             "unit": "°C",
             "access_mode": "RW",
@@ -1378,8 +1316,8 @@
             "bacnet_unit_type": "UNITS_DEGREES_CELSIUS"
         },
         {
-            "id": "fahrenheit_center_heat_temp",
-            "name": "Fahrenheit Center Heat Temp",
+            "id": "fahrenheit_heating_setpoint",
+            "name": "Fahrenheit Heating Setpoint",
             "value": "58",
             "unit": "℉",
             "access_mode": "RW",
@@ -1441,22 +1379,6 @@
             "bacnet_type": "analog_value_object",
             "bacnet_unit_type_id": 120,
             "bacnet_unit_type": "UNITS_DELTA_DEGREES_FAHRENHEIT"
-        },
-        {
-            "id": "screen_time_enable",
-            "name": "Screen Time Enable",
-            "value": "1",
-            "unit": "",
-            "access_mode": "RW",
-            "data_type": "BOOL",
-            "value_type": "UINT8",
-            "values": [
-                { "value": 0, "name": "disable" },
-                { "value": 1, "name": "enable" }
-            ],
-            "bacnet_type": "binary_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS"
         }
     ]
 }

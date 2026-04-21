@@ -96,8 +96,8 @@ function milesightDeviceEncode(payload) {
     if ("freeze_protection_config" in payload) {
         encoded = encoded.concat(setFreezeProtection(payload.freeze_protection_config));
     }
-    if ("fan_mode" in payload) {
-        encoded = encoded.concat(setFanMode(payload.fan_mode));
+    if ("fan_mode_setting" in payload) {
+        encoded = encoded.concat(setFanMode(payload.fan_mode_setting));
     }
     if ("fan_execute_time" in payload) {
         encoded = encoded.concat(setFanExecuteTime(payload.fan_execute_time));
@@ -331,11 +331,11 @@ function milesightDeviceEncode(payload) {
     if ("heating_setpoint_tolerance" in payload) {
         encoded = encoded.concat(setTemperatureSettingUInt8Value(payload.heating_setpoint_tolerance, [0.1, 5], "heating_setpoint_tolerance", 0x6f));
     }
-    if ("center_cool_temp" in payload) {
-        encoded = encoded.concat(setTemperatureSettingUInt16LEValue(payload.center_cool_temp, [5, 35], "center_cool_temp", 0x72));
+    if ("cooling_setpoint" in payload) {
+        encoded = encoded.concat(setTemperatureSettingUInt16LEValue(payload.cooling_setpoint, [5, 35], "cooling_setpoint", 0x72));
     }
-    if ("center_heat_temp" in payload) {
-        encoded = encoded.concat(setTemperatureSettingUInt16LEValue(payload.center_heat_temp, [5, 35], "center_heat_temp", 0x73));
+    if ("heating_setpoint" in payload) {
+        encoded = encoded.concat(setTemperatureSettingUInt16LEValue(payload.heating_setpoint, [5, 35], "heating_setpoint", 0x73));
     }
     if ("cooling_adjust_tolerance" in payload) {
         encoded = encoded.concat(setTemperatureSettingUInt16LEValue(payload.cooling_adjust_tolerance, [0.5, 16], "cooling_adjust_tolerance", 0x74));
@@ -915,23 +915,24 @@ function setTemperatureControlMode(temperature_control_mode) {
  * set current temperature control mode
  * @since v2.0
  * @param {object} current_temperature_control_mode
- * @param {number} current_temperature_control_mode.value values: (1: heat, 2: em heat, 3: cool, 4: auto)
+ * @param {number} current_temperature_control_mode.mode_value values: (1: heat, 2: em heat, 3: cool, 4: auto)
  * @param {string} current_temperature_control_mode.mode values: (heat, em heat, cool, auto)
- * @example { "current_temperature_control_mode": { "value": 1, "mode": "heat" } }
+ * @example { "current_temperature_control_mode": { "mode_value": 1, "mode": "heat" } }
  */
 function setCurrentTemperatureControlMode(current_temperature_control_mode) {
-    var value = current_temperature_control_mode.value;
-    var mode = current_temperature_control_mode.mode;
-    var temperature_mode_map = { 1: "heat", 2: "em_heat", 3: "cool", 4: "auto" };
+    var value = current_temperature_control_mode.mode_value;
+    
+    var temperature_mode_map = { 1: "heat", 2: "em heat", 3: "cool", 4: "auto" };
     var temperature_mode_values = getValues(temperature_mode_map);
 
     if (RAW_VALUE) {
         if (temperature_mode_values.indexOf(value) === -1) {
-            throw new Error("current_temperature_control_mode.value must be one of " + temperature_mode_values.join(", "));
+            throw new Error("current_temperature_control_mode.mode_value must be one of " + temperature_mode_values.join(", "));
         }
 
         return [0xff, 0xfb, value - 1];
     } else {
+        var mode = current_temperature_control_mode.mode;
         if (temperature_mode_values.indexOf(mode) === -1) {
             throw new Error("current_temperature_control_mode.mode must be one of " + temperature_mode_values.join(", "));
         }
@@ -1502,12 +1503,14 @@ function setFreezeProtection(freeze_protection_config) {
 }
 
 /**
- * @param {string} fan_mode values: (2: "auto", 3: "always on", 4: "circulate")
- * @example { "fan_mode": { "value": 2, "mode": "auto" } }
+ * @param {string} fan_mode_setting 
+ * @param {number} fan_mode_setting.mode_value values: (2: "auto", 3: "always on", 4: "circulate")
+ * @param {string} fan_mode_setting.mode values: (auto, always on, circulate)
+ * @example { "fan_mode_setting": { "mode_value": 2, "mode": "auto" } }
  */
-function setFanMode(fan_mode) {
-    var value = fan_mode.value;
-    var mode = fan_mode.mode;
+function setFanMode(fan_mode_setting) {
+    var value = fan_mode_setting.mode_value;
+    
     var fan_mode_map = [
         { value: 2, name: "auto" },
         { value: 3, name: "always on" },
@@ -1517,14 +1520,15 @@ function setFanMode(fan_mode) {
     if(RAW_VALUE) {
         var fan_mode_value_values = fan_mode_map.map(function(item) { return item.value; });
         if (fan_mode_value_values.indexOf(value) === -1) {
-            throw new Error("fan_mode.value must be one of " + fan_mode_value_values.join(", "));
+            throw new Error("fan_mode_setting.mode_value must be one of " + fan_mode_value_values.join(", "));
         }
 
         return [0xff, 0xb6, arrayFindIndex(fan_mode_map, function(item) { return item.value === value; })];
     } else {
+        var mode = fan_mode_setting.mode;
         var fan_mode_values = fan_mode_map.map(function(item) { return item.name; });
         if (fan_mode_values.indexOf(mode) === -1) {
-            throw new Error("fan_mode.mode must be one of " + fan_mode_values.join(", "));
+            throw new Error("fan_mode_setting.mode must be one of " + fan_mode_values.join(", "));
         }
 
         return [0xff, 0xb6, arrayFindIndex(fan_mode_map, function(item) { return item.name === mode; })];
@@ -2899,11 +2903,11 @@ function processTemperature(payload) {
             "coefficient": 0.1,
             "constant": 0
         },
-        "center_cool_temp": {
+        "cooling_setpoint": {
             "coefficient": 0.1,
             "constant": 32
         },
-        "center_heat_temp": {
+        "heating_setpoint": {
             "coefficient": 0.1,
             "constant": 32
         },
