@@ -55,15 +55,14 @@ function milesightDeviceEncode(payload) {
     if ("temperature_unit" in payload) {
         encoded = encoded.concat(setTemperatureUnitDisplay(payload.temperature_unit));
     }
+    if ("temperature_control" in payload) {
+        encoded = encoded.concat(setTemperatureControl(payload.temperature_control.mode, payload.temperature_control.target, payload.temperature_control.unit));
+    }
     if ("temperature_control_mode" in payload) {
-        if ("target_temperature" in payload) {
-            if ("temperature_unit" in payload) {
-                encoded = encoded.concat(setTemperatureControl(payload.temperature_control_mode, payload.target_temperature, payload.temperature_unit));
-            } else {
-                encoded = encoded.concat(setTemperatureTarget(payload.temperature_control_mode, payload.target_temperature));
-            }
+        if ("system_status" in payload) {
+            encoded = encoded.concat(setSystemStatusAndTemperatureControl(payload.system_status, payload.temperature_control_mode, payload.target_temperature));
         } else {
-            encoded = encoded.concat(setTemperatureControlMode(payload.temperature_control_mode));
+            encoded = encoded.concat(setTemperatureTarget(payload.temperature_control_mode, payload.target_temperature));
         }
     }
     if ("device_status" in payload) {
@@ -84,6 +83,9 @@ function milesightDeviceEncode(payload) {
     if ("temperature_source_config" in payload) {
         encoded = encoded.concat(setTemperatureSourceConfig(payload.temperature_source_config));
     }
+    if ("temperature_control_enable" in payload) {
+        encoded = encoded.concat(setTemperatureControlEnableStatus(payload.temperature_control_enable));
+    }
     if ("temperature" in payload) {
         encoded = encoded.concat(setOutsideTemperature(payload.temperature));
     }
@@ -99,6 +101,9 @@ function milesightDeviceEncode(payload) {
     if ("fan_mode_setting" in payload) {
         encoded = encoded.concat(setFanMode(payload.fan_mode_setting));
     }
+    if ("fan_delay" in payload) {
+        encoded = encoded.concat(setFanDelay(payload.fan_delay));
+    }
     if ("fan_execute_time" in payload) {
         encoded = encoded.concat(setFanExecuteTime(payload.fan_execute_time));
     }
@@ -113,6 +118,12 @@ function milesightDeviceEncode(payload) {
     }
     if ("plan_type" in payload) {
         encoded = encoded.concat(setPlanType(payload.plan_type));
+    }
+    if ("plan_cfg" in payload) {
+        for (var index = 0; index < payload.plan_cfg.length; index++) {
+            var plan = payload.plan_cfg[index];
+            encoded = encoded.concat(setPlan(plan));
+        }
     }
     if ("plan_schedule" in payload) {
         for (var schedule_index = 0; schedule_index < payload.plan_schedule.length; schedule_index++) {
@@ -331,11 +342,11 @@ function milesightDeviceEncode(payload) {
     if ("heating_setpoint_tolerance" in payload) {
         encoded = encoded.concat(setTemperatureSettingUInt8Value(payload.heating_setpoint_tolerance, [0.1, 5], "heating_setpoint_tolerance", 0x6f));
     }
-    if ("cooling_setpoint" in payload) {
-        encoded = encoded.concat(setTemperatureSettingUInt16LEValue(payload.cooling_setpoint, [5, 35], "cooling_setpoint", 0x72));
+    if ("center_cool_temp" in payload) {
+        encoded = encoded.concat(setTemperatureSettingUInt16LEValue(payload.center_cool_temp, [5, 35], "center_cool_temp", 0x72));
     }
-    if ("heating_setpoint" in payload) {
-        encoded = encoded.concat(setTemperatureSettingUInt16LEValue(payload.heating_setpoint, [5, 35], "heating_setpoint", 0x73));
+    if ("center_heat_temp" in payload) {
+        encoded = encoded.concat(setTemperatureSettingUInt16LEValue(payload.center_heat_temp, [5, 35], "center_heat_temp", 0x73));
     }
     if ("cooling_adjust_tolerance" in payload) {
         encoded = encoded.concat(setTemperatureSettingUInt16LEValue(payload.cooling_adjust_tolerance, [0.5, 16], "cooling_adjust_tolerance", 0x74));
@@ -610,14 +621,14 @@ function setSystemStatus(device_status) {
 }
 
 /**
- * set temperature control
+ * set system status and temperature control
  * @since v2.0
  * @param {number} system_status values: (0: off, 1: on)
  * @param {number} temperature_control_mode values: (0: heat, 1: em heat, 2: cool, 3: auto)
- * @param {number} target_temperature unit: celsius
+ * @param {number} target_temperature range: [5, 35]
  * @example { "system_status": 1, "temperature_control_mode": 2, "target_temperature": 25 }
  */
-function setTemperatureControl(system_status, temperature_control_mode, target_temperature) {
+function setSystemStatusAndTemperatureControl(system_status, temperature_control_mode, target_temperature) {
     var on_off_map = { 0: "off", 1: "on" };
     var on_off_values = getValues(on_off_map);
     if (on_off_values.indexOf(system_status) === -1) {
@@ -631,6 +642,9 @@ function setTemperatureControl(system_status, temperature_control_mode, target_t
     if (typeof target_temperature !== "number") {
         throw new Error("target_temperature must be a number");
     }
+    if (target_temperature < 5 || target_temperature > 35) {
+        throw new Error("target_temperature must be in range [5, 35]");
+    }
 
     var buffer = new Buffer(6);
     buffer.writeUInt8(0xf9);
@@ -638,6 +652,41 @@ function setTemperatureControl(system_status, temperature_control_mode, target_t
     buffer.writeUInt8(getValue(on_off_map, system_status));
     buffer.writeUInt8(getValue(temperature_control_mode_map, temperature_control_mode));
     buffer.writeInt16LE(target_temperature * 10);
+    return buffer.toBytes();
+}
+
+/**
+ * set temperature control
+ * @since v2.0
+ * @param {number} mode values: (0: heat, 1: em heat, 2: cool, 3: auto)
+ * @param {number} target range: [5, 95]
+ * @param {number} unit values: (0: celsius, 1: fahrenheit)
+ * @example { "mode": 2, "target": 25, "unit": 0 }
+ */
+function setTemperatureControl(mode, target, unit) {
+    var mode_map = { 0: "heat", 1: "em heat", 2: "cool", 3: "auto" };
+    var unit_map = { 0: "celsius", 1: "fahrenheit" };
+    var mode_values = getValues(mode_map);
+    var unit_values = getValues(unit_map);
+    if (mode_values.indexOf(mode) === -1) {
+        throw new Error("temperature_control_mode must be one of " + mode_values.join(", "));
+    }
+    if (unit_values.indexOf(unit) === -1) {
+        throw new Error("temperature_unit must be one of " + unit_values.join(", "));
+    }
+    if (target < 5 || target > 95) {
+        throw new Error("target_temperature must be in range [5, 95]");
+    }
+
+    var data = 0x00;
+    data |= getValue(unit_map, unit) << 7;
+    data |= target;
+
+    var buffer = new Buffer(4);
+    buffer.writeUInt8(0xff);
+    buffer.writeUInt8(0xb7);
+    buffer.writeUInt8(getValue(mode_map, mode));
+    buffer.writeUInt8(data);
     return buffer.toBytes();
 }
 
@@ -888,26 +937,6 @@ function setTemperatureTarget(temperature_control_mode, target_temperature) {
     buffer.writeUInt8(0xfa);
     buffer.writeUInt8(getValue(temperature_mode_map, temperature_control_mode));
     buffer.writeInt16LE(target_temperature * 10);
-    return buffer.toBytes();
-}
-
-/**
- * set temperature control mode
- * @since v1.3
- * @param {number} temperature_control_mode values: (0: heat, 1: em_heat, 2: cool, 3: auto)
- * @example { "temperature_control_mode": 2 }
- */
-function setTemperatureControlMode(temperature_control_mode) {
-    var temperature_mode_map = { 0: "heat", 1: "em_heat", 2: "cool", 3: "auto" };
-    var temperature_mode_values = getValues(temperature_mode_map);
-    if (temperature_mode_values.indexOf(temperature_control_mode) === -1) {
-        throw new Error("temperature_control_mode must be one of " + temperature_mode_values.join(", "));
-    }
-
-    var buffer = new Buffer(3);
-    buffer.writeUInt8(0xff);
-    buffer.writeUInt8(0xfb);
-    buffer.writeUInt8(getValue(temperature_mode_map, temperature_control_mode));
     return buffer.toBytes();
 }
 
@@ -1302,6 +1331,21 @@ function setTemperatureControlStage(stage, key, channel_type) {
 }
 
 /**
+ * set temperature control enable status
+ * @since v2.0
+ * @param {number} temperature_control_enable values: (0: disable, 1: enable)
+ * @example { "temperature_control_enable": 1 }
+ */
+function setTemperatureControlEnableStatus(temperature_control_enable) {
+    var enable_map = { 0: "disable", 1: "enable" };
+    var enable_values = getValues(enable_map);
+    if (enable_values.indexOf(temperature_control_enable) === -1) {
+        throw new Error("temperature_control_enable must be one of " + enable_values.join(", "));
+    }
+    return [0xff, 0xc5, getValue(enable_map, temperature_control_enable)];
+}
+
+/**
  * set temperature source config
  * @param {object} temperature_source_config
  * @param {number} temperature_source_config.source values: (0: disable, 1: lora, 2: d2d)
@@ -1414,7 +1458,7 @@ function setHumidityRange(humidity_range) {
  */
 function setTemperatureDehumidify(temperature_dehumidify) {
     var enable = temperature_dehumidify.enable;
-    var temperature_control_tolerance = temperature_dehumidify.temperature_control_tolerance;
+    var temperature_control_tolerance = temperature_dehumidify.temperature_tolerance;
 
     var enable_map = { 0: "disable", 1: "enable" };
     var enable_values = getValues(enable_map);
@@ -1535,6 +1579,30 @@ function setFanMode(fan_mode_setting) {
     }
 }
 
+function setFanDelay(fan_delay) {
+    var enable = fan_delay.enable;
+    var time = fan_delay.time;
+
+    var enable_map = { 0: "disable", 1: "enable" };
+    var enable_values = getValues(enable_map);
+    if (enable_values.indexOf(enable) === -1) {
+        throw new Error("fan_delay.enable must be one of " + enable_values.join(", "));
+    }
+    if (enable && typeof time !== "number") {
+        throw new Error("fan_delay.time must be a number");
+    }
+    if (enable && (time < 5 || time > 55)) {
+        throw new Error("fan_delay.time must be in range [5, 55]");
+    }
+
+    var buffer = new Buffer(3);
+    buffer.writeUInt8(0xf9);
+    buffer.writeUInt8(0x05);
+    buffer.writeUInt8(getValue(enable_map, enable));
+    buffer.writeUInt8(time);
+    return buffer.toBytes();
+}
+
 /**
  * set fan execute time
  * @since v1.3
@@ -1572,6 +1640,57 @@ function setPlanType(plan_type) {
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0xc2);
     buffer.writeUInt8(getValue(plan_type_map, plan_type));
+    return buffer.toBytes();
+}
+
+/**
+ * set plan
+ * @param {object} plan
+ * @param {number} plan.plan_id values: (0: wake, 1: away, 2: home, 3: sleep)
+ * @param {number} plan.temp_mode values: (0: heat, 1: em heat, 2: cool, 3: auto)
+ * @param {number} plan.fan_mode values: (0: auto, 1: on, 2: circulate)
+ * @param {number} plan.target
+ * @param {number} plan.error
+ * @example { "plan": { "plan_id": 1, "temp_mode": 0, "fan_mode": 0, "target": 20, "error": 1 } }
+ */
+function setPlan(plan) {
+    var plan_id = plan.plan_id;
+    var temp_mode = plan.temp_mode;
+    var fan_mode = plan.fan_mode;
+    var target = plan.target;
+    var error = plan.error;
+
+    var plan_id_map = { 0: "wake", 1: "away", 2: "home", 3: "sleep" };
+    var temp_mode_map = { 0: "heat", 1: "em heat", 2: "cool", 3: "auto" };
+    var fan_mode_map = { 0: "auto", 1: "on", 2: "circulate" };
+
+    var temp_mode_values = getValues(temp_mode_map);
+    var fan_mode_values = getValues(fan_mode_map);
+    var plan_id_values = getValues(plan_id_map);
+    if (plan_id_values.indexOf(plan_id) === -1) {
+        throw new Error("plan.plan_id must be one of " + plan_id_values.join(", "));
+    }
+    if (temp_mode_values.indexOf(temp_mode) === -1) {
+        throw new Error("plan.temp_mode must be one of " + temp_mode_values.join(", "));
+    }
+    if (fan_mode_values.indexOf(fan_mode) === -1) {
+        throw new Error("plan.fan_mode must be one of " + fan_mode_values.join(", "));
+    }
+    if (typeof target !== "number") {
+        throw new Error("plan.target must be a number");
+    }
+    if (typeof error !== "number") {
+        throw new Error("plan.error must be a number");
+    }
+
+    var buffer = new Buffer(5);
+    buffer.writeUInt8(0xff);
+    buffer.writeUInt8(0xc8);
+    buffer.writeUInt8(getValue(plan_id_map, plan_id));
+    buffer.writeUInt8(getValue(temp_mode_map, temp_mode));
+    buffer.writeUInt8(getValue(fan_mode_map, fan_mode));
+    buffer.writeUInt8(target);
+    buffer.writeUInt8(error * 10);
     return buffer.toBytes();
 }
 
@@ -2303,7 +2422,7 @@ function setDownHeart(heartbeat) {
  * @example { "fan_control_during_heating": 0 }
  */
 function setFanControlDuringHeating(fan_control_during_heating) {
-    var mode_map = { 0: "furnace", 1: "thermostat" };
+    var mode_map = { 0: "furnace/boiler", 1: "thermostat" };
     var mode_values = getValues(mode_map);
     if (mode_values.indexOf(fan_control_during_heating) === -1) {
         throw new Error("fan_control_during_heating must be one of " + mode_values.join(", "));
@@ -2903,11 +3022,11 @@ function processTemperature(payload) {
             "coefficient": 0.1,
             "constant": 0
         },
-        "cooling_setpoint": {
+        "center_cool_temp": {
             "coefficient": 0.1,
             "constant": 32
         },
-        "heating_setpoint": {
+        "center_heat_temp": {
             "coefficient": 0.1,
             "constant": 32
         },
