@@ -302,6 +302,10 @@ function handle_downlink_response(channel_type, bytes, offset) {
 
             decoded.temperature_alarm_config = data;
             break;
+        case 0x10:
+            decoded.reboot = readYesNoStatus(1);
+            offset += 1;
+            break;
         case 0x25:
             var masked = readUInt8(bytes[offset]);
             var status = readUInt8(bytes[offset + 1]);
@@ -395,10 +399,11 @@ function handle_downlink_response(channel_type, bytes, offset) {
             offset += 1;
             break;
         case 0xb7:
-            decoded.temperature_control_mode = readTemperatureControlMode(readUInt8(bytes[offset]));
+            decoded.temperature_control = {};
+            decoded.temperature_control.mode = readTemperatureControlMode(readUInt8(bytes[offset]));
             var t = readUInt8(bytes[offset + 1]);
-            decoded.target_temperature = t & 0x7f;
-            decoded.temperature_unit = readTemperatureUnit((t >>> 7) & 0x01);
+            decoded.temperature_control.target = t & 0x7f;
+            decoded.temperature_control.unit = readTemperatureUnit((t >>> 7) & 0x01);
             offset += 2;
             break;
         case 0xb8:
@@ -477,6 +482,13 @@ function handle_downlink_response(channel_type, bytes, offset) {
                 decoded.d2d_slave_enable = readEnableStatus((d2d_enable_status >> 1) & 0x01);
             }
             break;
+        case 0xc8:
+            var plan = readPlan(bytes.slice(offset, offset + 5));
+            offset += 5;
+
+            decoded.plan_cfg = decoded.plan_cfg || [];
+            decoded.plan_cfg.push(plan);
+            break;
         case 0xc9:
             var schedule = readPlanSchedule(bytes.slice(offset, offset + 6));
             offset += 6;
@@ -549,6 +561,12 @@ function handle_downlink_response_ext(code, channel_type, bytes, offset) {
     var decoded = {};
 
     switch (channel_type) {
+        case 0x05:
+            decoded.fan_delay = {};
+            decoded.fan_delay.enable = readEnableStatus(readUInt8(bytes[offset]));
+            decoded.fan_delay.time = readUInt8(bytes[offset + 1]);
+            offset += 2;
+            break;
         case 0x06:
             decoded.fan_execute_time = readUInt8(bytes[offset]);
             offset += 1;
@@ -955,11 +973,11 @@ function handle_downlink_response_ext(code, channel_type, bytes, offset) {
             offset += 1;
             break;
         case 0x72:
-            decoded.cooling_setpoint = readUInt16LE(bytes.slice(offset, offset + 2)) / 10;
+            decoded.center_cool_temp = readUInt16LE(bytes.slice(offset, offset + 2)) / 10;
             offset += 2;
             break;
         case 0x73:
-            decoded.heating_setpoint = readUInt16LE(bytes.slice(offset, offset + 2)) / 10;
+            decoded.center_heat_temp = readUInt16LE(bytes.slice(offset, offset + 2)) / 10;
             offset += 2;
             break;
         case 0x74:
@@ -1291,6 +1309,35 @@ function readOfflineControlMode(type) {
     return getValue(offline_control_mode_map, type);
 }
 
+function readPlanId(type) {
+    var plan_id_map = {
+        0: "wake",
+        1: "away",
+        2: "home",
+        3: "sleep"
+    };
+    return getValue(plan_id_map, type);
+}
+
+function readTempMode(type) {
+    var temperature_mode_map = {
+        0: "heat",
+        1: "em heat",
+        2: "cool",
+        3: "auto"
+    };
+    return getValue(temperature_mode_map, type);
+}
+
+function readOldFanMode(type) {
+    var fan_mode_map = {
+        0: "auto",
+        1: "on",
+        2: "circulate"
+    };
+    return getValue(fan_mode_map, type);
+}
+
 function readTemperatureControlMode(type) {
     var temperature_control_mode_map = {
         0: "heat",
@@ -1467,6 +1514,17 @@ function readDualTemperaturePlanConfig(bytes) {
         config.cool_temperature_tolerance = cool_temperature_tolerance_value / 10;
     }
     return config;
+}
+
+function readPlan(bytes) {
+    var offset = 0;
+    var plan = {};
+    plan.plan_id = readPlanId(bytes[offset]);
+    plan.temp_mode = readTempMode(bytes[offset + 1]);
+    plan.fan_mode = readOldFanMode(bytes[offset + 2]);
+    plan.target = readUInt8(bytes[offset + 3]);
+    plan.error = readUInt8(bytes[offset + 4]) / 10;
+    return plan;
 }
 
 function readPlanSchedule(bytes) {
@@ -1805,11 +1863,11 @@ function processTemperature(decoded) {
             "precision": 1,
             "constant": 0
         },
-        "cooling_setpoint": {
+        "center_cool_temp": {
             "precision": 1,
             "constant": 32
         },
-        "heating_setpoint": {
+        "center_heat_temp": {
             "precision": 1,
             "constant": 32
         },
