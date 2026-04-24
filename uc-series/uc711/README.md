@@ -63,12 +63,16 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Sub-command | 0x70 | 2 | rw | 0 |  |  |
 | Fan Mode | 0x70 | 2 | rw | 0 |  | 0：Auto<br>1：Ventilation<br>2：Always Open<br>3：Low<br>4：Medium<br>5：High<br>255：Disabled |
 | Adjust Humidity Enable | 0x70 | 2 | rw | 0 |  | 0：Disable<br>1：Enable |
-| Adjust Period | 0x70 | 2 | rw | 30 | 5 - 55 |  |
-| Work Time | 0x70 | 2 | rw | 30 | 5 - 55 |  |
+| Adjust Humidity Period | 0x70 | 2 | rw | 30 | 5 - 55 |  |
+| Circulate Work Time | 0x70 | 2 | rw | 30 | 5 - 55 |  |
 | Anti Freezing | 0x71 | 1 | rw |  |  |  |
 | Sub-command | 0x71 | 2 | rw | 0 |  |  |
 | Enable | 0x71 | 2 | rw | 0 |  | 0：Disable<br>1：Enable |
 | Target Temperature | 0x71 | 3 | rw | 3 | 1 - 5 |  |
+| Dehumidify Settings | 0x72 | 1 | rw |  |  |  |
+| Sub-command | 0x72 | 2 | rw | 2 |  |  |
+| Humidify Low Threshold | 0x72 | 3 | rw | 40 | 0 - 100 |  |
+| Humidify High Threshold | 0x72 | 3 | rw | 80 | 0 - 100 |  |
 | Temperature Control Mode Enable | 0x75 | 2 | rw |  |  |  |
 | Heat Mode | 0x75 | 2 | rw | 0 |  | 0：disable<br>1：enable |
 | EM Heat Mode | 0x75 | 2 | rw | 0 |  | 0：disable<br>1：enable |
@@ -82,9 +86,18 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Reversing Valve Mode | 0x8E | 1 | rw |  |  |  |
 | Reversing Valve Mode | 0x8E | 2 | rw | 1 |  | 0：o/b on heat<br>1：o/b on cool |
 
+### Event
+
+| CHANNEL |  ID  | LENGTH | READ/WRITE | DEFAULT | RANGE | ENUM |
+| :------ | :--: | :----: | :--------: | :-----: | :---: | :--: |
+| Temperature  Alarm | 0x02 | 1 | r |  |  |  |
+
 ### Service
 
 | CHANNEL |  ID  | LENGTH | READ/WRITE | DEFAULT | RANGE | ENUM |
 | :------ | :--: | :----: | :--------: | :-----: | :---: | :--: |
+| Alarm Type | 0x02 | 2 | r |  |  |  |
+| Freeze Protection Alarm Released | 0x02 | 3 | r |  |  |  |
+| Freeze Protection Alarm | 0x02 | 3 | r |  |  |  |
 | Time Synchronize | 0xB8 | 1 | w |  |  |  |
 

@@ -74,6 +74,16 @@ function milesightDeviceDecode(bytes) {
 				decoded.relay_status_change.GH = extractBits(bitOptions, 5, 6);
 				decoded.relay_status_change.reserved = extractBits(bitOptions, 6, 8);
 				break;
+			case 0x02:
+				decoded.temperature_alarm = decoded.temperature_alarm || {};
+				decoded.temperature_alarm.type = readUInt8(bytes, counterObj, 1);
+				if (decoded.temperature_alarm.type == 0x10) {
+					decoded.temperature_alarm.anti_freeze_protection_deactivation = decoded.temperature_alarm.anti_freeze_protection_deactivation || {};
+				}
+				if (decoded.temperature_alarm.type == 0x11) {
+					decoded.temperature_alarm.anti_freeze_protection_trigger = decoded.temperature_alarm.anti_freeze_protection_trigger || {};
+				}
+				break;
 			case 0x06:
 				decoded.temperature = readInt16LE(bytes, counterObj, 2) / 100;
 				break;
@@ -184,6 +194,16 @@ function milesightDeviceDecode(bytes) {
 				}
 				if (anti_freezing_command == 0x01) {
 					decoded.anti_freezing.target_temperature = readInt16LE(bytes, counterObj, 2) / 100;
+				}
+				break;
+			case 0x72:
+				decoded.dehumidify_settings = decoded.dehumidify_settings || {};
+				var dehumidify_settings_command = readUInt8(bytes, counterObj, 1);
+				if (dehumidify_settings_command == 0x02) {
+					decoded.dehumidify_settings.humidify_low_threshold = readInt16LE(bytes, counterObj, 2) / 10;
+				}
+				if (dehumidify_settings_command == 0x03) {
+					decoded.dehumidify_settings.humidify_high_threshold = readInt16LE(bytes, counterObj, 2) / 10;
 				}
 				break;
 			case 0x75:
@@ -576,6 +596,7 @@ function cmdMap() {
 		  "66": "reporting_interval",
 		  "70": "fan_settings",
 		  "71": "anti_freezing",
+		  "72": "dehumidify_settings",
 		  "75": "temperature_control_mode_enable",
 		  "6100": "target_temperature_settings.heat",
 		  "6102": "target_temperature_settings.cool",
@@ -591,6 +612,8 @@ function cmdMap() {
 		  "7003": "fan_settings.work_time",
 		  "7100": "anti_freezing.enable",
 		  "7101": "anti_freezing.target_temperature",
+		  "7202": "dehumidify_settings.humidify_low_threshold",
+		  "7203": "dehumidify_settings.humidify_high_threshold",
 		  "660000": "reporting_interval.ble_lora.seconds_of_time",
 		  "660001": "reporting_interval.ble_lora.minutes_of_time",
 		  "660100": "reporting_interval.power_lora.seconds_of_time",
@@ -602,6 +625,9 @@ function cmdMap() {
 		  "da": "version.hardware_version",
 		  "c8": "device_status",
 		  "01": "relay_status_change",
+		  "02": "temperature_alarm",
+		  "0210": "temperature_alarm.anti_freeze_protection_deactivation",
+		  "0211": "temperature_alarm.anti_freeze_protection_trigger",
 		  "06": "temperature",
 		  "08": "humidity",
 		  "0c": "temperature_control_info",
@@ -614,34 +640,34 @@ function cmdMap() {
 function processTemperature(decoded) {
 	var allTemperatureProperties = {
     "temperature": {
-        "precision": 1
+        "precision": 2
     },
     "target_temperature_settings.heat": {
-        "precision": 1
+        "precision": 2
     },
     "target_temperature_settings.cool": {
-        "precision": 1
+        "precision": 2
     },
     "target_temperature_tolerance.heat_value": {
-        "precision": 1
+        "precision": 2
     },
     "target_temperature_tolerance.cool_value": {
-        "precision": 1
+        "precision": 2
     },
     "target_temperature_range.heat.min": {
-        "precision": 1
+        "precision": 2
     },
     "target_temperature_range.heat.max": {
-        "precision": 1
+        "precision": 2
     },
     "target_temperature_range.cool.min": {
-        "precision": 1
+        "precision": 2
     },
     "target_temperature_range.cool.max": {
-        "precision": 1
+        "precision": 2
     },
     "anti_freezing.target_temperature": {
-        "precision": 1
+        "precision": 2
     }
 };
 	var leafPaths = getAllLeafPaths(decoded);

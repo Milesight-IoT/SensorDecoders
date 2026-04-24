@@ -83,6 +83,17 @@ function milesightDeviceEncode(payload) {
 
 		encoded = encoded.concat(buffer.toBytes());
 	}
+	//0x02
+	if ('temperature_alarm' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0x02);
+		buffer.writeUInt8(payload.temperature_alarm.type);
+		if (payload.temperature_alarm.type == 0x10) {
+		}
+		if (payload.temperature_alarm.type == 0x11) {
+		}
+		encoded = encoded.concat(buffer.toBytes());
+	}
 	//0x06
 	if ('temperature' in payload) {
 		var buffer = new Buffer();
@@ -297,6 +308,27 @@ function milesightDeviceEncode(payload) {
 				throw new Error('anti_freezing.target_temperature must be between 1 and 5');
 			}
 			buffer.writeInt16LE(payload.anti_freezing.target_temperature * 100);
+		}
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0x72
+	if ('dehumidify_settings' in payload) {
+		var buffer = new Buffer();
+		if (isValid(payload.dehumidify_settings.humidify_low_threshold)) {
+			buffer.writeUInt8(0x72);
+			buffer.writeUInt8(0x02);
+			if (payload.dehumidify_settings.humidify_low_threshold < 0 || payload.dehumidify_settings.humidify_low_threshold > 100) {
+				throw new Error('dehumidify_settings.humidify_low_threshold must be between 0 and 100');
+			}
+			buffer.writeInt16LE(payload.dehumidify_settings.humidify_low_threshold * 10);
+		}
+		if (isValid(payload.dehumidify_settings.humidify_high_threshold)) {
+			buffer.writeUInt8(0x72);
+			buffer.writeUInt8(0x03);
+			if (payload.dehumidify_settings.humidify_high_threshold < 0 || payload.dehumidify_settings.humidify_high_threshold > 100) {
+				throw new Error('dehumidify_settings.humidify_high_threshold must be between 0 and 100');
+			}
+			buffer.writeInt16LE(payload.dehumidify_settings.humidify_high_threshold * 10);
 		}
 		encoded = encoded.concat(buffer.toBytes());
 	}
@@ -585,6 +617,9 @@ function cmdMap() {
 		  "version.hardware_version": "da",
 		  "device_status": "c8",
 		  "relay_status_change": "01",
+		  "temperature_alarm": "02",
+		  "temperature_alarm.anti_freeze_protection_deactivation": "0210",
+		  "temperature_alarm.anti_freeze_protection_trigger": "0211",
 		  "temperature": "06",
 		  "humidity": "08",
 		  "temperature_control_info": "0c",
@@ -614,6 +649,9 @@ function cmdMap() {
 		  "anti_freezing": "71",
 		  "anti_freezing.enable": "7100",
 		  "anti_freezing.target_temperature": "7101",
+		  "dehumidify_settings": "72",
+		  "dehumidify_settings.humidify_low_threshold": "7202",
+		  "dehumidify_settings.humidify_high_threshold": "7203",
 		  "temperature_control_mode_enable": "75",
 		  "install_configuration": "8e",
 		  "install_configuration.reversing_valve": "8e01",

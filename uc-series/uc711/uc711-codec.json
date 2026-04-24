@@ -159,6 +159,63 @@
             ]
         },
         {
+            "id": "dehumidify_settings.command",
+            "name": "Sub-command",
+            "value": "2",
+            "unit": "",
+            "access_mode": "RW",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 2,
+                    "name": "Humidify Low Threshold"
+                },
+                {
+                    "value": 3,
+                    "name": "Humidify High Threshold"
+                }
+            ],
+            "bacnet_type": "multistate_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": []
+        },
+        {
+            "id": "dehumidify_settings.humidify_high_threshold",
+            "name": "Humidify High Threshold",
+            "value": "80",
+            "unit": "%RH",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "range": [
+                0,
+                100
+            ],
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 29,
+            "bacnet_unit_type": "UNITS_PERCENT_RELATIVE_HUMIDITY",
+            "reference": []
+        },
+        {
+            "id": "dehumidify_settings.humidify_low_threshold",
+            "name": "Humidify Low Threshold",
+            "value": "40",
+            "unit": "%RH",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "range": [
+                0,
+                100
+            ],
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 29,
+            "bacnet_unit_type": "UNITS_PERCENT_RELATIVE_HUMIDITY",
+            "reference": []
+        },
+        {
             "id": "device_status",
             "name": "Device Status",
             "value": "1",
@@ -256,7 +313,7 @@
         },
         {
             "id": "fan_settings.adjust_period",
-            "name": "Adjust Period",
+            "name": "Adjust Humidity Period",
             "value": "30",
             "unit": "",
             "access_mode": "RW",
@@ -290,11 +347,11 @@
                 },
                 {
                     "value": 2,
-                    "name": "Adjust Period"
+                    "name": "Adjust Humidity Period"
                 },
                 {
                     "value": 3,
-                    "name": "Work Time"
+                    "name": "Circulate Work Time"
                 }
             ],
             "bacnet_type": "multistate_value_object",
@@ -347,7 +404,7 @@
         },
         {
             "id": "fan_settings.work_time",
-            "name": "Work Time",
+            "name": "Circulate Work Time",
             "value": "30",
             "unit": "",
             "access_mode": "RW",
@@ -1534,6 +1591,77 @@
             "bacnet_type": "analog_input_object",
             "bacnet_unit_type_id": 62,
             "bacnet_unit_type": "UNITS_DEGREES_CELSIUS"
+        },
+        {
+            "id": "temperature_alarm.type",
+            "name": "Alarm Type",
+            "value": "",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "Close Window"
+                },
+                {
+                    "value": 1,
+                    "name": "Open Window"
+                },
+                {
+                    "value": 16,
+                    "name": "Freeze Protection Alarm Released"
+                },
+                {
+                    "value": 17,
+                    "name": "Freeze Protection Alarm"
+                },
+                {
+                    "value": 32,
+                    "name": "Temperature Above Alarm"
+                },
+                {
+                    "value": 33,
+                    "name": "Temperature Above Alarm Released"
+                },
+                {
+                    "value": 34,
+                    "name": "Temperature Below Alarm"
+                },
+                {
+                    "value": 35,
+                    "name": "Temperature Below Alarm Released"
+                },
+                {
+                    "value": 36,
+                    "name": "Temperature Within Alarm"
+                },
+                {
+                    "value": 37,
+                    "name": "Temperature Within Alarm Released"
+                },
+                {
+                    "value": 48,
+                    "name": "Persistent Low Temp Release"
+                },
+                {
+                    "value": 49,
+                    "name": "Persistent Low Temp Trigger"
+                },
+                {
+                    "value": 64,
+                    "name": "Persistent High Temp Release"
+                },
+                {
+                    "value": 65,
+                    "name": "Persistent High Temp Trigger"
+                }
+            ],
+            "bacnet_type": "multistate_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": []
         },
         {
             "id": "temperature_control_info.status",
