@@ -28,6 +28,12 @@ function Encoder(obj, port) {
 function milesightDeviceEncode(payload) {
 	processTemperature(payload);
 	var encoded = [];
+	//0xee
+	if ('request_query_all_configurations' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0xee);
+		encoded = encoded.concat(buffer.toBytes());
+	}
 	//0xcf
 	if ('lorawan_configuration_settings' in payload) {
 		var buffer = new Buffer();
@@ -35,6 +41,9 @@ function milesightDeviceEncode(payload) {
 			buffer.writeUInt8(0xcf);
 			// 0:ClassA, 1:ClassB, 2:ClassC, 3:ClassC to B
 			buffer.writeUInt8(0x00);
+			if ([0, 1, 2, 3].indexOf(payload.lorawan_configuration_settings.mode) === -1) {
+				throw new Error('lorawan_configuration_settings.mode must be one of [0, 1, 2, 3]');
+			}
 			// 0:ClassA, 1:ClassB, 2:ClassC, 3:ClassC to B
 			buffer.writeUInt8(payload.lorawan_configuration_settings.mode);
 		}
@@ -58,6 +67,9 @@ function milesightDeviceEncode(payload) {
 	if ('device_status' in payload) {
 		var buffer = new Buffer();
 		buffer.writeUInt8(0xc8);
+		if ([0, 1].indexOf(payload.device_status) === -1) {
+			throw new Error('device_status must be one of [0, 1]');
+		}
 		// 0：Off, 1：On
 		buffer.writeUInt8(payload.device_status);
 		encoded = encoded.concat(buffer.toBytes());
@@ -80,12 +92,18 @@ function milesightDeviceEncode(payload) {
 			buffer.writeUInt8(0xcd);
 			// 0：disable, 1：enable
 			buffer.writeUInt8(0x00);
+			if ([0, 1].indexOf(payload.ble_configuration_settings.enable) === -1) {
+				throw new Error('ble_configuration_settings.enable must be one of [0, 1]');
+			}
 			// 0：disable, 1：enable
 			buffer.writeUInt8(payload.ble_configuration_settings.enable);
 		}
 		if (isValid(payload.ble_configuration_settings.local_id)) {
 			buffer.writeUInt8(0xcd);
 			buffer.writeUInt8(0x01);
+			if ([0, 1].indexOf(payload.ble_configuration_settings.local_id.type) === -1) {
+				throw new Error('ble_configuration_settings.local_id.type must be one of [0, 1]');
+			}
 			// 0：public, 1：private
 			buffer.writeUInt8(payload.ble_configuration_settings.local_id.type);
 			buffer.writeHexString(payload.ble_configuration_settings.local_id.address, 6);
@@ -102,6 +120,9 @@ function milesightDeviceEncode(payload) {
 			var pair_addr_item_id = pair_addr_item.channel;
 			buffer.writeUInt8(0xcd);
 			buffer.writeUInt8(0x03);
+			if ([0, 1].indexOf(pair_addr_item.type) === -1) {
+				throw new Error('type must be one of [0, 1]');
+			}
 			// 0：public, 1：private
 			buffer.writeUInt8(pair_addr_item.type);
 			buffer.writeHexString(pair_addr_item.mac, 6);
@@ -130,6 +151,9 @@ function milesightDeviceEncode(payload) {
 		if (isValid(payload.ble_configuration_settings.pair_info)) {
 			buffer.writeUInt8(0xcd);
 			buffer.writeUInt8(0x07);
+			if ([0, 1].indexOf(payload.ble_configuration_settings.pair_info.type) === -1) {
+				throw new Error('ble_configuration_settings.pair_info.type must be one of [0, 1]');
+			}
 			// 0：public, 1：private
 			buffer.writeUInt8(payload.ble_configuration_settings.pair_info.type);
 			buffer.writeHexString(payload.ble_configuration_settings.pair_info.addr, 6);
@@ -143,6 +167,9 @@ function milesightDeviceEncode(payload) {
 		if (isValid(payload.ble_configuration_settings.local_info)) {
 			buffer.writeUInt8(0xcd);
 			buffer.writeUInt8(0x08);
+			if ([0, 1].indexOf(payload.ble_configuration_settings.local_info.type) === -1) {
+				throw new Error('ble_configuration_settings.local_info.type must be one of [0, 1]');
+			}
 			// 0：public, 1：private
 			buffer.writeUInt8(payload.ble_configuration_settings.local_info.type);
 			buffer.writeHexString(payload.ble_configuration_settings.local_info.addr, 6);
@@ -163,6 +190,9 @@ function milesightDeviceEncode(payload) {
 	if ('ble_server' in payload) {
 		var buffer = new Buffer();
 		buffer.writeUInt8(0xb4);
+		if ([0, 1, 2].indexOf(payload.ble_server.type) === -1) {
+			throw new Error('ble_server.type must be one of [0, 1, 2]');
+		}
 		// 0：复位名称, 1：取消配对, 2：触发配对
 		buffer.writeUInt8(payload.ble_server.type);
 		encoded = encoded.concat(buffer.toBytes());
@@ -213,8 +243,16 @@ function milesightDeviceEncode(payload) {
 			buffer.writeInt16LE(payload.temperature_alarm.open_window_alarm_trigger.temperature * 100);
 		}
 		if (payload.temperature_alarm.type == 0x10) {
+			if (payload.temperature_alarm.anti_freeze_protection_deactivation.temperature < -20 || payload.temperature_alarm.anti_freeze_protection_deactivation.temperature > 60) {
+				throw new Error('temperature_alarm.anti_freeze_protection_deactivation.temperature must be between -20 and 60');
+			}
+			buffer.writeInt16LE(payload.temperature_alarm.anti_freeze_protection_deactivation.temperature * 100);
 		}
 		if (payload.temperature_alarm.type == 0x11) {
+			if (payload.temperature_alarm.anti_freeze_protection_trigger.temperature < -20 || payload.temperature_alarm.anti_freeze_protection_trigger.temperature > 60) {
+				throw new Error('temperature_alarm.anti_freeze_protection_trigger.temperature must be between -20 and 60');
+			}
+			buffer.writeInt16LE(payload.temperature_alarm.anti_freeze_protection_trigger.temperature * 100);
 		}
 		if (payload.temperature_alarm.type == 0x20) {
 			if (payload.temperature_alarm.over_range_alarm_trigger.temperature < -20 || payload.temperature_alarm.over_range_alarm_trigger.temperature > 60) {
@@ -304,6 +342,9 @@ function milesightDeviceEncode(payload) {
 	if ('temperature_humi_data_source' in payload) {
 		var buffer = new Buffer();
 		buffer.writeUInt8(0x05);
+		if ([0, 1, 2, 3].indexOf(payload.temperature_humi_data_source) === -1) {
+			throw new Error('temperature_humi_data_source must be one of [0, 1, 2, 3]');
+		}
 		// 0: External Temperature Sensor, 1: Issued By Lorawan Gateway , 2: Lorawan D2D  , 3: HMI(WT401) 
 		buffer.writeUInt8(payload.temperature_humi_data_source);
 		encoded = encoded.concat(buffer.toBytes());
@@ -424,6 +465,9 @@ function milesightDeviceEncode(payload) {
 			buffer.writeUInt8(0xc5);
 			// 0：Disable, 1：Enable
 			buffer.writeUInt8(0x00);
+			if ([0, 1].indexOf(payload.data_storage_settings.enable) === -1) {
+				throw new Error('data_storage_settings.enable must be one of [0, 1]');
+			}
 			// 0：Disable, 1：Enable
 			buffer.writeUInt8(payload.data_storage_settings.enable);
 		}
@@ -431,6 +475,9 @@ function milesightDeviceEncode(payload) {
 			buffer.writeUInt8(0xc5);
 			// 0：Disable, 1：Enable
 			buffer.writeUInt8(0x01);
+			if ([0, 1].indexOf(payload.data_storage_settings.retransmission_enable) === -1) {
+				throw new Error('data_storage_settings.retransmission_enable must be one of [0, 1]');
+			}
 			// 0：Disable, 1：Enable
 			buffer.writeUInt8(payload.data_storage_settings.retransmission_enable);
 		}
@@ -459,6 +506,9 @@ function milesightDeviceEncode(payload) {
 			buffer.writeUInt8(0x60);
 			// 0：heat, 2：cool, 3：auto
 			buffer.writeUInt8(0x00);
+			if ([0, 2, 3].indexOf(payload.temperature_control_mode.ctrl_mode) === -1) {
+				throw new Error('temperature_control_mode.ctrl_mode must be one of [0, 2, 3]');
+			}
 			// 0：heat, 2：cool, 3：auto
 			buffer.writeUInt8(payload.temperature_control_mode.ctrl_mode);
 		}
@@ -466,6 +516,9 @@ function milesightDeviceEncode(payload) {
 			buffer.writeUInt8(0x60);
 			// 0：disable, 1：enable
 			buffer.writeUInt8(0x01);
+			if ([0, 1].indexOf(payload.temperature_control_mode.plan_enable) === -1) {
+				throw new Error('temperature_control_mode.plan_enable must be one of [0, 1]');
+			}
 			// 0：disable, 1：enable
 			buffer.writeUInt8(payload.temperature_control_mode.plan_enable);
 		}
@@ -582,6 +635,9 @@ function milesightDeviceEncode(payload) {
 	if ('temperature_unit' in payload) {
 		var buffer = new Buffer();
 		buffer.writeUInt8(0x64);
+		if ([0, 1].indexOf(payload.temperature_unit) === -1) {
+			throw new Error('temperature_unit must be one of [0, 1]');
+		}
 		// 0：℃, 1：℉
 		buffer.writeUInt8(payload.temperature_unit);
 		encoded = encoded.concat(buffer.toBytes());
@@ -590,6 +646,9 @@ function milesightDeviceEncode(payload) {
 	if ('target_temperature_resolution' in payload) {
 		var buffer = new Buffer();
 		buffer.writeUInt8(0x65);
+		if ([0, 1].indexOf(payload.target_temperature_resolution) === -1) {
+			throw new Error('target_temperature_resolution must be one of [0, 1]');
+		}
 		// 0：0.5, 1：1
 		buffer.writeUInt8(payload.target_temperature_resolution);
 		encoded = encoded.concat(buffer.toBytes());
@@ -598,6 +657,9 @@ function milesightDeviceEncode(payload) {
 	if ('communication_mode' in payload) {
 		var buffer = new Buffer();
 		buffer.writeUInt8(0x91);
+		if ([0, 1].indexOf(payload.communication_mode) === -1) {
+			throw new Error('communication_mode must be one of [0, 1]');
+		}
 		// 0：BLE+Lorawan, 1：POWERBUS+Lorawan
 		buffer.writeUInt8(payload.communication_mode);
 		encoded = encoded.concat(buffer.toBytes());
@@ -608,6 +670,9 @@ function milesightDeviceEncode(payload) {
 		if (isValid(payload.reporting_interval.ble_lora)) {
 			buffer.writeUInt8(0x66);
 			buffer.writeUInt8(0x00);
+			if ([0, 1].indexOf(payload.reporting_interval.ble_lora.unit) === -1) {
+				throw new Error('reporting_interval.ble_lora.unit must be one of [0, 1]');
+			}
 			// 0：second, 1：min
 			buffer.writeUInt8(payload.reporting_interval.ble_lora.unit);
 			if (payload.reporting_interval.ble_lora.unit == 0x00) {
@@ -626,6 +691,9 @@ function milesightDeviceEncode(payload) {
 		if (isValid(payload.reporting_interval.power_lora)) {
 			buffer.writeUInt8(0x66);
 			buffer.writeUInt8(0x01);
+			if ([0, 1].indexOf(payload.reporting_interval.power_lora.unit) === -1) {
+				throw new Error('reporting_interval.power_lora.unit must be one of [0, 1]');
+			}
 			// 0：second, 1：min
 			buffer.writeUInt8(payload.reporting_interval.power_lora.unit);
 			if (payload.reporting_interval.power_lora.unit == 0x00) {
@@ -647,6 +715,9 @@ function milesightDeviceEncode(payload) {
 	if ('window_opening_detection_enable' in payload) {
 		var buffer = new Buffer();
 		buffer.writeUInt8(0x68);
+		if ([0, 1].indexOf(payload.window_opening_detection_enable) === -1) {
+			throw new Error('window_opening_detection_enable must be one of [0, 1]');
+		}
 		// 0：disable, 1：enable
 		buffer.writeUInt8(payload.window_opening_detection_enable);
 		encoded = encoded.concat(buffer.toBytes());
@@ -655,6 +726,9 @@ function milesightDeviceEncode(payload) {
 	if ('window_opening_detection_settings' in payload) {
 		var buffer = new Buffer();
 		buffer.writeUInt8(0x69);
+		if ([0, 1].indexOf(payload.window_opening_detection_settings.type) === -1) {
+			throw new Error('window_opening_detection_settings.type must be one of [0, 1]');
+		}
 		// 0：temperature, 1：door
 		buffer.writeUInt8(payload.window_opening_detection_settings.type);
 		if (payload.window_opening_detection_settings.type == 0x00) {
@@ -682,18 +756,27 @@ function milesightDeviceEncode(payload) {
 			buffer.writeUInt8(0x6a);
 			// 0: External Temperature Sensor, 1: Issued By Lorawan Gateway , 2: Lorawan D2D  , 3: HMI(WT401) 
 			buffer.writeUInt8(0x00);
+			if ([0, 1, 2, 3].indexOf(payload.temperature_data_source.source) === -1) {
+				throw new Error('temperature_data_source.source must be one of [0, 1, 2, 3]');
+			}
 			// 0: External Temperature Sensor, 1: Issued By Lorawan Gateway , 2: Lorawan D2D  , 3: HMI(WT401) 
 			buffer.writeUInt8(payload.temperature_data_source.source);
 		}
 		if (isValid(payload.temperature_data_source.time_out)) {
 			buffer.writeUInt8(0x6a);
 			buffer.writeUInt8(0x01);
+			if (payload.temperature_data_source.time_out < 1 || payload.temperature_data_source.time_out > 60) {
+				throw new Error('temperature_data_source.time_out must be in range [1,60]');
+			}
 			buffer.writeUInt8(payload.temperature_data_source.time_out);
 		}
 		if (isValid(payload.temperature_data_source.offline_mode)) {
 			buffer.writeUInt8(0x6a);
 			// 0: Maintain, 1: Disconnect, 2: Cut into internal
 			buffer.writeUInt8(0x02);
+			if ([0, 1, 2].indexOf(payload.temperature_data_source.offline_mode) === -1) {
+				throw new Error('temperature_data_source.offline_mode must be one of [0, 1, 2]');
+			}
 			// 0: Maintain, 1: Disconnect, 2: Cut into internal
 			buffer.writeUInt8(payload.temperature_data_source.offline_mode);
 		}
@@ -727,6 +810,9 @@ function milesightDeviceEncode(payload) {
 			buffer.writeUInt8(0x6c);
 			// 0：Disable, 1：Enable
 			buffer.writeUInt8(0x00);
+			if ([0, 1].indexOf(payload.high_temperature_alarm_settings.enable) === -1) {
+				throw new Error('high_temperature_alarm_settings.enable must be one of [0, 1]');
+			}
 			// 0：Disable, 1：Enable
 			buffer.writeUInt8(payload.high_temperature_alarm_settings.enable);
 		}
@@ -755,6 +841,9 @@ function milesightDeviceEncode(payload) {
 			buffer.writeUInt8(0x6d);
 			// 0：Disable, 1：Enable
 			buffer.writeUInt8(0x00);
+			if ([0, 1].indexOf(payload.low_temperature_alarm_settings.enable) === -1) {
+				throw new Error('low_temperature_alarm_settings.enable must be one of [0, 1]');
+			}
 			// 0：Disable, 1：Enable
 			buffer.writeUInt8(payload.low_temperature_alarm_settings.enable);
 		}
@@ -783,6 +872,9 @@ function milesightDeviceEncode(payload) {
 			buffer.writeUInt8(0x6e);
 			// 0：Disable, 1：Enable
 			buffer.writeUInt8(0x00);
+			if ([0, 1].indexOf(payload.temperature_alarm_settings.enable) === -1) {
+				throw new Error('temperature_alarm_settings.enable must be one of [0, 1]');
+			}
 			// 0：Disable, 1：Enable
 			buffer.writeUInt8(payload.temperature_alarm_settings.enable);
 		}
@@ -790,6 +882,9 @@ function milesightDeviceEncode(payload) {
 			buffer.writeUInt8(0x6e);
 			// 0:Disable, 1:Condition: x<A, 2:Condition: x>B, 3:Condition: A≤x≤B, 4:Condition: x<A or x>B
 			buffer.writeUInt8(0x01);
+			if ([0, 1, 2, 3, 4].indexOf(payload.temperature_alarm_settings.threshold_condition) === -1) {
+				throw new Error('temperature_alarm_settings.threshold_condition must be one of [0, 1, 2, 3, 4]');
+			}
 			// 0:Disable, 1:Condition: x<A, 2:Condition: x>B, 3:Condition: A≤x≤B, 4:Condition: x<A or x>B
 			buffer.writeUInt8(payload.temperature_alarm_settings.threshold_condition);
 		}
@@ -815,6 +910,9 @@ function milesightDeviceEncode(payload) {
 	if ('system_switch' in payload) {
 		var buffer = new Buffer();
 		buffer.writeUInt8(0x6f);
+		if ([0, 1].indexOf(payload.system_switch) === -1) {
+			throw new Error('system_switch must be one of [0, 1]');
+		}
 		// 0：Switch Off, 1：Switch On
 		buffer.writeUInt8(payload.system_switch);
 		encoded = encoded.concat(buffer.toBytes());
@@ -826,6 +924,9 @@ function milesightDeviceEncode(payload) {
 			buffer.writeUInt8(0x70);
 			// 0：Auto, 1：Ventilation, 2：Always Open, 3：Low, 4：Medium, 5：High, 255：Disabled
 			buffer.writeUInt8(0x00);
+			if ([0, 1, 2, 3, 4, 5, 255].indexOf(payload.fan_settings.fan_mode) === -1) {
+				throw new Error('fan_settings.fan_mode must be one of [0, 1, 2, 3, 4, 5, 255]');
+			}
 			// 0：Auto, 1：Ventilation, 2：Always Open, 3：Low, 4：Medium, 5：High, 255：Disabled
 			buffer.writeUInt8(payload.fan_settings.fan_mode);
 		}
@@ -833,6 +934,9 @@ function milesightDeviceEncode(payload) {
 			buffer.writeUInt8(0x70);
 			// 0：Disable, 1：Enable
 			buffer.writeUInt8(0x01);
+			if ([0, 1].indexOf(payload.fan_settings.adjust_humidity_enable) === -1) {
+				throw new Error('fan_settings.adjust_humidity_enable must be one of [0, 1]');
+			}
 			// 0：Disable, 1：Enable
 			buffer.writeUInt8(payload.fan_settings.adjust_humidity_enable);
 		}
@@ -861,6 +965,9 @@ function milesightDeviceEncode(payload) {
 			buffer.writeUInt8(0x71);
 			// 0：Disable, 1：Enable
 			buffer.writeUInt8(0x00);
+			if ([0, 1].indexOf(payload.anti_freezing.enable) === -1) {
+				throw new Error('anti_freezing.enable must be one of [0, 1]');
+			}
 			// 0：Disable, 1：Enable
 			buffer.writeUInt8(payload.anti_freezing.enable);
 		}
@@ -902,6 +1009,9 @@ function milesightDeviceEncode(payload) {
 			buffer.writeUInt8(0x74);
 			// 0：Disable, 1：Enable
 			buffer.writeUInt8(0x00);
+			if ([0, 1].indexOf(payload.system_protect.enable) === -1) {
+				throw new Error('system_protect.enable must be one of [0, 1]');
+			}
 			// 0：Disable, 1：Enable
 			buffer.writeUInt8(payload.system_protect.enable);
 		}
@@ -947,6 +1057,9 @@ function milesightDeviceEncode(payload) {
 	if ('target_temperature_mode' in payload) {
 		var buffer = new Buffer();
 		buffer.writeUInt8(0x76);
+		if ([0, 1].indexOf(payload.target_temperature_mode) === -1) {
+			throw new Error('target_temperature_mode must be one of [0, 1]');
+		}
 		// 0：single, 1：double
 		buffer.writeUInt8(payload.target_temperature_mode);
 		encoded = encoded.concat(buffer.toBytes());
@@ -955,6 +1068,9 @@ function milesightDeviceEncode(payload) {
 	if ('unilateral_tolerance_enable' in payload) {
 		var buffer = new Buffer();
 		buffer.writeUInt8(0x77);
+		if ([0, 1].indexOf(payload.unilateral_tolerance_enable) === -1) {
+			throw new Error('unilateral_tolerance_enable must be one of [0, 1]');
+		}
 		// 0：Disable, 1：Enable
 		buffer.writeUInt8(payload.unilateral_tolerance_enable);
 		encoded = encoded.concat(buffer.toBytes());
@@ -963,6 +1079,9 @@ function milesightDeviceEncode(payload) {
 	if ('relay_change_report_enable' in payload) {
 		var buffer = new Buffer();
 		buffer.writeUInt8(0x80);
+		if ([0, 1].indexOf(payload.relay_change_report_enable) === -1) {
+			throw new Error('relay_change_report_enable must be one of [0, 1]');
+		}
 		// 0：disable, 1：enable
 		buffer.writeUInt8(payload.relay_change_report_enable);
 		encoded = encoded.concat(buffer.toBytes());
@@ -974,6 +1093,9 @@ function milesightDeviceEncode(payload) {
 			buffer.writeUInt8(0x82);
 			// 0：Disable, 1：Enable
 			buffer.writeUInt8(0x00);
+			if ([0, 1].indexOf(payload.fan_delay_settings.enable) === -1) {
+				throw new Error('fan_delay_settings.enable must be one of [0, 1]');
+			}
 			// 0：Disable, 1：Enable
 			buffer.writeUInt8(payload.fan_delay_settings.enable);
 		}
@@ -994,6 +1116,9 @@ function milesightDeviceEncode(payload) {
 			buffer.writeUInt8(0x83);
 			// 0：disable, 1：enable
 			buffer.writeUInt8(0x00);
+			if ([0, 1].indexOf(payload.temperature_control_level_switch.setforw_enable) === -1) {
+				throw new Error('temperature_control_level_switch.setforw_enable must be one of [0, 1]');
+			}
 			// 0：disable, 1：enable
 			buffer.writeUInt8(payload.temperature_control_level_switch.setforw_enable);
 		}
@@ -1001,6 +1126,9 @@ function milesightDeviceEncode(payload) {
 			buffer.writeUInt8(0x83);
 			// 0：disable, 1：enable
 			buffer.writeUInt8(0x01);
+			if ([0, 1].indexOf(payload.temperature_control_level_switch.setback_enable) === -1) {
+				throw new Error('temperature_control_level_switch.setback_enable must be one of [0, 1]');
+			}
 			// 0：disable, 1：enable
 			buffer.writeUInt8(payload.temperature_control_level_switch.setback_enable);
 		}
@@ -1058,6 +1186,9 @@ function milesightDeviceEncode(payload) {
 	if ('energy_saving_enable' in payload) {
 		var buffer = new Buffer();
 		buffer.writeUInt8(0x84);
+		if ([0, 1].indexOf(payload.energy_saving_enable) === -1) {
+			throw new Error('energy_saving_enable must be one of [0, 1]');
+		}
 		// 0：Disable, 1：Enable
 		buffer.writeUInt8(payload.energy_saving_enable);
 		encoded = encoded.concat(buffer.toBytes());
@@ -1072,6 +1203,9 @@ function milesightDeviceEncode(payload) {
 				buffer.writeUInt8(0x00);
 				// 0：Disable, 1：Enable
 				buffer.writeUInt8(0x00);
+				if ([0, 1].indexOf(payload.energy_saving.level_1.enable) === -1) {
+					throw new Error('energy_saving.level_1.enable must be one of [0, 1]');
+				}
 				// 0：Disable, 1：Enable
 				buffer.writeUInt8(payload.energy_saving.level_1.enable);
 			}
@@ -1101,6 +1235,9 @@ function milesightDeviceEncode(payload) {
 				buffer.writeUInt8(0x01);
 				// 0：Disable, 1：Enable
 				buffer.writeUInt8(0x00);
+				if ([0, 1].indexOf(payload.energy_saving.level_2.enable) === -1) {
+					throw new Error('energy_saving.level_2.enable must be one of [0, 1]');
+				}
 				// 0：Disable, 1：Enable
 				buffer.writeUInt8(payload.energy_saving.level_2.enable);
 			}
@@ -1129,6 +1266,9 @@ function milesightDeviceEncode(payload) {
 	if ('di_settings_enable' in payload) {
 		var buffer = new Buffer();
 		buffer.writeUInt8(0x86);
+		if ([0, 1].indexOf(payload.di_settings_enable) === -1) {
+			throw new Error('di_settings_enable must be one of [0, 1]');
+		}
 		// 0：Disable, 1：Enable
 		buffer.writeUInt8(payload.di_settings_enable);
 		encoded = encoded.concat(buffer.toBytes());
@@ -1137,23 +1277,41 @@ function milesightDeviceEncode(payload) {
 	if ('di_settings' in payload) {
 		var buffer = new Buffer();
 		buffer.writeUInt8(0x87);
+		if ([0, 1].indexOf(payload.di_settings.object) === -1) {
+			throw new Error('di_settings.object must be one of [0, 1]');
+		}
 		// 0：card, 1：door
 		buffer.writeUInt8(payload.di_settings.object);
 		if (payload.di_settings.object == 0x00) {
+			if ([0, 1].indexOf(payload.di_settings.card_control.type) === -1) {
+				throw new Error('di_settings.card_control.type must be one of [0, 1]');
+			}
 			// 0：system_ctrl, 1：insert_sche
 			buffer.writeUInt8(payload.di_settings.card_control.type);
 			if (payload.di_settings.card_control.type == 0x00) {
+				if ([0, 1].indexOf(payload.di_settings.card_control.system_control.trigger_by_insertion) === -1) {
+					throw new Error('di_settings.card_control.system_control.trigger_by_insertion must be one of [0, 1]');
+				}
 				// 0：system close, 1：system open
 				buffer.writeUInt8(payload.di_settings.card_control.system_control.trigger_by_insertion);
 			}
 			if (payload.di_settings.card_control.type == 0x01) {
+				if ([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15].indexOf(payload.di_settings.card_control.insertion_plan.trigger_by_insertion) === -1) {
+					throw new Error('di_settings.card_control.insertion_plan.trigger_by_insertion must be one of [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]');
+				}
 				// 0：Insert Schedule1, 1：Insert Schedule2, 2：Insert Schedule3, 3：Insert Schedule4, 4：Insert Schedule5, 5：Insert Schedule6, 6：Insert Schedule7, 7：Insert Schedule8, 8：Insert Schedule9, 9：Insert Schedule10, 10：Insert Schedule11, 11：Insert Schedule12, 12：Insert Schedule13, 13：Insert Schedule14, 14：Insert Schedule15, 15：Insert Schedule16
 				buffer.writeUInt8(payload.di_settings.card_control.insertion_plan.trigger_by_insertion);
+				if ([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15].indexOf(payload.di_settings.card_control.insertion_plan.trigger_by_extraction) === -1) {
+					throw new Error('di_settings.card_control.insertion_plan.trigger_by_extraction must be one of [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]');
+				}
 				// 0：Insert Schedule1, 1：Insert Schedule2, 2：Insert Schedule3, 3：Insert Schedule4, 4：Insert Schedule5, 5：Insert Schedule6, 6：Insert Schedule7, 7：Insert Schedule8, 8：Insert Schedule9, 9：Insert Schedule10, 10：Insert Schedule11, 11：Insert Schedule12, 12：Insert Schedule13, 13：Insert Schedule14, 14：Insert Schedule15, 15：Insert Schedule16
 				buffer.writeUInt8(payload.di_settings.card_control.insertion_plan.trigger_by_extraction);
 			}
 		}
 		if (payload.di_settings.object == 0x01) {
+			if ([0, 1].indexOf(payload.di_settings.magnet_detection.magnet_type) === -1) {
+				throw new Error('di_settings.magnet_detection.magnet_type must be one of [0, 1]');
+			}
 			// 0：normally closed, 1：normally open
 			buffer.writeUInt8(payload.di_settings.magnet_detection.magnet_type);
 		}
@@ -1174,6 +1332,9 @@ function milesightDeviceEncode(payload) {
 			buffer.writeUInt8(0x89);
 			// 0：Disable, 1：Enable
 			buffer.writeUInt8(0x03);
+			if ([0, 1].indexOf(payload.external_sensor_settings.temp_calibration_en) === -1) {
+				throw new Error('external_sensor_settings.temp_calibration_en must be one of [0, 1]');
+			}
 			// 0：Disable, 1：Enable
 			buffer.writeUInt8(payload.external_sensor_settings.temp_calibration_en);
 		}
@@ -1189,6 +1350,9 @@ function milesightDeviceEncode(payload) {
 			buffer.writeUInt8(0x89);
 			// 0：Disable, 1：Enable
 			buffer.writeUInt8(0x05);
+			if ([0, 1].indexOf(payload.external_sensor_settings.humi_calibration_en) === -1) {
+				throw new Error('external_sensor_settings.humi_calibration_en must be one of [0, 1]');
+			}
 			// 0：Disable, 1：Enable
 			buffer.writeUInt8(payload.external_sensor_settings.humi_calibration_en);
 		}
@@ -1209,6 +1373,9 @@ function milesightDeviceEncode(payload) {
 			buffer.writeUInt8(0x8b);
 			// 0：Disable, 1：Enable
 			buffer.writeUInt8(0x00);
+			if ([0, 1].indexOf(payload.filter_clean_settings.enable) === -1) {
+				throw new Error('filter_clean_settings.enable must be one of [0, 1]');
+			}
 			// 0：Disable, 1：Enable
 			buffer.writeUInt8(payload.filter_clean_settings.enable);
 		}
@@ -1273,18 +1440,27 @@ function milesightDeviceEncode(payload) {
 		if (isValid(payload.install_configuration.reversing_valve)) {
 			buffer.writeUInt8(0x8e);
 			buffer.writeUInt8(0x01);
+			if ([0, 1].indexOf(payload.install_configuration.reversing_valve.mode) === -1) {
+				throw new Error('install_configuration.reversing_valve.mode must be one of [0, 1]');
+			}
 			// 0：o/b on heat, 1：o/b on cool 
 			buffer.writeUInt8(payload.install_configuration.reversing_valve.mode);
 		}
 		if (isValid(payload.install_configuration.y_combine_aux)) {
 			buffer.writeUInt8(0x8e);
 			buffer.writeUInt8(0x02);
+			if ([0, 1].indexOf(payload.install_configuration.y_combine_aux.enable) === -1) {
+				throw new Error('install_configuration.y_combine_aux.enable must be one of [0, 1]');
+			}
 			// 0：disable, 1：enable
 			buffer.writeUInt8(payload.install_configuration.y_combine_aux.enable);
 		}
 		if (isValid(payload.install_configuration.fan)) {
 			buffer.writeUInt8(0x8e);
 			buffer.writeUInt8(0x03);
+			if ([0, 1].indexOf(payload.install_configuration.fan.owner) === -1) {
+				throw new Error('install_configuration.fan.owner must be one of [0, 1]');
+			}
 			// 0：thermostat, 1：hvac
 			buffer.writeUInt8(payload.install_configuration.fan.owner);
 		}
@@ -1294,6 +1470,9 @@ function milesightDeviceEncode(payload) {
 	if ('time_zone' in payload) {
 		var buffer = new Buffer();
 		buffer.writeUInt8(0xc7);
+		if ([-720, -660, -600, -570, -540, -480, -420, -360, -300, -240, -210, -180, -120, -60, 0, 60, 120, 180, 210, 240, 270, 300, 330, 345, 360, 390, 420, 480, 540, 570, 600, 630, 660, 720, 765, 780, 840].indexOf(payload.time_zone) === -1) {
+			throw new Error('time_zone must be one of [-720, -660, -600, -570, -540, -480, -420, -360, -300, -240, -210, -180, -120, -60, 0, 60, 120, 180, 210, 240, 270, 300, 330, 345, 360, 390, 420, 480, 540, 570, 600, 630, 660, 720, 765, 780, 840]');
+		}
 		buffer.writeInt16LE(payload.time_zone);
 		encoded = encoded.concat(buffer.toBytes());
 	}
@@ -1301,12 +1480,18 @@ function milesightDeviceEncode(payload) {
 	if ('daylight_saving_time' in payload) {
 		var buffer = new Buffer();
 		buffer.writeUInt8(0xc6);
+		if ([0, 1].indexOf(payload.daylight_saving_time.enable) === -1) {
+			throw new Error('daylight_saving_time.enable must be one of [0, 1]');
+		}
 		// 0：Disable, 1：Enable
 		buffer.writeUInt8(payload.daylight_saving_time.enable);
 		if (payload.daylight_saving_time.daylight_saving_time_offset < 1 || payload.daylight_saving_time.daylight_saving_time_offset > 120) {
 			throw new Error('daylight_saving_time.daylight_saving_time_offset must be between 1 and 120');
 		}
 		buffer.writeUInt8(payload.daylight_saving_time.daylight_saving_time_offset);
+		if ([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].indexOf(payload.daylight_saving_time.start_month) === -1) {
+			throw new Error('daylight_saving_time.start_month must be one of [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]');
+		}
 		// 1:Jan., 2:Feb., 3:Mar., 4:Apr., 5:May, 6:Jun., 7:Jul., 8:Aug., 9:Sep., 10:Oct., 11:Nov., 12:Dec.
 		buffer.writeUInt8(payload.daylight_saving_time.start_month);
 		var bitOptions = 0;
@@ -1317,7 +1502,13 @@ function milesightDeviceEncode(payload) {
 		bitOptions |= payload.daylight_saving_time.start_week_day << 0;
 		buffer.writeUInt8(bitOptions);
 
+		if ([0, 60, 120, 180, 240, 300, 360, 420, 480, 540, 600, 660, 720, 780, 840, 900, 960, 1020, 1080, 1140, 1200, 1260, 1320, 1380].indexOf(payload.daylight_saving_time.start_hour_min) === -1) {
+			throw new Error('daylight_saving_time.start_hour_min must be one of [0, 60, 120, 180, 240, 300, 360, 420, 480, 540, 600, 660, 720, 780, 840, 900, 960, 1020, 1080, 1140, 1200, 1260, 1320, 1380]');
+		}
 		buffer.writeUInt16LE(payload.daylight_saving_time.start_hour_min);
+		if ([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].indexOf(payload.daylight_saving_time.end_month) === -1) {
+			throw new Error('daylight_saving_time.end_month must be one of [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]');
+		}
 		// 1:Jan., 2:Feb., 3:Mar., 4:Apr., 5:May, 6:Jun., 7:Jul., 8:Aug., 9:Sep., 10:Oct., 11:Nov., 12:Dec.
 		buffer.writeUInt8(payload.daylight_saving_time.end_month);
 		var bitOptions = 0;
@@ -1328,6 +1519,9 @@ function milesightDeviceEncode(payload) {
 		bitOptions |= payload.daylight_saving_time.end_week_day << 0;
 		buffer.writeUInt8(bitOptions);
 
+		if ([0, 60, 120, 180, 240, 300, 360, 420, 480, 540, 600, 660, 720, 780, 840, 900, 960, 1020, 1080, 1140, 1200, 1260, 1320, 1380].indexOf(payload.daylight_saving_time.end_hour_min) === -1) {
+			throw new Error('daylight_saving_time.end_hour_min must be one of [0, 60, 120, 180, 240, 300, 360, 420, 480, 540, 600, 660, 720, 780, 840, 900, 960, 1020, 1080, 1140, 1200, 1260, 1320, 1380]');
+		}
 		buffer.writeUInt16LE(payload.daylight_saving_time.end_hour_min);
 		encoded = encoded.concat(buffer.toBytes());
 	}
@@ -1335,6 +1529,9 @@ function milesightDeviceEncode(payload) {
 	if ('d2d_pairing_enable' in payload) {
 		var buffer = new Buffer();
 		buffer.writeUInt8(0x95);
+		if ([0, 1].indexOf(payload.d2d_pairing_enable) === -1) {
+			throw new Error('d2d_pairing_enable must be one of [0, 1]');
+		}
 		// 0：disable, 1：enable
 		buffer.writeUInt8(payload.d2d_pairing_enable);
 		encoded = encoded.concat(buffer.toBytes());
@@ -1350,6 +1547,9 @@ function milesightDeviceEncode(payload) {
 				buffer.writeUInt8(d2d_pairing_settings_item_id);
 				// 0：disable, 1：enable
 				buffer.writeUInt8(0x00);
+				if ([0, 1].indexOf(d2d_pairing_settings_item.enable) === -1) {
+					throw new Error('enable must be one of [0, 1]');
+				}
 				// 0：disable, 1：enable
 				buffer.writeUInt8(d2d_pairing_settings_item.enable);
 			}
@@ -1378,6 +1578,9 @@ function milesightDeviceEncode(payload) {
 	if ('d2d_master_enable' in payload) {
 		var buffer = new Buffer();
 		buffer.writeUInt8(0x97);
+		if ([0, 1].indexOf(payload.d2d_master_enable) === -1) {
+			throw new Error('d2d_master_enable must be one of [0, 1]');
+		}
 		// 0：disable, 1：enable
 		buffer.writeUInt8(payload.d2d_master_enable);
 		encoded = encoded.concat(buffer.toBytes());
@@ -1390,11 +1593,20 @@ function milesightDeviceEncode(payload) {
 			var d2d_master_settings_item_id = d2d_master_settings_item.trigger_condition;
 			buffer.writeUInt8(0x98);
 			buffer.writeUInt8(d2d_master_settings_item_id);
+			if ([0, 1].indexOf(d2d_master_settings_item.enable) === -1) {
+				throw new Error('enable must be one of [0, 1]');
+			}
 			// 0：disable, 1：enable
 			buffer.writeUInt8(d2d_master_settings_item.enable);
 			buffer.writeHexString(d2d_master_settings_item.command, pair_name_item.length, true);
+			if ([0, 1].indexOf(d2d_master_settings_item.uplink) === -1) {
+				throw new Error('uplink must be one of [0, 1]');
+			}
 			// 0：disable, 1：enable
 			buffer.writeUInt8(d2d_master_settings_item.uplink);
+			if ([0, 1].indexOf(d2d_master_settings_item.control_time_enable) === -1) {
+				throw new Error('control_time_enable must be one of [0, 1]');
+			}
 			// 0：disable, 1：enable
 			buffer.writeUInt8(d2d_master_settings_item.control_time_enable);
 			if (d2d_master_settings_item.control_time < 1 || d2d_master_settings_item.control_time > 1440) {
@@ -1408,6 +1620,9 @@ function milesightDeviceEncode(payload) {
 	if ('d2d_slave_enable' in payload) {
 		var buffer = new Buffer();
 		buffer.writeUInt8(0x99);
+		if ([0, 1].indexOf(payload.d2d_slave_enable) === -1) {
+			throw new Error('d2d_slave_enable must be one of [0, 1]');
+		}
 		// 0：disable, 1：enable
 		buffer.writeUInt8(payload.d2d_slave_enable);
 		encoded = encoded.concat(buffer.toBytes());
@@ -1420,9 +1635,15 @@ function milesightDeviceEncode(payload) {
 			var d2d_slave_settings_item_id = d2d_slave_settings_item.index;
 			buffer.writeUInt8(0x9a);
 			buffer.writeUInt8(d2d_slave_settings_item_id);
+			if ([0, 1].indexOf(d2d_slave_settings_item.enable) === -1) {
+				throw new Error('enable must be one of [0, 1]');
+			}
 			// 0：disable, 1：enable
 			buffer.writeUInt8(d2d_slave_settings_item.enable);
 			buffer.writeHexString(d2d_slave_settings_item.command, pair_name_item.length, true);
+			if ([0, 1, 2, 3, 4, 5, 6, 7, 16, 17].indexOf(d2d_slave_settings_item.value) === -1) {
+				throw new Error('value must be one of [0, 1, 2, 3, 4, 5, 6, 7, 16, 17]');
+			}
 			// 0：Schedule1, 1：Schedule2, 2：Schedule3, 3：Schedule4, 4：Schedule5, 5：Schedule6, 6：Schedule7, 7：Schedule8, 16：System Off, 17：System On
 			buffer.writeUInt8(d2d_slave_settings_item.value);
 		}
@@ -1480,6 +1701,55 @@ Buffer.prototype.writeUInt32LE = function(value) {
 
 Buffer.prototype.writeInt32LE = function(value) {
 	this._write(value < 0 ? value + 0x100000000 : value, 4, true);
+};
+
+Buffer.prototype.writeFloatLE = function(value) {
+	var sign = (value < 0 || (value === 0 && 1 / value === -Infinity)) ? 1 : 0;
+	var absValue = Math.abs(value);
+
+	if (absValue === 0) {
+		this._write(sign ? 0x80000000 : 0, 4, true);
+		return;
+	} else if (value !== value) {
+		this._write(0x7fc00000, 4, true);
+		return;
+	} else if (absValue === Infinity) {
+		this._write((((sign << 31) >>> 0) | 0x7f800000) >>> 0, 4, true);
+		return;
+	}
+
+	var exponent = Math.floor(Math.log(absValue) / Math.LN2);
+	var normalized = absValue / Math.pow(2, exponent);
+	if (normalized < 1) {
+		exponent -= 1;
+		normalized *= 2;
+	} else if (normalized >= 2) {
+		exponent += 1;
+		normalized /= 2;
+	}
+
+	var biasedExponent = exponent + 127;
+	var mantissaBits = 0;
+	if (biasedExponent <= 0) {
+		biasedExponent = 0;
+		mantissaBits = Math.round(absValue / Math.pow(2, -149));
+		if (mantissaBits > 0x7fffff) {
+			mantissaBits = 0x7fffff;
+		}
+	} else {
+		mantissaBits = Math.round((normalized - 1) * 0x800000);
+		if (mantissaBits === 0x800000) {
+			biasedExponent += 1;
+			mantissaBits = 0;
+		}
+		if (biasedExponent >= 0xff) {
+			this._write((((sign << 31) >>> 0) | 0x7f800000) >>> 0, 4, true);
+			return;
+		}
+	}
+
+	var floatBits = ((((sign << 31) >>> 0) | ((biasedExponent & 0xff) << 23) | (mantissaBits & 0x7fffff)) >>> 0);
+	this._write(floatBits, 4, true);
 };
 
 Buffer.prototype.writeBytes = function(bytes, length, mustEqual) {
@@ -1667,6 +1937,7 @@ function isInteger(str) {
 
 function cmdMap() {
 	return {
+		  "request_query_all_configurations": "ee",
 		  "lorawan_configuration_settings": "cf",
 		  "lorawan_configuration_settings.mode": "cf00",
 		  "tsl_version": "df",
@@ -1866,6 +2137,12 @@ function processTemperature(payload) {
         "coefficient": 0.01
     },
     "temperature_alarm.open_window_alarm_trigger.temperature": {
+        "coefficient": 0.01
+    },
+    "temperature_alarm.anti_freeze_protection_deactivation.temperature": {
+        "coefficient": 0.01
+    },
+    "temperature_alarm.anti_freeze_protection_trigger.temperature": {
         "coefficient": 0.01
     },
     "temperature_alarm.over_range_alarm_trigger.temperature": {

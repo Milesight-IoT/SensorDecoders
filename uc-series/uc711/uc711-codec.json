@@ -2,6 +2,28 @@
     "version": "1.0.0",
     "object": [
         {
+            "id": "anti_freeze_protection_status",
+            "name": "Anti Freeze Protection",
+            "value": "0",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "Normal"
+                },
+                {
+                    "value": 1,
+                    "name": "Alarm"
+                }
+            ],
+            "bacnet_type": "binary_input_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS"
+        },
+        {
             "id": "anti_freezing.celsius_target_temperature",
             "name": "Celsius Target Temperature",
             "value": "3",

@@ -35,6 +35,9 @@ function milesightDeviceDecode(bytes) {
 	for (counterObj.i = 0; counterObj.i < bytes.length; ) {
 		var command_id = bytes[counterObj.i++];
 		switch (command_id) {
+			case 0xee:
+				decoded.all_configurations_request_by_device = readOnlyCommand(bytes, counterObj, 0);
+				break;
 			case 0xcf:
 				decoded.lorawan_configuration_settings = decoded.lorawan_configuration_settings || {};
 				var lorawan_configuration_settings_command = readUInt8(bytes, counterObj, 1);
@@ -171,9 +174,13 @@ function milesightDeviceDecode(bytes) {
 				}
 				if (decoded.temperature_alarm.type == 0x10) {
 					decoded.temperature_alarm.anti_freeze_protection_deactivation = decoded.temperature_alarm.anti_freeze_protection_deactivation || {};
+					decoded.temperature_alarm.anti_freeze_protection_deactivation.temperature = readInt16LE(bytes, counterObj, 2) / 100;
+					decoded.temperature = decoded.temperature_alarm.anti_freeze_protection_deactivation.temperature;
 				}
 				if (decoded.temperature_alarm.type == 0x11) {
 					decoded.temperature_alarm.anti_freeze_protection_trigger = decoded.temperature_alarm.anti_freeze_protection_trigger || {};
+					decoded.temperature_alarm.anti_freeze_protection_trigger.temperature = readInt16LE(bytes, counterObj, 2) / 100;
+					decoded.temperature = decoded.temperature_alarm.anti_freeze_protection_trigger.temperature;
 				}
 				if (decoded.temperature_alarm.type == 0x20) {
 					decoded.temperature_alarm.over_range_alarm_trigger = decoded.temperature_alarm.over_range_alarm_trigger || {};
@@ -874,6 +881,9 @@ function milesightDeviceDecode(bytes) {
 			case 0xbe:
 				decoded.reboot = readOnlyCommand(bytes, counterObj, 0);
 				break;
+			default:
+				unknown_command = 1;
+				break;
 		}
 		if (unknown_command) {
 			throw new Error('unknown command: ' + command_id);
@@ -882,7 +892,7 @@ function milesightDeviceDecode(bytes) {
 
 	if (Object.keys(history).length > 0) {
 		result.history = history;
-	} else {        
+	} else {
 		for (var k2 in decoded) {
 			if (decoded.hasOwnProperty(k2)) {
 				result[k2] = decoded[k2];
@@ -891,8 +901,20 @@ function milesightDeviceDecode(bytes) {
 	}
 
 	processTemperature(result);
+    patchDecode(result);
 
 	return result;
+}
+
+function patchDecode(decoded) {
+	//0=Normal, 1=Alarm
+	if (decoded.temperature_alarm && decoded.temperature_alarm.type == 0x10) {
+		decoded.anti_freeze_protection_status = 0;
+	}
+	if (decoded.temperature_alarm && decoded.temperature_alarm.type == 0x11) {
+		decoded.anti_freeze_protection_status = 1;
+	}
+	return decoded;
 }
 
 function readOnlyCommand(bytes) {
@@ -1057,14 +1079,14 @@ function extractBits(byte, startBit, endBit) {
 	if (startBit >= endBit) {
 	  throw new Error("invalid bit range");
 	}
-  
+
 	var width = endBit - startBit;
 	var mask = (1 << width) - 1;
 	return (byte >>> startBit) & mask;
 }
 
 function pickArrayItem(array, index, idName) {
-	for (var i = 0; i < array.length; i++) { 
+	for (var i = 0; i < array.length; i++) {
 		if (array[i][idName] === index) {
 			return array[i];
 		}
@@ -1074,7 +1096,7 @@ function pickArrayItem(array, index, idName) {
 }
 
 function insertArrayItem(array, item, idName) {
-	for (var i = 0; i < array.length; i++) { 
+	for (var i = 0; i < array.length; i++) {
 		if (array[i][idName] === item[idName]) {
 			array[i] = item;
 			return;
@@ -1132,46 +1154,46 @@ function readCommand(allBytes, counterObj, end) {
 function hasPath(obj, path) {
 	var parts = path.split('.');
 	var current = obj;
-  
+
 	for (var i = 0; i < parts.length; i++) {
 	  	if (!current || !(parts[i] in current)) {
 			return false;
 	  	}
 	  	current = current[parts[i]];
 	}
-  
+
 	return true;
 }
 
 function getPath(obj, path) {
 	var parts = path.split('.');
 	var current = obj;
-  
+
 	for (var i = 0; i < parts.length; i++) {
 	  	var key = parts[i];
-  
+
 	  	if (!current || !(key in current)) {
 			return null;
 	  	}
-  
+
 	  	current = current[key];
 	}
-  
+
 	return current;
 }
-  
+
 
 function setPath(obj, path, value) {
 	var parts = path.split('.');
 	var current = obj;
-  
+
 	for (var i = 0; i < parts.length - 1; i++) {
 	  	var key = parts[i];
-  
+
 	  	if (!(key in current) || typeof current[key] !== 'object') {
 			current[key] = {};
 	  	}
-  
+
 	  	current = current[key];
 	}
 
@@ -1202,7 +1224,7 @@ function getAllLeafPaths(obj, prefix) {
 		  var newPath = path ? (path + "." + index) : String(index);
 		  recurse(item, newPath);
 		});
-  
+
 	  } else if (typeof current === 'object' && current !== null) {
 		for (var key in current) {
 		  if (Object.prototype.hasOwnProperty.call(current, key)) {
@@ -1210,15 +1232,15 @@ function getAllLeafPaths(obj, prefix) {
 			recurse(current[key], newPath);
 		  }
 		}
-  
+
 	  } else {
 		paths.push(path);
 	  }
 	}
-  
+
 	recurse(obj, "");
 	return paths;
-  
+
 }
 
 function isInteger(str) {
@@ -1316,6 +1338,7 @@ function cmdMap() {
 		  "850102": "energy_saving.level_2.target_temp_tolerance",
 		  "870000": "di_settings.card_control.system_control",
 		  "870001": "di_settings.card_control.insertion_plan",
+		  "ee": "request_query_all_configurations",
 		  "cf": "lorawan_configuration_settings",
 		  "cf00": "lorawan_configuration_settings.mode",
 		  "df": "tsl_version",
@@ -1426,6 +1449,12 @@ function processTemperature(decoded) {
         "precision": 2
     },
     "temperature_alarm.open_window_alarm_trigger.temperature": {
+        "precision": 2
+    },
+    "temperature_alarm.anti_freeze_protection_deactivation.temperature": {
+        "precision": 2
+    },
+    "temperature_alarm.anti_freeze_protection_trigger.temperature": {
         "precision": 2
     },
     "temperature_alarm.over_range_alarm_trigger.temperature": {
