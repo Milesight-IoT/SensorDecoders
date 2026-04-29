@@ -183,8 +183,14 @@ function milesightDeviceEncode(payload) {
 		encoded = encoded.concat(buffer.toBytes());
 	}
 	//0xba
-	if ('ble_new_event' in payload) {
-
+	if ('retrieve_historical_data_by_time' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0xba);
+		if (payload.retrieve_historical_data_by_time.time < 0 || payload.retrieve_historical_data_by_time.time > 4294967295) {
+			throw new Error('retrieve_historical_data_by_time.time must be in range [0,4294967295]');
+		}
+		buffer.writeUInt32LE(payload.retrieve_historical_data_by_time.time);
+		encoded = encoded.concat(buffer.toBytes());
 	}
 	//0xb4
 	if ('ble_server' in payload) {
@@ -1960,6 +1966,7 @@ function cmdMap() {
 		  "ble_configuration_settings.pair_info": "cd07",
 		  "ble_configuration_settings.local_info": "cd08",
 		  "ble_new_event": "ba",
+		  "ble_new_event._item": "baxx",
 		  "ble_server": "b4",
 		  "relay_status_change": "01",
 		  "temperature_alarm": "02",

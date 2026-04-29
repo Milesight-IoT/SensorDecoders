@@ -135,7 +135,14 @@ function milesightDeviceDecode(bytes) {
 				}
 				break;
 			case 0xba:
-				decoded.ble_new_event = readBytes(bytes, counterObj, 10);
+				decoded.ble_new_event = decoded.ble_new_event || [];
+				var index = readUInt8(bytes, counterObj, 1);
+				var ble_new_event_item = pickArrayItem(decoded.ble_new_event, index, 'index');
+				ble_new_event_item.index = index;
+				insertArrayItem(decoded.ble_new_event, ble_new_event_item, 'index');
+				// 0：unpair, 1：paired, 2：disconnected
+				ble_new_event_item.status = readUInt8(bytes, counterObj, 1);
+				ble_new_event_item.mac = readHexString(bytes, counterObj, pair_name_item.length);
 				break;
 			case 0xb4:
 				decoded.ble_server = decoded.ble_server || {};
@@ -1361,6 +1368,7 @@ function cmdMap() {
 		  "cd07": "ble_configuration_settings.pair_info",
 		  "cd08": "ble_configuration_settings.local_info",
 		  "ba": "ble_new_event",
+		  "baxx": "ble_new_event._item",
 		  "b4": "ble_server",
 		  "01": "relay_status_change",
 		  "02": "temperature_alarm",
