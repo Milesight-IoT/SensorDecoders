@@ -82,6 +82,20 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Dehumidify Mode | 0x75 | 2 | rw | 0 |  | 0：disable<br>1：enable |
 | Ventilate Mode | 0x75 | 2 | rw | 0 |  | 0：disable<br>1：enable |
 | Reserved | 0x75 | 2 | rw |  |  |  |
+| Fan Delay Off Settings | 0x82 | 1 | rw |  |  |  |
+| Sub-command | 0x82 | 2 | rw | 0 |  |  |
+| Fan Delay Off Enable | 0x82 | 2 | rw | 1 |  | 0：Disable<br>1：Enable |
+| Fan Delay Off Time | 0x82 | 3 | rw | 60 | 1 - 3600 |  |
+| Temperature Control Level Switch | 0x83 | 1 | rw |  |  |  |
+| Subcmd ID | 0x83 | 2 | rw | 0 |  |  |
+| Setforw Enable | 0x83 | 2 | rw | 1 |  | 0：disable<br>1：enable |
+| Setback Enable | 0x83 | 2 | rw | 1 |  | 0：disable<br>1：enable |
+| Heat Switch Time | 0x83 | 2 | rw | 5 | 1 - 30 |  |
+| Heat Switch Temp | 0x83 | 3 | rw | 1 | 0.5 - 5 |  |
+| Cool Switch Time | 0x83 | 2 | rw | 5 | 1 - 30 |  |
+| Cool Switch Temp | 0x83 | 3 | rw | 1 | 0.5 - 50 |  |
+| level-1 Threshold | 0x83 | 3 | rw | 3 | 0 - 10 |  |
+| level-2 Threshold | 0x83 | 3 | rw | 5 | 0 - 10 |  |
 | Installation Settings | 0x8E | 5 | rw |  |  |  |
 | Subcmd ID | 0x8E | 2 | rw | 0 |  | 0：wire config<br>1:reversing_valve config<br>2:combine config<br>3:fan owner config |
 | Reversing Valve Mode | 0x8E | 1 | rw |  |  |  |
