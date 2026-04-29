@@ -263,7 +263,7 @@ function milesightDeviceDecode(bytes) {
                 }
                 // CUSTOM MESSAGE
                 else if (j < 13) {
-                    data.text = readAscii(bytes.slice(i, 48));
+                    data.text = readAscii(bytes.slice(i, i + 48));
                     i += 48;
                 }
             }

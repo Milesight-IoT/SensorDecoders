@@ -20,26 +20,24 @@ For more detailed information, please visit [Milesight Official Website](https:/
 
 ### Attribute
 
-|    CHANNEL    |  ID  | TYPE | LENGTH | DESCRIPTION                                                                                      |
-| :-----------: | :--: | :--: | :----: | ------------------------------------------------------------------------------------------------ |
-|     IPSO      | 0xFF | 0x01 |   1    | ipso_version(1B)                                                                                 |
-|   Hardware    | 0xFF | 0x09 |   2    | hardware_version(2B)<br/>hardware_version, e.g. 0110 -> v1.1                                     |
-|   Firmware    | 0xFF | 0x0A |   2    | firmware_version(2B)<br/>firmware_version, e.g. 0110 -> v1.10                                    |
-|      TSL      | 0xFF | 0xFF |   2    | tsl_version(2B)                                                                                  |
-| Serial Number | 0xFF | 0x16 |   2    | sn(8B)                                                                                           |
-| LoRaWAN Class | 0xFF | 0x0F |   1    | lorawan_class(1B)<br/>lorawan_class, values: (0: Class A, 1: Class B, 2: Class C, 3: Class CtoB) |
-|  Reset Event  | 0xFF | 0xFE |   1    | reset_event(1B)                                                                                  |
-| Device Status | 0xFF | 0x0B |   1    | device_status(1B)                                                                                |
+|    CHANNEL    |  ID  | TYPE | LENGTH | DESCRIPTION                                          |
+| :-----------: | :--: | :--: | :----: | ---------------------------------------------------- |
+|     IPSO      | 0xFF | 0x01 |   1    | ipso_version(1B)                                     |
+| Serial Number | 0xFF | 0x16 |   8    | sn(8B)                                               |
+|   Hardware    | 0xFF | 0x09 |   2    | hardware_version(2B)<br/>e.g. 0110 -> v1.1           |
+|   Firmware    | 0xFF | 0x0A |   2    | firmware_version(2B)<br/>e.g. 0101 -> v1.1           |
+| Device Status | 0xFF | 0x0B |   1    | device_status(1B)<br/>value: 0xFF -> on              |
+
+> Legacy compatibility: the decoder still keeps `tsl_version`, `lorawan_class`, `reset_event`, and historical downlink response parsing for older payloads.
 
 ### Telemetry
 
 |               CHANNEL                |  ID  | TYPE | LENGTH | DESCRIPTION                                                           |
 | :----------------------------------: | :--: | :--: | :----: | --------------------------------------------------------------------- |
-|           Protocol Version           | 0xFF | 0x01 |   1    | protocol_version(1B)                                                  |
-|             Power Status             | 0xFF | 0x0B |   1    | power(1B)                                                             |
+|             IPSO Version             | 0xFF | 0x01 |   1    | ipso_version(1B)                                                      |
 |            Serial Number             | 0xFF | 0x16 |   8    | sn(8B)                                                                |
-|           Hardware Version           | 0xFF | 0x09 |   2    | hardware_version(8B)                                                  |
-|           Firmware Version           | 0xFF | 0x0A |   2    | firmware_version(8B)                                                  |
+|           Hardware Version           | 0xFF | 0x09 |   2    | hardware_version(2B)                                                  |
+|           Firmware Version           | 0xFF | 0x0A |   2    | firmware_version(2B)                                                  |
 |           Digital Input 1            | 0x03 | 0x00 |   1    | gpio_input_1(1B)                                                      |
 |           Digital Input 2            | 0x04 | 0x00 |   1    | gpio_input_2(1B)                                                      |
 |           Digital Input 3            | 0x05 | 0x00 |   1    | gpio_input_3(1B)                                                      |
@@ -70,6 +68,26 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | BITS |   7    | 6...0                                                                                                                                                                                                                                                                                                |
 | :--: | :----: | :--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 |      | signed | 0x00: MB_COIL<br/>0x01: MB_DISCRETE<br/>0x02: MB_INPUT_INT16<br/>0x03: MB_HOLD_INT16<br/>0x04: MB_HOLD_INT32<br/>0x05: MB_HOLD_FLOAT<br/>0x06: MB_INPUT_INT32<br/>0x07: MB_INPUT_FLOAT<br/>0x08: MB_INPUT_INT32_AB<br/>0x09: MB_INPUT_INT32_CD<br/>0x0A: MB_HOLD_INT32_AB<br/>0x0B: MB_HOLD_INT32_CD |
+
+### Downlink Command
+
+|           CHANNEL            |  ID  | TYPE | LENGTH | DESCRIPTION                                                                 |
+| :--------------------------: | :--: | :--: | :----: | --------------------------------------------------------------------------- |
+|     Collection Interval      | 0xFF | 0x02 |   2    | `collection_interval`(2B), unit: second                                     |
+|        Report Interval       | 0xFF | 0x03 |   2    | `report_interval`(2B), unit: second                                         |
+|           Rejoin             | 0xFF | 0x04 |   1    | `rejoin`(1B), value: `0xFF`                                                 |
+|           Reboot             | 0xFF | 0x10 |   1    | `reboot`(1B), value: `0xFF`                                                 |
+|          Timestamp           | 0xFF | 0x11 |   4    | `timestamp`(4B)                                                             |
+|          Time Zone           | 0xFF | 0x17 |   2    | `time_zone`(2B), UTC+8 -> `80`                                              |
+|          Sync Time           | 0xFF | 0x4A |   1    | `sync_time`(1B), value: `0xFF`                                              |
+|        Jitter Config         | 0xFF | 0x91 |   5    | `jitter_config`: `num`(1B) + `time`(4B), unit: ms                           |
+|      GPIO Output Control     | 0xFF | 0x93 |   6    | `gpio_output_x_control`: `num`(1B) + `status`(1B) + `duration`(4B)          |
+|        Report Status         | 0xFF | 0x94 |   1    | `report_status`(1B), value: `0xFF`                                          |
+|       GPIO Output 1 Set      | 0x07 |  --  |   2    | `gpio_output_1`: `status`(1B) + `0xFF`                                      |
+|       GPIO Output 2 Set      | 0x08 |  --  |   2    | `gpio_output_2`: `status`(1B) + `0xFF`                                      |
+| DI Counter Filter 1/2/3/4    | 0xFF | 0x52 |   4    | `di_counter_filter_x`: `num`(1B) + `mode`(1B) + `filter_count`(2B, LE)      |
+
+`di_counter_filter_x.mode`: `0` disable, `1` hardware, `2` software.
 
 ## Example
 

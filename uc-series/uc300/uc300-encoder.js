@@ -68,6 +68,18 @@ function milesightDeviceEncode(payload) {
     if ("gpio_output_2" in payload) {
         encoded = encoded.concat(controlOutputStatus(2, payload.gpio_output_2));
     }
+    if ("di_counter_filter_1" in payload) {
+        encoded = encoded.concat(setDiCounterFilter(1, payload.di_counter_filter_1));
+    }
+    if ("di_counter_filter_2" in payload) {
+        encoded = encoded.concat(setDiCounterFilter(2, payload.di_counter_filter_2));
+    }
+    if ("di_counter_filter_3" in payload) {
+        encoded = encoded.concat(setDiCounterFilter(3, payload.di_counter_filter_3));
+    }
+    if ("di_counter_filter_4" in payload) {
+        encoded = encoded.concat(setDiCounterFilter(4, payload.di_counter_filter_4));
+    }
 
     return encoded;
 }
@@ -304,6 +316,50 @@ function controlOutputStatus(gpio_index, status) {
     buffer.writeUInt8(channel_ids[gpio_index - 1]);
     buffer.writeUInt8(getValue(on_off_map, status));
     buffer.writeUInt8(0xff);
+    return buffer.toBytes();
+}
+
+/**
+ * Set DI counter filter
+ * @param {number} di_index values: (1: DI1, 2: DI2, 3: DI3, 4: DI4)
+ * @param {object} di_counter_filter_x
+ * @param {number} di_counter_filter_x.mode values: (0: disable, 1: hardware, 2: software)
+ * @param {number} di_counter_filter_x.filter_count hardware: 250us, software: 1-65535ms
+ * @example { "di_counter_filter_1": { "mode": 2, "filter_count": 100 } }
+ */
+function setDiCounterFilter(di_index, di_counter_filter_x) {
+    var di_chns = [1, 2, 3, 4];
+    if (di_chns.indexOf(di_index) === -1) {
+        throw new Error("di_index must be one of " + di_chns.join(", "));
+    }
+    if (typeof di_counter_filter_x !== "object") {
+        throw new Error("di_counter_filter_" + di_index + " must be an object");
+    }
+
+    var mode = di_counter_filter_x.mode;
+    var filter_count = di_counter_filter_x.filter_count;
+    var mode_map = { 0: "disable", 1: "hardware", 2: "software" };
+    var raw_mode;
+    if (typeof mode === "number" && Object.prototype.hasOwnProperty.call(mode_map, mode)) {
+        raw_mode = mode;
+    } else if (typeof mode === "string") {
+        raw_mode = getValue(mode_map, mode);
+    } else {
+        throw new Error("di_counter_filter_" + di_index + ".mode must be one of 0, 1, 2, disable, hardware, software");
+    }
+    if (typeof filter_count !== "number") {
+        throw new Error("di_counter_filter_" + di_index + ".filter_count must be a number");
+    }
+    if (filter_count < 0 || filter_count > 0xffff) {
+        throw new Error("di_counter_filter_" + di_index + ".filter_count must be in range 0-65535");
+    }
+
+    var buffer = new Buffer(6);
+    buffer.writeUInt8(0xff);
+    buffer.writeUInt8(0x52);
+    buffer.writeUInt8(di_index);
+    buffer.writeUInt8(raw_mode);
+    buffer.writeUInt16LE(filter_count);
     return buffer.toBytes();
 }
 
