@@ -10,6 +10,8 @@ For more detailed information, please visit [Milesight Official Website](https:/
 
 | CHANNEL |  ID  | LENGTH | READ/WRITE | DEFAULT | RANGE | ENUM |
 | :------ | :--: | :----: | :--------: | :-----: | :---: | :--: |
+| LoRaWAN  Settings | 0xCF | 1 | rw |  |  |  |
+| LoRaWAN Comand | 0xCF | 2 | rw |  |  |  |
 | LoRaWAN Work Mode | 0xCF | 2 | rw | 0 |  | 0:ClassA<br>1:ClassB<br>2:ClassC<br>3:ClassC to B |
 | TSL Version | 0xDF | 3 | r |  |  |  |
 | Product Name | 0xDE | 33 | rw |  |  |  |
@@ -20,6 +22,11 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Firmware Version | 0xDA | 7 | r |  |  |  |
 | OEM ID | 0xD9 | 3 | rw |  |  |  |
 | Product Region | 0xD8 | 17 | r |  |  |  |
+| Bluetooth Status | 0xBA | 11 | r |  |  |  |
+| Bluetooth Status | 0xBA | M | r |  |  |  |
+| Index | 0xBA | 2 | r | 0 |  |  |
+| Status | 0xBA | 2 | r | 0 |  | 0：unpair<br>1：paired<br>2：disconnected |
+| Mac | 0xBA | 9 | r | 24e124123456789a |  |  |
 | Battery | 0x00 | 2 | r |  | 0 - 100 |  |
 | Temperature | 0x01 | 3 | r |  | -20 - 60 |  |
 | Humidity | 0x02 | 3 | r |  | 0 - 100 |  |
@@ -262,6 +269,9 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Current Battery | 0xB8 | 5 | r |  |  |  |
 | Battery Voltage | 0xB8 | 3 | r |  |  |  |
 | Current Battery Status | 0xB8 | 3 | r |  |  |  |
+| Retrieval(Time Period) | 0xBA | 9 | w |  |  |  |
+| Start Time | 0xBA | 5 | w |  |  |  |
+| End Time | 0xBA | 5 | w |  |  |  |
 | Alarm Type | 0x0B | 2 | r |  |  |  |
 | Collection Error | 0x0B | 1 | r |  |  |  |
 | Exceed the Range Lower Limit | 0x0B | 1 | r |  |  |  |

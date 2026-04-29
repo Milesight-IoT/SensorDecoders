@@ -36,8 +36,12 @@ function milesightDeviceDecode(bytes) {
 		var command_id = bytes[counterObj.i++];
 		switch (command_id) {
 			case 0xcf:
-				// 0:ClassA, 1:ClassB, 2:ClassC, 3:ClassC to B
-				decoded.lorawan_configuration_settings.mode = readUInt8(bytes, counterObj, 1);
+				decoded.lorawan_configuration_settings = decoded.lorawan_configuration_settings || {};
+				var lorawan_configuration_settings_command = readUInt8(bytes, counterObj, 1);
+				if (lorawan_configuration_settings_command == 0x00) {
+					// 0:ClassA, 1:ClassB, 2:ClassC, 3:ClassC to B
+					decoded.lorawan_configuration_settings.mode = readUInt8(bytes, counterObj, 1);
+				}
 				break;
 			case 0xdf:
 				decoded.tsl_version = readProtocolVersion(readBytes(bytes, counterObj, 2));
@@ -75,6 +79,16 @@ function milesightDeviceDecode(bytes) {
 				decoded.battery_info.battery_left = readUInt32LE(bytes, counterObj, 4) / 1000;
 				decoded.battery_info.battery_voltage = readUInt16LE(bytes, counterObj, 2) / 1000;
 				decoded.battery_info.current_battery_status = readHexString(bytes, counterObj, 2);
+				break;
+			case 0xba:
+				decoded.ble_new_event = decoded.ble_new_event || [];
+				var index = readUInt8(bytes, counterObj, 1);
+				var ble_new_event_item = pickArrayItem(decoded.ble_new_event, index, 'index');
+				ble_new_event_item.index = index;
+				insertArrayItem(decoded.ble_new_event, ble_new_event_item, 'index');
+				// 0：unpair, 1：paired, 2：disconnected
+				ble_new_event_item.status = readUInt8(bytes, counterObj, 1);
+				ble_new_event_item.mac = readHexString(bytes, counterObj, 8);
 				break;
 			case 0x00:
 				decoded.battery = readUInt8(bytes, counterObj, 1);
@@ -708,6 +722,9 @@ function milesightDeviceDecode(bytes) {
 				// 0：Schedule1, 1：Schedule2, 2：Schedule3, 3：Schedule4, 4：Schedule5, 5：Schedule6, 6：Schedule7, 7：Schedule8, 255：Reset All
 				decoded.delete_task_plan.type = readUInt8(bytes, counterObj, 1);
 				break;
+			default:
+				unknown_command = 1;
+				break;
 		}
 		if (unknown_command) {
 			throw new Error('unknown command: ' + command_id);
@@ -716,7 +733,7 @@ function milesightDeviceDecode(bytes) {
 
 	if (Object.keys(history).length > 0) {
 		result.history = history;
-	} else {        
+	} else {
 		for (var k2 in decoded) {
 			if (decoded.hasOwnProperty(k2)) {
 				result[k2] = decoded[k2];
@@ -725,9 +742,12 @@ function milesightDeviceDecode(bytes) {
 	}
 
 	processTemperature(result);
+    patchDecode(result);
 
 	return result;
 }
+
+function patchDecode(decoded) {}
 
 function readOnlyCommand(bytes) {
 	return 1;
@@ -891,14 +911,14 @@ function extractBits(byte, startBit, endBit) {
 	if (startBit >= endBit) {
 	  throw new Error("invalid bit range");
 	}
-  
+
 	var width = endBit - startBit;
 	var mask = (1 << width) - 1;
 	return (byte >>> startBit) & mask;
 }
 
 function pickArrayItem(array, index, idName) {
-	for (var i = 0; i < array.length; i++) { 
+	for (var i = 0; i < array.length; i++) {
 		if (array[i][idName] === index) {
 			return array[i];
 		}
@@ -908,7 +928,7 @@ function pickArrayItem(array, index, idName) {
 }
 
 function insertArrayItem(array, item, idName) {
-	for (var i = 0; i < array.length; i++) { 
+	for (var i = 0; i < array.length; i++) {
 		if (array[i][idName] === item[idName]) {
 			array[i] = item;
 			return;
@@ -966,46 +986,46 @@ function readCommand(allBytes, counterObj, end) {
 function hasPath(obj, path) {
 	var parts = path.split('.');
 	var current = obj;
-  
+
 	for (var i = 0; i < parts.length; i++) {
 	  	if (!current || !(parts[i] in current)) {
 			return false;
 	  	}
 	  	current = current[parts[i]];
 	}
-  
+
 	return true;
 }
 
 function getPath(obj, path) {
 	var parts = path.split('.');
 	var current = obj;
-  
+
 	for (var i = 0; i < parts.length; i++) {
 	  	var key = parts[i];
-  
+
 	  	if (!current || !(key in current)) {
 			return null;
 	  	}
-  
+
 	  	current = current[key];
 	}
-  
+
 	return current;
 }
-  
+
 
 function setPath(obj, path, value) {
 	var parts = path.split('.');
 	var current = obj;
-  
+
 	for (var i = 0; i < parts.length - 1; i++) {
 	  	var key = parts[i];
-  
+
 	  	if (!(key in current) || typeof current[key] !== 'object') {
 			current[key] = {};
 	  	}
-  
+
 	  	current = current[key];
 	}
 
@@ -1036,7 +1056,7 @@ function getAllLeafPaths(obj, prefix) {
 		  var newPath = path ? (path + "." + index) : String(index);
 		  recurse(item, newPath);
 		});
-  
+
 	  } else if (typeof current === 'object' && current !== null) {
 		for (var key in current) {
 		  if (Object.prototype.hasOwnProperty.call(current, key)) {
@@ -1044,15 +1064,15 @@ function getAllLeafPaths(obj, prefix) {
 			recurse(current[key], newPath);
 		  }
 		}
-  
+
 	  } else {
 		paths.push(path);
 	  }
 	}
-  
+
 	recurse(obj, "");
 	return paths;
-  
+
 }
 
 function isInteger(str) {
@@ -1128,7 +1148,8 @@ function cmdMap() {
 		  "610201": "reporting_interval.ble_lora.minutes_of_time",
 		  "610300": "reporting_interval.power_lora.seconds_of_time",
 		  "610301": "reporting_interval.power_lora.minutes_of_time",
-		  "cf": "lorawan_configuration_settings.mode",
+		  "cf": "lorawan_configuration_settings",
+		  "cf00": "lorawan_configuration_settings.mode",
 		  "df": "tsl_version",
 		  "de": "product_name",
 		  "dd": "product_pn",
@@ -1138,6 +1159,8 @@ function cmdMap() {
 		  "d8": "product_frequency_band",
 		  "b9": "device_time",
 		  "b8": "battery_info",
+		  "ba": "ble_new_event",
+		  "baxx": "ble_new_event._item",
 		  "00": "battery",
 		  "01": "temperature",
 		  "02": "humidity",

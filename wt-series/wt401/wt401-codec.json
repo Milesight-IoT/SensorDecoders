@@ -41,7 +41,7 @@
         },
         {
             "id": "battery_event.type",
-            "name": "Battery Event Type",
+            "name": "Battery Event Type(Battery Event)",
             "value": "",
             "unit": "",
             "access_mode": "R",
@@ -76,7 +76,7 @@
         },
         {
             "id": "ble_event.type",
-            "name": "Bluetooth Event Type",
+            "name": "Bluetooth Event Type(Bluetooth Event)",
             "value": "",
             "unit": "",
             "access_mode": "R",
@@ -101,7 +101,7 @@
         },
         {
             "id": "button_custom_function.enable",
-            "name": "Enable",
+            "name": "Enable(Button Custom Function)",
             "value": "0",
             "unit": "",
             "access_mode": "RW",
@@ -124,7 +124,7 @@
         },
         {
             "id": "button_custom_function.mode1",
-            "name": "Button1 Custom Function",
+            "name": "Button1 Custom Function(Button Custom Function)",
             "value": "1",
             "unit": "",
             "access_mode": "RW",
@@ -167,7 +167,7 @@
         },
         {
             "id": "button_custom_function.mode2",
-            "name": "Button2 Custom Function",
+            "name": "Button2 Custom Function(Button Custom Function)",
             "value": "2",
             "unit": "",
             "access_mode": "RW",
@@ -210,7 +210,7 @@
         },
         {
             "id": "button_custom_function.mode3",
-            "name": "Button3 Custom Function",
+            "name": "Button3 Custom Function(Button Custom Function)",
             "value": "0",
             "unit": "",
             "access_mode": "RW",
@@ -249,7 +249,7 @@
         },
         {
             "id": "button_custom_function.subcmd",
-            "name": "Subcmd ID",
+            "name": "Subcmd ID(Button Custom Function)",
             "value": "0",
             "unit": "",
             "access_mode": "RW",
@@ -326,7 +326,7 @@
         },
         {
             "id": "children_lock_settings.button1_event",
-            "name": "Button Event 1",
+            "name": "Button Event 1 (Child Lock)",
             "value": "0",
             "unit": "",
             "access_mode": "RW",
@@ -366,7 +366,7 @@
         },
         {
             "id": "children_lock_settings.button2_event",
-            "name": "Button Event 2",
+            "name": "Button Event 2 (Child Lock)",
             "value": "0",
             "unit": "",
             "access_mode": "RW",
@@ -406,7 +406,7 @@
         },
         {
             "id": "children_lock_settings.button3_event",
-            "name": "Button Event 3",
+            "name": "Button Event 3 (Child Lock)",
             "value": "0",
             "unit": "",
             "access_mode": "RW",
@@ -446,7 +446,7 @@
         },
         {
             "id": "children_lock_settings.cancel_pair",
-            "name": "Cancel Pairing",
+            "name": "Cancel Pairing(Child Lock)",
             "value": "0",
             "unit": "",
             "access_mode": "RW",
@@ -486,7 +486,7 @@
         },
         {
             "id": "children_lock_settings.enable",
-            "name": "Enable",
+            "name": "Enable(Child Lock)",
             "value": "0",
             "unit": "",
             "access_mode": "RW",
@@ -526,7 +526,7 @@
         },
         {
             "id": "children_lock_settings.fan_mode",
-            "name": "Fan Mode",
+            "name": "Fan Mode(Child Lock)",
             "value": "0",
             "unit": "",
             "access_mode": "RW",
@@ -566,7 +566,7 @@
         },
         {
             "id": "children_lock_settings.filter_clean_alarm_release",
-            "name": "Filter Clean Alarm Release",
+            "name": "Filter Clean Alarm Release(Child Lock)",
             "value": "0",
             "unit": "",
             "access_mode": "RW",
@@ -606,7 +606,7 @@
         },
         {
             "id": "children_lock_settings.plan_switch",
-            "name": "Schedule Switch",
+            "name": "Schedule Switch(Child Lock)",
             "value": "0",
             "unit": "",
             "access_mode": "RW",
@@ -646,7 +646,7 @@
         },
         {
             "id": "children_lock_settings.power_on_off",
-            "name": "Power On/Off",
+            "name": "Power On/Off(Child Lock)",
             "value": "0",
             "unit": "",
             "access_mode": "RW",
@@ -686,7 +686,7 @@
         },
         {
             "id": "children_lock_settings.reboot_reset",
-            "name": "Reboot&Reset",
+            "name": "Reboot&Reset(Child Lock)",
             "value": "0",
             "unit": "",
             "access_mode": "RW",
@@ -726,7 +726,7 @@
         },
         {
             "id": "children_lock_settings.reserved",
-            "name": "Reserved",
+            "name": "Reserved(Child Lock)",
             "value": "0",
             "unit": "",
             "access_mode": "RW",
@@ -766,7 +766,7 @@
         },
         {
             "id": "children_lock_settings.status_report",
-            "name": "Status Report",
+            "name": "Status Report (Child Lock)",
             "value": "0",
             "unit": "",
             "access_mode": "RW",
@@ -806,7 +806,7 @@
         },
         {
             "id": "children_lock_settings.system_on_off",
-            "name": "System On/Off",
+            "name": "System On/Off(Child Lock)",
             "value": "0",
             "unit": "",
             "access_mode": "RW",
@@ -846,7 +846,7 @@
         },
         {
             "id": "children_lock_settings.temp_down",
-            "name": "Temperature -",
+            "name": "Temperature -(Child Lock)",
             "value": "0",
             "unit": "",
             "access_mode": "RW",
@@ -886,7 +886,7 @@
         },
         {
             "id": "children_lock_settings.temp_up",
-            "name": "Temperature +",
+            "name": "Temperature +(Child Lock)",
             "value": "0",
             "unit": "",
             "access_mode": "RW",
@@ -926,7 +926,7 @@
         },
         {
             "id": "children_lock_settings.temperature_control_mode",
-            "name": "Temperature Control Mode",
+            "name": "Temperature Control Mode(Child Lock)",
             "value": "0",
             "unit": "",
             "access_mode": "RW",
@@ -966,7 +966,7 @@
         },
         {
             "id": "children_lock_settings.temperature_unit_switch",
-            "name": "Temperature Unit Switch",
+            "name": "Temperature Unit Switch(Child Lock)",
             "value": "0",
             "unit": "",
             "access_mode": "RW",
@@ -1005,30 +1005,8 @@
             ]
         },
         {
-            "id": "clear_historical_data",
-            "name": "Clear Data",
-            "access_mode": "W",
-            "data_type": "BOOL",
-            "value_type": "UINT8",
-            "unit": "",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "bacnet_type": "binary_output_object",
-            "value": "",
-            "values": [
-                {
-                    "value": 0,
-                    "name": "no"
-                },
-                {
-                    "value": 1,
-                    "name": "yes"
-                }
-            ]
-        },
-        {
             "id": "collection_interval.minutes_of_time",
-            "name": "Collecting Interval",
+            "name": "Collecting Interval(Collecting Interval)",
             "value": "1",
             "unit": "min",
             "access_mode": "RW",
@@ -1047,7 +1025,7 @@
         },
         {
             "id": "collection_interval.seconds_of_time",
-            "name": "Collecting Interval",
+            "name": "Collecting Interval(Collecting Interval)",
             "value": "30",
             "unit": "s",
             "access_mode": "RW",
@@ -1066,7 +1044,7 @@
         },
         {
             "id": "collection_interval.unit",
-            "name": "Collecting Interval Unit",
+            "name": "Collecting Interval Unit(Collecting Interval)",
             "value": "0",
             "unit": "",
             "access_mode": "RW",
@@ -1089,7 +1067,7 @@
         },
         {
             "id": "communicate_interval.ble_lora.minutes_of_time",
-            "name": "BLE_LORA Communicate Interval",
+            "name": "BLE_LORA Communicate Interval(BLE_LORA Communicate Interval)",
             "value": "1",
             "unit": "min",
             "access_mode": "RW",
@@ -1108,7 +1086,7 @@
         },
         {
             "id": "communicate_interval.ble_lora.seconds_of_time",
-            "name": "BLE_LORA Communicate Interval",
+            "name": "BLE_LORA Communicate Interval(BLE_LORA Communicate Interval)",
             "value": "600",
             "unit": "s",
             "access_mode": "RW",
@@ -1127,7 +1105,7 @@
         },
         {
             "id": "communicate_interval.ble_lora.unit",
-            "name": "BLE_LORA Communicate Interval Unit",
+            "name": "BLE_LORA Communicate Interval Unit(BLE_LORA Communicate Interval)",
             "value": "1",
             "unit": "",
             "access_mode": "RW",
@@ -1150,7 +1128,7 @@
         },
         {
             "id": "communicate_interval.ble.minutes_of_time",
-            "name": "BLE Communicate Interval",
+            "name": "BLE Communicate Interval(BLE Communicate Interval)",
             "value": "1",
             "unit": "min",
             "access_mode": "RW",
@@ -1169,7 +1147,7 @@
         },
         {
             "id": "communicate_interval.ble.seconds_of_time",
-            "name": "BLE Communicate Interval",
+            "name": "BLE Communicate Interval(BLE Communicate Interval)",
             "value": "600",
             "unit": "s",
             "access_mode": "RW",
@@ -1188,7 +1166,7 @@
         },
         {
             "id": "communicate_interval.ble.unit",
-            "name": "BLE Communicate Interval Unit",
+            "name": "BLE Communicate Interval Unit(BLE Communicate Interval)",
             "value": "1",
             "unit": "",
             "access_mode": "RW",
@@ -1211,7 +1189,7 @@
         },
         {
             "id": "communicate_interval.id",
-            "name": "Communicate Interval ID",
+            "name": "Communicate Interval ID(Communicate Interval)",
             "value": "0",
             "unit": "",
             "access_mode": "RW",
@@ -1242,7 +1220,7 @@
         },
         {
             "id": "communicate_interval.lora.minutes_of_time",
-            "name": "LORA Communicate Interval",
+            "name": "LORA Communicate Interval(LORA Communicate Interval)",
             "value": "1",
             "unit": "min",
             "access_mode": "RW",
@@ -1261,7 +1239,7 @@
         },
         {
             "id": "communicate_interval.lora.seconds_of_time",
-            "name": "LORA Communicate Interval",
+            "name": "LORA Communicate Interval(LORA Communicate Interval)",
             "value": "600",
             "unit": "s",
             "access_mode": "RW",
@@ -1280,7 +1258,7 @@
         },
         {
             "id": "communicate_interval.lora.unit",
-            "name": "LORA Communicate Interval Unit",
+            "name": "LORA Communicate Interval Unit(LORA Communicate Interval)",
             "value": "1",
             "unit": "",
             "access_mode": "RW",
@@ -1303,7 +1281,7 @@
         },
         {
             "id": "communicate_interval.power_bus.minutes_of_time",
-            "name": "POWERBUS_LORA Communicate Interval",
+            "name": "POWERBUS_LORA Communicate Interval(POWERBUS_LORA Communicate Interval)",
             "value": "1",
             "unit": "min",
             "access_mode": "RW",
@@ -1322,7 +1300,7 @@
         },
         {
             "id": "communicate_interval.power_bus.seconds_of_time",
-            "name": "POWERBUS_LORA Communicate Interval",
+            "name": "POWERBUS_LORA Communicate Interval(POWERBUS_LORA Communicate Interval)",
             "value": "600",
             "unit": "s",
             "access_mode": "RW",
@@ -1341,7 +1319,7 @@
         },
         {
             "id": "communicate_interval.power_bus.unit",
-            "name": "POWERBUS_LORA Communicate Interval Unit",
+            "name": "POWERBUS_LORA Communicate Interval Unit(POWERBUS_LORA Communicate Interval)",
             "value": "1",
             "unit": "",
             "access_mode": "RW",
@@ -1436,7 +1414,7 @@
         },
         {
             "id": "daylight_saving_time.daylight_saving_time_offset",
-            "name": "DST Bias",
+            "name": "DST Bias(Daylight Saving Time)",
             "value": "60",
             "unit": "min",
             "access_mode": "RW",
@@ -1463,7 +1441,7 @@
         },
         {
             "id": "daylight_saving_time.enable",
-            "name": "Daylight Saving Time",
+            "name": "Daylight Saving Time(Daylight Saving Time)",
             "value": "0",
             "unit": "",
             "access_mode": "RW",
@@ -1496,7 +1474,7 @@
         },
         {
             "id": "daylight_saving_time.end_hour_min",
-            "name": "Time",
+            "name": "Time(Daylight Saving Time)",
             "value": "0",
             "unit": "min",
             "access_mode": "RW",
@@ -1617,7 +1595,7 @@
         },
         {
             "id": "daylight_saving_time.end_month",
-            "name": "Month",
+            "name": "Month(Daylight Saving Time)",
             "value": "1",
             "unit": "",
             "access_mode": "RW",
@@ -1690,7 +1668,7 @@
         },
         {
             "id": "daylight_saving_time.end_week_day",
-            "name": "Week",
+            "name": "Week(Daylight Saving Time)",
             "value": "1",
             "unit": "",
             "access_mode": "RW",
@@ -1743,7 +1721,7 @@
         },
         {
             "id": "daylight_saving_time.end_week_num",
-            "name": "Number of Week",
+            "name": "Number of Week(Daylight Saving Time)",
             "value": "1",
             "unit": "",
             "access_mode": "RW",
@@ -1788,7 +1766,7 @@
         },
         {
             "id": "daylight_saving_time.start_hour_min",
-            "name": "Time",
+            "name": "Time(Daylight Saving Time)",
             "value": "0",
             "unit": "min",
             "access_mode": "RW",
@@ -1909,7 +1887,7 @@
         },
         {
             "id": "daylight_saving_time.start_month",
-            "name": "Month",
+            "name": "Month(Daylight Saving Time)",
             "value": "1",
             "unit": "",
             "access_mode": "RW",
@@ -1982,7 +1960,7 @@
         },
         {
             "id": "daylight_saving_time.start_week_day",
-            "name": "Week",
+            "name": "Week(Daylight Saving Time)",
             "value": "1",
             "unit": "",
             "access_mode": "RW",
@@ -2035,7 +2013,7 @@
         },
         {
             "id": "daylight_saving_time.start_week_num",
-            "name": "Number of Week",
+            "name": "Number of Week(Daylight Saving Time)",
             "value": "1",
             "unit": "",
             "access_mode": "RW",
@@ -2080,7 +2058,7 @@
         },
         {
             "id": "delete_task_plan.type",
-            "name": "Delete Schedule",
+            "name": "Delete Schedule(Delete Schedule)",
             "value": "255",
             "unit": "",
             "access_mode": "W",
@@ -2124,7 +2102,7 @@
                     "name": "Reset All"
                 }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_output_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": []
@@ -2207,7 +2185,7 @@
                     "name": "Not executed"
                 }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS"
         },
@@ -2315,7 +2293,7 @@
         },
         {
             "id": "fan_enable.auto",
-            "name": "Auto",
+            "name": "Auto(Fan Mode Enabled)",
             "value": "1",
             "unit": "",
             "access_mode": "RW",
@@ -2345,7 +2323,7 @@
         },
         {
             "id": "fan_enable.circul",
-            "name": "Circul",
+            "name": "Circul(Fan Mode Enabled)",
             "value": "1",
             "unit": "",
             "access_mode": "RW",
@@ -2375,7 +2353,7 @@
         },
         {
             "id": "fan_enable.high",
-            "name": "High",
+            "name": "High(Fan Mode Enabled)",
             "value": "1",
             "unit": "",
             "access_mode": "RW",
@@ -2405,7 +2383,7 @@
         },
         {
             "id": "fan_enable.low",
-            "name": "Low",
+            "name": "Low(Fan Mode Enabled)",
             "value": "1",
             "unit": "",
             "access_mode": "RW",
@@ -2435,7 +2413,7 @@
         },
         {
             "id": "fan_enable.medium",
-            "name": "Medium",
+            "name": "Medium(Fan Mode Enabled)",
             "value": "1",
             "unit": "",
             "access_mode": "RW",
@@ -2465,7 +2443,7 @@
         },
         {
             "id": "fan_enable.on",
-            "name": "On",
+            "name": "On(Fan Mode Enabled)",
             "value": "0",
             "unit": "",
             "access_mode": "RW",
@@ -2495,7 +2473,7 @@
         },
         {
             "id": "fan_enable.reserved",
-            "name": "Reserved",
+            "name": "Reserved(Fan Mode Enabled)",
             "value": "0",
             "unit": "",
             "access_mode": "RW",
@@ -2525,7 +2503,7 @@
         },
         {
             "id": "fan_error_alarm.mode",
-            "name": "Action",
+            "name": "Action(Fan Error Alarm)",
             "value": "0",
             "unit": "",
             "access_mode": "W",
@@ -2541,7 +2519,7 @@
                     "name": "trigger alarm"
                 }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_output_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": []
@@ -2588,13 +2566,13 @@
                     "name": "none/keep"
                 }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS"
         },
         {
             "id": "filter_clean_alarm.mode",
-            "name": "Action",
+            "name": "Action(Filter Cleaning Alarm)",
             "value": "0",
             "unit": "",
             "access_mode": "W",
@@ -2610,7 +2588,7 @@
                     "name": "clean alarm"
                 }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_output_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": []
@@ -2633,7 +2611,7 @@
         },
         {
             "id": "humidity_alarm.type",
-            "name": "Alarm Type",
+            "name": "Alarm Type(Humidity Alarm)",
             "value": "",
             "unit": "",
             "access_mode": "R",
@@ -2657,14 +2635,14 @@
                     "name": "No Data"
                 }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": []
         },
         {
             "id": "humidity_calibration_settings.calibration_value",
-            "name": "Calibration Value",
+            "name": "Calibration Value(Humidity Calibration Settings)",
             "value": "0",
             "unit": "%",
             "access_mode": "RW",
@@ -2683,7 +2661,7 @@
         },
         {
             "id": "humidity_calibration_settings.enable",
-            "name": "Humidity Calibration",
+            "name": "Humidity Calibration(Humidity Calibration Settings)",
             "value": "0",
             "unit": "",
             "access_mode": "RW",
@@ -2708,7 +2686,7 @@
         },
         {
             "id": "insert_temporary_plan.id",
-            "name": "Plan ID",
+            "name": "Plan ID(Insert Temporary Plan)",
             "value": "0",
             "unit": "",
             "access_mode": "W",
@@ -2747,7 +2725,7 @@
         },
         {
             "id": "key_event.type",
-            "name": "Event Type",
+            "name": "Event Type(Button Report)",
             "value": "",
             "unit": "",
             "access_mode": "R",
@@ -2765,6 +2743,37 @@
                 {
                     "value": 2,
                     "name": "Button 3 Report"
+                }
+            ],
+            "bacnet_type": "multistate_input_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": []
+        },
+        {
+            "id": "lorawan_configuration_settings.mode",
+            "name": "LoRaWAN Work Mode(LoRaWAN  Settings)",
+            "value": "0",
+            "unit": "",
+            "access_mode": "RW",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "ClassA"
+                },
+                {
+                    "value": 1,
+                    "name": "ClassB"
+                },
+                {
+                    "value": 2,
+                    "name": "ClassC"
+                },
+                {
+                    "value": 3,
+                    "name": "ClassC to B"
                 }
             ],
             "bacnet_type": "multistate_value_object",
@@ -2790,7 +2799,7 @@
         },
         {
             "id": "mode_enable.auto",
-            "name": "Auto",
+            "name": "Auto(Temperature Control Mode Enable)",
             "value": "1",
             "unit": "",
             "access_mode": "RW",
@@ -2820,7 +2829,7 @@
         },
         {
             "id": "mode_enable.cool",
-            "name": "Cool",
+            "name": "Cool(Temperature Control Mode Enable)",
             "value": "1",
             "unit": "",
             "access_mode": "RW",
@@ -2850,7 +2859,7 @@
         },
         {
             "id": "mode_enable.dehumidity",
-            "name": "Dehumidity",
+            "name": "Dehumidity(Temperature Control Mode Enable)",
             "value": "1",
             "unit": "",
             "access_mode": "RW",
@@ -2880,7 +2889,7 @@
         },
         {
             "id": "mode_enable.em_heat",
-            "name": "EM Heat",
+            "name": "EM Heat(Temperature Control Mode Enable)",
             "value": "1",
             "unit": "",
             "access_mode": "RW",
@@ -2910,7 +2919,7 @@
         },
         {
             "id": "mode_enable.heat",
-            "name": "Heat",
+            "name": "Heat(Temperature Control Mode Enable)",
             "value": "1",
             "unit": "",
             "access_mode": "RW",
@@ -2940,7 +2949,7 @@
         },
         {
             "id": "mode_enable.reserved",
-            "name": "Reserved",
+            "name": "Reserved(Temperature Control Mode Enable)",
             "value": "",
             "unit": "",
             "access_mode": "RW",
@@ -2970,7 +2979,7 @@
         },
         {
             "id": "mode_enable.ventilation",
-            "name": "Ventilation",
+            "name": "Ventilation(Temperature Control Mode Enable)",
             "value": "1",
             "unit": "",
             "access_mode": "RW",
@@ -3057,7 +3066,7 @@
         },
         {
             "id": "pir_common.check.period",
-            "name": "Duration",
+            "name": "Duration(Trigger Condition)",
             "value": "5",
             "unit": "min",
             "access_mode": "RW",
@@ -3076,7 +3085,7 @@
         },
         {
             "id": "pir_common.check.rate",
-            "name": "Trigger Ratio",
+            "name": "Trigger Ratio(Trigger Condition)",
             "value": "50",
             "unit": "%",
             "access_mode": "RW",
@@ -3095,7 +3104,7 @@
         },
         {
             "id": "pir_common.cmd",
-            "name": "Common Cmd",
+            "name": "Common Cmd(Occupancy Detection)",
             "value": "0",
             "unit": "",
             "access_mode": "RW",
@@ -3108,7 +3117,7 @@
         },
         {
             "id": "pir_common.enable",
-            "name": "Occupancy Detection",
+            "name": "Occupancy Detection(Occupancy Detection)",
             "value": "1",
             "unit": "",
             "access_mode": "RW",
@@ -3131,7 +3140,7 @@
         },
         {
             "id": "pir_common.mode",
-            "name": "Detection Mode",
+            "name": "Detection Mode(Occupancy Detection)",
             "value": "",
             "unit": "",
             "access_mode": "RW",
@@ -3154,7 +3163,7 @@
         },
         {
             "id": "pir_common.release_time",
-            "name": "Occupied to Vacant Delay",
+            "name": "Occupied to Vacant Delay(Occupancy Detection)",
             "value": "30",
             "unit": "min",
             "access_mode": "RW",
@@ -3171,7 +3180,7 @@
         },
         {
             "id": "pir_energy.cmd",
-            "name": "Energy Cmd",
+            "name": "Energy Cmd(Energy-saving Setting)",
             "value": "0",
             "unit": "",
             "access_mode": "RW",
@@ -3184,7 +3193,7 @@
         },
         {
             "id": "pir_energy.enable",
-            "name": "Energy-Saving Enable",
+            "name": "Energy-Saving Enable(Energy-saving Setting)",
             "value": "1",
             "unit": "",
             "access_mode": "RW",
@@ -3207,7 +3216,7 @@
         },
         {
             "id": "pir_energy.plan.occupied",
-            "name": "Occupied Execution",
+            "name": "Occupied Execution(Energy Saving Plan)",
             "value": "0",
             "unit": "",
             "access_mode": "RW",
@@ -3260,7 +3269,7 @@
         },
         {
             "id": "pir_energy.plan.unoccupied",
-            "name": "Vacant Execution",
+            "name": "Vacant Execution(Energy Saving Plan)",
             "value": "1",
             "unit": "",
             "access_mode": "RW",
@@ -3313,7 +3322,7 @@
         },
         {
             "id": "pir_night.check.period",
-            "name": "Duration",
+            "name": "Duration(Trigger Condition)",
             "value": "5",
             "unit": "min",
             "access_mode": "RW",
@@ -3332,7 +3341,7 @@
         },
         {
             "id": "pir_night.check.rate",
-            "name": "Trigger Ratio",
+            "name": "Trigger Ratio(Trigger Condition)",
             "value": "50",
             "unit": "%",
             "access_mode": "RW",
@@ -3351,7 +3360,7 @@
         },
         {
             "id": "pir_night.cmd",
-            "name": "Night Cmd",
+            "name": "Night Cmd(Night Occupancy Settings)",
             "value": "1",
             "unit": "",
             "access_mode": "RW",
@@ -3364,7 +3373,7 @@
         },
         {
             "id": "pir_night.enable",
-            "name": "Night Occupancy Settings",
+            "name": "Night Occupancy Settings(Night Occupancy Settings)",
             "value": "0",
             "unit": "",
             "access_mode": "RW",
@@ -3387,7 +3396,7 @@
         },
         {
             "id": "pir_night.mode",
-            "name": "Detection Mode",
+            "name": "Detection Mode(Night Occupancy Settings)",
             "value": "0",
             "unit": "",
             "access_mode": "RW",
@@ -3410,7 +3419,7 @@
         },
         {
             "id": "pir_night.night_time.start",
-            "name": "Start Time",
+            "name": "Start Time(Nighttime)",
             "value": "1260",
             "unit": "min",
             "access_mode": "RW",
@@ -3429,7 +3438,7 @@
         },
         {
             "id": "pir_night.night_time.stop",
-            "name": "Stop Time",
+            "name": "Stop Time(Nighttime)",
             "value": "480",
             "unit": "min",
             "access_mode": "RW",
@@ -3448,7 +3457,7 @@
         },
         {
             "id": "pir_night.occupied",
-            "name": "Night Occupied Execution",
+            "name": "Night Occupied Execution(Night Occupancy Settings)",
             "value": "2",
             "unit": "",
             "access_mode": "RW",
@@ -3519,13 +3528,13 @@
                     "name": "Night Occupied"
                 }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS"
         },
         {
             "id": "power_bus_event.type",
-            "name": "Powerbus Event Type",
+            "name": "Powerbus Event Type(Powerbus Event)",
             "value": "",
             "unit": "",
             "access_mode": "R",
@@ -3548,28 +3557,6 @@
             "bacnet_type": "character_string_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS"
-        },
-        {
-            "id": "query_device_status",
-            "name": "Query Device Status",
-            "access_mode": "W",
-            "data_type": "BOOL",
-            "value_type": "UINT8",
-            "unit": "",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "bacnet_type": "binary_output_object",
-            "value": "",
-            "values": [
-                {
-                    "value": 0,
-                    "name": "no"
-                },
-                {
-                    "value": 1,
-                    "name": "yes"
-                }
-            ]
         },
         {
             "id": "reboot",
@@ -3617,7 +3604,7 @@
         },
         {
             "id": "reporting_interval.ble_lora.minutes_of_time",
-            "name": "Reporting Interval",
+            "name": "Reporting Interval(BLE_LORA Reporting Interval)",
             "value": "10",
             "unit": "min",
             "access_mode": "RW",
@@ -3636,7 +3623,7 @@
         },
         {
             "id": "reporting_interval.ble_lora.seconds_of_time",
-            "name": "Reporting Interval",
+            "name": "Reporting Interval(BLE_LORA Reporting Interval)",
             "value": "600",
             "unit": "s",
             "access_mode": "RW",
@@ -3655,7 +3642,7 @@
         },
         {
             "id": "reporting_interval.ble_lora.unit",
-            "name": "Reporting Interval Unit",
+            "name": "Reporting Interval Unit(BLE_LORA Reporting Interval)",
             "value": "1",
             "unit": "",
             "access_mode": "RW",
@@ -3678,7 +3665,7 @@
         },
         {
             "id": "reporting_interval.ble.minutes_of_time",
-            "name": "Reporting Interval",
+            "name": "Reporting Interval(BLE Reporting Interval)",
             "value": "10",
             "unit": "min",
             "access_mode": "RW",
@@ -3697,7 +3684,7 @@
         },
         {
             "id": "reporting_interval.ble.seconds_of_time",
-            "name": "Reporting Interval",
+            "name": "Reporting Interval(BLE Reporting Interval)",
             "value": "600",
             "unit": "s",
             "access_mode": "RW",
@@ -3716,7 +3703,7 @@
         },
         {
             "id": "reporting_interval.ble.unit",
-            "name": "Reporting Interval Unit",
+            "name": "Reporting Interval Unit(BLE Reporting Interval)",
             "value": "1",
             "unit": "",
             "access_mode": "RW",
@@ -3739,7 +3726,7 @@
         },
         {
             "id": "reporting_interval.lora.minutes_of_time",
-            "name": "Reporting Interval",
+            "name": "Reporting Interval(LORA Reporting Interval)",
             "value": "10",
             "unit": "min",
             "access_mode": "RW",
@@ -3758,7 +3745,7 @@
         },
         {
             "id": "reporting_interval.lora.seconds_of_time",
-            "name": "Reporting Interval",
+            "name": "Reporting Interval(LORA Reporting Interval)",
             "value": "600",
             "unit": "s",
             "access_mode": "RW",
@@ -3777,7 +3764,7 @@
         },
         {
             "id": "reporting_interval.lora.unit",
-            "name": "Reporting Interval Unit",
+            "name": "Reporting Interval Unit(LORA Reporting Interval)",
             "value": "1",
             "unit": "",
             "access_mode": "RW",
@@ -3800,7 +3787,7 @@
         },
         {
             "id": "reporting_interval.power_lora.minutes_of_time",
-            "name": "Reporting Interval",
+            "name": "Reporting Interval(POWERBUS_LORA Reporting Interval)",
             "value": "10",
             "unit": "min",
             "access_mode": "RW",
@@ -3819,7 +3806,7 @@
         },
         {
             "id": "reporting_interval.power_lora.seconds_of_time",
-            "name": "Reporting Interval",
+            "name": "Reporting Interval(POWERBUS_LORA Reporting Interval)",
             "value": "600",
             "unit": "s",
             "access_mode": "RW",
@@ -3838,7 +3825,7 @@
         },
         {
             "id": "reporting_interval.power_lora.unit",
-            "name": "Reporting Interval Unit",
+            "name": "Reporting Interval Unit(POWERBUS_LORA Reporting Interval)",
             "value": "1",
             "unit": "",
             "access_mode": "RW",
@@ -3861,7 +3848,7 @@
         },
         {
             "id": "reporting_interval.type",
-            "name": "Reporting Interval Type",
+            "name": "Reporting Interval Type(Reporting Interval)",
             "value": "0",
             "unit": "",
             "access_mode": "RW",
@@ -3891,52 +3878,38 @@
             "reference": []
         },
         {
-            "id": "request_query_all_configurations",
-            "name": "Request to Query All Configurations",
-            "access_mode": "W",
-            "data_type": "BOOL",
-            "value_type": "UINT8",
+            "id": "retrieve_historical_data_by_time_range.end_time",
+            "name": "End Time(Retrieval(Time Period))",
+            "value": "",
             "unit": "",
+            "access_mode": "W",
+            "data_type": "NUMBER",
+            "value_type": "UINT8",
+            "bacnet_type": "analog_output_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
-            "bacnet_type": "binary_output_object",
-            "value": "",
-            "values": [
-                {
-                    "value": 0,
-                    "name": "no"
-                },
-                {
-                    "value": 1,
-                    "name": "yes"
-                }
+            "reference": [
+                "retrieve_historical_data_by_time_range.start_time"
             ]
         },
         {
-            "id": "reset",
-            "name": "Reset",
-            "access_mode": "W",
-            "data_type": "BOOL",
-            "value_type": "UINT8",
+            "id": "retrieve_historical_data_by_time_range.start_time",
+            "name": "Start Time(Retrieval(Time Period))",
+            "value": "",
             "unit": "",
+            "access_mode": "W",
+            "data_type": "NUMBER",
+            "value_type": "UINT8",
+            "bacnet_type": "analog_output_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
-            "bacnet_type": "binary_output_object",
-            "value": "",
-            "values": [
-                {
-                    "value": 0,
-                    "name": "no"
-                },
-                {
-                    "value": 1,
-                    "name": "yes"
-                }
+            "reference": [
+                "retrieve_historical_data_by_time_range.end_time"
             ]
         },
         {
             "id": "screen_display_settings.ambient_humi",
-            "name": "Ambient Humidity",
+            "name": "Ambient Humidity(Screen Display Settings)",
             "value": "1",
             "unit": "",
             "access_mode": "RW",
@@ -3964,7 +3937,7 @@
         },
         {
             "id": "screen_display_settings.ambient_temp",
-            "name": "Ambient Temperature",
+            "name": "Ambient Temperature(Screen Display Settings)",
             "value": "1",
             "unit": "",
             "access_mode": "RW",
@@ -3992,7 +3965,7 @@
         },
         {
             "id": "screen_display_settings.plan_name",
-            "name": "Schedule Name",
+            "name": "Schedule Name(Screen Display Settings)",
             "value": "1",
             "unit": "",
             "access_mode": "RW",
@@ -4020,7 +3993,7 @@
         },
         {
             "id": "screen_display_settings.reserved",
-            "name": "Reserved",
+            "name": "Reserved(Screen Display Settings)",
             "value": "0",
             "unit": "",
             "access_mode": "RW",
@@ -4048,7 +4021,7 @@
         },
         {
             "id": "screen_display_settings.target_temp",
-            "name": "Target Temperature",
+            "name": "Target Temperature(Screen Display Settings)",
             "value": "1",
             "unit": "",
             "access_mode": "RW",
@@ -4119,50 +4092,6 @@
             "bacnet_unit_type": "UNITS_NO_UNITS"
         },
         {
-            "id": "stop_historical_data_retrieval",
-            "name": "Stop Retrieval",
-            "access_mode": "W",
-            "data_type": "BOOL",
-            "value_type": "UINT8",
-            "unit": "",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "bacnet_type": "binary_output_object",
-            "value": "",
-            "values": [
-                {
-                    "value": 0,
-                    "name": "no"
-                },
-                {
-                    "value": 1,
-                    "name": "yes"
-                }
-            ]
-        },
-        {
-            "id": "synchronize_time",
-            "name": "Time Synchronize",
-            "access_mode": "W",
-            "data_type": "BOOL",
-            "value_type": "UINT8",
-            "unit": "",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "bacnet_type": "binary_output_object",
-            "value": "",
-            "values": [
-                {
-                    "value": 0,
-                    "name": "no"
-                },
-                {
-                    "value": 1,
-                    "name": "yes"
-                }
-            ]
-        },
-        {
             "id": "system_status",
             "name": "System On/Off",
             "value": "0",
@@ -4186,7 +4115,7 @@
         },
         {
             "id": "system_status_control.mode",
-            "name": "Temperature Control Mode",
+            "name": "Temperature Control Mode(System Status Control)",
             "value": "0",
             "unit": "",
             "access_mode": "W",
@@ -4218,7 +4147,7 @@
                     "name": "ventilation"
                 }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_output_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": [
@@ -4229,7 +4158,7 @@
         },
         {
             "id": "system_status_control.on_off",
-            "name": "System On/Off",
+            "name": "System On/Off(System Status Control)",
             "value": "1",
             "unit": "",
             "access_mode": "W",
@@ -4245,7 +4174,7 @@
                     "name": "system open"
                 }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_output_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": [
@@ -4256,7 +4185,7 @@
         },
         {
             "id": "system_status_control.temperature1",
-            "name": "Heat Temperature",
+            "name": "Heat Temperature(System Status Control)",
             "value": "17",
             "unit": "",
             "access_mode": "W",
@@ -4277,7 +4206,7 @@
         },
         {
             "id": "system_status_control.temperature2",
-            "name": "Cool Temperature",
+            "name": "Cool Temperature(System Status Control)",
             "value": "28",
             "unit": "",
             "access_mode": "W",
@@ -4316,7 +4245,7 @@
         },
         {
             "id": "target_temperature_range.auto.celsius_max",
-            "name": "Celsius Max Value",
+            "name": "Celsius Max Value(Auto Target Temperature Range)",
             "value": "35",
             "unit": "°C",
             "access_mode": "RW",
@@ -4335,7 +4264,7 @@
         },
         {
             "id": "target_temperature_range.auto.celsius_min",
-            "name": "Celsius Min Value",
+            "name": "Celsius Min Value(Auto Target Temperature Range)",
             "value": "10",
             "unit": "°C",
             "access_mode": "RW",
@@ -4354,7 +4283,7 @@
         },
         {
             "id": "target_temperature_range.auto.fahrenheit_max",
-            "name": "Fahrenheit Max Value",
+            "name": "Fahrenheit Max Value(Auto Target Temperature Range)",
             "value": "95",
             "unit": "℉",
             "access_mode": "RW",
@@ -4373,7 +4302,7 @@
         },
         {
             "id": "target_temperature_range.auto.fahrenheit_min",
-            "name": "Fahrenheit Min Value",
+            "name": "Fahrenheit Min Value(Auto Target Temperature Range)",
             "value": "50",
             "unit": "℉",
             "access_mode": "RW",
@@ -4392,7 +4321,7 @@
         },
         {
             "id": "target_temperature_range.auto.max",
-            "name": "Max Value",
+            "name": "Max Value(Auto Target Temperature Range)",
             "value": "35",
             "unit": "°C",
             "access_mode": "RW",
@@ -4411,7 +4340,7 @@
         },
         {
             "id": "target_temperature_range.auto.min",
-            "name": "Min Value",
+            "name": "Min Value(Auto Target Temperature Range)",
             "value": "10",
             "unit": "°C",
             "access_mode": "RW",
@@ -4430,7 +4359,7 @@
         },
         {
             "id": "target_temperature_range.cool.celsius_max",
-            "name": "Celsius Max Value",
+            "name": "Celsius Max Value(Cool Target Temperature Range)",
             "value": "35",
             "unit": "°C",
             "access_mode": "RW",
@@ -4449,7 +4378,7 @@
         },
         {
             "id": "target_temperature_range.cool.celsius_min",
-            "name": "Celsius Min Value",
+            "name": "Celsius Min Value(Cool Target Temperature Range)",
             "value": "23",
             "unit": "°C",
             "access_mode": "RW",
@@ -4468,7 +4397,7 @@
         },
         {
             "id": "target_temperature_range.cool.fahrenheit_max",
-            "name": "Fahrenheit Max Value",
+            "name": "Fahrenheit Max Value(Cool Target Temperature Range)",
             "value": "95",
             "unit": "℉",
             "access_mode": "RW",
@@ -4487,7 +4416,7 @@
         },
         {
             "id": "target_temperature_range.cool.fahrenheit_min",
-            "name": "Fahrenheit Min Value",
+            "name": "Fahrenheit Min Value(Cool Target Temperature Range)",
             "value": "73.4",
             "unit": "℉",
             "access_mode": "RW",
@@ -4506,7 +4435,7 @@
         },
         {
             "id": "target_temperature_range.cool.max",
-            "name": "Max Value",
+            "name": "Max Value(Cool Target Temperature Range)",
             "value": "35",
             "unit": "°C",
             "access_mode": "RW",
@@ -4525,7 +4454,7 @@
         },
         {
             "id": "target_temperature_range.cool.min",
-            "name": "Min Value",
+            "name": "Min Value(Cool Target Temperature Range)",
             "value": "23",
             "unit": "°C",
             "access_mode": "RW",
@@ -4544,7 +4473,7 @@
         },
         {
             "id": "target_temperature_range.dehumidify.celsius_max",
-            "name": "Celsius Max Value",
+            "name": "Celsius Max Value(Dehumidify Target Temperature Range)",
             "value": "35",
             "unit": "°C",
             "access_mode": "RW",
@@ -4563,7 +4492,7 @@
         },
         {
             "id": "target_temperature_range.dehumidify.celsius_min",
-            "name": "Celsius Min Value",
+            "name": "Celsius Min Value(Dehumidify Target Temperature Range)",
             "value": "10",
             "unit": "°C",
             "access_mode": "RW",
@@ -4582,7 +4511,7 @@
         },
         {
             "id": "target_temperature_range.dehumidify.fahrenheit_max",
-            "name": "Fahrenheit Max Value",
+            "name": "Fahrenheit Max Value(Dehumidify Target Temperature Range)",
             "value": "95",
             "unit": "℉",
             "access_mode": "RW",
@@ -4601,7 +4530,7 @@
         },
         {
             "id": "target_temperature_range.dehumidify.fahrenheit_min",
-            "name": "Fahrenheit Min Value",
+            "name": "Fahrenheit Min Value(Dehumidify Target Temperature Range)",
             "value": "50",
             "unit": "℉",
             "access_mode": "RW",
@@ -4620,7 +4549,7 @@
         },
         {
             "id": "target_temperature_range.dehumidify.max",
-            "name": "Max Value",
+            "name": "Max Value(Dehumidify Target Temperature Range)",
             "value": "35",
             "unit": "°C",
             "access_mode": "RW",
@@ -4639,7 +4568,7 @@
         },
         {
             "id": "target_temperature_range.dehumidify.min",
-            "name": "Min Value",
+            "name": "Min Value(Dehumidify Target Temperature Range)",
             "value": "10",
             "unit": "°C",
             "access_mode": "RW",
@@ -4658,7 +4587,7 @@
         },
         {
             "id": "target_temperature_range.em_heat.celsius_max",
-            "name": "Celsius Max Value",
+            "name": "Celsius Max Value(EM Heat Target Temperature Range)",
             "value": "27",
             "unit": "°C",
             "access_mode": "RW",
@@ -4677,7 +4606,7 @@
         },
         {
             "id": "target_temperature_range.em_heat.celsius_min",
-            "name": "Celsius Min Value",
+            "name": "Celsius Min Value(EM Heat Target Temperature Range)",
             "value": "10",
             "unit": "°C",
             "access_mode": "RW",
@@ -4696,7 +4625,7 @@
         },
         {
             "id": "target_temperature_range.em_heat.fahrenheit_max",
-            "name": "Fahrenheit Max Value",
+            "name": "Fahrenheit Max Value(EM Heat Target Temperature Range)",
             "value": "80.6",
             "unit": "℉",
             "access_mode": "RW",
@@ -4715,7 +4644,7 @@
         },
         {
             "id": "target_temperature_range.em_heat.fahrenheit_min",
-            "name": "Fahrenheit Min Value",
+            "name": "Fahrenheit Min Value(EM Heat Target Temperature Range)",
             "value": "50",
             "unit": "℉",
             "access_mode": "RW",
@@ -4734,7 +4663,7 @@
         },
         {
             "id": "target_temperature_range.em_heat.max",
-            "name": "Max Value",
+            "name": "Max Value(EM Heat Target Temperature Range)",
             "value": "27",
             "unit": "°C",
             "access_mode": "RW",
@@ -4753,7 +4682,7 @@
         },
         {
             "id": "target_temperature_range.em_heat.min",
-            "name": "Min Value",
+            "name": "Min Value(EM Heat Target Temperature Range)",
             "value": "10",
             "unit": "°C",
             "access_mode": "RW",
@@ -4772,7 +4701,7 @@
         },
         {
             "id": "target_temperature_range.heat.celsius_max",
-            "name": "Celsius Max Value",
+            "name": "Celsius Max Value(Heat Target Temperature Range)",
             "value": "19",
             "unit": "°C",
             "access_mode": "RW",
@@ -4791,7 +4720,7 @@
         },
         {
             "id": "target_temperature_range.heat.celsius_min",
-            "name": "Celsius Min Value",
+            "name": "Celsius Min Value(Heat Target Temperature Range)",
             "value": "10",
             "unit": "°C",
             "access_mode": "RW",
@@ -4810,7 +4739,7 @@
         },
         {
             "id": "target_temperature_range.heat.fahrenheit_max",
-            "name": "Fahrenheit Max Value",
+            "name": "Fahrenheit Max Value(Heat Target Temperature Range)",
             "value": "66.2",
             "unit": "℉",
             "access_mode": "RW",
@@ -4829,7 +4758,7 @@
         },
         {
             "id": "target_temperature_range.heat.fahrenheit_min",
-            "name": "Fahrenheit Min Value",
+            "name": "Fahrenheit Min Value(Heat Target Temperature Range)",
             "value": "50",
             "unit": "℉",
             "access_mode": "RW",
@@ -4848,7 +4777,7 @@
         },
         {
             "id": "target_temperature_range.heat.max",
-            "name": "Max Value",
+            "name": "Max Value(Heat Target Temperature Range)",
             "value": "19",
             "unit": "°C",
             "access_mode": "RW",
@@ -4867,7 +4796,7 @@
         },
         {
             "id": "target_temperature_range.heat.min",
-            "name": "Min Value",
+            "name": "Min Value(Heat Target Temperature Range)",
             "value": "10",
             "unit": "°C",
             "access_mode": "RW",
@@ -4886,7 +4815,7 @@
         },
         {
             "id": "target_temperature_range.id",
-            "name": "Target Temperature Range ID",
+            "name": "Target Temperature Range ID(Target Temperature Range)",
             "value": "0",
             "unit": "",
             "access_mode": "RW",
@@ -4917,7 +4846,7 @@
         },
         {
             "id": "target_temperature_range.ventilation.celsius_max",
-            "name": "Celsius Max Value",
+            "name": "Celsius Max Value(Ventilation Target Temperature Range)",
             "value": "35",
             "unit": "°C",
             "access_mode": "RW",
@@ -4936,7 +4865,7 @@
         },
         {
             "id": "target_temperature_range.ventilation.celsius_min",
-            "name": "Celsius Min Value",
+            "name": "Celsius Min Value(Ventilation Target Temperature Range)",
             "value": "10",
             "unit": "°C",
             "access_mode": "RW",
@@ -4955,7 +4884,7 @@
         },
         {
             "id": "target_temperature_range.ventilation.fahrenheit_max",
-            "name": "Fahrenheit Max Value",
+            "name": "Fahrenheit Max Value(Ventilation Target Temperature Range)",
             "value": "95",
             "unit": "℉",
             "access_mode": "RW",
@@ -4974,7 +4903,7 @@
         },
         {
             "id": "target_temperature_range.ventilation.fahrenheit_min",
-            "name": "Fahrenheit Min Value",
+            "name": "Fahrenheit Min Value(Ventilation Target Temperature Range)",
             "value": "50",
             "unit": "℉",
             "access_mode": "RW",
@@ -4993,7 +4922,7 @@
         },
         {
             "id": "target_temperature_range.ventilation.max",
-            "name": "Max Value",
+            "name": "Max Value(Ventilation Target Temperature Range)",
             "value": "35",
             "unit": "°C",
             "access_mode": "RW",
@@ -5012,7 +4941,7 @@
         },
         {
             "id": "target_temperature_range.ventilation.min",
-            "name": "Min Value",
+            "name": "Min Value(Ventilation Target Temperature Range)",
             "value": "10",
             "unit": "°C",
             "access_mode": "RW",
@@ -5053,7 +4982,7 @@
         },
         {
             "id": "target_temperature_settings.auto",
-            "name": "Auto Target Temperature",
+            "name": "Auto Target Temperature(Target Temperature Settings)",
             "value": "23",
             "unit": "°C",
             "access_mode": "RW",
@@ -5070,7 +4999,7 @@
         },
         {
             "id": "target_temperature_settings.auto_cool",
-            "name": "Auto-Cool Target Temperature",
+            "name": "Auto-Cool Target Temperature(Target Temperature Settings)",
             "value": "28",
             "unit": "°C",
             "access_mode": "RW",
@@ -5087,7 +5016,7 @@
         },
         {
             "id": "target_temperature_settings.auto_heat",
-            "name": "Auto-Heat Target Temperature",
+            "name": "Auto-Heat Target Temperature(Target Temperature Settings)",
             "value": "17",
             "unit": "°C",
             "access_mode": "RW",
@@ -5104,7 +5033,7 @@
         },
         {
             "id": "target_temperature_settings.celsius_auto",
-            "name": "Celsius Auto Target Temperature",
+            "name": "Celsius Auto Target Temperature(Target Temperature Settings)",
             "value": "23",
             "unit": "°C",
             "access_mode": "RW",
@@ -5121,7 +5050,7 @@
         },
         {
             "id": "target_temperature_settings.celsius_auto_cool",
-            "name": "Celsius Auto-Cool Target Temperature",
+            "name": "Celsius Auto-Cool Target Temperature(Target Temperature Settings)",
             "value": "28",
             "unit": "°C",
             "access_mode": "RW",
@@ -5138,7 +5067,7 @@
         },
         {
             "id": "target_temperature_settings.celsius_auto_heat",
-            "name": "Celsius Auto-Heat Target Temperature",
+            "name": "Celsius Auto-Heat Target Temperature(Target Temperature Settings)",
             "value": "17",
             "unit": "°C",
             "access_mode": "RW",
@@ -5155,7 +5084,7 @@
         },
         {
             "id": "target_temperature_settings.celsius_cool",
-            "name": "Celsius Cool Target Temperature",
+            "name": "Celsius Cool Target Temperature(Target Temperature Settings)",
             "value": "28",
             "unit": "°C",
             "access_mode": "RW",
@@ -5172,7 +5101,7 @@
         },
         {
             "id": "target_temperature_settings.celsius_dehumidify",
-            "name": "Celsius Dehumidify Target Temperature",
+            "name": "Celsius Dehumidify Target Temperature(Target Temperature Settings)",
             "value": "17",
             "unit": "°C",
             "access_mode": "RW",
@@ -5189,7 +5118,7 @@
         },
         {
             "id": "target_temperature_settings.celsius_em_heat",
-            "name": "Celsius EM Heat Target Temperature",
+            "name": "Celsius EM Heat Target Temperature(Target Temperature Settings)",
             "value": "25",
             "unit": "°C",
             "access_mode": "RW",
@@ -5206,7 +5135,7 @@
         },
         {
             "id": "target_temperature_settings.celsius_heat",
-            "name": "Celsius Heat Target Temperature",
+            "name": "Celsius Heat Target Temperature(Target Temperature Settings)",
             "value": "17",
             "unit": "°C",
             "access_mode": "RW",
@@ -5223,7 +5152,7 @@
         },
         {
             "id": "target_temperature_settings.celsius_ventilation",
-            "name": "Celsius Ventilation Target Temperature",
+            "name": "Celsius Ventilation Target Temperature(Target Temperature Settings)",
             "value": "28",
             "unit": "°C",
             "access_mode": "RW",
@@ -5240,7 +5169,7 @@
         },
         {
             "id": "target_temperature_settings.cool",
-            "name": "Cool Target Temperature",
+            "name": "Cool Target Temperature(Target Temperature Settings)",
             "value": "28",
             "unit": "°C",
             "access_mode": "RW",
@@ -5257,7 +5186,7 @@
         },
         {
             "id": "target_temperature_settings.dehumidify",
-            "name": "Dehumidify Target Temperature",
+            "name": "Dehumidify Target Temperature(Target Temperature Settings)",
             "value": "17",
             "unit": "°C",
             "access_mode": "RW",
@@ -5274,7 +5203,7 @@
         },
         {
             "id": "target_temperature_settings.em_heat",
-            "name": "EM Heat Target Temperature",
+            "name": "EM Heat Target Temperature(Target Temperature Settings)",
             "value": "25",
             "unit": "°C",
             "access_mode": "RW",
@@ -5291,7 +5220,7 @@
         },
         {
             "id": "target_temperature_settings.fahrenheit_auto",
-            "name": "Fahrenheit Auto Target Temperature",
+            "name": "Fahrenheit Auto Target Temperature(Target Temperature Settings)",
             "value": "73.4",
             "unit": "℉",
             "access_mode": "RW",
@@ -5308,7 +5237,7 @@
         },
         {
             "id": "target_temperature_settings.fahrenheit_auto_cool",
-            "name": "Fahrenheit Auto-Cool Target Temperature",
+            "name": "Fahrenheit Auto-Cool Target Temperature(Target Temperature Settings)",
             "value": "82.4",
             "unit": "℉",
             "access_mode": "RW",
@@ -5325,7 +5254,7 @@
         },
         {
             "id": "target_temperature_settings.fahrenheit_auto_heat",
-            "name": "Fahrenheit Auto-Heat Target Temperature",
+            "name": "Fahrenheit Auto-Heat Target Temperature(Target Temperature Settings)",
             "value": "62.6",
             "unit": "℉",
             "access_mode": "RW",
@@ -5342,7 +5271,7 @@
         },
         {
             "id": "target_temperature_settings.fahrenheit_cool",
-            "name": "Fahrenheit Cool Target Temperature",
+            "name": "Fahrenheit Cool Target Temperature(Target Temperature Settings)",
             "value": "82.4",
             "unit": "℉",
             "access_mode": "RW",
@@ -5359,7 +5288,7 @@
         },
         {
             "id": "target_temperature_settings.fahrenheit_dehumidify",
-            "name": "Fahrenheit Dehumidify Target Temperature",
+            "name": "Fahrenheit Dehumidify Target Temperature(Target Temperature Settings)",
             "value": "62.6",
             "unit": "℉",
             "access_mode": "RW",
@@ -5376,7 +5305,7 @@
         },
         {
             "id": "target_temperature_settings.fahrenheit_em_heat",
-            "name": "Fahrenheit EM Heat Target Temperature",
+            "name": "Fahrenheit EM Heat Target Temperature(Target Temperature Settings)",
             "value": "77",
             "unit": "℉",
             "access_mode": "RW",
@@ -5393,7 +5322,7 @@
         },
         {
             "id": "target_temperature_settings.fahrenheit_heat",
-            "name": "Fahrenheit Heat Target Temperature",
+            "name": "Fahrenheit Heat Target Temperature(Target Temperature Settings)",
             "value": "62.6",
             "unit": "℉",
             "access_mode": "RW",
@@ -5410,7 +5339,7 @@
         },
         {
             "id": "target_temperature_settings.fahrenheit_ventilation",
-            "name": "Fahrenheit Ventilation Target Temperature",
+            "name": "Fahrenheit Ventilation Target Temperature(Target Temperature Settings)",
             "value": "82.4",
             "unit": "℉",
             "access_mode": "RW",
@@ -5427,7 +5356,7 @@
         },
         {
             "id": "target_temperature_settings.heat",
-            "name": "Heat Target Temperature",
+            "name": "Heat Target Temperature(Target Temperature Settings)",
             "value": "17",
             "unit": "°C",
             "access_mode": "RW",
@@ -5444,7 +5373,7 @@
         },
         {
             "id": "target_temperature_settings.temperature_control_mode",
-            "name": "Temperature Control Mode",
+            "name": "Temperature Control Mode(Target Temperature Settings)",
             "value": "0",
             "unit": "",
             "access_mode": "RW",
@@ -5491,7 +5420,7 @@
         },
         {
             "id": "target_temperature_settings.ventilation",
-            "name": "Ventilation Target Temperature",
+            "name": "Ventilation Target Temperature(Target Temperature Settings)",
             "value": "28",
             "unit": "°C",
             "access_mode": "RW",
@@ -5556,7 +5485,7 @@
         },
         {
             "id": "temperature_alarm.type",
-            "name": "Alarm Type",
+            "name": "Alarm Type(Temperature  Alarm)",
             "value": "",
             "unit": "",
             "access_mode": "R",
@@ -5580,14 +5509,14 @@
                     "name": "No Data"
                 }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": []
         },
         {
             "id": "temperature_calibration_settings.calibration_value",
-            "name": "Calibration Value",
+            "name": "Calibration Value(Temperature Calibration Settings)",
             "value": "0",
             "unit": "°C",
             "access_mode": "RW",
@@ -5606,7 +5535,7 @@
         },
         {
             "id": "temperature_calibration_settings.celsius_calibration_value",
-            "name": "Celsius Calibration Value",
+            "name": "Celsius Calibration Value(Temperature Calibration Settings)",
             "value": "0",
             "unit": "°C",
             "access_mode": "RW",
@@ -5625,7 +5554,7 @@
         },
         {
             "id": "temperature_calibration_settings.enable",
-            "name": "Temperature Calibration",
+            "name": "Temperature Calibration(Temperature Calibration Settings)",
             "value": "0",
             "unit": "",
             "access_mode": "RW",
@@ -5650,7 +5579,7 @@
         },
         {
             "id": "temperature_calibration_settings.fahrenheit_calibration_value",
-            "name": "Fahrenheit Calibration Value",
+            "name": "Fahrenheit Calibration Value(Temperature Calibration Settings)",
             "value": "32",
             "unit": "℉",
             "access_mode": "RW",
@@ -5669,7 +5598,7 @@
         },
         {
             "id": "temperature_control_mode.mode",
-            "name": "Temperature Control Mode",
+            "name": "Temperature Control Mode(Temperature Control Mode)",
             "value": "0",
             "unit": "",
             "access_mode": "RW",
@@ -5708,7 +5637,7 @@
         },
         {
             "id": "temperature_control_mode.plan_mode_enable",
-            "name": "Plan Temperature Control Mode Enable",
+            "name": "Plan Temperature Control Mode Enable(Temperature Control Mode)",
             "value": "1",
             "unit": "",
             "access_mode": "RW",
@@ -5731,7 +5660,7 @@
         },
         {
             "id": "temperature_control_mode.subcmd",
-            "name": "Subcmd ID",
+            "name": "Subcmd ID(Temperature Control Mode)",
             "value": "0",
             "unit": "",
             "access_mode": "RW",
@@ -5784,7 +5713,7 @@
                     "name": "none"
                 }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS"
         },
@@ -5987,7 +5916,7 @@
         },
         {
             "id": "unlock_button.enable",
-            "name": "Temporary Unlock Enable",
+            "name": "Temporary Unlock Enable(Temporary Unlock)",
             "value": "0",
             "unit": "",
             "access_mode": "RW",
@@ -6012,7 +5941,7 @@
         },
         {
             "id": "unlock_button.timeout",
-            "name": "Temporary Unlock Time",
+            "name": "Temporary Unlock Time(Temporary Unlock)",
             "value": "30",
             "unit": "s",
             "access_mode": "RW",
@@ -6031,7 +5960,7 @@
         },
         {
             "id": "unlock_combination_button_settings.button1",
-            "name": "Button 1",
+            "name": "Button 1(Temporary Unlock Button Combination)",
             "value": "1",
             "unit": "",
             "access_mode": "RW",
@@ -6060,7 +5989,7 @@
         },
         {
             "id": "unlock_combination_button_settings.button2",
-            "name": "Button 2",
+            "name": "Button 2(Temporary Unlock Button Combination)",
             "value": "1",
             "unit": "",
             "access_mode": "RW",
@@ -6089,7 +6018,7 @@
         },
         {
             "id": "unlock_combination_button_settings.button3",
-            "name": "Button 3",
+            "name": "Button 3(Temporary Unlock Button Combination)",
             "value": "0",
             "unit": "",
             "access_mode": "RW",
@@ -6118,7 +6047,7 @@
         },
         {
             "id": "unlock_combination_button_settings.button4",
-            "name": "Button 4",
+            "name": "Button 4(Temporary Unlock Button Combination)",
             "value": "0",
             "unit": "",
             "access_mode": "RW",
@@ -6147,7 +6076,7 @@
         },
         {
             "id": "unlock_combination_button_settings.button5",
-            "name": "Button 5",
+            "name": "Button 5(Temporary Unlock Button Combination)",
             "value": "0",
             "unit": "",
             "access_mode": "RW",
@@ -6176,7 +6105,7 @@
         },
         {
             "id": "unlock_combination_button_settings.reserved",
-            "name": "Reserved",
+            "name": "Reserved(Temporary Unlock Button Combination)",
             "value": "0",
             "unit": "",
             "access_mode": "RW",
@@ -6205,7 +6134,7 @@
         },
         {
             "id": "version.firmware_version",
-            "name": "Firmware Version",
+            "name": "Firmware Version(Product Version)",
             "value": "",
             "unit": "",
             "access_mode": "R",
@@ -6221,7 +6150,7 @@
         },
         {
             "id": "version.hardware_version",
-            "name": "Hardware Version",
+            "name": "Hardware Version(Product Version)",
             "value": "",
             "unit": "",
             "access_mode": "R",
