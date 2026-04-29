@@ -18,6 +18,11 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Hardware Version | 0xDA | 3 | r |  |  |  |
 | Firmware Version | 0xDA | 7 | r |  |  |  |
 | Device Status | 0xC8 | 2 | rw | 1 |  | 0：Off<br>1：On |
+| Bluetooth Status | 0xBA | 11 | r |  |  |  |
+| Bluetooth Status | 0xBA | M | r |  |  |  |
+| Index | 0xBA | 2 | r | 0 |  |  |
+| Status | 0xBA | 2 | r | 0 |  | 0：unpair<br>1：paired<br>2：disconnected |
+| Mac | 0xBA | 9 | r | 24e124123456789a |  |  |
 | Relay Status Change | 0x01 | 2 | r |  |  |  |
 | Y1 | 0x01 | 2 | r | 0 |  | 0: Disconnect<br>1: Close |
 | W1 | 0x01 | 2 | r | 0 |  | 0: Disconnect<br>1: Close |
@@ -69,10 +74,6 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Sub-command | 0x71 | 2 | rw | 0 |  |  |
 | Enable | 0x71 | 2 | rw | 0 |  | 0：Disable<br>1：Enable |
 | Target Temperature | 0x71 | 3 | rw | 3 | 1 - 5 |  |
-| Dehumidify Settings | 0x72 | 1 | rw |  |  |  |
-| Sub-command | 0x72 | 2 | rw | 2 |  |  |
-| Humidify Low Threshold | 0x72 | 3 | rw | 40 | 0 - 100 |  |
-| Humidify High Threshold | 0x72 | 3 | rw | 80 | 0 - 100 |  |
 | Temperature Control Mode Enable | 0x75 | 2 | rw |  |  |  |
 | Heat Mode | 0x75 | 2 | rw | 0 |  | 0：disable<br>1：enable |
 | EM Heat Mode | 0x75 | 2 | rw | 0 |  | 0：disable<br>1：enable |
@@ -86,18 +87,11 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Reversing Valve Mode | 0x8E | 1 | rw |  |  |  |
 | Reversing Valve Mode | 0x8E | 2 | rw | 1 |  | 0：o/b on heat<br>1：o/b on cool |
 
-### Event
-
-| CHANNEL |  ID  | LENGTH | READ/WRITE | DEFAULT | RANGE | ENUM |
-| :------ | :--: | :----: | :--------: | :-----: | :---: | :--: |
-| Temperature  Alarm | 0x02 | 1 | r |  |  |  |
-
 ### Service
 
 | CHANNEL |  ID  | LENGTH | READ/WRITE | DEFAULT | RANGE | ENUM |
 | :------ | :--: | :----: | :--------: | :-----: | :---: | :--: |
-| Alarm Type | 0x02 | 2 | r |  |  |  |
-| Freeze Protection Alarm Released | 0x02 | 3 | r |  |  |  |
-| Freeze Protection Alarm | 0x02 | 3 | r |  |  |  |
+| Retrieval(Point-in-Time) | 0xBA | 5 | w |  |  |  |
+| Time Point | 0xBA | 5 | w |  |  |  |
 | Time Synchronize | 0xB8 | 1 | w |  |  |  |
 
