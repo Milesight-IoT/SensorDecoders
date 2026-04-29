@@ -64,6 +64,7 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Reporting Interval Unit | 0x66 | 2 | rw | 1 |  | 0：second<br>1：min |
 | Reporting Interval | 0x66 | 3 | rw | 600 | 60 - 64800 |  |
 | Reporting Interval | 0x66 | 3 | rw | 10 | 1 - 1440 |  |
+| System Switch | 0x6F | 2 | rw | 0 |  | 0：Switch Off<br>1：Switch On |
 | Fan Settings | 0x70 | 1 | rw |  |  |  |
 | Sub-command | 0x70 | 2 | rw | 0 |  |  |
 | Fan Mode | 0x70 | 2 | rw | 0 |  | 0：Auto<br>1：Ventilation<br>2：Always Open<br>3：Low<br>4：Medium<br>5：High<br>255：Disabled |

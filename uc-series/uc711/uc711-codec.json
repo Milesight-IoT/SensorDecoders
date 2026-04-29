@@ -921,6 +921,28 @@
             ]
         },
         {
+            "id": "system_switch",
+            "name": "System Switch",
+            "value": "0",
+            "unit": "",
+            "access_mode": "RW",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "Switch Off"
+                },
+                {
+                    "value": 1,
+                    "name": "Switch On"
+                }
+            ],
+            "bacnet_type": "binary_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS"
+        },
+        {
             "id": "target_temperature_range.cool.celsius_max",
             "name": "Celsius Max Value(Cool Target Temperature Range)",
             "value": "35",
