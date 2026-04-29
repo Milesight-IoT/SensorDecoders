@@ -1,6 +1,6 @@
 # Passage People Counter - VS350
 
-![VS350](VS350.png)
+![VS350](vs350.png)
 
 For more detailed information, please visit [Milesight Official Website](https://www.milesight.com)
 
