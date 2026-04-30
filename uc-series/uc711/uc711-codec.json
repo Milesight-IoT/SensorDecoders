@@ -104,23 +104,6 @@
             "reference": []
         },
         {
-            "id": "anti_freezing.target_temperature",
-            "name": "Target Temperature(Anti Freezing)",
-            "value": "3",
-            "unit": "°C",
-            "access_mode": "RW",
-            "data_type": "NUMBER",
-            "value_type": "FLOAT",
-            "range": [
-                1,
-                5
-            ],
-            "bacnet_type": "analog_value_object",
-            "bacnet_unit_type_id": 62,
-            "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
-            "reference": []
-        },
-        {
             "id": "celsius_temperature",
             "name": "Celsius Temperature",
             "value": "",
@@ -236,7 +219,7 @@
             "id": "fan_delay_settings.delay_time",
             "name": "Fan Delay Off Time(Fan Delay Off Settings)",
             "value": "60",
-            "unit": "",
+            "unit": "s",
             "access_mode": "RW",
             "data_type": "NUMBER",
             "value_type": "UINT16",
@@ -245,8 +228,8 @@
                 3600
             ],
             "bacnet_type": "analog_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "bacnet_unit_type_id": 73,
+            "bacnet_unit_type": "UNITS_SECONDS",
             "reference": []
         },
         {
@@ -299,7 +282,7 @@
             "id": "fan_settings.adjust_period",
             "name": "Adjust Humidity Period(Fan Settings)",
             "value": "30",
-            "unit": "",
+            "unit": "min",
             "access_mode": "RW",
             "data_type": "NUMBER",
             "value_type": "UINT8",
@@ -308,8 +291,8 @@
                 55
             ],
             "bacnet_type": "analog_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "bacnet_unit_type_id": 72,
+            "bacnet_unit_type": "UNITS_MINUTES",
             "reference": []
         },
         {
@@ -390,7 +373,7 @@
             "id": "fan_settings.work_time",
             "name": "Circulate Work Time(Fan Settings)",
             "value": "30",
-            "unit": "",
+            "unit": "min",
             "access_mode": "RW",
             "data_type": "NUMBER",
             "value_type": "UINT8",
@@ -399,8 +382,8 @@
                 55
             ],
             "bacnet_type": "analog_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "bacnet_unit_type_id": 72,
+            "bacnet_unit_type": "UNITS_MINUTES",
             "reference": []
         },
         {
@@ -920,7 +903,7 @@
             "bacnet_unit_type_id": 62,
             "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
             "reference": [
-                "target_temperature_range.cool.min"
+                "target_temperature_range.cool.celsius_min"
             ]
         },
         {
@@ -939,7 +922,7 @@
             "bacnet_unit_type_id": 62,
             "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
             "reference": [
-                "target_temperature_range.cool.max"
+                "target_temperature_range.cool.celsius_max"
             ]
         },
         {
@@ -958,7 +941,7 @@
             "bacnet_unit_type_id": 64,
             "bacnet_unit_type": "UNITS_DEGREES_FAHRENHEIT",
             "reference": [
-                "target_temperature_range.cool.min"
+                "target_temperature_range.cool.fahrenheit_min"
             ]
         },
         {
@@ -977,45 +960,7 @@
             "bacnet_unit_type_id": 64,
             "bacnet_unit_type": "UNITS_DEGREES_FAHRENHEIT",
             "reference": [
-                "target_temperature_range.cool.max"
-            ]
-        },
-        {
-            "id": "target_temperature_range.cool.max",
-            "name": "Max Value(Cool Target Temperature Range)",
-            "value": "35",
-            "unit": "°C",
-            "access_mode": "RW",
-            "data_type": "NUMBER",
-            "value_type": "FLOAT",
-            "range": [
-                5,
-                35
-            ],
-            "bacnet_type": "analog_value_object",
-            "bacnet_unit_type_id": 62,
-            "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
-            "reference": [
-                "target_temperature_range.cool.min"
-            ]
-        },
-        {
-            "id": "target_temperature_range.cool.min",
-            "name": "Min Value(Cool Target Temperature Range)",
-            "value": "23",
-            "unit": "°C",
-            "access_mode": "RW",
-            "data_type": "NUMBER",
-            "value_type": "FLOAT",
-            "range": [
-                5,
-                35
-            ],
-            "bacnet_type": "analog_value_object",
-            "bacnet_unit_type_id": 62,
-            "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
-            "reference": [
-                "target_temperature_range.cool.max"
+                "target_temperature_range.cool.fahrenheit_max"
             ]
         },
         {
@@ -1034,7 +979,7 @@
             "bacnet_unit_type_id": 62,
             "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
             "reference": [
-                "target_temperature_range.heat.min"
+                "target_temperature_range.heat.celsius_min"
             ]
         },
         {
@@ -1053,7 +998,7 @@
             "bacnet_unit_type_id": 62,
             "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
             "reference": [
-                "target_temperature_range.heat.max"
+                "target_temperature_range.heat.celsius_max"
             ]
         },
         {
@@ -1072,7 +1017,7 @@
             "bacnet_unit_type_id": 64,
             "bacnet_unit_type": "UNITS_DEGREES_FAHRENHEIT",
             "reference": [
-                "target_temperature_range.heat.min"
+                "target_temperature_range.heat.fahrenheit_min"
             ]
         },
         {
@@ -1091,45 +1036,7 @@
             "bacnet_unit_type_id": 64,
             "bacnet_unit_type": "UNITS_DEGREES_FAHRENHEIT",
             "reference": [
-                "target_temperature_range.heat.max"
-            ]
-        },
-        {
-            "id": "target_temperature_range.heat.max",
-            "name": "Max Value(Heat Target Temperature Range)",
-            "value": "19",
-            "unit": "°C",
-            "access_mode": "RW",
-            "data_type": "NUMBER",
-            "value_type": "FLOAT",
-            "range": [
-                5,
-                35
-            ],
-            "bacnet_type": "analog_value_object",
-            "bacnet_unit_type_id": 62,
-            "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
-            "reference": [
-                "target_temperature_range.heat.min"
-            ]
-        },
-        {
-            "id": "target_temperature_range.heat.min",
-            "name": "Min Value(Heat Target Temperature Range)",
-            "value": "10",
-            "unit": "°C",
-            "access_mode": "RW",
-            "data_type": "NUMBER",
-            "value_type": "FLOAT",
-            "range": [
-                5,
-                35
-            ],
-            "bacnet_type": "analog_value_object",
-            "bacnet_unit_type_id": 62,
-            "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
-            "reference": [
-                "target_temperature_range.heat.max"
+                "target_temperature_range.heat.fahrenheit_max"
             ]
         },
         {
@@ -1194,23 +1101,6 @@
             "reference": []
         },
         {
-            "id": "target_temperature_settings.cool",
-            "name": "Cool Temperature(Target Temperature Settings)",
-            "value": "28",
-            "unit": "°C",
-            "access_mode": "RW",
-            "data_type": "NUMBER",
-            "value_type": "FLOAT",
-            "range": [
-                5,
-                35
-            ],
-            "bacnet_type": "analog_value_object",
-            "bacnet_unit_type_id": 62,
-            "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
-            "reference": []
-        },
-        {
             "id": "target_temperature_settings.fahrenheit_cool",
             "name": "Fahrenheit Cool Temperature(Target Temperature Settings)",
             "value": "82.4",
@@ -1242,23 +1132,6 @@
             "bacnet_type": "analog_value_object",
             "bacnet_unit_type_id": 64,
             "bacnet_unit_type": "UNITS_DEGREES_FAHRENHEIT",
-            "reference": []
-        },
-        {
-            "id": "target_temperature_settings.heat",
-            "name": "Heat Temperature(Target Temperature Settings)",
-            "value": "17",
-            "unit": "°C",
-            "access_mode": "RW",
-            "data_type": "NUMBER",
-            "value_type": "FLOAT",
-            "range": [
-                5,
-                35
-            ],
-            "bacnet_type": "analog_value_object",
-            "bacnet_unit_type_id": 62,
-            "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
             "reference": []
         },
         {
@@ -1323,23 +1196,6 @@
             "reference": []
         },
         {
-            "id": "target_temperature_tolerance.cool_value",
-            "name": "Cool Target Temperature Tolerance(Target Temperature Tolerance)",
-            "value": "1",
-            "unit": "K",
-            "access_mode": "RW",
-            "data_type": "NUMBER",
-            "value_type": "FLOAT",
-            "range": [
-                0,
-                5
-            ],
-            "bacnet_type": "analog_value_object",
-            "bacnet_unit_type_id": 121,
-            "bacnet_unit_type": "UNITS_DELTA_DEGREES_KELVIN",
-            "reference": []
-        },
-        {
             "id": "target_temperature_tolerance.fahrenheit_cool_value",
             "name": "Fahrenheit Cool Target Temperature Tolerance(Target Temperature Tolerance)",
             "value": "1.8",
@@ -1374,23 +1230,6 @@
             "reference": []
         },
         {
-            "id": "target_temperature_tolerance.heat_value",
-            "name": "Heat Target Temperature Tolerance(Target Temperature Tolerance)",
-            "value": "1",
-            "unit": "K",
-            "access_mode": "RW",
-            "data_type": "NUMBER",
-            "value_type": "FLOAT",
-            "range": [
-                0,
-                5
-            ],
-            "bacnet_type": "analog_value_object",
-            "bacnet_unit_type_id": 121,
-            "bacnet_unit_type": "UNITS_DELTA_DEGREES_KELVIN",
-            "reference": []
-        },
-        {
             "id": "target_temperature_tolerance.id",
             "name": "Target Temperature Tolerance(Target Temperature Tolerance)",
             "value": "0",
@@ -1402,22 +1241,6 @@
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": []
-        },
-        {
-            "id": "temperature",
-            "name": "Temperature",
-            "value": "",
-            "unit": "°C",
-            "access_mode": "R",
-            "data_type": "NUMBER",
-            "value_type": "FLOAT",
-            "range": [
-                -20,
-                60
-            ],
-            "bacnet_type": "analog_input_object",
-            "bacnet_unit_type_id": 62,
-            "bacnet_unit_type": "UNITS_DEGREES_CELSIUS"
         },
         {
             "id": "temperature_control_info.status",
@@ -1586,23 +1409,6 @@
             "reference": []
         },
         {
-            "id": "temperature_control_level_switch.cool_temp",
-            "name": "Cool Switch Temp(Temperature Control Level Switch)",
-            "value": "1",
-            "unit": "°C",
-            "access_mode": "RW",
-            "data_type": "NUMBER",
-            "value_type": "FLOAT",
-            "range": [
-                0,
-                50
-            ],
-            "bacnet_type": "analog_value_object",
-            "bacnet_unit_type_id": 62,
-            "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
-            "reference": []
-        },
-        {
             "id": "temperature_control_level_switch.cool_time",
             "name": "Cool Switch Time(Temperature Control Level Switch)",
             "value": "5",
@@ -1688,23 +1494,6 @@
             "reference": []
         },
         {
-            "id": "temperature_control_level_switch.heat_temp",
-            "name": "Heat Switch Temp(Temperature Control Level Switch)",
-            "value": "1",
-            "unit": "°C",
-            "access_mode": "RW",
-            "data_type": "NUMBER",
-            "value_type": "FLOAT",
-            "range": [
-                0,
-                5
-            ],
-            "bacnet_type": "analog_value_object",
-            "bacnet_unit_type_id": 62,
-            "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
-            "reference": []
-        },
-        {
             "id": "temperature_control_level_switch.heat_time",
             "name": "Heat Switch Time(Temperature Control Level Switch)",
             "value": "5",
@@ -1765,40 +1554,6 @@
             "bacnet_type": "binary_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": []
-        },
-        {
-            "id": "temperature_control_level_switch.threshold_t1",
-            "name": "level-1 Threshold(Temperature Control Level Switch)",
-            "value": "3",
-            "unit": "°C",
-            "access_mode": "RW",
-            "data_type": "NUMBER",
-            "value_type": "FLOAT",
-            "range": [
-                0,
-                10
-            ],
-            "bacnet_type": "analog_value_object",
-            "bacnet_unit_type_id": 62,
-            "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
-            "reference": []
-        },
-        {
-            "id": "temperature_control_level_switch.threshold_t2",
-            "name": "level-2 Threshold(Temperature Control Level Switch)",
-            "value": "5",
-            "unit": "°C",
-            "access_mode": "RW",
-            "data_type": "NUMBER",
-            "value_type": "FLOAT",
-            "range": [
-                0,
-                10
-            ],
-            "bacnet_type": "analog_value_object",
-            "bacnet_unit_type_id": 62,
-            "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
             "reference": []
         },
         {
