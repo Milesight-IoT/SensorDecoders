@@ -760,25 +760,6 @@
             ]
         },
         {
-            "id": "reporting_interval.ble_lora.seconds_of_time",
-            "name": "Reporting Interval(BLE_LORA Reporting Interval)",
-            "value": "600",
-            "unit": "s",
-            "access_mode": "RW",
-            "data_type": "NUMBER",
-            "value_type": "UINT16",
-            "range": [
-                60,
-                64800
-            ],
-            "bacnet_type": "analog_value_object",
-            "bacnet_unit_type_id": 73,
-            "bacnet_unit_type": "UNITS_SECONDS",
-            "reference": [
-                "reporting_interval.ble_lora.unit"
-            ]
-        },
-        {
             "id": "reporting_interval.ble_lora.unit",
             "name": "Reporting Interval Unit(BLE_LORA Reporting Interval)",
             "value": "1",
@@ -816,25 +797,6 @@
             "bacnet_type": "analog_value_object",
             "bacnet_unit_type_id": 72,
             "bacnet_unit_type": "UNITS_MINUTES",
-            "reference": [
-                "reporting_interval.power_lora.unit"
-            ]
-        },
-        {
-            "id": "reporting_interval.power_lora.seconds_of_time",
-            "name": "Reporting Interval(POWERBUS_LORA Reporting Interval)",
-            "value": "600",
-            "unit": "s",
-            "access_mode": "RW",
-            "data_type": "NUMBER",
-            "value_type": "UINT16",
-            "range": [
-                60,
-                64800
-            ],
-            "bacnet_type": "analog_value_object",
-            "bacnet_unit_type_id": 73,
-            "bacnet_unit_type": "UNITS_SECONDS",
             "reference": [
                 "reporting_interval.power_lora.unit"
             ]
