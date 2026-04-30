@@ -1330,7 +1330,7 @@
             "id": "target_temperature_tolerance.celsius_cool_value",
             "name": "Celsius Cool Target Temperature Tolerance(Target Temperature Tolerance)",
             "value": "1",
-            "unit": "°C",
+            "unit": "K",
             "access_mode": "RW",
             "data_type": "NUMBER",
             "value_type": "FLOAT",
@@ -1339,15 +1339,15 @@
                 5
             ],
             "bacnet_type": "analog_value_object",
-            "bacnet_unit_type_id": 62,
-            "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
+            "bacnet_unit_type_id": 121,
+            "bacnet_unit_type": "UNITS_DELTA_DEGREES_KELVIN",
             "reference": []
         },
         {
             "id": "target_temperature_tolerance.celsius_heat_value",
             "name": "Celsius Heat Target Temperature Tolerance(Target Temperature Tolerance)",
             "value": "1",
-            "unit": "°C",
+            "unit": "K",
             "access_mode": "RW",
             "data_type": "NUMBER",
             "value_type": "FLOAT",
@@ -1356,15 +1356,15 @@
                 5
             ],
             "bacnet_type": "analog_value_object",
-            "bacnet_unit_type_id": 62,
-            "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
+            "bacnet_unit_type_id": 121,
+            "bacnet_unit_type": "UNITS_DELTA_DEGREES_KELVIN",
             "reference": []
         },
         {
             "id": "target_temperature_tolerance.cool_value",
             "name": "Cool Target Temperature Tolerance(Target Temperature Tolerance)",
             "value": "1",
-            "unit": "°C",
+            "unit": "K",
             "access_mode": "RW",
             "data_type": "NUMBER",
             "value_type": "FLOAT",
@@ -1373,49 +1373,49 @@
                 5
             ],
             "bacnet_type": "analog_value_object",
-            "bacnet_unit_type_id": 62,
-            "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
+            "bacnet_unit_type_id": 121,
+            "bacnet_unit_type": "UNITS_DELTA_DEGREES_KELVIN",
             "reference": []
         },
         {
             "id": "target_temperature_tolerance.fahrenheit_cool_value",
             "name": "Fahrenheit Cool Target Temperature Tolerance(Target Temperature Tolerance)",
-            "value": "33.8",
-            "unit": "℉",
+            "value": "1.8",
+            "unit": "ΔT°F",
             "access_mode": "RW",
             "data_type": "NUMBER",
             "value_type": "FLOAT",
             "range": [
-                32,
-                41
+                0,
+                9
             ],
             "bacnet_type": "analog_value_object",
-            "bacnet_unit_type_id": 64,
-            "bacnet_unit_type": "UNITS_DEGREES_FAHRENHEIT",
+            "bacnet_unit_type_id": 120,
+            "bacnet_unit_type": "UNITS_DELTA_DEGREES_FAHRENHEIT",
             "reference": []
         },
         {
             "id": "target_temperature_tolerance.fahrenheit_heat_value",
             "name": "Fahrenheit Heat Target Temperature Tolerance(Target Temperature Tolerance)",
-            "value": "33.8",
-            "unit": "℉",
+            "value": "1.8",
+            "unit": "ΔT°F",
             "access_mode": "RW",
             "data_type": "NUMBER",
             "value_type": "FLOAT",
             "range": [
-                32,
-                41
+                0,
+                9
             ],
             "bacnet_type": "analog_value_object",
-            "bacnet_unit_type_id": 64,
-            "bacnet_unit_type": "UNITS_DEGREES_FAHRENHEIT",
+            "bacnet_unit_type_id": 120,
+            "bacnet_unit_type": "UNITS_DELTA_DEGREES_FAHRENHEIT",
             "reference": []
         },
         {
             "id": "target_temperature_tolerance.heat_value",
             "name": "Heat Target Temperature Tolerance(Target Temperature Tolerance)",
             "value": "1",
-            "unit": "°C",
+            "unit": "K",
             "access_mode": "RW",
             "data_type": "NUMBER",
             "value_type": "FLOAT",
@@ -1424,8 +1424,8 @@
                 5
             ],
             "bacnet_type": "analog_value_object",
-            "bacnet_unit_type_id": 62,
-            "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
+            "bacnet_unit_type_id": 121,
+            "bacnet_unit_type": "UNITS_DELTA_DEGREES_KELVIN",
             "reference": []
         },
         {
