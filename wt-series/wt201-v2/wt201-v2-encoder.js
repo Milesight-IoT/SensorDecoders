@@ -584,21 +584,31 @@ function setDaylightSavingTime(dst_config) {
 
 /**
  * set temperature unit display
- * @param {number} temperature_unit values: (0: celsius, 1: fahrenheit)
- * @example { "temperature_unit": 0 }
+ * @param {object} temperature_unit
+ * @param {number} temperature_unit.value values: [0, 1]
+ * @param {string} temperature_unit.unit values: (celsius, fahrenheit)
+ * @example { "temperature_unit": { "value": 0, "unit": "celsius" } }
  */
 function setTemperatureUnitDisplay(temperature_unit) {
-    var temperature_unit_map = { 0: "celsius", 1: "fahrenheit" };
-    var temperature_unit_values = getValues(temperature_unit_map);
-    if (temperature_unit_values.indexOf(temperature_unit) === -1) {
-        throw new Error("temperature_unit must be one of " + temperature_unit_values.join(", "));
-    }
+    var value = temperature_unit.value;
 
-    var buffer = new Buffer(3);
-    buffer.writeUInt8(0xff);
-    buffer.writeUInt8(0xeb);
-    buffer.writeUInt8(getValue(temperature_unit_map, temperature_unit));
-    return buffer.toBytes();
+    var temperature_unit_map = { 1: "celsius", 2: "fahrenheit" };
+    var temperature_unit_values = getValues(temperature_unit_map);
+
+    if (RAW_VALUE) {
+        if (temperature_unit_values.indexOf(value) === -1) {
+            throw new Error("temperature_unit.value must be one of " + temperature_unit_values.join(", "));
+        }
+
+        return [0xff, 0xeb, value - 1];
+    } else {
+        var unit = temperature_unit.unit;
+        if (temperature_unit_values.indexOf(unit) === -1) {
+            throw new Error("temperature_unit.unit must be one of " + temperature_unit_values.join(", "));
+        }
+
+        return [0xff, 0xeb, getValue(temperature_unit_map, unit) - 1];
+    }
 }
 
 /**

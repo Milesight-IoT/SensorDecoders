@@ -502,7 +502,12 @@ function handle_downlink_response(channel_type, bytes, offset) {
             offset += 3;
             break;
         case 0xeb:
-            decoded.temperature_unit = readTemperatureUnit(bytes[offset]);
+            var temperature_unit_map = { 0: "celsius", 1: "fahrenheit" };
+            decoded.temperature_unit = {};
+            decoded.temperature_unit.unit = temperature_unit_map[bytes[offset]];
+            if(RAW_VALUE) {
+                decoded.temperature_unit.value = bytes[offset] + 1;
+            }
             offset += 1;
             break;
         case 0xf6:
