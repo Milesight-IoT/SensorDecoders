@@ -310,18 +310,18 @@
             "unit": "",
             "access_mode": "RW",
             "data_type": "BOOL",
-            "value_type": "UINT8",
+            "value_type": "ENUM",
             "values": [
                 {
-                    "value": 0,
+                    "value": 1,
                     "name": "celsius"
                 },
                 {
-                    "value": 1,
+                    "value": 2,
                     "name": "fahrenheit"
                 }
             ],
-            "bacnet_type": "binary_value_object",
+            "bacnet_type": "multistate_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS"
         },
