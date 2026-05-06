@@ -1,0 +1,42 @@
+name: github notify
+
+on:
+  issues:
+    types: [opened]
+
+  pull_request:
+    types: [opened]
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: send wecom
+        env:
+          WECOM_WEBHOOK: ${{ secrets.WECHAT_WEBHOOK_URL }}
+        run: |
+          if [ "${{ github.event_name }}" = "issues" ]; then
+            TITLE="${{ github.event.issue.title }}"
+            URL="${{ github.event.issue.html_url }}"
+            USER="${{ github.event.issue.user.login }}"
+            UTC_TIME="${{ github.event.issue.created_at }}"
+            TYPE="Issue"
+          else
+            TITLE="${{ github.event.pull_request.title }}"
+            URL="${{ github.event.pull_request.html_url }}"
+            USER="${{ github.event.pull_request.user.login }}"
+            UTC_TIME="${{ github.event.pull_request.created_at }}"
+            TYPE="Pull Request"
+          fi
+
+          CREATED_AT=$(TZ='Asia/Shanghai' date -d "$UTC_TIME" "+%Y-%m-%d %H:%M:%S")
+
+          curl "$WECOM_WEBHOOK" \
+            -H "Content-Type: application/json" \
+            -d "{
+              \"msgtype\": \"markdown\",
+              \"markdown\": {
+                \"content\": \"# GitHub 新${TYPE}\n> ${TITLE}\n\n创建人：${USER}\n创建时间：${CREATED_AT}\n\n[点击查看](${URL})\"
+              }
+            }"
