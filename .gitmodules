@@ -1,0 +1,4 @@
+[submodule ".claude/skills"]
+	path = .claude/skills
+	url = git@gitlab.milesight.com:iot/cloud/toolbox/sensor-decoder-skills.git
+	branch = main
