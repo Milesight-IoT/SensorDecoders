@@ -1454,130 +1454,180 @@ function cmdMap() {
 function processTemperature(decoded) {
 	var allTemperatureProperties = {
     "temperature_alarm.open_window_alarm_deactivation.temperature": {
-        "precision": 2
+        "precision": 2,
+        "unitName": "℃"
     },
     "temperature_alarm.open_window_alarm_trigger.temperature": {
-        "precision": 2
+        "precision": 2,
+        "unitName": "℃"
     },
     "temperature_alarm.anti_freeze_protection_deactivation.temperature": {
-        "precision": 2
+        "precision": 2,
+        "unitName": "℃"
     },
     "temperature_alarm.anti_freeze_protection_trigger.temperature": {
-        "precision": 2
+        "precision": 2,
+        "unitName": "℃"
     },
     "temperature_alarm.over_range_alarm_trigger.temperature": {
-        "precision": 2
+        "precision": 2,
+        "unitName": "℃"
     },
     "temperature_alarm.over_range_alarm_deactivation.temperature": {
-        "precision": 2
+        "precision": 2,
+        "unitName": "℃"
     },
     "temperature_alarm.lower_range_alarm_trigger.temperature": {
-        "precision": 2
+        "precision": 2,
+        "unitName": "℃"
     },
     "temperature_alarm.lower_range_alarm_deactivation.temperature": {
-        "precision": 2
+        "precision": 2,
+        "unitName": "℃"
     },
     "temperature_alarm.within_range_alarm_trigger.temperature": {
-        "precision": 2
+        "precision": 2,
+        "unitName": "℃"
     },
     "temperature_alarm.within_range_alarm_deactivation.temperature": {
-        "precision": 2
+        "precision": 2,
+        "unitName": "℃"
     },
     "temperature_alarm.persistent_low_temp_deactivation.temperature": {
-        "precision": 2
+        "precision": 2,
+        "unitName": "℃"
     },
     "temperature_alarm.persistent_low_temp_trigger.temperature": {
-        "precision": 2
+        "precision": 2,
+        "unitName": "℃"
     },
     "temperature_alarm.persistent_high_temp_deactivation.temperature": {
-        "precision": 2
+        "precision": 2,
+        "unitName": "℃"
     },
     "temperature_alarm.persistent_high_temp_trigger.temperature": {
-        "precision": 2
+        "precision": 2,
+        "unitName": "℃"
     },
     "temperature": {
-        "precision": 2
+        "precision": 2,
+        "unitName": "℃"
     },
     "target_temperature": {
-        "precision": 2
+        "precision": 2,
+        "unitName": "℃"
     },
     "cool_target_temperature": {
-        "precision": 2
+        "precision": 2,
+        "unitName": "℃"
     },
     "target_temperature_settings.heat": {
-        "precision": 2
+        "precision": 2,
+        "unitName": "℃"
     },
     "target_temperature_settings.cool": {
-        "precision": 2
+        "precision": 2,
+        "unitName": "℃"
     },
     "target_temperature_settings.auto": {
-        "precision": 2
+        "precision": 2,
+        "unitName": "℃"
     },
     "target_temperature_tolerance.heat_value": {
-        "precision": 2
+        "precision": 2,
+        "unitName": "K"
     },
     "target_temperature_tolerance.cool_value": {
-        "precision": 2
+        "precision": 2,
+        "unitName": "K"
     },
     "target_temperature_tolerance.target_value": {
-        "precision": 2
+        "precision": 2,
+        "unitName": "K"
     },
     "target_temperature_tolerance.ctrl_value": {
-        "precision": 2
+        "precision": 2,
+        "unitName": "K"
     },
     "target_temperature_range.heat.min": {
-        "precision": 2
+        "precision": 2,
+        "unitName": "℃"
     },
     "target_temperature_range.heat.max": {
-        "precision": 2
+        "precision": 2,
+        "unitName": "℃"
     },
     "target_temperature_range.cool.min": {
-        "precision": 2
+        "precision": 2,
+        "unitName": "℃"
     },
     "target_temperature_range.cool.max": {
-        "precision": 2
+        "precision": 2,
+        "unitName": "℃"
     },
     "target_temperature_range.auto.min": {
-        "precision": 2
+        "precision": 2,
+        "unitName": "℃"
     },
     "target_temperature_range.auto.max": {
-        "precision": 2
+        "precision": 2,
+        "unitName": "℃"
     },
     "window_opening_detection_settings.temperature_detection.difference_in_temperature": {
-        "precision": 2
+        "precision": 2,
+        "unitName": "℃"
     },
     "external_temperature_settings.temperature": {
-        "precision": 2
+        "precision": 2,
+        "unitName": "℃"
     },
     "high_temperature_alarm_settings.difference_in_temperature": {
-        "precision": 2
+        "precision": 2,
+        "unitName": "℃"
     },
     "low_temperature_alarm_settings.difference_in_temperature": {
-        "precision": 2
+        "precision": 2,
+        "unitName": "℃"
     },
     "temperature_alarm_settings.threshold_min": {
-        "precision": 2
+        "precision": 2,
+        "unitName": "℃"
     },
     "temperature_alarm_settings.threshold_max": {
-        "precision": 2
+        "precision": 2,
+        "unitName": "℃"
     },
     "anti_freezing.target_temperature": {
-        "precision": 2
+        "precision": 2,
+        "unitName": "℃"
     },
     "temperature_control_level_switch.heat_temp": {
-        "precision": 2
+        "precision": 2,
+        "unitName": "℃"
     },
     "temperature_control_level_switch.cool_temp": {
-        "precision": 2
+        "precision": 2,
+        "unitName": "℃"
     },
     "temperature_control_level_switch.threshold_t1": {
-        "precision": 2
+        "precision": 2,
+        "unitName": "℃"
     },
     "temperature_control_level_switch.threshold_t2": {
-        "precision": 2
+        "precision": 2,
+        "unitName": "℃"
+    },
+    "energy_saving.level_1.target_temp_tolerance": {
+        "precision": 2,
+        "unitName": "K"
+    },
+    "energy_saving.level_2.target_temp_tolerance": {
+        "precision": 2,
+        "unitName": "K"
     },
     "external_sensor_settings.temp_calibration": {
-        "precision": 2
+        "precision": 2,
+        "unitName": "℃"
     }
 };
 	var leafPaths = getAllLeafPaths(decoded);
@@ -1601,11 +1651,13 @@ function processTemperature(decoded) {
 		if (allTemperatureProperties[newPropertyId]) {
 			var fahrenheitProperty = convertName(propertyId, 'fahrenheit');
 			var celsiusProperty = convertName(propertyId, 'celsius');
+			var unitName = allTemperatureProperties[newPropertyId].unitName;
+			var constant = unitName == 'K' ? 0 : 32;
 			if (hasPath(decoded, propertyId)) {
-				setPath(decoded, fahrenheitProperty,  Number((getPath(decoded, propertyId) * 1.8 + 32).toFixed(allTemperatureProperties[newPropertyId].precision)));
+				setPath(decoded, fahrenheitProperty,  Number((getPath(decoded, propertyId) * 1.8 + constant).toFixed(allTemperatureProperties[newPropertyId].precision)));
 				setPath(decoded, celsiusProperty,  Number(getPath(decoded, propertyId).toFixed(allTemperatureProperties[newPropertyId].precision)));
 			}
-		}	
-	}	
+		}
+	}
 	return decoded;
 }

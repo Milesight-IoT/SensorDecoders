@@ -461,7 +461,7 @@
             "name": "LoRaWAN Work Mode(LoRaWAN  Settings)",
             "value": "0",
             "unit": "",
-            "access_mode": "RW",
+            "access_mode": "R",
             "data_type": "ENUM",
             "value_type": "UINT8",
             "values": [
@@ -482,7 +482,7 @@
                     "name": "ClassC to B"
                 }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": []

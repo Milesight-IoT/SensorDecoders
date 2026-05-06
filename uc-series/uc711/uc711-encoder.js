@@ -2141,136 +2141,186 @@ function cmdMap() {
 function processTemperature(payload) {
 	var allTemperatureProperties = {
     "temperature_alarm.open_window_alarm_deactivation.temperature": {
-        "coefficient": 0.01
+        "coefficient": 0.01,
+        "unitName": "℃"
     },
     "temperature_alarm.open_window_alarm_trigger.temperature": {
-        "coefficient": 0.01
+        "coefficient": 0.01,
+        "unitName": "℃"
     },
     "temperature_alarm.anti_freeze_protection_deactivation.temperature": {
-        "coefficient": 0.01
+        "coefficient": 0.01,
+        "unitName": "℃"
     },
     "temperature_alarm.anti_freeze_protection_trigger.temperature": {
-        "coefficient": 0.01
+        "coefficient": 0.01,
+        "unitName": "℃"
     },
     "temperature_alarm.over_range_alarm_trigger.temperature": {
-        "coefficient": 0.01
+        "coefficient": 0.01,
+        "unitName": "℃"
     },
     "temperature_alarm.over_range_alarm_deactivation.temperature": {
-        "coefficient": 0.01
+        "coefficient": 0.01,
+        "unitName": "℃"
     },
     "temperature_alarm.lower_range_alarm_trigger.temperature": {
-        "coefficient": 0.01
+        "coefficient": 0.01,
+        "unitName": "℃"
     },
     "temperature_alarm.lower_range_alarm_deactivation.temperature": {
-        "coefficient": 0.01
+        "coefficient": 0.01,
+        "unitName": "℃"
     },
     "temperature_alarm.within_range_alarm_trigger.temperature": {
-        "coefficient": 0.01
+        "coefficient": 0.01,
+        "unitName": "℃"
     },
     "temperature_alarm.within_range_alarm_deactivation.temperature": {
-        "coefficient": 0.01
+        "coefficient": 0.01,
+        "unitName": "℃"
     },
     "temperature_alarm.persistent_low_temp_deactivation.temperature": {
-        "coefficient": 0.01
+        "coefficient": 0.01,
+        "unitName": "℃"
     },
     "temperature_alarm.persistent_low_temp_trigger.temperature": {
-        "coefficient": 0.01
+        "coefficient": 0.01,
+        "unitName": "℃"
     },
     "temperature_alarm.persistent_high_temp_deactivation.temperature": {
-        "coefficient": 0.01
+        "coefficient": 0.01,
+        "unitName": "℃"
     },
     "temperature_alarm.persistent_high_temp_trigger.temperature": {
-        "coefficient": 0.01
+        "coefficient": 0.01,
+        "unitName": "℃"
     },
     "temperature": {
-        "coefficient": 0.01
+        "coefficient": 0.01,
+        "unitName": "℃"
     },
     "target_temperature": {
-        "coefficient": 0.01
+        "coefficient": 0.01,
+        "unitName": "℃"
     },
     "cool_target_temperature": {
-        "coefficient": 0.01
+        "coefficient": 0.01,
+        "unitName": "℃"
     },
     "target_temperature_settings.heat": {
-        "coefficient": 0.01
+        "coefficient": 0.01,
+        "unitName": "℃"
     },
     "target_temperature_settings.cool": {
-        "coefficient": 0.01
+        "coefficient": 0.01,
+        "unitName": "℃"
     },
     "target_temperature_settings.auto": {
-        "coefficient": 0.01
+        "coefficient": 0.01,
+        "unitName": "℃"
     },
     "target_temperature_tolerance.heat_value": {
-        "coefficient": 0.01
+        "coefficient": 0.01,
+        "unitName": "K"
     },
     "target_temperature_tolerance.cool_value": {
-        "coefficient": 0.01
+        "coefficient": 0.01,
+        "unitName": "K"
     },
     "target_temperature_tolerance.target_value": {
-        "coefficient": 0.01
+        "coefficient": 0.01,
+        "unitName": "K"
     },
     "target_temperature_tolerance.ctrl_value": {
-        "coefficient": 0.01
+        "coefficient": 0.01,
+        "unitName": "K"
     },
     "target_temperature_range.heat.min": {
-        "coefficient": 0.01
+        "coefficient": 0.01,
+        "unitName": "℃"
     },
     "target_temperature_range.heat.max": {
-        "coefficient": 0.01
+        "coefficient": 0.01,
+        "unitName": "℃"
     },
     "target_temperature_range.cool.min": {
-        "coefficient": 0.01
+        "coefficient": 0.01,
+        "unitName": "℃"
     },
     "target_temperature_range.cool.max": {
-        "coefficient": 0.01
+        "coefficient": 0.01,
+        "unitName": "℃"
     },
     "target_temperature_range.auto.min": {
-        "coefficient": 0.01
+        "coefficient": 0.01,
+        "unitName": "℃"
     },
     "target_temperature_range.auto.max": {
-        "coefficient": 0.01
+        "coefficient": 0.01,
+        "unitName": "℃"
     },
     "window_opening_detection_settings.temperature_detection.difference_in_temperature": {
-        "coefficient": 0.01
+        "coefficient": 0.01,
+        "unitName": "℃"
     },
     "external_temperature_settings.temperature": {
-        "coefficient": 0.01
+        "coefficient": 0.01,
+        "unitName": "℃"
     },
     "high_temperature_alarm_settings.difference_in_temperature": {
-        "coefficient": 0.01
+        "coefficient": 0.01,
+        "unitName": "℃"
     },
     "low_temperature_alarm_settings.difference_in_temperature": {
-        "coefficient": 0.01
+        "coefficient": 0.01,
+        "unitName": "℃"
     },
     "temperature_alarm_settings.threshold_min": {
-        "coefficient": 0.01
+        "coefficient": 0.01,
+        "unitName": "℃"
     },
     "temperature_alarm_settings.threshold_max": {
-        "coefficient": 0.01
+        "coefficient": 0.01,
+        "unitName": "℃"
     },
     "anti_freezing.target_temperature": {
-        "coefficient": 0.01
+        "coefficient": 0.01,
+        "unitName": "℃"
     },
     "temperature_control_level_switch.heat_temp": {
-        "coefficient": 0.01
+        "coefficient": 0.01,
+        "unitName": "℃"
     },
     "temperature_control_level_switch.cool_temp": {
-        "coefficient": 0.01
+        "coefficient": 0.01,
+        "unitName": "℃"
     },
     "temperature_control_level_switch.threshold_t1": {
-        "coefficient": 0.01
+        "coefficient": 0.01,
+        "unitName": "℃"
     },
     "temperature_control_level_switch.threshold_t2": {
-        "coefficient": 0.01
+        "coefficient": 0.01,
+        "unitName": "℃"
+    },
+    "energy_saving.level_1.target_temp_tolerance": {
+        "coefficient": 0.01,
+        "unitName": "K"
+    },
+    "energy_saving.level_2.target_temp_tolerance": {
+        "coefficient": 0.01,
+        "unitName": "K"
     },
     "external_sensor_settings.temp_calibration": {
-        "coefficient": 0.01
+        "coefficient": 0.01,
+        "unitName": "℃"
     }
 };
-    var leafPaths = getAllLeafPaths(payload);    
+    var leafPaths = getAllLeafPaths(payload);
 	for (var i = 0; i < leafPaths.length; i++) {
         var propertyId = leafPaths[i];
-        var propertyParts = propertyId.split('.');        
+        var propertyParts = propertyId.split('.');
         var newPropertyParts = []
         for (var j = 0; j < propertyParts.length; j++) {
             var part = propertyParts[j];
@@ -2285,23 +2335,25 @@ function processTemperature(payload) {
         newPropertyId = recoverName(newPropertyId, 'celsius');
         propertyId = recoverName(propertyId, 'fahrenheit');
         propertyId = recoverName(propertyId, 'celsius');
-        if (allTemperatureProperties[newPropertyId]) {            
+        if (allTemperatureProperties[newPropertyId]) {
+            var unitName = allTemperatureProperties[newPropertyId].unitName;
+            var constant = unitName == 'K' ? 0 : 32;
             var fahrenheitProperty = convertName(propertyId, 'fahrenheit');
             var celsiusProperty = convertName(propertyId, 'celsius');
             var stringCoefficient = String(allTemperatureProperties[newPropertyId].coefficient);
             var dotIndex = stringCoefficient.indexOf('.');
             var precision = dotIndex != -1 ? stringCoefficient.length - dotIndex - 1 : 0;
             if (!hasPath(payload, propertyId)) {
-                if (hasPath(payload, fahrenheitProperty) && hasPath(payload, celsiusProperty)) { 
+                if (hasPath(payload, fahrenheitProperty) && hasPath(payload, celsiusProperty)) {
                     throw new Error(fahrenheitProperty + ' and ' + celsiusProperty + ' cannot be in payload at the same time');
                 }
                 if (hasPath(payload, fahrenheitProperty)) {
-                    setPath(payload, propertyId, Number(((getPath(payload, fahrenheitProperty) - 32) / 1.8).toFixed(precision)));
+                    setPath(payload, propertyId, Number(((getPath(payload, fahrenheitProperty) - constant) / 1.8).toFixed(precision)));
                 } else if (hasPath(payload, celsiusProperty)) {
                     setPath(payload, propertyId, Number(getPath(payload, celsiusProperty).toFixed(precision)));
                 }
             }
         }
-	}	
+	}
 	return payload;
 }
