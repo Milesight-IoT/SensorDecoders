@@ -37,6 +37,6 @@ jobs:
             -d "{
               \"msgtype\": \"markdown\",
               \"markdown\": {
-                \"content\": \"# GitHub 新${TYPE}\n> ${TITLE}\n\n创建人：${USER}\n创建时间：${CREATED_AT}\n\n[点击查看](${URL})\"
+                \"content\": \"# SensorDecoders 新${TYPE}\n> ${TITLE}\n\n创建人：${USER}\n创建时间：${CREATED_AT}\n\n[点击查看](${URL})\"
               }
             }"
