@@ -131,6 +131,17 @@ function milesightDeviceDecode(bytes) {
             decoded.wires_relay = readWiresRelay(bytes[i]);
             i += 1;
         }
+        else if (channel_id === 0x0b && channel_type === 0x5d) {
+            var d2d_info = {};
+            d2d_info.id = readUInt8(bytes[i]);
+            d2d_info.deveui = '24e124' + toHexString(bytes.slice(i + 1, i + 6));
+            d2d_info.snr = readInt8(bytes.slice(i + 6, i + 7));
+            d2d_info.rssi = readInt8(bytes.slice(i + 7, i + 8));
+            i += 8;
+
+            decoded.d2d_info = decoded.d2d_info || [];
+            decoded.d2d_info.push(d2d_info);
+        }
         // TEMPERATURE MODE SUPPORT
         else if (channel_id === 0xff && channel_type === 0xcb) {
             decoded.temperature_control_support_mode = readTemperatureControlSupportMode(bytes[i]);
@@ -983,7 +994,7 @@ function readBandType(value) {
 }
 
 function readReportStatus(value) {
-    var report_status_map = { 0: "plan", 1: "periodic", 2: "target_temperature_range", 3: "params_1", 4: "params_2" };
+    var report_status_map = { 0: "plan", 1: "periodic", 2: "target_temperature_range", 3: "params_1", 4: "params_2", 5: "d2d" };
     return getValue(report_status_map, value);
 }
 
