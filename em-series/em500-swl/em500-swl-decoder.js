@@ -87,7 +87,7 @@ function milesightDeviceDecode(bytes) {
             } else if (depth_value === 0xfffd) {
                 decoded.depth_error = readSensorStatus(2);
             } else {
-                decoded.depth = depth_value / 100;
+                decoded.depth = depth_value;
             }
             i += 2;
         }
@@ -109,7 +109,7 @@ function milesightDeviceDecode(bytes) {
             } else if (depth_value === 0xfffd) {
                 data.depth_error = readSensorStatus(2);
             } else {
-                data.depth = depth_value / 100;
+                data.depth = depth_value;
             }
             i += 6;
             decoded.history = decoded.history || [];
@@ -150,8 +150,8 @@ function handle_downlink_response(channel_type, bytes, offset) {
                 decoded.depth_alarm_config = {};
                 decoded.depth_alarm_config.enable = readEnableStatus(enable);
                 decoded.depth_alarm_config.condition = readConditionType(condition);
-                decoded.depth_alarm_config.threshold_min = readInt16LE(bytes.slice(offset + 1, offset + 3)) / 100;
-                decoded.depth_alarm_config.threshold_max = readInt16LE(bytes.slice(offset + 3, offset + 5)) / 100;
+                decoded.depth_alarm_config.threshold_min = readInt16LE(bytes.slice(offset + 1, offset + 3));
+                decoded.depth_alarm_config.threshold_max = readInt16LE(bytes.slice(offset + 3, offset + 5));
             }
             offset += 9;
             break;
@@ -232,7 +232,7 @@ function handle_downlink_response(channel_type, bytes, offset) {
             if (calibration_type === 0x06) {
                 decoded.depth_calibration_settings = {};
                 decoded.depth_calibration_settings.enable = readEnableStatus(bytes[offset + 1]);
-                decoded.depth_calibration_settings.calibration_value = readInt16LE(bytes.slice(offset + 2, offset + 4)) / 100;
+                decoded.depth_calibration_settings.calibration_value = readInt16LE(bytes.slice(offset + 2, offset + 4));
             }
             offset += 4;
             break;

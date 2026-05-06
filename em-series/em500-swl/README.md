@@ -36,8 +36,8 @@ For more detailed information, please visit [Milesight Official Website](https:/
 |     CHANNEL     |  ID  | TYPE | LENGTH | DESCRIPTION                               |
 | :-------------: | :--: | :--: | :----: | ----------------------------------------- |
 |     Battery     | 0x01 | 0x75 |   1    | battery(1B)<br/>battery, unit: %          |
-|   Water Level   | 0x03 | 0x77 |   2    | water_level(2B)<br/>water_level, unit: cm |
-| Historical Data | 0x20 | 0XCE |   6    | timestamp(4B) + water_level(2B)           |
+|      Depth      | 0x03 | 0x77 |   2    | depth(2B)<br/>depth, unit: cm             |
+| Historical Data | 0x20 | 0XCE |   6    | timestamp(4B) + depth(2B)                 |
 
 ## Example
 
@@ -45,6 +45,6 @@ For more detailed information, please visit [Milesight Official Website](https:/
 // 017564 03770200
 {
     "battery": 100,
-    "water_level": 2
+    "depth": 2
 }
 ```
