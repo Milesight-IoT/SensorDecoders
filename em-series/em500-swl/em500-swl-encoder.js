@@ -322,8 +322,8 @@ function setDepthAlarmConfig(depth_alarm_config) {
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0x06);
     buffer.writeUInt8(data);
-    buffer.writeInt16LE(threshold_min * 100);
-    buffer.writeInt16LE(threshold_max * 100);
+    buffer.writeInt16LE(threshold_min);
+    buffer.writeInt16LE(threshold_max);
     buffer.writeUInt16LE(0x00);
     buffer.writeUInt16LE(0x00);
     return buffer.toBytes();
@@ -390,7 +390,7 @@ function setDepthCalibrationConfig(depth_calibration_settings) {
     buffer.writeUInt8(0xf1);
     buffer.writeUInt8(0x06); // depth
     buffer.writeUInt8(getValue(enable_map, enable));
-    buffer.writeInt16LE(calibration_value * 100);
+    buffer.writeInt16LE(calibration_value);
     return buffer.toBytes();
 }
 
