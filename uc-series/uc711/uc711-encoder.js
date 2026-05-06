@@ -28,6 +28,46 @@ function Encoder(obj, port) {
 function milesightDeviceEncode(payload) {
 	processTemperature(payload);
 	var encoded = [];
+	//0xef
+	if ('req' in payload) {
+		var buffer = new Buffer();
+		var reqList = payload.req;
+		for (var idx = 0; idx < reqList.length; idx++) {
+			var req_command = reqList[idx];
+			var pureNumber = [];
+			var formateStrParts = [];
+		
+			req_command.split('.').forEach(function(part) {
+				if (/^[0-9]+$/.test(part)) {
+					// padStart ES5 兼容
+					var hex = Number(part).toString(16);
+					while (hex.length < 2) { hex = '0' + hex; }
+					pureNumber.push(hex);
+					formateStrParts.push('_item');
+				} else {
+					formateStrParts.push(part);
+				}
+			});
+		
+			var formateStr = formateStrParts.join('.');
+			var hexString = cmdMap()[formateStr];
+		
+			if (hexString && hexString.indexOf('xx') !== -1) {
+				var i = 0;
+				hexString = hexString.replace(/xx/g, function() {
+					return pureNumber[i++];
+				});
+			}
+		
+			if (hexString) {
+				var length = hexString.length / 2;
+				buffer.writeUInt8(0xef);
+				buffer.writeUInt8(length);
+				buffer.writeHexString(hexString, length, true);
+			}
+		}
+		encoded = encoded.concat(buffer.toBytes());
+	}
 	//0xee
 	if ('request_query_all_configurations' in payload) {
 		var buffer = new Buffer();
@@ -1943,6 +1983,7 @@ function isInteger(str) {
 
 function cmdMap() {
 	return {
+		  "request_command_queries": "ef",
 		  "request_query_all_configurations": "ee",
 		  "lorawan_configuration_settings": "cf",
 		  "lorawan_configuration_settings.mode": "cf00",

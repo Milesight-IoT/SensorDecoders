@@ -35,6 +35,16 @@ function milesightDeviceDecode(bytes) {
 	for (counterObj.i = 0; counterObj.i < bytes.length; ) {
 		var command_id = bytes[counterObj.i++];
 		switch (command_id) {
+			case 0xef:
+				decoded.ans = decoded.ans || [];
+				var ans_item = {};
+				var bitOptions = readUInt8(bytes, counterObj, 1);
+				// 0：success, 1：unknow, 2：error order, 3：error passwd, 4：error read params, 5：error write params, 6：error read, 7：error write, 8：error read apply, 9：error write apply
+				ans_item.result = extractBits(bitOptions, 4, 8);
+				ans_item.length = extractBits(bitOptions, 0, 4);
+				ans_item.id = readCommand(bytes, counterObj, ans_item.length);
+				decoded.ans.push(ans_item);
+				break;
 			case 0xee:
 				decoded.all_configurations_request_by_device = readOnlyCommand(bytes, counterObj, 0);
 				break;
@@ -1345,6 +1355,7 @@ function cmdMap() {
 		  "850102": "energy_saving.level_2.target_temp_tolerance",
 		  "870000": "di_settings.card_control.system_control",
 		  "870001": "di_settings.card_control.insertion_plan",
+		  "ef": "request_command_queries",
 		  "ee": "request_query_all_configurations",
 		  "cf": "lorawan_configuration_settings",
 		  "cf00": "lorawan_configuration_settings.mode",
