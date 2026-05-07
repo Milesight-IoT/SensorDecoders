@@ -662,10 +662,6 @@
                 {
                     "value": 5,
                     "name": "High"
-                },
-                {
-                    "value": 255,
-                    "name": "Disabled"
                 }
             ],
             "bacnet_type": "multistate_value_object",

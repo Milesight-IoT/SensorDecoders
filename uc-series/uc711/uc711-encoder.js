@@ -978,12 +978,12 @@ function milesightDeviceEncode(payload) {
 		var buffer = new Buffer();
 		if (isValid(payload.fan_settings.fan_mode)) {
 			buffer.writeUInt8(0x70);
-			// 0：Auto, 1：Ventilation, 2：Always Open, 3：Low, 4：Medium, 5：High, 255：Disabled
+			// 0：Auto, 1：Ventilation, 2：Always Open, 3：Low, 4：Medium, 5：High
 			buffer.writeUInt8(0x00);
-			if ([0, 1, 2, 3, 4, 5, 255].indexOf(payload.fan_settings.fan_mode) === -1) {
-				throw new Error('fan_settings.fan_mode must be one of [0, 1, 2, 3, 4, 5, 255]');
+			if ([0, 1, 2, 3, 4, 5].indexOf(payload.fan_settings.fan_mode) === -1) {
+				throw new Error('fan_settings.fan_mode must be one of [0, 1, 2, 3, 4, 5]');
 			}
-			// 0：Auto, 1：Ventilation, 2：Always Open, 3：Low, 4：Medium, 5：High, 255：Disabled
+			// 0：Auto, 1：Ventilation, 2：Always Open, 3：Low, 4：Medium, 5：High
 			buffer.writeUInt8(payload.fan_settings.fan_mode);
 		}
 		if (isValid(payload.fan_settings.adjust_humidity_enable)) {
@@ -2366,7 +2366,7 @@ function processTemperature(payload) {
     },
     "external_sensor_settings.temp_calibration": {
         "coefficient": 0.01,
-        "unitName": "℃"
+        "unitName": "K"
     }
 };
     var leafPaths = getAllLeafPaths(payload);

@@ -549,7 +549,7 @@ function milesightDeviceDecode(bytes) {
 				decoded.fan_settings = decoded.fan_settings || {};
 				var fan_settings_command = readUInt8(bytes, counterObj, 1);
 				if (fan_settings_command == 0x00) {
-					// 0：Auto, 1：Ventilation, 2：Always Open, 3：Low, 4：Medium, 5：High, 255：Disabled
+					// 0：Auto, 1：Ventilation, 2：Always Open, 3：Low, 4：Medium, 5：High
 					decoded.fan_settings.fan_mode = readUInt8(bytes, counterObj, 1);
 				}
 				if (fan_settings_command == 0x01) {
@@ -1643,7 +1643,7 @@ function processTemperature(decoded) {
     },
     "external_sensor_settings.temp_calibration": {
         "precision": 2,
-        "unitName": "℃"
+        "unitName": "K"
     }
 };
 	var leafPaths = getAllLeafPaths(decoded);
