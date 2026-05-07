@@ -234,32 +234,8 @@
                     "name": "Level 1 Settings"
                 },
                 {
-                    "value": 0,
-                    "name": "Enable"
-                },
-                {
-                    "value": 1,
-                    "name": "Free Time"
-                },
-                {
-                    "value": 2,
-                    "name": "Energy Saving Target Temperature Tolerance"
-                },
-                {
                     "value": 1,
                     "name": "Level 2 Settings"
-                },
-                {
-                    "value": 0,
-                    "name": "Enable"
-                },
-                {
-                    "value": 1,
-                    "name": "Free Time"
-                },
-                {
-                    "value": 2,
-                    "name": "Energy Saving Target Temperature Tolerance"
                 }
             ],
             "bacnet_type": "multistate_value_object",
