@@ -1591,7 +1591,7 @@ function processTemperature(decoded) {
     },
     "window_opening_detection_settings.temperature_detection.difference_in_temperature": {
         "precision": 2,
-        "unitName": "℃"
+        "unitName": "K"
     },
     "external_temperature_settings.temperature": {
         "precision": 2,
@@ -1599,11 +1599,11 @@ function processTemperature(decoded) {
     },
     "high_temperature_alarm_settings.difference_in_temperature": {
         "precision": 2,
-        "unitName": "℃"
+        "unitName": "K"
     },
     "low_temperature_alarm_settings.difference_in_temperature": {
         "precision": 2,
-        "unitName": "℃"
+        "unitName": "K"
     },
     "temperature_alarm_settings.threshold_min": {
         "precision": 2,
@@ -1619,19 +1619,19 @@ function processTemperature(decoded) {
     },
     "temperature_control_level_switch.heat_temp": {
         "precision": 2,
-        "unitName": "℃"
+        "unitName": "K"
     },
     "temperature_control_level_switch.cool_temp": {
         "precision": 2,
-        "unitName": "℃"
+        "unitName": "K"
     },
     "temperature_control_level_switch.threshold_t1": {
         "precision": 2,
-        "unitName": "℃"
+        "unitName": "K"
     },
     "temperature_control_level_switch.threshold_t2": {
         "precision": 2,
-        "unitName": "℃"
+        "unitName": "K"
     },
     "energy_saving.level_1.target_temp_tolerance": {
         "precision": 2,

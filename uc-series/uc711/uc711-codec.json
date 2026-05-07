@@ -1618,7 +1618,7 @@
             "id": "temperature_control_level_switch.celsius_cool_temp",
             "name": "Celsius Cool Switch Temp(Temperature Control Level Switch)",
             "value": "1",
-            "unit": "°C",
+            "unit": "K",
             "access_mode": "RW",
             "data_type": "NUMBER",
             "value_type": "FLOAT",
@@ -1627,15 +1627,15 @@
                 50
             ],
             "bacnet_type": "analog_value_object",
-            "bacnet_unit_type_id": 62,
-            "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
+            "bacnet_unit_type_id": 121,
+            "bacnet_unit_type": "UNITS_DELTA_DEGREES_KELVIN",
             "reference": []
         },
         {
             "id": "temperature_control_level_switch.celsius_heat_temp",
             "name": "Celsius Heat Switch Temp(Temperature Control Level Switch)",
             "value": "1",
-            "unit": "°C",
+            "unit": "K",
             "access_mode": "RW",
             "data_type": "NUMBER",
             "value_type": "FLOAT",
@@ -1644,15 +1644,15 @@
                 5
             ],
             "bacnet_type": "analog_value_object",
-            "bacnet_unit_type_id": 62,
-            "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
+            "bacnet_unit_type_id": 121,
+            "bacnet_unit_type": "UNITS_DELTA_DEGREES_KELVIN",
             "reference": []
         },
         {
             "id": "temperature_control_level_switch.celsius_threshold_t1",
             "name": "Celsius level-1 Threshold(Temperature Control Level Switch)",
             "value": "3",
-            "unit": "°C",
+            "unit": "K",
             "access_mode": "RW",
             "data_type": "NUMBER",
             "value_type": "FLOAT",
@@ -1661,15 +1661,15 @@
                 10
             ],
             "bacnet_type": "analog_value_object",
-            "bacnet_unit_type_id": 62,
-            "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
+            "bacnet_unit_type_id": 121,
+            "bacnet_unit_type": "UNITS_DELTA_DEGREES_KELVIN",
             "reference": []
         },
         {
             "id": "temperature_control_level_switch.celsius_threshold_t2",
             "name": "Celsius level-2 Threshold(Temperature Control Level Switch)",
             "value": "5",
-            "unit": "°C",
+            "unit": "K",
             "access_mode": "RW",
             "data_type": "NUMBER",
             "value_type": "FLOAT",
@@ -1678,8 +1678,8 @@
                 10
             ],
             "bacnet_type": "analog_value_object",
-            "bacnet_unit_type_id": 62,
-            "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
+            "bacnet_unit_type_id": 121,
+            "bacnet_unit_type": "UNITS_DELTA_DEGREES_KELVIN",
             "reference": []
         },
         {
@@ -1749,69 +1749,69 @@
         {
             "id": "temperature_control_level_switch.fahrenheit_cool_temp",
             "name": "Fahrenheit Cool Switch Temp(Temperature Control Level Switch)",
-            "value": "33.8",
-            "unit": "℉",
+            "value": "1.8",
+            "unit": "ΔT°F",
             "access_mode": "RW",
             "data_type": "NUMBER",
             "value_type": "FLOAT",
             "range": [
-                32,
-                122
+                0,
+                90
             ],
             "bacnet_type": "analog_value_object",
-            "bacnet_unit_type_id": 64,
-            "bacnet_unit_type": "UNITS_DEGREES_FAHRENHEIT",
+            "bacnet_unit_type_id": 120,
+            "bacnet_unit_type": "UNITS_DELTA_DEGREES_FAHRENHEIT",
             "reference": []
         },
         {
             "id": "temperature_control_level_switch.fahrenheit_heat_temp",
             "name": "Fahrenheit Heat Switch Temp(Temperature Control Level Switch)",
-            "value": "33.8",
-            "unit": "℉",
+            "value": "1.8",
+            "unit": "ΔT°F",
             "access_mode": "RW",
             "data_type": "NUMBER",
             "value_type": "FLOAT",
             "range": [
-                32,
-                41
+                0,
+                9
             ],
             "bacnet_type": "analog_value_object",
-            "bacnet_unit_type_id": 64,
-            "bacnet_unit_type": "UNITS_DEGREES_FAHRENHEIT",
+            "bacnet_unit_type_id": 120,
+            "bacnet_unit_type": "UNITS_DELTA_DEGREES_FAHRENHEIT",
             "reference": []
         },
         {
             "id": "temperature_control_level_switch.fahrenheit_threshold_t1",
             "name": "Fahrenheit level-1 Threshold(Temperature Control Level Switch)",
-            "value": "37.4",
-            "unit": "℉",
+            "value": "5.4",
+            "unit": "ΔT°F",
             "access_mode": "RW",
             "data_type": "NUMBER",
             "value_type": "FLOAT",
             "range": [
-                32,
-                50
+                0,
+                18
             ],
             "bacnet_type": "analog_value_object",
-            "bacnet_unit_type_id": 64,
-            "bacnet_unit_type": "UNITS_DEGREES_FAHRENHEIT",
+            "bacnet_unit_type_id": 120,
+            "bacnet_unit_type": "UNITS_DELTA_DEGREES_FAHRENHEIT",
             "reference": []
         },
         {
             "id": "temperature_control_level_switch.fahrenheit_threshold_t2",
             "name": "Fahrenheit level-2 Threshold(Temperature Control Level Switch)",
-            "value": "41",
-            "unit": "℉",
+            "value": "9",
+            "unit": "ΔT°F",
             "access_mode": "RW",
             "data_type": "NUMBER",
             "value_type": "FLOAT",
             "range": [
-                32,
-                50
+                0,
+                18
             ],
             "bacnet_type": "analog_value_object",
-            "bacnet_unit_type_id": 64,
-            "bacnet_unit_type": "UNITS_DEGREES_FAHRENHEIT",
+            "bacnet_unit_type_id": 120,
+            "bacnet_unit_type": "UNITS_DELTA_DEGREES_FAHRENHEIT",
             "reference": []
         },
         {

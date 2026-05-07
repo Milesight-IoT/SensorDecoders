@@ -2314,7 +2314,7 @@ function processTemperature(payload) {
     },
     "window_opening_detection_settings.temperature_detection.difference_in_temperature": {
         "coefficient": 0.01,
-        "unitName": "℃"
+        "unitName": "K"
     },
     "external_temperature_settings.temperature": {
         "coefficient": 0.01,
@@ -2322,11 +2322,11 @@ function processTemperature(payload) {
     },
     "high_temperature_alarm_settings.difference_in_temperature": {
         "coefficient": 0.01,
-        "unitName": "℃"
+        "unitName": "K"
     },
     "low_temperature_alarm_settings.difference_in_temperature": {
         "coefficient": 0.01,
-        "unitName": "℃"
+        "unitName": "K"
     },
     "temperature_alarm_settings.threshold_min": {
         "coefficient": 0.01,
@@ -2342,19 +2342,19 @@ function processTemperature(payload) {
     },
     "temperature_control_level_switch.heat_temp": {
         "coefficient": 0.01,
-        "unitName": "℃"
+        "unitName": "K"
     },
     "temperature_control_level_switch.cool_temp": {
         "coefficient": 0.01,
-        "unitName": "℃"
+        "unitName": "K"
     },
     "temperature_control_level_switch.threshold_t1": {
         "coefficient": 0.01,
-        "unitName": "℃"
+        "unitName": "K"
     },
     "temperature_control_level_switch.threshold_t2": {
         "coefficient": 0.01,
-        "unitName": "℃"
+        "unitName": "K"
     },
     "energy_saving.level_1.target_temp_tolerance": {
         "coefficient": 0.01,
