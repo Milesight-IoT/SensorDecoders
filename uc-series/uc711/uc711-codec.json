@@ -120,6 +120,63 @@
             "bacnet_unit_type": "UNITS_DEGREES_CELSIUS"
         },
         {
+            "id": "dehumidify_settings.command",
+            "name": "Sub-command(Dehumidify Settings)",
+            "value": "2",
+            "unit": "",
+            "access_mode": "RW",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 2,
+                    "name": "Humidify Low Threshold"
+                },
+                {
+                    "value": 3,
+                    "name": "Humidify High Threshold"
+                }
+            ],
+            "bacnet_type": "multistate_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": []
+        },
+        {
+            "id": "dehumidify_settings.humidify_high_threshold",
+            "name": "Humidify High Threshold(Dehumidify Settings)",
+            "value": "80",
+            "unit": "%RH",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "range": [
+                0,
+                100
+            ],
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 29,
+            "bacnet_unit_type": "UNITS_PERCENT_RELATIVE_HUMIDITY",
+            "reference": []
+        },
+        {
+            "id": "dehumidify_settings.humidify_low_threshold",
+            "name": "Humidify Low Threshold(Dehumidify Settings)",
+            "value": "40",
+            "unit": "%RH",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "range": [
+                0,
+                100
+            ],
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 29,
+            "bacnet_unit_type": "UNITS_PERCENT_RELATIVE_HUMIDITY",
+            "reference": []
+        },
+        {
             "id": "device_status",
             "name": "Device Status",
             "value": "1",
@@ -140,6 +197,277 @@
             "bacnet_type": "binary_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS"
+        },
+        {
+            "id": "energy_saving_enable",
+            "name": "Energy-Saving Enable",
+            "value": "0",
+            "unit": "",
+            "access_mode": "RW",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "Disable"
+                },
+                {
+                    "value": 1,
+                    "name": "Enable"
+                }
+            ],
+            "bacnet_type": "binary_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS"
+        },
+        {
+            "id": "energy_saving.level",
+            "name": "Energy-Saving Level(Energy-Saving Settings)",
+            "value": "0",
+            "unit": "",
+            "access_mode": "RW",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "Level 1 Settings"
+                },
+                {
+                    "value": 0,
+                    "name": "Enable"
+                },
+                {
+                    "value": 1,
+                    "name": "Free Time"
+                },
+                {
+                    "value": 2,
+                    "name": "Energy Saving Target Temperature Tolerance"
+                },
+                {
+                    "value": 1,
+                    "name": "Level 2 Settings"
+                },
+                {
+                    "value": 0,
+                    "name": "Enable"
+                },
+                {
+                    "value": 1,
+                    "name": "Free Time"
+                },
+                {
+                    "value": 2,
+                    "name": "Energy Saving Target Temperature Tolerance"
+                }
+            ],
+            "bacnet_type": "multistate_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": []
+        },
+        {
+            "id": "energy_saving.level_1.celsius_target_temp_tolerance",
+            "name": "Celsius Energy Saving Target Temperature Tolerance(Level 1 Settings)",
+            "value": "2",
+            "unit": "K",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "range": [
+                0,
+                5
+            ],
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 121,
+            "bacnet_unit_type": "UNITS_DELTA_DEGREES_KELVIN",
+            "reference": []
+        },
+        {
+            "id": "energy_saving.level_1.command",
+            "name": "Sub-command(Level 1 Settings)",
+            "value": "0",
+            "unit": "",
+            "access_mode": "RW",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "Enable"
+                },
+                {
+                    "value": 1,
+                    "name": "Free Time"
+                },
+                {
+                    "value": 2,
+                    "name": "Energy Saving Target Temperature Tolerance"
+                }
+            ],
+            "bacnet_type": "multistate_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": []
+        },
+        {
+            "id": "energy_saving.level_1.enable",
+            "name": "Enable(Level 1 Settings)",
+            "value": "0",
+            "unit": "",
+            "access_mode": "RW",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "Disable"
+                },
+                {
+                    "value": 1,
+                    "name": "Enable"
+                }
+            ],
+            "bacnet_type": "binary_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": []
+        },
+        {
+            "id": "energy_saving.level_1.fahrenheit_target_temp_tolerance",
+            "name": "Fahrenheit Energy Saving Target Temperature Tolerance(Level 1 Settings)",
+            "value": "3.6",
+            "unit": "ΔT°F",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "range": [
+                0,
+                9
+            ],
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 120,
+            "bacnet_unit_type": "UNITS_DELTA_DEGREES_FAHRENHEIT",
+            "reference": []
+        },
+        {
+            "id": "energy_saving.level_1.free_time",
+            "name": "Free Time(Level 1 Settings)",
+            "value": "480",
+            "unit": "min",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "UINT16",
+            "range": [
+                1,
+                1440
+            ],
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 72,
+            "bacnet_unit_type": "UNITS_MINUTES",
+            "reference": []
+        },
+        {
+            "id": "energy_saving.level_2.celsius_target_temp_tolerance",
+            "name": "Celsius Energy Saving Target Temperature Tolerance(Level 2 Settings)",
+            "value": "4",
+            "unit": "K",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "range": [
+                0,
+                5
+            ],
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 121,
+            "bacnet_unit_type": "UNITS_DELTA_DEGREES_KELVIN",
+            "reference": []
+        },
+        {
+            "id": "energy_saving.level_2.command",
+            "name": "Sub-command(Level 2 Settings)",
+            "value": "0",
+            "unit": "",
+            "access_mode": "RW",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "Enable"
+                },
+                {
+                    "value": 1,
+                    "name": "Free Time"
+                },
+                {
+                    "value": 2,
+                    "name": "Energy Saving Target Temperature Tolerance"
+                }
+            ],
+            "bacnet_type": "multistate_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": []
+        },
+        {
+            "id": "energy_saving.level_2.enable",
+            "name": "Enable(Level 2 Settings)",
+            "value": "0",
+            "unit": "",
+            "access_mode": "RW",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "Disable"
+                },
+                {
+                    "value": 1,
+                    "name": "Enable"
+                }
+            ],
+            "bacnet_type": "binary_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": []
+        },
+        {
+            "id": "energy_saving.level_2.fahrenheit_target_temp_tolerance",
+            "name": "Fahrenheit Energy Saving Target Temperature Tolerance(Level 2 Settings)",
+            "value": "7.2",
+            "unit": "ΔT°F",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "range": [
+                0,
+                9
+            ],
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 120,
+            "bacnet_unit_type": "UNITS_DELTA_DEGREES_FAHRENHEIT",
+            "reference": []
+        },
+        {
+            "id": "energy_saving.level_2.free_time",
+            "name": "Free Time(Level 2 Settings)",
+            "value": "720",
+            "unit": "min",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "UINT16",
+            "range": [
+                1,
+                1440
+            ],
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 72,
+            "bacnet_unit_type": "UNITS_MINUTES",
+            "reference": []
         },
         {
             "id": "fahrenheit_temperature",
@@ -401,6 +729,29 @@
             "bacnet_type": "analog_input_object",
             "bacnet_unit_type_id": 29,
             "bacnet_unit_type": "UNITS_PERCENT_RELATIVE_HUMIDITY"
+        },
+        {
+            "id": "install_configuration.fan.owner",
+            "name": "Fan Owner(Fan Owner)",
+            "value": "0",
+            "unit": "",
+            "access_mode": "RW",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "thermostat"
+                },
+                {
+                    "value": 1,
+                    "name": "hvac"
+                }
+            ],
+            "bacnet_type": "multistate_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": []
         },
         {
             "id": "install_configuration.reversing_valve.mode",
@@ -1792,6 +2143,28 @@
             "value_type": "STRING",
             "max_length": 4,
             "bacnet_type": "character_string_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS"
+        },
+        {
+            "id": "unilateral_tolerance_enable",
+            "name": "Unilateral Tolerance Enable",
+            "value": "0",
+            "unit": "",
+            "access_mode": "RW",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "Disable"
+                },
+                {
+                    "value": 1,
+                    "name": "Enable"
+                }
+            ],
+            "bacnet_type": "binary_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS"
         },
