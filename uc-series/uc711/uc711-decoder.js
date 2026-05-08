@@ -549,7 +549,7 @@ function milesightDeviceDecode(bytes) {
 				decoded.fan_settings = decoded.fan_settings || {};
 				var fan_settings_command = readUInt8(bytes, counterObj, 1);
 				if (fan_settings_command == 0x00) {
-					// 0：Auto, 1：Ventilation, 2：Always Open, 3：Low, 4：Medium, 5：High
+					// 0：Auto, 1：Ventilation, 2：Always Open, 3：Low, 4：Medium, 5：High, 255：Disabled
 					decoded.fan_settings.fan_mode = readUInt8(bytes, counterObj, 1);
 				}
 				if (fan_settings_command == 0x01) {
@@ -898,6 +898,9 @@ function milesightDeviceDecode(bytes) {
 				d2d_slave_settings_item.command = readHexString(bytes, counterObj, pair_name_item.length);
 				// 0：Schedule1, 1：Schedule2, 2：Schedule3, 3：Schedule4, 4：Schedule5, 5：Schedule6, 6：Schedule7, 7：Schedule8, 16：System Off, 17：System On
 				d2d_slave_settings_item.value = readUInt8(bytes, counterObj, 1);
+				break;
+			case 0xb8:
+				decoded.synchronize_time = readOnlyCommand(bytes, counterObj, 0);
 				break;
 			case 0xbe:
 				decoded.reboot = readOnlyCommand(bytes, counterObj, 0);
@@ -1464,6 +1467,7 @@ function cmdMap() {
 		  "98xx": "d2d_master_settings._item",
 		  "9a": "d2d_slave_settings",
 		  "9axx": "d2d_slave_settings._item",
+		  "b8": "synchronize_time",
 		  "be": "reboot"
 	};
 }
@@ -1643,7 +1647,7 @@ function processTemperature(decoded) {
     },
     "external_sensor_settings.temp_calibration": {
         "precision": 2,
-        "unitName": "K"
+        "unitName": "℃"
     }
 };
 	var leafPaths = getAllLeafPaths(decoded);

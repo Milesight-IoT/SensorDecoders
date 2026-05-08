@@ -978,12 +978,12 @@ function milesightDeviceEncode(payload) {
 		var buffer = new Buffer();
 		if (isValid(payload.fan_settings.fan_mode)) {
 			buffer.writeUInt8(0x70);
-			// 0：Auto, 1：Ventilation, 2：Always Open, 3：Low, 4：Medium, 5：High
+			// 0：Auto, 1：Ventilation, 2：Always Open, 3：Low, 4：Medium, 5：High, 255：Disabled
 			buffer.writeUInt8(0x00);
-			if ([0, 1, 2, 3, 4, 5].indexOf(payload.fan_settings.fan_mode) === -1) {
-				throw new Error('fan_settings.fan_mode must be one of [0, 1, 2, 3, 4, 5]');
+			if ([0, 1, 2, 3, 4, 5, 255].indexOf(payload.fan_settings.fan_mode) === -1) {
+				throw new Error('fan_settings.fan_mode must be one of [0, 1, 2, 3, 4, 5, 255]');
 			}
-			// 0：Auto, 1：Ventilation, 2：Always Open, 3：Low, 4：Medium, 5：High
+			// 0：Auto, 1：Ventilation, 2：Always Open, 3：Low, 4：Medium, 5：High, 255：Disabled
 			buffer.writeUInt8(payload.fan_settings.fan_mode);
 		}
 		if (isValid(payload.fan_settings.adjust_humidity_enable)) {
@@ -1705,6 +1705,12 @@ function milesightDeviceEncode(payload) {
 		}
 		encoded = encoded.concat(buffer.toBytes());
 	}
+	//0xb8
+	if ('synchronize_time' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0xb8);
+		encoded = encoded.concat(buffer.toBytes());
+	}
 	//0xbe
 	if ('reboot' in payload) {
 		var buffer = new Buffer();
@@ -2187,6 +2193,7 @@ function cmdMap() {
 		  "d2d_slave_enable": "99",
 		  "d2d_slave_settings": "9a",
 		  "d2d_slave_settings._item": "9axx",
+		  "synchronize_time": "b8",
 		  "reboot": "be"
 	};
 }
@@ -2366,7 +2373,7 @@ function processTemperature(payload) {
     },
     "external_sensor_settings.temp_calibration": {
         "coefficient": 0.01,
-        "unitName": "K"
+        "unitName": "℃"
     }
 };
     var leafPaths = getAllLeafPaths(payload);
