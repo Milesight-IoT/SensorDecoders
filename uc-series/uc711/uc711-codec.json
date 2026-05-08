@@ -252,7 +252,7 @@
             "data_type": "NUMBER",
             "value_type": "FLOAT",
             "range": [
-                0,
+                0.1,
                 5
             ],
             "bacnet_type": "analog_value_object",
@@ -319,7 +319,7 @@
             "data_type": "NUMBER",
             "value_type": "FLOAT",
             "range": [
-                0,
+                0.18,
                 9
             ],
             "bacnet_type": "analog_value_object",
@@ -353,7 +353,7 @@
             "data_type": "NUMBER",
             "value_type": "FLOAT",
             "range": [
-                0,
+                0.1,
                 5
             ],
             "bacnet_type": "analog_value_object",
@@ -420,7 +420,7 @@
             "data_type": "NUMBER",
             "value_type": "FLOAT",
             "range": [
-                0,
+                0.18,
                 9
             ],
             "bacnet_type": "analog_value_object",
@@ -1491,7 +1491,7 @@
             "data_type": "NUMBER",
             "value_type": "FLOAT",
             "range": [
-                0,
+                0.1,
                 5
             ],
             "bacnet_type": "analog_value_object",
@@ -1508,7 +1508,7 @@
             "data_type": "NUMBER",
             "value_type": "FLOAT",
             "range": [
-                0,
+                0.1,
                 5
             ],
             "bacnet_type": "analog_value_object",
@@ -1525,7 +1525,7 @@
             "data_type": "NUMBER",
             "value_type": "FLOAT",
             "range": [
-                0,
+                0.18,
                 9
             ],
             "bacnet_type": "analog_value_object",
@@ -1542,7 +1542,7 @@
             "data_type": "NUMBER",
             "value_type": "FLOAT",
             "range": [
-                0,
+                0.18,
                 9
             ],
             "bacnet_type": "analog_value_object",
@@ -1623,7 +1623,7 @@
             "data_type": "NUMBER",
             "value_type": "FLOAT",
             "range": [
-                0,
+                0.5,
                 50
             ],
             "bacnet_type": "analog_value_object",
@@ -1640,7 +1640,7 @@
             "data_type": "NUMBER",
             "value_type": "FLOAT",
             "range": [
-                0,
+                0.5,
                 5
             ],
             "bacnet_type": "analog_value_object",
@@ -1755,7 +1755,7 @@
             "data_type": "NUMBER",
             "value_type": "FLOAT",
             "range": [
-                0,
+                0.9,
                 90
             ],
             "bacnet_type": "analog_value_object",
@@ -1772,7 +1772,7 @@
             "data_type": "NUMBER",
             "value_type": "FLOAT",
             "range": [
-                0,
+                0.9,
                 9
             ],
             "bacnet_type": "analog_value_object",
