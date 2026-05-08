@@ -37,6 +37,11 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Temperature Control Status | 0x0C | 2 | r | 0 |  | 0：standby<br>1：stage-1 heat<br>2：stage-2 heat<br>3：stage-3 heat<br>4：stage-4 heat<br>5：stage-5 heat<br>7：stage-1 cool<br>8：stage-2 cool<br>9：stage-3 cool |
 | Fan Info | 0x0D | 2 | r |  |  |  |
 | Fan Status | 0x0D | 2 | r | 0 |  | 0：off<br>1：open<br>2：low<br>3:medium<br>4:high |
+| Temperature Control Mode | 0x60 | 1 | rw |  |  |  |
+| Sub-command | 0x60 | 2 | rw | 0 |  | 0：Mode<br>1：Plan Temperature Control<br>Mode Enable |
+| Temperature Control Mode | 0x60 | 2 | rw | 0 |  | 0：heat<br>2：cool<br>3：auto |
+| Plan Temperature Control 
+Mode Enable | 0x60 | 2 | rw | 0 |  | 0：disable<br>1：enable |
 | Target Temperature Settings | 0x61 | 1 | rw |  |  |  |
 | Temperature Control Mode | 0x61 | 2 | rw | 0 |  |  |
 | Heat Temperature | 0x61 | 3 | rw | 17 | 5 - 35 |  |
@@ -58,11 +63,9 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Reporting Interval Type | 0x66 | 2 | rw | 0 |  | 0：BLE+LORA<br>1：POWERBUS+LORA |
 | BLE_LORA Reporting Interval | 0x66 | 1 | rw |  |  |  |
 | Reporting Interval Unit | 0x66 | 2 | rw | 1 |  | 0：second<br>1：min |
-| Reporting Interval | 0x66 | 3 | rw | 600 | 60 - 64800 |  |
 | Reporting Interval | 0x66 | 3 | rw | 10 | 1 - 1440 |  |
 | POWERBUS_LORA Reporting Interval | 0x66 | 1 | rw |  |  |  |
 | Reporting Interval Unit | 0x66 | 2 | rw | 1 |  | 0：second<br>1：min |
-| Reporting Interval | 0x66 | 3 | rw | 600 | 60 - 64800 |  |
 | Reporting Interval | 0x66 | 3 | rw | 10 | 1 - 1440 |  |
 | System Switch | 0x6F | 2 | rw | 0 |  | 0：Switch Off<br>1：Switch On |
 | Fan Settings | 0x70 | 1 | rw |  |  |  |
@@ -75,6 +78,10 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Sub-command | 0x71 | 2 | rw | 0 |  |  |
 | Enable | 0x71 | 2 | rw | 0 |  | 0：Disable<br>1：Enable |
 | Target Temperature | 0x71 | 3 | rw | 3 | 1 - 5 |  |
+| Dehumidify Settings | 0x72 | 1 | rw |  |  |  |
+| Sub-command | 0x72 | 2 | rw | 2 |  |  |
+| Humidify Low Threshold | 0x72 | 3 | rw | 40 | 0 - 100 |  |
+| Humidify High Threshold | 0x72 | 3 | rw | 80 | 0 - 100 |  |
 | Temperature Control Mode Enable | 0x75 | 2 | rw |  |  |  |
 | Heat Mode | 0x75 | 2 | rw | 0 |  | 0：disable<br>1：enable |
 | EM Heat Mode | 0x75 | 2 | rw | 0 |  | 0：disable<br>1：enable |
@@ -83,6 +90,7 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Dehumidify Mode | 0x75 | 2 | rw | 0 |  | 0：disable<br>1：enable |
 | Ventilate Mode | 0x75 | 2 | rw | 0 |  | 0：disable<br>1：enable |
 | Reserved | 0x75 | 2 | rw |  |  |  |
+| Unilateral Tolerance Enable | 0x77 | 2 | rw | 0 |  | 0：Disable<br>1：Enable |
 | Fan Delay Off Settings | 0x82 | 1 | rw |  |  |  |
 | Sub-command | 0x82 | 2 | rw | 0 |  |  |
 | Fan Delay Off Enable | 0x82 | 2 | rw | 1 |  | 0：Disable<br>1：Enable |
@@ -97,10 +105,25 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Cool Switch Temp | 0x83 | 3 | rw | 1 | 0.5 - 50 |  |
 | level-1 Threshold | 0x83 | 3 | rw | 3 | 0 - 10 |  |
 | level-2 Threshold | 0x83 | 3 | rw | 5 | 0 - 10 |  |
+| Energy-Saving Enable | 0x84 | 2 | rw | 0 |  | 0：Disable<br>1：Enable |
+| Energy-Saving Settings | 0x85 | 1 | rw |  |  |  |
+| Energy-Saving Level | 0x85 | 2 | rw | 0 |  |  |
+| Level 1 Settings | 0x85 | 1 | rw |  |  |  |
+| Sub-command | 0x85 | 2 | rw | 0 |  |  |
+| Enable | 0x85 | 2 | rw | 0 |  | 0：Disable<br>1：Enable |
+| Free Time | 0x85 | 3 | rw | 480 | 1 - 1440 |  |
+| Energy Saving Target Temperature Tolerance | 0x85 | 3 | rw | 2 | 0.1 - 5 |  |
+| Level 2 Settings | 0x85 | 1 | rw |  |  |  |
+| Sub-command | 0x85 | 2 | rw | 0 |  |  |
+| Enable | 0x85 | 2 | rw | 0 |  | 0：Disable<br>1：Enable |
+| Free Time | 0x85 | 3 | rw | 720 | 1 - 1440 |  |
+| Energy Saving Target Temperature Tolerance | 0x85 | 3 | rw | 4 | 0.1 - 5 |  |
 | Installation Settings | 0x8E | 5 | rw |  |  |  |
 | Subcmd ID | 0x8E | 2 | rw | 0 |  | 0：wire config<br>1:reversing_valve config<br>2:combine config<br>3:fan owner config |
 | Reversing Valve Mode | 0x8E | 1 | rw |  |  |  |
 | Reversing Valve Mode | 0x8E | 2 | rw | 1 |  | 0：o/b on heat<br>1：o/b on cool |
+| Fan Owner | 0x8E | 1 | rw |  |  |  |
+| Fan Owner | 0x8E | 2 | rw | 0 |  | 0：thermostat<br>1：hvac |
 
 ### Service
 

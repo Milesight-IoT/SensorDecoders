@@ -662,6 +662,10 @@
                 {
                     "value": 5,
                     "name": "High"
+                },
+                {
+                    "value": 255,
+                    "name": "Disabled"
                 }
             ],
             "bacnet_type": "multistate_value_object",
@@ -2082,6 +2086,79 @@
                 "temperature_control_mode_enable.dehumidify",
                 "temperature_control_mode_enable.reserved"
             ]
+        },
+        {
+            "id": "temperature_control_mode.command",
+            "name": "Sub-command(Temperature Control Mode)",
+            "value": "0",
+            "unit": "",
+            "access_mode": "RW",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "Mode"
+                },
+                {
+                    "value": 1,
+                    "name": "Plan Temperature Control"
+                }
+            ],
+            "bacnet_type": "multistate_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": []
+        },
+        {
+            "id": "temperature_control_mode.ctrl_mode",
+            "name": "Temperature Control Mode(Temperature Control Mode)",
+            "value": "0",
+            "unit": "",
+            "access_mode": "RW",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "heat"
+                },
+                {
+                    "value": 2,
+                    "name": "cool"
+                },
+                {
+                    "value": 3,
+                    "name": "auto"
+                }
+            ],
+            "bacnet_type": "multistate_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": []
+        },
+        {
+            "id": "temperature_control_mode.plan_enable",
+            "name": "Plan Temperature Control \nMode Enable(Temperature Control Mode)",
+            "value": "0",
+            "unit": "",
+            "access_mode": "RW",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "disable"
+                },
+                {
+                    "value": 1,
+                    "name": "enable"
+                }
+            ],
+            "bacnet_type": "binary_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": []
         },
         {
             "id": "temperature_unit",
