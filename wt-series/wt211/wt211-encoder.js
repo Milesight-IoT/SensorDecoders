@@ -37,6 +37,18 @@ function milesightDeviceEncode(payload) {
     if ("report_status" in payload) {
         encoded = encoded.concat(reportStatus(payload.report_status));
     }
+    if ("history_enable" in payload) {
+        encoded = encoded.concat(setHistoryEnable(payload.history_enable));
+    }
+    if ("retransmit_enable" in payload) {
+        encoded = encoded.concat(setRetransmitEnable(payload.retransmit_enable));
+    }
+    if ("retransmit_interval" in payload) {
+        encoded = encoded.concat(setRetransmitInterval(payload.retransmit_interval));
+    }
+    if ("resend_interval" in payload) {
+        encoded = encoded.concat(setResendInterval(payload.resend_interval));
+    }
     if ("reporting_interval_settings" in payload) {
         encoded = encoded.concat(setReportInterval(payload.reporting_interval_settings.time));
     }
@@ -66,7 +78,7 @@ function milesightDeviceEncode(payload) {
         }
     }
     if ("device_status" in payload) {
-        encoded = encoded.concat(setSystemStatus(payload.device_status));
+        encoded = encoded.concat(setDeviceStatus(payload.device_status));
     }
     if ("temperature_calibration_settings" in payload) {
         encoded = encoded.concat(setTemperatureCalibration(payload.temperature_calibration_settings));
@@ -152,10 +164,8 @@ function milesightDeviceEncode(payload) {
     if ("child_lock_config" in payload) {
         encoded = encoded.concat(setChildLock(payload.child_lock_config));
     }
-    if ("ob_mode" in payload) {
-        if ("wires" in payload) {
-            encoded = encoded.concat(setWires(payload.wires, payload.ob_mode));
-        }
+    if ("wires" in payload) {
+        encoded = encoded.concat(setWires(payload.wires));
     }
     if("reversing_valve" in payload) {
         encoded = encoded.concat(setReversingValve(payload.reversing_valve));
@@ -447,6 +457,86 @@ function reportStatus(report_status) {
 }
 
 /**
+ * history enable
+ * @param {number} history_enable values: (0: disable, 1: enable)
+ * @example { "history_enable": 1 }
+ */
+function setHistoryEnable(history_enable) {
+    var enable_map = { 0: "disable", 1: "enable" };
+    var enable_values = getValues(enable_map);
+    if (enable_values.indexOf(history_enable) === -1) {
+        throw new Error("history_enable must be one of " + enable_values.join(", "));
+    }
+
+    var buffer = new Buffer(3);
+    buffer.writeUInt8(0xff);
+    buffer.writeUInt8(0x68);
+    buffer.writeUInt8(getValue(enable_map, history_enable));
+    return buffer.toBytes();
+}
+
+/**
+ * set retransmit enable
+ * @param {number} retransmit_enable values: (0: disable, 1: enable)
+ * @example { "retransmit_enable": 1 }
+ */
+function setRetransmitEnable(retransmit_enable) {
+    var enable_map = { 0: "disable", 1: "enable" };
+    var enable_values = getValues(enable_map);
+    if (enable_values.indexOf(retransmit_enable) === -1) {
+        throw new Error("retransmit_enable must be one of " + enable_values.join(", "));
+    }
+
+    var buffer = new Buffer(3);
+    buffer.writeUInt8(0xff);
+    buffer.writeUInt8(0x69);
+    buffer.writeUInt8(getValue(enable_map, retransmit_enable));
+    return buffer.toBytes();
+}
+
+/**
+ * set retransmit interval
+ * @param {number} retransmit_interval unit: second, range: [1, 64800]
+ * @example { "retransmit_interval": 600 }
+ */
+function setRetransmitInterval(retransmit_interval) {
+    if (typeof retransmit_interval !== "number") {
+        throw new Error("retransmit_interval must be a number");
+    }
+    if (retransmit_interval < 1 || retransmit_interval > 64800) {
+        throw new Error("retransmit_interval must be between 1 and 64800");
+    }
+
+    var buffer = new Buffer(5);
+    buffer.writeUInt8(0xff);
+    buffer.writeUInt8(0x6a);
+    buffer.writeUInt8(0x00);
+    buffer.writeUInt16LE(retransmit_interval);
+    return buffer.toBytes();
+}
+
+/**
+ * set resend interval
+ * @param {number} resend_interval unit: second, range: [1, 64800]
+ * @example { "resend_interval": 600 }
+ */
+function setResendInterval(resend_interval) {
+    if (typeof resend_interval !== "number") {
+        throw new Error("resend_interval must be a number");
+    }
+    if (resend_interval < 1 || resend_interval > 64800) {
+        throw new Error("resend_interval must be between 1 and 64800");
+    }
+
+    var buffer = new Buffer(5);
+    buffer.writeUInt8(0xff);
+    buffer.writeUInt8(0x6a);
+    buffer.writeUInt8(0x01);
+    buffer.writeUInt16LE(resend_interval);
+    return buffer.toBytes();
+}
+
+/**
  * set report interval
  * @param {number} report_interval unit: minute, range: [1, 1440]
  * @example { "report_interval": 20 }
@@ -616,8 +706,8 @@ function setTemperatureUnitDisplay(temperature_unit) {
  * @param {number} device_status values: (0: on, 1: off)
  * @example { "device_status": 1 }
  */
-function setSystemStatus(device_status) {
-    var on_off_map = { 0: "on", 1: "off" };
+function setDeviceStatus(device_status) {
+    var on_off_map = { 0: "off", 1: "on" };
     var on_off_values = getValues(on_off_map);
     if (on_off_values.indexOf(device_status) === -1) {
         throw new Error("device_status must be one of " + on_off_values.join(", "));
@@ -625,7 +715,7 @@ function setSystemStatus(device_status) {
 
     var buffer = new Buffer(3);
     buffer.writeUInt8(0xff);
-    buffer.writeUInt8(0xc5);
+    buffer.writeUInt8(0x0b);
     buffer.writeUInt8(getValue(on_off_map, device_status));
     return buffer.toBytes();
 }
@@ -1873,7 +1963,7 @@ function setCardConfig(card_config) {
  * @param {number} e: values: (0: off, 1: on)
  * @param {number} g: values: (0: off, 1: on)
  * @param {number} ob: values: (0: off, 1: on)
- * @example { "wires_relay_config": { "y1": 1, "y2_gl": 0, "w1": 1, "w2_aux": 0, "e": 1, "g": 0 },"ob_mode": 1 }
+ * @example { "wires_relay_config": { "y1": 1, "y2_gl": 0, "w1": 1, "w2_aux": 0, "e": 1, "g": 0, "ob": 1 } }
  */
 function setWiresRelayConfig(wires_relay_config) {
     var on_off_map = { 0: "off", 1: "on" };
@@ -2095,10 +2185,9 @@ function setChildLock(child_lock_config) {
  * @param {number} wires.aux values: (0: on, 1: off)
  * @param {number} wires.y2 values: (0: on, 1: off)
  * @param {number} wires.gl values: (0: on, 1: off)
- * @param {number} ob_mode values: (0: on cool, 1: on heat, 3: hold)
- * @example { "wires": { "y1": 1, "gh": 0, "ob": 1, "w1": 1, "e": 1, "di": 0, "pek": 1, "w2": 0, "aux": 0, "y2": 1, "gl": 0 }, "ob_mode": 0 }
+ * @example { "wires": { "y1": 1, "gh": 0, "ob": 1, "w1": 1, "e": 1, "di": 0, "pek": 1, "w2": 0, "aux": 0, "y2": 1, "gl": 0 } }
  */
-function setWires(wires, ob_mode) {
+function setWires(wires) {
     var on_off_map = { 0: "off", 1: "on" };
 
     var b1 = 0x00;
@@ -2139,8 +2228,6 @@ function setWires(wires, ob_mode) {
     if ("gl" in wires) {
         b3 |= getValue(on_off_map, wires.gl) ? 2 << 0 : 0;
     }
-    var mode_map = { 0: "on cool", 1: "on heat", 3: "hold" };
-    b3 |= getValue(mode_map, ob_mode) << 2;
 
     var buffer = new Buffer(5);
     buffer.writeUInt8(0xff);
@@ -2326,7 +2413,7 @@ function setD2DSlaveConfig(d2d_slave_config) {
 }
 
 /**
- * set d2d slave group
+ * set control permissions
  * @since v1.3
  * @param {number} control_permission values: (0: thermostat, 1: remote control)
  * @example { "control_permission": 0 }

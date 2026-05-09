@@ -275,7 +275,7 @@
             "bacnet_unit_type": "UNITS_NO_UNITS"
         },
         {
-            "id": "relay_status",
+            "id": "enabled_relay",
             "name": "Relay operation status",
             "value": "",
             "unit": "",

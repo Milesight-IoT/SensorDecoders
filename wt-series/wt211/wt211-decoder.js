@@ -179,7 +179,7 @@ function milesightDeviceDecode(bytes) {
         }
         // SYSTEM STATUS
         else if (channel_id === 0x08 && channel_type === 0x8e) {
-            decoded.device_status = readOnOffStatus(bytes[i]);
+            decoded.system_status = readOnOffStatus(bytes[i]);
             i += 1;
         }
         // HUMIDITY
@@ -189,7 +189,7 @@ function milesightDeviceDecode(bytes) {
         }
         // RELAY STATUS
         else if (channel_id === 0x0a && channel_type === 0x6e) {
-            decoded.relay_status = readWiresRelay(bytes[i]);
+            decoded.enabled_relay = readWiresRelay(bytes[i]);
             i += 1;
         }
         // TEMPERATURE MODE SUPPORT
@@ -323,6 +323,26 @@ function handle_downlink_response(channel_type, bytes, offset) {
             var report_status_map = { 0: "plan", 1: "periodic", 2: "target_temperature_range" };
             decoded.report_status = getValue(report_status_map, readUInt8(bytes[offset]));
             offset += 1;
+            break;
+        case 0x68:
+            decoded.history_enable = readEnableStatus(bytes[offset]);
+            offset += 1;
+            break;
+        case 0x69:
+            decoded.retransmit_enable = readEnableStatus(bytes[offset]);
+            offset += 1;
+            break;
+        case 0x6a:
+            var interval_type = readUInt8(bytes[offset]);
+            switch (interval_type) {
+                case 0:
+                    decoded.retransmit_interval = readUInt16LE(bytes.slice(offset + 1, offset + 3));
+                    break;
+                case 1:
+                    decoded.resend_interval = readUInt16LE(bytes.slice(offset + 1, offset + 3));
+                    break;
+            }
+            offset += 3;
             break;
         case 0x82:
             var value = readUInt8(bytes[offset]);
@@ -498,7 +518,6 @@ function handle_downlink_response(channel_type, bytes, offset) {
             break;
         case 0xca:
             decoded.wires = readWires(bytes[offset], bytes[offset + 1], bytes[offset + 2]);
-            decoded.ob_mode = readObMode((bytes[offset + 2] >>> 2) & 0x03);
             offset += 3;
             break;
         case 0xeb:
@@ -1398,15 +1417,6 @@ function readWiresRelay(status) {
         }
     }
     return relay.length > 0 ? relay.join("&") : "off";
-}
-
-function readObMode(type) {
-    var ob_mode_map = {
-        0: "on cool",
-        1: "on heat",
-        3: "hold",
-    };
-    return getValue(ob_mode_map, type);
 }
 
 function readReversingValve(type) {
