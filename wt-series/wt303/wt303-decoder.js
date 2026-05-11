@@ -79,9 +79,17 @@ function milesightDeviceDecode(bytes) {
 			case 0xcf:
 				decoded.lorawan_configuration_settings = decoded.lorawan_configuration_settings || {};
 				var lorawan_configuration_settings_command = readUInt8(bytes, counterObj, 1);
-				if (lorawan_configuration_settings_command == 0x00) {
-					// 0:ClassA, 1:ClassB, 2:ClassC, 3:ClassC to B
-					decoded.lorawan_configuration_settings.mode = readUInt8(bytes, counterObj, 1);
+				if (lorawan_configuration_settings_command == 0xd8) {
+					// 1：1.0.2, 2：1.0.3, 3：1.0.3, 4：1.0.4
+					decoded.lorawan_configuration_settings.version = readUInt8(bytes, counterObj, 1);
+				}
+				if (lorawan_configuration_settings_command == 0x5d) {
+					// 0：disable, 1：enable
+					decoded.lorawan_configuration_settings.confirmed_mode = readUInt8(bytes, counterObj, 1);
+				}
+				if (lorawan_configuration_settings_command == 0xba) {
+					// 0：DR0(SF12,125kHz), 1：DR1(SF11,125kHz), 2：DR2(SF10,125kHz), 3：DR3(SF9,125kHz), 4：DR4(SF8,125kHz), 5：DR5(SF7,125kHz)
+					decoded.lorawan_configuration_settings.tx_data_rate = readUInt8(bytes, counterObj, 1);
 				}
 				break;
 			case 0xdf:
@@ -324,11 +332,11 @@ function milesightDeviceDecode(bytes) {
 				decoded.system_status = readUInt8(bytes, counterObj, 1);
 				break;
 			case 0x64:
-				// 7：Ventilation、Heat、Cool, 3：Ventilation、Heat, 5：Ventilation、Cool
+				// 15：Ventilation、Heat、Cool、Auto, 7：Ventilation、Heat、Cool, 9：Ventilation、Auto, 3：Ventilation、Heat, 5：Ventilation、Cool
 				decoded.mode_enable = readUInt8(bytes, counterObj, 1);
 				break;
 			case 0x68:
-				// 0：Ventilation, 1：Heat, 2：Cool
+				// 0：Ventilation, 1：Heat, 2：Cool, 3：Auto
 				decoded.temperature_control_mode = readUInt8(bytes, counterObj, 1);
 				break;
 			case 0x69:
@@ -341,8 +349,14 @@ function milesightDeviceDecode(bytes) {
 			case 0x6c:
 				decoded.cooling_target_temperature = readInt16LE(bytes, counterObj, 2) / 100;
 				break;
+			case 0xa3:
+				decoded.auto_target_temperature = readInt16LE(bytes, counterObj, 2) / 100;
+				break;
 			case 0x6a:
 				decoded.target_temperature_tolerance = readInt16LE(bytes, counterObj, 2) / 100;
+				break;
+			case 0xa4:
+				decoded.auto_target_temperature_tolerance = readInt16LE(bytes, counterObj, 2) / 100;
 				break;
 			case 0x6d:
 				decoded.heating_target_temperature_range = decoded.heating_target_temperature_range || {};
@@ -353,6 +367,11 @@ function milesightDeviceDecode(bytes) {
 				decoded.cooling_target_temperature_range = decoded.cooling_target_temperature_range || {};
 				decoded.cooling_target_temperature_range.min = readInt16LE(bytes, counterObj, 2) / 100;
 				decoded.cooling_target_temperature_range.max = readInt16LE(bytes, counterObj, 2) / 100;
+				break;
+			case 0xa5:
+				decoded.auto_target_temperature_range = decoded.auto_target_temperature_range || {};
+				decoded.auto_target_temperature_range.min = readInt16LE(bytes, counterObj, 2) / 100;
+				decoded.auto_target_temperature_range.max = readInt16LE(bytes, counterObj, 2) / 100;
 				break;
 			case 0x70:
 				decoded.target_humidity_range = decoded.target_humidity_range || {};
@@ -591,7 +610,7 @@ function milesightDeviceDecode(bytes) {
 				}
 				if (schedule_settings_item_command == 0x03) {
 					schedule_settings_item.content = schedule_settings_item.content || {};
-					// 0：auto, 1：low, 2：medium, 3：high
+					// 0：Auto, 1：Low, 2：Medium, 3：High
 					schedule_settings_item.content.fan_mode = readUInt8(bytes, counterObj, 1);
 					var bitOptions = readUInt16LE(bytes, counterObj, 2);
 					schedule_settings_item.content.heat_target_temperature_enable = extractBits(bitOptions, 0, 1);
@@ -599,6 +618,9 @@ function milesightDeviceDecode(bytes) {
 					var bitOptions = readUInt16LE(bytes, counterObj, 2);
 					schedule_settings_item.content.cool_target_temperature_enable = extractBits(bitOptions, 0, 1);
 					schedule_settings_item.content.cool_target_temperature = extractBits(bitOptions, 1, 16) / 100;
+					var bitOptions = readUInt16LE(bytes, counterObj, 2);
+					schedule_settings_item.content.auto_target_temperature_enable = extractBits(bitOptions, 0, 1);
+					schedule_settings_item.content.auto_target_temperature = extractBits(bitOptions, 1, 16) / 100;
 					var bitOptions = readUInt16LE(bytes, counterObj, 2);
 					schedule_settings_item.content.temperature_tolerance_enable = extractBits(bitOptions, 0, 1);
 					schedule_settings_item.content.temperature_tolerance = extractBits(bitOptions, 1, 16) / 100;
@@ -834,7 +856,7 @@ function milesightDeviceDecode(bytes) {
 
 	if (Object.keys(history).length > 0) {
 		result.history = history;
-	} else {        
+	} else {
 		for (var k2 in decoded) {
 			if (decoded.hasOwnProperty(k2)) {
 				result[k2] = decoded[k2];
@@ -843,9 +865,12 @@ function milesightDeviceDecode(bytes) {
 	}
 
 	processTemperature(result);
+    patchDecode(result);
 
 	return result;
 }
+
+function patchDecode(decoded) {}
 
 function readOnlyCommand(bytes) {
 	return 1;
@@ -1009,14 +1034,14 @@ function extractBits(byte, startBit, endBit) {
 	if (startBit >= endBit) {
 	  throw new Error("invalid bit range");
 	}
-  
+
 	var width = endBit - startBit;
 	var mask = (1 << width) - 1;
 	return (byte >>> startBit) & mask;
 }
 
 function pickArrayItem(array, index, idName) {
-	for (var i = 0; i < array.length; i++) { 
+	for (var i = 0; i < array.length; i++) {
 		if (array[i][idName] === index) {
 			return array[i];
 		}
@@ -1026,7 +1051,7 @@ function pickArrayItem(array, index, idName) {
 }
 
 function insertArrayItem(array, item, idName) {
-	for (var i = 0; i < array.length; i++) { 
+	for (var i = 0; i < array.length; i++) {
 		if (array[i][idName] === item[idName]) {
 			array[i] = item;
 			return;
@@ -1084,46 +1109,46 @@ function readCommand(allBytes, counterObj, end) {
 function hasPath(obj, path) {
 	var parts = path.split('.');
 	var current = obj;
-  
+
 	for (var i = 0; i < parts.length; i++) {
 	  	if (!current || !(parts[i] in current)) {
 			return false;
 	  	}
 	  	current = current[parts[i]];
 	}
-  
+
 	return true;
 }
 
 function getPath(obj, path) {
 	var parts = path.split('.');
 	var current = obj;
-  
+
 	for (var i = 0; i < parts.length; i++) {
 	  	var key = parts[i];
-  
+
 	  	if (!current || !(key in current)) {
 			return null;
 	  	}
-  
+
 	  	current = current[key];
 	}
-  
+
 	return current;
 }
-  
+
 
 function setPath(obj, path, value) {
 	var parts = path.split('.');
 	var current = obj;
-  
+
 	for (var i = 0; i < parts.length - 1; i++) {
 	  	var key = parts[i];
-  
+
 	  	if (!(key in current) || typeof current[key] !== 'object') {
 			current[key] = {};
 	  	}
-  
+
 	  	current = current[key];
 	}
 
@@ -1154,7 +1179,7 @@ function getAllLeafPaths(obj, prefix) {
 		  var newPath = path ? (path + "." + index) : String(index);
 		  recurse(item, newPath);
 		});
-  
+
 	  } else if (typeof current === 'object' && current !== null) {
 		for (var key in current) {
 		  if (Object.prototype.hasOwnProperty.call(current, key)) {
@@ -1162,15 +1187,15 @@ function getAllLeafPaths(obj, prefix) {
 			recurse(current[key], newPath);
 		  }
 		}
-  
+
 	  } else {
 		paths.push(path);
 	  }
 	}
-  
+
 	recurse(obj, "");
 	return paths;
-  
+
 }
 
 function isInteger(str) {
@@ -1228,9 +1253,11 @@ function cmdMap() {
 		  "f402": "request_full_inspection.reading",
 		  "f403": "request_full_inspection.end_inspection",
 		  "ef": "request_command_queries",
-		  "ee": "all_configurations_request_by_device",
+		  "ee": "request_query_all_configurations",
 		  "cf": "lorawan_configuration_settings",
-		  "cf00": "lorawan_configuration_settings.mode",
+		  "cfd8": "lorawan_configuration_settings.version",
+		  "cf5d": "lorawan_configuration_settings.confirmed_mode",
+		  "cfba": "lorawan_configuration_settings.tx_data_rate",
 		  "df": "tsl_version",
 		  "db": "product_sn",
 		  "da": "version",
@@ -1275,9 +1302,12 @@ function cmdMap() {
 		  "c4": "auto_p_enable",
 		  "6b": "heating_target_temperature",
 		  "6c": "cooling_target_temperature",
+		  "a3": "auto_target_temperature",
 		  "6a": "target_temperature_tolerance",
+		  "a4": "auto_target_temperature_tolerance",
 		  "6d": "heating_target_temperature_range",
 		  "6e": "cooling_target_temperature_range",
+		  "a5": "auto_target_temperature_range",
 		  "6f": "temperature_control_dehumidification",
 		  "8c": "timed_system_control",
 		  "8c00": "timed_system_control.enable",
@@ -1335,121 +1365,180 @@ function cmdMap() {
 function processTemperature(decoded) {
 	var allTemperatureProperties = {
     "temperature": {
-        "precision": 2
+        "precision": 2,
+        "unitName": "℃"
     },
     "target_temperature": {
-        "precision": 2
+        "precision": 2,
+        "unitName": "℃"
     },
     "temperature_alarm.lower_range_alarm_deactivation.temperature": {
-        "precision": 2
+        "precision": 2,
+        "unitName": "℃"
     },
     "temperature_alarm.lower_range_alarm_trigger.temperature": {
-        "precision": 2
+        "precision": 2,
+        "unitName": "℃"
     },
     "temperature_alarm.over_range_alarm_deactivation.temperature": {
-        "precision": 2
+        "precision": 2,
+        "unitName": "℃"
     },
     "temperature_alarm.over_range_alarm_trigger.temperature": {
-        "precision": 2
+        "precision": 2,
+        "unitName": "℃"
     },
     "temperature_alarm.within_range_alarm_deactivation.temperature": {
-        "precision": 2
+        "precision": 2,
+        "unitName": "℃"
     },
     "temperature_alarm.within_range_alarm_trigger.temperature": {
-        "precision": 2
+        "precision": 2,
+        "unitName": "℃"
     },
     "temperature_alarm.exceed_range_alarm_deactivation.temperature": {
-        "precision": 2
+        "precision": 2,
+        "unitName": "℃"
     },
     "temperature_alarm.exceed_range_alarm_trigger.temperature": {
-        "precision": 2
+        "precision": 2,
+        "unitName": "℃"
     },
     "temperature_alarm.persistent_low_temperature_alarm_deactivation.temperature": {
-        "precision": 2
+        "precision": 2,
+        "unitName": "℃"
     },
     "temperature_alarm.persistent_low_temperature_alarm_trigger.temperature": {
-        "precision": 2
+        "precision": 2,
+        "unitName": "℃"
     },
     "temperature_alarm.persistent_high_alarm_deactivation.temperature": {
-        "precision": 2
+        "precision": 2,
+        "unitName": "℃"
     },
     "temperature_alarm.persistent_high_alarm_trigger.temperature": {
-        "precision": 2
+        "precision": 2,
+        "unitName": "℃"
     },
     "temperature_alarm.anti_freeze_protection_deactivation.temperature": {
-        "precision": 2
+        "precision": 2,
+        "unitName": "℃"
     },
     "temperature_alarm.anti_freeze_protection_trigger.temperature": {
-        "precision": 2
+        "precision": 2,
+        "unitName": "℃"
     },
     "temperature_alarm.window_status_detection_deactivation.temperature": {
-        "precision": 2
+        "precision": 2,
+        "unitName": "℃"
     },
     "temperature_alarm.window_status_detection_trigger.temperature": {
-        "precision": 2
+        "precision": 2,
+        "unitName": "℃"
     },
     "heating_target_temperature": {
-        "precision": 2
+        "precision": 2,
+        "unitName": "℃"
     },
     "cooling_target_temperature": {
-        "precision": 2
+        "precision": 2,
+        "unitName": "℃"
+    },
+    "auto_target_temperature": {
+        "precision": 2,
+        "unitName": "℃"
     },
     "target_temperature_tolerance": {
-        "precision": 2
+        "precision": 2,
+        "unitName": "℃"
+    },
+    "auto_target_temperature_tolerance": {
+        "precision": 2,
+        "unitName": "℃"
     },
     "heating_target_temperature_range.min": {
-        "precision": 2
+        "precision": 2,
+        "unitName": "℃"
     },
     "heating_target_temperature_range.max": {
-        "precision": 2
+        "precision": 2,
+        "unitName": "℃"
     },
     "cooling_target_temperature_range.min": {
-        "precision": 2
+        "precision": 2,
+        "unitName": "℃"
     },
     "cooling_target_temperature_range.max": {
-        "precision": 2
+        "precision": 2,
+        "unitName": "℃"
+    },
+    "auto_target_temperature_range.min": {
+        "precision": 2,
+        "unitName": "℃"
+    },
+    "auto_target_temperature_range.max": {
+        "precision": 2,
+        "unitName": "℃"
     },
     "temperature_control_dehumidification.temperature_tolerance": {
-        "precision": 2
+        "precision": 2,
+        "unitName": "℃"
     },
     "fan_auto_mode_temperature_range.speed_range_1": {
-        "precision": 2
+        "precision": 2,
+        "unitName": "℃"
     },
     "fan_auto_mode_temperature_range.speed_range_2": {
-        "precision": 2
+        "precision": 2,
+        "unitName": "℃"
     },
     "temperature_calibration_settings.calibration_value": {
-        "precision": 2
+        "precision": 2,
+        "unitName": "℃"
     },
     "temperature_alarm_settings.threshold_min": {
-        "precision": 2
+        "precision": 2,
+        "unitName": "℃"
     },
     "temperature_alarm_settings.threshold_max": {
-        "precision": 2
+        "precision": 2,
+        "unitName": "℃"
     },
     "high_temperature_alarm_settings.difference_in_temperature": {
-        "precision": 2
+        "precision": 2,
+        "unitName": "℃"
     },
     "low_temperature_alarm_settings.difference_in_temperature": {
-        "precision": 2
+        "precision": 2,
+        "unitName": "℃"
     },
     "schedule_settings._item.content.heat_target_temperature": {
-        "precision": 2
+        "precision": 2,
+        "unitName": "℃"
     },
     "schedule_settings._item.content.cool_target_temperature": {
-        "precision": 2
+        "precision": 2,
+        "unitName": "℃"
+    },
+    "schedule_settings._item.content.auto_target_temperature": {
+        "precision": 2,
+        "unitName": "℃"
     },
     "schedule_settings._item.content.temperature_tolerance": {
-        "precision": 2
+        "precision": 2,
+        "unitName": "℃"
     },
     "window_opening_detection_settings.temperature_detection.difference_in_temperature": {
-        "precision": 2
+        "precision": 2,
+        "unitName": "℃"
     },
     "freeze_protection_settings.target_temperature": {
-        "precision": 2
+        "precision": 2,
+        "unitName": "℃"
     },
     "send_temperature.temperature": {
-        "precision": 2
+        "precision": 2,
+        "unitName": "℃"
     }
 };
 	var leafPaths = getAllLeafPaths(decoded);
@@ -1473,11 +1562,13 @@ function processTemperature(decoded) {
 		if (allTemperatureProperties[newPropertyId]) {
 			var fahrenheitProperty = convertName(propertyId, 'fahrenheit');
 			var celsiusProperty = convertName(propertyId, 'celsius');
+			var unitName = allTemperatureProperties[newPropertyId].unitName;
+			var constant = unitName == 'K' ? 0 : 32;
 			if (hasPath(decoded, propertyId)) {
-				setPath(decoded, fahrenheitProperty,  Number((getPath(decoded, propertyId) * 1.8 + 32).toFixed(allTemperatureProperties[newPropertyId].precision)));
+				setPath(decoded, fahrenheitProperty,  Number((getPath(decoded, propertyId) * 1.8 + constant).toFixed(allTemperatureProperties[newPropertyId].precision)));
 				setPath(decoded, celsiusProperty,  Number(getPath(decoded, propertyId).toFixed(allTemperatureProperties[newPropertyId].precision)));
 			}
-		}	
-	}	
+		}
+	}
 	return decoded;
 }

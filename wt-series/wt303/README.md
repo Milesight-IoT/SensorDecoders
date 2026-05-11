@@ -12,7 +12,9 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | :------ | :--: | :----: | :--------: | :-----: | :---: | :--: |
 | LoRaWAN  Settings | 0xCF | 1 | rw |  |  |  |
 | LoRaWAN Comand | 0xCF | 2 | rw |  |  |  |
-| LoRaWAN Work Mode | 0xCF | 2 | rw | 0 |  | 0:ClassA<br>1:ClassB<br>2:ClassC<br>3:ClassC to B |
+| LoRaWAN Version | 0xCF | 2 | rw | 2 |  | 1：1.0.2<br>2：1.0.3<br>3：1.0.3<br>4：1.0.4 |
+| Confirmed Mode | 0xCF | 2 | rw | 0 |  | 0：disable<br>1：enable |
+| TX Data Rate | 0xCF | 2 | rw | 2 |  | 0：DR0(SF12<br>125kHz)<br>1：DR1(SF11<br>125kHz)<br>2：DR2(SF10<br>125kHz)<br>3：DR3(SF9<br>125kHz)<br>4：DR4(SF8<br>125kHz)<br>5：DR5(SF7<br>125kHz) |
 | TSL Version | 0xDF | 3 | r |  |  |  |
 | SN | 0xDB | 9 | r |  |  |  |
 | Product Version | 0xDA | 9 | r |  |  |  |
@@ -31,7 +33,7 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Fan Mode | 0x07 | 2 | r | 0 |  | 0: Auto<br>1: Low<br>2: Medium<br>3: High |
 | Fan Status | 0x07 | 2 | r | 0 |  | 0：Off<br>1: Low<br>2: Medium<br>3: High |
 | Schedule | 0x08 | 2 | r | 255 |  | 0：Schedule1<br>1：Schedule2<br>2：Schedule3<br>3：Schedule4<br>4：Schedule5<br>5：Schedule6<br>6：Schedule7<br>7：Schedule8<br>8：Schedule9<br>9：Schedule10<br>10：Schedule11<br>11：Schedule12<br>12：Schedule13<br>13：Schedule14<br>14：Schedule15<br>15：Schedule16<br>255：Not executed |
-| Relay/Valve Status  | 0x10 | 5 | r |  |  |  |
+| Relay/Valve Status | 0x10 | 5 | r |  |  |  |
 | Fan Low | 0x10 | 5 | r | 0 |  | 0：Open<br>1：Close |
 | Fan Medium | 0x10 | 5 | r | 0 |  | 0：Open<br>1：Close |
 | Fan High | 0x10 | 5 | r | 0 |  | 0：Open<br>1：Close |
@@ -41,7 +43,7 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Device Status | 0xC8 | 2 | r | 1 |  | 0：Off<br>1：On |
 | Collecting Interval | 0x60 | 1 | rw |  |  |  |
 | Collecting Interval Unit | 0x60 | 2 | rw | 0 |  | 0：second<br>1：min |
-|  Collecting Interval | 0x60 | 3 | rw | 30 | 10 - 64800 |  |
+| Collecting Interval | 0x60 | 3 | rw | 30 | 10 - 64800 |  |
 | Collecting Interval | 0x60 | 3 | rw | 1 | 1 - 1440 |  |
 | Reporting Interval | 0x62 | 1 | rw |  |  |  |
 | Reporting Interval Unit | 0x62 | 2 | rw | 1 |  | 0：second<br>1：min |
@@ -59,18 +61,23 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Timeout | 0x85 | 2 | rw | 10 | 1 - 60 |  |
 | Device Offline Settings | 0x85 | 2 | rw | 0 |  | 0: Keep Control<br>1: Turn Off The Control<br>2: Switch The Embedded Temperature |
 | System On/Off | 0x67 | 2 | rw | 0 |  | 0：Off<br>1：On |
-| Mode Enable | 0x64 | 2 | rw | 7 |  | 7：Ventilation、Heat、Cool<br>3：Ventilation、Heat<br>5：Ventilation、Cool |
-| Temperature Control Mode | 0x68 | 2 | rw | 1 |  | 0：Ventilation<br>1：Heat<br>2：Cool |
+| Mode Enable | 0x64 | 2 | rw | 15 |  | 15：Ventilation、Heat、Cool、Auto<br>7：Ventilation、Heat、Cool<br>9：Ventilation、Auto<br>3：Ventilation、Heat<br>5：Ventilation、Cool |
+| Temperature Control Mode | 0x68 | 2 | rw | 1 |  | 0：Ventilation<br>1：Heat<br>2：Cool<br>3：Auto |
 | Target Temperature Resolution | 0x69 | 2 | rw | 0 |  | 0：0.5<br>1：1 |
 | Heating Target Temperature | 0x6B | 3 | rw | 17 | 5 - 35 |  |
-| CoolingTarget Temperature | 0x6C | 3 | rw | 28 | 5 - 35 |  |
+| Cooling Target Temperature | 0x6C | 3 | rw | 28 | 5 - 35 |  |
+| Auto Target Temperature | 0xA3 | 3 | rw | 22 | 5 - 35 |  |
 | Target Temperature Tolerance | 0x6A | 3 | rw | 1 | 0.1 - 5 |  |
+| Auto Target Temperature Tolerance | 0xA4 | 3 | rw | 1 | 1 - 5 |  |
 | Heating Target Temperature Regulation Range | 0x6D | 5 | rw |  |  |  |
 | Min Value | 0x6D | 3 | rw | 10 | 5 - 35 |  |
 | Max Value | 0x6D | 3 | rw | 19 | 5 - 35 |  |
 | Cooling Target Temperature Regulation Range | 0x6E | 5 | rw |  |  |  |
 | Min Value | 0x6E | 3 | rw | 23 | 5 - 35 |  |
 | Max Value | 0x6E | 3 | rw | 35 | 5 - 35 |  |
+| Auto Target Temperature Regulation Range | 0xA5 | 5 | rw |  |  |  |
+| Min Value | 0xA5 | 3 | rw | 5 | 5 - 35 |  |
+| Max Value | 0xA5 | 3 | rw | 35 | 5 - 35 |  |
 | Target Humidity Regulation Range | 0x70 | 5 | rw |  |  |  |
 | Min Value | 0x70 | 3 | rw | 40 | 0 - 100 |  |
 | Max Value | 0x70 | 3 | rw | 80 | 0 - 100 |  |
@@ -119,12 +126,12 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Screen Display | 0x66 | 2 | rw | 1 |  | 0：disable<br>1：enable |
 | Ambient Temperature | 0x66 | 2 | rw | 1 |  | 0：disable<br>1：enable |
 | Ambient Humidity | 0x66 | 2 | rw | 1 |  | 0：disable<br>1：enable |
-| Target Temperature  | 0x66 | 2 | rw | 1 |  | 0：disable<br>1：enable |
+| Target Temperature | 0x66 | 2 | rw | 1 |  | 0：disable<br>1：enable |
 | Schedule | 0x66 | 2 | rw | 1 |  | 0：disable<br>1：enable |
 | Reserved | 0x66 | 2 | rw |  |  |  |
 | Child Lock | 0x75 | 3 | rw |  |  |  |
 | Child Lock Enable | 0x75 | 2 | rw | 0 |  | 0：disable<br>1：enable |
-| System On/Off  | 0x75 | 2 | rw | 1 |  | 0：disable<br>1：enable |
+| System On/Off | 0x75 | 2 | rw | 1 |  | 0：disable<br>1：enable |
 | Temperature + /- | 0x75 | 2 | rw | 1 |  | 0：disable<br>1：enable |
 | Fan Mode | 0x75 | 2 | rw | 1 |  | 0：disable<br>1：enable |
 | Temperature Control Mode | 0x75 | 2 | rw | 1 |  | 0：disable<br>1：enable |
@@ -132,8 +139,8 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Reserved | 0x75 | 2 | rw |  |  |  |
 | Unlock Button Settings | 0x8D | 5 | rw |  |  |  |
 | Unlock Function Enable | 0x8D | 2 | rw | 0 |  | 0：disable<br>1：enable |
-| System On/Off  | 0x8D | 2 | rw | 0 |  | 0：disable<br>1：enable |
-| Temperature +  | 0x8D | 2 | rw | 0 |  | 0：disable<br>1：enable |
+| System On/Off | 0x8D | 2 | rw | 0 |  | 0：disable<br>1：enable |
+| Temperature + | 0x8D | 2 | rw | 0 |  | 0：disable<br>1：enable |
 | Temperature - | 0x8D | 2 | rw | 0 |  | 0：disable<br>1：enable |
 | Fan Mode | 0x8D | 2 | rw | 0 |  | 0：disable<br>1：enable |
 | Temperature Control Mode | 0x8D | 2 | rw | 0 |  | 0：disable<br>1：enable |
@@ -143,12 +150,12 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Daylight Saving Time | 0xC6 | M | rw |  |  |  |
 | Daylight Saving Time | 0xC6 | 2 | rw | 0 |  | 0：disable<br>1：enable |
 | DST Bias | 0xC6 | 2 | rw | 60 | 1 - 120 |  |
-|  Month | 0xC6 | 2 | rw | 1 |  | 1:Jan.<br>2:Feb.<br>3:Mar.<br>4:Apr.<br>5:May<br>6:Jun.<br>7:Jul.<br>8:Aug.<br>9:Sep.<br>10:Oct.<br>11:Nov.<br>12:Dec. |
-|  Number of Week | 0xC6 | 2 | rw | 1 |  | 1:1st<br>2: 2nd<br>3: 3rd<br>4: 4th<br>5: last |
+| Month | 0xC6 | 2 | rw | 1 |  | 1:Jan.<br>2:Feb.<br>3:Mar.<br>4:Apr.<br>5:May<br>6:Jun.<br>7:Jul.<br>8:Aug.<br>9:Sep.<br>10:Oct.<br>11:Nov.<br>12:Dec. |
+| Number of Week | 0xC6 | 2 | rw | 1 |  | 1:1st<br>2: 2nd<br>3: 3rd<br>4: 4th<br>5: last |
 | Week | 0xC6 | 2 | rw | 7 |  | 1：Mon.<br>2：Tues.<br>3：Wed.<br>4：Thurs.<br>5：Fri.<br>6：Sat.<br>7：Sun. |
 | Time | 0xC6 | 3 | rw | 0 |  | 0：00:00<br>60：01:00<br>120：02:00<br>180：03:00<br>240：04:00<br>300：05:00<br>360：06:00<br>420：07:00<br>480：08:00<br>540：09:00<br>600：10:00<br>660：11:00<br>720：12:00<br>780：13:00<br>840：14:00<br>900：15:00<br>960：16:00<br>1020：17:00<br>1080：18:00<br>1140：19:00<br>1200：20:00<br>1260：21:00<br>1320：22:00<br>1380：23:00 |
-|  Month | 0xC6 | 2 | rw | 1 |  | 1:Jan.<br>2:Feb.<br>3:Mar.<br>4:Apr.<br>5:May<br>6:Jun.<br>7:Jul.<br>8:Aug.<br>9:Sep.<br>10:Oct.<br>11:Nov.<br>12:Dec. |
-|  Number of Week | 0xC6 | 2 | rw | 1 |  | 1:1st<br>2: 2nd<br>3: 3rd<br>4: 4th<br>5: last |
+| Month | 0xC6 | 2 | rw | 1 |  | 1:Jan.<br>2:Feb.<br>3:Mar.<br>4:Apr.<br>5:May<br>6:Jun.<br>7:Jul.<br>8:Aug.<br>9:Sep.<br>10:Oct.<br>11:Nov.<br>12:Dec. |
+| Number of Week | 0xC6 | 2 | rw | 1 |  | 1:1st<br>2: 2nd<br>3: 3rd<br>4: 4th<br>5: last |
 | Week | 0xC6 | 2 | rw | 7 |  | 1：Mon.<br>2：Tues.<br>3：Wed.<br>4：Thurs.<br>5：Fri.<br>6：Sat.<br>7：Sun. |
 | Time | 0xC6 | 3 | rw | 0 |  | 0：00:00<br>60：01:00<br>120：02:00<br>180：03:00<br>240：04:00<br>300：05:00<br>360：06:00<br>420：07:00<br>480：08:00<br>540：09:00<br>600：10:00<br>660：11:00<br>720：12:00<br>780：13:00<br>840：14:00<br>900：15:00<br>960：16:00<br>1020：17:00<br>1080：18:00<br>1140：19:00<br>1200：20:00<br>1260：21:00<br>1320：22:00<br>1380：23:00 |
 | Data Storage Settings | 0xC5 | 1 | rw |  |  |  |
@@ -189,8 +196,10 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Heating Target Temperature | 0x7B | 3 | rw | 17 | 5 - 35 |  |
 | Cooling Target Temperature Enable | 0x7B | 3 | rw | 0 |  | 0：disable<br>1：enable |
 | Cooling Target Temperature | 0x7B | 3 | rw | 26 | 5 - 35 |  |
+| Auto Target Temperature Enable | 0x7B | 3 | rw | 0 |  | 0：disable<br>1：enable |
+| Auto Target Temperature | 0x7B | 3 | rw | 26 | 5 - 35 |  |
 | Temperature Control Tolerance Enable | 0x7B | 3 | rw | 0 |  | 0：disable<br>1：enable |
-| Temperature Control Tolerance | 0x7B | 3 | rw | 2 | 0.1 - 5 |  |
+| Temperature Control Tolerance | 0x7B | 3 | rw | 2 | 1 - 5 |  |
 | Time | 0x7B | 6 | rw |  |  |  |
 | Time Configuration | 0x7B | 6 | rw |  |  |  |
 | Time ID | 0x7B | 2 | rw | 0 | 0 - 15 |  |
@@ -323,9 +332,9 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Full Inspection End | 0xF4 | 1 | w |  |  |  |
 | Full Inspection Response Subcommand | 0xF4 | 2 | r |  |  |  |
 | Full Inspection Start Response | 0xF4 | 2 | r |  |  |  |
-| Full Inspection Start Response  | 0xF4 | 2 | r | 0 |  | 0：success<br>1：failed |
+| Full Inspection Start Response | 0xF4 | 2 | r | 0 |  | 0：success<br>1：failed |
 | Full Inspection Control Response | 0xF4 | 2 | r |  |  |  |
-| Full Inspection Control Response  | 0xF4 | 2 | r | 0 |  | 0：success<br>1：failed |
+| Full Inspection Control Response | 0xF4 | 2 | r | 0 |  | 0：success<br>1：failed |
 | Full Inspection Read Response | 0xF4 | 1 | r |  |  |  |
 | Read Response Length | 0xF4 | 3 | r | 0 | 0 - 65535 |  |
 | Read Response Content | 0xF4 | 1 | r |  |  |  |
@@ -338,6 +347,7 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Answer Result | 0xEF | 2 | r | 0 |  | 0：success<br>1：unknow<br>2：error order<br>3：error passwd<br>4：error read params<br>5：error write params<br>6：error read<br>7：error write<br>8：error read apply<br>9：error write apply |
 | Command Length | 0xEF | 2 | r | 1 | 1 - 15 |  |
 | Answered Commands | 0xEF | 1 | r |  |  |  |
+| Request to Query All Configurations | 0xEE | 1 | w |  |  |  |
 | Alarm Type | 0x09 | 2 | r |  |  |  |
 | Collection Error | 0x09 | 1 | r |  |  |  |
 | Exceed the Range Lower Limit | 0x09 | 1 | r |  |  |  |
@@ -396,8 +406,8 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Temperature Extend Value | 0x5B | 3 | w | 0 | -20 - 60 |  |
 | Humidity Extend Settings | 0x5C | 3 | w |  |  |  |
 | Humidity Extend Value | 0x5C | 3 | w | 0 | 0 - 100 |  |
-|  Open Window Status Control | 0x5D | 2 | w |  |  |  |
-|  Open Window Status Control | 0x5D | 2 | w | 0 |  | 0：Normal<br>1：Open |
+| Open Window Status Control | 0x5D | 2 | w |  |  |  |
+| Open Window Status Control | 0x5D | 2 | w | 0 |  | 0：Normal<br>1：Open |
 | Event Control | 0x5E | 2 | w |  |  |  |
 | Event Control | 0x5E | 2 | w | 0 |  | 0：Schedule1<br>1：Schedule2<br>2：Schedule3<br>3：Schedule4<br>4：Schedule5<br>5：Schedule6<br>6：Schedule7<br>7：Schedule8 |
 | Delete Schedule List | 0x5F | 2 | w |  |  |  |
