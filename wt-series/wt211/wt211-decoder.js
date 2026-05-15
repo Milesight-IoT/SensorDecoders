@@ -853,14 +853,14 @@ function handle_downlink_response_ext(code, channel_type, bytes, offset) {
             offset += 1;
             break;
         case 0x27:
-            var occupied_mode = readUInt8(bytes[offset]);
-            var rawValue_occupied_mode_map = { 1: "off", 2: "occupied", 3: "unoccupied" };
-            decoded.occupied_mode = {};
+            var occupancy_mode = readUInt8(bytes[offset]);
+            var rawValue_occupancy_mode_map = { 1: "off", 2: "occupied", 3: "unoccupied" };
+            decoded.occupancy_mode = {};
             if(RAW_VALUE) {
-                decoded.occupied_mode.value = occupied_mode;
-                decoded.occupied_mode.mode = rawValue_occupied_mode_map[occupied_mode];
+                decoded.occupancy_mode.value = occupancy_mode;
+                decoded.occupancy_mode.mode = rawValue_occupancy_mode_map[occupancy_mode];
             } else {
-                decoded.occupied_mode.mode = rawValue_occupied_mode_map[occupied_mode];
+                decoded.occupancy_mode.mode = rawValue_occupancy_mode_map[occupancy_mode];
             }
             offset += 1;
             break;

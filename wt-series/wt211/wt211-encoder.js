@@ -283,8 +283,8 @@ function milesightDeviceEncode(payload) {
     if ("temperature_control_delta2" in payload) {
         encoded = encoded.concat(setTemperatureSettingUInt8Value(payload.temperature_control_delta2, [1, 10], "temperature_control_delta2", 0x24));
     }
-    if ("occupied_mode" in payload) {
-        encoded = encoded.concat(setOccupiedMode(payload.occupied_mode));
+    if ("occupancy_mode" in payload) {
+        encoded = encoded.concat(setOccupancyMode(payload.occupancy_mode));
     }
     if ("occupied_delay" in payload) {
         encoded = encoded.concat(setConfigValueTime(payload.occupied_delay, "occupied_delay", 0x28));
@@ -1184,29 +1184,29 @@ function setTemporaryUnlockSettings(temporary_unlock_settings) {
 }
 
 /**
- * set occupied mode
+ * set occupancy mode
  * @since v2.0
- * @param {number} occupied_mode values: (1: off, 2: occupied, 3: unoccupied)
- * @example { "occupied_mode": 1 }
+ * @param {number} occupancy_mode values: (1: off, 2: occupied, 3: unoccupied)
+ * @example { "occupancy_mode": 1 }
  */
-function setOccupiedMode(occupied_mode) {
-    var value = occupied_mode.value;
-    var mode = occupied_mode.mode;
-    var occupied_mode_map = { 1: "off", 2: "occupied", 3: "unoccupied" };
-    var occupied_mode_values = getValues(occupied_mode_map);
+function setOccupancyMode(occupancy_mode) {
+    var value = occupancy_mode.value;
+    var mode = occupancy_mode.mode;
+    var occupancy_mode_map = { 1: "off", 2: "occupied", 3: "unoccupied" };
+    var occupancy_mode_values = getValues(occupancy_mode_map);
 
     if (RAW_VALUE) {
-        if (occupied_mode_values.indexOf(value) === -1) {
-            throw new Error("occupied_mode.value must be one of " + occupied_mode_values.join(", "));
+        if (occupancy_mode_values.indexOf(value) === -1) {
+            throw new Error("occupancy_mode.value must be one of " + occupancy_mode_values.join(", "));
         }
 
         return [0xf9, 0x27, value];
     } else {
-        if (occupied_mode_values.indexOf(mode) === -1) {
-            throw new Error("occupied_mode.mode must be one of " + occupied_mode_values.join(", "));
+        if (occupancy_mode_values.indexOf(mode) === -1) {
+            throw new Error("occupancy_mode.mode must be one of " + occupancy_mode_values.join(", "));
         }
 
-        return [0xf9, 0x27, getValue(occupied_mode_map, mode)];
+        return [0xf9, 0x27, getValue(occupancy_mode_map, mode)];
     }
 }
 
