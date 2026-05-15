@@ -229,6 +229,10 @@ function handle_downlink_response(channel_type, bytes, offset) {
             decoded.confirm_mode_enable = readEnableStatus(bytes[offset]);
             offset += 1;
             break;
+        case 0xd2:
+            decoded.client_heartbeat = readClientHeartbeat(bytes.slice(offset, offset + 9));
+            offset += 9;
+            break;
         case 0x10:
             decoded.reboot = readYesNoStatus(1);
             offset += 1;
@@ -578,6 +582,18 @@ function readRetransmitConfig(bytes) {
     offset += 3;
 
     return retransmit_config;
+}
+
+function readClientHeartbeat(bytes) {
+    var offset = 0;
+
+    var client_heartbeat = {};
+    client_heartbeat.enable = readEnableStatus(bytes[offset]);
+    client_heartbeat.interval = readUInt16LE(bytes.slice(offset + 1, offset + 3));
+    client_heartbeat.data = readHexString(bytes.slice(offset + 3, offset + 9));
+    offset += 9;
+
+    return client_heartbeat;
 }
 
 function readBatchRules(value) {
@@ -1121,6 +1137,14 @@ function readAscii(bytes) {
         str += String.fromCharCode(bytes[i]);
     }
     return str;
+}
+
+function readHexString(bytes) {
+    var temp = [];
+    for (var idx = 0; idx < bytes.length; idx++) {
+        temp.push(("0" + (bytes[idx] & 0xff).toString(16)).slice(-2));
+    }
+    return temp.join("").toUpperCase();
 }
 
 function getValue(map, key) {

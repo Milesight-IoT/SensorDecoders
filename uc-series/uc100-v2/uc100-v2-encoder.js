@@ -44,6 +44,9 @@ function milesightDeviceEncode(payload) {
     if ("confirm_mode_enable" in payload) {
         encoded = encoded.concat(setConfirmModeEnable(payload.confirm_mode_enable));
     }
+    if ("client_heartbeat" in payload) {
+        encoded = encoded.concat(setClientHeartbeat(payload.client_heartbeat));
+    }
     if ("time_zone" in payload) {
         encoded = encoded.concat(setTimeZone(payload.time_zone));
     }
@@ -208,6 +211,49 @@ function setConfirmModeEnable(confirm_mode_enable) {
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0x04);
     buffer.writeUInt8(getValue(enable_map, confirm_mode_enable));
+    return buffer.toBytes();
+}
+
+/**
+ * set client heartbeat
+ * @param {object} client_heartbeat
+ * @param {number} client_heartbeat.enable values: (0: disable, 1: enable)
+ * @param {number} client_heartbeat.interval range: [1, 1440], unit: min
+ * @param {string} client_heartbeat.data hex string, length: 12
+ * @example { "client_heartbeat": { "enable": 1, "interval": 10, "data": "EE010101F3D4" } }
+ */
+function setClientHeartbeat(client_heartbeat) {
+    var enable = client_heartbeat.enable;
+    var interval = client_heartbeat.interval;
+    var data = client_heartbeat.data;
+
+    var enable_map = { 0: "disable", 1: "enable" };
+    var enable_values = getValues(enable_map);
+    if (enable_values.indexOf(enable) === -1) {
+        throw new Error("client_heartbeat.enable must be one of " + enable_values.join(", "));
+    }
+    if (typeof interval !== "number") {
+        throw new Error("client_heartbeat.interval must be a number");
+    }
+    if (interval < 1 || interval > 1440) {
+        throw new Error("client_heartbeat.interval must be in range [1, 1440]");
+    }
+    if (typeof data !== "string") {
+        throw new Error("client_heartbeat.data must be a string");
+    }
+    if (data.length !== 12) {
+        throw new Error("client_heartbeat.data must be 12 hex characters");
+    }
+    if (!/^[0-9a-fA-F]+$/.test(data)) {
+        throw new Error("client_heartbeat.data must be hex string [0-9a-fA-F]");
+    }
+
+    var buffer = new Buffer(11);
+    buffer.writeUInt8(0xff);
+    buffer.writeUInt8(0xd2);
+    buffer.writeUInt8(getValue(enable_map, enable));
+    buffer.writeUInt16LE(interval);
+    buffer.writeBytes(hexToBytes(data));
     return buffer.toBytes();
 }
 
@@ -1484,4 +1530,12 @@ function getValue(map, value) {
     }
 
     throw new Error("not match in " + JSON.stringify(map));
+}
+
+function hexToBytes(hex) {
+    var bytes = [];
+    for (var i = 0; i < hex.length; i += 2) {
+        bytes.push(parseInt(hex.substr(i, 2), 16));
+    }
+    return bytes;
 }
