@@ -809,7 +809,7 @@ function readHistoryEvent(event) {
 }
 
 function readSensorIDType(type) {
-    var sensor_id_map = { 1: "PT100", 2: "SHT4X", 3: "DS18B20", 4: "MAGNET" };
+    var sensor_id_map = { 1: "PT100", 2: "SHT4X", 3: "DS18B20", 4: "MAGNET", 5: "TMP117" };
     return getValue(sensor_id_map, type);
 }
 

@@ -273,7 +273,8 @@
                 { "value": 1, "name": "PT100" },
                 { "value": 2, "name": "SHT4X" },
                 { "value": 3, "name": "DS18B20" },
-                { "value": 4, "name": "MAGNET" }
+                { "value": 4, "name": "MAGNET" },
+                { "value": 5, "name": "TMP117" }
             ],
             "bacnet_type": "multistate_value_object",
             "bacnet_unit_type_id": 95,
