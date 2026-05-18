@@ -190,7 +190,7 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Schedule Enable | 0x7B | 2 | rw | 0 |  | 0：disable<br>1：enable |
 | Name (prefix6) | 0x7B | 7 | rw |  |  |  |
 | Name (suffix4) | 0x7B | 5 | rw |  |  |  |
-| Schedule Content | 0x7B | 8 | rw |  |  |  |
+| Schedule Content | 0x7B | 10 | rw |  |  |  |
 | Fan Mode | 0x7B | 2 | rw | 0 |  | 0：Auto<br>1：Low<br>2：Medium<br>3：High |
 | Heating Target Temperature Enable | 0x7B | 3 | rw | 0 |  | 0：disable<br>1：enable |
 | Heating Target Temperature | 0x7B | 3 | rw | 17 | 5 - 35 |  |
@@ -220,12 +220,14 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Schedule Enable | 0x7B | 2 | rw | 0 |  | 0：disable<br>1：enable |
 | Name (prefix6) | 0x7B | 7 | rw |  |  |  |
 | Name (suffix4) | 0x7B | 5 | rw |  |  |  |
-| Schedule Content | 0x7B | 8 | rw |  |  |  |
+| Schedule Content | 0x7B | 10 | rw |  |  |  |
 | Fan Mode | 0x7B | 2 | rw | 0 |  | 0：auto<br>1：low<br>2：medium<br>3：high |
 | Heating Target Temperature Enable | 0x7B | 3 | rw | 0 |  | 0：disable<br>1：enable |
 | Heating Target Temperature | 0x7B | 3 | rw | 17 | 5 - 35 |  |
 | Cooling Target Temperature Enable | 0x7B | 3 | rw | 0 |  | 0：disable<br>1：enable |
 | Cooling Target Temperature | 0x7B | 3 | rw | 26 | 5 - 35 |  |
+| Auto Target Temperature Enable | 0x7B | 3 | rw | 0 |  | 0：disable<br>1：enable |
+| Auto Target Temperature | 0x7B | 3 | rw | 26 | 5 - 35 |  |
 | Temperature Control Tolerance Enable | 0x7B | 3 | rw | 0 |  | 0：disable<br>1：enable |
 | Temperature Control Tolerance | 0x7B | 3 | rw | 2 | 0.1 - 5 |  |
 | Time | 0x7B | 6 | rw |  |  |  |

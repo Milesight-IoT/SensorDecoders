@@ -1159,7 +1159,7 @@ function milesightDeviceEncode(payload) {
 				if ([0, 1, 2, 3].indexOf(schedule_settings_item.content.fan_mode) === -1) {
 					throw new Error('content.fan_mode must be one of [0, 1, 2, 3]');
 				}
-				// 0：Auto, 1：Low, 2：Medium, 3：High
+				// 0：auto, 1：low, 2：medium, 3：high
 				buffer.writeUInt8(schedule_settings_item.content.fan_mode);
 				var bitOptions = 0;
 				bitOptions |= schedule_settings_item.content.heat_target_temperature_enable << 0;

@@ -610,7 +610,7 @@ function milesightDeviceDecode(bytes) {
 				}
 				if (schedule_settings_item_command == 0x03) {
 					schedule_settings_item.content = schedule_settings_item.content || {};
-					// 0：Auto, 1：Low, 2：Medium, 3：High
+					// 0：auto, 1：low, 2：medium, 3：high
 					schedule_settings_item.content.fan_mode = readUInt8(bytes, counterObj, 1);
 					var bitOptions = readUInt16LE(bytes, counterObj, 2);
 					schedule_settings_item.content.heat_target_temperature_enable = extractBits(bitOptions, 0, 1);
