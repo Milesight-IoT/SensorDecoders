@@ -79,17 +79,9 @@ function milesightDeviceDecode(bytes) {
 			case 0xcf:
 				decoded.lorawan_configuration_settings = decoded.lorawan_configuration_settings || {};
 				var lorawan_configuration_settings_command = readUInt8(bytes, counterObj, 1);
-				if (lorawan_configuration_settings_command == 0xd8) {
-					// 1：1.0.2, 2：1.0.3, 3：1.0.3, 4：1.0.4
-					decoded.lorawan_configuration_settings.version = readUInt8(bytes, counterObj, 1);
-				}
-				if (lorawan_configuration_settings_command == 0x5d) {
-					// 0：disable, 1：enable
-					decoded.lorawan_configuration_settings.confirmed_mode = readUInt8(bytes, counterObj, 1);
-				}
-				if (lorawan_configuration_settings_command == 0xba) {
-					// 0：DR0(SF12,125kHz), 1：DR1(SF11,125kHz), 2：DR2(SF10,125kHz), 3：DR3(SF9,125kHz), 4：DR4(SF8,125kHz), 5：DR5(SF7,125kHz)
-					decoded.lorawan_configuration_settings.tx_data_rate = readUInt8(bytes, counterObj, 1);
+				if (lorawan_configuration_settings_command == 0x00) {
+					// 0:ClassA, 1:ClassB, 2:ClassC, 3:ClassC to B
+					decoded.lorawan_configuration_settings.mode = readUInt8(bytes, counterObj, 1);
 				}
 				break;
 			case 0xdf:
@@ -1319,9 +1311,7 @@ function cmdMap() {
 		  "ef": "request_command_queries",
 		  "ee": "request_query_all_configurations",
 		  "cf": "lorawan_configuration_settings",
-		  "cfd8": "lorawan_configuration_settings.version",
-		  "cf5d": "lorawan_configuration_settings.confirmed_mode",
-		  "cfba": "lorawan_configuration_settings.tx_data_rate",
+		  "cf00": "lorawan_configuration_settings.mode",
 		  "df": "tsl_version",
 		  "db": "product_sn",
 		  "da": "version",

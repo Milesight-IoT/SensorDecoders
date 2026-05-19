@@ -113,40 +113,14 @@ function milesightDeviceEncode(payload) {
 		encoded = encoded.concat(buffer.toBytes());
 	}
 	//0xcf
-	if ('lorawan_configuration_settings' in payload) {
-		var buffer = new Buffer();
-		if (isValid(payload.lorawan_configuration_settings.version)) {
-			buffer.writeUInt8(0xcf);
-			// 1：1.0.2, 2：1.0.3, 3：1.0.3, 4：1.0.4
-			buffer.writeUInt8(0xd8);
-			if ([1, 2, 3, 4].indexOf(payload.lorawan_configuration_settings.version) === -1) {
-				throw new Error('lorawan_configuration_settings.version must be one of [1, 2, 3, 4]');
-			}
-			// 1：1.0.2, 2：1.0.3, 3：1.0.3, 4：1.0.4
-			buffer.writeUInt8(payload.lorawan_configuration_settings.version);
+	case 0xcf:
+		decoded.lorawan_configuration_settings = decoded.lorawan_configuration_settings || {};
+		var lorawan_configuration_settings_command = readUInt8(bytes, counterObj, 1);
+		if (lorawan_configuration_settings_command == 0x00) {
+			// 0:ClassA, 1:ClassB, 2:ClassC, 3:ClassC to B
+			decoded.lorawan_configuration_settings.mode = readUInt8(bytes, counterObj, 1);
 		}
-		if (isValid(payload.lorawan_configuration_settings.confirmed_mode)) {
-			buffer.writeUInt8(0xcf);
-			// 0：disable, 1：enable
-			buffer.writeUInt8(0x5d);
-			if ([0, 1].indexOf(payload.lorawan_configuration_settings.confirmed_mode) === -1) {
-				throw new Error('lorawan_configuration_settings.confirmed_mode must be one of [0, 1]');
-			}
-			// 0：disable, 1：enable
-			buffer.writeUInt8(payload.lorawan_configuration_settings.confirmed_mode);
-		}
-		if (isValid(payload.lorawan_configuration_settings.tx_data_rate)) {
-			buffer.writeUInt8(0xcf);
-			// 0：DR0(SF12,125kHz), 1：DR1(SF11,125kHz), 2：DR2(SF10,125kHz), 3：DR3(SF9,125kHz), 4：DR4(SF8,125kHz), 5：DR5(SF7,125kHz)
-			buffer.writeUInt8(0xba);
-			if ([0, 1, 2, 3, 4, 5].indexOf(payload.lorawan_configuration_settings.tx_data_rate) === -1) {
-				throw new Error('lorawan_configuration_settings.tx_data_rate must be one of [0, 1, 2, 3, 4, 5]');
-			}
-			// 0：DR0(SF12,125kHz), 1：DR1(SF11,125kHz), 2：DR2(SF10,125kHz), 3：DR3(SF9,125kHz), 4：DR4(SF8,125kHz), 5：DR5(SF7,125kHz)
-			buffer.writeUInt8(payload.lorawan_configuration_settings.tx_data_rate);
-		}
-		encoded = encoded.concat(buffer.toBytes());
-	}
+		break;
 	//0xdb
 	if ('product_sn' in payload) {
 		var buffer = new Buffer();
@@ -2061,9 +2035,7 @@ function cmdMap() {
 		  "request_command_queries": "ef",
 		  "request_query_all_configurations": "ee",
 		  "lorawan_configuration_settings": "cf",
-		  "lorawan_configuration_settings.version": "cfd8",
-		  "lorawan_configuration_settings.confirmed_mode": "cf5d",
-		  "lorawan_configuration_settings.tx_data_rate": "cfba",
+		  "lorawan_configuration_settings.mode": "cf00",
 		  "tsl_version": "df",
 		  "product_sn": "db",
 		  "version": "da",
