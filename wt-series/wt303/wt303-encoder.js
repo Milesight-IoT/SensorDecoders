@@ -1152,12 +1152,6 @@ function milesightDeviceEncode(payload) {
 				buffer.writeInt16LE(bitOptions);
 
 				var bitOptions = 0;
-				bitOptions |= schedule_settings_item.content.auto_target_temperature_enable << 0;
-
-				bitOptions |= schedule_settings_item.content.auto_target_temperature * 100 << 1;
-				buffer.writeInt16LE(bitOptions);
-
-				var bitOptions = 0;
 				bitOptions |= schedule_settings_item.content.temperature_tolerance_enable << 0;
 
 				bitOptions |= schedule_settings_item.content.temperature_tolerance * 100 << 1;
@@ -1204,6 +1198,61 @@ function milesightDeviceEncode(payload) {
 
 				bitOptions |= cycle_settings_item.reserved << 7;
 				buffer.writeUInt8(bitOptions);
+
+			}
+			if (isValid(schedule_settings_item.fan_mode)) {
+				buffer.writeUInt8(0x7b);
+				buffer.writeUInt8(schedule_settings_item_id);
+				// 0：Auto, 1：Low, 2：Medium, 3：High
+				buffer.writeUInt8(0x05);
+				if ([0, 1, 2, 3].indexOf(schedule_settings_item.fan_mode) === -1) {
+					throw new Error('fan_mode must be one of [0, 1, 2, 3]');
+				}
+				// 0：Auto, 1：Low, 2：Medium, 3：High
+				buffer.writeUInt8(schedule_settings_item.fan_mode);
+			}
+			if (isValid(schedule_settings_item.heating)) {
+				buffer.writeUInt8(0x7b);
+				buffer.writeUInt8(schedule_settings_item_id);
+				buffer.writeUInt8(0x06);
+				var bitOptions = 0;
+				bitOptions |= schedule_settings_item.heating.heat_target_temperature_enable << 0;
+
+				bitOptions |= schedule_settings_item.heating.heat_target_temperature * 100 << 1;
+				buffer.writeInt16LE(bitOptions);
+
+			}
+			if (isValid(schedule_settings_item.cooling)) {
+				buffer.writeUInt8(0x7b);
+				buffer.writeUInt8(schedule_settings_item_id);
+				buffer.writeUInt8(0x07);
+				var bitOptions = 0;
+				bitOptions |= schedule_settings_item.cooling.cool_target_temperature_enable << 0;
+
+				bitOptions |= schedule_settings_item.cooling.cool_target_temperature * 100 << 1;
+				buffer.writeInt16LE(bitOptions);
+
+			}
+			if (isValid(schedule_settings_item.auto)) {
+				buffer.writeUInt8(0x7b);
+				buffer.writeUInt8(schedule_settings_item_id);
+				buffer.writeUInt8(0x08);
+				var bitOptions = 0;
+				bitOptions |= schedule_settings_item.auto.auto_target_temperature_enable << 0;
+
+				bitOptions |= schedule_settings_item.auto.auto_target_temperature * 100 << 1;
+				buffer.writeInt16LE(bitOptions);
+
+			}
+			if (isValid(schedule_settings_item.tolerance)) {
+				buffer.writeUInt8(0x7b);
+				buffer.writeUInt8(schedule_settings_item_id);
+				buffer.writeUInt8(0x09);
+				var bitOptions = 0;
+				bitOptions |= schedule_settings_item.tolerance.temperature_tolerance_enable << 0;
+
+				bitOptions |= schedule_settings_item.tolerance.temperature_tolerance * 100 << 1;
+				buffer.writeInt16LE(bitOptions);
 
 			}
 		}
@@ -2002,6 +2051,11 @@ function cmdMap() {
 		  "schedule_settings._item.content": "7bxx03",
 		  "schedule_settings._item.cycle_settings": "7bxx04",
 		  "schedule_settings._item.cycle_settings._item": "7bxx04xx",
+		  "schedule_settings._item.fan_mode": "7bxx05",
+		  "schedule_settings._item.heating": "7bxx06",
+		  "schedule_settings._item.cooling": "7bxx07",
+		  "schedule_settings._item.auto": "7bxx08",
+		  "schedule_settings._item.tolerance": "7bxx09",
 		  "interface_settings": "7c",
 		  "interface_settings.valve_4_pipe_2_wire": "7c00",
 		  "interface_settings.valve_2_pipe_2_wire": "7c01",
@@ -2205,11 +2259,23 @@ function processTemperature(payload) {
         "coefficient": 0.01,
         "unitName": "℃"
     },
-    "schedule_settings._item.content.auto_target_temperature": {
+    "schedule_settings._item.content.temperature_tolerance": {
         "coefficient": 0.01,
         "unitName": "℃"
     },
-    "schedule_settings._item.content.temperature_tolerance": {
+    "schedule_settings._item.heating.heat_target_temperature": {
+        "coefficient": 0.01,
+        "unitName": "℃"
+    },
+    "schedule_settings._item.cooling.cool_target_temperature": {
+        "coefficient": 0.01,
+        "unitName": "℃"
+    },
+    "schedule_settings._item.auto.auto_target_temperature": {
+        "coefficient": 0.01,
+        "unitName": "℃"
+    },
+    "schedule_settings._item.tolerance.temperature_tolerance": {
         "coefficient": 0.01,
         "unitName": "℃"
     },

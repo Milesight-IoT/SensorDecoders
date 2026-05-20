@@ -611,9 +611,6 @@ function milesightDeviceDecode(bytes) {
 					schedule_settings_item.content.cool_target_temperature_enable = extractBits(bitOptions, 0, 1);
 					schedule_settings_item.content.cool_target_temperature = extractBits(bitOptions, 1, 16) / 100;
 					var bitOptions = readUInt16LE(bytes, counterObj, 2);
-					schedule_settings_item.content.auto_target_temperature_enable = extractBits(bitOptions, 0, 1);
-					schedule_settings_item.content.auto_target_temperature = extractBits(bitOptions, 1, 16) / 100;
-					var bitOptions = readUInt16LE(bytes, counterObj, 2);
 					schedule_settings_item.content.temperature_tolerance_enable = extractBits(bitOptions, 0, 1);
 					schedule_settings_item.content.temperature_tolerance = extractBits(bitOptions, 1, 16) / 100;
 				}
@@ -642,6 +639,34 @@ function milesightDeviceDecode(bytes) {
 					// 0：disable, 1：enable
 					cycle_settings_item.execution_day_sat = extractBits(bitOptions, 6, 7);
 					cycle_settings_item.reserved = extractBits(bitOptions, 7, 8);
+				}
+				if (schedule_settings_item_command == 0x05) {
+					// 0：Auto, 1：Low, 2：Medium, 3：High
+					schedule_settings_item.fan_mode = readUInt8(bytes, counterObj, 1);
+				}
+				if (schedule_settings_item_command == 0x06) {
+					schedule_settings_item.heating = schedule_settings_item.heating || {};
+					var bitOptions = readUInt16LE(bytes, counterObj, 2);
+					schedule_settings_item.heating.heat_target_temperature_enable = extractBits(bitOptions, 0, 1);
+					schedule_settings_item.heating.heat_target_temperature = extractBits(bitOptions, 1, 16) / 100;
+				}
+				if (schedule_settings_item_command == 0x07) {
+					schedule_settings_item.cooling = schedule_settings_item.cooling || {};
+					var bitOptions = readUInt16LE(bytes, counterObj, 2);
+					schedule_settings_item.cooling.cool_target_temperature_enable = extractBits(bitOptions, 0, 1);
+					schedule_settings_item.cooling.cool_target_temperature = extractBits(bitOptions, 1, 16) / 100;
+				}
+				if (schedule_settings_item_command == 0x08) {
+					schedule_settings_item.auto = schedule_settings_item.auto || {};
+					var bitOptions = readUInt16LE(bytes, counterObj, 2);
+					schedule_settings_item.auto.auto_target_temperature_enable = extractBits(bitOptions, 0, 1);
+					schedule_settings_item.auto.auto_target_temperature = extractBits(bitOptions, 1, 16) / 100;
+				}
+				if (schedule_settings_item_command == 0x09) {
+					schedule_settings_item.tolerance = schedule_settings_item.tolerance || {};
+					var bitOptions = readUInt16LE(bytes, counterObj, 2);
+					schedule_settings_item.tolerance.temperature_tolerance_enable = extractBits(bitOptions, 0, 1);
+					schedule_settings_item.tolerance.temperature_tolerance = extractBits(bitOptions, 1, 16) / 100;
 				}
 				break;
 			case 0x7c:
@@ -1322,6 +1347,11 @@ function cmdMap() {
 		  "7bxx03": "schedule_settings._item.content",
 		  "7bxx04": "schedule_settings._item.cycle_settings",
 		  "7bxx04xx": "schedule_settings._item.cycle_settings._item",
+		  "7bxx05": "schedule_settings._item.fan_mode",
+		  "7bxx06": "schedule_settings._item.heating",
+		  "7bxx07": "schedule_settings._item.cooling",
+		  "7bxx08": "schedule_settings._item.auto",
+		  "7bxx09": "schedule_settings._item.tolerance",
 		  "7c": "interface_settings",
 		  "7c00": "interface_settings.valve_4_pipe_2_wire",
 		  "7c01": "interface_settings.valve_2_pipe_2_wire",
@@ -1510,11 +1540,23 @@ function processTemperature(decoded) {
         "precision": 2,
         "unitName": "℃"
     },
-    "schedule_settings._item.content.auto_target_temperature": {
+    "schedule_settings._item.content.temperature_tolerance": {
         "precision": 2,
         "unitName": "℃"
     },
-    "schedule_settings._item.content.temperature_tolerance": {
+    "schedule_settings._item.heating.heat_target_temperature": {
+        "precision": 2,
+        "unitName": "℃"
+    },
+    "schedule_settings._item.cooling.cool_target_temperature": {
+        "precision": 2,
+        "unitName": "℃"
+    },
+    "schedule_settings._item.auto.auto_target_temperature": {
+        "precision": 2,
+        "unitName": "℃"
+    },
+    "schedule_settings._item.tolerance.temperature_tolerance": {
         "precision": 2,
         "unitName": "℃"
     },
