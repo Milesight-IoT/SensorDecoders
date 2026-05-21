@@ -248,6 +248,7 @@ For more detailed information, please visit [Milesight Official Website](https:/
 
 | CHANNEL |  ID  | LENGTH | READ/WRITE | DEFAULT | RANGE | ENUM |
 | :------ | :--: | :----: | :--------: | :-----: | :---: | :--: |
+| Order Check Response | 0xFE | 2 | r |  |  |  |
 | Command Response | 0xEF | 1 | r |  |  |  |
 | Request to Push All Configurations | 0xEE | 1 | r |  |  |  |
 | Device Time | 0xB9 | M | r |  |  |  |
@@ -263,6 +264,9 @@ For more detailed information, please visit [Milesight Official Website](https:/
 
 | CHANNEL |  ID  | LENGTH | READ/WRITE | DEFAULT | RANGE | ENUM |
 | :------ | :--: | :----: | :--------: | :-----: | :---: | :--: |
+| Order Check | 0xFE | 2 | w |  |  |  |
+| Order | 0xFE | 2 | w | 0 | 0 - 255 |  |
+| Order | 0xFE | 2 | r | 0 | 0 - 255 |  |
 | Command Queries | 0xEF | 1 | w |  |  |  |
 | Query Information | 0xEF | 2 | w |  |  |  |
 | Command Length | 0xEF | 2 | w | 1 | 1 - 15 |  |
