@@ -35,6 +35,19 @@ function milesightDeviceDecode(bytes) {
 	for (counterObj.i = 0; counterObj.i < bytes.length; ) {
 		var command_id = bytes[counterObj.i++];
 		switch (command_id) {
+			case 0xef:
+				decoded.ans = decoded.ans || [];
+				var ans_item = {};
+				var bitOptions = readUInt8(bytes, counterObj, 1);
+				// 0：success, 1：unknow, 2：error order, 3：error passwd, 4：error read params, 5：error write params, 6：error read, 7：error write, 8：error read apply, 9：error write apply
+				ans_item.result = extractBits(bitOptions, 4, 8);
+				ans_item.length = extractBits(bitOptions, 0, 4);
+				ans_item.id = readCommand(bytes, counterObj, ans_item.length);
+				decoded.ans.push(ans_item);
+				break;
+			case 0xee:
+				decoded.all_configurations_request_by_device = readOnlyCommand(bytes, counterObj, 0);
+				break;
 			case 0xcf:
 				decoded.lorawan_configuration_settings = decoded.lorawan_configuration_settings || {};
 				var lorawan_configuration_settings_command = readUInt8(bytes, counterObj, 1);
@@ -667,7 +680,7 @@ function milesightDeviceDecode(bytes) {
 				}
 				if (schedule_settings_item_command == 0x03) {
 					schedule_settings_item.content1 = schedule_settings_item.content1 || {};
-					// 0：heat, 1：em heat, 2：cool, 3：auto, 10：off
+					// 0：heat, 1：em heat, 2：cool, 3：auto, 4：dehumidify, 5：ventilation, 10：off
 					schedule_settings_item.content1.tstat_mode = readUInt8(bytes, counterObj, 1);
 					schedule_settings_item.content1.heat_target_temperature = readInt16LE(bytes, counterObj, 2) / 100;
 					schedule_settings_item.content1.em_heat_target_temperature = readInt16LE(bytes, counterObj, 2) / 100;
@@ -1148,6 +1161,8 @@ function cmdMap() {
 		  "610201": "reporting_interval.ble_lora.minutes_of_time",
 		  "610300": "reporting_interval.power_lora.seconds_of_time",
 		  "610301": "reporting_interval.power_lora.minutes_of_time",
+		  "ef": "request_command_queries",
+		  "ee": "request_query_all_configurations",
 		  "cf": "lorawan_configuration_settings",
 		  "cf00": "lorawan_configuration_settings.mode",
 		  "df": "tsl_version",
@@ -1240,100 +1255,132 @@ function cmdMap() {
 function processTemperature(decoded) {
 	var allTemperatureProperties = {
     "temperature": {
-        "precision": 1
+        "precision": 1,
+        "unitName": "℃"
     },
     "target_temperature1": {
-        "precision": 1
+        "precision": 1,
+        "unitName": "℃"
     },
     "target_temperature2": {
-        "precision": 1
+        "precision": 1,
+        "unitName": "℃"
     },
     "target_temperature_settings.heat": {
-        "precision": null
+        "precision": null,
+        "unitName": "℃"
     },
     "target_temperature_settings.em_heat": {
-        "precision": null
+        "precision": null,
+        "unitName": "℃"
     },
     "target_temperature_settings.cool": {
-        "precision": null
+        "precision": null,
+        "unitName": "℃"
     },
     "target_temperature_settings.auto": {
-        "precision": null
+        "precision": null,
+        "unitName": "℃"
     },
     "target_temperature_settings.auto_heat": {
-        "precision": null
+        "precision": null,
+        "unitName": "℃"
     },
     "target_temperature_settings.auto_cool": {
-        "precision": null
+        "precision": null,
+        "unitName": "℃"
     },
     "target_temperature_settings.dehumidify": {
-        "precision": null
+        "precision": null,
+        "unitName": "℃"
     },
     "target_temperature_settings.ventilation": {
-        "precision": null
+        "precision": null,
+        "unitName": "℃"
     },
     "minimum_dead_zone": {
-        "precision": 1
+        "precision": 1,
+        "unitName": "℃"
     },
     "target_temperature_range.heat.min": {
-        "precision": 1
+        "precision": 1,
+        "unitName": "℃"
     },
     "target_temperature_range.heat.max": {
-        "precision": 1
+        "precision": 1,
+        "unitName": "℃"
     },
     "target_temperature_range.em_heat.min": {
-        "precision": 1
+        "precision": 1,
+        "unitName": "℃"
     },
     "target_temperature_range.em_heat.max": {
-        "precision": 1
+        "precision": 1,
+        "unitName": "℃"
     },
     "target_temperature_range.cool.min": {
-        "precision": 1
+        "precision": 1,
+        "unitName": "℃"
     },
     "target_temperature_range.cool.max": {
-        "precision": 1
+        "precision": 1,
+        "unitName": "℃"
     },
     "target_temperature_range.auto.min": {
-        "precision": 1
+        "precision": 1,
+        "unitName": "℃"
     },
     "target_temperature_range.auto.max": {
-        "precision": 1
+        "precision": 1,
+        "unitName": "℃"
     },
     "target_temperature_range.dehumidify.min": {
-        "precision": 1
+        "precision": 1,
+        "unitName": "℃"
     },
     "target_temperature_range.dehumidify.max": {
-        "precision": 1
+        "precision": 1,
+        "unitName": "℃"
     },
     "target_temperature_range.ventilation.min": {
-        "precision": 1
+        "precision": 1,
+        "unitName": "℃"
     },
     "target_temperature_range.ventilation.max": {
-        "precision": 1
+        "precision": 1,
+        "unitName": "℃"
     },
     "temperature_calibration_settings.calibration_value": {
-        "precision": 2
+        "precision": 2,
+        "unitName": "℃"
     },
     "schedule_settings._item.content1.heat_target_temperature": {
-        "precision": 1
+        "precision": 1,
+        "unitName": "℃"
     },
     "schedule_settings._item.content1.em_heat_target_temperature": {
-        "precision": 1
+        "precision": 1,
+        "unitName": "℃"
     },
     "schedule_settings._item.content1.cool_target_temperature": {
-        "precision": 1
+        "precision": 1,
+        "unitName": "℃"
     },
     "schedule_settings._item.content2.auto_target_temperature": {
-        "precision": 1
+        "precision": 1,
+        "unitName": "℃"
     },
     "schedule_settings._item.content2.auto_heat_target_temperature": {
-        "precision": 1
+        "precision": 1,
+        "unitName": "℃"
     },
     "schedule_settings._item.content2.auto_cool_target_temperature": {
-        "precision": 1
+        "precision": 1,
+        "unitName": "℃"
     },
     "origin_temperature": {
-        "precision": 1
+        "precision": 1,
+        "unitName": "℃"
     }
 };
 	var leafPaths = getAllLeafPaths(decoded);
@@ -1357,11 +1404,13 @@ function processTemperature(decoded) {
 		if (allTemperatureProperties[newPropertyId]) {
 			var fahrenheitProperty = convertName(propertyId, 'fahrenheit');
 			var celsiusProperty = convertName(propertyId, 'celsius');
+			var unitName = allTemperatureProperties[newPropertyId].unitName;
+			var constant = unitName == 'K' ? 0 : 32;
 			if (hasPath(decoded, propertyId)) {
-				setPath(decoded, fahrenheitProperty,  Number((getPath(decoded, propertyId) * 1.8 + 32).toFixed(allTemperatureProperties[newPropertyId].precision)));
+				setPath(decoded, fahrenheitProperty,  Number((getPath(decoded, propertyId) * 1.8 + constant).toFixed(allTemperatureProperties[newPropertyId].precision)));
 				setPath(decoded, celsiusProperty,  Number(getPath(decoded, propertyId).toFixed(allTemperatureProperties[newPropertyId].precision)));
 			}
-		}	
-	}	
+		}
+	}
 	return decoded;
 }

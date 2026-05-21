@@ -233,7 +233,7 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Name | 0x7B | 7 | rw |  |  |  |
 | Name | 0x7B | 5 | rw |  |  |  |
 | Schedule Content | 0x7B | 8 | rw |  |  |  |
-| Temperature Control Mode | 0x7B | 2 | rw | 0 | 0 - 255 | 0：heat<br>1：em heat<br>2：cool<br>3：auto<br>10：off |
+| Temperature Control Mode | 0x7B | 2 | rw | 0 | 0 - 255 | 0：heat<br>1：em heat<br>2：cool<br>3：auto<br>4：dehumidify<br>5：ventilation<br>10：off |
 | Heating Target Temperature | 0x7B | 3 | rw | 19 | 5 - 35 |  |
 | EM Heat Target Temperature | 0x7B | 3 | rw | 25 | 5 - 35 |  |
 | Cool Target Temperature | 0x7B | 3 | rw | 28 | 5 - 35 |  |
@@ -248,6 +248,8 @@ For more detailed information, please visit [Milesight Official Website](https:/
 
 | CHANNEL |  ID  | LENGTH | READ/WRITE | DEFAULT | RANGE | ENUM |
 | :------ | :--: | :----: | :--------: | :-----: | :---: | :--: |
+| Command Response | 0xEF | 1 | r |  |  |  |
+| Request to Push All Configurations | 0xEE | 1 | r |  |  |  |
 | Device Time | 0xB9 | M | r |  |  |  |
 | Battery Status | 0xB8 | M | r |  |  |  |
 | Temperature  Alarm | 0x0B | 1 | r |  |  |  |
@@ -261,6 +263,14 @@ For more detailed information, please visit [Milesight Official Website](https:/
 
 | CHANNEL |  ID  | LENGTH | READ/WRITE | DEFAULT | RANGE | ENUM |
 | :------ | :--: | :----: | :--------: | :-----: | :---: | :--: |
+| Command Queries | 0xEF | 1 | w |  |  |  |
+| Query Information | 0xEF | 2 | w |  |  |  |
+| Command Length | 0xEF | 2 | w | 1 | 1 - 15 |  |
+| The command that was queried | 0xEF | 1 | w |  |  |  |
+| Answer Result | 0xEF | 2 | r | 0 |  | 0：success<br>1：unknow<br>2：error order<br>3：error passwd<br>4：error read params<br>5：error write params<br>6：error read<br>7：error write<br>8：error read apply<br>9：error write apply |
+| Command Length | 0xEF | 2 | r | 1 | 1 - 15 |  |
+| Answered Commands | 0xEF | 1 | r |  |  |  |
+| Request to Query All Configurations | 0xEE | 1 | w |  |  |  |
 | Current Time | 0xB9 | 5 | r |  |  |  |
 | Operation Time | 0xB9 | 5 | r |  |  |  |
 | Power-On Time | 0xB9 | 5 | r |  |  |  |

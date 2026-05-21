@@ -28,6 +28,52 @@ function Encoder(obj, port) {
 function milesightDeviceEncode(payload) {
 	processTemperature(payload);
 	var encoded = [];
+	//0xef
+	if ('req' in payload) {
+		var buffer = new Buffer();
+		var reqList = payload.req;
+		for (var idx = 0; idx < reqList.length; idx++) {
+			var req_command = reqList[idx];
+			var pureNumber = [];
+			var formateStrParts = [];
+		
+			req_command.split('.').forEach(function(part) {
+				if (/^[0-9]+$/.test(part)) {
+					// padStart ES5 兼容
+					var hex = Number(part).toString(16);
+					while (hex.length < 2) { hex = '0' + hex; }
+					pureNumber.push(hex);
+					formateStrParts.push('_item');
+				} else {
+					formateStrParts.push(part);
+				}
+			});
+		
+			var formateStr = formateStrParts.join('.');
+			var hexString = cmdMap()[formateStr];
+		
+			if (hexString && hexString.indexOf('xx') !== -1) {
+				var i = 0;
+				hexString = hexString.replace(/xx/g, function() {
+					return pureNumber[i++];
+				});
+			}
+		
+			if (hexString) {
+				var length = hexString.length / 2;
+				buffer.writeUInt8(0xef);
+				buffer.writeUInt8(length);
+				buffer.writeHexString(hexString, length, true);
+			}
+		}
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0xee
+	if ('request_query_all_configurations' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0xee);
+		encoded = encoded.concat(buffer.toBytes());
+	}
 	//0xcf
 	if ('lorawan_configuration_settings' in payload) {
 		var buffer = new Buffer();
@@ -1289,7 +1335,7 @@ function milesightDeviceEncode(payload) {
 				if (schedule_settings_item.content1.tstat_mode < 0 || schedule_settings_item.content1.tstat_mode > 255) {
 					throw new Error('content1.tstat_mode must be between 0 and 255');
 				}
-				// 0：heat, 1：em heat, 2：cool, 3：auto, 10：off
+				// 0：heat, 1：em heat, 2：cool, 3：auto, 4：dehumidify, 5：ventilation, 10：off
 				buffer.writeUInt8(schedule_settings_item.content1.tstat_mode);
 				if (schedule_settings_item.content1.heat_target_temperature < 5 || schedule_settings_item.content1.heat_target_temperature > 35) {
 					throw new Error('content1.heat_target_temperature must be between 5 and 35');
@@ -1710,6 +1756,8 @@ function isInteger(str) {
 
 function cmdMap() {
 	return {
+		  "request_command_queries": "ef",
+		  "request_query_all_configurations": "ee",
 		  "lorawan_configuration_settings": "cf",
 		  "lorawan_configuration_settings.mode": "cf00",
 		  "tsl_version": "df",
@@ -1869,106 +1917,138 @@ function cmdMap() {
 function processTemperature(payload) {
 	var allTemperatureProperties = {
     "temperature": {
-        "coefficient": 0.01
+        "coefficient": 0.01,
+        "unitName": "℃"
     },
     "target_temperature1": {
-        "coefficient": 0.01
+        "coefficient": 0.01,
+        "unitName": "℃"
     },
     "target_temperature2": {
-        "coefficient": 0.01
+        "coefficient": 0.01,
+        "unitName": "℃"
     },
     "target_temperature_settings.heat": {
-        "coefficient": 0.01
+        "coefficient": 0.01,
+        "unitName": "℃"
     },
     "target_temperature_settings.em_heat": {
-        "coefficient": 0.01
+        "coefficient": 0.01,
+        "unitName": "℃"
     },
     "target_temperature_settings.cool": {
-        "coefficient": 0.01
+        "coefficient": 0.01,
+        "unitName": "℃"
     },
     "target_temperature_settings.auto": {
-        "coefficient": 0.01
+        "coefficient": 0.01,
+        "unitName": "℃"
     },
     "target_temperature_settings.auto_heat": {
-        "coefficient": 0.01
+        "coefficient": 0.01,
+        "unitName": "℃"
     },
     "target_temperature_settings.auto_cool": {
-        "coefficient": 0.01
+        "coefficient": 0.01,
+        "unitName": "℃"
     },
     "target_temperature_settings.dehumidify": {
-        "coefficient": 0.01
+        "coefficient": 0.01,
+        "unitName": "℃"
     },
     "target_temperature_settings.ventilation": {
-        "coefficient": 0.01
+        "coefficient": 0.01,
+        "unitName": "℃"
     },
     "minimum_dead_zone": {
-        "coefficient": 0.01
+        "coefficient": 0.01,
+        "unitName": "℃"
     },
     "target_temperature_range.heat.min": {
-        "coefficient": 0.01
+        "coefficient": 0.01,
+        "unitName": "℃"
     },
     "target_temperature_range.heat.max": {
-        "coefficient": 0.01
+        "coefficient": 0.01,
+        "unitName": "℃"
     },
     "target_temperature_range.em_heat.min": {
-        "coefficient": 0.01
+        "coefficient": 0.01,
+        "unitName": "℃"
     },
     "target_temperature_range.em_heat.max": {
-        "coefficient": 0.01
+        "coefficient": 0.01,
+        "unitName": "℃"
     },
     "target_temperature_range.cool.min": {
-        "coefficient": 0.01
+        "coefficient": 0.01,
+        "unitName": "℃"
     },
     "target_temperature_range.cool.max": {
-        "coefficient": 0.01
+        "coefficient": 0.01,
+        "unitName": "℃"
     },
     "target_temperature_range.auto.min": {
-        "coefficient": 0.01
+        "coefficient": 0.01,
+        "unitName": "℃"
     },
     "target_temperature_range.auto.max": {
-        "coefficient": 0.01
+        "coefficient": 0.01,
+        "unitName": "℃"
     },
     "target_temperature_range.dehumidify.min": {
-        "coefficient": 0.01
+        "coefficient": 0.01,
+        "unitName": "℃"
     },
     "target_temperature_range.dehumidify.max": {
-        "coefficient": 0.01
+        "coefficient": 0.01,
+        "unitName": "℃"
     },
     "target_temperature_range.ventilation.min": {
-        "coefficient": 0.01
+        "coefficient": 0.01,
+        "unitName": "℃"
     },
     "target_temperature_range.ventilation.max": {
-        "coefficient": 0.01
+        "coefficient": 0.01,
+        "unitName": "℃"
     },
     "temperature_calibration_settings.calibration_value": {
-        "coefficient": 0.01
+        "coefficient": 0.01,
+        "unitName": "℃"
     },
     "schedule_settings._item.content1.heat_target_temperature": {
-        "coefficient": 0.01
+        "coefficient": 0.01,
+        "unitName": "℃"
     },
     "schedule_settings._item.content1.em_heat_target_temperature": {
-        "coefficient": 0.01
+        "coefficient": 0.01,
+        "unitName": "℃"
     },
     "schedule_settings._item.content1.cool_target_temperature": {
-        "coefficient": 0.01
+        "coefficient": 0.01,
+        "unitName": "℃"
     },
     "schedule_settings._item.content2.auto_target_temperature": {
-        "coefficient": 0.01
+        "coefficient": 0.01,
+        "unitName": "℃"
     },
     "schedule_settings._item.content2.auto_heat_target_temperature": {
-        "coefficient": 0.01
+        "coefficient": 0.01,
+        "unitName": "℃"
     },
     "schedule_settings._item.content2.auto_cool_target_temperature": {
-        "coefficient": 0.01
+        "coefficient": 0.01,
+        "unitName": "℃"
     },
     "origin_temperature": {
-        "coefficient": 0.01
+        "coefficient": 0.01,
+        "unitName": "℃"
     }
 };
-    var leafPaths = getAllLeafPaths(payload);    
+    var leafPaths = getAllLeafPaths(payload);
 	for (var i = 0; i < leafPaths.length; i++) {
         var propertyId = leafPaths[i];
-        var propertyParts = propertyId.split('.');        
+        var propertyParts = propertyId.split('.');
         var newPropertyParts = []
         for (var j = 0; j < propertyParts.length; j++) {
             var part = propertyParts[j];
@@ -1983,23 +2063,25 @@ function processTemperature(payload) {
         newPropertyId = recoverName(newPropertyId, 'celsius');
         propertyId = recoverName(propertyId, 'fahrenheit');
         propertyId = recoverName(propertyId, 'celsius');
-        if (allTemperatureProperties[newPropertyId]) {            
+        if (allTemperatureProperties[newPropertyId]) {
+            var unitName = allTemperatureProperties[newPropertyId].unitName;
+            var constant = unitName == 'K' ? 0 : 32;
             var fahrenheitProperty = convertName(propertyId, 'fahrenheit');
             var celsiusProperty = convertName(propertyId, 'celsius');
             var stringCoefficient = String(allTemperatureProperties[newPropertyId].coefficient);
             var dotIndex = stringCoefficient.indexOf('.');
             var precision = dotIndex != -1 ? stringCoefficient.length - dotIndex - 1 : 0;
             if (!hasPath(payload, propertyId)) {
-                if (hasPath(payload, fahrenheitProperty) && hasPath(payload, celsiusProperty)) { 
+                if (hasPath(payload, fahrenheitProperty) && hasPath(payload, celsiusProperty)) {
                     throw new Error(fahrenheitProperty + ' and ' + celsiusProperty + ' cannot be in payload at the same time');
                 }
                 if (hasPath(payload, fahrenheitProperty)) {
-                    setPath(payload, propertyId, Number(((getPath(payload, fahrenheitProperty) - 32) / 1.8).toFixed(precision)));
+                    setPath(payload, propertyId, Number(((getPath(payload, fahrenheitProperty) - constant) / 1.8).toFixed(precision)));
                 } else if (hasPath(payload, celsiusProperty)) {
                     setPath(payload, propertyId, Number(getPath(payload, celsiusProperty).toFixed(precision)));
                 }
             }
         }
-	}	
+	}
 	return payload;
 }
