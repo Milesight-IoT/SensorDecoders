@@ -255,8 +255,8 @@ function milesightDeviceEncode(payload) {
 	if ('execution_plan_id' in payload) {
 		var buffer = new Buffer();
 		buffer.writeUInt8(0x05);
-		if (payload.execution_plan_id < 0 || payload.execution_plan_id > 16) {
-			throw new Error('execution_plan_id must be between 0 and 16');
+		if (payload.execution_plan_id < 0 || payload.execution_plan_id > 255) {
+			throw new Error('execution_plan_id must be between 0 and 255');
 		}
 		// 0:plan0, 1:plan1, 2:plan2, 3:plan3, 4:plan4, 5:plan5, 6:plan6, 7:plan7, 8:plan8, 9:plan9, 10:plan10, 11:plan11, 12:plan12, 13:plan13, 14:plan14, 15:plan15, 255:Not executed
 		buffer.writeUInt8(payload.execution_plan_id);

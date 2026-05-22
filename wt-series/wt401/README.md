@@ -35,7 +35,7 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Target Temperature1 | 0x06 | 3 | r |  | 5 - 35 |  |
 | Target Temperature2 | 0x07 | 3 | r |  | 5 - 35 |  |
 | Fan Mode | 0x04 | 2 | r | 0 |  | 0：auto<br>1：circulate<br>2：on<br>3：low<br>4：medium<br>5：high<br>10：off<br>11：none/keep |
-| Schedule | 0x05 | 2 | r | 0 | 0 - 16 | 0:plan0<br>1:plan1<br>2:plan2<br>3:plan3<br>4:plan4<br>5:plan5<br>6:plan6<br>7:plan7<br>8:plan8<br>9:plan9<br>10:plan10<br>11:plan11<br>12:plan12<br>13:plan13<br>14:plan14<br>15:plan15<br>255:Not executed |
+| Schedule | 0x05 | 2 | r | 0 | 0 - 255 | 0:plan0<br>1:plan1<br>2:plan2<br>3:plan3<br>4:plan4<br>5:plan5<br>6:plan6<br>7:plan7<br>8:plan8<br>9:plan9<br>10:plan10<br>11:plan11<br>12:plan12<br>13:plan13<br>14:plan14<br>15:plan15<br>255:Not executed |
 | Collecting Interval | 0x60 | 1 | rw |  |  |  |
 | Collecting Interval Unit | 0x60 | 2 | rw | 0 |  | 0：second<br>1：min |
 |  Collecting Interval | 0x60 | 3 | rw | 30 | 1 - 3600 |  |
