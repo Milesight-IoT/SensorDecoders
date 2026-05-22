@@ -187,6 +187,11 @@ function handle_downlink_response(channel_type, bytes, offset) {
     var decoded = {};
 
     switch (channel_type) {
+        case 0x03:
+            // skip the first byte
+            decoded.report_interval = readUInt16LE(bytes.slice(offset + 1, offset + 3));
+            offset += 3;
+            break;
         case 0x06:
             var data = readUInt8(bytes[offset]);
             var trigger_source = (data >>> 3) & 0x07;
@@ -252,11 +257,6 @@ function handle_downlink_response(channel_type, bytes, offset) {
         case 0x84:
             decoded.d2d_enable = readEnableStatus(bytes[offset]);
             offset += 1;
-            break;
-        case 0x8e:
-            // skip the first byte
-            decoded.report_interval = readUInt16LE(bytes.slice(offset + 1, offset + 3));
-            offset += 3;
             break;
         case 0x96:
             var d2d_master_config = {};
