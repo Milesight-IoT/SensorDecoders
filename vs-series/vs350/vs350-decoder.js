@@ -188,9 +188,8 @@ function handle_downlink_response(channel_type, bytes, offset) {
 
     switch (channel_type) {
         case 0x03:
-            // skip the first byte
-            decoded.report_interval = readUInt16LE(bytes.slice(offset + 1, offset + 3));
-            offset += 3;
+            decoded.report_interval = readUInt16LE(bytes.slice(offset, offset + 2));
+            offset += 2;
             break;
         case 0x06:
             var data = readUInt8(bytes[offset]);
