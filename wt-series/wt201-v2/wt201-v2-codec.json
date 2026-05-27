@@ -304,21 +304,21 @@
             "bacnet_unit_type": "UNITS_MINUTES"
         },
         {
-            "id": "temperature_unit",
-            "name": "Temperature Unit",
-            "value": "",
+            "id": "temperature_unit.value",
+            "name": "Temperature Unit (Value)",
+            "value": "2",
             "unit": "",
             "access_mode": "RW",
             "data_type": "ENUM",
             "value_type": "UINT8",
             "values": [
                 {
-                    "value": 1,
-                    "name": "celsius"
-                },
-                {
                     "value": 2,
                     "name": "fahrenheit"
+                },
+                {
+                    "value": 1,
+                    "name": "celsius"
                 }
             ],
             "bacnet_type": "multistate_value_object",
