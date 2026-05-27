@@ -81,7 +81,7 @@
                 { "value": 2, "name": "Class C" },
                 { "value": 3, "name": "Class CtoB" }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS"
         },
@@ -154,7 +154,7 @@
                 { "value": 1, "name": "over range alarm" },
                 { "value": 2, "name": "read failed" }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS"
         },
@@ -271,7 +271,7 @@
                 { "value": 1, "name": "over range alarm" },
                 { "value": 2, "name": "read failed" }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS"
         },
@@ -287,7 +287,7 @@
                 { "value": 0, "name": "temperature threshold alarm release" },
                 { "value": 1, "name": "temperature threshold alarm" }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS"
         },
@@ -523,7 +523,7 @@
                     "value": 0
                 }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": []
@@ -546,7 +546,7 @@
                     "value": 1
                 }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_output_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS"
         },
