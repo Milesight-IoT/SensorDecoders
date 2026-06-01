@@ -50,8 +50,14 @@
             "data_type": "BOOL",
             "value_type": "UINT8",
             "values": [
-                { "value": 0, "name": "off" },
-                { "value": 1, "name": "on" }
+                {
+                    "value": 0,
+                    "name": "off"
+                },
+                {
+                    "value": 1,
+                    "name": "on"
+                }
             ],
             "bacnet_type": "binary_input_object",
             "bacnet_unit_type_id": 95,
@@ -66,10 +72,22 @@
             "data_type": "ENUM",
             "value_type": "UINT8",
             "values": [
-                { "value": 0, "name": "Class A" },
-                { "value": 1, "name": "Class B" },
-                { "value": 2, "name": "Class C" },
-                { "value": 3, "name": "Class CtoB" }
+                {
+                    "value": 0,
+                    "name": "Class A"
+                },
+                {
+                    "value": 1,
+                    "name": "Class B"
+                },
+                {
+                    "value": 2,
+                    "name": "Class C"
+                },
+                {
+                    "value": 3,
+                    "name": "Class CtoB"
+                }
             ],
             "bacnet_type": "multistate_value_object",
             "bacnet_unit_type_id": 95,
@@ -619,6 +637,30 @@
         {
             "id": "d_to_d",
             "name": "D to D",
+            "value": "0",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "NUMBER",
+            "value_type": "UINT16",
+            "bacnet_type": "analog_input_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS"
+        },
+        {
+            "id": "people_total_in",
+            "name": "People Total In",
+            "value": "0",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "NUMBER",
+            "value_type": "UINT16",
+            "bacnet_type": "analog_input_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS"
+        },
+        {
+            "id": "people_total_out",
+            "name": "People Total Out",
             "value": "0",
             "unit": "",
             "access_mode": "R",
