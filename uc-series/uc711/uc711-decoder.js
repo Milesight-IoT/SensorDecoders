@@ -920,6 +920,30 @@ function patchDecode(decoded) {
 	if (decoded.temperature_alarm && decoded.temperature_alarm.type == 0x11) {
 		decoded.anti_freeze_protection_status = 1;
 	}
+
+	if (decoded.relay_status_change) {
+		var relay = [];
+		if (decoded.relay_status_change.Y1 == 1) {
+			relay.push('Y1');
+		}
+		if (decoded.relay_status_change.W1 == 1) {
+			relay.push('W1');
+		}
+		if (decoded.relay_status_change.OB == 1) {
+			relay.push('OB');
+		}
+		if (decoded.relay_status_change.GL == 1) {
+			relay.push('GL');
+		}
+		if (decoded.relay_status_change.GM == 1) {
+			relay.push('GM');
+		}
+		if (decoded.relay_status_change.GH == 1) {
+			relay.push('GH');
+		}
+		decoded.enabled_relay = relay.length > 0 ? relay.join('&') : 'off';
+	}
+
 	return decoded;
 }
 
