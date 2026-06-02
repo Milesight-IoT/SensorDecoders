@@ -26,6 +26,7 @@ function Decoder(bytes, port) {
 }
 /* eslint-enable */
 
+
 function milesightDeviceDecode(bytes) {
     var decoded = {
         device: {
@@ -41,16 +42,30 @@ function milesightDeviceDecode(bytes) {
                 slot: 1,
                 type: "Temperature",
                 unit: "Celsius",
-                values: [{}]
+                values: []
             },
             {
                 slot: 1,
                 type: "Humidity",
                 unit: "Percent",
-                values: [{}]
+                values: []
             }
         ]
     };
+
+    function pushSensorData(temperature, humidity , timestamp) {
+        var time = new Date(timestamp * 1000).toISOString();
+        decoded.sensors[0].values.push({
+            value: temperature,
+            time: time,
+        })
+
+        decoded.sensors[1].values.push( {
+            value: humidity,
+            time: time,
+        })
+    }
+
 
     for (var i = 0; i < bytes.length;) {
         var channel_id = bytes[i++];
@@ -91,31 +106,21 @@ function milesightDeviceDecode(bytes) {
             var timestamp = readUInt32LE(bytes.slice(i, i + 4))
             i += 4;
             var temperature = readInt16LE(bytes.slice(i, i + 2)) / 10;
-            var temperatureISOString = new Date(timestamp * 1000).toISOString();
             i += 2;
             var humidity = readUInt8(bytes[i]) / 2;
             i += 1;
 
-            decoded.sensors[0].values[0] = {
-                value: temperature,
-                time: temperatureISOString,
-            }
-
-            decoded.sensors[1].values[0] = {
-                value: humidity,
-                time: temperatureISOString,
-            }
+            pushSensorData(temperature, humidity, timestamp)
         }
 
         // HISTORY
         else if (channel_id === 0x20 && channel_type === 0xce) {
-            var data = {};
-            data.timestamp = readUInt32LE(bytes.slice(i, i + 4));
-            data.temperature = readInt16LE(bytes.slice(i + 4, i + 6)) / 10;
-            data.humidity = readUInt8(bytes[i + 6]) / 2;
+            var _timestamp = readUInt32LE(bytes.slice(i, i + 4));
+            var _temperature = readInt16LE(bytes.slice(i + 4, i + 6)) / 10;
+            var _humidity = readUInt8(bytes[i + 6]) / 2;
             i += 7;
-            decoded.history = decoded.history || [];
-            decoded.history.push(data);
+
+            pushSensorData(_temperature, _humidity, _timestamp)
         }
 
         // TSL VERSION
