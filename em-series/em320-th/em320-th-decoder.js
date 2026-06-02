@@ -27,73 +27,86 @@ function Decoder(bytes, port) {
 /* eslint-enable */
 
 function milesightDeviceDecode(bytes) {
-    var decoded = {};
+    var decoded = {
+        device: {
+            model: "EM320-TH",
+            type: "MSL"
+        },
+        payload: {
+            type: "Reading",
+            version: 1
+        },
+        sensors: [
+            {
+                slot: 1,
+                type: "Temperature",
+                unit: "Celsius",
+                values: [{}]
+            },
+            {
+                slot: 1,
+                type: "Humidity",
+                unit: "Percent",
+                values: [{}]
+            }
+        ]
+    };
 
     for (var i = 0; i < bytes.length;) {
         var channel_id = bytes[i++];
         var channel_type = bytes[i++];
 
-        // IPSO VERSION
-        if (channel_id === 0xff && channel_type === 0x01) {
-            decoded.ipso_version = readProtocolVersion(bytes[i]);
-            i += 1;
-        }
-        // HARDWARE VERSION
-        else if (channel_id === 0xff && channel_type === 0x09) {
-            decoded.hardware_version = readHardwareVersion(bytes.slice(i, i + 2));
-            i += 2;
-        }
-        // FIRMWARE VERSION
-        else if (channel_id === 0xff && channel_type === 0x0a) {
-            decoded.firmware_version = readFirmwareVersion(bytes.slice(i, i + 2));
-            i += 2;
-        }
-        // TSL VERSION
-        else if (channel_id === 0xff && channel_type === 0xff) {
-            decoded.tsl_version = readTslVersion(bytes.slice(i, i + 2));
-            i += 2;
-        }
-        // SERIAL NUMBER
-        else if (channel_id === 0xff && channel_type === 0x16) {
-            decoded.sn = readSerialNumber(bytes.slice(i, i + 8));
-            i += 8;
-        }
-        // LORAWAN CLASS TYPE
-        else if (channel_id === 0xff && channel_type === 0x0f) {
-            decoded.lorawan_class = readLoRaWANClass(bytes[i]);
-            i += 1;
-        }
-        // RESET EVENT
-        else if (channel_id === 0xff && channel_type === 0xfe) {
-            decoded.reset_event = readResetEvent(1);
-            i += 1;
-        }
-        // DEVICE STATUS
-        else if (channel_id === 0xff && channel_type === 0x0b) {
-            decoded.device_status = readDeviceStatus(1);
+        // BATTERY
+        if (channel_id === 0x01 && channel_type === 0x75) {
+            decoded.device.batteryPercent = readUInt8(bytes[i]);
             i += 1;
         }
 
-        // BATTERY
-        else if (channel_id === 0x01 && channel_type === 0x75) {
-            decoded.battery = readUInt8(bytes[i]);
-            i += 1;
-        }
-        // TEMPERATURE
-        else if (channel_id === 0x03 && channel_type === 0x67) {
-            decoded.temperature = readInt16LE(bytes.slice(i, i + 2)) / 10;
+        // FIRMWARE VERSION
+        else if (channel_id === 0xff && channel_type === 0x0a) {
+            decoded.device.firmwareVersion = readFirmwareVersion(bytes.slice(i, i + 2));
             i += 2;
         }
-        // HUMIDITY
-        else if (channel_id === 0x04 && channel_type === 0x68) {
-            decoded.humidity = readUInt8(bytes[i]) / 2;
+
+        // HARDWARE VERSION
+        else if (channel_id === 0xff && channel_type === 0x09) {
+            decoded.device.hardwareVersion = readHardwareVersion(bytes.slice(i, i + 2));
+            i += 2;
+        }
+
+        // SERIAL NUMBER
+        else if (channel_id === 0xff && channel_type === 0x16) {
+            decoded.device.serial = readSerialNumber(bytes.slice(i, i + 8));
+            i += 8;
+        }
+
+        // IPSO VERSION
+        else if (channel_id === 0xff && channel_type === 0x01) {
+            decoded.payload.version = readProtocolVersion(bytes[i]);
             i += 1;
         }
-        // STORAGE STATUS (V1.7+, cert version only)
-        else if (channel_id === 0x05 && channel_type === 0x9c) {
-            decoded.storage_status = readStorageStatus(bytes[i]);
+
+        // TEMPERATURE & HUMIDITY
+        else if (channel_id === 0x03 && channel_type === 0xac) {
+            var timestamp = readUInt32LE(bytes.slice(i, i + 4))
+            i += 4;
+            var temperature = readInt16LE(bytes.slice(i, i + 2)) / 10;
+            var temperatureISOString = new Date(timestamp * 1000).toISOString();
+            i += 2;
+            var humidity = readUInt8(bytes[i]) / 2;
             i += 1;
+
+            decoded.sensors[0].values[0] = {
+                value: temperature,
+                time: temperatureISOString,
+            }
+
+            decoded.sensors[1].values[0] = {
+                value: humidity,
+                time: temperatureISOString,
+            }
         }
+
         // HISTORY
         else if (channel_id === 0x20 && channel_type === 0xce) {
             var data = {};
@@ -104,11 +117,42 @@ function milesightDeviceDecode(bytes) {
             decoded.history = decoded.history || [];
             decoded.history.push(data);
         }
+
+        // TSL VERSION
+        else if (channel_id === 0xff && channel_type === 0xff) {
+            decoded.tsl_version = readTslVersion(bytes.slice(i, i + 2));
+        }
+
+        // LORAWAN CLASS TYPE
+        else if (channel_id === 0xff && channel_type === 0x0f) {
+            decoded.lorawan_class = readLoRaWANClass(bytes[i]);
+            i += 1;
+        }
+
+        // RESET EVENT
+        else if (channel_id === 0xff && channel_type === 0xfe) {
+            decoded.reset_event = readResetEvent(1);
+            i += 1;
+        }
+
+        // DEVICE STATUS
+        else if (channel_id === 0xff && channel_type === 0x0b) {
+            decoded.device_status = readDeviceStatus(1);
+            i += 1;
+        }
+
+        // STORAGE STATUS (V1.7+, cert version only)
+        else if (channel_id === 0x05 && channel_type === 0x9c) {
+            decoded.storage_status = readStorageStatus(bytes[i]);
+            i += 1;
+        }
+
         // FULL STORAGE ALARM ENABLE (V1.7+, cert version only)
         else if (channel_id === 0xf9 && channel_type === 0xc9) {
             decoded.full_storage_alarm_enable = readEnableStatus(bytes[i]);
             i += 1;
         }
+
         // DOWNLINK RESPONSE
         else if (channel_id === 0xfe || channel_id === 0xff || channel_id === 0xf8) {
             var result = handle_downlink_response(channel_id, channel_type, bytes, i);
