@@ -59,20 +59,11 @@ function milesightDeviceEncode(payload) {
     if ("gas_calibration_config" in payload) {
         encoded = encoded.concat(setGasCalibrationConfig(payload.gas_calibration_config));
     }
+    if ("sensor_status" in payload) {
+        encoded = encoded.concat(setSensorStatus(payload.sensor_status));
+    }
     if ("co2_abc_calibration_schedule" in payload) {
         encoded = encoded.concat(setCO2AutoBackgroundCalibrationConfig(payload.co2_abc_calibration_schedule));
-    }
-    if ("temperature_calibration_settings" in payload) {
-        encoded = encoded.concat(setTemperatureCalibrationValueConfig(payload.temperature_calibration_settings));
-    }
-    if ("co2_calibration_settings" in payload) {
-        encoded = encoded.concat(setCO2CalibrationValueConfig(payload.co2_calibration_settings));
-    }
-    if ("humidity_calibration_settings" in payload) {
-        encoded = encoded.concat(setHumidityCalibrationValueConfig(payload.humidity_calibration_settings));
-    }
-    if ("pressure_calibration_settings" in payload) {
-        encoded = encoded.concat(setPressureCalibrationValueConfig(payload.pressure_calibration_settings));
     }
     if ("altitude_calibration_settings" in payload) {
         encoded = encoded.concat(setAltitudeCalibrationConfig(payload.altitude_calibration_settings));
@@ -82,12 +73,6 @@ function milesightDeviceEncode(payload) {
     }
     if ("gas_alarm_config" in payload) {
         encoded = encoded.concat(setGasThresholdAlarmConfig(payload.gas_alarm_config));
-    }
-    if ("temperature_alarm_config" in payload) {
-        encoded = encoded.concat(setTemperatureThresholdAlarmConfig(payload.temperature_alarm_config));
-    }
-    if ("temperature_mutation_alarm_config" in payload) {
-        encoded = encoded.concat(setTemperatureMutationAlarmConfig(payload.temperature_mutation_alarm_config));
     }
     if ("alarm_report_counts" in payload) {
         encoded = encoded.concat(alarmReportCounts(payload.alarm_report_counts));
@@ -309,23 +294,149 @@ function setRecollectionConfig(recollection_config) {
  * @param {object} gas_calibration_config
  * @param {number} gas_calibration_config.type values: (0: Zero Calibration, 1: Target Calibration)
  * @param {number} gas_calibration_config.calibration_value
- * @example { "gas_calibration_config": { "type": 1, "calibration_value": 10 } }
+ * @example { "gas_calibration_config": { "type": 1, "calibration_value": 11.2 } }
  */
 function setGasCalibrationConfig(gas_calibration_config) {
     var type = gas_calibration_config.type;
     var calibration_value = gas_calibration_config.calibration_value;
 
     var type_map = { 0: "Zero Calibration", 1: "Target Calibration" };
-    var type_values = getValues(type_map);
-    if (type_values.indexOf(type) == -1) {
-        throw new Error("gas_calibration_config.type must be one of " + type_values.join(", "));
+    var type_value = getMappedValue(type_map, type);
+    if (type_value === 0) {
+        calibration_value = 0;
+    } else if (typeof calibration_value !== "number") {
+        throw new Error("gas_calibration_config.calibration_value must be a number");
     }
 
-    var buffer = new Buffer(5);
+    var buffer = new Buffer(7);
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0x1a);
-    buffer.writeUInt8(getValue(type_map, type));
-    buffer.writeUInt16LE(calibration_value * 100);
+    buffer.writeUInt8(type_value);
+    buffer.writeUInt32LE(Math.round(calibration_value * 1000));
+    return buffer.toBytes();
+}
+
+/**
+ * set sensor status
+ * @param {object} sensor_status
+ * @param {number} sensor_status.gas_type
+ * @param {number} sensor_status.value
+ * @param {number} sensor_status.range
+ * @param {number} sensor_status.decimal range: [0, 15]
+ * @param {number} sensor_status.status values: (0: normal, 1: warning, 2: error, 3: invalid/undetected)
+ * @param {number} sensor_status.unit values: (0: ppm, 1: ppb, 2: %vol, 3: invalid)
+ * @example { "sensor_status": { "gas_type": 1, "value": 11.2, "range": 100, "decimal": 1, "status": 0, "unit": 2 } }
+ */
+function setSensorStatus(sensor_status) {
+    var gas_type = sensor_status.gas_type;
+    var value = sensor_status.value;
+    var range = sensor_status.range;
+    var decimal = sensor_status.decimal;
+    var status = sensor_status.status;
+    var unit = sensor_status.unit;
+
+    var gas_type_map = {
+        0x00: "UNKNOWN",
+        0x01: "O2",
+        0x03: "H2S",
+        0x05: "NH3",
+        0x0f: "C2H4",
+        0x10: "VOC",
+        0x11: "SMELL",
+        0x17: "HCHO",
+        0x18: "VOC",
+        0x19: "CO",
+        0x1a: "Cl2",
+        0x1b: "H2",
+        0x1c: "H2S",
+        0x1d: "HCl",
+        0x1e: "HCN",
+        0x1f: "HF",
+        0x20: "NH3",
+        0x21: "NO2",
+        0x22: "O2",
+        0x23: "O3",
+        0x24: "SO2",
+        0x25: "HBr",
+        0x26: "Br2",
+        0x27: "F2",
+        0x28: "PH3",
+        0x29: "AsH3",
+        0x2a: "SiH4",
+        0x2b: "GeH4",
+        0x2c: "B2H6",
+        0x2d: "BF3",
+        0x2e: "WF6",
+        0x2f: "SiF4",
+        0x30: "XeF2",
+        0x31: "TiF4",
+        0x32: "SMELL",
+        0x33: "IAQ",
+        0x34: "AQI",
+        0x35: "NMHC",
+        0x36: "SOx",
+        0x37: "NOx",
+        0x38: "NO",
+        0x39: "C4H8",
+        0x3a: "C3H8O2",
+        0x3b: "CH4S",
+        0x3c: "C8H8",
+        0x3d: "C4H10",
+        0x3e: "C2H6",
+        0x3f: "C6H14",
+        0x40: "ETO",
+        0x41: "C3H9N",
+        0x42: "C2H7N",
+        0x43: "C2H6O",
+        0x44: "CS2",
+        0x45: "C2H6S",
+        0x46: "C2H6S2",
+        0x47: "C2H4",
+        0x48: "CH3OH",
+        0x49: "C6H6",
+        0x4a: "C8H10",
+        0x4b: "C7H8",
+        0x4c: "CH3COOH",
+        0x4d: "ClO2",
+        0x4e: "H2O2",
+        0x4f: "N2H4",
+        0x50: "C2H8N2",
+        0x51: "C2HCl3",
+        0x52: "CHCl3",
+        0x53: "C2H3Cl3",
+        0x54: "H2Se",
+        0x55: "LEL",
+        0x56: "CO2",
+        0x57: "PID_VOCS",
+        0xd0: "OTHERS",
+    };
+    var status_map = { 0: "normal", 1: "warning", 2: "error", 3: "invalid/undetected" };
+    var unit_map = { 0: "ppm", 1: "ppb", 2: "%vol", 3: "invalid" };
+    var gas_type_value = getMappedValue(gas_type_map, gas_type);
+    if (typeof value !== "number") {
+        throw new Error("sensor_status.value must be a number");
+    }
+    if (typeof range !== "number") {
+        throw new Error("sensor_status.range must be a number");
+    }
+    if (typeof decimal !== "number" || decimal < 0 || decimal > 15) {
+        throw new Error("sensor_status.decimal must be a number from 0 to 15");
+    }
+    var status_value = getMappedValue(status_map, status);
+    var unit_value = getMappedValue(unit_map, unit);
+
+    var flags = 0x00;
+    flags |= decimal & 0x0f;
+    flags |= status_value << 4;
+    flags |= unit_value << 6;
+
+    var buffer = new Buffer(10);
+    buffer.writeUInt8(0x02);
+    buffer.writeUInt8(0xbd);
+    buffer.writeUInt8(gas_type_value);
+    buffer.writeUInt32LE(Math.round(value * Math.pow(10, decimal)));
+    buffer.writeUInt16LE(range);
+    buffer.writeUInt8(flags);
     return buffer.toBytes();
 }
 
@@ -359,117 +470,6 @@ function setCO2AutoBackgroundCalibrationConfig(co2_abc_calibration_schedule) {
 }
 
 /**
- * set temperature calibration value
- * @since hardware_version v2.0, firmware_version v1.7
- * @param {object} temperature_calibration_settings
- * @param {number} temperature_calibration_settings.enable values: (0: disable, 1: enable)
- * @param {number} temperature_calibration_settings.calibration_value
- * @example { "temperature_calibration_settings": { "enable": 1, "calibration_value": 23 } }
- */
-function setTemperatureCalibrationValueConfig(temperature_calibration_settings) {
-    var enable = temperature_calibration_settings.enable;
-    var calibration_value = temperature_calibration_settings.calibration_value;
-
-    var enable_map = { 0: "disable", 1: "enable" };
-    var enable_values = getValues(enable_map);
-    if (enable_values.indexOf(enable) === -1) {
-        throw new Error("temperature_calibration_settings.enable must be one of " + enable_values.join(", "));
-    }
-
-    var buffer = new Buffer(6);
-    buffer.writeUInt8(0xff);
-    buffer.writeUInt8(0xf1);
-    buffer.writeUInt8(0x00); // temperature
-    buffer.writeUInt8(getValue(enable_map, enable));
-    buffer.writeInt16LE(calibration_value * 10);
-    return buffer.toBytes();
-}
-
-/**
- * set CO2 calibration value
- * @since hardware_version v2.0, firmware_version v1.7
- * @param {object} co2_calibration_settings
- * @param {number} co2_calibration_settings.enable values: (0: disable, 1: enable)
- * @param {number} co2_calibration_settings.calibration_value
- * @example { "co2_calibration_settings": { "enable": 1, "calibration_value": 1000 } }
- */
-function setCO2CalibrationValueConfig(co2_calibration_settings) {
-    var enable = co2_calibration_settings.enable;
-    var calibration_value = co2_calibration_settings.calibration_value;
-
-    var enable_map = { 0: "disable", 1: "enable" };
-    var enable_values = getValues(enable_map);
-    if (enable_values.indexOf(enable) === -1) {
-        throw new Error("co2_calibration_settings.enable must be one of " + enable_values.join(", "));
-    }
-
-    var buffer = new Buffer(6);
-    buffer.writeUInt8(0xff);
-    buffer.writeUInt8(0xf1);
-    buffer.writeUInt8(0x04); // co2
-    buffer.writeUInt8(getValue(enable_map, enable));
-    buffer.writeInt16LE(calibration_value);
-    return buffer.toBytes();
-}
-
-/**
- * set humidity calibration value
- * @since hardware_version v2.0, firmware_version v1.7
- * @param {object} humidity_calibration_settings
- * @param {number} humidity_calibration_settings.enable values: (0: disable, 1: enable)
- * @param {number} humidity_calibration_settings.calibration_value
- * @example { "humidity_calibration_settings": { "enable": 1, "calibration_value": 50 } }
- */
-function setHumidityCalibrationValueConfig(humidity_calibration_settings) {
-    var enable = humidity_calibration_settings.enable;
-    var calibration_value = humidity_calibration_settings.calibration_value;
-
-    var enable_map = { 0: "disable", 1: "enable" };
-    var enable_values = getValues(enable_map);
-    if (enable_values.indexOf(enable) === -1) {
-        throw new Error("humidity_calibration_settings.enable must be one of " + enable_values.join(", "));
-    }
-
-    var buffer = new Buffer(6);
-    buffer.writeUInt8(0xff);
-
-    var buffer = new Buffer(6);
-    buffer.writeUInt8(0xff);
-    buffer.writeUInt8(0xf1);
-    buffer.writeUInt8(0x09);
-    buffer.writeUInt8(getValue(enable_map, enable));
-    buffer.writeInt16LE(calibration_value * 2);
-    return buffer.toBytes();
-}
-
-/**
- * set pressure calibration value
- * @since hardware_version v2.0, firmware_version v1.7
- * @param {object} pressure_calibration_settings
- * @param {number} pressure_calibration_settings.enable values: (0: disable, 1: enable)
- * @param {number} pressure_calibration_settings.calibration_value
- * @example { "pressure_calibration_settings": { "enable": 1, "calibration_value": 1000 } }
- */
-function setPressureCalibrationValueConfig(pressure_calibration_settings) {
-    var enable = pressure_calibration_settings.enable;
-    var calibration_value = pressure_calibration_settings.calibration_value;
-
-    var enable_map = { 0: "disable", 1: "enable" };
-    var enable_values = getValues(enable_map);
-    if (enable_values.indexOf(enable) === -1) {
-        throw new Error("pressure_calibration_settings.enable must be one of " + enable_values.join(", "));
-    }
-
-    var buffer = new Buffer(6);
-    buffer.writeUInt8(0xff);
-    buffer.writeUInt8(0xf1);
-    buffer.writeUInt8(0x05);
-    buffer.writeUInt8(getValue(enable_map, enable));
-    buffer.writeInt16LE(calibration_value * 10);
-    return buffer.toBytes();
-}
-
-/**
  * set pressure calibration config
  * @param {object} altitude_calibration_settings
  * @param {number} altitude_calibration_settings.mode values: (0: disable, 1: auto, 2: manual)
@@ -483,7 +483,7 @@ function setAltitudeCalibrationConfig(altitude_calibration_settings) {
     var mode_map = { 0: "disable", 1: "auto", 2: "manual" };
     var mode_values = getValues(mode_map);
     if (mode_values.indexOf(mode) == -1) {
-        throw new Error("pressure_calibration_settings.mode must be one of " + mode_values.join(", "));
+        throw new Error("altitude_calibration_settings.mode must be one of " + mode_values.join(", "));
     }
 
     var buffer = new Buffer(5);
@@ -526,113 +526,30 @@ function setSensorFunctionConfig(sensor_function_config) {
  * set gas threshold alarm config
  * @param {object} gas_alarm_config
  * @param {number} gas_alarm_config.enable values: (0: disable, 1: enable)
- * @param {number} gas_alarm_config.condition values: (0: disable, 1: below, 2: above, 3: between, 4: outside, 5: mutation)
- * @param {number} gas_alarm_config.threshold_min unit: ppm
- * @param {number} gas_alarm_config.threshold_max unit: ppm
- * @example { "gas_alarm_config": { "enable": 1, "condition": 1, "threshold_max": 10, "threshold_min": 10 } }
+ * @param {number} gas_alarm_config.threshold_1
+ * @param {number} gas_alarm_config.threshold_2
+ * @example { "gas_alarm_config": { "enable": 1, "threshold_1": 100, "threshold_2": 200 } }
  */
 function setGasThresholdAlarmConfig(gas_alarm_config) {
     var enable = gas_alarm_config.enable;
-    var condition = gas_alarm_config.condition;
-    var threshold_max = gas_alarm_config.threshold_max;
-    var threshold_min = gas_alarm_config.threshold_min;
+    var threshold_1 = gas_alarm_config.threshold_1;
+    var threshold_2 = gas_alarm_config.threshold_2;
 
-    var condition_map = { 0: "disable", 1: "below", 2: "above", 3: "between", 4: "outside", 5: "mutation" };
-    var condition_values = getValues(condition_map);
-    if (condition_values.indexOf(condition) == -1) {
-        throw new Error("gas_alarm_config.condition must be one of " + condition_values.join(", "));
-    }
     var enable_map = { 0: "disable", 1: "enable" };
-    var enable_values = getValues(enable_map);
-    if (enable_values.indexOf(enable) == -1) {
-        throw new Error("gas_alarm_config.enable must be one of " + enable_values.join(", "));
+    var enable_value = getMappedValue(enable_map, enable);
+    if (typeof threshold_1 !== "number") {
+        throw new Error("gas_alarm_config.threshold_1 must be a number");
     }
-
-    var data = 0x00;
-    data |= getValue(condition_map, condition) << 0;
-    data |= 1 << 3; // co2
-    data |= getValue(enable_map, enable) << 6;
+    if (typeof threshold_2 !== "number") {
+        throw new Error("gas_alarm_config.threshold_2 must be a number");
+    }
 
     var buffer = new Buffer(11);
     buffer.writeUInt8(0xff);
-    buffer.writeUInt8(0x06);
-    buffer.writeUInt8(data);
-    buffer.writeUInt16LE(threshold_min * 100);
-    buffer.writeUInt16LE(threshold_max * 100);
-    buffer.writeUInt32LE(0x00);
-    return buffer.toBytes();
-}
-
-/**
- * set temperature threshold alarm config
- * @param {object} temperature_alarm_config
- * @param {number} temperature_alarm_config.enable values: (0: disable, 1: enable)
- * @param {number} temperature_alarm_config.condition values: (0: disable, 1: below, 2: above, 3: between, 4: outside)
- * @param {number} temperature_alarm_config.threshold_min unit: °C
- * @param {number} temperature_alarm_config.threshold_max unit: °C
- * @example { "temperature_alarm_config": { "enable": 1, "condition": 1, "threshold_max": 20, "threshold_min": 0 } }
- */
-function setTemperatureThresholdAlarmConfig(temperature_alarm_config) {
-    var enable = temperature_alarm_config.enable;
-    var condition = temperature_alarm_config.condition;
-    var threshold_max = temperature_alarm_config.threshold_max;
-    var threshold_min = temperature_alarm_config.threshold_min;
-
-    var enable_map = { 0: "disable", 1: "enable" };
-    var enable_values = getValues(enable_map);
-    if (enable_values.indexOf(enable) == -1) {
-        throw new Error("temperature_alarm_config.enable must be one of " + enable_values.join(", "));
-    }
-    var condition_map = { 0: "disable", 1: "below", 2: "above", 3: "between", 4: "outside" };
-    var condition_values = getValues(condition_map);
-    if (condition_values.indexOf(condition) == -1) {
-        throw new Error("temperature_alarm_config.condition must be one of " + condition_values.join(", "));
-    }
-
-    var data = 0x00;
-    data |= getValue(condition_map, condition) << 0;
-    data |= 2 << 3; // temperature
-    data |= getValue(enable_map, enable) << 6;
-
-    var buffer = new Buffer(11);
-    buffer.writeUInt8(0xff);
-    buffer.writeUInt8(0x06);
-    buffer.writeUInt8(data);
-    buffer.writeInt16LE(threshold_min * 10);
-    buffer.writeInt16LE(threshold_max * 10);
-    buffer.writeUInt32LE(0x00);
-    return buffer.toBytes();
-}
-
-/**
- * set temperature mutation alarm config
- * @param {object} temperature_mutation_alarm_config
- * @param {number} temperature_mutation_alarm_config.enable values: (0: disable, 1: enable)
- * @param {number} temperature_mutation_alarm_config.mutation unit: °C
- * @example { "temperature_mutation_alarm_config": { "enable": 1, "mutation": 0 } }
- */
-function setTemperatureMutationAlarmConfig(temperature_mutation_alarm_config) {
-    var enable = temperature_mutation_alarm_config.enable;
-    var mutation = temperature_mutation_alarm_config.mutation;
-
-    var enable_map = { 0: "disable", 1: "enable" };
-    var enable_values = getValues(enable_map);
-    if (enable_values.indexOf(enable) == -1) {
-        throw new Error("temperature_mutation_alarm_config.enable must be one of " + enable_values.join(", "));
-    }
-
-    var data = 0x00;
-    data |= 5 << 0; // mutation
-    data |= 3 << 3; // temperature
-    data |= getValue(enable_map, enable) << 6;
-
-    var buffer = new Buffer(11);
-    buffer.writeUInt8(0xff);
-    buffer.writeUInt8(0x06);
-    buffer.writeUInt8(data);
-    buffer.writeInt16LE(0x00);
-    buffer.writeInt16LE(mutation * 10);
-    buffer.writeUInt32LE(0x00);
+    buffer.writeUInt8(0x54);
+    buffer.writeUInt8(enable_value);
+    buffer.writeUInt32LE(threshold_1);
+    buffer.writeUInt32LE(threshold_2);
     return buffer.toBytes();
 }
 
@@ -915,6 +832,13 @@ function getValues(map) {
         values.push(RAW_VALUE ? parseInt(key) : map[key]);
     }
     return values;
+}
+
+function getMappedValue(map, value) {
+    if (typeof value === "number" && map[value] !== undefined) {
+        return value;
+    }
+    return getValue(map, value);
 }
 
 function getValue(map, value) {

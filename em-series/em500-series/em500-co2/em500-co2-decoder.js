@@ -97,6 +97,21 @@ function milesightDeviceDecode(bytes) {
             decoded.status = readSensorStatus(bytes.slice(i + 1, i + 2));
             i += 2;
         }
+        // SENSOR STATUS
+        else if (channel_id === 0x02 && channel_type === 0xbd) {
+            var sensor_status = {};
+            var flags = readUInt8(bytes[i + 7]);
+            var decimal = flags & 0x0f;
+
+            sensor_status.gas_type = readGasType(bytes[i]);
+            sensor_status.value = readUInt32LE(bytes.slice(i + 1, i + 5)) / Math.pow(10, decimal);
+            sensor_status.range = readUInt16LE(bytes.slice(i + 5, i + 7));
+            sensor_status.decimal = decimal;
+            sensor_status.status = readGasSensorStatus((flags >> 4) & 0x03);
+            sensor_status.unit = readGasUnit((flags >> 6) & 0x03);
+            decoded.sensor_status = sensor_status;
+            i += 8;
+        }
         // TEMPERATURE(°C)
         else if (channel_id === 0x03 && channel_type === 0x67) {
             decoded.temperature = readInt16LE(bytes.slice(i, i + 2)) / 10;
@@ -181,21 +196,6 @@ function handle_downlink_response(channel_type, bytes, offset) {
             decoded.report_interval = readUInt16LE(bytes.slice(offset, offset + 2));
             offset += 2;
             break;
-        case 0x06:
-            var data = readUInt8(bytes[offset]);
-            var enable = readEnableStatus((data >>> 6) & 0x01);
-            var condition = readCondition((data >>> 0) & 0x07);
-            var target = (data >>> 3) & 0x07;
-
-            if(target === 0x01) {
-                decoded.gas_alarm_config = {};
-                decoded.gas_alarm_config.enable = enable;
-                decoded.gas_alarm_config.condition = condition;
-                decoded.gas_alarm_config.threshold_min = readUInt16LE(bytes.slice(offset + 1, offset + 3)) / 100;
-                decoded.gas_alarm_config.threshold_max = readUInt16LE(bytes.slice(offset + 3, offset + 5)) / 100;
-            }
-            offset += 9;
-            break;
         case 0x11:
             decoded.timestamp = readUInt32LE(bytes.slice(offset, offset + 4));
             offset += 4;
@@ -230,9 +230,9 @@ function handle_downlink_response(channel_type, bytes, offset) {
                 decoded.gas_calibration_config.calibration_value = 0;
             } else if(type === 0x01) {
                 decoded.gas_calibration_config.type = "Target Calibration";
-                decoded.gas_calibration_config.calibration_value = readUInt16LE(bytes.slice(offset + 1, offset + 3)) / 100;
+                decoded.gas_calibration_config.calibration_value = readUInt32LE(bytes.slice(offset + 1, offset + 5)) / 1000;
             }
-            offset += 3;
+            offset += 5;
             break;
         case 0x1c:
             decoded.recollection_config = {};
@@ -254,6 +254,13 @@ function handle_downlink_response(channel_type, bytes, offset) {
         case 0x3b:
             decoded.time_sync_enable = readEnableStatus(bytes[offset]);
             offset += 1;
+            break;
+        case 0x54:
+            decoded.gas_alarm_config = {};
+            decoded.gas_alarm_config.enable = readEnableStatus(bytes[offset]);
+            decoded.gas_alarm_config.threshold_1 = readUInt32LE(bytes.slice(offset + 1, offset + 5));
+            decoded.gas_alarm_config.threshold_2 = readUInt32LE(bytes.slice(offset + 5, offset + 9));
+            offset += 9;
             break;
         case 0x68: // history_enable
             decoded.history_enable = readEnableStatus(readUInt8(bytes[offset]));
@@ -294,27 +301,6 @@ function handle_downlink_response(channel_type, bytes, offset) {
             offset += 8;
             decoded.d2d_master_config = decoded.d2d_master_config || [];
             decoded.d2d_master_config.push(d2d_master_config);
-            break;
-        case 0xf1:
-            var calibration_target = readUInt8(bytes[offset]);
-            if (calibration_target === 0x00) {
-                decoded.temperature_calibration_settings = {};
-                decoded.temperature_calibration_settings.enable = readEnableStatus(bytes[offset + 1]);
-                decoded.temperature_calibration_settings.calibration_value = readInt16LE(bytes.slice(offset + 2, offset + 4)) / 10;
-            } else if (calibration_target === 0x04) {
-                decoded.co2_calibration_settings = {};
-                decoded.co2_calibration_settings.enable = readEnableStatus(bytes[offset + 1]);
-                decoded.co2_calibration_settings.calibration_value = readInt16LE(bytes.slice(offset + 2, offset + 4));
-            } else if (calibration_target === 0x05) {
-                decoded.pressure_calibration_settings = {};
-                decoded.pressure_calibration_settings.enable = readEnableStatus(bytes[offset + 1]);
-                decoded.pressure_calibration_settings.calibration_value = readInt16LE(bytes.slice(offset + 2, offset + 4)) / 10;
-            } else if (calibration_target === 0x09) {
-                decoded.humidity_calibration_settings = {};
-                decoded.humidity_calibration_settings.enable = readEnableStatus(bytes[offset + 1]);
-                decoded.humidity_calibration_settings.calibration_value = readInt16LE(bytes.slice(offset + 2, offset + 4)) / 2;
-            }
-            offset += 4;
             break;
         case 0xf2:
             decoded.alarm_report_counts = readUInt16LE(bytes.slice(offset, offset + 2));
@@ -382,6 +368,26 @@ function readSensorStatus(status) {
     return getValue(status_map, status);
 }
 
+function readGasSensorStatus(status) {
+    var status_map = {
+        0: "normal",
+        1: "warning",
+        2: "error",
+        3: "invalid/undetected",
+    };
+    return getValue(status_map, status);
+}
+
+function readGasUnit(unit) {
+    var unit_map = {
+        0: "ppm",
+        1: "ppb",
+        2: "%vol",
+        3: "invalid",
+    };
+    return getValue(unit_map, unit);
+}
+
 function readTemperatureAlarm(type) {
     var alarm_map = {
         0: "threshold alarm",
@@ -393,12 +399,79 @@ function readTemperatureAlarm(type) {
 
 function readGasType(type) {
     var type_map = {
+        0x00: "UNKNOWN",
         0x01: "O2",
         0x03: "H2S",
         0x05: "NH3",
         0x0f: "C2H4",
         0x10: "VOC",
         0x11: "SMELL",
+        0x17: "HCHO",
+        0x18: "VOC",
+        0x19: "CO",
+        0x1a: "Cl2",
+        0x1b: "H2",
+        0x1c: "H2S",
+        0x1d: "HCl",
+        0x1e: "HCN",
+        0x1f: "HF",
+        0x20: "NH3",
+        0x21: "NO2",
+        0x22: "O2",
+        0x23: "O3",
+        0x24: "SO2",
+        0x25: "HBr",
+        0x26: "Br2",
+        0x27: "F2",
+        0x28: "PH3",
+        0x29: "AsH3",
+        0x2a: "SiH4",
+        0x2b: "GeH4",
+        0x2c: "B2H6",
+        0x2d: "BF3",
+        0x2e: "WF6",
+        0x2f: "SiF4",
+        0x30: "XeF2",
+        0x31: "TiF4",
+        0x32: "SMELL",
+        0x33: "IAQ",
+        0x34: "AQI",
+        0x35: "NMHC",
+        0x36: "SOx",
+        0x37: "NOx",
+        0x38: "NO",
+        0x39: "C4H8",
+        0x3a: "C3H8O2",
+        0x3b: "CH4S",
+        0x3c: "C8H8",
+        0x3d: "C4H10",
+        0x3e: "C2H6",
+        0x3f: "C6H14",
+        0x40: "ETO",
+        0x41: "C3H9N",
+        0x42: "C2H7N",
+        0x43: "C2H6O",
+        0x44: "CS2",
+        0x45: "C2H6S",
+        0x46: "C2H6S2",
+        0x47: "C2H4",
+        0x48: "CH3OH",
+        0x49: "C6H6",
+        0x4a: "C8H10",
+        0x4b: "C7H8",
+        0x4c: "CH3COOH",
+        0x4d: "ClO2",
+        0x4e: "H2O2",
+        0x4f: "N2H4",
+        0x50: "C2H8N2",
+        0x51: "C2HCl3",
+        0x52: "CHCl3",
+        0x53: "C2H3Cl3",
+        0x54: "H2Se",
+        0x55: "LEL",
+        0x56: "CO2",
+        0x57: "PID_VOCS",
+        0xd0: "OTHERS",
     };
     return getValue(type_map, type);
 }
@@ -421,16 +494,6 @@ function readCalibrationStrategy(type) {
 function readPressureCalibrationMode(type) {
     var mode_map = { 0: "disable", 1: "auto", 2: "manual" };
     return getValue(mode_map, type);
-}
-
-function readCondition(type) {
-    var condition_map = { 0: "disable", 1: "below", 2: "above", 3: "between", 4: "outside", 5: "mutation" };
-    return getValue(condition_map, type);
-}
-
-function readCalibrationType(type) {
-    var type_map = { 0: "Zero Calibration", 1: "Target Calibration" };
-    return getValue(type_map, type);
 }
 
 /* eslint-disable */
