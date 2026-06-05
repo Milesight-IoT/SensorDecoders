@@ -95,12 +95,6 @@ function milesightDeviceDecode(bytes) {
             i += 8;
         }
 
-        // IPSO VERSION
-        else if (channel_id === 0xff && channel_type === 0x01) {
-            decoded.payload.version = readProtocolVersion(bytes[i]);
-            i += 1;
-        }
-
         // TEMPERATURE & HUMIDITY
         else if (channel_id === 0x03 && channel_type === 0xac) {
             var timestamp = readUInt32LE(bytes.slice(i, i + 4))
@@ -246,12 +240,6 @@ function handle_downlink_response(channel_id, channel_type, bytes, offset) {
     }
 
     return { data: decoded, offset: offset };
-}
-
-function readProtocolVersion(bytes) {
-    var major = (bytes & 0xf0) >> 4;
-    var minor = bytes & 0x0f;
-    return "v" + major + "." + minor;
 }
 
 function readHardwareVersion(bytes) {
