@@ -152,6 +152,17 @@ function milesightDeviceDecode(bytes) {
             i += 1;
         }
 
+        // IPSO VERSION
+        else if (channel_id === 0xff && channel_type === 0x01) {
+            i += 1;
+        }
+
+        // TSL VERSION
+        else if (channel_id === 0xff && channel_type === 0xff) {
+            i += 2;
+        }
+
+
         // DOWNLINK RESPONSE
         else if (channel_id === 0xfe || channel_id === 0xff || channel_id === 0xf8) {
             var result = handle_downlink_response(channel_id, channel_type, bytes, i);
