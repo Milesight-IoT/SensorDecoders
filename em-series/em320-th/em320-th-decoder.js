@@ -54,6 +54,8 @@ function milesightDeviceDecode(bytes) {
         ]
     };
 
+    var _firmwareVersion = ''
+
     function pushSensorData(temperature, humidity , timestamp) {
         var time = new Date(timestamp * 1000).toISOString();
         decoded.sensors[0].values.push({
@@ -80,7 +82,7 @@ function milesightDeviceDecode(bytes) {
 
         // FIRMWARE VERSION
         else if (channel_id === 0xff && channel_type === 0x0a) {
-            decoded.device.firmwareVersion = readFirmwareVersion(bytes.slice(i, i + 2));
+            _firmwareVersion = readFirmwareVersion(bytes.slice(i, i + 2));
             i += 2;
         }
 
@@ -180,6 +182,12 @@ function milesightDeviceDecode(bytes) {
         delete decoded.sensors
     }
 
+    var hardwareMajorVersion = readVersionMajorCode(decoded.device.hardwareVersion);
+    var firmwareVersionCode = readVersionCode(_firmwareVersion);
+    if (hardwareMajorVersion && firmwareVersionCode) {
+        decoded.device.firmwareVersion = "EM320-TH.2954." + hardwareMajorVersion + "00." + firmwareVersionCode;
+    }
+
     return decoded;
 }
 
@@ -270,6 +278,28 @@ function readFirmwareVersion(bytes) {
     var major = (bytes[0] & 0xff).toString(16);
     var minor = (bytes[1] & 0xff).toString(16);
     return "v" + major + "." + minor;
+}
+
+function readVersionMajorCode(version) {
+    if (!version) {
+        return "";
+    }
+
+    var matched = /^v([0-9a-fA-F]+)\./.exec(version);
+    return matched ? ("0" + matched[1]).slice(-2) : "";
+}
+
+function readVersionCode(version) {
+    if (!version) {
+        return "";
+    }
+
+    var matched = /^v([0-9a-fA-F]+)\.([0-9a-fA-F]+)$/.exec(version);
+    if (!matched) {
+        return "";
+    }
+
+    return ("0" + matched[1]).slice(-2) + ("0" + matched[2]).slice(-2);
 }
 
 function readTslVersion(bytes) {
