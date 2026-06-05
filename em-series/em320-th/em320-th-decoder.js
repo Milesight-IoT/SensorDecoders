@@ -31,7 +31,8 @@ function milesightDeviceDecode(bytes) {
     var decoded = {
         device: {
             model: "EM320-TH",
-            type: "MSL"
+            type: "MSL",
+            cellular: "Unknown"
         },
         payload: {
             type: "Reading",
@@ -171,6 +172,12 @@ function milesightDeviceDecode(bytes) {
         } else {
             break;
         }
+    }
+
+    if (decoded.sensors.every(function (sensor) {
+        return sensor.values.length === 0;
+    })){
+        delete decoded.sensors
     }
 
     return decoded;
