@@ -228,7 +228,7 @@ function milesightDeviceEncode(payload) {
 		if ([0, 1, 2].indexOf(payload.ble_server.type) === -1) {
 			throw new Error('ble_server.type must be one of [0, 1, 2]');
 		}
-		// 0：Reset BLE Name , 1：Cancel Pairing, 2：Trigger Pairing
+		// 0：Reset BLE Name, 1：Cancel Pairing, 2：Trigger Pairing
 		buffer.writeUInt8(payload.ble_server.type);
 		encoded = encoded.concat(buffer.toBytes());
 	}
@@ -385,7 +385,7 @@ function milesightDeviceEncode(payload) {
 		var buffer = new Buffer();
 		buffer.writeUInt8(0x0c);
 		var bitOptions = 0;
-		// 0：heat, 2：cool, 3：auto, 15：na
+		// 0：heat, 2：cool, 3：auto
 		bitOptions |= payload.temperature_control_info.mode << 4;
 
 		// 0：standby, 1：stage-1 heat, 2：stage-2 heat, 3：stage-3 heat, 4：stage-4 heat, 5：stage-5 heat, 7：stage-1 cool, 8：stage-2 cool, 9：stage-3 cool
@@ -399,7 +399,7 @@ function milesightDeviceEncode(payload) {
 		var buffer = new Buffer();
 		buffer.writeUInt8(0x0d);
 		var bitOptions = 0;
-		// 0：auto, 1：circulate, 2：on, 3：low, 4：medium, 5：high, 15：na
+		// 0：auto, 1：circulate, 2：on, 3：low, 4：medium, 5：high
 		bitOptions |= payload.fan_control_info.mode << 4;
 
 		// 0：off, 1：open, 2：low, 3:medium, 4:high
@@ -482,6 +482,13 @@ function milesightDeviceEncode(payload) {
 				}
 				if (payload.data_transparent.res_cmd1.key_event.type == 0x02) {
 				}
+			}
+			if (payload.data_transparent.res_cmd1.command == 0xc8) {
+				if ([0, 1].indexOf(payload.data_transparent.res_cmd1.device_status) === -1) {
+					throw new Error('data_transparent.res_cmd1.device_status must be one of [0, 1]');
+				}
+				// 0：Off, 1：On
+				buffer.writeUInt8(payload.data_transparent.res_cmd1.device_status);
 			}
 		}
 		encoded = encoded.concat(buffer.toBytes());
@@ -954,8 +961,8 @@ function milesightDeviceEncode(payload) {
 		if (isValid(payload.fan_delay_settings.delay_time)) {
 			buffer.writeUInt8(0x82);
 			buffer.writeUInt8(0x01);
-			if (payload.fan_delay_settings.delay_time < 1 || payload.fan_delay_settings.delay_time > 3600) {
-				throw new Error('fan_delay_settings.delay_time must be between 1 and 3600');
+			if (payload.fan_delay_settings.delay_time < 30 || payload.fan_delay_settings.delay_time > 3600) {
+				throw new Error('fan_delay_settings.delay_time must be between 30 and 3600');
 			}
 			buffer.writeUInt16LE(payload.fan_delay_settings.delay_time);
 		}
@@ -1493,15 +1500,15 @@ function milesightDeviceEncode(payload) {
 				buffer.writeUInt8(payload.di_settings.card_control.system_control.trigger_by_insertion);
 			}
 			if (payload.di_settings.card_control.type == 0x01) {
-				if ([0, 1, 2, 3, 4, 5, 6, 7].indexOf(payload.di_settings.card_control.insertion_plan.trigger_by_insertion) === -1) {
-					throw new Error('di_settings.card_control.insertion_plan.trigger_by_insertion must be one of [0, 1, 2, 3, 4, 5, 6, 7]');
+				if ([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15].indexOf(payload.di_settings.card_control.insertion_plan.trigger_by_insertion) === -1) {
+					throw new Error('di_settings.card_control.insertion_plan.trigger_by_insertion must be one of [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]');
 				}
-				// 0：Schedule1, 1：Schedule2, 2：Schedule3, 3：Schedule4, 4：Schedule5, 5：Schedule6, 6：Schedule7, 7：Schedule8
+				// 0：Schedule1, 1：Schedule2, 2：Schedule3, 3：Schedule4, 4：Schedule5, 5：Schedule6, 6：Schedule7, 7：Schedule8, 8：Schedule9, 9：Schedule10, 10：Schedule11, 11：Schedule12, 12：Schedule13, 13：Schedule14, 14：Schedule15, 15：Schedule16
 				buffer.writeUInt8(payload.di_settings.card_control.insertion_plan.trigger_by_insertion);
-				if ([0, 1, 2, 3, 4, 5, 6, 7].indexOf(payload.di_settings.card_control.insertion_plan.trigger_by_extraction) === -1) {
-					throw new Error('di_settings.card_control.insertion_plan.trigger_by_extraction must be one of [0, 1, 2, 3, 4, 5, 6, 7]');
+				if ([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15].indexOf(payload.di_settings.card_control.insertion_plan.trigger_by_extraction) === -1) {
+					throw new Error('di_settings.card_control.insertion_plan.trigger_by_extraction must be one of [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15]');
 				}
-				// 0：Schedule1, 1：Schedule2, 2：Schedule3, 3：Schedule4, 4：Schedule5, 5：Schedule6, 6：Schedule7, 7：Schedule8
+				// 0：Schedule1, 1：Schedule2, 2：Schedule3, 3：Schedule4, 4：Schedule5, 5：Schedule6, 6：Schedule7, 7：Schedule8, 8：Schedule9, 9：Schedule10, 10：Schedule11, 11：Schedule12, 12：Schedule13, 13：Schedule14, 14：Schedule15, 15：Schedule16
 				buffer.writeUInt8(payload.di_settings.card_control.insertion_plan.trigger_by_extraction);
 			}
 		}
@@ -1630,10 +1637,10 @@ function milesightDeviceEncode(payload) {
 			// 0：disable, 1：enable
 			buffer.writeUInt8(d2d_slave_settings_item.enable);
 			buffer.writeHexString(d2d_slave_settings_item.command, pair_name_item.length, true);
-			if ([0, 1, 2, 3, 4, 5, 6, 7, 16, 17].indexOf(d2d_slave_settings_item.value) === -1) {
-				throw new Error('value must be one of [0, 1, 2, 3, 4, 5, 6, 7, 16, 17]');
+			if ([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17].indexOf(d2d_slave_settings_item.value) === -1) {
+				throw new Error('value must be one of [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17]');
 			}
-			// 0：Schedule1, 1：Schedule2, 2：Schedule3, 3：Schedule4, 4：Schedule5, 5：Schedule6, 6：Schedule7, 7：Schedule8, 16：System Off, 17：System On
+			// 0: Schedule1, 1: Schedule2, 2: Schedule3, 3: Schedule4, 4: Schedule5, 5: Schedule6, 6: Schedule7, 7: Schedule8, 8：Schedule9, 9：Schedule10, 10：Schedule11, 11：Schedule12, 12：Schedule13, 13：Schedule14, 14：Schedule15, 15：Schedule16, 16：System Off, 17：System On
 			buffer.writeUInt8(d2d_slave_settings_item.value);
 		}
 		encoded = encoded.concat(buffer.toBytes());
@@ -1642,6 +1649,20 @@ function milesightDeviceEncode(payload) {
 	if ('reboot' in payload) {
 		var buffer = new Buffer();
 		buffer.writeUInt8(0xbe);
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0xbb
+	if ('retrieve_historical_data_by_time_range' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0xbb);
+		if (payload.retrieve_historical_data_by_time_range.start_time < 0 || payload.retrieve_historical_data_by_time_range.start_time > 4294967295) {
+			throw new Error('retrieve_historical_data_by_time_range.start_time must be in range [0,4294967295]');
+		}
+		buffer.writeUInt32LE(payload.retrieve_historical_data_by_time_range.start_time);
+		if (payload.retrieve_historical_data_by_time_range.end_time < 0 || payload.retrieve_historical_data_by_time_range.end_time > 4294967295) {
+			throw new Error('retrieve_historical_data_by_time_range.end_time must be in range [0,4294967295]');
+		}
+		buffer.writeUInt32LE(payload.retrieve_historical_data_by_time_range.end_time);
 		encoded = encoded.concat(buffer.toBytes());
 	}
 	return encoded;
@@ -1995,6 +2016,7 @@ function cmdMap() {
 		  "data_transparent.res_cmd1.key_event.f1": "30000d00",
 		  "data_transparent.res_cmd1.key_event.f2": "30000d01",
 		  "data_transparent.res_cmd1.key_event.f3": "30000d02",
+		  "data_transparent.res_cmd1.device_status": "3000c8",
 		  "relay_status_change": "01",
 		  "communication_mode": "91",
 		  "reporting_interval": "66",
@@ -2121,7 +2143,8 @@ function cmdMap() {
 		  "d2d_slave_enable": "99",
 		  "d2d_slave_settings": "9a",
 		  "d2d_slave_settings._item": "9axx",
-		  "reboot": "be"
+		  "reboot": "be",
+		  "retrieve_historical_data_by_time_range": "bb"
 	};
 }
 function processTemperature(payload) {

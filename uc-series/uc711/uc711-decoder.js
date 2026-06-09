@@ -149,7 +149,7 @@ function milesightDeviceDecode(bytes) {
 				break;
 			case 0xb4:
 				decoded.ble_server = decoded.ble_server || {};
-				// 0：Reset BLE Name , 1：Cancel Pairing, 2：Trigger Pairing
+				// 0：Reset BLE Name, 1：Cancel Pairing, 2：Trigger Pairing
 				decoded.ble_server.type = readUInt8(bytes, counterObj, 1);
 				break;
 			case 0x02:
@@ -271,7 +271,7 @@ function milesightDeviceDecode(bytes) {
 			case 0x0c:
 				decoded.temperature_control_info = decoded.temperature_control_info || {};
 				var bitOptions = readUInt8(bytes, counterObj, 1);
-				// 0：heat, 2：cool, 3：auto, 15：na
+				// 0：heat, 2：cool, 3：auto
 				decoded.temperature_control_info.mode = extractBits(bitOptions, 4, 8);
 				// 0：standby, 1：stage-1 heat, 2：stage-2 heat, 3：stage-3 heat, 4：stage-4 heat, 5：stage-5 heat, 7：stage-1 cool, 8：stage-2 cool, 9：stage-3 cool
 				decoded.temperature_control_info.status = extractBits(bitOptions, 0, 4);
@@ -279,7 +279,7 @@ function milesightDeviceDecode(bytes) {
 			case 0x0d:
 				decoded.fan_control_info = decoded.fan_control_info || {};
 				var bitOptions = readUInt8(bytes, counterObj, 1);
-				// 0：auto, 1：circulate, 2：on, 3：low, 4：medium, 5：high, 15：na
+				// 0：auto, 1：circulate, 2：on, 3：low, 4：medium, 5：high
 				decoded.fan_control_info.mode = extractBits(bitOptions, 4, 8);
 				// 0：off, 1：open, 2：low, 3:medium, 4:high
 				decoded.fan_control_info.status = extractBits(bitOptions, 0, 4);
@@ -333,6 +333,10 @@ function milesightDeviceDecode(bytes) {
 						if (decoded.data_transparent.res_cmd1.key_event.type == 0x02) {
 							decoded.data_transparent.res_cmd1.key_event.f3 = decoded.data_transparent.res_cmd1.key_event.f3 || {};
 						}
+					}
+					if (decoded.data_transparent.res_cmd1.command == 0xc8) {
+						// 0：Off, 1：On
+						decoded.data_transparent.res_cmd1.device_status = readUInt8(bytes, counterObj, 1);
 					}
 				}
 				break;
@@ -811,9 +815,9 @@ function milesightDeviceDecode(bytes) {
 					}
 					if (decoded.di_settings.card_control.type == 0x01) {
 						decoded.di_settings.card_control.insertion_plan = decoded.di_settings.card_control.insertion_plan || {};
-						// 0：Schedule1, 1：Schedule2, 2：Schedule3, 3：Schedule4, 4：Schedule5, 5：Schedule6, 6：Schedule7, 7：Schedule8
+						// 0：Schedule1, 1：Schedule2, 2：Schedule3, 3：Schedule4, 4：Schedule5, 5：Schedule6, 6：Schedule7, 7：Schedule8, 8：Schedule9, 9：Schedule10, 10：Schedule11, 11：Schedule12, 12：Schedule13, 13：Schedule14, 14：Schedule15, 15：Schedule16
 						decoded.di_settings.card_control.insertion_plan.trigger_by_insertion = readUInt8(bytes, counterObj, 1);
-						// 0：Schedule1, 1：Schedule2, 2：Schedule3, 3：Schedule4, 4：Schedule5, 5：Schedule6, 6：Schedule7, 7：Schedule8
+						// 0：Schedule1, 1：Schedule2, 2：Schedule3, 3：Schedule4, 4：Schedule5, 5：Schedule6, 6：Schedule7, 7：Schedule8, 8：Schedule9, 9：Schedule10, 10：Schedule11, 11：Schedule12, 12：Schedule13, 13：Schedule14, 14：Schedule15, 15：Schedule16
 						decoded.di_settings.card_control.insertion_plan.trigger_by_extraction = readUInt8(bytes, counterObj, 1);
 					}
 				}
@@ -854,7 +858,7 @@ function milesightDeviceDecode(bytes) {
 				break;
 			case 0x98:
 				decoded.d2d_master_settings = decoded.d2d_master_settings || [];
-				// 0: Schedule1, 1: Schedule2, 2: Schedule3, 3: Schedule4, 4: Schedule5, 5: Schedule6, 6: Schedule7, 7: Schedule8, 16：System Off, 17：System On
+				// 0: Schedule1, 1: Schedule2, 2: Schedule3, 3: Schedule4, 4: Schedule5, 5: Schedule6, 6: Schedule7, 7: Schedule8, 8：Schedule9, 9：Schedule10, 10：Schedule11, 11：Schedule12, 12：Schedule13, 13：Schedule14, 14：Schedule15, 15：Schedule16, 16：System Off, 17：System On
 				var trigger_condition = readUInt8(bytes, counterObj, 1);
 				var d2d_master_settings_item = pickArrayItem(decoded.d2d_master_settings, trigger_condition, 'trigger_condition');
 				d2d_master_settings_item.trigger_condition = trigger_condition;
@@ -881,11 +885,16 @@ function milesightDeviceDecode(bytes) {
 				// 0：disable, 1：enable
 				d2d_slave_settings_item.enable = readUInt8(bytes, counterObj, 1);
 				d2d_slave_settings_item.command = readHexString(bytes, counterObj, 2);
-				// 0：Schedule1, 1：Schedule2, 2：Schedule3, 3：Schedule4, 4：Schedule5, 5：Schedule6, 6：Schedule7, 7：Schedule8, 16：System Off, 17：System On
+				// 0: Schedule1, 1: Schedule2, 2: Schedule3, 3: Schedule4, 4: Schedule5, 5: Schedule6, 6: Schedule7, 7: Schedule8, 8：Schedule9, 9：Schedule10, 10：Schedule11, 11：Schedule12, 12：Schedule13, 13：Schedule14, 14：Schedule15, 15：Schedule16, 16：System Off, 17：System On
 				d2d_slave_settings_item.value = readUInt8(bytes, counterObj, 1);
 				break;
 			case 0xbe:
 				decoded.reboot = readOnlyCommand(bytes, counterObj, 0);
+				break;
+			case 0xbb:
+				decoded.retrieve_historical_data_by_time_range = decoded.retrieve_historical_data_by_time_range || {};
+				decoded.retrieve_historical_data_by_time_range.start_time = readUInt32LE(bytes, counterObj, 4);
+				decoded.retrieve_historical_data_by_time_range.end_time = readUInt32LE(bytes, counterObj, 4);
 				break;
 			default:
 				unknown_command = 1;
@@ -1432,6 +1441,7 @@ function cmdMap() {
 		  "30000d00": "data_transparent.res_cmd1.key_event.f1",
 		  "30000d01": "data_transparent.res_cmd1.key_event.f2",
 		  "30000d02": "data_transparent.res_cmd1.key_event.f3",
+		  "3000c8": "data_transparent.res_cmd1.device_status",
 		  "01": "relay_status_change",
 		  "6a": "temperature_data_source",
 		  "6a00": "temperature_data_source.source",
@@ -1474,7 +1484,8 @@ function cmdMap() {
 		  "98xx": "d2d_master_settings._item",
 		  "9a": "d2d_slave_settings",
 		  "9axx": "d2d_slave_settings._item",
-		  "be": "reboot"
+		  "be": "reboot",
+		  "bb": "retrieve_historical_data_by_time_range"
 	};
 }
 function processTemperature(decoded) {
