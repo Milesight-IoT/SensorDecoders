@@ -85,6 +85,12 @@ function milesightDeviceDecode(bytes) {
 					// 0：disable, 1：enable
 					decoded.ble_configuration_settings.enable = readUInt8(bytes, counterObj, 1);
 				}
+				if (ble_configuration_settings_command == 0x01) {
+					decoded.ble_configuration_settings.local_id = decoded.ble_configuration_settings.local_id || {};
+					// 0：public, 1：private
+					decoded.ble_configuration_settings.local_id.type = readUInt8(bytes, counterObj, 1);
+					decoded.ble_configuration_settings.local_id.address = readHexString(bytes, counterObj, 6);
+				}
 				if (ble_configuration_settings_command == 0x05) {
 					decoded.ble_configuration_settings.local_name_first = readString(bytes, counterObj, 8);
 				}
@@ -1403,6 +1409,7 @@ function cmdMap() {
 		  "c8": "device_status",
 		  "cd": "ble_configuration_settings",
 		  "cd00": "ble_configuration_settings.enable",
+		  "cd01": "ble_configuration_settings.local_id",
 		  "cd05": "ble_configuration_settings.local_name_first",
 		  "cd06": "ble_configuration_settings.local_name_last",
 		  "cd07": "ble_configuration_settings.pair_info",

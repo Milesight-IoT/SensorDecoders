@@ -23,6 +23,9 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | BLE Settings | 0xCD | 1 | rw |  |  |  |
 | BLE Command | 0xCD | 2 | rw | 0 |  |  |
 | Bluetooth Enable | 0xCD | 2 | rw | 0 |  | 0：disable<br>1：enable |
+| Device Bluetooth Address | 0xCD | 8 | r |  |  |  |
+| Address Type | 0xCD | 2 | r | 0 |  | 0：public<br>1：private |
+| Bluetooth Mac Address | 0xCD | 7 | r | 24e124123456 |  |  |
 | Device Bluetooth Name (prefix8) | 0xCD | 9 | rw |  |  |  |
 | Device Bluetooth Name (suffix5) | 0xCD | 6 | rw |  |  |  |
 | Device Bluetooth Information | 0xCD | 1 | rw |  |  |  |
