@@ -345,6 +345,17 @@ function milesightDeviceEncode(payload) {
 		buffer.writeUInt32LE(payload.filter_clean_remind.usage_time);
 		encoded = encoded.concat(buffer.toBytes());
 	}
+	//0x05
+	if ('temperature_humi_data_source' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0x05);
+		if ([0, 1, 2, 3].indexOf(payload.temperature_humi_data_source) === -1) {
+			throw new Error('temperature_humi_data_source must be one of [0, 1, 2, 3]');
+		}
+		// 0: NTC Sensor, 1: Lora Data, 2:  D2D Data, 3: WT401 
+		buffer.writeUInt8(payload.temperature_humi_data_source);
+		encoded = encoded.concat(buffer.toBytes());
+	}
 	//0x06
 	if ('temperature' in payload) {
 		var buffer = new Buffer();
@@ -1665,6 +1676,30 @@ function milesightDeviceEncode(payload) {
 		buffer.writeUInt32LE(payload.retrieve_historical_data_by_time_range.end_time);
 		encoded = encoded.concat(buffer.toBytes());
 	}
+	//0x59
+	if ('system_status_control' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0x59);
+		if ([0, 1].indexOf(payload.system_status_control.on_off) === -1) {
+			throw new Error('system_status_control.on_off must be one of [0, 1]');
+		}
+		// 0：system off, 1：system on
+		buffer.writeUInt8(payload.system_status_control.on_off);
+		if ([0, 2, 3, 255].indexOf(payload.system_status_control.mode) === -1) {
+			throw new Error('system_status_control.mode must be one of [0, 2, 3, 255]');
+		}
+		// 0：heat, 2：cool, 3：auto, 255：disable
+		buffer.writeUInt8(payload.system_status_control.mode);
+		if (payload.system_status_control.temperature1 < 5 || payload.system_status_control.temperature1 > 35) {
+			throw new Error('system_status_control.temperature1 must be between 5 and 35');
+		}
+		buffer.writeInt16LE(payload.system_status_control.temperature1 * 100);
+		if (payload.system_status_control.temperature2 < 5 || payload.system_status_control.temperature2 > 35) {
+			throw new Error('system_status_control.temperature2 must be between 5 and 35');
+		}
+		buffer.writeInt16LE(payload.system_status_control.temperature2 * 100);
+		encoded = encoded.concat(buffer.toBytes());
+	}
 	return encoded;
 }
 
@@ -1993,6 +2028,7 @@ function cmdMap() {
 		  "temperature_abnormal.over_range_error": "0302",
 		  "temperature_abnormal.no_data": "0303",
 		  "filter_clean_remind": "04",
+		  "temperature_humi_data_source": "05",
 		  "temperature": "06",
 		  "humidity_abnormal": "07",
 		  "humidity_abnormal.collection_error": "0700",
@@ -2144,7 +2180,8 @@ function cmdMap() {
 		  "d2d_slave_settings": "9a",
 		  "d2d_slave_settings._item": "9axx",
 		  "reboot": "be",
-		  "retrieve_historical_data_by_time_range": "bb"
+		  "retrieve_historical_data_by_time_range": "bb",
+		  "system_status_control": "59"
 	};
 }
 function processTemperature(payload) {

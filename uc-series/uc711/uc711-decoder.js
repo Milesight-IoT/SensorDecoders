@@ -246,6 +246,10 @@ function milesightDeviceDecode(bytes) {
 				decoded.filter_clean_remind = decoded.filter_clean_remind || {};
 				decoded.filter_clean_remind.usage_time = readUInt32LE(bytes, counterObj, 4);
 				break;
+			case 0x05:
+				// 0: NTC Sensor, 1: Lora Data, 2:  D2D Data, 3: WT401 
+				decoded.temperature_humi_data_source = readUInt8(bytes, counterObj, 1);
+				break;
 			case 0x06:
 				decoded.temperature = readInt16LE(bytes, counterObj, 2) / 100;
 				break;
@@ -896,6 +900,15 @@ function milesightDeviceDecode(bytes) {
 				decoded.retrieve_historical_data_by_time_range.start_time = readUInt32LE(bytes, counterObj, 4);
 				decoded.retrieve_historical_data_by_time_range.end_time = readUInt32LE(bytes, counterObj, 4);
 				break;
+			case 0x59:
+				decoded.system_status_control = decoded.system_status_control || {};
+				// 0：system off, 1：system on
+				decoded.system_status_control.on_off = readUInt8(bytes, counterObj, 1);
+				// 0：heat, 2：cool, 3：auto, 255：disable
+				decoded.system_status_control.mode = readUInt8(bytes, counterObj, 1);
+				decoded.system_status_control.temperature1 = readInt16LE(bytes, counterObj, 2) / 100;
+				decoded.system_status_control.temperature2 = readInt16LE(bytes, counterObj, 2) / 100;
+				break;
 			default:
 				unknown_command = 1;
 				break;
@@ -1291,6 +1304,7 @@ function cmdMap() {
 		  "10": "target_temperature",
 		  "12": "cool_target_temperature",
 		  "30": "data_transparent",
+		  "59": "system_status_control",
 		  "60": "temperature_control_mode",
 		  "61": "target_temperature_settings",
 		  "62": "target_temperature_tolerance",
@@ -1423,6 +1437,7 @@ function cmdMap() {
 		  "0302": "temperature_abnormal.over_range_error",
 		  "0303": "temperature_abnormal.no_data",
 		  "04": "filter_clean_remind",
+		  "05": "temperature_humi_data_source",
 		  "06": "temperature",
 		  "07": "humidity_abnormal",
 		  "0700": "humidity_abnormal.collection_error",
