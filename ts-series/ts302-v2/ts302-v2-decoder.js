@@ -79,8 +79,8 @@ function milesightDeviceDecode(bytes) {
             i += 1;
         }
         // TEMPERATURE(CHANNEL 1 SENSOR)
-        else if (channel_id === 0x03 && channel_type === 0x67) {
-            decoded.temperature_chn1 = readInt16LE(bytes.slice(i, i + 2)) / 10;
+        else if (channel_id === 0x03 && channel_type === 0xbb) {
+            decoded.temperature_chn1 = readInt16LE(bytes.slice(i, i + 2)) / 100;
             i += 2;
         }
         // MAGNET STATUS(CHANNEL 1 SENSOR)
@@ -94,8 +94,8 @@ function milesightDeviceDecode(bytes) {
             i += 2;
         }
         // TEMPERATURE(CHANNEL 2 SENSOR)
-        else if (channel_id === 0x04 && channel_type === 0x67) {
-            decoded.temperature_chn2 = readInt16LE(bytes.slice(i, i + 2)) / 10;
+        else if (channel_id === 0x04 && channel_type === 0xbb) {
+            decoded.temperature_chn2 = readInt16LE(bytes.slice(i, i + 2)) / 100;
             i += 2;
         }
         // MAGNET STATUS(CHANNEL 2 SENSOR)
@@ -109,8 +109,8 @@ function milesightDeviceDecode(bytes) {
             i += 2;
         }
         // TEMPERATURE(CHANNEL 1 SENSOR) ALARM
-        else if (channel_id === 0x83 && channel_type === 0x67) {
-            var temp_value = readInt16LE(bytes.slice(i, i + 2)) / 10;
+        else if (channel_id === 0x83 && channel_type === 0xbb) {
+            var temp_value = readInt16LE(bytes.slice(i, i + 2)) / 100;
             var alarm_type = readAlarmType(bytes[i + 2]);
             decoded.temperature_chn1 = temp_value;
             decoded.temperature_chn1_alarm = alarm_type;
@@ -129,8 +129,8 @@ function milesightDeviceDecode(bytes) {
             i += 3;
         }
         // TEMPERATURE(CHANNEL 2 SENSOR) ALARM
-        else if (channel_id === 0x84 && channel_type === 0x67) {
-            var temp_value = readInt16LE(bytes.slice(i, i + 2)) / 10;
+        else if (channel_id === 0x84 && channel_type === 0xbb) {
+            var temp_value = readInt16LE(bytes.slice(i, i + 2)) / 100;
             var alarm_type = readAlarmType(bytes[i + 2]);
             decoded.temperature_chn2 = temp_value;
             decoded.temperature_chn2_alarm = alarm_type;
@@ -149,10 +149,10 @@ function milesightDeviceDecode(bytes) {
             i += 3;
         }
         // TEMPERATURE(CHANNEL 1 SENSOR) MUTATION ALARM
-        else if (channel_id === 0x93 && channel_type === 0x67) {
-            var temp_value = readInt16LE(bytes.slice(i, i + 2)) / 10;
-            var mutation_value = readInt16LE(bytes.slice(i + 2, i + 4)) / 10;
-            var alarm_type = readAlarmType(8);
+        else if (channel_id === 0x93 && channel_type === 0xbb) {
+            var temp_value = readInt16LE(bytes.slice(i, i + 2)) / 100;
+            var mutation_value = readInt16LE(bytes.slice(i + 2, i + 4)) / 100;
+            var alarm_type = readMutationAlarmType(bytes[i + 4]);
             decoded.temperature_chn1 = temp_value;
             decoded.temperature_chn1_mutation = mutation_value;
             decoded.temperature_chn1_alarm = alarm_type;
@@ -173,10 +173,10 @@ function milesightDeviceDecode(bytes) {
             i += 5;
         }
         // TEMPERATURE(CHANNEL 2 SENSOR) MUTATION ALARM
-        else if (channel_id === 0x94 && channel_type === 0x67) {
-            var temp_value = readInt16LE(bytes.slice(i, i + 2)) / 10;
-            var mutation_value = readInt16LE(bytes.slice(i + 2, i + 4)) / 10;
-            var alarm_type = readAlarmType(8);
+        else if (channel_id === 0x94 && channel_type === 0xbb) {
+            var temp_value = readInt16LE(bytes.slice(i, i + 2)) / 100;
+            var mutation_value = readInt16LE(bytes.slice(i + 2, i + 4)) / 100;
+            var alarm_type = readMutationAlarmType(bytes[i + 4]);
             decoded.temperature_chn2 = temp_value;
             decoded.temperature_chn2_mutation = mutation_value;
             decoded.temperature_chn2_alarm = alarm_type;
@@ -197,7 +197,7 @@ function milesightDeviceDecode(bytes) {
             i += 5;
         }
         // TEMPERATURE SENSOR STATUS (CHANNEL 1)
-        else if (channel_id === 0xb3 && channel_type === 0x67) {
+        else if (channel_id === 0xb3 && channel_type === 0xbb) {
             var data = {};
             data.temperature_chn1_sensor_status = readSensorStatus(bytes[i]);
             decoded.event = decoded.event || [];
@@ -213,7 +213,7 @@ function milesightDeviceDecode(bytes) {
             i += 1;
         }
         // TEMPERATURE SENSOR STATUS (CHANNEL 2)
-        else if (channel_id === 0xb4 && channel_type === 0x67) {
+        else if (channel_id === 0xb4 && channel_type === 0xbb) {
             var data = {};
             data.temperature_chn2_sensor_status = readSensorStatus(bytes[i]);
             decoded.event = decoded.event || [];
@@ -229,7 +229,7 @@ function milesightDeviceDecode(bytes) {
             i += 1;
         }
         // HISTORY DATA (CHANNEL 1)
-        else if (channel_id === 0x20 && channel_type === 0xce) {
+        else if (channel_id === 0x22 && channel_type === 0xce) {
             var timestamp = readUInt32LE(bytes.slice(i, i + 4));
             var mask = readUInt8(bytes[i + 4]);
             i += 5;
@@ -252,7 +252,7 @@ function milesightDeviceDecode(bytes) {
                     if (temperature_chn1 === -1002) {
                         data.temperature_chn1 = 'over_range';
                     } else {
-                        data.temperature_chn1 = temperature_chn1 / 10;
+                        data.temperature_chn1 = temperature_chn1 / 100;
                     }
                     data.temperature_chn1_event = readHistoryEvent(temperature_chn_event);
                 }
@@ -269,7 +269,7 @@ function milesightDeviceDecode(bytes) {
                     if (humidity_chn1 === -1002) {
                         data.humidity_chn1 = 'over_range';
                     } else {
-                        data.humidity_chn1 = humidity_chn1 / 10;
+                        data.humidity_chn1 = humidity_chn1 / 100;
                     }
                     data.humidity_chn1_event = readHistoryEvent(humidity_chn_event);
                 }
@@ -279,7 +279,7 @@ function milesightDeviceDecode(bytes) {
             decoded.history.push(data);
         }
         // HISTORY DATA (CHANNEL 2)
-        else if (channel_id === 0x21 && channel_type === 0xce) {
+        else if (channel_id === 0x23 && channel_type === 0xce) {
             var timestamp = readUInt32LE(bytes.slice(i, i + 4));
             var mask = readUInt8(bytes[i + 4]);
             i += 5;
@@ -302,7 +302,7 @@ function milesightDeviceDecode(bytes) {
                     if (temperature_chn2 === -1002) {
                         data.temperature_chn2 = 'over_range';
                     } else {
-                        data.temperature_chn2 = temperature_chn2 / 10;
+                        data.temperature_chn2 = temperature_chn2 / 100;
                     }
                     data.temperature_chn2_event = readHistoryEvent(temperature_chn_event);
                 }
@@ -319,7 +319,7 @@ function milesightDeviceDecode(bytes) {
                     if (humidity_chn2 === -1002) {
                         data.humidity_chn2 = 'over_range';
                     } else {
-                        data.humidity_chn2 = humidity_chn2 / 10;
+                        data.humidity_chn2 = humidity_chn2 / 100;
                     }
                     data.humidity_chn2_event = readHistoryEvent(humidity_chn_event);
                 }
@@ -781,6 +781,11 @@ function readAlarmType(type) {
         8: "mutation_alarm",
     };
     return getValue(alarm_type_map, type);
+}
+
+function readMutationAlarmType(type) {
+    var mutation_alarm_type_map = { 0: "mutation_alarm" };
+    return getValue(mutation_alarm_type_map, type);
 }
 
 function readSensorStatus(status) {
