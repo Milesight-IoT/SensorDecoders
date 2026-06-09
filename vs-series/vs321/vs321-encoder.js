@@ -175,13 +175,15 @@ function setReportInterval(report_interval) {
 
 /**
  * collection interval
- * @param {number} collection_interval unit: minute, values: (2: 2min, 5: 5min, 10: 10min, 15: 15min, 30: 30min, 60: 1h)
+ * @param {number} collection_interval unit: minute, range: [1, 60]
  * @example { "collection_interval": 60 }
  */
 function setCollectionInterval(collection_interval) {
-    var interval = [2, 5, 10, 15, 30, 60];
-    if (interval.indexOf(collection_interval) === -1) {
-        throw new Error("collection_interval must be one of " + interval.join(", "));
+    if (typeof collection_interval !== "number") {
+        throw new Error("collection_interval must be a number");
+    }
+    if (collection_interval < 1 || collection_interval > 60) {
+        throw new Error("collection_interval must be in range [1, 60]");
     }
 
     var buffer = new Buffer(4);
