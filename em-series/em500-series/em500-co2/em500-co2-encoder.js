@@ -292,7 +292,7 @@ function setRecollectionConfig(recollection_config) {
 /**
  * set Gas calibration config
  * @param {object} gas_calibration_config
- * @param {number} gas_calibration_config.type values: (0: Zero Calibration, 1: Target Calibration)
+ * @param {number} gas_calibration_config.type values: (0: Zero Calibration, 1: Target Calibration, 2: Compensation Calibration)
  * @param {number} gas_calibration_config.calibration_value
  * @example { "gas_calibration_config": { "type": 1, "calibration_value": 11.2 } }
  */
@@ -300,7 +300,7 @@ function setGasCalibrationConfig(gas_calibration_config) {
     var type = gas_calibration_config.type;
     var calibration_value = gas_calibration_config.calibration_value;
 
-    var type_map = { 0: "Zero Calibration", 1: "Target Calibration" };
+    var type_map = { 0: "Zero Calibration", 1: "Target Calibration", 2: "Compensation Calibration" };
     var type_value = getMappedValue(type_map, type);
     if (type_value === 0) {
         calibration_value = 0;

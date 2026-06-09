@@ -143,29 +143,16 @@ function milesightDeviceDecode(bytes) {
         else if (channel_id === 0x20 && channel_type === 0xce) {
             var data = {};
             data.timestamp = readUInt32LE(bytes.slice(i, i + 4));
-            var type = readUInt8(bytes.slice(i + 7, i + 8));
-            switch (type) {
-                case 0x01:
-                    data.o2 = readUInt16LE(bytes.slice(i + 4, i + 6)) / 100;
-                    break;
-                case 0x03:
-                    data.h2s = readUInt16LE(bytes.slice(i + 4, i + 6)) / 100;
-                    break;
-                case 0x05:
-                    data.nh3 = readUInt16LE(bytes.slice(i + 4, i + 6)) / 100;
-                    break;
-                case 0x0f:
-                    data.c2h4 = readUInt16LE(bytes.slice(i + 4, i + 6)) / 100;
-                    break;
-                case 0x10:
-                    data.voc = readUInt16LE(bytes.slice(i + 4, i + 6)) / 100;
-                    break;
-                case 0x11:
-                    data.smell = readUInt16LE(bytes.slice(i + 4, i + 6));
-                    break;
-            }
-            data.status = readSensorStatus(bytes.slice(i + 6, i + 7));
-            i += 8;
+            var flags = readUInt8(bytes[i + 11]);
+            var decimal = flags & 0x0f;
+
+            data.gas_type = readGasType(bytes[i + 4]);
+            data.value = readUInt32LE(bytes.slice(i + 5, i + 9)) / Math.pow(10, decimal);
+            data.range = readUInt16LE(bytes.slice(i + 9, i + 11));
+            data.decimal = decimal;
+            data.status = readGasSensorStatus((flags >> 4) & 0x03);
+            data.unit = readGasUnit((flags >> 6) & 0x03);
+            i += 12;
 
             decoded.history = decoded.history || [];
             decoded.history.push(data);
@@ -230,6 +217,9 @@ function handle_downlink_response(channel_type, bytes, offset) {
                 decoded.gas_calibration_config.calibration_value = 0;
             } else if(type === 0x01) {
                 decoded.gas_calibration_config.type = "Target Calibration";
+                decoded.gas_calibration_config.calibration_value = readUInt32LE(bytes.slice(offset + 1, offset + 5)) / 1000;
+            } else if (type === 0x02) {
+                decoded.gas_calibration_config.type = "Compensation Calibration";
                 decoded.gas_calibration_config.calibration_value = readUInt32LE(bytes.slice(offset + 1, offset + 5)) / 1000;
             }
             offset += 5;
