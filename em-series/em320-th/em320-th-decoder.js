@@ -123,7 +123,7 @@ function milesightDeviceDecode(bytes) {
             decoded.temperature_mutation_alarm =  {};
             decoded.temperature_mutation_alarm.temperature = readInt16LE(bytes.slice(i, i + 2)) / 10;
             decoded.temperature_mutation_alarm.temperature_change = readInt16LE(bytes.slice(i + 2, i + 4)) / 10;
-            const alarm_type = readUInt8(bytes[i + 4]);
+            var alarm_type = readUInt8(bytes[i + 4]);
             if (alarm_type === 0) {
                 decoded.temperature_mutation_alarm.alarm_type = 'Temperature mutation';
             }
@@ -139,7 +139,7 @@ function milesightDeviceDecode(bytes) {
             decoded.humidity_mutation_alarm =  {};
             decoded.humidity_mutation_alarm.relative_humidity = readInt16LE(bytes.slice(i, i + 2)) / 10;
             decoded.humidity_mutation_alarm.relative_humidity_change = readInt16LE(bytes.slice(i + 2, i + 4)) / 10;
-            const alarm_type = readUInt8(bytes[i + 4]);
+            var alarm_type = readUInt8(bytes[i + 4]);
             if (alarm_type === 0) {
                 decoded.humidity_mutation_alarm.alarm_type = 'Humidity mutation';
             }
@@ -155,7 +155,7 @@ function milesightDeviceDecode(bytes) {
             decoded.humidity_mutation_alarm =  {};
             decoded.humidity_mutation_alarm.relative_humidity = readInt8(bytes[i]) / 2;
             decoded.humidity_mutation_alarm.relative_humidity_change = readInt8(bytes[i + 1]) / 2;
-            const alarm_type = readUInt8(bytes[i + 2]);
+            var alarm_type = readUInt8(bytes[i + 2]);
             if (alarm_type === 0) {
                 decoded.humidity_mutation_alarm.alarm_type = 'Humidity mutation';
             }
