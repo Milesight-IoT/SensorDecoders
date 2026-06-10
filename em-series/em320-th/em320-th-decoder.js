@@ -108,6 +108,11 @@ function milesightDeviceDecode(bytes) {
             decoded.humidity = readUInt8(bytes[i]) / 2;
             i += 1;
         }
+        else if (channel_id === 0x05 && channel_type === 0x6B) {
+            // 触发类型
+            decoded.trigger_type = readTriggerType(readUInt8(bytes[i]));
+            i += 1;
+        }
         // STORAGE STATUS (V1.7+, cert version only)
         else if (channel_id === 0x05 && channel_type === 0x9c) {
             decoded.storage_status = readStorageStatus(bytes[i]);
@@ -271,8 +276,8 @@ function handle_downlink_response(channel_id, channel_type, bytes, offset) {
             offset += 3;
             break;
         case 0xf2:
-            decoded.alarm_count = readUInt16LE(bytes.slice(offset + 1, offset + 3));
-            offset += 3;
+            decoded.alarm_count = readUInt16LE(bytes.slice(offset, offset + 2));
+            offset += 2;
             break;
         case 0xf5:
             decoded.threshold_release = readEnableStatus(bytes[offset]);
@@ -383,8 +388,13 @@ function readLoRaWANClass(type) {
 }
 
 function readHumidityResolution(resolution) {
-    var resolution_map = { 0: "0.5%", 1: "1%" };
+    var resolution_map = { 0: "0.5%", 1: "0.1%" };
     return getValue(resolution_map, resolution);
+}
+
+function readTriggerType(type) {
+    var type_map = { 1: "external_trigger" };
+    return getValue(type_map, type);
 }
 
 function readRecordType(type) {

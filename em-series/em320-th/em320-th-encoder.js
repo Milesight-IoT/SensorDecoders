@@ -56,6 +56,9 @@ function milesightDeviceEncode(payload) {
     if ("humidity_resolution" in payload) {
         encoded = encoded.concat(setHumidityResolution(payload.humidity_resolution));
     }
+    if ("trigger_type" in payload) {
+        encoded = encoded.concat(setTriggerType(payload.trigger_type));
+    }
     if ("calibration_config" in payload) {
         encoded = encoded.concat(setCalibrationConfig(payload.calibration_config));
     }
@@ -275,12 +278,31 @@ function setThresholdRelease(threshold_release) {
 }
 
 /**
+ * set trigger type
+ * @param {number} trigger_type values: (1: 外部触发)
+ * @example { "trigger_type": 1 }
+ */
+function setTriggerType(trigger_type) {
+    var trigger_type_map = { 1: "external_trigger" };
+    var trigger_type_values = getValues(trigger_type_map);
+    if (trigger_type_values.indexOf(trigger_type) === -1) {
+        throw new Error("trigger_type must be one of " + trigger_type_values.join(", "));
+    }
+
+    var buffer = new Buffer(3);
+    buffer.writeUInt8(0x05);
+    buffer.writeUInt8(0x6B);
+    buffer.writeUInt8(1);
+    return buffer.toBytes();
+}
+
+/**
  * set humidity resolution
  * @param {number} humidity_resolution values: (0: 0.5%, 1: 1%)
  * @example { "humidity_resolution": 0 }
  */
 function setHumidityResolution(humidity_resolution) {
-    var resolution_map = { 0: "0.5%", 1: "1%" };
+    var resolution_map = { 0: "0.5%", 1: "0.1%" };
     var resolution_values = getValues(resolution_map);
     if (resolution_values.indexOf(humidity_resolution) === -1) {
         throw new Error("humidity_resolution must be one of " + resolution_values.join(", "));
