@@ -41,8 +41,35 @@ function milesightDeviceEncode(payload) {
     if ("report_status" in payload) {
         encoded = encoded.concat(reportStatus(payload.report_status));
     }
-    if ("temperature_alarm_config" in payload) {
-        encoded = encoded.concat(setTemperatureAlarmConfig(payload.temperature_alarm_config));
+    if ("alarm_config" in payload) {
+        encoded = encoded.concat(setAlarmConfig(payload.alarm_config));
+    }
+    if ("mutation_config" in payload) {
+        encoded = encoded.concat(setMutationConfig(payload.mutation_config));
+    }
+    if ("alarm_count" in payload) {
+        encoded = encoded.concat(setAlarmCount(payload.alarm_count));
+    }
+    if ("threshold_release" in payload) {
+        encoded = encoded.concat(setThresholdRelease(payload.threshold_release));
+    }
+    if ("humidity_resolution" in payload) {
+        encoded = encoded.concat(setHumidityResolution(payload.humidity_resolution));
+    }
+    if ("calibration_config" in payload) {
+        encoded = encoded.concat(setCalibrationConfig(payload.calibration_config));
+    }
+    if ("button_lock" in payload) {
+        encoded = encoded.concat(setButtonLock(payload.button_lock));
+    }
+    if ("D2D_enable" in payload) {
+        encoded = encoded.concat(setD2DEnable(payload.D2D_enable));
+    }
+    if ("D2D_key" in payload) {
+        encoded = encoded.concat(setD2DKey(payload.D2D_key));
+    }
+    if ("D2D_sender_config" in payload) {
+        encoded = encoded.concat(setD2DSenderConfig(payload.D2D_sender_config));
     }
     if ("history_enable" in payload) {
         encoded = encoded.concat(setHistoryEnable(payload.history_enable));
@@ -57,7 +84,7 @@ function milesightDeviceEncode(payload) {
         encoded = encoded.concat(setResendInterval(payload.resend_interval));
     }
     if ("fetch_history" in payload) {
-        encoded = encoded.concat(fetchHistory(payload.fetch_history.start_time, payload.fetch_history.end_time));
+        encoded = encoded.concat(fetchHistory(payload.fetch_history));
     }
     if ("stop_transmit" in payload) {
         encoded = encoded.concat(stopTransmit(payload.stop_transmit));
@@ -92,34 +119,36 @@ function reboot(reboot) {
 
 /**
  * report interval configuration
- * @param {number} report_interval uint: second, range: [60, 64800]
+ * @param {number} report_interval uint: min, range: [1, 1440]
  * @example { "report_interval": 600 }
  */
 function setReportInterval(report_interval) {
-    if (report_interval < 60 || report_interval > 64800) {
-        throw new Error("report_interval must be in range [60, 64800]");
+    if (report_interval < 1 || report_interval > 1440) {
+        throw new Error("report_interval must be in range [1, 1440]");
     }
 
     var buffer = new Buffer(4);
     buffer.writeUInt8(0xff);
-    buffer.writeUInt8(0x03);
+    buffer.writeUInt8(0x8e);
+    // ID reserved
+    buffer.writeUInt8(0x01);
     buffer.writeUInt16LE(report_interval);
     return buffer.toBytes();
 }
 
 /**
  * set collection interval
- * @param {number} collection_interval unit: second, range: [60, 64800]
+ * @param {number} collection_interval unit: min, range: [1, 1440]
  * @example { "collection_interval": 60 }
  */
 function setCollectionInterval(collection_interval) {
-    if (collection_interval < 60 || collection_interval > 64800) {
-        throw new Error("collection_interval must be in range [60, 64800]");
+    if (collection_interval < 1 || collection_interval > 1440) {
+        throw new Error("collection_interval must be in range [1, 1440]");
     }
 
     var buffer = new Buffer(4);
-    buffer.writeUInt8(0xff);
-    buffer.writeUInt8(0x02);
+    buffer.writeUInt8(0xf9);
+    buffer.writeUInt8(0x39);
     buffer.writeUInt16LE(collection_interval);
     return buffer.toBytes();
 }
@@ -144,35 +173,267 @@ function reportStatus(report_status) {
 
 /**
  * set temperature threshold alarm
- * @param {object} temperature_alarm_config
- * @param {number} temperature_alarm_config.condition values: (0: disable, 1: below, 2: above, 3: between, 4: outside)
- * @param {number} temperature_alarm_config.threshold_min condition=(below, within, outside)
- * @param {number} temperature_alarm_config.threshold_max condition=(above, within, outside)
- * @example { "temperature_alarm_config": { "condition": 2, "threshold_min": 10, "threshold_max": 30 } }
+ * @param {object} alarm_config
+ * @param {number} alarm_config.id 1: temperature, 2: humidity
+ * @param {number} alarm_config.condition values: (0: disable, 1: below, 2: above, 3: between, 4: outside)
+ * @param {number} alarm_config.threshold_min condition=(below, within, outside)
+ * @param {number} alarm_config.threshold_max condition=(above, within, outside)
+ * @param {number} alarm_config.enable values: (0: disable, 1: enable)
+ * @example { "alarm_config": { "id": 1, "condition": 2, "threshold_min": 10, "threshold_max": 30, "enable": 1 } }
  */
-function setTemperatureAlarmConfig(temperature_alarm_config) {
-    var condition = temperature_alarm_config.condition;
-    var threshold_min = temperature_alarm_config.threshold_min;
-    var threshold_max = temperature_alarm_config.threshold_max;
+function setAlarmConfig(alarm_config) {
+    var id = alarm_config.id;
+    var condition = alarm_config.condition;
+    var threshold_min = alarm_config.threshold_min;
+    var threshold_max = alarm_config.threshold_max;
 
+    var enable_map = { 0: "disable", 1: "enable" };
+    var enable_values = getValues(enable_map);
+    if (enable_values.indexOf(enable) === -1) {
+        throw new Error("enable must be one of " + enable_values.join(", "));
+    }
     var condition_map = { 0: "disable", 1: "below", 2: "above", 3: "between", 4: "outside" };
     var condition_values = getValues(condition_map);
     if (condition_values.indexOf(condition) === -1) {
         throw new Error("condition must be one of " + condition_values.join(", "));
     }
 
-    var data = 0x00;
-    data |= getValue(condition_map, condition);
-    data |= 1 << 3; // temperature alarm
-
-    var buffer = new Buffer(11);
-    buffer.writeUInt8(0xff);
-    buffer.writeUInt8(0x06);
-    buffer.writeUInt8(data);
+    var buffer = new Buffer(9);
+    buffer.writeUInt8(0xf9);
+    buffer.writeUInt8(0x0b);
+    buffer.writeUInt8(id);
+    buffer.writeUInt8(getValue(condition_map, condition));
     buffer.writeInt16LE(threshold_min * 10);
     buffer.writeInt16LE(threshold_max * 10);
-    buffer.writeUInt16LE(0x00);
-    buffer.writeUInt16LE(0x00);
+    buffer.writeUInt8(getValue(enable_map, enable));
+    return buffer.toBytes();
+}
+
+/**
+ * set mutation config
+ * @param {object} mutation_config
+ * @param {number} mutation_config.id 1: temperature, 2: humidity
+ * @param {number} mutation_config.mutation_max
+ * @param {number} mutation_config.enable values: (0: disable, 1: enable)
+ * @example { "mutation_config": { "id": 1, "mutation_max": 10, "enable": 1 } }
+ */
+function setMutationConfig(mutation_config) {
+
+    var id = mutation_config.id;
+    var mutation_max = mutation_config.mutation_max;
+    var enable = mutation_config.enable;
+
+    var enable_map = { 0: "disable", 1: "enable" };
+    var enable_values = getValues(enable_map);
+    if (enable_values.indexOf(enable) === -1) {
+        throw new Error("enable must be one of " + enable_values.join(", "));
+    }
+
+    var buffer = new Buffer(6);
+    buffer.writeUInt8(0xf9);
+    buffer.writeUInt8(0x0c);
+    buffer.writeUInt8(id);
+    buffer.writeInt16LE(mutation_max * 10);
+    buffer.writeUInt8(getValue(enable_map, enable));
+    return buffer.toBytes();
+}
+
+/**
+ * set alarm count
+ * @param {number} alarm_count
+ * @example { "alarm_count": 10 } range: [1, 1000]
+ */
+function setAlarmCount(alarm_count) {
+    if (alarm_count < 1 || alarm_count > 1000) {
+        throw new Error("alarm_count must be in range [1, 1000]");
+    }
+
+    var buffer = new Buffer(4);
+    buffer.writeUInt8(0xff);
+    buffer.writeUInt8(0xf2);
+    buffer.writeUInt16LE(alarm_count);
+    return buffer.toBytes();
+}
+
+/**
+ * set threshold release
+ * @param {number} threshold_release values: (0: enable, 1: disable)
+ * @example { "threshold_release": 0 }
+ */
+function setThresholdRelease(threshold_release) {
+    var enable_map = { 0: "enable", 1: "disable" };
+    var enable_values = getValues(enable_map);
+    if (enable_values.indexOf(threshold_release) === -1) {
+        throw new Error("threshold_release must be one of " + enable_values.join(", "));
+    }
+
+    var buffer = new Buffer(3);
+    buffer.writeUInt8(0xff);
+    buffer.writeUInt8(0xf5);
+    buffer.writeUInt8(getValue(enable_map, threshold_release));
+    return buffer.toBytes();
+}
+
+/**
+ * set humidity resolution
+ * @param {number} humidity_resolution values: (0: 0.5%, 1: 1%)
+ * @example { "humidity_resolution": 0 }
+ */
+function setHumidityResolution(humidity_resolution) {
+    var resolution_map = { 0: "0.5%", 1: "1%" };
+    var resolution_values = getValues(resolution_map);
+    if (resolution_values.indexOf(humidity_resolution) === -1) {
+        throw new Error("humidity_resolution must be one of " + resolution_values.join(", "));
+    }
+
+    var buffer = new Buffer(3);
+    buffer.writeUInt8(0xf9);
+    buffer.writeUInt8(0xd9);
+    buffer.writeUInt8(getValue(resolution_map, humidity_resolution));
+    return buffer.toBytes();
+}
+
+/**
+ * set calibration config
+ * @param {object} calibration_config
+ * @param {number} calibration_config.id values: (0: temperature, 1: humidity)
+ * @param {number} calibration_config.enable values: (0: disable, 1: enable)
+ * @param {number} calibration_config.calibration_value unit: ℃ or %, range: [-100, 100]
+ * @example { "calibration_config": { "id": 0, "enable": 1, "calibration_value": 10 } }
+ * @example { "calibration_config": { "id": 1, "enable": 1, "calibration_value": 10 } }
+ */
+function setCalibrationConfig(calibration_config) {
+    var id = calibration_config.id;
+    var enable = calibration_config.enable;
+    var calibration_value = calibration_config.calibration_value;
+
+    var id_map = { 0: "temperature", 1: "humidity" };
+    var id_values = getValues(id_map);
+    if (id_values.indexOf(id) === -1) {
+        throw new Error("calibration_config.id must be one of " + id_values.join(", "));
+    }
+
+    var enable_map = { 0: "disable", 1: "enable" };
+    var enable_values = getValues(enable_map);
+    if (enable_values.indexOf(enable) === -1) {
+        throw new Error("calibration_config.enable must be one of " + enable_values.join(", "));
+    }
+
+    if (calibration_value < -100 || calibration_value > 100) {
+        throw new Error("calibration_config.calibration_value must be in range [-100, 100]");
+    }
+
+    // ctrl: bit0~bit6 = id, bit7 = enable
+    var ctrl = (getValue(id_map, id) & 0x7f) | (getValue(enable_map, enable) << 7);
+
+    var buffer = new Buffer(5);
+    buffer.writeUInt8(0xff);
+    buffer.writeUInt8(0xea);
+    buffer.writeUInt8(ctrl);
+    buffer.writeInt16LE(calibration_value * 10);
+    return buffer.toBytes();
+}
+
+/**
+ * set button lock
+ * @param {object} button_lock
+ * @param {number} button_lock.power_off values: (0: disable, 1: enable)
+ * @param {number} button_lock.collect_report values: (0: disable, 1: enable)
+ * @example { "button_lock": { "power_off": 1, "collect_report": 1 } }
+ */
+function setButtonLock(button_lock) {
+    var power_off = button_lock.power_off;
+    var collect_report = button_lock.collect_report;
+
+    var enable_map = { 0: "disable", 1: "enable" };
+    var enable_values = getValues(enable_map);
+    if (enable_values.indexOf(power_off) === -1) {
+        throw new Error("button_lock.power_off must be one of " + enable_values.join(", "));
+    }
+    if (enable_values.indexOf(collect_report) === -1) {
+        throw new Error("button_lock.collect_report must be one of " + enable_values.join(", "));
+    }
+
+    var mask = 0x00;
+    mask |= getValue(enable_map, power_off) << 0;
+    mask |= getValue(enable_map, collect_report) << 1;
+
+    var buffer = new Buffer(3);
+    buffer.writeUInt8(0xf9);
+    buffer.writeUInt8(0x69);
+    buffer.writeUInt8(mask);
+    return buffer.toBytes();
+}
+
+/**
+ * set D2D enable
+ * @param {number} D2D_enable values: (0: disable, 1: enable)
+ * @example { "D2D_enable": 1 }
+ */
+function setD2DEnable(D2D_enable) {
+    var enable_map = { 0: "disable", 1: "enable" };
+    var enable_values = getValues(enable_map);
+    if (enable_values.indexOf(D2D_enable) === -1) {
+        throw new Error("D2D_enable must be one of " + enable_values.join(", "));
+    }
+
+    var buffer = new Buffer(3);
+    buffer.writeUInt8(0xf9);
+    buffer.writeUInt8(0x66);
+    buffer.writeUInt8(getValue(enable_map, D2D_enable));
+    return buffer.toBytes();
+}
+
+/**
+ * set D2D key
+ * @param {string} D2D_key 8-byte hex string, e.g. "1234567812345678"
+ * @example { "D2D_key": "1234567812345678" }
+ */
+function setD2DKey(D2D_key) {
+    if (typeof D2D_key !== "string" || D2D_key.length !== 16 || !/^[0-9a-fA-F]{16}$/.test(D2D_key)) {
+        throw new Error("D2D_key must be a 16-character hex string (8 bytes)");
+    }
+
+    var buffer = new Buffer(10);
+    buffer.writeUInt8(0xff);
+    buffer.writeUInt8(0x35);
+    for (var i = 0; i < 8; i++) {
+        buffer.writeUInt8(parseInt(D2D_key.slice(i * 2, i * 2 + 2), 16));
+    }
+    return buffer.toBytes();
+}
+
+/**
+ * set D2D sender config
+ * @param {object} D2D_sender_config
+ * @param {number} D2D_sender_config.d2d_sender_enable values: (0: disable, 1: enable)
+ * @param {number} D2D_sender_config.uplink_lora_enable values: (0: disable, 1: enable)
+ * @param {number} D2D_sender_config.sensor_data_enable bitmask: bit0=temperature, bit1=humidity
+ * @example { "D2D_sender_config": { "d2d_sender_enable": 1, "uplink_lora_enable": 1, "sensor_data_enable": 3 } }
+ */
+function setD2DSenderConfig(D2D_sender_config) {
+    var d2d_sender_enable = D2D_sender_config.d2d_sender_enable;
+    var uplink_lora_enable = D2D_sender_config.uplink_lora_enable;
+    var sensor_data_enable = D2D_sender_config.sensor_data_enable;
+
+    var enable_map = { 0: "disable", 1: "enable" };
+    var enable_values = getValues(enable_map);
+    if (enable_values.indexOf(d2d_sender_enable) === -1) {
+        throw new Error("D2D_sender_config.d2d_sender_enable must be one of " + enable_values.join(", "));
+    }
+    if (enable_values.indexOf(uplink_lora_enable) === -1) {
+        throw new Error("D2D_sender_config.uplink_lora_enable must be one of " + enable_values.join(", "));
+    }
+    if (typeof sensor_data_enable !== "number" || sensor_data_enable < 0 || sensor_data_enable > 0xffff) {
+        throw new Error("D2D_sender_config.sensor_data_enable must be in range [0, 65535]");
+    }
+
+    var buffer = new Buffer(6);
+    buffer.writeUInt8(0xf9);
+    buffer.writeUInt8(0x63);
+    buffer.writeUInt8(getValue(enable_map, d2d_sender_enable));
+    buffer.writeUInt8(getValue(enable_map, uplink_lora_enable));
+    buffer.writeUInt16LE(sensor_data_enable);
     return buffer.toBytes();
 }
 

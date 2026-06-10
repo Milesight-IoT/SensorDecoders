@@ -252,8 +252,8 @@
             "bacnet_unit_type": "UNITS_NO_UNITS"
         },
         {
-            "id": "temperature_alarm_config.condition",
-            "name": "Temperature Alarm Config (Condition)",
+            "id": "alarm_config.condition",
+            "name": "Alarm Config (Condition)",
             "value": "",
             "unit": "",
             "access_mode": "RW",
@@ -269,11 +269,11 @@
             "bacnet_type": "multistate_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": ["temperature_alarm_config.condition", "temperature_alarm_config.threshold_min", "temperature_alarm_config.threshold_max"]
+            "reference": ["alarm_config.condition", "alarm_config.threshold_min", "alarm_config.threshold_max"]
         },
         {
-            "id": "temperature_alarm_config.threshold_min",
-            "name": "Temperature Alarm Config (Threshold Min)",
+            "id": "alarm_config.threshold_min",
+            "name": "Alarm Config (Threshold Min)",
             "value": "",
             "unit": "°C",
             "access_mode": "RW",
@@ -282,11 +282,11 @@
             "bacnet_type": "analog_value_object",
             "bacnet_unit_type_id": 62,
             "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
-            "reference": ["temperature_alarm_config.condition", "temperature_alarm_config.threshold_min", "temperature_alarm_config.threshold_max"]
+            "reference": ["alarm_config.condition", "alarm_config.threshold_min", "alarm_config.threshold_max"]
         },
         {
-            "id": "temperature_alarm_config.threshold_max",
-            "name": "Temperature Alarm Config (Threshold Max)",
+            "id": "alarm_config.threshold_max",
+            "name": "Alarm Config (Threshold Max)",
             "value": "",
             "unit": "°C",
             "access_mode": "RW",
@@ -295,7 +295,7 @@
             "bacnet_type": "analog_value_object",
             "bacnet_unit_type_id": 62,
             "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
-            "reference": ["temperature_alarm_config.condition", "temperature_alarm_config.threshold_min", "temperature_alarm_config.threshold_max"]
+            "reference": ["alarm_config.condition", "alarm_config.threshold_min", "alarm_config.threshold_max"]
         },
         {
             "id": "history_enable",
