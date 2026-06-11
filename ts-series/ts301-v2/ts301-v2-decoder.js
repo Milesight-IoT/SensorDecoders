@@ -159,13 +159,13 @@ function milesightDeviceDecode(bytes) {
             var temperature_chn_event = (mask >>> 4) & 0x0f;
             var temperature = readInt16LE(bytes.slice(i + 2, i + 4));
             var humidity = readInt16LE(bytes.slice(i, i + 2));
-            // -999 is not valid temperature, skip it
-            if (temperature !== -999) {
-                if (temperature === -1000 || temperature === -1001) {
+            // -29999 is invalid value, skip it
+            if (temperature !== -29999) {
+                if (temperature === -30000 || temperature === -30001) {
                     data.magnet = readMagnetEvent(temperature);
                     data.event = readHistoryEvent(temperature_chn_event);
                 } else {
-                    if (temperature === -1002) {
+                    if (temperature === -30002) {
                         data.temperature = 'over_range';
                     } else {
                         data.temperature = temperature / 100;
@@ -173,12 +173,12 @@ function milesightDeviceDecode(bytes) {
                     data.temperature_event = readHistoryEvent(temperature_chn_event);
                 }
             }
-            if (humidity !== -999) {
-                if (humidity === -1000 || humidity === -1001) {
+            if (humidity !== -29999) {
+                if (humidity === -30000 || humidity === -30001) {
                     data.magnet = readMagnetEvent(humidity);
                     data.event = readHistoryEvent(humidity_chn_event);
                 } else {
-                    if (humidity === -1002) {
+                    if (humidity === -30002) {
                         data.humidity = 'over_range';
                     } else {
                         data.humidity = humidity / 100;
@@ -537,9 +537,9 @@ function readMagnetStatus(status) {
 }
 
 function readMagnetEvent(status) {
-    if (status === -1000) {
+    if (status === -30000) {
         return 'close';
-    } else if (status === -1001) {
+    } else if (status === -30001) {
         return 'open';
     } else {
         return 'unknown';

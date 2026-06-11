@@ -240,16 +240,15 @@ function milesightDeviceDecode(bytes) {
             var humidity_chn_event = (mask >>> 0) & 0x0f;
             var humidity_chn1 = readInt16LE(bytes.slice(i, i + 2));
             var temperature_chn1 = readInt16LE(bytes.slice(i + 2, i + 4));
-            // -999 is not valid temperature, skip it
-            if (temperature_chn1 !== -999) {
-                // magnet sensor
-                // -1000 is magnet close
-                // -1001 is magnet open
-                if (temperature_chn1 === -1000 || temperature_chn1 === -1001) {
+            // -29999 is invalid value, skip it
+            if (temperature_chn1 !== -29999) {
+                // -30000 is magnet close
+                // -30001 is magnet open
+                if (temperature_chn1 === -30000 || temperature_chn1 === -30001) {
                     data.magnet_chn1 = readMagnetEvent(temperature_chn1);
                     data.chn1_event = readHistoryEvent(temperature_chn_event);
                 } else {
-                    if (temperature_chn1 === -1002) {
+                    if (temperature_chn1 === -30002) {
                         data.temperature_chn1 = 'over_range';
                     } else {
                         data.temperature_chn1 = temperature_chn1 / 100;
@@ -257,16 +256,15 @@ function milesightDeviceDecode(bytes) {
                     data.temperature_chn1_event = readHistoryEvent(temperature_chn_event);
                 }
             }
-            // -999 is not valid humidity, skip it
-            if (humidity_chn1 !== -999) {
-                // magnet sensor
-                // -1000 is magnet close
-                // -1001 is magnet open
-                if (humidity_chn1 === -1000 || humidity_chn1 === -1001) {
+            // -29999 is invalid value, skip it
+            if (humidity_chn1 !== -29999) {
+                // -30000 is magnet close
+                // -30001 is magnet open
+                if (humidity_chn1 === -30000 || humidity_chn1 === -30001) {
                     data.magnet_chn1 = readMagnetEvent(humidity_chn1);
                     data.chn1_event = readHistoryEvent(humidity_chn_event);
                 } else {
-                    if (humidity_chn1 === -1002) {
+                    if (humidity_chn1 === -30002) {
                         data.humidity_chn1 = 'over_range';
                     } else {
                         data.humidity_chn1 = humidity_chn1 / 100;
@@ -290,16 +288,15 @@ function milesightDeviceDecode(bytes) {
             var humidity_chn_event = (mask >>> 0) & 0x0f;
             var temperature_chn2 = readInt16LE(bytes.slice(i + 2, i + 4));
             var humidity_chn2 = readInt16LE(bytes.slice(i, i + 2));
-            // -999 is not valid temperature, skip it
-            if (temperature_chn2 !== -999) {
-                // magnet sensor
-                // -1000 is magnet close
-                // -1001 is magnet open
-                if (temperature_chn2 === -1000 || temperature_chn2 === -1001) {
+            // -29999 is invalid value, skip it
+            if (temperature_chn2 !== -29999) {
+                // -30000 is magnet close
+                // -30001 is magnet open
+                if (temperature_chn2 === -30000 || temperature_chn2 === -30001) {
                     data.magnet_chn2 = readMagnetEvent(temperature_chn2);
                     data.chn2_event = readHistoryEvent(temperature_chn_event);
                 } else {
-                    if (temperature_chn2 === -1002) {
+                    if (temperature_chn2 === -30002) {
                         data.temperature_chn2 = 'over_range';
                     } else {
                         data.temperature_chn2 = temperature_chn2 / 100;
@@ -307,16 +304,15 @@ function milesightDeviceDecode(bytes) {
                     data.temperature_chn2_event = readHistoryEvent(temperature_chn_event);
                 }
             }
-            // -999 is not valid humidity, skip it
-            if (humidity_chn2 !== -999) {
-                // magnet sensor
-                // -1000 is magnet close
-                // -1001 is magnet open
-                if (humidity_chn2 === -1000 || humidity_chn2 === -1001) {
+            // -29999 is invalid value, skip it
+            if (humidity_chn2 !== -29999) {
+                // -30000 is magnet close
+                // -30001 is magnet open
+                if (humidity_chn2 === -30000 || humidity_chn2 === -30001) {
                     data.magnet_chn2 = readMagnetEvent(humidity_chn2);
                     data.chn2_event = readHistoryEvent(humidity_chn_event);
                 } else {
-                    if (humidity_chn2 === -1002) {
+                    if (humidity_chn2 === -30002) {
                         data.humidity_chn2 = 'over_range';
                     } else {
                         data.humidity_chn2 = humidity_chn2 / 100;
@@ -715,9 +711,9 @@ function readMagnetStatus(status) {
 }
 
 function readMagnetEvent(status) {
-    if (status === -1000) {
+    if (status === -30000) {
         return 'close';
-    } else if (status === -1001) {
+    } else if (status === -30001) {
         return 'open';
     } else {
         return 'unknown';
