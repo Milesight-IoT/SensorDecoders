@@ -70,7 +70,7 @@ function milesightDeviceDecode(bytes) {
         }
         // DEVICE STATUS
         else if (channel_id === 0xff && channel_type === 0x0b) {
-            decoded.device_status = readDeviceStatus(1);
+            decoded.device_status = readDeviceStatus(bytes[i]);
             i += 1;
         }
 
@@ -105,7 +105,11 @@ function milesightDeviceDecode(bytes) {
         }
         // HUMIDITY
         else if (channel_id === 0x04 && channel_type === 0x68) {
-            decoded.humidity = readUInt8(bytes[i]) / 2;
+            if (bytes[i] === 0xFF) {
+                decoded.humidity = "collection_err";
+            } else {
+                decoded.humidity = readUInt8(bytes[i]) / 2;
+            }
             i += 1;
         }
         else if (channel_id === 0x05 && channel_type === 0x6B) {
@@ -152,14 +156,14 @@ function milesightDeviceDecode(bytes) {
         }
         else if (channel_id === 0x84 && channel_type === 0x68) {
             decoded.humidity_threshold_alarm =  {};
-            decoded.humidity_threshold_alarm.relative_humidity = readInt8(bytes[i]) / 2;
+            decoded.humidity_threshold_alarm.relative_humidity = readUInt8(bytes[i]) / 2;
             decoded.humidity_threshold_alarm.alarm_type = readAlarmType(bytes[i + 1]);
             i += 2;
         }
         else if (channel_id === 0x94 && channel_type === 0x68) {
             decoded.humidity_mutation_alarm =  {};
-            decoded.humidity_mutation_alarm.relative_humidity = readInt8(bytes[i]) / 2;
-            decoded.humidity_mutation_alarm.relative_humidity_change = readInt8(bytes[i + 1]) / 2;
+            decoded.humidity_mutation_alarm.relative_humidity = readUInt8(bytes[i]) / 2;
+            decoded.humidity_mutation_alarm.relative_humidity_change = readUInt8(bytes[i + 1]) / 2;
             var alarm_type = readUInt8(bytes[i + 2]);
             if (alarm_type === 0) {
                 decoded.humidity_mutation_alarm.alarm_type = 'Humidity mutation';
@@ -184,7 +188,11 @@ function milesightDeviceDecode(bytes) {
             var data = {};
             data.timestamp = readUInt32LE(bytes.slice(i, i + 4));
             data.temperature = readInt16LE(bytes.slice(i + 4, i + 6)) / 10;
-            data.humidity = readUInt8(bytes[i + 6]) / 2;
+            if (bytes[i + 6] === 0xFF) {
+                data.humidity = "collection_err";
+            } else {
+                data.humidity = readUInt8(bytes[i + 6]) / 2;
+            }
             data.record_type = readRecordType(readUInt8(bytes[i + 7]));
             i += 8;
             decoded.history = decoded.history || [];
