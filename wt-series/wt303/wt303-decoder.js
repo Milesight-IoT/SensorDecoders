@@ -374,7 +374,7 @@ function milesightDeviceDecode(bytes) {
 				decoded.temperature_control_dehumidification = decoded.temperature_control_dehumidification || {};
 				// 0：disable, 1：enable
 				decoded.temperature_control_dehumidification.enable = readUInt8(bytes, counterObj, 1);
-				decoded.temperature_control_dehumidification.temperature_tolerance = readInt16LE(bytes, counterObj, 2) / 100;
+				decoded.temperature_control_dehumidification.temp = readInt16LE(bytes, counterObj, 2) / 100;
 				break;
 			case 0x72:
 				// 0：Auto, 1：Low, 2:Medium, 3:High
@@ -573,14 +573,14 @@ function milesightDeviceDecode(bytes) {
 				decoded.high_temperature_alarm_settings = decoded.high_temperature_alarm_settings || {};
 				// 0：disable, 1：enable
 				decoded.high_temperature_alarm_settings.enable = readUInt8(bytes, counterObj, 1);
-				decoded.high_temperature_alarm_settings.difference_in_temperature = readInt16LE(bytes, counterObj, 2) / 100;
+				decoded.high_temperature_alarm_settings.diff_in_temperature = readInt16LE(bytes, counterObj, 2) / 100;
 				decoded.high_temperature_alarm_settings.duration = readUInt8(bytes, counterObj, 1);
 				break;
 			case 0x78:
 				decoded.low_temperature_alarm_settings = decoded.low_temperature_alarm_settings || {};
 				// 0：disable, 1：enable
 				decoded.low_temperature_alarm_settings.enable = readUInt8(bytes, counterObj, 1);
-				decoded.low_temperature_alarm_settings.difference_in_temperature = readInt16LE(bytes, counterObj, 2) / 100;
+				decoded.low_temperature_alarm_settings.diff_in_temperature = readInt16LE(bytes, counterObj, 2) / 100;
 				decoded.low_temperature_alarm_settings.duration = readUInt8(bytes, counterObj, 1);
 				break;
 			case 0x7b:
@@ -730,16 +730,16 @@ function milesightDeviceDecode(bytes) {
 				decoded.window_opening_detection_enable = readUInt8(bytes, counterObj, 1);
 				break;
 			case 0x83:
-				decoded.window_opening_detection_settings = decoded.window_opening_detection_settings || {};
-				decoded.window_opening_detection_settings.type = readUInt8(bytes, counterObj, 1);
-				if (decoded.window_opening_detection_settings.type == 0x00) {
-					decoded.window_opening_detection_settings.temperature_detection = decoded.window_opening_detection_settings.temperature_detection || {};
-					decoded.window_opening_detection_settings.temperature_detection.difference_in_temperature = readInt16LE(bytes, counterObj, 2) / 100;
-					decoded.window_opening_detection_settings.temperature_detection.stop_time = readUInt8(bytes, counterObj, 1);
+				decoded.win_op = decoded.win_op || {};
+				decoded.win_op.type = readUInt8(bytes, counterObj, 1);
+				if (decoded.win_op.type == 0x00) {
+					decoded.win_op.temperature_detection = decoded.win_op.temperature_detection || {};
+					decoded.win_op.temperature_detection.diff_in_temperature = readInt16LE(bytes, counterObj, 2) / 100;
+					decoded.win_op.temperature_detection.stop_time = readUInt8(bytes, counterObj, 1);
 				}
-				if (decoded.window_opening_detection_settings.type == 0x01) {
-					decoded.window_opening_detection_settings.magnet_detection = decoded.window_opening_detection_settings.magnet_detection || {};
-					decoded.window_opening_detection_settings.magnet_detection.duration = readUInt8(bytes, counterObj, 1);
+				if (decoded.win_op.type == 0x01) {
+					decoded.win_op.magnet_detection = decoded.win_op.magnet_detection || {};
+					decoded.win_op.magnet_detection.duration = readUInt8(bytes, counterObj, 1);
 				}
 				break;
 			case 0x84:
@@ -1243,7 +1243,7 @@ function cmdMap() {
 		  "80": "di_enable",
 		  "81": "di_settings",
 		  "82": "window_opening_detection_enable",
-		  "83": "window_opening_detection_settings",
+		  "83": "win_op",
 		  "84": "freeze_protection_settings",
 		  "85": "temperature_source",
 		  "86": "d2d_pairing_enable",
@@ -1257,8 +1257,8 @@ function cmdMap() {
 		  "6201": "reporting_interval.minutes_of_time",
 		  "8100": "di_settings.card_control",
 		  "8101": "di_settings.magnet_detection",
-		  "8300": "window_opening_detection_settings.temperature_detection",
-		  "8301": "window_opening_detection_settings.magnet_detection",
+		  "8300": "win_op.temperature_detection",
+		  "8301": "win_op.magnet_detection",
 		  "8502": "temperature_source.lorawan_reception",
 		  "8503": "temperature_source.d2d_reception",
 		  "810000": "di_settings.card_control.system_control",
@@ -1500,7 +1500,7 @@ function processTemperature(decoded) {
         "precision": 2,
         "unitName": "℃"
     },
-    "temperature_control_dehumidification.temperature_tolerance": {
+    "temperature_control_dehumidification.temp": {
         "precision": 2,
         "unitName": "℃"
     },
@@ -1524,11 +1524,11 @@ function processTemperature(decoded) {
         "precision": 2,
         "unitName": "℃"
     },
-    "high_temperature_alarm_settings.difference_in_temperature": {
+    "high_temperature_alarm_settings.diff_in_temperature": {
         "precision": 2,
         "unitName": "℃"
     },
-    "low_temperature_alarm_settings.difference_in_temperature": {
+    "low_temperature_alarm_settings.diff_in_temperature": {
         "precision": 2,
         "unitName": "℃"
     },
@@ -1560,7 +1560,7 @@ function processTemperature(decoded) {
         "precision": 2,
         "unitName": "℃"
     },
-    "window_opening_detection_settings.temperature_detection.difference_in_temperature": {
+    "win_op.temperature_detection.diff_in_temperature": {
         "precision": 2,
         "unitName": "℃"
     },

@@ -462,7 +462,7 @@
         },
         {
             "id": "cooling_target_temperature_range.celsius_max",
-            "name": "Celsius Max Value(Cooling Target Temperature Regulation Range)",
+            "name": "Celsius Max Value(Cooling Target Temperature Range)",
             "value": "35",
             "unit": "°C",
             "access_mode": "RW",
@@ -481,7 +481,7 @@
         },
         {
             "id": "cooling_target_temperature_range.celsius_min",
-            "name": "Celsius Min Value(Cooling Target Temperature Regulation Range)",
+            "name": "Celsius Min Value(Cooling Target Temperature Range)",
             "value": "23",
             "unit": "°C",
             "access_mode": "RW",
@@ -500,7 +500,7 @@
         },
         {
             "id": "cooling_target_temperature_range.fahrenheit_max",
-            "name": "Fahrenheit Max Value(Cooling Target Temperature Regulation Range)",
+            "name": "Fahrenheit Max Value(Cooling Target Temperature Range)",
             "value": "95",
             "unit": "℉",
             "access_mode": "RW",
@@ -519,7 +519,7 @@
         },
         {
             "id": "cooling_target_temperature_range.fahrenheit_min",
-            "name": "Fahrenheit Min Value(Cooling Target Temperature Regulation Range)",
+            "name": "Fahrenheit Min Value(Cooling Target Temperature Range)",
             "value": "73.4",
             "unit": "℉",
             "access_mode": "RW",
@@ -2142,7 +2142,7 @@
         },
         {
             "id": "heating_target_temperature_range.celsius_max",
-            "name": "Celsius Max Value(Heating Target Temperature Regulation Range)",
+            "name": "Celsius Max Value(Heating Target Temperature Range)",
             "value": "19",
             "unit": "°C",
             "access_mode": "RW",
@@ -2161,7 +2161,7 @@
         },
         {
             "id": "heating_target_temperature_range.celsius_min",
-            "name": "Celsius Min Value(Heating Target Temperature Regulation Range)",
+            "name": "Celsius Min Value(Heating Target Temperature Range)",
             "value": "10",
             "unit": "°C",
             "access_mode": "RW",
@@ -2180,7 +2180,7 @@
         },
         {
             "id": "heating_target_temperature_range.fahrenheit_max",
-            "name": "Fahrenheit Max Value(Heating Target Temperature Regulation Range)",
+            "name": "Fahrenheit Max Value(Heating Target Temperature Range)",
             "value": "66.2",
             "unit": "℉",
             "access_mode": "RW",
@@ -2199,7 +2199,7 @@
         },
         {
             "id": "heating_target_temperature_range.fahrenheit_min",
-            "name": "Fahrenheit Min Value(Heating Target Temperature Regulation Range)",
+            "name": "Fahrenheit Min Value(Heating Target Temperature Range)",
             "value": "50",
             "unit": "℉",
             "access_mode": "RW",
@@ -2217,8 +2217,8 @@
             ]
         },
         {
-            "id": "high_temperature_alarm_settings.celsius_difference_in_temperature",
-            "name": "Celsius Difference in Temperature(Persistent High Temperature Alarm Settings)",
+            "id": "high_temperature_alarm_settings.celsius_diff_in_temperature",
+            "name": "Celsius Difference in Temperature(Persistent High Temperature)",
             "value": "3",
             "unit": "°C",
             "access_mode": "RW",
@@ -2257,7 +2257,7 @@
         },
         {
             "id": "high_temperature_alarm_settings.enable",
-            "name": "Persistent High Temperature(Persistent High Temperature Alarm Settings)",
+            "name": "Persistent High Temperature(Persistent High Temperature)",
             "value": "0",
             "unit": "",
             "access_mode": "RW",
@@ -2281,8 +2281,8 @@
             ]
         },
         {
-            "id": "high_temperature_alarm_settings.fahrenheit_difference_in_temperature",
-            "name": "Fahrenheit Difference in Temperature(Persistent High Temperature Alarm Settings)",
+            "id": "high_temperature_alarm_settings.fahrenheit_diff_in_temperature",
+            "name": "Fahrenheit Difference in Temperature(Persistent High Temperature)",
             "value": "37.4",
             "unit": "℉",
             "access_mode": "RW",
@@ -3028,8 +3028,8 @@
             "reference": []
         },
         {
-            "id": "low_temperature_alarm_settings.celsius_difference_in_temperature",
-            "name": "Celsius Difference in Temperature(Persistent Low Temperature Alarm Settings)",
+            "id": "low_temperature_alarm_settings.celsius_diff_in_temperature",
+            "name": "Celsius Difference in Temperature(Persistent Low Temperature)",
             "value": "3",
             "unit": "°C",
             "access_mode": "RW",
@@ -3068,7 +3068,7 @@
         },
         {
             "id": "low_temperature_alarm_settings.enable",
-            "name": "Persistent Low Temperature(Persistent Low Temperature Alarm Settings)",
+            "name": "Persistent Low Temperature(Persistent Low Temperature)",
             "value": "0",
             "unit": "",
             "access_mode": "RW",
@@ -3092,8 +3092,8 @@
             ]
         },
         {
-            "id": "low_temperature_alarm_settings.fahrenheit_difference_in_temperature",
-            "name": "Fahrenheit Difference in Temperature(Persistent Low Temperature Alarm Settings)",
+            "id": "low_temperature_alarm_settings.fahrenheit_diff_in_temperature",
+            "name": "Fahrenheit Difference in Temperature(Persistent Low Temperature)",
             "value": "37.4",
             "unit": "℉",
             "access_mode": "RW",
@@ -3726,7 +3726,7 @@
         },
         {
             "id": "send_temperature.fahrenheit_temperature",
-            "name": "Fahrenheit Temperature Extend Value(Temperature Extend Settings)",
+            "name": "Fahrenheit Temperature Extend Value(Temperature)",
             "value": "32",
             "unit": "℉",
             "access_mode": "W",
@@ -3906,7 +3906,7 @@
         },
         {
             "id": "temperature_alarm_settings.enable",
-            "name": "Temperature Threshold Alarm(Temperature Threshold Alarm Settings)",
+            "name": "Temperature Threshold Alarm(Temperature Threshold)",
             "value": "0",
             "unit": "",
             "access_mode": "RW",
@@ -4165,8 +4165,8 @@
             ]
         },
         {
-            "id": "temperature_control_dehumidification.celsius_temperature_tolerance",
-            "name": "Celsius Temp. Tolerance for Dehumidification\n(Temp. Control and Dehumidify Settings)",
+            "id": "temperature_control_dehumidification.celsius_temp_tolerance",
+            "name": "Celsius Temp. Tolerance for Dehumidification",
             "value": "1",
             "unit": "°C",
             "access_mode": "RW",
@@ -4185,7 +4185,7 @@
         },
         {
             "id": "temperature_control_dehumidification.enable",
-            "name": "Temp. Control and Dehumidify(Temp. Control and Dehumidify Settings)",
+            "name": "Temp. Control and Dehumidify(Temp. Control)",
             "value": "0",
             "unit": "",
             "access_mode": "RW",
@@ -4207,8 +4207,8 @@
             "reference": []
         },
         {
-            "id": "temperature_control_dehumidification.fahrenheit_temperature_tolerance",
-            "name": "Fahrenheit Temp. Tolerance for Dehumidification\n(Temp. Control and Dehumidify Settings)",
+            "id": "temperature_control_dehumidification.fahrenhei_temp_tolerance",
+            "name": "Fahrenheit Temp. Tolerance for Dehumidification",
             "value": "33.8",
             "unit": "℉",
             "access_mode": "RW",
@@ -5000,7 +5000,7 @@
         },
         {
             "id": "valve_control_settings.fahrenheit_control_adjustment_range",
-            "name": "Fahrenheit Valve Control Adjustment Range(Valve Control Settingd)",
+            "name": "Fahrenheit Valve Control Adjustment Range(Valve Control)",
             "value": "50",
             "unit": "℉",
             "access_mode": "RW",
@@ -5157,7 +5157,7 @@
             "bacnet_unit_type": "UNITS_NO_UNITS"
         },
         {
-            "id": "window_opening_detection_settings.magnet_detection.duration",
+            "id": "win_op.magnet_detection.duration",
             "name": "Duration(Magnetic Detection)",
             "value": "10",
             "unit": "min",
@@ -5174,7 +5174,7 @@
             "reference": []
         },
         {
-            "id": "window_opening_detection_settings.temperature_detection.celsius_difference_in_temperature",
+            "id": "win_op.temperature_detection.celsius_diff_in_temperature",
             "name": "Celsius Temperature Change(Temperature Detection)",
             "value": "3",
             "unit": "°C",
@@ -5189,11 +5189,11 @@
             "bacnet_unit_type_id": 62,
             "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
             "reference": [
-                "window_opening_detection_settings.temperature_detection.stop_time"
+                "win_op.temperature_detection.stop_time"
             ]
         },
         {
-            "id": "window_opening_detection_settings.temperature_detection.fahrenheit_difference_in_temperature",
+            "id": "win_op.temperature_detection.fahrenheit_diff_in_temperature",
             "name": "Fahrenheit Temperature Change(Temperature Detection)",
             "value": "37.4",
             "unit": "℉",
@@ -5208,11 +5208,11 @@
             "bacnet_unit_type_id": 64,
             "bacnet_unit_type": "UNITS_DEGREES_FAHRENHEIT",
             "reference": [
-                "window_opening_detection_settings.temperature_detection.stop_time"
+                "win_op.temperature_detection.stop_time"
             ]
         },
         {
-            "id": "window_opening_detection_settings.temperature_detection.stop_time",
+            "id": "win_op.temperature_detection.stop_time",
             "name": "Stop Temperature Control For(Temperature Detection)",
             "value": "30",
             "unit": "min",
@@ -5229,7 +5229,7 @@
             "reference": []
         },
         {
-            "id": "window_opening_detection_settings.type",
+            "id": "win_op.type",
             "name": "Detection Method(Open Window Detection)",
             "value": "0",
             "unit": "",
