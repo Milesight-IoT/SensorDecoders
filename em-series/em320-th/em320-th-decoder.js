@@ -81,7 +81,7 @@ function milesightDeviceDecode(bytes) {
         }
         // TEMPERATURE
         else if (channel_id === 0x03 && channel_type === 0x67) {
-            var tempRaw = readInt16LE(bytes.slice(i, i + 2));
+            var tempRaw = readUInt16LE(bytes.slice(i, i + 2));
             if (tempRaw === 0x8001) {
                 decoded.temperature = "collection_err";
             } else if (tempRaw === 0x8002) {
@@ -89,14 +89,14 @@ function milesightDeviceDecode(bytes) {
             } else if (tempRaw === 0x8003) {
                 decoded.temperature = "over_range_err";
             } else {
-                decoded.temperature = tempRaw / 10;
+                decoded.temperature = (tempRaw > 0x7fff ? tempRaw - 0x10000 : tempRaw) / 10;
             }
             i += 2;
         }
         // HUMIDITY
         else if (channel_id === 0x04 && channel_type === 0x9A) {
             var humidityRaw = readUInt16LE(bytes.slice(i, i + 2));
-            if (humidityRaw === 0x8001) {
+            if (humidityRaw === 0xFFFF) {
                 decoded.humidity = "collection_err";
             } else {
                 decoded.humidity = humidityRaw / 10;
@@ -193,8 +193,8 @@ function milesightDeviceDecode(bytes) {
             } else {
                 data.humidity = readUInt8(bytes[i + 6]) / 2;
             }
-            data.record_type = readRecordType(readUInt8(bytes[i + 7]));
-            i += 8;
+            data.record_type = readRecordType(readUInt8(bytes[i + 8]));
+            i += 9;
             decoded.history = decoded.history || [];
             decoded.history.push(data);
         }
@@ -246,14 +246,14 @@ function milesightDeviceDecode(bytes) {
             i += 1;
         }
         else if (channel_id === 0xf9 && channel_type === 0x66) {
-            decoded.D2D_enable = readEnableStatus(bytes[i]);
+            decoded.d2d_enable = readEnableStatus(bytes[i]);
             i += 1;
         }
         else if (channel_id === 0xf9 && channel_type === 0x63) {
-            decoded.D2D_sender_config = {};
-            decoded.D2D_sender_config.d2d_sender_enable = readEnableStatus(bytes[i]);
-            decoded.D2D_sender_config.uplink_lora_enable = readEnableStatus(bytes[i + 1]);
-            decoded.D2D_sender_config.sensor_data_enable = readUInt16LE(bytes.slice(i + 2, i + 4));
+            decoded.d2d_sender_config = {};
+            decoded.d2d_sender_config.d2d_sender_enable = readEnableStatus(bytes[i]);
+            decoded.d2d_sender_config.uplink_lora_enable = readEnableStatus(bytes[i + 1]);
+            decoded.d2d_sender_config.sensor_data_enable = readUInt16LE(bytes.slice(i + 2, i + 4));
             i += 4;
         }
         // DOWNLINK RESPONSE
@@ -275,7 +275,7 @@ function handle_downlink_response(channel_id, channel_type, bytes, offset) {
 
     switch (channel_type) {
         case 0x35:
-            decoded.D2D_key = readD2DKey(bytes.slice(offset, offset + 8));
+            decoded.d2d_key = readD2DKey(bytes.slice(offset, offset + 8));
             offset += 8;
             break;
         case 0x8e:

@@ -65,14 +65,14 @@ function milesightDeviceEncode(payload) {
     if ("button_lock" in payload) {
         encoded = encoded.concat(setButtonLock(payload.button_lock));
     }
-    if ("D2D_enable" in payload) {
-        encoded = encoded.concat(setD2DEnable(payload.D2D_enable));
+    if ("d2d_enable" in payload) {
+        encoded = encoded.concat(setD2DEnable(payload.d2d_enable));
     }
-    if ("D2D_key" in payload) {
-        encoded = encoded.concat(setD2DKey(payload.D2D_key));
+    if ("d2d_key" in payload) {
+        encoded = encoded.concat(setD2DKey(payload.d2d_key));
     }
-    if ("D2D_sender_config" in payload) {
-        encoded = encoded.concat(setD2DSenderConfig(payload.D2D_sender_config));
+    if ("d2d_sender_config" in payload) {
+        encoded = encoded.concat(setD2DSenderConfig(payload.d2d_sender_config));
     }
     if ("history_enable" in payload) {
         encoded = encoded.concat(setHistoryEnable(payload.history_enable));
@@ -389,65 +389,65 @@ function setButtonLock(button_lock) {
 
 /**
  * set D2D enable
- * @param {number} D2D_enable values: (0: disable, 1: enable)
- * @example { "D2D_enable": 1 }
+ * @param {number} d2d_enable values: (0: disable, 1: enable)
+ * @example { "d2d_enable": 1 }
  */
-function setD2DEnable(D2D_enable) {
+function setD2DEnable(d2d_enable) {
     var enable_map = { 0: "disable", 1: "enable" };
     var enable_values = getValues(enable_map);
-    if (enable_values.indexOf(D2D_enable) === -1) {
-        throw new Error("D2D_enable must be one of " + enable_values.join(", "));
+    if (enable_values.indexOf(d2d_enable) === -1) {
+        throw new Error("d2d_enable must be one of " + enable_values.join(", "));
     }
 
     var buffer = new Buffer(3);
     buffer.writeUInt8(0xf9);
     buffer.writeUInt8(0x66);
-    buffer.writeUInt8(getValue(enable_map, D2D_enable));
+    buffer.writeUInt8(getValue(enable_map, d2d_enable));
     return buffer.toBytes();
 }
 
 /**
  * set D2D key
- * @param {string} D2D_key 8-byte hex string, e.g. "1234567812345678"
- * @example { "D2D_key": "1234567812345678" }
+ * @param {string} d2d_key 8-byte hex string, e.g. "1234567812345678"
+ * @example { "d2d_key": "1234567812345678" }
  */
-function setD2DKey(D2D_key) {
-    if (typeof D2D_key !== "string" || D2D_key.length !== 16 || !/^[0-9a-fA-F]{16}$/.test(D2D_key)) {
-        throw new Error("D2D_key must be a 16-character hex string (8 bytes)");
+function setD2DKey(d2d_key) {
+    if (typeof d2d_key !== "string" || d2d_key.length !== 16 || !/^[0-9a-fA-F]{16}$/.test(d2d_key)) {
+        throw new Error("d2d_key must be a 16-character hex string (8 bytes)");
     }
 
     var buffer = new Buffer(10);
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0x35);
     for (var i = 0; i < 8; i++) {
-        buffer.writeUInt8(parseInt(D2D_key.slice(i * 2, i * 2 + 2), 16));
+        buffer.writeUInt8(parseInt(d2d_key.slice(i * 2, i * 2 + 2), 16));
     }
     return buffer.toBytes();
 }
 
 /**
  * set D2D sender config
- * @param {object} D2D_sender_config
- * @param {number} D2D_sender_config.d2d_sender_enable values: (0: disable, 1: enable)
- * @param {number} D2D_sender_config.uplink_lora_enable values: (0: disable, 1: enable)
- * @param {number} D2D_sender_config.sensor_data_enable bitmask: bit0=temperature, bit1=humidity
- * @example { "D2D_sender_config": { "d2d_sender_enable": 1, "uplink_lora_enable": 1, "sensor_data_enable": 3 } }
+ * @param {object} d2d_sender_config
+ * @param {number} d2d_sender_config.d2d_sender_enable values: (0: disable, 1: enable)
+ * @param {number} d2d_sender_config.uplink_lora_enable values: (0: disable, 1: enable)
+ * @param {number} d2d_sender_config.sensor_data_enable bitmask: bit0=temperature, bit1=humidity
+ * @example { "d2d_sender_config": { "d2d_sender_enable": 1, "uplink_lora_enable": 1, "sensor_data_enable": 3 } }
  */
-function setD2DSenderConfig(D2D_sender_config) {
-    var d2d_sender_enable = D2D_sender_config.d2d_sender_enable;
-    var uplink_lora_enable = D2D_sender_config.uplink_lora_enable;
-    var sensor_data_enable = D2D_sender_config.sensor_data_enable;
+function setD2DSenderConfig(d2d_sender_config) {
+    var d2d_sender_enable = d2d_sender_config.d2d_sender_enable;
+    var uplink_lora_enable = d2d_sender_config.uplink_lora_enable;
+    var sensor_data_enable = d2d_sender_config.sensor_data_enable;
 
     var enable_map = { 0: "disable", 1: "enable" };
     var enable_values = getValues(enable_map);
     if (enable_values.indexOf(d2d_sender_enable) === -1) {
-        throw new Error("D2D_sender_config.d2d_sender_enable must be one of " + enable_values.join(", "));
+        throw new Error("d2d_sender_config.d2d_sender_enable must be one of " + enable_values.join(", "));
     }
     if (enable_values.indexOf(uplink_lora_enable) === -1) {
-        throw new Error("D2D_sender_config.uplink_lora_enable must be one of " + enable_values.join(", "));
+        throw new Error("d2d_sender_config.uplink_lora_enable must be one of " + enable_values.join(", "));
     }
     if (typeof sensor_data_enable !== "number" || sensor_data_enable < 0 || sensor_data_enable > 0xffff) {
-        throw new Error("D2D_sender_config.sensor_data_enable must be in range [0, 65535]");
+        throw new Error("d2d_sender_config.sensor_data_enable must be in range [0, 65535]");
     }
 
     var buffer = new Buffer(6);
