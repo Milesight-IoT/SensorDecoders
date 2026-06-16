@@ -2218,7 +2218,7 @@
         },
         {
             "id": "high_temperature_alarm_settings.celsius_diff_in_temperature",
-            "name": "Celsius Difference in Temperature(Persistent High Temperature)",
+            "name": "Celsius Diff in Temperature(Persistent High Temperature)",
             "value": "3",
             "unit": "°C",
             "access_mode": "RW",
@@ -2282,7 +2282,7 @@
         },
         {
             "id": "high_temperature_alarm_settings.fahrenheit_diff_in_temperature",
-            "name": "Fahrenheit Difference in Temperature(Persistent High Temperature)",
+            "name": "Fahrenheit Diff in Temperature(Persistent High Temperature)",
             "value": "37.4",
             "unit": "℉",
             "access_mode": "RW",
@@ -3029,7 +3029,7 @@
         },
         {
             "id": "low_temperature_alarm_settings.celsius_diff_in_temperature",
-            "name": "Celsius Difference in Temperature(Persistent Low Temperature)",
+            "name": "Celsius Diff in Temperature(Persistent Low Temperature)",
             "value": "3",
             "unit": "°C",
             "access_mode": "RW",
@@ -3093,7 +3093,7 @@
         },
         {
             "id": "low_temperature_alarm_settings.fahrenheit_diff_in_temperature",
-            "name": "Fahrenheit Difference in Temperature(Persistent Low Temperature)",
+            "name": "Fahrenheit Diff in Temperature(Persistent Low Temperature)",
             "value": "37.4",
             "unit": "℉",
             "access_mode": "RW",
