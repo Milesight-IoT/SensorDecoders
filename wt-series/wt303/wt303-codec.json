@@ -2226,7 +2226,7 @@
             "id": "humidity",
             "name": "Humidity",
             "value": "",
-            "unit": "%",
+            "unit": "%r.h.",
             "access_mode": "R",
             "data_type": "NUMBER",
             "value_type": "FLOAT",
@@ -2235,8 +2235,8 @@
                 100
             ],
             "bacnet_type": "analog_input_object",
-            "bacnet_unit_type_id": 98,
-            "bacnet_unit_type": "UNITS_PERCENT"
+            "bacnet_unit_type_id": 29,
+            "bacnet_unit_type": "UNITS_PERCENT_RELATIVE_HUMIDITY"
         },
         {
             "id": "humidity_alarm.type",
