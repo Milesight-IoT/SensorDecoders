@@ -193,8 +193,8 @@ function milesightDeviceDecode(bytes) {
             } else {
                 data.humidity = readUInt8(bytes[i + 6]) / 2;
             }
-            data.record_type = readRecordType(readUInt8(bytes[i + 8]));
-            i += 9;
+            data.record_type = readRecordType(readUInt8(bytes[i + 7]));
+            i += 8;
             decoded.history = decoded.history || [];
             decoded.history.push(data);
         }
