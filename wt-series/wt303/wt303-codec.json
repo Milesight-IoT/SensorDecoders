@@ -2226,7 +2226,7 @@
             "id": "humidity",
             "name": "Humidity",
             "value": "",
-            "unit": "%r.h.",
+            "unit": "%RH",
             "access_mode": "R",
             "data_type": "NUMBER",
             "value_type": "FLOAT",
