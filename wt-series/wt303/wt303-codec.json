@@ -3367,8 +3367,8 @@
                     "name": "No Data"
                 },
                 {
-                    "value": 3,
-                    "name": "No Data"
+                    "value": 4,
+                    "name": "No Data(reversed)"
                 }
             ],
             "bacnet_type": "multistate_input_object",
@@ -3615,7 +3615,7 @@
                 },
                 {
                     "value": 35,
-                    "name": "Persistent High Temperature Alarm Released"
+                    "name": "Persistent High Temperature Alarm Released(reversed)"
                 },
                 {
                     "value": 48,
@@ -4438,8 +4438,8 @@
                     "name": "Timer Switch Enable"
                 },
                 {
-                    "value": 0,
-                    "name": "Timer Switch Enable"
+                    "value": 1,
+                    "name": "Timer Switch Enable(reversed)"
                 }
             ],
             "bacnet_type": "multistate_value_object",
