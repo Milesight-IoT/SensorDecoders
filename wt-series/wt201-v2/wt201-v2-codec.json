@@ -81,7 +81,7 @@
                 { "value": 2, "name": "Class C" },
                 { "value": 3, "name": "Class CtoB" }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS"
         },
@@ -149,7 +149,7 @@
                 { "value": 9, "name": "threshold alarm" },
                 { "value": 10, "name": "threshold alarm release" }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS"
         },
@@ -165,7 +165,7 @@
                 { "value": 1, "name": "read failed" },
                 { "value": 2, "name": "out of range" }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS"
         },
@@ -205,7 +205,7 @@
                 { "value": 1, "name": "read failed" },
                 { "value": 2, "name": "out of range" }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS"
         },
@@ -246,7 +246,7 @@
                 { "value": 7, "name": "stage-2 cool" },
                 { "value": 8, "name": "stage-5 heat" }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS"
         },
@@ -295,7 +295,7 @@
             "data_type": "ENUM",
             "value_type": "UINT8",
             "values": [
-                { "value": 0, "name": "off" },
+                { "value": 0, "name": "standby" },
                 { "value": 1, "name": "low speed" },
                 { "value": 2, "name": "medium speed" },
                 { "value": 3, "name": "high speed" }
@@ -325,7 +325,7 @@
             "id": "humidity",
             "name": "Humidity",
             "value": "50",
-            "unit": "%r.h.",
+            "unit": "%RH",
             "access_mode": "RW",
             "data_type": "NUMBER",
             "value_type": "FLOAT",
@@ -1124,7 +1124,7 @@
             "id": "humidity_calibration.humidity",
             "name": "Humidity Calibration Humidity",
             "value": "50",
-            "unit": "%r.h.",
+            "unit": "%RH",
             "access_mode": "RW",
             "data_type": "NUMBER",
             "value_type": "FLOAT",
@@ -1358,7 +1358,7 @@
             "id": "humidity_range.min",
             "name": "Humidity Range (Min)",
             "value": "10",
-            "unit": "%r.h.",
+            "unit": "%RH",
             "access_mode": "RW",
             "data_type": "NUMBER",
             "value_type": "UINT8",
@@ -1371,7 +1371,7 @@
             "id": "humidity_range.max",
             "name": "Humidity Range (Max)",
             "value": "90",
-            "unit": "%r.h.",
+            "unit": "%RH",
             "access_mode": "RW",
             "data_type": "NUMBER",
             "value_type": "UINT8",
