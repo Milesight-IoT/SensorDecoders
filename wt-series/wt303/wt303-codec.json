@@ -161,7 +161,7 @@
             "id": "celsius_target_temperature_tolerance",
             "name": "Celsius Target Temperature Tolerance",
             "value": "1",
-            "unit": "°C",
+            "unit": "K",
             "access_mode": "RW",
             "data_type": "NUMBER",
             "value_type": "FLOAT",
@@ -170,8 +170,8 @@
                 5
             ],
             "bacnet_type": "analog_value_object",
-            "bacnet_unit_type_id": 62,
-            "bacnet_unit_type": "UNITS_DEGREES_CELSIUS"
+            "bacnet_unit_type_id": 121,
+            "bacnet_unit_type": "UNITS_DELTA_DEGREES_KELVIN"
         },
         {
             "id": "celsius_temperature",
@@ -1671,7 +1671,7 @@
             "id": "fahrenheit_auto_target_temperature_tolerance",
             "name": "Fahrenheit Auto Target Temperature Tolerance",
             "value": "33.8",
-            "unit": "K",
+            "unit": "ΔT°F",
             "access_mode": "RW",
             "data_type": "NUMBER",
             "value_type": "FLOAT",
@@ -1680,8 +1680,8 @@
                 41
             ],
             "bacnet_type": "analog_value_object",
-            "bacnet_unit_type_id": 121,
-            "bacnet_unit_type": "UNITS_DELTA_DEGREES_KELVIN"
+            "bacnet_unit_type_id": 120,
+            "bacnet_unit_type": "UNITS_DELTA_DEGREES_FAHRENHEIT"
         },
         {
             "id": "fahrenheit_cooling_target_temperature",
@@ -1735,7 +1735,7 @@
             "id": "fahrenheit_target_temperature_tolerance",
             "name": "Fahrenheit Target Temperature Tolerance",
             "value": "33.8",
-            "unit": "℉",
+            "unit": "ΔT°F",
             "access_mode": "RW",
             "data_type": "NUMBER",
             "value_type": "FLOAT",
@@ -1744,8 +1744,8 @@
                 41
             ],
             "bacnet_type": "analog_value_object",
-            "bacnet_unit_type_id": 64,
-            "bacnet_unit_type": "UNITS_DEGREES_FAHRENHEIT"
+            "bacnet_unit_type_id": 120,
+            "bacnet_unit_type": "UNITS_DELTA_DEGREES_FAHRENHEIT"
         },
         {
             "id": "fahrenheit_temperature",
@@ -3704,7 +3704,7 @@
             "id": "temperature_control_dehumidification.celsius_temp_tolerance",
             "name": "Celsius Temp. Tolerance for Dehumidification",
             "value": "1",
-            "unit": "°C",
+            "unit": "K",
             "access_mode": "RW",
             "data_type": "NUMBER",
             "value_type": "FLOAT",
@@ -3713,8 +3713,8 @@
                 5
             ],
             "bacnet_type": "analog_value_object",
-            "bacnet_unit_type_id": 62,
-            "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
+            "bacnet_unit_type_id": 121,
+            "bacnet_unit_type": "UNITS_DELTA_DEGREES_KELVIN",
             "reference": [
                 "temperature_control_dehumidification.enable"
             ]
@@ -3743,10 +3743,10 @@
             "reference": []
         },
         {
-            "id": "temperature_control_dehumidification.fahrenhei_temp_tolerance",
+            "id": "temperature_control_dehumidification.fahrenheit_temp_tolerance",
             "name": "Fahrenheit Temp. Tolerance for Dehumidification",
             "value": "33.8",
-            "unit": "℉",
+            "unit": "ΔT°F",
             "access_mode": "RW",
             "data_type": "NUMBER",
             "value_type": "FLOAT",
@@ -3755,8 +3755,8 @@
                 41
             ],
             "bacnet_type": "analog_value_object",
-            "bacnet_unit_type_id": 64,
-            "bacnet_unit_type": "UNITS_DEGREES_FAHRENHEIT",
+            "bacnet_unit_type_id": 120,
+            "bacnet_unit_type": "UNITS_DELTA_DEGREES_FAHRENHEIT",
             "reference": [
                 "temperature_control_dehumidification.enable"
             ]
