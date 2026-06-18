@@ -155,13 +155,13 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Nighttime | 0x84 | 1 | rw |  |  |  |
 | Start Time | 0x84 | 3 | rw | 1260 | 0 - 1439 |  |
 | Stop Time | 0x84 | 3 | rw | 480 | 0 - 1439 |  |
-| Night Occupied Execution | 0x84 | 2 | rw | 2 | 0 - 255 | 0:plan0<br>1:plan1<br>2:plan2<br>3:plan3<br>4:plan4<br>5:plan5<br>6:plan6<br>7:plan7<br>255:Not executed |
+| Night Occupied Execution | 0x84 | 2 | rw | 2 |  | 0:plan0<br>1:plan1<br>2:plan2<br>3:plan3<br>4:plan4<br>5:plan5<br>6:plan6<br>7:plan7<br>8:plan8<br>9:plan9<br>10:plan10<br>11:plan11<br>12:plan12<br>13:plan13<br>14:plan14<br>15:plan15<br>255:Not executed |
 | Energy-saving Setting | 0x83 | 1 | rw |  |  |  |
 | Energy Cmd | 0x83 | 2 | rw | 0 |  |  |
 | Energy-Saving Enable | 0x83 | 2 | rw | 1 | 0 - 1 | 0:disable<br>1:enable |
 | Energy Saving Plan | 0x83 | 1 | rw |  |  |  |
-| Occupied Execution | 0x83 | 2 | rw | 0 | 0 - 255 | 0:plan0<br>1:plan1<br>2:plan2<br>3:plan3<br>4:plan4<br>5:plan5<br>6:plan6<br>7:plan7<br>255:Not executed |
-| Vacant Execution | 0x83 | 2 | rw | 1 | 0 - 255 | 0:plan0<br>1:plan1<br>2:plan2<br>3:plan3<br>4:plan4<br>5:plan5<br>6:plan6<br>7:plan7<br>255:Not executed |
+| Occupied Execution | 0x83 | 2 | rw | 0 |  | 0:plan0<br>1:plan1<br>2:plan2<br>3:plan3<br>4:plan4<br>5:plan5<br>6:plan6<br>7:plan7<br>8:plan8<br>9:plan9<br>10:plan10<br>11:plan11<br>12:plan12<br>13:plan13<br>14:plan14<br>15:plan15<br>255:Not executed |
+| Vacant Execution | 0x83 | 2 | rw | 1 |  | 0:plan0<br>1:plan1<br>2:plan2<br>3:plan3<br>4:plan4<br>5:plan5<br>6:plan6<br>7:plan7<br>8:plan8<br>9:plan9<br>10:plan10<br>11:plan11<br>12:plan12<br>13:plan13<br>14:plan14<br>15:plan15<br>255:Not executed |
 | Smart Display | 0x62 | 2 | rw | 1 |  | 0：disable<br>1：enable |
 | Screen Display Settings | 0x75 | 2 | rw |  |  |  |
 | Schedule Name | 0x75 | 2 | rw | 1 |  | 0:disable<br>1:enable |
@@ -313,6 +313,7 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Button 3 Report | 0x0D | 1 | r |  |  |  |
 | Battery Event Type | 0x0F | 2 | r |  |  |  |
 | Battery Recover | 0x0F | 2 | r |  |  |  |
+| Reset BLE Name | 0x54 | 2 | w |  |  |  |
 | System On/Off | 0x59 | 2 | w | 1 |  | 0：system off<br>1：system on |
 | Temperature Control Mode | 0x59 | 2 | w | 0 | 0 - 5 | 0：heat<br>1：em heat<br>2：cool<br>3：auto<br>4：dehumidify<br>5：ventilation |
 | Heat Temperature | 0x59 | 3 | w | 17 | 5 - 35 |  |

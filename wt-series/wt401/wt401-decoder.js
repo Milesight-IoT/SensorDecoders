@@ -515,7 +515,7 @@ function milesightDeviceDecode(bytes) {
 					decoded.pir_night.night_time.stop = readUInt16LE(bytes, counterObj, 2);
 				}
 				if (pir_night_cmd == 0x05) {
-					// 0:plan0, 1:plan1, 2:plan2, 3:plan3, 4:plan4, 5:plan5, 6:plan6, 7:plan7, 255:Not executed
+					// 0:plan0, 1:plan1, 2:plan2, 3:plan3, 4:plan4, 5:plan5, 6:plan6, 7:plan7, 8:plan8, 9:plan9, 10:plan10, 11:plan11, 12:plan12, 13:plan13, 14:plan14, 15:plan15, 255:Not executed
 					decoded.pir_night.occupied = readUInt8(bytes, counterObj, 1);
 				}
 				break;
@@ -528,9 +528,9 @@ function milesightDeviceDecode(bytes) {
 				}
 				if (pir_energy_cmd == 0x02) {
 					decoded.pir_energy.plan = decoded.pir_energy.plan || {};
-					// 0:plan0, 1:plan1, 2:plan2, 3:plan3, 4:plan4, 5:plan5, 6:plan6, 7:plan7, 255:Not executed
+					// 0:plan0, 1:plan1, 2:plan2, 3:plan3, 4:plan4, 5:plan5, 6:plan6, 7:plan7, 8:plan8, 9:plan9, 10:plan10, 11:plan11, 12:plan12, 13:plan13, 14:plan14, 15:plan15, 255:Not executed
 					decoded.pir_energy.plan.occupied = readUInt8(bytes, counterObj, 1);
-					// 0:plan0, 1:plan1, 2:plan2, 3:plan3, 4:plan4, 5:plan5, 6:plan6, 7:plan7, 255:Not executed
+					// 0:plan0, 1:plan1, 2:plan2, 3:plan3, 4:plan4, 5:plan5, 6:plan6, 7:plan7, 8:plan8, 9:plan9, 10:plan10, 11:plan11, 12:plan12, 13:plan13, 14:plan14, 15:plan15, 255:Not executed
 					decoded.pir_energy.plan.unoccupied = readUInt8(bytes, counterObj, 1);
 				}
 				break;
@@ -712,6 +712,9 @@ function milesightDeviceDecode(bytes) {
 				if (schedule_settings_item_command == 0x0a) {
 					schedule_settings_item.auto_target_temperature = readInt16LE(bytes, counterObj, 2) / 100;
 				}
+				break;
+			case 0x54:
+				decoded.reset_ble_name = readOnlyCommand(bytes, counterObj, 1);
 				break;
 			case 0x59:
 				decoded.system_status_control = decoded.system_status_control || {};
@@ -1112,6 +1115,7 @@ function isInteger(str) {
 
 function cmdMap() {
 	return {
+		  "54": "reset_ble_name",
 		  "55": "fan_error_alarm",
 		  "59": "system_status_control",
 		  "60": "collection_interval",

@@ -2837,6 +2837,38 @@
                     "name": "plan7"
                 },
                 {
+                    "value": 8,
+                    "name": "plan8"
+                },
+                {
+                    "value": 9,
+                    "name": "plan9"
+                },
+                {
+                    "value": 10,
+                    "name": "plan10"
+                },
+                {
+                    "value": 11,
+                    "name": "plan11"
+                },
+                {
+                    "value": 12,
+                    "name": "plan12"
+                },
+                {
+                    "value": 13,
+                    "name": "plan13"
+                },
+                {
+                    "value": 14,
+                    "name": "plan14"
+                },
+                {
+                    "value": 15,
+                    "name": "plan15"
+                },
+                {
                     "value": 255,
                     "name": "Not executed"
                 }
@@ -2888,6 +2920,38 @@
                 {
                     "value": 7,
                     "name": "plan7"
+                },
+                {
+                    "value": 8,
+                    "name": "plan8"
+                },
+                {
+                    "value": 9,
+                    "name": "plan9"
+                },
+                {
+                    "value": 10,
+                    "name": "plan10"
+                },
+                {
+                    "value": 11,
+                    "name": "plan11"
+                },
+                {
+                    "value": 12,
+                    "name": "plan12"
+                },
+                {
+                    "value": 13,
+                    "name": "plan13"
+                },
+                {
+                    "value": 14,
+                    "name": "plan14"
+                },
+                {
+                    "value": 15,
+                    "name": "plan15"
                 },
                 {
                     "value": 255,
@@ -3076,6 +3140,38 @@
                 {
                     "value": 7,
                     "name": "plan7"
+                },
+                {
+                    "value": 8,
+                    "name": "plan8"
+                },
+                {
+                    "value": 9,
+                    "name": "plan9"
+                },
+                {
+                    "value": 10,
+                    "name": "plan10"
+                },
+                {
+                    "value": 11,
+                    "name": "plan11"
+                },
+                {
+                    "value": 12,
+                    "name": "plan12"
+                },
+                {
+                    "value": 13,
+                    "name": "plan13"
+                },
+                {
+                    "value": 14,
+                    "name": "plan14"
+                },
+                {
+                    "value": 15,
+                    "name": "plan15"
                 },
                 {
                     "value": 255,
@@ -3457,6 +3553,28 @@
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": []
+        },
+        {
+            "id": "reset_ble_name",
+            "name": "Reset BLE Name",
+            "access_mode": "W",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "unit": "",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "bacnet_type": "binary_output_object",
+            "value": "",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "no"
+                },
+                {
+                    "value": 1,
+                    "name": "yes"
+                }
+            ]
         },
         {
             "id": "retrieve_historical_data_by_time_range.end_time",
