@@ -976,12 +976,12 @@ function milesightDeviceEncode(payload) {
 		}
 		if (isValid(payload.pir_night.occupied)) {
 			buffer.writeUInt8(0x84);
-			// 0:plan0, 1:plan1, 2:plan2, 3:plan3, 4:plan4, 5:plan5, 6:plan6, 7:plan7, 255:Not executed
+			// 0:plan0, 1:plan1, 2:plan2, 3:plan3, 4:plan4, 5:plan5, 6:plan6, 7:plan7, 8:plan8, 9:plan9, 10:plan10, 11:plan11, 12:plan12, 13:plan13, 14:plan14, 15:plan15, 255:Not executed
 			buffer.writeUInt8(0x05);
-			if (payload.pir_night.occupied < 0 || payload.pir_night.occupied > 255) {
-				throw new Error('pir_night.occupied must be between 0 and 255');
+			if ([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 255].indexOf(payload.pir_night.occupied) === -1) {
+				throw new Error('pir_night.occupied must be one of [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 255]');
 			}
-			// 0:plan0, 1:plan1, 2:plan2, 3:plan3, 4:plan4, 5:plan5, 6:plan6, 7:plan7, 255:Not executed
+			// 0:plan0, 1:plan1, 2:plan2, 3:plan3, 4:plan4, 5:plan5, 6:plan6, 7:plan7, 8:plan8, 9:plan9, 10:plan10, 11:plan11, 12:plan12, 13:plan13, 14:plan14, 15:plan15, 255:Not executed
 			buffer.writeUInt8(payload.pir_night.occupied);
 		}
 		encoded = encoded.concat(buffer.toBytes());
@@ -1002,15 +1002,15 @@ function milesightDeviceEncode(payload) {
 		if (isValid(payload.pir_energy.plan)) {
 			buffer.writeUInt8(0x83);
 			buffer.writeUInt8(0x02);
-			if (payload.pir_energy.plan.occupied < 0 || payload.pir_energy.plan.occupied > 255) {
-				throw new Error('pir_energy.plan.occupied must be between 0 and 255');
+			if ([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 255].indexOf(payload.pir_energy.plan.occupied) === -1) {
+				throw new Error('pir_energy.plan.occupied must be one of [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 255]');
 			}
-			// 0:plan0, 1:plan1, 2:plan2, 3:plan3, 4:plan4, 5:plan5, 6:plan6, 7:plan7, 255:Not executed
+			// 0:plan0, 1:plan1, 2:plan2, 3:plan3, 4:plan4, 5:plan5, 6:plan6, 7:plan7, 8:plan8, 9:plan9, 10:plan10, 11:plan11, 12:plan12, 13:plan13, 14:plan14, 15:plan15, 255:Not executed
 			buffer.writeUInt8(payload.pir_energy.plan.occupied);
-			if (payload.pir_energy.plan.unoccupied < 0 || payload.pir_energy.plan.unoccupied > 255) {
-				throw new Error('pir_energy.plan.unoccupied must be between 0 and 255');
+			if ([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 255].indexOf(payload.pir_energy.plan.unoccupied) === -1) {
+				throw new Error('pir_energy.plan.unoccupied must be one of [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 255]');
 			}
-			// 0:plan0, 1:plan1, 2:plan2, 3:plan3, 4:plan4, 5:plan5, 6:plan6, 7:plan7, 255:Not executed
+			// 0:plan0, 1:plan1, 2:plan2, 3:plan3, 4:plan4, 5:plan5, 6:plan6, 7:plan7, 8:plan8, 9:plan9, 10:plan10, 11:plan11, 12:plan12, 13:plan13, 14:plan14, 15:plan15, 255:Not executed
 			buffer.writeUInt8(payload.pir_energy.plan.unoccupied);
 		}
 		encoded = encoded.concat(buffer.toBytes());
@@ -1422,6 +1422,12 @@ function milesightDeviceEncode(payload) {
 				buffer.writeInt16LE(schedule_settings_item.auto_target_temperature * 100);
 			}
 		}
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0x54
+	if ('reset_ble_name' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0x54);
 		encoded = encoded.concat(buffer.toBytes());
 	}
 	//0x59
@@ -1957,6 +1963,7 @@ function cmdMap() {
 		  "schedule_settings._item.heat_target_temperature": "7bxx08",
 		  "schedule_settings._item.cool_target_temperature": "7bxx09",
 		  "schedule_settings._item.auto_target_temperature": "7bxx0a",
+		  "reset_ble_name": "54",
 		  "system_status_control": "59",
 		  "origin_temperature": "86",
 		  "origin_humidity": "87",
