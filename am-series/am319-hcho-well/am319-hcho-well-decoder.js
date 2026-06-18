@@ -130,7 +130,7 @@ function milesightDeviceDecode(bytes) {
         }
         // HCHO (ppm)
         else if (channel_id === 0x0f && channel_type === 0x7d) {
-            decoded.hcho = readUInt16LE(bytes.slice(i, i + 2)) / 10000;
+            decoded.hcho = readUInt16LE(bytes.slice(i, i + 2)) / 1000;
             i += 2;
         }
         // HISTORY DATA (AM319 CH2O)
