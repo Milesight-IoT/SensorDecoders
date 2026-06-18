@@ -694,7 +694,8 @@ function milesightDeviceDecode(bytes) {
 	return result;
 }
 
-function readOnlyCommand(bytes) {
+function readOnlyCommand(bytes, counterObj, end) {
+	counterObj.i += end;
 	return 1;
 }
 
