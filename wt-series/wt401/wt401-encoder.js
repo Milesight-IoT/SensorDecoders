@@ -1439,19 +1439,30 @@ function milesightDeviceEncode(payload) {
 		}
 		// 0：system off, 1：system on
 		buffer.writeUInt8(payload.system_status_control.on_off);
-		if (payload.system_status_control.mode < 0 || payload.system_status_control.mode > 5) {
+		if (payload.system_status_control.mode == 'no apply') {
+			buffer.writeUInt8(255);
+		} else if (payload.system_status_control.mode < 0 || payload.system_status_control.mode > 5) {
 			throw new Error('system_status_control.mode must be between 0 and 5');
+		} else {
+			// 0：heat, 1：em heat, 2：cool, 3：auto, 4：dehumidify, 5：ventilation
+			buffer.writeUInt8(payload.system_status_control.mode);
 		}
-		// 0：heat, 1：em heat, 2：cool, 3：auto, 4：dehumidify, 5：ventilation
-		buffer.writeUInt8(payload.system_status_control.mode);
-		if (payload.system_status_control.temperature1 < 5 || payload.system_status_control.temperature1 > 35) {
+
+		if (payload.system_status_control.temperature1 == 'no apply') {
+			buffer.writeInt16LE(65535);
+		} else if (payload.system_status_control.temperature1 < 5 || payload.system_status_control.temperature1 > 35) {
 			throw new Error('system_status_control.temperature1 must be between 5 and 35');
+		} else {
+			buffer.writeInt16LE(payload.system_status_control.temperature1 * 100);
 		}
-		buffer.writeInt16LE(payload.system_status_control.temperature1 * 100);
-		if (payload.system_status_control.temperature2 < 5 || payload.system_status_control.temperature2 > 35) {
+
+		if (payload.system_status_control.temperature2 == 'no apply') {
+			buffer.writeInt16LE(65535);
+		} else if (payload.system_status_control.temperature2 < 5 || payload.system_status_control.temperature2 > 35) {
 			throw new Error('system_status_control.temperature2 must be in range [5,35]');
+		} else {
+			buffer.writeInt16LE(payload.system_status_control.temperature2 * 100);
 		}
-		buffer.writeInt16LE(payload.system_status_control.temperature2 * 100);
 		encoded = encoded.concat(buffer.toBytes());
 	}
 	//0x86
@@ -1717,46 +1728,46 @@ function isValid(value) {
 function hasPath(obj, path) {
 	var parts = path.split('.');
 	var current = obj;
-  
+
 	for (var i = 0; i < parts.length; i++) {
 	  	if (!current || !(parts[i] in current)) {
 			return false;
 	  	}
 	  	current = current[parts[i]];
 	}
-  
+
 	return true;
 }
 
 function getPath(obj, path) {
 	var parts = path.split('.');
 	var current = obj;
-  
+
 	for (var i = 0; i < parts.length; i++) {
 	  	var key = parts[i];
-  
+
 	  	if (!current || !(key in current)) {
 			return null;
 	  	}
-  
+
 	  	current = current[key];
 	}
-  
+
 	return current;
 }
-  
+
 
 function setPath(obj, path, value) {
 	var parts = path.split('.');
 	var current = obj;
-  
+
 	for (var i = 0; i < parts.length - 1; i++) {
 	  	var key = parts[i];
-  
+
 	  	if (!(key in current) || typeof current[key] !== 'object') {
 			current[key] = {};
 	  	}
-  
+
 	  	current = current[key];
 	}
 
@@ -1779,34 +1790,34 @@ function recoverName(propertyId, prefix) {
 }
 
 function getAllLeafPaths(obj, prefix) {
-    var paths = [];
+	var paths = [];
 
-    function recurse(current, path) {
-      if (Array.isArray(current)) {
-        current.forEach(function (item, index) {
-          var newPath = path ? (path + "." + index) : String(index);
-          recurse(item, newPath);
-        });
-  
-      } else if (typeof current === 'object' && current !== null) {
-        for (var key in current) {
-          if (Object.prototype.hasOwnProperty.call(current, key)) {
-            var newPath = path ? (path + "." + key) : key;
-            recurse(current[key], newPath);
-          }
-        }
-  
-      } else {
-        paths.push(path);
-      }
-    }
-  
-    recurse(obj, "");
-    return paths;  
+	function recurse(current, path) {
+	  if (Array.isArray(current)) {
+		current.forEach(function (item, index) {
+		  var newPath = path ? (path + "." + index) : String(index);
+		  recurse(item, newPath);
+		});
+
+	  } else if (typeof current === 'object' && current !== null) {
+		for (var key in current) {
+		  if (Object.prototype.hasOwnProperty.call(current, key)) {
+			var newPath = path ? (path + "." + key) : key;
+			recurse(current[key], newPath);
+		  }
+		}
+
+	  } else {
+		paths.push(path);
+	  }
+	}
+
+	recurse(obj, "");
+	return paths;
 }
 
 function isInteger(str) {
-    return typeof str === 'string' && /^[0-9]+$/.test(str);
+	return typeof str === 'string' && /^[0-9]+$/.test(str);
 }
 
 function cmdMap() {

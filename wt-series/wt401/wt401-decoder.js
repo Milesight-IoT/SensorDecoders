@@ -776,7 +776,7 @@ function milesightDeviceDecode(bytes) {
 	}
 
 	processTemperature(result);
-    patchDecode(result);
+	patchDecode(result);
 
 	return result;
 }
