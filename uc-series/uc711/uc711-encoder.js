@@ -189,7 +189,7 @@ function milesightDeviceEncode(payload) {
 			var pair_mac_item_id = pair_mac_item.channel;
 			buffer.writeUInt8(0xcd);
 			buffer.writeUInt8(0x02);
-			buffer.writeHexString(pair_mac_item.mac, 8);
+			buffer.writeHexString(pair_mac_item.mac, pair_name_item.length, true);
 		}
 		for (var pair_addr_id = 0; pair_addr_id < (payload.ble_configuration_settings.pair_addr && payload.ble_configuration_settings.pair_addr.length); pair_addr_id++) {
 			var pair_addr_item = payload.ble_configuration_settings.pair_addr[pair_addr_id];
@@ -201,7 +201,7 @@ function milesightDeviceEncode(payload) {
 			}
 			// 0：public, 1：private
 			buffer.writeUInt8(pair_addr_item.type);
-			buffer.writeHexString(pair_addr_item.mac, 6);
+			buffer.writeHexString(pair_addr_item.mac, pair_name_item.length, true);
 		}
 		if (isValid(payload.ble_configuration_settings.local_info)) {
 			buffer.writeUInt8(0xcd);
@@ -1574,19 +1574,19 @@ function milesightDeviceEncode(payload) {
 				buffer.writeUInt8(0x96);
 				buffer.writeUInt8(d2d_pairing_settings_item_id);
 				buffer.writeUInt8(0x01);
-				buffer.writeHexString(d2d_pairing_settings_item.deveui, 8);
+				buffer.writeHexString(d2d_pairing_settings_item.deveui, pair_name_item.length, true);
 			}
 			if (isValid(d2d_pairing_settings_item.name_first)) {
 				buffer.writeUInt8(0x96);
 				buffer.writeUInt8(d2d_pairing_settings_item_id);
 				buffer.writeUInt8(0x02);
-				buffer.writeString(d2d_pairing_settings_item.name_first, 8);
+				buffer.writeString(d2d_pairing_settings_item.name_first, pair_name_item.length, true);
 			}
 			if (isValid(d2d_pairing_settings_item.name_last)) {
 				buffer.writeUInt8(0x96);
 				buffer.writeUInt8(d2d_pairing_settings_item_id);
 				buffer.writeUInt8(0x03);
-				buffer.writeString(d2d_pairing_settings_item.name_last, 8);
+				buffer.writeString(d2d_pairing_settings_item.name_last, pair_name_item.length, true);
 			}
 		}
 		encoded = encoded.concat(buffer.toBytes());
@@ -1615,7 +1615,7 @@ function milesightDeviceEncode(payload) {
 			}
 			// 0：disable, 1：enable
 			buffer.writeUInt8(d2d_master_settings_item.enable);
-			buffer.writeHexString(d2d_master_settings_item.command, 2);
+			buffer.writeHexString(d2d_master_settings_item.command, pair_name_item.length, true);
 			if ([0, 1].indexOf(d2d_master_settings_item.uplink) === -1) {
 				throw new Error('uplink must be one of [0, 1]');
 			}
@@ -1657,7 +1657,7 @@ function milesightDeviceEncode(payload) {
 			}
 			// 0：disable, 1：enable
 			buffer.writeUInt8(d2d_slave_settings_item.enable);
-			buffer.writeHexString(d2d_slave_settings_item.command, 2);
+			buffer.writeHexString(d2d_slave_settings_item.command, pair_name_item.length, true);
 			if ([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17].indexOf(d2d_slave_settings_item.value) === -1) {
 				throw new Error('value must be one of [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17]');
 			}
@@ -1695,19 +1695,30 @@ function milesightDeviceEncode(payload) {
 		}
 		// 0：system off, 1：system on
 		buffer.writeUInt8(payload.system_status_control.on_off);
-		if ([0, 2, 3, 255].indexOf(payload.system_status_control.mode) === -1) {
-			throw new Error('system_status_control.mode must be one of [0, 2, 3, 255]');
+		if (payload.system_status_control.mode == 'no apply') {
+			buffer.writeUInt8(255);
+		} else if (payload.system_status_control.mode < 0 || payload.system_status_control.mode > 5) {
+			throw new Error('system_status_control.mode must be between 0 and 5');
+		} else {
+			// 0：heat, 1：em heat, 2：cool, 3：auto, 4：dehumidify, 5：ventilation
+			buffer.writeUInt8(payload.system_status_control.mode);
 		}
-		// 0：heat, 2：cool, 3：auto, 255：disable
-		buffer.writeUInt8(payload.system_status_control.mode);
-		if (payload.system_status_control.temperature1 < 5 || payload.system_status_control.temperature1 > 35) {
+
+		if (payload.system_status_control.temperature1 == 'no apply') {
+			buffer.writeInt16LE(65535);
+		} else if (payload.system_status_control.temperature1 < 5 || payload.system_status_control.temperature1 > 35) {
 			throw new Error('system_status_control.temperature1 must be between 5 and 35');
+		} else {
+			buffer.writeInt16LE(payload.system_status_control.temperature1 * 100);
 		}
-		buffer.writeInt16LE(payload.system_status_control.temperature1 * 100);
-		if (payload.system_status_control.temperature2 < 5 || payload.system_status_control.temperature2 > 35) {
-			throw new Error('system_status_control.temperature2 must be between 5 and 35');
+
+		if (payload.system_status_control.temperature2 == 'no apply') {
+			buffer.writeInt16LE(65535);
+		} else if (payload.system_status_control.temperature2 < 5 || payload.system_status_control.temperature2 > 35) {
+			throw new Error('system_status_control.temperature2 must be in range [5,35]');
+		} else {
+			buffer.writeInt16LE(payload.system_status_control.temperature2 * 100);
 		}
-		buffer.writeInt16LE(payload.system_status_control.temperature2 * 100);
 		encoded = encoded.concat(buffer.toBytes());
 	}
 	return encoded;
@@ -1898,46 +1909,46 @@ function isValid(value) {
 function hasPath(obj, path) {
 	var parts = path.split('.');
 	var current = obj;
-  
+
 	for (var i = 0; i < parts.length; i++) {
 	  	if (!current || !(parts[i] in current)) {
 			return false;
 	  	}
 	  	current = current[parts[i]];
 	}
-  
+
 	return true;
 }
 
 function getPath(obj, path) {
 	var parts = path.split('.');
 	var current = obj;
-  
+
 	for (var i = 0; i < parts.length; i++) {
 	  	var key = parts[i];
-  
+
 	  	if (!current || !(key in current)) {
 			return null;
 	  	}
-  
+
 	  	current = current[key];
 	}
-  
+
 	return current;
 }
-  
+
 
 function setPath(obj, path, value) {
 	var parts = path.split('.');
 	var current = obj;
-  
+
 	for (var i = 0; i < parts.length - 1; i++) {
 	  	var key = parts[i];
-  
+
 	  	if (!(key in current) || typeof current[key] !== 'object') {
 			current[key] = {};
 	  	}
-  
+
 	  	current = current[key];
 	}
 
@@ -1960,34 +1971,34 @@ function recoverName(propertyId, prefix) {
 }
 
 function getAllLeafPaths(obj, prefix) {
-    var paths = [];
+	var paths = [];
 
-    function recurse(current, path) {
-      if (Array.isArray(current)) {
-        current.forEach(function (item, index) {
-          var newPath = path ? (path + "." + index) : String(index);
-          recurse(item, newPath);
-        });
-  
-      } else if (typeof current === 'object' && current !== null) {
-        for (var key in current) {
-          if (Object.prototype.hasOwnProperty.call(current, key)) {
-            var newPath = path ? (path + "." + key) : key;
-            recurse(current[key], newPath);
-          }
-        }
-  
-      } else {
-        paths.push(path);
-      }
-    }
-  
-    recurse(obj, "");
-    return paths;  
+	function recurse(current, path) {
+	  if (Array.isArray(current)) {
+		current.forEach(function (item, index) {
+		  var newPath = path ? (path + "." + index) : String(index);
+		  recurse(item, newPath);
+		});
+
+	  } else if (typeof current === 'object' && current !== null) {
+		for (var key in current) {
+		  if (Object.prototype.hasOwnProperty.call(current, key)) {
+			var newPath = path ? (path + "." + key) : key;
+			recurse(current[key], newPath);
+		  }
+		}
+
+	  } else {
+		paths.push(path);
+	  }
+	}
+
+	recurse(obj, "");
+	return paths;
 }
 
 function isInteger(str) {
-    return typeof str === 'string' && /^[0-9]+$/.test(str);
+	return typeof str === 'string' && /^[0-9]+$/.test(str);
 }
 
 function cmdMap() {
