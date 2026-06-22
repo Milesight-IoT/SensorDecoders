@@ -189,6 +189,16 @@ function milesightDeviceEncode(payload) {
 		buffer.writeUInt8(payload.battery);
 		encoded = encoded.concat(buffer.toBytes());
 	}
+	//0x01
+	if ('temperature' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0x01);
+		if (payload.temperature < -20 || payload.temperature > 60) {
+			throw new Error('temperature must be between -20 and 60');
+		}
+		buffer.writeInt16LE(payload.temperature * 100);
+		encoded = encoded.concat(buffer.toBytes());
+	}
 	//0x02
 	if ('humidity' in payload) {
 		var buffer = new Buffer();
@@ -1840,6 +1850,7 @@ function cmdMap() {
 		  "ble_new_event": "ba",
 		  "ble_new_event._item": "baxx",
 		  "battery": "00",
+		  "temperature": "01",
 		  "humidity": "02",
 		  "pir_status": "08",
 		  "temperature_mode": "03",
@@ -1988,6 +1999,10 @@ function cmdMap() {
 }
 function processTemperature(payload) {
 	var allTemperatureProperties = {
+    "temperature": {
+        "coefficient": 0.01,
+        "unitName": "℃"
+    },
     "target_temperature1": {
         "coefficient": 0.01,
         "unitName": "℃"

@@ -29,6 +29,7 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Bluetooth Status | 0xBA | 2 | r | 0 |  | 0: Not paired<br>1: Paired<br>2: Disconnected |
 | Paired Device DevEUI | 0xBA | 9 | r | 24e124123456789a |  |  |
 | Battery | 0x00 | 2 | r |  | 0 - 100 |  |
+| Temperature | 0x01 | 3 | r |  | -20 - 60 |  |
 | Humidity | 0x02 | 3 | r |  | 0 - 100 |  |
 | Occupied Status | 0x08 | 2 | r | 0 | 0 - 2 | 0：Vacant<br>1：Occupied<br>2：Night Occupied |
 | Temperature Control Mode | 0x03 | 2 | r | 0 |  | 0：heat<br>1：em heat<br>2：cool<br>3：auto<br>4：dehumidify<br>5：ventilation<br>10：off<br>11：none |

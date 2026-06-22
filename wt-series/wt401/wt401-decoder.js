@@ -114,6 +114,9 @@ function milesightDeviceDecode(bytes) {
 			case 0x00:
 				decoded.battery = readUInt8(bytes, counterObj, 1);
 				break;
+			case 0x01:
+				decoded.temperature = readInt16LE(bytes, counterObj, 2) / 100;
+				break;
 			case 0x02:
 				decoded.humidity = readUInt16LE(bytes, counterObj, 2) / 10;
 				break;
@@ -1200,6 +1203,7 @@ function cmdMap() {
 		  "ba": "ble_new_event",
 		  "baxx": "ble_new_event._item",
 		  "00": "battery",
+		  "01": "temperature",
 		  "02": "humidity",
 		  "08": "pir_status",
 		  "03": "temperature_mode",
@@ -1281,6 +1285,10 @@ function cmdMap() {
 }
 function processTemperature(decoded) {
 	var allTemperatureProperties = {
+    "temperature": {
+        "precision": 1,
+        "unitName": "℃"
+    },
     "target_temperature1": {
         "precision": 1,
         "unitName": "℃"

@@ -126,6 +126,22 @@
             "bacnet_unit_type": "UNITS_DEGREES_CELSIUS"
         },
         {
+            "id": "celsius_temperature",
+            "name": "Celsius Temperature",
+            "value": "",
+            "unit": "°C",
+            "access_mode": "R",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "range": [
+                -20,
+                60
+            ],
+            "bacnet_type": "analog_input_object",
+            "bacnet_unit_type_id": 62,
+            "bacnet_unit_type": "UNITS_DEGREES_CELSIUS"
+        },
+        {
             "id": "children_lock_settings.button1_event",
             "name": "Button Event 1 (Child Lock)",
             "value": "0",
@@ -2055,6 +2071,22 @@
             "range": [
                 41,
                 95
+            ],
+            "bacnet_type": "analog_input_object",
+            "bacnet_unit_type_id": 64,
+            "bacnet_unit_type": "UNITS_DEGREES_FAHRENHEIT"
+        },
+        {
+            "id": "fahrenheit_temperature",
+            "name": "Fahrenheit Temperature",
+            "value": "",
+            "unit": "℉",
+            "access_mode": "R",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "range": [
+                -4,
+                140
             ],
             "bacnet_type": "analog_input_object",
             "bacnet_unit_type_id": 64,
