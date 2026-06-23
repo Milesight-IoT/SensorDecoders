@@ -192,6 +192,11 @@ function milesightDeviceDecode(bytes) {
             decoded.enabled_relay = readWiresRelay(bytes[i]);
             i += 1;
         }
+        // DO STATUS
+        else if (channel_id === 0x0c && channel_type === 0x01) {
+            decoded.do_status = readDoStatus(bytes[i]);
+            i += 1;
+        }
         // TEMPERATURE MODE SUPPORT
         else if (channel_id === 0xff && channel_type === 0xcb) {
             decoded.temperature_control_support_mode = readTemperatureControlSupportMode(bytes[i]);
@@ -320,8 +325,13 @@ function handle_downlink_response(channel_type, bytes, offset) {
             offset += 2;
             break;
         case 0x28:
-            var report_status_map = { 0: "plan", 1: "periodic", 2: "target_temperature_range" };
-            decoded.report_status = getValue(report_status_map, readUInt8(bytes[offset]));
+            var report_status_map = { 1: "plan", 2: "periodic", 3: "target_temperature_range", 4: "do_status_config" };
+            var report_status_value = readUInt8(bytes[offset]) + 1;
+            decoded.report_status = {};
+            decoded.report_status.type = report_status_map[report_status_value];
+            if (RAW_VALUE) {
+                decoded.report_status.value = report_status_value;
+            }
             offset += 1;
             break;
         case 0x68:
@@ -948,6 +958,10 @@ function handle_downlink_response_ext(code, channel_type, bytes, offset) {
             decoded.sharing_mode_enable = readEnableStatus(readUInt8(bytes[offset]));
             offset += 1;
             break;
+        case 0x35:
+            decoded.do_status_config = readDoStatus(readUInt8(bytes[offset]));
+            offset += 1;
+            break;
         case 0x64:
             decoded.occupied_cooling_setpoint = readUInt16LE(bytes.slice(offset, offset + 2)) / 10;
             offset += 2;
@@ -1417,6 +1431,15 @@ function readWiresRelay(status) {
         }
     }
     return relay.length > 0 ? relay.join("&") : "off";
+}
+
+function readDoStatus(status) {
+    var do_bit_offset = { do1: 0 };
+    var do_status = {};
+    for (var key in do_bit_offset) {
+        do_status[key] = readOnOffStatus((status >>> do_bit_offset[key]) & 0x01);
+    }
+    return do_status;
 }
 
 function readReversingValve(type) {

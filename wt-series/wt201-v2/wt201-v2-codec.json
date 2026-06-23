@@ -288,6 +288,80 @@
             "bacnet_unit_type": "UNITS_NO_UNITS"
         },
         {
+            "id": "do_status.do1",
+            "name": "DO Status",
+            "value": "",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "off"
+                },
+                {
+                    "value": 1,
+                    "name": "on"
+                }
+            ],
+            "bacnet_type": "binary_input_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS"
+        },
+        {
+            "id": "do_status_config.do1",
+            "name": "DO Status Config",
+            "value": "",
+            "unit": "",
+            "access_mode": "RW",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "off"
+                },
+                {
+                    "value": 1,
+                    "name": "on"
+                }
+            ],
+            "bacnet_type": "binary_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS"
+        },
+        {
+            "id": "report_status.value",
+            "name": "Report Status (Value)",
+            "value": "",
+            "unit": "",
+            "access_mode": "W",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 1,
+                    "name": "plan"
+                },
+                {
+                    "value": 2,
+                    "name": "periodic"
+                },
+                {
+                    "value": 3,
+                    "name": "target_temperature_range"
+                },
+                {
+                    "value": 4,
+                    "name": "do_status_config"
+                }
+            ],
+            "bacnet_type": "multistate_output_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS"
+        },
+        {
             "id": "reporting_interval_settings.time",
             "name": "Report Interval",
             "value": "10",

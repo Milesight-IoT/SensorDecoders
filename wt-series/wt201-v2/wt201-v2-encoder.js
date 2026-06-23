@@ -221,6 +221,9 @@ function milesightDeviceEncode(payload) {
     if ("aux_control_config" in payload) {
         encoded = encoded.concat(setAuxControlConfig(payload.aux_control_config));
     }
+    if ("do_status_config" in payload) {
+        encoded = encoded.concat(setDoStatusConfig(payload.do_status_config));
+    }
     if ("screen_display_mode" in payload) {
         encoded = encoded.concat(setScreenDisplayMode(payload.screen_display_mode));
     }
@@ -439,21 +442,36 @@ function reboot(reboot) {
 
 /**
  * report device status
- * @param {number} report_status values: (0: plan, 1: periodic, 2: target_temperature_range)
- * @example { "report_status": 1 }
+ * @param {object} report_status
+ * @param {number} report_status.value values: (1: plan, 2: periodic, 3: target_temperature_range, 4: do_status_config)
+ * @param {string} report_status.type values: (plan, periodic, target_temperature_range, do_status_config)
+ * @example { "report_status": { "value": 2, "type": "periodic" } }
  */
 function reportStatus(report_status) {
-    var report_status_map = { 0: "plan", 1: "periodic", 2: "target_temperature_range" };
-    var report_status_values = getValues(report_status_map);
-    if (report_status_values.indexOf(report_status) === -1) {
-        throw new Error("report_status must be one of " + report_status_values.join(", "));
-    }
+    var report_status_map = [
+        { value: 1, name: "plan" },
+        { value: 2, name: "periodic" },
+        { value: 3, name: "target_temperature_range" },
+        { value: 4, name: "do_status_config" },
+    ];
 
-    var buffer = new Buffer(3);
-    buffer.writeUInt8(0xff);
-    buffer.writeUInt8(0x28);
-    buffer.writeUInt8(getValue(report_status_map, report_status));
-    return buffer.toBytes();
+    if (RAW_VALUE) {
+        var value = report_status.value;
+        var report_status_values = report_status_map.map(function(item) { return item.value; });
+        if (report_status_values.indexOf(value) === -1) {
+            throw new Error("report_status.value must be one of " + report_status_values.join(", "));
+        }
+
+        return [0xff, 0x28, arrayFindIndex(report_status_map, function(item) { return item.value === value; })];
+    } else {
+        var type = report_status.type;
+        var report_status_types = report_status_map.map(function(item) { return item.name; });
+        if (report_status_types.indexOf(type) === -1) {
+            throw new Error("report_status.type must be one of " + report_status_types.join(", "));
+        }
+
+        return [0xff, 0x28, arrayFindIndex(report_status_map, function(item) { return item.name === type; })];
+    }
 }
 
 /**
@@ -2017,6 +2035,34 @@ function setAuxControlConfig(aux_control_config) {
     var buffer = new Buffer(3);
     buffer.writeUInt8(0xf9);
     buffer.writeUInt8(0x3b);
+    buffer.writeUInt8(data);
+    return buffer.toBytes();
+}
+
+/**
+ * set DO status config
+ * @param {object} do_status_config
+ * @param {number} do_status_config.do1 values: (0: off, 1: on)
+ * @example { "do_status_config": { "do1": 1 } }
+ */
+function setDoStatusConfig(do_status_config) {
+    var on_off_map = { 0: "off", 1: "on" };
+    var on_off_values = getValues(on_off_map);
+    var do_bit_offset = { do1: 0 };
+
+    var data = 0;
+    for (var key in do_bit_offset) {
+        if (key in do_status_config) {
+            if (on_off_values.indexOf(do_status_config[key]) === -1) {
+                throw new Error("do_status_config." + key + " must be one of " + on_off_values.join(", "));
+            }
+            data |= getValue(on_off_map, do_status_config[key]) << do_bit_offset[key];
+        }
+    }
+
+    var buffer = new Buffer(3);
+    buffer.writeUInt8(0xf9);
+    buffer.writeUInt8(0x35);
     buffer.writeUInt8(data);
     return buffer.toBytes();
 }
