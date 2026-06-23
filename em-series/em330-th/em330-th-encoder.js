@@ -3,7 +3,7 @@
  *
  * Copyright 2024 Milesight IoT
  *
- * @product EM320-TH
+ * @product EM330-TH
  */
 var RAW_VALUE = 0x00;
 

@@ -1,8 +1,8 @@
-# Temperature & Humidity Sensor - EM320-TH
+# Temperature & Humidity Sensor - EM330-TH
 
-![EM320-TH](em320-th.png)
+![EM330-TH](em330-th.png)
 
-For more detailed information, please visit [Milesight Official Website](https://www.milesight.com/iot/product/lorawan-sensor/em320-th)
+For more detailed information, please visit [Milesight Official Website](https://www.milesight.com/iot/product/lorawan-sensor/em330-th)
 
 ## Payload
 
