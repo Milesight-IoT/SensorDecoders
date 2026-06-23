@@ -867,11 +867,13 @@ function readModbusValueCondition(bytes) {
     }
     modbus_value_condition.continue_time = continue_time;
     modbus_value_condition.lock_time = lock_time;
-    if (condition_value === 2 || condition_value === 4) {
+    if (condition_value === 2 || condition_value === 4 || condition_value === 5) {
         modbus_value_condition.threshold_min = value_1;
-    } else if (condition_value === 3 || condition_value === 4) {
+    }
+    if (condition_value === 3 || condition_value === 4 || condition_value === 5) {
         modbus_value_condition.threshold_max = value_2;
-    } else if (condition_value === 6 || condition_value === 7) {
+    }
+    if (condition_value === 6 || condition_value === 7) {
         modbus_value_condition.mutation_duration = value_1;
         modbus_value_condition.mutation = value_2;
     }
