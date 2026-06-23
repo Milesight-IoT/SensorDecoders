@@ -260,16 +260,16 @@
             "value_type": "UINT8",
             "values": [
                 { "value": 0, "name": "auto" },
-                { "value": 1, "name": "low speed" },
-                { "value": 2, "name": "medium speed" },
-                { "value": 3, "name": "high speed" }
+                { "value": 1, "name": "low" },
+                { "value": 2, "name": "medium" },
+                { "value": 3, "name": "high" }
             ],
             "bacnet_type": "multistate_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS"
         },
         {
-            "id": "fan_mode_status",
+            "id": "fan_control_info.fan_control_mode",
             "name": "Fan Mode Status",
             "value": "",
             "unit": "",
@@ -284,10 +284,10 @@
             "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": ["fan_status"]
+            "reference": ["fan_control_info.fan_control_status"]
         },
         {
-            "id": "fan_status",
+            "id": "fan_control_info.fan_control_status",
             "name": "Fan Control Status",
             "value": "",
             "unit": "",
@@ -303,7 +303,7 @@
             "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": ["fan_mode_status"]
+            "reference": ["fan_control_info.fan_control_mode"]
         },
         {
             "id": "system_status",
