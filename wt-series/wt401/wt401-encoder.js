@@ -165,6 +165,103 @@ function milesightDeviceEncode(payload) {
 		buffer.writeHexString(payload.battery_info.current_battery_status, 2);
 		encoded = encoded.concat(buffer.toBytes());
 	}
+	//0xcd
+	if ('ble_configuration_settings' in payload) {
+		var buffer = new Buffer();
+		if (isValid(payload.ble_configuration_settings.enable)) {
+			buffer.writeUInt8(0xcd);
+			// 0：disable, 1：enable
+			buffer.writeUInt8(0x00);
+			if ([0, 1].indexOf(payload.ble_configuration_settings.enable) === -1) {
+				throw new Error('ble_configuration_settings.enable must be one of [0, 1]');
+			}
+			// 0：disable, 1：enable
+			buffer.writeUInt8(payload.ble_configuration_settings.enable);
+		}
+		if (isValid(payload.ble_configuration_settings.local_id)) {
+			buffer.writeUInt8(0xcd);
+			buffer.writeUInt8(0x01);
+			if ([0, 1].indexOf(payload.ble_configuration_settings.local_id.type) === -1) {
+				throw new Error('ble_configuration_settings.local_id.type must be one of [0, 1]');
+			}
+			// 0：public, 1：private
+			buffer.writeUInt8(payload.ble_configuration_settings.local_id.type);
+			buffer.writeHexString(payload.ble_configuration_settings.local_id.address, 6);
+		}
+		if (isValid(payload.ble_configuration_settings.local_name_first)) {
+			buffer.writeUInt8(0xcd);
+			buffer.writeUInt8(0x05);
+			buffer.writeString(payload.ble_configuration_settings.local_name_first, 8);
+		}
+		if (isValid(payload.ble_configuration_settings.local_name_last)) {
+			buffer.writeUInt8(0xcd);
+			buffer.writeUInt8(0x06);
+			buffer.writeString(payload.ble_configuration_settings.local_name_last, 5);
+		}
+		if (isValid(payload.ble_configuration_settings.pair_info)) {
+			buffer.writeUInt8(0xcd);
+			buffer.writeUInt8(0x07);
+			if ([0, 1].indexOf(payload.ble_configuration_settings.pair_info.type) === -1) {
+				throw new Error('ble_configuration_settings.pair_info.type must be one of [0, 1]');
+			}
+			// 0：public, 1：private
+			buffer.writeUInt8(payload.ble_configuration_settings.pair_info.type);
+			buffer.writeHexString(payload.ble_configuration_settings.pair_info.addr, 6);
+			buffer.writeHexString(payload.ble_configuration_settings.pair_info.mac, 8);
+			if (payload.ble_configuration_settings.pair_info.name_length < 1 || payload.ble_configuration_settings.pair_info.name_length > 13) {
+				throw new Error('ble_configuration_settings.pair_info.name_length must be between 1 and 13');
+			}
+			buffer.writeUInt8(payload.ble_configuration_settings.pair_info.name_length);
+			buffer.writeString(payload.ble_configuration_settings.pair_info.name, payload.ble_configuration_settings.pair_info.name_length, true);
+		}
+		for (var pair_name_id = 0; pair_name_id < (payload.ble_configuration_settings.pair_name && payload.ble_configuration_settings.pair_name.length); pair_name_id++) {
+			var pair_name_item = payload.ble_configuration_settings.pair_name[pair_name_id];
+			var pair_name_item_id = pair_name_item.channel;
+			buffer.writeUInt8(0xcd);
+			buffer.writeUInt8(0x04);
+			if (pair_name_item.length < 1 || pair_name_item.length > 13) {
+				throw new Error('length must be between 1 and 13');
+			}
+			buffer.writeUInt8(pair_name_item.length);
+			buffer.writeString(pair_name_item.content, pair_name_item.length, true);
+		}
+		for (var pair_mac_id = 0; pair_mac_id < (payload.ble_configuration_settings.pair_mac && payload.ble_configuration_settings.pair_mac.length); pair_mac_id++) {
+			var pair_mac_item = payload.ble_configuration_settings.pair_mac[pair_mac_id];
+			var pair_mac_item_id = pair_mac_item.channel;
+			buffer.writeUInt8(0xcd);
+			buffer.writeUInt8(0x02);
+			buffer.writeHexString(pair_mac_item.mac, 8);
+		}
+		for (var pair_addr_id = 0; pair_addr_id < (payload.ble_configuration_settings.pair_addr && payload.ble_configuration_settings.pair_addr.length); pair_addr_id++) {
+			var pair_addr_item = payload.ble_configuration_settings.pair_addr[pair_addr_id];
+			var pair_addr_item_id = pair_addr_item.channel;
+			buffer.writeUInt8(0xcd);
+			buffer.writeUInt8(0x03);
+			if ([0, 1].indexOf(pair_addr_item.type) === -1) {
+				throw new Error('type must be one of [0, 1]');
+			}
+			// 0：public, 1：private
+			buffer.writeUInt8(pair_addr_item.type);
+			buffer.writeHexString(pair_addr_item.mac, 6);
+		}
+		if (isValid(payload.ble_configuration_settings.local_info)) {
+			buffer.writeUInt8(0xcd);
+			buffer.writeUInt8(0x08);
+			if ([0, 1].indexOf(payload.ble_configuration_settings.local_info.type) === -1) {
+				throw new Error('ble_configuration_settings.local_info.type must be one of [0, 1]');
+			}
+			// 0：public, 1：private
+			buffer.writeUInt8(payload.ble_configuration_settings.local_info.type);
+			buffer.writeHexString(payload.ble_configuration_settings.local_info.addr, 6);
+			buffer.writeHexString(payload.ble_configuration_settings.local_info.mac, 8);
+			if (payload.ble_configuration_settings.local_info.name_length < 1 || payload.ble_configuration_settings.local_info.name_length > 13) {
+				throw new Error('ble_configuration_settings.local_info.name_length must be between 1 and 13');
+			}
+			buffer.writeUInt8(payload.ble_configuration_settings.local_info.name_length);
+			buffer.writeString(payload.ble_configuration_settings.local_info.name, payload.ble_configuration_settings.local_info.name_length, true);
+		}
+		encoded = encoded.concat(buffer.toBytes());
+	}
 	//0xba
 	if ('retrieve_historical_data_by_time_range' in payload) {
 		var buffer = new Buffer();
@@ -1080,6 +1177,17 @@ function milesightDeviceEncode(payload) {
 		buffer.writeUInt8(payload.screen_fan_mode_enable);
 		encoded = encoded.concat(buffer.toBytes());
 	}
+	//0x89
+	if ('backlight_enable' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0x89);
+		if ([0, 1].indexOf(payload.backlight_enable) === -1) {
+			throw new Error('backlight_enable must be one of [0, 1]');
+		}
+		// 0:disable, 1:enable
+		buffer.writeUInt8(payload.backlight_enable);
+		encoded = encoded.concat(buffer.toBytes());
+	}
 	//0x71
 	if ('button_custom_function' in payload) {
 		var buffer = new Buffer();
@@ -1847,6 +1955,19 @@ function cmdMap() {
 		  "product_frequency_band": "d8",
 		  "device_time": "b9",
 		  "battery_info": "b8",
+		  "ble_configuration_settings": "cd",
+		  "ble_configuration_settings.enable": "cd00",
+		  "ble_configuration_settings.local_id": "cd01",
+		  "ble_configuration_settings.local_name_first": "cd05",
+		  "ble_configuration_settings.local_name_last": "cd06",
+		  "ble_configuration_settings.pair_info": "cd07",
+		  "ble_configuration_settings.pair_name": "cd04",
+		  "ble_configuration_settings.pair_name._item": "cd04xx",
+		  "ble_configuration_settings.pair_mac": "cd02",
+		  "ble_configuration_settings.pair_mac._item": "cd02xx",
+		  "ble_configuration_settings.pair_addr": "cd03",
+		  "ble_configuration_settings.pair_addr._item": "cd03xx",
+		  "ble_configuration_settings.local_info": "cd08",
 		  "ble_new_event": "ba",
 		  "ble_new_event._item": "baxx",
 		  "battery": "00",
@@ -1960,6 +2081,7 @@ function cmdMap() {
 		  "screen_display_settings": "75",
 		  "screen_temp_mode_enable": "8a",
 		  "screen_fan_mode_enable": "8c",
+		  "backlight_enable": "89",
 		  "button_custom_function": "71",
 		  "button_custom_function.enable": "7100",
 		  "button_custom_function.mode1": "7101",

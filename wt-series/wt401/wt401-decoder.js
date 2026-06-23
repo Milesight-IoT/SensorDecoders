@@ -101,6 +101,71 @@ function milesightDeviceDecode(bytes) {
 				decoded.battery_info.battery_voltage = readUInt16LE(bytes, counterObj, 2) / 1000;
 				decoded.battery_info.current_battery_status = readHexString(bytes, counterObj, 2);
 				break;
+			case 0xcd:
+				decoded.ble_configuration_settings = decoded.ble_configuration_settings || {};
+				var ble_configuration_settings_command = readUInt8(bytes, counterObj, 1);
+				if (ble_configuration_settings_command == 0x00) {
+					// 0：disable, 1：enable
+					decoded.ble_configuration_settings.enable = readUInt8(bytes, counterObj, 1);
+				}
+				if (ble_configuration_settings_command == 0x01) {
+					decoded.ble_configuration_settings.local_id = decoded.ble_configuration_settings.local_id || {};
+					// 0：public, 1：private
+					decoded.ble_configuration_settings.local_id.type = readUInt8(bytes, counterObj, 1);
+					decoded.ble_configuration_settings.local_id.address = readHexString(bytes, counterObj, 6);
+				}
+				if (ble_configuration_settings_command == 0x05) {
+					decoded.ble_configuration_settings.local_name_first = readString(bytes, counterObj, 8);
+				}
+				if (ble_configuration_settings_command == 0x06) {
+					decoded.ble_configuration_settings.local_name_last = readString(bytes, counterObj, 5);
+				}
+				if (ble_configuration_settings_command == 0x07) {
+					decoded.ble_configuration_settings.pair_info = decoded.ble_configuration_settings.pair_info || {};
+					// 0：public, 1：private
+					decoded.ble_configuration_settings.pair_info.type = readUInt8(bytes, counterObj, 1);
+					decoded.ble_configuration_settings.pair_info.addr = readHexString(bytes, counterObj, 6);
+					decoded.ble_configuration_settings.pair_info.mac = readHexString(bytes, counterObj, 8);
+					decoded.ble_configuration_settings.pair_info.name_length = readUInt8(bytes, counterObj, 1);
+					decoded.ble_configuration_settings.pair_info.name = readString(bytes, counterObj, decoded.ble_configuration_settings.pair_info.name_length);
+				}
+				if (ble_configuration_settings_command == 0x04) {
+					decoded.ble_configuration_settings.pair_name = decoded.ble_configuration_settings.pair_name || [];
+					var channel = readUInt8(bytes, counterObj, 1);
+					var pair_name_item = pickArrayItem(decoded.ble_configuration_settings.pair_name, channel, 'channel');
+					pair_name_item.channel = channel;
+					insertArrayItem(decoded.ble_configuration_settings.pair_name, pair_name_item, 'channel');
+					pair_name_item.length = readUInt8(bytes, counterObj, 1);
+					pair_name_item.content = readString(bytes, counterObj, pair_name_item.length);
+				}
+				if (ble_configuration_settings_command == 0x02) {
+					decoded.ble_configuration_settings.pair_mac = decoded.ble_configuration_settings.pair_mac || [];
+					var channel = readUInt8(bytes, counterObj, 1);
+					var pair_mac_item = pickArrayItem(decoded.ble_configuration_settings.pair_mac, channel, 'channel');
+					pair_mac_item.channel = channel;
+					insertArrayItem(decoded.ble_configuration_settings.pair_mac, pair_mac_item, 'channel');
+					pair_mac_item.mac = readHexString(bytes, counterObj, 8);
+				}
+				if (ble_configuration_settings_command == 0x03) {
+					decoded.ble_configuration_settings.pair_addr = decoded.ble_configuration_settings.pair_addr || [];
+					var channel = readUInt8(bytes, counterObj, 1);
+					var pair_addr_item = pickArrayItem(decoded.ble_configuration_settings.pair_addr, channel, 'channel');
+					pair_addr_item.channel = channel;
+					insertArrayItem(decoded.ble_configuration_settings.pair_addr, pair_addr_item, 'channel');
+					// 0：public, 1：private
+					pair_addr_item.type = readUInt8(bytes, counterObj, 1);
+					pair_addr_item.mac = readHexString(bytes, counterObj, 6);
+				}
+				if (ble_configuration_settings_command == 0x08) {
+					decoded.ble_configuration_settings.local_info = decoded.ble_configuration_settings.local_info || {};
+					// 0：public, 1：private
+					decoded.ble_configuration_settings.local_info.type = readUInt8(bytes, counterObj, 1);
+					decoded.ble_configuration_settings.local_info.addr = readHexString(bytes, counterObj, 6);
+					decoded.ble_configuration_settings.local_info.mac = readHexString(bytes, counterObj, 8);
+					decoded.ble_configuration_settings.local_info.name_length = readUInt8(bytes, counterObj, 1);
+					decoded.ble_configuration_settings.local_info.name = readString(bytes, counterObj, decoded.ble_configuration_settings.local_info.name_length);
+				}
+				break;
 			case 0xba:
 				decoded.ble_new_event = decoded.ble_new_event || [];
 				var index = readUInt8(bytes, counterObj, 1);
@@ -561,6 +626,10 @@ function milesightDeviceDecode(bytes) {
 			case 0x8c:
 				// 0:disable, 1:enable
 				decoded.screen_fan_mode_enable = readUInt8(bytes, counterObj, 1);
+				break;
+			case 0x89:
+				// 0:disable, 1:enable
+				decoded.backlight_enable = readUInt8(bytes, counterObj, 1);
 				break;
 			case 0x71:
 				decoded.button_custom_function = decoded.button_custom_function || {};
@@ -1146,6 +1215,7 @@ function cmdMap() {
 		  "86": "origin_temperature",
 		  "87": "origin_humidity",
 		  "88": "fan_enable",
+		  "89": "backlight_enable",
 		  "6000": "collection_interval.seconds_of_time",
 		  "6001": "collection_interval.minutes_of_time",
 		  "6100": "reporting_interval.ble",
@@ -1200,6 +1270,19 @@ function cmdMap() {
 		  "d8": "product_frequency_band",
 		  "b9": "device_time",
 		  "b8": "battery_info",
+		  "cd": "ble_configuration_settings",
+		  "cd00": "ble_configuration_settings.enable",
+		  "cd01": "ble_configuration_settings.local_id",
+		  "cd05": "ble_configuration_settings.local_name_first",
+		  "cd06": "ble_configuration_settings.local_name_last",
+		  "cd07": "ble_configuration_settings.pair_info",
+		  "cd04": "ble_configuration_settings.pair_name",
+		  "cd04xx": "ble_configuration_settings.pair_name._item",
+		  "cd02": "ble_configuration_settings.pair_mac",
+		  "cd02xx": "ble_configuration_settings.pair_mac._item",
+		  "cd03": "ble_configuration_settings.pair_addr",
+		  "cd03xx": "ble_configuration_settings.pair_addr._item",
+		  "cd08": "ble_configuration_settings.local_info",
 		  "ba": "ble_new_event",
 		  "baxx": "ble_new_event._item",
 		  "00": "battery",

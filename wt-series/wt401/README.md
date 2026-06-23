@@ -23,6 +23,40 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | OEM ID | 0xD9 | 3 | rw |  |  |  |
 | Device Status | 0xC8 | 2 | rw | 1 |  | 0：Off<br>1：On |
 | Product Region | 0xD8 | 17 | r |  |  |  |
+| BLE Settings | 0xCD | 1 | rw |  |  |  |
+| BLE Command | 0xCD | 2 | rw | 0 |  |  |
+| Bluetooth Enable | 0xCD | 2 | rw | 0 |  | 0：disable<br>1：enable |
+| Device Bluetooth Address | 0xCD | 8 | r |  |  |  |
+| Address Type | 0xCD | 2 | r | 0 |  | 0：public<br>1：private |
+| Bluetooth Mac Address | 0xCD | 7 | r | 24e124123456 |  |  |
+| Device Bluetooth Name (prefix8) | 0xCD | 9 | rw |  |  |  |
+| Device Bluetooth Name (suffix5) | 0xCD | 6 | rw |  |  |  |
+| Device Bluetooth Information | 0xCD | 1 | rw |  |  |  |
+| Address Type | 0xCD | 2 | rw | 0 |  | 0：public<br>1：private |
+| Mac Address | 0xCD | 7 | rw | 24e124123456 |  |  |
+| DevEUI | 0xCD | 9 | rw | 24e124123456789a |  |  |
+| Name Length | 0xCD | 2 | rw | 13 | 1 - 13 |  |
+| Bluetooth Name | 0xCD | 1 | rw |  |  |  |
+| Paired Device Name | 0xCD | 1 | rw |  |  |  |
+| Paired Device Name | 0xCD | 1 | rw |  |  |  |
+| ID | 0xCD | 2 | rw | 0 |  |  |
+| Name Length | 0xCD | 2 | rw | 13 | 1 - 13 |  |
+| Bluetooth Name | 0xCD | 1 | rw |  |  |  |
+| Paired Device | 0xCD | 1 | rw |  |  |  |
+| Paired Device | 0xCD | 10 | rw |  |  |  |
+| ID | 0xCD | 2 | rw | 0 |  |  |
+| DevEUI | 0xCD | 9 | rw | 24e124123456789a |  |  |
+| Paired Device Bluetooth Mac Address | 0xCD | 1 | rw |  |  |  |
+| Paired Device Bluetooth Mac Address  | 0xCD | 9 | rw |  |  |  |
+| ID | 0xCD | 2 | rw | 0 |  |  |
+| Address Type | 0xCD | 2 | rw | 0 |  | 0：public<br>1：private |
+| Bluetooth Mac Address | 0xCD | 7 | rw | 24e124123456 |  |  |
+| Paired Device Bluetooth Information | 0xCD | 1 | r |  |  |  |
+| Address Type | 0xCD | 2 | r | 0 |  | 0：public<br>1：private |
+| Mac Address | 0xCD | 7 | r | 24e124123456 |  |  |
+| DevEUI | 0xCD | 9 | r | 24e124123456789a |  |  |
+| Name Length | 0xCD | 2 | r | 13 | 1 - 13 |  |
+| Bluetooth Name | 0xCD | 1 | r |  |  |  |
 | Bluetooth Status | 0xBA | 11 | r |  |  |  |
 | Bluetooth Status | 0xBA | M | r |  |  |  |
 | ID | 0xBA | 2 | r | 0 |  |  |
@@ -172,6 +206,7 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Reserved | 0x75 | 2 | rw | 0 |  |  |
 | Screen Temp Mode Enable | 0x8A | 2 | rw | 1 |  | 0:disable<br>1:enable |
 | Screen Fan Mode Enable | 0x8C | 2 | rw | 1 |  | 0:disable<br>1:enable |
+| Backlight Enable | 0x89 | 2 | rw | 1 |  | 0:disable<br>1:enable |
 | Button Custom Function | 0x71 | 1 | rw |  |  |  |
 | ID | 0x71 | 2 | rw | 0 |  |  |
 | Enable | 0x71 | 2 | rw | 0 |  | 0：disable<br>1：enable |
