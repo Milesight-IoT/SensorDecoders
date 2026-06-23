@@ -251,59 +251,59 @@
             "bacnet_unit_type": "UNITS_NO_UNITS"
         },
         {
-            "id": "fan_mode",
-            "name": "Fan Mode",
+            "id": "fan_mode.value",
+            "name": "Fan Mode (Value)",
             "value": "",
             "unit": "",
             "access_mode": "RW",
             "data_type": "ENUM",
             "value_type": "UINT8",
             "values": [
-                { "value": 0, "name": "auto" },
-                { "value": 1, "name": "low" },
-                { "value": 2, "name": "medium" },
-                { "value": 3, "name": "high" }
+                { "value": 1, "name": "auto" },
+                { "value": 2, "name": "low" },
+                { "value": 3, "name": "medium" },
+                { "value": 4, "name": "high" }
             ],
             "bacnet_type": "multistate_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS"
         },
         {
-            "id": "fan_control_info.fan_control_mode",
-            "name": "Fan Mode Status",
+            "id": "fan_control_info.fan_control_mode_value",
+            "name": "Fan Control Mode (Value)",
             "value": "",
             "unit": "",
             "access_mode": "R",
             "data_type": "ENUM",
             "value_type": "UINT8",
             "values": [
-                { "value": 0, "name": "auto" },
-                { "value": 1, "name": "on" },
-                { "value": 3, "name": "disable" }
+                { "value": 1, "name": "auto" },
+                { "value": 2, "name": "on" },
+                { "value": 4, "name": "disable" }
             ],
             "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": ["fan_control_info.fan_control_status"]
+            "reference": ["fan_control_info.fan_control_status_value"]
         },
         {
-            "id": "fan_control_info.fan_control_status",
-            "name": "Fan Control Status",
+            "id": "fan_control_info.fan_control_status_value",
+            "name": "Fan Control Status (Value)",
             "value": "",
             "unit": "",
             "access_mode": "R",
             "data_type": "ENUM",
             "value_type": "UINT8",
             "values": [
-                { "value": 0, "name": "standby" },
-                { "value": 1, "name": "low speed" },
-                { "value": 2, "name": "medium speed" },
-                { "value": 3, "name": "high speed" }
+                { "value": 1, "name": "standby" },
+                { "value": 2, "name": "low speed" },
+                { "value": 3, "name": "medium speed" },
+                { "value": 4, "name": "high speed" }
             ],
             "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": ["fan_control_info.fan_control_mode"]
+            "reference": ["fan_control_info.fan_control_mode_value"]
         },
         {
             "id": "system_status",

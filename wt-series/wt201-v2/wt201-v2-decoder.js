@@ -3,7 +3,7 @@
  *
  * Copyright 2025 Milesight IoT
  *
- * @product WT201 v2 (odm: 7089)
+ * @product WT201 v2 (odm: 7074)
  */
 var RAW_VALUE = 0x01;
 
@@ -99,9 +99,23 @@ function milesightDeviceDecode(bytes) {
         // FAN CONTROL
         else if (channel_id === 0x06 && channel_type === 0xe8) {
             var fan_data = bytes[i];
-            // value = fan_mode(0..1) + fan_status(2..3)
-            decoded.fan_mode = readFanMode((fan_data >>> 0) & 0x03);
-            decoded.fan_status = readFanStatus((fan_data >>> 2) & 0x03);
+            var fan_mode_map = {
+                0: "auto",
+                1: "on",
+                3: "disable",
+            };
+            var fan_status_map = {
+                0: "standby",
+                1: "low speed",
+                2: "medium speed",
+                3: "high speed",
+            };
+            decoded.fan_control_info = {};
+            // value = fan_control_mode(0..1) + fan_control_status(2..3)
+            decoded.fan_control_info.fan_control_mode = fan_mode_map[(fan_data >>> 0) & 0x03];
+            decoded.fan_control_info.fan_control_mode_value = ((fan_data >>> 0) & 0x03) + 1;
+            decoded.fan_control_info.fan_control_status = fan_status_map[(fan_data >>> 2) & 0x03];
+            decoded.fan_control_info.fan_control_status_value = ((fan_data >>> 2) & 0x03) + 1;
             i += 1;
         }
         // PLAN EVENT
@@ -329,7 +343,15 @@ function handle_downlink_response(channel_type, bytes, offset) {
             offset += 1;
             break;
         case 0xb6:
-            decoded.fan_mode = readFanMode(readUInt8(bytes[offset]));
+            var fan_mode_map = {
+                0: "auto",
+                1: "low",
+                2: "medium",
+                3: "high",
+            };
+            decoded.fan_mode = {};
+            decoded.fan_mode.mode = fan_mode_map[readUInt8(bytes[offset])];
+            decoded.fan_mode.value = readUInt8(bytes[offset]) + 1;
             offset += 1;
             break;
         case 0xb7:
@@ -845,8 +867,17 @@ function readPlanType(type) {
 function readFanMode(type) {
     var fan_mode_map = {
         0: "auto",
+        1: "low",
+        2: "medium",
+        3: "high",
+    };
+    return getValue(fan_mode_map, type);
+}
+
+function readFanModeStatus(type) {
+    var fan_mode_map = {
+        0: "auto",
         1: "on",
-        2: "circulate",
         3: "disable",
     };
     return getValue(fan_mode_map, type);
@@ -855,9 +886,9 @@ function readFanMode(type) {
 function readFanStatus(type) {
     var fan_status_map = {
         0: "standby",
-        1: "high speed",
-        2: "low speed",
-        3: "on",
+        1: "low speed",
+        2: "medium speed",
+        3: "high speed",
     };
     return getValue(fan_status_map, type);
 }
@@ -915,7 +946,7 @@ function readWires(wire1, wire2, wire3) {
     wire.ob = readOnOffStatus((wire1 >>> 4) & 0x03);
     wire.w1 = readOnOffStatus((wire1 >>> 6) & 0x03);
 
-    wire.e = readOnOffStatus((wire2 >>> 0) & 0x03);
+    wire.gm = readOnOffStatus((wire2 >>> 0) & 0x03);
     wire.di = readOnOffStatus((wire2 >>> 2) & 0x03);
     wire.pek = readOnOffStatus((wire2 >>> 4) & 0x03);
     wire.w2 = readOnOffStatus((wire2 >>> 6) & 0x01);

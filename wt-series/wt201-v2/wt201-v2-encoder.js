@@ -3,7 +3,7 @@
  *
  * Copyright 2025 Milesight IoT
  *
- * @product WT201 v2 (odm: 7089)
+ * @product WT201 v2 (odm: 7074)
  */
 var RAW_VALUE = 0x01;
 
@@ -367,21 +367,24 @@ function setTemperatureControlMode(temperature_control_mode) {
 
 /**
  * fan mode
- * @param {string} fan_mode values: (0: auto, 1: on, 2: circulate)
+ * @param {string} fan_mode values: (1: auto, 2: low, 3: medium, 4: high)
  * @example { "fan_mode": 0 }
  */
 function setFanMode(fan_mode) {
-    var fan_mode_map = { 0: "auto", 1: "on", 2: "circulate" };
-    var fan_mode_values = getValues(fan_mode_map);
-    if (fan_mode_values.indexOf(fan_mode) === -1) {
-        throw new Error("fan_mode must be one of " + fan_mode_values.join(", "));
+    var value = fan_mode.value;
+    var fan_mode_map = [
+        { value: 1, name: "auto" },
+        { value: 2, name: "low" },
+        { value: 3, name: "medium" },
+        { value: 4, name: "high" },
+    ];
+
+    var fan_mode_value_values = fan_mode_map.map(function(item) { return item.value; });
+    if (fan_mode_value_values.indexOf(value) === -1) {
+        throw new Error("fan_mode.value must be one of " + fan_mode_value_values.join(", "));
     }
 
-    var buffer = new Buffer(3);
-    buffer.writeUInt8(0xff);
-    buffer.writeUInt8(0xb6);
-    buffer.writeUInt8(getValue(fan_mode_map, fan_mode));
-    return buffer.toBytes();
+    return [0xff, 0xb6, arrayFindIndex(fan_mode_map, function(item) { return item.value === value; })];
 }
 
 /**
@@ -1048,24 +1051,6 @@ function setFreezeProtection(freeze_protection_config) {
 }
 
 /**
- * @param {string} fan_mode values: (0: auto, 1: on, 2: circulate)
- * @example { "fan_mode": 0 }
- */
-function setFanMode(fan_mode) {
-    var fan_mode_map = { 0: "auto", 1: "on", 2: "circulate" };
-    var fan_mode_values = getValues(fan_mode_map);
-    if (fan_mode_values.indexOf(fan_mode) === -1) {
-        throw new Error("fan_mode must be one of " + fan_mode_values.join(", "));
-    }
-
-    var buffer = new Buffer(3);
-    buffer.writeUInt8(0xff);
-    buffer.writeUInt8(0xb6);
-    buffer.writeUInt8(getValue(fan_mode_map, fan_mode));
-    return buffer.toBytes();
-}
-
-/**
  * set fan execute time
  * @since v1.3
  * @param {number} fan_execute_time range: [5,55], unit: minute
@@ -1532,7 +1517,7 @@ function setChildLock(child_lock_config) {
  * @param {number} wires.gh values: (0: on, 1: off)
  * @param {number} wires.ob values: (0: on, 1: off)
  * @param {number} wires.w1 values: (0: on, 1: off)
- * @param {number} wires.e values: (0: on, 1: off)
+ * @param {number} wires.gm values: (0: on, 1: off)
  * @param {number} wires.di values: (0: on, 1: off)
  * @param {number} wires.pek values: (0: on, 1: off)
  * @param {number} wires.w2 values: (0: on, 1: off)
@@ -1540,7 +1525,7 @@ function setChildLock(child_lock_config) {
  * @param {number} wires.y2 values: (0: on, 1: off)
  * @param {number} wires.gl values: (0: on, 1: off)
  * @param {number} ob_mode values: (0: on cool, 1: on heat, 3: hold)
- * @example { "wires": { "y1": 1, "gh": 0, "ob": 1, "w1": 1, "e": 1, "di": 0, "pek": 1, "w2": 0, "aux": 0, "y2": 1, "gl": 0 }, "ob_mode": 0 }
+ * @example { "wires": { "y1": 1, "gh": 0, "ob": 1, "w1": 1, "gm": 1, "di": 0, "pek": 1, "w2": 0, "aux": 0, "y2": 1, "gl": 0 }, "ob_mode": 0 }
  */
 function setWires(wires, ob_mode) {
     var on_off_map = { 0: "off", 1: "on" };
@@ -1560,7 +1545,7 @@ function setWires(wires, ob_mode) {
     }
 
     var b2 = 0x00;
-    if ("e" in wires) {
+    if ("gm" in wires) {
         b2 |= getValue(on_off_map, wires.e) << 0;
     }
     if ("di" in wires) {
@@ -1959,7 +1944,7 @@ function setTemperatureControlForbiddenConfig(temperature_control_forbidden_conf
  * @param {object} dual_plan_config
  * @param {number} dual_plan_config.type values: (0: wake, 1: away, 2: home, 3: sleep, 4: occupied, 5: vacant, 6: eco)
  * @param {number} dual_plan_config.temperature_control_mode values: (0: heat, 1: em heat, 2: cool, 3: auto)
- * @param {number} dual_plan_config.fan_mode values: (0: auto, 1: on, 2: circulate)
+ * @param {number} dual_plan_config.fan_mode values: (0: auto, 1: low, 2: medium, 3: high)
  * @param {number} dual_plan_config.heat_setpoint
  * @param {number} dual_plan_config.heat_temperature_tolerance
  * @param {number} dual_plan_config.cool_setpoint
@@ -1985,7 +1970,7 @@ function setPlanConfigWithDualTemperature(dual_temperature_plan_config) {
     if (plan_config_temperature_control_mode_values.indexOf(temperature_control_mode) === -1) {
         throw new Error("dual_temperature_plan_config._item.temperature_control_mode must be one of " + plan_config_temperature_control_mode_values.join(", "));
     }
-    var plan_config_fan_mode_map = { 0: "auto", 1: "on", 2: "circulate" };
+    var plan_config_fan_mode_map = { 0: "auto", 1: "low", 2: "medium", 3: "high" };
     var plan_config_fan_mode_values = getValues(plan_config_fan_mode_map);
     if (plan_config_fan_mode_values.indexOf(fan_mode) === -1) {
         throw new Error("dual_temperature_plan_config._item.fan_mode must be one of " + plan_config_fan_mode_values.join(", "));
@@ -2041,7 +2026,7 @@ function setPlanConfigWithDualTemperature(dual_temperature_plan_config) {
  * @param {object} single_temperature_plan_config
  * @param {number} single_temperature_plan_config.plan_type values: (0: wake, 1: away, 2: home, 3: sleep, 4: occupied, 5: vacant, 6: eco)
  * @param {number} single_temperature_plan_config.temperature_control_mode values: (0: heat, 1: em heat, 2: cool, 3: auto)
- * @param {number} single_temperature_plan_config.fan_mode values: (0: auto, 1: on, 2: circulate)
+ * @param {number} single_temperature_plan_config.fan_mode values: (0: auto, 1: low, 2: medium, 3: high)
  * @param {number} single_temperature_plan_config.setpoint
  * @param {number} single_temperature_plan_config.setpoint_tolerance
  * @param {number} single_temperature_plan_config.temperature_control_tolerance
@@ -2065,7 +2050,7 @@ function setPlanConfigWithSingleTemperature(single_temperature_plan_config) {
     if (temperature_control_mode_values.indexOf(temperature_control_mode) === -1) {
         throw new Error("single_temperature_plan_config._item.temperature_control_mode must be one of " + temperature_control_mode_values.join(", "));
     }
-    var fan_mode_map = { 0: "auto", 1: "on", 2: "circulate" };
+    var fan_mode_map = { 0: "auto", 1: "low", 2: "medium", 3: "high" };
     var fan_mode_values = getValues(fan_mode_map);
     if (fan_mode_values.indexOf(fan_mode) === -1) {
         throw new Error("single_temperature_plan_config._item.fan_mode must be one of " + fan_mode_values.join(", "));
@@ -2162,6 +2147,15 @@ function getValue(map, value) {
     }
 
     throw new Error("not match in " + JSON.stringify(map));
+}
+
+function arrayFindIndex(array, callback) {
+    for (var i = 0; i < array.length; i++) {
+        if (callback(array[i], i, array)) {
+            return i;
+        }
+    }
+    return -1;
 }
 
 function Buffer(size) {
