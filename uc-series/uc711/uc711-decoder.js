@@ -912,8 +912,22 @@ function milesightDeviceDecode(bytes) {
 				decoded.system_status_control.on_off = readUInt8(bytes, counterObj, 1);
 				// 0：heat, 2：cool, 3：auto, 255：disable
 				decoded.system_status_control.mode = readUInt8(bytes, counterObj, 1);
-				decoded.system_status_control.temperature1 = readInt16LE(bytes, counterObj, 2) / 100;
-				decoded.system_status_control.temperature2 = readInt16LE(bytes, counterObj, 2) / 100;
+				if (decoded.system_status_control.mode == 255) {
+					decoded.system_status_control.mode = 'no apply';
+				}
+				var t1 = readInt16LE(bytes, counterObj, 2);
+				if (t1 == -1) {
+					decoded.system_status_control.temperature1 = 'no apply';
+				} else {
+					decoded.system_status_control.temperature1 = t1 / 100;
+				}
+
+				var t2 = readInt16LE(bytes, counterObj, 2);
+				if (t2 == -1) {
+					decoded.system_status_control.temperature2 = 'no apply';
+				} else {
+					decoded.system_status_control.temperature2 = t2 / 100;
+				}
 				break;
 			default:
 				unknown_command = 1;

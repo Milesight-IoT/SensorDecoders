@@ -189,7 +189,7 @@ function milesightDeviceEncode(payload) {
 			var pair_mac_item_id = pair_mac_item.channel;
 			buffer.writeUInt8(0xcd);
 			buffer.writeUInt8(0x02);
-			buffer.writeHexString(pair_mac_item.mac, pair_name_item.length, true);
+			buffer.writeHexString(pair_mac_item.mac, 8);
 		}
 		for (var pair_addr_id = 0; pair_addr_id < (payload.ble_configuration_settings.pair_addr && payload.ble_configuration_settings.pair_addr.length); pair_addr_id++) {
 			var pair_addr_item = payload.ble_configuration_settings.pair_addr[pair_addr_id];
@@ -201,7 +201,7 @@ function milesightDeviceEncode(payload) {
 			}
 			// 0：public, 1：private
 			buffer.writeUInt8(pair_addr_item.type);
-			buffer.writeHexString(pair_addr_item.mac, pair_name_item.length, true);
+			buffer.writeHexString(pair_addr_item.mac, 6);
 		}
 		if (isValid(payload.ble_configuration_settings.local_info)) {
 			buffer.writeUInt8(0xcd);
@@ -1574,19 +1574,19 @@ function milesightDeviceEncode(payload) {
 				buffer.writeUInt8(0x96);
 				buffer.writeUInt8(d2d_pairing_settings_item_id);
 				buffer.writeUInt8(0x01);
-				buffer.writeHexString(d2d_pairing_settings_item.deveui, pair_name_item.length, true);
+				buffer.writeHexString(d2d_pairing_settings_item.deveui, 8);
 			}
 			if (isValid(d2d_pairing_settings_item.name_first)) {
 				buffer.writeUInt8(0x96);
 				buffer.writeUInt8(d2d_pairing_settings_item_id);
 				buffer.writeUInt8(0x02);
-				buffer.writeString(d2d_pairing_settings_item.name_first, pair_name_item.length, true);
+				buffer.writeString(d2d_pairing_settings_item.name_first, 8);
 			}
 			if (isValid(d2d_pairing_settings_item.name_last)) {
 				buffer.writeUInt8(0x96);
 				buffer.writeUInt8(d2d_pairing_settings_item_id);
 				buffer.writeUInt8(0x03);
-				buffer.writeString(d2d_pairing_settings_item.name_last, pair_name_item.length, true);
+				buffer.writeString(d2d_pairing_settings_item.name_last, 8);
 			}
 		}
 		encoded = encoded.concat(buffer.toBytes());
@@ -1615,7 +1615,7 @@ function milesightDeviceEncode(payload) {
 			}
 			// 0：disable, 1：enable
 			buffer.writeUInt8(d2d_master_settings_item.enable);
-			buffer.writeHexString(d2d_master_settings_item.command, pair_name_item.length, true);
+			buffer.writeHexString(d2d_master_settings_item.command, 2);
 			if ([0, 1].indexOf(d2d_master_settings_item.uplink) === -1) {
 				throw new Error('uplink must be one of [0, 1]');
 			}
@@ -1657,7 +1657,7 @@ function milesightDeviceEncode(payload) {
 			}
 			// 0：disable, 1：enable
 			buffer.writeUInt8(d2d_slave_settings_item.enable);
-			buffer.writeHexString(d2d_slave_settings_item.command, pair_name_item.length, true);
+			buffer.writeHexString(d2d_slave_settings_item.command, 2);
 			if ([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17].indexOf(d2d_slave_settings_item.value) === -1) {
 				throw new Error('value must be one of [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17]');
 			}
