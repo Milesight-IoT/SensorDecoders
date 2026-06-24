@@ -189,6 +189,7 @@ function setAlarmConfig(alarm_config) {
     var condition = alarm_config.condition;
     var threshold_min = alarm_config.threshold_min;
     var threshold_max = alarm_config.threshold_max;
+    var enable = alarm_config.enable;
 
     var enable_map = { 0: "disable", 1: "enable" };
     var enable_values = getValues(enable_map);
