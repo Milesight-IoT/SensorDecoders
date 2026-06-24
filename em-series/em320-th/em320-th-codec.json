@@ -81,7 +81,7 @@
                 { "value": 2, "name": "Class C" },
                 { "value": 3, "name": "Class CtoB" }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS"
         },
@@ -145,7 +145,7 @@
             "id": "humidity",
             "name": "Humidity",
             "value": "50.5",
-            "unit": "%r.h.",
+            "unit": "%RH",
             "access_mode": "R",
             "data_type": "NUMBER",
             "value_type": "FLOAT",
@@ -167,7 +167,7 @@
                 { "value": 3, "name": "full" },
                 { "value": 4, "name": "overwritten" }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS"
         },
