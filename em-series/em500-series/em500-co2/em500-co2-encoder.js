@@ -434,7 +434,7 @@ function setSensorStatus(sensor_status) {
     buffer.writeUInt8(0x02);
     buffer.writeUInt8(0xbd);
     buffer.writeUInt8(gas_type_value);
-    buffer.writeUInt32LE(Math.round(value * Math.pow(10, decimal)));
+    buffer.writeUInt32LE(Math.round(value * 1000));
     buffer.writeUInt16LE(range);
     buffer.writeUInt8(flags);
     return buffer.toBytes();

@@ -104,7 +104,7 @@ function milesightDeviceDecode(bytes) {
             var decimal = flags & 0x0f;
 
             sensor_status.gas_type = readGasType(bytes[i]);
-            sensor_status.value = readUInt32LE(bytes.slice(i + 1, i + 5)) / Math.pow(10, decimal);
+            sensor_status.value = parseFloat((readUInt32LE(bytes.slice(i + 1, i + 5)) / 1000).toFixed(decimal));
             sensor_status.range = readUInt16LE(bytes.slice(i + 5, i + 7));
             sensor_status.decimal = decimal;
             sensor_status.status = readGasSensorStatus((flags >> 4) & 0x03);
@@ -147,7 +147,7 @@ function milesightDeviceDecode(bytes) {
             var decimal = flags & 0x0f;
 
             data.gas_type = readGasType(bytes[i + 4]);
-            data.value = readUInt32LE(bytes.slice(i + 5, i + 9)) / Math.pow(10, decimal);
+            data.value = parseFloat((readUInt32LE(bytes.slice(i + 5, i + 9)) / 1000).toFixed(decimal));
             data.range = readUInt16LE(bytes.slice(i + 9, i + 11));
             data.decimal = decimal;
             data.status = readGasSensorStatus((flags >> 4) & 0x03);
