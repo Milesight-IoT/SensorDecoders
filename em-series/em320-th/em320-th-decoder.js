@@ -120,38 +120,28 @@ function milesightDeviceDecode(bytes) {
             pushSensorData(_temperature, _humidity, _timestamp)
         }
 
-        // TSL VERSION
-        else if (channel_id === 0xff && channel_type === 0xff) {
-            decoded.tsl_version = readTslVersion(bytes.slice(i, i + 2));
-        }
-
         // LORAWAN CLASS TYPE
         else if (channel_id === 0xff && channel_type === 0x0f) {
-            decoded.lorawan_class = readLoRaWANClass(bytes[i]);
             i += 1;
         }
 
         // RESET EVENT
         else if (channel_id === 0xff && channel_type === 0xfe) {
-            decoded.reset_event = readResetEvent(1);
             i += 1;
         }
 
         // DEVICE STATUS
         else if (channel_id === 0xff && channel_type === 0x0b) {
-            decoded.device_status = readDeviceStatus(1);
             i += 1;
         }
 
         // STORAGE STATUS (V1.7+, cert version only)
         else if (channel_id === 0x05 && channel_type === 0x9c) {
-            decoded.storage_status = readStorageStatus(bytes[i]);
             i += 1;
         }
 
         // FULL STORAGE ALARM ENABLE (V1.7+, cert version only)
         else if (channel_id === 0xf9 && channel_type === 0xc9) {
-            decoded.full_storage_alarm_enable = readEnableStatus(bytes[i]);
             i += 1;
         }
 
@@ -164,7 +154,6 @@ function milesightDeviceDecode(bytes) {
         else if (channel_id === 0xff && channel_type === 0xff) {
             i += 2;
         }
-
 
         // DOWNLINK RESPONSE
         else if (channel_id === 0xfe || channel_id === 0xff || channel_id === 0xf8) {
