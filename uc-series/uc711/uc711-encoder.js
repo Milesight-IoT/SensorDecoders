@@ -178,6 +178,7 @@ function milesightDeviceEncode(payload) {
 			var pair_name_item_id = pair_name_item.channel;
 			buffer.writeUInt8(0xcd);
 			buffer.writeUInt8(0x04);
+			buffer.writeUInt8(pair_name_item_id);
 			if (pair_name_item.length < 1 || pair_name_item.length > 13) {
 				throw new Error('length must be between 1 and 13');
 			}
@@ -189,6 +190,7 @@ function milesightDeviceEncode(payload) {
 			var pair_mac_item_id = pair_mac_item.channel;
 			buffer.writeUInt8(0xcd);
 			buffer.writeUInt8(0x02);
+			buffer.writeUInt8(pair_mac_item_id);
 			buffer.writeHexString(pair_mac_item.mac, 8);
 		}
 		for (var pair_addr_id = 0; pair_addr_id < (payload.ble_configuration_settings.pair_addr && payload.ble_configuration_settings.pair_addr.length); pair_addr_id++) {
@@ -196,6 +198,7 @@ function milesightDeviceEncode(payload) {
 			var pair_addr_item_id = pair_addr_item.channel;
 			buffer.writeUInt8(0xcd);
 			buffer.writeUInt8(0x03);
+			buffer.writeUInt8(pair_addr_item_id);
 			if ([0, 1].indexOf(pair_addr_item.type) === -1) {
 				throw new Error('type must be one of [0, 1]');
 			}
@@ -238,7 +241,7 @@ function milesightDeviceEncode(payload) {
 		if ([0, 1, 2].indexOf(payload.ble_server.type) === -1) {
 			throw new Error('ble_server.type must be one of [0, 1, 2]');
 		}
-		// 0：Reset BLE Name, 1：Cancel Pairing, 2：Trigger Pairing
+		// 0：Reset BLE Name , 1：Cancel Pairing, 2：Trigger Pairing
 		buffer.writeUInt8(payload.ble_server.type);
 		encoded = encoded.concat(buffer.toBytes());
 	}
@@ -1326,6 +1329,35 @@ function milesightDeviceEncode(payload) {
 		}
 		encoded = encoded.concat(buffer.toBytes());
 	}
+	//0x73
+	if ('plan_dwell_time_settings' in payload) {
+		var buffer = new Buffer();
+		for (var plan_dwell_time_settings_id = 0; plan_dwell_time_settings_id < (payload.plan_dwell_time_settings && payload.plan_dwell_time_settings.length); plan_dwell_time_settings_id++) {
+			var plan_dwell_time_settings_item = payload.plan_dwell_time_settings[plan_dwell_time_settings_id];
+			var plan_dwell_time_settings_item_id = plan_dwell_time_settings_item.id;
+			if (isValid(plan_dwell_time_settings_item.permanent_stay_enable)) {
+				buffer.writeUInt8(0x73);
+				buffer.writeUInt8(plan_dwell_time_settings_item_id);
+				// 0：Disable, 1：Enable
+				buffer.writeUInt8(0x00);
+				if ([0, 1].indexOf(plan_dwell_time_settings_item.permanent_stay_enable) === -1) {
+					throw new Error('permanent_stay_enable must be one of [0, 1]');
+				}
+				// 0：Disable, 1：Enable
+				buffer.writeUInt8(plan_dwell_time_settings_item.permanent_stay_enable);
+			}
+			if (isValid(plan_dwell_time_settings_item.dwell_time)) {
+				buffer.writeUInt8(0x73);
+				buffer.writeUInt8(plan_dwell_time_settings_item_id);
+				buffer.writeUInt8(0x01);
+				if (plan_dwell_time_settings_item.dwell_time < 0 || plan_dwell_time_settings_item.dwell_time > 120) {
+					throw new Error('dwell_time must be between 0 and 120');
+				}
+				buffer.writeUInt8(plan_dwell_time_settings_item.dwell_time);
+			}
+		}
+		encoded = encoded.concat(buffer.toBytes());
+	}
 	//0x8e
 	if ('install_configuration' in payload) {
 		var buffer = new Buffer();
@@ -2167,6 +2199,10 @@ function cmdMap() {
 		  "high_temperature_alarm_settings.enable": "6c00",
 		  "high_temperature_alarm_settings.difference_in_temperature": "6c01",
 		  "high_temperature_alarm_settings.duration": "6c02",
+		  "plan_dwell_time_settings": "73",
+		  "plan_dwell_time_settings._item": "73xx",
+		  "plan_dwell_time_settings._item.permanent_stay_enable": "73xx00",
+		  "plan_dwell_time_settings._item.dwell_time": "73xx01",
 		  "install_configuration": "8e",
 		  "install_configuration.wire": "8e00",
 		  "install_configuration.reversing_valve": "8e01",

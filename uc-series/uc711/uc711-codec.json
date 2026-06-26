@@ -247,7 +247,7 @@
         {
             "id": "ble_configuration_settings.local_info.name",
             "name": "Bluetooth Name(Paired Device Bluetooth Information)",
-            "value": "",
+            "value": "BLE_PAIR_1234",
             "unit": "",
             "access_mode": "RW",
             "data_type": "TEXT",
@@ -381,7 +381,7 @@
         {
             "id": "ble_configuration_settings.pair_info.name",
             "name": "Bluetooth Name(Device Bluetooth Information)",
-            "value": "",
+            "value": "BLE_123456789",
             "unit": "",
             "access_mode": "RW",
             "data_type": "TEXT",
@@ -964,7 +964,7 @@
         {
             "id": "daylight_saving_time.end_month",
             "name": "Month(Daylight Saving Time)",
-            "value": "1",
+            "value": "11",
             "unit": "",
             "access_mode": "RW",
             "data_type": "ENUM",
@@ -1037,7 +1037,7 @@
         {
             "id": "daylight_saving_time.end_week_day",
             "name": "Week(Daylight Saving Time)",
-            "value": "7",
+            "value": "1",
             "unit": "",
             "access_mode": "RW",
             "data_type": "ENUM",
@@ -1256,7 +1256,7 @@
         {
             "id": "daylight_saving_time.start_month",
             "name": "Month(Daylight Saving Time)",
-            "value": "1",
+            "value": "3",
             "unit": "",
             "access_mode": "RW",
             "data_type": "ENUM",
@@ -1382,7 +1382,7 @@
         {
             "id": "daylight_saving_time.start_week_num",
             "name": "Number of Week(Daylight Saving Time)",
-            "value": "1",
+            "value": "2",
             "unit": "",
             "access_mode": "RW",
             "data_type": "ENUM",
@@ -2807,7 +2807,7 @@
         },
         {
             "id": "target_temperature_settings.celsius_heat",
-            "name": "Celsius Heat Target Temperature(Target Temperature Settings)",
+            "name": "Celsius Heat Target Temperature (Target Temperature Settings)",
             "value": "17",
             "unit": "°C",
             "access_mode": "RW",
@@ -2858,7 +2858,7 @@
         },
         {
             "id": "target_temperature_settings.fahrenheit_heat",
-            "name": "Fahrenheit Heat Target Temperature(Target Temperature Settings)",
+            "name": "Fahrenheit Heat Target Temperature (Target Temperature Settings)",
             "value": "62.6",
             "unit": "℉",
             "access_mode": "RW",
@@ -3424,36 +3424,6 @@
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": []
-        },
-        {
-            "id": "temperature_humi_data_source",
-            "name": "Temp. & Humidity Data Source",
-            "value": "0",
-            "unit": "",
-            "access_mode": "R",
-            "data_type": "ENUM",
-            "value_type": "UINT8",
-            "values": [
-                {
-                    "value": 0,
-                    "name": "NTC Sensor"
-                },
-                {
-                    "value": 1,
-                    "name": "Lora Data"
-                },
-                {
-                    "value": 2,
-                    "name": "D2D Data"
-                },
-                {
-                    "value": 3,
-                    "name": "WT401"
-                }
-            ],
-            "bacnet_type": "multistate_input_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS"
         },
         {
             "id": "temperature_unit",

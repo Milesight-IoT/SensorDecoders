@@ -33,18 +33,18 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Mac Address | 0xCD | 7 | rw | 24e124123456 |  |  |
 | DevEUI | 0xCD | 9 | rw | 24e124123456789a |  |  |
 | Name Length | 0xCD | 2 | rw | 13 | 1 - 13 |  |
-| Bluetooth Name | 0xCD | 1 | rw |  |  |  |
+| Bluetooth Name | 0xCD | 1 | rw | BLE_123456789 |  |  |
 | Paired Device Name | 0xCD | 1 | rw |  |  |  |
 | Paired Device Name | 0xCD | 1 | rw |  |  |  |
 | ID | 0xCD | 2 | rw | 0 | 0 - 0 |  |
 | Name Length | 0xCD | 2 | rw | 13 | 1 - 13 |  |
-| Bluetooth Name | 0xCD | 1 | rw |  |  |  |
+| Bluetooth Name | 0xCD | 1 | rw | BLE_PAIR_1234 |  |  |
 | Paired Device | 0xCD | 1 | rw |  |  |  |
 | Paired Device | 0xCD | 10 | rw |  |  |  |
 | ID | 0xCD | 2 | rw | 0 | 0 - 0 |  |
 | DevEUI | 0xCD | 9 | rw | 24e124123456789a |  |  |
 | Paired Device Bluetooth Mac Address | 0xCD | 1 | rw |  |  |  |
-| Paired Device Bluetooth Mac Address | 0xCD | 9 | rw |  |  |  |
+| Paired Device Bluetooth Mac Address  | 0xCD | 9 | rw |  |  |  |
 | ID | 0xCD | 2 | rw | 0 | 0 - 0 |  |
 | Address Type | 0xCD | 2 | rw | 0 |  | 0：public<br>1：private |
 | Bluetooth Mac Address | 0xCD | 7 | rw | 24e124123456 |  |  |
@@ -53,13 +53,13 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Mac Address | 0xCD | 7 | rw | 24e124123456 |  |  |
 | DevEUI | 0xCD | 9 | rw | 24e124123456789a |  |  |
 | Name Length | 0xCD | 2 | rw | 13 | 1 - 13 |  |
-| Bluetooth Name | 0xCD | 1 | rw |  |  |  |
+| Bluetooth Name | 0xCD | 1 | rw | BLE_PAIR_1234 |  |  |
 | Bluetooth Status | 0xBA | 11 | r |  |  |  |
 | Bluetooth Status | 0xBA | M | r |  |  |  |
 | ID | 0xBA | 2 | r | 0 |  |  |
 | Bluetooth Status | 0xBA | 2 | r | 0 |  | 0: Not paired<br>1: Paired<br>2: Disconnected |
 | Paired Device DevEUI | 0xBA | 9 | r | 24e124123456789a |  |  |
-| Temp. &amp; Humidity Data Source | 0x05 | 2 | r | 0 |  | 0: NTC Sensor<br>1: Lora Data<br>2:  D2D Data<br>3: WT401 |
+| 	Temp. &amp; Humidity Data Source | 0x05 | 2 | r | 3 |  | 0: NTC Sensor<br>1: Lora Data<br>2:  D2D Data<br>3: WT401 |
 | Temperature | 0x06 | 3 | r |  | -20 - 60 |  |
 | Humidity | 0x08 | 3 | r |  | 0 - 100 |  |
 | Temperature Control Mode and Status | 0x0C | 2 | r |  |  |  |
@@ -105,13 +105,13 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Temperature Control Mode | 0x60 | 1 | rw |  |  |  |
 | Sub-command | 0x60 | 2 | rw | 0 |  | 0：Mode<br>1：Plan Temperature Control<br>Mode Enable |
 | Temperature Control Mode | 0x60 | 2 | rw | 0 |  | 0：heat<br>2：cool<br>3：auto |
-| Plan Temperature Control
+| Plan Temperature Control 
 Mode Enable | 0x60 | 2 | rw | 0 |  | 0：disable<br>1：enable |
 | Target Temperature Mode | 0x76 | 2 | rw | 1 |  | 0：single<br>1：double |
 | Target Temperature Resolution | 0x65 | 2 | rw | 0 |  | 0：0.5<br>1：1 |
 | Target Temperature Settings | 0x61 | 1 | rw |  |  |  |
 | Temperature Control Mode | 0x61 | 2 | rw | 0 |  |  |
-| Heat Target Temperature | 0x61 | 3 | rw | 17 | 5 - 35 |  |
+| Heat Target Temperature  | 0x61 | 3 | rw | 17 | 5 - 35 |  |
 | Cool Target Temperature | 0x61 | 3 | rw | 28 | 5 - 35 |  |
 | Auto Target Temperature | 0x61 | 3 | rw | 23 | 5 - 35 |  |
 | Unilateral Tolerance Enable | 0x77 | 2 | rw | 0 |  | 0：Disable<br>1：Enable |
@@ -177,13 +177,13 @@ Mode Enable | 0x60 | 2 | rw | 0 |  | 0：disable<br>1：enable |
 | Daylight Saving Time | 0xC6 | M | rw |  |  |  |
 | Enable | 0xC6 | 2 | rw | 0 |  | 0：Disable<br>1：Enable |
 | DST Bias | 0xC6 | 2 | rw | 60 | 1 - 120 |  |
-| Month | 0xC6 | 2 | rw | 1 |  | 1:Jan.<br>2:Feb.<br>3:Mar.<br>4:Apr.<br>5:May<br>6:Jun.<br>7:Jul.<br>8:Aug.<br>9:Sep.<br>10:Oct.<br>11:Nov.<br>12:Dec. |
-| Number of Week | 0xC6 | 2 | rw | 1 |  | 1:1st<br>2: 2nd<br>3: 3rd<br>4: 4th<br>5: last |
+| Month | 0xC6 | 2 | rw | 3 |  | 1:Jan.<br>2:Feb.<br>3:Mar.<br>4:Apr.<br>5:May<br>6:Jun.<br>7:Jul.<br>8:Aug.<br>9:Sep.<br>10:Oct.<br>11:Nov.<br>12:Dec. |
+| Number of Week | 0xC6 | 2 | rw | 2 |  | 1:1st<br>2: 2nd<br>3: 3rd<br>4: 4th<br>5: last |
 | Week | 0xC6 | 2 | rw | 7 |  | 1：Mon.<br>2：Tues.<br>3：Wed.<br>4：Thurs.<br>5：Fri.<br>6：Sat.<br>7：Sun. |
 | Time | 0xC6 | 3 | rw | 0 |  | 0：00:00<br>60：01:00<br>120：02:00<br>180：03:00<br>240：04:00<br>300：05:00<br>360：06:00<br>420：07:00<br>480：08:00<br>540：09:00<br>600：10:00<br>660：11:00<br>720：12:00<br>780：13:00<br>840：14:00<br>900：15:00<br>960：16:00<br>1020：17:00<br>1080：18:00<br>1140：19:00<br>1200：20:00<br>1260：21:00<br>1320：22:00<br>1380：23:00 |
-| Month | 0xC6 | 2 | rw | 1 |  | 1:Jan.<br>2:Feb.<br>3:Mar.<br>4:Apr.<br>5:May<br>6:Jun.<br>7:Jul.<br>8:Aug.<br>9:Sep.<br>10:Oct.<br>11:Nov.<br>12:Dec. |
+| Month | 0xC6 | 2 | rw | 11 |  | 1:Jan.<br>2:Feb.<br>3:Mar.<br>4:Apr.<br>5:May<br>6:Jun.<br>7:Jul.<br>8:Aug.<br>9:Sep.<br>10:Oct.<br>11:Nov.<br>12:Dec. |
 | Number of Week | 0xC6 | 2 | rw | 1 |  | 1:1st<br>2: 2nd<br>3: 3rd<br>4: 4th<br>5: last |
-| Week | 0xC6 | 2 | rw | 7 |  | 1：Mon.<br>2：Tues.<br>3：Wed.<br>4：Thurs.<br>5：Fri.<br>6：Sat.<br>7：Sun. |
+| Week | 0xC6 | 2 | rw | 1 |  | 1：Mon.<br>2：Tues.<br>3：Wed.<br>4：Thurs.<br>5：Fri.<br>6：Sat.<br>7：Sun. |
 | Time | 0xC6 | 3 | rw | 0 |  | 0：00:00<br>60：01:00<br>120：02:00<br>180：03:00<br>240：04:00<br>300：05:00<br>360：06:00<br>420：07:00<br>480：08:00<br>540：09:00<br>600：10:00<br>660：11:00<br>720：12:00<br>780：13:00<br>840：14:00<br>900：15:00<br>960：16:00<br>1020：17:00<br>1080：18:00<br>1140：19:00<br>1200：20:00<br>1260：21:00<br>1320：22:00<br>1380：23:00 |
 | Data Storage Settings | 0xC5 | 1 | rw |  |  |  |
 | Sub-command | 0xC5 | 2 | rw | 0 |  |  |
@@ -212,19 +212,25 @@ Mode Enable | 0x60 | 2 | rw | 0 |  | 0：disable<br>1：enable |
 | Persistent High Temperature | 0x6C | 2 | rw | 0 |  | 0：Disable<br>1：Enable |
 | Difference in Temperature | 0x6C | 3 | rw | 3 | 1 - 10 |  |
 | Duration | 0x6C | 2 | rw | 5 | 0 - 60 |  |
+| Schedule Stay Duration Settings | 0x73 | 1 | rw |  |  |  |
+| Schedule | 0x73 | 1 | rw |  |  |  |
+| Schedule ID | 0x73 | 2 | rw | 0 | 0 - 15 |  |
+| Sub-command | 0x73 | 2 | rw | 0 |  |  |
+| Permanent Stay Enable | 0x73 | 2 | rw | 0 |  | 0：Disable<br>1：Enable |
+| Temporary Stay Duration | 0x73 | 2 | rw | 0 | 0 - 120 |  |
 | Installation Settings | 0x8E | 5 | rw |  |  |  |
 | Subcmd ID | 0x8E | 2 | rw | 0 |  | 0：wire config<br>1:reversing_valve config<br>2:combine config<br>3:fan owner config |
 | Wire Settings | 0x8E | 1 | rw |  |  |  |
-| Y1 | 0x8E | 2 | rw | 1 |  | 0：disable<br>1：enable |
-| GH | 0x8E | 2 | rw | 1 |  | 0：disable<br>1：enable |
-| OB | 0x8E | 2 | rw | 1 |  | 0：disable<br>1：enable |
-| W1 | 0x8E | 2 | rw | 1 |  | 0：disable<br>1：enable |
+| Y1 | 0x8E | 2 | rw | 0 |  | 0：disable<br>1：enable |
+| GH | 0x8E | 2 | rw | 0 |  | 0：disable<br>1：enable |
+| OB | 0x8E | 2 | rw | 0 |  | 0：disable<br>1：enable |
+| W1 | 0x8E | 2 | rw | 0 |  | 0：disable<br>1：enable |
 | E | 0x8E | 2 | rw | 0 |  | 0：disable<br>1：enable |
 | DI | 0x8E | 2 | rw | 0 |  | 0：disable<br>1：enable |
 | PEK | 0x8E | 2 | rw | 0 |  | 0：disable<br>1：enable |
 | W2/AUX | 0x8E | 2 | rw | 0 |  | 0：disable<br>1：w2 enable<br>2：aux enable |
 | GL | 0x8E | 2 | rw | 0 |  | 0：disable<br>1：enable |
-| GM | 0x8E | 2 | rw | 1 |  | 0：disable<br>1：enable |
+| GM | 0x8E | 2 | rw | 0 |  | 0：disable<br>1：enable |
 | NTC | 0x8E | 2 | rw | 0 |  | 0：disable<br>1：enable |
 | Reserved | 0x8E | 2 | rw | 0 |  |  |
 | Reversing Valve | 0x8E | 1 | rw |  |  |  |

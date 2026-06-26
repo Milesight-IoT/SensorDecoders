@@ -155,7 +155,7 @@ function milesightDeviceDecode(bytes) {
 				break;
 			case 0xb4:
 				decoded.ble_server = decoded.ble_server || {};
-				// 0：Reset BLE Name, 1：Cancel Pairing, 2：Trigger Pairing
+				// 0：Reset BLE Name , 1：Cancel Pairing, 2：Trigger Pairing
 				decoded.ble_server.type = readUInt8(bytes, counterObj, 1);
 				break;
 			case 0x02:
@@ -717,6 +717,21 @@ function milesightDeviceDecode(bytes) {
 					decoded.high_temperature_alarm_settings.duration = readUInt8(bytes, counterObj, 1);
 				}
 				break;
+			case 0x73:
+				decoded.plan_dwell_time_settings = decoded.plan_dwell_time_settings || [];
+				var id = readUInt8(bytes, counterObj, 1);
+				var plan_dwell_time_settings_item = pickArrayItem(decoded.plan_dwell_time_settings, id, 'id');
+				plan_dwell_time_settings_item.id = id;
+				insertArrayItem(decoded.plan_dwell_time_settings, plan_dwell_time_settings_item, 'id');
+				var plan_dwell_time_settings_item_command = readUInt8(bytes, counterObj, 1);
+				if (plan_dwell_time_settings_item_command == 0x00) {
+					// 0：Disable, 1：Enable
+					plan_dwell_time_settings_item.permanent_stay_enable = readUInt8(bytes, counterObj, 1);
+				}
+				if (plan_dwell_time_settings_item_command == 0x01) {
+					plan_dwell_time_settings_item.dwell_time = readUInt8(bytes, counterObj, 1);
+				}
+				break;
 			case 0x8e:
 				decoded.install_configuration = decoded.install_configuration || {};
 				// 0：wire config, 1:reversing_valve config, 2:combine config, 3:fan owner config
@@ -934,7 +949,7 @@ function milesightDeviceDecode(bytes) {
 				break;
 		}
 		if (unknown_command) {
-			throw new Error('unknown command: ' + command_id);
+			throw new Error('unknown command: 0x' + command_id.toString(16));
 		}
 	}
 
@@ -1337,6 +1352,7 @@ function cmdMap() {
 		  "70": "fan_settings",
 		  "71": "anti_freezing",
 		  "72": "dehumidify_settings",
+		  "73": "plan_dwell_time_settings",
 		  "74": "system_protect",
 		  "76": "target_temperature_mode",
 		  "77": "unilateral_tolerance_enable",
@@ -1507,6 +1523,9 @@ function cmdMap() {
 		  "6c00": "high_temperature_alarm_settings.enable",
 		  "6c01": "high_temperature_alarm_settings.difference_in_temperature",
 		  "6c02": "high_temperature_alarm_settings.duration",
+		  "73xx": "plan_dwell_time_settings._item",
+		  "73xx00": "plan_dwell_time_settings._item.permanent_stay_enable",
+		  "73xx01": "plan_dwell_time_settings._item.dwell_time",
 		  "8e": "install_configuration",
 		  "8e00": "install_configuration.wire",
 		  "8e01": "install_configuration.reversing_valve",
