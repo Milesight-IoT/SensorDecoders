@@ -46,7 +46,7 @@ function milesightDeviceEncode(payload) {
 			var req_command = reqList[idx];
 			var pureNumber = [];
 			var formateStrParts = [];
-		
+
 			req_command.split('.').forEach(function(part) {
 				if (/^[0-9]+$/.test(part)) {
 					// padStart ES5 兼容
@@ -58,17 +58,17 @@ function milesightDeviceEncode(payload) {
 					formateStrParts.push(part);
 				}
 			});
-		
+
 			var formateStr = formateStrParts.join('.');
 			var hexString = cmdMap()[formateStr];
-		
+
 			if (hexString && hexString.indexOf('xx') !== -1) {
 				var i = 0;
 				hexString = hexString.replace(/xx/g, function() {
 					return pureNumber[i++];
 				});
 			}
-		
+
 			if (hexString) {
 				var length = hexString.length / 2;
 				buffer.writeUInt8(0xef);
@@ -97,6 +97,17 @@ function milesightDeviceEncode(payload) {
 			// 0:ClassA, 1:ClassB, 2:ClassC, 3:ClassC to B
 			buffer.writeUInt8(payload.lorawan_configuration_settings.mode);
 		}
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0xc9
+	if ('random_key' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0xc9);
+		if ([0, 1].indexOf(payload.random_key) === -1) {
+			throw new Error('random_key must be one of [0, 1]');
+		}
+		// 0：disable, 1：enable
+		buffer.writeUInt8(payload.random_key);
 		encoded = encoded.concat(buffer.toBytes());
 	}
 	//0xde
@@ -219,6 +230,7 @@ function milesightDeviceEncode(payload) {
 			var pair_name_item_id = pair_name_item.channel;
 			buffer.writeUInt8(0xcd);
 			buffer.writeUInt8(0x04);
+			buffer.writeUInt8(pair_name_item_id);
 			if (pair_name_item.length < 1 || pair_name_item.length > 13) {
 				throw new Error('length must be between 1 and 13');
 			}
@@ -230,6 +242,7 @@ function milesightDeviceEncode(payload) {
 			var pair_mac_item_id = pair_mac_item.channel;
 			buffer.writeUInt8(0xcd);
 			buffer.writeUInt8(0x02);
+			buffer.writeUInt8(pair_mac_item_id);
 			buffer.writeHexString(pair_mac_item.mac, 8);
 		}
 		for (var pair_addr_id = 0; pair_addr_id < (payload.ble_configuration_settings.pair_addr && payload.ble_configuration_settings.pair_addr.length); pair_addr_id++) {
@@ -237,6 +250,7 @@ function milesightDeviceEncode(payload) {
 			var pair_addr_item_id = pair_addr_item.channel;
 			buffer.writeUInt8(0xcd);
 			buffer.writeUInt8(0x03);
+			buffer.writeUInt8(pair_addr_item_id);
 			if ([0, 1].indexOf(pair_addr_item.type) === -1) {
 				throw new Error('type must be one of [0, 1]');
 			}
@@ -1945,6 +1959,7 @@ function cmdMap() {
 		  "request_query_all_configurations": "ee",
 		  "lorawan_configuration_settings": "cf",
 		  "lorawan_configuration_settings.mode": "cf00",
+		  "random_key": "c9",
 		  "tsl_version": "df",
 		  "product_name": "de",
 		  "product_pn": "dd",

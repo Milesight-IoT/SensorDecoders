@@ -60,6 +60,10 @@ function milesightDeviceDecode(bytes) {
 					decoded.lorawan_configuration_settings.mode = readUInt8(bytes, counterObj, 1);
 				}
 				break;
+			case 0xc9:
+				// 0：disable, 1：enable
+				decoded.random_key = readUInt8(bytes, counterObj, 1);
+				break;
 			case 0xdf:
 				decoded.tsl_version = readProtocolVersion(readBytes(bytes, counterObj, 2));
 				break;
@@ -847,7 +851,7 @@ function milesightDeviceDecode(bytes) {
 				break;
 		}
 		if (unknown_command) {
-			throw new Error('unknown command: ' + command_id);
+			throw new Error('unknown command: 0x' + command_id.toString(16));
 		}
 	}
 
@@ -1274,6 +1278,7 @@ function cmdMap() {
 		  "ee": "request_query_all_configurations",
 		  "cf": "lorawan_configuration_settings",
 		  "cf00": "lorawan_configuration_settings.mode",
+		  "c9": "random_key",
 		  "df": "tsl_version",
 		  "de": "product_name",
 		  "dd": "product_pn",
