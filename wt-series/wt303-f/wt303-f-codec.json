@@ -472,7 +472,7 @@
         },
         {
             "id": "cooling_target_temperature_range.fahrenheit_max",
-            "name": "Fahrenheit Max Value(Cooling Target Temperature Regulation Range)",
+            "name": "Fahrenheit Max Value(Cooling Target Temp Regulation Range)",
             "value": "95",
             "unit": "℉",
             "access_mode": "RW",
@@ -491,7 +491,7 @@
         },
         {
             "id": "cooling_target_temperature_range.fahrenheit_min",
-            "name": "Fahrenheit Min Value(Cooling Target Temperature Regulation Range)",
+            "name": "Fahrenheit Min Value(Cooling Target Temp Regulation Range)",
             "value": "73.4",
             "unit": "℉",
             "access_mode": "RW",
@@ -548,7 +548,7 @@
         },
         {
             "id": "heating_target_temperature_range.fahrenheit_max",
-            "name": "Fahrenheit Max Value(Heating Target Temperature Regulation Range)",
+            "name": "Fahrenheit Max Value(Heating Target Temp Regulation Range)",
             "value": "66.2",
             "unit": "℉",
             "access_mode": "RW",
@@ -567,7 +567,7 @@
         },
         {
             "id": "heating_target_temperature_range.fahrenheit_min",
-            "name": "Fahrenheit Min Value(Heating Target Temperature Regulation Range)",
+            "name": "Fahrenheit Min Value(Heating Target Temp Regulation Range)",
             "value": "50",
             "unit": "℉",
             "access_mode": "RW",
@@ -724,7 +724,7 @@
         },
         {
             "id": "temp_ctl_dehumi_cfg.enable",
-            "name": "Temp Control and Dehumidify Enable(Temp Control and Dehumidify Configuration)",
+            "name": "Temp Control & Dehumidify Enable(Temp Ctrl & Dehumidify Cfg)",
             "value": "0",
             "unit": "",
             "access_mode": "RW",
@@ -747,7 +747,7 @@
         },
         {
             "id": "temp_ctl_dehumi_cfg.fahrenheit_temperature_tolerance",
-            "name": "Fahrenheit Temp Control and Dehumidify Enable Tolerance(Temp Control and Dehumidify Configuration)",
+            "name": "Fahrenheit Temp & Dehumidify Tol(Temp Ctrl & Dehumidify Cfg)",
             "value": "33.8",
             "unit": "ΔT°F",
             "access_mode": "RW",
@@ -764,7 +764,7 @@
         },
         {
             "id": "temp_ctl_dehumi_cfg.celsius_temperature_tolerance",
-            "name": "Celsius Temp Control and Dehumidify Enable Tolerance(Temp Control and Dehumidify Configuration)",
+            "name": "Celsius Temp Ctrl & Dehumidify Tol(Temp Ctrl & Dehumidify Cfg)",
             "value": "1",
             "unit": "K",
             "access_mode": "RW",
@@ -842,7 +842,7 @@
         },
         {
             "id": "temporary_button_unlock_cfg.enable",
-            "name": "Temporary Button Unlock Enable(Temporary Button Unlock Configuration)",
+            "name": "Temporary Button Unlock Enable(Temp Button Unlock Cfg)",
             "value": "0",
             "unit": "",
             "access_mode": "RW",
@@ -850,32 +850,32 @@
             "value_type": "UINT8",
             "values": [
                 { "value": 0, "name": "None" },
-                { "value": 3, "name": "System switch & Temperature +" },
-                { "value": 5, "name": "System switch & Temperature -" },
-                { "value": 6, "name": "Temperature + & Temperature -" },
-                { "value": 7, "name": "System switch & Temperature + & Temperature -" },
+                { "value": 3, "name": "System switch & Temp +" },
+                { "value": 5, "name": "System switch & Temp -" },
+                { "value": 6, "name": "Temp + & Temp -" },
+                { "value": 7, "name": "System switch & Temp + & Temp -" },
                 { "value": 9, "name": "System switch & Fan" },
-                { "value": 10, "name": "Temperature + & Fan" },
-                { "value": 11, "name": "System switch & Temperature + & Fan" },
-                { "value": 12, "name": "Temperature - & Fan" },
-                { "value": 13, "name": "System switch & Temperature - & Fan" },
-                { "value": 14, "name": "Temperature + & Temperature - & Fan" },
-                { "value": 15, "name": "System switch & Temperature + & Temperature - & Fan" },
-                { "value": 17, "name": "System switch & Temperature control mode" },
-                { "value": 18, "name": "Temperature + & Temperature control mode" },
-                { "value": 19, "name": "System switch & Temperature + & Temperature control mode" },
-                { "value": 20, "name": "Temperature - & Temperature control mode" },
-                { "value": 21, "name": "System switch & Temperature - & Temperature control mode" },
-                { "value": 22, "name": "Temperature + & Temperature - & Temperature control mode" },
-                { "value": 23, "name": "System switch & Temperature + & Temperature - & Temperature control mode" },
-                { "value": 24, "name": "Fan & Temperature control mode" },
-                { "value": 25, "name": "System switch & Fan & Temperature control mode" },
-                { "value": 26, "name": "Temperature + & Fan & Temperature control mode" },
-                { "value": 27, "name": "System switch & Temperature + & Fan & Temperature control mode" },
-                { "value": 28, "name": "Temperature - & Fan & Temperature control mode" },
-                { "value": 29, "name": "System switch & Temperature - & Fan & Temperature control mode" },
-                { "value": 30, "name": "Temperature + & Temperature - & Fan & Temperature control mode" },
-                { "value": 31, "name": "System switch & Temperature + & Temperature - & Fan & Temperature control mode" }
+                { "value": 10, "name": "Temp + & Fan" },
+                { "value": 11, "name": "System switch & Temp + & Fan" },
+                { "value": 12, "name": "Temp - & Fan" },
+                { "value": 13, "name": "System switch & Temp - & Fan" },
+                { "value": 14, "name": "Temp + & Temp - & Fan" },
+                { "value": 15, "name": "System switch & Temp + & Temp - & Fan" },
+                { "value": 17, "name": "System switch & Temp ctrl mode" },
+                { "value": 18, "name": "Temp + & Temp ctrl mode" },
+                { "value": 19, "name": "System switch & Temp + & Temp ctrl mode" },
+                { "value": 20, "name": "Temp - & Temp ctrl mode" },
+                { "value": 21, "name": "System switch & Temp - & Temp ctrl mode" },
+                { "value": 22, "name": "Temp + & Temp - & Temp ctrl mode" },
+                { "value": 23, "name": "System switch & Temp + & Temp - & Temp ctrl mode" },
+                { "value": 24, "name": "Fan & Temp ctrl mode" },
+                { "value": 25, "name": "System switch & Fan & Temp ctrl mode" },
+                { "value": 26, "name": "Temp + & Fan & Temp ctrl mode" },
+                { "value": 27, "name": "System switch & Temp + & Fan & Temp ctrl mode" },
+                { "value": 28, "name": "Temp - & Fan & Temp ctrl mode" },
+                { "value": 29, "name": "System switch & Temp - & Fan & Temp ctrl mode" },
+                { "value": 30, "name": "Temp + & Temp - & Fan & Temp ctrl mode" },
+                { "value": 31, "name": "System switch & Temp + & Temp - & Fan & Temp ctrl mode" }
             ],
             "bacnet_type": "multistate_value_object",
             "bacnet_unit_type_id": 95,
@@ -940,7 +940,7 @@
         },
         {
             "id": "occupied_detection_cfg.night_enable",
-            "name": "Night Occupied Detection Enable(Occupied Detection Configuration)",
+            "name": "Night Occupied Detection Enable(Occupied Detection Cfg)",
             "value": "1",
             "unit": "",
             "access_mode": "RW",
@@ -1158,7 +1158,7 @@
         },
         {
             "id": "energy_saving_cfg.level_1_energy_saving_temperature_tolerance",
-            "name": "Energy Saving Level1 Target Temp Tolerance(Energy Saving Configuration)",
+            "name": "Energy Saving Level1 Target Temp Tol(Energy Saving Cfg)",
             "value": "2",
             "unit": "",
             "access_mode": "RW",
@@ -1215,7 +1215,7 @@
         },
         {
             "id": "energy_saving_cfg.level_2_energy_saving_temperature_tolerance",
-            "name": "Energy Saving Level2 Target Temp Tolerance(Energy Saving Configuration)",
+            "name": "Energy Saving Level2 Target Temp Tol(Energy Saving Cfg)",
             "value": "4",
             "unit": "",
             "access_mode": "RW",
@@ -1258,15 +1258,15 @@
             "values": [
                 {
                     "value": 0,
-                    "name": "Four-pipe"
+                    "name": "4-pipe 2-wire 3-speed"
                 },
                 {
                     "value": 1,
-                    "name": "Two-pipe"
+                    "name": "2-pipe 2-wire 3-speed"
                 },
                 {
                     "value": 2,
-                    "name": "Two-pipe"
+                    "name": "2-pipe 3-wire 3-speed"
                 }
             ],
             "bacnet_type": "multistate_value_object",
@@ -1298,7 +1298,7 @@
         },
         {
             "id": "freeze_protection_cfg.fahrenheit_target_temperature",
-            "name": "Fahrenheit Freeze Protection Target Temperature(Freeze Protection Configuration)",
+            "name": "Fahrenheit Freeze Protection Target Temp(Freeze Protection Cfg)",
             "value": "37.4",
             "unit": "℉",
             "access_mode": "RW",
@@ -1315,7 +1315,7 @@
         },
         {
             "id": "freeze_protection_cfg.celsius_target_temperature",
-            "name": "Celsius Freeze Protection Target Temperature(Freeze Protection Configuration)",
+            "name": "Celsius Freeze Protection Target Temp(Freeze Protection Cfg)",
             "value": "3",
             "unit": "°C",
             "access_mode": "RW",
@@ -1332,7 +1332,7 @@
         },
         {
             "id": "threshold_alarm_cfg.mode",
-            "name": "Temperature Threshold Alarm Mode(Temperature Threshold Alarm Configuration)",
+            "name": "Temp Threshold Alarm Mode(Temp Threshold Alarm Cfg)",
             "value": "0",
             "unit": "",
             "access_mode": "RW",
@@ -1367,7 +1367,7 @@
         },
         {
             "id": "threshold_alarm_cfg.celsius_max",
-            "name": "Celsius Temperature Threshold Alarm Value B(Temperature Threshold Alarm Configuration)",
+            "name": "Celsius Temp Threshold Alarm Value B(Temp Threshold Alarm Cfg)",
             "value": "0",
             "unit": "°C",
             "access_mode": "RW",
@@ -1384,7 +1384,7 @@
         },
         {
             "id": "threshold_alarm_cfg.celsius_min",
-            "name": "Celsius Temperature Threshold Alarm Value A(Temperature Threshold Alarm Configuration)",
+            "name": "Celsius Temp Threshold Alarm Value A(Temp Threshold Alarm Cfg)",
             "value": "0",
             "unit": "°C",
             "access_mode": "RW",
@@ -1401,7 +1401,7 @@
         },
         {
             "id": "threshold_alarm_cfg.fahrenheit_max",
-            "name": "Fahrenheit Temperature Threshold Alarm Value B(Temperature Threshold Alarm Configuration)",
+            "name": "Fahrenheit Temp Thresh Alarm Val B(Temp Threshold Alarm Cfg)",
             "value": "32",
             "unit": "℉",
             "access_mode": "RW",
@@ -1418,7 +1418,7 @@
         },
         {
             "id": "threshold_alarm_cfg.fahrenheit_min",
-            "name": "Fahrenheit Temperature Threshold Alarm Value A(Temperature Threshold Alarm Configuration)",
+            "name": "Fahrenheit Temp Thresh Alarm Val A(Temp Threshold Alarm Cfg)",
             "value": "32",
             "unit": "℉",
             "access_mode": "RW",
@@ -1435,7 +1435,7 @@
         },
         {
             "id": "low_temperature_alarm_cfg.enable",
-            "name": "Persistent Low Temperature Alarm Enable(Persistent Low Temperature Alarm Configuration)",
+            "name": "Persistent Low Temp Alarm Enable(Persistent Low Temp Alarm Cfg)",
             "value": "0",
             "unit": "",
             "access_mode": "RW",
@@ -1458,7 +1458,7 @@
         },
         {
             "id": "low_temperature_alarm_cfg.fahrenheit_delta",
-            "name": "Fahrenheit Persistent Low Temperature Alarm Delta(Persistent Low Temperature Alarm Configuration)",
+            "name": "Fahrenheit Persist Low Temp Alarm Delta(Low Temp Alarm Cfg)",
             "value": "37.4",
             "unit": "℉",
             "access_mode": "RW",
@@ -1475,7 +1475,7 @@
         },
         {
             "id": "low_temperature_alarm_cfg.celsius_delta",
-            "name": "Celsius Persistent Low Temperature Alarm Delta(Persistent Low Temperature Alarm Configuration)",
+            "name": "Celsius Persist Low Temp Alarm Delta(Low Temp Alarm Cfg)",
             "value": "3",
             "unit": "°C",
             "access_mode": "RW",
@@ -1492,7 +1492,7 @@
         },
         {
             "id": "low_temperature_alarm_cfg.duration",
-            "name": "Persistent Low Temperature Alarm Duration(Persistent Low Temperature Alarm Configuration)",
+            "name": "Persistent Low Temp Alarm Duration(Low Temp Alarm Cfg)",
             "value": "5",
             "unit": "min",
             "access_mode": "RW",
@@ -1509,7 +1509,7 @@
         },
         {
             "id": "high_temperature_alarm_cfg.enable",
-            "name": "Persistent High Temperature Alarm Enable(Persistent High Temperature Alarm Configuration)",
+            "name": "Persistent High Temp Alarm Enable(High Temp Alarm Cfg)",
             "value": "0",
             "unit": "",
             "access_mode": "RW",
@@ -1532,7 +1532,7 @@
         },
         {
             "id": "high_temperature_alarm_cfg.fahrenheit_delta",
-            "name": "Fahrenheit Persistent High Temperature Alarm Delta(Persistent High Temperature Alarm Configuration)",
+            "name": "Fahrenheit Persist High Temp Alarm Delta(High Temp Alarm Cfg)",
             "value": "37.4",
             "unit": "℉",
             "access_mode": "RW",
@@ -1549,7 +1549,7 @@
         },
         {
             "id": "high_temperature_alarm_cfg.celsius_delta",
-            "name": "Celsius Persistent High Temperature Alarm Delta(Persistent High Temperature Alarm Configuration)",
+            "name": "Celsius Persist High Temp Alarm Delta(High Temp Alarm Cfg)",
             "value": "3",
             "unit": "°C",
             "access_mode": "RW",
@@ -1566,7 +1566,7 @@
         },
         {
             "id": "high_temperature_alarm_cfg.duration",
-            "name": "Persistent High Temperature Alarm Duration(Persistent High Temperature Alarm Configuration)",
+            "name": "Persistent High Temp Alarm Duration(High Temp Alarm Cfg)",
             "value": "5",
             "unit": "min",
             "access_mode": "RW",
@@ -1583,7 +1583,7 @@
         },
         {
             "id": "temperature_calibration_cfg.celsius_calibration_value",
-            "name": "Celsius Temperature Calibration Value(Temperature Calibration Configuration)",
+            "name": "Celsius Temp Calibration Value(Temp Calibration Cfg)",
             "value": "0",
             "unit": "°C",
             "access_mode": "RW",
@@ -1600,7 +1600,7 @@
         },
         {
             "id": "temperature_calibration_cfg.fahrenheit_calibration_value",
-            "name": "Fahrenheit Temperature Calibration Value(Temperature Calibration Configuration)",
+            "name": "Fahrenheit Temp Calibration Value(Temp Calibration Cfg)",
             "value": "32",
             "unit": "℉",
             "access_mode": "RW",
