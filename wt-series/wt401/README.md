@@ -13,6 +13,7 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | LoRaWAN  Settings | 0xCF | 1 | rw |  |  |  |
 | LoRaWAN Command | 0xCF | 2 | rw |  |  |  |
 | LoRaWAN Work Mode | 0xCF | 2 | rw | 0 |  | 0:ClassA<br>1:ClassB<br>2:ClassC<br>3:ClassC to B |
+| Random key | 0xC9 | 2 | rw | 0 |  | 0：disable<br>1：enable |
 | TSL Version | 0xDF | 3 | r |  |  |  |
 | Product Name | 0xDE | 33 | rw |  |  |  |
 | PN | 0xDD | 33 | rw |  |  |  |
@@ -51,12 +52,12 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | ID | 0xCD | 2 | rw | 0 |  |  |
 | Address Type | 0xCD | 2 | rw | 0 |  | 0：public<br>1：private |
 | Bluetooth Mac Address | 0xCD | 7 | rw | 24e124123456 |  |  |
-| Paired Device Bluetooth Information | 0xCD | 1 | r |  |  |  |
-| Address Type | 0xCD | 2 | r | 0 |  | 0：public<br>1：private |
-| Mac Address | 0xCD | 7 | r | 24e124123456 |  |  |
-| DevEUI | 0xCD | 9 | r | 24e124123456789a |  |  |
-| Name Length | 0xCD | 2 | r | 13 | 1 - 13 |  |
-| Bluetooth Name | 0xCD | 1 | r |  |  |  |
+| Paired Device Bluetooth Information | 0xCD | 1 | rw |  |  |  |
+| Address Type | 0xCD | 2 | rw | 0 |  | 0：public<br>1：private |
+| Mac Address | 0xCD | 7 | rw | 24e124123456 |  |  |
+| DevEUI | 0xCD | 9 | rw | 24e124123456789a |  |  |
+| Name Length | 0xCD | 2 | rw | 13 | 1 - 13 |  |
+| Bluetooth Name | 0xCD | 1 | rw |  |  |  |
 | Bluetooth Status | 0xBA | 11 | r |  |  |  |
 | Bluetooth Status | 0xBA | M | r |  |  |  |
 | ID | 0xBA | 2 | r | 0 |  |  |

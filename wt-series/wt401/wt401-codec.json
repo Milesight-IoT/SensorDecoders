@@ -160,7 +160,7 @@
             "name": "Mac Address(Paired Device Bluetooth Information)",
             "value": "24e124123456",
             "unit": "",
-            "access_mode": "R",
+            "access_mode": "RW",
             "data_type": "TEXT",
             "value_type": "STRING",
             "max_length": 12,
@@ -179,7 +179,7 @@
             "name": "DevEUI(Paired Device Bluetooth Information)",
             "value": "24e124123456789a",
             "unit": "",
-            "access_mode": "R",
+            "access_mode": "RW",
             "data_type": "TEXT",
             "value_type": "STRING",
             "max_length": 16,
@@ -198,7 +198,7 @@
             "name": "Bluetooth Name(Paired Device Bluetooth Information)",
             "value": "",
             "unit": "",
-            "access_mode": "R",
+            "access_mode": "RW",
             "data_type": "TEXT",
             "value_type": "STRING",
             "bacnet_type": "character_string_value_object",
@@ -216,14 +216,14 @@
             "name": "Name Length(Paired Device Bluetooth Information)",
             "value": "13",
             "unit": "",
-            "access_mode": "R",
+            "access_mode": "RW",
             "data_type": "NUMBER",
             "value_type": "UINT8",
             "range": [
                 1,
                 13
             ],
-            "bacnet_type": "analog_input_object",
+            "bacnet_type": "analog_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": [
@@ -238,7 +238,7 @@
             "name": "Address Type(Paired Device Bluetooth Information)",
             "value": "0",
             "unit": "",
-            "access_mode": "R",
+            "access_mode": "RW",
             "data_type": "ENUM",
             "value_type": "UINT8",
             "values": [
@@ -251,7 +251,7 @@
                     "name": "private"
                 }
             ],
-            "bacnet_type": "multistate_input_object",
+            "bacnet_type": "multistate_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": [
@@ -1521,36 +1521,6 @@
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": []
-        },
-        {
-            "id": "communication_mode",
-            "name": "Communication Mode",
-            "value": "1",
-            "unit": "",
-            "access_mode": "RW",
-            "data_type": "ENUM",
-            "value_type": "UINT8",
-            "values": [
-                {
-                    "value": 0,
-                    "name": "BLE"
-                },
-                {
-                    "value": 1,
-                    "name": "LoRa"
-                },
-                {
-                    "value": 2,
-                    "name": "BLE+LoRa"
-                },
-                {
-                    "value": 3,
-                    "name": "PowerBus+LoRa"
-                }
-            ],
-            "bacnet_type": "multistate_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS"
         },
         {
             "id": "data_sync_timeout",
@@ -4340,6 +4310,493 @@
             "bacnet_unit_type": "UNITS_NO_UNITS"
         },
         {
+            "id": "target_temperature_range.auto.celsius_max",
+            "name": "Celsius Max Value(Auto Target Temperature Range)",
+            "value": "35",
+            "unit": "°C",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "range": [
+                5,
+                35
+            ],
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 62,
+            "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
+            "reference": [
+                "target_temperature_range.auto.celsius_min"
+            ]
+        },
+        {
+            "id": "target_temperature_range.auto.celsius_min",
+            "name": "Celsius Min Value(Auto Target Temperature Range)",
+            "value": "10",
+            "unit": "°C",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "range": [
+                5,
+                35
+            ],
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 62,
+            "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
+            "reference": [
+                "target_temperature_range.auto.celsius_max"
+            ]
+        },
+        {
+            "id": "target_temperature_range.auto.fahrenheit_max",
+            "name": "Fahrenheit Max Value(Auto Target Temperature Range)",
+            "value": "95",
+            "unit": "℉",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "range": [
+                41,
+                95
+            ],
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 64,
+            "bacnet_unit_type": "UNITS_DEGREES_FAHRENHEIT",
+            "reference": [
+                "target_temperature_range.auto.fahrenheit_min"
+            ]
+        },
+        {
+            "id": "target_temperature_range.auto.fahrenheit_min",
+            "name": "Fahrenheit Min Value(Auto Target Temperature Range)",
+            "value": "50",
+            "unit": "℉",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "range": [
+                41,
+                95
+            ],
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 64,
+            "bacnet_unit_type": "UNITS_DEGREES_FAHRENHEIT",
+            "reference": [
+                "target_temperature_range.auto.fahrenheit_max"
+            ]
+        },
+        {
+            "id": "target_temperature_range.cool.celsius_max",
+            "name": "Celsius Max Value(Cool Target Temperature Range)",
+            "value": "35",
+            "unit": "°C",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "range": [
+                5,
+                35
+            ],
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 62,
+            "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
+            "reference": [
+                "target_temperature_range.cool.celsius_min"
+            ]
+        },
+        {
+            "id": "target_temperature_range.cool.celsius_min",
+            "name": "Celsius Min Value(Cool Target Temperature Range)",
+            "value": "23",
+            "unit": "°C",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "range": [
+                5,
+                35
+            ],
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 62,
+            "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
+            "reference": [
+                "target_temperature_range.cool.celsius_max"
+            ]
+        },
+        {
+            "id": "target_temperature_range.cool.fahrenheit_max",
+            "name": "Fahrenheit Max Value(Cool Target Temperature Range)",
+            "value": "95",
+            "unit": "℉",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "range": [
+                41,
+                95
+            ],
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 64,
+            "bacnet_unit_type": "UNITS_DEGREES_FAHRENHEIT",
+            "reference": [
+                "target_temperature_range.cool.fahrenheit_min"
+            ]
+        },
+        {
+            "id": "target_temperature_range.cool.fahrenheit_min",
+            "name": "Fahrenheit Min Value(Cool Target Temperature Range)",
+            "value": "73.4",
+            "unit": "℉",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "range": [
+                41,
+                95
+            ],
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 64,
+            "bacnet_unit_type": "UNITS_DEGREES_FAHRENHEIT",
+            "reference": [
+                "target_temperature_range.cool.fahrenheit_max"
+            ]
+        },
+        {
+            "id": "target_temperature_range.dehumidify.celsius_max",
+            "name": "Celsius Max Value(Dehumidify Target Temperature Range)",
+            "value": "35",
+            "unit": "°C",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "range": [
+                5,
+                35
+            ],
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 62,
+            "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
+            "reference": [
+                "target_temperature_range.dehumidify.celsius_min"
+            ]
+        },
+        {
+            "id": "target_temperature_range.dehumidify.celsius_min",
+            "name": "Celsius Min Value(Dehumidify Target Temperature Range)",
+            "value": "10",
+            "unit": "°C",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "range": [
+                5,
+                35
+            ],
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 62,
+            "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
+            "reference": [
+                "target_temperature_range.dehumidify.celsius_max"
+            ]
+        },
+        {
+            "id": "target_temperature_range.dehumidify.fahrenheit_max",
+            "name": "Fahrenheit Max Value(Dehumidify Target Temperature Range)",
+            "value": "95",
+            "unit": "℉",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "range": [
+                41,
+                95
+            ],
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 64,
+            "bacnet_unit_type": "UNITS_DEGREES_FAHRENHEIT",
+            "reference": [
+                "target_temperature_range.dehumidify.fahrenheit_min"
+            ]
+        },
+        {
+            "id": "target_temperature_range.dehumidify.fahrenheit_min",
+            "name": "Fahrenheit Min Value(Dehumidify Target Temperature Range)",
+            "value": "50",
+            "unit": "℉",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "range": [
+                41,
+                95
+            ],
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 64,
+            "bacnet_unit_type": "UNITS_DEGREES_FAHRENHEIT",
+            "reference": [
+                "target_temperature_range.dehumidify.fahrenheit_max"
+            ]
+        },
+        {
+            "id": "target_temperature_range.em_heat.celsius_max",
+            "name": "Celsius Max Value(EM Heat Target Temperature Range)",
+            "value": "27",
+            "unit": "°C",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "range": [
+                5,
+                35
+            ],
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 62,
+            "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
+            "reference": [
+                "target_temperature_range.em_heat.celsius_min"
+            ]
+        },
+        {
+            "id": "target_temperature_range.em_heat.celsius_min",
+            "name": "Celsius Min Value(EM Heat Target Temperature Range)",
+            "value": "10",
+            "unit": "°C",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "range": [
+                5,
+                35
+            ],
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 62,
+            "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
+            "reference": [
+                "target_temperature_range.em_heat.celsius_max"
+            ]
+        },
+        {
+            "id": "target_temperature_range.em_heat.fahrenheit_max",
+            "name": "Fahrenheit Max Value(EM Heat Target Temperature Range)",
+            "value": "80.6",
+            "unit": "℉",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "range": [
+                41,
+                95
+            ],
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 64,
+            "bacnet_unit_type": "UNITS_DEGREES_FAHRENHEIT",
+            "reference": [
+                "target_temperature_range.em_heat.fahrenheit_min"
+            ]
+        },
+        {
+            "id": "target_temperature_range.em_heat.fahrenheit_min",
+            "name": "Fahrenheit Min Value(EM Heat Target Temperature Range)",
+            "value": "50",
+            "unit": "℉",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "range": [
+                41,
+                95
+            ],
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 64,
+            "bacnet_unit_type": "UNITS_DEGREES_FAHRENHEIT",
+            "reference": [
+                "target_temperature_range.em_heat.fahrenheit_max"
+            ]
+        },
+        {
+            "id": "target_temperature_range.heat.celsius_max",
+            "name": "Celsius Max Value(Heat Target Temperature Range)",
+            "value": "19",
+            "unit": "°C",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "range": [
+                5,
+                35
+            ],
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 62,
+            "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
+            "reference": [
+                "target_temperature_range.heat.celsius_min"
+            ]
+        },
+        {
+            "id": "target_temperature_range.heat.celsius_min",
+            "name": "Celsius Min Value(Heat Target Temperature Range)",
+            "value": "10",
+            "unit": "°C",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "range": [
+                5,
+                35
+            ],
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 62,
+            "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
+            "reference": [
+                "target_temperature_range.heat.celsius_max"
+            ]
+        },
+        {
+            "id": "target_temperature_range.heat.fahrenheit_max",
+            "name": "Fahrenheit Max Value(Heat Target Temperature Range)",
+            "value": "66.2",
+            "unit": "℉",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "range": [
+                41,
+                95
+            ],
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 64,
+            "bacnet_unit_type": "UNITS_DEGREES_FAHRENHEIT",
+            "reference": [
+                "target_temperature_range.heat.fahrenheit_min"
+            ]
+        },
+        {
+            "id": "target_temperature_range.heat.fahrenheit_min",
+            "name": "Fahrenheit Min Value(Heat Target Temperature Range)",
+            "value": "50",
+            "unit": "℉",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "range": [
+                41,
+                95
+            ],
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 64,
+            "bacnet_unit_type": "UNITS_DEGREES_FAHRENHEIT",
+            "reference": [
+                "target_temperature_range.heat.fahrenheit_max"
+            ]
+        },
+        {
+            "id": "target_temperature_range.id",
+            "name": "Target Temperature Range ID(Target Temperature Range)",
+            "value": "0",
+            "unit": "",
+            "access_mode": "RW",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "heat"
+                },
+                {
+                    "value": 1,
+                    "name": "em heat"
+                },
+                {
+                    "value": 2,
+                    "name": "cool"
+                },
+                {
+                    "value": 3,
+                    "name": "auto"
+                }
+            ],
+            "bacnet_type": "multistate_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": []
+        },
+        {
+            "id": "target_temperature_range.ventilation.celsius_max",
+            "name": "Celsius Max Value(Ventilation Target Temperature Range)",
+            "value": "35",
+            "unit": "°C",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "range": [
+                5,
+                35
+            ],
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 62,
+            "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
+            "reference": [
+                "target_temperature_range.ventilation.celsius_min"
+            ]
+        },
+        {
+            "id": "target_temperature_range.ventilation.celsius_min",
+            "name": "Celsius Min Value(Ventilation Target Temperature Range)",
+            "value": "10",
+            "unit": "°C",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "range": [
+                5,
+                35
+            ],
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 62,
+            "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
+            "reference": [
+                "target_temperature_range.ventilation.celsius_max"
+            ]
+        },
+        {
+            "id": "target_temperature_range.ventilation.fahrenheit_max",
+            "name": "Fahrenheit Max Value(Ventilation Target Temperature Range)",
+            "value": "95",
+            "unit": "℉",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "range": [
+                41,
+                95
+            ],
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 64,
+            "bacnet_unit_type": "UNITS_DEGREES_FAHRENHEIT",
+            "reference": [
+                "target_temperature_range.ventilation.fahrenheit_min"
+            ]
+        },
+        {
+            "id": "target_temperature_range.ventilation.fahrenheit_min",
+            "name": "Fahrenheit Min Value(Ventilation Target Temperature Range)",
+            "value": "50",
+            "unit": "℉",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "range": [
+                41,
+                95
+            ],
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 64,
+            "bacnet_unit_type": "UNITS_DEGREES_FAHRENHEIT",
+            "reference": [
+                "target_temperature_range.ventilation.fahrenheit_max"
+            ]
+        },
+        {
             "id": "target_temperature_resolution",
             "name": "Target Temperature Resolution",
             "value": "0",
@@ -4360,6 +4817,325 @@
             "bacnet_type": "multistate_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS"
+        },
+        {
+            "id": "target_temperature_settings.celsius_auto",
+            "name": "Celsius Auto Target Temperature(Target Temperature Settings)",
+            "value": "23",
+            "unit": "°C",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "range": [
+                5,
+                35
+            ],
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 62,
+            "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
+            "reference": []
+        },
+        {
+            "id": "target_temperature_settings.celsius_auto_cool",
+            "name": "Celsius Auto-Cool Target Temperature(Target Temperature Settings)",
+            "value": "28",
+            "unit": "°C",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "range": [
+                5,
+                35
+            ],
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 62,
+            "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
+            "reference": []
+        },
+        {
+            "id": "target_temperature_settings.celsius_auto_heat",
+            "name": "Celsius Auto-Heat Target Temperature(Target Temperature Settings)",
+            "value": "17",
+            "unit": "°C",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "range": [
+                5,
+                35
+            ],
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 62,
+            "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
+            "reference": []
+        },
+        {
+            "id": "target_temperature_settings.celsius_cool",
+            "name": "Celsius Cool Target Temperature(Target Temperature Settings)",
+            "value": "28",
+            "unit": "°C",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "range": [
+                5,
+                35
+            ],
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 62,
+            "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
+            "reference": []
+        },
+        {
+            "id": "target_temperature_settings.celsius_dehumidify",
+            "name": "Celsius Dehumidify Target Temperature(Target Temperature Settings)",
+            "value": "17",
+            "unit": "°C",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "range": [
+                5,
+                35
+            ],
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 62,
+            "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
+            "reference": []
+        },
+        {
+            "id": "target_temperature_settings.celsius_em_heat",
+            "name": "Celsius EM Heat Target Temperature(Target Temperature Settings)",
+            "value": "25",
+            "unit": "°C",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "range": [
+                5,
+                35
+            ],
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 62,
+            "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
+            "reference": []
+        },
+        {
+            "id": "target_temperature_settings.celsius_heat",
+            "name": "Celsius Heat Target Temperature(Target Temperature Settings)",
+            "value": "17",
+            "unit": "°C",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "range": [
+                5,
+                35
+            ],
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 62,
+            "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
+            "reference": []
+        },
+        {
+            "id": "target_temperature_settings.celsius_ventilation",
+            "name": "Celsius Ventilation Target Temperature(Target Temperature Settings)",
+            "value": "28",
+            "unit": "°C",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "range": [
+                5,
+                35
+            ],
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 62,
+            "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
+            "reference": []
+        },
+        {
+            "id": "target_temperature_settings.fahrenheit_auto",
+            "name": "Fahrenheit Auto Target Temperature(Target Temperature Settings)",
+            "value": "73.4",
+            "unit": "℉",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "range": [
+                41,
+                95
+            ],
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 64,
+            "bacnet_unit_type": "UNITS_DEGREES_FAHRENHEIT",
+            "reference": []
+        },
+        {
+            "id": "target_temperature_settings.fahrenheit_auto_cool",
+            "name": "Fahrenheit Auto-Cool Target Temperature(Target Temperature Settings)",
+            "value": "82.4",
+            "unit": "℉",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "range": [
+                41,
+                95
+            ],
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 64,
+            "bacnet_unit_type": "UNITS_DEGREES_FAHRENHEIT",
+            "reference": []
+        },
+        {
+            "id": "target_temperature_settings.fahrenheit_auto_heat",
+            "name": "Fahrenheit Auto-Heat Target Temperature(Target Temperature Settings)",
+            "value": "62.6",
+            "unit": "℉",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "range": [
+                41,
+                95
+            ],
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 64,
+            "bacnet_unit_type": "UNITS_DEGREES_FAHRENHEIT",
+            "reference": []
+        },
+        {
+            "id": "target_temperature_settings.fahrenheit_cool",
+            "name": "Fahrenheit Cool Target Temperature(Target Temperature Settings)",
+            "value": "82.4",
+            "unit": "℉",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "range": [
+                41,
+                95
+            ],
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 64,
+            "bacnet_unit_type": "UNITS_DEGREES_FAHRENHEIT",
+            "reference": []
+        },
+        {
+            "id": "target_temperature_settings.fahrenheit_dehumidify",
+            "name": "Fahrenheit Dehumidify Target Temperature(Target Temperature Settings)",
+            "value": "62.6",
+            "unit": "℉",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "range": [
+                41,
+                95
+            ],
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 64,
+            "bacnet_unit_type": "UNITS_DEGREES_FAHRENHEIT",
+            "reference": []
+        },
+        {
+            "id": "target_temperature_settings.fahrenheit_em_heat",
+            "name": "Fahrenheit EM Heat Target Temperature(Target Temperature Settings)",
+            "value": "77",
+            "unit": "℉",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "range": [
+                41,
+                95
+            ],
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 64,
+            "bacnet_unit_type": "UNITS_DEGREES_FAHRENHEIT",
+            "reference": []
+        },
+        {
+            "id": "target_temperature_settings.fahrenheit_heat",
+            "name": "Fahrenheit Heat Target Temperature(Target Temperature Settings)",
+            "value": "62.6",
+            "unit": "℉",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "range": [
+                41,
+                95
+            ],
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 64,
+            "bacnet_unit_type": "UNITS_DEGREES_FAHRENHEIT",
+            "reference": []
+        },
+        {
+            "id": "target_temperature_settings.fahrenheit_ventilation",
+            "name": "Fahrenheit Ventilation Target Temperature(Target Temperature Settings)",
+            "value": "82.4",
+            "unit": "℉",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "range": [
+                41,
+                95
+            ],
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 64,
+            "bacnet_unit_type": "UNITS_DEGREES_FAHRENHEIT",
+            "reference": []
+        },
+        {
+            "id": "target_temperature_settings.temperature_control_mode",
+            "name": "Temperature Control Mode(Target Temperature Settings)",
+            "value": "0",
+            "unit": "",
+            "access_mode": "RW",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "Heat Target Temperature"
+                },
+                {
+                    "value": 1,
+                    "name": "EM Heat Target Temperature"
+                },
+                {
+                    "value": 2,
+                    "name": "Cool Target Temperature"
+                },
+                {
+                    "value": 3,
+                    "name": "Auto Target Temperature"
+                },
+                {
+                    "value": 4,
+                    "name": "Auto-Heat Target Temperature"
+                },
+                {
+                    "value": 5,
+                    "name": "Auto-Cool Target Temperature"
+                },
+                {
+                    "value": 6,
+                    "name": "Dehumidify Target Temperature"
+                },
+                {
+                    "value": 7,
+                    "name": "Ventilation Target Temperature"
+                }
+            ],
+            "bacnet_type": "multistate_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": []
         },
         {
             "id": "temperature_alarm.type",
@@ -4452,45 +5228,6 @@
             "reference": [
                 "temperature_calibration_settings.enable"
             ]
-        },
-        {
-            "id": "temperature_control_mode.mode",
-            "name": "Temperature Control Mode(Temperature Control Mode)",
-            "value": "0",
-            "unit": "",
-            "access_mode": "RW",
-            "data_type": "ENUM",
-            "value_type": "UINT8",
-            "values": [
-                {
-                    "value": 0,
-                    "name": "heat"
-                },
-                {
-                    "value": 1,
-                    "name": "em heat"
-                },
-                {
-                    "value": 2,
-                    "name": "cool"
-                },
-                {
-                    "value": 3,
-                    "name": "auto"
-                },
-                {
-                    "value": 4,
-                    "name": "dehumidify"
-                },
-                {
-                    "value": 5,
-                    "name": "ventilation"
-                }
-            ],
-            "bacnet_type": "multistate_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": []
         },
         {
             "id": "temperature_control_mode.plan_mode_enable",
