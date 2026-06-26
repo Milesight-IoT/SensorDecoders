@@ -64,19 +64,59 @@ jobs:
     if: always() && failure() && needs.detect-files.outputs.files != '[]'
     runs-on: ubuntu-latest
     steps:
-      - name: Send WeChat notification
+      - name: Send Feishu notification
         env:
-          WECHAT_WEBHOOK: ${{ secrets.WECHAT_WEBHOOK_URL }}
+          FEISHU_WEBHOOK: ${{ secrets.FEISHU_WEBHOOK_URL }}
         run: |
-          if [ -n "$WECHAT_WEBHOOK" ]; then
-            curl -X POST "$WECHAT_WEBHOOK" \
-              -H 'Content-Type: application/json' \
-              -d "{
-                \"msgtype\": \"markdown\",
-                \"markdown\": {
-                  \"content\": \"## Codec 校验失败\n\n**仓库:** ${{ github.repository }}\n**分支:** <font color=\\\"warning\\\">${{ github.ref_name }}</font>\n**作者:** ${{ github.actor }}\n**提交:** ${{ github.event.head_commit.message }}\n\n────────────────\n\n[查看 Actions](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})  |  [查看提交](${{ github.event.head_commit.url }})\"
-                }
-              }"
-          else
-            echo "Warning: WECHAT_WEBHOOK_URL secret is not configured, skipping notification"
+          if [ -z "$FEISHU_WEBHOOK" ]; then
+            echo "Warning: FEISHU_WEBHOOK_URL secret is not configured, skipping notification"
+            exit 0
           fi
+
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            COMMIT_MSG="${{ github.event.pull_request.title }}"
+            COMMIT_URL="${{ github.event.pull_request.html_url }}"
+          else
+            COMMIT_MSG="${{ github.event.head_commit.message }}"
+            COMMIT_URL="${{ github.event.head_commit.url }}"
+          fi
+
+          ACTIONS_URL="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+
+          curl -sS -X POST "$FEISHU_WEBHOOK" \
+            -H 'Content-Type: application/json' \
+            -d "{
+              \"msg_type\": \"interactive\",
+              \"card\": {
+                \"config\": { \"wide_screen_mode\": true },
+                \"header\": {
+                  \"title\": { \"tag\": \"plain_text\", \"content\": \"Codec 校验失败\" },
+                  \"template\": \"red\"
+                },
+                \"elements\": [
+                  {
+                    \"tag\": \"div\",
+                    \"text\": {
+                      \"tag\": \"lark_md\",
+                      \"content\": \"**仓库:** ${{ github.repository }}\\n**分支:** ${{ github.ref_name }}\\n**作者:** ${{ github.actor }}\\n**提交:** ${COMMIT_MSG}\"
+                    }
+                  },
+                  {
+                    \"tag\": \"action\",
+                    \"actions\": [
+                      {
+                        \"tag\": \"button\",
+                        \"text\": { \"tag\": \"plain_text\", \"content\": \"查看 Actions\" },
+                        \"url\": \"${ACTIONS_URL}\",
+                        \"type\": \"primary\"
+                      },
+                      {
+                        \"tag\": \"button\",
+                        \"text\": { \"tag\": \"plain_text\", \"content\": \"查看提交/PR\" },
+                        \"url\": \"${COMMIT_URL}\"
+                      }
+                    ]
+                  }
+                ]
+              }
+            }"
