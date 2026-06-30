@@ -50,11 +50,11 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Temperature Control Mode | 0x60 | 1 | rw |  |  |  |
 | Sub-command | 0x60 | 2 | rw | 0 |  | 0：Mode<br>1：Plan Temperature Control<br>Mode Enable |
 | Temperature Control Mode | 0x60 | 2 | rw | 0 |  | 0：heat<br>2：cool<br>3：auto |
-| Plan Temperature Control
+| Plan Temperature Control 
 Mode Enable | 0x60 | 2 | rw | 0 |  | 0：disable<br>1：enable |
 | Target Temperature Settings | 0x61 | 1 | rw |  |  |  |
 | Temperature Control Mode | 0x61 | 2 | rw | 0 |  |  |
-| Heat Target Temperature | 0x61 | 3 | rw | 17 | 5 - 35 |  |
+| Heat Target Temperature  | 0x61 | 3 | rw | 17 | 5 - 35 |  |
 | Cool Target Temperature | 0x61 | 3 | rw | 28 | 5 - 35 |  |
 | Unilateral Tolerance Enable | 0x77 | 2 | rw | 0 |  | 0：Disable<br>1：Enable |
 | Target Temperature Tolerance | 0x62 | 1 | rw |  |  |  |

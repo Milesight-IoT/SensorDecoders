@@ -1125,7 +1125,7 @@
         },
         {
             "id": "target_temperature_settings.celsius_heat",
-            "name": "Celsius Heat Target Temperature(Target Temperature Settings)",
+            "name": "Celsius Heat Target Temperature (Target Temperature Settings)",
             "value": "17",
             "unit": "°C",
             "access_mode": "RW",
@@ -1159,7 +1159,7 @@
         },
         {
             "id": "target_temperature_settings.fahrenheit_heat",
-            "name": "Fahrenheit Heat Target Temperature(Target Temperature Settings)",
+            "name": "Fahrenheit Heat Target Temperature (Target Temperature Settings)",
             "value": "62.6",
             "unit": "℉",
             "access_mode": "RW",
