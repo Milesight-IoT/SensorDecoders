@@ -46,7 +46,7 @@ function milesightDeviceEncode(payload) {
 			var req_command = reqList[idx];
 			var pureNumber = [];
 			var formateStrParts = [];
-
+		
 			req_command.split('.').forEach(function(part) {
 				if (/^[0-9]+$/.test(part)) {
 					// padStart ES5 兼容
@@ -58,17 +58,17 @@ function milesightDeviceEncode(payload) {
 					formateStrParts.push(part);
 				}
 			});
-
+		
 			var formateStr = formateStrParts.join('.');
 			var hexString = cmdMap()[formateStr];
-
+		
 			if (hexString && hexString.indexOf('xx') !== -1) {
 				var i = 0;
 				hexString = hexString.replace(/xx/g, function() {
 					return pureNumber[i++];
 				});
 			}
-
+		
 			if (hexString) {
 				var length = hexString.length / 2;
 				buffer.writeUInt8(0xef);
@@ -2304,9 +2304,9 @@ function processTemperature(payload) {
             var dotIndex = stringCoefficient.indexOf('.');
             var precision = dotIndex != -1 ? stringCoefficient.length - dotIndex - 1 : 0;
             if (!hasPath(payload, propertyId)) {
-                if (hasPath(payload, fahrenheitProperty) && hasPath(payload, celsiusProperty)) {
-                    throw new Error(fahrenheitProperty + ' and ' + celsiusProperty + ' cannot be in payload at the same time');
-                }
+                // if (hasPath(payload, fahrenheitProperty) && hasPath(payload, celsiusProperty)) {
+                //     throw new Error(fahrenheitProperty + ' and ' + celsiusProperty + ' cannot be in payload at the same time');
+                // }
                 if (hasPath(payload, fahrenheitProperty)) {
                     setPath(payload, propertyId, Number(((getPath(payload, fahrenheitProperty) - constant) / 1.8).toFixed(precision)));
                 } else if (hasPath(payload, celsiusProperty)) {
