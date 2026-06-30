@@ -802,6 +802,110 @@
             "bacnet_unit_type": "UNITS_NO_UNITS"
         },
         {
+            "id": "system_status_control.mode",
+            "name": "Temperature Control Mode(System Status Control)",
+            "value": "0",
+            "unit": "",
+            "access_mode": "W",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "heat"
+                },
+                {
+                    "value": 2,
+                    "name": "cool"
+                },
+                {
+                    "value": 3,
+                    "name": "auto"
+                },
+                {
+                    "value": 255,
+                    "name": "disable"
+                }
+            ],
+            "bacnet_type": "multistate_output_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "system_status_control.on_off",
+                "system_status_control.temperature1",
+                "system_status_control.temperature2"
+            ]
+        },
+        {
+            "id": "system_status_control.on_off",
+            "name": "System On/Off(System Status Control)",
+            "value": "1",
+            "unit": "",
+            "access_mode": "W",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "system off"
+                },
+                {
+                    "value": 1,
+                    "name": "system on"
+                }
+            ],
+            "bacnet_type": "multistate_output_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "system_status_control.mode",
+                "system_status_control.temperature1",
+                "system_status_control.temperature2"
+            ]
+        },
+        {
+            "id": "system_status_control.temperature1",
+            "name": "Heat Temperature(System Status Control)",
+            "value": "17",
+            "unit": "",
+            "access_mode": "W",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "range": [
+                5,
+                35
+            ],
+            "bacnet_type": "analog_output_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "system_status_control.on_off",
+                "system_status_control.mode",
+                "system_status_control.temperature2"
+            ]
+        },
+        {
+            "id": "system_status_control.temperature2",
+            "name": "Cool Temperature(System Status Control)",
+            "value": "28",
+            "unit": "",
+            "access_mode": "W",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "range": [
+                5,
+                35
+            ],
+            "bacnet_type": "analog_output_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "system_status_control.on_off",
+                "system_status_control.mode",
+                "system_status_control.temperature1"
+            ]
+        },
+        {
             "id": "system_switch",
             "name": "System Switch",
             "value": "0",
@@ -1021,7 +1125,7 @@
         },
         {
             "id": "target_temperature_settings.celsius_heat",
-            "name": "Celsius Heat Target Temperature (Target Temperature Settings)",
+            "name": "Celsius Heat Target Temperature(Target Temperature Settings)",
             "value": "17",
             "unit": "°C",
             "access_mode": "RW",
@@ -1055,7 +1159,7 @@
         },
         {
             "id": "target_temperature_settings.fahrenheit_heat",
-            "name": "Fahrenheit Heat Target Temperature (Target Temperature Settings)",
+            "name": "Fahrenheit Heat Target Temperature(Target Temperature Settings)",
             "value": "62.6",
             "unit": "℉",
             "access_mode": "RW",

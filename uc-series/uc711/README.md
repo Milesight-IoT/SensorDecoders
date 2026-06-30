@@ -50,11 +50,11 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Temperature Control Mode | 0x60 | 1 | rw |  |  |  |
 | Sub-command | 0x60 | 2 | rw | 0 |  | 0：Mode<br>1：Plan Temperature Control<br>Mode Enable |
 | Temperature Control Mode | 0x60 | 2 | rw | 0 |  | 0：heat<br>2：cool<br>3：auto |
-| Plan Temperature Control 
+| Plan Temperature Control
 Mode Enable | 0x60 | 2 | rw | 0 |  | 0：disable<br>1：enable |
 | Target Temperature Settings | 0x61 | 1 | rw |  |  |  |
 | Temperature Control Mode | 0x61 | 2 | rw | 0 |  |  |
-| Heat Target Temperature  | 0x61 | 3 | rw | 17 | 5 - 35 |  |
+| Heat Target Temperature | 0x61 | 3 | rw | 17 | 5 - 35 |  |
 | Cool Target Temperature | 0x61 | 3 | rw | 28 | 5 - 35 |  |
 | Unilateral Tolerance Enable | 0x77 | 2 | rw | 0 |  | 0：Disable<br>1：Enable |
 | Target Temperature Tolerance | 0x62 | 1 | rw |  |  |  |
@@ -106,6 +106,12 @@ Mode Enable | 0x60 | 2 | rw | 0 |  | 0：disable<br>1：enable |
 | Level 2 Energy-saving Enable | 0x85 | 2 | rw | 0 |  | 0：Disable<br>1：Enable |
 | Vacant Time | 0x85 | 3 | rw | 720 | 1 - 1440 |  |
 | Energy Saving Target Temperature Tolerance | 0x85 | 3 | rw | 4 | 0.1 - 5 |  |
+| Schedule Stay Duration Settings | 0x73 | 1 | rw |  |  |  |
+| Schedule | 0x73 | 1 | rw |  |  |  |
+| Schedule ID | 0x73 | 2 | rw | 0 | 0 - 15 |  |
+| Sub-command | 0x73 | 2 | rw | 0 |  |  |
+| Permanent Stay Enable | 0x73 | 2 | rw | 0 |  | 0：Disable<br>1：Enable |
+| Temporary Stay Duration | 0x73 | 2 | rw | 0 | 0 - 120 |  |
 | Installation Settings | 0x8E | 5 | rw |  |  |  |
 | Subcmd ID | 0x8E | 2 | rw | 0 |  | 0：wire config<br>1:reversing_valve config<br>2:combine config<br>3:fan owner config |
 | Reversing Valve | 0x8E | 1 | rw |  |  |  |
@@ -124,4 +130,9 @@ Mode Enable | 0x60 | 2 | rw | 0 |  | 0：disable<br>1：enable |
 | Retrieval(Point-in-Time) | 0xBA | 5 | w |  |  |  |
 | Time Point | 0xBA | 5 | w |  |  |  |
 | Time Synchronize | 0xB8 | 1 | w |  |  |  |
+| System Status Control | 0x59 | 7 | w |  |  |  |
+| System On/Off | 0x59 | 2 | w | 1 |  | 0：system off<br>1：system on |
+| Temperature Control Mode | 0x59 | 2 | w | 0 |  | 0：heat<br>2：cool<br>3：auto<br>255：disable |
+| Heat Temperature | 0x59 | 3 | w | 17 | 5 - 35 |  |
+| Cool Temperature | 0x59 | 3 | w | 28 | 5 - 35 |  |
 
