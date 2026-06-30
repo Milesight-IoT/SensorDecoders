@@ -241,7 +241,7 @@ function milesightDeviceEncode(payload) {
 		if ([0, 1, 2].indexOf(payload.ble_server.type) === -1) {
 			throw new Error('ble_server.type must be one of [0, 1, 2]');
 		}
-		// 0：Reset BLE Name , 1：Cancel Pairing, 2：Trigger Pairing
+		// 0：Reset BLE Name, 1：Cancel Pairing, 2：Trigger Pairing
 		buffer.writeUInt8(payload.ble_server.type);
 		encoded = encoded.concat(buffer.toBytes());
 	}
@@ -2444,9 +2444,9 @@ function processTemperature(payload) {
             var dotIndex = stringCoefficient.indexOf('.');
             var precision = dotIndex != -1 ? stringCoefficient.length - dotIndex - 1 : 0;
             if (!hasPath(payload, propertyId)) {
-                if (hasPath(payload, fahrenheitProperty) && hasPath(payload, celsiusProperty)) {
-                    throw new Error(fahrenheitProperty + ' and ' + celsiusProperty + ' cannot be in payload at the same time');
-                }
+                // if (hasPath(payload, fahrenheitProperty) && hasPath(payload, celsiusProperty)) {
+                //     throw new Error(fahrenheitProperty + ' and ' + celsiusProperty + ' cannot be in payload at the same time');
+                // }
                 if (hasPath(payload, fahrenheitProperty)) {
                     setPath(payload, propertyId, Number(((getPath(payload, fahrenheitProperty) - constant) / 1.8).toFixed(precision)));
                 } else if (hasPath(payload, celsiusProperty)) {

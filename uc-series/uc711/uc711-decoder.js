@@ -155,7 +155,7 @@ function milesightDeviceDecode(bytes) {
 				break;
 			case 0xb4:
 				decoded.ble_server = decoded.ble_server || {};
-				// 0：Reset BLE Name , 1：Cancel Pairing, 2：Trigger Pairing
+				// 0：Reset BLE Name, 1：Cancel Pairing, 2：Trigger Pairing
 				decoded.ble_server.type = readUInt8(bytes, counterObj, 1);
 				break;
 			case 0x02:
@@ -1288,6 +1288,42 @@ function setPath(obj, path, value) {
 	return obj;
 }
 
+function removePath(obj, path) {
+	var parts = path.split('.');
+	var chain = [obj];
+	var current = obj;
+
+	for (var i = 0; i < parts.length - 1; i++) {
+		var key = parts[i];
+
+		if (!current || typeof current[key] !== 'object') {
+			return obj;
+		}
+
+		current = current[key];
+		chain.push(current);
+	}
+
+	var leaf = parts[parts.length - 1];
+
+	if (!current || !Object.prototype.hasOwnProperty.call(current, leaf)) {
+		return obj;
+	}
+
+	delete current[leaf];
+
+	// prune empty intermediate containers left behind on the path
+	for (var j = chain.length - 1; j >= 1; j--) {
+		if (Object.keys(chain[j]).length === 0) {
+			delete chain[j - 1][parts[j - 1]];
+		} else {
+			break;
+		}
+	}
+
+	return obj;
+}
+
 function convertName(propertyId, prefix) {
 	var parts = propertyId.split('.');
 	var lastPart = parts[parts.length - 1];
@@ -1744,6 +1780,7 @@ function processTemperature(decoded) {
 			if (hasPath(decoded, propertyId)) {
 				setPath(decoded, fahrenheitProperty,  Number((getPath(decoded, propertyId) * 1.8 + constant).toFixed(allTemperatureProperties[newPropertyId].precision)));
 				setPath(decoded, celsiusProperty,  Number(getPath(decoded, propertyId).toFixed(allTemperatureProperties[newPropertyId].precision)));
+                removePath(decoded, propertyId);
 			}
 		}
 	}
