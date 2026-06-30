@@ -155,7 +155,7 @@ function milesightDeviceDecode(bytes) {
 				break;
 			case 0xb4:
 				decoded.ble_server = decoded.ble_server || {};
-				// 0：Reset BLE Name, 1：Cancel Pairing, 2：Trigger Pairing
+				// 0：Reset BLE Name , 1：Cancel Pairing, 2：Trigger Pairing
 				decoded.ble_server.type = readUInt8(bytes, counterObj, 1);
 				break;
 			case 0x02:
@@ -307,10 +307,10 @@ function milesightDeviceDecode(bytes) {
 				decoded.system_status.reserved = extractBits(bitOptions, 3, 8);
 				break;
 			case 0x10:
-				decoded.target_temperature = readInt16LE(bytes, counterObj, 2) / 100;
+				decoded.target_temperature1 = readInt16LE(bytes, counterObj, 2) / 100;
 				break;
 			case 0x12:
-				decoded.cool_target_temperature = readInt16LE(bytes, counterObj, 2) / 100;
+				decoded.target_temperature2 = readInt16LE(bytes, counterObj, 2) / 100;
 				break;
 			case 0x30:
 				decoded.data_transparent = decoded.data_transparent || {};
@@ -1372,8 +1372,8 @@ function isInteger(str) {
 
 function cmdMap() {
 	return {
-		  "10": "target_temperature",
-		  "12": "cool_target_temperature",
+		  "10": "target_temperature1",
+		  "12": "target_temperature2",
 		  "30": "data_transparent",
 		  "59": "system_status_control",
 		  "60": "temperature_control_mode",
@@ -1641,11 +1641,11 @@ function processTemperature(decoded) {
         "precision": 2,
         "unitName": "℃"
     },
-    "target_temperature": {
+    "target_temperature1": {
         "precision": 2,
         "unitName": "℃"
     },
-    "cool_target_temperature": {
+    "target_temperature2": {
         "precision": 2,
         "unitName": "℃"
     },

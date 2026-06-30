@@ -241,7 +241,7 @@ function milesightDeviceEncode(payload) {
 		if ([0, 1, 2].indexOf(payload.ble_server.type) === -1) {
 			throw new Error('ble_server.type must be one of [0, 1, 2]');
 		}
-		// 0：Reset BLE Name, 1：Cancel Pairing, 2：Trigger Pairing
+		// 0：Reset BLE Name , 1：Cancel Pairing, 2：Trigger Pairing
 		buffer.writeUInt8(payload.ble_server.type);
 		encoded = encoded.concat(buffer.toBytes());
 	}
@@ -459,23 +459,23 @@ function milesightDeviceEncode(payload) {
 		encoded = encoded.concat(buffer.toBytes());
 	}
 	//0x10
-	if ('target_temperature' in payload) {
+	if ('target_temperature1' in payload) {
 		var buffer = new Buffer();
 		buffer.writeUInt8(0x10);
-		if (payload.target_temperature < 5 || payload.target_temperature > 35) {
-			throw new Error('target_temperature must be between 5 and 35');
+		if (payload.target_temperature1 < 5 || payload.target_temperature1 > 35) {
+			throw new Error('target_temperature1 must be between 5 and 35');
 		}
-		buffer.writeInt16LE(payload.target_temperature * 100);
+		buffer.writeInt16LE(payload.target_temperature1 * 100);
 		encoded = encoded.concat(buffer.toBytes());
 	}
 	//0x12
-	if ('cool_target_temperature' in payload) {
+	if ('target_temperature2' in payload) {
 		var buffer = new Buffer();
 		buffer.writeUInt8(0x12);
-		if (payload.cool_target_temperature < 5 || payload.cool_target_temperature > 35) {
-			throw new Error('cool_target_temperature must be between 5 and 35');
+		if (payload.target_temperature2 < 5 || payload.target_temperature2 > 35) {
+			throw new Error('target_temperature2 must be between 5 and 35');
 		}
-		buffer.writeInt16LE(payload.cool_target_temperature * 100);
+		buffer.writeInt16LE(payload.target_temperature2 * 100);
 		encoded = encoded.concat(buffer.toBytes());
 	}
 	//0x30
@@ -2094,8 +2094,8 @@ function cmdMap() {
 		  "fan_control_info": "0d",
 		  "execution_plan_id": "0e",
 		  "system_status": "0f",
-		  "target_temperature": "10",
-		  "cool_target_temperature": "12",
+		  "target_temperature1": "10",
+		  "target_temperature2": "12",
 		  "data_transparent": "30",
 		  "data_transparent.res_cmd1": "3000",
 		  "data_transparent.res_cmd1.battery": "300000",
@@ -2304,11 +2304,11 @@ function processTemperature(payload) {
         "coefficient": 0.01,
         "unitName": "℃"
     },
-    "target_temperature": {
+    "target_temperature1": {
         "coefficient": 0.01,
         "unitName": "℃"
     },
-    "cool_target_temperature": {
+    "target_temperature2": {
         "coefficient": 0.01,
         "unitName": "℃"
     },
