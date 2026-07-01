@@ -1590,7 +1590,7 @@ function processTemperature(decoded) {
 			if (hasPath(decoded, propertyId)) {
 				setPath(decoded, fahrenheitProperty,  Number((getPath(decoded, propertyId) * 1.8 + constant).toFixed(allTemperatureProperties[newPropertyId].precision)));
 				setPath(decoded, celsiusProperty,  Number(getPath(decoded, propertyId).toFixed(allTemperatureProperties[newPropertyId].precision)));
-                removePath(decoded, propertyId);
+				removePath(decoded, propertyId);
 			}
 		}
 	}

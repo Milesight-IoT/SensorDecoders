@@ -2277,43 +2277,43 @@ function processTemperature(payload) {
         "unitName": "℃"
     }
 };
-    var leafPaths = getAllLeafPaths(payload);
+	var leafPaths = getAllLeafPaths(payload);
 	for (var i = 0; i < leafPaths.length; i++) {
-        var propertyId = leafPaths[i];
-        var propertyParts = propertyId.split('.');
-        var newPropertyParts = []
-        for (var j = 0; j < propertyParts.length; j++) {
-            var part = propertyParts[j];
-            if (isInteger(part)) {
-                newPropertyParts.push('_item');
-            } else {
-                newPropertyParts.push(part);
-            }
-        }
-        var newPropertyId = newPropertyParts.join('.');
-        newPropertyId = recoverName(newPropertyId, 'fahrenheit');
-        newPropertyId = recoverName(newPropertyId, 'celsius');
-        propertyId = recoverName(propertyId, 'fahrenheit');
-        propertyId = recoverName(propertyId, 'celsius');
-        if (allTemperatureProperties[newPropertyId]) {
-            var unitName = allTemperatureProperties[newPropertyId].unitName;
-            var constant = unitName == 'K' ? 0 : 32;
-            var fahrenheitProperty = convertName(propertyId, 'fahrenheit');
-            var celsiusProperty = convertName(propertyId, 'celsius');
-            var stringCoefficient = String(allTemperatureProperties[newPropertyId].coefficient);
-            var dotIndex = stringCoefficient.indexOf('.');
-            var precision = dotIndex != -1 ? stringCoefficient.length - dotIndex - 1 : 0;
-            if (!hasPath(payload, propertyId)) {
-                // if (hasPath(payload, fahrenheitProperty) && hasPath(payload, celsiusProperty)) {
-                //     throw new Error(fahrenheitProperty + ' and ' + celsiusProperty + ' cannot be in payload at the same time');
-                // }
-                if (hasPath(payload, fahrenheitProperty)) {
-                    setPath(payload, propertyId, Number(((getPath(payload, fahrenheitProperty) - constant) / 1.8).toFixed(precision)));
-                } else if (hasPath(payload, celsiusProperty)) {
-                    setPath(payload, propertyId, Number(getPath(payload, celsiusProperty).toFixed(precision)));
-                }
-            }
-        }
+		var propertyId = leafPaths[i];
+		var propertyParts = propertyId.split('.');
+		var newPropertyParts = []
+		for (var j = 0; j < propertyParts.length; j++) {
+			var part = propertyParts[j];
+			if (isInteger(part)) {
+				newPropertyParts.push('_item');
+			} else {
+				newPropertyParts.push(part);
+			}
+		}
+		var newPropertyId = newPropertyParts.join('.');
+		newPropertyId = recoverName(newPropertyId, 'fahrenheit');
+		newPropertyId = recoverName(newPropertyId, 'celsius');
+		propertyId = recoverName(propertyId, 'fahrenheit');
+		propertyId = recoverName(propertyId, 'celsius');
+		if (allTemperatureProperties[newPropertyId]) {
+			var unitName = allTemperatureProperties[newPropertyId].unitName;
+			var constant = unitName == 'K' ? 0 : 32;
+			var fahrenheitProperty = convertName(propertyId, 'fahrenheit');
+			var celsiusProperty = convertName(propertyId, 'celsius');
+			var stringCoefficient = String(allTemperatureProperties[newPropertyId].coefficient);
+			var dotIndex = stringCoefficient.indexOf('.');
+			var precision = dotIndex != -1 ? stringCoefficient.length - dotIndex - 1 : 0;
+			if (!hasPath(payload, propertyId)) {
+				// if (hasPath(payload, fahrenheitProperty) && hasPath(payload, celsiusProperty)) {
+				//     throw new Error(fahrenheitProperty + ' and ' + celsiusProperty + ' cannot be in payload at the same time');
+				// }
+				if (hasPath(payload, celsiusProperty)) {
+					setPath(payload, propertyId, Number(getPath(payload, celsiusProperty).toFixed(precision)));
+				} else if (hasPath(payload, fahrenheitProperty)) {
+					setPath(payload, propertyId, Number(((getPath(payload, fahrenheitProperty) - constant) / 1.8).toFixed(precision)));
+				}
+			}
+		}
 	}
 	return payload;
 }
