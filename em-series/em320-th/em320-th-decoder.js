@@ -188,13 +188,14 @@ function milesightDeviceDecode(bytes) {
             var data = {};
             data.timestamp = readUInt32LE(bytes.slice(i, i + 4));
             data.temperature = readInt16LE(bytes.slice(i + 4, i + 6)) / 10;
-            if (bytes[i + 6] === 0xFF) {
+            var humidity = readUInt16LE(bytes.slice(i + 6, i + 8));
+            if (humidity === 0xffff) {
                 data.humidity = "collection_err";
             } else {
-                data.humidity = readUInt8(bytes[i + 6]) / 2;
+                data.humidity = humidity / 10;
             }
-            data.record_type = readRecordType(readUInt8(bytes[i + 7]));
-            i += 8;
+            data.record_type = readRecordType(readUInt8(bytes[i + 8]));
+            i += 9;
             decoded.history = decoded.history || [];
             decoded.history.push(data);
         }
@@ -410,26 +411,26 @@ function readRecordType(type) {
         1: "periodic_report",
         2: "manual_operation_report",
         3: "temperature_below",
-        4: "temperature_below_clear",
-        5: "temperature_above",
-        6: "temperature_above_clear",
-        7: "temperature_within",
-        8: "temperature_within_clear",
-        9: "temperature_below_or_above",
-        10: "temperature_below_or_above_clear",
-        11: "temperature_mutation_alarm",
+        4: "temperature_above",
+        5: "temperature_within",
+        6: "temperature_below_or_above",
+        7: "temperature_mutation_alarm",
+        8: "temperature_below_clear",
+        9: "temperature_above_clear",
+        10: "temperature_within_clear",
+        11: "temperature_below_or_above_clear",
         12: "temperature_over_range_upper",
         13: "temperature_over_range_lower",
         14: "temperature_collection_err",
         15: "humidity_below",
-        16: "humidity_below_clear",
-        17: "humidity_above",
-        18: "humidity_above_clear",
-        19: "humidity_within",
-        20: "humidity_within_clear",
-        21: "humidity_below_or_above",
-        22: "humidity_below_or_above_clear",
-        23: "humidity_mutation_alarm",
+        16: "humidity_above",
+        17: "humidity_within",
+        18: "humidity_below_or_above",
+        19: "humidity_mutation_alarm",
+        20: "humidity_below_clear",
+        21: "humidity_above_clear",
+        22: "humidity_within_clear",
+        23: "humidity_below_or_above_clear",
         24: "humidity_collection_err",
     };
     return getValue(type_map, type);
