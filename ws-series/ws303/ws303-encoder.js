@@ -38,6 +38,9 @@ function milesightDeviceEncode(payload) {
     if ("report_interval" in payload) {
         encoded = encoded.concat(setReportInterval(payload.report_interval));
     }
+    if ("special_report_config" in payload) {
+        encoded = encoded.concat(setSpecialReportConfig(payload.special_report_config));
+    }
     if ("leakage_alarm_config" in payload) {
         encoded = encoded.concat(setLeakageAlarmSettings(payload.leakage_alarm_config));
     }
@@ -118,6 +121,35 @@ function setReportInterval(report_interval) {
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0x03);
     buffer.writeUInt16LE(report_interval);
+    return buffer.toBytes();
+}
+
+/**
+ * set special report config
+ * @param {object} special_report_config
+ * @param {number} special_report_config.cycle unit: second, range: [10, 65535], 0 means no change
+ * @param {number} special_report_config.count range: [1, 255], 0 means no change
+ * @example { "special_report_config": { "cycle": 60, "count": 10 } }
+ */
+function setSpecialReportConfig(special_report_config) {
+    var cycle = "cycle" in special_report_config ? special_report_config.cycle : 0;
+    var count = "count" in special_report_config ? special_report_config.count : 0;
+
+    if (cycle !== 0 && (cycle < 10 || cycle > 65535)) {
+        throw new Error("special_report_config.cycle must be 0 or between 10 and 65535");
+    }
+    if (count !== 0 && (count < 1 || count > 255)) {
+        throw new Error("special_report_config.count must be 0 or between 1 and 255");
+    }
+    if (cycle === 0 && count === 0) {
+        throw new Error("special_report_config must specify at least one of cycle or count");
+    }
+
+    var buffer = new Buffer(5);
+    buffer.writeUInt8(0xff);
+    buffer.writeUInt8(0xd4);
+    buffer.writeUInt16LE(cycle);
+    buffer.writeUInt8(count);
     return buffer.toBytes();
 }
 

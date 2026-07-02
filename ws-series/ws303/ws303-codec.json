@@ -190,6 +190,32 @@
             "bacnet_unit_type": "UNITS_SECONDS"
         },
         {
+            "id": "special_report_config.cycle",
+            "name": "Special Report Config (Cycle)",
+            "value": "",
+            "unit": "s",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "UINT16",
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 73,
+            "bacnet_unit_type": "UNITS_SECONDS",
+            "reference": ["special_report_config.cycle", "special_report_config.count"]
+        },
+        {
+            "id": "special_report_config.count",
+            "name": "Special Report Config (Count)",
+            "value": "",
+            "unit": "",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "UINT8",
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": ["special_report_config.cycle", "special_report_config.count"]
+        },
+        {
             "id": "leakage_alarm_config.enable",
             "name": "Leakage Alarm Config (Enable)",
             "value": "",
