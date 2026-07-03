@@ -127,7 +127,7 @@ function setReportInterval(report_interval) {
 /**
  * set special report config
  * @param {object} special_report_config
- * @param {number} special_report_config.cycle unit: second, range: [10, 65535], 0 means no change
+ * @param {number} special_report_config.cycle unit: second, range: [13, 64800], 0 means no change
  * @param {number} special_report_config.count range: [1, 255], 0 means no change
  * @example { "special_report_config": { "cycle": 60, "count": 10 } }
  */
@@ -135,8 +135,8 @@ function setSpecialReportConfig(special_report_config) {
     var cycle = "cycle" in special_report_config ? special_report_config.cycle : 0;
     var count = "count" in special_report_config ? special_report_config.count : 0;
 
-    if (cycle !== 0 && (cycle < 10 || cycle > 65535)) {
-        throw new Error("special_report_config.cycle must be 0 or between 10 and 65535");
+    if (cycle !== 0 && (cycle < 13 || cycle > 64800)) {
+        throw new Error("special_report_config.cycle must be 0 or between 13 and 64800");
     }
     if (count !== 0 && (count < 1 || count > 255)) {
         throw new Error("special_report_config.count must be 0 or between 1 and 255");
