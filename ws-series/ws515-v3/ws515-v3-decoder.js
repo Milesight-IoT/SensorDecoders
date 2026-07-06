@@ -173,7 +173,7 @@ function milesightDeviceDecode(bytes) {
 				var ipso_type_v1 = bytes[counterObj.i++];
 				switch (ipso_type_v1) {
 					case 0x83:
-						decoded.power_consumption = readUInt32LE(bytes, counterObj, 4) / 1000;
+						decoded.power_consumption = readUInt32LE(bytes, counterObj, 4) / 100000;
 						break;
 				}
 				break;
