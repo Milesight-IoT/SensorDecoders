@@ -320,7 +320,7 @@ function milesightDeviceEncode(payload) {
 		var buffer = new Buffer();
 		buffer.writeUInt8(0x06);
 		buffer.writeUInt8(0x83);
-		buffer.writeUInt32LE(payload.power_consumption * 1000);
+		buffer.writeUInt32LE(payload.power_consumption * 100000);
 		encoded = encoded.concat(buffer.toBytes());
 	}
 	//0x07_0xc9
