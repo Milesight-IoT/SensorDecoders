@@ -130,9 +130,4 @@ Mode Enable | 0x60 | 2 | rw | 0 |  | 0：disable<br>1：enable |
 | Retrieval(Point-in-Time) | 0xBA | 5 | w |  |  |  |
 | Time Point | 0xBA | 5 | w |  |  |  |
 | Time Synchronize | 0xB8 | 1 | w |  |  |  |
-| System Status Control | 0x59 | 7 | w |  |  |  |
-| System On/Off | 0x59 | 2 | w | 1 |  | 0：system off<br>1：system on |
-| Temperature Control Mode | 0x59 | 2 | w | 0 |  | 0：heat<br>2：cool<br>3：auto<br>255：disable |
-| Heat Temperature | 0x59 | 3 | w | 17 | 5 - 35 |  |
-| Cool Temperature | 0x59 | 3 | w | 28 | 5 - 35 |  |
 
