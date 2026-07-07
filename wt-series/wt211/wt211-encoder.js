@@ -3,7 +3,7 @@
  *
  * Copyright 2025 Milesight IoT
  *
- * @product WT201 v2
+ * @product WT211
  */
 var RAW_VALUE = 0x01;
 

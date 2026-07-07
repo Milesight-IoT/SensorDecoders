@@ -1098,12 +1098,13 @@ function writeModbusValueCondition(modbus_value_condition) {
     condition_data |= holding_mode_value << 4;
     var value_1 = 0x00;
     var value_2 = 0x00;
-    // condition(below, between)
-    if (condition_value === 2 || condition_value === 4) {
+    if (condition_value === 2 || condition_value === 4 || condition_value === 5) {
         value_1 = threshold_min;
-    } else if (condition_value === 3 || condition_value === 4) {
+    }
+    if (condition_value === 3 || condition_value === 4 || condition_value === 5) {
         value_2 = threshold_max;
-    } else if (condition_value === 6 || condition_value === 7) {
+    }
+    if (condition_value === 6 || condition_value === 7) {
         value_1 = mutation_duration;
         value_2 = mutation;
     }

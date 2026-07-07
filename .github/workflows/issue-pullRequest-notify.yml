@@ -12,31 +12,66 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: send wecom
+      - name: Send Feishu notification
         env:
-          WECOM_WEBHOOK: ${{ secrets.WECHAT_WEBHOOK_URL }}
+          FEISHU_WEBHOOK: ${{ secrets.FEISHU_WEBHOOK_URL }}
+          EVENT_NAME: ${{ github.event_name }}
+          ISSUE_TITLE: ${{ github.event.issue.title }}
+          ISSUE_URL: ${{ github.event.issue.html_url }}
+          ISSUE_USER: ${{ github.event.issue.user.login }}
+          ISSUE_CREATED_AT: ${{ github.event.issue.created_at }}
+          PR_TITLE: ${{ github.event.pull_request.title }}
+          PR_URL: ${{ github.event.pull_request.html_url }}
+          PR_USER: ${{ github.event.pull_request.user.login }}
+          PR_CREATED_AT: ${{ github.event.pull_request.created_at }}
         run: |
-          if [ "${{ github.event_name }}" = "issues" ]; then
-            TITLE="${{ github.event.issue.title }}"
-            URL="${{ github.event.issue.html_url }}"
-            USER="${{ github.event.issue.user.login }}"
-            UTC_TIME="${{ github.event.issue.created_at }}"
+          if [ -z "$FEISHU_WEBHOOK" ]; then
+            echo "Warning: FEISHU_WEBHOOK_URL secret is not configured, skipping notification"
+            exit 0
+          fi
+
+          if [ "$EVENT_NAME" = "issues" ]; then
+            TITLE="$ISSUE_TITLE"
+            URL="$ISSUE_URL"
+            USER="$ISSUE_USER"
+            UTC_TIME="$ISSUE_CREATED_AT"
             TYPE="Issue"
           else
-            TITLE="${{ github.event.pull_request.title }}"
-            URL="${{ github.event.pull_request.html_url }}"
-            USER="${{ github.event.pull_request.user.login }}"
-            UTC_TIME="${{ github.event.pull_request.created_at }}"
+            TITLE="$PR_TITLE"
+            URL="$PR_URL"
+            USER="$PR_USER"
+            UTC_TIME="$PR_CREATED_AT"
             TYPE="Pull Request"
           fi
 
           CREATED_AT=$(TZ='Asia/Shanghai' date -d "$UTC_TIME" "+%Y-%m-%d %H:%M:%S")
 
-          curl "$WECOM_WEBHOOK" \
-            -H "Content-Type: application/json" \
-            -d "{
-              \"msgtype\": \"markdown\",
-              \"markdown\": {
-                \"content\": \"# SensorDecoders 新${TYPE}\n> ${TITLE}\n\n创建人：${USER}\n创建时间：${CREATED_AT}\n\n[点击查看](${URL})\"
+          PAYLOAD=$(jq -n \
+            --arg type "$TYPE" \
+            --arg title "$TITLE" \
+            --arg user "$USER" \
+            --arg created_at "$CREATED_AT" \
+            --arg url "$URL" \
+            '{
+              msg_type: "interactive",
+              card: {
+                config: { wide_screen_mode: true },
+                header: {
+                  title: { tag: "plain_text", content: ($type + " 通知") },
+                  template: "blue"
+                },
+                elements: [
+                  {
+                    tag: "div",
+                    text: {
+                      tag: "lark_md",
+                      content: ("**" + $type + ":** " + $title + "\n\n**创建人:** " + $user + "\n**创建时间:** " + $created_at + "\n\n[点击查看](" + $url + ")")
+                    }
+                  }
+                ]
               }
-            }"
+            }')
+
+          curl -sS -X POST "$FEISHU_WEBHOOK" \
+            -H "Content-Type: application/json" \
+            -d "$PAYLOAD"
