@@ -704,6 +704,17 @@ function handle_downlink_response_ext(code, channel_type, bytes, offset) {
             decoded.plan_schedule_enable_config = readPlanScheduleEnableConfig(bytes.slice(offset, offset + 2));
             offset += 2;
             break;
+
+        case 0x99:
+            decoded.display_mode = readDisplayMode(readUInt8(bytes[offset]));
+            offset += 1;
+            break;
+        case 0xfb:
+            decoded.adj_temperature_settings = {};
+            decoded.adj_temperature_settings.mode = readTemperatureControlMode(readUInt8(bytes[offset]));
+            decoded.adj_temperature_settings.value = readInt16LE(bytes.slice(offset + 1, offset + 3)) / 10;
+            offset += 3;
+            break;
         default:
             throw new Error("unknown downlink response");
     }
@@ -1208,6 +1219,11 @@ function readHourMin(hour_min) {
         1380: "23:00"
     };
     return getValue(hour_min_map, hour_min);
+}
+
+function readDisplayMode(mode) {
+    var display_mode_map = { 1: "full display", 2: "simplified", 3: "minimalist" };
+    return getValue(display_mode_map, mode);
 }
 
 /* eslint-disable */

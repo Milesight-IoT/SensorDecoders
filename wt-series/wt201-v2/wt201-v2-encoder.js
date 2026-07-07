@@ -244,6 +244,12 @@ function milesightDeviceEncode(payload) {
     if ("cfg_report_counts" in payload) {
         encoded = encoded.concat(setUpCounts(payload.cfg_report_counts));
     }
+    if ("adj_temperature_settings" in payload) {
+        encoded = encoded.concat(setAdjTemperatureSettings(payload.adj_temperature_settings));
+    }
+    if ("display_mode" in payload) {
+        encoded = encoded.concat(setDisplayMode(payload.display_mode));
+    }
 
     return encoded;
 }
@@ -755,6 +761,9 @@ function setTemperatureTarget(temperature_control_mode, target_temperature) {
     }
     if (typeof target_temperature !== "number") {
         throw new Error("target_temperature must be a number");
+    }
+    if (target_temperature < 5 || target_temperature > 35) {
+        throw new Error("target_temperature must be in range [5, 35]");
     }
 
     var buffer = new Buffer(5);
@@ -2162,6 +2171,51 @@ function setTargetTemperatureDual(target_temperature_dual_enable) {
     buffer.writeUInt8(0xf9);
     buffer.writeUInt8(0x58);
     buffer.writeUInt8(getValue(enable_map, target_temperature_dual_enable));
+    return buffer.toBytes();
+}
+
+/**
+ * set adj temperature settings
+ * @param {object} adj_temperature_settings
+ * @param {number} adj_temperature_settings.mode values: (0: heat, 1: em heat, 2: cool, 3: auto, 4: auto heat, 5: auto cool)
+ * @param {number} adj_temperature_settings.value unit: celsius range: [0.5, 16]
+ * @example { "adj_temperature_settings": { "mode": 0, "value": 2 } }
+ */
+function setAdjTemperatureSettings(adj_temperature_settings) {
+    var mode = adj_temperature_settings.mode;
+    var value = adj_temperature_settings.value;
+
+    var mode_map = { 0: "heat", 1: "em heat", 2: "cool", 3: "auto", 4: "auto heat", 5: "auto cool" };
+    var mode_values = getValues(mode_map);
+    if (mode_values.indexOf(mode) === -1) {
+        throw new Error("adj_temperature_settings.mode must be one of " + mode_values.join(", "));
+    }
+    if (typeof value !== "number") {
+        throw new Error("adj_temperature_settings.value must be a number");
+    }
+    if (value < 0.5 || value > 16) {
+        throw new Error("adj_temperature_settings.value must be in range [0.5, 16]");
+    }
+
+    var buffer = new Buffer(5);
+    buffer.writeUInt8(0xf9);
+    buffer.writeUInt8(0xfb);
+    buffer.writeUInt8(getValue(mode_map, mode));
+    buffer.writeInt16LE(value * 10);
+    return buffer.toBytes();
+}
+
+function setDisplayMode(display_mode) {
+    var display_mode_map = { 1: "full display", 2: "simplified", 3: "minimalist" };
+    var display_mode_values = getValues(display_mode_map);
+    if (display_mode_values.indexOf(display_mode) === -1) {
+        throw new Error("display_mode must be one of " + display_mode_values.join(", "));
+    }
+
+    var buffer = new Buffer(3);
+    buffer.writeUInt8(0xf9);
+    buffer.writeUInt8(0x99);
+    buffer.writeUInt8(getValue(display_mode_map, display_mode));
     return buffer.toBytes();
 }
 
