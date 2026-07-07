@@ -1,6 +1,6 @@
 # WT303 Sensor
 
-![WT303](wt303.png)
+![WT303](wt303-f.png)
 
 For more detailed information, please visit [Milesight Official Website](https://www.milesight.com/iot/product/lorawan-sensor/wt303)
 
@@ -101,8 +101,8 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | ΔT2 | 0x73 | 3 | rw | 5 | 1 - 15 |  |
 | Fan Speed Control Delta Configuration | 0x9F | 1 | rw |  |  |  |
 | Sub-command | 0x9F | 2 | rw | 0 |  |  |
-| ΔT1 | 0x9F | 3 | rw | 3 | 1 - 15 |  |
-| ΔT2 | 0x9F | 3 | rw | 5 | 1 - 15 |  |
+| ΔT1 | 0x9F | 3 | rw | 3 | 0 - 10 |  |
+| ΔT2 | 0x9F | 3 | rw | 5 | 0 - 10 |  |
 | Timer Switch System | 0x8C | 1 | rw |  |  |  |
 | Sub-command | 0x8C | 2 | rw | 0 |  |  |
 | Timer Switch Enable | 0x8C | 2 | rw | 0 |  | 0：disable<br>1：enable |
@@ -170,7 +170,7 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Temporary Button Unlock Configuration | 0x97 | 1 | rw |  |  |  |
 | Sub-command | 0x97 | 2 | rw | 0 |  |  |
 | Temporary Button Unlock Function Enable | 0x97 | 2 | rw | 0 |  | 0：disable<br>1：enable |
-| Temporary Button Unlock Enable | 0x97 | 2 | rw | 0 |  | 0=None<br>3=System switch & Temperature +<br>5=System switch & Temperature -<br>6=Temperature + & Temperature -<br>7=System switch & Temperature + & Temperature -<br>9=System switch & Fan<br>10=Temperature + & Fan<br>11=System switch & Temperature + & Fan<br>12=Temperature - & Fan<br>13=System switch & Temperature - & Fan<br>14=Temperature + & Temperature - & Fan<br>15=System switch & Temperature + & Temperature - & Fan<br>17=System switch & Temperature control mode<br>18=Temperature + & Temperature control mode<br>19=System switch & Temperature + & Temperature control mode<br>20=Temperature - & Temperature control mode<br>21=System switch & Temperature - & Temperature control mode<br>22=Temperature + & Temperature - & Temperature control mode<br>23=System switch & Temperature + & Temperature - & Temperature control mode<br>24=Fan & Temperature control mode<br>25=System switch & Fan & Temperature control mode<br>26=Temperature + & Fan & Temperature control mode<br>27=System switch & Temperature + & Fan & Temperature control mode<br>28=Temperature - & Fan & Temperature control mode<br>29=System switch & Temperature - & Fan & Temperature control mode<br>30=Temperature + & Temperature - & Fan & Temperature control mode<br>31=System switch & Temperature + & Temperature - & Fan & Temperature control mode |
+| Temporary Button Unlock Enable | 0x97 | 2 | rw | 0 |  | 0=None<br>3=System switch & Temp +<br>5=System switch & Temp -<br>6=Temp + & Temp -<br>7=System switch & Temp + & Temp -<br>9=System switch & Fan<br>10=Temp + & Fan<br>11=System switch & Temp + & Fan<br>12=Temp - & Fan<br>13=System switch & Temp - & Fan<br>14=Temp + & Temp - & Fan<br>15=System switch & Temp + & Temp - & Fan<br>17=System switch & Temp ctrl mode<br>18=Temp + & Temp ctrl mode<br>19=System switch & Temp + & Temp ctrl mode<br>20=Temp - & Temp ctrl mode<br>21=System switch & Temp - & Temp ctrl mode<br>22=Temp + & Temp - & Temp ctrl mode<br>23=System switch & Temp + & Temp - & Temp ctrl mode<br>24=Fan & Temp ctrl mode<br>25=System switch & Fan & Temp ctrl mode<br>26=Temp + & Fan & Temp ctrl mode<br>27=System switch & Temp + & Fan & Temp ctrl mode<br>28=Temp - & Fan & Temp ctrl mode<br>29=System switch & Temp - & Fan & Temp ctrl mode<br>30=Temp + & Temp - & Fan & Temp ctrl mode<br>31=System switch & Temp + & Temp - & Fan & Temp ctrl mode |
 | System On/Off | 0x97 | 2 | rw | 0 |  | 0：disable<br>1：enable |
 | Temperature + | 0x97 | 2 | rw | 0 |  | 0：disable<br>1：enable |
 | Temperature - | 0x97 | 2 | rw | 0 |  | 0：disable<br>1：enable |
@@ -379,10 +379,10 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Night Exec Plan | 0x95 | 2 | rw | 2 |  | 0：Schedule1<br>1：Schedule2<br>2：Schedule3<br>255：None |
 | Energy Saving Level1 Enable | 0x95 | 2 | rw | 0 |  | 0：disable<br>1：enable |
 | Energy Saving Level1 Vacant Time | 0x95 | 3 | rw | 480 | 1 - 1440 |  |
-| Energy Saving Level1 Target Temp Tolerance | 0x95 | 3 | rw | 2 | 0.1 - 5 |  |
+| Energy Saving Level1 Target Temp Tol | 0x95 | 3 | rw | 2 | 0.1 - 5 |  |
 | Energy Saving Level2 Enable | 0x95 | 2 | rw | 0 |  | 0：disable<br>1：enable |
 | Energy Saving Level2 Vacant Time | 0x95 | 3 | rw | 720 | 1 - 1440 |  |
-| Energy Saving Level2 Target Temp Tolerance | 0x95 | 3 | rw | 4 | 0.1 - 5 |  |
+| Energy Saving Level2 Target Temp Tol | 0x95 | 3 | rw | 4 | 0.1 - 5 |  |
 | Energy Saving Mode | 0x95 | 2 | rw | 1 |  | 0：Execute Plan<br>1：Adjust Energy Saving Level |
 
 ### Event
