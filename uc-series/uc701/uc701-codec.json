@@ -541,7 +541,7 @@
             "value_type": "FLOAT",
             "range": [
                 -20,
-                60
+                70
             ],
             "bacnet_type": "analog_input_object",
             "bacnet_unit_type_id": 62,
@@ -557,7 +557,7 @@
             "value_type": "FLOAT",
             "range": [
                 -20,
-                60
+                70
             ],
             "bacnet_type": "analog_input_object",
             "bacnet_unit_type_id": 62,
@@ -1031,7 +1031,7 @@
         {
             "id": "ct_sensor_settings.collect_period",
             "name": "Collect Period(CT Sensor Setting)",
-            "value": "30",
+            "value": "5",
             "unit": "s",
             "access_mode": "RW",
             "data_type": "NUMBER",
@@ -2328,8 +2328,8 @@
             "data_type": "NUMBER",
             "value_type": "FLOAT",
             "range": [
-                -60,
-                60
+                -70,
+                70
             ],
             "bacnet_type": "analog_value_object",
             "bacnet_unit_type_id": 62,
@@ -2380,8 +2380,8 @@
             "data_type": "NUMBER",
             "value_type": "FLOAT",
             "range": [
-                -76,
-                140
+                -94,
+                158
             ],
             "bacnet_type": "analog_value_object",
             "bacnet_unit_type_id": 64,
@@ -2391,7 +2391,7 @@
         {
             "id": "external_sensor_settings.name1",
             "name": "Name(prefix6)(External Temperature Sensor Setting)",
-            "value": "",
+            "value": "extern",
             "unit": "",
             "access_mode": "RW",
             "data_type": "TEXT",
@@ -2405,7 +2405,7 @@
         {
             "id": "external_sensor_settings.name2",
             "name": "Name(infix6)(External Temperature Sensor Setting)",
-            "value": "",
+            "value": "al sen",
             "unit": "",
             "access_mode": "RW",
             "data_type": "TEXT",
@@ -2419,7 +2419,7 @@
         {
             "id": "external_sensor_settings.name3",
             "name": "Name(suffix6)(External Temperature Sensor Setting)",
-            "value": "",
+            "value": "sor",
             "unit": "",
             "access_mode": "RW",
             "data_type": "TEXT",
@@ -2440,7 +2440,7 @@
             "value_type": "FLOAT",
             "range": [
                 -4,
-                140
+                158
             ],
             "bacnet_type": "analog_input_object",
             "bacnet_unit_type_id": 64,
@@ -2456,7 +2456,7 @@
             "value_type": "FLOAT",
             "range": [
                 -4,
-                140
+                158
             ],
             "bacnet_type": "analog_input_object",
             "bacnet_unit_type_id": 64,
@@ -3328,8 +3328,8 @@
             "data_type": "NUMBER",
             "value_type": "FLOAT",
             "range": [
-                -80,
-                80
+                -70,
+                70
             ],
             "bacnet_type": "analog_value_object",
             "bacnet_unit_type_id": 62,
@@ -3413,8 +3413,8 @@
             "data_type": "NUMBER",
             "value_type": "FLOAT",
             "range": [
-                -112,
-                176
+                -94,
+                158
             ],
             "bacnet_type": "analog_value_object",
             "bacnet_unit_type_id": 64,
@@ -3464,7 +3464,7 @@
         {
             "id": "internal_sensor_settings.name1",
             "name": "Name(prefix6)(Internal Temperature Sensor Setting)",
-            "value": "",
+            "value": "built-",
             "unit": "",
             "access_mode": "RW",
             "data_type": "TEXT",
@@ -3478,7 +3478,7 @@
         {
             "id": "internal_sensor_settings.name2",
             "name": "Name(infix6)(Internal Temperature Sensor Setting)",
-            "value": "",
+            "value": "in sen",
             "unit": "",
             "access_mode": "RW",
             "data_type": "TEXT",
@@ -3492,7 +3492,7 @@
         {
             "id": "internal_sensor_settings.name3",
             "name": "Name(suffix6)(Internal Temperature Sensor Setting)",
-            "value": "",
+            "value": "sor",
             "unit": "",
             "access_mode": "RW",
             "data_type": "TEXT",
@@ -4380,7 +4380,7 @@
             "value_type": "FLOAT",
             "range": [
                 -20,
-                60
+                70
             ],
             "bacnet_type": "analog_value_object",
             "bacnet_unit_type_id": 62,
@@ -4397,7 +4397,7 @@
             "value_type": "FLOAT",
             "range": [
                 -20,
-                60
+                70
             ],
             "bacnet_type": "analog_value_object",
             "bacnet_unit_type_id": 62,
@@ -4468,7 +4468,7 @@
             "value_type": "FLOAT",
             "range": [
                 -4,
-                140
+                158
             ],
             "bacnet_type": "analog_value_object",
             "bacnet_unit_type_id": 64,
@@ -4485,7 +4485,7 @@
             "value_type": "FLOAT",
             "range": [
                 -4,
-                140
+                158
             ],
             "bacnet_type": "analog_value_object",
             "bacnet_unit_type_id": 64,
@@ -4533,7 +4533,7 @@
             "value_type": "FLOAT",
             "range": [
                 -20,
-                60
+                70
             ],
             "bacnet_type": "analog_input_object",
             "bacnet_unit_type_id": 62,
@@ -4550,7 +4550,7 @@
             "value_type": "FLOAT",
             "range": [
                 -4,
-                140
+                158
             ],
             "bacnet_type": "analog_input_object",
             "bacnet_unit_type_id": 64,
@@ -4567,7 +4567,7 @@
             "value_type": "FLOAT",
             "range": [
                 -20,
-                60
+                70
             ],
             "bacnet_type": "analog_input_object",
             "bacnet_unit_type_id": 62,
@@ -4584,7 +4584,7 @@
             "value_type": "FLOAT",
             "range": [
                 -4,
-                140
+                158
             ],
             "bacnet_type": "analog_input_object",
             "bacnet_unit_type_id": 64,
@@ -4601,7 +4601,7 @@
             "value_type": "FLOAT",
             "range": [
                 -20,
-                60
+                70
             ],
             "bacnet_type": "analog_input_object",
             "bacnet_unit_type_id": 62,
@@ -4618,7 +4618,7 @@
             "value_type": "FLOAT",
             "range": [
                 -4,
-                140
+                158
             ],
             "bacnet_type": "analog_input_object",
             "bacnet_unit_type_id": 64,
@@ -4635,7 +4635,7 @@
             "value_type": "FLOAT",
             "range": [
                 -20,
-                60
+                70
             ],
             "bacnet_type": "analog_input_object",
             "bacnet_unit_type_id": 62,
@@ -4652,7 +4652,7 @@
             "value_type": "FLOAT",
             "range": [
                 -4,
-                140
+                158
             ],
             "bacnet_type": "analog_input_object",
             "bacnet_unit_type_id": 64,
@@ -4669,7 +4669,7 @@
             "value_type": "FLOAT",
             "range": [
                 -20,
-                60
+                70
             ],
             "bacnet_type": "analog_input_object",
             "bacnet_unit_type_id": 62,
@@ -4686,7 +4686,7 @@
             "value_type": "FLOAT",
             "range": [
                 -4,
-                140
+                158
             ],
             "bacnet_type": "analog_input_object",
             "bacnet_unit_type_id": 64,
@@ -4703,7 +4703,7 @@
             "value_type": "FLOAT",
             "range": [
                 -20,
-                60
+                70
             ],
             "bacnet_type": "analog_input_object",
             "bacnet_unit_type_id": 62,
@@ -4720,7 +4720,7 @@
             "value_type": "FLOAT",
             "range": [
                 -4,
-                140
+                158
             ],
             "bacnet_type": "analog_input_object",
             "bacnet_unit_type_id": 64,
@@ -4737,7 +4737,7 @@
             "value_type": "FLOAT",
             "range": [
                 -20,
-                60
+                70
             ],
             "bacnet_type": "analog_input_object",
             "bacnet_unit_type_id": 62,
@@ -4754,7 +4754,7 @@
             "value_type": "FLOAT",
             "range": [
                 -4,
-                140
+                158
             ],
             "bacnet_type": "analog_input_object",
             "bacnet_unit_type_id": 64,
@@ -4771,7 +4771,7 @@
             "value_type": "FLOAT",
             "range": [
                 -20,
-                60
+                70
             ],
             "bacnet_type": "analog_input_object",
             "bacnet_unit_type_id": 62,
@@ -4788,7 +4788,7 @@
             "value_type": "FLOAT",
             "range": [
                 -4,
-                140
+                158
             ],
             "bacnet_type": "analog_input_object",
             "bacnet_unit_type_id": 64,
@@ -4805,7 +4805,7 @@
             "value_type": "FLOAT",
             "range": [
                 -20,
-                60
+                70
             ],
             "bacnet_type": "analog_input_object",
             "bacnet_unit_type_id": 62,
@@ -4822,7 +4822,7 @@
             "value_type": "FLOAT",
             "range": [
                 -4,
-                140
+                158
             ],
             "bacnet_type": "analog_input_object",
             "bacnet_unit_type_id": 64,
@@ -4839,7 +4839,7 @@
             "value_type": "FLOAT",
             "range": [
                 -20,
-                60
+                70
             ],
             "bacnet_type": "analog_input_object",
             "bacnet_unit_type_id": 62,
@@ -4856,7 +4856,7 @@
             "value_type": "FLOAT",
             "range": [
                 -4,
-                140
+                158
             ],
             "bacnet_type": "analog_input_object",
             "bacnet_unit_type_id": 64,
@@ -4873,7 +4873,7 @@
             "value_type": "FLOAT",
             "range": [
                 -20,
-                60
+                70
             ],
             "bacnet_type": "analog_input_object",
             "bacnet_unit_type_id": 62,
@@ -4890,7 +4890,7 @@
             "value_type": "FLOAT",
             "range": [
                 -4,
-                140
+                158
             ],
             "bacnet_type": "analog_input_object",
             "bacnet_unit_type_id": 64,
@@ -4907,7 +4907,7 @@
             "value_type": "FLOAT",
             "range": [
                 -20,
-                60
+                70
             ],
             "bacnet_type": "analog_input_object",
             "bacnet_unit_type_id": 62,
@@ -4924,7 +4924,7 @@
             "value_type": "FLOAT",
             "range": [
                 -4,
-                140
+                158
             ],
             "bacnet_type": "analog_input_object",
             "bacnet_unit_type_id": 64,
@@ -5012,7 +5012,7 @@
             "value_type": "FLOAT",
             "range": [
                 -20,
-                60
+                70
             ],
             "bacnet_type": "analog_input_object",
             "bacnet_unit_type_id": 62,
@@ -5029,7 +5029,7 @@
             "value_type": "FLOAT",
             "range": [
                 -4,
-                140
+                158
             ],
             "bacnet_type": "analog_input_object",
             "bacnet_unit_type_id": 64,
@@ -5046,7 +5046,7 @@
             "value_type": "FLOAT",
             "range": [
                 -20,
-                60
+                70
             ],
             "bacnet_type": "analog_input_object",
             "bacnet_unit_type_id": 62,
@@ -5063,7 +5063,7 @@
             "value_type": "FLOAT",
             "range": [
                 -4,
-                140
+                158
             ],
             "bacnet_type": "analog_input_object",
             "bacnet_unit_type_id": 64,
@@ -5659,7 +5659,7 @@
             ]
         },
         {
-            "id": "window_opening_detection.celsius_difference_in_temperature",
+            "id": "window_opening_detection_settings.celsius_difference_in_temperature",
             "name": "Celsius Temperature Variation(Open Window Detection)",
             "value": "3",
             "unit": "°C",
@@ -5676,7 +5676,7 @@
             "reference": []
         },
         {
-            "id": "window_opening_detection.command",
+            "id": "window_opening_detection_settings.command",
             "name": "Sub-command(Open Window Detection)",
             "value": "0",
             "unit": "",
@@ -5703,7 +5703,7 @@
             "reference": []
         },
         {
-            "id": "window_opening_detection.enable",
+            "id": "window_opening_detection_settings.enable",
             "name": "Enable(Open Window Detection)",
             "value": "0",
             "unit": "",
@@ -5726,7 +5726,7 @@
             "reference": []
         },
         {
-            "id": "window_opening_detection.fahrenheit_difference_in_temperature",
+            "id": "window_opening_detection_settings.fahrenheit_difference_in_temperature",
             "name": "Fahrenheit Temperature Variation(Open Window Detection)",
             "value": "37.4",
             "unit": "℉",
@@ -5743,7 +5743,7 @@
             "reference": []
         },
         {
-            "id": "window_opening_detection.stop_time",
+            "id": "window_opening_detection_settings.stop_time",
             "name": "Stop Control For(Open Window Detection)",
             "value": "30",
             "unit": "min",

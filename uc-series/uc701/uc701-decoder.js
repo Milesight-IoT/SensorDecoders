@@ -443,25 +443,6 @@ function milesightDeviceDecode(bytes) {
 				decoded.device_info.pn_3 = readString(bytes, counterObj, 8);
 				decoded.device_info.pn_4 = readString(bytes, counterObj, 8);
 				break;
-			case 0xd6:
-				decoded.submodule_info = decoded.submodule_info || {};
-				var submodule_info_cmd = readUInt8(bytes, counterObj, 1);
-				if (submodule_info_cmd == 0x01) {
-					decoded.submodule_info.version_1 = decoded.submodule_info.version_1 || {};
-					decoded.submodule_info.version_1.context = decoded.submodule_info.version_1.context || {};
-					// 0：not allowed, 1：allowed
-					decoded.submodule_info.version_1.context.patch_enable = readUInt8(bytes, counterObj, 1);
-					decoded.submodule_info.version_1.context.version = readString(bytes, counterObj, 8);
-				}
-				if (submodule_info_cmd == 0x02) {
-					decoded.submodule_info.version_2 = decoded.submodule_info.version_2 || {};
-					decoded.submodule_info.version_2.length = readUInt8(bytes, counterObj, 1);
-					decoded.submodule_info.version_2.context = readBytes(bytes, counterObj, decoded.submodule_info.version_2.length);
-					// 0：not allowed, 1：allowed
-					context_item.patch_enable = readUInt8(bytes, counterObj, 1);
-					context_item.version = readString(bytes, counterObj, 16);
-				}
-				break;
 			case 0xbf:
 				decoded.lorawan_status = decoded.lorawan_status || {};
 				var lorawan_status_command = readUInt8(bytes, counterObj, 1);
@@ -935,17 +916,17 @@ function milesightDeviceDecode(bytes) {
 				}
 				break;
 			case 0x68:
-				decoded.window_opening_detection = decoded.window_opening_detection || {};
-				var window_opening_detection_command = readUInt8(bytes, counterObj, 1);
-				if (window_opening_detection_command == 0x00) {
+				decoded.window_opening_detection_settings = decoded.window_opening_detection_settings || {};
+				var window_opening_detection_settings_command = readUInt8(bytes, counterObj, 1);
+				if (window_opening_detection_settings_command == 0x00) {
 					// 0：Disable, 1：Enable
-					decoded.window_opening_detection.enable = readUInt8(bytes, counterObj, 1);
+					decoded.window_opening_detection_settings.enable = readUInt8(bytes, counterObj, 1);
 				}
-				if (window_opening_detection_command == 0x02) {
-					decoded.window_opening_detection.difference_in_temperature = readInt16LE(bytes, counterObj, 2) / 100;
+				if (window_opening_detection_settings_command == 0x02) {
+					decoded.window_opening_detection_settings.difference_in_temperature = readInt16LE(bytes, counterObj, 2) / 100;
 				}
-				if (window_opening_detection_command == 0x03) {
-					decoded.window_opening_detection.stop_time = readUInt16LE(bytes, counterObj, 2);
+				if (window_opening_detection_settings_command == 0x03) {
+					decoded.window_opening_detection_settings.stop_time = readUInt16LE(bytes, counterObj, 2);
 				}
 				break;
 			case 0x6a:
@@ -1845,7 +1826,7 @@ function cmdMap() {
 		  "65": "target_temperature_resolution",
 		  "66": "reporting_interval",
 		  "67": "schedule_settings",
-		  "68": "window_opening_detection",
+		  "68": "window_opening_detection_settings",
 		  "70": "fan_settings",
 		  "73": "plan_dwell_time_settings",
 		  "75": "temperature_control_mode_enable",
@@ -1872,9 +1853,9 @@ function cmdMap() {
 		  "6103": "target_temperature_settings.auto",
 		  "6200": "target_temperature_tolerance.target_value",
 		  "6600": "reporting_interval.ble_lora",
-		  "6800": "window_opening_detection.enable",
-		  "6802": "window_opening_detection.difference_in_temperature",
-		  "6803": "window_opening_detection.stop_time",
+		  "6800": "window_opening_detection_settings.enable",
+		  "6802": "window_opening_detection_settings.difference_in_temperature",
+		  "6803": "window_opening_detection_settings.stop_time",
 		  "7000": "fan_settings.fan_mode",
 		  "8000": "indicator_light_disable_settings.enable",
 		  "8001": "indicator_light_disable_settings.time",
@@ -1936,7 +1917,7 @@ function cmdMap() {
 		  "ee": "request_query_all_configurations",
 		  "ed": "historical_data_report",
 		  "ec": "ipso_device_upgrade",
-		  "undefinedxx": "submodule_info.version_2.context._item",
+		  "undefinedxx": "ipso_device_upgrade.firmwares._item",
 		  "eb": "debugging_commands",
 		  "cf": "lorawan_configuration_settings",
 		  "cf0b": "lorawan_configuration_settings.deveui",
@@ -2010,9 +1991,6 @@ function cmdMap() {
 		  "c8": "device_status",
 		  "d8": "product_frequency_band",
 		  "d7": "device_info",
-		  "d6": "submodule_info",
-		  "d601": "submodule_info.version_1",
-		  "d602": "submodule_info.version_2",
 		  "bf": "lorawan_status",
 		  "bf00": "lorawan_status.join_status",
 		  "bf01": "lorawan_status.eui",
@@ -2291,7 +2269,7 @@ function processTemperature(decoded) {
         "precision": 2,
         "unitName": "℃"
     },
-    "window_opening_detection.difference_in_temperature": {
+    "window_opening_detection_settings.difference_in_temperature": {
         "precision": 2,
         "unitName": "℃"
     },
