@@ -761,7 +761,7 @@ function setSystemStatusAndTemperatureControl(system_status, temperature_control
  * @param {number} mode values: (0: heat, 1: em heat, 2: cool, 3: auto)
  * @param {number} target range: [5, 95]
  * @param {number} unit values: (0: celsius, 1: fahrenheit)
- * @example { "mode": 2, "target": 25, "unit": 0 }
+ * @example { "temperature_control": { "mode": 2, "target": 25, "unit": 0 } }
  */
 function setTemperatureControl(mode, target, unit) {
     var mode_map = { 0: "heat", 1: "em heat", 2: "cool", 3: "auto" };
