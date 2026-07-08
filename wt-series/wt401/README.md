@@ -52,12 +52,6 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | ID | 0xCD | 2 | rw | 0 |  |  |
 | Address Type | 0xCD | 2 | rw | 0 |  | 0：public<br>1：private |
 | Bluetooth Mac Address | 0xCD | 7 | rw | 24e124123456 |  |  |
-| Paired Device Bluetooth Information | 0xCD | 1 | rw |  |  |  |
-| Address Type | 0xCD | 2 | rw | 0 |  | 0：public<br>1：private |
-| Mac Address | 0xCD | 7 | rw | 24e124123456 |  |  |
-| DevEUI | 0xCD | 9 | rw | 24e124123456789a |  |  |
-| Name Length | 0xCD | 2 | rw | 13 | 1 - 13 |  |
-| Bluetooth Name | 0xCD | 1 | rw |  |  |  |
 | Bluetooth Status | 0xBA | 11 | r |  |  |  |
 | Bluetooth Status | 0xBA | M | r |  |  |  |
 | ID | 0xBA | 2 | r | 0 |  |  |
@@ -72,7 +66,7 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Target Temperature2 | 0x07 | 3 | r |  | 5 - 35 |  |
 | Fan Mode | 0x04 | 2 | r | 0 |  | 0：auto<br>1：circulate<br>2：on<br>3：low<br>4：medium<br>5：high<br>10：off<br>11：none/keep |
 | Schedule | 0x05 | 2 | r | 0 | 0 - 255 | 0:plan0<br>1:plan1<br>2:plan2<br>3:plan3<br>4:plan4<br>5:plan5<br>6:plan6<br>7:plan7<br>8:plan8<br>9:plan9<br>10:plan10<br>11:plan11<br>12:plan12<br>13:plan13<br>14:plan14<br>15:plan15<br>255:Not executed |
-| Communication Mode | 0x8D | 2 | rw | 1 | 0 - 3 | 0：BLE<br>1：LoRa<br>2：BLE+LoRa<br>3：PowerBus+LoRa |
+| Communication Mode | 0x8D | 2 | rw | 2 | 0 - 3 | 0：BLE<br>1：LoRa<br>2：BLE+LoRa<br>3：PowerBus+LoRa |
 | Reporting Interval | 0x61 | 1 | rw |  |  |  |
 | Reporting Interval Type | 0x61 | 2 | rw | 0 |  | 0：BLE<br>1：LoRa<br>2：BLE+LoRa<br>3：PowerBus+LoRa |
 | BLE Reporting Interval | 0x61 | 1 | rw |  |  |  |
@@ -273,17 +267,16 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | EM Heat Target Temperature | 0x7B | 3 | rw | 25 | 5 - 35 |  |
 | Cool Target Temperature | 0x7B | 3 | rw | 28 | 5 - 35 |  |
 | Schedule Content | 0x7B | 8 | rw |  |  |  |
-| Fan Mode | 0x7B | 2 | rw | 0 | 0 - 255 | 0：auto<br>1：circulate<br>2：on<br>3：low<br>4：medium<br>5：high<br>10：off |
+| Fan Mode | 0x7B | 2 | rw | 0 | 0 - 255 | 0：auto<br>1：circulate<br>2：on<br>3：low<br>4：medium<br>5：high |
 | Auto Target Temperature | 0x7B | 3 | rw | 23 | 5 - 35 |  |
 | Auto-Heat Target Temperature | 0x7B | 3 | rw | 17 | 5 - 35 |  |
 | Auto-Cool Target Temperature | 0x7B | 3 | rw | 28 | 5 - 35 |  |
 | System On/Off | 0x7B | 2 | rw | 1 |  | 0：system off<br>1：system on |
-| Temperature Control Mode | 0x7B | 2 | rw | 0 | 0 - 255 | 0：heat<br>1：em heat<br>2：cool<br>3：auto<br>4：dehumidify<br>5：ventilation<br>10：off |
-| Fan Mode | 0x7B | 2 | rw | 0 | 0 - 255 | 0：auto<br>1：circulate<br>2：on<br>3：low<br>4：medium<br>5：high<br>10：off |
+| Temperature Control Mode | 0x7B | 2 | rw | 0 | 0 - 255 | 0：heat<br>1：em heat<br>2：cool<br>3：auto<br>4：dehumidify<br>5：ventilation |
+| Fan Mode | 0x7B | 2 | rw | 0 | 0 - 255 | 0：auto<br>1：circulate<br>2：on<br>3：low<br>4：medium<br>5：high |
 | Heating Target Temperature | 0x7B | 3 | rw | 19 | 5 - 35 |  |
 | Cool Target Temperature | 0x7B | 3 | rw | 28 | 5 - 35 |  |
 | Auto Target Temperature | 0x7B | 3 | rw | 23 | 5 - 35 |  |
-| System Status Control | 0x59 | 7 | w |  |  |  |
 
 ### Event
 
@@ -351,6 +344,7 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Battery Event Type | 0x0F | 2 | r |  |  |  |
 | Battery Recover | 0x0F | 2 | r |  |  |  |
 | Reset BLE Name | 0x54 | 2 | w |  |  |  |
+| System Status Control | 0x59 | 7 | w |  |  |  |
 | System On/Off | 0x59 | 2 | w | 1 |  | 0：system off<br>1：system on |
 | Temperature Control Mode | 0x59 | 2 | w | 0 | 0 - 5 | 0：heat<br>1：em heat<br>2：cool<br>3：auto<br>4：dehumidify<br>5：ventilation |
 | Heat Temperature | 0x59 | 3 | w | 17 | 5 - 35 |  |

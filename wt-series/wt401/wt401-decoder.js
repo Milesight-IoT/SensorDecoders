@@ -160,15 +160,6 @@ function milesightDeviceDecode(bytes) {
 					pair_addr_item.type = readUInt8(bytes, counterObj, 1);
 					pair_addr_item.mac = readHexString(bytes, counterObj, 6);
 				}
-				if (ble_configuration_settings_command == 0x08) {
-					decoded.ble_configuration_settings.local_info = decoded.ble_configuration_settings.local_info || {};
-					// 0：public, 1：private
-					decoded.ble_configuration_settings.local_info.type = readUInt8(bytes, counterObj, 1);
-					decoded.ble_configuration_settings.local_info.addr = readHexString(bytes, counterObj, 6);
-					decoded.ble_configuration_settings.local_info.mac = readHexString(bytes, counterObj, 8);
-					decoded.ble_configuration_settings.local_info.name_length = readUInt8(bytes, counterObj, 1);
-					decoded.ble_configuration_settings.local_info.name = readString(bytes, counterObj, decoded.ble_configuration_settings.local_info.name_length);
-				}
 				break;
 			case 0xba:
 				decoded.ble_new_event = decoded.ble_new_event || [];
@@ -761,7 +752,7 @@ function milesightDeviceDecode(bytes) {
 				}
 				if (schedule_settings_item_command == 0x04) {
 					schedule_settings_item.content2 = schedule_settings_item.content2 || {};
-					// 0：auto, 1：circulate, 2：on, 3：low, 4：medium, 5：high, 10：off
+					// 0：auto, 1：circulate, 2：on, 3：low, 4：medium, 5：high
 					schedule_settings_item.content2.fan_mode = readUInt8(bytes, counterObj, 1);
 					schedule_settings_item.content2.auto_target_temperature = readInt16LE(bytes, counterObj, 2) / 100;
 					schedule_settings_item.content2.auto_heat_target_temperature = readInt16LE(bytes, counterObj, 2) / 100;
@@ -772,11 +763,11 @@ function milesightDeviceDecode(bytes) {
 					schedule_settings_item.system_on_off = readUInt8(bytes, counterObj, 1);
 				}
 				if (schedule_settings_item_command == 0x06) {
-					// 0：heat, 1：em heat, 2：cool, 3：auto, 4：dehumidify, 5：ventilation, 10：off
+					// 0：heat, 1：em heat, 2：cool, 3：auto, 4：dehumidify, 5：ventilation
 					schedule_settings_item.tstat_mode = readUInt8(bytes, counterObj, 1);
 				}
 				if (schedule_settings_item_command == 0x07) {
-					// 0：auto, 1：circulate, 2：on, 3：low, 4：medium, 5：high, 10：off
+					// 0：auto, 1：circulate, 2：on, 3：low, 4：medium, 5：high
 					schedule_settings_item.fan_mode = readUInt8(bytes, counterObj, 1);
 				}
 				if (schedule_settings_item_command == 0x08) {
@@ -1337,7 +1328,6 @@ function cmdMap() {
 		  "cd02xx": "ble_configuration_settings.pair_mac._item",
 		  "cd03": "ble_configuration_settings.pair_addr",
 		  "cd03xx": "ble_configuration_settings.pair_addr._item",
-		  "cd08": "ble_configuration_settings.local_info",
 		  "ba": "ble_new_event",
 		  "baxx": "ble_new_event._item",
 		  "00": "battery",
@@ -1436,40 +1426,40 @@ function processTemperature(decoded) {
         "unitName": "℃"
     },
     "target_temperature_settings.heat": {
-        "precision": null,
+        "precision": 1,
         "unitName": "℃"
     },
     "target_temperature_settings.em_heat": {
-        "precision": null,
+        "precision": 1,
         "unitName": "℃"
     },
     "target_temperature_settings.cool": {
-        "precision": null,
+        "precision": 1,
         "unitName": "℃"
     },
     "target_temperature_settings.auto": {
-        "precision": null,
+        "precision": 1,
         "unitName": "℃"
     },
     "target_temperature_settings.auto_heat": {
-        "precision": null,
+        "precision": 1,
         "unitName": "℃"
     },
     "target_temperature_settings.auto_cool": {
-        "precision": null,
+        "precision": 1,
         "unitName": "℃"
     },
     "target_temperature_settings.dehumidify": {
-        "precision": null,
+        "precision": 1,
         "unitName": "℃"
     },
     "target_temperature_settings.ventilation": {
-        "precision": null,
+        "precision": 1,
         "unitName": "℃"
     },
     "minimum_dead_zone": {
         "precision": 1,
-        "unitName": "℃"
+        "unitName": "K"
     },
     "target_temperature_range.heat.min": {
         "precision": 1,

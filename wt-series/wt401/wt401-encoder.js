@@ -258,22 +258,6 @@ function milesightDeviceEncode(payload) {
 			buffer.writeUInt8(pair_addr_item.type);
 			buffer.writeHexString(pair_addr_item.mac, 6);
 		}
-		if (isValid(payload.ble_configuration_settings.local_info)) {
-			buffer.writeUInt8(0xcd);
-			buffer.writeUInt8(0x08);
-			if ([0, 1].indexOf(payload.ble_configuration_settings.local_info.type) === -1) {
-				throw new Error('ble_configuration_settings.local_info.type must be one of [0, 1]');
-			}
-			// 0：public, 1：private
-			buffer.writeUInt8(payload.ble_configuration_settings.local_info.type);
-			buffer.writeHexString(payload.ble_configuration_settings.local_info.addr, 6);
-			buffer.writeHexString(payload.ble_configuration_settings.local_info.mac, 8);
-			if (payload.ble_configuration_settings.local_info.name_length < 1 || payload.ble_configuration_settings.local_info.name_length > 13) {
-				throw new Error('ble_configuration_settings.local_info.name_length must be between 1 and 13');
-			}
-			buffer.writeUInt8(payload.ble_configuration_settings.local_info.name_length);
-			buffer.writeString(payload.ble_configuration_settings.local_info.name, payload.ble_configuration_settings.local_info.name_length, true);
-		}
 		encoded = encoded.concat(buffer.toBytes());
 	}
 	//0xba
@@ -1478,7 +1462,7 @@ function milesightDeviceEncode(payload) {
 				if (schedule_settings_item.content2.fan_mode < 0 || schedule_settings_item.content2.fan_mode > 255) {
 					throw new Error('content2.fan_mode must be between 0 and 255');
 				}
-				// 0：auto, 1：circulate, 2：on, 3：low, 4：medium, 5：high, 10：off
+				// 0：auto, 1：circulate, 2：on, 3：low, 4：medium, 5：high
 				buffer.writeUInt8(schedule_settings_item.content2.fan_mode);
 				if (schedule_settings_item.content2.auto_target_temperature < 5 || schedule_settings_item.content2.auto_target_temperature > 35) {
 					throw new Error('content2.auto_target_temperature must be between 5 and 35');
@@ -1507,23 +1491,23 @@ function milesightDeviceEncode(payload) {
 			if (isValid(schedule_settings_item.tstat_mode)) {
 				buffer.writeUInt8(0x7b);
 				buffer.writeUInt8(schedule_settings_item_id);
-				// 0：heat, 1：em heat, 2：cool, 3：auto, 4：dehumidify, 5：ventilation, 10：off
+				// 0：heat, 1：em heat, 2：cool, 3：auto, 4：dehumidify, 5：ventilation
 				buffer.writeUInt8(0x06);
 				if (schedule_settings_item.tstat_mode < 0 || schedule_settings_item.tstat_mode > 255) {
 					throw new Error('tstat_mode must be between 0 and 255');
 				}
-				// 0：heat, 1：em heat, 2：cool, 3：auto, 4：dehumidify, 5：ventilation, 10：off
+				// 0：heat, 1：em heat, 2：cool, 3：auto, 4：dehumidify, 5：ventilation
 				buffer.writeUInt8(schedule_settings_item.tstat_mode);
 			}
 			if (isValid(schedule_settings_item.fan_mode)) {
 				buffer.writeUInt8(0x7b);
 				buffer.writeUInt8(schedule_settings_item_id);
-				// 0：auto, 1：circulate, 2：on, 3：low, 4：medium, 5：high, 10：off
+				// 0：auto, 1：circulate, 2：on, 3：low, 4：medium, 5：high
 				buffer.writeUInt8(0x07);
 				if (schedule_settings_item.fan_mode < 0 || schedule_settings_item.fan_mode > 255) {
 					throw new Error('fan_mode must be between 0 and 255');
 				}
-				// 0：auto, 1：circulate, 2：on, 3：low, 4：medium, 5：high, 10：off
+				// 0：auto, 1：circulate, 2：on, 3：low, 4：medium, 5：high
 				buffer.writeUInt8(schedule_settings_item.fan_mode);
 			}
 			if (isValid(schedule_settings_item.heat_target_temperature)) {
@@ -1982,7 +1966,6 @@ function cmdMap() {
 		  "ble_configuration_settings.pair_mac._item": "cd02xx",
 		  "ble_configuration_settings.pair_addr": "cd03",
 		  "ble_configuration_settings.pair_addr._item": "cd03xx",
-		  "ble_configuration_settings.local_info": "cd08",
 		  "ble_new_event": "ba",
 		  "ble_new_event._item": "baxx",
 		  "battery": "00",
@@ -2182,7 +2165,7 @@ function processTemperature(payload) {
     },
     "minimum_dead_zone": {
         "coefficient": 0.01,
-        "unitName": "℃"
+        "unitName": "K"
     },
     "target_temperature_range.heat.min": {
         "coefficient": 0.01,

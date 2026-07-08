@@ -156,112 +156,6 @@
             ]
         },
         {
-            "id": "ble_configuration_settings.local_info.addr",
-            "name": "Mac Address(Paired Device Bluetooth Information)",
-            "value": "24e124123456",
-            "unit": "",
-            "access_mode": "RW",
-            "data_type": "TEXT",
-            "value_type": "STRING",
-            "max_length": 12,
-            "bacnet_type": "character_string_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": [
-                "ble_configuration_settings.local_info.type",
-                "ble_configuration_settings.local_info.mac",
-                "ble_configuration_settings.local_info.name_length",
-                "ble_configuration_settings.local_info.name"
-            ]
-        },
-        {
-            "id": "ble_configuration_settings.local_info.mac",
-            "name": "DevEUI(Paired Device Bluetooth Information)",
-            "value": "24e124123456789a",
-            "unit": "",
-            "access_mode": "RW",
-            "data_type": "TEXT",
-            "value_type": "STRING",
-            "max_length": 16,
-            "bacnet_type": "character_string_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": [
-                "ble_configuration_settings.local_info.type",
-                "ble_configuration_settings.local_info.addr",
-                "ble_configuration_settings.local_info.name_length",
-                "ble_configuration_settings.local_info.name"
-            ]
-        },
-        {
-            "id": "ble_configuration_settings.local_info.name",
-            "name": "Bluetooth Name(Paired Device Bluetooth Information)",
-            "value": "",
-            "unit": "",
-            "access_mode": "RW",
-            "data_type": "TEXT",
-            "value_type": "STRING",
-            "bacnet_type": "character_string_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": [
-                "ble_configuration_settings.local_info.type",
-                "ble_configuration_settings.local_info.addr",
-                "ble_configuration_settings.local_info.mac",
-                "ble_configuration_settings.local_info.name_length"
-            ]
-        },
-        {
-            "id": "ble_configuration_settings.local_info.name_length",
-            "name": "Name Length(Paired Device Bluetooth Information)",
-            "value": "13",
-            "unit": "",
-            "access_mode": "RW",
-            "data_type": "NUMBER",
-            "value_type": "UINT8",
-            "range": [
-                1,
-                13
-            ],
-            "bacnet_type": "analog_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": [
-                "ble_configuration_settings.local_info.type",
-                "ble_configuration_settings.local_info.addr",
-                "ble_configuration_settings.local_info.mac",
-                "ble_configuration_settings.local_info.name"
-            ]
-        },
-        {
-            "id": "ble_configuration_settings.local_info.type",
-            "name": "Address Type(Paired Device Bluetooth Information)",
-            "value": "0",
-            "unit": "",
-            "access_mode": "RW",
-            "data_type": "ENUM",
-            "value_type": "UINT8",
-            "values": [
-                {
-                    "value": 0,
-                    "name": "public"
-                },
-                {
-                    "value": 1,
-                    "name": "private"
-                }
-            ],
-            "bacnet_type": "multistate_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": [
-                "ble_configuration_settings.local_info.addr",
-                "ble_configuration_settings.local_info.mac",
-                "ble_configuration_settings.local_info.name_length",
-                "ble_configuration_settings.local_info.name"
-            ]
-        },
-        {
             "id": "ble_configuration_settings.local_name_first",
             "name": "Device Bluetooth Name (prefix8)(BLE Settings)",
             "value": "",
@@ -446,7 +340,7 @@
             "id": "celsius_minimum_dead_zone",
             "name": "Celsius DeadBand",
             "value": "5",
-            "unit": "°C",
+            "unit": "K",
             "access_mode": "RW",
             "data_type": "NUMBER",
             "value_type": "FLOAT",
@@ -455,8 +349,8 @@
                 10
             ],
             "bacnet_type": "analog_value_object",
-            "bacnet_unit_type_id": 62,
-            "bacnet_unit_type": "UNITS_DEGREES_CELSIUS"
+            "bacnet_unit_type_id": 121,
+            "bacnet_unit_type": "UNITS_DELTA_DEGREES_KELVIN"
         },
         {
             "id": "celsius_target_temperature1",
@@ -2366,18 +2260,18 @@
         {
             "id": "fahrenheit_minimum_dead_zone",
             "name": "Fahrenheit DeadBand",
-            "value": "41",
-            "unit": "℉",
+            "value": "9",
+            "unit": "ΔT°F",
             "access_mode": "RW",
             "data_type": "NUMBER",
             "value_type": "FLOAT",
             "range": [
-                33.8,
-                50
+                1.8,
+                18
             ],
             "bacnet_type": "analog_value_object",
-            "bacnet_unit_type_id": 64,
-            "bacnet_unit_type": "UNITS_DEGREES_FAHRENHEIT"
+            "bacnet_unit_type_id": 120,
+            "bacnet_unit_type": "UNITS_DELTA_DEGREES_FAHRENHEIT"
         },
         {
             "id": "fahrenheit_target_temperature1",
