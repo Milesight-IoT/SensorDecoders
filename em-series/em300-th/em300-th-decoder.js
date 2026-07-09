@@ -242,42 +242,42 @@ function readLoRaWANClass(type) {
         2: "Class C",
         3: "Class CtoB",
     };
-    return getValue(class_map, type);
+    return getValueByKey(class_map, type);
 }
 
 function readResetEvent(status) {
     var status_map = { 0: "normal", 1: "reset" };
-    return getValue(status_map, status);
+    return getValueByKey(status_map, status);
 }
 
 function readDeviceStatus(status) {
     var status_map = { 0: "off", 1: "on" };
-    return getValue(status_map, status);
+    return getValueByKey(status_map, status);
 }
 
 function readYesNoStatus(status) {
     var status_map = { 0: "no", 1: "yes" };
-    return getValue(status_map, status);
+    return getValueByKey(status_map, status);
 }
 
 function readEnableStatus(status) {
     var status_map = { 0: "disable", 1: "enable" };
-    return getValue(status_map, status);
+    return getValueByKey(status_map, status);
 }
 
 function readConditionType(condition) {
     var condition_map = { 0: "disable", 1: "below", 2: "above", 3: "between", 4: "outside" };
-    return getValue(condition_map, condition);
+    return getValueByKey(condition_map, condition);
 }
 
 function readD2DMode(mode) {
     var mode_map = { 1: "temperature_alarm", 2: "temperature_alarm_release" };
-    return getValue(mode_map, mode);
+    return getValueByKey(mode_map, mode);
 }
 
 function readD2DReportType(type) {
     var type_map = { 0: "lora", 1: "d2d", 3: "d2d_and_lora" };
-    return getValue(type_map, type);
+    return getValueByKey(type_map, type);
 }
 
 /* eslint-disable */
@@ -309,7 +309,7 @@ function readD2DCommand(bytes) {
     return ("0" + (bytes[1] & 0xff).toString(16)).slice(-2) + ("0" + (bytes[0] & 0xff).toString(16)).slice(-2);
 }
 
-function getValue(map, key) {
+function getValueByKey(map, key) {
     if (RAW_VALUE) return key;
 
     var value = map[key];
