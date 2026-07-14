@@ -228,6 +228,10 @@ function milesightDeviceEncode(payload) {
 		for (var pair_name_id = 0; pair_name_id < (payload.ble_configuration_settings.pair_name && payload.ble_configuration_settings.pair_name.length); pair_name_id++) {
 			var pair_name_item = payload.ble_configuration_settings.pair_name[pair_name_id];
 			var pair_name_item_id = pair_name_item.channel;
+			if (pair_name_item_id < 0 || pair_name_item_id > 11) {
+				throw new Error('pair_name_item_id must be in range [0,11]');
+			}
+
 			buffer.writeUInt8(0xcd);
 			buffer.writeUInt8(0x04);
 			buffer.writeUInt8(pair_name_item_id);
@@ -240,6 +244,10 @@ function milesightDeviceEncode(payload) {
 		for (var pair_mac_id = 0; pair_mac_id < (payload.ble_configuration_settings.pair_mac && payload.ble_configuration_settings.pair_mac.length); pair_mac_id++) {
 			var pair_mac_item = payload.ble_configuration_settings.pair_mac[pair_mac_id];
 			var pair_mac_item_id = pair_mac_item.channel;
+			if (pair_mac_item_id < 0 || pair_mac_item_id > 11) {
+				throw new Error('pair_mac_item_id must be in range [0,11]');
+			}
+
 			buffer.writeUInt8(0xcd);
 			buffer.writeUInt8(0x02);
 			buffer.writeUInt8(pair_mac_item_id);
@@ -248,6 +256,10 @@ function milesightDeviceEncode(payload) {
 		for (var pair_addr_id = 0; pair_addr_id < (payload.ble_configuration_settings.pair_addr && payload.ble_configuration_settings.pair_addr.length); pair_addr_id++) {
 			var pair_addr_item = payload.ble_configuration_settings.pair_addr[pair_addr_id];
 			var pair_addr_item_id = pair_addr_item.channel;
+			if (pair_addr_item_id < 0 || pair_addr_item_id > 11) {
+				throw new Error('pair_addr_item_id must be in range [0,11]');
+			}
+
 			buffer.writeUInt8(0xcd);
 			buffer.writeUInt8(0x03);
 			buffer.writeUInt8(pair_addr_item_id);
@@ -1410,6 +1422,10 @@ function milesightDeviceEncode(payload) {
 		for (var schedule_settings_id = 0; schedule_settings_id < (payload.schedule_settings && payload.schedule_settings.length); schedule_settings_id++) {
 			var schedule_settings_item = payload.schedule_settings[schedule_settings_id];
 			var schedule_settings_item_id = schedule_settings_item.id;
+			if (schedule_settings_item_id < 0 || schedule_settings_item_id > 15) {
+				throw new Error('schedule_settings_item_id must be between 0 and 15');
+			}
+
 			if (isValid(schedule_settings_item.enable)) {
 				buffer.writeUInt8(0x7b);
 				buffer.writeUInt8(schedule_settings_item_id);
