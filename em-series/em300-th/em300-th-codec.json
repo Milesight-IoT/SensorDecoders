@@ -81,7 +81,7 @@
                 { "value": 2, "name": "Class C" },
                 { "value": 3, "name": "Class CtoB" }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS"
         },
@@ -145,7 +145,7 @@
             "id": "humidity",
             "name": "Humidity",
             "value": "61.5",
-            "unit": "%r.h.",
+            "unit": "%RH",
             "access_mode": "R",
             "data_type": "NUMBER",
             "value_type": "FLOAT",
@@ -419,7 +419,7 @@
             "id": "humidity_calibration_settings.calibration_value",
             "name": "Humidity Calibration Settings (Calibration Value)",
             "value": "",
-            "unit": "%r.h.",
+            "unit": "%RH",
             "access_mode": "RW",
             "data_type": "NUMBER",
             "value_type": "FLOAT",
@@ -427,6 +427,82 @@
             "bacnet_unit_type_id": 29,
             "bacnet_unit_type": "UNITS_PERCENT_RELATIVE_HUMIDITY",
             "reference": ["humidity_calibration_settings.enable", "humidity_calibration_settings.calibration_value"]
+        },
+        {
+            "id": "calibration_settings.temp_enable",
+            "name": "Calibration Settings (Temperature Enable)",
+            "value": "",
+            "unit": "",
+            "access_mode": "RW",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                { "value": 0, "name": "disable" },
+                { "value": 1, "name": "enable" }
+            ],
+            "bacnet_type": "binary_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": ["calibration_settings.temp_calibration", "calibration_settings.humi_enable", "calibration_settings.humi_calibration"]
+        },
+        {
+            "id": "calibration_settings.temp_calibration",
+            "name": "Calibration Settings (Temperature Calibration)",
+            "value": "",
+            "unit": "°C",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 62,
+            "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
+            "reference": ["calibration_settings.temp_enable", "calibration_settings.humi_enable", "calibration_settings.humi_calibration"]
+        },
+        {
+            "id": "calibration_settings.humi_enable",
+            "name": "Calibration Settings (Humidity Enable)",
+            "value": "",
+            "unit": "",
+            "access_mode": "RW",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                { "value": 0, "name": "disable" },
+                { "value": 1, "name": "enable" }
+            ],
+            "bacnet_type": "binary_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": ["calibration_settings.temp_enable", "calibration_settings.temp_calibration", "calibration_settings.humi_calibration"]
+        },
+        {
+            "id": "calibration_settings.humi_calibration",
+            "name": "Calibration Settings (Humidity Calibration)",
+            "value": "",
+            "unit": "%RH",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 29,
+            "bacnet_unit_type": "UNITS_PERCENT_RELATIVE_HUMIDITY",
+            "reference": ["calibration_settings.temp_enable", "calibration_settings.temp_calibration", "calibration_settings.humi_enable"]
+        },
+        {
+            "id": "retransmit_reset",
+            "name": "Retransmit Reset",
+            "value": "",
+            "unit": "",
+            "access_mode": "W",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                { "value": 0, "name": "no" },
+                { "value": 1, "name": "yes" }
+            ],
+            "bacnet_type": "binary_output_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS"
         }
     ]
 }

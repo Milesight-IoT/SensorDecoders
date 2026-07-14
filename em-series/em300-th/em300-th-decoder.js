@@ -196,6 +196,20 @@ function handle_downlink_response(channel_type, bytes, offset) {
             }
             offset += 3;
             break;
+
+        // ODM: 2965
+        case 0xd6:
+            decoded.calibration_settings = {};
+            decoded.calibration_settings.temp_enable = readEnableStatus(bytes[offset]);
+            decoded.calibration_settings.temp_calibration = readInt16LE(bytes.slice(offset + 1, offset + 3)) / 10;
+            decoded.calibration_settings.humi_enable = readEnableStatus(bytes[offset + 3]);
+            decoded.calibration_settings.humi_calibration = readInt16LE(bytes.slice(offset + 4, offset + 6)) / 10;
+            offset += 6;
+            break;
+        case 0xd7:
+            decoded.retransmit_reset = readYesNoStatus(1);
+            offset += 1;
+            break;
         default:
             throw new Error("unknown downlink response");
     }

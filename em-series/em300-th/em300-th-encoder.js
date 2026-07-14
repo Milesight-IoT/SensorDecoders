@@ -76,6 +76,12 @@ function milesightDeviceEncode(payload) {
             encoded = encoded.concat(setD2DMasterConfig(payload.d2d_master_config[i]));
         }
     }
+    if ("calibration_settings" in payload) {
+        encoded = encoded.concat(setCalibrationSettings(payload.calibration_settings));
+    }
+    if ("retransmit_reset" in payload) {
+        encoded = encoded.concat(setRetransmitReset(payload.retransmit_reset));
+    }
 
     return encoded;
 }
@@ -423,6 +429,55 @@ function setD2DMasterConfig(d2d_master_config) {
     buffer.writeUInt8(getValue(report_type_map, report_type));
     buffer.writeD2DCommand(d2d_cmd, "0000");
     return buffer.toBytes();
+}
+
+/**
+ * ODM: 2965
+ * set calibration settings
+ * @param {object} calibration_settings
+ * @param {number} calibration_settings.temp_enable values: (0: disable, 1: enable)
+ * @param {number} calibration_settings.temp_calibration unit: °C
+ * @param {number} calibration_settings.humi_enable values: (0: disable, 1: enable)
+ * @param {number} calibration_settings.humi_calibration unit: %RH
+ * @example { "calibration_settings": { "temp_enable": 1, "temp_calibration": 10, "humi_enable": 1, "humi_calibration": 1.5 } }
+ */
+function setCalibrationSettings(calibration_settings) {
+    var temp_enable = calibration_settings.temp_enable;
+    var temp_calibration = calibration_settings.temp_calibration;
+    var humi_enable = calibration_settings.humi_enable;
+    var humi_calibration = calibration_settings.humi_calibration;
+
+    var enable_map = { 0: "disable", 1: "enable" };
+    var enable_values = getValues(enable_map);
+    if (enable_values.indexOf(temp_enable) === -1) {
+        throw new Error("calibration_settings.temp_enable must be one of " + enable_values.join(", "));
+    }
+    if (enable_values.indexOf(humi_enable) === -1) {
+        throw new Error("calibration_settings.humi_enable must be one of " + enable_values.join(", "));
+    }
+    var buffer = new Buffer(6);
+    buffer.writeUInt8(0xff);
+    buffer.writeUInt8(0xd6);
+    buffer.writeUInt8(getValue(enable_map, temp_enable));
+    buffer.writeInt16LE(temp_calibration * 10);
+    buffer.writeUInt8(getValue(enable_map, humi_enable));
+    buffer.writeInt16LE(humi_calibration * 10);
+    return buffer.toBytes();
+}
+
+/**
+ * ODM: 2965
+ * set retransmit reset
+ * @param {number} retransmit_reset values: (0: no, 1: yes)
+ * @example { "retransmit_reset": 1 }
+ */
+function setRetransmitReset(retransmit_reset) {
+    var yes_no_map = { 0: "no", 1: "yes" };
+    var yes_no_values = getValues(yes_no_map);
+    if (yes_no_values.indexOf(retransmit_reset) === -1) {
+        throw new Error("retransmit_reset must be one of " + yes_no_values.join(", "));
+    }
+    return [0xff, 0xd7, 0x01];
 }
 
 function getValues(map) {
