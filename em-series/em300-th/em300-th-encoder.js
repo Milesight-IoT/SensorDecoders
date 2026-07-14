@@ -461,7 +461,7 @@ function setCalibrationSettings(calibration_settings) {
     buffer.writeUInt8(getValue(enable_map, temp_enable));
     buffer.writeInt16LE(temp_calibration * 10);
     buffer.writeUInt8(getValue(enable_map, humi_enable));
-    buffer.writeInt16LE(humi_calibration * 10);
+    buffer.writeInt16LE(humi_calibration * 2);
     return buffer.toBytes();
 }
 

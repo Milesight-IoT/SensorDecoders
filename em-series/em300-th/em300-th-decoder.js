@@ -203,7 +203,7 @@ function handle_downlink_response(channel_type, bytes, offset) {
             decoded.calibration_settings.temp_enable = readEnableStatus(bytes[offset]);
             decoded.calibration_settings.temp_calibration = readInt16LE(bytes.slice(offset + 1, offset + 3)) / 10;
             decoded.calibration_settings.humi_enable = readEnableStatus(bytes[offset + 3]);
-            decoded.calibration_settings.humi_calibration = readInt16LE(bytes.slice(offset + 4, offset + 6)) / 10;
+            decoded.calibration_settings.humi_calibration = readInt16LE(bytes.slice(offset + 4, offset + 6)) / 2;
             offset += 6;
             break;
         case 0xd7:
