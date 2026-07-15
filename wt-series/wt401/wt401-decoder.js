@@ -601,6 +601,10 @@ function milesightDeviceDecode(bytes) {
 				// 0：disable, 1：enable
 				decoded.intelligent_display_enable = readUInt8(bytes, counterObj, 1);
 				break;
+			case 0x89:
+				// 0:disable, 1:enable
+				decoded.backlight_enable = readUInt8(bytes, counterObj, 1);
+				break;
 			case 0x75:
 				decoded.screen_display_settings = decoded.screen_display_settings || {};
 				var bitOptions = readUInt8(bytes, counterObj, 1);
@@ -621,10 +625,6 @@ function milesightDeviceDecode(bytes) {
 			case 0x8c:
 				// 0:disable, 1:enable
 				decoded.screen_fan_mode_enable = readUInt8(bytes, counterObj, 1);
-				break;
-			case 0x89:
-				// 0:disable, 1:enable
-				decoded.backlight_enable = readUInt8(bytes, counterObj, 1);
 				break;
 			case 0x71:
 				decoded.button_custom_function = decoded.button_custom_function || {};

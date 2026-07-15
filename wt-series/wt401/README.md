@@ -131,7 +131,7 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Reserved | 0x88 | 2 | rw | 0 |  |  |
 | Temperature Control Mode | 0x68 | 1 | rw |  |  |  |
 | Subcmd ID | 0x68 | 2 | rw | 0 |  |  |
-| Temperature Control Mode | 0x68 | 2 | rw | 0 | 0 - 5 | 0：heat<br>1：em heat<br>2：cool<br>3：auto<br>4：dehumidify<br>5：ventilation |
+| Temperature Control Mode | 0x68 | 2 | rw | 0 |  | 0：heat<br>1：em heat<br>2：cool<br>3：auto<br>4：dehumidify<br>5：ventilation |
 | Plan Temperature Control Mode Enable | 0x68 | 2 | rw | 1 |  | 0：disable<br>1：enable |
 | Target Temperature Mode | 0x65 | 2 | rw | 0 |  | 0：single<br>1：dual |
 | Target Temperature Resolution | 0x66 | 2 | rw | 0 |  | 0：0.5<br>1：1 |
@@ -193,6 +193,7 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Occupied Execution | 0x83 | 2 | rw | 0 |  | 0:plan0<br>1:plan1<br>2:plan2<br>3:plan3<br>4:plan4<br>5:plan5<br>6:plan6<br>7:plan7<br>8:plan8<br>9:plan9<br>10:plan10<br>11:plan11<br>12:plan12<br>13:plan13<br>14:plan14<br>15:plan15<br>255:Not executed |
 | Vacant Execution | 0x83 | 2 | rw | 1 |  | 0:plan0<br>1:plan1<br>2:plan2<br>3:plan3<br>4:plan4<br>5:plan5<br>6:plan6<br>7:plan7<br>8:plan8<br>9:plan9<br>10:plan10<br>11:plan11<br>12:plan12<br>13:plan13<br>14:plan14<br>15:plan15<br>255:Not executed |
 | Smart Display | 0x62 | 2 | rw | 1 |  | 0：disable<br>1：enable |
+| Backlight Enable | 0x89 | 2 | rw | 1 |  | 0:disable<br>1:enable |
 | Screen Display Settings | 0x75 | 2 | rw |  |  |  |
 | Schedule Name | 0x75 | 2 | rw | 1 |  | 0:disable<br>1:enable |
 | Ambient Temperature | 0x75 | 2 | rw | 1 |  | 0:disable<br>1:enable |
@@ -201,7 +202,6 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Reserved | 0x75 | 2 | rw | 0 |  |  |
 | Screen Temp Mode Enable | 0x8A | 2 | rw | 1 |  | 0:disable<br>1:enable |
 | Screen Fan Mode Enable | 0x8C | 2 | rw | 1 |  | 0:disable<br>1:enable |
-| Backlight Enable | 0x89 | 2 | rw | 1 |  | 0:disable<br>1:enable |
 | Button Custom Function | 0x71 | 1 | rw |  |  |  |
 | ID | 0x71 | 2 | rw | 0 |  |  |
 | Enable | 0x71 | 2 | rw | 0 |  | 0：disable<br>1：enable |
@@ -262,18 +262,18 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Name | 0x7B | 7 | rw |  |  |  |
 | Name | 0x7B | 5 | rw |  |  |  |
 | Schedule Content | 0x7B | 8 | rw |  |  |  |
-| Temperature Control Mode | 0x7B | 2 | rw | 0 | 0 - 255 | 0：heat<br>1：em heat<br>2：cool<br>3：auto |
+| Temperature Control Mode | 0x7B | 2 | rw | 0 |  | 0：heat<br>1：em heat<br>2：cool<br>3：auto |
 | Heating Target Temperature | 0x7B | 3 | rw | 19 | 5 - 35 |  |
 | EM Heat Target Temperature | 0x7B | 3 | rw | 25 | 5 - 35 |  |
 | Cool Target Temperature | 0x7B | 3 | rw | 28 | 5 - 35 |  |
 | Schedule Content | 0x7B | 8 | rw |  |  |  |
-| Fan Mode | 0x7B | 2 | rw | 0 | 0 - 255 | 0：auto<br>1：circulate<br>2：on<br>3：low<br>4：medium<br>5：high |
+| Fan Mode | 0x7B | 2 | rw | 0 |  | 0：auto<br>1：circulate<br>2：on<br>3：low<br>4：medium<br>5：high |
 | Auto Target Temperature | 0x7B | 3 | rw | 23 | 5 - 35 |  |
 | Auto-Heat Target Temperature | 0x7B | 3 | rw | 17 | 5 - 35 |  |
 | Auto-Cool Target Temperature | 0x7B | 3 | rw | 28 | 5 - 35 |  |
 | System On/Off | 0x7B | 2 | rw | 1 |  | 0：system off<br>1：system on |
-| Temperature Control Mode | 0x7B | 2 | rw | 0 | 0 - 255 | 0：heat<br>1：em heat<br>2：cool<br>3：auto<br>4：dehumidify<br>5：ventilation |
-| Fan Mode | 0x7B | 2 | rw | 0 | 0 - 255 | 0：auto<br>1：circulate<br>2：on<br>3：low<br>4：medium<br>5：high |
+| Temperature Control Mode | 0x7B | 2 | rw | 0 |  | 0：heat<br>1：em heat<br>2：cool<br>3：auto<br>4：dehumidify<br>5：ventilation |
+| Fan Mode | 0x7B | 2 | rw | 0 |  | 0：auto<br>1：circulate<br>2：on<br>3：low<br>4：medium<br>5：high |
 | Heating Target Temperature | 0x7B | 3 | rw | 19 | 5 - 35 |  |
 | Cool Target Temperature | 0x7B | 3 | rw | 28 | 5 - 35 |  |
 | Auto Target Temperature | 0x7B | 3 | rw | 23 | 5 - 35 |  |
@@ -346,7 +346,7 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Reset BLE Name | 0x54 | 2 | w |  |  |  |
 | System Status Control | 0x59 | 7 | w |  |  |  |
 | System On/Off | 0x59 | 2 | w | 1 |  | 0：system off<br>1：system on |
-| Temperature Control Mode | 0x59 | 2 | w | 0 | 0 - 5 | 0：heat<br>1：em heat<br>2：cool<br>3：auto<br>4：dehumidify<br>5：ventilation |
+| Temperature Control Mode | 0x59 | 2 | w | 0 |  | 0：heat<br>1：em heat<br>2：cool<br>3：auto<br>4：dehumidify<br>5：ventilation |
 | Heat Temperature | 0x59 | 3 | w | 17 | 5 - 35 |  |
 | Cool Temperature | 0x59 | 3 | w | 28 |  |  |
 | External Temperature | 0x86 | 3 | rw |  | -20 - 60 |  |
@@ -360,5 +360,5 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Reboot | 0xBE | 1 | w |  |  |  |
 | Network Reconnection | 0xB6 | 1 | w |  |  |  |
 | Delete Schedule | 0x5F | 2 | w |  |  |  |
-| Delete Schedule | 0x5F | 2 | w | 255 | 0 - 255 | 0:plan0<br>1:plan1<br>2:plan2<br>3:plan3<br>4:plan4<br>5:plan5<br>6:plan6<br>7:plan7<br>255：All |
+| Delete Schedule | 0x5F | 2 | w | 255 |  | 0:plan0<br>1:plan1<br>2:plan2<br>3:plan3<br>4:plan4<br>5:plan5<br>6:plan6<br>7:plan7<br>255：All |
 

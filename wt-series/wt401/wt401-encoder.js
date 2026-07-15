@@ -228,8 +228,8 @@ function milesightDeviceEncode(payload) {
 		for (var pair_name_id = 0; pair_name_id < (payload.ble_configuration_settings.pair_name && payload.ble_configuration_settings.pair_name.length); pair_name_id++) {
 			var pair_name_item = payload.ble_configuration_settings.pair_name[pair_name_id];
 			var pair_name_item_id = pair_name_item.channel;
-			if (pair_name_item_id < 0 || pair_name_item_id > 11) {
-				throw new Error('pair_name_item_id must be in range [0,11]');
+			if (pair_name_item_id < 0 || pair_name_item_id > 0) {
+				throw new Error('pair_name_item_id must be in range [0,0]');
 			}
 
 			buffer.writeUInt8(0xcd);
@@ -244,8 +244,8 @@ function milesightDeviceEncode(payload) {
 		for (var pair_mac_id = 0; pair_mac_id < (payload.ble_configuration_settings.pair_mac && payload.ble_configuration_settings.pair_mac.length); pair_mac_id++) {
 			var pair_mac_item = payload.ble_configuration_settings.pair_mac[pair_mac_id];
 			var pair_mac_item_id = pair_mac_item.channel;
-			if (pair_mac_item_id < 0 || pair_mac_item_id > 11) {
-				throw new Error('pair_mac_item_id must be in range [0,11]');
+			if (pair_mac_item_id < 0 || pair_mac_item_id > 0) {
+				throw new Error('pair_mac_item_id must be in range [0,0]');
 			}
 
 			buffer.writeUInt8(0xcd);
@@ -256,8 +256,8 @@ function milesightDeviceEncode(payload) {
 		for (var pair_addr_id = 0; pair_addr_id < (payload.ble_configuration_settings.pair_addr && payload.ble_configuration_settings.pair_addr.length); pair_addr_id++) {
 			var pair_addr_item = payload.ble_configuration_settings.pair_addr[pair_addr_id];
 			var pair_addr_item_id = pair_addr_item.channel;
-			if (pair_addr_item_id < 0 || pair_addr_item_id > 11) {
-				throw new Error('pair_addr_item_id must be in range [0,11]');
+			if (pair_addr_item_id < 0 || pair_addr_item_id > 0) {
+				throw new Error('pair_addr_item_id must be in range [0,0]');
 			}
 
 			buffer.writeUInt8(0xcd);
@@ -792,8 +792,8 @@ function milesightDeviceEncode(payload) {
 			buffer.writeUInt8(0x68);
 			// 0：heat, 1：em heat, 2：cool, 3：auto, 4：dehumidify, 5：ventilation
 			buffer.writeUInt8(0x00);
-			if (payload.temperature_control_mode.mode < 0 || payload.temperature_control_mode.mode > 5) {
-				throw new Error('temperature_control_mode.mode must be between 0 and 5');
+			if ([0, 1, 2, 3, 4, 5].indexOf(payload.temperature_control_mode.mode) === -1) {
+				throw new Error('temperature_control_mode.mode must be one of [0, 1, 2, 3, 4, 5]');
 			}
 			// 0：heat, 1：em heat, 2：cool, 3：auto, 4：dehumidify, 5：ventilation
 			buffer.writeUInt8(payload.temperature_control_mode.mode);
@@ -1143,6 +1143,17 @@ function milesightDeviceEncode(payload) {
 		buffer.writeUInt8(payload.intelligent_display_enable);
 		encoded = encoded.concat(buffer.toBytes());
 	}
+	//0x89
+	if ('backlight_enable' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0x89);
+		if ([0, 1].indexOf(payload.backlight_enable) === -1) {
+			throw new Error('backlight_enable must be one of [0, 1]');
+		}
+		// 0:disable, 1:enable
+		buffer.writeUInt8(payload.backlight_enable);
+		encoded = encoded.concat(buffer.toBytes());
+	}
 	//0x75
 	if ('screen_display_settings' in payload) {
 		var buffer = new Buffer();
@@ -1185,17 +1196,6 @@ function milesightDeviceEncode(payload) {
 		}
 		// 0:disable, 1:enable
 		buffer.writeUInt8(payload.screen_fan_mode_enable);
-		encoded = encoded.concat(buffer.toBytes());
-	}
-	//0x89
-	if ('backlight_enable' in payload) {
-		var buffer = new Buffer();
-		buffer.writeUInt8(0x89);
-		if ([0, 1].indexOf(payload.backlight_enable) === -1) {
-			throw new Error('backlight_enable must be one of [0, 1]');
-		}
-		// 0:disable, 1:enable
-		buffer.writeUInt8(payload.backlight_enable);
 		encoded = encoded.concat(buffer.toBytes());
 	}
 	//0x71
@@ -1453,8 +1453,8 @@ function milesightDeviceEncode(payload) {
 				buffer.writeUInt8(0x7b);
 				buffer.writeUInt8(schedule_settings_item_id);
 				buffer.writeUInt8(0x03);
-				if (schedule_settings_item.content1.tstat_mode < 0 || schedule_settings_item.content1.tstat_mode > 255) {
-					throw new Error('content1.tstat_mode must be between 0 and 255');
+				if ([0, 1, 2, 3].indexOf(schedule_settings_item.content1.tstat_mode) === -1) {
+					throw new Error('content1.tstat_mode must be one of [0, 1, 2, 3]');
 				}
 				// 0：heat, 1：em heat, 2：cool, 3：auto
 				buffer.writeUInt8(schedule_settings_item.content1.tstat_mode);
@@ -1475,8 +1475,8 @@ function milesightDeviceEncode(payload) {
 				buffer.writeUInt8(0x7b);
 				buffer.writeUInt8(schedule_settings_item_id);
 				buffer.writeUInt8(0x04);
-				if (schedule_settings_item.content2.fan_mode < 0 || schedule_settings_item.content2.fan_mode > 255) {
-					throw new Error('content2.fan_mode must be between 0 and 255');
+				if ([0, 1, 2, 3, 4, 5].indexOf(schedule_settings_item.content2.fan_mode) === -1) {
+					throw new Error('content2.fan_mode must be one of [0, 1, 2, 3, 4, 5]');
 				}
 				// 0：auto, 1：circulate, 2：on, 3：low, 4：medium, 5：high
 				buffer.writeUInt8(schedule_settings_item.content2.fan_mode);
@@ -1509,8 +1509,8 @@ function milesightDeviceEncode(payload) {
 				buffer.writeUInt8(schedule_settings_item_id);
 				// 0：heat, 1：em heat, 2：cool, 3：auto, 4：dehumidify, 5：ventilation
 				buffer.writeUInt8(0x06);
-				if (schedule_settings_item.tstat_mode < 0 || schedule_settings_item.tstat_mode > 255) {
-					throw new Error('tstat_mode must be between 0 and 255');
+				if ([0, 1, 2, 3, 4, 5].indexOf(schedule_settings_item.tstat_mode) === -1) {
+					throw new Error('tstat_mode must be one of [0, 1, 2, 3, 4, 5]');
 				}
 				// 0：heat, 1：em heat, 2：cool, 3：auto, 4：dehumidify, 5：ventilation
 				buffer.writeUInt8(schedule_settings_item.tstat_mode);
@@ -1520,8 +1520,8 @@ function milesightDeviceEncode(payload) {
 				buffer.writeUInt8(schedule_settings_item_id);
 				// 0：auto, 1：circulate, 2：on, 3：low, 4：medium, 5：high
 				buffer.writeUInt8(0x07);
-				if (schedule_settings_item.fan_mode < 0 || schedule_settings_item.fan_mode > 255) {
-					throw new Error('fan_mode must be between 0 and 255');
+				if ([0, 1, 2, 3, 4, 5].indexOf(schedule_settings_item.fan_mode) === -1) {
+					throw new Error('fan_mode must be one of [0, 1, 2, 3, 4, 5]');
 				}
 				// 0：auto, 1：circulate, 2：on, 3：low, 4：medium, 5：high
 				buffer.writeUInt8(schedule_settings_item.fan_mode);
@@ -1665,8 +1665,8 @@ function milesightDeviceEncode(payload) {
 	if ('delete_task_plan' in payload) {
 		var buffer = new Buffer();
 		buffer.writeUInt8(0x5f);
-		if (payload.delete_task_plan.type < 0 || payload.delete_task_plan.type > 255) {
-			throw new Error('delete_task_plan.type must be between 0 and 255');
+		if ([0, 1, 2, 3, 4, 5, 6, 7, 255].indexOf(payload.delete_task_plan.type) === -1) {
+			throw new Error('delete_task_plan.type must be one of [0, 1, 2, 3, 4, 5, 6, 7, 255]');
 		}
 		// 0:plan0, 1:plan1, 2:plan2, 3:plan3, 4:plan4, 5:plan5, 6:plan6, 7:plan7, 255：All
 		buffer.writeUInt8(payload.delete_task_plan.type);
@@ -2092,10 +2092,10 @@ function cmdMap() {
 		  "pir_energy.enable": "8301",
 		  "pir_energy.plan": "8302",
 		  "intelligent_display_enable": "62",
+		  "backlight_enable": "89",
 		  "screen_display_settings": "75",
 		  "screen_temp_mode_enable": "8a",
 		  "screen_fan_mode_enable": "8c",
-		  "backlight_enable": "89",
 		  "button_custom_function": "71",
 		  "button_custom_function.enable": "7100",
 		  "button_custom_function.mode1": "7101",
