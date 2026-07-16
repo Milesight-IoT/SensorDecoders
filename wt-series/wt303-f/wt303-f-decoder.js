@@ -223,14 +223,16 @@ function milesightDeviceDecode(bytes) {
 					decoded.temperature = decoded.temperature_alarm.persistent_high_alarm_trigger.temperature;
 				}
 				if (decoded.temperature_alarm.type == 0x30) {
-					decoded.temperature_alarm.anti_freeze_protection_deactivation = decoded.temperature_alarm.anti_freeze_protection_deactivation || {};
-					decoded.temperature_alarm.anti_freeze_protection_deactivation.temperature = readInt16LE(bytes, counterObj, 2) / 100;
-					decoded.temperature = decoded.temperature_alarm.anti_freeze_protection_deactivation.temperature;
+					decoded.temperature_alarm.anti_freeze_protection = decoded.temperature_alarm.anti_freeze_protection || {};
+					decoded.temperature_alarm.anti_freeze_protection.status = 0;
+					decoded.temperature_alarm.anti_freeze_protection.temperature = readInt16LE(bytes, counterObj, 2) / 100;
+					decoded.temperature = decoded.temperature_alarm.anti_freeze_protection.temperature;
 				}
 				if (decoded.temperature_alarm.type == 0x31) {
-					decoded.temperature_alarm.anti_freeze_protection_trigger = decoded.temperature_alarm.anti_freeze_protection_trigger || {};
-					decoded.temperature_alarm.anti_freeze_protection_trigger.temperature = readInt16LE(bytes, counterObj, 2) / 100;
-					decoded.temperature = decoded.temperature_alarm.anti_freeze_protection_trigger.temperature;
+					decoded.temperature_alarm.anti_freeze_protection = decoded.temperature_alarm.anti_freeze_protection || {};
+					decoded.temperature_alarm.anti_freeze_protection.status = 1;
+					decoded.temperature_alarm.anti_freeze_protection.temperature = readInt16LE(bytes, counterObj, 2) / 100;
+					decoded.temperature = decoded.temperature_alarm.anti_freeze_protection.temperature;
 				}
 				if (decoded.temperature_alarm.type == 0x32) {
 					decoded.temperature_alarm.window_status_detection_deactivation = decoded.temperature_alarm.window_status_detection_deactivation || {};
@@ -1603,8 +1605,8 @@ function cmdMap() {
 		  "0921": "temperature_alarm.persistent_low_temperature_alarm_trigger",
 		  "0922": "temperature_alarm.persistent_high_alarm_deactivation",
 		  "0923": "temperature_alarm.persistent_high_alarm_trigger",
-		  "0930": "temperature_alarm.anti_freeze_protection_deactivation",
-		  "0931": "temperature_alarm.anti_freeze_protection_trigger",
+		  "0930": "temperature_alarm.anti_freeze_protection",
+		  "0931": "temperature_alarm.anti_freeze_protection",
 		  "0932": "temperature_alarm.window_status_detection_deactivation",
 		  "0933": "temperature_alarm.window_status_detection_trigger",
 		  "0a": "humidity_alarm",
@@ -1759,11 +1761,7 @@ function processTemperature(decoded) {
 			"precision": 2,
 			"unitName": "℃"
 		},
-		"temperature_alarm.anti_freeze_protection_deactivation.temperature": {
-			"precision": 2,
-			"unitName": "℃"
-		},
-		"temperature_alarm.anti_freeze_protection_trigger.temperature": {
+		"temperature_alarm.anti_freeze_protection.temperature": {
 			"precision": 2,
 			"unitName": "℃"
 		},

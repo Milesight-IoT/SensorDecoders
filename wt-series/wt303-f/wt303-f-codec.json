@@ -161,6 +161,36 @@
             "bacnet_unit_type": "UNITS_PERCENT_RELATIVE_HUMIDITY"
         },
         {
+            "id": "data_source",
+            "name": "Temperature Sensor Source Status",
+            "value": "0",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "Embedded Temperature"
+                },
+                {
+                    "value": 1,
+                    "name": "External NTC"
+                },
+                {
+                    "value": 2,
+                    "name": "LoRa Receive"
+                },
+                {
+                    "value": 3,
+                    "name": "D2D Receive"
+                }
+            ],
+            "bacnet_type": "multistate_input_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS"
+        },
+        {
             "id": "temperature_data_source_cfg",
             "name": "Temperature Data Source Configuration",
             "value": "0",
@@ -1206,7 +1236,7 @@
             "id": "energy_saving_cfg.level_1_energy_saving_vacant_time",
             "name": "Energy Saving Level1 Vacant Time(Energy Saving Configuration)",
             "value": "480",
-            "unit": "",
+            "unit": "min",
             "access_mode": "RW",
             "data_type": "NUMBER",
             "value_type": "UINT16",
@@ -1215,8 +1245,8 @@
                 1440
             ],
             "bacnet_type": "analog_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "bacnet_unit_type_id": 72,
+            "bacnet_unit_type": "UNITS_MINUTES",
             "reference": []
         },
         {
@@ -1280,7 +1310,7 @@
             "id": "energy_saving_cfg.level_2_energy_saving_vacant_time",
             "name": "Energy Saving Level2 Vacant Time(Energy Saving Configuration)",
             "value": "720",
-            "unit": "",
+            "unit": "min",
             "access_mode": "RW",
             "data_type": "NUMBER",
             "value_type": "UINT16",
@@ -1289,8 +1319,8 @@
                 1440
             ],
             "bacnet_type": "analog_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "bacnet_unit_type_id": 72,
+            "bacnet_unit_type": "UNITS_MINUTES",
             "reference": []
         },
         {
@@ -1710,6 +1740,28 @@
                 }
             ],
             "bacnet_type": "binary_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS"
+        },
+        {
+            "id": "temperature_alarm.anti_freeze_protection.status",
+            "name": "Frost protection Alarm",
+            "value": "0",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "normal"
+                },
+                {
+                    "value": 1,
+                    "name": "alarm"
+                }
+            ],
+            "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS"
         }

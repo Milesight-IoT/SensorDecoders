@@ -348,16 +348,16 @@ function milesightDeviceEncode(payload) {
 			buffer.writeInt16LE(payload.temperature_alarm.persistent_high_alarm_trigger.temperature * 100);
 		}
 		if (payload.temperature_alarm.type == 0x30) {
-			if (payload.temperature_alarm.anti_freeze_protection_deactivation.temperature < -20 || payload.temperature_alarm.anti_freeze_protection_deactivation.temperature > 60) {
-				throw new Error('temperature_alarm.anti_freeze_protection_deactivation.temperature must be between -20 and 60');
+			if (payload.temperature_alarm.anti_freeze_protection.temperature < -20 || payload.temperature_alarm.anti_freeze_protection.temperature > 60) {
+				throw new Error('temperature_alarm.anti_freeze_protection.temperature must be between -20 and 60');
 			}
-			buffer.writeInt16LE(payload.temperature_alarm.anti_freeze_protection_deactivation.temperature * 100);
+			buffer.writeInt16LE(payload.temperature_alarm.anti_freeze_protection.temperature * 100);
 		}
 		if (payload.temperature_alarm.type == 0x31) {
-			if (payload.temperature_alarm.anti_freeze_protection_trigger.temperature < -20 || payload.temperature_alarm.anti_freeze_protection_trigger.temperature > 60) {
-				throw new Error('temperature_alarm.anti_freeze_protection_trigger.temperature must be between -20 and 60');
+			if (payload.temperature_alarm.anti_freeze_protection.temperature < -20 || payload.temperature_alarm.anti_freeze_protection.temperature > 60) {
+				throw new Error('temperature_alarm.anti_freeze_protection.temperature must be between -20 and 60');
 			}
-			buffer.writeInt16LE(payload.temperature_alarm.anti_freeze_protection_trigger.temperature * 100);
+			buffer.writeInt16LE(payload.temperature_alarm.anti_freeze_protection.temperature * 100);
 		}
 		if (payload.temperature_alarm.type == 0x32) {
 			if (payload.temperature_alarm.window_status_detection_deactivation.temperature < -20 || payload.temperature_alarm.window_status_detection_deactivation.temperature > 60) {
@@ -2545,8 +2545,6 @@ function cmdMap() {
 		  "temperature_alarm.persistent_low_temperature_alarm_trigger": "0921",
 		  "temperature_alarm.persistent_high_alarm_deactivation": "0922",
 		  "temperature_alarm.persistent_high_alarm_trigger": "0923",
-		  "temperature_alarm.anti_freeze_protection_deactivation": "0930",
-		  "temperature_alarm.anti_freeze_protection_trigger": "0931",
 		  "temperature_alarm.window_status_detection_deactivation": "0932",
 		  "temperature_alarm.window_status_detection_trigger": "0933",
 		  "humidity_alarm": "0a",
@@ -2784,11 +2782,7 @@ function processTemperature(payload) {
 			"coefficient": 0.01,
 			"unitName": "℃"
 		},
-		"temperature_alarm.anti_freeze_protection_deactivation.temperature": {
-			"coefficient": 0.01,
-			"unitName": "℃"
-		},
-		"temperature_alarm.anti_freeze_protection_trigger.temperature": {
+		"temperature_alarm.anti_freeze_protection.temperature": {
 			"coefficient": 0.01,
 			"unitName": "℃"
 		},
