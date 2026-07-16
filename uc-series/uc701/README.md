@@ -26,7 +26,7 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Application Session Key | 0xCF | 17 | w | 5572404c696e6b4c6f52613230313823 |  |  |
 | Device Address | 0xCF | 5 | rw |  |  |  |
 | Rejoin Mode  | 0xCF | 2 | rw | 1 |  | 0：disable<br>1：enable |
-| Set the number of detection signals  sent | 0xCF | 2 | rw | 32 | 4 - 32 |  |
+| Set the number of detection signals  sent | 0xCF | 2 | rw | 32 | 4 - 32 |  |
 | Frequency Band | 0xCF | 2 | rw | 0 |  | 0：CN470<br>2：AS923<br>3：AU915<br>4：EU868<br>5：KR920<br>6：IN865<br>7：US915<br>10：RU864 |
 | Channel Plan | 0xCF | 2 | rw | 0 |  | 0：AS923-1<br>1：AS923-2<br>2：AS923-3<br>3：AS923-4 |
 | Channel Mask | 0xCF | 13 | rw | 00000000000000000000ff00 |  |  |
@@ -100,21 +100,9 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | PN2 | 0xD7 | 9 | r |  |  |  |
 | PN3 | 0xD7 | 9 | r |  |  |  |
 | PN4 | 0xD7 | 9 | r |  |  |  |
-| Submodule Information | 0xD6 | 1 | r |  |  |  |
-| Submodule Command | 0xD6 | 2 | r |  |  |  |
-| Submodule Version 1 | 0xD6 | 1 | r |  |  |  |
-| Submodule Content | 0xD6 | 10 | r |  |  |  |
-| Patch Upgrade Status | 0xD6 | 2 | r | 0 |  | 0：not allowed<br>1：allowed |
-| Version | 0xD6 | 9 | r |  |  |  |
-| Submodule Version 2 | 0xD6 | 1 | r |  |  |  |
-| Number of Submodules | 0xD6 | 2 | r | 1 | 1 - 16 |  |
-| Submodule Content | 0xD6 | 1 | r |  |  |  |
-| Submodule Content | 0xD6 | M | r |  |  |  |
-| Patch Upgrade Status | 0xD6 | 2 | r | 0 |  | 0：not allowed<br>1：allowed |
-| Version | 0xD6 | 17 | r |  |  |  |
-| BLE Phone Name | 0xD5 | 1 | w |  |  |  |
-|  Name Length | 0xD5 | 2 | w | 6 | 1 - 64 |  |
-| Phone Name | 0xD5 | 1 | w | 123456 |  |  |
+| BLE Phone Name | 0xD5 | 1 | rw |  |  |  |
+|  Name Length | 0xD5 | 2 | rw | 6 | 1 - 64 |  |
+| Phone Name | 0xD5 | 1 | rw | 123456 |  |  |
 | BLE Settings | 0xCD | 1 | rw |  |  |  |
 | BLE Command | 0xCD | 2 | rw | 0 |  |  |
 | Bluetooth Enable | 0xCD | 2 | rw | 0 |  | 0：disable<br>1：enable |
@@ -172,8 +160,8 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Switch State | 0x05 | 2 | r |  |  | 0: Switch Off<br>1: Switch On |
 | Current Transformer | 0x05 | 5 | r |  |  |  |
 | Current | 0x05 | 5 | r |  | 0 - 30 |  |
-| Internal Temperature | 0x06 | 3 | r |  | -20 - 60 |  |
-| External Temperature | 0x07 | 3 | r |  | -20 - 60 |  |
+| Internal Temperature | 0x06 | 3 | r |  | -20 - 70 |  |
+| External Temperature | 0x07 | 3 | r |  | -20 - 70 |  |
 | Humidity | 0x08 | 3 | r |  | 0 - 100 |  |
 | Random key | 0xC9 | 2 | rw | 0 |  | 0：Disable<br>1：Enable |
 | Auto-P | 0xC4 | 2 | rw | 1 |  | 0：Disable<br>1：Enable |
@@ -251,8 +239,8 @@ Mode Enable | 0x60 | 2 | rw | 1 |  | 0：disable<br>1：enable |
 | Sub-command | 0x6E | 2 | rw | 0 |  |  |
 | Enable | 0x6E | 2 | rw | 0 |  | 0：Disable<br>1：Enable |
 | Alarm Mode | 0x6E | 2 | rw | 0 |  | 0:Disable<br>1:Condition: x<A<br>2:Condition: x>B<br>4:Condition: x<A or x>B |
-| Low Threshold | 0x6E | 3 | rw | -20 | -20 - 60 |  |
-| High Threshold | 0x6E | 3 | rw | 60 | -20 - 60 |  |
+| Low Threshold | 0x6E | 3 | rw | -20 | -20 - 70 |  |
+| High Threshold | 0x6E | 3 | rw | 60 | -20 - 70 |  |
 | System Switch | 0x6F | 2 | rw | 0 |  | 0：Switch Off<br>1：Switch On |
 | Fan Settings | 0x70 | 1 | rw |  |  |  |
 | Sub-command | 0x70 | 2 | rw | 0 |  |  |
@@ -363,26 +351,26 @@ Mode Enable | 0x60 | 2 | rw | 1 |  | 0：disable<br>1：enable |
 | Infrared Package Status | 0x86 | 2 | r | 0 |  | 0: No infrared format packet<br>1: Infrared format package already exists |
 | Internal Temperature Sensor Setting | 0x88 | 1 | rw |  |  |  |
 | Sub-command | 0x88 | 2 | rw | 0 |  |  |
-| Name(prefix6) | 0x88 | 7 | rw |  |  |  |
-| Name(infix6) | 0x88 | 7 | rw |  |  |  |
-| Name(suffix6) | 0x88 | 7 | rw |  |  |  |
+| Name(prefix6) | 0x88 | 7 | rw | built- |  |  |
+| Name(infix6) | 0x88 | 7 | rw | in sen |  |  |
+| Name(suffix6) | 0x88 | 7 | rw | sor |  |  |
 | Collect Period | 0x88 | 3 | rw | 30 | 30 - 3600 |  |
 | Temperature Calibration Enable | 0x88 | 2 | rw | 0 |  | 0：Disable<br>1：Enable |
-| Temperature Calibration Value | 0x88 | 3 | rw | 0 | -80 - 80 |  |
+| Temperature Calibration Value | 0x88 | 3 | rw | 0 | -70 - 70 |  |
 | Humidity Calibration Enable | 0x88 | 2 | rw | 0 |  | 0：Disable<br>1：Enable |
 | Humidity Calibration Value | 0x88 | 3 | rw | 0 | -100 - 100 |  |
 | Sensor Type | 0x88 | 2 | rw | 0 |  | 0：Temperature Sensor<br>1：Temperature and Humidity Sensor |
 | External Temperature Sensor Setting | 0x89 | 1 | rw |  |  |  |
 | Sub-command | 0x89 | 2 | rw | 0 |  |  |
-| Name(prefix6) | 0x89 | 7 | rw |  |  |  |
-| Name(infix6) | 0x89 | 7 | rw |  |  |  |
-| Name(suffix6) | 0x89 | 7 | rw |  |  |  |
+| Name(prefix6) | 0x89 | 7 | rw | extern |  |  |
+| Name(infix6) | 0x89 | 7 | rw | al sen |  |  |
+| Name(suffix6) | 0x89 | 7 | rw | sor |  |  |
 | Calibration Enable | 0x89 | 2 | rw | 0 |  | 0：Disable<br>1：Enable |
-| Temperature Calibration Value | 0x89 | 3 | rw | 0 | -60 - 60 |  |
+| Temperature Calibration Value | 0x89 | 3 | rw | 0 | -70 - 70 |  |
 | CT Sensor Setting | 0x8A | 1 | rw |  |  |  |
 | Sub-command | 0x8A | 2 | rw | 0 |  |  |
 | Connect Conifg | 0x8A | 2 | rw | 0 |  | 0：Disconnected<br>1：Connected |
-| Collect Period | 0x8A | 3 | rw | 30 | 1 - 128 |  |
+| Collect Period | 0x8A | 3 | rw | 5 | 1 - 128 |  |
 | Filter Clean Reminder Setting | 0x8B | 1 | rw |  |  |  |
 | Sub-command | 0x8B | 2 | rw | 0 |  |  |
 | Filter Clean Reminder Enable | 0x8B | 2 | rw | 0 |  | 0：Disable<br>1：Enable |
@@ -627,33 +615,33 @@ Alarm | 0x0B | 1 | r |  |  |  |
 | Battery | 0x01 | 2 | r |  | 0 - 100 |  |
 | Alarm Type | 0x02 | 2 | r |  |  |  |
 | Close Window | 0x02 | 3 | r |  |  |  |
-| Temperature | 0x02 | 3 | r |  | -20 - 60 |  |
+| Temperature | 0x02 | 3 | r |  | -20 - 70 |  |
 | Open Window | 0x02 | 3 | r |  |  |  |
-| Temperature | 0x02 | 3 | r |  | -20 - 60 |  |
+| Temperature | 0x02 | 3 | r |  | -20 - 70 |  |
 | Temperature Above Alarm | 0x02 | 3 | r |  |  |  |
-| Temperature | 0x02 | 3 | r |  | -20 - 60 |  |
+| Temperature | 0x02 | 3 | r |  | -20 - 70 |  |
 | Temperature Above Alarm Released | 0x02 | 3 | r |  |  |  |
-| Temperature | 0x02 | 3 | r |  | -20 - 60 |  |
+| Temperature | 0x02 | 3 | r |  | -20 - 70 |  |
 | Temperature Below Alarm | 0x02 | 3 | r |  |  |  |
-| Temperature | 0x02 | 3 | r |  | -20 - 60 |  |
+| Temperature | 0x02 | 3 | r |  | -20 - 70 |  |
 | Temperature Below Alarm Released | 0x02 | 3 | r |  |  |  |
-| Temperature | 0x02 | 3 | r |  | -20 - 60 |  |
+| Temperature | 0x02 | 3 | r |  | -20 - 70 |  |
 | Temperature Within Alarm | 0x02 | 3 | r |  |  |  |
-| Temperature | 0x02 | 3 | r |  | -20 - 60 |  |
+| Temperature | 0x02 | 3 | r |  | -20 - 70 |  |
 | Temperature Within Alarm Released | 0x02 | 3 | r |  |  |  |
-| Temperature | 0x02 | 3 | r |  | -20 - 60 |  |
+| Temperature | 0x02 | 3 | r |  | -20 - 70 |  |
 | Temperature Below Above Alarm | 0x02 | 3 | r |  |  |  |
-| Temperature | 0x02 | 3 | r |  | -20 - 60 |  |
+| Temperature | 0x02 | 3 | r |  | -20 - 70 |  |
 | Temperature Below Above Alarm Released | 0x02 | 3 | r |  |  |  |
-| Temperature | 0x02 | 3 | r |  | -20 - 60 |  |
+| Temperature | 0x02 | 3 | r |  | -20 - 70 |  |
 | Persistent Low Temp Release | 0x02 | 3 | r |  |  |  |
-| Temperature | 0x02 | 3 | r |  | -20 - 60 |  |
+| Temperature | 0x02 | 3 | r |  | -20 - 70 |  |
 | Persistent Low Temp Trigger | 0x02 | 3 | r |  |  |  |
-| Temperature | 0x02 | 3 | r |  | -20 - 60 |  |
+| Temperature | 0x02 | 3 | r |  | -20 - 70 |  |
 | Persistent High Temp Release | 0x02 | 3 | r |  |  |  |
-| Temperature | 0x02 | 3 | r |  | -20 - 60 |  |
+| Temperature | 0x02 | 3 | r |  | -20 - 70 |  |
 | Persistent High Temp Trigger | 0x02 | 3 | r |  |  |  |
-| Temperature | 0x02 | 3 | r |  | -20 - 60 |  |
+| Temperature | 0x02 | 3 | r |  | -20 - 70 |  |
 | Alarm Type | 0x03 | 2 | r |  |  |  |
 | Internal Sensor Collect Error | 0x03 | 1 | r |  |  |  |
 | External Sensor Collect Error | 0x03 | 1 | r |  |  |  |

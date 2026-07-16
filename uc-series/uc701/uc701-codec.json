@@ -4004,7 +4004,7 @@
             "unit": "a",
             "access_mode": "R",
             "data_type": "NUMBER",
-            "value_type": "UINT8",
+            "value_type": "FLOAT",
             "range": [
                 0,
                 30
@@ -4074,24 +4074,36 @@
                     "name": "Internal Sensor Collect Error"
                 },
                 {
-                    "value": 240,
+                    "value": 16,
                     "name": "External Sensor Collect Error"
+                },
+                {
+                    "value": 32,
+                    "name": "Humidity Sensor Collect Error"
                 },
                 {
                     "value": 1,
                     "name": "Internal Sensor Out of The Low Range"
                 },
                 {
-                    "value": 241,
+                    "value": 17,
                     "name": "External Sensor Out of The Low Range"
+                },
+                {
+                    "value": 33,
+                    "name": "Humidity Out of The Low Range"
                 },
                 {
                     "value": 2,
                     "name": "Internal Sensor Out of The High Range"
                 },
                 {
-                    "value": 242,
+                    "value": 18,
                     "name": "External Sensor Out of The High Range"
+                },
+                {
+                    "value": 34,
+                    "name": "Humidity Out of The High Range"
                 }
             ],
             "bacnet_type": "multistate_input_object",
@@ -4592,74 +4604,6 @@
             "reference": []
         },
         {
-            "id": "temperature_alarm.open_window_alarm_deactivation.celsius_temperature",
-            "name": "Celsius Temperature(Close Window)",
-            "value": "",
-            "unit": "°C",
-            "access_mode": "R",
-            "data_type": "NUMBER",
-            "value_type": "FLOAT",
-            "range": [
-                -20,
-                70
-            ],
-            "bacnet_type": "analog_input_object",
-            "bacnet_unit_type_id": 62,
-            "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
-            "reference": []
-        },
-        {
-            "id": "temperature_alarm.open_window_alarm_deactivation.fahrenheit_temperature",
-            "name": "Fahrenheit Temperature(Close Window)",
-            "value": "",
-            "unit": "℉",
-            "access_mode": "R",
-            "data_type": "NUMBER",
-            "value_type": "FLOAT",
-            "range": [
-                -4,
-                158
-            ],
-            "bacnet_type": "analog_input_object",
-            "bacnet_unit_type_id": 64,
-            "bacnet_unit_type": "UNITS_DEGREES_FAHRENHEIT",
-            "reference": []
-        },
-        {
-            "id": "temperature_alarm.open_window_alarm_trigger.celsius_temperature",
-            "name": "Celsius Temperature(Open Window)",
-            "value": "",
-            "unit": "°C",
-            "access_mode": "R",
-            "data_type": "NUMBER",
-            "value_type": "FLOAT",
-            "range": [
-                -20,
-                70
-            ],
-            "bacnet_type": "analog_input_object",
-            "bacnet_unit_type_id": 62,
-            "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
-            "reference": []
-        },
-        {
-            "id": "temperature_alarm.open_window_alarm_trigger.fahrenheit_temperature",
-            "name": "Fahrenheit Temperature(Open Window)",
-            "value": "",
-            "unit": "℉",
-            "access_mode": "R",
-            "data_type": "NUMBER",
-            "value_type": "FLOAT",
-            "range": [
-                -4,
-                158
-            ],
-            "bacnet_type": "analog_input_object",
-            "bacnet_unit_type_id": 64,
-            "bacnet_unit_type": "UNITS_DEGREES_FAHRENHEIT",
-            "reference": []
-        },
-        {
             "id": "temperature_alarm.outside_range_alarm_deactivation.celsius_temperature",
             "name": "Celsius Temperature(Temperature Below Above Alarm Released)",
             "value": "",
@@ -4796,7 +4740,7 @@
             "reference": []
         },
         {
-            "id": "temperature_alarm.persistent_high_temp_deactivation.celsius_temperature",
+            "id": "temperature_alarm.persistent_high_alarm_deactivation.celsius_temperature",
             "name": "Celsius Temperature(Persistent High Temp Release)",
             "value": "",
             "unit": "°C",
@@ -4813,7 +4757,7 @@
             "reference": []
         },
         {
-            "id": "temperature_alarm.persistent_high_temp_deactivation.fahrenheit_temperature",
+            "id": "temperature_alarm.persistent_high_alarm_deactivation.fahrenheit_temperature",
             "name": "Fahrenheit Temperature(Persistent High Temp Release)",
             "value": "",
             "unit": "℉",
@@ -4830,7 +4774,7 @@
             "reference": []
         },
         {
-            "id": "temperature_alarm.persistent_high_temp_trigger.celsius_temperature",
+            "id": "temperature_alarm.persistent_high_alarm_trigger.celsius_temperature",
             "name": "Celsius Temperature(Persistent High Temp Trigger)",
             "value": "",
             "unit": "°C",
@@ -4847,7 +4791,7 @@
             "reference": []
         },
         {
-            "id": "temperature_alarm.persistent_high_temp_trigger.fahrenheit_temperature",
+            "id": "temperature_alarm.persistent_high_alarm_trigger.fahrenheit_temperature",
             "name": "Fahrenheit Temperature(Persistent High Temp Trigger)",
             "value": "",
             "unit": "℉",
@@ -4864,7 +4808,7 @@
             "reference": []
         },
         {
-            "id": "temperature_alarm.persistent_low_temp_deactivation.celsius_temperature",
+            "id": "temperature_alarm.persistent_low_temperature_alarm_deactivation.celsius_temperature",
             "name": "Celsius Temperature(Persistent Low Temp Release)",
             "value": "",
             "unit": "°C",
@@ -4881,7 +4825,7 @@
             "reference": []
         },
         {
-            "id": "temperature_alarm.persistent_low_temp_deactivation.fahrenheit_temperature",
+            "id": "temperature_alarm.persistent_low_temperature_alarm_deactivation.fahrenheit_temperature",
             "name": "Fahrenheit Temperature(Persistent Low Temp Release)",
             "value": "",
             "unit": "℉",
@@ -4898,7 +4842,7 @@
             "reference": []
         },
         {
-            "id": "temperature_alarm.persistent_low_temp_trigger.celsius_temperature",
+            "id": "temperature_alarm.persistent_low_temperature_alarm_trigger.celsius_temperature",
             "name": "Celsius Temperature(Persistent Low Temp Trigger)",
             "value": "",
             "unit": "°C",
@@ -4915,7 +4859,7 @@
             "reference": []
         },
         {
-            "id": "temperature_alarm.persistent_low_temp_trigger.fahrenheit_temperature",
+            "id": "temperature_alarm.persistent_low_temperature_alarm_trigger.fahrenheit_temperature",
             "name": "Fahrenheit Temperature(Persistent Low Temp Trigger)",
             "value": "",
             "unit": "℉",
@@ -5000,6 +4944,74 @@
             "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": []
+        },
+        {
+            "id": "temperature_alarm.window_status_detection_deactivation.celsius_temperature",
+            "name": "Celsius Temperature(Close Window)",
+            "value": "",
+            "unit": "°C",
+            "access_mode": "R",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "range": [
+                -20,
+                70
+            ],
+            "bacnet_type": "analog_input_object",
+            "bacnet_unit_type_id": 62,
+            "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
+            "reference": []
+        },
+        {
+            "id": "temperature_alarm.window_status_detection_deactivation.fahrenheit_temperature",
+            "name": "Fahrenheit Temperature(Close Window)",
+            "value": "",
+            "unit": "℉",
+            "access_mode": "R",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "range": [
+                -4,
+                158
+            ],
+            "bacnet_type": "analog_input_object",
+            "bacnet_unit_type_id": 64,
+            "bacnet_unit_type": "UNITS_DEGREES_FAHRENHEIT",
+            "reference": []
+        },
+        {
+            "id": "temperature_alarm.window_status_detection_trigger.celsius_temperature",
+            "name": "Celsius Temperature(Open Window)",
+            "value": "",
+            "unit": "°C",
+            "access_mode": "R",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "range": [
+                -20,
+                70
+            ],
+            "bacnet_type": "analog_input_object",
+            "bacnet_unit_type_id": 62,
+            "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
+            "reference": []
+        },
+        {
+            "id": "temperature_alarm.window_status_detection_trigger.fahrenheit_temperature",
+            "name": "Fahrenheit Temperature(Open Window)",
+            "value": "",
+            "unit": "℉",
+            "access_mode": "R",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "range": [
+                -4,
+                158
+            ],
+            "bacnet_type": "analog_input_object",
+            "bacnet_unit_type_id": 64,
+            "bacnet_unit_type": "UNITS_DEGREES_FAHRENHEIT",
             "reference": []
         },
         {

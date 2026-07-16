@@ -561,11 +561,6 @@ function milesightDeviceDecode(bytes) {
 				ble_new_event_item.status = readUInt8(bytes, counterObj, 1);
 				ble_new_event_item.mac = readHexString(bytes, counterObj, 8);
 				break;
-			case 0xb4:
-				decoded.ble_server = decoded.ble_server || {};
-				// 0：Reset BLE Name , 1：Cancel Pairing, 2：Trigger Pairing
-				decoded.ble_server.type = readUInt8(bytes, counterObj, 1);
-				break;
 			case 0x00:
 				decoded.battery = readUInt8(bytes, counterObj, 1);
 				break;
@@ -578,12 +573,12 @@ function milesightDeviceDecode(bytes) {
 				decoded.temperature_alarm = decoded.temperature_alarm || {};
 				decoded.temperature_alarm.type = readUInt8(bytes, counterObj, 1);
 				if (decoded.temperature_alarm.type == 0x00) {
-					decoded.temperature_alarm.open_window_alarm_deactivation = decoded.temperature_alarm.open_window_alarm_deactivation || {};
-					decoded.temperature_alarm.open_window_alarm_deactivation.temperature = readInt16LE(bytes, counterObj, 2) / 100;
+					decoded.temperature_alarm.window_status_detection_deactivation = decoded.temperature_alarm.window_status_detection_deactivation || {};
+					decoded.temperature_alarm.window_status_detection_deactivation.temperature = readInt16LE(bytes, counterObj, 2) / 100;
 				}
 				if (decoded.temperature_alarm.type == 0x01) {
-					decoded.temperature_alarm.open_window_alarm_trigger = decoded.temperature_alarm.open_window_alarm_trigger || {};
-					decoded.temperature_alarm.open_window_alarm_trigger.temperature = readInt16LE(bytes, counterObj, 2) / 100;
+					decoded.temperature_alarm.window_status_detection_trigger = decoded.temperature_alarm.window_status_detection_trigger || {};
+					decoded.temperature_alarm.window_status_detection_trigger.temperature = readInt16LE(bytes, counterObj, 2) / 100;
 				}
 				if (decoded.temperature_alarm.type == 0x20) {
 					decoded.temperature_alarm.over_range_alarm_trigger = decoded.temperature_alarm.over_range_alarm_trigger || {};
@@ -618,20 +613,20 @@ function milesightDeviceDecode(bytes) {
 					decoded.temperature_alarm.outside_range_alarm_deactivation.temperature = readInt16LE(bytes, counterObj, 2) / 100;
 				}
 				if (decoded.temperature_alarm.type == 0x30) {
-					decoded.temperature_alarm.persistent_low_temp_deactivation = decoded.temperature_alarm.persistent_low_temp_deactivation || {};
-					decoded.temperature_alarm.persistent_low_temp_deactivation.temperature = readInt16LE(bytes, counterObj, 2) / 100;
+					decoded.temperature_alarm.persistent_low_temperature_alarm_deactivation = decoded.temperature_alarm.persistent_low_temperature_alarm_deactivation || {};
+					decoded.temperature_alarm.persistent_low_temperature_alarm_deactivation.temperature = readInt16LE(bytes, counterObj, 2) / 100;
 				}
 				if (decoded.temperature_alarm.type == 0x31) {
-					decoded.temperature_alarm.persistent_low_temp_trigger = decoded.temperature_alarm.persistent_low_temp_trigger || {};
-					decoded.temperature_alarm.persistent_low_temp_trigger.temperature = readInt16LE(bytes, counterObj, 2) / 100;
+					decoded.temperature_alarm.persistent_low_temperature_alarm_trigger = decoded.temperature_alarm.persistent_low_temperature_alarm_trigger || {};
+					decoded.temperature_alarm.persistent_low_temperature_alarm_trigger.temperature = readInt16LE(bytes, counterObj, 2) / 100;
 				}
 				if (decoded.temperature_alarm.type == 0x40) {
-					decoded.temperature_alarm.persistent_high_temp_deactivation = decoded.temperature_alarm.persistent_high_temp_deactivation || {};
-					decoded.temperature_alarm.persistent_high_temp_deactivation.temperature = readInt16LE(bytes, counterObj, 2) / 100;
+					decoded.temperature_alarm.persistent_high_alarm_deactivation = decoded.temperature_alarm.persistent_high_alarm_deactivation || {};
+					decoded.temperature_alarm.persistent_high_alarm_deactivation.temperature = readInt16LE(bytes, counterObj, 2) / 100;
 				}
 				if (decoded.temperature_alarm.type == 0x41) {
-					decoded.temperature_alarm.persistent_high_temp_trigger = decoded.temperature_alarm.persistent_high_temp_trigger || {};
-					decoded.temperature_alarm.persistent_high_temp_trigger.temperature = readInt16LE(bytes, counterObj, 2) / 100;
+					decoded.temperature_alarm.persistent_high_alarm_trigger = decoded.temperature_alarm.persistent_high_alarm_trigger || {};
+					decoded.temperature_alarm.persistent_high_alarm_trigger.temperature = readInt16LE(bytes, counterObj, 2) / 100;
 				}
 				break;
 			case 0x03:
@@ -640,19 +635,19 @@ function milesightDeviceDecode(bytes) {
 				if (decoded.sensor_error.type == 0x00) {
 					decoded.sensor_error.internal_sensor_collect_error = decoded.sensor_error.internal_sensor_collect_error || {};
 				}
-				if (decoded.sensor_error.type == 0xf0) {
+				if (decoded.sensor_error.type == 0x10) {
 					decoded.sensor_error.external_sensor_collect_error = decoded.sensor_error.external_sensor_collect_error || {};
 				}
 				if (decoded.sensor_error.type == 0x01) {
 					decoded.sensor_error.internal_sensor_lower_ranger_error = decoded.sensor_error.internal_sensor_lower_ranger_error || {};
 				}
-				if (decoded.sensor_error.type == 0xf1) {
+				if (decoded.sensor_error.type == 0x11) {
 					decoded.sensor_error.external_sensor_lower_ranger_error = decoded.sensor_error.external_sensor_lower_ranger_error || {};
 				}
 				if (decoded.sensor_error.type == 0x02) {
 					decoded.sensor_error.internal_sensor_over_ranger_error = decoded.sensor_error.internal_sensor_over_ranger_error || {};
 				}
-				if (decoded.sensor_error.type == 0xf2) {
+				if (decoded.sensor_error.type == 0x12) {
 					decoded.sensor_error.external_sensor_over_ranger_error = decoded.sensor_error.external_sensor_over_ranger_error || {};
 				}
 				break;
@@ -687,7 +682,7 @@ function milesightDeviceDecode(bytes) {
 				}
 				if (decoded.running_state.data_source == 0x01) {
 					decoded.running_state.current_transformer = decoded.running_state.current_transformer || {};
-					decoded.running_state.current_transformer.current = readInt32LE(bytes, counterObj, 4);
+					decoded.running_state.current_transformer.current = readInt32LE(bytes, counterObj, 4) / 1000;
 				}
 				break;
 			case 0x06:
@@ -1389,77 +1384,12 @@ function milesightDeviceDecode(bytes) {
 				// 0：Schedule1, 1：Schedule2, 2：Schedule3, 3：Schedule4, 4：Schedule5, 5：Schedule6, 6：Schedule7, 7：Schedule8, 8：Schedule9, 9：Schedule10, 10：Schedule11, 11：Schedule12, 12：Schedule13, 13：Schedule14, 14：Schedule15, 15：Schedule16, 16：System Off, 17：System On
 				d2d_slave_settings_item.value = readUInt8(bytes, counterObj, 1);
 				break;
-			case 0xb6:
-				decoded.reconnect = readOnlyCommand(bytes, counterObj, 0);
-				break;
-			case 0xb7:
-				decoded.set_time = decoded.set_time || {};
-				decoded.set_time.timestamp = readUInt32LE(bytes, counterObj, 4);
-				break;
-			case 0xb5:
-				decoded.collect_data = readOnlyCommand(bytes, counterObj, 0);
-				break;
-			case 0xbd:
-				decoded.clear_historical_data = readOnlyCommand(bytes, counterObj, 0);
-				break;
-			case 0xbc:
-				decoded.stop_historical_data_retrieval = readOnlyCommand(bytes, counterObj, 0);
-				break;
-			case 0xbb:
-				decoded.retrieve_historical_data_by_time_range = decoded.retrieve_historical_data_by_time_range || {};
-				decoded.retrieve_historical_data_by_time_range.start_time = readUInt32LE(bytes, counterObj, 4);
-				decoded.retrieve_historical_data_by_time_range.end_time = readUInt32LE(bytes, counterObj, 4);
-				break;
-			case 0xbe:
-				decoded.reboot = readOnlyCommand(bytes, counterObj, 0);
-				break;
-			case 0x5f:
-				decoded.delete_task_plan = decoded.delete_task_plan || {};
-				// 0：Schedule1, 1：Schedule2, 2：Schedule3, 3：Schedule4, 4：Schedule5, 5：Schedule6, 6：Schedule7, 7：Schedule8, 8：Schedule9, 9：Schedule10, 10：Schedule11, 11：Schedule12, 12：Schedule13, 13：Schedule14, 14：Schedule15, 15：Schedule16, 255：All
-				decoded.delete_task_plan.type = readUInt8(bytes, counterObj, 1);
-				break;
-			case 0x5c:
-				decoded.insert_temporary_plan = decoded.insert_temporary_plan || {};
-				// 0：Insert Schedule1, 1：Insert Schedule2, 2：Insert Schedule3, 3：Insert Schedule4, 4：Insert Schedule5, 5：Insert Schedule6, 6：Insert Schedule7, 7：Insert Schedule8, 8：Insert Schedule9, 9：Insert Schedule10, 10：Insert Schedule11, 11：Insert Schedule12, 12：Insert Schedule13, 13：Insert Schedule14, 14：Insert Schedule15, 15：Insert Schedule16
-				decoded.insert_temporary_plan.id = readUInt8(bytes, counterObj, 1);
-				break;
-			case 0x5b:
-				decoded.filter_clean_alarm = decoded.filter_clean_alarm || {};
-				// 0：clean alarm, 1：report alarm
-				decoded.filter_clean_alarm.mode = readUInt8(bytes, counterObj, 1);
-				break;
-			case 0x5a:
-				decoded.open_window_alarm = decoded.open_window_alarm || {};
-				// 0：clean alarm, 1：report alarm
-				decoded.open_window_alarm.mode = readUInt8(bytes, counterObj, 1);
-				break;
-			case 0x59:
-				decoded.clear_infrared_format_code = readOnlyCommand(bytes, counterObj, 0);
-				break;
-			case 0x58:
-				decoded.delete_temperature_limit_task = decoded.delete_temperature_limit_task || {};
-				// 0：Task1, 1：Task2, 2：Task3, 3：Task4, 4：Task5, 5：Task6, 6：Task7, 7：Task8, 255：All
-				decoded.delete_temperature_limit_task.type = readUInt8(bytes, counterObj, 1);
-				break;
-			case 0x57:
-				decoded.delete_night_task = decoded.delete_night_task || {};
-				// 0：Task1, 1：Task2, 2：Task3, 3：Task4, 4：Task5, 5：Task6, 6：Task7, 7：Task8, 255：All
-				decoded.delete_night_task.type = readUInt8(bytes, counterObj, 1);
-				break;
-			case 0x56:
-				decoded.delete_vacation_task = decoded.delete_vacation_task || {};
-				// 0：Task1, 1：Task2, 2：Task3, 3：Task4, 4：Task5, 5：Task6, 6：Task7, 7：Task8, 255：All
-				decoded.delete_vacation_task.type = readUInt8(bytes, counterObj, 1);
-				break;
-			case 0x55:
-				decoded.trigger_infrared_learn = readOnlyCommand(bytes, counterObj, 0);
-				break;
 			default:
 				unknown_command = 1;
 				break;
 		}
 		if (unknown_command) {
-			throw new Error('unknown command: ' + command_id);
+			throw new Error('unknown command: 0x' + command_id.toString(16));
 		}
 	}
 
@@ -1474,7 +1404,7 @@ function milesightDeviceDecode(bytes) {
 	}
 
 	processTemperature(result);
-    patchDecode(result);
+	patchDecode(result);
 
 	return result;
 }
@@ -1765,6 +1695,42 @@ function setPath(obj, path, value) {
 	return obj;
 }
 
+function removePath(obj, path) {
+	var parts = path.split('.');
+	var chain = [obj];
+	var current = obj;
+
+	for (var i = 0; i < parts.length - 1; i++) {
+		var key = parts[i];
+
+		if (!current || typeof current[key] !== 'object') {
+			return obj;
+		}
+
+		current = current[key];
+		chain.push(current);
+	}
+
+	var leaf = parts[parts.length - 1];
+
+	if (!current || !Object.prototype.hasOwnProperty.call(current, leaf)) {
+		return obj;
+	}
+
+	delete current[leaf];
+
+	// prune empty intermediate containers left behind on the path
+	for (var j = chain.length - 1; j >= 1; j--) {
+		if (Object.keys(chain[j]).length === 0) {
+			delete chain[j - 1][parts[j - 1]];
+		} else {
+			break;
+		}
+	}
+
+	return obj;
+}
+
 function convertName(propertyId, prefix) {
 	var parts = propertyId.split('.');
 	var lastPart = parts[parts.length - 1];
@@ -2019,8 +1985,8 @@ function cmdMap() {
 		  "00": "battery",
 		  "01": "low_battery_alarm",
 		  "02": "temperature_alarm",
-		  "0200": "temperature_alarm.open_window_alarm_deactivation",
-		  "0201": "temperature_alarm.open_window_alarm_trigger",
+		  "0200": "temperature_alarm.window_status_detection_deactivation",
+		  "0201": "temperature_alarm.window_status_detection_trigger",
 		  "0220": "temperature_alarm.over_range_alarm_trigger",
 		  "0221": "temperature_alarm.over_range_alarm_deactivation",
 		  "0222": "temperature_alarm.lower_range_alarm_trigger",
@@ -2029,17 +1995,17 @@ function cmdMap() {
 		  "0225": "temperature_alarm.within_range_alarm_deactivation",
 		  "0226": "temperature_alarm.outside_range_alarm_trigger",
 		  "0227": "temperature_alarm.outside_range_alarm_deactivation",
-		  "0230": "temperature_alarm.persistent_low_temp_deactivation",
-		  "0231": "temperature_alarm.persistent_low_temp_trigger",
-		  "0240": "temperature_alarm.persistent_high_temp_deactivation",
-		  "0241": "temperature_alarm.persistent_high_temp_trigger",
+		  "0230": "temperature_alarm.persistent_low_temperature_alarm_deactivation",
+		  "0231": "temperature_alarm.persistent_low_temperature_alarm_trigger",
+		  "0240": "temperature_alarm.persistent_high_alarm_deactivation",
+		  "0241": "temperature_alarm.persistent_high_alarm_trigger",
 		  "03": "sensor_error",
 		  "0300": "sensor_error.internal_sensor_collect_error",
-		  "03f0": "sensor_error.external_sensor_collect_error",
+		  "0310": "sensor_error.external_sensor_collect_error",
 		  "0301": "sensor_error.internal_sensor_lower_ranger_error",
-		  "03f1": "sensor_error.external_sensor_lower_ranger_error",
+		  "0311": "sensor_error.external_sensor_lower_ranger_error",
 		  "0302": "sensor_error.internal_sensor_over_ranger_error",
-		  "03f2": "sensor_error.external_sensor_over_ranger_error",
+		  "0312": "sensor_error.external_sensor_over_ranger_error",
 		  "04": "infrared_cmd_status",
 		  "05": "running_state",
 		  "0500": "running_state.infrared_cmd",
@@ -2149,11 +2115,11 @@ function cmdMap() {
 }
 function processTemperature(decoded) {
 	var allTemperatureProperties = {
-    "temperature_alarm.open_window_alarm_deactivation.temperature": {
+    "temperature_alarm.window_status_detection_deactivation.temperature": {
         "precision": 2,
         "unitName": "℃"
     },
-    "temperature_alarm.open_window_alarm_trigger.temperature": {
+    "temperature_alarm.window_status_detection_trigger.temperature": {
         "precision": 2,
         "unitName": "℃"
     },
@@ -2189,19 +2155,19 @@ function processTemperature(decoded) {
         "precision": 2,
         "unitName": "℃"
     },
-    "temperature_alarm.persistent_low_temp_deactivation.temperature": {
+    "temperature_alarm.persistent_low_temperature_alarm_deactivation.temperature": {
         "precision": 2,
         "unitName": "℃"
     },
-    "temperature_alarm.persistent_low_temp_trigger.temperature": {
+    "temperature_alarm.persistent_low_temperature_alarm_trigger.temperature": {
         "precision": 2,
         "unitName": "℃"
     },
-    "temperature_alarm.persistent_high_temp_deactivation.temperature": {
+    "temperature_alarm.persistent_high_alarm_deactivation.temperature": {
         "precision": 2,
         "unitName": "℃"
     },
-    "temperature_alarm.persistent_high_temp_trigger.temperature": {
+    "temperature_alarm.persistent_high_alarm_trigger.temperature": {
         "precision": 2,
         "unitName": "℃"
     },
@@ -2332,6 +2298,7 @@ function processTemperature(decoded) {
 			if (hasPath(decoded, propertyId)) {
 				setPath(decoded, fahrenheitProperty,  Number((getPath(decoded, propertyId) * 1.8 + constant).toFixed(allTemperatureProperties[newPropertyId].precision)));
 				setPath(decoded, celsiusProperty,  Number(getPath(decoded, propertyId).toFixed(allTemperatureProperties[newPropertyId].precision)));
+				removePath(decoded, propertyId);
 			}
 		}
 	}
