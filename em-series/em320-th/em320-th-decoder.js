@@ -199,17 +199,6 @@ function milesightDeviceDecode(bytes) {
             decoded.history = decoded.history || [];
             decoded.history.push(data);
         }
-        // HISTORY
-        else if (channel_id === 0x21 && channel_type === 0xce) {
-            var data = {};
-            data.timestamp = readUInt32LE(bytes.slice(i, i + 4));
-            data.temperature = readInt16LE(bytes.slice(i + 4, i + 6)) / 10;
-            data.humidity = readUInt16LE(bytes.slice(i + 6, i + 8)) / 10;
-            data.record_type = readRecordType(readUInt8(bytes[i + 8]));
-            i += 9;
-            decoded.history = decoded.history || [];
-            decoded.history.push(data);
-        }
         // FULL STORAGE ALARM ENABLE (V1.7+, cert version only)
         else if (channel_id === 0xf9 && channel_type === 0xc9) {
             decoded.full_storage_alarm_enable = readEnableStatus(bytes[i]);
@@ -232,8 +221,8 @@ function milesightDeviceDecode(bytes) {
             decoded.mutation_config = {};
             decoded.mutation_config.id = readUInt8(bytes[i]);
             decoded.mutation_config.mutation_max = readInt16LE(bytes.slice(i + 1, i + 3)) / 10;
-            decoded.mutation_config.enable = readEnableStatus(bytes[i + 4]);
-            i += 5;
+            decoded.mutation_config.enable = readEnableStatus(bytes[i + 3]);
+            i += 4;
         }
         else if (channel_id === 0xf9 && channel_type === 0xd9) {
             decoded.humidity_resolution = readHumidityResolution(bytes[i]);
@@ -462,14 +451,15 @@ function readHumidityError(type) {
 
 function readAlarmType(type) {
     var type_map = { 
-        0: "Above alarm",
-        1: "Above alarm clear",
-        2: "Below alarm",
-        3: "Below alarm clear",
-        4: "Between alarm",
-        5: "Between alarm clear",
-        6: "Outside alarm",
-        7: "Outside alarm clear"
+        1: "Below alarm",
+        2: "Above alarm",
+        3: "Between alarm",
+        4: "Outside alarm",
+
+        6: "Below alarm clear",
+        7: "Above alarm clear",
+        8: "Between alarm clear",
+        9: "Outside alarm clear"
     };
     return getValue(type_map, type);
 }
