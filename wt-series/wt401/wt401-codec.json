@@ -94,7 +94,7 @@
         {
             "id": "ble_configuration_settings.enable",
             "name": "Bluetooth Enable(BLE Settings)",
-            "value": "0",
+            "value": "1",
             "unit": "",
             "access_mode": "RW",
             "data_type": "BOOL",
@@ -2015,31 +2015,31 @@
             "values": [
                 {
                     "value": 1,
-                    "name": "Mon."
+                    "name": "Sun."
                 },
                 {
                     "value": 2,
-                    "name": "Tues."
+                    "name": "Mon."
                 },
                 {
                     "value": 3,
-                    "name": "Wed."
+                    "name": "Tues."
                 },
                 {
                     "value": 4,
-                    "name": "Thurs."
+                    "name": "Wed."
                 },
                 {
                     "value": 5,
-                    "name": "Fri."
+                    "name": "Thurs."
                 },
                 {
                     "value": 6,
-                    "name": "Sat."
+                    "name": "Fri."
                 },
                 {
                     "value": 7,
-                    "name": "Sun."
+                    "name": "Sat."
                 }
             ],
             "bacnet_type": "multistate_value_object",

@@ -26,7 +26,7 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Product Region | 0xD8 | 17 | r |  |  |  |
 | BLE Settings | 0xCD | 1 | rw |  |  |  |
 | BLE Command | 0xCD | 2 | rw | 0 |  |  |
-| Bluetooth Enable | 0xCD | 2 | rw | 0 |  | 0：disable<br>1：enable |
+| Bluetooth Enable | 0xCD | 2 | rw | 1 |  | 0：disable<br>1：enable |
 | Device Bluetooth Address | 0xCD | 8 | r |  |  |  |
 | Address Type | 0xCD | 2 | r | 0 |  | 0：public<br>1：private |
 | Bluetooth Mac Address | 0xCD | 7 | r | 24e124123456 |  |  |
@@ -242,7 +242,7 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | DST Bias | 0xC6 | 2 | rw | 60 | 1 - 120 |  |
 |  Month | 0xC6 | 2 | rw | 1 | 1 - 12 | 1:Jan.<br>2:Feb.<br>3:Mar.<br>4:Apr.<br>5:May<br>6:Jun.<br>7:Jul.<br>8:Aug.<br>9:Sep.<br>10:Oct.<br>11:Nov.<br>12:Dec. |
 |  Number of Week | 0xC6 | 2 | rw | 1 | 1 - 2 | 1:1st<br>2: 2nd<br>3: 3rd<br>4: 4th<br>5: last |
-| Week | 0xC6 | 2 | rw | 1 | 1 - 7 | 1：Mon.<br>2：Tues.<br>3：Wed.<br>4：Thurs.<br>5：Fri.<br>6：Sat.<br>7：Sun. |
+| Week | 0xC6 | 2 | rw | 1 | 1 - 7 | 1：Sun.<br>2：Mon.<br>3：Tues.<br>4：Wed.<br>5：Thurs.<br>6：Fri.<br>7：Sat. |
 | Time | 0xC6 | 3 | rw | 0 | 0 - 1380 | 0：00:00<br>60：01:00<br>120：02:00<br>180：03:00<br>240：04:00<br>300：05:00<br>360：06:00<br>420：07:00<br>480：08:00<br>540：09:00<br>600：10:00<br>660：11:00<br>720：12:00<br>780：13:00<br>840：14:00<br>900：15:00<br>960：16:00<br>1020：17:00<br>1080：18:00<br>1140：19:00<br>1200：20:00<br>1260：21:00<br>1320：22:00<br>1380：23:00 |
 |  Month | 0xC6 | 2 | rw | 1 | 1 - 12 | 1:Jan.<br>2:Feb.<br>3:Mar.<br>4:Apr.<br>5:May<br>6:Jun.<br>7:Jul.<br>8:Aug.<br>9:Sep.<br>10:Oct.<br>11:Nov.<br>12:Dec. |
 |  Number of Week | 0xC6 | 2 | rw | 1 | 1 - 5 | 1:1st<br>2: 2nd<br>3: 3rd<br>4: 4th<br>5: last |

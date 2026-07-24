@@ -1359,7 +1359,7 @@ function milesightDeviceEncode(payload) {
 		// 1:1st, 2: 2nd, 3: 3rd, 4: 4th, 5: last
 		bitOptions |= payload.daylight_saving_time.start_week_num << 4;
 
-		// 1：Mon., 2：Tues., 3：Wed., 4：Thurs., 5：Fri., 6：Sat., 7：Sun.
+		// 1：Sun., 2：Mon., 3：Tues., 4：Wed., 5：Thurs., 6：Fri., 7：Sat., 
 		bitOptions |= payload.daylight_saving_time.start_week_day << 0;
 		buffer.writeUInt8(bitOptions);
 
