@@ -1414,99 +1414,99 @@ function cmdMap() {
 function processTemperature(decoded) {
 	var allTemperatureProperties = {
     "temperature": {
-        "precision": 1,
+        "precision": 2,
         "unitName": "℃"
     },
     "target_temperature1": {
-        "precision": 1,
+        "precision": 2,
         "unitName": "℃"
     },
     "target_temperature2": {
-        "precision": 1,
+        "precision": 2,
         "unitName": "℃"
     },
     "target_temperature_settings.heat": {
-        "precision": 1,
+        "precision": 2,
         "unitName": "℃"
     },
     "target_temperature_settings.em_heat": {
-        "precision": 1,
+        "precision": 2,
         "unitName": "℃"
     },
     "target_temperature_settings.cool": {
-        "precision": 1,
+        "precision": 2,
         "unitName": "℃"
     },
     "target_temperature_settings.auto": {
-        "precision": 1,
+        "precision": 2,
         "unitName": "℃"
     },
     "target_temperature_settings.auto_heat": {
-        "precision": 1,
+        "precision": 2,
         "unitName": "℃"
     },
     "target_temperature_settings.auto_cool": {
-        "precision": 1,
+        "precision": 2,
         "unitName": "℃"
     },
     "target_temperature_settings.dehumidify": {
-        "precision": 1,
+        "precision": 2,
         "unitName": "℃"
     },
     "target_temperature_settings.ventilation": {
-        "precision": 1,
+        "precision": 2,
         "unitName": "℃"
     },
     "minimum_dead_zone": {
-        "precision": 1,
+        "precision": 2,
         "unitName": "K"
     },
     "target_temperature_range.heat.min": {
-        "precision": 1,
+        "precision": 2,
         "unitName": "℃"
     },
     "target_temperature_range.heat.max": {
-        "precision": 1,
+        "precision": 2,
         "unitName": "℃"
     },
     "target_temperature_range.em_heat.min": {
-        "precision": 1,
+        "precision": 2,
         "unitName": "℃"
     },
     "target_temperature_range.em_heat.max": {
-        "precision": 1,
+        "precision": 2,
         "unitName": "℃"
     },
     "target_temperature_range.cool.min": {
-        "precision": 1,
+        "precision": 2,
         "unitName": "℃"
     },
     "target_temperature_range.cool.max": {
-        "precision": 1,
+        "precision": 2,
         "unitName": "℃"
     },
     "target_temperature_range.auto.min": {
-        "precision": 1,
+        "precision": 2,
         "unitName": "℃"
     },
     "target_temperature_range.auto.max": {
-        "precision": 1,
+        "precision": 2,
         "unitName": "℃"
     },
     "target_temperature_range.dehumidify.min": {
-        "precision": 1,
+        "precision": 2,
         "unitName": "℃"
     },
     "target_temperature_range.dehumidify.max": {
-        "precision": 1,
+        "precision": 2,
         "unitName": "℃"
     },
     "target_temperature_range.ventilation.min": {
-        "precision": 1,
+        "precision": 2,
         "unitName": "℃"
     },
     "target_temperature_range.ventilation.max": {
-        "precision": 1,
+        "precision": 2,
         "unitName": "℃"
     },
     "temperature_calibration_settings.calibration_value": {
@@ -1514,43 +1514,43 @@ function processTemperature(decoded) {
         "unitName": "℃"
     },
     "schedule_settings._item.content1.heat_target_temperature": {
-        "precision": 1,
+        "precision": 2,
         "unitName": "℃"
     },
     "schedule_settings._item.content1.em_heat_target_temperature": {
-        "precision": 1,
+        "precision": 2,
         "unitName": "℃"
     },
     "schedule_settings._item.content1.cool_target_temperature": {
-        "precision": 1,
+        "precision": 2,
         "unitName": "℃"
     },
     "schedule_settings._item.content2.auto_target_temperature": {
-        "precision": 1,
+        "precision": 2,
         "unitName": "℃"
     },
     "schedule_settings._item.content2.auto_heat_target_temperature": {
-        "precision": 1,
+        "precision": 2,
         "unitName": "℃"
     },
     "schedule_settings._item.content2.auto_cool_target_temperature": {
-        "precision": 1,
+        "precision": 2,
         "unitName": "℃"
     },
     "schedule_settings._item.heat_target_temperature": {
-        "precision": 1,
+        "precision": 2,
         "unitName": "℃"
     },
     "schedule_settings._item.cool_target_temperature": {
-        "precision": 1,
+        "precision": 2,
         "unitName": "℃"
     },
     "schedule_settings._item.auto_target_temperature": {
-        "precision": 1,
+        "precision": 2,
         "unitName": "℃"
     },
     "origin_temperature": {
-        "precision": 1,
+        "precision": 2,
         "unitName": "℃"
     }
 };
