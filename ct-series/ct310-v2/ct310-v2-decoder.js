@@ -121,6 +121,11 @@ function milesightDeviceDecode(bytes) {
             i += 4;
         }
         // BATTERY
+        else if (channel_id === 0x01 && channel_type === 0x75) {
+            decoded.battery = readUInt8(bytes[i]);
+            i += 1;
+        }
+        // LOW VOLTAGE ALARM
         else if (channel_id === 0x13 && channel_type === 0x75) {
             decoded.low_voltage_alarm = {};
             decoded.low_voltage_alarm.alarm_type = readLowVoltageAlarm(bytes[i]);
