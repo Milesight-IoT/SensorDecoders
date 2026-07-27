@@ -41,29 +41,6 @@
             "reference": []
         },
         {
-            "id": "anti_freezing.command",
-            "name": "Sub-command(Freeze Protection)",
-            "value": "0",
-            "unit": "",
-            "access_mode": "RW",
-            "data_type": "ENUM",
-            "value_type": "UINT8",
-            "values": [
-                {
-                    "value": 0,
-                    "name": "Freeze Protection Enable"
-                },
-                {
-                    "value": 1,
-                    "name": "Protection Temperature"
-                }
-            ],
-            "bacnet_type": "multistate_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": []
-        },
-        {
             "id": "anti_freezing.enable",
             "name": "Freeze Protection Enable(Freeze Protection)",
             "value": "0",
@@ -118,29 +95,6 @@
             "bacnet_type": "analog_input_object",
             "bacnet_unit_type_id": 62,
             "bacnet_unit_type": "UNITS_DEGREES_CELSIUS"
-        },
-        {
-            "id": "dehumidify_settings.command",
-            "name": "Sub-command(Target Humidity Range)",
-            "value": "2",
-            "unit": "",
-            "access_mode": "RW",
-            "data_type": "ENUM",
-            "value_type": "UINT8",
-            "values": [
-                {
-                    "value": 2,
-                    "name": "Min Value"
-                },
-                {
-                    "value": 3,
-                    "name": "Max Value"
-                }
-            ],
-            "bacnet_type": "multistate_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": []
         },
         {
             "id": "dehumidify_settings.humidify_high_threshold",
@@ -234,29 +188,6 @@
             "bacnet_unit_type": "UNITS_NO_UNITS"
         },
         {
-            "id": "energy_saving.level",
-            "name": "Energy-saving Level(Energy-saving Settings)",
-            "value": "0",
-            "unit": "",
-            "access_mode": "RW",
-            "data_type": "ENUM",
-            "value_type": "UINT8",
-            "values": [
-                {
-                    "value": 0,
-                    "name": "Level 1 Energy-saving Settings"
-                },
-                {
-                    "value": 1,
-                    "name": "Level 2 Energy-saving Settings"
-                }
-            ],
-            "bacnet_type": "multistate_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": []
-        },
-        {
             "id": "energy_saving.level_1.celsius_target_temp_tolerance",
             "name": "Celsius Energy Saving Target Temperature Tolerance(Level 1 Energy-saving Settings)",
             "value": "2",
@@ -271,33 +202,6 @@
             "bacnet_type": "analog_value_object",
             "bacnet_unit_type_id": 121,
             "bacnet_unit_type": "UNITS_DELTA_DEGREES_KELVIN",
-            "reference": []
-        },
-        {
-            "id": "energy_saving.level_1.command",
-            "name": "Sub-command(Level 1 Energy-saving Settings)",
-            "value": "0",
-            "unit": "",
-            "access_mode": "RW",
-            "data_type": "ENUM",
-            "value_type": "UINT8",
-            "values": [
-                {
-                    "value": 0,
-                    "name": "Level 1 Energy-saving Enable"
-                },
-                {
-                    "value": 1,
-                    "name": "Vacant Time"
-                },
-                {
-                    "value": 2,
-                    "name": "Energy Saving Target Temperature Tolerance"
-                }
-            ],
-            "bacnet_type": "multistate_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": []
         },
         {
@@ -372,33 +276,6 @@
             "bacnet_type": "analog_value_object",
             "bacnet_unit_type_id": 121,
             "bacnet_unit_type": "UNITS_DELTA_DEGREES_KELVIN",
-            "reference": []
-        },
-        {
-            "id": "energy_saving.level_2.command",
-            "name": "Sub-command(Level 2 Energy-saving Settings)",
-            "value": "0",
-            "unit": "",
-            "access_mode": "RW",
-            "data_type": "ENUM",
-            "value_type": "UINT8",
-            "values": [
-                {
-                    "value": 0,
-                    "name": "Level 2 Energy-saving Enable"
-                },
-                {
-                    "value": 1,
-                    "name": "Vacant Time"
-                },
-                {
-                    "value": 2,
-                    "name": "Energy Saving Target Temperature Tolerance"
-                }
-            ],
-            "bacnet_type": "multistate_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": []
         },
         {
@@ -510,29 +387,6 @@
             "reference": []
         },
         {
-            "id": "fan_delay_settings.command",
-            "name": "Sub-command(Fan Delay Off Settings)",
-            "value": "0",
-            "unit": "",
-            "access_mode": "RW",
-            "data_type": "ENUM",
-            "value_type": "UINT8",
-            "values": [
-                {
-                    "value": 0,
-                    "name": "Fan Delay Off Enable"
-                },
-                {
-                    "value": 1,
-                    "name": "Fan Delay Off Time"
-                }
-            ],
-            "bacnet_type": "multistate_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": []
-        },
-        {
             "id": "fan_delay_settings.delay_time",
             "name": "Fan Delay Off Time(Fan Delay Off Settings)",
             "value": "60",
@@ -610,37 +464,6 @@
             "bacnet_type": "analog_value_object",
             "bacnet_unit_type_id": 72,
             "bacnet_unit_type": "UNITS_MINUTES",
-            "reference": []
-        },
-        {
-            "id": "fan_settings.command",
-            "name": "Sub-command(Fan Settings)",
-            "value": "0",
-            "unit": "",
-            "access_mode": "RW",
-            "data_type": "ENUM",
-            "value_type": "UINT8",
-            "values": [
-                {
-                    "value": 0,
-                    "name": "Fan Mode"
-                },
-                {
-                    "value": 3,
-                    "name": "Fan Circulate Time"
-                },
-                {
-                    "value": 1,
-                    "name": "Regulate Humidity Enable"
-                },
-                {
-                    "value": 2,
-                    "name": "Regulation Interval"
-                }
-            ],
-            "bacnet_type": "multistate_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": []
         },
         {
@@ -976,33 +799,6 @@
             ]
         },
         {
-            "id": "target_temperature_range.id",
-            "name": "Target Temperature Range ID(Target Temperature Range)",
-            "value": "0",
-            "unit": "",
-            "access_mode": "RW",
-            "data_type": "ENUM",
-            "value_type": "UINT8",
-            "values": [
-                {
-                    "value": 0,
-                    "name": "Heat Target Temperature Range"
-                },
-                {
-                    "value": 2,
-                    "name": "Cool Target Temperature Range"
-                },
-                {
-                    "value": 3,
-                    "name": "Auto Target Temperature Range"
-                }
-            ],
-            "bacnet_type": "multistate_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": []
-        },
-        {
             "id": "target_temperature_settings.celsius_cool",
             "name": "Celsius Cool Target Temperature(Target Temperature Settings)",
             "value": "28",
@@ -1071,33 +867,6 @@
             "reference": []
         },
         {
-            "id": "target_temperature_settings.temperature_control_mode",
-            "name": "Temperature Control Mode(Target Temperature Settings)",
-            "value": "0",
-            "unit": "",
-            "access_mode": "RW",
-            "data_type": "ENUM",
-            "value_type": "UINT8",
-            "values": [
-                {
-                    "value": 0,
-                    "name": "Heat Target Temperature"
-                },
-                {
-                    "value": 2,
-                    "name": "Cool Target Temperature"
-                },
-                {
-                    "value": 3,
-                    "name": "Auto Target Temperature"
-                }
-            ],
-            "bacnet_type": "multistate_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": []
-        },
-        {
             "id": "target_temperature_tolerance.celsius_cool_value",
             "name": "Celsius Cool Target Temperature Tolerance(Target Temperature Tolerance)",
             "value": "1",
@@ -1163,19 +932,6 @@
             "bacnet_type": "analog_value_object",
             "bacnet_unit_type_id": 120,
             "bacnet_unit_type": "UNITS_DELTA_DEGREES_FAHRENHEIT",
-            "reference": []
-        },
-        {
-            "id": "target_temperature_tolerance.id",
-            "name": "Target Temperature Tolerance(Target Temperature Tolerance)",
-            "value": "0",
-            "unit": "",
-            "access_mode": "RW",
-            "data_type": "NUMBER",
-            "value_type": "UINT8",
-            "bacnet_type": "analog_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": []
         },
         {
@@ -1295,53 +1051,6 @@
             "bacnet_type": "analog_value_object",
             "bacnet_unit_type_id": 121,
             "bacnet_unit_type": "UNITS_DELTA_DEGREES_KELVIN",
-            "reference": []
-        },
-        {
-            "id": "temperature_control_level_switch.cmd",
-            "name": "Subcmd ID(Temperature Control Level Switch Enable)",
-            "value": "0",
-            "unit": "",
-            "access_mode": "RW",
-            "data_type": "ENUM",
-            "value_type": "UINT8",
-            "values": [
-                {
-                    "value": 0,
-                    "name": "Setforward Enable"
-                },
-                {
-                    "value": 1,
-                    "name": "Setback Enable"
-                },
-                {
-                    "value": 2,
-                    "name": "Heat Timeout"
-                },
-                {
-                    "value": 3,
-                    "name": "Heat Change Value"
-                },
-                {
-                    "value": 4,
-                    "name": "Cool Timeout"
-                },
-                {
-                    "value": 5,
-                    "name": "Cool Change Value"
-                },
-                {
-                    "value": 6,
-                    "name": "ΔT1"
-                },
-                {
-                    "value": 7,
-                    "name": "ΔT2"
-                }
-            ],
-            "bacnet_type": "multistate_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": []
         },
         {
