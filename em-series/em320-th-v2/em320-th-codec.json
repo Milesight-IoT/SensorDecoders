@@ -81,7 +81,7 @@
                 { "value": 2, "name": "Class C" },
                 { "value": 3, "name": "Class CtoB" }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS"
         },
@@ -165,7 +165,7 @@
                 { "value": 1, "name": "external_trigger" },
                 { "value": 2, "name": "internal_trigger" }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS"
         },
@@ -187,7 +187,7 @@
                 { "value": 6, "name": "Outside alarm" },
                 { "value": 7, "name": "Outside alarm clear" }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS"
         },
@@ -233,7 +233,7 @@
                 { "value": 6, "name": "Outside alarm" },
                 { "value": 7, "name": "Outside alarm clear" }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS"
         },
@@ -279,7 +279,7 @@
                 { "value": 6, "name": "Outside alarm" },
                 { "value": 7, "name": "Outside alarm clear" }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS"
         },
@@ -296,7 +296,7 @@
                 { "value": 2, "name": "lower_range_err" },
                 { "value": 3, "name": "over_range_err" }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS"
         },
@@ -342,7 +342,7 @@
                 { "value": 6, "name": "Outside alarm" },
                 { "value": 7, "name": "Outside alarm clear" }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS"
         },
@@ -359,7 +359,7 @@
                 { "value": 2, "name": "lower_range_err" },
                 { "value": 3, "name": "over_range_err" }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS"
         },
@@ -403,7 +403,7 @@
                 { "value": 0, "name": "0.5%" },
                 { "value": 1, "name": "1%" }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS"
         },
@@ -633,7 +633,7 @@
                 { "value": 3, "name": "full" },
                 { "value": 4, "name": "overwritten" }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS"
         },
