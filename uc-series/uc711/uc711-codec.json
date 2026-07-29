@@ -986,40 +986,6 @@
             "reference": []
         },
         {
-            "id": "temperature_control_level_switch.celsius_cool_temp",
-            "name": "Celsius Cool Change Value(Temperature Control Level Switch Enable)",
-            "value": "1",
-            "unit": "K",
-            "access_mode": "RW",
-            "data_type": "NUMBER",
-            "value_type": "FLOAT",
-            "range": [
-                0.5,
-                5
-            ],
-            "bacnet_type": "analog_value_object",
-            "bacnet_unit_type_id": 121,
-            "bacnet_unit_type": "UNITS_DELTA_DEGREES_KELVIN",
-            "reference": []
-        },
-        {
-            "id": "temperature_control_level_switch.celsius_heat_temp",
-            "name": "Celsius Heat Change Value(Temperature Control Level Switch Enable)",
-            "value": "1",
-            "unit": "K",
-            "access_mode": "RW",
-            "data_type": "NUMBER",
-            "value_type": "FLOAT",
-            "range": [
-                0.5,
-                5
-            ],
-            "bacnet_type": "analog_value_object",
-            "bacnet_unit_type_id": 121,
-            "bacnet_unit_type": "UNITS_DELTA_DEGREES_KELVIN",
-            "reference": []
-        },
-        {
             "id": "temperature_control_level_switch.celsius_threshold_t1",
             "name": "Celsius ΔT1(Temperature Control Level Switch Enable)",
             "value": "3",
@@ -1054,57 +1020,6 @@
             "reference": []
         },
         {
-            "id": "temperature_control_level_switch.cool_time",
-            "name": "Cool Timeout(Temperature Control Level Switch Enable)",
-            "value": "5",
-            "unit": "",
-            "access_mode": "RW",
-            "data_type": "NUMBER",
-            "value_type": "UINT8",
-            "range": [
-                1,
-                30
-            ],
-            "bacnet_type": "analog_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": []
-        },
-        {
-            "id": "temperature_control_level_switch.fahrenheit_cool_temp",
-            "name": "Fahrenheit Cool Change Value(Temperature Control Level Switch Enable)",
-            "value": "1.8",
-            "unit": "ΔT°F",
-            "access_mode": "RW",
-            "data_type": "NUMBER",
-            "value_type": "FLOAT",
-            "range": [
-                0.9,
-                9
-            ],
-            "bacnet_type": "analog_value_object",
-            "bacnet_unit_type_id": 120,
-            "bacnet_unit_type": "UNITS_DELTA_DEGREES_FAHRENHEIT",
-            "reference": []
-        },
-        {
-            "id": "temperature_control_level_switch.fahrenheit_heat_temp",
-            "name": "Fahrenheit Heat Change Value(Temperature Control Level Switch Enable)",
-            "value": "1.8",
-            "unit": "ΔT°F",
-            "access_mode": "RW",
-            "data_type": "NUMBER",
-            "value_type": "FLOAT",
-            "range": [
-                0.9,
-                9
-            ],
-            "bacnet_type": "analog_value_object",
-            "bacnet_unit_type_id": 120,
-            "bacnet_unit_type": "UNITS_DELTA_DEGREES_FAHRENHEIT",
-            "reference": []
-        },
-        {
             "id": "temperature_control_level_switch.fahrenheit_threshold_t1",
             "name": "Fahrenheit ΔT1(Temperature Control Level Switch Enable)",
             "value": "5.4",
@@ -1136,69 +1051,6 @@
             "bacnet_type": "analog_value_object",
             "bacnet_unit_type_id": 120,
             "bacnet_unit_type": "UNITS_DELTA_DEGREES_FAHRENHEIT",
-            "reference": []
-        },
-        {
-            "id": "temperature_control_level_switch.heat_time",
-            "name": "Heat Timeout(Temperature Control Level Switch Enable)",
-            "value": "5",
-            "unit": "",
-            "access_mode": "RW",
-            "data_type": "NUMBER",
-            "value_type": "UINT8",
-            "range": [
-                1,
-                30
-            ],
-            "bacnet_type": "analog_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": []
-        },
-        {
-            "id": "temperature_control_level_switch.setback_enable",
-            "name": "Setback Enable(Temperature Control Level Switch Enable)",
-            "value": "1",
-            "unit": "",
-            "access_mode": "RW",
-            "data_type": "BOOL",
-            "value_type": "UINT8",
-            "values": [
-                {
-                    "value": 0,
-                    "name": "disable"
-                },
-                {
-                    "value": 1,
-                    "name": "enable"
-                }
-            ],
-            "bacnet_type": "binary_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": []
-        },
-        {
-            "id": "temperature_control_level_switch.setforw_enable",
-            "name": "Setforward Enable(Temperature Control Level Switch Enable)",
-            "value": "1",
-            "unit": "",
-            "access_mode": "RW",
-            "data_type": "BOOL",
-            "value_type": "UINT8",
-            "values": [
-                {
-                    "value": 0,
-                    "name": "disable"
-                },
-                {
-                    "value": 1,
-                    "name": "enable"
-                }
-            ],
-            "bacnet_type": "binary_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": []
         },
         {
