@@ -176,6 +176,10 @@ function milesightDeviceEncode(payload) {
 		for (var pair_name_id = 0; pair_name_id < (payload.ble_configuration_settings.pair_name && payload.ble_configuration_settings.pair_name.length); pair_name_id++) {
 			var pair_name_item = payload.ble_configuration_settings.pair_name[pair_name_id];
 			var pair_name_item_id = pair_name_item.channel;
+			if (pair_name_item_id < 0 || pair_name_item_id > 0) {
+				throw new Error('pair_name_item_id must be between 0 and 0');
+			}
+
 			buffer.writeUInt8(0xcd);
 			buffer.writeUInt8(0x04);
 			buffer.writeUInt8(pair_name_item_id);
@@ -188,6 +192,10 @@ function milesightDeviceEncode(payload) {
 		for (var pair_mac_id = 0; pair_mac_id < (payload.ble_configuration_settings.pair_mac && payload.ble_configuration_settings.pair_mac.length); pair_mac_id++) {
 			var pair_mac_item = payload.ble_configuration_settings.pair_mac[pair_mac_id];
 			var pair_mac_item_id = pair_mac_item.channel;
+			if (pair_mac_item_id < 0 || pair_mac_item_id > 0) {
+				throw new Error('pair_mac_item_id must be between 0 and 0');
+			}
+
 			buffer.writeUInt8(0xcd);
 			buffer.writeUInt8(0x02);
 			buffer.writeUInt8(pair_mac_item_id);
@@ -196,6 +204,10 @@ function milesightDeviceEncode(payload) {
 		for (var pair_addr_id = 0; pair_addr_id < (payload.ble_configuration_settings.pair_addr && payload.ble_configuration_settings.pair_addr.length); pair_addr_id++) {
 			var pair_addr_item = payload.ble_configuration_settings.pair_addr[pair_addr_id];
 			var pair_addr_item_id = pair_addr_item.channel;
+			if (pair_addr_item_id < 0 || pair_addr_item_id > 0) {
+				throw new Error('pair_addr_item_id must be between 0 and 0');
+			}
+
 			buffer.writeUInt8(0xcd);
 			buffer.writeUInt8(0x03);
 			buffer.writeUInt8(pair_addr_item_id);
@@ -1335,6 +1347,10 @@ function milesightDeviceEncode(payload) {
 		for (var plan_dwell_time_settings_id = 0; plan_dwell_time_settings_id < (payload.plan_dwell_time_settings && payload.plan_dwell_time_settings.length); plan_dwell_time_settings_id++) {
 			var plan_dwell_time_settings_item = payload.plan_dwell_time_settings[plan_dwell_time_settings_id];
 			var plan_dwell_time_settings_item_id = plan_dwell_time_settings_item.id;
+			if (plan_dwell_time_settings_item_id < 0 || plan_dwell_time_settings_item_id > 15) {
+				throw new Error('plan_dwell_time_settings_item_id must be between 0 and 15');
+			}
+
 			if (isValid(plan_dwell_time_settings_item.permanent_stay_enable)) {
 				buffer.writeUInt8(0x73);
 				buffer.writeUInt8(plan_dwell_time_settings_item_id);
@@ -1591,6 +1607,10 @@ function milesightDeviceEncode(payload) {
 		for (var d2d_pairing_settings_id = 0; d2d_pairing_settings_id < (payload.d2d_pairing_settings && payload.d2d_pairing_settings.length); d2d_pairing_settings_id++) {
 			var d2d_pairing_settings_item = payload.d2d_pairing_settings[d2d_pairing_settings_id];
 			var d2d_pairing_settings_item_id = d2d_pairing_settings_item.index;
+			if (d2d_pairing_settings_item_id < 0 || d2d_pairing_settings_item_id > 4) {
+				throw new Error('d2d_pairing_settings_item_id must be between 0 and 4');
+			}
+
 			if (isValid(d2d_pairing_settings_item.enable)) {
 				buffer.writeUInt8(0x96);
 				buffer.writeUInt8(d2d_pairing_settings_item_id);
@@ -1640,6 +1660,10 @@ function milesightDeviceEncode(payload) {
 		for (var d2d_master_settings_id = 0; d2d_master_settings_id < (payload.d2d_master_settings && payload.d2d_master_settings.length); d2d_master_settings_id++) {
 			var d2d_master_settings_item = payload.d2d_master_settings[d2d_master_settings_id];
 			var d2d_master_settings_item_id = d2d_master_settings_item.trigger_condition;
+			if ([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17].indexOf(d2d_master_settings_item_id) === -1) {
+				throw new Error('d2d_master_settings_item_id must be one of [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17]');
+			}
+
 			buffer.writeUInt8(0x98);
 			buffer.writeUInt8(d2d_master_settings_item_id);
 			if ([0, 1].indexOf(d2d_master_settings_item.enable) === -1) {
@@ -1682,6 +1706,10 @@ function milesightDeviceEncode(payload) {
 		for (var d2d_slave_settings_id = 0; d2d_slave_settings_id < (payload.d2d_slave_settings && payload.d2d_slave_settings.length); d2d_slave_settings_id++) {
 			var d2d_slave_settings_item = payload.d2d_slave_settings[d2d_slave_settings_id];
 			var d2d_slave_settings_item_id = d2d_slave_settings_item.index;
+			if (d2d_slave_settings_item_id < 0 || d2d_slave_settings_item_id > 15) {
+				throw new Error('d2d_slave_settings_item_id must be between 0 and 15');
+			}
+
 			buffer.writeUInt8(0x9a);
 			buffer.writeUInt8(d2d_slave_settings_item_id);
 			if ([0, 1].indexOf(d2d_slave_settings_item.enable) === -1) {
@@ -1702,6 +1730,12 @@ function milesightDeviceEncode(payload) {
 	if ('reboot' in payload) {
 		var buffer = new Buffer();
 		buffer.writeUInt8(0xbe);
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0xb8
+	if ('synchronize_time' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0xb8);
 		encoded = encoded.concat(buffer.toBytes());
 	}
 	//0xbb
@@ -2238,6 +2272,7 @@ function cmdMap() {
 		  "d2d_slave_settings": "9a",
 		  "d2d_slave_settings._item": "9axx",
 		  "reboot": "be",
+		  "synchronize_time": "b8",
 		  "retrieve_historical_data_by_time_range": "bb",
 		  "system_status_control": "59"
 	};

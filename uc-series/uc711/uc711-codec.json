@@ -539,6 +539,52 @@
             "bacnet_unit_type": "UNITS_PERCENT_RELATIVE_HUMIDITY"
         },
         {
+            "id": "install_configuration.fan.owner",
+            "name": "Fan Owner(Fan Owner)",
+            "value": "0",
+            "unit": "",
+            "access_mode": "RW",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "thermostat"
+                },
+                {
+                    "value": 1,
+                    "name": "hvac"
+                }
+            ],
+            "bacnet_type": "multistate_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": []
+        },
+        {
+            "id": "install_configuration.reversing_valve.mode",
+            "name": "Reversing Valve(Reversing Valve)",
+            "value": "1",
+            "unit": "",
+            "access_mode": "RW",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "Energize on Heat"
+                },
+                {
+                    "value": 1,
+                    "name": "Energize on Cool"
+                }
+            ],
+            "bacnet_type": "multistate_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": []
+        },
+        {
             "id": "lorawan_configuration_settings.mode",
             "name": "LoRaWAN Work Mode(LoRaWAN  Settings)",
             "value": "0",
@@ -596,14 +642,43 @@
             "bacnet_unit_type": "UNITS_NO_UNITS"
         },
         {
-            "id": "retrieve_historical_data_by_time.time",
-            "name": "Time Point(Retrieval(Point-in-Time))",
-            "value": "",
-            "unit": "",
-            "access_mode": "W",
+            "id": "reporting_interval.ble_lora.minutes_of_time",
+            "name": "Reporting Interval(BLE_LORA Reporting Interval)",
+            "value": "10",
+            "unit": "min",
+            "access_mode": "RW",
             "data_type": "NUMBER",
+            "value_type": "UINT16",
+            "range": [
+                1,
+                1440
+            ],
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 72,
+            "bacnet_unit_type": "UNITS_MINUTES",
+            "reference": [
+                "reporting_interval.ble_lora.unit"
+            ]
+        },
+        {
+            "id": "reporting_interval.ble_lora.unit",
+            "name": "Reporting Interval Unit(BLE_LORA Reporting Interval)",
+            "value": "1",
+            "unit": "",
+            "access_mode": "RW",
+            "data_type": "ENUM",
             "value_type": "UINT8",
-            "bacnet_type": "analog_output_object",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "second"
+                },
+                {
+                    "value": 1,
+                    "name": "min"
+                }
+            ],
+            "bacnet_type": "multistate_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": []
@@ -1054,6 +1129,33 @@
             "reference": []
         },
         {
+            "id": "temperature_control_mode.ctrl_mode",
+            "name": "Temperature Control Mode(Temperature Control Mode)",
+            "value": "0",
+            "unit": "",
+            "access_mode": "RW",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "heat"
+                },
+                {
+                    "value": 2,
+                    "name": "cool"
+                },
+                {
+                    "value": 3,
+                    "name": "auto"
+                }
+            ],
+            "bacnet_type": "multistate_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": []
+        },
+        {
             "id": "temperature_unit",
             "name": "Temperature Unit",
             "value": "0",
@@ -1085,6 +1187,28 @@
             "value_type": "STRING",
             "max_length": 4,
             "bacnet_type": "character_string_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS"
+        },
+        {
+            "id": "unilateral_tolerance_enable",
+            "name": "Unilateral Tolerance Enable",
+            "value": "0",
+            "unit": "",
+            "access_mode": "RW",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "Disable"
+                },
+                {
+                    "value": 1,
+                    "name": "Enable"
+                }
+            ],
+            "bacnet_type": "binary_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS"
         },

@@ -916,6 +916,9 @@ function milesightDeviceDecode(bytes) {
 			case 0xbe:
 				decoded.reboot = readOnlyCommand(bytes, counterObj, 0);
 				break;
+			case 0xb8:
+				decoded.synchronize_time = readOnlyCommand(bytes, counterObj, 0);
+				break;
 			case 0xbb:
 				decoded.retrieve_historical_data_by_time_range = decoded.retrieve_historical_data_by_time_range || {};
 				decoded.retrieve_historical_data_by_time_range.start_time = readUInt32LE(bytes, counterObj, 4);
@@ -1576,6 +1579,7 @@ function cmdMap() {
 		  "9a": "d2d_slave_settings",
 		  "9axx": "d2d_slave_settings._item",
 		  "be": "reboot",
+		  "b8": "synchronize_time",
 		  "bb": "retrieve_historical_data_by_time_range"
 	};
 }
