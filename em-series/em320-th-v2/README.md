@@ -1,6 +1,6 @@
 # Temperature & Humidity Sensor - EM320-TH
 
-![EM320-TH](em320-th.png)
+![EM320-TH](em320-th-v2.png)
 
 For more detailed information, please visit [Milesight Official Website](https://www.milesight.com/iot/product/lorawan-sensor/em320-th)
 
