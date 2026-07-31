@@ -700,10 +700,10 @@ function milesightDeviceEncode(payload) {
 		}
 		// 0：disable, 1：enable
 		buffer.writeUInt8(payload.temperature_control_dehumidification.enable);
-		if (payload.temperature_control_dehumidification.temperature_tolerance < 0.1 || payload.temperature_control_dehumidification.temperature_tolerance > 5) {
-			throw new Error('temperature_control_dehumidification.temperature_tolerance must be between 0.1 and 5');
+		if (payload.temperature_control_dehumidification.temp_tolerance < 0.1 || payload.temperature_control_dehumidification.temp_tolerance > 5) {
+			throw new Error('temperature_control_dehumidification.temp_tolerance must be between 0.1 and 5');
 		}
-		buffer.writeInt16LE(payload.temperature_control_dehumidification.temperature_tolerance * 100);
+		buffer.writeInt16LE(payload.temperature_control_dehumidification.temp_tolerance * 100);
 		encoded = encoded.concat(buffer.toBytes());
 	}
 	//0x71
@@ -1097,12 +1097,12 @@ function milesightDeviceEncode(payload) {
 		}
 		if (isValid(payload.temporary_button_unlock_cfg.enable)) {
 			buffer.writeUInt8(0x97);
-			// 0：None, 3：System switch & Temperature +, 5：System switch & Temperature -, 6：Temperature + & Temperature -, 7：System switch & Temperature + & Temperature -, 9：System switch & Fan, 10：Temperature + & Fan, 11：System switch & Temperature + & Fan, 12：Temperature - & Fan, 13：System switch & Temperature - & Fan, 14：Temperature + & Temperature - & Fan, 15：System switch & Temperature + & Temperature - & Fan, 17：System switch & Temperature control mode, 18：Temperature + & Temperature control mode, 19：System switch & Temperature + & Temperature control mode, 20：Temperature - & Temperature control mode, 21：System switch & Temperature - & Temperature control mode, 22：Temperature + & Temperature - & Temperature control mode, 23：System switch & Temperature + & Temperature - & Temperature control mode, 24：Fan & Temperature control mode, 25：System switch & Fan & Temperature control mode, 26：Temperature + & Fan & Temperature control mode, 27：System switch & Temperature + & Fan & Temperature control mode, 28：Temperature - & Fan & Temperature control mode, 29：System switch & Temperature - & Fan & Temperature control mode, 30：Temperature + & Temperature - & Fan & Temperature control mode, 31：System switch & Temperature + & Temperature - & Fan & Temperature control mode
+			// 0：None, 3：System switch & Temp +, 5：System switch & Temp -, 6：Temp + & Temp -, 7：System switch & Temp + & Temp -, 9：System switch & Fan, 10：Temp + & Fan, 11：System switch & Temp + & Fan, 12：Temp - & Fan, 13：System switch & Temp - & Fan, 14：Temp + & Temp - & Fan, 15：System switch & Temp + & Temp - & Fan, 17：System switch & Temp ctrl mode, 18：Temp + & Temp ctrl mode, 19：System switch & Temp + & Temp ctrl mode, 20：Temp - & Temp ctrl mode, 21：System switch & Temp - & Temp ctrl mode, 22：Temp + & Temp - & Temp ctrl mode, 23：System switch & Temp + & Temp - & Temp ctrl mode, 24：Fan & Temp ctrl mode, 25：System switch & Fan & Temp ctrl mode, 26：Temp + & Fan & Temp ctrl mode, 27：System switch & Temp + & Fan & Temp ctrl mode, 28：Temp - & Fan & Temp ctrl mode, 29：System switch & Temp - & Fan & Temp ctrl mode, 30：Temp + & Temp - & Fan & Temp ctrl mode, 31：System switch & Temp + & Temp - & Fan & Temp ctrl mode
 			buffer.writeUInt8(0x01);
 			if ([0, 3, 5, 6, 7, 9, 10, 11, 12, 13, 14, 15, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31].indexOf(payload.temporary_button_unlock_cfg.enable) === -1) {
 				throw new Error('temporary_button_unlock_cfg.enable must be one of [0, 3, 5, 6, 7, 9, 10, 11, 12, 13, 14, 15, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31]');
 			}
-			// 0：None, 3：System switch & Temperature +, 5：System switch & Temperature -, 6：Temperature + & Temperature -, 7：System switch & Temperature + & Temperature -, 9：System switch & Fan, 10：Temperature + & Fan, 11：System switch & Temperature + & Fan, 12：Temperature - & Fan, 13：System switch & Temperature - & Fan, 14：Temperature + & Temperature - & Fan, 15：System switch & Temperature + & Temperature - & Fan, 17：System switch & Temperature control mode, 18：Temperature + & Temperature control mode, 19：System switch & Temperature + & Temperature control mode, 20：Temperature - & Temperature control mode, 21：System switch & Temperature - & Temperature control mode, 22：Temperature + & Temperature - & Temperature control mode, 23：System switch & Temperature + & Temperature - & Temperature control mode, 24：Fan & Temperature control mode, 25：System switch & Fan & Temperature control mode, 26：Temperature + & Fan & Temperature control mode, 27：System switch & Temperature + & Fan & Temperature control mode, 28：Temperature - & Fan & Temperature control mode, 29：System switch & Temperature - & Fan & Temperature control mode, 30：Temperature + & Temperature - & Fan & Temperature control mode, 31：System switch & Temperature + & Temperature - & Fan & Temperature control mode
+			// 0：None, 3：System switch & Temp +, 5：System switch & Temp -, 6：Temp + & Temp -, 7：System switch & Temp + & Temp -, 9：System switch & Fan, 10：Temp + & Fan, 11：System switch & Temp + & Fan, 12：Temp - & Fan, 13：System switch & Temp - & Fan, 14：Temp + & Temp - & Fan, 15：System switch & Temp + & Temp - & Fan, 17：System switch & Temp ctrl mode, 18：Temp + & Temp ctrl mode, 19：System switch & Temp + & Temp ctrl mode, 20：Temp - & Temp ctrl mode, 21：System switch & Temp - & Temp ctrl mode, 22：Temp + & Temp - & Temp ctrl mode, 23：System switch & Temp + & Temp - & Temp ctrl mode, 24：Fan & Temp ctrl mode, 25：System switch & Fan & Temp ctrl mode, 26：Temp + & Fan & Temp ctrl mode, 27：System switch & Temp + & Fan & Temp ctrl mode, 28：Temp - & Fan & Temp ctrl mode, 29：System switch & Temp - & Fan & Temp ctrl mode, 30：Temp + & Temp - & Fan & Temp ctrl mode, 31：System switch & Temp + & Temp - & Fan & Temp ctrl mode
 			buffer.writeUInt8(payload.temporary_button_unlock_cfg.enable);
 		}
 		var bitOptions = 0;
@@ -1381,10 +1381,10 @@ function milesightDeviceEncode(payload) {
 		}
 		// 0：disable, 1：enable
 		buffer.writeUInt8(payload.high_temperature_alarm_settings.enable);
-		if (payload.high_temperature_alarm_settings.difference_in_temperature < 1 || payload.high_temperature_alarm_settings.difference_in_temperature > 10) {
-			throw new Error('high_temperature_alarm_settings.difference_in_temperature must be between 1 and 10');
+		if (payload.high_temperature_alarm_settings.temp_difference < 1 || payload.high_temperature_alarm_settings.temp_difference > 10) {
+			throw new Error('high_temperature_alarm_settings.temp_difference must be between 1 and 10');
 		}
-		buffer.writeInt16LE(payload.high_temperature_alarm_settings.difference_in_temperature * 100);
+		buffer.writeInt16LE(payload.high_temperature_alarm_settings.temp_difference * 100);
 		if (payload.high_temperature_alarm_settings.duration < 0 || payload.high_temperature_alarm_settings.duration > 60) {
 			throw new Error('high_temperature_alarm_settings.duration must be between 0 and 60');
 		}
@@ -1431,10 +1431,10 @@ function milesightDeviceEncode(payload) {
 		}
 		// 0：disable, 1：enable
 		buffer.writeUInt8(payload.low_temperature_alarm_settings.enable);
-		if (payload.low_temperature_alarm_settings.difference_in_temperature < 1 || payload.low_temperature_alarm_settings.difference_in_temperature > 10) {
-			throw new Error('low_temperature_alarm_settings.difference_in_temperature must be between 1 and 10');
+		if (payload.low_temperature_alarm_settings.temp_difference < 1 || payload.low_temperature_alarm_settings.temp_difference > 10) {
+			throw new Error('low_temperature_alarm_settings.temp_difference must be between 1 and 10');
 		}
-		buffer.writeInt16LE(payload.low_temperature_alarm_settings.difference_in_temperature * 100);
+		buffer.writeInt16LE(payload.low_temperature_alarm_settings.temp_difference * 100);
 		if (payload.low_temperature_alarm_settings.duration < 0 || payload.low_temperature_alarm_settings.duration > 60) {
 			throw new Error('low_temperature_alarm_settings.duration must be between 0 and 60');
 		}
@@ -1696,14 +1696,14 @@ function milesightDeviceEncode(payload) {
 		}
 		buffer.writeUInt8(payload.window_opening_detection_settings.type);
 		if (payload.window_opening_detection_settings.type == 0x00) {
-			if (payload.window_opening_detection_settings.temperature_detection.difference_in_temperature < 1 || payload.window_opening_detection_settings.temperature_detection.difference_in_temperature > 10) {
-				throw new Error('window_opening_detection_settings.temperature_detection.difference_in_temperature must be between 1 and 10');
+			if (payload.window_opening_detection_settings.temp_detect.change < 1 || payload.window_opening_detection_settings.temp_detect.change > 10) {
+				throw new Error('window_opening_detection_settings.temp_detect.change must be between 1 and 10');
 			}
-			buffer.writeInt16LE(payload.window_opening_detection_settings.temperature_detection.difference_in_temperature * 100);
-			if (payload.window_opening_detection_settings.temperature_detection.stop_time < 1 || payload.window_opening_detection_settings.temperature_detection.stop_time > 60) {
-				throw new Error('window_opening_detection_settings.temperature_detection.stop_time must be between 1 and 60');
+			buffer.writeInt16LE(payload.window_opening_detection_settings.temp_detect.change * 100);
+			if (payload.window_opening_detection_settings.temp_detect.stop_time < 1 || payload.window_opening_detection_settings.temp_detect.stop_time > 60) {
+				throw new Error('window_opening_detection_settings.temp_detect.stop_time must be between 1 and 60');
 			}
-			buffer.writeUInt8(payload.window_opening_detection_settings.temperature_detection.stop_time);
+			buffer.writeUInt8(payload.window_opening_detection_settings.temp_detect.stop_time);
 		}
 		if (payload.window_opening_detection_settings.type == 0x01) {
 			if (payload.window_opening_detection_settings.magnet_detection.duration < 1 || payload.window_opening_detection_settings.magnet_detection.duration > 60) {
@@ -2049,13 +2049,13 @@ function milesightDeviceEncode(payload) {
 			}
 			buffer.writeUInt16LE(payload.energy_saving_cfg.level_1_energy_saving_vacant_time);
 		}
-		if (isValid(payload.energy_saving_cfg.level_1_energy_saving_temperature_tolerance)) {
+		if (isValid(payload.energy_saving_cfg.level_1_temp_tolerance)) {
 			buffer.writeUInt8(0x95);
 			buffer.writeUInt8(0x06);
-			if (payload.energy_saving_cfg.level_1_energy_saving_temperature_tolerance < 0.1 || payload.energy_saving_cfg.level_1_energy_saving_temperature_tolerance > 5) {
-				throw new Error('energy_saving_cfg.level_1_energy_saving_temperature_tolerance must be between 0.1 and 5');
+			if (payload.energy_saving_cfg.level_1_temp_tolerance < 0.1 || payload.energy_saving_cfg.level_1_temp_tolerance > 5) {
+				throw new Error('energy_saving_cfg.level_1_temp_tolerance must be between 0.1 and 5');
 			}
-			buffer.writeUInt16LE(payload.energy_saving_cfg.level_1_energy_saving_temperature_tolerance * 100);
+			buffer.writeUInt16LE(payload.energy_saving_cfg.level_1_temp_tolerance * 100);
 		}
 		if (isValid(payload.energy_saving_cfg.level_2_energy_saving_enabled)) {
 			buffer.writeUInt8(0x95);
@@ -2075,13 +2075,13 @@ function milesightDeviceEncode(payload) {
 			}
 			buffer.writeUInt16LE(payload.energy_saving_cfg.level_2_energy_saving_vacant_time);
 		}
-		if (isValid(payload.energy_saving_cfg.level_2_energy_saving_temperature_tolerance)) {
+		if (isValid(payload.energy_saving_cfg.level_2_temp_tolerance)) {
 			buffer.writeUInt8(0x95);
 			buffer.writeUInt8(0x09);
-			if (payload.energy_saving_cfg.level_2_energy_saving_temperature_tolerance < 0.1 || payload.energy_saving_cfg.level_2_energy_saving_temperature_tolerance > 5) {
-				throw new Error('energy_saving_cfg.level_2_energy_saving_temperature_tolerance must be between 0.1 and 5');
+			if (payload.energy_saving_cfg.level_2_temp_tolerance < 0.1 || payload.energy_saving_cfg.level_2_temp_tolerance > 5) {
+				throw new Error('energy_saving_cfg.level_2_temp_tolerance must be between 0.1 and 5');
 			}
-			buffer.writeUInt16LE(payload.energy_saving_cfg.level_2_energy_saving_temperature_tolerance * 100);
+			buffer.writeUInt16LE(payload.energy_saving_cfg.level_2_temp_tolerance * 100);
 		}
 		if (isValid(payload.energy_saving_cfg.mode)) {
 			buffer.writeUInt8(0x95);
@@ -2830,7 +2830,7 @@ function cmdMap() {
 		  "di_settings.magnet_detection": "8101",
 		  "window_opening_detection_enable": "82",
 		  "window_opening_detection_settings": "83",
-		  "window_opening_detection_settings.temperature_detection": "8300",
+		  "window_opening_detection_settings.temp_detect": "8300",
 		  "window_opening_detection_settings.magnet_detection": "8301",
 		  "freeze_protection_settings": "84",
 		  "freeze_protection_cfg": "98",
@@ -2868,10 +2868,10 @@ function cmdMap() {
 		  "energy_saving_cfg.night_execution": "9503",
 		  "energy_saving_cfg.level_1_energy_saving_enabled": "9504",
 		  "energy_saving_cfg.level_1_energy_saving_vacant_time": "9505",
-		  "energy_saving_cfg.level_1_energy_saving_temperature_tolerance": "9506",
+		  "energy_saving_cfg.level_1_temp_tolerance": "9506",
 		  "energy_saving_cfg.level_2_energy_saving_enabled": "9507",
 		  "energy_saving_cfg.level_2_energy_saving_vacant_time": "9508",
-		  "energy_saving_cfg.level_2_energy_saving_temperature_tolerance": "9509",
+		  "energy_saving_cfg.level_2_temp_tolerance": "9509",
 		  "energy_saving_cfg.mode": "950a",
 		  "screen_display_cfg": "a2",
 		  "screen_display_cfg.display_data_enable_when_off": "a200",
@@ -3010,7 +3010,7 @@ function processTemperature(payload) {
         "coefficient": 0.01,
         "unitName": "℃"
     },
-    "temperature_control_dehumidification.temperature_tolerance": {
+    "temperature_control_dehumidification.temp_tolerance": {
         "coefficient": 0.01,
         "unitName": "℃"
     },
@@ -3058,7 +3058,7 @@ function processTemperature(payload) {
         "coefficient": 0.01,
         "unitName": "℃"
     },
-    "high_temperature_alarm_settings.difference_in_temperature": {
+    "high_temperature_alarm_settings.temp_difference": {
         "coefficient": 0.01,
         "unitName": "℃"
     },
@@ -3066,7 +3066,7 @@ function processTemperature(payload) {
         "coefficient": 0.01,
         "unitName": "℃"
     },
-    "low_temperature_alarm_settings.difference_in_temperature": {
+    "low_temperature_alarm_settings.temp_difference": {
         "coefficient": 0.01,
         "unitName": "℃"
     },
@@ -3086,7 +3086,7 @@ function processTemperature(payload) {
         "coefficient": 0.01,
         "unitName": "℃"
     },
-    "window_opening_detection_settings.temperature_detection.difference_in_temperature": {
+    "window_opening_detection_settings.temp_detect.change": {
         "coefficient": 0.01,
         "unitName": "℃"
     },
@@ -3098,11 +3098,11 @@ function processTemperature(payload) {
         "coefficient": 0.01,
         "unitName": "℃"
     },
-    "energy_saving_cfg.level_1_energy_saving_temperature_tolerance": {
+    "energy_saving_cfg.level_1_temp_tolerance": {
         "coefficient": 0.01,
         "unitName": "℃"
     },
-    "energy_saving_cfg.level_2_energy_saving_temperature_tolerance": {
+    "energy_saving_cfg.level_2_temp_tolerance": {
         "coefficient": 0.01,
         "unitName": "℃"
     },
