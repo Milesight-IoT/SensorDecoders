@@ -1025,25 +1025,24 @@ function milesightDeviceEncode(payload) {
 			}
 			// 0：disable, 1：enable
 			buffer.writeUInt8(payload.child_lock_enable_cfg.key_enable);
+			var bitOptions = 0;
+			// 0：disable, 1：enable
+			bitOptions |= payload.child_lock_enable_cfg.system << 0;
+
+			// 0：disable, 1：enable
+			bitOptions |= payload.child_lock_enable_cfg.temperature << 1;
+
+			// 0：disable, 1：enable
+			bitOptions |= payload.child_lock_enable_cfg.fan << 2;
+
+			// 0：disable, 1：enable
+			bitOptions |= payload.child_lock_enable_cfg.temperature_control << 3;
+
+			// 0：disable, 1：enable
+			bitOptions |= payload.child_lock_enable_cfg.reboot_reset << 4;
+
+			buffer.writeUInt8(bitOptions);
 		}
-		var bitOptions = 0;
-		// 0：disable, 1：enable
-		bitOptions |= payload.child_lock_enable_cfg.system << 0;
-
-		// 0：disable, 1：enable
-		bitOptions |= payload.child_lock_enable_cfg.temperature << 1;
-
-		// 0：disable, 1：enable
-		bitOptions |= payload.child_lock_enable_cfg.fan << 2;
-		buffer.writeUInt8(bitOptions);
-
-		var bitOptions = 0;
-		// 0：disable, 1：enable
-		bitOptions |= payload.child_lock_enable_cfg.temperature_control << 3;
-
-		// 0：disable, 1：enable
-		bitOptions |= payload.child_lock_enable_cfg.reboot_reset << 4;
-
 		encoded = encoded.concat(buffer.toBytes());
 	}
 	//0x8d
@@ -1097,6 +1096,9 @@ function milesightDeviceEncode(payload) {
 		}
 		if (isValid(payload.temporary_button_unlock_cfg.enable)) {
 			buffer.writeUInt8(0x97);
+			buffer.writeUInt8(0x00);
+			buffer.writeUInt8(0x01);
+			buffer.writeUInt8(0x97);
 			// 0：None, 3：System switch & Temp +, 5：System switch & Temp -, 6：Temp + & Temp -, 7：System switch & Temp + & Temp -, 9：System switch & Fan, 10：Temp + & Fan, 11：System switch & Temp + & Fan, 12：Temp - & Fan, 13：System switch & Temp - & Fan, 14：Temp + & Temp - & Fan, 15：System switch & Temp + & Temp - & Fan, 17：System switch & Temp ctrl mode, 18：Temp + & Temp ctrl mode, 19：System switch & Temp + & Temp ctrl mode, 20：Temp - & Temp ctrl mode, 21：System switch & Temp - & Temp ctrl mode, 22：Temp + & Temp - & Temp ctrl mode, 23：System switch & Temp + & Temp - & Temp ctrl mode, 24：Fan & Temp ctrl mode, 25：System switch & Fan & Temp ctrl mode, 26：Temp + & Fan & Temp ctrl mode, 27：System switch & Temp + & Fan & Temp ctrl mode, 28：Temp - & Fan & Temp ctrl mode, 29：System switch & Temp - & Fan & Temp ctrl mode, 30：Temp + & Temp - & Fan & Temp ctrl mode, 31：System switch & Temp + & Temp - & Fan & Temp ctrl mode
 			buffer.writeUInt8(0x01);
 			if ([0, 3, 5, 6, 7, 9, 10, 11, 12, 13, 14, 15, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31].indexOf(payload.temporary_button_unlock_cfg.enable) === -1) {
@@ -1104,30 +1106,28 @@ function milesightDeviceEncode(payload) {
 			}
 			// 0：None, 3：System switch & Temp +, 5：System switch & Temp -, 6：Temp + & Temp -, 7：System switch & Temp + & Temp -, 9：System switch & Fan, 10：Temp + & Fan, 11：System switch & Temp + & Fan, 12：Temp - & Fan, 13：System switch & Temp - & Fan, 14：Temp + & Temp - & Fan, 15：System switch & Temp + & Temp - & Fan, 17：System switch & Temp ctrl mode, 18：Temp + & Temp ctrl mode, 19：System switch & Temp + & Temp ctrl mode, 20：Temp - & Temp ctrl mode, 21：System switch & Temp - & Temp ctrl mode, 22：Temp + & Temp - & Temp ctrl mode, 23：System switch & Temp + & Temp - & Temp ctrl mode, 24：Fan & Temp ctrl mode, 25：System switch & Fan & Temp ctrl mode, 26：Temp + & Fan & Temp ctrl mode, 27：System switch & Temp + & Fan & Temp ctrl mode, 28：Temp - & Fan & Temp ctrl mode, 29：System switch & Temp - & Fan & Temp ctrl mode, 30：Temp + & Temp - & Fan & Temp ctrl mode, 31：System switch & Temp + & Temp - & Fan & Temp ctrl mode
 			buffer.writeUInt8(payload.temporary_button_unlock_cfg.enable);
+			var bitOptions = 0;
+			// 0：disable, 1：enable
+			bitOptions |= payload.temporary_button_unlock_cfg.system << 0;
+
+			// 0：disable, 1：enable
+			bitOptions |= payload.temporary_button_unlock_cfg.temperature_up << 1;
+
+			// 0：disable, 1：enable
+			bitOptions |= payload.temporary_button_unlock_cfg.temperature_down << 2;
+
+			// 0：disable, 1：enable
+			bitOptions |= payload.temporary_button_unlock_cfg.fan << 3;
+
+			// 0：disable, 1：enable
+			bitOptions |= payload.temporary_button_unlock_cfg.temperature_control << 4;
+
+			buffer.writeUInt8(bitOptions);
 		}
-		var bitOptions = 0;
-		// 0：disable, 1：enable
-		bitOptions |= payload.temporary_button_unlock_cfg.system << 0;
-
-		// 0：disable, 1：enable
-		bitOptions |= payload.temporary_button_unlock_cfg.temperature_up << 1;
-
-		// 0：disable, 1：enable
-		bitOptions |= payload.temporary_button_unlock_cfg.temperature_down << 2;
-		buffer.writeUInt8(bitOptions);
-
-		var bitOptions = 0;
-		// 0：disable, 1：enable
-		bitOptions |= payload.temporary_button_unlock_cfg.fan << 3;
-
-		// 0：disable, 1：enable
-		bitOptions |= payload.temporary_button_unlock_cfg.temperature_control << 4;
-
 		if (isValid(payload.temporary_button_unlock_cfg.unlocking_duration)) {
 			buffer.writeUInt8(0x97);
 			buffer.writeUInt8(0x02);
-			buffer.writeUInt8(bitOptions);
-			buffer.writeUnknownDataType(payload.temporary_button_unlock_cfg.unlocking_duration);
+			buffer.writeUInt16LE(payload.temporary_button_unlock_cfg.unlocking_duration);
 		}
 		encoded = encoded.concat(buffer.toBytes());
 	}
@@ -2992,7 +2992,7 @@ function processTemperature(payload) {
     },
     "target_temperature_tolerance": {
         "coefficient": 0.01,
-        "unitName": "℃"
+        "unitName": "K"
     },
     "heating_target_temperature_range.min": {
         "coefficient": 0.01,
@@ -3012,11 +3012,11 @@ function processTemperature(payload) {
     },
     "temperature_control_dehumidification.temp_tolerance": {
         "coefficient": 0.01,
-        "unitName": "℃"
+        "unitName": "K"
     },
     "temp_ctl_dehumi_cfg.temperature_tolerance": {
         "coefficient": 0.01,
-        "unitName": "℃"
+        "unitName": "K"
     },
     "fan_auto_mode_temperature_range.speed_range_1": {
         "coefficient": 0.01,
@@ -3028,19 +3028,19 @@ function processTemperature(payload) {
     },
     "fan_speed_ctl_delta_cfg.delta1": {
         "coefficient": 0.01,
-        "unitName": "℃"
+        "unitName": "K"
     },
     "fan_speed_ctl_delta_cfg.delta2": {
         "coefficient": 0.01,
-        "unitName": "℃"
+        "unitName": "K"
     },
     "temperature_calibration_settings.calibration_value": {
         "coefficient": 0.01,
-        "unitName": "℃"
+        "unitName": "K"
     },
     "temperature_calibration_cfg.calibration_value": {
         "coefficient": 0.01,
-        "unitName": "℃"
+        "unitName": "K"
     },
     "temperature_alarm_settings.threshold_min": {
         "coefficient": 0.01,
@@ -3060,19 +3060,19 @@ function processTemperature(payload) {
     },
     "high_temperature_alarm_settings.temp_difference": {
         "coefficient": 0.01,
-        "unitName": "℃"
+        "unitName": "K"
     },
     "high_temperature_alarm_cfg.delta": {
         "coefficient": 0.01,
-        "unitName": "℃"
+        "unitName": "K"
     },
     "low_temperature_alarm_settings.temp_difference": {
         "coefficient": 0.01,
-        "unitName": "℃"
+        "unitName": "K"
     },
     "low_temperature_alarm_cfg.delta": {
         "coefficient": 0.01,
-        "unitName": "℃"
+        "unitName": "K"
     },
     "schedule_settings._item.content.heat_target_temperature": {
         "coefficient": 0.01,
@@ -3084,11 +3084,11 @@ function processTemperature(payload) {
     },
     "schedule_settings._item.content.temperature_tolerance": {
         "coefficient": 0.01,
-        "unitName": "℃"
+        "unitName": "K"
     },
     "window_opening_detection_settings.temp_detect.change": {
         "coefficient": 0.01,
-        "unitName": "℃"
+        "unitName": "K"
     },
     "freeze_protection_settings.target_temperature": {
         "coefficient": 0.01,
@@ -3100,11 +3100,11 @@ function processTemperature(payload) {
     },
     "energy_saving_cfg.level_1_temp_tolerance": {
         "coefficient": 0.01,
-        "unitName": "℃"
+        "unitName": "K"
     },
     "energy_saving_cfg.level_2_temp_tolerance": {
         "coefficient": 0.01,
-        "unitName": "℃"
+        "unitName": "K"
     },
     "debug_commands.ambition_temp_value": {
         "coefficient": 0.01,

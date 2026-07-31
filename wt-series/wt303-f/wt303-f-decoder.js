@@ -542,18 +542,18 @@ function milesightDeviceDecode(bytes) {
 				if (child_lock_enable_cfg_cmd == 0x01) {
 					// 0：disable, 1：enable
 					decoded.child_lock_enable_cfg.key_enable = readUInt8(bytes, counterObj, 1);
+					var bitOptions = readUInt8(bytes, counterObj, 1);
+					// 0：disable, 1：enable
+					decoded.child_lock_enable_cfg.system = extractBits(bitOptions, 0, 1);
+					// 0：disable, 1：enable
+					decoded.child_lock_enable_cfg.temperature = extractBits(bitOptions, 1, 2);
+					// 0：disable, 1：enable
+					decoded.child_lock_enable_cfg.fan = extractBits(bitOptions, 2, 3);
+					// 0：disable, 1：enable
+					decoded.child_lock_enable_cfg.temperature_control = extractBits(bitOptions, 3, 4);
+					// 0：disable, 1：enable
+					decoded.child_lock_enable_cfg.reboot_reset = extractBits(bitOptions, 4, 5);
 				}
-				var bitOptions = readUInt8(bytes, counterObj, 1);
-				// 0：disable, 1：enable
-				decoded.child_lock_enable_cfg.system = extractBits(bitOptions, 0, 1);
-				// 0：disable, 1：enable
-				decoded.child_lock_enable_cfg.temperature = extractBits(bitOptions, 1, 2);
-				// 0：disable, 1：enable
-				decoded.child_lock_enable_cfg.fan = extractBits(bitOptions, 2, 3);
-				// 0：disable, 1：enable
-				decoded.child_lock_enable_cfg.temperature_control = extractBits(bitOptions, 3, 4);
-				// 0：disable, 1：enable
-				decoded.child_lock_enable_cfg.reboot_reset = extractBits(bitOptions, 4, 5);
 				break;
 			case 0x8d:
 				decoded.temporary_unlock_settings = decoded.temporary_unlock_settings || {};
@@ -583,20 +583,20 @@ function milesightDeviceDecode(bytes) {
 				if (temporary_button_unlock_cfg_cmd == 0x01) {
 					// 0：None, 3：System switch & Temp +, 5：System switch & Temp -, 6：Temp + & Temp -, 7：System switch & Temp + & Temp -, 9：System switch & Fan, 10：Temp + & Fan, 11：System switch & Temp + & Fan, 12：Temp - & Fan, 13：System switch & Temp - & Fan, 14：Temp + & Temp - & Fan, 15：System switch & Temp + & Temp - & Fan, 17：System switch & Temp ctrl mode, 18：Temp + & Temp ctrl mode, 19：System switch & Temp + & Temp ctrl mode, 20：Temp - & Temp ctrl mode, 21：System switch & Temp - & Temp ctrl mode, 22：Temp + & Temp - & Temp ctrl mode, 23：System switch & Temp + & Temp - & Temp ctrl mode, 24：Fan & Temp ctrl mode, 25：System switch & Fan & Temp ctrl mode, 26：Temp + & Fan & Temp ctrl mode, 27：System switch & Temp + & Fan & Temp ctrl mode, 28：Temp - & Fan & Temp ctrl mode, 29：System switch & Temp - & Fan & Temp ctrl mode, 30：Temp + & Temp - & Fan & Temp ctrl mode, 31：System switch & Temp + & Temp - & Fan & Temp ctrl mode
 					decoded.temporary_button_unlock_cfg.enable = readUInt8(bytes, counterObj, 1);
+					var bitOptions = readUInt8(bytes, counterObj, 1);
+					// 0：disable, 1：enable
+					decoded.temporary_button_unlock_cfg.system = extractBits(bitOptions, 0, 1);
+					// 0：disable, 1：enable
+					decoded.temporary_button_unlock_cfg.temperature_up = extractBits(bitOptions, 1, 2);
+					// 0：disable, 1：enable
+					decoded.temporary_button_unlock_cfg.temperature_down = extractBits(bitOptions, 2, 3);
+					// 0：disable, 1：enable
+					decoded.temporary_button_unlock_cfg.fan = extractBits(bitOptions, 3, 4);
+					// 0：disable, 1：enable
+					decoded.temporary_button_unlock_cfg.temperature_control = extractBits(bitOptions, 4, 5);
 				}
-				var bitOptions = readUInt8(bytes, counterObj, 1);
-				// 0：disable, 1：enable
-				decoded.temporary_button_unlock_cfg.system = extractBits(bitOptions, 0, 1);
-				// 0：disable, 1：enable
-				decoded.temporary_button_unlock_cfg.temperature_up = extractBits(bitOptions, 1, 2);
-				// 0：disable, 1：enable
-				decoded.temporary_button_unlock_cfg.temperature_down = extractBits(bitOptions, 2, 3);
-				// 0：disable, 1：enable
-				decoded.temporary_button_unlock_cfg.fan = extractBits(bitOptions, 3, 4);
-				// 0：disable, 1：enable
-				decoded.temporary_button_unlock_cfg.temperature_control = extractBits(bitOptions, 4, 5);
 				if (temporary_button_unlock_cfg_cmd == 0x02) {
-					decoded.temporary_button_unlock_cfg.unlocking_duration = readUnknownDataType(bytes, counterObj, 1);
+					decoded.temporary_button_unlock_cfg.unlocking_duration = readUInt16LE(bytes, counterObj, 2);
 				}
 				break;
 			case 0xc7:
@@ -1885,7 +1885,7 @@ function processTemperature(decoded) {
     },
     "target_temperature_tolerance": {
         "precision": 2,
-        "unitName": "℃"
+        "unitName": "K"
     },
     "heating_target_temperature_range.min": {
         "precision": 2,
@@ -1905,11 +1905,11 @@ function processTemperature(decoded) {
     },
     "temperature_control_dehumidification.temp_tolerance": {
         "precision": 2,
-        "unitName": "℃"
+        "unitName": "K"
     },
     "temp_ctl_dehumi_cfg.temperature_tolerance": {
         "precision": 2,
-        "unitName": "℃"
+        "unitName": "K"
     },
     "fan_auto_mode_temperature_range.speed_range_1": {
         "precision": 2,
@@ -1921,19 +1921,19 @@ function processTemperature(decoded) {
     },
     "fan_speed_ctl_delta_cfg.delta1": {
         "precision": 2,
-        "unitName": "℃"
+        "unitName": "K"
     },
     "fan_speed_ctl_delta_cfg.delta2": {
         "precision": 2,
-        "unitName": "℃"
+        "unitName": "K"
     },
     "temperature_calibration_settings.calibration_value": {
         "precision": 2,
-        "unitName": "℃"
+        "unitName": "K"
     },
     "temperature_calibration_cfg.calibration_value": {
         "precision": 2,
-        "unitName": "℃"
+        "unitName": "K"
     },
     "temperature_alarm_settings.threshold_min": {
         "precision": 2,
@@ -1953,19 +1953,19 @@ function processTemperature(decoded) {
     },
     "high_temperature_alarm_settings.temp_difference": {
         "precision": 2,
-        "unitName": "℃"
+        "unitName": "K"
     },
     "high_temperature_alarm_cfg.delta": {
         "precision": 2,
-        "unitName": "℃"
+        "unitName": "K"
     },
     "low_temperature_alarm_settings.temp_difference": {
         "precision": 2,
-        "unitName": "℃"
+        "unitName": "K"
     },
     "low_temperature_alarm_cfg.delta": {
         "precision": 2,
-        "unitName": "℃"
+        "unitName": "K"
     },
     "schedule_settings._item.content.heat_target_temperature": {
         "precision": 2,
@@ -1977,11 +1977,11 @@ function processTemperature(decoded) {
     },
     "schedule_settings._item.content.temperature_tolerance": {
         "precision": 2,
-        "unitName": "℃"
+        "unitName": "K"
     },
     "window_opening_detection_settings.temp_detect.change": {
         "precision": 2,
-        "unitName": "℃"
+        "unitName": "K"
     },
     "freeze_protection_settings.target_temperature": {
         "precision": 2,
@@ -1993,11 +1993,11 @@ function processTemperature(decoded) {
     },
     "energy_saving_cfg.level_1_temp_tolerance": {
         "precision": 2,
-        "unitName": "℃"
+        "unitName": "K"
     },
     "energy_saving_cfg.level_2_temp_tolerance": {
         "precision": 2,
-        "unitName": "℃"
+        "unitName": "K"
     },
     "debug_commands.ambition_temp_value": {
         "precision": 2,
