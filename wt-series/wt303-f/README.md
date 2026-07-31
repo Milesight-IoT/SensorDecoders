@@ -1,6 +1,6 @@
 # WT303 Sensor
 
-![WT303](wt303.png)
+![WT303](wt303-f.png)
 
 For more detailed information, please visit [Milesight Official Website](https://www.milesight.com/iot/product/lorawan-sensor/wt303)
 
