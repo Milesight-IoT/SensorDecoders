@@ -238,19 +238,6 @@
             "bacnet_unit_type": "UNITS_DEGREES_CELSIUS"
         },
         {
-            "id": "child_lock_enable_cfg",
-            "name": "Child Lock Enable Configuration",
-            "value": "0",
-            "unit": "",
-            "access_mode": "RW",
-            "data_type": "BOOL",
-            "value_type": "UINT8",
-            "values": [],
-            "bacnet_type": "binary_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS"
-        },
-        {
             "id": "child_lock_enable_cfg.enable",
             "name": "Child Lock Function Enable(Child Lock Enable Configuration)",
             "value": "0",
@@ -5651,7 +5638,116 @@
             "access_mode": "RW",
             "data_type": "ENUM",
             "value_type": "UINT8",
-            "values": [],
+            "values": [
+                {
+                    "value": 0,
+                    "name": "None"
+                },
+                {
+                    "value": 3,
+                    "name": "System switch & Temperature +"
+                },
+                {
+                    "value": 5,
+                    "name": "System switch & Temperature -"
+                },
+                {
+                    "value": 6,
+                    "name": "Temperature + & Temperature -"
+                },
+                {
+                    "value": 7,
+                    "name": "System switch & Temperature + & Temperature -"
+                },
+                {
+                    "value": 9,
+                    "name": "System switch & Fan"
+                },
+                {
+                    "value": 10,
+                    "name": "Temperature + & Fan"
+                },
+                {
+                    "value": 11,
+                    "name": "System switch & Temperature + & Fan"
+                },
+                {
+                    "value": 12,
+                    "name": "Temperature - & Fan"
+                },
+                {
+                    "value": 13,
+                    "name": "System switch & Temperature - & Fan"
+                },
+                {
+                    "value": 14,
+                    "name": "Temperature + & Temperature - & Fan"
+                },
+                {
+                    "value": 15,
+                    "name": "System switch & Temperature + & Temperature - & Fan"
+                },
+                {
+                    "value": 17,
+                    "name": "System switch & Temperature control mode"
+                },
+                {
+                    "value": 18,
+                    "name": "Temperature + & Temperature control mode"
+                },
+                {
+                    "value": 19,
+                    "name": "System switch & Temperature + & Temperature control mode"
+                },
+                {
+                    "value": 20,
+                    "name": "Temperature - & Temperature control mode"
+                },
+                {
+                    "value": 21,
+                    "name": "System switch & Temperature - & Temperature control mode"
+                },
+                {
+                    "value": 22,
+                    "name": "Temperature + & Temperature - & Temperature control mode"
+                },
+                {
+                    "value": 23,
+                    "name": "System switch & Temperature + & Temperature - & Temperature control mode"
+                },
+                {
+                    "value": 24,
+                    "name": "Fan & Temperature control mode"
+                },
+                {
+                    "value": 25,
+                    "name": "System switch & Fan & Temperature control mode"
+                },
+                {
+                    "value": 26,
+                    "name": "Temperature + & Fan & Temperature control mode"
+                },
+                {
+                    "value": 27,
+                    "name": "System switch & Temperature + & Fan & Temperature control mode"
+                },
+                {
+                    "value": 28,
+                    "name": "Temperature - & Fan & Temperature control mode"
+                },
+                {
+                    "value": 29,
+                    "name": "System switch & Temperature - & Fan & Temperature control mode"
+                },
+                {
+                    "value": 30,
+                    "name": "Temperature + & Temperature - & Fan & Temperature control mode"
+                },
+                {
+                    "value": 31,
+                    "name": "System switch & Temperature + & Temperature - & Fan & Temperature control mode"
+                }
+            ],
             "bacnet_type": "multistate_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
