@@ -288,6 +288,18 @@ function handle_downlink_response(channel_type, bytes, offset) {
             }
             offset += 3;
             break;
+        case 0xdc:
+            decoded.motion_alarm_config = {};
+            decoded.motion_alarm_config.enable = readEnableStatus(readUInt8(bytes[offset]));
+            decoded.motion_alarm_config.threshold = readUInt8(bytes[offset + 1]);
+            offset += 2;
+            break;
+        case 0xdd:
+            decoded.alarm_suppression_config = {};
+            decoded.alarm_suppression_config.enable = readEnableStatus(readUInt8(bytes[offset]));
+            decoded.alarm_suppression_config.suppress_time = readUInt16LE(bytes.slice(offset + 1, offset + 3));
+            offset += 3;
+            break;
         default:
             throw new Error("unknown downlink response");
     }
@@ -411,7 +423,7 @@ function readReportStrategy(type) {
 }
 
 function readPositioningStrategy(type) {
-    var positioning_strategy_map = { 0: "gnss", 1: "wifi", 2: "wifi_gnss" };
+    var positioning_strategy_map = { 0: "gnss", 1: "wifi", 2: "wifi_gnss", 3: "disable" };
     return getValue(positioning_strategy_map, type);
 }
 
