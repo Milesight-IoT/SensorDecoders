@@ -68,6 +68,12 @@ function milesightDeviceEncode(payload) {
     if ("motion_report_config" in payload) {
         encoded = encoded.concat(setMotionReportConfig(payload.motion_report_config));
     }
+    if ("motion_alarm_config" in payload) {
+        encoded = encoded.concat(setMotionAlarmConfig(payload.motion_alarm_config));
+    }
+    if ("alarm_suppression_config" in payload) {
+        encoded = encoded.concat(setAlarmSuppressionConfig(payload.alarm_suppression_config));
+    }
     if ("geofence_center_config" in payload) {
         encoded = encoded.concat(setGeofenceCenterConfig(payload.geofence_center_config));
     }
@@ -222,11 +228,11 @@ function setReportStrategy(report_strategy) {
 
 /**
  * set positioning strategy
- * @param {number} positioning_strategy values: (0: gnss, 1: wifi, 2: wifi_gnss)
- * @example { "positioning_strategy": 1 }
+ * @param {string} positioning_strategy values: (0: gnss, 1: wifi, 2: wifi_gnss, 3: disable)
+ * @example { "positioning_strategy": "disable" } output: FF7103
  */
 function setPositioningStrategy(positioning_strategy) {
-    var mode_map = { 0: "gnss", 1: "wifi", 2: "wifi_gnss" };
+    var mode_map = { 0: "gnss", 1: "wifi", 2: "wifi_gnss", 3: "disable" };
     var mode_values = getValues(mode_map);
     if (mode_values.indexOf(positioning_strategy) === -1) {
         throw new Error("positioning_strategy must be one of " + mode_values.join(", "));
@@ -357,6 +363,62 @@ function setMotionReportConfig(motion_report_config) {
     buffer.writeUInt8(0x13);
     buffer.writeUInt8(getValue(enable_map, enable));
     buffer.writeUInt16LE(interval);
+    return buffer.toBytes();
+}
+
+/**
+ * set motion alarm config
+ * @param {object} motion_alarm_config
+ * @param {string} motion_alarm_config.enable values: (0: disable, 1: enable)
+ * @param {number} motion_alarm_config.threshold unit: 0.01g, range: [10, 200]
+ * @example { "motion_alarm_config": { "enable": "enable", "threshold": 10 } } output: FFDC010A
+ */
+function setMotionAlarmConfig(motion_alarm_config) {
+    var enable = motion_alarm_config.enable;
+    var threshold = motion_alarm_config.threshold;
+
+    var enable_map = { 0: "disable", 1: "enable" };
+    var enable_values = getValues(enable_map);
+    if (enable_values.indexOf(enable) === -1) {
+        throw new Error("motion_alarm_config.enable must be one of " + enable_values.join(", "));
+    }
+    if (typeof threshold !== "number" || !isFinite(threshold) || Math.floor(threshold) !== threshold || threshold < 10 || threshold > 200) {
+        throw new Error("motion_alarm_config.threshold must be an integer between 10 and 200");
+    }
+
+    var buffer = new Buffer(4);
+    buffer.writeUInt8(0xff);
+    buffer.writeUInt8(0xdc);
+    buffer.writeUInt8(getValue(enable_map, enable));
+    buffer.writeUInt8(threshold);
+    return buffer.toBytes();
+}
+
+/**
+ * set alarm suppression config
+ * @param {object} alarm_suppression_config
+ * @param {string} alarm_suppression_config.enable values: (0: disable, 1: enable)
+ * @param {number} alarm_suppression_config.suppress_time unit: minute, range: [1, 1440]
+ * @example { "alarm_suppression_config": { "enable": "enable", "suppress_time": 2 } } output: FFDD010200
+ */
+function setAlarmSuppressionConfig(alarm_suppression_config) {
+    var enable = alarm_suppression_config.enable;
+    var suppress_time = alarm_suppression_config.suppress_time;
+
+    var enable_map = { 0: "disable", 1: "enable" };
+    var enable_values = getValues(enable_map);
+    if (enable_values.indexOf(enable) === -1) {
+        throw new Error("alarm_suppression_config.enable must be one of " + enable_values.join(", "));
+    }
+    if (typeof suppress_time !== "number" || !isFinite(suppress_time) || Math.floor(suppress_time) !== suppress_time || suppress_time < 1 || suppress_time > 1440) {
+        throw new Error("alarm_suppression_config.suppress_time must be an integer between 1 and 1440");
+    }
+
+    var buffer = new Buffer(5);
+    buffer.writeUInt8(0xff);
+    buffer.writeUInt8(0xdd);
+    buffer.writeUInt8(getValue(enable_map, enable));
+    buffer.writeUInt16LE(suppress_time);
     return buffer.toBytes();
 }
 

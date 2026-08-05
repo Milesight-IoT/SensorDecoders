@@ -41,14 +41,39 @@ For more detailed information, please visit [Milesight Official Website](https:/
 |       Position       | 0x05 | 0x00 |   1    | position(1B)<br/>position, values: (0: normal, 1: tilt)                 |
 |      Wifi Scan       | 0x06 | 0xD9 |   9    | ID(1B) + MAC(6B) + RSSI(1B) + motion_status(1B)                         |
 |    Tamper Status     | 0x07 | 0x00 |   1    | tamper_status(1B)<br/>tamper_status, values: (0: install, 1: uninstall) |
+|     Motion Alarm     | 0x88 | 0xE5 |   9    | event_id(4B) + acceleration(1B) + battery(1B) + angle_x(1B) + angle_y(1B) + angle_z(1B) |
+| Periodic Statistics  | 0x09 | 0xE6 |   7    | alarm_count(2B) + max_acceleration(1B) + avg_acceleration(1B) + angle_x(1B) + angle_y(1B) + angle_z(1B) |
 | Temperature Abnormal | 0x83 | 0x67 |   3    | temperature(2B) + temperature_abnormal(1B)                              |
 |     History Data     | 0x20 | 0xCE |   12   | timestamp(4B) + longitude(4B) + latitude(4B)                            |
+| Motion Alarm History | 0x22 | 0xCE |   9    | timestamp(4B) + event_id(4B) + acceleration(1B)                         |
 
 motion_status
 
 |    BITS     | 7 - 4                                                          | 3 - 0                                                                   |
 | :---------: | :------------------------------------------------------------- | :---------------------------------------------------------------------- |
 | DESCRIPTION | Geofence Status, (0: inside, 1: outside, 2: unset, 3: unknown) | Motion Status, (0: unknown, 1: start moving, 2: moving, 3: stop moving) |
+
+periodic_statistics
+
+|        FIELD         | ENCODING | UNIT | RANGE      | DESCRIPTION                                                |
+| :------------------: | :------: | :--: | :--------- | :--------------------------------------------------------- |
+|     alarm_count      | uint16LE |      | 0 - 65535  | Number of acceleration threshold alarms in this period     |
+|   max_acceleration   |  uint8   |  g   | 0 - 2.55   | Raw value / 100; must be 0 when `alarm_count` is 0          |
+|   avg_acceleration   |  uint8   |  g   | 0 - 2.55   | Raw value / 100; must be 0 when `alarm_count` is 0          |
+|       angle_x        |   int8   |  °   | -90 - 90   | X-axis inclination angle                                   |
+|       angle_y        |   int8   |  °   | -90 - 90   | Y-axis inclination angle                                   |
+|       angle_z        |   int8   |  °   | -90 - 90   | Z-axis inclination angle                                   |
+
+motion_alarm
+
+|      FIELD       | ENCODING | UNIT | RANGE         | DESCRIPTION                                   |
+| :--------------: | :------: | :--: | :------------ | :-------------------------------------------- |
+|     event_id     | uint32LE |      | 0 - 4294967295 | Alarm event timestamp                         |
+|   acceleration   |  uint8   |  g   | 0.10 - 2.00   | Raw value / 100                               |
+|     battery      |  uint8   |  %   | 0 - 100       | Battery level                                 |
+|     angle_x      |   int8   |  °   | -90 - 90      | X-axis inclination angle                      |
+|     angle_y      |   int8   |  °   | -90 - 90      | Y-axis inclination angle                      |
+|     angle_z      |   int8   |  °   | -90 - 90      | Z-axis inclination angle                      |
 
 ## Example
 
@@ -103,5 +128,25 @@ motion_status
         }
     ],
     "wifi_scan_result": "finish"
+}
+
+// 09E602007D50F6141E
+{
+    "alarm_count": 2,
+    "max_acceleration": 1.25,
+    "avg_acceleration": 0.8,
+    "angle_x": -10,
+    "angle_y": 20,
+    "angle_z": 30
+}
+
+// 88E5785634127D64F6141E
+{
+    "event_id": 305419896,
+    "acceleration": 1.25,
+    "battery": 100,
+    "angle_x": -10,
+    "angle_y": 20,
+    "angle_z": 30
 }
 ```

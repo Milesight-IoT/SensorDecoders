@@ -121,11 +121,42 @@ function milesightDeviceDecode(bytes) {
             decoded.tamper_status = readTamperStatus(bytes[i]);
             i += 1;
         }
+        // MOTION ALARM
+        else if (channel_id === 0x88 && channel_type === 0xe5) {
+            decoded.event_id = readUInt32LE(bytes.slice(i, i + 4));
+            decoded.acceleration = readUInt8(bytes[i + 4]) / 100;
+            decoded.battery = readUInt8(bytes[i + 5]);
+            decoded.angle_x = readInt8(bytes[i + 6]);
+            decoded.angle_y = readInt8(bytes[i + 7]);
+            decoded.angle_z = readInt8(bytes[i + 8]);
+            i += 9;
+        }
+        // PERIODIC STATISTICS
+        else if (channel_id === 0x09 && channel_type === 0xe6) {
+            decoded.alarm_count = readUInt16LE(bytes.slice(i, i + 2));
+            decoded.max_acceleration = readUInt8(bytes[i + 2]) / 100;
+            decoded.avg_acceleration = readUInt8(bytes[i + 3]) / 100;
+            decoded.angle_x = readInt8(bytes[i + 4]);
+            decoded.angle_y = readInt8(bytes[i + 5]);
+            decoded.angle_z = readInt8(bytes[i + 6]);
+            i += 7;
+        }
         // TEMPERATURE WITH ABNORMAL
         else if (channel_id === 0x83 && channel_type === 0x67) {
             decoded.temperature = readInt16LE(bytes.slice(i, i + 2)) / 10;
             decoded.temperature_alarm = readTemperatureAlarm(bytes[i + 2]);
             i += 3;
+        }
+        // MOTION ALARM HISTORY
+        else if (channel_id === 0x22 && channel_type === 0xce) {
+            var data = {};
+            data.timestamp = readUInt32LE(bytes.slice(i, i + 4));
+            data.event_id = readUInt32LE(bytes.slice(i + 4, i + 8));
+            data.acceleration = readUInt8(bytes[i + 8]) / 100;
+            i += 9;
+
+            decoded.history = decoded.history || [];
+            decoded.history.push(data);
         }
         // HISTORICAL DATA
         else if (channel_id === 0x20 && channel_type === 0xce) {
