@@ -53,6 +53,16 @@ function milesightDeviceDecode(bytes) {
             decoded.tsl_version = readTslVersion(bytes.slice(i, i + 2));
             i += 2;
         }
+        // ODM ID
+        else if (channel_id === 0xff && channel_type === 0xe7) {
+            decoded.odm_id = readOdmId(bytes.slice(i, i + 2));
+            i += 2;
+        }
+        // SUB VERSION
+        else if (channel_id === 0xff && channel_type === 0xe8) {
+            decoded.sub_version = readSubVersion(bytes.slice(i, i + 4));
+            i += 4;
+        }
         // SERIAL NUMBER
         else if (channel_id === 0xff && channel_type === 0x16) {
             decoded.sn = readSerialNumber(bytes.slice(i, i + 8));
@@ -329,6 +339,26 @@ function readTslVersion(bytes) {
     var major = bytes[0] & 0xff;
     var minor = bytes[1] & 0xff;
     return "v" + major + "." + minor;
+}
+
+function readOdmId(bytes) {
+    var odm_id = [];
+    for (var idx = 0; idx < bytes.length; idx++) {
+        odm_id.push(("0" + readUInt8(bytes[idx]).toString(16)).slice(-2));
+    }
+    return odm_id.join("");
+}
+
+function readSubVersion(bytes) {
+    var version_types = ["r", "a", "u", "t"];
+    var sub_version = "";
+    for (var idx = 0; idx < bytes.length; idx++) {
+        var value = readUInt8(bytes[idx]);
+        if (value !== 0) {
+            sub_version += "-" + version_types[idx] + value.toString(16);
+        }
+    }
+    return sub_version;
 }
 
 function readSerialNumber(bytes) {
