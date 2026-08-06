@@ -642,7 +642,7 @@ function handle_downlink_response_ext(code, channel_type, bytes, offset) {
             var offline_timeout = readUInt8(bytes[offset]);
             decoded.offline_timeout = {};
             if(RAW_VALUE) {
-                var rawValue_offline_timeout_map = { 255: 1, 5: 2, 10: 3, 20: 4, 30: 5, 40: 6, 50: 7, 60: 8 };
+                var rawValue_offline_timeout_map = { 5: 1, 10: 2, 20: 3, 30: 4, 40: 5, 50: 6, 60: 7, 255: 8 };
                 decoded.offline_timeout.value = rawValue_offline_timeout_map[offline_timeout];
                 decoded.offline_timeout.time = offline_timeout === 255 ? "disable" : offline_timeout;
             } else {
@@ -651,6 +651,7 @@ function handle_downlink_response_ext(code, channel_type, bytes, offset) {
             offset += 1;
             break;
         case 0x2a:
+            // HEARTBEAT COUNTS
             decoded.heartbeat = readUInt8(bytes[offset]);
             offset += 1;
             break;

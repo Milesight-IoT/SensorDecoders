@@ -738,9 +738,9 @@
         {
             "id": "heartbeat",
             "name": "Heartbeat",
-            "value": "",
+            "value": "0",
             "unit": "",
-            "access_mode": "W",
+            "access_mode": "RW",
             "data_type": "NUMBER",
             "value_type": "UINT8",
             "range": [
@@ -754,7 +754,7 @@
         {
             "id": "offline_timeout.value",
             "name": "Offline Timeout",
-            "value": "1",
+            "value": "8",
             "unit": "min",
             "access_mode": "RW",
             "data_type": "ENUM",
@@ -762,35 +762,35 @@
             "values": [
                 {
                     "value": 1,
-                    "name": "disable"
-                },
-                {
-                    "value": 2,
                     "name": "5"
                 },
                 {
-                    "value": 3,
+                    "value": 2,
                     "name": "10"
                 },
                 {
-                    "value": 4,
+                    "value": 3,
                     "name": "20"
                 },
                 {
-                    "value": 5,
+                    "value": 4,
                     "name": "30"
                 },
                 {
-                    "value": 6,
+                    "value": 5,
                     "name": "40"
                 },
                 {
-                    "value": 7,
+                    "value": 6,
                     "name": "50"
                 },
                 {
-                    "value": 8,
+                    "value": 7,
                     "name": "60"
+                },
+                {
+                    "value": 8,
+                    "name": "disable"
                 }
             ],
             "bacnet_type": "multistate_value_object",

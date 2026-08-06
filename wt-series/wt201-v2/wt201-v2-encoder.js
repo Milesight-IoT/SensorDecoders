@@ -206,7 +206,8 @@ function milesightDeviceEncode(payload) {
 
     // fireware version 1.4
     if ("offline_timeout" in payload) {
-        encoded = encoded.concat(setConfigValueTime(payload.offline_timeout, "offline_timeout", 0x29));
+        var offline_timeout_value_map = { 1: 5, 2: 10, 3: 20, 4: 30, 5: 40, 6: 50, 7: 60, 8: "disable" };
+        encoded = encoded.concat(setConfigValueTime(payload.offline_timeout, "offline_timeout", 0x29, offline_timeout_value_map));
     }
     if ("heartbeat" in payload) {
         encoded = encoded.concat(setDownHeart(payload.heartbeat));
@@ -287,7 +288,8 @@ function milesightDeviceEncode(payload) {
         encoded = encoded.concat(setOccupancyMode(payload.occupancy_mode));
     }
     if ("occupied_delay" in payload) {
-        encoded = encoded.concat(setConfigValueTime(payload.occupied_delay, "occupied_delay", 0x28));
+        var occupied_delay_value_map = { 1: "disable", 2: 5, 3: 10, 4: 20, 5: 30, 6: 40, 7: 50, 8: 60 };
+        encoded = encoded.concat(setConfigValueTime(payload.occupied_delay, "occupied_delay", 0x28, occupied_delay_value_map));
     }
     if ("unilateral_tolerance" in payload) {
         encoded = encoded.concat(setEnableStatus(payload.unilateral_tolerance, "unilateral_tolerance", 0x2b));
@@ -2458,11 +2460,12 @@ function setOfflineControlMode(offline_control_mode) {
  * @param {object} offline_timeout/occupied_delay
  * @param {number} [offline_timeout/occupied_delay].value values: [ 1, 2, 3, 4, 5, 6, 7, 8 ]
  * @param {string} [offline_timeout/occupied_delay].time values: [ 'disable', 5, 10, 20, 30, 40, 50, 60 ]
- * @example { "offline_timeout/occupied_delay": { "value": 2, "time": 5 } }
+ * @param {object} config_value_map mapping of model values to protocol values
+ * @example { "offline_timeout": { "value": 1, "time": 5 } }
+ * @example { "occupied_delay": { "value": 2, "time": 5 } }
  */
-function setConfigValueTime(config, key, channel_type) { 
+function setConfigValueTime(config, key, channel_type, config_value_map) {
     var value = config.value;
-    var config_value_map = { 1: "disable", 2: 5, 3: 10, 4: 20, 5: 30, 6: 40, 7: 50, 8: 60 };
     var config_value_values = getValues(config_value_map);
 
     var buffer = new Buffer(3);
@@ -2471,7 +2474,7 @@ function setConfigValueTime(config, key, channel_type) {
 
     if(RAW_VALUE) {
         if (config_value_values.indexOf(value) === -1) {
-            throw new Error(key + ".value must be one of " + config_value_map.join(", "));
+            throw new Error(key + ".value must be one of " + Object.keys(config_value_map).join(", "));
         }
 
         buffer.writeUInt8(config_value_map[value] === 'disable' ? 255 : config_value_map[value]);
@@ -2492,9 +2495,9 @@ function setConfigValueTime(config, key, channel_type) {
 }
 
 /**
- * set down heart
+ * set heartbeat count
  * @since firmware version 1.4
- * @param {number} heartbeat range: [0, 255]
+ * @param {number} heartbeat counts, range: [0, 255]
  * @example { "heartbeat": 0 }
  */
 function setDownHeart(heartbeat) {
