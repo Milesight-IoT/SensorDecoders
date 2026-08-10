@@ -44,6 +44,7 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Valve 1 | 0x10 | 5 | r | 0 |  | 0：Open<br>1：Close |
 | Valve 2 | 0x10 | 5 | r | 0 |  | 0：Open<br>1：Close |
 | Reserved | 0x10 | 5 | r |  |  |  |
+| Reserved | 0x10 | 5 | r |  |  |  |
 | AO1 Duty | 0x10 | 5 | r | 0 |  |  |
 | AO2 Duty | 0x10 | 5 | r | 0 |  |  |
 | Random key | 0xC9 | 2 | rw | 0 |  | 0：disable<br>1：enable |

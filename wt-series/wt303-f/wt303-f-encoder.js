@@ -425,6 +425,10 @@ function milesightDeviceEncode(payload) {
 		bitOptions |= payload.relay_status.valve_2_status << 4;
 
 		bitOptions |= payload.relay_status.reserved << 5;
+		buffer.writeUInt32LE(bitOptions);
+
+		var bitOptions = 0;
+		bitOptions |= payload.relay_status.reserved << 5;
 
 		bitOptions |= payload.relay_status.ao1_duty << 16;
 

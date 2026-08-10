@@ -263,6 +263,8 @@ function milesightDeviceDecode(bytes) {
 				decoded.relay_status.high_status = extractBits(bitOptions, 2, 3);
 				decoded.relay_status.valve_1_status = extractBits(bitOptions, 3, 4);
 				decoded.relay_status.valve_2_status = extractBits(bitOptions, 4, 5);
+				decoded.relay_status.reserved = extractBits(bitOptions, 5, 32);
+				var bitOptions = readUInt32LE(bytes, counterObj, 4);
 				decoded.relay_status.reserved = extractBits(bitOptions, 5, 16);
 				decoded.relay_status.ao1_duty = extractBits(bitOptions, 16, 24);
 				decoded.relay_status.ao2_duty = extractBits(bitOptions, 24, 32);
