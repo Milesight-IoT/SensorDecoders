@@ -1583,57 +1583,6 @@
             "reference": []
         },
         {
-            "id": "delete_schedule.type",
-            "name": "Delete Schedule(Delete Schedule List)",
-            "value": "255",
-            "unit": "",
-            "access_mode": "W",
-            "data_type": "ENUM",
-            "value_type": "UINT8",
-            "values": [
-                {
-                    "value": 0,
-                    "name": "Schedule1"
-                },
-                {
-                    "value": 1,
-                    "name": "Schedule2"
-                },
-                {
-                    "value": 2,
-                    "name": "Schedule3"
-                },
-                {
-                    "value": 3,
-                    "name": "Schedule4"
-                },
-                {
-                    "value": 4,
-                    "name": "Schedule5"
-                },
-                {
-                    "value": 5,
-                    "name": "Schedule6"
-                },
-                {
-                    "value": 6,
-                    "name": "Schedule7"
-                },
-                {
-                    "value": 7,
-                    "name": "Schedule8"
-                },
-                {
-                    "value": 255,
-                    "name": "Reset All"
-                }
-            ],
-            "bacnet_type": "multistate_output_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": []
-        },
-        {
             "id": "device_status",
             "name": "Device Status",
             "value": "1",
@@ -2243,6 +2192,47 @@
             "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS"
+        },
+        {
+            "id": "external_data_src_timeout_cfg.timeout",
+            "name": "Timeout(External Data Source Timeout Configuration)",
+            "value": "10",
+            "unit": "min",
+            "access_mode": "RW",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [],
+            "bacnet_type": "multistate_value_object",
+            "bacnet_unit_type_id": 72,
+            "bacnet_unit_type": "UNITS_MINUTES",
+            "reference": []
+        },
+        {
+            "id": "external_data_src_timeout_cfg.timeout_response",
+            "name": "Device Offline Settings(External Data Source Timeout Configuration)",
+            "value": "0",
+            "unit": "",
+            "access_mode": "RW",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "Keep Control"
+                },
+                {
+                    "value": 1,
+                    "name": "Turn Off The Control"
+                },
+                {
+                    "value": 2,
+                    "name": "Switch The Embedded Temperature"
+                }
+            ],
+            "bacnet_type": "multistate_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": []
         },
         {
             "id": "fahrenheit_cooling_target_temperature",
@@ -2999,19 +2989,6 @@
                 "high_temperature_alarm_settings.enable",
                 "high_temperature_alarm_settings.duration"
             ]
-        },
-        {
-            "id": "historical_data_report.timestamp",
-            "name": "Historical Data Timestamps(Historical Data)",
-            "value": "",
-            "unit": "",
-            "access_mode": "R",
-            "data_type": "NUMBER",
-            "value_type": "UINT8",
-            "bacnet_type": "analog_input_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": []
         },
         {
             "id": "humidity",
@@ -3930,6 +3907,48 @@
             "bacnet_unit_type": "UNITS_NO_UNITS"
         },
         {
+            "id": "relay_status.ao1_duty",
+            "name": "AO1 Duty(Relay/Valve Status)",
+            "value": "0",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "NUMBER",
+            "value_type": "UINT8",
+            "bacnet_type": "analog_input_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "relay_status.low_status",
+                "relay_status.mid_status",
+                "relay_status.high_status",
+                "relay_status.valve_1_status",
+                "relay_status.valve_2_status",
+                "relay_status.reserved",
+                "relay_status.ao2_duty"
+            ]
+        },
+        {
+            "id": "relay_status.ao2_duty",
+            "name": "AO2 Duty(Relay/Valve Status)",
+            "value": "0",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "NUMBER",
+            "value_type": "UINT8",
+            "bacnet_type": "analog_input_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "relay_status.low_status",
+                "relay_status.mid_status",
+                "relay_status.high_status",
+                "relay_status.valve_1_status",
+                "relay_status.valve_2_status",
+                "relay_status.reserved",
+                "relay_status.ao1_duty"
+            ]
+        },
+        {
             "id": "relay_status.high_status",
             "name": "Fan High(Relay/Valve Status)",
             "value": "0",
@@ -3955,7 +3974,9 @@
                 "relay_status.mid_status",
                 "relay_status.valve_1_status",
                 "relay_status.valve_2_status",
-                "relay_status.reserved"
+                "relay_status.reserved",
+                "relay_status.ao1_duty",
+                "relay_status.ao2_duty"
             ]
         },
         {
@@ -3984,7 +4005,9 @@
                 "relay_status.high_status",
                 "relay_status.valve_1_status",
                 "relay_status.valve_2_status",
-                "relay_status.reserved"
+                "relay_status.reserved",
+                "relay_status.ao1_duty",
+                "relay_status.ao2_duty"
             ]
         },
         {
@@ -4013,7 +4036,9 @@
                 "relay_status.high_status",
                 "relay_status.valve_1_status",
                 "relay_status.valve_2_status",
-                "relay_status.reserved"
+                "relay_status.reserved",
+                "relay_status.ao1_duty",
+                "relay_status.ao2_duty"
             ]
         },
         {
@@ -4032,7 +4057,9 @@
                 "relay_status.mid_status",
                 "relay_status.high_status",
                 "relay_status.valve_1_status",
-                "relay_status.valve_2_status"
+                "relay_status.valve_2_status",
+                "relay_status.ao1_duty",
+                "relay_status.ao2_duty"
             ],
             "values": [
                 {
@@ -4071,7 +4098,9 @@
                 "relay_status.mid_status",
                 "relay_status.high_status",
                 "relay_status.valve_2_status",
-                "relay_status.reserved"
+                "relay_status.reserved",
+                "relay_status.ao1_duty",
+                "relay_status.ao2_duty"
             ]
         },
         {
@@ -4100,7 +4129,9 @@
                 "relay_status.mid_status",
                 "relay_status.high_status",
                 "relay_status.valve_1_status",
-                "relay_status.reserved"
+                "relay_status.reserved",
+                "relay_status.ao1_duty",
+                "relay_status.ao2_duty"
             ]
         },
         {
@@ -4725,6 +4756,28 @@
             "reference": []
         },
         {
+            "id": "temp_ctrl_auth_status",
+            "name": "Temperature Control Authority Status",
+            "value": "0",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "Thermostat Control"
+                },
+                {
+                    "value": 1,
+                    "name": "Remote Control"
+                }
+            ],
+            "bacnet_type": "multistate_input_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS"
+        },
+        {
             "id": "temperature_alarm_settings.celsius_threshold_max",
             "name": "Celsius Value B(Temperature Threshold Alarm Settings)",
             "value": "0",
@@ -5264,7 +5317,7 @@
             "name": "Remote Ctrl Interface Switch(Temp Ctrl Permission Cfg)",
             "value": "0",
             "unit": "",
-            "access_mode": "RW",
+            "access_mode": "W",
             "data_type": "ENUM",
             "value_type": "UINT8",
             "values": [
@@ -5401,10 +5454,9 @@
                     "name": "Enable All Interfaces"
                 }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_output_object",
             "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": []
+            "bacnet_unit_type": "UNITS_NO_UNITS"
         },
         {
             "id": "temperature_control_permission_cfg.temp_ctrl_permission",
@@ -5641,7 +5693,7 @@
             "values": [
                 {
                     "value": 0,
-                    "name": "None"
+                    "name": "Disable"
                 },
                 {
                     "value": 3,

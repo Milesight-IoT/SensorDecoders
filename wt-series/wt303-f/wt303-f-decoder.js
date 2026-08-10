@@ -55,27 +55,12 @@ function milesightDeviceDecode(bytes) {
 			case 0xee:
 				decoded.all_configurations_request_by_device = readOnlyCommand(bytes, counterObj, 0);
 				break;
-			case 0xed:
-				if (history.length === 0) {
-					for (var k in decoded) {
-						if (decoded.hasOwnProperty(k)) {
-							result[k] = decoded[k];
-						}
-					}
-				}
-				decoded = {};
-				// skip type
-				readUInt8(bytes, counterObj, 1);
-				decoded.timestamp = readUInt32LE(bytes, counterObj, 4);
-				history.push(decoded);
-				break;
 			case 0xcf:
 				decoded.lorawan_configuration_settings = decoded.lorawan_configuration_settings || {};
-				var lorawan_configuration_settings_command = readUInt8(bytes, counterObj, 1);
-				if (lorawan_configuration_settings_command == 0x00) {
-					// 0:ClassA, 1:ClassB, 2:ClassC, 3:ClassC to B
-					decoded.lorawan_configuration_settings.mode = readUInt8(bytes, counterObj, 1);
-				}
+				// 1：1.0.2, 2：1.0.3, 3：1.0.3, 4：1.0.4
+				decoded.lorawan_configuration_settings.version = readUInt8(bytes, counterObj, 1);
+				// 0:ClassA, 1:ClassB, 2:ClassC, 3:ClassC to B
+				decoded.lorawan_configuration_settings.mode = readUInt8(bytes, counterObj, 1);
 				break;
 			case 0xdf:
 				decoded.tsl_version = readProtocolVersion(readBytes(bytes, counterObj, 2));
@@ -99,6 +84,9 @@ function milesightDeviceDecode(bytes) {
 				break;
 			case 0xd8:
 				decoded.product_frequency_band = readString(bytes, counterObj, 16);
+				break;
+			case 0xb8:
+				decoded.battery_info.current_battery_status = readHexString(bytes, counterObj, 2);
 				break;
 			case 0x00:
 				decoded.battery = readUInt8(bytes, counterObj, 1);
@@ -263,6 +251,10 @@ function milesightDeviceDecode(bytes) {
 				// 0：Available, 1：Occupied, 2：Occupied at Night
 				decoded.occupied_status = readUInt8(bytes, counterObj, 1);
 				break;
+			case 0x0d:
+				// 0: Thermostat Control, 1: Remote Control
+				decoded.temp_ctrl_auth_status = readUInt8(bytes, counterObj, 1);
+				break;
 			case 0x10:
 				decoded.relay_status = decoded.relay_status || {};
 				var bitOptions = readUInt32LE(bytes, counterObj, 4);
@@ -271,7 +263,13 @@ function milesightDeviceDecode(bytes) {
 				decoded.relay_status.high_status = extractBits(bitOptions, 2, 3);
 				decoded.relay_status.valve_1_status = extractBits(bitOptions, 3, 4);
 				decoded.relay_status.valve_2_status = extractBits(bitOptions, 4, 5);
-				decoded.relay_status.reserved = extractBits(bitOptions, 5, 32);
+				decoded.relay_status.reserved = extractBits(bitOptions, 5, 16);
+				decoded.relay_status.ao1_duty = extractBits(bitOptions, 16, 24);
+				decoded.relay_status.ao2_duty = extractBits(bitOptions, 24, 32);
+				break;
+			case 0xc9:
+				// 0：disable, 1：enable
+				decoded.random_key = readUInt8(bytes, counterObj, 1);
 				break;
 			case 0xc8:
 				// 0：Off, 1：On
@@ -334,6 +332,17 @@ function milesightDeviceDecode(bytes) {
 			case 0xa0:
 				// 0：Embedded Temperature, 1：External NTC, 2：LoRa Receive, 3：D2D Receive
 				decoded.temperature_data_source_cfg = readUInt8(bytes, counterObj, 1);
+				break;
+			case 0xa7:
+				decoded.external_data_src_timeout_cfg = decoded.external_data_src_timeout_cfg || {};
+				var external_data_src_timeout_cfg_cmd = readUInt8(bytes, counterObj, 1);
+				if (external_data_src_timeout_cfg_cmd == 0x00) {
+					decoded.external_data_src_timeout_cfg.timeout = readUInt8(bytes, counterObj, 1);
+				}
+				if (external_data_src_timeout_cfg_cmd == 0x01) {
+					// 0: Keep Control, 1: Turn Off The Control, 2: Switch The Embedded Temperature
+					decoded.external_data_src_timeout_cfg.timeout_response = readUInt8(bytes, counterObj, 1);
+				}
 				break;
 			case 0x67:
 				// 0：Off, 1：On
@@ -950,6 +959,16 @@ function milesightDeviceDecode(bytes) {
 				// 0：Schedule1, 1：Schedule2, 2：Schedule3, 3：Schedule4, 4：Schedule5, 5：Schedule6, 6：Schedule7, 7：Schedule8, 16：System Off, 17：System On
 				d2d_slave_settings_item.value = readUInt8(bytes, counterObj, 1);
 				break;
+			case 0x91:
+				decoded.screen_content_settings = decoded.screen_content_settings || [];
+				// 0: Reboot, 1: Reset, 2: Overtemperature Protection, 3: Ventilation Icon, 4: Ventilation Text, 5: Heat Icon, 6: Heat Text, 7: Cool Icon, 8: Cool Text, 9: Auto Fan Icon, 10: Auto Fan Text, 11: Low Fan Speed Icon, 12: Low Fan Speed Text, 13: Medium Fan Speed Icon, 14: Medium Fan Speed Text, 15: High Fan Speed Icon, 16: High Fan Speed Text, 17: Temperature Set, 18: Schedule Icon, 19: Schedule 1 Name, 20: Schedule 2 Name, 21: Schedule 3 Name, 22: Schedule 4 Name, 23: Schedule 5 Name, 24: Schedule 6 Name, 25: Schedule 7 Name, 26: Schedule 8 Name, 27: Schedule 9 Name, 28: Schedule 10 Name, 29: Schedule 11 Name, 30: Schedule 12 Name, 31: Schedule 13 Name, 32: Schedule 14 Name, 33: Schedule 15 Name, 34: Schedule 16 Name
+				var object = readUInt8(bytes, counterObj, 1);
+				var screen_content_settings_item = pickArrayItem(decoded.screen_content_settings, object, 'object');
+				screen_content_settings_item.object = object;
+				insertArrayItem(decoded.screen_content_settings, screen_content_settings_item, 'object');
+				screen_content_settings_item.length = readUInt16LE(bytes, counterObj, 2);
+				screen_content_settings_item.data = readHexString(bytes, counterObj, screen_content_settings_item.length);
+				break;
 			case 0x94:
 				decoded.occupied_detection_cfg = decoded.occupied_detection_cfg || {};
 				var occupied_detection_cfg_cmd = readUInt8(bytes, counterObj, 1);
@@ -1084,14 +1103,6 @@ function milesightDeviceDecode(bytes) {
 					// 0: Thermostat Control, 1: Remote Control
 					decoded.temperature_control_permission_cfg.temp_ctrl_permission = readUInt8(bytes, counterObj, 1);
 				}
-				if (temperature_control_permission_cfg_cmd == 0x01) {
-					// 0: Disable All, 1: Enable GL Interface, 2: Enable GM Interface, 3: Enable GL and GM Interfaces, 4: Enable GH Interface, 5: Enable GL and GH Interfaces, 6: Enable GM and GH Interfaces, 7: Enable GL, GM, and GH Interfaces, 8: Enable V1 Interface, 9: Enable GL and V1 Interfaces, 10: Enable GM and V1 Interfaces, 11: Enable GL, GM, and V1 Interfaces, 12: Enable GH and V1 Interfaces, 13: Enable GL, GH, and V1 Interfaces, 14: Enable GM, GH, and V1 Interfaces, 15: Enable GL, GM, GH, and V1 Interfaces, 16: Enable V2 Interface, 17: Enable GL and V2 Interfaces, 18: Enable GM and V2 Interfaces, 19: Enable GL, GM, and V2 Interfaces, 20: Enable GH and V2 Interfaces, 21: Enable GL, GH, and V2 Interfaces, 22: Enable GM, GH, and V2 Interfaces, 23: Enable GL, GM, GH, and V2 Interfaces, 24: Enable V1 and V2 Interfaces, 25: Enable GL, V1, and V2 Interfaces, 26: Enable GM, V1, and V2 Interfaces, 27: Enable GL, GM, V1, and V2 Interfaces, 28: Enable GH, V1, and V2 Interfaces, 29: Enable GL, GH, V1, and V2 Interfaces, 30: Enable GM, GH, V1, and V2 Interfaces, 31: Enable GL, GM, GH, V1, and V2 Interfaces, 255: Enable All Interfaces
-					decoded.temperature_control_permission_cfg.switch_303 = readUInt8(bytes, counterObj, 1);
-				}
-				if (temperature_control_permission_cfg_cmd == 0x03) {
-					// 0:Keep Current Temperature Control Status, 1:Switch to Thermostat Control + Internal Temperature Control, 2:Turn Off All Relays
-					decoded.temperature_control_permission_cfg.offline_switch_status = readUInt8(bytes, counterObj, 1);
-				}
 				break;
 			case 0xa6:
 				decoded.debug_commands = decoded.debug_commands || {};
@@ -1113,9 +1124,6 @@ function milesightDeviceDecode(bytes) {
 				break;
 			case 0xb9:
 				decoded.query_device_status = readOnlyCommand(bytes, counterObj, 0);
-				break;
-			case 0xb8:
-				decoded.synchronize_time = readOnlyCommand(bytes, counterObj, 0);
 				break;
 			case 0xb7:
 				decoded.set_time = decoded.set_time || {};
@@ -1139,6 +1147,10 @@ function milesightDeviceDecode(bytes) {
 			case 0xb6:
 				decoded.reconnect = readOnlyCommand(bytes, counterObj, 0);
 				break;
+			case 0x5a:
+				// 0: Disable All, 1: Enable GL Interface, 2: Enable GM Interface, 3: Enable GL and GM Interfaces, 4: Enable GH Interface, 5: Enable GL and GH Interfaces, 6: Enable GM and GH Interfaces, 7: Enable GL, GM, and GH Interfaces, 8: Enable V1 Interface, 9: Enable GL and V1 Interfaces, 10: Enable GM and V1 Interfaces, 11: Enable GL, GM, and V1 Interfaces, 12: Enable GH and V1 Interfaces, 13: Enable GL, GH, and V1 Interfaces, 14: Enable GM, GH, and V1 Interfaces, 15: Enable GL, GM, GH, and V1 Interfaces, 16: Enable V2 Interface, 17: Enable GL and V2 Interfaces, 18: Enable GM and V2 Interfaces, 19: Enable GL, GM, and V2 Interfaces, 20: Enable GH and V2 Interfaces, 21: Enable GL, GH, and V2 Interfaces, 22: Enable GM, GH, and V2 Interfaces, 23: Enable GL, GM, GH, and V2 Interfaces, 24: Enable V1 and V2 Interfaces, 25: Enable GL, V1, and V2 Interfaces, 26: Enable GM, V1, and V2 Interfaces, 27: Enable GL, GM, V1, and V2 Interfaces, 28: Enable GH, V1, and V2 Interfaces, 29: Enable GL, GH, V1, and V2 Interfaces, 30: Enable GM, GH, V1, and V2 Interfaces, 31: Enable GL, GM, GH, V1, and V2 Interfaces, 255: Enable All Interfaces
+				decoded.temperature_control_permission_cfg_303 = readUInt8(bytes, counterObj, 1);
+				break;
 			case 0x5b:
 				decoded.send_temperature = decoded.send_temperature || {};
 				decoded.send_temperature.temperature = readInt16LE(bytes, counterObj, 2) / 100;
@@ -1156,11 +1168,6 @@ function milesightDeviceDecode(bytes) {
 				decoded.insert_schedule = decoded.insert_schedule || {};
 				// 0：Schedule1, 1：Schedule2, 2：Schedule3, 3：Schedule4, 4：Schedule5, 5：Schedule6, 6：Schedule7, 7：Schedule8
 				decoded.insert_schedule.type = readUInt8(bytes, counterObj, 1);
-				break;
-			case 0x5f:
-				decoded.delete_schedule = decoded.delete_schedule || {};
-				// 0：Schedule1, 1：Schedule2, 2：Schedule3, 3：Schedule4, 4：Schedule5, 5：Schedule6, 6：Schedule7, 7：Schedule8, 255：Reset All 
-				decoded.delete_schedule.type = readUInt8(bytes, counterObj, 1);
 				break;
 			case 0xbf:
 				decoded.reset = readOnlyCommand(bytes, counterObj, 0);
@@ -1594,6 +1601,7 @@ function cmdMap() {
 		  "88": "d2d_master_enable",
 		  "89": "d2d_master_settings",
 		  "90": "relay_changes_report_enable",
+		  "91": "screen_content_settings",
 		  "93": "screen_front_light_enable",
 		  "94": "occupied_detection_cfg",
 		  "95": "energy_saving_cfg",
@@ -1635,9 +1643,8 @@ function cmdMap() {
 		  "9509": "energy_saving_cfg.level_2_temp_tolerance",
 		  "9600": "child_lock_enable_cfg.enable",
 		  "9601": "child_lock_enable_cfg.key_enable",
-		  "9700": "temporary_button_unlock_cfg.func_enable",
-		  "9701": "temporary_button_unlock_cfg.enable",
-		  "9702": "temporary_button_unlock_cfg.unlocking_duration",
+		  "9700": "temporary_button_unlock_cfg.enable",
+		  "9701": "temporary_button_unlock_cfg.unlocking_duration",
 		  "9800": "freeze_protection_cfg.enable",
 		  "9801": "freeze_protection_cfg.target_temperature",
 		  "9900": "threshold_alarm_cfg.enable",
@@ -1650,9 +1657,7 @@ function cmdMap() {
 		  "fe": "request_check_order",
 		  "ef": "request_command_queries",
 		  "ee": "request_query_all_configurations",
-		  "ed": "historical_data_report",
 		  "cf": "lorawan_configuration_settings",
-		  "cf00": "lorawan_configuration_settings.mode",
 		  "df": "tsl_version",
 		  "de": "product_name",
 		  "dd": "product_pn",
@@ -1660,6 +1665,7 @@ function cmdMap() {
 		  "da": "version",
 		  "d9": "oem_id",
 		  "d8": "product_frequency_band",
+		  "b8": "battery_info.current_battery_status",
 		  "00": "battery",
 		  "04": "data_source",
 		  "01": "temperature",
@@ -1698,10 +1704,15 @@ function cmdMap() {
 		  "0b": "target_temperature_alarm",
 		  "0b03": "target_temperature_alarm.no_data",
 		  "0c": "occupied_status",
+		  "0d": "temp_ctrl_auth_status",
+		  "c9": "random_key",
 		  "c8": "device_status",
 		  "a1": "reporting_interval_cfg",
 		  "c4": "auto_p_enable",
 		  "a0": "temperature_data_source_cfg",
+		  "a7": "external_data_src_timeout_cfg",
+		  "a700": "external_data_src_timeout_cfg.timeout",
+		  "a701": "external_data_src_timeout_cfg.timeout_response",
 		  "6b": "heating_target_temperature",
 		  "6c": "cooling_target_temperature",
 		  "6a": "target_temperature_tolerance",
@@ -1764,6 +1775,7 @@ function cmdMap() {
 		  "8a": "d2d_slave_enable",
 		  "8b": "d2d_slave_settings",
 		  "8bxx": "d2d_slave_settings._item",
+		  "91xx": "screen_content_settings._item",
 		  "940a": "occupied_detection_cfg.vacant_time",
 		  "950a": "energy_saving_cfg.mode",
 		  "a2": "screen_display_cfg",
@@ -1777,26 +1789,23 @@ function cmdMap() {
 		  "a404": "active_data_reporting_cfg.enable",
 		  "a5": "temperature_control_permission_cfg",
 		  "a500": "temperature_control_permission_cfg.temp_ctrl_permission",
-		  "a501": "temperature_control_permission_cfg.switch_303",
-		  "a503": "temperature_control_permission_cfg.offline_switch_status",
 		  "a6": "debug_commands",
 		  "a600": "debug_commands.ambition_temp_enable",
 		  "a601": "debug_commands.ambition_temp_value",
 		  "a602": "debug_commands.ambition_humi_enable",
 		  "a603": "debug_commands.ambition_humi_value",
 		  "b9": "query_device_status",
-		  "b8": "synchronize_time",
 		  "b7": "set_time",
 		  "bd": "clear_historical_data",
 		  "bc": "stop_historical_data_retrieval",
 		  "bb": "retrieve_historical_data_by_time_range",
 		  "ba": "retrieve_historical_data_by_time",
 		  "b6": "reconnect",
+		  "5a": "temperature_control_permission_cfg_303",
 		  "5b": "send_temperature",
 		  "5c": "send_humidity",
 		  "5d": "update_open_windows_state",
 		  "5e": "insert_schedule",
-		  "5f": "delete_schedule",
 		  "bf": "reset",
 		  "be": "reboot"
 	};

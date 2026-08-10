@@ -11,7 +11,7 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | CHANNEL |  ID  | LENGTH | READ/WRITE | DEFAULT | RANGE | ENUM |
 | :------ | :--: | :----: | :--------: | :-----: | :---: | :--: |
 | LoRaWAN  Settings | 0xCF | 1 | rw |  |  |  |
-| LoRaWAN Comand | 0xCF | 2 | rw |  |  |  |
+| LoRaWAN Version | 0xCF | 2 | rw | 2 |  | 1：1.0.2<br>2：1.0.3<br>3：1.0.3<br>4：1.0.4 |
 | LoRaWAN Work Mode | 0xCF | 2 | rw | 0 |  | 0:ClassA<br>1:ClassB<br>2:ClassC<br>3:ClassC to B |
 | TSL Version | 0xDF | 3 | r |  |  |  |
 | Product Name | 0xDE | 33 | rw |  |  |  |
@@ -36,6 +36,7 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Fan Status | 0x07 | 2 | r | 0 |  | 0：Off<br>1: Low<br>2: Medium<br>3: High |
 | Schedule | 0x08 | 2 | r | 255 |  | 0：Schedule1<br>1：Schedule2<br>2：Schedule3<br>3：Schedule4<br>4：Schedule5<br>5：Schedule6<br>6：Schedule7<br>7：Schedule8<br>8：Schedule9<br>9：Schedule10<br>10：Schedule11<br>11：Schedule12<br>12：Schedule13<br>13：Schedule14<br>14：Schedule15<br>15：Schedule16<br>255：Not executed |
 | Occupied Status | 0x0C | 2 | r | 0 |  | 0：Available<br>1：Occupied<br>2：Occupied at Night |
+| Temperature Control Authority Status | 0x0D | 2 | r | 0 |  | 0: Thermostat Control<br>1: Remote Control |
 | Relay/Valve Status | 0x10 | 5 | r |  |  |  |
 | Fan Low | 0x10 | 5 | r | 0 |  | 0：Open<br>1：Close |
 | Fan Medium | 0x10 | 5 | r | 0 |  | 0：Open<br>1：Close |
@@ -43,6 +44,9 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Valve 1 | 0x10 | 5 | r | 0 |  | 0：Open<br>1：Close |
 | Valve 2 | 0x10 | 5 | r | 0 |  | 0：Open<br>1：Close |
 | Reserved | 0x10 | 5 | r |  |  |  |
+| AO1 Duty | 0x10 | 5 | r | 0 |  |  |
+| AO2 Duty | 0x10 | 5 | r | 0 |  |  |
+| Random key | 0xC9 | 2 | rw | 0 |  | 0：disable<br>1：enable |
 | Device Status | 0xC8 | 2 | r | 1 |  | 0：Off<br>1：On |
 | Collecting Interval | 0x60 | 1 | rw |  |  |  |
 | Collecting Interval Unit | 0x60 | 2 | rw | 0 |  | 0：second<br>1：min |
@@ -65,6 +69,10 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Timeout | 0x85 | 2 | rw | 10 | 1 - 60 |  |
 | Device Offline Settings | 0x85 | 2 | rw | 0 |  | 0: Keep Control<br>1: Turn Off The Control<br>2: Switch The Embedded Temperature |
 | Temperature Data Source Configuration | 0xA0 | 2 | rw | 0 |  | 0：Embedded Temperature<br>1：External NTC<br>2：LoRa Receive<br>3：D2D Receive |
+| External Data Source Timeout Configuration | 0xA7 | 1 | rw |  |  |  |
+| Sub-command | 0xA7 | 2 | rw | 0 |  |  |
+| Timeout | 0xA7 | 2 | rw | 10 | 1 - 60 |  |
+| Device Offline Settings | 0xA7 | 2 | rw | 0 |  | 0: Keep Control<br>1: Turn Off The Control<br>2: Switch The Embedded Temperature |
 | System On/Off | 0x67 | 2 | rw | 0 |  | 0：Off<br>1：On |
 | Mode Enable | 0x64 | 2 | rw | 7 |  | 7：Ventilation、Heat、Cool<br>3：Ventilation、Heat<br>5：Ventilation、Cool |
 | Temperature Control Mode | 0x68 | 2 | rw | 1 |  | 0：Ventilation<br>1：Heat<br>2：Cool |
@@ -172,8 +180,7 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Unlocking Time | 0x8D | 3 | rw | 30 | 1 - 3600 |  |
 | Temporary Button Unlock Configuration | 0x97 | 1 | rw |  |  |  |
 | Sub-command | 0x97 | 2 | rw | 0 |  |  |
-| Temporary Button Unlock Function Enable | 0x97 | 2 | rw | 0 |  | 0：disable<br>1：enable |
-| Temporary Button Unlock Enable | 0x97 | 2 | rw | 0 |  | 0：None<br>3：System switch & Temperature +<br>5：System switch & Temperature -<br>6：Temperature + & Temperature -<br>7：System switch & Temperature + & Temperature -<br>9：System switch & Fan<br>10：Temperature + & Fan<br>11：System switch & Temperature + & Fan<br>12：Temperature - & Fan<br>13：System switch & Temperature - & Fan<br>14：Temperature + & Temperature - & Fan<br>15：System switch & Temperature + & Temperature - & Fan<br>17：System switch & Temperature control mode<br>18：Temperature + & Temperature control mode<br>19：System switch & Temperature + & Temperature control mode<br>20：Temperature - & Temperature control mode<br>21：System switch & Temperature - & Temperature control mode<br>22：Temperature + & Temperature - & Temperature control mode<br>23：System switch & Temperature + & Temperature - & Temperature control mode<br>24：Fan & Temperature control mode<br>25：System switch & Fan & Temperature control mode<br>26：Temperature + & Fan & Temperature control mode<br>27：System switch & Temperature + & Fan & Temperature control mode<br>28：Temperature - & Fan & Temperature control mode<br>29：System switch & Temperature - & Fan & Temperature control mode<br>30：Temperature + & Temperature - & Fan & Temperature control mode<br>31：System switch & Temperature + & Temperature - & Fan & Temperature control mode |
+| Temporary Button Unlock Enable | 0x97 | 2 | rw | 0 |  | 0：Disable<br>3：System switch & Temperature +<br>5：System switch & Temperature -<br>6：Temperature + & Temperature -<br>7：System switch & Temperature + & Temperature -<br>9：System switch & Fan<br>10：Temperature + & Fan<br>11：System switch & Temperature + & Fan<br>12：Temperature - & Fan<br>13：System switch & Temperature - & Fan<br>14：Temperature + & Temperature - & Fan<br>15：System switch & Temperature + & Temperature - & Fan<br>17：System switch & Temperature control mode<br>18：Temperature + & Temperature control mode<br>19：System switch & Temperature + & Temperature control mode<br>20：Temperature - & Temperature control mode<br>21：System switch & Temperature - & Temperature control mode<br>22：Temperature + & Temperature - & Temperature control mode<br>23：System switch & Temperature + & Temperature - & Temperature control mode<br>24：Fan & Temperature control mode<br>25：System switch & Fan & Temperature control mode<br>26：Temperature + & Fan & Temperature control mode<br>27：System switch & Temperature + & Fan & Temperature control mode<br>28：Temperature - & Fan & Temperature control mode<br>29：System switch & Temperature - & Fan & Temperature control mode<br>30：Temperature + & Temperature - & Fan & Temperature control mode<br>31：System switch & Temperature + & Temperature - & Fan & Temperature control mode |
 | System On/Off | 0x97 | 2 | rw | 0 |  | 0：disable<br>1：enable |
 | Temperature + | 0x97 | 2 | rw | 0 |  | 0：disable<br>1：enable |
 | Temperature - | 0x97 | 2 | rw | 0 |  | 0：disable<br>1：enable |
@@ -331,6 +338,11 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Enable | 0x8B | 2 | rw | 0 |  | 0：disable<br>1：enable |
 | Control Command | 0x8B | 3 | rw | 0000 |  |  |
 | Action Status | 0x8B | 2 | rw | 16 |  | 0：Schedule1<br>1：Schedule2<br>2：Schedule3<br>3：Schedule4<br>4：Schedule5<br>5：Schedule6<br>6：Schedule7<br>7：Schedule8<br>16：System Off<br>17：System On |
+| Preconfigured on The Screen | 0x91 | 1 | w |  |  |  |
+| Preconfigured on The Screen | 0x91 | 1 | w |  |  |  |
+| Preconfigured Objects | 0x91 | 2 | w | 0 |  | 0: Reboot<br>1: Reset<br>2: Overtemperature Protection<br>3: Ventilation Icon<br>4: Ventilation Text<br>5: Heat Icon<br>6: Heat Text<br>7: Cool Icon<br>8: Cool Text<br>9: Auto Fan Icon<br>10: Auto Fan Text<br>11: Low Fan Speed Icon<br>12: Low Fan Speed Text<br>13: Medium Fan Speed Icon<br>14: Medium Fan Speed Text<br>15: High Fan Speed Icon<br>16: High Fan Speed Text<br>17: Temperature Set<br>18: Schedule Icon<br>19: Schedule 1 Name<br>20: Schedule 2 Name<br>21: Schedule 3 Name<br>22: Schedule 4 Name<br>23: Schedule 5 Name<br>24: Schedule 6 Name<br>25: Schedule 7 Name<br>26: Schedule 8 Name<br>27: Schedule 9 Name<br>28: Schedule 10 Name<br>29: Schedule 11 Name<br>30: Schedule 12 Name<br>31: Schedule 13 Name<br>32: Schedule 14 Name<br>33: Schedule 15 Name<br>34: Schedule 16 Name |
+| Image Length | 0x91 | 3 | w | 0 | 0 - 65535 |  |
+| Content | 0x91 | 1 | w | 0 |  |  |
 | Occupied Detection Configuration | 0x94 | 1 | rw |  |  |  |
 | Sub-command | 0x94 | 2 | rw | 0 |  |  |
 | Occupied Detection Enable | 0x94 | 2 | rw | 1 |  | 0：disable<br>1：enable |
@@ -375,14 +387,13 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Temperature Control Permission Configuration | 0xA5 | 1 | rw |  |  |  |
 | Sub-command | 0xA5 | 2 | rw | 0 |  |  |
 | Temperature Control Permission | 0xA5 | 2 | rw | 0 |  | 0: Thermostat Control<br>1: Remote Control |
-| Remote Control Configuration Interface Switch | 0xA5 | 2 | rw | 0 |  | 0: Disable All<br>1: Enable GL Interface<br>2: Enable GM Interface<br>3: Enable GL and GM Interfaces<br>4: Enable GH Interface<br>5: Enable GL and GH Interfaces<br>6: Enable GM and GH Interfaces<br>7: Enable GL<br>GM<br>and GH Interfaces<br>8: Enable V1 Interface<br>9: Enable GL and V1 Interfaces<br>10: Enable GM and V1 Interfaces<br>11: Enable GL<br>GM<br>and V1 Interfaces<br>12: Enable GH and V1 Interfaces<br>13: Enable GL<br>GH<br>and V1 Interfaces<br>14: Enable GM<br>GH<br>and V1 Interfaces<br>15: Enable GL<br>GM<br>GH<br>and V1 Interfaces<br>16: Enable V2 Interface<br>17: Enable GL and V2 Interfaces<br>18: Enable GM and V2 Interfaces<br>19: Enable GL<br>GM<br>and V2 Interfaces<br>20: Enable GH and V2 Interfaces<br>21: Enable GL<br>GH<br>and V2 Interfaces<br>22: Enable GM<br>GH<br>and V2 Interfaces<br>23: Enable GL<br>GM<br>GH<br>and V2 Interfaces<br>24: Enable V1 and V2 Interfaces<br>25: Enable GL<br>V1<br>and V2 Interfaces<br>26: Enable GM<br>V1<br>and V2 Interfaces<br>27: Enable GL<br>GM<br>V1<br>and V2 Interfaces<br>28: Enable GH<br>V1<br>and V2 Interfaces<br>29: Enable GL<br>GH<br>V1<br>and V2 Interfaces<br>30: Enable GM<br>GH<br>V1<br>and V2 Interfaces<br>31: Enable GL<br>GM<br>GH<br>V1<br>and V2 Interfaces<br>255: Enable All Interfaces |
-| Device Status When The Temperature Controller Is Offline | 0xA5 | 2 | rw | 0 |  | 0:Keep Current Temperature Control Status<br>1:Switch to Thermostat Control + Internal Temperature Control<br>2:Turn Off All Relays |
 | Debug Commands | 0xA6 | 1 | rw |  |  |  |
 | Sub-command | 0xA6 | 2 | rw | 0 |  |  |
 | Ambient Temperature Debug Enable | 0xA6 | 2 | rw | 0 |  | 0：disable<br>1：enable |
 | Ambient Temperature Debug Value | 0xA6 | 3 | rw |  | -20 - 60 |  |
 | Ambient Humidity Debug Enable | 0xA6 | 2 | rw | 0 |  | 0：disable<br>1：enable |
 | Ambient Humidity Debug Value | 0xA6 | 3 | rw |  | 0 - 100 |  |
+| Remote Control Configuration Interface Switch | 0x5A | 2 | w | 0 |  | 0: Disable All<br>1: Enable GL Interface<br>2: Enable GM Interface<br>3: Enable GL and GM Interfaces<br>4: Enable GH Interface<br>5: Enable GL and GH Interfaces<br>6: Enable GM and GH Interfaces<br>7: Enable GL<br>GM<br>and GH Interfaces<br>8: Enable V1 Interface<br>9: Enable GL and V1 Interfaces<br>10: Enable GM and V1 Interfaces<br>11: Enable GL<br>GM<br>and V1 Interfaces<br>12: Enable GH and V1 Interfaces<br>13: Enable GL<br>GH<br>and V1 Interfaces<br>14: Enable GM<br>GH<br>and V1 Interfaces<br>15: Enable GL<br>GM<br>GH<br>and V1 Interfaces<br>16: Enable V2 Interface<br>17: Enable GL and V2 Interfaces<br>18: Enable GM and V2 Interfaces<br>19: Enable GL<br>GM<br>and V2 Interfaces<br>20: Enable GH and V2 Interfaces<br>21: Enable GL<br>GH<br>and V2 Interfaces<br>22: Enable GM<br>GH<br>and V2 Interfaces<br>23: Enable GL<br>GM<br>GH<br>and V2 Interfaces<br>24: Enable V1 and V2 Interfaces<br>25: Enable GL<br>V1<br>and V2 Interfaces<br>26: Enable GM<br>V1<br>and V2 Interfaces<br>27: Enable GL<br>GM<br>V1<br>and V2 Interfaces<br>28: Enable GH<br>V1<br>and V2 Interfaces<br>29: Enable GL<br>GH<br>V1<br>and V2 Interfaces<br>30: Enable GM<br>GH<br>V1<br>and V2 Interfaces<br>31: Enable GL<br>GM<br>GH<br>V1<br>and V2 Interfaces<br>255: Enable All Interfaces |
 
 ### Event
 
@@ -392,7 +403,6 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Order Check Response | 0xFE | 2 | r |  |  |  |
 | Command Response | 0xEF | 1 | r |  |  |  |
 | Request to Push All Configurations | 0xEE | 1 | r |  |  |  |
-| Historical Data | 0xED | 5 | r |  |  |  |
 | Temperature  Alarm | 0x09 | 1 | r |  |  |  |
 | Humidity Alarm | 0x0A | 1 | r |  |  |  |
 | Target Temperature Alarm | 0x0B | 1 | r |  |  |  |
@@ -414,7 +424,8 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Command Length | 0xEF | 2 | r | 1 | 1 - 15 |  |
 | Answered Commands | 0xEF | 1 | r |  |  |  |
 | Request to Query All Configurations | 0xEE | 1 | w |  |  |  |
-| Historical Data Timestamps | 0xED | 5 | r |  |  |  |
+| Current Battery Status | 0xB8 | 3 | r |  |  |  |
+| Time Synchronize | 0xB8 | 1 | w |  |  |  |
 | Alarm Type | 0x09 | 2 | r |  |  |  |
 | Collection Error | 0x09 | 1 | r |  |  |  |
 | Exceed the Range Lower Limit | 0x09 | 1 | r |  |  |  |
@@ -460,7 +471,6 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Alarm Type | 0x0B | 2 | r |  |  |  |
 | No Data | 0x0B | 1 | r |  |  |  |
 | Query Device Status | 0xB9 | 1 | w |  |  |  |
-| Time Synchronize | 0xB8 | 1 | w |  |  |  |
 | Time Synchronize | 0xB7 | 5 | w |  |  |  |
 | Timestamp | 0xB7 | 5 | w |  |  |  |
 | Clear Data | 0xBD | 1 | w |  |  |  |
@@ -479,8 +489,6 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Open Window Status Control | 0x5D | 2 | w | 0 |  | 0：Normal<br>1：Open |
 | Event Control | 0x5E | 2 | w |  |  |  |
 | Event Control | 0x5E | 2 | w | 0 |  | 0：Schedule1<br>1：Schedule2<br>2：Schedule3<br>3：Schedule4<br>4：Schedule5<br>5：Schedule6<br>6：Schedule7<br>7：Schedule8 |
-| Delete Schedule List | 0x5F | 2 | w |  |  |  |
-| Delete Schedule | 0x5F | 2 | w | 255 |  | 0：Schedule1<br>1：Schedule2<br>2：Schedule3<br>3：Schedule4<br>4：Schedule5<br>5：Schedule6<br>6：Schedule7<br>7：Schedule8<br>255：Reset All |
 | Reset | 0xBF | 1 | w |  |  |  |
 | Reboot | 0xBE | 1 | w |  |  |  |
 

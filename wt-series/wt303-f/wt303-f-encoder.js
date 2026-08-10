@@ -94,39 +94,20 @@ function milesightDeviceEncode(payload) {
 		buffer.writeUInt8(0xee);
 		encoded = encoded.concat(buffer.toBytes());
 	}
-	//0xed
-	if ('history' in payload) {
-		for (var i = 0; i < payload.history.length; i++) {
-			var buffer = new Buffer();
-			var history = payload.history[i];
-			buffer.writeUInt8(0xed);
-			// 0：target time, 1：historical time
-			buffer.writeUInt8(1);
-			buffer.writeUInt32LE(history.timestamp);
-			var reset = {};
-			for (var k in history) {
-				if (history.hasOwnProperty(k) && k !== "timestamp") {
-					reset[k] = history[k];
-				}
-			}
-		
-			encoded = encoded.concat(buffer.toBytes());
-			encoded = encoded.concat(milesightDeviceEncode(reset));
-		}
-	}
 	//0xcf
 	if ('lorawan_configuration_settings' in payload) {
 		var buffer = new Buffer();
-		if (isValid(payload.lorawan_configuration_settings.mode)) {
-			buffer.writeUInt8(0xcf);
-			// 0:ClassA, 1:ClassB, 2:ClassC, 3:ClassC to B
-			buffer.writeUInt8(0x00);
-			if ([0, 1, 2, 3].indexOf(payload.lorawan_configuration_settings.mode) === -1) {
-				throw new Error('lorawan_configuration_settings.mode must be one of [0, 1, 2, 3]');
-			}
-			// 0:ClassA, 1:ClassB, 2:ClassC, 3:ClassC to B
-			buffer.writeUInt8(payload.lorawan_configuration_settings.mode);
+		buffer.writeUInt8(0xcf);
+		if ([1, 2, 3, 4].indexOf(payload.lorawan_configuration_settings.version) === -1) {
+			throw new Error('lorawan_configuration_settings.version must be one of [1, 2, 3, 4]');
 		}
+		// 1：1.0.2, 2：1.0.3, 3：1.0.3, 4：1.0.4
+		buffer.writeUInt8(payload.lorawan_configuration_settings.version);
+		if ([0, 1, 2, 3].indexOf(payload.lorawan_configuration_settings.mode) === -1) {
+			throw new Error('lorawan_configuration_settings.mode must be one of [0, 1, 2, 3]');
+		}
+		// 0:ClassA, 1:ClassB, 2:ClassC, 3:ClassC to B
+		buffer.writeUInt8(payload.lorawan_configuration_settings.mode);
 		encoded = encoded.concat(buffer.toBytes());
 	}
 	//0xde
@@ -162,6 +143,12 @@ function milesightDeviceEncode(payload) {
 		var buffer = new Buffer();
 		buffer.writeUInt8(0xd8);
 		buffer.writeString(payload.product_frequency_band, 16);
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0xb8
+	if ('synchronize_time' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0xb8);
 		encoded = encoded.concat(buffer.toBytes());
 	}
 	//0x00
@@ -411,6 +398,17 @@ function milesightDeviceEncode(payload) {
 		buffer.writeUInt8(payload.occupied_status);
 		encoded = encoded.concat(buffer.toBytes());
 	}
+	//0x0d
+	if ('temp_ctrl_auth_status' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0x0d);
+		if ([0, 1].indexOf(payload.temp_ctrl_auth_status) === -1) {
+			throw new Error('temp_ctrl_auth_status must be one of [0, 1]');
+		}
+		// 0: Thermostat Control, 1: Remote Control
+		buffer.writeUInt8(payload.temp_ctrl_auth_status);
+		encoded = encoded.concat(buffer.toBytes());
+	}
 	//0x10
 	if ('relay_status' in payload) {
 		var buffer = new Buffer();
@@ -427,8 +425,23 @@ function milesightDeviceEncode(payload) {
 		bitOptions |= payload.relay_status.valve_2_status << 4;
 
 		bitOptions |= payload.relay_status.reserved << 5;
+
+		bitOptions |= payload.relay_status.ao1_duty << 16;
+
+		bitOptions |= payload.relay_status.ao2_duty << 24;
 		buffer.writeUInt32LE(bitOptions);
 
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0xc9
+	if ('random_key' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0xc9);
+		if ([0, 1].indexOf(payload.random_key) === -1) {
+			throw new Error('random_key must be one of [0, 1]');
+		}
+		// 0：disable, 1：enable
+		buffer.writeUInt8(payload.random_key);
 		encoded = encoded.concat(buffer.toBytes());
 	}
 	//0xc8
@@ -573,6 +586,29 @@ function milesightDeviceEncode(payload) {
 		}
 		// 0：Embedded Temperature, 1：External NTC, 2：LoRa Receive, 3：D2D Receive
 		buffer.writeUInt8(payload.temperature_data_source_cfg);
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0xa7
+	if ('external_data_src_timeout_cfg' in payload) {
+		var buffer = new Buffer();
+		if (isValid(payload.external_data_src_timeout_cfg.timeout)) {
+			buffer.writeUInt8(0xa7);
+			buffer.writeUInt8(0x00);
+			if (payload.external_data_src_timeout_cfg.timeout < 1 || payload.external_data_src_timeout_cfg.timeout > 60) {
+				throw new Error('external_data_src_timeout_cfg.timeout must be between 1 and 60');
+			}
+			buffer.writeUInt8(payload.external_data_src_timeout_cfg.timeout);
+		}
+		if (isValid(payload.external_data_src_timeout_cfg.timeout_response)) {
+			buffer.writeUInt8(0xa7);
+			// 0: Keep Control, 1: Turn Off The Control, 2: Switch The Embedded Temperature
+			buffer.writeUInt8(0x01);
+			if ([0, 1, 2].indexOf(payload.external_data_src_timeout_cfg.timeout_response) === -1) {
+				throw new Error('external_data_src_timeout_cfg.timeout_response must be one of [0, 1, 2]');
+			}
+			// 0: Keep Control, 1: Turn Off The Control, 2: Switch The Embedded Temperature
+			buffer.writeUInt8(payload.external_data_src_timeout_cfg.timeout_response);
+		}
 		encoded = encoded.concat(buffer.toBytes());
 	}
 	//0x67
@@ -1084,16 +1120,6 @@ function milesightDeviceEncode(payload) {
 	//0x97
 	if ('temporary_button_unlock_cfg' in payload) {
 		var buffer = new Buffer();
-		if (isValid(payload.temporary_button_unlock_cfg.func_enable)) {
-			buffer.writeUInt8(0x97);
-			// 0：disable, 1：enable
-			buffer.writeUInt8(0x00);
-			if ([0, 1].indexOf(payload.temporary_button_unlock_cfg.func_enable) === -1) {
-				throw new Error('temporary_button_unlock_cfg.func_enable must be one of [0, 1]');
-			}
-			// 0：disable, 1：enable
-			buffer.writeUInt8(payload.temporary_button_unlock_cfg.func_enable);
-		}
 		if (isValid(payload.temporary_button_unlock_cfg.enable)) {
 			buffer.writeUInt8(0x97);
 			buffer.writeUInt8(0x00);
@@ -1887,6 +1913,26 @@ function milesightDeviceEncode(payload) {
 		}
 		encoded = encoded.concat(buffer.toBytes());
 	}
+	//0x91
+	if ('screen_content_settings' in payload) {
+		var buffer = new Buffer();
+		for (var screen_content_settings_id = 0; screen_content_settings_id < (payload.screen_content_settings && payload.screen_content_settings.length); screen_content_settings_id++) {
+			var screen_content_settings_item = payload.screen_content_settings[screen_content_settings_id];
+			var screen_content_settings_item_id = screen_content_settings_item.object;
+			if ([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34].indexOf(screen_content_settings_item_id) === -1) {
+				throw new Error('screen_content_settings_item_id must be one of [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34]');
+			}
+
+			buffer.writeUInt8(0x91);
+			buffer.writeUInt8(screen_content_settings_item_id);
+			if (screen_content_settings_item.length < 0 || screen_content_settings_item.length > 65535) {
+				throw new Error('length must be between 0 and 65535');
+			}
+			buffer.writeUInt16LE(screen_content_settings_item.length);
+			buffer.writeHexString(screen_content_settings_item.data, screen_content_settings_item.length, true);
+		}
+		encoded = encoded.concat(buffer.toBytes());
+	}
 	//0x94
 	if ('occupied_detection_cfg' in payload) {
 		var buffer = new Buffer();
@@ -2196,26 +2242,6 @@ function milesightDeviceEncode(payload) {
 			// 0: Thermostat Control, 1: Remote Control
 			buffer.writeUInt8(payload.temperature_control_permission_cfg.temp_ctrl_permission);
 		}
-		if (isValid(payload.temperature_control_permission_cfg.switch_303)) {
-			buffer.writeUInt8(0xa5);
-			// 0: Disable All, 1: Enable GL Interface, 2: Enable GM Interface, 3: Enable GL and GM Interfaces, 4: Enable GH Interface, 5: Enable GL and GH Interfaces, 6: Enable GM and GH Interfaces, 7: Enable GL, GM, and GH Interfaces, 8: Enable V1 Interface, 9: Enable GL and V1 Interfaces, 10: Enable GM and V1 Interfaces, 11: Enable GL, GM, and V1 Interfaces, 12: Enable GH and V1 Interfaces, 13: Enable GL, GH, and V1 Interfaces, 14: Enable GM, GH, and V1 Interfaces, 15: Enable GL, GM, GH, and V1 Interfaces, 16: Enable V2 Interface, 17: Enable GL and V2 Interfaces, 18: Enable GM and V2 Interfaces, 19: Enable GL, GM, and V2 Interfaces, 20: Enable GH and V2 Interfaces, 21: Enable GL, GH, and V2 Interfaces, 22: Enable GM, GH, and V2 Interfaces, 23: Enable GL, GM, GH, and V2 Interfaces, 24: Enable V1 and V2 Interfaces, 25: Enable GL, V1, and V2 Interfaces, 26: Enable GM, V1, and V2 Interfaces, 27: Enable GL, GM, V1, and V2 Interfaces, 28: Enable GH, V1, and V2 Interfaces, 29: Enable GL, GH, V1, and V2 Interfaces, 30: Enable GM, GH, V1, and V2 Interfaces, 31: Enable GL, GM, GH, V1, and V2 Interfaces, 255: Enable All Interfaces
-			buffer.writeUInt8(0x01);
-			if ([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 255].indexOf(payload.temperature_control_permission_cfg.switch_303) === -1) {
-				throw new Error('temperature_control_permission_cfg.switch_303 must be one of [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 255]');
-			}
-			// 0: Disable All, 1: Enable GL Interface, 2: Enable GM Interface, 3: Enable GL and GM Interfaces, 4: Enable GH Interface, 5: Enable GL and GH Interfaces, 6: Enable GM and GH Interfaces, 7: Enable GL, GM, and GH Interfaces, 8: Enable V1 Interface, 9: Enable GL and V1 Interfaces, 10: Enable GM and V1 Interfaces, 11: Enable GL, GM, and V1 Interfaces, 12: Enable GH and V1 Interfaces, 13: Enable GL, GH, and V1 Interfaces, 14: Enable GM, GH, and V1 Interfaces, 15: Enable GL, GM, GH, and V1 Interfaces, 16: Enable V2 Interface, 17: Enable GL and V2 Interfaces, 18: Enable GM and V2 Interfaces, 19: Enable GL, GM, and V2 Interfaces, 20: Enable GH and V2 Interfaces, 21: Enable GL, GH, and V2 Interfaces, 22: Enable GM, GH, and V2 Interfaces, 23: Enable GL, GM, GH, and V2 Interfaces, 24: Enable V1 and V2 Interfaces, 25: Enable GL, V1, and V2 Interfaces, 26: Enable GM, V1, and V2 Interfaces, 27: Enable GL, GM, V1, and V2 Interfaces, 28: Enable GH, V1, and V2 Interfaces, 29: Enable GL, GH, V1, and V2 Interfaces, 30: Enable GM, GH, V1, and V2 Interfaces, 31: Enable GL, GM, GH, V1, and V2 Interfaces, 255: Enable All Interfaces
-			buffer.writeUInt8(payload.temperature_control_permission_cfg.switch_303);
-		}
-		if (isValid(payload.temperature_control_permission_cfg.offline_switch_status)) {
-			buffer.writeUInt8(0xa5);
-			// 0:Keep Current Temperature Control Status, 1:Switch to Thermostat Control + Internal Temperature Control, 2:Turn Off All Relays
-			buffer.writeUInt8(0x03);
-			if ([0, 1, 2].indexOf(payload.temperature_control_permission_cfg.offline_switch_status) === -1) {
-				throw new Error('temperature_control_permission_cfg.offline_switch_status must be one of [0, 1, 2]');
-			}
-			// 0:Keep Current Temperature Control Status, 1:Switch to Thermostat Control + Internal Temperature Control, 2:Turn Off All Relays
-			buffer.writeUInt8(payload.temperature_control_permission_cfg.offline_switch_status);
-		}
 		encoded = encoded.concat(buffer.toBytes());
 	}
 	//0xa6
@@ -2263,12 +2289,6 @@ function milesightDeviceEncode(payload) {
 	if ('query_device_status' in payload) {
 		var buffer = new Buffer();
 		buffer.writeUInt8(0xb9);
-		encoded = encoded.concat(buffer.toBytes());
-	}
-	//0xb8
-	if ('synchronize_time' in payload) {
-		var buffer = new Buffer();
-		buffer.writeUInt8(0xb8);
 		encoded = encoded.concat(buffer.toBytes());
 	}
 	//0xb7
@@ -2323,6 +2343,17 @@ function milesightDeviceEncode(payload) {
 		buffer.writeUInt8(0xb6);
 		encoded = encoded.concat(buffer.toBytes());
 	}
+	//0x5a
+	if ('temperature_control_permission_cfg_303' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0x5a);
+		if ([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 255].indexOf(payload.temperature_control_permission_cfg_303) === -1) {
+			throw new Error('temperature_control_permission_cfg_303 must be one of [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 255]');
+		}
+		// 0: Disable All, 1: Enable GL Interface, 2: Enable GM Interface, 3: Enable GL and GM Interfaces, 4: Enable GH Interface, 5: Enable GL and GH Interfaces, 6: Enable GM and GH Interfaces, 7: Enable GL, GM, and GH Interfaces, 8: Enable V1 Interface, 9: Enable GL and V1 Interfaces, 10: Enable GM and V1 Interfaces, 11: Enable GL, GM, and V1 Interfaces, 12: Enable GH and V1 Interfaces, 13: Enable GL, GH, and V1 Interfaces, 14: Enable GM, GH, and V1 Interfaces, 15: Enable GL, GM, GH, and V1 Interfaces, 16: Enable V2 Interface, 17: Enable GL and V2 Interfaces, 18: Enable GM and V2 Interfaces, 19: Enable GL, GM, and V2 Interfaces, 20: Enable GH and V2 Interfaces, 21: Enable GL, GH, and V2 Interfaces, 22: Enable GM, GH, and V2 Interfaces, 23: Enable GL, GM, GH, and V2 Interfaces, 24: Enable V1 and V2 Interfaces, 25: Enable GL, V1, and V2 Interfaces, 26: Enable GM, V1, and V2 Interfaces, 27: Enable GL, GM, V1, and V2 Interfaces, 28: Enable GH, V1, and V2 Interfaces, 29: Enable GL, GH, V1, and V2 Interfaces, 30: Enable GM, GH, V1, and V2 Interfaces, 31: Enable GL, GM, GH, V1, and V2 Interfaces, 255: Enable All Interfaces
+		buffer.writeUInt8(payload.temperature_control_permission_cfg_303);
+		encoded = encoded.concat(buffer.toBytes());
+	}
 	//0x5b
 	if ('send_temperature' in payload) {
 		var buffer = new Buffer();
@@ -2363,17 +2394,6 @@ function milesightDeviceEncode(payload) {
 		}
 		// 0：Schedule1, 1：Schedule2, 2：Schedule3, 3：Schedule4, 4：Schedule5, 5：Schedule6, 6：Schedule7, 7：Schedule8
 		buffer.writeUInt8(payload.insert_schedule.type);
-		encoded = encoded.concat(buffer.toBytes());
-	}
-	//0x5f
-	if ('delete_schedule' in payload) {
-		var buffer = new Buffer();
-		buffer.writeUInt8(0x5f);
-		if ([0, 1, 2, 3, 4, 5, 6, 7, 255].indexOf(payload.delete_schedule.type) === -1) {
-			throw new Error('delete_schedule.type must be one of [0, 1, 2, 3, 4, 5, 6, 7, 255]');
-		}
-		// 0：Schedule1, 1：Schedule2, 2：Schedule3, 3：Schedule4, 4：Schedule5, 5：Schedule6, 6：Schedule7, 7：Schedule8, 255：Reset All 
-		buffer.writeUInt8(payload.delete_schedule.type);
 		encoded = encoded.concat(buffer.toBytes());
 	}
 	//0xbf
@@ -2674,9 +2694,7 @@ function cmdMap() {
 		  "request_check_order": "fe",
 		  "request_command_queries": "ef",
 		  "request_query_all_configurations": "ee",
-		  "historical_data_report": "ed",
 		  "lorawan_configuration_settings": "cf",
-		  "lorawan_configuration_settings.mode": "cf00",
 		  "tsl_version": "df",
 		  "product_name": "de",
 		  "product_pn": "dd",
@@ -2684,6 +2702,7 @@ function cmdMap() {
 		  "version": "da",
 		  "oem_id": "d9",
 		  "product_frequency_band": "d8",
+		  "battery_info.current_battery_status": "b8",
 		  "battery": "00",
 		  "data_source": "04",
 		  "temperature": "01",
@@ -2722,7 +2741,9 @@ function cmdMap() {
 		  "target_temperature_alarm": "0b",
 		  "target_temperature_alarm.no_data": "0b03",
 		  "occupied_status": "0c",
+		  "temp_ctrl_auth_status": "0d",
 		  "relay_status": "10",
+		  "random_key": "c9",
 		  "device_status": "c8",
 		  "collection_interval": "60",
 		  "collection_interval.seconds_of_time": "6000",
@@ -2738,6 +2759,9 @@ function cmdMap() {
 		  "temperature_source.lorawan_reception": "8502",
 		  "temperature_source.d2d_reception": "8503",
 		  "temperature_data_source_cfg": "a0",
+		  "external_data_src_timeout_cfg": "a7",
+		  "external_data_src_timeout_cfg.timeout": "a700",
+		  "external_data_src_timeout_cfg.timeout_response": "a701",
 		  "system_status": "67",
 		  "mode_enable": "64",
 		  "temperature_control_mode": "68",
@@ -2776,9 +2800,8 @@ function cmdMap() {
 		  "child_lock_enable_cfg.key_enable": "9601",
 		  "temporary_unlock_settings": "8d",
 		  "temporary_button_unlock_cfg": "97",
-		  "temporary_button_unlock_cfg.func_enable": "9700",
-		  "temporary_button_unlock_cfg.enable": "9701",
-		  "temporary_button_unlock_cfg.unlocking_duration": "9702",
+		  "temporary_button_unlock_cfg.enable": "9700",
+		  "temporary_button_unlock_cfg.unlocking_duration": "9701",
 		  "time_zone": "c7",
 		  "daylight_saving_time": "c6",
 		  "data_storage_settings": "c5",
@@ -2849,6 +2872,8 @@ function cmdMap() {
 		  "d2d_slave_enable": "8a",
 		  "d2d_slave_settings": "8b",
 		  "d2d_slave_settings._item": "8bxx",
+		  "screen_content_settings": "91",
+		  "screen_content_settings._item": "91xx",
 		  "occupied_detection_cfg": "94",
 		  "occupied_detection_cfg.enable": "9400",
 		  "occupied_detection_cfg.condition_enable": "9401",
@@ -2884,26 +2909,23 @@ function cmdMap() {
 		  "active_data_reporting_cfg.enable": "a404",
 		  "temperature_control_permission_cfg": "a5",
 		  "temperature_control_permission_cfg.temp_ctrl_permission": "a500",
-		  "temperature_control_permission_cfg.switch_303": "a501",
-		  "temperature_control_permission_cfg.offline_switch_status": "a503",
 		  "debug_commands": "a6",
 		  "debug_commands.ambition_temp_enable": "a600",
 		  "debug_commands.ambition_temp_value": "a601",
 		  "debug_commands.ambition_humi_enable": "a602",
 		  "debug_commands.ambition_humi_value": "a603",
 		  "query_device_status": "b9",
-		  "synchronize_time": "b8",
 		  "set_time": "b7",
 		  "clear_historical_data": "bd",
 		  "stop_historical_data_retrieval": "bc",
 		  "retrieve_historical_data_by_time_range": "bb",
 		  "retrieve_historical_data_by_time": "ba",
 		  "reconnect": "b6",
+		  "temperature_control_permission_cfg_303": "5a",
 		  "send_temperature": "5b",
 		  "send_humidity": "5c",
 		  "update_open_windows_state": "5d",
 		  "insert_schedule": "5e",
-		  "delete_schedule": "5f",
 		  "reset": "bf",
 		  "reboot": "be"
 	};
