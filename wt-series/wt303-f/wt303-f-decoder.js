@@ -1066,20 +1066,24 @@ function milesightDeviceDecode(bytes) {
 				// 0：disable, 1：enable
 				decoded.unilatera_tolerance_enable = readUInt8(bytes, counterObj, 1);
 				break;
-			case 0xa4:
+			case 0xc3:
 				decoded.active_data_reporting_cfg = decoded.active_data_reporting_cfg || {};
 				var active_data_reporting_cfg_cmd = readUInt8(bytes, counterObj, 1);
 				if (active_data_reporting_cfg_cmd == 0x00) {
-					decoded.active_data_reporting_cfg.start_time = readUInt16LE(bytes, counterObj, 2);
+					// 0：disable, 1：enable
+					decoded.active_data_reporting_cfg.enable = readUInt8(bytes, counterObj, 1);
 				}
 				if (active_data_reporting_cfg_cmd == 0x01) {
-					decoded.active_data_reporting_cfg.times = readUInt8(bytes, counterObj, 1);
+					decoded.active_data_reporting_cfg.start_time = readUInt16LE(bytes, counterObj, 2);
 				}
 				if (active_data_reporting_cfg_cmd == 0x02) {
+					decoded.active_data_reporting_cfg.times = readUInt8(bytes, counterObj, 1);
+				}
+				if (active_data_reporting_cfg_cmd == 0x03) {
 					// 0: Disable All, 1: Enable All, 2: Custom
 					decoded.active_data_reporting_cfg.mode = readUInt8(bytes, counterObj, 1);
 				}
-				if (active_data_reporting_cfg_cmd == 0x03) {
+				if (active_data_reporting_cfg_cmd == 0x04) {
 					decoded.active_data_reporting_cfg.custom_cfg = decoded.active_data_reporting_cfg.custom_cfg || {};
 					decoded.active_data_reporting_cfg.custom_cfg.cmd_cfg = decoded.active_data_reporting_cfg.custom_cfg.cmd_cfg || {};
 					if (decoded.active_data_reporting_cfg.custom_cfg.cmd_cfg == 0x00) {
@@ -1090,10 +1094,6 @@ function milesightDeviceDecode(bytes) {
 					}
 					// 0：disable, 1：enable
 					decoded.active_data_reporting_cfg.custom_cfg.cmd_enable = readUInt8(bytes, counterObj, 1);
-				}
-				if (active_data_reporting_cfg_cmd == 0x04) {
-					// 0：disable, 1：enable
-					decoded.active_data_reporting_cfg.enable = readUInt8(bytes, counterObj, 1);
 				}
 				break;
 			case 0xa5:
@@ -1781,12 +1781,12 @@ function cmdMap() {
 		  "a2": "screen_display_cfg",
 		  "a200": "screen_display_cfg.display_data_enable_when_off",
 		  "a3": "unilatera_tolerance_enable",
-		  "a4": "active_data_reporting_cfg",
-		  "a400": "active_data_reporting_cfg.start_time",
-		  "a401": "active_data_reporting_cfg.times",
-		  "a402": "active_data_reporting_cfg.mode",
-		  "a403": "active_data_reporting_cfg.custom_cfg",
-		  "a404": "active_data_reporting_cfg.enable",
+		  "c3": "active_data_reporting_cfg",
+		  "c300": "active_data_reporting_cfg.enable",
+		  "c301": "active_data_reporting_cfg.start_time",
+		  "c302": "active_data_reporting_cfg.times",
+		  "c303": "active_data_reporting_cfg.mode",
+		  "c304": "active_data_reporting_cfg.custom_cfg",
 		  "a5": "temperature_control_permission_cfg",
 		  "a500": "temperature_control_permission_cfg.temp_ctrl_permission",
 		  "a6": "debug_commands",

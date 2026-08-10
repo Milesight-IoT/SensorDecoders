@@ -373,17 +373,17 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Sub-command | 0xA2 | 2 | rw | 0 |  |  |
 | Enable Screen Display Data When System Is Off | 0xA2 | 2 | rw | 1 |  | 0：disable<br>1：enable |
 | Unilateral Tolerance Enable | 0xA3 | 2 | rw | 0 |  | 0：disable<br>1：enable |
-| Active Data Reporting Configuration | 0xA4 | 1 | rw |  |  |  |
-| Sub-command | 0xA4 | 2 | rw | 0 |  |  |
-| Active Data Reporting Start Time | 0xA4 | 3 | rw | 240 | 0 - 1439 |  |
-| Active Data Reporting Times | 0xA4 | 2 | rw | 1 | 0 - 12 |  |
-| Active Data Reporting Mode | 0xA4 | 2 | rw | 0 |  | 0: Disable All<br>1: Enable All<br>2: Custom |
-| Active Data Reporting Custom Configuration | 0xA4 | 3 | rw |  |  |  |
-| Active Data Reporting Custom Command Configuration | 0xA4 | 2 | rw |  |  |  |
-| Active Data Reporting Custom Command | 0xA4 | 2 | rw |  |  |  |
-| Active Data Reporting Common Command | 0xA4 | 2 | rw |  |  |  |
-| Active Data Reporting Custom Command Enable | 0xA4 | 2 | rw | 0 |  | 0：disable<br>1：enable |
-| Active Data Reporting Enable | 0xA4 | 2 | rw | 0 |  | 0：disable<br>1：enable |
+| Active Data Reporting Configuration | 0xC3 | 1 | rw |  |  |  |
+| Sub-command | 0xC3 | 2 | rw | 0 |  |  |
+| Active Data Reporting Enable | 0xC3 | 2 | rw | 0 |  | 0：disable<br>1：enable |
+| Active Data Reporting Start Time | 0xC3 | 3 | rw | 240 | 0 - 1439 |  |
+| Active Data Reporting Times | 0xC3 | 2 | rw | 1 | 0 - 12 |  |
+| Active Data Reporting Mode | 0xC3 | 2 | rw | 0 |  | 0: Disable All<br>1: Enable All<br>2: Custom |
+| Active Data Reporting Custom Configuration | 0xC3 | 3 | rw |  |  |  |
+| Active Data Reporting Custom Command Configuration | 0xC3 | 2 | rw |  |  |  |
+| Active Data Reporting Custom Command | 0xC3 | 2 | rw |  |  |  |
+| Active Data Reporting Common Command | 0xC3 | 2 | rw |  |  |  |
+| Active Data Reporting Custom Command Enable | 0xC3 | 2 | rw | 0 |  | 0：disable<br>1：enable |
 | Temperature Control Permission Configuration | 0xA5 | 1 | rw |  |  |  |
 | Sub-command | 0xA5 | 2 | rw | 0 |  |  |
 | Temperature Control Permission | 0xA5 | 2 | rw | 0 |  | 0: Thermostat Control<br>1: Remote Control |
