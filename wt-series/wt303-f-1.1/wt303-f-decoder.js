@@ -870,9 +870,9 @@ function milesightDeviceDecode(bytes) {
 				decoded.window_opening_detection_settings = decoded.window_opening_detection_settings || {};
 				decoded.window_opening_detection_settings.type = readUInt8(bytes, counterObj, 1);
 				if (decoded.window_opening_detection_settings.type == 0x00) {
-					decoded.window_opening_detection_settings.temperature_detection = decoded.window_opening_detection_settings.temperature_detection || {};
-					decoded.window_opening_detection_settings.temperature_detection.difference_in_temperature = readInt16LE(bytes, counterObj, 2) / 100;
-					decoded.window_opening_detection_settings.temperature_detection.stop_time = readUInt8(bytes, counterObj, 1);
+					decoded.window_opening_detection_settings.temp_detection = decoded.window_opening_detection_settings.temp_detection || {};
+					decoded.window_opening_detection_settings.temp_detection.difference_in_temperature = readInt16LE(bytes, counterObj, 2) / 100;
+					decoded.window_opening_detection_settings.temp_detection.stop_minutes = readUInt8(bytes, counterObj, 1);
 				}
 				if (decoded.window_opening_detection_settings.type == 0x01) {
 					decoded.window_opening_detection_settings.magnet_detection = decoded.window_opening_detection_settings.magnet_detection || {};
@@ -1035,7 +1035,7 @@ function milesightDeviceDecode(bytes) {
 					decoded.energy_saving_cfg.level_1_energy_saving_vacant_time = readUInt16LE(bytes, counterObj, 2);
 				}
 				if (energy_saving_cfg_cmd == 0x06) {
-					decoded.energy_saving_cfg.level_1_energy_saving_temperature_tolerance = readUInt16LE(bytes, counterObj, 2) / 100;
+					decoded.energy_saving_cfg.celsius_level_1_tolerance = readUInt16LE(bytes, counterObj, 2) / 100;
 				}
 				if (energy_saving_cfg_cmd == 0x07) {
 					// 0：disable, 1：enable
@@ -1045,7 +1045,7 @@ function milesightDeviceDecode(bytes) {
 					decoded.energy_saving_cfg.level_2_energy_saving_vacant_time = readUInt16LE(bytes, counterObj, 2);
 				}
 				if (energy_saving_cfg_cmd == 0x09) {
-					decoded.energy_saving_cfg.level_2_energy_saving_temperature_tolerance = readUInt16LE(bytes, counterObj, 2) / 100;
+					decoded.energy_saving_cfg.celsius_level_2_tolerance = readUInt16LE(bytes, counterObj, 2) / 100;
 				}
 				if (energy_saving_cfg_cmd == 0x0a) {
 					// 0：Execute Plan, 1：Adjust Energy Saving Level
@@ -1620,7 +1620,7 @@ function cmdMap() {
 		  "7101": "temp_ctl_dehumi_cfg.temperature_tolerance",
 		  "8100": "di_settings.card_control",
 		  "8101": "di_settings.magnet_detection",
-		  "8300": "window_opening_detection_settings.temperature_detection",
+		  "8300": "window_opening_detection_settings.temp_detection",
 		  "8301": "window_opening_detection_settings.magnet_detection",
 		  "8502": "temperature_source.lorawan_reception",
 		  "8503": "temperature_source.d2d_reception",
@@ -1640,10 +1640,10 @@ function cmdMap() {
 		  "9503": "energy_saving_cfg.night_execution",
 		  "9504": "energy_saving_cfg.level_1_energy_saving_enabled",
 		  "9505": "energy_saving_cfg.level_1_energy_saving_vacant_time",
-		  "9506": "energy_saving_cfg.level_1_energy_saving_temperature_tolerance",
+		  "9506": "energy_saving_cfg.celsius_level_1_tolerance",
 		  "9507": "energy_saving_cfg.level_2_energy_saving_enabled",
 		  "9508": "energy_saving_cfg.level_2_energy_saving_vacant_time",
-		  "9509": "energy_saving_cfg.level_2_energy_saving_temperature_tolerance",
+		  "9509": "energy_saving_cfg.celsius_level_2_tolerance",
 		  "9600": "child_lock_enable_cfg.enable",
 		  "9601": "child_lock_enable_cfg.key_enable",
 		  "9700": "temporary_button_unlock_cfg.enable",
@@ -1992,7 +1992,7 @@ function processTemperature(decoded) {
         "precision": 2,
         "unitName": "℃"
     },
-    "window_opening_detection_settings.temperature_detection.difference_in_temperature": {
+    "window_opening_detection_settings.temp_detection.difference_in_temperature": {
         "precision": 2,
         "unitName": "℃"
     },
@@ -2004,11 +2004,11 @@ function processTemperature(decoded) {
         "precision": 2,
         "unitName": "℃"
     },
-    "energy_saving_cfg.level_1_energy_saving_temperature_tolerance": {
+    "energy_saving_cfg.celsius_level_1_tolerance": {
         "precision": 2,
         "unitName": "℃"
     },
-    "energy_saving_cfg.level_2_energy_saving_temperature_tolerance": {
+    "energy_saving_cfg.celsius_level_2_tolerance": {
         "precision": 2,
         "unitName": "℃"
     },

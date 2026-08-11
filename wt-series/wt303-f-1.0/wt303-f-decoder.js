@@ -707,9 +707,9 @@ function milesightDeviceDecode(bytes) {
 				decoded.window_opening_detection_settings = decoded.window_opening_detection_settings || {};
 				decoded.window_opening_detection_settings.type = readUInt8(bytes, counterObj, 1);
 				if (decoded.window_opening_detection_settings.type == 0x00) {
-					decoded.window_opening_detection_settings.temperature_detection = decoded.window_opening_detection_settings.temperature_detection || {};
-					decoded.window_opening_detection_settings.temperature_detection.difference_in_temperature = readInt16LE(bytes, counterObj, 2) / 100;
-					decoded.window_opening_detection_settings.temperature_detection.stop_time = readUInt8(bytes, counterObj, 1);
+					decoded.window_opening_detection_settings.temp_detection = decoded.window_opening_detection_settings.temp_detection || {};
+					decoded.window_opening_detection_settings.temp_detection.difference_in_temperature = readInt16LE(bytes, counterObj, 2) / 100;
+					decoded.window_opening_detection_settings.temp_detection.stop_minutes = readUInt8(bytes, counterObj, 1);
 				}
 				if (decoded.window_opening_detection_settings.type == 0x01) {
 					decoded.window_opening_detection_settings.magnet_detection = decoded.window_opening_detection_settings.magnet_detection || {};
@@ -1276,7 +1276,7 @@ function cmdMap() {
 		  "6201": "reporting_interval.minutes_of_time",
 		  "8100": "di_settings.card_control",
 		  "8101": "di_settings.magnet_detection",
-		  "8300": "window_opening_detection_settings.temperature_detection",
+		  "8300": "window_opening_detection_settings.temp_detection",
 		  "8301": "window_opening_detection_settings.magnet_detection",
 		  "8502": "temperature_source.lorawan_reception",
 		  "8503": "temperature_source.d2d_reception",
@@ -1541,7 +1541,7 @@ function processTemperature(decoded) {
         "precision": 2,
         "unitName": "℃"
     },
-    "window_opening_detection_settings.temperature_detection.difference_in_temperature": {
+    "window_opening_detection_settings.temp_detection.difference_in_temperature": {
         "precision": 2,
         "unitName": "℃"
     },

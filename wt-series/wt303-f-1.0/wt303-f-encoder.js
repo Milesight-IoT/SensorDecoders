@@ -1358,14 +1358,14 @@ function milesightDeviceEncode(payload) {
 		}
 		buffer.writeUInt8(payload.window_opening_detection_settings.type);
 		if (payload.window_opening_detection_settings.type == 0x00) {
-			if (payload.window_opening_detection_settings.temperature_detection.difference_in_temperature < 1 || payload.window_opening_detection_settings.temperature_detection.difference_in_temperature > 10) {
-				throw new Error('window_opening_detection_settings.temperature_detection.difference_in_temperature must be between 1 and 10');
+			if (payload.window_opening_detection_settings.temp_detection.difference_in_temperature < 1 || payload.window_opening_detection_settings.temp_detection.difference_in_temperature > 10) {
+				throw new Error('window_opening_detection_settings.temp_detection.difference_in_temperature must be between 1 and 10');
 			}
-			buffer.writeInt16LE(payload.window_opening_detection_settings.temperature_detection.difference_in_temperature * 100);
-			if (payload.window_opening_detection_settings.temperature_detection.stop_time < 1 || payload.window_opening_detection_settings.temperature_detection.stop_time > 60) {
-				throw new Error('window_opening_detection_settings.temperature_detection.stop_time must be between 1 and 60');
+			buffer.writeInt16LE(payload.window_opening_detection_settings.temp_detection.difference_in_temperature * 100);
+			if (payload.window_opening_detection_settings.temp_detection.stop_minutes < 1 || payload.window_opening_detection_settings.temp_detection.stop_minutes > 60) {
+				throw new Error('window_opening_detection_settings.temp_detection.stop_minutes must be between 1 and 60');
 			}
-			buffer.writeUInt8(payload.window_opening_detection_settings.temperature_detection.stop_time);
+			buffer.writeUInt8(payload.window_opening_detection_settings.temp_detection.stop_minutes);
 		}
 		if (payload.window_opening_detection_settings.type == 0x01) {
 			if (payload.window_opening_detection_settings.magnet_detection.duration < 1 || payload.window_opening_detection_settings.magnet_detection.duration > 60) {
@@ -2068,7 +2068,7 @@ function cmdMap() {
 		  "di_settings.magnet_detection": "8101",
 		  "window_opening_detection_enable": "82",
 		  "window_opening_detection_settings": "83",
-		  "window_opening_detection_settings.temperature_detection": "8300",
+		  "window_opening_detection_settings.temp_detection": "8300",
 		  "window_opening_detection_settings.magnet_detection": "8301",
 		  "freeze_protection_settings": "84",
 		  "d2d_pairing_enable": "86",
@@ -2247,7 +2247,7 @@ function processTemperature(payload) {
         "coefficient": 0.01,
         "unitName": "℃"
     },
-    "window_opening_detection_settings.temperature_detection.difference_in_temperature": {
+    "window_opening_detection_settings.temp_detection.difference_in_temperature": {
         "coefficient": 0.01,
         "unitName": "℃"
     },

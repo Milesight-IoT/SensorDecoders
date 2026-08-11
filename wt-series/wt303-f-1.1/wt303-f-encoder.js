@@ -1722,14 +1722,14 @@ function milesightDeviceEncode(payload) {
 		}
 		buffer.writeUInt8(payload.window_opening_detection_settings.type);
 		if (payload.window_opening_detection_settings.type == 0x00) {
-			if (payload.window_opening_detection_settings.temperature_detection.difference_in_temperature < 1 || payload.window_opening_detection_settings.temperature_detection.difference_in_temperature > 10) {
-				throw new Error('window_opening_detection_settings.temperature_detection.difference_in_temperature must be between 1 and 10');
+			if (payload.window_opening_detection_settings.temp_detection.difference_in_temperature < 1 || payload.window_opening_detection_settings.temp_detection.difference_in_temperature > 10) {
+				throw new Error('window_opening_detection_settings.temp_detection.difference_in_temperature must be between 1 and 10');
 			}
-			buffer.writeInt16LE(payload.window_opening_detection_settings.temperature_detection.difference_in_temperature * 100);
-			if (payload.window_opening_detection_settings.temperature_detection.stop_time < 1 || payload.window_opening_detection_settings.temperature_detection.stop_time > 60) {
-				throw new Error('window_opening_detection_settings.temperature_detection.stop_time must be between 1 and 60');
+			buffer.writeInt16LE(payload.window_opening_detection_settings.temp_detection.difference_in_temperature * 100);
+			if (payload.window_opening_detection_settings.temp_detection.stop_minutes < 1 || payload.window_opening_detection_settings.temp_detection.stop_minutes > 60) {
+				throw new Error('window_opening_detection_settings.temp_detection.stop_minutes must be between 1 and 60');
 			}
-			buffer.writeUInt8(payload.window_opening_detection_settings.temperature_detection.stop_time);
+			buffer.writeUInt8(payload.window_opening_detection_settings.temp_detection.stop_minutes);
 		}
 		if (payload.window_opening_detection_settings.type == 0x01) {
 			if (payload.window_opening_detection_settings.magnet_detection.duration < 1 || payload.window_opening_detection_settings.magnet_detection.duration > 60) {
@@ -2095,13 +2095,13 @@ function milesightDeviceEncode(payload) {
 			}
 			buffer.writeUInt16LE(payload.energy_saving_cfg.level_1_energy_saving_vacant_time);
 		}
-		if (isValid(payload.energy_saving_cfg.level_1_energy_saving_temperature_tolerance)) {
+		if (isValid(payload.energy_saving_cfg.celsius_level_1_tolerance)) {
 			buffer.writeUInt8(0x95);
 			buffer.writeUInt8(0x06);
-			if (payload.energy_saving_cfg.level_1_energy_saving_temperature_tolerance < 0.1 || payload.energy_saving_cfg.level_1_energy_saving_temperature_tolerance > 5) {
-				throw new Error('energy_saving_cfg.level_1_energy_saving_temperature_tolerance must be between 0.1 and 5');
+			if (payload.energy_saving_cfg.celsius_level_1_tolerance < 0.1 || payload.energy_saving_cfg.celsius_level_1_tolerance > 5) {
+				throw new Error('energy_saving_cfg.celsius_level_1_tolerance must be between 0.1 and 5');
 			}
-			buffer.writeUInt16LE(payload.energy_saving_cfg.level_1_energy_saving_temperature_tolerance * 100);
+			buffer.writeUInt16LE(payload.energy_saving_cfg.celsius_level_1_tolerance * 100);
 		}
 		if (isValid(payload.energy_saving_cfg.level_2_energy_saving_enabled)) {
 			buffer.writeUInt8(0x95);
@@ -2121,13 +2121,13 @@ function milesightDeviceEncode(payload) {
 			}
 			buffer.writeUInt16LE(payload.energy_saving_cfg.level_2_energy_saving_vacant_time);
 		}
-		if (isValid(payload.energy_saving_cfg.level_2_energy_saving_temperature_tolerance)) {
+		if (isValid(payload.energy_saving_cfg.celsius_level_2_tolerance)) {
 			buffer.writeUInt8(0x95);
 			buffer.writeUInt8(0x09);
-			if (payload.energy_saving_cfg.level_2_energy_saving_temperature_tolerance < 0.1 || payload.energy_saving_cfg.level_2_energy_saving_temperature_tolerance > 5) {
-				throw new Error('energy_saving_cfg.level_2_energy_saving_temperature_tolerance must be between 0.1 and 5');
+			if (payload.energy_saving_cfg.celsius_level_2_tolerance < 0.1 || payload.energy_saving_cfg.celsius_level_2_tolerance > 5) {
+				throw new Error('energy_saving_cfg.celsius_level_2_tolerance must be between 0.1 and 5');
 			}
-			buffer.writeUInt16LE(payload.energy_saving_cfg.level_2_energy_saving_temperature_tolerance * 100);
+			buffer.writeUInt16LE(payload.energy_saving_cfg.celsius_level_2_tolerance * 100);
 		}
 		if (isValid(payload.energy_saving_cfg.mode)) {
 			buffer.writeUInt8(0x95);
@@ -2864,7 +2864,7 @@ function cmdMap() {
 		  "di_settings.magnet_detection": "8101",
 		  "window_opening_detection_enable": "82",
 		  "window_opening_detection_settings": "83",
-		  "window_opening_detection_settings.temperature_detection": "8300",
+		  "window_opening_detection_settings.temp_detection": "8300",
 		  "window_opening_detection_settings.magnet_detection": "8301",
 		  "freeze_protection_settings": "84",
 		  "freeze_protection_cfg": "98",
@@ -2904,10 +2904,10 @@ function cmdMap() {
 		  "energy_saving_cfg.night_execution": "9503",
 		  "energy_saving_cfg.level_1_energy_saving_enabled": "9504",
 		  "energy_saving_cfg.level_1_energy_saving_vacant_time": "9505",
-		  "energy_saving_cfg.level_1_energy_saving_temperature_tolerance": "9506",
+		  "energy_saving_cfg.celsius_level_1_tolerance": "9506",
 		  "energy_saving_cfg.level_2_energy_saving_enabled": "9507",
 		  "energy_saving_cfg.level_2_energy_saving_vacant_time": "9508",
-		  "energy_saving_cfg.level_2_energy_saving_temperature_tolerance": "9509",
+		  "energy_saving_cfg.celsius_level_2_tolerance": "9509",
 		  "energy_saving_cfg.mode": "950a",
 		  "screen_display_cfg": "a2",
 		  "screen_display_cfg.display_data_enable_when_off": "a200",
@@ -3120,7 +3120,7 @@ function processTemperature(payload) {
         "coefficient": 0.01,
         "unitName": "℃"
     },
-    "window_opening_detection_settings.temperature_detection.difference_in_temperature": {
+    "window_opening_detection_settings.temp_detection.difference_in_temperature": {
         "coefficient": 0.01,
         "unitName": "℃"
     },
@@ -3132,11 +3132,11 @@ function processTemperature(payload) {
         "coefficient": 0.01,
         "unitName": "℃"
     },
-    "energy_saving_cfg.level_1_energy_saving_temperature_tolerance": {
+    "energy_saving_cfg.celsius_level_1_tolerance": {
         "coefficient": 0.01,
         "unitName": "℃"
     },
-    "energy_saving_cfg.level_2_energy_saving_temperature_tolerance": {
+    "energy_saving_cfg.celsius_level_2_tolerance": {
         "coefficient": 0.01,
         "unitName": "℃"
     },
