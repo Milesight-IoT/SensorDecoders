@@ -2174,9 +2174,12 @@
             "value": "10",
             "unit": "min",
             "access_mode": "RW",
-            "data_type": "ENUM",
+            "data_type": "NUMBER",
             "value_type": "UINT8",
-            "values": [],
+            "range": [
+                1,
+                60
+            ],
             "bacnet_type": "multistate_value_object",
             "bacnet_unit_type_id": 72,
             "bacnet_unit_type": "UNITS_MINUTES",
