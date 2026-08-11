@@ -37,13 +37,12 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Schedule | 0x08 | 2 | r | 255 |  | 0：Schedule1<br>1：Schedule2<br>2：Schedule3<br>3：Schedule4<br>4：Schedule5<br>5：Schedule6<br>6：Schedule7<br>7：Schedule8<br>8：Schedule9<br>9：Schedule10<br>10：Schedule11<br>11：Schedule12<br>12：Schedule13<br>13：Schedule14<br>14：Schedule15<br>15：Schedule16<br>255：Not executed |
 | Occupied Status | 0x0C | 2 | r | 0 |  | 0：Available<br>1：Occupied<br>2：Occupied at Night |
 | Temperature Control Authority Status | 0x0D | 2 | r | 0 |  | 0: Thermostat Control<br>1: Remote Control |
-| Relay/Valve Status | 0x10 | 5 | r |  |  |  |
+| Relay/Valve Status  | 0x10 | 5 | r |  |  |  |
 | Fan Low | 0x10 | 5 | r | 0 |  | 0：Open<br>1：Close |
 | Fan Medium | 0x10 | 5 | r | 0 |  | 0：Open<br>1：Close |
 | Fan High | 0x10 | 5 | r | 0 |  | 0：Open<br>1：Close |
 | Valve 1 | 0x10 | 5 | r | 0 |  | 0：Open<br>1：Close |
 | Valve 2 | 0x10 | 5 | r | 0 |  | 0：Open<br>1：Close |
-| Reserved | 0x10 | 5 | r |  |  |  |
 | Reserved | 0x10 | 5 | r |  |  |  |
 | AO1 Duty | 0x10 | 5 | r | 0 |  |  |
 | AO2 Duty | 0x10 | 5 | r | 0 |  |  |
@@ -51,7 +50,7 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Device Status | 0xC8 | 2 | r | 1 |  | 0：Off<br>1：On |
 | Collecting Interval | 0x60 | 1 | rw |  |  |  |
 | Collecting Interval Unit | 0x60 | 2 | rw | 0 |  | 0：second<br>1：min |
-| Collecting Interval | 0x60 | 3 | rw | 30 | 10 - 64800 |  |
+|  Collecting Interval | 0x60 | 3 | rw | 30 | 10 - 64800 |  |
 | Collecting Interval | 0x60 | 3 | rw | 1 | 1 - 1440 |  |
 | Reporting Interval | 0x62 | 1 | rw |  |  |  |
 | Reporting Interval Unit | 0x62 | 2 | rw | 1 |  | 0：second<br>1：min |
@@ -147,7 +146,7 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Screen Display | 0x66 | 2 | rw | 1 |  | 0：disable<br>1：enable |
 | Ambient Temperature | 0x66 | 2 | rw | 1 |  | 0：disable<br>1：enable |
 | Ambient Humidity | 0x66 | 2 | rw | 1 |  | 0：disable<br>1：enable |
-| Target Temperature | 0x66 | 2 | rw | 1 |  | 0：disable<br>1：enable |
+| Target Temperature  | 0x66 | 2 | rw | 1 |  | 0：disable<br>1：enable |
 | Schedule | 0x66 | 2 | rw | 1 |  | 0：disable<br>1：enable |
 | Temperature Control Mode | 0x66 | 2 | rw | 1 |  | 0：disable<br>1：enable |
 | Fan Control Mode | 0x66 | 2 | rw | 1 |  | 0：disable<br>1：enable |
@@ -155,7 +154,7 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Screen Front Light Enable | 0x93 | 2 | rw | 1 |  | 0：disable<br>1：enable |
 | Child Lock | 0x75 | 3 | rw |  |  |  |
 | Child Lock Enable | 0x75 | 2 | rw | 0 |  | 0：disable<br>1：enable |
-| System On/Off | 0x75 | 2 | rw | 1 |  | 0：disable<br>1：enable |
+| System On/Off  | 0x75 | 2 | rw | 1 |  | 0：disable<br>1：enable |
 | Temperature + /- | 0x75 | 2 | rw | 1 |  | 0：disable<br>1：enable |
 | Fan Mode | 0x75 | 2 | rw | 1 |  | 0：disable<br>1：enable |
 | Temperature Control Mode | 0x75 | 2 | rw | 1 |  | 0：disable<br>1：enable |
@@ -165,15 +164,15 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Sub-command | 0x96 | 2 | rw | 0 |  |  |
 | Child Lock Function Enable | 0x96 | 2 | rw | 0 |  | 0：disable<br>1：enable |
 | Child Lock Key Enable | 0x96 | 2 | rw | 0 |  | 0：disable<br>1：enable |
-| System On/Off | 0x96 | 2 | rw | 0 |  | 0：disable<br>1：enable |
+| System On/Off  | 0x96 | 2 | rw | 0 |  | 0：disable<br>1：enable |
 | Temperature + &amp; Temperature - | 0x96 | 2 | rw | 0 |  | 0：disable<br>1：enable |
 | Fan | 0x96 | 2 | rw | 0 |  | 0：disable<br>1：enable |
 | Temperature Control Mode | 0x96 | 2 | rw | 0 |  | 0：disable<br>1：enable |
 | Reboot&amp;Reset | 0x96 | 2 | rw | 0 |  | 0：disable<br>1：enable |
 | Unlock Button Settings | 0x8D | 5 | rw |  |  |  |
 | Unlock Function Enable | 0x8D | 2 | rw | 0 |  | 0：disable<br>1：enable |
-| System On/Off | 0x8D | 2 | rw | 0 |  | 0：disable<br>1：enable |
-| Temperature + | 0x8D | 2 | rw | 0 |  | 0：disable<br>1：enable |
+| System On/Off  | 0x8D | 2 | rw | 0 |  | 0：disable<br>1：enable |
+| Temperature +  | 0x8D | 2 | rw | 0 |  | 0：disable<br>1：enable |
 | Temperature - | 0x8D | 2 | rw | 0 |  | 0：disable<br>1：enable |
 | Fan Mode | 0x8D | 2 | rw | 0 |  | 0：disable<br>1：enable |
 | Temperature Control Mode | 0x8D | 2 | rw | 0 |  | 0：disable<br>1：enable |
@@ -182,8 +181,8 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Temporary Button Unlock Configuration | 0x97 | 1 | rw |  |  |  |
 | Sub-command | 0x97 | 2 | rw | 0 |  |  |
 | Temporary Button Unlock Enable | 0x97 | 2 | rw | 0 |  | 0：Disable<br>3：System switch & Temperature +<br>5：System switch & Temperature -<br>6：Temperature + & Temperature -<br>7：System switch & Temperature + & Temperature -<br>9：System switch & Fan<br>10：Temperature + & Fan<br>11：System switch & Temperature + & Fan<br>12：Temperature - & Fan<br>13：System switch & Temperature - & Fan<br>14：Temperature + & Temperature - & Fan<br>15：System switch & Temperature + & Temperature - & Fan<br>17：System switch & Temperature control mode<br>18：Temperature + & Temperature control mode<br>19：System switch & Temperature + & Temperature control mode<br>20：Temperature - & Temperature control mode<br>21：System switch & Temperature - & Temperature control mode<br>22：Temperature + & Temperature - & Temperature control mode<br>23：System switch & Temperature + & Temperature - & Temperature control mode<br>24：Fan & Temperature control mode<br>25：System switch & Fan & Temperature control mode<br>26：Temperature + & Fan & Temperature control mode<br>27：System switch & Temperature + & Fan & Temperature control mode<br>28：Temperature - & Fan & Temperature control mode<br>29：System switch & Temperature - & Fan & Temperature control mode<br>30：Temperature + & Temperature - & Fan & Temperature control mode<br>31：System switch & Temperature + & Temperature - & Fan & Temperature control mode |
-| System On/Off | 0x97 | 2 | rw | 0 |  | 0：disable<br>1：enable |
-| Temperature + | 0x97 | 2 | rw | 0 |  | 0：disable<br>1：enable |
+| System On/Off  | 0x97 | 2 | rw | 0 |  | 0：disable<br>1：enable |
+| Temperature +  | 0x97 | 2 | rw | 0 |  | 0：disable<br>1：enable |
 | Temperature - | 0x97 | 2 | rw | 0 |  | 0：disable<br>1：enable |
 | Fan Mode | 0x97 | 2 | rw | 0 |  | 0：disable<br>1：enable |
 | Temperature Control Mode | 0x97 | 2 | rw | 0 |  | 0：disable<br>1：enable |
@@ -192,12 +191,12 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Daylight Saving Time | 0xC6 | M | rw |  |  |  |
 | Daylight Saving Time | 0xC6 | 2 | rw | 0 |  | 0：disable<br>1：enable |
 | DST Bias | 0xC6 | 2 | rw | 60 | 1 - 120 |  |
-| Month | 0xC6 | 2 | rw | 1 |  | 1:Jan.<br>2:Feb.<br>3:Mar.<br>4:Apr.<br>5:May<br>6:Jun.<br>7:Jul.<br>8:Aug.<br>9:Sep.<br>10:Oct.<br>11:Nov.<br>12:Dec. |
-| Number of Week | 0xC6 | 2 | rw | 1 |  | 1:1st<br>2: 2nd<br>3: 3rd<br>4: 4th<br>5: last |
+|  Month | 0xC6 | 2 | rw | 1 |  | 1:Jan.<br>2:Feb.<br>3:Mar.<br>4:Apr.<br>5:May<br>6:Jun.<br>7:Jul.<br>8:Aug.<br>9:Sep.<br>10:Oct.<br>11:Nov.<br>12:Dec. |
+|  Number of Week | 0xC6 | 2 | rw | 1 |  | 1:1st<br>2: 2nd<br>3: 3rd<br>4: 4th<br>5: last |
 | Week | 0xC6 | 2 | rw | 7 |  | 1：Mon.<br>2：Tues.<br>3：Wed.<br>4：Thurs.<br>5：Fri.<br>6：Sat.<br>7：Sun. |
 | Time | 0xC6 | 3 | rw | 0 |  | 0：00:00<br>60：01:00<br>120：02:00<br>180：03:00<br>240：04:00<br>300：05:00<br>360：06:00<br>420：07:00<br>480：08:00<br>540：09:00<br>600：10:00<br>660：11:00<br>720：12:00<br>780：13:00<br>840：14:00<br>900：15:00<br>960：16:00<br>1020：17:00<br>1080：18:00<br>1140：19:00<br>1200：20:00<br>1260：21:00<br>1320：22:00<br>1380：23:00 |
-| Month | 0xC6 | 2 | rw | 1 |  | 1:Jan.<br>2:Feb.<br>3:Mar.<br>4:Apr.<br>5:May<br>6:Jun.<br>7:Jul.<br>8:Aug.<br>9:Sep.<br>10:Oct.<br>11:Nov.<br>12:Dec. |
-| Number of Week | 0xC6 | 2 | rw | 1 |  | 1:1st<br>2: 2nd<br>3: 3rd<br>4: 4th<br>5: last |
+|  Month | 0xC6 | 2 | rw | 1 |  | 1:Jan.<br>2:Feb.<br>3:Mar.<br>4:Apr.<br>5:May<br>6:Jun.<br>7:Jul.<br>8:Aug.<br>9:Sep.<br>10:Oct.<br>11:Nov.<br>12:Dec. |
+|  Number of Week | 0xC6 | 2 | rw | 1 |  | 1:1st<br>2: 2nd<br>3: 3rd<br>4: 4th<br>5: last |
 | Week | 0xC6 | 2 | rw | 7 |  | 1：Mon.<br>2：Tues.<br>3：Wed.<br>4：Thurs.<br>5：Fri.<br>6：Sat.<br>7：Sun. |
 | Time | 0xC6 | 3 | rw | 0 |  | 0：00:00<br>60：01:00<br>120：02:00<br>180：03:00<br>240：04:00<br>300：05:00<br>360：06:00<br>420：07:00<br>480：08:00<br>540：09:00<br>600：10:00<br>660：11:00<br>720：12:00<br>780：13:00<br>840：14:00<br>900：15:00<br>960：16:00<br>1020：17:00<br>1080：18:00<br>1140：19:00<br>1200：20:00<br>1260：21:00<br>1320：22:00<br>1380：23:00 |
 | Data Storage Settings | 0xC5 | 1 | rw |  |  |  |
@@ -388,7 +387,7 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Temperature Control Permission Configuration | 0xA5 | 1 | rw |  |  |  |
 | Sub-command | 0xA5 | 2 | rw | 0 |  |  |
 | Temperature Control Permission | 0xA5 | 2 | rw | 0 |  | 0: Thermostat Control<br>1: Remote Control |
-| Debug Commands | 0xA6 | 1 | rw |  |  |  |
+|  Debug Commands | 0xA6 | 1 | rw |  |  |  |
 | Sub-command | 0xA6 | 2 | rw | 0 |  |  |
 | Ambient Temperature Debug Enable | 0xA6 | 2 | rw | 0 |  | 0：disable<br>1：enable |
 | Ambient Temperature Debug Value | 0xA6 | 3 | rw |  | -20 - 60 |  |
@@ -404,6 +403,7 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Order Check Response | 0xFE | 2 | r |  |  |  |
 | Command Response | 0xEF | 1 | r |  |  |  |
 | Request to Push All Configurations | 0xEE | 1 | r |  |  |  |
+| Battery Status | 0xB8 | M | r |  |  |  |
 | Temperature  Alarm | 0x09 | 1 | r |  |  |  |
 | Humidity Alarm | 0x0A | 1 | r |  |  |  |
 | Target Temperature Alarm | 0x0B | 1 | r |  |  |  |
@@ -417,6 +417,7 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Sequence Number | 0xFF | 2 | r | 0 | 0 - 255 |  |
 | Order Check | 0xFE | 2 | w |  |  |  |
 | Order | 0xFE | 2 | w | 0 | 0 - 255 |  |
+| Order | 0xFE | 2 | r | 0 | 0 - 255 |  |
 | Command Queries | 0xEF | 1 | w |  |  |  |
 | Query Information | 0xEF | 2 | w |  |  |  |
 | Command Length | 0xEF | 2 | w | 1 | 1 - 15 |  |
@@ -486,10 +487,12 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Temperature Extend Value | 0x5B | 3 | w | 0 | -20 - 60 |  |
 | Humidity Extend Settings | 0x5C | 3 | w |  |  |  |
 | Humidity Extend Value | 0x5C | 3 | w | 0 | 0 - 100 |  |
-| Open Window Status Control | 0x5D | 2 | w |  |  |  |
-| Open Window Status Control | 0x5D | 2 | w | 0 |  | 0：Normal<br>1：Open |
+|  Open Window Status Control | 0x5D | 2 | w |  |  |  |
+|  Open Window Status Control | 0x5D | 2 | w | 0 |  | 0：Normal<br>1：Open |
 | Event Control | 0x5E | 2 | w |  |  |  |
 | Event Control | 0x5E | 2 | w | 0 |  | 0：Schedule1<br>1：Schedule2<br>2：Schedule3<br>3：Schedule4<br>4：Schedule5<br>5：Schedule6<br>6：Schedule7<br>7：Schedule8 |
+| Delete Schedule List | 0x5F | 2 | w |  |  |  |
+| Delete Schedule | 0x5F | 2 | w | 255 |  | 0：Schedule1<br>1：Schedule2<br>2：Schedule3<br>3：Schedule4<br>4：Schedule5<br>5：Schedule6<br>6：Schedule7<br>7：Schedule8<br>255：Reset All |
 | Reset | 0xBF | 1 | w |  |  |  |
 | Reboot | 0xBE | 1 | w |  |  |  |
 
