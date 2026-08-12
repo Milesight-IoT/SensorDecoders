@@ -2180,7 +2180,7 @@
                 1,
                 60
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "analog_value_object",
             "bacnet_unit_type_id": 72,
             "bacnet_unit_type": "UNITS_MINUTES",
             "reference": []
