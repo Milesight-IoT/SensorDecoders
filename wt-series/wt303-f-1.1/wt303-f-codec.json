@@ -3,7 +3,7 @@
     "object": [
         {
             "id": "active_data_reporting_cfg.custom_cfg.cmd_cfg.common",
-            "name": "Active Data Reporting Common Command",
+            "name": "Active Data Reporting Common Command(Active Data Reporting Custom Command Configuration)",
             "value": "",
             "unit": "",
             "access_mode": "RW",
@@ -18,7 +18,7 @@
         },
         {
             "id": "active_data_reporting_cfg.custom_cfg.cmd_cfg.custom",
-            "name": "Active Data Reporting Custom Command",
+            "name": "Active Data Reporting Custom Command(Active Data Reporting Custom Command Configuration)",
             "value": "",
             "unit": "",
             "access_mode": "RW",
@@ -33,7 +33,7 @@
         },
         {
             "id": "active_data_reporting_cfg.custom_cfg.cmd_enable",
-            "name": "Active Data Reporting Custom Command Enable",
+            "name": "Active Data Reporting Custom Command Enable(Active Data Reporting Custom Configuration)",
             "value": "0",
             "unit": "",
             "access_mode": "RW",
@@ -59,7 +59,7 @@
         },
         {
             "id": "active_data_reporting_cfg.enable",
-            "name": "Active Data Reporting Enable",
+            "name": "Active Data Reporting Enable(Active Data Reporting Configuration)",
             "value": "0",
             "unit": "",
             "access_mode": "RW",
@@ -109,7 +109,7 @@
         },
         {
             "id": "active_data_reporting_cfg.start_time",
-            "name": "Active Data Reporting Start Time",
+            "name": "Active Data Reporting Start Time(Active Data Reporting Configuration)",
             "value": "240",
             "unit": "",
             "access_mode": "RW",
@@ -1800,8 +1800,8 @@
             "reference": []
         },
         {
-            "id": "energy_saving_cfg.celsius_level_1_tolerance",
-            "name": "Celsius Energy Saving Level1 Tolerance",
+            "id": "energy_saving_cfg.celsius_level_1_energy_saving_temperature_tolerance",
+            "name": "Celsius Energy Saving Level1 Target Temp Tolerance(Energy Saving Configuration)",
             "value": "2",
             "unit": "°C",
             "access_mode": "RW",
@@ -1817,8 +1817,8 @@
             "reference": []
         },
         {
-            "id": "energy_saving_cfg.celsius_level_2_tolerance",
-            "name": "Celsius Energy Saving Level2 Tolerance",
+            "id": "energy_saving_cfg.celsius_level_2_energy_saving_temperature_tolerance",
+            "name": "Celsius Energy Saving Level2 Target Temp Tolerance(Energy Saving Configuration)",
             "value": "4",
             "unit": "°C",
             "access_mode": "RW",
@@ -1857,8 +1857,8 @@
             "reference": []
         },
         {
-            "id": "energy_saving_cfg.fahrenheit_level_1_tolerance",
-            "name": "Fahrenheit Energy Saving Level1 Tolerance",
+            "id": "energy_saving_cfg.fahrenheit_level_1_energy_saving_temperature_tolerance",
+            "name": "Fahrenheit Energy Saving Level1 Target Temp Tolerance(Energy Saving Configuration)",
             "value": "35.6",
             "unit": "℉",
             "access_mode": "RW",
@@ -1874,8 +1874,8 @@
             "reference": []
         },
         {
-            "id": "energy_saving_cfg.fahrenheit_level_2_tolerance",
-            "name": "Fahrenheit Energy Saving Level2 Tolerance",
+            "id": "energy_saving_cfg.fahrenheit_level_2_energy_saving_temperature_tolerance",
+            "name": "Fahrenheit Energy Saving Level2 Target Temp Tolerance(Energy Saving Configuration)",
             "value": "39.2",
             "unit": "℉",
             "access_mode": "RW",
@@ -2174,20 +2174,17 @@
             "value": "10",
             "unit": "min",
             "access_mode": "RW",
-            "data_type": "NUMBER",
+            "data_type": "ENUM",
             "value_type": "UINT8",
-            "range": [
-                1,
-                60
-            ],
-            "bacnet_type": "analog_value_object",
+            "values": [],
+            "bacnet_type": "multistate_value_object",
             "bacnet_unit_type_id": 72,
             "bacnet_unit_type": "UNITS_MINUTES",
             "reference": []
         },
         {
             "id": "external_data_src_timeout_cfg.timeout_response",
-            "name": "Device Offline Settings",
+            "name": "Device Offline Settings(External Data Source Timeout Configuration)",
             "value": "0",
             "unit": "",
             "access_mode": "RW",
@@ -2617,8 +2614,30 @@
             "reference": []
         },
         {
+            "id": "fan_stop_enable",
+            "name": "Fan Stop Settings",
+            "value": "1",
+            "unit": "",
+            "access_mode": "RW",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "disable"
+                },
+                {
+                    "value": 1,
+                    "name": "enable"
+                }
+            ],
+            "bacnet_type": "binary_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS"
+        },
+        {
             "id": "freeze_protection_cfg.celsius_target_temperature",
-            "name": "Celsius Freeze Protection Target",
+            "name": "Celsius Freeze Protection Target Temperature(Freeze Protection Configuration)",
             "value": "3",
             "unit": "°C",
             "access_mode": "RW",
@@ -2658,7 +2677,7 @@
         },
         {
             "id": "freeze_protection_cfg.fahrenheit_target_temperature",
-            "name": "Fahrenheit Freeze Protection Target",
+            "name": "Fahrenheit Freeze Protection Target Temperature(Freeze Protection Configuration)",
             "value": "37.4",
             "unit": "℉",
             "access_mode": "RW",
@@ -2736,7 +2755,7 @@
         },
         {
             "id": "high_temperature_alarm_cfg.celsius_delta",
-            "name": "Celsius High Alarm Delta",
+            "name": "Celsius Persistent High Temperature Alarm Delta(Persistent High Temperature Alarm Configuration)",
             "value": "3",
             "unit": "°C",
             "access_mode": "RW",
@@ -2753,7 +2772,7 @@
         },
         {
             "id": "high_temperature_alarm_cfg.duration",
-            "name": "High Alarm Duration",
+            "name": "Persistent High Temperature Alarm Duration(Persistent High Temperature Alarm Configuration)",
             "value": "5",
             "unit": "min",
             "access_mode": "RW",
@@ -2770,7 +2789,7 @@
         },
         {
             "id": "high_temperature_alarm_cfg.enable",
-            "name": "High Alarm Enable",
+            "name": "Persistent High Temperature Alarm Enable(Persistent High Temperature Alarm Configuration)",
             "value": "0",
             "unit": "",
             "access_mode": "RW",
@@ -2793,7 +2812,7 @@
         },
         {
             "id": "high_temperature_alarm_cfg.fahrenheit_delta",
-            "name": "Fahrenheit High Alarm Delta",
+            "name": "Fahrenheit Persistent High Temperature Alarm Delta(Persistent High Temperature Alarm Configuration)",
             "value": "37.4",
             "unit": "℉",
             "access_mode": "RW",
@@ -2809,8 +2828,8 @@
             "reference": []
         },
         {
-            "id": "high_temperature_alarm_settings.celsius_delta",
-            "name": "Celsius Persistent High Alarm Delta",
+            "id": "high_temperature_alarm_settings.celsius_difference_in_temperature",
+            "name": "Celsius Difference in Temperature(Persistent High Temperature Alarm Settings)",
             "value": "3",
             "unit": "°C",
             "access_mode": "RW",
@@ -2849,7 +2868,7 @@
         },
         {
             "id": "high_temperature_alarm_settings.enable",
-            "name": "Persistent High Temperature Alarm",
+            "name": "Persistent High Temperature(Persistent High Temperature Alarm Settings)",
             "value": "0",
             "unit": "",
             "access_mode": "RW",
@@ -2873,8 +2892,8 @@
             ]
         },
         {
-            "id": "high_temperature_alarm_settings.fahrenheit_delta",
-            "name": "Fahrenheit Persistent High Alarm Delta",
+            "id": "high_temperature_alarm_settings.fahrenheit_difference_in_temperature",
+            "name": "Fahrenheit Difference in Temperature(Persistent High Temperature Alarm Settings)",
             "value": "37.4",
             "unit": "℉",
             "access_mode": "RW",
@@ -2891,6 +2910,19 @@
                 "high_temperature_alarm_settings.enable",
                 "high_temperature_alarm_settings.duration"
             ]
+        },
+        {
+            "id": "historical_data_report.timestamp",
+            "name": "Historical Data Timestamps(Historical Data)",
+            "value": "",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "NUMBER",
+            "value_type": "UINT8",
+            "bacnet_type": "analog_input_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": []
         },
         {
             "id": "humidity",
@@ -3275,7 +3307,7 @@
         },
         {
             "id": "low_temperature_alarm_cfg.celsius_delta",
-            "name": "Celsius Low Alarm Delta",
+            "name": "Celsius Persistent Low Temperature Alarm Delta(Persistent Low Temperature Alarm Configuration)",
             "value": "3",
             "unit": "°C",
             "access_mode": "RW",
@@ -3292,7 +3324,7 @@
         },
         {
             "id": "low_temperature_alarm_cfg.duration",
-            "name": "Low Alarm Duration",
+            "name": "Persistent Low Temperature Alarm Duration(Persistent Low Temperature Alarm Configuration)",
             "value": "5",
             "unit": "min",
             "access_mode": "RW",
@@ -3309,7 +3341,7 @@
         },
         {
             "id": "low_temperature_alarm_cfg.enable",
-            "name": "Low Alarm Enable",
+            "name": "Persistent Low Temperature Alarm Enable(Persistent Low Temperature Alarm Configuration)",
             "value": "0",
             "unit": "",
             "access_mode": "RW",
@@ -3332,7 +3364,7 @@
         },
         {
             "id": "low_temperature_alarm_cfg.fahrenheit_delta",
-            "name": "Fahrenheit Low Alarm Delta",
+            "name": "Fahrenheit Persistent Low Temperature Alarm Delta(Persistent Low Temperature Alarm Configuration)",
             "value": "37.4",
             "unit": "℉",
             "access_mode": "RW",
@@ -3348,8 +3380,8 @@
             "reference": []
         },
         {
-            "id": "low_temperature_alarm_settings.celsius_delta",
-            "name": "Celsius Persistent Low Alarm Delta",
+            "id": "low_temperature_alarm_settings.celsius_difference_in_temperature",
+            "name": "Celsius Difference in Temperature(Persistent Low Temperature Alarm Settings)",
             "value": "3",
             "unit": "°C",
             "access_mode": "RW",
@@ -3388,7 +3420,7 @@
         },
         {
             "id": "low_temperature_alarm_settings.enable",
-            "name": "Persistent Low Temperature Alarm",
+            "name": "Persistent Low Temperature(Persistent Low Temperature Alarm Settings)",
             "value": "0",
             "unit": "",
             "access_mode": "RW",
@@ -3412,8 +3444,8 @@
             ]
         },
         {
-            "id": "low_temperature_alarm_settings.fahrenheit_delta",
-            "name": "Fahrenheit Persistent Low Alarm Delta",
+            "id": "low_temperature_alarm_settings.fahrenheit_difference_in_temperature",
+            "name": "Fahrenheit Difference in Temperature(Persistent Low Temperature Alarm Settings)",
             "value": "37.4",
             "unit": "℉",
             "access_mode": "RW",
@@ -3459,7 +3491,7 @@
         },
         {
             "id": "occupied_detection_cfg.condition_enable",
-            "name": "Occupied Condition Detection Enable",
+            "name": "Occupied Condition Detection Enable(Occupied Detection Configuration)",
             "value": "0",
             "unit": "",
             "access_mode": "RW",
@@ -3482,7 +3514,7 @@
         },
         {
             "id": "occupied_detection_cfg.condition_trigger_period",
-            "name": "Occupied Detection Trigger Period",
+            "name": "Occupied Condition Detection Trigger Period(Occupied Detection Configuration)",
             "value": "5",
             "unit": "min",
             "access_mode": "RW",
@@ -3499,7 +3531,7 @@
         },
         {
             "id": "occupied_detection_cfg.condition_trigger_rate",
-            "name": "Occupied Detection Trigger Rate",
+            "name": "Occupied Condition Detection Trigger Rate(Occupied Detection Configuration)",
             "value": "50",
             "unit": "%",
             "access_mode": "RW",
@@ -3539,7 +3571,7 @@
         },
         {
             "id": "occupied_detection_cfg.night_condition_enable",
-            "name": "Night Occupied Detection Enable",
+            "name": "Night Occupied Condition  Detection Enable(Occupied Detection Configuration)",
             "value": "1",
             "unit": "",
             "access_mode": "RW",
@@ -3562,7 +3594,7 @@
         },
         {
             "id": "occupied_detection_cfg.night_condition_trigger_period",
-            "name": "Night Occupied Detection Trigger Period",
+            "name": "Night Occupied Condition  Detection Trigger Period(Occupied Detection Configuration)",
             "value": "5",
             "unit": "min",
             "access_mode": "RW",
@@ -3579,7 +3611,7 @@
         },
         {
             "id": "occupied_detection_cfg.night_condition_trigger_rate",
-            "name": "Night Occupied Detection Trigger Rate",
+            "name": "Night Occupied Condition  Detection Trigger Rate(Occupied Detection Configuration)",
             "value": "50",
             "unit": "%",
             "access_mode": "RW",
@@ -3596,7 +3628,7 @@
         },
         {
             "id": "occupied_detection_cfg.night_enable",
-            "name": "Night Occupied Detection Enable",
+            "name": "Night Occupied Detection Enable(Occupied Detection Configuration)",
             "value": "1",
             "unit": "",
             "access_mode": "RW",
@@ -3721,28 +3753,6 @@
             "bacnet_unit_type": "UNITS_NO_UNITS"
         },
         {
-            "id": "query_device_status",
-            "name": "Query Device Status",
-            "access_mode": "W",
-            "data_type": "BOOL",
-            "value_type": "UINT8",
-            "unit": "",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "bacnet_type": "binary_output_object",
-            "value": "",
-            "values": [
-                {
-                    "value": 0,
-                    "name": "no"
-                },
-                {
-                    "value": 1,
-                    "name": "yes"
-                }
-            ]
-        },
-        {
             "id": "reboot",
             "name": "Reboot",
             "access_mode": "W",
@@ -3809,48 +3819,6 @@
             "bacnet_unit_type": "UNITS_NO_UNITS"
         },
         {
-            "id": "relay_status.ao1_duty",
-            "name": "AO1 Duty(Relay/Valve Status )",
-            "value": "0",
-            "unit": "",
-            "access_mode": "R",
-            "data_type": "NUMBER",
-            "value_type": "UINT8",
-            "bacnet_type": "analog_input_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": [
-                "relay_status.low_status",
-                "relay_status.mid_status",
-                "relay_status.high_status",
-                "relay_status.valve_1_status",
-                "relay_status.valve_2_status",
-                "relay_status.reserved",
-                "relay_status.ao2_duty"
-            ]
-        },
-        {
-            "id": "relay_status.ao2_duty",
-            "name": "AO2 Duty(Relay/Valve Status )",
-            "value": "0",
-            "unit": "",
-            "access_mode": "R",
-            "data_type": "NUMBER",
-            "value_type": "UINT8",
-            "bacnet_type": "analog_input_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": [
-                "relay_status.low_status",
-                "relay_status.mid_status",
-                "relay_status.high_status",
-                "relay_status.valve_1_status",
-                "relay_status.valve_2_status",
-                "relay_status.reserved",
-                "relay_status.ao1_duty"
-            ]
-        },
-        {
             "id": "relay_status.high_status",
             "name": "Fan High(Relay/Valve Status )",
             "value": "0",
@@ -3876,9 +3844,7 @@
                 "relay_status.mid_status",
                 "relay_status.valve_1_status",
                 "relay_status.valve_2_status",
-                "relay_status.reserved",
-                "relay_status.ao1_duty",
-                "relay_status.ao2_duty"
+                "relay_status.reserved"
             ]
         },
         {
@@ -3907,9 +3873,7 @@
                 "relay_status.high_status",
                 "relay_status.valve_1_status",
                 "relay_status.valve_2_status",
-                "relay_status.reserved",
-                "relay_status.ao1_duty",
-                "relay_status.ao2_duty"
+                "relay_status.reserved"
             ]
         },
         {
@@ -3938,9 +3902,7 @@
                 "relay_status.high_status",
                 "relay_status.valve_1_status",
                 "relay_status.valve_2_status",
-                "relay_status.reserved",
-                "relay_status.ao1_duty",
-                "relay_status.ao2_duty"
+                "relay_status.reserved"
             ]
         },
         {
@@ -3959,9 +3921,7 @@
                 "relay_status.mid_status",
                 "relay_status.high_status",
                 "relay_status.valve_1_status",
-                "relay_status.valve_2_status",
-                "relay_status.ao1_duty",
-                "relay_status.ao2_duty"
+                "relay_status.valve_2_status"
             ],
             "values": [
                 {
@@ -4000,9 +3960,7 @@
                 "relay_status.mid_status",
                 "relay_status.high_status",
                 "relay_status.valve_2_status",
-                "relay_status.reserved",
-                "relay_status.ao1_duty",
-                "relay_status.ao2_duty"
+                "relay_status.reserved"
             ]
         },
         {
@@ -4031,9 +3989,7 @@
                 "relay_status.mid_status",
                 "relay_status.high_status",
                 "relay_status.valve_1_status",
-                "relay_status.reserved",
-                "relay_status.ao1_duty",
-                "relay_status.ao2_duty"
+                "relay_status.reserved"
             ]
         },
         {
@@ -4114,30 +4070,8 @@
             "reference": []
         },
         {
-            "id": "reset",
-            "name": "Reset",
-            "access_mode": "W",
-            "data_type": "BOOL",
-            "value_type": "UINT8",
-            "unit": "",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "bacnet_type": "binary_output_object",
-            "value": "",
-            "values": [
-                {
-                    "value": 0,
-                    "name": "no"
-                },
-                {
-                    "value": 1,
-                    "name": "yes"
-                }
-            ]
-        },
-        {
             "id": "screen_display_cfg.display_data_enable_when_off",
-            "name": "Screen Display Data When Off",
+            "name": "Enable Screen Display Data When System Is Off(Screen Display Configuration)",
             "value": "1",
             "unit": "",
             "access_mode": "RW",
@@ -4480,22 +4414,6 @@
             "reference": []
         },
         {
-            "id": "synchronize_time",
-            "name": "Synchronize Time",
-            "value": "",
-            "unit": "",
-            "access_mode": "W",
-            "data_type": "NUMBER",
-            "value_type": "UINT8",
-            "range": [
-                0,
-                255
-            ],
-            "bacnet_type": "analog_output_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS"
-        },
-        {
             "id": "system_status",
             "name": "System On/Off",
             "value": "0",
@@ -4602,7 +4520,7 @@
         },
         {
             "id": "temp_ctl_dehumi_cfg.celsius_temperature_tolerance",
-            "name": "Celsius Dehumidification Enable Tolerance",
+            "name": "Celsius Temp Control and Dehumidify Enable Tolerance(Temp Control and Dehumidify Configuration)",
             "value": "1",
             "unit": "°C",
             "access_mode": "RW",
@@ -4619,7 +4537,7 @@
         },
         {
             "id": "temp_ctl_dehumi_cfg.enable",
-            "name": "Dehumidification Enable",
+            "name": "Temp Control and Dehumidify Enable(Temp Control and Dehumidify Configuration)",
             "value": "0",
             "unit": "",
             "access_mode": "RW",
@@ -4642,7 +4560,7 @@
         },
         {
             "id": "temp_ctl_dehumi_cfg.fahrenheit_temperature_tolerance",
-            "name": "Fahrenheit Dehumidification Enable Tolerance",
+            "name": "Fahrenheit Temp Control and Dehumidify Enable Tolerance(Temp Control and Dehumidify Configuration)",
             "value": "33.8",
             "unit": "℉",
             "access_mode": "RW",
@@ -4723,7 +4641,7 @@
         },
         {
             "id": "temperature_alarm_settings.enable",
-            "name": "Temperature Threshold Alarm",
+            "name": "Temperature Threshold Alarm(Temperature Threshold Alarm Settings)",
             "value": "0",
             "unit": "",
             "access_mode": "RW",
@@ -4922,7 +4840,7 @@
         },
         {
             "id": "temperature_calibration_cfg.celsius_calibration_value",
-            "name": "Celsius Calibration Value",
+            "name": "Celsius Temperature Calibration Value(Temperature Calibration Configuration)",
             "value": "0",
             "unit": "°C",
             "access_mode": "RW",
@@ -4939,7 +4857,7 @@
         },
         {
             "id": "temperature_calibration_cfg.enable",
-            "name": "Temperature Calibration Enable",
+            "name": "Temperature Calibration Enable(Temperature Calibration Configuration)",
             "value": "0",
             "unit": "",
             "access_mode": "RW",
@@ -4962,7 +4880,7 @@
         },
         {
             "id": "temperature_calibration_cfg.fahrenheit_calibration_value",
-            "name": "Fahrenheit Calibration Value",
+            "name": "Fahrenheit Temperature Calibration Value(Temperature Calibration Configuration)",
             "value": "32",
             "unit": "℉",
             "access_mode": "RW",
@@ -5039,8 +4957,8 @@
             ]
         },
         {
-            "id": "temperature_control_dehumidification.celsius_tolerance",
-            "name": "Celsius Dehumidification Tolerance",
+            "id": "temperature_control_dehumidification.celsius_temperature_tolerance",
+            "name": "Celsius Temp. Tolerance for Dehumidification\n(Temp. Control and Dehumidify Settings)",
             "value": "1",
             "unit": "°C",
             "access_mode": "RW",
@@ -5059,7 +4977,7 @@
         },
         {
             "id": "temperature_control_dehumidification.enable",
-            "name": "Temperature Dehumidification",
+            "name": "Temp. Control and Dehumidify(Temp. Control and Dehumidify Settings)",
             "value": "0",
             "unit": "",
             "access_mode": "RW",
@@ -5081,8 +4999,8 @@
             "reference": []
         },
         {
-            "id": "temperature_control_dehumidification.fahrenheit_tolerance",
-            "name": "Fahrenheit Dehumidification Tolerance",
+            "id": "temperature_control_dehumidification.fahrenheit_temperature_tolerance",
+            "name": "Fahrenheit Temp. Tolerance for Dehumidification\n(Temp. Control and Dehumidify Settings)",
             "value": "33.8",
             "unit": "℉",
             "access_mode": "RW",
@@ -5335,7 +5253,7 @@
         },
         {
             "id": "temperature_control_permission_cfg.temp_ctrl_permission",
-            "name": "Temperature Control Permission",
+            "name": "Temperature Control Permission(Temperature Control Permission Configuration)",
             "value": "0",
             "unit": "",
             "access_mode": "RW",
@@ -5559,7 +5477,7 @@
         },
         {
             "id": "temporary_button_unlock_cfg.enable",
-            "name": "Temporary Button Unlock Enable",
+            "name": "Temporary Button Unlock Enable(Temporary Button Unlock Configuration)",
             "value": "0",
             "unit": "",
             "access_mode": "RW",
@@ -5640,7 +5558,7 @@
                 },
                 {
                     "value": 23,
-                    "name": "System switch & Temp + & Temp - & Temp control"
+                    "name": "System switch & Temperature + & Temperature - & Temperature control mode"
                 },
                 {
                     "value": 24,
@@ -5672,7 +5590,7 @@
                 },
                 {
                     "value": 31,
-                    "name": "System switch & Temp + & Temp - & Fan & Temp control"
+                    "name": "System switch & Temperature + & Temperature - & Fan & Temperature control mode"
                 }
             ],
             "bacnet_type": "multistate_value_object",
@@ -6056,7 +5974,7 @@
         },
         {
             "id": "threshold_alarm_cfg.celsius_max",
-            "name": "Celsius Threshold Alarm Value B",
+            "name": "Celsius Temperature Threshold Alarm Value B(Temperature Threshold Alarm Configuration)",
             "value": "0",
             "unit": "°C",
             "access_mode": "RW",
@@ -6073,7 +5991,7 @@
         },
         {
             "id": "threshold_alarm_cfg.celsius_min",
-            "name": "Celsius Threshold Alarm Value A",
+            "name": "Celsius Temperature Threshold Alarm Value A(Temperature Threshold Alarm Configuration)",
             "value": "0",
             "unit": "°C",
             "access_mode": "RW",
@@ -6090,7 +6008,7 @@
         },
         {
             "id": "threshold_alarm_cfg.enable",
-            "name": "Temperature Threshold Alarm Enable",
+            "name": "Temperature Threshold Alarm Enable(Temperature Threshold Alarm Configuration)",
             "value": "0",
             "unit": "",
             "access_mode": "RW",
@@ -6113,7 +6031,7 @@
         },
         {
             "id": "threshold_alarm_cfg.fahrenheit_max",
-            "name": "Fahrenheit Threshold Alarm Value B",
+            "name": "Fahrenheit Temperature Threshold Alarm Value B(Temperature Threshold Alarm Configuration)",
             "value": "32",
             "unit": "℉",
             "access_mode": "RW",
@@ -6130,7 +6048,7 @@
         },
         {
             "id": "threshold_alarm_cfg.fahrenheit_min",
-            "name": "Fahrenheit Threshold Alarm Value A",
+            "name": "Fahrenheit Temperature Threshold Alarm Value A(Temperature Threshold Alarm Configuration)",
             "value": "32",
             "unit": "℉",
             "access_mode": "RW",
@@ -6147,7 +6065,7 @@
         },
         {
             "id": "threshold_alarm_cfg.mode",
-            "name": "Temperature Threshold Alarm Mode",
+            "name": "Temperature Threshold Alarm Mode(Temperature Threshold Alarm Configuration)",
             "value": "0",
             "unit": "",
             "access_mode": "RW",
@@ -6495,8 +6413,8 @@
             "reference": []
         },
         {
-            "id": "window_opening_detection_settings.temp_detection.celsius_delta",
-            "name": "Celsius Temperature Change",
+            "id": "window_opening_detection_settings.temperature_detection.celsius_difference_in_temperature",
+            "name": "Celsius Temperature Change(Temperature Detection)",
             "value": "3",
             "unit": "°C",
             "access_mode": "RW",
@@ -6510,12 +6428,12 @@
             "bacnet_unit_type_id": 62,
             "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
             "reference": [
-                "window_opening_detection_settings.temp_detection.stop_minutes"
+                "window_opening_detection_settings.temperature_detection.stop_time"
             ]
         },
         {
-            "id": "window_opening_detection_settings.temp_detection.f_delta",
-            "name": "Fahrenheit Temperature Change",
+            "id": "window_opening_detection_settings.temperature_detection.fahrenheit_difference_in_temperature",
+            "name": "Fahrenheit Temperature Change(Temperature Detection)",
             "value": "37.4",
             "unit": "℉",
             "access_mode": "RW",
@@ -6529,12 +6447,12 @@
             "bacnet_unit_type_id": 64,
             "bacnet_unit_type": "UNITS_DEGREES_FAHRENHEIT",
             "reference": [
-                "window_opening_detection_settings.temp_detection.stop_minutes"
+                "window_opening_detection_settings.temperature_detection.stop_time"
             ]
         },
         {
-            "id": "window_opening_detection_settings.temp_detection.stop_minutes",
-            "name": "Temperature Control Stop Time",
+            "id": "window_opening_detection_settings.temperature_detection.stop_time",
+            "name": "Stop Temperature Control For(Temperature Detection)",
             "value": "30",
             "unit": "min",
             "access_mode": "RW",

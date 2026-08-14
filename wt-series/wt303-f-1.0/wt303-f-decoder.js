@@ -54,7 +54,21 @@ function milesightDeviceDecode(bytes) {
 				decoded.ans.push(ans_item);
 				break;
 			case 0xee:
-				decoded.request_query_all_configurations = readOnlyCommand(bytes, counterObj, 0);
+				decoded.all_configurations_request_by_device = readOnlyCommand(bytes, counterObj, 0);
+				break;
+			case 0xed:
+				if (history.length === 0) {
+					for (var k in decoded) {
+						if (decoded.hasOwnProperty(k)) {
+							result[k] = decoded[k];
+						}
+					}
+				}
+				decoded = {};
+				// skip type
+				readUInt8(bytes, counterObj, 1);
+				decoded.timestamp = readUInt32LE(bytes, counterObj, 4);
+				history.push(decoded);
 				break;
 			case 0xcf:
 				decoded.lorawan_configuration_settings = decoded.lorawan_configuration_settings || {};
@@ -86,18 +100,8 @@ function milesightDeviceDecode(bytes) {
 			case 0xd8:
 				decoded.product_frequency_band = readString(bytes, counterObj, 16);
 				break;
-			case 0xb9:
-				decoded.device_time = decoded.device_time || {};
-				decoded.device_time.current_time = readUInt32LE(bytes, counterObj, 4);
-				decoded.device_time.running_time = readUInt32LE(bytes, counterObj, 4);
-				decoded.device_time.power_on_time = readUInt32LE(bytes, counterObj, 4);
-				break;
 			case 0xb8:
 				decoded.battery_info = decoded.battery_info || {};
-				decoded.battery_info.battery_capacity = readUInt32LE(bytes, counterObj, 4) / 1000;
-				decoded.battery_info.battery_consumption = readUInt32LE(bytes, counterObj, 4) / 1000;
-				decoded.battery_info.battery_left = readUInt32LE(bytes, counterObj, 4) / 1000;
-				decoded.battery_info.battery_voltage = readUInt16LE(bytes, counterObj, 2) / 1000;
 				decoded.battery_info.current_battery_status = readHexString(bytes, counterObj, 2);
 				break;
 			case 0x00:
@@ -707,9 +711,9 @@ function milesightDeviceDecode(bytes) {
 				decoded.window_opening_detection_settings = decoded.window_opening_detection_settings || {};
 				decoded.window_opening_detection_settings.type = readUInt8(bytes, counterObj, 1);
 				if (decoded.window_opening_detection_settings.type == 0x00) {
-					decoded.window_opening_detection_settings.temp_detection = decoded.window_opening_detection_settings.temp_detection || {};
-					decoded.window_opening_detection_settings.temp_detection.difference_in_temperature = readInt16LE(bytes, counterObj, 2) / 100;
-					decoded.window_opening_detection_settings.temp_detection.stop_minutes = readUInt8(bytes, counterObj, 1);
+					decoded.window_opening_detection_settings.temperature_detection = decoded.window_opening_detection_settings.temperature_detection || {};
+					decoded.window_opening_detection_settings.temperature_detection.difference_in_temperature = readInt16LE(bytes, counterObj, 2) / 100;
+					decoded.window_opening_detection_settings.temperature_detection.stop_time = readUInt8(bytes, counterObj, 1);
 				}
 				if (decoded.window_opening_detection_settings.type == 0x01) {
 					decoded.window_opening_detection_settings.magnet_detection = decoded.window_opening_detection_settings.magnet_detection || {};
@@ -837,9 +841,6 @@ function milesightDeviceDecode(bytes) {
 				decoded.delete_schedule = decoded.delete_schedule || {};
 				// 0：Schedule1, 1：Schedule2, 2：Schedule3, 3：Schedule4, 4：Schedule5, 5：Schedule6, 6：Schedule7, 7：Schedule8, 255：Reset All 
 				decoded.delete_schedule.type = readUInt8(bytes, counterObj, 1);
-				break;
-			case 0xbf:
-				decoded.reset = readOnlyCommand(bytes, counterObj, 0);
 				break;
 			case 0xbe:
 				decoded.reboot = readOnlyCommand(bytes, counterObj, 0);
@@ -1276,7 +1277,7 @@ function cmdMap() {
 		  "6201": "reporting_interval.minutes_of_time",
 		  "8100": "di_settings.card_control",
 		  "8101": "di_settings.magnet_detection",
-		  "8300": "window_opening_detection_settings.temp_detection",
+		  "8300": "window_opening_detection_settings.temperature_detection",
 		  "8301": "window_opening_detection_settings.magnet_detection",
 		  "8502": "temperature_source.lorawan_reception",
 		  "8503": "temperature_source.d2d_reception",
@@ -1286,6 +1287,7 @@ function cmdMap() {
 		  "fe": "request_check_order",
 		  "ef": "request_command_queries",
 		  "ee": "request_query_all_configurations",
+		  "ed": "historical_data_report",
 		  "cf": "lorawan_configuration_settings",
 		  "df": "tsl_version",
 		  "de": "product_name",
@@ -1294,7 +1296,6 @@ function cmdMap() {
 		  "da": "version",
 		  "d9": "oem_id",
 		  "d8": "product_frequency_band",
-		  "b9": "device_time",
 		  "b8": "battery_info",
 		  "00": "battery",
 		  "04": "data_source",
@@ -1391,7 +1392,6 @@ function cmdMap() {
 		  "5d": "update_open_windows_state",
 		  "5e": "insert_schedule",
 		  "5f": "delete_schedule",
-		  "bf": "reset",
 		  "be": "reboot"
 	};
 }
@@ -1541,7 +1541,7 @@ function processTemperature(decoded) {
         "precision": 2,
         "unitName": "℃"
     },
-    "window_opening_detection_settings.temp_detection.difference_in_temperature": {
+    "window_opening_detection_settings.temperature_detection.difference_in_temperature": {
         "precision": 2,
         "unitName": "℃"
     },

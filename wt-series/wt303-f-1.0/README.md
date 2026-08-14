@@ -283,7 +283,8 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Sequence Number Check Response | 0xFF | 2 | r |  |  |  |
 | Order Check Response | 0xFE | 2 | r |  |  |  |
 | Command Response | 0xEF | 1 | r |  |  |  |
-| Device Time | 0xB9 | M | r |  |  |  |
+| Request to Push All Configurations | 0xEE | 1 | r |  |  |  |
+| Historical Data | 0xED | 5 | r |  |  |  |
 | Battery Status | 0xB8 | M | r |  |  |  |
 | Temperature  Alarm | 0x09 | 1 | r |  |  |  |
 | Humidity Alarm | 0x0A | 1 | r |  |  |  |
@@ -307,14 +308,7 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Command Length | 0xEF | 2 | r | 1 | 1 - 15 |  |
 | Answered Commands | 0xEF | 1 | r |  |  |  |
 | Request to Query All Configurations | 0xEE | 1 | w |  |  |  |
-| Current Time | 0xB9 | 5 | r |  |  |  |
-| Operation Time | 0xB9 | 5 | r |  |  |  |
-| Power-On Time | 0xB9 | 5 | r |  |  |  |
-| Query Device Status | 0xB9 | 1 | w |  |  |  |
-| Battery Capacity | 0xB8 | 5 | r |  |  |  |
-| Battery Drain | 0xB8 | 5 | r |  |  |  |
-| Current Battery | 0xB8 | 5 | r |  |  |  |
-| Battery Voltage | 0xB8 | 3 | r |  |  |  |
+| Historical Data Timestamps | 0xED | 5 | r |  |  |  |
 | Current Battery Status | 0xB8 | 3 | r |  |  |  |
 | Time Synchronize | 0xB8 | 1 | w |  |  |  |
 | Alarm Type | 0x09 | 2 | r |  |  |  |
@@ -381,6 +375,5 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Event Control | 0x5E | 2 | w | 0 |  | 0：Schedule1<br>1：Schedule2<br>2：Schedule3<br>3：Schedule4<br>4：Schedule5<br>5：Schedule6<br>6：Schedule7<br>7：Schedule8 |
 | Delete Schedule List | 0x5F | 2 | w |  |  |  |
 | Delete Schedule | 0x5F | 2 | w | 255 |  | 0：Schedule1<br>1：Schedule2<br>2：Schedule3<br>3：Schedule4<br>4：Schedule5<br>5：Schedule6<br>6：Schedule7<br>7：Schedule8<br>255：Reset All |
-| Reset | 0xBF | 1 | w |  |  |  |
 | Reboot | 0xBE | 1 | w |  |  |  |
 

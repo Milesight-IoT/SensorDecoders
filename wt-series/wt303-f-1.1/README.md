@@ -44,8 +44,6 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Valve 1 | 0x10 | 5 | r | 0 |  | 0：Open<br>1：Close |
 | Valve 2 | 0x10 | 5 | r | 0 |  | 0：Open<br>1：Close |
 | Reserved | 0x10 | 5 | r |  |  |  |
-| AO1 Duty | 0x10 | 5 | r | 0 |  |  |
-| AO2 Duty | 0x10 | 5 | r | 0 |  |  |
 | Random key | 0xC9 | 2 | rw | 0 |  | 0：disable<br>1：enable |
 | Device Status | 0xC8 | 2 | r | 1 |  | 0：Off<br>1：On |
 | Collecting Interval | 0x60 | 1 | rw |  |  |  |
@@ -286,6 +284,7 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Two-pipe, Three-wire Valve+Three-speeds Fan | 0x7C | 3 | rw |  |  |  |
 | NO | 0x7C | 2 | rw | 1 |  | 1：V1/ NO<br>2：V2/ NC |
 | NC | 0x7C | 2 | rw | 2 |  | 1：V1/ NO<br>2：V2/ NC |
+| Fan Stop Settings | 0x8E | 2 | rw | 1 |  | 0：disable<br>1：enable |
 | DI Enable | 0x80 | 2 | rw | 0 |  | 0：disable<br>1：enable |
 | DI Settings | 0x81 | 1 | rw |  |  |  |
 | DI Interface | 0x81 | 2 | rw | 0 |  |  |
@@ -403,6 +402,7 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Order Check Response | 0xFE | 2 | r |  |  |  |
 | Command Response | 0xEF | 1 | r |  |  |  |
 | Request to Push All Configurations | 0xEE | 1 | r |  |  |  |
+| Historical Data | 0xED | 5 | r |  |  |  |
 | Battery Status | 0xB8 | M | r |  |  |  |
 | Temperature  Alarm | 0x09 | 1 | r |  |  |  |
 | Humidity Alarm | 0x0A | 1 | r |  |  |  |
@@ -426,8 +426,8 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Command Length | 0xEF | 2 | r | 1 | 1 - 15 |  |
 | Answered Commands | 0xEF | 1 | r |  |  |  |
 | Request to Query All Configurations | 0xEE | 1 | w |  |  |  |
+| Historical Data Timestamps | 0xED | 5 | r |  |  |  |
 | Current Battery Status | 0xB8 | 3 | r |  |  |  |
-| Time Synchronize | 0xB8 | 1 | w |  |  |  |
 | Alarm Type | 0x09 | 2 | r |  |  |  |
 | Collection Error | 0x09 | 1 | r |  |  |  |
 | Exceed the Range Lower Limit | 0x09 | 1 | r |  |  |  |
@@ -472,7 +472,6 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | No Data | 0x0A | 1 | r |  |  |  |
 | Alarm Type | 0x0B | 2 | r |  |  |  |
 | No Data | 0x0B | 1 | r |  |  |  |
-| Query Device Status | 0xB9 | 1 | w |  |  |  |
 | Time Synchronize | 0xB7 | 5 | w |  |  |  |
 | Timestamp | 0xB7 | 5 | w |  |  |  |
 | Clear Data | 0xBD | 1 | w |  |  |  |
@@ -493,6 +492,5 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Event Control | 0x5E | 2 | w | 0 |  | 0：Schedule1<br>1：Schedule2<br>2：Schedule3<br>3：Schedule4<br>4：Schedule5<br>5：Schedule6<br>6：Schedule7<br>7：Schedule8 |
 | Delete Schedule List | 0x5F | 2 | w |  |  |  |
 | Delete Schedule | 0x5F | 2 | w | 255 |  | 0：Schedule1<br>1：Schedule2<br>2：Schedule3<br>3：Schedule4<br>4：Schedule5<br>5：Schedule6<br>6：Schedule7<br>7：Schedule8<br>255：Reset All |
-| Reset | 0xBF | 1 | w |  |  |  |
 | Reboot | 0xBE | 1 | w |  |  |  |
 

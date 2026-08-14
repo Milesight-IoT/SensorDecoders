@@ -94,6 +94,26 @@ function milesightDeviceEncode(payload) {
 		buffer.writeUInt8(0xee);
 		encoded = encoded.concat(buffer.toBytes());
 	}
+	//0xed
+	if ('history' in payload) {
+		for (var i = 0; i < payload.history.length; i++) {
+			var buffer = new Buffer();
+			var history = payload.history[i];
+			buffer.writeUInt8(0xed);
+			// 0：target time, 1：historical time
+			buffer.writeUInt8(1);
+			buffer.writeUInt32LE(history.timestamp);
+			var reset = {};
+			for (var k in history) {
+				if (history.hasOwnProperty(k) && k !== "timestamp") {
+					reset[k] = history[k];
+				}
+			}
+		
+			encoded = encoded.concat(buffer.toBytes());
+			encoded = encoded.concat(milesightDeviceEncode(reset));
+		}
+	}
 	//0xcf
 	if ('lorawan_configuration_settings' in payload) {
 		var buffer = new Buffer();
@@ -143,12 +163,6 @@ function milesightDeviceEncode(payload) {
 		var buffer = new Buffer();
 		buffer.writeUInt8(0xd8);
 		buffer.writeString(payload.product_frequency_band, 16);
-		encoded = encoded.concat(buffer.toBytes());
-	}
-	//0xb9
-	if ('query_device_status' in payload) {
-		var buffer = new Buffer();
-		buffer.writeUInt8(0xb9);
 		encoded = encoded.concat(buffer.toBytes());
 	}
 	//0xb8
@@ -1358,14 +1372,14 @@ function milesightDeviceEncode(payload) {
 		}
 		buffer.writeUInt8(payload.window_opening_detection_settings.type);
 		if (payload.window_opening_detection_settings.type == 0x00) {
-			if (payload.window_opening_detection_settings.temp_detection.difference_in_temperature < 1 || payload.window_opening_detection_settings.temp_detection.difference_in_temperature > 10) {
-				throw new Error('window_opening_detection_settings.temp_detection.difference_in_temperature must be between 1 and 10');
+			if (payload.window_opening_detection_settings.temperature_detection.difference_in_temperature < 1 || payload.window_opening_detection_settings.temperature_detection.difference_in_temperature > 10) {
+				throw new Error('window_opening_detection_settings.temperature_detection.difference_in_temperature must be between 1 and 10');
 			}
-			buffer.writeInt16LE(payload.window_opening_detection_settings.temp_detection.difference_in_temperature * 100);
-			if (payload.window_opening_detection_settings.temp_detection.stop_minutes < 1 || payload.window_opening_detection_settings.temp_detection.stop_minutes > 60) {
-				throw new Error('window_opening_detection_settings.temp_detection.stop_minutes must be between 1 and 60');
+			buffer.writeInt16LE(payload.window_opening_detection_settings.temperature_detection.difference_in_temperature * 100);
+			if (payload.window_opening_detection_settings.temperature_detection.stop_time < 1 || payload.window_opening_detection_settings.temperature_detection.stop_time > 60) {
+				throw new Error('window_opening_detection_settings.temperature_detection.stop_time must be between 1 and 60');
 			}
-			buffer.writeUInt8(payload.window_opening_detection_settings.temp_detection.stop_minutes);
+			buffer.writeUInt8(payload.window_opening_detection_settings.temperature_detection.stop_time);
 		}
 		if (payload.window_opening_detection_settings.type == 0x01) {
 			if (payload.window_opening_detection_settings.magnet_detection.duration < 1 || payload.window_opening_detection_settings.magnet_detection.duration > 60) {
@@ -1649,12 +1663,6 @@ function milesightDeviceEncode(payload) {
 		}
 		// 0：Schedule1, 1：Schedule2, 2：Schedule3, 3：Schedule4, 4：Schedule5, 5：Schedule6, 6：Schedule7, 7：Schedule8, 255：Reset All 
 		buffer.writeUInt8(payload.delete_schedule.type);
-		encoded = encoded.concat(buffer.toBytes());
-	}
-	//0xbf
-	if ('reset' in payload) {
-		var buffer = new Buffer();
-		buffer.writeUInt8(0xbf);
 		encoded = encoded.concat(buffer.toBytes());
 	}
 	//0xbe
@@ -1949,6 +1957,7 @@ function cmdMap() {
 		  "request_check_order": "fe",
 		  "request_command_queries": "ef",
 		  "request_query_all_configurations": "ee",
+		  "historical_data_report": "ed",
 		  "lorawan_configuration_settings": "cf",
 		  "tsl_version": "df",
 		  "product_name": "de",
@@ -1957,7 +1966,6 @@ function cmdMap() {
 		  "version": "da",
 		  "oem_id": "d9",
 		  "product_frequency_band": "d8",
-		  "device_time": "b9",
 		  "battery_info": "b8",
 		  "battery": "00",
 		  "data_source": "04",
@@ -2068,7 +2076,7 @@ function cmdMap() {
 		  "di_settings.magnet_detection": "8101",
 		  "window_opening_detection_enable": "82",
 		  "window_opening_detection_settings": "83",
-		  "window_opening_detection_settings.temp_detection": "8300",
+		  "window_opening_detection_settings.temperature_detection": "8300",
 		  "window_opening_detection_settings.magnet_detection": "8301",
 		  "freeze_protection_settings": "84",
 		  "d2d_pairing_enable": "86",
@@ -2097,7 +2105,6 @@ function cmdMap() {
 		  "update_open_windows_state": "5d",
 		  "insert_schedule": "5e",
 		  "delete_schedule": "5f",
-		  "reset": "bf",
 		  "reboot": "be"
 	};
 }
@@ -2247,7 +2254,7 @@ function processTemperature(payload) {
         "coefficient": 0.01,
         "unitName": "℃"
     },
-    "window_opening_detection_settings.temp_detection.difference_in_temperature": {
+    "window_opening_detection_settings.temperature_detection.difference_in_temperature": {
         "coefficient": 0.01,
         "unitName": "℃"
     },
