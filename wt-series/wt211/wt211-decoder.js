@@ -782,6 +782,10 @@ function handle_downlink_response_ext(code, channel_type, bytes, offset) {
             decoded.fan_control_during_heating = readFanControlDuringHeating(readUInt8(bytes[offset]));
             offset += 1;
             break;
+        case 0x70:
+            decoded.fan_enable = readEnableStatus(readUInt8(bytes[offset]));
+            offset += 1;
+            break;
         case 0x8b:
             decoded.plan_schedule_enable_config = readPlanScheduleEnableConfig(bytes.slice(offset, offset + 2));
             offset += 2;

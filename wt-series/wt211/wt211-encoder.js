@@ -233,6 +233,9 @@ function milesightDeviceEncode(payload) {
     if ("fan_control_during_heating" in payload) {
         encoded = encoded.concat(setFanControlDuringHeating(payload.fan_control_during_heating));
     }
+    if ("fan_enable" in payload) {
+        encoded = encoded.concat(setEnableStatus(payload.fan_enable, "fan_enable", 0x70));
+    }
     if ("double_point_target_tolerance" in payload) {
         for (var index = 0; index < payload.double_point_target_tolerance.length; index++) {
             var double_point_target_tolerance = payload.double_point_target_tolerance[index];
