@@ -81,7 +81,7 @@
                 { "value": 2, "name": "Class C" },
                 { "value": 3, "name": "Class CtoB" }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS"
         },
@@ -229,7 +229,7 @@
                 { "value": 0, "name": "current" },
                 { "value": 1, "name": "voltage" }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS"
         },
@@ -293,7 +293,7 @@
                 { "value": 1, "name": "threshold alarm" },
                 { "value": 2, "name": "value change alarm" }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS"
         },
@@ -309,7 +309,7 @@
                 { "value": 0, "name": "current" },
                 { "value": 1, "name": "voltage" }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS"
         },
@@ -373,7 +373,7 @@
                 { "value": 1, "name": "threshold alarm" },
                 { "value": 2, "name": "value change alarm" }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS"
         },
@@ -385,7 +385,7 @@
             "access_mode": "R",
             "data_type": "TEXT",
             "value_type": "STRING",
-            "max_length": 255,
+            "max_length": 242,
             "bacnet_type": "character_string_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS"
@@ -398,7 +398,7 @@
             "access_mode": "R",
             "data_type": "TEXT",
             "value_type": "STRING",
-            "max_length": 255,
+            "max_length": 242,
             "bacnet_type": "character_string_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS"
@@ -411,7 +411,7 @@
             "access_mode": "R",
             "data_type": "TEXT",
             "value_type": "STRING",
-            "max_length": 255,
+            "max_length": 242,
             "bacnet_type": "character_string_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS"
@@ -424,7 +424,7 @@
             "access_mode": "R",
             "data_type": "TEXT",
             "value_type": "STRING",
-            "max_length": 255,
+            "max_length": 242,
             "bacnet_type": "character_string_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS"
@@ -437,7 +437,7 @@
             "access_mode": "R",
             "data_type": "TEXT",
             "value_type": "STRING",
-            "max_length": 255,
+            "max_length": 242,
             "bacnet_type": "character_string_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS"
@@ -450,7 +450,7 @@
             "access_mode": "R",
             "data_type": "TEXT",
             "value_type": "STRING",
-            "max_length": 255,
+            "max_length": 242,
             "bacnet_type": "character_string_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS"
@@ -463,7 +463,7 @@
             "access_mode": "R",
             "data_type": "TEXT",
             "value_type": "STRING",
-            "max_length": 255,
+            "max_length": 242,
             "bacnet_type": "character_string_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS"
@@ -476,7 +476,7 @@
             "access_mode": "R",
             "data_type": "TEXT",
             "value_type": "STRING",
-            "max_length": 255,
+            "max_length": 242,
             "bacnet_type": "character_string_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS"
@@ -489,7 +489,7 @@
             "access_mode": "R",
             "data_type": "TEXT",
             "value_type": "STRING",
-            "max_length": 255,
+            "max_length": 242,
             "bacnet_type": "character_string_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS"
@@ -502,7 +502,7 @@
             "access_mode": "R",
             "data_type": "TEXT",
             "value_type": "STRING",
-            "max_length": 255,
+            "max_length": 242,
             "bacnet_type": "character_string_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS"
@@ -515,7 +515,7 @@
             "access_mode": "R",
             "data_type": "TEXT",
             "value_type": "STRING",
-            "max_length": 255,
+            "max_length": 242,
             "bacnet_type": "character_string_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS"
@@ -528,7 +528,7 @@
             "access_mode": "R",
             "data_type": "TEXT",
             "value_type": "STRING",
-            "max_length": 255,
+            "max_length": 242,
             "bacnet_type": "character_string_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS"
@@ -541,7 +541,7 @@
             "access_mode": "R",
             "data_type": "TEXT",
             "value_type": "STRING",
-            "max_length": 255,
+            "max_length": 242,
             "bacnet_type": "character_string_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS"
@@ -554,7 +554,7 @@
             "access_mode": "R",
             "data_type": "TEXT",
             "value_type": "STRING",
-            "max_length": 255,
+            "max_length": 242,
             "bacnet_type": "character_string_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS"
@@ -567,7 +567,7 @@
             "access_mode": "R",
             "data_type": "TEXT",
             "value_type": "STRING",
-            "max_length": 255,
+            "max_length": 242,
             "bacnet_type": "character_string_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS"
@@ -580,7 +580,7 @@
             "access_mode": "R",
             "data_type": "TEXT",
             "value_type": "STRING",
-            "max_length": 255,
+            "max_length": 242,
             "bacnet_type": "character_string_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS"
