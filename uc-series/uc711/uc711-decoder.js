@@ -155,7 +155,7 @@ function milesightDeviceDecode(bytes) {
 				break;
 			case 0xb4:
 				decoded.ble_server = decoded.ble_server || {};
-				// 0：Reset BLE Name , 1：Cancel Pairing, 2：Trigger Pairing
+				// 0：Reset BLE Name , 1：Cancel Pairing
 				decoded.ble_server.type = readUInt8(bytes, counterObj, 1);
 				break;
 			case 0x02:
@@ -281,17 +281,17 @@ function milesightDeviceDecode(bytes) {
 			case 0x0c:
 				decoded.temperature_control_info = decoded.temperature_control_info || {};
 				var bitOptions = readUInt8(bytes, counterObj, 1);
-				// 0：heat, 2：cool, 3：auto
+				// 0：Heat, 2：Cool, 3：Auto
 				decoded.temperature_control_info.mode = extractBits(bitOptions, 4, 8);
-				// 0：standby, 1：stage-1 heat, 2：stage-2 heat, 3：stage-3 heat, 4：stage-4 heat, 5：stage-5 heat, 7：stage-1 cool, 8：stage-2 cool, 9：stage-3 cool
+				// 0：Standby,  1：Stage-1 Heat,  2：Stage-2 Heat,  3：Stage-3 Heat,  4：Stage-4 Heat,  5：Stage-5 Heat,  7：Stage-1 Cool,  8：Stage-2 Cool,  9：Stage-3 Cool
 				decoded.temperature_control_info.status = extractBits(bitOptions, 0, 4);
 				break;
 			case 0x0d:
 				decoded.fan_control_info = decoded.fan_control_info || {};
 				var bitOptions = readUInt8(bytes, counterObj, 1);
-				// 0：auto, 1：circulate, 2：on, 3：low, 4：medium, 5：high
+				// 0：Auto, 1：Circulate, 2：On, 3：Low, 4：Medium, 5：High
 				decoded.fan_control_info.mode = extractBits(bitOptions, 4, 8);
-				// 0：off, 1：open, 2：low, 3:medium, 4:high
+				// 0：Off, 1：On, 2：Low, 3:Medium, 4:High
 				decoded.fan_control_info.status = extractBits(bitOptions, 0, 4);
 				break;
 			case 0x0e:
@@ -300,9 +300,9 @@ function milesightDeviceDecode(bytes) {
 			case 0x0f:
 				decoded.system_status = decoded.system_status || {};
 				var bitOptions = readUInt8(bytes, counterObj, 1);
-				// 0：system Off, 1：system on
+				// 0：System Off, 1：System On
 				decoded.system_status.system_switch = extractBits(bitOptions, 0, 1);
-				// 0：Vacant, 1：occupied, 2：night occupied
+				// 0：Vacant, 1：Occupied, 2：Night Occupied
 				decoded.system_status.occupy_status = extractBits(bitOptions, 1, 3);
 				decoded.system_status.reserved = extractBits(bitOptions, 3, 8);
 				break;
@@ -353,17 +353,17 @@ function milesightDeviceDecode(bytes) {
 			case 0x01:
 				decoded.relay_status_change = decoded.relay_status_change || {};
 				var bitOptions = readUInt8(bytes, counterObj, 1);
-				// 0：opened, 1：closed
+				// 0：Opened, 1：Closed
 				decoded.relay_status_change.Y1 = extractBits(bitOptions, 0, 1);
-				// 0：opened, 1：closed
+				// 0：Opened, 1：Closed
 				decoded.relay_status_change.W1 = extractBits(bitOptions, 1, 2);
-				// 0：opened, 1：closed
+				// 0：Opened, 1：Closed
 				decoded.relay_status_change.OB = extractBits(bitOptions, 2, 3);
-				// 0：opened, 1：closed
+				// 0：Opened, 1：Closed
 				decoded.relay_status_change.GL = extractBits(bitOptions, 3, 4);
-				// 0：opened, 1：closed
+				// 0：Opened, 1：Closed
 				decoded.relay_status_change.GM = extractBits(bitOptions, 4, 5);
-				// 0：opened, 1：closed
+				// 0：Opened, 1：Closed
 				decoded.relay_status_change.GH = extractBits(bitOptions, 5, 6);
 				decoded.relay_status_change.reserved = extractBits(bitOptions, 6, 8);
 				break;
@@ -377,7 +377,7 @@ function milesightDeviceDecode(bytes) {
 				var reporting_interval_type = readUInt8(bytes, counterObj, 1);
 				if (reporting_interval_type == 0x00) {
 					decoded.reporting_interval.ble_lora = decoded.reporting_interval.ble_lora || {};
-					// 0：second, 1：min
+					// 0：Second, 1：Min
 					decoded.reporting_interval.ble_lora.unit = readUInt8(bytes, counterObj, 1);
 					if (decoded.reporting_interval.ble_lora.unit == 0x00) {
 						decoded.reporting_interval.ble_lora.seconds_of_time = readUInt16LE(bytes, counterObj, 2);
@@ -388,7 +388,7 @@ function milesightDeviceDecode(bytes) {
 				}
 				if (reporting_interval_type == 0x01) {
 					decoded.reporting_interval.power_lora = decoded.reporting_interval.power_lora || {};
-					// 0：second, 1：min
+					// 0：Second, 1：Min
 					decoded.reporting_interval.power_lora.unit = readUInt8(bytes, counterObj, 1);
 					if (decoded.reporting_interval.power_lora.unit == 0x00) {
 						decoded.reporting_interval.power_lora.seconds_of_time = readUInt16LE(bytes, counterObj, 2);
@@ -403,7 +403,7 @@ function milesightDeviceDecode(bytes) {
 				decoded.temperature_unit = readUInt8(bytes, counterObj, 1);
 				break;
 			case 0x80:
-				// 0：disable, 1：enable
+				// 0：Disable, 1：Enable
 				decoded.relay_change_report_enable = readUInt8(bytes, counterObj, 1);
 				break;
 			case 0x6a:
@@ -417,7 +417,7 @@ function milesightDeviceDecode(bytes) {
 					decoded.temperature_data_source.time_out = readUInt8(bytes, counterObj, 1);
 				}
 				if (temperature_data_source_command == 0x02) {
-					// 0:  keep relays status, 1: turn off all relays, 2: thermostat control
+					// 0: Keep Relays Status,  1: Turn Off All Relays,  2: Thermostat Control
 					decoded.temperature_data_source.offline_mode = readUInt8(bytes, counterObj, 1);
 				}
 				break;
@@ -430,16 +430,16 @@ function milesightDeviceDecode(bytes) {
 				// 0：Mode, 1：Plan Temperature Control , Mode Enable
 				var temperature_control_mode_command = readUInt8(bytes, counterObj, 1);
 				if (temperature_control_mode_command == 0x00) {
-					// 0：heat, 2：cool, 3：auto
+					// 0：Heat, 2：Cool, 3：Auto
 					decoded.temperature_control_mode.ctrl_mode = readUInt8(bytes, counterObj, 1);
 				}
 				if (temperature_control_mode_command == 0x01) {
-					// 0：disable, 1：enable
+					// 0：Disable, 1：Enable
 					decoded.temperature_control_mode.plan_enable = readUInt8(bytes, counterObj, 1);
 				}
 				break;
 			case 0x76:
-				// 0：single, 1：double
+				// 0：Single, 1：Double
 				decoded.target_temperature_mode = readUInt8(bytes, counterObj, 1);
 				break;
 			case 0x65:
@@ -512,11 +512,11 @@ function milesightDeviceDecode(bytes) {
 				decoded.temperature_control_level_switch = decoded.temperature_control_level_switch || {};
 				var temperature_control_level_switch_cmd = readUInt8(bytes, counterObj, 1);
 				if (temperature_control_level_switch_cmd == 0x00) {
-					// 0：disable, 1：enable
+					// 0：Disable, 1：Enable
 					decoded.temperature_control_level_switch.setforw_enable = readUInt8(bytes, counterObj, 1);
 				}
 				if (temperature_control_level_switch_cmd == 0x01) {
-					// 0：disable, 1：enable
+					// 0：Disable, 1：Enable
 					decoded.temperature_control_level_switch.setback_enable = readUInt8(bytes, counterObj, 1);
 				}
 				if (temperature_control_level_switch_cmd == 0x02) {
@@ -542,7 +542,7 @@ function milesightDeviceDecode(bytes) {
 				decoded.fan_settings = decoded.fan_settings || {};
 				var fan_settings_command = readUInt8(bytes, counterObj, 1);
 				if (fan_settings_command == 0x00) {
-					// 0：Auto, 1：Ventilation, 2：Always Open, 3：Low, 4：Medium, 5：High
+					// 0：Auto, 1：Circulate, 2：On, 3：Low, 4：Medium, 5：High
 					decoded.fan_settings.fan_mode = readUInt8(bytes, counterObj, 1);
 				}
 				if (fan_settings_command == 0x03) {
@@ -739,29 +739,29 @@ function milesightDeviceDecode(bytes) {
 				if (install_configuration_type == 0x00) {
 					decoded.install_configuration.wire = decoded.install_configuration.wire || {};
 					var bitOptions = readUInt8(bytes, counterObj, 1);
-					// 0：disable, 1：enable
+					// 0：Disable, 1：Enable
 					decoded.install_configuration.wire.y1_connected = extractBits(bitOptions, 0, 2);
-					// 0：disable, 1：enable
+					// 0：Disable, 1：Enable
 					decoded.install_configuration.wire.gh_connected = extractBits(bitOptions, 2, 4);
-					// 0：disable, 1：enable
+					// 0：Disable, 1：Enable
 					decoded.install_configuration.wire.ob_connected = extractBits(bitOptions, 4, 6);
-					// 0：disable, 1：enable
+					// 0：Disable, 1：Enable
 					decoded.install_configuration.wire.w1_connected = extractBits(bitOptions, 6, 8);
 					var bitOptions = readUInt8(bytes, counterObj, 1);
-					// 0：disable, 1：enable
+					// 0：Disable, 1：Enable
 					decoded.install_configuration.wire.we_connected = extractBits(bitOptions, 0, 2);
-					// 0：disable, 1：enable
+					// 0：Disable, 1：Enable
 					decoded.install_configuration.wire.di_connected = extractBits(bitOptions, 2, 4);
-					// 0：disable, 1：enable
+					// 0：Disable, 1：Enable
 					decoded.install_configuration.wire.pek_connected = extractBits(bitOptions, 4, 6);
-					// 0：disable, 1：w2 enable, 2：aux enable
+					// 0：Disable, 1：W2 Enable, 2：Aux Enable
 					decoded.install_configuration.wire.w2_connected = extractBits(bitOptions, 6, 8);
 					var bitOptions = readUInt8(bytes, counterObj, 1);
-					// 0：disable, 1：enable
+					// 0：Disable, 1：Enable
 					decoded.install_configuration.wire.gl_connected = extractBits(bitOptions, 0, 2);
-					// 0：disable, 1：enable
+					// 0：Disable, 1：Enable
 					decoded.install_configuration.wire.gm_connected = extractBits(bitOptions, 2, 4);
-					// 0：disable, 1：enable
+					// 0：Disable, 1：Enable
 					decoded.install_configuration.wire.ntc_connected = extractBits(bitOptions, 4, 6);
 					decoded.install_configuration.wire.reserved = extractBits(bitOptions, 6, 8);
 				}
@@ -772,12 +772,12 @@ function milesightDeviceDecode(bytes) {
 				}
 				if (install_configuration_type == 0x03) {
 					decoded.install_configuration.fan = decoded.install_configuration.fan || {};
-					// 0：thermostat, 1：hvac
+					// 0：Thermostat, 1：Hvac
 					decoded.install_configuration.fan.owner = readUInt8(bytes, counterObj, 1);
 				}
 				if (install_configuration_type == 0x02) {
 					decoded.install_configuration.y_combine_aux = decoded.install_configuration.y_combine_aux || {};
-					// 0：disable, 1：enable
+					// 0：Disable, 1：Enable
 					decoded.install_configuration.y_combine_aux.enable = readUInt8(bytes, counterObj, 1);
 				}
 				break;
@@ -804,7 +804,7 @@ function milesightDeviceDecode(bytes) {
 				}
 				break;
 			case 0x68:
-				// 0：disable, 1：enable
+				// 0：Disable, 1：Enable
 				decoded.window_opening_detection_enable = readUInt8(bytes, counterObj, 1);
 				break;
 			case 0x69:
@@ -835,7 +835,7 @@ function milesightDeviceDecode(bytes) {
 					decoded.di_settings.card_control.type = readUInt8(bytes, counterObj, 1);
 					if (decoded.di_settings.card_control.type == 0x00) {
 						decoded.di_settings.card_control.system_control = decoded.di_settings.card_control.system_control || {};
-						// 0：system off, 1：system on
+						// 0：System Off, 1：System On
 						decoded.di_settings.card_control.system_control.trigger_by_insertion = readUInt8(bytes, counterObj, 1);
 					}
 					if (decoded.di_settings.card_control.type == 0x01) {
@@ -853,7 +853,7 @@ function milesightDeviceDecode(bytes) {
 				}
 				break;
 			case 0x95:
-				// 0：disable, 1：enable
+				// 0：Disable, 1：Enable
 				decoded.d2d_pairing_enable = readUInt8(bytes, counterObj, 1);
 				break;
 			case 0x96:
@@ -864,7 +864,7 @@ function milesightDeviceDecode(bytes) {
 				insertArrayItem(decoded.d2d_pairing_settings, d2d_pairing_settings_item, 'index');
 				var d2d_pairing_settings_item_type = readUInt8(bytes, counterObj, 1);
 				if (d2d_pairing_settings_item_type == 0x00) {
-					// 0：disable, 1：enable
+					// 0：Disable, 1：Enable
 					d2d_pairing_settings_item.enable = readUInt8(bytes, counterObj, 1);
 				}
 				if (d2d_pairing_settings_item_type == 0x01) {
@@ -878,7 +878,7 @@ function milesightDeviceDecode(bytes) {
 				}
 				break;
 			case 0x97:
-				// 0：disable, 1：enable
+				// 0：Disable, 1：Enable
 				decoded.d2d_master_enable = readUInt8(bytes, counterObj, 1);
 				break;
 			case 0x98:
@@ -888,17 +888,17 @@ function milesightDeviceDecode(bytes) {
 				var d2d_master_settings_item = pickArrayItem(decoded.d2d_master_settings, trigger_condition, 'trigger_condition');
 				d2d_master_settings_item.trigger_condition = trigger_condition;
 				insertArrayItem(decoded.d2d_master_settings, d2d_master_settings_item, 'trigger_condition');
-				// 0：disable, 1：enable
+				// 0：Disable, 1：Enable
 				d2d_master_settings_item.enable = readUInt8(bytes, counterObj, 1);
 				d2d_master_settings_item.command = readHexString(bytes, counterObj, 2);
-				// 0：disable, 1：enable
+				// 0：Disable, 1：Enable
 				d2d_master_settings_item.uplink = readUInt8(bytes, counterObj, 1);
-				// 0：disable, 1：enable
+				// 0：Disable, 1：Enable
 				d2d_master_settings_item.control_time_enable = readUInt8(bytes, counterObj, 1);
 				d2d_master_settings_item.control_time = readUInt16LE(bytes, counterObj, 2);
 				break;
 			case 0x99:
-				// 0：disable, 1：enable
+				// 0：Disable, 1：Enable
 				decoded.d2d_slave_enable = readUInt8(bytes, counterObj, 1);
 				break;
 			case 0x9a:
@@ -907,7 +907,7 @@ function milesightDeviceDecode(bytes) {
 				var d2d_slave_settings_item = pickArrayItem(decoded.d2d_slave_settings, index, 'index');
 				d2d_slave_settings_item.index = index;
 				insertArrayItem(decoded.d2d_slave_settings, d2d_slave_settings_item, 'index');
-				// 0：disable, 1：enable
+				// 0：Disable, 1：Enable
 				d2d_slave_settings_item.enable = readUInt8(bytes, counterObj, 1);
 				d2d_slave_settings_item.command = readHexString(bytes, counterObj, 2);
 				// 0: Schedule1, 1: Schedule2, 2: Schedule3, 3: Schedule4, 4: Schedule5, 5: Schedule6, 6: Schedule7, 7: Schedule8, 8：Schedule9, 9：Schedule10, 10：Schedule11, 11：Schedule12, 12：Schedule13, 13：Schedule14, 14：Schedule15, 15：Schedule16, 16：System Off, 17：System On
@@ -923,29 +923,6 @@ function milesightDeviceDecode(bytes) {
 				decoded.retrieve_historical_data_by_time_range = decoded.retrieve_historical_data_by_time_range || {};
 				decoded.retrieve_historical_data_by_time_range.start_time = readUInt32LE(bytes, counterObj, 4);
 				decoded.retrieve_historical_data_by_time_range.end_time = readUInt32LE(bytes, counterObj, 4);
-				break;
-			case 0x59:
-				decoded.system_status_control = decoded.system_status_control || {};
-				// 0：system off, 1：system on
-				decoded.system_status_control.on_off = readUInt8(bytes, counterObj, 1);
-				// 0：heat, 2：cool, 3：auto, 255：disable
-				decoded.system_status_control.mode = readUInt8(bytes, counterObj, 1);
-				if (decoded.system_status_control.mode == 255) {
-					decoded.system_status_control.mode = 'no apply';
-				}
-				var t1 = readInt16LE(bytes, counterObj, 2);
-				if (t1 == -1) {
-					decoded.system_status_control.temperature1 = 'no apply';
-				} else {
-					decoded.system_status_control.temperature1 = t1 / 100;
-				}
-
-				var t2 = readInt16LE(bytes, counterObj, 2);
-				if (t2 == -1) {
-					decoded.system_status_control.temperature2 = 'no apply';
-				} else {
-					decoded.system_status_control.temperature2 = t2 / 100;
-				}
 				break;
 			default:
 				unknown_command = 1;
@@ -1378,7 +1355,6 @@ function cmdMap() {
 		  "10": "target_temperature1",
 		  "12": "target_temperature2",
 		  "30": "data_transparent",
-		  "59": "system_status_control",
 		  "60": "temperature_control_mode",
 		  "61": "target_temperature_settings",
 		  "62": "target_temperature_tolerance",
