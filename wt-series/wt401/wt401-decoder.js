@@ -701,7 +701,7 @@ function milesightDeviceDecode(bytes) {
 				var bitOptions = readUInt8(bytes, counterObj, 1);
 				// 1:1st, 2: 2nd, 3: 3rd, 4: 4th, 5: last
 				decoded.daylight_saving_time.start_week_num = extractBits(bitOptions, 4, 8);
-				// 1：Sun., 2：Mon., 3：Tues., 4：Wed., 5：Thurs., 6：Fri., 7：Sat., 
+				// 1：Sun., 2：Mon., 3：Tues., 4：Wed., 5：Thurs., 6：Fri., 7：Sat.,
 				decoded.daylight_saving_time.start_week_day = extractBits(bitOptions, 0, 4);
 				decoded.daylight_saving_time.start_hour_min = readUInt16LE(bytes, counterObj, 2);
 				// 1:Jan., 2:Feb., 3:Mar., 4:Apr., 5:May, 6:Jun., 7:Jul., 8:Aug., 9:Sep., 10:Oct., 11:Nov., 12:Dec.
@@ -782,29 +782,6 @@ function milesightDeviceDecode(bytes) {
 				break;
 			case 0x54:
 				decoded.reset_ble_name = readOnlyCommand(bytes, counterObj, 1);
-				break;
-			case 0x59:
-				decoded.system_status_control = decoded.system_status_control || {};
-				// 0：system off, 1：system on
-				decoded.system_status_control.on_off = readUInt8(bytes, counterObj, 1);
-				// 0：heat, 2：cool, 3：auto, 255：disable
-				decoded.system_status_control.mode = readUInt8(bytes, counterObj, 1);
-				if (decoded.system_status_control.mode == 255) {
-					decoded.system_status_control.mode = 'no apply';
-				}
-				var t1 = readInt16LE(bytes, counterObj, 2);
-				if (t1 == -1) {
-					decoded.system_status_control.temperature1 = 'no apply';
-				} else {
-					decoded.system_status_control.temperature1 = t1 / 100;
-				}
-
-				var t2 = readInt16LE(bytes, counterObj, 2);
-				if (t2 == -1) {
-					decoded.system_status_control.temperature2 = 'no apply';
-				} else {
-					decoded.system_status_control.temperature2 = t2 / 100;
-				}
 				break;
 			case 0x86:
 				decoded.origin_temperature = readInt16LE(bytes, counterObj, 2) / 100;

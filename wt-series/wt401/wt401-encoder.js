@@ -46,7 +46,7 @@ function milesightDeviceEncode(payload) {
 			var req_command = reqList[idx];
 			var pureNumber = [];
 			var formateStrParts = [];
-		
+
 			req_command.split('.').forEach(function(part) {
 				if (/^[0-9]+$/.test(part)) {
 					// padStart ES5 兼容
@@ -58,17 +58,17 @@ function milesightDeviceEncode(payload) {
 					formateStrParts.push(part);
 				}
 			});
-		
+
 			var formateStr = formateStrParts.join('.');
 			var hexString = cmdMap()[formateStr];
-		
+
 			if (hexString && hexString.indexOf('xx') !== -1) {
 				var i = 0;
 				hexString = hexString.replace(/xx/g, function() {
 					return pureNumber[i++];
 				});
 			}
-		
+
 			if (hexString) {
 				var length = hexString.length / 2;
 				buffer.writeUInt8(0xef);
@@ -1359,7 +1359,7 @@ function milesightDeviceEncode(payload) {
 		// 1:1st, 2: 2nd, 3: 3rd, 4: 4th, 5: last
 		bitOptions |= payload.daylight_saving_time.start_week_num << 4;
 
-		// 1：Sun., 2：Mon., 3：Tues., 4：Wed., 5：Thurs., 6：Fri., 7：Sat., 
+		// 1：Sun., 2：Mon., 3：Tues., 4：Wed., 5：Thurs., 6：Fri., 7：Sat.,
 		bitOptions |= payload.daylight_saving_time.start_week_day << 0;
 		buffer.writeUInt8(bitOptions);
 
@@ -1560,41 +1560,6 @@ function milesightDeviceEncode(payload) {
 	if ('reset_ble_name' in payload) {
 		var buffer = new Buffer();
 		buffer.writeUInt8(0x54);
-		encoded = encoded.concat(buffer.toBytes());
-	}
-	//0x59
-	if ('system_status_control' in payload) {
-		var buffer = new Buffer();
-		buffer.writeUInt8(0x59);
-		if ([0, 1].indexOf(payload.system_status_control.on_off) === -1) {
-			throw new Error('system_status_control.on_off must be one of [0, 1]');
-		}
-		// 0：system off, 1：system on
-		buffer.writeUInt8(payload.system_status_control.on_off);
-		if (payload.system_status_control.mode == 'no apply') {
-			buffer.writeUInt8(255);
-		} else if (payload.system_status_control.mode < 0 || payload.system_status_control.mode > 5) {
-			throw new Error('system_status_control.mode must be between 0 and 5');
-		} else {
-			// 0：heat, 1：em heat, 2：cool, 3：auto, 4：dehumidify, 5：ventilation
-			buffer.writeUInt8(payload.system_status_control.mode);
-		}
-
-		if (payload.system_status_control.temperature1 == 'no apply') {
-			buffer.writeInt16LE(65535);
-		} else if (payload.system_status_control.temperature1 < 5 || payload.system_status_control.temperature1 > 35) {
-			throw new Error('system_status_control.temperature1 must be between 5 and 35');
-		} else {
-			buffer.writeInt16LE(payload.system_status_control.temperature1 * 100);
-		}
-
-		if (payload.system_status_control.temperature2 == 'no apply') {
-			buffer.writeInt16LE(65535);
-		} else if (payload.system_status_control.temperature2 < 5 || payload.system_status_control.temperature2 > 35) {
-			throw new Error('system_status_control.temperature2 must be in range [5,35]');
-		} else {
-			buffer.writeInt16LE(payload.system_status_control.temperature2 * 100);
-		}
 		encoded = encoded.concat(buffer.toBytes());
 	}
 	//0x86

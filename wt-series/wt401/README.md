@@ -344,11 +344,6 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Battery Event Type | 0x0F | 2 | r |  |  |  |
 | Battery Recover | 0x0F | 2 | r |  |  |  |
 | Reset BLE Name | 0x54 | 2 | w |  |  |  |
-| System Status Control | 0x59 | 7 | w |  |  |  |
-| System On/Off | 0x59 | 2 | w | 1 |  | 0：system off<br>1：system on |
-| Temperature Control Mode | 0x59 | 2 | w | 0 |  | 0：heat<br>1：em heat<br>2：cool<br>3：auto<br>4：dehumidify<br>5：ventilation |
-| Heat Temperature | 0x59 | 3 | w | 17 | 5 - 35 |  |
-| Cool Temperature | 0x59 | 3 | w | 28 |  |  |
 | External Temperature | 0x86 | 3 | rw |  | -20 - 60 |  |
 | External Humidity | 0x87 | 3 | rw |  | 0 - 100 |  |
 | Insert Temporary Plan | 0x5C | 2 | w |  |  |  |
