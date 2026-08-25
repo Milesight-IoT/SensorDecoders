@@ -2957,14 +2957,6 @@
                     "name": "Collection Error"
                 },
                 {
-                    "value": 1,
-                    "name": "Exceed the Range Lower Limit"
-                },
-                {
-                    "value": 2,
-                    "name": "Exceed the Range Upper Limit"
-                },
-                {
                     "value": 3,
                     "name": "No Data"
                 }
