@@ -246,12 +246,6 @@ function milesightDeviceDecode(bytes) {
 				if (decoded.humidity_alarm.type == 0x00) {
 					decoded.humidity_alarm.collection_error = decoded.humidity_alarm.collection_error || {};
 				}
-				if (decoded.humidity_alarm.type == 0x01) {
-					decoded.humidity_alarm.lower_range_error = decoded.humidity_alarm.lower_range_error || {};
-				}
-				if (decoded.humidity_alarm.type == 0x02) {
-					decoded.humidity_alarm.over_range_error = decoded.humidity_alarm.over_range_error || {};
-				}
 				if (decoded.humidity_alarm.type == 0x03) {
 					decoded.humidity_alarm.no_data = decoded.humidity_alarm.no_data || {};
 				}
@@ -279,9 +273,7 @@ function milesightDeviceDecode(bytes) {
 				decoded.relay_status.high_status = extractBits(bitOptions, 2, 3);
 				decoded.relay_status.valve_1_status = extractBits(bitOptions, 3, 4);
 				decoded.relay_status.valve_2_status = extractBits(bitOptions, 4, 5);
-				decoded.relay_status.reserved = extractBits(bitOptions, 5, 16);
-				decoded.relay_status.ao1_duty = extractBits(bitOptions, 16, 24);
-				decoded.relay_status.ao2_duty = extractBits(bitOptions, 24, 32);
+				decoded.relay_status.reserved = extractBits(bitOptions, 5, 32);
 				break;
 			case 0xc9:
 				// 0：disable, 1：enable
@@ -856,6 +848,10 @@ function milesightDeviceDecode(bytes) {
 			case 0x9e:
 				// 0：Four-pipe, Two-wire Valve+Three-speeds Fan, 1：Two-pipe, Two-wire Valve+Three-speeds Fan, 2：Two-pipe, Three-wire Valve+Three-speeds Fan
 				decoded.interface_type_cfg = readUInt8(bytes, counterObj, 1);
+				break;
+			case 0x8e:
+				// 0：disable, 1：enable
+				decoded.fan_stop_enable = readUInt8(bytes, counterObj, 1);
 				break;
 			case 0x80:
 				// 0：disable, 1：enable
@@ -1720,8 +1716,6 @@ function cmdMap() {
 		  "0933": "temperature_alarm.window_status_detection_trigger",
 		  "0a": "humidity_alarm",
 		  "0a00": "humidity_alarm.collection_error",
-		  "0a01": "humidity_alarm.lower_range_error",
-		  "0a02": "humidity_alarm.over_range_error",
 		  "0a03": "humidity_alarm.no_data",
 		  "0b": "target_temperature_alarm",
 		  "0b03": "target_temperature_alarm.no_data",
@@ -1789,6 +1783,7 @@ function cmdMap() {
 		  "7c01": "interface_settings.valve_2_pipe_2_wire",
 		  "7c02": "interface_settings.valve_2_pipe_3_wire",
 		  "9e": "interface_type_cfg",
+		  "8e": "fan_stop_enable",
 		  "87xx": "d2d_pairing_settings._item",
 		  "87xx00": "d2d_pairing_settings._item.enable",
 		  "87xx01": "d2d_pairing_settings._item.deveui",

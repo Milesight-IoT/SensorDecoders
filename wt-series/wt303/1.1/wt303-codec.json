@@ -2334,10 +2334,13 @@
             "value": "10",
             "unit": "min",
             "access_mode": "RW",
-            "data_type": "ENUM",
+            "data_type": "NUMBER",
             "value_type": "UINT8",
-            "values": [],
-            "bacnet_type": "multistate_value_object",
+            "range": [
+                1,
+                60
+            ],
+            "bacnet_type": "analog_value_object",
             "bacnet_unit_type_id": 72,
             "bacnet_unit_type": "UNITS_MINUTES",
             "reference": []
@@ -2772,6 +2775,28 @@
             "bacnet_unit_type_id": 64,
             "bacnet_unit_type": "UNITS_DEGREES_FAHRENHEIT",
             "reference": []
+        },
+        {
+            "id": "fan_stop_enable",
+            "name": "Fan Stop Settings",
+            "value": "1",
+            "unit": "",
+            "access_mode": "RW",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "disable"
+                },
+                {
+                    "value": 1,
+                    "name": "enable"
+                }
+            ],
+            "bacnet_type": "binary_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS"
         },
         {
             "id": "freeze_protection_cfg.celsius_target_temperature",
@@ -3250,14 +3275,6 @@
                 {
                     "value": 0,
                     "name": "Collection Error"
-                },
-                {
-                    "value": 1,
-                    "name": "Exceed the Range Lower Limit"
-                },
-                {
-                    "value": 2,
-                    "name": "Exceed the Range Upper Limit"
                 },
                 {
                     "value": 3,
@@ -4143,48 +4160,6 @@
             "bacnet_unit_type": "UNITS_NO_UNITS"
         },
         {
-            "id": "relay_status.ao1_duty",
-            "name": "AO1 Duty(Relay/Valve Status )",
-            "value": "0",
-            "unit": "",
-            "access_mode": "R",
-            "data_type": "NUMBER",
-            "value_type": "UINT8",
-            "bacnet_type": "analog_input_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": [
-                "relay_status.low_status",
-                "relay_status.mid_status",
-                "relay_status.high_status",
-                "relay_status.valve_1_status",
-                "relay_status.valve_2_status",
-                "relay_status.reserved",
-                "relay_status.ao2_duty"
-            ]
-        },
-        {
-            "id": "relay_status.ao2_duty",
-            "name": "AO2 Duty(Relay/Valve Status )",
-            "value": "0",
-            "unit": "",
-            "access_mode": "R",
-            "data_type": "NUMBER",
-            "value_type": "UINT8",
-            "bacnet_type": "analog_input_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": [
-                "relay_status.low_status",
-                "relay_status.mid_status",
-                "relay_status.high_status",
-                "relay_status.valve_1_status",
-                "relay_status.valve_2_status",
-                "relay_status.reserved",
-                "relay_status.ao1_duty"
-            ]
-        },
-        {
             "id": "relay_status.high_status",
             "name": "Fan High(Relay/Valve Status )",
             "value": "0",
@@ -4210,9 +4185,7 @@
                 "relay_status.mid_status",
                 "relay_status.valve_1_status",
                 "relay_status.valve_2_status",
-                "relay_status.reserved",
-                "relay_status.ao1_duty",
-                "relay_status.ao2_duty"
+                "relay_status.reserved"
             ]
         },
         {
@@ -4241,9 +4214,7 @@
                 "relay_status.high_status",
                 "relay_status.valve_1_status",
                 "relay_status.valve_2_status",
-                "relay_status.reserved",
-                "relay_status.ao1_duty",
-                "relay_status.ao2_duty"
+                "relay_status.reserved"
             ]
         },
         {
@@ -4272,9 +4243,7 @@
                 "relay_status.high_status",
                 "relay_status.valve_1_status",
                 "relay_status.valve_2_status",
-                "relay_status.reserved",
-                "relay_status.ao1_duty",
-                "relay_status.ao2_duty"
+                "relay_status.reserved"
             ]
         },
         {
@@ -4293,9 +4262,7 @@
                 "relay_status.mid_status",
                 "relay_status.high_status",
                 "relay_status.valve_1_status",
-                "relay_status.valve_2_status",
-                "relay_status.ao1_duty",
-                "relay_status.ao2_duty"
+                "relay_status.valve_2_status"
             ],
             "values": [
                 {
@@ -4334,9 +4301,7 @@
                 "relay_status.mid_status",
                 "relay_status.high_status",
                 "relay_status.valve_2_status",
-                "relay_status.reserved",
-                "relay_status.ao1_duty",
-                "relay_status.ao2_duty"
+                "relay_status.reserved"
             ]
         },
         {
@@ -4365,9 +4330,7 @@
                 "relay_status.mid_status",
                 "relay_status.high_status",
                 "relay_status.valve_1_status",
-                "relay_status.reserved",
-                "relay_status.ao1_duty",
-                "relay_status.ao2_duty"
+                "relay_status.reserved"
             ]
         },
         {

@@ -246,12 +246,6 @@ function milesightDeviceDecode(bytes) {
 				if (decoded.humidity_alarm.type == 0x00) {
 					decoded.humidity_alarm.collection_error = decoded.humidity_alarm.collection_error || {};
 				}
-				if (decoded.humidity_alarm.type == 0x01) {
-					decoded.humidity_alarm.lower_range_error = decoded.humidity_alarm.lower_range_error || {};
-				}
-				if (decoded.humidity_alarm.type == 0x02) {
-					decoded.humidity_alarm.over_range_error = decoded.humidity_alarm.over_range_error || {};
-				}
 				if (decoded.humidity_alarm.type == 0x03) {
 					decoded.humidity_alarm.no_data = decoded.humidity_alarm.no_data || {};
 				}
@@ -797,6 +791,9 @@ function milesightDeviceDecode(bytes) {
 				screen_content_settings_item.length = readUInt16LE(bytes, counterObj, 2);
 				screen_content_settings_item.data = readHexString(bytes, counterObj, screen_content_settings_item.length);
 				break;
+			case 0xb9:
+				decoded.query_device_status = readOnlyCommand(bytes, counterObj, 0);
+				break;
 			case 0xb7:
 				decoded.set_time = decoded.set_time || {};
 				decoded.set_time.timestamp = readUInt32LE(bytes, counterObj, 4);
@@ -1329,8 +1326,6 @@ function cmdMap() {
 		  "0933": "temperature_alarm.window_status_detection_trigger",
 		  "0a": "humidity_alarm",
 		  "0a00": "humidity_alarm.collection_error",
-		  "0a01": "humidity_alarm.lower_range_error",
-		  "0a02": "humidity_alarm.over_range_error",
 		  "0a03": "humidity_alarm.no_data",
 		  "0b": "target_temperature_alarm",
 		  "0b03": "target_temperature_alarm.no_data",
@@ -1381,6 +1376,7 @@ function cmdMap() {
 		  "8b": "d2d_slave_settings",
 		  "8bxx": "d2d_slave_settings._item",
 		  "91xx": "screen_content_settings._item",
+		  "b9": "query_device_status",
 		  "b7": "set_time",
 		  "bd": "clear_historical_data",
 		  "bc": "stop_historical_data_retrieval",

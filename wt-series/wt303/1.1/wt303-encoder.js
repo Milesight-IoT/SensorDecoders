@@ -391,10 +391,6 @@ function milesightDeviceEncode(payload) {
 		buffer.writeUInt8(payload.humidity_alarm.type);
 		if (payload.humidity_alarm.type == 0x00) {
 		}
-		if (payload.humidity_alarm.type == 0x01) {
-		}
-		if (payload.humidity_alarm.type == 0x02) {
-		}
 		if (payload.humidity_alarm.type == 0x03) {
 		}
 		encoded = encoded.concat(buffer.toBytes());
@@ -446,10 +442,6 @@ function milesightDeviceEncode(payload) {
 		bitOptions |= payload.relay_status.valve_2_status << 4;
 
 		bitOptions |= payload.relay_status.reserved << 5;
-
-		bitOptions |= payload.relay_status.ao1_duty << 16;
-
-		bitOptions |= payload.relay_status.ao2_duty << 24;
 		buffer.writeUInt32LE(bitOptions);
 
 		encoded = encoded.concat(buffer.toBytes());
@@ -1697,6 +1689,17 @@ function milesightDeviceEncode(payload) {
 		buffer.writeUInt8(payload.interface_type_cfg);
 		encoded = encoded.concat(buffer.toBytes());
 	}
+	//0x8e
+	if ('fan_stop_enable' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0x8e);
+		if ([0, 1].indexOf(payload.fan_stop_enable) === -1) {
+			throw new Error('fan_stop_enable must be one of [0, 1]');
+		}
+		// 0：disable, 1：enable
+		buffer.writeUInt8(payload.fan_stop_enable);
+		encoded = encoded.concat(buffer.toBytes());
+	}
 	//0x80
 	if ('di_enable' in payload) {
 		var buffer = new Buffer();
@@ -2783,8 +2786,6 @@ function cmdMap() {
 		  "temperature_alarm.window_status_detection_trigger": "0933",
 		  "humidity_alarm": "0a",
 		  "humidity_alarm.collection_error": "0a00",
-		  "humidity_alarm.lower_range_error": "0a01",
-		  "humidity_alarm.over_range_error": "0a02",
 		  "humidity_alarm.no_data": "0a03",
 		  "target_temperature_alarm": "0b",
 		  "target_temperature_alarm.no_data": "0b03",
@@ -2894,6 +2895,7 @@ function cmdMap() {
 		  "interface_settings.valve_2_pipe_2_wire": "7c01",
 		  "interface_settings.valve_2_pipe_3_wire": "7c02",
 		  "interface_type_cfg": "9e",
+		  "fan_stop_enable": "8e",
 		  "di_enable": "80",
 		  "di_settings": "81",
 		  "di_settings.card_control": "8100",

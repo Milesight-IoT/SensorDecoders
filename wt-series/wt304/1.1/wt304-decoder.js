@@ -245,12 +245,6 @@ function milesightDeviceDecode(bytes) {
 				if (decoded.humidity_alarm.type == 0x00) {
 					decoded.humidity_alarm.collection_error = decoded.humidity_alarm.collection_error || {};
 				}
-				if (decoded.humidity_alarm.type == 0x01) {
-					decoded.humidity_alarm.lower_range_error = decoded.humidity_alarm.lower_range_error || {};
-				}
-				if (decoded.humidity_alarm.type == 0x02) {
-					decoded.humidity_alarm.over_range_error = decoded.humidity_alarm.over_range_error || {};
-				}
 				if (decoded.humidity_alarm.type == 0x03) {
 					decoded.humidity_alarm.no_data = decoded.humidity_alarm.no_data || {};
 				}
@@ -1676,8 +1670,6 @@ function cmdMap() {
 		  "0933": "temperature_alarm.window_status_detection_trigger",
 		  "0a": "humidity_alarm",
 		  "0a00": "humidity_alarm.collection_error",
-		  "0a01": "humidity_alarm.lower_range_error",
-		  "0a02": "humidity_alarm.over_range_error",
 		  "0a03": "humidity_alarm.no_data",
 		  "0b": "target_temperature_alarm",
 		  "0b03": "target_temperature_alarm.no_data",

@@ -2141,14 +2141,6 @@
                     "name": "Collection Error"
                 },
                 {
-                    "value": 1,
-                    "name": "Exceed the Range Lower Limit"
-                },
-                {
-                    "value": 2,
-                    "name": "Exceed the Range Upper Limit"
-                },
-                {
                     "value": 3,
                     "name": "No Data"
                 }
@@ -2587,6 +2579,28 @@
             "bacnet_type": "character_string_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS"
+        },
+        {
+            "id": "query_device_status",
+            "name": "Query Device Status",
+            "access_mode": "W",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "unit": "",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "bacnet_type": "binary_output_object",
+            "value": "",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "no"
+                },
+                {
+                    "value": 1,
+                    "name": "yes"
+                }
+            ]
         },
         {
             "id": "reboot",

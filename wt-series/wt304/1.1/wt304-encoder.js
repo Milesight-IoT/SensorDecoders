@@ -390,10 +390,6 @@ function milesightDeviceEncode(payload) {
 		buffer.writeUInt8(payload.humidity_alarm.type);
 		if (payload.humidity_alarm.type == 0x00) {
 		}
-		if (payload.humidity_alarm.type == 0x01) {
-		}
-		if (payload.humidity_alarm.type == 0x02) {
-		}
 		if (payload.humidity_alarm.type == 0x03) {
 		}
 		encoded = encoded.concat(buffer.toBytes());
@@ -2710,8 +2706,6 @@ function cmdMap() {
 		  "temperature_alarm.window_status_detection_trigger": "0933",
 		  "humidity_alarm": "0a",
 		  "humidity_alarm.collection_error": "0a00",
-		  "humidity_alarm.lower_range_error": "0a01",
-		  "humidity_alarm.over_range_error": "0a02",
 		  "humidity_alarm.no_data": "0a03",
 		  "target_temperature_alarm": "0b",
 		  "target_temperature_alarm.no_data": "0b03",

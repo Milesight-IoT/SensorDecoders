@@ -391,10 +391,6 @@ function milesightDeviceEncode(payload) {
 		buffer.writeUInt8(payload.humidity_alarm.type);
 		if (payload.humidity_alarm.type == 0x00) {
 		}
-		if (payload.humidity_alarm.type == 0x01) {
-		}
-		if (payload.humidity_alarm.type == 0x02) {
-		}
 		if (payload.humidity_alarm.type == 0x03) {
 		}
 		encoded = encoded.concat(buffer.toBytes());
@@ -1561,6 +1557,12 @@ function milesightDeviceEncode(payload) {
 		}
 		encoded = encoded.concat(buffer.toBytes());
 	}
+	//0xb9
+	if ('query_device_status' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0xb9);
+		encoded = encoded.concat(buffer.toBytes());
+	}
 	//0xb7
 	if ('set_time' in payload) {
 		var buffer = new Buffer();
@@ -2000,8 +2002,6 @@ function cmdMap() {
 		  "temperature_alarm.window_status_detection_trigger": "0933",
 		  "humidity_alarm": "0a",
 		  "humidity_alarm.collection_error": "0a00",
-		  "humidity_alarm.lower_range_error": "0a01",
-		  "humidity_alarm.over_range_error": "0a02",
 		  "humidity_alarm.no_data": "0a03",
 		  "target_temperature_alarm": "0b",
 		  "target_temperature_alarm.no_data": "0b03",
@@ -2095,6 +2095,7 @@ function cmdMap() {
 		  "d2d_slave_settings._item": "8bxx",
 		  "screen_content_settings": "91",
 		  "screen_content_settings._item": "91xx",
+		  "query_device_status": "b9",
 		  "set_time": "b7",
 		  "clear_historical_data": "bd",
 		  "stop_historical_data_retrieval": "bc",

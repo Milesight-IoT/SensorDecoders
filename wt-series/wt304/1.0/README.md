@@ -405,8 +405,6 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Temperature | 0x09 | 3 | r |  | -20 - 60 |  |
 | Alarm Type | 0x0A | 2 | r |  |  |  |
 | Collection Error | 0x0A | 1 | r |  |  |  |
-| Exceed the Range Lower Limit | 0x0A | 1 | r |  |  |  |
-| Exceed the Range Upper Limit | 0x0A | 1 | r |  |  |  |
 | No Data | 0x0A | 1 | r |  |  |  |
 | Alarm Type | 0x0B | 2 | r |  |  |  |
 | No Data | 0x0B | 1 | r |  |  |  |

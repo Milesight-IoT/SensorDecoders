@@ -2047,10 +2047,13 @@
             "value": "10",
             "unit": "min",
             "access_mode": "RW",
-            "data_type": "ENUM",
+            "data_type": "NUMBER",
             "value_type": "UINT8",
-            "values": [],
-            "bacnet_type": "multistate_value_object",
+            "range": [
+                1,
+                60
+            ],
+            "bacnet_type": "analog_value_object",
             "bacnet_unit_type_id": 72,
             "bacnet_unit_type": "UNITS_MINUTES",
             "reference": []
@@ -3036,14 +3039,6 @@
                 {
                     "value": 0,
                     "name": "Collection Error"
-                },
-                {
-                    "value": 1,
-                    "name": "Exceed the Range Lower Limit"
-                },
-                {
-                    "value": 2,
-                    "name": "Exceed the Range Upper Limit"
                 },
                 {
                     "value": 3,

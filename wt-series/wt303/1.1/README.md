@@ -44,8 +44,6 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Valve 1 | 0x10 | 5 | r | 0 |  | 0：Open<br>1：Close |
 | Valve 2 | 0x10 | 5 | r | 0 |  | 0：Open<br>1：Close |
 | Reserved | 0x10 | 5 | r |  |  |  |
-| AO1 Duty | 0x10 | 5 | r | 0 |  |  |
-| AO2 Duty | 0x10 | 5 | r | 0 |  |  |
 | Random key | 0xC9 | 2 | rw | 0 |  | 0：disable<br>1：enable |
 | Device Status | 0xC8 | 2 | r | 1 |  | 0：Off<br>1：On |
 | Collecting Interval | 0x60 | 1 | rw |  |  |  |
@@ -321,6 +319,7 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | NO | 0x7C | 2 | rw | 1 |  | 1：V1/ NO<br>2：V2/ NC |
 | NC | 0x7C | 2 | rw | 2 |  | 1：V1/ NO<br>2：V2/ NC |
 | Interface Type Configuration | 0x9E | 2 | rw | 1 |  | 0：Four-pipe<br>Two-wire Valve+Three-speeds Fan<br>1：Two-pipe<br>Two-wire Valve+Three-speeds Fan<br>2：Two-pipe<br>Three-wire Valve+Three-speeds Fan |
+| Fan Stop Settings | 0x8E | 2 | rw | 1 |  | 0：disable<br>1：enable |
 | DI Enable | 0x80 | 2 | rw | 0 |  | 0：disable<br>1：enable |
 | DI Settings | 0x81 | 1 | rw |  |  |  |
 | DI Interface | 0x81 | 2 | rw | 0 |  |  |
@@ -503,8 +502,6 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Temperature | 0x09 | 3 | r |  | -20 - 60 |  |
 | Alarm Type | 0x0A | 2 | r |  |  |  |
 | Collection Error | 0x0A | 1 | r |  |  |  |
-| Exceed the Range Lower Limit | 0x0A | 1 | r |  |  |  |
-| Exceed the Range Upper Limit | 0x0A | 1 | r |  |  |  |
 | No Data | 0x0A | 1 | r |  |  |  |
 | Alarm Type | 0x0B | 2 | r |  |  |  |
 | No Data | 0x0B | 1 | r |  |  |  |
