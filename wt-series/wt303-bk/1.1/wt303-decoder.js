@@ -1276,14 +1276,17 @@ function readHexStringLE(allBytes, counterObj, end) {
 }
 
 function extractBits(byte, startBit, endBit) {
-	if (byte < 0 || byte > 0xffff) {
-	  throw new Error("byte must be in range 0..65535");
+	if (byte < 0 || byte > 0xffffffff) {
+	  throw new Error("byte must be in range 0..4294967295");
 	}
 	if (startBit >= endBit) {
 	  throw new Error("invalid bit range");
 	}
 
 	var width = endBit - startBit;
+	if (width >= 32) {
+	  return byte >>> startBit;
+	}
 	var mask = (1 << width) - 1;
 	return (byte >>> startBit) & mask;
 }
