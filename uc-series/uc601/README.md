@@ -186,23 +186,23 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Alarm Type | 0x26 | 2 | r |  |  |  |
 | Collection Error | 0x26 | 1 | r |  |  |  |
 | No Data | 0x26 | 1 | r |  |  |  |
-| Alarm Status | 0x08 | 2 | r |  |  | 0：over current alarm Release<br>1：over current alarm trigger |
 | Current | 0x08 | 3 | r |  | 0 - 65535 |  |
-| Protection Status | 0x09 | 2 | r |  |  | 0：normal<br>1：over current protect  trigger |
+| Alarm Status | 0x08 | 2 | r |  |  | 0：over current alarm Release<br>1：over current alarm trigger |
 | Current | 0x09 | 3 | r |  | 0 - 65535 |  |
-| Protection Status | 0x0A | 2 | r |  |  | 0：normal<br>1：high current protect  trigger |
+| Protection Status | 0x09 | 2 | r |  |  | 0：normal<br>1：over current protect  trigger |
 | Current | 0x0A | 3 | r |  | 0 - 65535 |  |
-| Alarm Status | 0x0B | 2 | r |  |  | 0：over voltage alarm Release<br>1：over voltage alarm trigger |
+| Protection Status | 0x0A | 2 | r |  |  | 0：normal<br>1：high current protect  trigger |
 | Voltage | 0x0B | 3 | r |  | 0 - 250 |  |
-| Protection Status | 0x0C | 2 | r |  |  | 0：normal<br>1：over voltage protect trigger |
+| Alarm Status | 0x0B | 2 | r |  |  | 0：over voltage alarm Release<br>1：over voltage alarm trigger |
 | Voltage | 0x0C | 3 | r |  | 0 - 250 |  |
+| Protection Status | 0x0C | 2 | r |  |  | 0：normal<br>1：over voltage protect trigger |
 | Alarm  Status | 0x0D | 2 | r |  |  | 0：normal<br>1：device broken |
-| Protection Status | 0x0E | 2 | r |  |  | 0：normal<br>1：over temperature  trigger |
 | Equipment Temperature | 0x0E | 3 | r |  | -40 - 125 |  |
-| Protection Status | 0x0F | 2 | r |  |  | 0：normal<br>1：freeze protection |
+| Protection Status | 0x0E | 2 | r |  |  | 0：normal<br>1：over temperature  trigger |
 | Ambient Temperature | 0x0F | 3 | r |  | -20 - 60 |  |
-| Status | 0x10 | 2 | r |  |  | 0：normal<br>1：open window |
+| Protection Status | 0x0F | 2 | r |  |  | 0：normal<br>1：freeze protection |
 | Ambient Temperature | 0x10 | 3 | r |  | -20 - 60 |  |
+| Status | 0x10 | 2 | r |  |  | 0：normal<br>1：open window |
 | Relays Status | 0x11 | 2 | r |  |  | 0：normally closed<br>1：normally open |
 |  Relay Status Control | 0x7A | 2 | w |  |  |  |
 |  Relay Status | 0x7A | 2 | w | 0 |  | 0：normally closed<br>1：normally open |

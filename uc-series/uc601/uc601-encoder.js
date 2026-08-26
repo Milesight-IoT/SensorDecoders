@@ -267,75 +267,75 @@ function milesightDeviceEncode(payload) {
 	if ('overcurrent_alarm' in payload) {
 		var buffer = new Buffer();
 		buffer.writeUInt8(0x08);
+		if (payload.overcurrent_alarm.current < 0 || payload.overcurrent_alarm.current > 65535) {
+			throw new Error('overcurrent_alarm.current must be between 0 and 65535');
+		}
+		buffer.writeUInt16LE(payload.overcurrent_alarm.current * 1000);
 		if ([0, 1].indexOf(payload.overcurrent_alarm.status) === -1) {
 			throw new Error('overcurrent_alarm.status must be one of [0, 1]');
 		}
 		// 0：over current alarm Release, 1：over current alarm trigger
 		buffer.writeUInt8(payload.overcurrent_alarm.status);
-		if (payload.overcurrent_alarm.current < 0 || payload.overcurrent_alarm.current > 65535) {
-			throw new Error('overcurrent_alarm.current must be between 0 and 65535');
-		}
-		buffer.writeUInt16LE(payload.overcurrent_alarm.current * 1000);
 		encoded = encoded.concat(buffer.toBytes());
 	}
 	//0x09
 	if ('overcurrent_protection_trigger' in payload) {
 		var buffer = new Buffer();
 		buffer.writeUInt8(0x09);
+		if (payload.overcurrent_protection_trigger.current < 0 || payload.overcurrent_protection_trigger.current > 65535) {
+			throw new Error('overcurrent_protection_trigger.current must be between 0 and 65535');
+		}
+		buffer.writeUInt16LE(payload.overcurrent_protection_trigger.current * 1000);
 		if ([0, 1].indexOf(payload.overcurrent_protection_trigger.status) === -1) {
 			throw new Error('overcurrent_protection_trigger.status must be one of [0, 1]');
 		}
 		// 0：normal, 1：over current protect  trigger
 		buffer.writeUInt8(payload.overcurrent_protection_trigger.status);
-		if (payload.overcurrent_protection_trigger.current < 0 || payload.overcurrent_protection_trigger.current > 65535) {
-			throw new Error('overcurrent_protection_trigger.current must be between 0 and 65535');
-		}
-		buffer.writeUInt16LE(payload.overcurrent_protection_trigger.current * 1000);
 		encoded = encoded.concat(buffer.toBytes());
 	}
 	//0x0a
 	if ('high_current_alarm' in payload) {
 		var buffer = new Buffer();
 		buffer.writeUInt8(0x0a);
+		if (payload.high_current_alarm.current < 0 || payload.high_current_alarm.current > 65535) {
+			throw new Error('high_current_alarm.current must be between 0 and 65535');
+		}
+		buffer.writeUInt16LE(payload.high_current_alarm.current * 1000);
 		if ([0, 1].indexOf(payload.high_current_alarm.status) === -1) {
 			throw new Error('high_current_alarm.status must be one of [0, 1]');
 		}
 		// 0：normal, 1：high current protect  trigger
 		buffer.writeUInt8(payload.high_current_alarm.status);
-		if (payload.high_current_alarm.current < 0 || payload.high_current_alarm.current > 65535) {
-			throw new Error('high_current_alarm.current must be between 0 and 65535');
-		}
-		buffer.writeUInt16LE(payload.high_current_alarm.current * 1000);
 		encoded = encoded.concat(buffer.toBytes());
 	}
 	//0x0b
 	if ('overvoltage_alarm' in payload) {
 		var buffer = new Buffer();
 		buffer.writeUInt8(0x0b);
+		if (payload.overvoltage_alarm.voltage < 0 || payload.overvoltage_alarm.voltage > 250) {
+			throw new Error('overvoltage_alarm.voltage must be between 0 and 250');
+		}
+		buffer.writeUInt16LE(payload.overvoltage_alarm.voltage * 10);
 		if ([0, 1].indexOf(payload.overvoltage_alarm.status) === -1) {
 			throw new Error('overvoltage_alarm.status must be one of [0, 1]');
 		}
 		// 0：over voltage alarm Release, 1：over voltage alarm trigger
 		buffer.writeUInt8(payload.overvoltage_alarm.status);
-		if (payload.overvoltage_alarm.voltage < 0 || payload.overvoltage_alarm.voltage > 250) {
-			throw new Error('overvoltage_alarm.voltage must be between 0 and 250');
-		}
-		buffer.writeUInt16LE(payload.overvoltage_alarm.voltage * 10);
 		encoded = encoded.concat(buffer.toBytes());
 	}
 	//0x0c
 	if ('overvoltage_protect_trigger' in payload) {
 		var buffer = new Buffer();
 		buffer.writeUInt8(0x0c);
+		if (payload.overvoltage_protect_trigger.voltage < 0 || payload.overvoltage_protect_trigger.voltage > 250) {
+			throw new Error('overvoltage_protect_trigger.voltage must be between 0 and 250');
+		}
+		buffer.writeUInt16LE(payload.overvoltage_protect_trigger.voltage * 10);
 		if ([0, 1].indexOf(payload.overvoltage_protect_trigger.status) === -1) {
 			throw new Error('overvoltage_protect_trigger.status must be one of [0, 1]');
 		}
 		// 0：normal, 1：over voltage protect trigger
 		buffer.writeUInt8(payload.overvoltage_protect_trigger.status);
-		if (payload.overvoltage_protect_trigger.voltage < 0 || payload.overvoltage_protect_trigger.voltage > 250) {
-			throw new Error('overvoltage_protect_trigger.voltage must be between 0 and 250');
-		}
-		buffer.writeUInt16LE(payload.overvoltage_protect_trigger.voltage * 10);
 		encoded = encoded.concat(buffer.toBytes());
 	}
 	//0x0d
@@ -353,45 +353,45 @@ function milesightDeviceEncode(payload) {
 	if ('overtemperature_protect' in payload) {
 		var buffer = new Buffer();
 		buffer.writeUInt8(0x0e);
+		if (payload.overtemperature_protect.temperature < -40 || payload.overtemperature_protect.temperature > 125) {
+			throw new Error('overtemperature_protect.temperature must be between -40 and 125');
+		}
+		buffer.writeInt16LE(payload.overtemperature_protect.temperature * 10);
 		if ([0, 1].indexOf(payload.overtemperature_protect.status) === -1) {
 			throw new Error('overtemperature_protect.status must be one of [0, 1]');
 		}
 		// 0：normal, 1：over temperature  trigger
 		buffer.writeUInt8(payload.overtemperature_protect.status);
-		if (payload.overtemperature_protect.temperature < -40 || payload.overtemperature_protect.temperature > 125) {
-			throw new Error('overtemperature_protect.temperature must be between -40 and 125');
-		}
-		buffer.writeInt16LE(payload.overtemperature_protect.temperature * 10);
 		encoded = encoded.concat(buffer.toBytes());
 	}
 	//0x0f
 	if ('freeze_protection' in payload) {
 		var buffer = new Buffer();
 		buffer.writeUInt8(0x0f);
+		if (payload.freeze_protection.temperature < -20 || payload.freeze_protection.temperature > 60) {
+			throw new Error('freeze_protection.temperature must be between -20 and 60');
+		}
+		buffer.writeInt16LE(payload.freeze_protection.temperature * 10);
 		if ([0, 1].indexOf(payload.freeze_protection.status) === -1) {
 			throw new Error('freeze_protection.status must be one of [0, 1]');
 		}
 		// 0：normal, 1：freeze protection
 		buffer.writeUInt8(payload.freeze_protection.status);
-		if (payload.freeze_protection.temperature < -20 || payload.freeze_protection.temperature > 60) {
-			throw new Error('freeze_protection.temperature must be between -20 and 60');
-		}
-		buffer.writeInt16LE(payload.freeze_protection.temperature * 10);
 		encoded = encoded.concat(buffer.toBytes());
 	}
 	//0x10
 	if ('open_window_detection' in payload) {
 		var buffer = new Buffer();
 		buffer.writeUInt8(0x10);
+		if (payload.open_window_detection.temperature < -20 || payload.open_window_detection.temperature > 60) {
+			throw new Error('open_window_detection.temperature must be between -20 and 60');
+		}
+		buffer.writeInt16LE(payload.open_window_detection.temperature * 10);
 		if ([0, 1].indexOf(payload.open_window_detection.status) === -1) {
 			throw new Error('open_window_detection.status must be one of [0, 1]');
 		}
 		// 0：normal, 1：open window
 		buffer.writeUInt8(payload.open_window_detection.status);
-		if (payload.open_window_detection.temperature < -20 || payload.open_window_detection.temperature > 60) {
-			throw new Error('open_window_detection.temperature must be between -20 and 60');
-		}
-		buffer.writeInt16LE(payload.open_window_detection.temperature * 10);
 		encoded = encoded.concat(buffer.toBytes());
 	}
 	//0x11

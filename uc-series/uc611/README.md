@@ -140,12 +140,12 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Alarm Type | 0x26 | 2 | r |  |  |  |
 | Collection Error | 0x26 | 1 | r |  |  |  |
 | No Data | 0x26 | 1 | r |  |  |  |
-| Protection Status | 0x0E | 2 | r |  |  | 0：normal<br>1：over temperature  trigger |
 | Equipment Temperature | 0x0E | 3 | r |  | -40 - 125 |  |
-| Protection Status | 0x0F | 2 | r |  |  | 0：normal<br>1：freeze protection |
+| Protection Status | 0x0E | 2 | r |  |  | 0：normal<br>1：over temperature  trigger |
 | Ambient Temperature | 0x0F | 3 | r |  | -20 - 60 |  |
-| Status | 0x10 | 2 | r |  |  | 0：normal<br>1：open window |
+| Protection Status | 0x0F | 2 | r |  |  | 0：normal<br>1：freeze protection |
 | Ambient Temperature | 0x10 | 3 | r |  | -20 - 60 |  |
+| Status | 0x10 | 2 | r |  |  | 0：normal<br>1：open window |
 | Relays Status | 0x11 | 2 | r |  |  | 0：normally closed<br>1：normally open |
 |  Relay Status Control | 0x7A | 2 | w |  |  |  |
 |  Relay Status | 0x7A | 2 | w | 0 |  | 0：normally closed<br>1：normally open |

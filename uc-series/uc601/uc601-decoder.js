@@ -167,38 +167,38 @@ function milesightDeviceDecode(bytes) {
 				break;
 			case 0x08:
 				decoded.overcurrent_alarm = decoded.overcurrent_alarm || {};
-				// 0：over current alarm Release, 1：over current alarm trigger
-				decoded.overcurrent_alarm.status = readUInt8(bytes, counterObj, 1);
 				decoded.overcurrent_alarm.current = readUInt16LE(bytes, counterObj, 2) / 1000;
 				decoded.current = decoded.overcurrent_alarm.current;
+				// 0：over current alarm Release, 1：over current alarm trigger
+				decoded.overcurrent_alarm.status = readUInt8(bytes, counterObj, 1);
 				break;
 			case 0x09:
 				decoded.overcurrent_protection_trigger = decoded.overcurrent_protection_trigger || {};
-				// 0：normal, 1：over current protect  trigger
-				decoded.overcurrent_protection_trigger.status = readUInt8(bytes, counterObj, 1);
 				decoded.overcurrent_protection_trigger.current = readUInt16LE(bytes, counterObj, 2) / 1000;
 				decoded.current = decoded.overcurrent_protection_trigger.current;
+				// 0：normal, 1：over current protect  trigger
+				decoded.overcurrent_protection_trigger.status = readUInt8(bytes, counterObj, 1);
 				break;
 			case 0x0a:
 				decoded.high_current_alarm = decoded.high_current_alarm || {};
-				// 0：normal, 1：high current protect  trigger
-				decoded.high_current_alarm.status = readUInt8(bytes, counterObj, 1);
 				decoded.high_current_alarm.current = readUInt16LE(bytes, counterObj, 2) / 1000;
 				decoded.current = decoded.high_current_alarm.current;
+				// 0：normal, 1：high current protect  trigger
+				decoded.high_current_alarm.status = readUInt8(bytes, counterObj, 1);
 				break;
 			case 0x0b:
 				decoded.overvoltage_alarm = decoded.overvoltage_alarm || {};
-				// 0：over voltage alarm Release, 1：over voltage alarm trigger
-				decoded.overvoltage_alarm.status = readUInt8(bytes, counterObj, 1);
 				decoded.overvoltage_alarm.voltage = readUInt16LE(bytes, counterObj, 2) / 10;
 				decoded.voltage = decoded.overvoltage_alarm.voltage;
+				// 0：over voltage alarm Release, 1：over voltage alarm trigger
+				decoded.overvoltage_alarm.status = readUInt8(bytes, counterObj, 1);
 				break;
 			case 0x0c:
 				decoded.overvoltage_protect_trigger = decoded.overvoltage_protect_trigger || {};
-				// 0：normal, 1：over voltage protect trigger
-				decoded.overvoltage_protect_trigger.status = readUInt8(bytes, counterObj, 1);
 				decoded.overvoltage_protect_trigger.voltage = readUInt16LE(bytes, counterObj, 2) / 10;
 				decoded.voltage = decoded.overvoltage_protect_trigger.voltage;
+				// 0：normal, 1：over voltage protect trigger
+				decoded.overvoltage_protect_trigger.status = readUInt8(bytes, counterObj, 1);
 				break;
 			case 0x0d:
 				decoded.device_broken_alarm = decoded.device_broken_alarm || {};
@@ -207,24 +207,24 @@ function milesightDeviceDecode(bytes) {
 				break;
 			case 0x0e:
 				decoded.overtemperature_protect = decoded.overtemperature_protect || {};
-				// 0：normal, 1：over temperature  trigger
-				decoded.overtemperature_protect.status = readUInt8(bytes, counterObj, 1);
 				decoded.overtemperature_protect.temperature = readInt16LE(bytes, counterObj, 2) / 10;
 				decoded.equipment_temperature = decoded.overtemperature_protect.temperature;
+				// 0：normal, 1：over temperature  trigger
+				decoded.overtemperature_protect.status = readUInt8(bytes, counterObj, 1);
 				break;
 			case 0x0f:
 				decoded.freeze_protection = decoded.freeze_protection || {};
-				// 0：normal, 1：freeze protection
-				decoded.freeze_protection.status = readUInt8(bytes, counterObj, 1);
 				decoded.freeze_protection.temperature = readInt16LE(bytes, counterObj, 2) / 10;
 				decoded.ambient_temperature = decoded.freeze_protection.temperature;
+				// 0：normal, 1：freeze protection
+				decoded.freeze_protection.status = readUInt8(bytes, counterObj, 1);
 				break;
 			case 0x10:
 				decoded.open_window_detection = decoded.open_window_detection || {};
-				// 0：normal, 1：open window
-				decoded.open_window_detection.status = readUInt8(bytes, counterObj, 1);
 				decoded.open_window_detection.temperature = readInt16LE(bytes, counterObj, 2) / 10;
 				decoded.ambient_temperature = decoded.open_window_detection.temperature;
+				// 0：normal, 1：open window
+				decoded.open_window_detection.status = readUInt8(bytes, counterObj, 1);
 				break;
 			case 0x11:
 				decoded.relays_status_change = decoded.relays_status_change || {};

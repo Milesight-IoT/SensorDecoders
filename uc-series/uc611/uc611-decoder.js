@@ -117,24 +117,24 @@ function milesightDeviceDecode(bytes) {
 				break;
 			case 0x0e:
 				decoded.overtemperature_protect = decoded.overtemperature_protect || {};
-				// 0：normal, 1：over temperature  trigger
-				decoded.overtemperature_protect.status = readUInt8(bytes, counterObj, 1);
 				decoded.overtemperature_protect.temperature = readInt16LE(bytes, counterObj, 2) / 10;
 				decoded.equipment_temperature = decoded.overtemperature_protect.temperature;
+				// 0：normal, 1：over temperature  trigger
+				decoded.overtemperature_protect.status = readUInt8(bytes, counterObj, 1);
 				break;
 			case 0x0f:
 				decoded.freeze_protection = decoded.freeze_protection || {};
-				// 0：normal, 1：freeze protection
-				decoded.freeze_protection.status = readUInt8(bytes, counterObj, 1);
 				decoded.freeze_protection.temperature = readInt16LE(bytes, counterObj, 2) / 10;
 				decoded.ambient_temperature = decoded.freeze_protection.temperature;
+				// 0：normal, 1：freeze protection
+				decoded.freeze_protection.status = readUInt8(bytes, counterObj, 1);
 				break;
 			case 0x10:
 				decoded.open_window_detection = decoded.open_window_detection || {};
-				// 0：normal, 1：open window
-				decoded.open_window_detection.status = readUInt8(bytes, counterObj, 1);
 				decoded.open_window_detection.temperature = readInt16LE(bytes, counterObj, 2) / 10;
 				decoded.ambient_temperature = decoded.open_window_detection.temperature;
+				// 0：normal, 1：open window
+				decoded.open_window_detection.status = readUInt8(bytes, counterObj, 1);
 				break;
 			case 0x11:
 				decoded.relays_status_change = decoded.relays_status_change || {};
