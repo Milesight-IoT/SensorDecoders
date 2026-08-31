@@ -2,29 +2,6 @@
     "version": "1.0.0",
     "object": [
         {
-            "id": "air_power_settings.command",
-            "name": "Sub-command(Air Conditioning Power Setting)",
-            "value": "0",
-            "unit": "",
-            "access_mode": "RW",
-            "data_type": "ENUM",
-            "value_type": "UINT8",
-            "values": [
-                {
-                    "value": 0,
-                    "name": "Refrigeration Power"
-                },
-                {
-                    "value": 1,
-                    "name": "Heating Power"
-                }
-            ],
-            "bacnet_type": "multistate_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": []
-        },
-        {
             "id": "air_power_settings.heating_power",
             "name": "Heating Power(Air Conditioning Power Setting)",
             "value": "0",
@@ -97,31 +74,8 @@
             "bacnet_unit_type": "UNITS_NO_UNITS"
         },
         {
-            "id": "ble_adv_time_settings.command",
-            "name": "Sub-command(Ble Broadcast Duration Settings)",
-            "value": "0",
-            "unit": "",
-            "access_mode": "RW",
-            "data_type": "ENUM",
-            "value_type": "UINT8",
-            "values": [
-                {
-                    "value": 0,
-                    "name": "Broadcast Duration Control Enable"
-                },
-                {
-                    "value": 1,
-                    "name": "Ble Broadcast Duration"
-                }
-            ],
-            "bacnet_type": "multistate_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": []
-        },
-        {
             "id": "ble_adv_time_settings.duration",
-            "name": "Ble Broadcast Duration(Ble Broadcast Duration Settings)",
+            "name": "BLE Broadcast Duration(BLE Broadcast Duration Settings)",
             "value": "1",
             "unit": "min",
             "access_mode": "RW",
@@ -138,7 +92,7 @@
         },
         {
             "id": "ble_adv_time_settings.enable",
-            "name": "Broadcast Duration Control Enable(Ble Broadcast Duration Settings)",
+            "name": "Broadcast Duration Control Enable(BLE Broadcast Duration Settings)",
             "value": "1",
             "unit": "",
             "access_mode": "RW",
@@ -160,48 +114,9 @@
             "reference": []
         },
         {
-            "id": "ble_configuration_settings.command",
-            "name": "BLE Command(BLE Settings)",
-            "value": "0",
-            "unit": "",
-            "access_mode": "RW",
-            "data_type": "ENUM",
-            "value_type": "UINT8",
-            "values": [
-                {
-                    "value": 0,
-                    "name": "Bluetooth Enable"
-                },
-                {
-                    "value": 1,
-                    "name": "Device Bluetooth Address"
-                },
-                {
-                    "value": 5,
-                    "name": "Device Bluetooth Name (prefix8)"
-                },
-                {
-                    "value": 6,
-                    "name": "Device Bluetooth Name (suffix5)"
-                },
-                {
-                    "value": 7,
-                    "name": "Device Bluetooth Information"
-                },
-                {
-                    "value": 8,
-                    "name": "Paired Device Bluetooth Information"
-                }
-            ],
-            "bacnet_type": "multistate_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": []
-        },
-        {
             "id": "ble_configuration_settings.enable",
             "name": "Bluetooth Enable(BLE Settings)",
-            "value": "0",
+            "value": "1",
             "unit": "",
             "access_mode": "RW",
             "data_type": "BOOL",
@@ -308,7 +223,7 @@
             "access_mode": "RW",
             "data_type": "TEXT",
             "value_type": "STRING",
-            "max_length": 32,
+            "max_length": 13,
             "bacnet_type": "character_string_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
@@ -442,8 +357,8 @@
             "unit": "",
             "access_mode": "RW",
             "data_type": "TEXT",
-            "max_length": 32,
             "value_type": "STRING",
+            "max_length": 13,
             "bacnet_type": "character_string_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
@@ -520,10 +435,6 @@
                 {
                     "value": 1,
                     "name": "Cancel Pairing"
-                },
-                {
-                    "value": 2,
-                    "name": "Trigger Pairing"
                 }
             ],
             "bacnet_type": "multistate_output_object",
@@ -541,7 +452,7 @@
             "value_type": "FLOAT",
             "range": [
                 -20,
-                70
+                60
             ],
             "bacnet_type": "analog_input_object",
             "bacnet_unit_type_id": 62,
@@ -557,7 +468,7 @@
             "value_type": "FLOAT",
             "range": [
                 -20,
-                70
+                60
             ],
             "bacnet_type": "analog_input_object",
             "bacnet_unit_type_id": 62,
@@ -761,7 +672,7 @@
         },
         {
             "id": "cmd_temp_limit.type",
-            "name": "Alarm Type(Command Temperature Limit \nAlarm)",
+            "name": "Alarm Type(Command Temperature Limit Alarm)",
             "value": "",
             "unit": "",
             "access_mode": "R",
@@ -784,7 +695,7 @@
         },
         {
             "id": "collect_data",
-            "name": "Data Colloction",
+            "name": "Data Collection",
             "access_mode": "W",
             "data_type": "BOOL",
             "value_type": "UINT8",
@@ -818,8 +729,8 @@
                     "name": "BLE+Lorawan"
                 },
                 {
-                    "value": 0,
-                    "name": "BLE+Lorawan"
+                    "value": 1,
+                    "name": "Unsupported Command"
                 }
             ],
             "bacnet_type": "multistate_value_object",
@@ -828,7 +739,7 @@
         },
         {
             "id": "continuous_high_temp_alarm_settings.celsius_difference",
-            "name": "Celsius Difference(Continuous High Temperature Alarm)",
+            "name": "Celsius Difference in Temperature(Continuous High Temperature Alarm)",
             "value": "3",
             "unit": "°C",
             "access_mode": "RW",
@@ -841,33 +752,6 @@
             "bacnet_type": "analog_value_object",
             "bacnet_unit_type_id": 62,
             "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
-            "reference": []
-        },
-        {
-            "id": "continuous_high_temp_alarm_settings.command",
-            "name": "Sub-command(Continuous High Temperature Alarm)",
-            "value": "0",
-            "unit": "",
-            "access_mode": "RW",
-            "data_type": "ENUM",
-            "value_type": "UINT8",
-            "values": [
-                {
-                    "value": 0,
-                    "name": "Enable"
-                },
-                {
-                    "value": 1,
-                    "name": "Difference"
-                },
-                {
-                    "value": 2,
-                    "name": "Duration"
-                }
-            ],
-            "bacnet_type": "multistate_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": []
         },
         {
@@ -912,7 +796,7 @@
         },
         {
             "id": "continuous_high_temp_alarm_settings.fahrenheit_difference",
-            "name": "Fahrenheit Difference(Continuous High Temperature Alarm)",
+            "name": "Fahrenheit Difference in Temperature(Continuous High Temperature Alarm)",
             "value": "37.4",
             "unit": "℉",
             "access_mode": "RW",
@@ -929,7 +813,7 @@
         },
         {
             "id": "continuous_low_temp_alarm_settings.celsius_difference",
-            "name": "Celsius Difference(Continuous Low Temperature Alarm)",
+            "name": "Celsius Difference in Temperature(Continuous Low Temperature Alarm)",
             "value": "3",
             "unit": "°C",
             "access_mode": "RW",
@@ -942,33 +826,6 @@
             "bacnet_type": "analog_value_object",
             "bacnet_unit_type_id": 62,
             "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
-            "reference": []
-        },
-        {
-            "id": "continuous_low_temp_alarm_settings.command",
-            "name": "Sub-command(Continuous Low Temperature Alarm)",
-            "value": "0",
-            "unit": "",
-            "access_mode": "RW",
-            "data_type": "ENUM",
-            "value_type": "UINT8",
-            "values": [
-                {
-                    "value": 0,
-                    "name": "Enable"
-                },
-                {
-                    "value": 1,
-                    "name": "Difference"
-                },
-                {
-                    "value": 2,
-                    "name": "Duration"
-                }
-            ],
-            "bacnet_type": "multistate_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": []
         },
         {
@@ -1013,7 +870,7 @@
         },
         {
             "id": "continuous_low_temp_alarm_settings.fahrenheit_difference",
-            "name": "Fahrenheit Difference(Continuous Low Temperature Alarm)",
+            "name": "Fahrenheit Difference in Temperature(Continuous Low Temperature Alarm)",
             "value": "37.4",
             "unit": "℉",
             "access_mode": "RW",
@@ -1026,6 +883,33 @@
             "bacnet_type": "analog_value_object",
             "bacnet_unit_type_id": 64,
             "bacnet_unit_type": "UNITS_DEGREES_FAHRENHEIT",
+            "reference": []
+        },
+        {
+            "id": "ct_sensor_settings.ac_type",
+            "name": "AC Type(CT Sensor Setting)",
+            "value": "0",
+            "unit": "",
+            "access_mode": "RW",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "Wall mounted machine"
+                },
+                {
+                    "value": 1,
+                    "name": "Vertical cabinet machine"
+                },
+                {
+                    "value": 2,
+                    "name": "Ceiling machine"
+                }
+            ],
+            "bacnet_type": "multistate_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": []
         },
         {
@@ -1046,31 +930,25 @@
             "reference": []
         },
         {
-            "id": "ct_sensor_settings.command",
-            "name": "Sub-command(CT Sensor Setting)",
-            "value": "0",
-            "unit": "",
+            "id": "ct_sensor_settings.collect_threshold",
+            "name": "Collect threshold(CT Sensor Setting)",
+            "value": "100",
+            "unit": "mA",
             "access_mode": "RW",
-            "data_type": "ENUM",
-            "value_type": "UINT8",
-            "values": [
-                {
-                    "value": 0,
-                    "name": "Connect Conifg"
-                },
-                {
-                    "value": 1,
-                    "name": "Collect Period"
-                }
+            "data_type": "NUMBER",
+            "value_type": "UINT16",
+            "range": [
+                30,
+                1000
             ],
-            "bacnet_type": "multistate_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 2,
+            "bacnet_unit_type": "UNITS_MILLIAMPERES",
             "reference": []
         },
         {
             "id": "ct_sensor_settings.connected",
-            "name": "Connect Conifg(CT Sensor Setting)",
+            "name": "Connection Config(CT Sensor Setting)",
             "value": "0",
             "unit": "",
             "access_mode": "RW",
@@ -1114,40 +992,9 @@
             "bacnet_unit_type": "UNITS_NO_UNITS"
         },
         {
-            "id": "data_storage_settings.command",
-            "name": "Sub-command(Data Storage Settings)",
-            "value": "0",
-            "unit": "",
-            "access_mode": "RW",
-            "data_type": "ENUM",
-            "value_type": "UINT8",
-            "values": [
-                {
-                    "value": 0,
-                    "name": "Data Storage Enable"
-                },
-                {
-                    "value": 1,
-                    "name": "Data Retransmission Enable"
-                },
-                {
-                    "value": 2,
-                    "name": "Data Retransmission Interval"
-                },
-                {
-                    "value": 3,
-                    "name": "Data Retrieval Interval"
-                }
-            ],
-            "bacnet_type": "multistate_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": []
-        },
-        {
             "id": "data_storage_settings.enable",
             "name": "Data Storage Enable(Data Storage Settings)",
-            "value": "0",
+            "value": "1",
             "unit": "",
             "access_mode": "RW",
             "data_type": "BOOL",
@@ -1170,7 +1017,7 @@
         {
             "id": "data_storage_settings.retransmission_enable",
             "name": "Data Retransmission Enable(Data Storage Settings)",
-            "value": "0",
+            "value": "1",
             "unit": "",
             "access_mode": "RW",
             "data_type": "BOOL",
@@ -1238,8 +1085,8 @@
                     "name": "Reserved Cmd1"
                 },
                 {
-                    "value": 0,
-                    "name": "Reserved Cmd1"
+                    "value": 1,
+                    "name": "Unsupported Command"
                 }
             ],
             "bacnet_type": "multistate_input_object",
@@ -2017,57 +1864,6 @@
             ]
         },
         {
-            "id": "delete_night_task.type",
-            "name": "Delete Night Task(Delete Night Task)",
-            "value": "255",
-            "unit": "",
-            "access_mode": "W",
-            "data_type": "ENUM",
-            "value_type": "UINT8",
-            "values": [
-                {
-                    "value": 0,
-                    "name": "Task1"
-                },
-                {
-                    "value": 1,
-                    "name": "Task2"
-                },
-                {
-                    "value": 2,
-                    "name": "Task3"
-                },
-                {
-                    "value": 3,
-                    "name": "Task4"
-                },
-                {
-                    "value": 4,
-                    "name": "Task5"
-                },
-                {
-                    "value": 5,
-                    "name": "Task6"
-                },
-                {
-                    "value": 6,
-                    "name": "Task7"
-                },
-                {
-                    "value": 7,
-                    "name": "Task8"
-                },
-                {
-                    "value": 255,
-                    "name": "All"
-                }
-            ],
-            "bacnet_type": "multistate_output_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": []
-        },
-        {
             "id": "delete_task_plan.type",
             "name": "Delete Schedule(Delete Schedule)",
             "value": "255",
@@ -2153,7 +1949,7 @@
         {
             "id": "delete_temperature_limit_task.type",
             "name": "Delete Temperature Limit Task(Delete Temperature Limit Task)",
-            "value": "255",
+            "value": "0",
             "unit": "",
             "access_mode": "W",
             "data_type": "ENUM",
@@ -2165,35 +1961,7 @@
                 },
                 {
                     "value": 1,
-                    "name": "Task2"
-                },
-                {
-                    "value": 2,
-                    "name": "Task3"
-                },
-                {
-                    "value": 3,
-                    "name": "Task4"
-                },
-                {
-                    "value": 4,
-                    "name": "Task5"
-                },
-                {
-                    "value": 5,
-                    "name": "Task6"
-                },
-                {
-                    "value": 6,
-                    "name": "Task7"
-                },
-                {
-                    "value": 7,
-                    "name": "Task8"
-                },
-                {
-                    "value": 255,
-                    "name": "All"
+                    "name": "Unsupported Command"
                 }
             ],
             "bacnet_type": "multistate_output_object",
@@ -2297,12 +2065,29 @@
             "bacnet_unit_type": "UNITS_NO_UNITS"
         },
         {
-            "id": "external_sensor_settings.calibration_en",
-            "name": "Calibration Enable(External Temperature Sensor Setting)",
+            "id": "external_sensor_settings.celsius_temp_calibration",
+            "name": "Celsius Temperature Calibration Value(External Temperature Sensor Setting)",
+            "value": "0",
+            "unit": "°C",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "range": [
+                -80,
+                80
+            ],
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 62,
+            "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
+            "reference": []
+        },
+        {
+            "id": "external_sensor_settings.enable",
+            "name": "Sensor Enable(External Temperature Sensor Setting)",
             "value": "0",
             "unit": "",
             "access_mode": "RW",
-            "data_type": "ENUM",
+            "data_type": "BOOL",
             "value_type": "UINT8",
             "values": [
                 {
@@ -2314,59 +2099,7 @@
                     "name": "Enable"
                 }
             ],
-            "bacnet_type": "multistate_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": []
-        },
-        {
-            "id": "external_sensor_settings.celsius_temp_calibration",
-            "name": "Celsius Temperature Calibration Value(External Temperature Sensor Setting)",
-            "value": "0",
-            "unit": "°C",
-            "access_mode": "RW",
-            "data_type": "NUMBER",
-            "value_type": "FLOAT",
-            "range": [
-                -70,
-                70
-            ],
-            "bacnet_type": "analog_value_object",
-            "bacnet_unit_type_id": 62,
-            "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
-            "reference": []
-        },
-        {
-            "id": "external_sensor_settings.command",
-            "name": "Sub-command(External Temperature Sensor Setting)",
-            "value": "0",
-            "unit": "",
-            "access_mode": "RW",
-            "data_type": "ENUM",
-            "value_type": "UINT8",
-            "values": [
-                {
-                    "value": 0,
-                    "name": "Name(prefix6)"
-                },
-                {
-                    "value": 1,
-                    "name": "Name(infix6)"
-                },
-                {
-                    "value": 2,
-                    "name": "Name(suffix6)"
-                },
-                {
-                    "value": 4,
-                    "name": "Calibration Enable"
-                },
-                {
-                    "value": 5,
-                    "name": "Temperature Calibration Value"
-                }
-            ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "binary_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": []
@@ -2380,8 +2113,8 @@
             "data_type": "NUMBER",
             "value_type": "FLOAT",
             "range": [
-                -94,
-                158
+                -112,
+                176
             ],
             "bacnet_type": "analog_value_object",
             "bacnet_unit_type_id": 64,
@@ -2440,7 +2173,7 @@
             "value_type": "FLOAT",
             "range": [
                 -4,
-                158
+                140
             ],
             "bacnet_type": "analog_input_object",
             "bacnet_unit_type_id": 64,
@@ -2456,34 +2189,11 @@
             "value_type": "FLOAT",
             "range": [
                 -4,
-                158
+                140
             ],
             "bacnet_type": "analog_input_object",
             "bacnet_unit_type_id": 64,
             "bacnet_unit_type": "UNITS_DEGREES_FAHRENHEIT"
-        },
-        {
-            "id": "fan_settings.command",
-            "name": "Sub-command(Fan Settings)",
-            "value": "0",
-            "unit": "",
-            "access_mode": "RW",
-            "data_type": "ENUM",
-            "value_type": "UINT8",
-            "values": [
-                {
-                    "value": 0,
-                    "name": "Fan Mode"
-                },
-                {
-                    "value": 0,
-                    "name": "Fan Mode"
-                }
-            ],
-            "bacnet_type": "multistate_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": []
         },
         {
             "id": "fan_settings.fan_mode",
@@ -2517,10 +2227,6 @@
                 {
                     "value": 5,
                     "name": "High"
-                },
-                {
-                    "value": 255,
-                    "name": "Disabled"
                 }
             ],
             "bacnet_type": "multistate_value_object",
@@ -2565,29 +2271,6 @@
             "reference": []
         },
         {
-            "id": "filter_clean_settings.command",
-            "name": "Sub-command(Filter Clean Reminder Setting)",
-            "value": "0",
-            "unit": "",
-            "access_mode": "RW",
-            "data_type": "ENUM",
-            "value_type": "UINT8",
-            "values": [
-                {
-                    "value": 0,
-                    "name": "Filter Clean Reminder Enable"
-                },
-                {
-                    "value": 1,
-                    "name": "Reminder Period"
-                }
-            ],
-            "bacnet_type": "multistate_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": []
-        },
-        {
             "id": "filter_clean_settings.enable",
             "name": "Filter Clean Reminder Enable(Filter Clean Reminder Setting)",
             "value": "0",
@@ -2614,7 +2297,7 @@
             "id": "filter_clean_settings.reminder_period",
             "name": "Reminder Period(Filter Clean Reminder Setting)",
             "value": "90",
-            "unit": "",
+            "unit": "d",
             "access_mode": "RW",
             "data_type": "NUMBER",
             "value_type": "UINT16",
@@ -2623,8 +2306,8 @@
                 730
             ],
             "bacnet_type": "analog_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "bacnet_unit_type_id": 70,
+            "bacnet_unit_type": "UNITS_DAYS",
             "reference": []
         },
         {
@@ -2684,32 +2367,9 @@
             "bacnet_unit_type": "UNITS_PERCENT_RELATIVE_HUMIDITY"
         },
         {
-            "id": "indicator_light_disable_settings.command",
-            "name": "Sub-command(Indicator Light Disable Settings)",
-            "value": "0",
-            "unit": "",
-            "access_mode": "RW",
-            "data_type": "ENUM",
-            "value_type": "UINT8",
-            "values": [
-                {
-                    "value": 0,
-                    "name": "Enable"
-                },
-                {
-                    "value": 1,
-                    "name": "Time"
-                }
-            ],
-            "bacnet_type": "multistate_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": []
-        },
-        {
             "id": "indicator_light_disable_settings.enable",
             "name": "Enable(Indicator Light Disable Settings)",
-            "value": "0",
+            "value": "1",
             "unit": "",
             "access_mode": "RW",
             "data_type": "ENUM",
@@ -2773,7 +2433,7 @@
         },
         {
             "id": "infrared_cmd_status.cmd.air_volume",
-            "name": "Air Volume(Infrared Command)",
+            "name": "Fan Mode(Infrared Command)",
             "value": "",
             "unit": "",
             "access_mode": "R",
@@ -2950,7 +2610,7 @@
                 },
                 {
                     "value": 5,
-                    "name": "ventilate"
+                    "name": "ventilation"
                 }
             ],
             "bacnet_type": "multistate_input_object",
@@ -3053,41 +2713,6 @@
             "reference": [
                 "infrared_format_code.length"
             ]
-        },
-        {
-            "id": "infrared_learn.command",
-            "name": "Sub-command(Infrared Learn)",
-            "value": "0",
-            "unit": "",
-            "access_mode": "RW",
-            "data_type": "ENUM",
-            "value_type": "UINT8",
-            "values": [
-                {
-                    "value": 0,
-                    "name": "Learn Status"
-                },
-                {
-                    "value": 1,
-                    "name": "Findnext Max"
-                },
-                {
-                    "value": 2,
-                    "name": "Findnext"
-                },
-                {
-                    "value": 3,
-                    "name": "Predefine Brand"
-                },
-                {
-                    "value": 4,
-                    "name": "Infrared Package Status"
-                }
-            ],
-            "bacnet_type": "multistate_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": []
         },
         {
             "id": "infrared_learn.findnext",
@@ -3251,67 +2876,71 @@
             "values": [
                 {
                     "value": 0,
-                    "name": "Insert Schedule1"
+                    "name": "Schedule1"
                 },
                 {
                     "value": 1,
-                    "name": "Insert Schedule2"
+                    "name": "Schedule2"
                 },
                 {
                     "value": 2,
-                    "name": "Insert Schedule3"
+                    "name": "Schedule3"
                 },
                 {
                     "value": 3,
-                    "name": "Insert Schedule4"
+                    "name": "Schedule4"
                 },
                 {
                     "value": 4,
-                    "name": "Insert Schedule5"
+                    "name": "Schedule5"
                 },
                 {
                     "value": 5,
-                    "name": "Insert Schedule6"
+                    "name": "Schedule6"
                 },
                 {
                     "value": 6,
-                    "name": "Insert Schedule7"
+                    "name": "Schedule7"
                 },
                 {
                     "value": 7,
-                    "name": "Insert Schedule8"
+                    "name": "Schedule8"
                 },
                 {
                     "value": 8,
-                    "name": "Insert Schedule9"
+                    "name": "Schedule9"
                 },
                 {
                     "value": 9,
-                    "name": "Insert Schedule10"
+                    "name": "Schedule10"
                 },
                 {
                     "value": 10,
-                    "name": "Insert Schedule11"
+                    "name": "Schedule11"
                 },
                 {
                     "value": 11,
-                    "name": "Insert Schedule12"
+                    "name": "Schedule12"
                 },
                 {
                     "value": 12,
-                    "name": "Insert Schedule13"
+                    "name": "Schedule13"
                 },
                 {
                     "value": 13,
-                    "name": "Insert Schedule14"
+                    "name": "Schedule14"
                 },
                 {
                     "value": 14,
-                    "name": "Insert Schedule15"
+                    "name": "Schedule15"
                 },
                 {
                     "value": 15,
-                    "name": "Insert Schedule16"
+                    "name": "Schedule16"
+                },
+                {
+                    "value": 255,
+                    "name": "Insertion Schedule Interruption"
                 }
             ],
             "bacnet_type": "multistate_output_object",
@@ -3328,8 +2957,8 @@
             "data_type": "NUMBER",
             "value_type": "FLOAT",
             "range": [
-                -70,
-                70
+                -80,
+                80
             ],
             "bacnet_type": "analog_value_object",
             "bacnet_unit_type_id": 62,
@@ -3354,57 +2983,6 @@
             "reference": []
         },
         {
-            "id": "internal_sensor_settings.command",
-            "name": "Sub-command(Internal Temperature Sensor Setting)",
-            "value": "0",
-            "unit": "",
-            "access_mode": "RW",
-            "data_type": "ENUM",
-            "value_type": "UINT8",
-            "values": [
-                {
-                    "value": 0,
-                    "name": "Name(prefix6)"
-                },
-                {
-                    "value": 1,
-                    "name": "Name(infix6)"
-                },
-                {
-                    "value": 2,
-                    "name": "Name(suffix6)"
-                },
-                {
-                    "value": 3,
-                    "name": "Collect Period"
-                },
-                {
-                    "value": 4,
-                    "name": "Temperature Calibration Enable"
-                },
-                {
-                    "value": 5,
-                    "name": "Temperature Calibration Value"
-                },
-                {
-                    "value": 6,
-                    "name": "Humidity Calibration Enable"
-                },
-                {
-                    "value": 7,
-                    "name": "Humidity Calibration Value"
-                },
-                {
-                    "value": 8,
-                    "name": "Sensor Type"
-                }
-            ],
-            "bacnet_type": "multistate_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": []
-        },
-        {
             "id": "internal_sensor_settings.fahrenheit_temp_calibration",
             "name": "Fahrenheit Temperature Calibration Value(Internal Temperature Sensor Setting)",
             "value": "32",
@@ -3413,8 +2991,8 @@
             "data_type": "NUMBER",
             "value_type": "FLOAT",
             "range": [
-                -94,
-                158
+                -112,
+                176
             ],
             "bacnet_type": "analog_value_object",
             "bacnet_unit_type_id": 64,
@@ -3436,29 +3014,6 @@
             "bacnet_type": "analog_value_object",
             "bacnet_unit_type_id": 29,
             "bacnet_unit_type": "UNITS_PERCENT_RELATIVE_HUMIDITY",
-            "reference": []
-        },
-        {
-            "id": "internal_sensor_settings.humi_calibration_en",
-            "name": "Humidity Calibration Enable(Internal Temperature Sensor Setting)",
-            "value": "0",
-            "unit": "",
-            "access_mode": "RW",
-            "data_type": "ENUM",
-            "value_type": "UINT8",
-            "values": [
-                {
-                    "value": 0,
-                    "name": "Disable"
-                },
-                {
-                    "value": 1,
-                    "name": "Enable"
-                }
-            ],
-            "bacnet_type": "multistate_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": []
         },
         {
@@ -3499,52 +3054,6 @@
             "value_type": "STRING",
             "max_length": 6,
             "bacnet_type": "character_string_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": []
-        },
-        {
-            "id": "internal_sensor_settings.sensor_type",
-            "name": "Sensor Type(Internal Temperature Sensor Setting)",
-            "value": "0",
-            "unit": "",
-            "access_mode": "RW",
-            "data_type": "ENUM",
-            "value_type": "UINT8",
-            "values": [
-                {
-                    "value": 0,
-                    "name": "Temperature Sensor"
-                },
-                {
-                    "value": 1,
-                    "name": "Temperature and Humidity Sensor"
-                }
-            ],
-            "bacnet_type": "multistate_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": []
-        },
-        {
-            "id": "internal_sensor_settings.temperature_calibration_en",
-            "name": "Temperature Calibration Enable(Internal Temperature Sensor Setting)",
-            "value": "0",
-            "unit": "",
-            "access_mode": "RW",
-            "data_type": "ENUM",
-            "value_type": "UINT8",
-            "values": [
-                {
-                    "value": 0,
-                    "name": "Disable"
-                },
-                {
-                    "value": 1,
-                    "name": "Enable"
-                }
-            ],
-            "bacnet_type": "multistate_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": []
@@ -3703,7 +3212,7 @@
         },
         {
             "id": "local_temp_limit.type",
-            "name": "Alarm Type(Local Temperature Limit \nAlarm)",
+            "name": "Alarm Type(Local Temperature Limit Alarm)",
             "value": "",
             "unit": "",
             "access_mode": "R",
@@ -3725,9 +3234,25 @@
             "reference": []
         },
         {
+            "id": "lora_tx_max_random_time",
+            "name": "Lora Tx Max Random Time",
+            "value": "5",
+            "unit": "",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "UINT8",
+            "range": [
+                0,
+                60
+            ],
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS"
+        },
+        {
             "id": "lorawan_configuration_settings.mode",
             "name": "LoRaWAN Work Mode(LoRaWAN  Settings)",
-            "value": "0",
+            "value": "2",
             "unit": "",
             "access_mode": "RW",
             "data_type": "ENUM",
@@ -3932,27 +3457,26 @@
             "reference": []
         },
         {
-            "id": "reporting_interval.type",
-            "name": "Reporting Interval Type(Reporting Interval)",
-            "value": "0",
-            "unit": "",
-            "access_mode": "RW",
-            "data_type": "ENUM",
+            "id": "reset",
+            "name": "Reset",
+            "access_mode": "W",
+            "data_type": "BOOL",
             "value_type": "UINT8",
+            "unit": "",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "bacnet_type": "binary_output_object",
+            "value": "",
             "values": [
                 {
                     "value": 0,
-                    "name": "BLE+LORA"
+                    "name": "no"
                 },
                 {
-                    "value": 0,
-                    "name": "BLE+LORA"
+                    "value": 1,
+                    "name": "yes"
                 }
-            ],
-            "bacnet_type": "multistate_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": []
+            ]
         },
         {
             "id": "retrieve_historical_data_by_time_range.end_time",
@@ -4062,7 +3586,7 @@
         },
         {
             "id": "sensor_error.type",
-            "name": "Alarm Type(Sensor  Alarm)",
+            "name": "Alarm Type(Sensor Alarm)",
             "value": "",
             "unit": "",
             "access_mode": "R",
@@ -4164,7 +3688,7 @@
         },
         {
             "id": "system_switch",
-            "name": "System Switch",
+            "name": "AC On/Off",
             "value": "0",
             "unit": "",
             "access_mode": "RW",
@@ -4187,7 +3711,7 @@
         {
             "id": "target_temperature_resolution",
             "name": "Target Temperature Resolution",
-            "value": "0",
+            "value": "1",
             "unit": "",
             "access_mode": "RW",
             "data_type": "ENUM",
@@ -4208,7 +3732,7 @@
         },
         {
             "id": "target_temperature_settings.celsius_auto",
-            "name": "Celsius Auto Temperature(Target Temperature Settings)",
+            "name": "Celsius Auto Target Temperature(Target Temperature Settings)",
             "value": "23",
             "unit": "°C",
             "access_mode": "RW",
@@ -4225,7 +3749,7 @@
         },
         {
             "id": "target_temperature_settings.celsius_cool",
-            "name": "Celsius Cool Temperature(Target Temperature Settings)",
+            "name": "Celsius Cool Target Temperature(Target Temperature Settings)",
             "value": "28",
             "unit": "°C",
             "access_mode": "RW",
@@ -4242,7 +3766,7 @@
         },
         {
             "id": "target_temperature_settings.celsius_heat",
-            "name": "Celsius Heat Temperature(Target Temperature Settings)",
+            "name": "Celsius Heat Target Temperature(Target Temperature Settings)",
             "value": "17",
             "unit": "°C",
             "access_mode": "RW",
@@ -4259,7 +3783,7 @@
         },
         {
             "id": "target_temperature_settings.fahrenheit_auto",
-            "name": "Fahrenheit Auto Temperature(Target Temperature Settings)",
+            "name": "Fahrenheit Auto Target Temperature(Target Temperature Settings)",
             "value": "73.4",
             "unit": "℉",
             "access_mode": "RW",
@@ -4276,7 +3800,7 @@
         },
         {
             "id": "target_temperature_settings.fahrenheit_cool",
-            "name": "Fahrenheit Cool Temperature(Target Temperature Settings)",
+            "name": "Fahrenheit Cool Target Temperature(Target Temperature Settings)",
             "value": "82.4",
             "unit": "℉",
             "access_mode": "RW",
@@ -4293,7 +3817,7 @@
         },
         {
             "id": "target_temperature_settings.fahrenheit_heat",
-            "name": "Fahrenheit Heat Temperature(Target Temperature Settings)",
+            "name": "Fahrenheit Heat Target Temperature(Target Temperature Settings)",
             "value": "62.6",
             "unit": "℉",
             "access_mode": "RW",
@@ -4309,35 +3833,8 @@
             "reference": []
         },
         {
-            "id": "target_temperature_settings.temperature_control_mode",
-            "name": "Temperature Control Mode(Target Temperature Settings)",
-            "value": "0",
-            "unit": "",
-            "access_mode": "RW",
-            "data_type": "ENUM",
-            "value_type": "UINT8",
-            "values": [
-                {
-                    "value": 0,
-                    "name": "Heat Temperature"
-                },
-                {
-                    "value": 2,
-                    "name": "Cool Temperature"
-                },
-                {
-                    "value": 3,
-                    "name": "Auto Temperature"
-                }
-            ],
-            "bacnet_type": "multistate_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": []
-        },
-        {
             "id": "target_temperature_tolerance.celsius_target_value",
-            "name": "Celsius Target Temperature Tolerance(Target Temperature Tolerance)",
+            "name": "Celsius Target Temperature Tolerance Value(Target Temperature Tolerance)",
             "value": "1",
             "unit": "K",
             "access_mode": "RW",
@@ -4354,7 +3851,7 @@
         },
         {
             "id": "target_temperature_tolerance.fahrenheit_target_value",
-            "name": "Fahrenheit Target Temperature Tolerance(Target Temperature Tolerance)",
+            "name": "Fahrenheit Target Temperature Tolerance Value(Target Temperature Tolerance)",
             "value": "1.8",
             "unit": "ΔT°F",
             "access_mode": "RW",
@@ -4370,19 +3867,6 @@
             "reference": []
         },
         {
-            "id": "target_temperature_tolerance.id",
-            "name": "Target Temperature Tolerance(Target Temperature Tolerance)",
-            "value": "0",
-            "unit": "",
-            "access_mode": "RW",
-            "data_type": "NUMBER",
-            "value_type": "UINT8",
-            "bacnet_type": "analog_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": []
-        },
-        {
             "id": "temperature_alarm_settings.celsius_threshold_max",
             "name": "Celsius High Threshold(Temperature Threshold Alarm)",
             "value": "60",
@@ -4392,7 +3876,7 @@
             "value_type": "FLOAT",
             "range": [
                 -20,
-                70
+                60
             ],
             "bacnet_type": "analog_value_object",
             "bacnet_unit_type_id": 62,
@@ -4409,42 +3893,11 @@
             "value_type": "FLOAT",
             "range": [
                 -20,
-                70
+                60
             ],
             "bacnet_type": "analog_value_object",
             "bacnet_unit_type_id": 62,
             "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
-            "reference": []
-        },
-        {
-            "id": "temperature_alarm_settings.command",
-            "name": "Sub-command(Temperature Threshold Alarm)",
-            "value": "0",
-            "unit": "",
-            "access_mode": "RW",
-            "data_type": "ENUM",
-            "value_type": "UINT8",
-            "values": [
-                {
-                    "value": 0,
-                    "name": "Enable"
-                },
-                {
-                    "value": 1,
-                    "name": "Alarm Mode"
-                },
-                {
-                    "value": 2,
-                    "name": "Low Threshold"
-                },
-                {
-                    "value": 3,
-                    "name": "High Threshold"
-                }
-            ],
-            "bacnet_type": "multistate_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": []
         },
         {
@@ -4480,7 +3933,7 @@
             "value_type": "FLOAT",
             "range": [
                 -4,
-                158
+                140
             ],
             "bacnet_type": "analog_value_object",
             "bacnet_unit_type_id": 64,
@@ -4497,7 +3950,7 @@
             "value_type": "FLOAT",
             "range": [
                 -4,
-                158
+                140
             ],
             "bacnet_type": "analog_value_object",
             "bacnet_unit_type_id": 64,
@@ -4545,7 +3998,7 @@
             "value_type": "FLOAT",
             "range": [
                 -20,
-                70
+                60
             ],
             "bacnet_type": "analog_input_object",
             "bacnet_unit_type_id": 62,
@@ -4562,7 +4015,7 @@
             "value_type": "FLOAT",
             "range": [
                 -4,
-                158
+                140
             ],
             "bacnet_type": "analog_input_object",
             "bacnet_unit_type_id": 64,
@@ -4579,7 +4032,7 @@
             "value_type": "FLOAT",
             "range": [
                 -20,
-                70
+                60
             ],
             "bacnet_type": "analog_input_object",
             "bacnet_unit_type_id": 62,
@@ -4596,7 +4049,7 @@
             "value_type": "FLOAT",
             "range": [
                 -4,
-                158
+                140
             ],
             "bacnet_type": "analog_input_object",
             "bacnet_unit_type_id": 64,
@@ -4613,7 +4066,7 @@
             "value_type": "FLOAT",
             "range": [
                 -20,
-                70
+                60
             ],
             "bacnet_type": "analog_input_object",
             "bacnet_unit_type_id": 62,
@@ -4630,7 +4083,7 @@
             "value_type": "FLOAT",
             "range": [
                 -4,
-                158
+                140
             ],
             "bacnet_type": "analog_input_object",
             "bacnet_unit_type_id": 64,
@@ -4647,7 +4100,7 @@
             "value_type": "FLOAT",
             "range": [
                 -20,
-                70
+                60
             ],
             "bacnet_type": "analog_input_object",
             "bacnet_unit_type_id": 62,
@@ -4664,7 +4117,7 @@
             "value_type": "FLOAT",
             "range": [
                 -4,
-                158
+                140
             ],
             "bacnet_type": "analog_input_object",
             "bacnet_unit_type_id": 64,
@@ -4681,7 +4134,7 @@
             "value_type": "FLOAT",
             "range": [
                 -20,
-                70
+                60
             ],
             "bacnet_type": "analog_input_object",
             "bacnet_unit_type_id": 62,
@@ -4698,7 +4151,7 @@
             "value_type": "FLOAT",
             "range": [
                 -4,
-                158
+                140
             ],
             "bacnet_type": "analog_input_object",
             "bacnet_unit_type_id": 64,
@@ -4715,7 +4168,7 @@
             "value_type": "FLOAT",
             "range": [
                 -20,
-                70
+                60
             ],
             "bacnet_type": "analog_input_object",
             "bacnet_unit_type_id": 62,
@@ -4732,7 +4185,7 @@
             "value_type": "FLOAT",
             "range": [
                 -4,
-                158
+                140
             ],
             "bacnet_type": "analog_input_object",
             "bacnet_unit_type_id": 64,
@@ -4749,7 +4202,7 @@
             "value_type": "FLOAT",
             "range": [
                 -20,
-                70
+                60
             ],
             "bacnet_type": "analog_input_object",
             "bacnet_unit_type_id": 62,
@@ -4766,7 +4219,7 @@
             "value_type": "FLOAT",
             "range": [
                 -4,
-                158
+                140
             ],
             "bacnet_type": "analog_input_object",
             "bacnet_unit_type_id": 64,
@@ -4783,7 +4236,7 @@
             "value_type": "FLOAT",
             "range": [
                 -20,
-                70
+                60
             ],
             "bacnet_type": "analog_input_object",
             "bacnet_unit_type_id": 62,
@@ -4800,7 +4253,7 @@
             "value_type": "FLOAT",
             "range": [
                 -4,
-                158
+                140
             ],
             "bacnet_type": "analog_input_object",
             "bacnet_unit_type_id": 64,
@@ -4817,7 +4270,7 @@
             "value_type": "FLOAT",
             "range": [
                 -20,
-                70
+                60
             ],
             "bacnet_type": "analog_input_object",
             "bacnet_unit_type_id": 62,
@@ -4834,7 +4287,7 @@
             "value_type": "FLOAT",
             "range": [
                 -4,
-                158
+                140
             ],
             "bacnet_type": "analog_input_object",
             "bacnet_unit_type_id": 64,
@@ -4851,7 +4304,7 @@
             "value_type": "FLOAT",
             "range": [
                 -20,
-                70
+                60
             ],
             "bacnet_type": "analog_input_object",
             "bacnet_unit_type_id": 62,
@@ -4868,7 +4321,7 @@
             "value_type": "FLOAT",
             "range": [
                 -4,
-                158
+                140
             ],
             "bacnet_type": "analog_input_object",
             "bacnet_unit_type_id": 64,
@@ -4886,11 +4339,11 @@
             "values": [
                 {
                     "value": 0,
-                    "name": "Close Window"
+                    "name": "Open Window Alarm Released"
                 },
                 {
                     "value": 1,
-                    "name": "Open Window"
+                    "name": "Open Window Alarm"
                 },
                 {
                     "value": 32,
@@ -4948,7 +4401,7 @@
         },
         {
             "id": "temperature_alarm.window_status_detection_deactivation.celsius_temperature",
-            "name": "Celsius Temperature(Close Window)",
+            "name": "Celsius Temperature(Open Window Alarm Released)",
             "value": "",
             "unit": "°C",
             "access_mode": "R",
@@ -4956,7 +4409,7 @@
             "value_type": "FLOAT",
             "range": [
                 -20,
-                70
+                60
             ],
             "bacnet_type": "analog_input_object",
             "bacnet_unit_type_id": 62,
@@ -4965,7 +4418,7 @@
         },
         {
             "id": "temperature_alarm.window_status_detection_deactivation.fahrenheit_temperature",
-            "name": "Fahrenheit Temperature(Close Window)",
+            "name": "Fahrenheit Temperature(Open Window Alarm Released)",
             "value": "",
             "unit": "℉",
             "access_mode": "R",
@@ -4973,7 +4426,7 @@
             "value_type": "FLOAT",
             "range": [
                 -4,
-                158
+                140
             ],
             "bacnet_type": "analog_input_object",
             "bacnet_unit_type_id": 64,
@@ -4982,7 +4435,7 @@
         },
         {
             "id": "temperature_alarm.window_status_detection_trigger.celsius_temperature",
-            "name": "Celsius Temperature(Open Window)",
+            "name": "Celsius Temperature(Open Window Alarm)",
             "value": "",
             "unit": "°C",
             "access_mode": "R",
@@ -4990,7 +4443,7 @@
             "value_type": "FLOAT",
             "range": [
                 -20,
-                70
+                60
             ],
             "bacnet_type": "analog_input_object",
             "bacnet_unit_type_id": 62,
@@ -4999,7 +4452,7 @@
         },
         {
             "id": "temperature_alarm.window_status_detection_trigger.fahrenheit_temperature",
-            "name": "Fahrenheit Temperature(Open Window)",
+            "name": "Fahrenheit Temperature(Open Window Alarm)",
             "value": "",
             "unit": "℉",
             "access_mode": "R",
@@ -5007,7 +4460,7 @@
             "value_type": "FLOAT",
             "range": [
                 -4,
-                158
+                140
             ],
             "bacnet_type": "analog_input_object",
             "bacnet_unit_type_id": 64,
@@ -5024,7 +4477,7 @@
             "value_type": "FLOAT",
             "range": [
                 -20,
-                70
+                60
             ],
             "bacnet_type": "analog_input_object",
             "bacnet_unit_type_id": 62,
@@ -5041,7 +4494,7 @@
             "value_type": "FLOAT",
             "range": [
                 -4,
-                158
+                140
             ],
             "bacnet_type": "analog_input_object",
             "bacnet_unit_type_id": 64,
@@ -5058,7 +4511,7 @@
             "value_type": "FLOAT",
             "range": [
                 -20,
-                70
+                60
             ],
             "bacnet_type": "analog_input_object",
             "bacnet_unit_type_id": 62,
@@ -5075,7 +4528,7 @@
             "value_type": "FLOAT",
             "range": [
                 -4,
-                158
+                140
             ],
             "bacnet_type": "analog_input_object",
             "bacnet_unit_type_id": 64,
@@ -5085,7 +4538,7 @@
         {
             "id": "temperature_control_mode_enable.auto",
             "name": "Auto Mode(Temperature Control Mode Enable)",
-            "value": "0",
+            "value": "1",
             "unit": "",
             "access_mode": "RW",
             "data_type": "BOOL",
@@ -5115,7 +4568,7 @@
         {
             "id": "temperature_control_mode_enable.cool",
             "name": "Cool Mode(Temperature Control Mode Enable)",
-            "value": "0",
+            "value": "1",
             "unit": "",
             "access_mode": "RW",
             "data_type": "BOOL",
@@ -5145,7 +4598,7 @@
         {
             "id": "temperature_control_mode_enable.dehumidify",
             "name": "Dehumidify Mode(Temperature Control Mode Enable)",
-            "value": "0",
+            "value": "1",
             "unit": "",
             "access_mode": "RW",
             "data_type": "BOOL",
@@ -5175,7 +4628,7 @@
         {
             "id": "temperature_control_mode_enable.em_heat",
             "name": "EM Heat Mode(Temperature Control Mode Enable)",
-            "value": "0",
+            "value": "1",
             "unit": "",
             "access_mode": "RW",
             "data_type": "BOOL",
@@ -5205,7 +4658,7 @@
         {
             "id": "temperature_control_mode_enable.heat",
             "name": "Heat Mode(Temperature Control Mode Enable)",
-            "value": "0",
+            "value": "1",
             "unit": "",
             "access_mode": "RW",
             "data_type": "BOOL",
@@ -5264,8 +4717,8 @@
         },
         {
             "id": "temperature_control_mode_enable.ventilate",
-            "name": "Ventilate Mode(Temperature Control Mode Enable)",
-            "value": "0",
+            "name": "Ventilation Mode(Temperature Control Mode Enable)",
+            "value": "1",
             "unit": "",
             "access_mode": "RW",
             "data_type": "BOOL",
@@ -5291,29 +4744,6 @@
                 "temperature_control_mode_enable.dehumidify",
                 "temperature_control_mode_enable.reserved"
             ]
-        },
-        {
-            "id": "temperature_control_mode.command",
-            "name": "Sub-command(Temperature Control Mode)",
-            "value": "0",
-            "unit": "",
-            "access_mode": "RW",
-            "data_type": "ENUM",
-            "value_type": "UINT8",
-            "values": [
-                {
-                    "value": 0,
-                    "name": "Mode"
-                },
-                {
-                    "value": 1,
-                    "name": "Plan Temperature Control"
-                }
-            ],
-            "bacnet_type": "multistate_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": []
         },
         {
             "id": "temperature_control_mode.ctrl_mode",
@@ -5342,7 +4772,7 @@
                 },
                 {
                     "value": 5,
-                    "name": "ventilate"
+                    "name": "ventilation"
                 }
             ],
             "bacnet_type": "multistate_value_object",
@@ -5352,7 +4782,7 @@
         },
         {
             "id": "temperature_control_mode.plan_enable",
-            "name": "Plan Temperature Control \nMode Enable(Temperature Control Mode)",
+            "name": "Plan Temperature Control Mode Enable(Temperature Control Mode)",
             "value": "1",
             "unit": "",
             "access_mode": "RW",
@@ -5369,29 +4799,6 @@
                 }
             ],
             "bacnet_type": "binary_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": []
-        },
-        {
-            "id": "temperature_data_source.command",
-            "name": "Sub-command(Temperature Data Source Settings)",
-            "value": "0",
-            "unit": "",
-            "access_mode": "RW",
-            "data_type": "ENUM",
-            "value_type": "UINT8",
-            "values": [
-                {
-                    "value": 0,
-                    "name": "Data Source"
-                },
-                {
-                    "value": 0,
-                    "name": "Data Source"
-                }
-            ],
-            "bacnet_type": "multistate_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": []
@@ -5672,7 +5079,7 @@
         },
         {
             "id": "window_opening_detection_settings.celsius_difference_in_temperature",
-            "name": "Celsius Temperature Variation(Open Window Detection)",
+            "name": "Celsius Temperature Change(Open Window Detection)",
             "value": "3",
             "unit": "°C",
             "access_mode": "RW",
@@ -5685,33 +5092,6 @@
             "bacnet_type": "analog_value_object",
             "bacnet_unit_type_id": 62,
             "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
-            "reference": []
-        },
-        {
-            "id": "window_opening_detection_settings.command",
-            "name": "Sub-command(Open Window Detection)",
-            "value": "0",
-            "unit": "",
-            "access_mode": "RW",
-            "data_type": "ENUM",
-            "value_type": "UINT8",
-            "values": [
-                {
-                    "value": 0,
-                    "name": "Enable"
-                },
-                {
-                    "value": 2,
-                    "name": "Temperature Variation"
-                },
-                {
-                    "value": 3,
-                    "name": "Stop Control For"
-                }
-            ],
-            "bacnet_type": "multistate_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": []
         },
         {
@@ -5739,7 +5119,7 @@
         },
         {
             "id": "window_opening_detection_settings.fahrenheit_difference_in_temperature",
-            "name": "Fahrenheit Temperature Variation(Open Window Detection)",
+            "name": "Fahrenheit Temperature Change(Open Window Detection)",
             "value": "37.4",
             "unit": "℉",
             "access_mode": "RW",
@@ -5756,7 +5136,7 @@
         },
         {
             "id": "window_opening_detection_settings.stop_time",
-            "name": "Stop Control For(Open Window Detection)",
+            "name": "Stop Temperature Control For(Open Window Detection)",
             "value": "30",
             "unit": "min",
             "access_mode": "RW",
