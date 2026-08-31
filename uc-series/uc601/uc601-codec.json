@@ -349,8 +349,8 @@
                     "name": "Collection Error"
                 },
                 {
-                    "value": 0,
-                    "name": "Collection Error"
+                    "value": 1,
+                    "name": "Unsupported Command"
                 }
             ],
             "bacnet_type": "multistate_input_object",
@@ -1121,8 +1121,8 @@
                     "name": "Collection Error"
                 },
                 {
-                    "value": 0,
-                    "name": "Collection Error"
+                    "value": 1,
+                    "name": "Unsupported Command"
                 }
             ],
             "bacnet_type": "multistate_input_object",
@@ -1718,8 +1718,8 @@
                     "name": "Collection Error"
                 },
                 {
-                    "value": 0,
-                    "name": "Collection Error"
+                    "value": 1,
+                    "name": "Unsupported Command"
                 }
             ],
             "bacnet_type": "multistate_input_object",
@@ -1757,8 +1757,8 @@
                     "name": "Collection Error"
                 },
                 {
-                    "value": 0,
-                    "name": "Collection Error"
+                    "value": 1,
+                    "name": "Unsupported Command"
                 }
             ],
             "bacnet_type": "multistate_input_object",
@@ -2515,8 +2515,8 @@
                     "name": "Collection Error"
                 },
                 {
-                    "value": 0,
-                    "name": "Collection Error"
+                    "value": 1,
+                    "name": "Unsupported Command"
                 }
             ],
             "bacnet_type": "multistate_input_object",
