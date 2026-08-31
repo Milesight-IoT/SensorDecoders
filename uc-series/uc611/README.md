@@ -117,6 +117,7 @@ For more detailed information, please visit [Milesight Official Website](https:/
 
 | CHANNEL |  ID  | LENGTH | READ/WRITE | DEFAULT | RANGE | ENUM |
 | :------ | :--: | :----: | :--------: | :-----: | :---: | :--: |
+| Command Response | 0xEF | 1 | r |  |  |  |
 | Request to Push All Configurations | 0xEE | 1 | r |  |  |  |
 | Equipment Temperature  Alarm | 0x25 | 1 | r |  |  |  |
 | Ambient Temperature  Alarm | 0x26 | 1 | r |  |  |  |
@@ -129,6 +130,13 @@ For more detailed information, please visit [Milesight Official Website](https:/
 
 | CHANNEL |  ID  | LENGTH | READ/WRITE | DEFAULT | RANGE | ENUM |
 | :------ | :--: | :----: | :--------: | :-----: | :---: | :--: |
+|  Response Result | 0xEF | 2 | r | 0 |  | 0：success<br>1：unknown<br>2：error order<br>3：error passwd<br>4：error read params<br>5：error write params<br>6：error read<br>7：error write<br>8：error read apply<br>9：error write apply |
+| Command Length | 0xEF | 2 | r | 1 | 1 - 15 |  |
+| Answered Commands | 0xEF | 1 | r |  |  |  |
+| Command Queries | 0xEF | 1 | w |  |  |  |
+| Query Information | 0xEF | 2 | w |  |  |  |
+| Command Length | 0xEF | 2 | w | 1 | 1 - 15 |  |
+| The command that was queried | 0xEF | 1 | w |  |  | 0XDA:Product Version<br>0X00:Voltage<br>0X01:Electric Power<br>0X02:Power Factor<br>0X03:Power Consumption<br>0X04:Current Rating<br>0X05:Equipment Temperature<br>0X06:Ambient Temperature<br>0X07:Relays Status<br>0X60:Reporting Interval<br>0X61:LED Indicator<br>0X62:Button Lock<br>0X63:Reset Lock<br>0X6400:Overcurrent AlarmOvercurrent Alarm Enable<br>0X6400:Overcurrent AlarmOvercurrent Alarm Value<br>0X6500:Over current ProtectionOvercurrent Protection Enable<br>0X6501:Over current ProtectionOvercurrent Protection Value<br>0X6600:Overvoltage AlarmOvervoltage Alarm Enable<br>0X6601:Overvoltage AlarmOvervoltage Alarm Value<br>0X6700:Overvoltage ProtectionOvervoltage Protection Enable<br>0X6701:Overvoltage ProtectionOvervoltage Protection Value<br>0X68:High Current Protection Enable<br>0X69:Relay Abnormal Protection Enable<br>0X6A:Threshold Alarm Release<br>0X6B:Power-On Relay Mode<br>0X6C:Power Metering Enable<br>0X6D:Bluetooth Name<br>0X6E:D2D Data Reception Enable<br>0X6F00:D2D Data Receiving SettingsEnable<br>0X6F01:D2D Data Receiving SettingsPaired Device EUI<br>0X6F02:D2D Data Receiving SettingsDevice Name (First 8B)<br>0X6F03:D2D Data Receiving SettingsDevice Name (Last 8B)<br>0X70:Ambient Temperature Enable<br>0X7100:Ambient Temperature Config Ambient Temperature Source<br>0X7101:Ambient Temperature Config Ambient Temperature Timeout<br>0X7102:Ambient Temperature Config Relay Status After Temperature Timeout<br>0X72:Temperature Control Enable<br>0X7300:Temperature Control SettingsTemperature Control Target<br>0X7301:Temperature Control SettingsTemperature Control Tolerance<br>0X7302:Temperature Control SettingsTemperature Regulation Range<br>0X74:Enable<br>0X7500:Open Window DetectionRate of Temperature Fall<br>0X7501:Open Window DetectionStop Temperature Control<br>0X7600:Freeze ProtectionEnable<br>0X7601:Freeze ProtectionFreeze Temperature<br>0X7700:Schedule SettingsSchedule Enable<br>0X7701:Schedule SettingsSchedule Repeat Day<br>0X7702:Schedule SettingsSchedule Target<br>0X7703:Schedule SettingsSchedule Action<br>0X7704:Schedule SettingsSchedule Parameter<br>0X78:D2D Agent Enable<br>0X7900:D2D ControlledEnable<br>0X7901:D2D ControlledControl Command<br>0X7902:D2D ControlledControl Target<br>0X7903:D2D ControlledControl Action<br>0XC7:Time Zone<br>0XC6:Daylight Saving Time |
 | Request to Query All Configurations | 0xEE | 1 | w |  |  |  |
 | Time Synchronize | 0xB8 | 1 | w |  |  |  |
 | Reset | 0xBF | 1 | w |  |  |  |
