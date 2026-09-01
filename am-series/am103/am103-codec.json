@@ -701,7 +701,7 @@
             "bacnet_type": "binary_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": ["hibernate_config.enable", "hibernate_config.lora_uplink_enable", "hibernate_config.start_time", "hibernate_config.end_time", "hibernate_config.weekdays.monday", "hibernate_config.weekdays.tuesday", "hibernate_config.weekdays.wednesday", "hibernate_config.weekdays.thursday", "hibernate_config.weekdays.friday", "hibernate_config.weekdays.saturday", "hibernate_config.weekdays.sunday"]
+            "reference": ["hibernate_config.enable", "hibernate_config.lora_uplink_enable", "hibernate_config.start_time", "hibernate_config.end_time", "hibernate_config.weekdays.monday", "hibernate_config.weekdays.tuesday", "hibernate_config.weekdays.wednesday", "hibernate_config.weekdays.thursday", "hibernate_config.weekdays.friday", "hibernate_config.weekdays.saturday", "hibernate_config.weekdays.sunday", "hibernate_config.report_interval"]
         },
         {
             "id": "hibernate_config.lora_uplink_enable",
@@ -718,7 +718,7 @@
             "bacnet_type": "binary_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": ["hibernate_config.enable", "hibernate_config.lora_uplink_enable", "hibernate_config.start_time", "hibernate_config.end_time", "hibernate_config.weekdays.monday", "hibernate_config.weekdays.tuesday", "hibernate_config.weekdays.wednesday", "hibernate_config.weekdays.thursday", "hibernate_config.weekdays.friday", "hibernate_config.weekdays.saturday", "hibernate_config.weekdays.sunday"]
+            "reference": ["hibernate_config.enable", "hibernate_config.lora_uplink_enable", "hibernate_config.start_time", "hibernate_config.end_time", "hibernate_config.weekdays.monday", "hibernate_config.weekdays.tuesday", "hibernate_config.weekdays.wednesday", "hibernate_config.weekdays.thursday", "hibernate_config.weekdays.friday", "hibernate_config.weekdays.saturday", "hibernate_config.weekdays.sunday", "hibernate_config.report_interval"]
         },
         {
             "id": "hibernate_config.start_time",
@@ -731,7 +731,7 @@
             "bacnet_type": "analog_value_object",
             "bacnet_unit_type_id": 72,
             "bacnet_unit_type": "UNITS_MINUTES",
-            "reference": ["hibernate_config.enable", "hibernate_config.lora_uplink_enable", "hibernate_config.start_time", "hibernate_config.end_time", "hibernate_config.weekdays.monday", "hibernate_config.weekdays.tuesday", "hibernate_config.weekdays.wednesday", "hibernate_config.weekdays.thursday", "hibernate_config.weekdays.friday", "hibernate_config.weekdays.saturday", "hibernate_config.weekdays.sunday"]
+            "reference": ["hibernate_config.enable", "hibernate_config.lora_uplink_enable", "hibernate_config.start_time", "hibernate_config.end_time", "hibernate_config.weekdays.monday", "hibernate_config.weekdays.tuesday", "hibernate_config.weekdays.wednesday", "hibernate_config.weekdays.thursday", "hibernate_config.weekdays.friday", "hibernate_config.weekdays.saturday", "hibernate_config.weekdays.sunday", "hibernate_config.report_interval"]
         },
         {
             "id": "hibernate_config.end_time",
@@ -744,7 +744,7 @@
             "bacnet_type": "analog_value_object",
             "bacnet_unit_type_id": 72,
             "bacnet_unit_type": "UNITS_MINUTES",
-            "reference": ["hibernate_config.enable", "hibernate_config.lora_uplink_enable", "hibernate_config.start_time", "hibernate_config.end_time", "hibernate_config.weekdays.monday", "hibernate_config.weekdays.tuesday", "hibernate_config.weekdays.wednesday", "hibernate_config.weekdays.thursday", "hibernate_config.weekdays.friday", "hibernate_config.weekdays.saturday", "hibernate_config.weekdays.sunday"]
+            "reference": ["hibernate_config.enable", "hibernate_config.lora_uplink_enable", "hibernate_config.start_time", "hibernate_config.end_time", "hibernate_config.weekdays.monday", "hibernate_config.weekdays.tuesday", "hibernate_config.weekdays.wednesday", "hibernate_config.weekdays.thursday", "hibernate_config.weekdays.friday", "hibernate_config.weekdays.saturday", "hibernate_config.weekdays.sunday", "hibernate_config.report_interval"]
         },
         {
             "id": "hibernate_config.weekdays.monday",
@@ -761,7 +761,7 @@
             "bacnet_type": "binary_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": ["hibernate_config.enable", "hibernate_config.lora_uplink_enable", "hibernate_config.start_time", "hibernate_config.end_time", "hibernate_config.weekdays.monday", "hibernate_config.weekdays.tuesday", "hibernate_config.weekdays.wednesday", "hibernate_config.weekdays.thursday", "hibernate_config.weekdays.friday", "hibernate_config.weekdays.saturday", "hibernate_config.weekdays.sunday"]
+            "reference": ["hibernate_config.enable", "hibernate_config.lora_uplink_enable", "hibernate_config.start_time", "hibernate_config.end_time", "hibernate_config.weekdays.monday", "hibernate_config.weekdays.tuesday", "hibernate_config.weekdays.wednesday", "hibernate_config.weekdays.thursday", "hibernate_config.weekdays.friday", "hibernate_config.weekdays.saturday", "hibernate_config.weekdays.sunday", "hibernate_config.report_interval"]
         },
         {
             "id": "hibernate_config.weekdays.tuesday",
@@ -778,7 +778,7 @@
             "bacnet_type": "binary_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": ["hibernate_config.enable", "hibernate_config.lora_uplink_enable", "hibernate_config.start_time", "hibernate_config.end_time", "hibernate_config.weekdays.monday", "hibernate_config.weekdays.tuesday", "hibernate_config.weekdays.wednesday", "hibernate_config.weekdays.thursday", "hibernate_config.weekdays.friday", "hibernate_config.weekdays.saturday", "hibernate_config.weekdays.sunday"]
+            "reference": ["hibernate_config.enable", "hibernate_config.lora_uplink_enable", "hibernate_config.start_time", "hibernate_config.end_time", "hibernate_config.weekdays.monday", "hibernate_config.weekdays.tuesday", "hibernate_config.weekdays.wednesday", "hibernate_config.weekdays.thursday", "hibernate_config.weekdays.friday", "hibernate_config.weekdays.saturday", "hibernate_config.weekdays.sunday", "hibernate_config.report_interval"]
         },
         {
             "id": "hibernate_config.weekdays.wednesday",
@@ -795,7 +795,7 @@
             "bacnet_type": "binary_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": ["hibernate_config.enable", "hibernate_config.lora_uplink_enable", "hibernate_config.start_time", "hibernate_config.end_time", "hibernate_config.weekdays.monday", "hibernate_config.weekdays.tuesday", "hibernate_config.weekdays.wednesday", "hibernate_config.weekdays.thursday", "hibernate_config.weekdays.friday", "hibernate_config.weekdays.saturday", "hibernate_config.weekdays.sunday"]
+            "reference": ["hibernate_config.enable", "hibernate_config.lora_uplink_enable", "hibernate_config.start_time", "hibernate_config.end_time", "hibernate_config.weekdays.monday", "hibernate_config.weekdays.tuesday", "hibernate_config.weekdays.wednesday", "hibernate_config.weekdays.thursday", "hibernate_config.weekdays.friday", "hibernate_config.weekdays.saturday", "hibernate_config.weekdays.sunday", "hibernate_config.report_interval"]
         },
         {
             "id": "hibernate_config.weekdays.thursday",
@@ -812,7 +812,7 @@
             "bacnet_type": "binary_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": ["hibernate_config.enable", "hibernate_config.lora_uplink_enable", "hibernate_config.start_time", "hibernate_config.end_time", "hibernate_config.weekdays.monday", "hibernate_config.weekdays.tuesday", "hibernate_config.weekdays.wednesday", "hibernate_config.weekdays.thursday", "hibernate_config.weekdays.friday", "hibernate_config.weekdays.saturday", "hibernate_config.weekdays.sunday"]
+            "reference": ["hibernate_config.enable", "hibernate_config.lora_uplink_enable", "hibernate_config.start_time", "hibernate_config.end_time", "hibernate_config.weekdays.monday", "hibernate_config.weekdays.tuesday", "hibernate_config.weekdays.wednesday", "hibernate_config.weekdays.thursday", "hibernate_config.weekdays.friday", "hibernate_config.weekdays.saturday", "hibernate_config.weekdays.sunday", "hibernate_config.report_interval"]
         },
         {
             "id": "hibernate_config.weekdays.friday",
@@ -829,7 +829,7 @@
             "bacnet_type": "binary_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": ["hibernate_config.enable", "hibernate_config.lora_uplink_enable", "hibernate_config.start_time", "hibernate_config.end_time", "hibernate_config.weekdays.monday", "hibernate_config.weekdays.tuesday", "hibernate_config.weekdays.wednesday", "hibernate_config.weekdays.thursday", "hibernate_config.weekdays.friday", "hibernate_config.weekdays.saturday", "hibernate_config.weekdays.sunday"]
+            "reference": ["hibernate_config.enable", "hibernate_config.lora_uplink_enable", "hibernate_config.start_time", "hibernate_config.end_time", "hibernate_config.weekdays.monday", "hibernate_config.weekdays.tuesday", "hibernate_config.weekdays.wednesday", "hibernate_config.weekdays.thursday", "hibernate_config.weekdays.friday", "hibernate_config.weekdays.saturday", "hibernate_config.weekdays.sunday", "hibernate_config.report_interval"]
         },
         {
             "id": "hibernate_config.weekdays.saturday",
@@ -846,7 +846,7 @@
             "bacnet_type": "binary_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": ["hibernate_config.enable", "hibernate_config.lora_uplink_enable", "hibernate_config.start_time", "hibernate_config.end_time", "hibernate_config.weekdays.monday", "hibernate_config.weekdays.tuesday", "hibernate_config.weekdays.wednesday", "hibernate_config.weekdays.thursday", "hibernate_config.weekdays.friday", "hibernate_config.weekdays.saturday", "hibernate_config.weekdays.sunday"]
+            "reference": ["hibernate_config.enable", "hibernate_config.lora_uplink_enable", "hibernate_config.start_time", "hibernate_config.end_time", "hibernate_config.weekdays.monday", "hibernate_config.weekdays.tuesday", "hibernate_config.weekdays.wednesday", "hibernate_config.weekdays.thursday", "hibernate_config.weekdays.friday", "hibernate_config.weekdays.saturday", "hibernate_config.weekdays.sunday", "hibernate_config.report_interval"]
         },
         {
             "id": "hibernate_config.weekdays.sunday",
@@ -863,7 +863,20 @@
             "bacnet_type": "binary_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": ["hibernate_config.enable", "hibernate_config.lora_uplink_enable", "hibernate_config.start_time", "hibernate_config.end_time", "hibernate_config.weekdays.monday", "hibernate_config.weekdays.tuesday", "hibernate_config.weekdays.wednesday", "hibernate_config.weekdays.thursday", "hibernate_config.weekdays.friday", "hibernate_config.weekdays.saturday", "hibernate_config.weekdays.sunday"]
+            "reference": ["hibernate_config.enable", "hibernate_config.lora_uplink_enable", "hibernate_config.start_time", "hibernate_config.end_time", "hibernate_config.weekdays.monday", "hibernate_config.weekdays.tuesday", "hibernate_config.weekdays.wednesday", "hibernate_config.weekdays.thursday", "hibernate_config.weekdays.friday", "hibernate_config.weekdays.saturday", "hibernate_config.weekdays.sunday", "hibernate_config.report_interval"]
+        },
+        {
+            "id": "hibernate_config.report_interval",
+            "name": "Hibernate Config (Report Interval)",
+            "value": "",
+            "unit": "min",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "UINT16",
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 72,
+            "bacnet_unit_type": "UNITS_MINUTES",
+            "reference": ["hibernate_config.enable", "hibernate_config.lora_uplink_enable", "hibernate_config.start_time", "hibernate_config.end_time", "hibernate_config.weekdays.monday", "hibernate_config.weekdays.tuesday", "hibernate_config.weekdays.wednesday", "hibernate_config.weekdays.thursday", "hibernate_config.weekdays.friday", "hibernate_config.weekdays.saturday", "hibernate_config.weekdays.sunday", "hibernate_config.report_interval"]
         },
         {
             "id": "reset_battery",

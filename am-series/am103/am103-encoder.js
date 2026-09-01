@@ -579,7 +579,8 @@ function setAltitudeCalibrationSettings(altitude_calibration_settings) {
  * @param {number} hibernate_config.weekdays.friday values: (0: disable, 1: enable)
  * @param {number} hibernate_config.weekdays.saturday values: (0: disable, 1: enable)
  * @param {number} hibernate_config.weekdays.sunday values: (0: disable, 1: enable)
- * @example { "hibernate_config": { "enable": 1, "start_time": 240, "end_time": 270, "weekdays": { "monday": 1, "tuesday": 1, "wednesday": 1, "thursday": 1, "friday": 1, "saturday": 1, "sunday": 1 } } }
+ * @param {number} hibernate_config.report_interval unit: minute, range: [1, 1440] (report interval during hibernate time period)
+ * @example { "hibernate_config": { "enable": 1, "start_time": 240, "end_time": 270, "weekdays": { "monday": 1, "tuesday": 1, "wednesday": 1, "thursday": 1, "friday": 1, "saturday": 1, "sunday": 1 }, "report_interval": 60 } }
  */
 function setHibernateConfig(hibernate_config) {
     var enable = hibernate_config.enable;
@@ -587,6 +588,7 @@ function setHibernateConfig(hibernate_config) {
     var start_time = hibernate_config.start_time;
     var end_time = hibernate_config.end_time;
     var weekdays = hibernate_config.weekdays;
+    var report_interval = hibernate_config.report_interval;
 
     var enable_map = { 0: "disable", 1: "enable" };
     var enable_values = getValues(enable_map);
@@ -595,6 +597,9 @@ function setHibernateConfig(hibernate_config) {
     }
     if (enable_values.indexOf(lora_uplink_enable) === -1) {
         throw new Error("hibernate_config.lora_uplink_enable must be one of " + enable_values.join(", "));
+    }
+    if (report_interval < 1 || report_interval > 1440) {
+        throw new Error("hibernate_config.report_interval must be between 1 and 1440");
     }
 
     var day = 0;
@@ -608,7 +613,7 @@ function setHibernateConfig(hibernate_config) {
         }
     }
 
-    var buffer = new Buffer(9);
+    var buffer = new Buffer(11);
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0x75);
     buffer.writeUInt8(getValue(enable_map, enable));
@@ -616,6 +621,7 @@ function setHibernateConfig(hibernate_config) {
     buffer.writeUInt16LE(start_time);
     buffer.writeUInt16LE(end_time);
     buffer.writeUInt8(day);
+    buffer.writeUInt16LE(report_interval);
     return buffer.toBytes();
 }
 

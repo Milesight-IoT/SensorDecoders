@@ -262,7 +262,8 @@ function handle_downlink_response(channel_type, bytes, offset) {
             for (var key in weekday_bit_offset) {
                 decoded.hibernate_config.weekdays[key] = readEnableStatus((data >> weekday_bit_offset[key]) & 0x01);
             }
-            offset += 7;
+            decoded.hibernate_config.report_interval = readUInt16LE(bytes.slice(offset + 7, offset + 9));
+            offset += 9;
             break;
         case 0x85:
             decoded.screen_display_time_enable = readEnableStatus(bytes[offset]);
