@@ -681,7 +681,7 @@ function milesightDeviceDecode(bytes) {
 
 	if (Object.keys(history).length > 0) {
 		result.history = history;
-	} else {        
+	} else {
 		for (var k2 in decoded) {
 			if (decoded.hasOwnProperty(k2)) {
 				result[k2] = decoded[k2];
@@ -856,14 +856,14 @@ function extractBits(byte, startBit, endBit) {
 	if (startBit >= endBit) {
 	  throw new Error("invalid bit range");
 	}
-  
+
 	var width = endBit - startBit;
 	var mask = (1 << width) - 1;
 	return (byte >>> startBit) & mask;
 }
 
 function pickArrayItem(array, index, idName) {
-	for (var i = 0; i < array.length; i++) { 
+	for (var i = 0; i < array.length; i++) {
 		if (array[i][idName] === index) {
 			return array[i];
 		}
@@ -873,7 +873,7 @@ function pickArrayItem(array, index, idName) {
 }
 
 function insertArrayItem(array, item, idName) {
-	for (var i = 0; i < array.length; i++) { 
+	for (var i = 0; i < array.length; i++) {
 		if (array[i][idName] === item[idName]) {
 			array[i] = item;
 			return;
@@ -931,46 +931,46 @@ function readCommand(allBytes, counterObj, end) {
 function hasPath(obj, path) {
 	var parts = path.split('.');
 	var current = obj;
-  
+
 	for (var i = 0; i < parts.length; i++) {
 	  	if (!current || !(parts[i] in current)) {
 			return false;
 	  	}
 	  	current = current[parts[i]];
 	}
-  
+
 	return true;
 }
 
 function getPath(obj, path) {
 	var parts = path.split('.');
 	var current = obj;
-  
+
 	for (var i = 0; i < parts.length; i++) {
 	  	var key = parts[i];
-  
+
 	  	if (!current || !(key in current)) {
 			return null;
 	  	}
-  
+
 	  	current = current[key];
 	}
-  
+
 	return current;
 }
-  
+
 
 function setPath(obj, path, value) {
 	var parts = path.split('.');
 	var current = obj;
-  
+
 	for (var i = 0; i < parts.length - 1; i++) {
 	  	var key = parts[i];
-  
+
 	  	if (!(key in current) || typeof current[key] !== 'object') {
 			current[key] = {};
 	  	}
-  
+
 	  	current = current[key];
 	}
 
@@ -1001,7 +1001,7 @@ function getAllLeafPaths(obj, prefix) {
 		  var newPath = path ? (path + "." + index) : String(index);
 		  recurse(item, newPath);
 		});
-  
+
 	  } else if (typeof current === 'object' && current !== null) {
 		for (var key in current) {
 		  if (Object.prototype.hasOwnProperty.call(current, key)) {
@@ -1009,15 +1009,15 @@ function getAllLeafPaths(obj, prefix) {
 			recurse(current[key], newPath);
 		  }
 		}
-  
+
 	  } else {
 		paths.push(path);
 	  }
 	}
-  
+
 	recurse(obj, "");
 	return paths;
-  
+
 }
 
 function isInteger(str) {
@@ -1273,7 +1273,7 @@ function processTemperature(decoded) {
 				setPath(decoded, fahrenheitProperty,  Number((getPath(decoded, propertyId) * 1.8 + 32).toFixed(allTemperatureProperties[newPropertyId].precision)));
 				setPath(decoded, celsiusProperty,  Number(getPath(decoded, propertyId).toFixed(allTemperatureProperties[newPropertyId].precision)));
 			}
-		}	
-	}	
+		}
+	}
 	return decoded;
 }

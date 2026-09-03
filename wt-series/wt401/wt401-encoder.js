@@ -56,7 +56,7 @@ function milesightDeviceEncode(payload) {
 			var req_command = reqList[idx];
 			var pureNumber = [];
 			var formateStrParts = [];
-		
+
 			req_command.split('.').forEach(function(part) {
 				if (/^[0-9]+$/.test(part)) {
 					// padStart ES5 兼容
@@ -68,17 +68,17 @@ function milesightDeviceEncode(payload) {
 					formateStrParts.push(part);
 				}
 			});
-		
+
 			var formateStr = formateStrParts.join('.');
 			var hexString = cmdMap()[formateStr];
-		
+
 			if (hexString && hexString.indexOf('xx') !== -1) {
 				var i = 0;
 				hexString = hexString.replace(/xx/g, function() {
 					return pureNumber[i++];
 				});
 			}
-		
+
 			if (hexString) {
 				var length = hexString.length / 2;
 				buffer.writeUInt8(0xef);
@@ -1477,46 +1477,46 @@ function isValid(value) {
 function hasPath(obj, path) {
 	var parts = path.split('.');
 	var current = obj;
-  
+
 	for (var i = 0; i < parts.length; i++) {
 	  	if (!current || !(parts[i] in current)) {
 			return false;
 	  	}
 	  	current = current[parts[i]];
 	}
-  
+
 	return true;
 }
 
 function getPath(obj, path) {
 	var parts = path.split('.');
 	var current = obj;
-  
+
 	for (var i = 0; i < parts.length; i++) {
 	  	var key = parts[i];
-  
+
 	  	if (!current || !(key in current)) {
 			return null;
 	  	}
-  
+
 	  	current = current[key];
 	}
-  
+
 	return current;
 }
-  
+
 
 function setPath(obj, path, value) {
 	var parts = path.split('.');
 	var current = obj;
-  
+
 	for (var i = 0; i < parts.length - 1; i++) {
 	  	var key = parts[i];
-  
+
 	  	if (!(key in current) || typeof current[key] !== 'object') {
 			current[key] = {};
 	  	}
-  
+
 	  	current = current[key];
 	}
 
@@ -1547,7 +1547,7 @@ function getAllLeafPaths(obj, prefix) {
           var newPath = path ? (path + "." + index) : String(index);
           recurse(item, newPath);
         });
-  
+
       } else if (typeof current === 'object' && current !== null) {
         for (var key in current) {
           if (Object.prototype.hasOwnProperty.call(current, key)) {
@@ -1555,14 +1555,14 @@ function getAllLeafPaths(obj, prefix) {
             recurse(current[key], newPath);
           }
         }
-  
+
       } else {
         paths.push(path);
       }
     }
-  
+
     recurse(obj, "");
-    return paths;  
+    return paths;
 }
 
 function isInteger(str) {
@@ -1793,10 +1793,10 @@ function processTemperature(payload) {
         "coefficient": 0.01
     }
 };
-    var leafPaths = getAllLeafPaths(payload);    
+    var leafPaths = getAllLeafPaths(payload);
 	for (var i = 0; i < leafPaths.length; i++) {
         var propertyId = leafPaths[i];
-        var propertyParts = propertyId.split('.');        
+        var propertyParts = propertyId.split('.');
         var newPropertyParts = []
         for (var j = 0; j < propertyParts.length; j++) {
             var part = propertyParts[j];
@@ -1811,14 +1811,14 @@ function processTemperature(payload) {
         newPropertyId = recoverName(newPropertyId, 'celsius');
         propertyId = recoverName(propertyId, 'fahrenheit');
         propertyId = recoverName(propertyId, 'celsius');
-        if (allTemperatureProperties[newPropertyId]) {            
+        if (allTemperatureProperties[newPropertyId]) {
             var fahrenheitProperty = convertName(propertyId, 'fahrenheit');
             var celsiusProperty = convertName(propertyId, 'celsius');
             var stringCoefficient = String(allTemperatureProperties[newPropertyId].coefficient);
             var dotIndex = stringCoefficient.indexOf('.');
             var precision = dotIndex != -1 ? stringCoefficient.length - dotIndex - 1 : 0;
             if (!hasPath(payload, propertyId)) {
-                if (hasPath(payload, fahrenheitProperty) && hasPath(payload, celsiusProperty)) { 
+                if (hasPath(payload, fahrenheitProperty) && hasPath(payload, celsiusProperty)) {
                     throw new Error(fahrenheitProperty + ' and ' + celsiusProperty + ' cannot be in payload at the same time');
                 }
                 if (hasPath(payload, fahrenheitProperty)) {
@@ -1828,6 +1828,6 @@ function processTemperature(payload) {
                 }
             }
         }
-	}	
+	}
 	return payload;
 }
