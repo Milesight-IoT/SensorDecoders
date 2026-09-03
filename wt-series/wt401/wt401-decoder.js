@@ -35,12 +35,9 @@ function milesightDeviceDecode(bytes) {
 	for (counterObj.i = 0; counterObj.i < bytes.length; ) {
 		var command_id = bytes[counterObj.i++];
 		switch (command_id) {
-			case 0xff:
-				decoded.check_sequence_number_reply = decoded.check_sequence_number_reply || {};
-				decoded.check_sequence_number_reply.sequence_number = readUInt8(bytes, counterObj, 1);
-				break;
 			case 0xfe:
-				decoded.check_order_reply = readOnlyCommand(bytes, counterObj, 1);
+				decoded.check_order_reply = decoded.check_order_reply || {};
+				decoded.check_order_reply.order = readUInt8(bytes, counterObj, 1);
 				break;
 			case 0xef:
 				decoded.ans = decoded.ans || [];
@@ -63,6 +60,10 @@ function milesightDeviceDecode(bytes) {
 					decoded.lorawan_configuration_settings.mode = readUInt8(bytes, counterObj, 1);
 				}
 				break;
+			case 0xc9:
+				// 0：disable, 1：enable
+				decoded.random_key = readUInt8(bytes, counterObj, 1);
+				break;
 			case 0xdf:
 				decoded.tsl_version = readProtocolVersion(readBytes(bytes, counterObj, 2));
 				break;
@@ -83,13 +84,92 @@ function milesightDeviceDecode(bytes) {
 			case 0xd9:
 				decoded.oem_id = readHexString(bytes, counterObj, 2);
 				break;
+			case 0xc8:
+				// 0：Off, 1：On
+				decoded.device_status = readUInt8(bytes, counterObj, 1);
+				break;
 			case 0xd8:
 				decoded.product_frequency_band = readString(bytes, counterObj, 16);
 				break;
-			case 0xd5:
-				decoded.ble_phone_name = decoded.ble_phone_name || {};
-				decoded.ble_phone_name.length = readUInt8(bytes, counterObj, 1);
-				decoded.ble_phone_name.value = readString(bytes, counterObj, decoded.ble_phone_name.length);
+			case 0xb9:
+				decoded.device_time = decoded.device_time || {};
+				decoded.device_time.current_time = readUInt32LE(bytes, counterObj, 4);
+				decoded.device_time.running_time = readUInt32LE(bytes, counterObj, 4);
+				decoded.device_time.power_on_time = readUInt32LE(bytes, counterObj, 4);
+				break;
+			case 0xb8:
+				decoded.battery_info = decoded.battery_info || {};
+				decoded.battery_info.battery_capacity = readUInt32LE(bytes, counterObj, 4) / 1000;
+				decoded.battery_info.battery_consumption = readUInt32LE(bytes, counterObj, 4) / 1000;
+				decoded.battery_info.battery_left = readUInt32LE(bytes, counterObj, 4) / 1000;
+				decoded.battery_info.battery_voltage = readUInt16LE(bytes, counterObj, 2) / 1000;
+				decoded.battery_info.current_battery_status = readHexString(bytes, counterObj, 2);
+				break;
+			case 0xcd:
+				decoded.ble_configuration_settings = decoded.ble_configuration_settings || {};
+				var ble_configuration_settings_command = readUInt8(bytes, counterObj, 1);
+				if (ble_configuration_settings_command == 0x00) {
+					// 0：disable, 1：enable
+					decoded.ble_configuration_settings.enable = readUInt8(bytes, counterObj, 1);
+				}
+				if (ble_configuration_settings_command == 0x01) {
+					decoded.ble_configuration_settings.local_id = decoded.ble_configuration_settings.local_id || {};
+					// 0：public, 1：private
+					decoded.ble_configuration_settings.local_id.type = readUInt8(bytes, counterObj, 1);
+					decoded.ble_configuration_settings.local_id.address = readHexString(bytes, counterObj, 6);
+				}
+				if (ble_configuration_settings_command == 0x05) {
+					decoded.ble_configuration_settings.local_name_first = readString(bytes, counterObj, 8);
+				}
+				if (ble_configuration_settings_command == 0x06) {
+					decoded.ble_configuration_settings.local_name_last = readString(bytes, counterObj, 5);
+				}
+				if (ble_configuration_settings_command == 0x07) {
+					decoded.ble_configuration_settings.pair_info = decoded.ble_configuration_settings.pair_info || {};
+					// 0：public, 1：private
+					decoded.ble_configuration_settings.pair_info.type = readUInt8(bytes, counterObj, 1);
+					decoded.ble_configuration_settings.pair_info.addr = readHexString(bytes, counterObj, 6);
+					decoded.ble_configuration_settings.pair_info.mac = readHexString(bytes, counterObj, 8);
+					decoded.ble_configuration_settings.pair_info.name_length = readUInt8(bytes, counterObj, 1);
+					decoded.ble_configuration_settings.pair_info.name = readString(bytes, counterObj, decoded.ble_configuration_settings.pair_info.name_length);
+				}
+				if (ble_configuration_settings_command == 0x04) {
+					decoded.ble_configuration_settings.pair_name = decoded.ble_configuration_settings.pair_name || [];
+					var channel = readUInt8(bytes, counterObj, 1);
+					var pair_name_item = pickArrayItem(decoded.ble_configuration_settings.pair_name, channel, 'channel');
+					pair_name_item.channel = channel;
+					insertArrayItem(decoded.ble_configuration_settings.pair_name, pair_name_item, 'channel');
+					pair_name_item.length = readUInt8(bytes, counterObj, 1);
+					pair_name_item.content = readString(bytes, counterObj, pair_name_item.length);
+				}
+				if (ble_configuration_settings_command == 0x02) {
+					decoded.ble_configuration_settings.pair_mac = decoded.ble_configuration_settings.pair_mac || [];
+					var channel = readUInt8(bytes, counterObj, 1);
+					var pair_mac_item = pickArrayItem(decoded.ble_configuration_settings.pair_mac, channel, 'channel');
+					pair_mac_item.channel = channel;
+					insertArrayItem(decoded.ble_configuration_settings.pair_mac, pair_mac_item, 'channel');
+					pair_mac_item.mac = readHexString(bytes, counterObj, 8);
+				}
+				if (ble_configuration_settings_command == 0x03) {
+					decoded.ble_configuration_settings.pair_addr = decoded.ble_configuration_settings.pair_addr || [];
+					var channel = readUInt8(bytes, counterObj, 1);
+					var pair_addr_item = pickArrayItem(decoded.ble_configuration_settings.pair_addr, channel, 'channel');
+					pair_addr_item.channel = channel;
+					insertArrayItem(decoded.ble_configuration_settings.pair_addr, pair_addr_item, 'channel');
+					// 0：public, 1：private
+					pair_addr_item.type = readUInt8(bytes, counterObj, 1);
+					pair_addr_item.mac = readHexString(bytes, counterObj, 6);
+				}
+				break;
+			case 0xba:
+				decoded.ble_new_event = decoded.ble_new_event || [];
+				var index = readUInt8(bytes, counterObj, 1);
+				var ble_new_event_item = pickArrayItem(decoded.ble_new_event, index, 'index');
+				ble_new_event_item.index = index;
+				insertArrayItem(decoded.ble_new_event, ble_new_event_item, 'index');
+				// 0: Not paired, 1: Paired, 2: Disconnected
+				ble_new_event_item.status = readUInt8(bytes, counterObj, 1);
+				ble_new_event_item.mac = readHexString(bytes, counterObj, 8);
 				break;
 			case 0x00:
 				decoded.battery = readUInt8(bytes, counterObj, 1);
@@ -125,18 +205,57 @@ function milesightDeviceDecode(bytes) {
 			case 0x0b:
 				decoded.temperature_alarm = decoded.temperature_alarm || {};
 				decoded.temperature_alarm.type = readUInt8(bytes, counterObj, 1);
+				if (decoded.temperature_alarm.type == 0x00) {
+					decoded.temperature_alarm.collection_error = decoded.temperature_alarm.collection_error || {};
+				}
+				if (decoded.temperature_alarm.type == 0x01) {
+					decoded.temperature_alarm.lower_range_error = decoded.temperature_alarm.lower_range_error || {};
+				}
+				if (decoded.temperature_alarm.type == 0x02) {
+					decoded.temperature_alarm.over_range_error = decoded.temperature_alarm.over_range_error || {};
+				}
+				if (decoded.temperature_alarm.type == 0x03) {
+					decoded.temperature_alarm.no_data = decoded.temperature_alarm.no_data || {};
+				}
 				break;
 			case 0x0c:
 				decoded.humidity_alarm = decoded.humidity_alarm || {};
 				decoded.humidity_alarm.type = readUInt8(bytes, counterObj, 1);
+				if (decoded.humidity_alarm.type == 0x00) {
+					decoded.humidity_alarm.collection_error = decoded.humidity_alarm.collection_error || {};
+				}
+				if (decoded.humidity_alarm.type == 0x01) {
+					decoded.humidity_alarm.lower_range_error = decoded.humidity_alarm.lower_range_error || {};
+				}
+				if (decoded.humidity_alarm.type == 0x02) {
+					decoded.humidity_alarm.over_range_error = decoded.humidity_alarm.over_range_error || {};
+				}
+				if (decoded.humidity_alarm.type == 0x03) {
+					decoded.humidity_alarm.no_data = decoded.humidity_alarm.no_data || {};
+				}
 				break;
 			case 0x09:
 				decoded.ble_event = decoded.ble_event || {};
 				decoded.ble_event.type = readUInt8(bytes, counterObj, 1);
+				if (decoded.ble_event.type == 0x00) {
+					decoded.ble_event.none = decoded.ble_event.none || {};
+				}
+				if (decoded.ble_event.type == 0x01) {
+					decoded.ble_event.pair_cancel = decoded.ble_event.pair_cancel || {};
+				}
+				if (decoded.ble_event.type == 0x02) {
+					decoded.ble_event.disconnect = decoded.ble_event.disconnect || {};
+				}
 				break;
 			case 0x0a:
 				decoded.power_bus_event = decoded.power_bus_event || {};
 				decoded.power_bus_event.type = readUInt8(bytes, counterObj, 1);
+				if (decoded.power_bus_event.type == 0x00) {
+					decoded.power_bus_event.none = decoded.power_bus_event.none || {};
+				}
+				if (decoded.power_bus_event.type == 0x01) {
+					decoded.power_bus_event.disconnect = decoded.power_bus_event.disconnect || {};
+				}
 				break;
 			case 0x0d:
 				decoded.key_event = decoded.key_event || {};
@@ -154,16 +273,8 @@ function milesightDeviceDecode(bytes) {
 			case 0x0f:
 				decoded.battery_event = decoded.battery_event || {};
 				decoded.battery_event.type = readUInt8(bytes, counterObj, 1);
-				break;
-			case 0x60:
-				decoded.collection_interval = decoded.collection_interval || {};
-				// 0：second, 1：min
-				decoded.collection_interval.unit = readUInt8(bytes, counterObj, 1);
-				if (decoded.collection_interval.unit == 0x00) {
-					decoded.collection_interval.seconds_of_time = readUInt16LE(bytes, counterObj, 2);
-				}
-				if (decoded.collection_interval.unit == 0x01) {
-					decoded.collection_interval.minutes_of_time = readUInt16LE(bytes, counterObj, 2);
+				if (decoded.battery_event.type == 0x00) {
+					decoded.battery_event.recover = decoded.battery_event.recover || {};
 				}
 				break;
 			case 0x8d:
@@ -172,7 +283,7 @@ function milesightDeviceDecode(bytes) {
 				break;
 			case 0x61:
 				decoded.reporting_interval = decoded.reporting_interval || {};
-				// 0：BLE, 1：LORA, 2：BLE+LORA, 3：POWERBUS+lora
+				// 0：BLE, 1：LoRa, 2：BLE+LoRa, 3：PowerBus+LoRa
 				var reporting_interval_type = readUInt8(bytes, counterObj, 1);
 				if (reporting_interval_type == 0x00) {
 					decoded.reporting_interval.ble = decoded.reporting_interval.ble || {};
@@ -268,16 +379,23 @@ function milesightDeviceDecode(bytes) {
 					}
 				}
 				break;
-			case 0xc8:
-				// 0：Power Off, 1：Power On
-				decoded.device_status = readUInt8(bytes, counterObj, 1);
+			case 0x60:
+				decoded.collection_interval = decoded.collection_interval || {};
+				// 0：second, 1：min
+				decoded.collection_interval.unit = readUInt8(bytes, counterObj, 1);
+				if (decoded.collection_interval.unit == 0x00) {
+					decoded.collection_interval.seconds_of_time = readUInt16LE(bytes, counterObj, 2);
+				}
+				if (decoded.collection_interval.unit == 0x01) {
+					decoded.collection_interval.minutes_of_time = readUInt16LE(bytes, counterObj, 2);
+				}
 				break;
 			case 0x63:
 				// 0：℃, 1：℉
 				decoded.temperature_unit = readUInt8(bytes, counterObj, 1);
 				break;
 			case 0x7d:
-				// 0:Embedded Data, 1:External Receive
+				// 0:Embedded Data, 1:Lora Data, 2: UCController
 				decoded.data_sync_to_peer = readUInt8(bytes, counterObj, 1);
 				break;
 			case 0x7e:
@@ -305,6 +423,10 @@ function milesightDeviceDecode(bytes) {
 				decoded.mode_enable.cool = extractBits(bitOptions, 2, 3);
 				// 0：disable, 1：enable
 				decoded.mode_enable.auto = extractBits(bitOptions, 3, 4);
+				// 0：disable, 1：enable
+				decoded.mode_enable.dehumidity = extractBits(bitOptions, 4, 5);
+				// 0：disable, 1：enable
+				decoded.mode_enable.ventilation = extractBits(bitOptions, 5, 6);
 				decoded.mode_enable.reserved = extractBits(bitOptions, 6, 8);
 				break;
 			case 0x88:
@@ -365,6 +487,12 @@ function milesightDeviceDecode(bytes) {
 				if (target_temperature_settings_temperature_control_mode == 0x05) {
 					decoded.target_temperature_settings.auto_cool = readInt16LE(bytes, counterObj, 2) / 100;
 				}
+				if (target_temperature_settings_temperature_control_mode == 0x06) {
+					decoded.target_temperature_settings.dehumidify = readInt16LE(bytes, counterObj, 2) / 100;
+				}
+				if (target_temperature_settings_temperature_control_mode == 0x07) {
+					decoded.target_temperature_settings.ventilation = readInt16LE(bytes, counterObj, 2) / 100;
+				}
 				break;
 			case 0x6a:
 				decoded.minimum_dead_zone = readUInt16LE(bytes, counterObj, 2) / 100;
@@ -393,6 +521,16 @@ function milesightDeviceDecode(bytes) {
 					decoded.target_temperature_range.auto.min = readInt16LE(bytes, counterObj, 2) / 100;
 					decoded.target_temperature_range.auto.max = readInt16LE(bytes, counterObj, 2) / 100;
 				}
+				if (target_temperature_range_id == 0x04) {
+					decoded.target_temperature_range.dehumidify = decoded.target_temperature_range.dehumidify || {};
+					decoded.target_temperature_range.dehumidify.min = readInt16LE(bytes, counterObj, 2) / 100;
+					decoded.target_temperature_range.dehumidify.max = readInt16LE(bytes, counterObj, 2) / 100;
+				}
+				if (target_temperature_range_id == 0x05) {
+					decoded.target_temperature_range.ventilation = decoded.target_temperature_range.ventilation || {};
+					decoded.target_temperature_range.ventilation.min = readInt16LE(bytes, counterObj, 2) / 100;
+					decoded.target_temperature_range.ventilation.max = readInt16LE(bytes, counterObj, 2) / 100;
+				}
 				break;
 			case 0x74:
 				// 0：auto, 1：circulate, 2：on, 3：low, 4：medium, 5：high
@@ -418,36 +556,12 @@ function milesightDeviceDecode(bytes) {
 					decoded.pir_common.check.rate = readUInt8(bytes, counterObj, 1);
 				}
 				break;
-			case 0x83:
-				decoded.pir_energy = decoded.pir_energy || {};
-				var pir_energy_cmd = readUInt8(bytes, counterObj, 1);
-				if (pir_energy_cmd == 0x01) {
-					// 0:disable, 1:enable
-					decoded.pir_energy.enable = readUInt8(bytes, counterObj, 1);
-				}
-				if (pir_energy_cmd == 0x02) {
-					decoded.pir_energy.plan = decoded.pir_energy.plan || {};
-					// 0:plan0, 1:plan1, 2:plan2, 3:plan3, 4:plan4, 5:plan5, 6:plan6, 7:plan7, 255:Not executed
-					decoded.pir_energy.plan.occupied = readUInt8(bytes, counterObj, 1);
-					// 0:plan0, 1:plan1, 2:plan2, 3:plan3, 4:plan4, 5:plan5, 6:plan6, 7:plan7, 255:Not executed
-					decoded.pir_energy.plan.unoccupied = readUInt8(bytes, counterObj, 1);
-				}
-				break;
 			case 0x84:
 				decoded.pir_night = decoded.pir_night || {};
 				var pir_night_cmd = readUInt8(bytes, counterObj, 1);
 				if (pir_night_cmd == 0x01) {
 					// 0:disable, 1:enable
 					decoded.pir_night.enable = readUInt8(bytes, counterObj, 1);
-				}
-				if (pir_night_cmd == 0x04) {
-					decoded.pir_night.night_time = decoded.pir_night.night_time || {};
-					decoded.pir_night.night_time.start = readUInt16LE(bytes, counterObj, 2);
-					decoded.pir_night.night_time.stop = readUInt16LE(bytes, counterObj, 2);
-				}
-				if (pir_night_cmd == 0x05) {
-					// 0:plan0, 1:plan1, 2:plan2, 3:plan3, 4:plan4, 5:plan5, 6:plan6, 7:plan7, 255:Not executed
-					decoded.pir_night.occupied = readUInt8(bytes, counterObj, 1);
 				}
 				if (pir_night_cmd == 0x02) {
 					// 0:Immediate Trigger, 1:Rule Trigger
@@ -458,6 +572,38 @@ function milesightDeviceDecode(bytes) {
 					decoded.pir_night.check.period = readUInt8(bytes, counterObj, 1);
 					decoded.pir_night.check.rate = readUInt8(bytes, counterObj, 1);
 				}
+				if (pir_night_cmd == 0x04) {
+					decoded.pir_night.night_time = decoded.pir_night.night_time || {};
+					decoded.pir_night.night_time.start = readUInt16LE(bytes, counterObj, 2);
+					decoded.pir_night.night_time.stop = readUInt16LE(bytes, counterObj, 2);
+				}
+				if (pir_night_cmd == 0x05) {
+					// 0:plan0, 1:plan1, 2:plan2, 3:plan3, 4:plan4, 5:plan5, 6:plan6, 7:plan7, 8:plan8, 9:plan9, 10:plan10, 11:plan11, 12:plan12, 13:plan13, 14:plan14, 15:plan15, 255:Not executed
+					decoded.pir_night.occupied = readUInt8(bytes, counterObj, 1);
+				}
+				break;
+			case 0x83:
+				decoded.pir_energy = decoded.pir_energy || {};
+				var pir_energy_cmd = readUInt8(bytes, counterObj, 1);
+				if (pir_energy_cmd == 0x01) {
+					// 0:disable, 1:enable
+					decoded.pir_energy.enable = readUInt8(bytes, counterObj, 1);
+				}
+				if (pir_energy_cmd == 0x02) {
+					decoded.pir_energy.plan = decoded.pir_energy.plan || {};
+					// 0:plan0, 1:plan1, 2:plan2, 3:plan3, 4:plan4, 5:plan5, 6:plan6, 7:plan7, 8:plan8, 9:plan9, 10:plan10, 11:plan11, 12:plan12, 13:plan13, 14:plan14, 15:plan15, 255:Not executed
+					decoded.pir_energy.plan.occupied = readUInt8(bytes, counterObj, 1);
+					// 0:plan0, 1:plan1, 2:plan2, 3:plan3, 4:plan4, 5:plan5, 6:plan6, 7:plan7, 8:plan8, 9:plan9, 10:plan10, 11:plan11, 12:plan12, 13:plan13, 14:plan14, 15:plan15, 255:Not executed
+					decoded.pir_energy.plan.unoccupied = readUInt8(bytes, counterObj, 1);
+				}
+				break;
+			case 0x62:
+				// 0：disable, 1：enable
+				decoded.intelligent_display_enable = readUInt8(bytes, counterObj, 1);
+				break;
+			case 0x89:
+				// 0:disable, 1:enable
+				decoded.backlight_enable = readUInt8(bytes, counterObj, 1);
 				break;
 			case 0x75:
 				decoded.screen_display_settings = decoded.screen_display_settings || {};
@@ -471,6 +617,14 @@ function milesightDeviceDecode(bytes) {
 				// 0:disable, 1:enable
 				decoded.screen_display_settings.target_temp = extractBits(bitOptions, 3, 4);
 				decoded.screen_display_settings.reserved = extractBits(bitOptions, 4, 8);
+				break;
+			case 0x8a:
+				// 0:disable, 1:enable
+				decoded.screen_temp_mode_enable = readUInt8(bytes, counterObj, 1);
+				break;
+			case 0x8c:
+				// 0:disable, 1:enable
+				decoded.screen_fan_mode_enable = readUInt8(bytes, counterObj, 1);
 				break;
 			case 0x71:
 				decoded.button_custom_function = decoded.button_custom_function || {};
@@ -534,10 +688,6 @@ function milesightDeviceDecode(bytes) {
 				decoded.unlock_combination_button_settings.button5 = extractBits(bitOptions, 4, 5);
 				decoded.unlock_combination_button_settings.reserved = extractBits(bitOptions, 5, 8);
 				break;
-			case 0x62:
-				// 0：disable, 1：enable
-				decoded.intelligent_display_enable = readUInt8(bytes, counterObj, 1);
-				break;
 			case 0xc7:
 				decoded.time_zone = readInt16LE(bytes, counterObj, 2);
 				break;
@@ -551,7 +701,7 @@ function milesightDeviceDecode(bytes) {
 				var bitOptions = readUInt8(bytes, counterObj, 1);
 				// 1:1st, 2: 2nd, 3: 3rd, 4: 4th, 5: last
 				decoded.daylight_saving_time.start_week_num = extractBits(bitOptions, 4, 8);
-				// 1：Mon., 2：Tues., 3：Wed., 4：Thurs., 5：Fri., 6：Sat., 7：Sun.
+				// 1：Sun., 2：Mon., 3：Tues., 4：Wed., 5：Thurs., 6：Fri., 7：Sat.,
 				decoded.daylight_saving_time.start_week_day = extractBits(bitOptions, 0, 4);
 				decoded.daylight_saving_time.start_hour_min = readUInt16LE(bytes, counterObj, 2);
 				// 1:Jan., 2:Feb., 3:Mar., 4:Apr., 5:May, 6:Jun., 7:Jul., 8:Aug., 9:Sep., 10:Oct., 11:Nov., 12:Dec.
@@ -594,7 +744,7 @@ function milesightDeviceDecode(bytes) {
 				}
 				if (schedule_settings_item_command == 0x03) {
 					schedule_settings_item.content1 = schedule_settings_item.content1 || {};
-					// 0：heat, 1：em heat, 2：cool, 3：auto, 10：off
+					// 0：heat, 1：em heat, 2：cool, 3：auto
 					schedule_settings_item.content1.tstat_mode = readUInt8(bytes, counterObj, 1);
 					schedule_settings_item.content1.heat_target_temperature = readInt16LE(bytes, counterObj, 2) / 100;
 					schedule_settings_item.content1.em_heat_target_temperature = readInt16LE(bytes, counterObj, 2) / 100;
@@ -602,21 +752,36 @@ function milesightDeviceDecode(bytes) {
 				}
 				if (schedule_settings_item_command == 0x04) {
 					schedule_settings_item.content2 = schedule_settings_item.content2 || {};
-					// 0：auto, 1：circulate, 2：on, 3：low, 4：medium, 5：high, 10：off
+					// 0：auto, 1：circulate, 2：on, 3：low, 4：medium, 5：high
 					schedule_settings_item.content2.fan_mode = readUInt8(bytes, counterObj, 1);
 					schedule_settings_item.content2.auto_target_temperature = readInt16LE(bytes, counterObj, 2) / 100;
 					schedule_settings_item.content2.auto_heat_target_temperature = readInt16LE(bytes, counterObj, 2) / 100;
 					schedule_settings_item.content2.auto_cool_target_temperature = readInt16LE(bytes, counterObj, 2) / 100;
 				}
+				if (schedule_settings_item_command == 0x05) {
+					// 0：system off, 1：system on
+					schedule_settings_item.system_on_off = readUInt8(bytes, counterObj, 1);
+				}
+				if (schedule_settings_item_command == 0x06) {
+					// 0：heat, 1：em heat, 2：cool, 3：auto, 4：dehumidify, 5：ventilation
+					schedule_settings_item.tstat_mode = readUInt8(bytes, counterObj, 1);
+				}
+				if (schedule_settings_item_command == 0x07) {
+					// 0：auto, 1：circulate, 2：on, 3：low, 4：medium, 5：high
+					schedule_settings_item.fan_mode = readUInt8(bytes, counterObj, 1);
+				}
+				if (schedule_settings_item_command == 0x08) {
+					schedule_settings_item.heat_target_temperature = readInt16LE(bytes, counterObj, 2) / 100;
+				}
+				if (schedule_settings_item_command == 0x09) {
+					schedule_settings_item.cool_target_temperature = readInt16LE(bytes, counterObj, 2) / 100;
+				}
+				if (schedule_settings_item_command == 0x0a) {
+					schedule_settings_item.auto_target_temperature = readInt16LE(bytes, counterObj, 2) / 100;
+				}
 				break;
-			case 0x59:
-				decoded.system_status_control = decoded.system_status_control || {};
-				// 0：system close, 1：system open
-				decoded.system_status_control.on_off = readUInt8(bytes, counterObj, 1);
-				// 0：heat, 1：em heat, 2：cool, 3：auto, 4：dehumidify, 5：ventilation
-				decoded.system_status_control.mode = readUInt8(bytes, counterObj, 1);
-				decoded.system_status_control.temperature1 = readInt16LE(bytes, counterObj, 2) / 100;
-				decoded.system_status_control.temperature2 = readInt16LE(bytes, counterObj, 2) / 100;
+			case 0x54:
+				decoded.reset_ble_name = readOnlyCommand(bytes, counterObj, 1);
 				break;
 			case 0x86:
 				decoded.origin_temperature = readInt16LE(bytes, counterObj, 2) / 100;
@@ -635,39 +800,18 @@ function milesightDeviceDecode(bytes) {
 				break;
 			case 0x5b:
 				decoded.filter_clean_alarm = decoded.filter_clean_alarm || {};
-				// 0：clean alarm, 1：report alarm
+				// 0：clean alarm
 				decoded.filter_clean_alarm.mode = readUInt8(bytes, counterObj, 1);
-				break;
-			case 0x57:
-				decoded.frost_protection_alarm = decoded.frost_protection_alarm || {};
-				// 0：clean alarm, 1：trigger alarm
-				decoded.frost_protection_alarm.mode = readUInt8(bytes, counterObj, 1);
-				break;
-			case 0x5a:
-				decoded.open_window_alarm = decoded.open_window_alarm || {};
-				// 0：clean alarm, 1：report alarm
-				decoded.open_window_alarm.mode = readUInt8(bytes, counterObj, 1);
-				break;
-			case 0x58:
-				decoded.not_wired_alarm = decoded.not_wired_alarm || {};
-				// 0：clean alarm, 1：trigger alarm
-				decoded.not_wired_alarm.mode = readUInt8(bytes, counterObj, 1);
 				break;
 			case 0xbe:
 				decoded.reboot = readOnlyCommand(bytes, counterObj, 0);
-				break;
-			case 0xb9:
-				decoded.query_device_status = readOnlyCommand(bytes, counterObj, 0);
-				break;
-			case 0xb8:
-				decoded.synchronize_time = readOnlyCommand(bytes, counterObj, 0);
 				break;
 			case 0xb6:
 				decoded.reconnect = readOnlyCommand(bytes, counterObj, 0);
 				break;
 			case 0x5f:
 				decoded.delete_task_plan = decoded.delete_task_plan || {};
-				// 0：Schedule1, 1：Schedule2, 2：Schedule3, 3：Schedule4, 4：Schedule5, 5：Schedule6, 6：Schedule7, 7：Schedule8, 255：Reset All
+				// 0:plan0, 1:plan1, 2:plan2, 3:plan3, 4:plan4, 5:plan5, 6:plan6, 7:plan7, 255：All
 				decoded.delete_task_plan.type = readUInt8(bytes, counterObj, 1);
 				break;
 			default:
@@ -675,13 +819,13 @@ function milesightDeviceDecode(bytes) {
 				break;
 		}
 		if (unknown_command) {
-			throw new Error('unknown command: ' + command_id);
+			throw new Error('unknown command: 0x' + command_id.toString(16));
 		}
 	}
 
 	if (Object.keys(history).length > 0) {
 		result.history = history;
-	} else {        
+	} else {
 		for (var k2 in decoded) {
 			if (decoded.hasOwnProperty(k2)) {
 				result[k2] = decoded[k2];
@@ -690,9 +834,12 @@ function milesightDeviceDecode(bytes) {
 	}
 
 	processTemperature(result);
+	patchDecode(result);
 
 	return result;
 }
+
+function patchDecode(decoded) {}
 
 function readOnlyCommand(bytes) {
 	return 1;
@@ -856,14 +1003,13 @@ function extractBits(byte, startBit, endBit) {
 	if (startBit >= endBit) {
 	  throw new Error("invalid bit range");
 	}
-  
 	var width = endBit - startBit;
 	var mask = (1 << width) - 1;
 	return (byte >>> startBit) & mask;
 }
 
 function pickArrayItem(array, index, idName) {
-	for (var i = 0; i < array.length; i++) { 
+	for (var i = 0; i < array.length; i++) {
 		if (array[i][idName] === index) {
 			return array[i];
 		}
@@ -873,7 +1019,7 @@ function pickArrayItem(array, index, idName) {
 }
 
 function insertArrayItem(array, item, idName) {
-	for (var i = 0; i < array.length; i++) { 
+	for (var i = 0; i < array.length; i++) {
 		if (array[i][idName] === item[idName]) {
 			array[i] = item;
 			return;
@@ -931,50 +1077,84 @@ function readCommand(allBytes, counterObj, end) {
 function hasPath(obj, path) {
 	var parts = path.split('.');
 	var current = obj;
-  
 	for (var i = 0; i < parts.length; i++) {
 	  	if (!current || !(parts[i] in current)) {
 			return false;
 	  	}
 	  	current = current[parts[i]];
 	}
-  
 	return true;
 }
 
 function getPath(obj, path) {
 	var parts = path.split('.');
 	var current = obj;
-  
+
 	for (var i = 0; i < parts.length; i++) {
 	  	var key = parts[i];
-  
+
 	  	if (!current || !(key in current)) {
 			return null;
 	  	}
-  
+
 	  	current = current[key];
 	}
-  
+
 	return current;
 }
-  
+
 
 function setPath(obj, path, value) {
 	var parts = path.split('.');
 	var current = obj;
-  
+
 	for (var i = 0; i < parts.length - 1; i++) {
 	  	var key = parts[i];
-  
+
 	  	if (!(key in current) || typeof current[key] !== 'object') {
 			current[key] = {};
 	  	}
-  
+
 	  	current = current[key];
 	}
 
 	current[parts[parts.length - 1]] = value;
+	return obj;
+}
+
+function removePath(obj, path) {
+	var parts = path.split('.');
+	var chain = [obj];
+	var current = obj;
+
+	for (var i = 0; i < parts.length - 1; i++) {
+		var key = parts[i];
+
+		if (!current || typeof current[key] !== 'object') {
+			return obj;
+		}
+
+		current = current[key];
+		chain.push(current);
+	}
+
+	var leaf = parts[parts.length - 1];
+
+	if (!current || !Object.prototype.hasOwnProperty.call(current, leaf)) {
+		return obj;
+	}
+
+	delete current[leaf];
+
+	// prune empty intermediate containers left behind on the path
+	for (var j = chain.length - 1; j >= 1; j--) {
+		if (Object.keys(chain[j]).length === 0) {
+			delete chain[j - 1][parts[j - 1]];
+		} else {
+			break;
+		}
+	}
+
 	return obj;
 }
 
@@ -1001,7 +1181,6 @@ function getAllLeafPaths(obj, prefix) {
 		  var newPath = path ? (path + "." + index) : String(index);
 		  recurse(item, newPath);
 		});
-  
 	  } else if (typeof current === 'object' && current !== null) {
 		for (var key in current) {
 		  if (Object.prototype.hasOwnProperty.call(current, key)) {
@@ -1009,15 +1188,14 @@ function getAllLeafPaths(obj, prefix) {
 			recurse(current[key], newPath);
 		  }
 		}
-  
 	  } else {
 		paths.push(path);
 	  }
 	}
-  
+
 	recurse(obj, "");
 	return paths;
-  
+
 }
 
 function isInteger(str) {
@@ -1026,9 +1204,8 @@ function isInteger(str) {
 
 function cmdMap() {
 	return {
+		  "54": "reset_ble_name",
 		  "55": "fan_error_alarm",
-		  "57": "frost_protection_alarm",
-		  "58": "not_wired_alarm",
 		  "59": "system_status_control",
 		  "60": "collection_interval",
 		  "61": "reporting_interval",
@@ -1055,6 +1232,7 @@ function cmdMap() {
 		  "86": "origin_temperature",
 		  "87": "origin_humidity",
 		  "88": "fan_enable",
+		  "89": "backlight_enable",
 		  "6000": "collection_interval.seconds_of_time",
 		  "6001": "collection_interval.minutes_of_time",
 		  "6100": "reporting_interval.ble",
@@ -1069,6 +1247,8 @@ function cmdMap() {
 		  "6903": "target_temperature_settings.auto",
 		  "6904": "target_temperature_settings.auto_heat",
 		  "6905": "target_temperature_settings.auto_cool",
+		  "6906": "target_temperature_settings.dehumidify",
+		  "6907": "target_temperature_settings.ventilation",
 		  "7100": "button_custom_function.enable",
 		  "7101": "button_custom_function.mode1",
 		  "7102": "button_custom_function.mode2",
@@ -1092,20 +1272,36 @@ function cmdMap() {
 		  "610201": "reporting_interval.ble_lora.minutes_of_time",
 		  "610300": "reporting_interval.power_lora.seconds_of_time",
 		  "610301": "reporting_interval.power_lora.minutes_of_time",
-		  "ff": "request_check_sequence_number",
 		  "fe": "request_check_order",
 		  "ef": "request_command_queries",
 		  "ee": "request_query_all_configurations",
 		  "cf": "lorawan_configuration_settings",
 		  "cf00": "lorawan_configuration_settings.mode",
+		  "c9": "random_key",
 		  "df": "tsl_version",
 		  "de": "product_name",
 		  "dd": "product_pn",
 		  "db": "product_sn",
 		  "da": "version",
 		  "d9": "oem_id",
+		  "c8": "device_status",
 		  "d8": "product_frequency_band",
-		  "d5": "ble_phone_name",
+		  "b9": "device_time",
+		  "b8": "battery_info",
+		  "cd": "ble_configuration_settings",
+		  "cd00": "ble_configuration_settings.enable",
+		  "cd01": "ble_configuration_settings.local_id",
+		  "cd05": "ble_configuration_settings.local_name_first",
+		  "cd06": "ble_configuration_settings.local_name_last",
+		  "cd07": "ble_configuration_settings.pair_info",
+		  "cd04": "ble_configuration_settings.pair_name",
+		  "cd04xx": "ble_configuration_settings.pair_name._item",
+		  "cd02": "ble_configuration_settings.pair_mac",
+		  "cd02xx": "ble_configuration_settings.pair_mac._item",
+		  "cd03": "ble_configuration_settings.pair_addr",
+		  "cd03xx": "ble_configuration_settings.pair_addr._item",
+		  "ba": "ble_new_event",
+		  "baxx": "ble_new_event._item",
 		  "00": "battery",
 		  "01": "temperature",
 		  "02": "humidity",
@@ -1116,14 +1312,28 @@ function cmdMap() {
 		  "04": "fan_mode",
 		  "05": "execution_plan_id",
 		  "0b": "temperature_alarm",
+		  "0b00": "temperature_alarm.collection_error",
+		  "0b01": "temperature_alarm.lower_range_error",
+		  "0b02": "temperature_alarm.over_range_error",
+		  "0b03": "temperature_alarm.no_data",
 		  "0c": "humidity_alarm",
+		  "0c00": "humidity_alarm.collection_error",
+		  "0c01": "humidity_alarm.lower_range_error",
+		  "0c02": "humidity_alarm.over_range_error",
+		  "0c03": "humidity_alarm.no_data",
 		  "09": "ble_event",
+		  "0900": "ble_event.none",
+		  "0901": "ble_event.pair_cancel",
+		  "0902": "ble_event.disconnect",
 		  "0a": "power_bus_event",
+		  "0a00": "power_bus_event.none",
+		  "0a01": "power_bus_event.disconnect",
 		  "0d": "key_event",
 		  "0d00": "key_event.f1",
 		  "0d01": "key_event.f2",
 		  "0d02": "key_event.f3",
 		  "0f": "battery_event",
+		  "0f00": "battery_event.recover",
 		  "8d": "communication_mode",
 		  "6c": "communicate_interval",
 		  "6c00": "communicate_interval.ble",
@@ -1138,7 +1348,6 @@ function cmdMap() {
 		  "6c03": "communicate_interval.power_bus",
 		  "6c0300": "communicate_interval.power_bus.seconds_of_time",
 		  "6c0301": "communicate_interval.power_bus.minutes_of_time",
-		  "c8": "device_status",
 		  "7d": "data_sync_to_peer",
 		  "7e": "data_sync_timeout",
 		  "8b": "ble_name",
@@ -1148,6 +1357,10 @@ function cmdMap() {
 		  "6b01": "target_temperature_range.em_heat",
 		  "6b02": "target_temperature_range.cool",
 		  "6b03": "target_temperature_range.auto",
+		  "6b04": "target_temperature_range.dehumidify",
+		  "6b05": "target_temperature_range.ventilation",
+		  "8a": "screen_temp_mode_enable",
+		  "8c": "screen_fan_mode_enable",
 		  "c7": "time_zone",
 		  "c6": "daylight_saving_time",
 		  "7b": "schedule_settings",
@@ -1157,12 +1370,15 @@ function cmdMap() {
 		  "7bxx02": "schedule_settings._item.name_last",
 		  "7bxx03": "schedule_settings._item.content1",
 		  "7bxx04": "schedule_settings._item.content2",
+		  "7bxx05": "schedule_settings._item.system_on_off",
+		  "7bxx06": "schedule_settings._item.tstat_mode",
+		  "7bxx07": "schedule_settings._item.fan_mode",
+		  "7bxx08": "schedule_settings._item.heat_target_temperature",
+		  "7bxx09": "schedule_settings._item.cool_target_temperature",
+		  "7bxx0a": "schedule_settings._item.auto_target_temperature",
 		  "5c": "insert_temporary_plan",
 		  "5b": "filter_clean_alarm",
-		  "5a": "open_window_alarm",
 		  "be": "reboot",
-		  "b9": "query_device_status",
-		  "b8": "synchronize_time",
 		  "b6": "reconnect",
 		  "5f": "delete_task_plan"
 	};
@@ -1170,82 +1386,144 @@ function cmdMap() {
 function processTemperature(decoded) {
 	var allTemperatureProperties = {
     "temperature": {
-        "precision": 1
+        "precision": 2,
+        "unitName": "℃"
     },
     "target_temperature1": {
-        "precision": 1
+        "precision": 2,
+        "unitName": "℃"
     },
     "target_temperature2": {
-        "precision": 1
+        "precision": 2,
+        "unitName": "℃"
     },
     "target_temperature_settings.heat": {
-        "precision": null
+        "precision": 2,
+        "unitName": "℃"
     },
     "target_temperature_settings.em_heat": {
-        "precision": null
+        "precision": 2,
+        "unitName": "℃"
     },
     "target_temperature_settings.cool": {
-        "precision": null
+        "precision": 2,
+        "unitName": "℃"
     },
     "target_temperature_settings.auto": {
-        "precision": null
+        "precision": 2,
+        "unitName": "℃"
     },
     "target_temperature_settings.auto_heat": {
-        "precision": null
+        "precision": 2,
+        "unitName": "℃"
     },
     "target_temperature_settings.auto_cool": {
-        "precision": null
+        "precision": 2,
+        "unitName": "℃"
+    },
+    "target_temperature_settings.dehumidify": {
+        "precision": 2,
+        "unitName": "℃"
+    },
+    "target_temperature_settings.ventilation": {
+        "precision": 2,
+        "unitName": "℃"
     },
     "minimum_dead_zone": {
-        "precision": 1
+        "precision": 2,
+        "unitName": "K"
     },
     "target_temperature_range.heat.min": {
-        "precision": 1
+        "precision": 2,
+        "unitName": "℃"
     },
     "target_temperature_range.heat.max": {
-        "precision": 1
+        "precision": 2,
+        "unitName": "℃"
     },
     "target_temperature_range.em_heat.min": {
-        "precision": 1
+        "precision": 2,
+        "unitName": "℃"
     },
     "target_temperature_range.em_heat.max": {
-        "precision": 1
+        "precision": 2,
+        "unitName": "℃"
     },
     "target_temperature_range.cool.min": {
-        "precision": 1
+        "precision": 2,
+        "unitName": "℃"
     },
     "target_temperature_range.cool.max": {
-        "precision": 1
+        "precision": 2,
+        "unitName": "℃"
     },
     "target_temperature_range.auto.min": {
-        "precision": 1
+        "precision": 2,
+        "unitName": "℃"
     },
     "target_temperature_range.auto.max": {
-        "precision": 1
+        "precision": 2,
+        "unitName": "℃"
+    },
+    "target_temperature_range.dehumidify.min": {
+        "precision": 2,
+        "unitName": "℃"
+    },
+    "target_temperature_range.dehumidify.max": {
+        "precision": 2,
+        "unitName": "℃"
+    },
+    "target_temperature_range.ventilation.min": {
+        "precision": 2,
+        "unitName": "℃"
+    },
+    "target_temperature_range.ventilation.max": {
+        "precision": 2,
+        "unitName": "℃"
     },
     "temperature_calibration_settings.calibration_value": {
-        "precision": 2
+        "precision": 2,
+        "unitName": "℃"
     },
     "schedule_settings._item.content1.heat_target_temperature": {
-        "precision": 1
+        "precision": 2,
+        "unitName": "℃"
     },
     "schedule_settings._item.content1.em_heat_target_temperature": {
-        "precision": 1
+        "precision": 2,
+        "unitName": "℃"
     },
     "schedule_settings._item.content1.cool_target_temperature": {
-        "precision": 1
+        "precision": 2,
+        "unitName": "℃"
     },
     "schedule_settings._item.content2.auto_target_temperature": {
-        "precision": 1
+        "precision": 2,
+        "unitName": "℃"
     },
     "schedule_settings._item.content2.auto_heat_target_temperature": {
-        "precision": 1
+        "precision": 2,
+        "unitName": "℃"
     },
     "schedule_settings._item.content2.auto_cool_target_temperature": {
-        "precision": 1
+        "precision": 2,
+        "unitName": "℃"
+    },
+    "schedule_settings._item.heat_target_temperature": {
+        "precision": 2,
+        "unitName": "℃"
+    },
+    "schedule_settings._item.cool_target_temperature": {
+        "precision": 2,
+        "unitName": "℃"
+    },
+    "schedule_settings._item.auto_target_temperature": {
+        "precision": 2,
+        "unitName": "℃"
     },
     "origin_temperature": {
-        "precision": 1
+        "precision": 2,
+        "unitName": "℃"
     }
 };
 	var leafPaths = getAllLeafPaths(decoded);
@@ -1269,11 +1547,14 @@ function processTemperature(decoded) {
 		if (allTemperatureProperties[newPropertyId]) {
 			var fahrenheitProperty = convertName(propertyId, 'fahrenheit');
 			var celsiusProperty = convertName(propertyId, 'celsius');
+			var unitName = allTemperatureProperties[newPropertyId].unitName;
+			var constant = unitName == 'K' ? 0 : 32;
 			if (hasPath(decoded, propertyId)) {
-				setPath(decoded, fahrenheitProperty,  Number((getPath(decoded, propertyId) * 1.8 + 32).toFixed(allTemperatureProperties[newPropertyId].precision)));
+				setPath(decoded, fahrenheitProperty,  Number((getPath(decoded, propertyId) * 1.8 + constant).toFixed(allTemperatureProperties[newPropertyId].precision)));
 				setPath(decoded, celsiusProperty,  Number(getPath(decoded, propertyId).toFixed(allTemperatureProperties[newPropertyId].precision)));
+				removePath(decoded, propertyId);
 			}
-		}	
-	}	
+		}
+	}
 	return decoded;
 }
