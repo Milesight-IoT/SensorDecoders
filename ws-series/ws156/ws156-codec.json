@@ -1,6 +1,6 @@
 {
     "version": "1.0.0",
-    "bytes": "01755CFF34030300FF34060600",
+    "bytes": "01755CFF34010300FF34060201",
     "object": [
         {
             "id": "ipso_version",
@@ -81,7 +81,7 @@
                 { "value": 2, "name": "Class C" },
                 { "value": 3, "name": "Class CtoB" }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS"
         },
@@ -132,7 +132,7 @@
         {
             "id": "button_1",
             "name": "Button 1",
-            "value": "0",
+            "value": "1",
             "unit": "",
             "access_mode": "R",
             "data_type": "BOOL",
@@ -164,7 +164,7 @@
         {
             "id": "button_3",
             "name": "Button 3",
-            "value": "1",
+            "value": "0",
             "unit": "",
             "access_mode": "R",
             "data_type": "BOOL",
@@ -226,146 +226,212 @@
             "bacnet_unit_type": "UNITS_NO_UNITS"
         },
         {
-            "id": "button_1_msgid",
-            "name": "Button 1 Press Message Id",
-            "value": "187272",
+            "id": "button_1_mode",
+            "name": "Button 1 Press Mode",
+            "value": "0",
             "unit": "",
             "access_mode": "R",
-            "data_type": "NUMBER",
-            "value_type": "UINT16",
-            "bacnet_type": "analog_input_object",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [
+                { "value": 0, "name": "short_press" },
+                { "value": 1, "name": "short_press+double_press" },
+                { "value": 2, "name": "short_press+long_press" },
+                { "value": 3, "name": "short_press+double_press+long_press" }
+            ],
+            "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS"
         },
         {
-            "id": "button_2_msgid",
-            "name": "Button 2 Press Message Id",
-            "value": "187272",
-            "unit": "",
-            "access_mode": "R",
-            "data_type": "NUMBER",
-            "value_type": "UINT16",
-            "bacnet_type": "analog_input_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS"
-        },
-        {
-            "id": "button_3_msgid",
-            "name": "Button 3 Press Message Id",
-            "value": "187272",
-            "unit": "",
-            "access_mode": "R",
-            "data_type": "NUMBER",
-            "value_type": "UINT16",
-            "bacnet_type": "analog_input_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS"
-        },
-        {
-            "id": "button_4_msgid",
-            "name": "Button 4 Press Message Id",
-            "value": "187272",
-            "unit": "",
-            "access_mode": "R",
-            "data_type": "NUMBER",
-            "value_type": "UINT16",
-            "bacnet_type": "analog_input_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS"
-        },
-        {
-            "id": "button_5_msgid",
-            "name": "Button 5 Press Message Id",
-            "value": "187272",
-            "unit": "",
-            "access_mode": "R",
-            "data_type": "NUMBER",
-            "value_type": "UINT16",
-            "bacnet_type": "analog_input_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS"
-        },
-        {
-            "id": "button_6_msgid",
-            "name": "Button 6 Press Message Id",
-            "value": "187272",
-            "unit": "",
-            "access_mode": "R",
-            "data_type": "NUMBER",
-            "value_type": "UINT16",
-            "bacnet_type": "analog_input_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS"
-        },
-        {
-            "id": "button_1_d2d",
-            "name": "Button 1 D2D Command",
+            "id": "button_1_event",
+            "name": "Button 1 Press Event",
             "value": "",
             "unit": "",
             "access_mode": "R",
-            "data_type": "NUMBER",
-            "value_type": "UINT16",
-            "bacnet_type": "analog_input_object",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [
+                { "value": 0, "name": "short_press" },
+                { "value": 1, "name": "double_press" },
+                { "value": 2, "name": "long_press" }
+            ],
+            "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS"
         },
         {
-            "id": "button_2_d2d",
-            "name": "Button 2 D2D Command",
+            "id": "button_2_mode",
+            "name": "Button 2 Press Mode",
+            "value": "0",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [
+                { "value": 0, "name": "short_press" },
+                { "value": 1, "name": "short_press+double_press" },
+                { "value": 2, "name": "short_press+long_press" },
+                { "value": 3, "name": "short_press+double_press+long_press" }
+            ],
+            "bacnet_type": "multistate_input_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS"
+        },
+        {
+            "id": "button_2_event",
+            "name": "Button 2 Press Event",
             "value": "",
             "unit": "",
             "access_mode": "R",
-            "data_type": "NUMBER",
-            "value_type": "UINT16",
-            "bacnet_type": "analog_input_object",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [
+                { "value": 0, "name": "short_press" },
+                { "value": 1, "name": "double_press" },
+                { "value": 2, "name": "long_press" }
+            ],
+            "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS"
         },
         {
-            "id": "button_3_d2d",
-            "name": "Button 3 D2D Command",
-            "value": "3",
+            "id": "button_3_mode",
+            "name": "Button 3 Press Mode",
+            "value": "0",
             "unit": "",
             "access_mode": "R",
-            "data_type": "NUMBER",
-            "value_type": "UINT16",
-            "bacnet_type": "analog_input_object",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [
+                { "value": 0, "name": "short_press" },
+                { "value": 1, "name": "short_press+double_press" },
+                { "value": 2, "name": "short_press+long_press" },
+                { "value": 3, "name": "short_press+double_press+long_press" }
+            ],
+            "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS"
         },
         {
-            "id": "button_4_d2d",
-            "name": "Button 4 D2D Command",
+            "id": "button_3_event",
+            "name": "Button 3 Press Event",
             "value": "",
             "unit": "",
             "access_mode": "R",
-            "data_type": "NUMBER",
-            "value_type": "UINT16",
-            "bacnet_type": "analog_input_object",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [
+                { "value": 0, "name": "short_press" },
+                { "value": 1, "name": "double_press" },
+                { "value": 2, "name": "long_press" }
+            ],
+            "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS"
         },
         {
-            "id": "button_5_d2d",
-            "name": "Button 5 D2D Command",
+            "id": "button_4_mode",
+            "name": "Button 4 Press Mode",
+            "value": "0",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [
+                { "value": 0, "name": "short_press" },
+                { "value": 1, "name": "short_press+double_press" },
+                { "value": 2, "name": "short_press+long_press" },
+                { "value": 3, "name": "short_press+double_press+long_press" }
+            ],
+            "bacnet_type": "multistate_input_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS"
+        },
+        {
+            "id": "button_4_event",
+            "name": "Button 4 Press Event",
             "value": "",
             "unit": "",
             "access_mode": "R",
-            "data_type": "NUMBER",
-            "value_type": "UINT16",
-            "bacnet_type": "analog_input_object",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [
+                { "value": 0, "name": "short_press" },
+                { "value": 1, "name": "double_press" },
+                { "value": 2, "name": "long_press" }
+            ],
+            "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS"
         },
         {
-            "id": "button_6_d2d",
-            "name": "Button 6 D2D Command",
-            "value": "6",
+            "id": "button_5_mode",
+            "name": "Button 5 Press Mode",
+            "value": "0",
             "unit": "",
             "access_mode": "R",
-            "data_type": "NUMBER",
-            "value_type": "UINT16",
-            "bacnet_type": "analog_input_object",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [
+                { "value": 0, "name": "short_press" },
+                { "value": 1, "name": "short_press+double_press" },
+                { "value": 2, "name": "short_press+long_press" },
+                { "value": 3, "name": "short_press+double_press+long_press" }
+            ],
+            "bacnet_type": "multistate_input_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS"
+        },
+        {
+            "id": "button_5_event",
+            "name": "Button 5 Press Event",
+            "value": "",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [
+                { "value": 0, "name": "short_press" },
+                { "value": 1, "name": "double_press" },
+                { "value": 2, "name": "long_press" }
+            ],
+            "bacnet_type": "multistate_input_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS"
+        },
+        {
+            "id": "button_6_mode",
+            "name": "Button 6 Press Mode",
+            "value": "0",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [
+                { "value": 0, "name": "short_press" },
+                { "value": 1, "name": "short_press+double_press" },
+                { "value": 2, "name": "short_press+long_press" },
+                { "value": 3, "name": "short_press+double_press+long_press" }
+            ],
+            "bacnet_type": "multistate_input_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS"
+        },
+        {
+            "id": "button_6_event",
+            "name": "Button 6 Press Event",
+            "value": "",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [
+                { "value": 0, "name": "short_press" },
+                { "value": 1, "name": "double_press" },
+                { "value": 2, "name": "long_press" }
+            ],
+            "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS"
         }

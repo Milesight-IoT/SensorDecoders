@@ -65,12 +65,12 @@ function milesightDeviceDecode(bytes) {
         }
         // RESET EVENT
         else if (channel_id === 0xff && channel_type === 0xfe) {
-            decoded.reset_event = readResetEvent(1);
+            decoded.reset_event = readResetEvent(bytes[i]);
             i += 1;
         }
         // DEVICE STATUS
         else if (channel_id === 0xff && channel_type === 0x0b) {
-            decoded.device_status = readDeviceStatus(1);
+            decoded.device_status = readDeviceStatus(bytes[i]);
             i += 1;
         }
 
@@ -84,8 +84,8 @@ function milesightDeviceDecode(bytes) {
             var id = bytes[i];
             var btn_chn_name = "button_" + id;
             decoded[btn_chn_name] = 1;
-            decoded[btn_chn_name + "_d2d"] = readUInt16LE(bytes.slice(i + 1, i + 3));
-            decoded[btn_chn_name + "_msgid"] = getRandomIntInclusive(100000, 999999);
+            decoded[btn_chn_name + "_mode"] = readButtonMode(bytes[i + 1]);
+            decoded[btn_chn_name + "_event"] = readButtonEvent(bytes[i + 2]);
             i += 3;
         } else {
             break;
@@ -134,23 +134,17 @@ function readLoRaWANClass(type) {
         2: "Class C",
         3: "Class CtoB",
     };
-    return getValue(class_map, type);
+    return getEnumValue(class_map, type);
 }
 
 function readResetEvent(status) {
     var status_map = { 0: "normal", 1: "reset" };
-    return getValue(status_map, status);
+    return getEnumValue(status_map, status);
 }
 
 function readDeviceStatus(status) {
     var status_map = { 0: "off", 1: "on" };
-    return getValue(status_map, status);
-}
-
-function getRandomIntInclusive(min, max) {
-    min = Math.ceil(min);
-    max = Math.floor(max);
-    return Math.floor(Math.random() * (max - min + 1)) + min;
+    return getEnumValue(status_map, status);
 }
 
 /* eslint-disable */
@@ -173,12 +167,31 @@ function readInt16LE(bytes) {
     return ref > 0x7fff ? ref - 0x10000 : ref;
 }
 
-function getValue(map, key) {
+function getEnumValue(map, key) {
     if (RAW_VALUE) return key;
 
     var value = map[key];
     if (!value) value = "unknown";
     return value;
+}
+
+function readButtonMode(mode) {
+    var mode_map = {
+        0: "short_press",
+        1: "short_press+double_press",
+        2: "short_press+long_press",
+        3: "short_press+double_press+long_press",
+    };
+    return getEnumValue(mode_map, mode);
+}
+
+function readButtonEvent(event) {
+    var event_map = {
+        0: "short_press",
+        1: "double_press",
+        2: "long_press",
+    };
+    return getEnumValue(event_map, event);
 }
 
 //if (!Object.assign) {
