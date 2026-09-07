@@ -58,29 +58,6 @@
             ]
         },
         {
-            "id": "active_data_reporting_cfg.enable",
-            "name": "Active Data Reporting Enable(Active Data Reporting Configuration)",
-            "value": "0",
-            "unit": "",
-            "access_mode": "RW",
-            "data_type": "BOOL",
-            "value_type": "UINT8",
-            "values": [
-                {
-                    "value": 0,
-                    "name": "disable"
-                },
-                {
-                    "value": 1,
-                    "name": "enable"
-                }
-            ],
-            "bacnet_type": "binary_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": []
-        },
-        {
             "id": "active_data_reporting_cfg.mode",
             "name": "Active Data Reporting Mode(Active Data Reporting Configuration)",
             "value": "0",
@@ -127,7 +104,7 @@
         {
             "id": "active_data_reporting_cfg.times",
             "name": "Active Data Reporting Times(Active Data Reporting Configuration)",
-            "value": "1",
+            "value": "0",
             "unit": "",
             "access_mode": "RW",
             "data_type": "NUMBER",
@@ -5243,14 +5220,14 @@
             "name": "Timeout(D2D Receive)",
             "value": "10",
             "unit": "min",
-            "access_mode": "RW",
+            "access_mode": "R",
             "data_type": "NUMBER",
             "value_type": "UINT8",
             "range": [
                 1,
                 60
             ],
-            "bacnet_type": "analog_value_object",
+            "bacnet_type": "analog_input_object",
             "bacnet_unit_type_id": 72,
             "bacnet_unit_type": "UNITS_MINUTES",
             "reference": [
@@ -5262,7 +5239,7 @@
             "name": "Device Offline Settings(D2D Receive)",
             "value": "0",
             "unit": "",
-            "access_mode": "RW",
+            "access_mode": "R",
             "data_type": "ENUM",
             "value_type": "UINT8",
             "values": [
@@ -5279,7 +5256,7 @@
                     "name": "Switch The Embedded Temperature"
                 }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": [
@@ -5291,14 +5268,14 @@
             "name": "Timeout(LoRa Receive)",
             "value": "10",
             "unit": "min",
-            "access_mode": "RW",
+            "access_mode": "R",
             "data_type": "NUMBER",
             "value_type": "UINT8",
             "range": [
                 1,
                 60
             ],
-            "bacnet_type": "analog_value_object",
+            "bacnet_type": "analog_input_object",
             "bacnet_unit_type_id": 72,
             "bacnet_unit_type": "UNITS_MINUTES",
             "reference": [
@@ -5310,7 +5287,7 @@
             "name": "Device Offline Settings(LoRa Receive)",
             "value": "0",
             "unit": "",
-            "access_mode": "RW",
+            "access_mode": "R",
             "data_type": "ENUM",
             "value_type": "UINT8",
             "values": [
@@ -5327,7 +5304,7 @@
                     "name": "Switch The Embedded Temperature"
                 }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": [

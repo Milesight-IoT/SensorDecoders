@@ -1088,20 +1088,16 @@ function milesightDeviceDecode(bytes) {
 				decoded.active_data_reporting_cfg = decoded.active_data_reporting_cfg || {};
 				var active_data_reporting_cfg_cmd = readUInt8(bytes, counterObj, 1);
 				if (active_data_reporting_cfg_cmd == 0x00) {
-					// 0：disable, 1：enable
-					decoded.active_data_reporting_cfg.enable = readUInt8(bytes, counterObj, 1);
-				}
-				if (active_data_reporting_cfg_cmd == 0x01) {
 					decoded.active_data_reporting_cfg.start_time = readUInt16LE(bytes, counterObj, 2);
 				}
-				if (active_data_reporting_cfg_cmd == 0x02) {
+				if (active_data_reporting_cfg_cmd == 0x01) {
 					decoded.active_data_reporting_cfg.times = readUInt8(bytes, counterObj, 1);
 				}
-				if (active_data_reporting_cfg_cmd == 0x03) {
+				if (active_data_reporting_cfg_cmd == 0x02) {
 					// 0: Disable All, 1: Enable All, 2: Custom
 					decoded.active_data_reporting_cfg.mode = readUInt8(bytes, counterObj, 1);
 				}
-				if (active_data_reporting_cfg_cmd == 0x04) {
+				if (active_data_reporting_cfg_cmd == 0x03) {
 					decoded.active_data_reporting_cfg.custom_cfg = decoded.active_data_reporting_cfg.custom_cfg || {};
 					decoded.active_data_reporting_cfg.custom_cfg.cmd_cfg = decoded.active_data_reporting_cfg.custom_cfg.cmd_cfg || {};
 					if (decoded.active_data_reporting_cfg.custom_cfg.cmd_cfg == 0x00) {
@@ -1803,11 +1799,10 @@ function cmdMap() {
 		  "a200": "screen_display_cfg.display_data_enable_when_off",
 		  "a3": "unilatera_tolerance_enable",
 		  "c3": "active_data_reporting_cfg",
-		  "c300": "active_data_reporting_cfg.enable",
-		  "c301": "active_data_reporting_cfg.start_time",
-		  "c302": "active_data_reporting_cfg.times",
-		  "c303": "active_data_reporting_cfg.mode",
-		  "c304": "active_data_reporting_cfg.custom_cfg",
+		  "c300": "active_data_reporting_cfg.start_time",
+		  "c301": "active_data_reporting_cfg.times",
+		  "c302": "active_data_reporting_cfg.mode",
+		  "c303": "active_data_reporting_cfg.custom_cfg",
 		  "a5": "temperature_control_permission_cfg",
 		  "a500": "temperature_control_permission_cfg.temp_ctrl_permission",
 		  "a6": "debug_commands",

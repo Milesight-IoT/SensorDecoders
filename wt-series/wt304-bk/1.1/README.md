@@ -62,11 +62,11 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Temperature Data Source | 0x85 | 1 | rw |  |  |  |
 | Temperature Source | 0x85 | 2 | rw | 0 |  | 0：Embedded Temperature<br>1：External NTC<br>2：LoRa Receive<br>3：D2D Receive |
 | LoRa Receive | 0x85 | 3 | rw |  |  |  |
-| Timeout | 0x85 | 2 | rw | 10 | 1 - 60 |  |
-| Device Offline Settings | 0x85 | 2 | rw | 0 |  | 0: Keep Control<br>1: Turn Off The Control<br>2: Switch The Embedded Temperature |
+| Timeout | 0x85 | 2 | r | 10 | 1 - 60 |  |
+| Device Offline Settings | 0x85 | 2 | r | 0 |  | 0: Keep Control<br>1: Turn Off The Control<br>2: Switch The Embedded Temperature |
 | D2D Receive | 0x85 | 3 | rw |  |  |  |
-| Timeout | 0x85 | 2 | rw | 10 | 1 - 60 |  |
-| Device Offline Settings | 0x85 | 2 | rw | 0 |  | 0: Keep Control<br>1: Turn Off The Control<br>2: Switch The Embedded Temperature |
+| Timeout | 0x85 | 2 | r | 10 | 1 - 60 |  |
+| Device Offline Settings | 0x85 | 2 | r | 0 |  | 0: Keep Control<br>1: Turn Off The Control<br>2: Switch The Embedded Temperature |
 | Temperature Data Source Configuration | 0xA0 | 2 | rw | 0 |  | 0：Embedded Temperature<br>1：External NTC<br>2：LoRa Receive<br>3：D2D Receive |
 | External Data Source Timeout Configuration | 0xA7 | 1 | rw |  |  |  |
 | Sub-command | 0xA7 | 2 | rw | 0 |  |  |
@@ -377,9 +377,8 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Unilateral Tolerance Enable | 0xA3 | 2 | rw | 0 |  | 0：disable<br>1：enable |
 | Active Data Reporting Configuration | 0xC3 | 1 | rw |  |  |  |
 | Sub-command | 0xC3 | 2 | rw | 0 |  |  |
-| Active Data Reporting Enable | 0xC3 | 2 | rw | 0 |  | 0：disable<br>1：enable |
 | Active Data Reporting Start Time | 0xC3 | 3 | rw | 240 | 0 - 1439 |  |
-| Active Data Reporting Times | 0xC3 | 2 | rw | 1 | 0 - 12 |  |
+| Active Data Reporting Times | 0xC3 | 2 | rw | 0 | 0 - 12 |  |
 | Active Data Reporting Mode | 0xC3 | 2 | rw | 0 |  | 0: Disable All<br>1: Enable All<br>2: Custom |
 | Active Data Reporting Custom Configuration | 0xC3 | 3 | rw |  |  |  |
 | Active Data Reporting Custom Command Configuration | 0xC3 | 2 | rw |  |  |  |

@@ -556,26 +556,8 @@ function milesightDeviceEncode(payload) {
 		// 0：Embedded Temperature, 1：External NTC, 2：LoRa Receive, 3：D2D Receive
 		buffer.writeUInt8(payload.temperature_source.type);
 		if (payload.temperature_source.type == 0x02) {
-			if (payload.temperature_source.lorawan_reception.timeout < 1 || payload.temperature_source.lorawan_reception.timeout > 60) {
-				throw new Error('temperature_source.lorawan_reception.timeout must be between 1 and 60');
-			}
-			buffer.writeUInt8(payload.temperature_source.lorawan_reception.timeout);
-			if ([0, 1, 2].indexOf(payload.temperature_source.lorawan_reception.timeout_response) === -1) {
-				throw new Error('temperature_source.lorawan_reception.timeout_response must be one of [0, 1, 2]');
-			}
-			// 0: Keep Control, 1: Turn Off The Control, 2: Switch The Embedded Temperature
-			buffer.writeUInt8(payload.temperature_source.lorawan_reception.timeout_response);
 		}
 		if (payload.temperature_source.type == 0x03) {
-			if (payload.temperature_source.d2d_reception.timeout < 1 || payload.temperature_source.d2d_reception.timeout > 60) {
-				throw new Error('temperature_source.d2d_reception.timeout must be between 1 and 60');
-			}
-			buffer.writeUInt8(payload.temperature_source.d2d_reception.timeout);
-			if ([0, 1, 2].indexOf(payload.temperature_source.d2d_reception.timeout_response) === -1) {
-				throw new Error('temperature_source.d2d_reception.timeout_response must be one of [0, 1, 2]');
-			}
-			// 0: Keep Control, 1: Turn Off The Control, 2: Switch The Embedded Temperature
-			buffer.writeUInt8(payload.temperature_source.d2d_reception.timeout_response);
 		}
 		encoded = encoded.concat(buffer.toBytes());
 	}
@@ -1975,19 +1957,9 @@ function milesightDeviceEncode(payload) {
 	//0xc3
 	if ('active_data_reporting_cfg' in payload) {
 		var buffer = new Buffer();
-		if (isValid(payload.active_data_reporting_cfg.enable)) {
-			buffer.writeUInt8(0xc3);
-			// 0：disable, 1：enable
-			buffer.writeUInt8(0x00);
-			if ([0, 1].indexOf(payload.active_data_reporting_cfg.enable) === -1) {
-				throw new Error('active_data_reporting_cfg.enable must be one of [0, 1]');
-			}
-			// 0：disable, 1：enable
-			buffer.writeUInt8(payload.active_data_reporting_cfg.enable);
-		}
 		if (isValid(payload.active_data_reporting_cfg.start_time)) {
 			buffer.writeUInt8(0xc3);
-			buffer.writeUInt8(0x01);
+			buffer.writeUInt8(0x00);
 			if (payload.active_data_reporting_cfg.start_time < 0 || payload.active_data_reporting_cfg.start_time > 1439) {
 				throw new Error('active_data_reporting_cfg.start_time must be between 0 and 1439');
 			}
@@ -1995,7 +1967,7 @@ function milesightDeviceEncode(payload) {
 		}
 		if (isValid(payload.active_data_reporting_cfg.times)) {
 			buffer.writeUInt8(0xc3);
-			buffer.writeUInt8(0x02);
+			buffer.writeUInt8(0x01);
 			if (payload.active_data_reporting_cfg.times < 0 || payload.active_data_reporting_cfg.times > 12) {
 				throw new Error('active_data_reporting_cfg.times must be between 0 and 12');
 			}
@@ -2004,7 +1976,7 @@ function milesightDeviceEncode(payload) {
 		if (isValid(payload.active_data_reporting_cfg.mode)) {
 			buffer.writeUInt8(0xc3);
 			// 0: Disable All, 1: Enable All, 2: Custom
-			buffer.writeUInt8(0x03);
+			buffer.writeUInt8(0x02);
 			if ([0, 1, 2].indexOf(payload.active_data_reporting_cfg.mode) === -1) {
 				throw new Error('active_data_reporting_cfg.mode must be one of [0, 1, 2]');
 			}
@@ -2013,7 +1985,7 @@ function milesightDeviceEncode(payload) {
 		}
 		if (isValid(payload.active_data_reporting_cfg.custom_cfg)) {
 			buffer.writeUInt8(0xc3);
-			buffer.writeUInt8(0x04);
+			buffer.writeUInt8(0x03);
 			if (payload.active_data_reporting_cfg.custom_cfg.cmd_cfg == 0x00) {
 				if (payload.active_data_reporting_cfg.custom_cfg.cmd_cfg.custom < 96 || payload.active_data_reporting_cfg.custom_cfg.cmd_cfg.custom > 175) {
 					throw new Error('active_data_reporting_cfg.custom_cfg.cmd_cfg.custom must be in range [96,175]');
@@ -2681,11 +2653,10 @@ function cmdMap() {
 		  "screen_display_cfg.display_data_enable_when_off": "a200",
 		  "unilatera_tolerance_enable": "a3",
 		  "active_data_reporting_cfg": "c3",
-		  "active_data_reporting_cfg.enable": "c300",
-		  "active_data_reporting_cfg.start_time": "c301",
-		  "active_data_reporting_cfg.times": "c302",
-		  "active_data_reporting_cfg.mode": "c303",
-		  "active_data_reporting_cfg.custom_cfg": "c304",
+		  "active_data_reporting_cfg.start_time": "c300",
+		  "active_data_reporting_cfg.times": "c301",
+		  "active_data_reporting_cfg.mode": "c302",
+		  "active_data_reporting_cfg.custom_cfg": "c303",
 		  "temperature_control_permission_cfg": "a5",
 		  "temperature_control_permission_cfg.temp_ctrl_permission": "a500",
 		  "debug_commands": "a6",
