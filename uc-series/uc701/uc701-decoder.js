@@ -561,6 +561,11 @@ function milesightDeviceDecode(bytes) {
 				ble_new_event_item.status = readUInt8(bytes, counterObj, 1);
 				ble_new_event_item.mac = readHexString(bytes, counterObj, 8);
 				break;
+			case 0xb4:
+				decoded.ble_server = decoded.ble_server || {};
+				// 0：Reset BLE Name , 1：Cancel Pairing
+				decoded.ble_server.type = readUInt8(bytes, counterObj, 1);
+				break;
 			case 0x00:
 				decoded.battery = readUInt8(bytes, counterObj, 1);
 				break;
@@ -1331,6 +1336,66 @@ function milesightDeviceDecode(bytes) {
 				d2d_slave_settings_item.command = readHexString(bytes, counterObj, 2);
 				// 0：Schedule1, 1：Schedule2, 2：Schedule3, 3：Schedule4, 4：Schedule5, 5：Schedule6, 6：Schedule7, 7：Schedule8, 8：Schedule9, 9：Schedule10, 10：Schedule11, 11：Schedule12, 12：Schedule13, 13：Schedule14, 14：Schedule15, 15：Schedule16, 16：System Off, 17：System On, 18：System Flip
 				d2d_slave_settings_item.value = readUInt8(bytes, counterObj, 1);
+				break;
+			case 0xb6:
+				decoded.reconnect = readOnlyCommand(bytes, counterObj, 0);
+				break;
+			case 0xb7:
+				decoded.set_time = decoded.set_time || {};
+				decoded.set_time.timestamp = readUInt32LE(bytes, counterObj, 4);
+				break;
+			case 0xb5:
+				decoded.collect_data = readOnlyCommand(bytes, counterObj, 0);
+				break;
+			case 0xbd:
+				decoded.clear_historical_data = readOnlyCommand(bytes, counterObj, 0);
+				break;
+			case 0xbc:
+				decoded.stop_historical_data_retrieval = readOnlyCommand(bytes, counterObj, 0);
+				break;
+			case 0xbb:
+				decoded.retrieve_historical_data_by_time_range = decoded.retrieve_historical_data_by_time_range || {};
+				decoded.retrieve_historical_data_by_time_range.start_time = readUInt32LE(bytes, counterObj, 4);
+				decoded.retrieve_historical_data_by_time_range.end_time = readUInt32LE(bytes, counterObj, 4);
+				break;
+			case 0xbe:
+				decoded.reboot = readOnlyCommand(bytes, counterObj, 0);
+				break;
+			case 0x5f:
+				decoded.delete_task_plan = decoded.delete_task_plan || {};
+				// 0：Schedule1, 1：Schedule2, 2：Schedule3, 3：Schedule4, 4：Schedule5, 5：Schedule6, 6：Schedule7, 7：Schedule8, 8：Schedule9, 9：Schedule10, 10：Schedule11, 11：Schedule12, 12：Schedule13, 13：Schedule14, 14：Schedule15, 15：Schedule16, 255：All
+				decoded.delete_task_plan.type = readUInt8(bytes, counterObj, 1);
+				break;
+			case 0x5c:
+				decoded.insert_temporary_plan = decoded.insert_temporary_plan || {};
+				// 0：Schedule1, 1：Schedule2, 2：Schedule3, 3：Schedule4, 4：Schedule5, 5：Schedule6, 6：Schedule7, 7：Schedule8, 8：Schedule9, 9：Schedule10, 10：Schedule11, 11：Schedule12, 12：Schedule13, 13：Schedule14, 14：Schedule15, 15：Schedule16, 255：Insertion Schedule Interruption
+				decoded.insert_temporary_plan.id = readUInt8(bytes, counterObj, 1);
+				break;
+			case 0x5b:
+				decoded.filter_clean_alarm = decoded.filter_clean_alarm || {};
+				// 0：clean alarm, 1：report alarm
+				decoded.filter_clean_alarm.mode = readUInt8(bytes, counterObj, 1);
+				break;
+			case 0x5a:
+				decoded.open_window_alarm = decoded.open_window_alarm || {};
+				// 0：clean alarm, 1：report alarm
+				decoded.open_window_alarm.mode = readUInt8(bytes, counterObj, 1);
+				break;
+			case 0x59:
+				decoded.clear_infrared_format_code = readOnlyCommand(bytes, counterObj, 0);
+				break;
+			case 0x58:
+				decoded.delete_temperature_limit_task = decoded.delete_temperature_limit_task || {};
+				// 0：Task1
+				decoded.delete_temperature_limit_task.type = readUInt8(bytes, counterObj, 1);
+				break;
+			case 0x56:
+				decoded.delete_vacation_task = decoded.delete_vacation_task || {};
+				// 0：Task1, 1：Task2, 2：Task3, 3：Task4, 4：Task5, 5：Task6, 6：Task7, 7：Task8, 255：All
+				decoded.delete_vacation_task.type = readUInt8(bytes, counterObj, 1);
+				break;
+			case 0x55:
+				decoded.trigger_infrared_learn = readOnlyCommand(bytes, counterObj, 0);
 				break;
 			default:
 				unknown_command = 1;

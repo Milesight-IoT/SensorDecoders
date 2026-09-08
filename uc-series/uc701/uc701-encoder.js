@@ -244,6 +244,26 @@ function milesightDeviceEncode(payload) {
 		buffer.writeUInt8(0xee);
 		encoded = encoded.concat(buffer.toBytes());
 	}
+	//0xed
+	if ('history' in payload) {
+		for (var i = 0; i < payload.history.length; i++) {
+			var buffer = new Buffer();
+			var history = payload.history[i];
+			buffer.writeUInt8(0xed);
+			// 0：target time, 1：historical time
+			buffer.writeUInt8(1);
+			buffer.writeUInt32LE(history.timestamp);
+			var reset = {};
+			for (var k in history) {
+				if (history.hasOwnProperty(k) && k !== "timestamp") {
+					reset[k] = history[k];
+				}
+			}
+		
+			encoded = encoded.concat(buffer.toBytes());
+			encoded = encoded.concat(milesightDeviceEncode(reset));
+		}
+	}
 	//0xec
 	if ('ipso_device_upgrade' in payload) {
 		var buffer = new Buffer();
@@ -811,6 +831,13 @@ function milesightDeviceEncode(payload) {
 		buffer.writeString(payload.product_pn, 32);
 		encoded = encoded.concat(buffer.toBytes());
 	}
+	//0xdb
+	if ('product_sn' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0xdb);
+		buffer.writeHexString(payload.product_sn, 8);
+		encoded = encoded.concat(buffer.toBytes());
+	}
 	//0xd9
 	if ('oem_id' in payload) {
 		var buffer = new Buffer();
@@ -827,6 +854,28 @@ function milesightDeviceEncode(payload) {
 		}
 		// 0：Off, 1：On
 		buffer.writeUInt8(payload.device_status);
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0xd8
+	if ('product_frequency_band' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0xd8);
+		buffer.writeString(payload.product_frequency_band, 16);
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0xd7
+	if ('device_info' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0xd7);
+		buffer.writeString(payload.device_info.model, 8);
+		buffer.writeString(payload.device_info.submodel_1, 8);
+		buffer.writeString(payload.device_info.submodel_2, 8);
+		buffer.writeString(payload.device_info.submodel_3, 8);
+		buffer.writeString(payload.device_info.submodel_4, 8);
+		buffer.writeString(payload.device_info.pn_1, 8);
+		buffer.writeString(payload.device_info.pn_2, 8);
+		buffer.writeString(payload.device_info.pn_3, 8);
+		buffer.writeString(payload.device_info.pn_4, 8);
 		encoded = encoded.concat(buffer.toBytes());
 	}
 	//0xbf
@@ -870,6 +919,16 @@ function milesightDeviceEncode(payload) {
 			}
 			// 0：disable, 1：enable
 			buffer.writeUInt8(payload.ble_configuration_settings.enable);
+		}
+		if (isValid(payload.ble_configuration_settings.local_id)) {
+			buffer.writeUInt8(0xcd);
+			buffer.writeUInt8(0x01);
+			if ([0, 1].indexOf(payload.ble_configuration_settings.local_id.type) === -1) {
+				throw oneOfError('ble_configuration_settings.local_id.type', [0, 1]);
+			}
+			// 0：public, 1：private
+			buffer.writeUInt8(payload.ble_configuration_settings.local_id.type);
+			buffer.writeHexString(payload.ble_configuration_settings.local_id.address, 6);
 		}
 		if (isValid(payload.ble_configuration_settings.local_name_first)) {
 			buffer.writeUInt8(0xcd);
@@ -979,6 +1038,326 @@ function milesightDeviceEncode(payload) {
 		}
 		// 0：Reset BLE Name , 1：Cancel Pairing
 		buffer.writeUInt8(payload.ble_server.type);
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0x00
+	if ('battery' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0x00);
+		if (payload.battery < 0 || payload.battery > 100) {
+			throw betweenError('battery', 0, 100);
+		}
+		buffer.writeUInt8(payload.battery);
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0x01
+	if ('low_battery_alarm' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0x01);
+		if (payload.low_battery_alarm.value < 0 || payload.low_battery_alarm.value > 100) {
+			throw betweenError('low_battery_alarm.value', 0, 100);
+		}
+		buffer.writeUInt8(payload.low_battery_alarm.value);
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0x02
+	if ('temperature_alarm' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0x02);
+		buffer.writeUInt8(payload.temperature_alarm.type);
+		if (payload.temperature_alarm.type == 0x00) {
+			if (payload.temperature_alarm.window_status_detection_deactivation.temperature < -20 || payload.temperature_alarm.window_status_detection_deactivation.temperature > 60) {
+				throw betweenError('temperature_alarm.window_status_detection_deactivation.temperature', -20, 60);
+			}
+			buffer.writeInt16LE(payload.temperature_alarm.window_status_detection_deactivation.temperature * 100);
+		}
+		if (payload.temperature_alarm.type == 0x01) {
+			if (payload.temperature_alarm.window_status_detection_trigger.temperature < -20 || payload.temperature_alarm.window_status_detection_trigger.temperature > 60) {
+				throw betweenError('temperature_alarm.window_status_detection_trigger.temperature', -20, 60);
+			}
+			buffer.writeInt16LE(payload.temperature_alarm.window_status_detection_trigger.temperature * 100);
+		}
+		if (payload.temperature_alarm.type == 0x20) {
+			if (payload.temperature_alarm.over_range_alarm_trigger.temperature < -20 || payload.temperature_alarm.over_range_alarm_trigger.temperature > 60) {
+				throw betweenError('temperature_alarm.over_range_alarm_trigger.temperature', -20, 60);
+			}
+			buffer.writeInt16LE(payload.temperature_alarm.over_range_alarm_trigger.temperature * 100);
+		}
+		if (payload.temperature_alarm.type == 0x21) {
+			if (payload.temperature_alarm.over_range_alarm_deactivation.temperature < -20 || payload.temperature_alarm.over_range_alarm_deactivation.temperature > 60) {
+				throw betweenError('temperature_alarm.over_range_alarm_deactivation.temperature', -20, 60);
+			}
+			buffer.writeInt16LE(payload.temperature_alarm.over_range_alarm_deactivation.temperature * 100);
+		}
+		if (payload.temperature_alarm.type == 0x22) {
+			if (payload.temperature_alarm.lower_range_alarm_trigger.temperature < -20 || payload.temperature_alarm.lower_range_alarm_trigger.temperature > 60) {
+				throw betweenError('temperature_alarm.lower_range_alarm_trigger.temperature', -20, 60);
+			}
+			buffer.writeInt16LE(payload.temperature_alarm.lower_range_alarm_trigger.temperature * 100);
+		}
+		if (payload.temperature_alarm.type == 0x23) {
+			if (payload.temperature_alarm.lower_range_alarm_deactivation.temperature < -20 || payload.temperature_alarm.lower_range_alarm_deactivation.temperature > 60) {
+				throw betweenError('temperature_alarm.lower_range_alarm_deactivation.temperature', -20, 60);
+			}
+			buffer.writeInt16LE(payload.temperature_alarm.lower_range_alarm_deactivation.temperature * 100);
+		}
+		if (payload.temperature_alarm.type == 0x24) {
+			if (payload.temperature_alarm.within_range_alarm_trigger.temperature < -20 || payload.temperature_alarm.within_range_alarm_trigger.temperature > 60) {
+				throw betweenError('temperature_alarm.within_range_alarm_trigger.temperature', -20, 60);
+			}
+			buffer.writeInt16LE(payload.temperature_alarm.within_range_alarm_trigger.temperature * 100);
+		}
+		if (payload.temperature_alarm.type == 0x25) {
+			if (payload.temperature_alarm.within_range_alarm_deactivation.temperature < -20 || payload.temperature_alarm.within_range_alarm_deactivation.temperature > 60) {
+				throw betweenError('temperature_alarm.within_range_alarm_deactivation.temperature', -20, 60);
+			}
+			buffer.writeInt16LE(payload.temperature_alarm.within_range_alarm_deactivation.temperature * 100);
+		}
+		if (payload.temperature_alarm.type == 0x26) {
+			if (payload.temperature_alarm.outside_range_alarm_trigger.temperature < -20 || payload.temperature_alarm.outside_range_alarm_trigger.temperature > 60) {
+				throw betweenError('temperature_alarm.outside_range_alarm_trigger.temperature', -20, 60);
+			}
+			buffer.writeInt16LE(payload.temperature_alarm.outside_range_alarm_trigger.temperature * 100);
+		}
+		if (payload.temperature_alarm.type == 0x27) {
+			if (payload.temperature_alarm.outside_range_alarm_deactivation.temperature < -20 || payload.temperature_alarm.outside_range_alarm_deactivation.temperature > 60) {
+				throw betweenError('temperature_alarm.outside_range_alarm_deactivation.temperature', -20, 60);
+			}
+			buffer.writeInt16LE(payload.temperature_alarm.outside_range_alarm_deactivation.temperature * 100);
+		}
+		if (payload.temperature_alarm.type == 0x30) {
+			if (payload.temperature_alarm.persistent_low_temperature_alarm_deactivation.temperature < -20 || payload.temperature_alarm.persistent_low_temperature_alarm_deactivation.temperature > 60) {
+				throw betweenError('temperature_alarm.persistent_low_temperature_alarm_deactivation.temperature', -20, 60);
+			}
+			buffer.writeInt16LE(payload.temperature_alarm.persistent_low_temperature_alarm_deactivation.temperature * 100);
+		}
+		if (payload.temperature_alarm.type == 0x31) {
+			if (payload.temperature_alarm.persistent_low_temperature_alarm_trigger.temperature < -20 || payload.temperature_alarm.persistent_low_temperature_alarm_trigger.temperature > 60) {
+				throw betweenError('temperature_alarm.persistent_low_temperature_alarm_trigger.temperature', -20, 60);
+			}
+			buffer.writeInt16LE(payload.temperature_alarm.persistent_low_temperature_alarm_trigger.temperature * 100);
+		}
+		if (payload.temperature_alarm.type == 0x40) {
+			if (payload.temperature_alarm.persistent_high_alarm_deactivation.temperature < -20 || payload.temperature_alarm.persistent_high_alarm_deactivation.temperature > 60) {
+				throw betweenError('temperature_alarm.persistent_high_alarm_deactivation.temperature', -20, 60);
+			}
+			buffer.writeInt16LE(payload.temperature_alarm.persistent_high_alarm_deactivation.temperature * 100);
+		}
+		if (payload.temperature_alarm.type == 0x41) {
+			if (payload.temperature_alarm.persistent_high_alarm_trigger.temperature < -20 || payload.temperature_alarm.persistent_high_alarm_trigger.temperature > 60) {
+				throw betweenError('temperature_alarm.persistent_high_alarm_trigger.temperature', -20, 60);
+			}
+			buffer.writeInt16LE(payload.temperature_alarm.persistent_high_alarm_trigger.temperature * 100);
+		}
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0x03
+	if ('sensor_error' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0x03);
+		buffer.writeUInt8(payload.sensor_error.type);
+		if (payload.sensor_error.type == 0x00) {
+		}
+		if (payload.sensor_error.type == 0x10) {
+		}
+		if (payload.sensor_error.type == 0x20) {
+		}
+		if (payload.sensor_error.type == 0x01) {
+		}
+		if (payload.sensor_error.type == 0x11) {
+		}
+		if (payload.sensor_error.type == 0x21) {
+		}
+		if (payload.sensor_error.type == 0x02) {
+		}
+		if (payload.sensor_error.type == 0x12) {
+		}
+		if (payload.sensor_error.type == 0x22) {
+		}
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0x04
+	if ('infrared_cmd_status' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0x04);
+		var bitOptions = 0;
+		// 0: Switch Off, 1: Switch On
+		bitOptions |= payload.infrared_cmd_status.cmd.switch << 0;
+
+		// 0：heat, 1：em heat, 2：cool, 3：auto, 4：dehumidify, 5：ventilation
+		bitOptions |= payload.infrared_cmd_status.cmd.mode << 1;
+
+		// 0：Auto, 1：Ventilation, 2：Always Open, 3：Low, 4：Medium, 5：High, 255：Disabled
+		bitOptions |= payload.infrared_cmd_status.cmd.air_volume << 4;
+
+		// 0: Command, 1: Local
+		bitOptions |= payload.infrared_cmd_status.cmd.cmd_type << 7;
+		buffer.writeUInt8(bitOptions);
+
+		var bitOptions = 0;
+		// 0: Command Invalid, 1: Command Valid
+		bitOptions |= payload.infrared_cmd_status.cmd.control_word.command_valid << 0;
+
+		// 0: Command unavailable, 1: Command available
+		bitOptions |= payload.infrared_cmd_status.cmd.control_word.command_available << 1;
+
+		bitOptions |= payload.infrared_cmd_status.cmd.control_word.reserve << 2;
+		buffer.writeUInt8(bitOptions);
+
+		if (payload.infrared_cmd_status.target_temp < 16 || payload.infrared_cmd_status.target_temp > 30) {
+			throw betweenError('infrared_cmd_status.target_temp', 16, 30);
+		}
+		buffer.writeInt16LE(payload.infrared_cmd_status.target_temp * 100);
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0x05
+	if ('running_state' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0x05);
+		buffer.writeUInt8(payload.running_state.data_source);
+		if (payload.running_state.data_source == 0x00) {
+			if ([0, 1].indexOf(payload.running_state.infrared_cmd.switch_state) === -1) {
+				throw oneOfError('running_state.infrared_cmd.switch_state', [0, 1]);
+			}
+			// 0: Switch Off, 1: Switch On
+			buffer.writeUInt8(payload.running_state.infrared_cmd.switch_state);
+		}
+		if (payload.running_state.data_source == 0x01) {
+			if (payload.running_state.current_transformer.current < 0 || payload.running_state.current_transformer.current > 30) {
+				throw betweenError('running_state.current_transformer.current', 0, 30);
+			}
+			buffer.writeInt32LE(payload.running_state.current_transformer.current * 1000);
+		}
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0x06
+	if ('internal_temp' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0x06);
+		if (payload.internal_temp < -20 || payload.internal_temp > 60) {
+			throw betweenError('internal_temp', -20, 60);
+		}
+		buffer.writeInt16LE(payload.internal_temp * 100);
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0x07
+	if ('external_temp' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0x07);
+		if (payload.external_temp < -20 || payload.external_temp > 60) {
+			throw betweenError('external_temp', -20, 60);
+		}
+		buffer.writeInt16LE(payload.external_temp * 100);
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0x08
+	if ('humidity' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0x08);
+		if (payload.humidity < 0 || payload.humidity > 100) {
+			throw betweenError('humidity', 0, 100);
+		}
+		buffer.writeInt16LE(payload.humidity * 10);
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0x09
+	if ('filter_clean_remind' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0x09);
+		buffer.writeUInt32LE(payload.filter_clean_remind.usage_time);
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0x0a
+	if ('cmd_temp_limit' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0x0a);
+		buffer.writeUInt8(payload.cmd_temp_limit.type);
+		if (payload.cmd_temp_limit.type == 0x00) {
+			if (payload.cmd_temp_limit.lower_range_alarm_trigger.low_threshold < 5 || payload.cmd_temp_limit.lower_range_alarm_trigger.low_threshold > 35) {
+				throw betweenError('cmd_temp_limit.lower_range_alarm_trigger.low_threshold', 5, 35);
+			}
+			buffer.writeInt16LE(payload.cmd_temp_limit.lower_range_alarm_trigger.low_threshold * 100);
+			if (payload.cmd_temp_limit.lower_range_alarm_trigger.high_threshold < 5 || payload.cmd_temp_limit.lower_range_alarm_trigger.high_threshold > 35) {
+				throw betweenError('cmd_temp_limit.lower_range_alarm_trigger.high_threshold', 5, 35);
+			}
+			buffer.writeInt16LE(payload.cmd_temp_limit.lower_range_alarm_trigger.high_threshold * 100);
+		}
+		if (payload.cmd_temp_limit.type == 0x01) {
+			if (payload.cmd_temp_limit.over_range_alarm_trigger.low_threshold < 5 || payload.cmd_temp_limit.over_range_alarm_trigger.low_threshold > 35) {
+				throw betweenError('cmd_temp_limit.over_range_alarm_trigger.low_threshold', 5, 35);
+			}
+			buffer.writeInt16LE(payload.cmd_temp_limit.over_range_alarm_trigger.low_threshold * 100);
+			if (payload.cmd_temp_limit.over_range_alarm_trigger.high_threshold < 5 || payload.cmd_temp_limit.over_range_alarm_trigger.high_threshold > 35) {
+				throw betweenError('cmd_temp_limit.over_range_alarm_trigger.high_threshold', 5, 35);
+			}
+			buffer.writeInt16LE(payload.cmd_temp_limit.over_range_alarm_trigger.high_threshold * 100);
+		}
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0x0b
+	if ('local_temp_limit' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0x0b);
+		buffer.writeUInt8(payload.local_temp_limit.type);
+		if (payload.local_temp_limit.type == 0x00) {
+			if (payload.local_temp_limit.lower_range_alarm_trigger.low_threshold < 5 || payload.local_temp_limit.lower_range_alarm_trigger.low_threshold > 35) {
+				throw betweenError('local_temp_limit.lower_range_alarm_trigger.low_threshold', 5, 35);
+			}
+			buffer.writeInt16LE(payload.local_temp_limit.lower_range_alarm_trigger.low_threshold * 100);
+			if (payload.local_temp_limit.lower_range_alarm_trigger.high_threshold < 5 || payload.local_temp_limit.lower_range_alarm_trigger.high_threshold > 35) {
+				throw betweenError('local_temp_limit.lower_range_alarm_trigger.high_threshold', 5, 35);
+			}
+			buffer.writeInt16LE(payload.local_temp_limit.lower_range_alarm_trigger.high_threshold * 100);
+		}
+		if (payload.local_temp_limit.type == 0x01) {
+			if (payload.local_temp_limit.over_range_alarm_trigger.low_threshold < 5 || payload.local_temp_limit.over_range_alarm_trigger.low_threshold > 35) {
+				throw betweenError('local_temp_limit.over_range_alarm_trigger.low_threshold', 5, 35);
+			}
+			buffer.writeInt16LE(payload.local_temp_limit.over_range_alarm_trigger.low_threshold * 100);
+			if (payload.local_temp_limit.over_range_alarm_trigger.high_threshold < 5 || payload.local_temp_limit.over_range_alarm_trigger.high_threshold > 35) {
+				throw betweenError('local_temp_limit.over_range_alarm_trigger.high_threshold', 5, 35);
+			}
+			buffer.writeInt16LE(payload.local_temp_limit.over_range_alarm_trigger.high_threshold * 100);
+		}
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0x30
+	if ('data_transparent' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0x30);
+		buffer.writeUInt8(payload.data_transparent.res_cmd);
+		if (payload.data_transparent.res_cmd == 0x00) {
+			buffer.writeUInt8(payload.data_transparent.res_cmd1.command);
+			if (payload.data_transparent.res_cmd1.command == 0x00) {
+				if (payload.data_transparent.res_cmd1.battery < 0 || payload.data_transparent.res_cmd1.battery > 100) {
+					throw betweenError('data_transparent.res_cmd1.battery', 0, 100);
+				}
+				buffer.writeUInt8(payload.data_transparent.res_cmd1.battery);
+			}
+			if (payload.data_transparent.res_cmd1.command == 0x0f) {
+				buffer.writeUInt8(payload.data_transparent.res_cmd1.battery_event.type);
+				if (payload.data_transparent.res_cmd1.battery_event.type == 0x00) {
+				}
+				if (payload.data_transparent.res_cmd1.battery_event.type == 0x01) {
+				}
+			}
+			if (payload.data_transparent.res_cmd1.command == 0x0d) {
+				buffer.writeUInt8(payload.data_transparent.res_cmd1.key_event.type);
+				if (payload.data_transparent.res_cmd1.key_event.type == 0x00) {
+				}
+				if (payload.data_transparent.res_cmd1.key_event.type == 0x01) {
+				}
+				if (payload.data_transparent.res_cmd1.key_event.type == 0x02) {
+				}
+			}
+			if (payload.data_transparent.res_cmd1.command == 0xc8) {
+				if ([0, 1].indexOf(payload.data_transparent.res_cmd1.device_status) === -1) {
+					throw oneOfError('data_transparent.res_cmd1.device_status', [0, 1]);
+				}
+				// 0：Off, 1：On
+				buffer.writeUInt8(payload.data_transparent.res_cmd1.device_status);
+			}
+		}
 		encoded = encoded.concat(buffer.toBytes());
 	}
 	//0xc9
@@ -1788,6 +2167,24 @@ function milesightDeviceEncode(payload) {
 	//0x86
 	if ('infrared_learn' in payload) {
 		var buffer = new Buffer();
+		if (isValid(payload.infrared_learn.status)) {
+			buffer.writeUInt8(0x86);
+			// 0: Non learning state, 1: During a learning session, 2: In secondary learning (requires secondary learning+or - key), 3: In secondary learning (requires secondary learning mode key), 4: In secondary learning (requires secondary learning of wind keys), 5: Learning failure (timeout failure), 6: Learning failed (code library matching failed), 7: Success in Learning (One Study), 8: Learning success (secondary learning)
+			buffer.writeUInt8(0x00);
+			if ([0, 1, 2, 3, 4, 5, 6, 7, 8].indexOf(payload.infrared_learn.status) === -1) {
+				throw oneOfError('infrared_learn.status', [0, 1, 2, 3, 4, 5, 6, 7, 8]);
+			}
+			// 0: Non learning state, 1: During a learning session, 2: In secondary learning (requires secondary learning+or - key), 3: In secondary learning (requires secondary learning mode key), 4: In secondary learning (requires secondary learning of wind keys), 5: Learning failure (timeout failure), 6: Learning failed (code library matching failed), 7: Success in Learning (One Study), 8: Learning success (secondary learning)
+			buffer.writeUInt8(payload.infrared_learn.status);
+		}
+		if (isValid(payload.infrared_learn.findnext_max)) {
+			buffer.writeUInt8(0x86);
+			buffer.writeUInt8(0x01);
+			if (payload.infrared_learn.findnext_max < 1 || payload.infrared_learn.findnext_max > 20) {
+				throw betweenError('infrared_learn.findnext_max', 1, 20);
+			}
+			buffer.writeUInt8(payload.infrared_learn.findnext_max);
+		}
 		if (isValid(payload.infrared_learn.findnext)) {
 			buffer.writeUInt8(0x86);
 			buffer.writeUInt8(0x02);
@@ -1805,6 +2202,16 @@ function milesightDeviceEncode(payload) {
 			}
 			// 0: NONE, 1: XIAOMI/TCL, 2: SHINCO/SAMSUNG/ELECTROLUX, 3: RSD/MCQUAY/TICA, 4: WHIRLPOOL/BOSCH/AIRWELL, 5: FUJITSU/McQUAY, 6: TRUMA
 			buffer.writeUInt8(payload.infrared_learn.predefine_brand);
+		}
+		if (isValid(payload.infrared_learn.package_status)) {
+			buffer.writeUInt8(0x86);
+			// 0: No infrared format packet, 1: Infrared format package already exists
+			buffer.writeUInt8(0x04);
+			if ([0, 1].indexOf(payload.infrared_learn.package_status) === -1) {
+				throw oneOfError('infrared_learn.package_status', [0, 1]);
+			}
+			// 0: No infrared format packet, 1: Infrared format package already exists
+			buffer.writeUInt8(payload.infrared_learn.package_status);
 		}
 		encoded = encoded.concat(buffer.toBytes());
 	}
@@ -1849,6 +2256,16 @@ function milesightDeviceEncode(payload) {
 				throw betweenError('internal_sensor_settings.humi_calibration', -100, 100);
 			}
 			buffer.writeInt16LE(payload.internal_sensor_settings.humi_calibration * 10);
+		}
+		if (isValid(payload.internal_sensor_settings.sensor_type)) {
+			buffer.writeUInt8(0x88);
+			// 0：Temperature Sensor, 1：Temperature and Humidity Sensor
+			buffer.writeUInt8(0x08);
+			if ([0, 1].indexOf(payload.internal_sensor_settings.sensor_type) === -1) {
+				throw oneOfError('internal_sensor_settings.sensor_type', [0, 1]);
+			}
+			// 0：Temperature Sensor, 1：Temperature and Humidity Sensor
+			buffer.writeUInt8(payload.internal_sensor_settings.sensor_type);
 		}
 		encoded = encoded.concat(buffer.toBytes());
 	}
