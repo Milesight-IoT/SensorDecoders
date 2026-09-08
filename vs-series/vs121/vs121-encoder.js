@@ -119,7 +119,9 @@ function milesightDeviceEncode(payload) {
         encoded = encoded.concat(setDetectRegionConfig(payload.detect_region_config));
     }
     if ("time_schedule_config" in payload) {
-        encoded = encoded.concat(setScheduleSetting(payload.time_schedule_config[i]));
+        for (var i = 0; i < payload.time_schedule_config.length; i++) {
+            encoded = encoded.concat(setScheduleSetting(payload.time_schedule_config[i]));
+        }
     }
     if ("time_schedule" in payload) {
         for (var i = 0; i < payload.time_schedule.length; i++) {
@@ -134,6 +136,54 @@ function milesightDeviceEncode(payload) {
     }
     if ("filter_u_turn_enable" in payload) {
         encoded = encoded.concat(setFilterUTurn(payload.filter_u_turn_enable));
+    }
+    if ("d2d_vacant_enable" in payload) {
+        encoded = encoded.concat(setD2DVacantEnable(payload.d2d_vacant_enable));
+    }
+    if ("d2d_occupied_enable" in payload) {
+        encoded = encoded.concat(setD2DOccupiedEnable(payload.d2d_occupied_enable));
+    }
+    if ("led_indicator_enable" in payload) {
+        encoded = encoded.concat(setLedIndicatorEnable(payload.led_indicator_enable));
+    }
+    if ("time_zone" in payload) {
+        encoded = encoded.concat(setTimeZone(payload.time_zone));
+    }
+    if ("retransmission_enable" in payload) {
+        encoded = encoded.concat(setRetransmissionEnable(payload.retransmission_enable));
+    }
+    if ("retransmission_interval" in payload) {
+        encoded = encoded.concat(setRetransmissionInterval(payload.retransmission_interval));
+    }
+    if ("detect_duration_mode" in payload) {
+        encoded = encoded.concat(setDetectDurationMode(payload.detect_duration_mode));
+    }
+    if ("detect_duration" in payload) {
+        encoded = encoded.concat(setDetectDuration(payload.detect_duration));
+    }
+    if ("privacy_mask_enable" in payload) {
+        encoded = encoded.concat(setPrivacyMaskEnable(payload.privacy_mask_enable));
+    }
+    if ("detect_region_enable" in payload) {
+        encoded = encoded.concat(setDetectRegionEnable(payload.detect_region_enable));
+    }
+    if ("obstacle_mask_enable" in payload) {
+        encoded = encoded.concat(setObstacleMaskEnable(payload.obstacle_mask_enable));
+    }
+    if ("periodic_report_enable" in payload) {
+        encoded = encoded.concat(setPeriodicReportEnable(payload.periodic_report_enable));
+    }
+    if ("trigger_report_config" in payload) {
+        encoded = encoded.concat(setTriggerReportConfig(payload.trigger_report_config));
+    }
+    if ("region_dwell_config" in payload) {
+        encoded = encoded.concat(setRegionDwellConfig(payload.region_dwell_config));
+    }
+    if ("work_schedule" in payload) {
+        encoded = encoded.concat(setWorkSchedule(payload.work_schedule));
+    }
+    if ("clear_all_cumulative_count" in payload) {
+        encoded = encoded.concat(clearAllCumulativeCount(payload.clear_all_cumulative_count));
     }
 
     return encoded;
@@ -517,18 +567,20 @@ function setOnTheDotReportInterval(on_the_dot_report_interval) {
 
 /**
  * set from now on report interval
- * @param {number} from_now_on_report_interval unit: second, range: [5, 65535]
+ * report interval of region / line crossing / people flow counting
+ * @param {number} from_now_on_report_interval unit: second, range: [5, 86400]
+ * 88 version uses 3 bytes data, before 87 it was 2 bytes with range [5, 65535]
  * @example { "from_now_on_report_interval": 10 }
  */
 function setFromNowOnReportInterval(from_now_on_report_interval) {
-    if (from_now_on_report_interval < 5 || from_now_on_report_interval > 65535) {
-        throw new Error("from_now_on_report_interval must be between 5 and 65535");
+    if (from_now_on_report_interval < 5 || from_now_on_report_interval > 86400) {
+        throw new Error("from_now_on_report_interval must be between 5 and 86400");
     }
 
-    var buffer = new Buffer(4);
+    var buffer = new Buffer(5);
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0x03);
-    buffer.writeUInt16LE(from_now_on_report_interval);
+    buffer.writeUInt24LE(from_now_on_report_interval);
     return buffer.toBytes();
 }
 
@@ -926,12 +978,377 @@ function setLogConfig(log_level) {
         throw new Error("log_level must be one of " + log_level_values.join(", "));
     }
 
-    var buffer = new Buffer(3);
+    var buffer = new Buffer(4);
     buffer.writeUInt8(0xf9);
-    buffer.writeUInt8(0x88);
+    buffer.writeUInt8(0x89);
     buffer.writeUInt8(0x00);
     buffer.writeUInt8(getValue(log_level_map, log_level));
     return buffer.toBytes();
+}
+
+/**
+ * d2d vacant master switch
+ * @param {number} d2d_vacant_enable values: (0: disable, 1: enable)
+ * @example { "d2d_vacant_enable": 1 }
+ */
+function setD2DVacantEnable(d2d_vacant_enable) {
+    var enable_map = { 0: "disable", 1: "enable" };
+    var enable_values = getValues(enable_map);
+    if (enable_values.indexOf(d2d_vacant_enable) === -1) {
+        throw new Error("d2d_vacant_enable must be one of " + enable_values.join(", "));
+    }
+
+    var buffer = new Buffer(3);
+    buffer.writeUInt8(0xf9);
+    buffer.writeUInt8(0xdc);
+    buffer.writeUInt8(getValue(enable_map, d2d_vacant_enable));
+    return buffer.toBytes();
+}
+
+/**
+ * d2d occupied master switch
+ * @param {number} d2d_occupied_enable values: (0: disable, 1: enable)
+ * @example { "d2d_occupied_enable": 1 }
+ */
+function setD2DOccupiedEnable(d2d_occupied_enable) {
+    var enable_map = { 0: "disable", 1: "enable" };
+    var enable_values = getValues(enable_map);
+    if (enable_values.indexOf(d2d_occupied_enable) === -1) {
+        throw new Error("d2d_occupied_enable must be one of " + enable_values.join(", "));
+    }
+
+    var buffer = new Buffer(3);
+    buffer.writeUInt8(0xf9);
+    buffer.writeUInt8(0xdd);
+    buffer.writeUInt8(getValue(enable_map, d2d_occupied_enable));
+    return buffer.toBytes();
+}
+
+/**
+ * led indicator switch
+ * @param {number} led_indicator_enable values: (0: disable, 1: enable)
+ * @example { "led_indicator_enable": 1 }
+ */
+function setLedIndicatorEnable(led_indicator_enable) {
+    var enable_map = { 0: "disable", 1: "enable" };
+    var enable_values = getValues(enable_map);
+    if (enable_values.indexOf(led_indicator_enable) === -1) {
+        throw new Error("led_indicator_enable must be one of " + enable_values.join(", "));
+    }
+
+    var buffer = new Buffer(3);
+    buffer.writeUInt8(0xf9);
+    buffer.writeUInt8(0xba);
+    buffer.writeUInt8(getValue(enable_map, led_indicator_enable));
+    return buffer.toBytes();
+}
+
+/**
+ * set device time zone
+ * @param {number} time_zone range: [1, 128], e.g. 113: UTC-8 CHN
+ * @example { "time_zone": 113 }
+ */
+function setTimeZone(time_zone) {
+    if (time_zone < 1 || time_zone > 128) {
+        throw new Error("time_zone must be between 1 and 128");
+    }
+
+    var buffer = new Buffer(3);
+    buffer.writeUInt8(0xf9);
+    buffer.writeUInt8(0xd0);
+    buffer.writeUInt8(time_zone);
+    return buffer.toBytes();
+}
+
+/**
+ * data retransmission switch
+ * @param {number} retransmission_enable values: (0: disable, 1: enable)
+ * @example { "retransmission_enable": 1 }
+ */
+function setRetransmissionEnable(retransmission_enable) {
+    var enable_map = { 0: "disable", 1: "enable" };
+    var enable_values = getValues(enable_map);
+    if (enable_values.indexOf(retransmission_enable) === -1) {
+        throw new Error("retransmission_enable must be one of " + enable_values.join(", "));
+    }
+
+    var buffer = new Buffer(3);
+    buffer.writeUInt8(0xff);
+    buffer.writeUInt8(0x69);
+    buffer.writeUInt8(getValue(enable_map, retransmission_enable));
+    return buffer.toBytes();
+}
+
+/**
+ * set retransmission interval
+ * @param {number} retransmission_interval unit: second, range: [30, 1200]
+ * @example { "retransmission_interval": 30 }
+ */
+function setRetransmissionInterval(retransmission_interval) {
+    if (retransmission_interval < 30 || retransmission_interval > 1200) {
+        throw new Error("retransmission_interval must be between 30 and 1200");
+    }
+
+    var buffer = new Buffer(5);
+    buffer.writeUInt8(0xff);
+    buffer.writeUInt8(0x6a);
+    buffer.writeUInt8(0x00);
+    buffer.writeUInt16LE(retransmission_interval);
+    return buffer.toBytes();
+}
+
+/**
+ * set detection duration mode
+ * @param {number} detect_duration_mode values: (0: auto, 1: manual)
+ * @example { "detect_duration_mode": 1 }
+ */
+function setDetectDurationMode(detect_duration_mode) {
+    var mode_map = { 0: "auto", 1: "manual" };
+    var mode_values = getValues(mode_map);
+    if (mode_values.indexOf(detect_duration_mode) === -1) {
+        throw new Error("detect_duration_mode must be one of " + mode_values.join(", "));
+    }
+
+    var buffer = new Buffer(3);
+    buffer.writeUInt8(0xf9);
+    buffer.writeUInt8(0xcd);
+    buffer.writeUInt8(getValue(mode_map, detect_duration_mode));
+    return buffer.toBytes();
+}
+
+/**
+ * set manual detection duration
+ * @param {number} detect_duration unit: second, range: [1, 10]
+ * @example { "detect_duration": 5 }
+ */
+function setDetectDuration(detect_duration) {
+    if (detect_duration < 1 || detect_duration > 10) {
+        throw new Error("detect_duration must be between 1 and 10");
+    }
+
+    var buffer = new Buffer(3);
+    buffer.writeUInt8(0xf9);
+    buffer.writeUInt8(0xcf);
+    buffer.writeUInt8(detect_duration);
+    return buffer.toBytes();
+}
+
+/**
+ * privacy mask switch
+ * @param {number} privacy_mask_enable values: (0: disable, 1: enable)
+ * @example { "privacy_mask_enable": 1 }
+ */
+function setPrivacyMaskEnable(privacy_mask_enable) {
+    var enable_map = { 0: "disable", 1: "enable" };
+    var enable_values = getValues(enable_map);
+    if (enable_values.indexOf(privacy_mask_enable) === -1) {
+        throw new Error("privacy_mask_enable must be one of " + enable_values.join(", "));
+    }
+
+    var buffer = new Buffer(3);
+    buffer.writeUInt8(0xf9);
+    buffer.writeUInt8(0xd1);
+    buffer.writeUInt8(getValue(enable_map, privacy_mask_enable));
+    return buffer.toBytes();
+}
+
+/**
+ * detect region usage switch
+ * @param {number} detect_region_enable values: (0: disable, 1: enable)
+ * @example { "detect_region_enable": 1 }
+ */
+function setDetectRegionEnable(detect_region_enable) {
+    var enable_map = { 0: "disable", 1: "enable" };
+    var enable_values = getValues(enable_map);
+    if (enable_values.indexOf(detect_region_enable) === -1) {
+        throw new Error("detect_region_enable must be one of " + enable_values.join(", "));
+    }
+
+    var buffer = new Buffer(3);
+    buffer.writeUInt8(0xf9);
+    buffer.writeUInt8(0xd2);
+    buffer.writeUInt8(getValue(enable_map, detect_region_enable));
+    return buffer.toBytes();
+}
+
+/**
+ * obstacle shield region switch
+ * @param {number} obstacle_mask_enable values: (0: disable, 1: enable)
+ * @example { "obstacle_mask_enable": 1 }
+ */
+function setObstacleMaskEnable(obstacle_mask_enable) {
+    var enable_map = { 0: "disable", 1: "enable" };
+    var enable_values = getValues(enable_map);
+    if (enable_values.indexOf(obstacle_mask_enable) === -1) {
+        throw new Error("obstacle_mask_enable must be one of " + enable_values.join(", "));
+    }
+
+    var buffer = new Buffer(3);
+    buffer.writeUInt8(0xf9);
+    buffer.writeUInt8(0xd3);
+    buffer.writeUInt8(getValue(enable_map, obstacle_mask_enable));
+    return buffer.toBytes();
+}
+
+/**
+ * periodic report switch of region / line crossing / people flow counting
+ * @param {number} periodic_report_enable values: (0: disable, 1: enable)
+ * @example { "periodic_report_enable": 1 }
+ */
+function setPeriodicReportEnable(periodic_report_enable) {
+    var enable_map = { 0: "disable", 1: "enable" };
+    var enable_values = getValues(enable_map);
+    if (enable_values.indexOf(periodic_report_enable) === -1) {
+        throw new Error("periodic_report_enable must be one of " + enable_values.join(", "));
+    }
+
+    var buffer = new Buffer(3);
+    buffer.writeUInt8(0xf9);
+    buffer.writeUInt8(0xd4);
+    buffer.writeUInt8(getValue(enable_map, periodic_report_enable));
+    return buffer.toBytes();
+}
+
+/**
+ * trigger report switch of region people count change / region occupancy change / line crossing
+ * @param {object} trigger_report_config
+ * @param {number} trigger_report_config.enable values: (0: disable, 1: enable)
+ * @param {number} trigger_report_config.mode values: (0: once_result_change, 1: zero_to_nonzero)
+ * @example { "trigger_report_config": { "enable": 1, "mode": 1 } }
+ */
+function setTriggerReportConfig(trigger_report_config) {
+    var enable = trigger_report_config.enable;
+    var mode = trigger_report_config.mode;
+
+    var enable_map = { 0: "disable", 1: "enable" };
+    var enable_values = getValues(enable_map);
+    if (enable_values.indexOf(enable) === -1) {
+        throw new Error("trigger_report_config.enable must be one of " + enable_values.join(", "));
+    }
+    var mode_map = { 0: "once_result_change", 1: "zero_to_nonzero" };
+    var mode_values = getValues(mode_map);
+    if (mode_values.indexOf(mode) === -1) {
+        throw new Error("trigger_report_config.mode must be one of " + mode_values.join(", "));
+    }
+
+    var buffer = new Buffer(4);
+    buffer.writeUInt8(0xf9);
+    buffer.writeUInt8(0xd5);
+    buffer.writeUInt8(getValue(enable_map, enable));
+    buffer.writeUInt8(getValue(mode_map, mode));
+    return buffer.toBytes();
+}
+
+/**
+ * set dwell time config of one region
+ * @param {object} region_dwell_config
+ * @param {number} region_dwell_config.region range: [1, 16]
+ * @param {number} region_dwell_config.enable values: (0: disable, 1: enable)
+ * @param {number} region_dwell_config.min_dwell_time unit: second, range: [5, 3600]
+ * @example { "region_dwell_config": { "region": 1, "enable": 1, "min_dwell_time": 5 } }
+ */
+function setRegionDwellConfig(region_dwell_config) {
+    var region = region_dwell_config.region;
+    var enable = region_dwell_config.enable;
+    var min_dwell_time = region_dwell_config.min_dwell_time;
+
+    if (region < 1 || region > 16) {
+        throw new Error("region_dwell_config.region must be between 1 and 16");
+    }
+    var enable_map = { 0: "disable", 1: "enable" };
+    var enable_values = getValues(enable_map);
+    if (enable_values.indexOf(enable) === -1) {
+        throw new Error("region_dwell_config.enable must be one of " + enable_values.join(", "));
+    }
+    if (min_dwell_time < 5 || min_dwell_time > 3600) {
+        throw new Error("region_dwell_config.min_dwell_time must be between 5 and 3600");
+    }
+
+    var buffer = new Buffer(6);
+    buffer.writeUInt8(0xf9);
+    buffer.writeUInt8(0xd6);
+    buffer.writeUInt8(region - 1);
+    buffer.writeUInt8(getValue(enable_map, enable));
+    buffer.writeUInt16LE(min_dwell_time);
+    return buffer.toBytes();
+}
+
+/**
+ * set work schedule (total switch of region / line crossing / people flow schedules)
+ * @param {object} work_schedule
+ * @param {number} work_schedule.enable values: (0: disable, 1: enable)
+ * @param {number} work_schedule.weekday values: (0: sun, 1: mon, 2: tue, 3: wed, 4: thu, 5: fri, 6: sat)
+ * @param {number} work_schedule.period values: (1: period 1, 2: period 2, 3: period 3)
+ * @param {number} work_schedule.start_hour range: [0, 23]
+ * @param {number} work_schedule.start_minute range: [0, 59]
+ * @param {number} work_schedule.end_hour range: [0, 23]
+ * @param {number} work_schedule.end_minute range: [0, 59]
+ * @example { "work_schedule": { "enable": 1, "weekday": 0, "period": 1, "start_hour": 8, "start_minute": 0, "end_hour": 9, "end_minute": 0 } }
+ */
+function setWorkSchedule(work_schedule) {
+    var enable = work_schedule.enable;
+    var weekday = work_schedule.weekday;
+    var period = work_schedule.period;
+    var start_hour = work_schedule.start_hour;
+    var start_minute = work_schedule.start_minute;
+    var end_hour = work_schedule.end_hour;
+    var end_minute = work_schedule.end_minute;
+
+    var enable_map = { 0: "disable", 1: "enable" };
+    var enable_values = getValues(enable_map);
+    if (enable_values.indexOf(enable) === -1) {
+        throw new Error("work_schedule.enable must be one of " + enable_values.join(", "));
+    }
+    var weekday_map = { 0: "sun", 1: "mon", 2: "tue", 3: "wed", 4: "thu", 5: "fri", 6: "sat" };
+    var weekday_values = getValues(weekday_map);
+    if (weekday_values.indexOf(weekday) === -1) {
+        throw new Error("work_schedule.weekday must be one of " + weekday_values.join(", "));
+    }
+    if (period < 1 || period > 3) {
+        throw new Error("work_schedule.period must be between 1 and 3");
+    }
+    if (start_hour < 0 || start_hour > 23) {
+        throw new Error("work_schedule.start_hour must be between 0 and 23");
+    }
+    if (start_minute < 0 || start_minute > 59) {
+        throw new Error("work_schedule.start_minute must be between 0 and 59");
+    }
+    if (end_hour < 0 || end_hour > 23) {
+        throw new Error("work_schedule.end_hour must be between 0 and 23");
+    }
+    if (end_minute < 0 || end_minute > 59) {
+        throw new Error("work_schedule.end_minute must be between 0 and 59");
+    }
+
+    var buffer = new Buffer(9);
+    buffer.writeUInt8(0xf9);
+    buffer.writeUInt8(0xd7);
+    buffer.writeUInt8(getValue(enable_map, enable));
+    buffer.writeUInt8(getValue(weekday_map, weekday));
+    buffer.writeUInt8(period - 1);
+    buffer.writeUInt8(start_hour);
+    buffer.writeUInt8(start_minute);
+    buffer.writeUInt8(end_hour);
+    buffer.writeUInt8(end_minute);
+    return buffer.toBytes();
+}
+
+/**
+ * reset all cumulative values of people passing / dwell time / people flow
+ * @param {number} clear_all_cumulative_count values: (0: no, 1: yes)
+ * @example { "clear_all_cumulative_count": 1 }
+ */
+function clearAllCumulativeCount(clear_all_cumulative_count) {
+    var yes_no_map = { 0: "no", 1: "yes" };
+    var yes_no_values = getValues(yes_no_map);
+    if (yes_no_values.indexOf(clear_all_cumulative_count) === -1) {
+        throw new Error("clear_all_cumulative_count must be one of " + yes_no_values.join(", "));
+    }
+
+    if (getValue(yes_no_map, clear_all_cumulative_count) === 0) {
+        return [];
+    }
+    return [0xf9, 0xd8, 0x01];
 }
 
 function getValues(map) {

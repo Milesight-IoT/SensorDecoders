@@ -185,8 +185,8 @@ function handle_downlink_response(channel_type, bytes, offset) {
 
     switch (channel_type) {
         case 0x03:
-            decoded.from_now_on_report_interval = readUInt16LE(bytes.slice(offset, offset + 2));
-            offset += 2;
+            decoded.from_now_on_report_interval = readUInt24LE(bytes.slice(offset, offset + 3));
+            offset += 3;
             break;
         case 0x04:
             decoded.confirm_mode_enable = readEnableStatus(bytes[offset]);
@@ -234,6 +234,14 @@ function handle_downlink_response(channel_type, bytes, offset) {
             decoded.clear_cumulative_count = readYesNoStatus(1);
             offset += 1;
             break
+        case 0x69:
+            decoded.retransmission_enable = readEnableStatus(bytes[offset]);
+            offset += 1;
+            break;
+        case 0x6a:
+            decoded.retransmission_interval = readUInt16LE(bytes.slice(offset + 1, offset + 3));
+            offset += 3;
+            break;
         case 0x84:
             decoded.d2d_enable = readEnableStatus(bytes[offset]);
             offset += 1;
@@ -277,8 +285,9 @@ function handle_downlink_response_ext(code, channel_type, bytes, offset) {
             offset += 1;
             break;
         case 0x88:
-            decoded.log_level = readLogLevel(bytes[offset]);
-            offset += 1;
+        case 0x89:
+            decoded.log_level = readLogLevel(bytes[offset + 1]);
+            offset += 2;
             break;
         case 0x8b:
             decoded.lorawan_version = readLoRaWANVersion(bytes[offset]);
@@ -372,6 +381,76 @@ function handle_downlink_response_ext(code, channel_type, bytes, offset) {
             decoded.time_schedule = decoded.time_schedule || [];
             decoded.time_schedule.push(time_schedule);
             break;
+        case 0xba:
+            decoded.led_indicator_enable = readEnableStatus(bytes[offset]);
+            offset += 1;
+            break;
+        case 0xcd:
+            decoded.detect_duration_mode = readDetectDurationMode(bytes[offset]);
+            offset += 1;
+            break;
+        case 0xcf:
+            decoded.detect_duration = readUInt8(bytes[offset]);
+            offset += 1;
+            break;
+        case 0xd0:
+            decoded.time_zone = readUInt8(bytes[offset]);
+            offset += 1;
+            break;
+        case 0xd1:
+            decoded.privacy_mask_enable = readEnableStatus(bytes[offset]);
+            offset += 1;
+            break;
+        case 0xd2:
+            decoded.detect_region_enable = readEnableStatus(bytes[offset]);
+            offset += 1;
+            break;
+        case 0xd3:
+            decoded.obstacle_mask_enable = readEnableStatus(bytes[offset]);
+            offset += 1;
+            break;
+        case 0xd4:
+            decoded.periodic_report_enable = readEnableStatus(bytes[offset]);
+            offset += 1;
+            break;
+        case 0xd5:
+            decoded.trigger_report_config = {};
+            decoded.trigger_report_config.enable = readEnableStatus(bytes[offset]);
+            decoded.trigger_report_config.mode = readTriggerReportMode(bytes[offset + 1]);
+            offset += 2;
+            break;
+        case 0xd6:
+            decoded.region_dwell_config = {};
+            decoded.region_dwell_config.region = readUInt8(bytes[offset]) + 1;
+            decoded.region_dwell_config.enable = readEnableStatus(bytes[offset + 1]);
+            decoded.region_dwell_config.min_dwell_time = readUInt16LE(bytes.slice(offset + 2, offset + 4));
+            offset += 4;
+            break;
+        case 0xd7:
+            var work_schedule = {};
+            work_schedule.enable = readEnableStatus(bytes[offset]);
+            work_schedule.weekday = readWeekday(readUInt8(bytes[offset + 1]));
+            work_schedule.period = readUInt8(bytes[offset + 2]) + 1;
+            work_schedule.start_hour = readUInt8(bytes[offset + 3]);
+            work_schedule.start_minute = readUInt8(bytes[offset + 4]);
+            work_schedule.end_hour = readUInt8(bytes[offset + 5]);
+            work_schedule.end_minute = readUInt8(bytes[offset + 6]);
+            offset += 7;
+            decoded.work_schedule = decoded.work_schedule || [];
+            decoded.work_schedule.push(work_schedule);
+            break;
+        case 0xd8:
+            decoded.clear_all_cumulative_count = readYesNoStatus(1);
+            offset += 1;
+            break;
+        case 0xdc:
+            decoded.d2d_vacant_enable = readEnableStatus(bytes[offset]);
+            offset += 1;
+            break;
+        case 0xdd:
+            decoded.d2d_occupied_enable = readEnableStatus(bytes[offset]);
+            offset += 1;
+            break;
         default:
             throw new Error("unknown downlink response");
     }
@@ -430,6 +509,16 @@ function readEnableStatus(status) {
 
 function readPeopleCountingReportMode(mode) {
     var mode_map = { 0: "zero_to_nonzero", 1: "once_result_change" };
+    return getValue(mode_map, mode);
+}
+
+function readTriggerReportMode(mode) {
+    var mode_map = { 0: "once_result_change", 1: "zero_to_nonzero" };
+    return getValue(mode_map, mode);
+}
+
+function readDetectDurationMode(mode) {
+    var mode_map = { 0: "auto", 1: "manual" };
     return getValue(mode_map, mode);
 }
 
