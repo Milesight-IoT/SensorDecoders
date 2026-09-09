@@ -708,10 +708,6 @@ function milesightDeviceDecode(bytes) {
 					decoded.target_temperature_tolerance.target_value = readInt16LE(bytes, counterObj, 2) / 100;
 				}
 				break;
-			case 0x64:
-				// 0：℃, 1：℉
-				decoded.temperature_unit = readUInt8(bytes, counterObj, 1);
-				break;
 			case 0x65:
 				// 0：0.5, 1：1
 				decoded.target_temperature_resolution = readUInt8(bytes, counterObj, 1);
@@ -734,20 +730,6 @@ function milesightDeviceDecode(bytes) {
 					if (decoded.reporting_interval.ble_lora.unit == 0x01) {
 						decoded.reporting_interval.ble_lora.minutes_of_time = readUInt16LE(bytes, counterObj, 2);
 					}
-				}
-				break;
-			case 0x68:
-				decoded.window_opening_detection_settings = decoded.window_opening_detection_settings || {};
-				var window_opening_detection_settings_command = readUInt8(bytes, counterObj, 1);
-				if (window_opening_detection_settings_command == 0x00) {
-					// 0：Disable, 1：Enable
-					decoded.window_opening_detection_settings.enable = readUInt8(bytes, counterObj, 1);
-				}
-				if (window_opening_detection_settings_command == 0x02) {
-					decoded.window_opening_detection_settings.difference_in_temperature = readInt16LE(bytes, counterObj, 2) / 100;
-				}
-				if (window_opening_detection_settings_command == 0x03) {
-					decoded.window_opening_detection_settings.stop_time = readUInt16LE(bytes, counterObj, 2);
 				}
 				break;
 			case 0x6a:
@@ -1122,6 +1104,8 @@ function milesightDeviceDecode(bytes) {
 	return result;
 }
 
+function processTemperature(decoded) {}
+
 function patchDecode(decoded) {}
 
 function readOnlyCommand(bytes) {
@@ -1358,138 +1342,6 @@ function readCommand(allBytes, counterObj, end) {
 	return null;
 }
 
-function hasPath(obj, path) {
-	var parts = path.split('.');
-	var current = obj;
-
-	for (var i = 0; i < parts.length; i++) {
-	  	if (!current || !(parts[i] in current)) {
-			return false;
-	  	}
-	  	current = current[parts[i]];
-	}
-
-	return true;
-}
-
-function getPath(obj, path) {
-	var parts = path.split('.');
-	var current = obj;
-
-	for (var i = 0; i < parts.length; i++) {
-	  	var key = parts[i];
-
-	  	if (!current || !(key in current)) {
-			return null;
-	  	}
-
-	  	current = current[key];
-	}
-
-	return current;
-}
-
-
-function setPath(obj, path, value) {
-	var parts = path.split('.');
-	var current = obj;
-
-	for (var i = 0; i < parts.length - 1; i++) {
-	  	var key = parts[i];
-
-	  	if (!(key in current) || typeof current[key] !== 'object') {
-			current[key] = {};
-	  	}
-
-	  	current = current[key];
-	}
-
-	current[parts[parts.length - 1]] = value;
-	return obj;
-}
-
-function removePath(obj, path) {
-	var parts = path.split('.');
-	var chain = [obj];
-	var current = obj;
-
-	for (var i = 0; i < parts.length - 1; i++) {
-		var key = parts[i];
-
-		if (!current || typeof current[key] !== 'object') {
-			return obj;
-		}
-
-		current = current[key];
-		chain.push(current);
-	}
-
-	var leaf = parts[parts.length - 1];
-
-	if (!current || !Object.prototype.hasOwnProperty.call(current, leaf)) {
-		return obj;
-	}
-
-	delete current[leaf];
-
-	// prune empty intermediate containers left behind on the path
-	for (var j = chain.length - 1; j >= 1; j--) {
-		if (Object.keys(chain[j]).length === 0) {
-			delete chain[j - 1][parts[j - 1]];
-		} else {
-			break;
-		}
-	}
-
-	return obj;
-}
-
-function convertName(propertyId, prefix) {
-	var parts = propertyId.split('.');
-	var lastPart = parts[parts.length - 1];
-	parts[parts.length - 1] = prefix + '_' + lastPart;
-	return parts.join('.');
-}
-
-function recoverName(propertyId, prefix) {
-	var parts = propertyId.split('.');
-	var lastPart = parts[parts.length - 1];
-	parts[parts.length - 1] = lastPart.replace(prefix + '_', '');
-	return parts.join('.');
-}
-
-function getAllLeafPaths(obj, prefix) {
-	var paths = [];
-
-	function recurse(current, path) {
-	  if (Array.isArray(current)) {
-		current.forEach(function (item, index) {
-		  var newPath = path ? (path + "." + index) : String(index);
-		  recurse(item, newPath);
-		});
-
-	  } else if (typeof current === 'object' && current !== null) {
-		for (var key in current) {
-		  if (Object.prototype.hasOwnProperty.call(current, key)) {
-			var newPath = path ? (path + "." + key) : key;
-			recurse(current[key], newPath);
-		  }
-		}
-
-	  } else {
-		paths.push(path);
-	  }
-	}
-
-	recurse(obj, "");
-	return paths;
-
-}
-
-function isInteger(str) {
-	return typeof str === 'string' && /^[0-9]+$/.test(str);
-}
-
 function cmdMap() {
 	return {
 		  "30": "data_transparent",
@@ -1500,10 +1352,8 @@ function cmdMap() {
 		  "60": "temperature_control_mode",
 		  "61": "target_temperature_settings",
 		  "62": "target_temperature_tolerance",
-		  "64": "temperature_unit",
 		  "65": "target_temperature_resolution",
 		  "66": "reporting_interval",
-		  "68": "window_opening_detection_settings",
 		  "70": "fan_settings",
 		  "75": "temperature_control_mode_enable",
 		  "80": "indicator_light_disable_settings",
@@ -1526,9 +1376,6 @@ function cmdMap() {
 		  "6103": "target_temperature_settings.auto",
 		  "6200": "target_temperature_tolerance.target_value",
 		  "6600": "reporting_interval.ble_lora",
-		  "6800": "window_opening_detection_settings.enable",
-		  "6802": "window_opening_detection_settings.difference_in_temperature",
-		  "6803": "window_opening_detection_settings.stop_time",
 		  "7000": "fan_settings.fan_mode",
 		  "8000": "indicator_light_disable_settings.enable",
 		  "8001": "indicator_light_disable_settings.time",
@@ -1754,191 +1601,4 @@ function cmdMap() {
 		  "5b": "filter_clean_alarm",
 		  "5a": "open_window_alarm"
 	};
-}
-function processTemperature(decoded) {
-	var allTemperatureProperties = {
-    "temperature_alarm.window_status_detection_deactivation.temperature": {
-        "precision": 2,
-        "unitName": "℃"
-    },
-    "temperature_alarm.window_status_detection_trigger.temperature": {
-        "precision": 2,
-        "unitName": "℃"
-    },
-    "temperature_alarm.over_range_alarm_trigger.temperature": {
-        "precision": 2,
-        "unitName": "℃"
-    },
-    "temperature_alarm.over_range_alarm_deactivation.temperature": {
-        "precision": 2,
-        "unitName": "℃"
-    },
-    "temperature_alarm.lower_range_alarm_trigger.temperature": {
-        "precision": 2,
-        "unitName": "℃"
-    },
-    "temperature_alarm.lower_range_alarm_deactivation.temperature": {
-        "precision": 2,
-        "unitName": "℃"
-    },
-    "temperature_alarm.within_range_alarm_trigger.temperature": {
-        "precision": 2,
-        "unitName": "℃"
-    },
-    "temperature_alarm.within_range_alarm_deactivation.temperature": {
-        "precision": 2,
-        "unitName": "℃"
-    },
-    "temperature_alarm.outside_range_alarm_trigger.temperature": {
-        "precision": 2,
-        "unitName": "℃"
-    },
-    "temperature_alarm.outside_range_alarm_deactivation.temperature": {
-        "precision": 2,
-        "unitName": "℃"
-    },
-    "temperature_alarm.persistent_low_temperature_alarm_deactivation.temperature": {
-        "precision": 2,
-        "unitName": "℃"
-    },
-    "temperature_alarm.persistent_low_temperature_alarm_trigger.temperature": {
-        "precision": 2,
-        "unitName": "℃"
-    },
-    "temperature_alarm.persistent_high_alarm_deactivation.temperature": {
-        "precision": 2,
-        "unitName": "℃"
-    },
-    "temperature_alarm.persistent_high_alarm_trigger.temperature": {
-        "precision": 2,
-        "unitName": "℃"
-    },
-    "infrared_cmd_status.target_temp": {
-        "precision": 2,
-        "unitName": "℃"
-    },
-    "internal_temp": {
-        "precision": 2,
-        "unitName": "℃"
-    },
-    "external_temp": {
-        "precision": 2,
-        "unitName": "℃"
-    },
-    "cmd_temp_limit.lower_range_alarm_trigger.low_threshold": {
-        "precision": 2,
-        "unitName": "℃"
-    },
-    "cmd_temp_limit.lower_range_alarm_trigger.high_threshold": {
-        "precision": 2,
-        "unitName": "℃"
-    },
-    "cmd_temp_limit.lower_range_alarm_trigger.ambient_temp": {
-        "precision": 2,
-        "unitName": "℃"
-    },
-    "cmd_temp_limit.over_range_alarm_trigger.low_threshold": {
-        "precision": 2,
-        "unitName": "℃"
-    },
-    "cmd_temp_limit.over_range_alarm_trigger.high_threshold": {
-        "precision": 2,
-        "unitName": "℃"
-    },
-    "cmd_temp_limit.over_range_alarm_trigger.ambient_temp": {
-        "precision": 2,
-        "unitName": "℃"
-    },
-    "local_temp_limit.lower_range_alarm_trigger.low_threshold": {
-        "precision": 2,
-        "unitName": "℃"
-    },
-    "local_temp_limit.lower_range_alarm_trigger.high_threshold": {
-        "precision": 2,
-        "unitName": "℃"
-    },
-    "local_temp_limit.lower_range_alarm_trigger.ambient_temp": {
-        "precision": 2,
-        "unitName": "℃"
-    },
-    "local_temp_limit.over_range_alarm_trigger.low_threshold": {
-        "precision": 2,
-        "unitName": "℃"
-    },
-    "local_temp_limit.over_range_alarm_trigger.high_threshold": {
-        "precision": 2,
-        "unitName": "℃"
-    },
-    "local_temp_limit.over_range_alarm_trigger.ambient_temp": {
-        "precision": 2,
-        "unitName": "℃"
-    },
-    "target_temperature_settings.heat": {
-        "precision": 2,
-        "unitName": "℃"
-    },
-    "target_temperature_settings.cool": {
-        "precision": 2,
-        "unitName": "℃"
-    },
-    "target_temperature_settings.auto": {
-        "precision": 2,
-        "unitName": "℃"
-    },
-    "target_temperature_tolerance.target_value": {
-        "precision": 2,
-        "unitName": "K"
-    },
-    "window_opening_detection_settings.difference_in_temperature": {
-        "precision": 2,
-        "unitName": "℃"
-    },
-    "temperature_limit_task_settings._item.low_threshold": {
-        "precision": 2,
-        "unitName": "℃"
-    },
-    "temperature_limit_task_settings._item.high_threshold": {
-        "precision": 2,
-        "unitName": "℃"
-    },
-    "internal_sensor_settings.temp_calibration": {
-        "precision": 2,
-        "unitName": "℃"
-    },
-    "external_sensor_settings.temp_calibration": {
-        "precision": 2,
-        "unitName": "℃"
-    }
-};
-	var leafPaths = getAllLeafPaths(decoded);
-	for (var i = 0; i < leafPaths.length; i++) {
-		var propertyId = leafPaths[i];
-		var propertyParts = propertyId.split('.');
-		var newPropertyParts = []
-		for (var j = 0; j < propertyParts.length; j++) {
-			var part = propertyParts[j];
-			if (isInteger(part)) {
-				newPropertyParts.push('_item');
-			} else {
-				newPropertyParts.push(part);
-			}
-		}
-		var newPropertyId = newPropertyParts.join('.');
-		newPropertyId = recoverName(newPropertyId, 'fahrenheit');
-		newPropertyId = recoverName(newPropertyId, 'celsius');
-		propertyId = recoverName(propertyId, 'fahrenheit');
-		propertyId = recoverName(propertyId, 'celsius');
-		if (allTemperatureProperties[newPropertyId]) {
-			var fahrenheitProperty = convertName(propertyId, 'fahrenheit');
-			var celsiusProperty = convertName(propertyId, 'celsius');
-			var unitName = allTemperatureProperties[newPropertyId].unitName;
-			var constant = unitName == 'K' ? 0 : 32;
-			if (hasPath(decoded, propertyId)) {
-				setPath(decoded, fahrenheitProperty,  Number((getPath(decoded, propertyId) * 1.8 + constant).toFixed(allTemperatureProperties[newPropertyId].precision)));
-				setPath(decoded, celsiusProperty,  Number(getPath(decoded, propertyId).toFixed(allTemperatureProperties[newPropertyId].precision)));
-				removePath(decoded, propertyId);
-			}
-		}
-	}
-	return decoded;
 }

@@ -1345,17 +1345,6 @@ function milesightDeviceEncode(payload) {
 		}
 		encoded = encoded.concat(buffer.toBytes());
 	}
-	//0x64
-	if ('temperature_unit' in payload) {
-		var buffer = new Buffer();
-		buffer.writeUInt8(0x64);
-		if ([0, 1].indexOf(payload.temperature_unit) === -1) {
-			throw oneOfError('temperature_unit', [0, 1]);
-		}
-		// 0：℃, 1：℉
-		buffer.writeUInt8(payload.temperature_unit);
-		encoded = encoded.concat(buffer.toBytes());
-	}
 	//0x65
 	if ('target_temperature_resolution' in payload) {
 		var buffer = new Buffer();
@@ -1401,37 +1390,6 @@ function milesightDeviceEncode(payload) {
 				}
 				buffer.writeUInt16LE(payload.reporting_interval.ble_lora.minutes_of_time);
 			}
-		}
-		encoded = encoded.concat(buffer.toBytes());
-	}
-	//0x68
-	if ('window_opening_detection_settings' in payload) {
-		var buffer = new Buffer();
-		if (isValid(payload.window_opening_detection_settings.enable)) {
-			buffer.writeUInt8(0x68);
-			// 0：Disable, 1：Enable
-			buffer.writeUInt8(0x00);
-			if ([0, 1].indexOf(payload.window_opening_detection_settings.enable) === -1) {
-				throw oneOfError('window_opening_detection_settings.enable', [0, 1]);
-			}
-			// 0：Disable, 1：Enable
-			buffer.writeUInt8(payload.window_opening_detection_settings.enable);
-		}
-		if (isValid(payload.window_opening_detection_settings.difference_in_temperature)) {
-			buffer.writeUInt8(0x68);
-			buffer.writeUInt8(0x02);
-			if (payload.window_opening_detection_settings.difference_in_temperature < 1 || payload.window_opening_detection_settings.difference_in_temperature > 20) {
-				throw betweenError('window_opening_detection_settings.difference_in_temperature', 1, 20);
-			}
-			buffer.writeInt16LE(payload.window_opening_detection_settings.difference_in_temperature * 100);
-		}
-		if (isValid(payload.window_opening_detection_settings.stop_time)) {
-			buffer.writeUInt8(0x68);
-			buffer.writeUInt8(0x03);
-			if (payload.window_opening_detection_settings.stop_time < 1 || payload.window_opening_detection_settings.stop_time > 1440) {
-				throw betweenError('window_opening_detection_settings.stop_time', 1, 1440);
-			}
-			buffer.writeUInt16LE(payload.window_opening_detection_settings.stop_time);
 		}
 		encoded = encoded.concat(buffer.toBytes());
 	}
@@ -2367,101 +2325,6 @@ function isValid(value) {
 	return value !== undefined && value !== null && value !== '';
 }
 
-function hasPath(obj, path) {
-	var parts = path.split('.');
-	var current = obj;
-
-	for (var i = 0; i < parts.length; i++) {
-	  	if (!current || !(parts[i] in current)) {
-			return false;
-	  	}
-	  	current = current[parts[i]];
-	}
-
-	return true;
-}
-
-function getPath(obj, path) {
-	var parts = path.split('.');
-	var current = obj;
-
-	for (var i = 0; i < parts.length; i++) {
-	  	var key = parts[i];
-
-	  	if (!current || !(key in current)) {
-			return null;
-	  	}
-
-	  	current = current[key];
-	}
-
-	return current;
-}
-
-
-function setPath(obj, path, value) {
-	var parts = path.split('.');
-	var current = obj;
-
-	for (var i = 0; i < parts.length - 1; i++) {
-	  	var key = parts[i];
-
-	  	if (!(key in current) || typeof current[key] !== 'object') {
-			current[key] = {};
-	  	}
-
-	  	current = current[key];
-	}
-
-	current[parts[parts.length - 1]] = value;
-	return obj;
-}
-
-function convertName(propertyId, prefix) {
-	var parts = propertyId.split('.');
-	var lastPart = parts[parts.length - 1];
-	parts[parts.length - 1] = prefix + '_' + lastPart;
-	return parts.join('.');
-}
-
-function recoverName(propertyId, prefix) {
-	var parts = propertyId.split('.');
-	var lastPart = parts[parts.length - 1];
-	parts[parts.length - 1] = lastPart.replace(prefix + '_', '');
-	return parts.join('.');
-}
-
-function getAllLeafPaths(obj, prefix) {
-	var paths = [];
-
-	function recurse(current, path) {
-	  if (Array.isArray(current)) {
-		current.forEach(function (item, index) {
-		  var newPath = path ? (path + "." + index) : String(index);
-		  recurse(item, newPath);
-		});
-
-	  } else if (typeof current === 'object' && current !== null) {
-		for (var key in current) {
-		  if (Object.prototype.hasOwnProperty.call(current, key)) {
-			var newPath = path ? (path + "." + key) : key;
-			recurse(current[key], newPath);
-		  }
-		}
-
-	  } else {
-		paths.push(path);
-	  }
-	}
-
-	recurse(obj, "");
-	return paths;
-}
-
-function isInteger(str) {
-    return typeof str === 'string' && /^[0-9]+$/.test(str);
-}
-
 function betweenError(path, min, max) {
 	return new Error(path + ' must be between ' + min + ' and ' + max);
 }
@@ -2646,17 +2509,12 @@ function cmdMap() {
 		  "target_temperature_settings.auto": "6103",
 		  "target_temperature_tolerance": "62",
 		  "target_temperature_tolerance.target_value": "6200",
-		  "temperature_unit": "64",
 		  "target_temperature_resolution": "65",
 		  "communication_mode": "91",
 		  "reporting_interval": "66",
 		  "reporting_interval.ble_lora": "6600",
 		  "reporting_interval.ble_lora.seconds_of_time": "660000",
 		  "reporting_interval.ble_lora.minutes_of_time": "660001",
-		  "window_opening_detection_settings": "68",
-		  "window_opening_detection_settings.enable": "6800",
-		  "window_opening_detection_settings.difference_in_temperature": "6802",
-		  "window_opening_detection_settings.stop_time": "6803",
 		  "temperature_data_source": "6a",
 		  "temperature_data_source.source": "6a00",
 		  "system_switch": "6f",
@@ -2738,198 +2596,5 @@ function cmdMap() {
 		  "trigger_infrared_learn": "55"
 	};
 }
-function processTemperature(payload) {
-	var allTemperatureProperties = {
-    "temperature_alarm.window_status_detection_deactivation.temperature": {
-        "coefficient": 0.01,
-        "unitName": "℃"
-    },
-    "temperature_alarm.window_status_detection_trigger.temperature": {
-        "coefficient": 0.01,
-        "unitName": "℃"
-    },
-    "temperature_alarm.over_range_alarm_trigger.temperature": {
-        "coefficient": 0.01,
-        "unitName": "℃"
-    },
-    "temperature_alarm.over_range_alarm_deactivation.temperature": {
-        "coefficient": 0.01,
-        "unitName": "℃"
-    },
-    "temperature_alarm.lower_range_alarm_trigger.temperature": {
-        "coefficient": 0.01,
-        "unitName": "℃"
-    },
-    "temperature_alarm.lower_range_alarm_deactivation.temperature": {
-        "coefficient": 0.01,
-        "unitName": "℃"
-    },
-    "temperature_alarm.within_range_alarm_trigger.temperature": {
-        "coefficient": 0.01,
-        "unitName": "℃"
-    },
-    "temperature_alarm.within_range_alarm_deactivation.temperature": {
-        "coefficient": 0.01,
-        "unitName": "℃"
-    },
-    "temperature_alarm.outside_range_alarm_trigger.temperature": {
-        "coefficient": 0.01,
-        "unitName": "℃"
-    },
-    "temperature_alarm.outside_range_alarm_deactivation.temperature": {
-        "coefficient": 0.01,
-        "unitName": "℃"
-    },
-    "temperature_alarm.persistent_low_temperature_alarm_deactivation.temperature": {
-        "coefficient": 0.01,
-        "unitName": "℃"
-    },
-    "temperature_alarm.persistent_low_temperature_alarm_trigger.temperature": {
-        "coefficient": 0.01,
-        "unitName": "℃"
-    },
-    "temperature_alarm.persistent_high_alarm_deactivation.temperature": {
-        "coefficient": 0.01,
-        "unitName": "℃"
-    },
-    "temperature_alarm.persistent_high_alarm_trigger.temperature": {
-        "coefficient": 0.01,
-        "unitName": "℃"
-    },
-    "infrared_cmd_status.target_temp": {
-        "coefficient": 0.01,
-        "unitName": "℃"
-    },
-    "internal_temp": {
-        "coefficient": 0.01,
-        "unitName": "℃"
-    },
-    "external_temp": {
-        "coefficient": 0.01,
-        "unitName": "℃"
-    },
-    "cmd_temp_limit.lower_range_alarm_trigger.low_threshold": {
-        "coefficient": 0.01,
-        "unitName": "℃"
-    },
-    "cmd_temp_limit.lower_range_alarm_trigger.high_threshold": {
-        "coefficient": 0.01,
-        "unitName": "℃"
-    },
-    "cmd_temp_limit.lower_range_alarm_trigger.ambient_temp": {
-        "coefficient": 0.01,
-        "unitName": "℃"
-    },
-    "cmd_temp_limit.over_range_alarm_trigger.low_threshold": {
-        "coefficient": 0.01,
-        "unitName": "℃"
-    },
-    "cmd_temp_limit.over_range_alarm_trigger.high_threshold": {
-        "coefficient": 0.01,
-        "unitName": "℃"
-    },
-    "cmd_temp_limit.over_range_alarm_trigger.ambient_temp": {
-        "coefficient": 0.01,
-        "unitName": "℃"
-    },
-    "local_temp_limit.lower_range_alarm_trigger.low_threshold": {
-        "coefficient": 0.01,
-        "unitName": "℃"
-    },
-    "local_temp_limit.lower_range_alarm_trigger.high_threshold": {
-        "coefficient": 0.01,
-        "unitName": "℃"
-    },
-    "local_temp_limit.lower_range_alarm_trigger.ambient_temp": {
-        "coefficient": 0.01,
-        "unitName": "℃"
-    },
-    "local_temp_limit.over_range_alarm_trigger.low_threshold": {
-        "coefficient": 0.01,
-        "unitName": "℃"
-    },
-    "local_temp_limit.over_range_alarm_trigger.high_threshold": {
-        "coefficient": 0.01,
-        "unitName": "℃"
-    },
-    "local_temp_limit.over_range_alarm_trigger.ambient_temp": {
-        "coefficient": 0.01,
-        "unitName": "℃"
-    },
-    "target_temperature_settings.heat": {
-        "coefficient": 0.01,
-        "unitName": "℃"
-    },
-    "target_temperature_settings.cool": {
-        "coefficient": 0.01,
-        "unitName": "℃"
-    },
-    "target_temperature_settings.auto": {
-        "coefficient": 0.01,
-        "unitName": "℃"
-    },
-    "target_temperature_tolerance.target_value": {
-        "coefficient": 0.01,
-        "unitName": "K"
-    },
-    "window_opening_detection_settings.difference_in_temperature": {
-        "coefficient": 0.01,
-        "unitName": "℃"
-    },
-    "temperature_limit_task_settings._item.low_threshold": {
-        "coefficient": 0.01,
-        "unitName": "℃"
-    },
-    "temperature_limit_task_settings._item.high_threshold": {
-        "coefficient": 0.01,
-        "unitName": "℃"
-    },
-    "internal_sensor_settings.temp_calibration": {
-        "coefficient": 0.01,
-        "unitName": "℃"
-    },
-    "external_sensor_settings.temp_calibration": {
-        "coefficient": 0.01,
-        "unitName": "℃"
-    }
-};
-	var leafPaths = getAllLeafPaths(payload);
-	for (var i = 0; i < leafPaths.length; i++) {
-		var propertyId = leafPaths[i];
-		var propertyParts = propertyId.split('.');
-		var newPropertyParts = []
-		for (var j = 0; j < propertyParts.length; j++) {
-			var part = propertyParts[j];
-			if (isInteger(part)) {
-				newPropertyParts.push('_item');
-			} else {
-				newPropertyParts.push(part);
-			}
-		}
-		var newPropertyId = newPropertyParts.join('.');
-		newPropertyId = recoverName(newPropertyId, 'fahrenheit');
-		newPropertyId = recoverName(newPropertyId, 'celsius');
-		propertyId = recoverName(propertyId, 'fahrenheit');
-		propertyId = recoverName(propertyId, 'celsius');
-		if (allTemperatureProperties[newPropertyId]) {
-			var unitName = allTemperatureProperties[newPropertyId].unitName;
-			var constant = unitName == 'K' ? 0 : 32;
-			var fahrenheitProperty = convertName(propertyId, 'fahrenheit');
-			var celsiusProperty = convertName(propertyId, 'celsius');
-			var stringCoefficient = String(allTemperatureProperties[newPropertyId].coefficient);
-			var dotIndex = stringCoefficient.indexOf('.');
-			var precision = dotIndex != -1 ? stringCoefficient.length - dotIndex - 1 : 0;
-			if (!hasPath(payload, propertyId)) {
-				// if (hasPath(payload, fahrenheitProperty) && hasPath(payload, celsiusProperty)) {
-				//     throw new Error(fahrenheitProperty + ' and ' + celsiusProperty + ' cannot be in payload at the same time');
-				// }
-				if (hasPath(payload, celsiusProperty)) {
-					setPath(payload, propertyId, Number(getPath(payload, celsiusProperty).toFixed(precision)));
-				} else if (hasPath(payload, fahrenheitProperty)) {
-					setPath(payload, propertyId, Number(((getPath(payload, fahrenheitProperty) - constant) / 1.8).toFixed(precision)));
-				}
-			}
-		}
-	}
-	return payload;
-}
+
+function processTemperature(payload) {}

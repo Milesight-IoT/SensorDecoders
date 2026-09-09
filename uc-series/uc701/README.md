@@ -173,7 +173,6 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Target Temperature Tolerance | 0x62 | 1 | rw |  |  |  |
 | Target Temperature Tolerance ID | 0x62 | 2 | rw | 0 |  |  |
 | Target Temperature Tolerance Value | 0x62 | 3 | rw | 1 | 0.1 - 5 |  |
-| Temperature Unit | 0x64 | 2 | rw | 0 |  | 0：℃<br>1：℉ |
 | Target Temperature Resolution | 0x65 | 2 | rw | 1 |  | 0：0.5<br>1：1 |
 | Communication Mode | 0x91 | 2 | rw | 0 |  | 0：BLE+Lorawan |
 | Reporting Interval | 0x66 | 1 | rw |  |  |  |
@@ -182,11 +181,6 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Reporting Interval Unit | 0x66 | 2 | rw | 1 |  | 0：second<br>1：min |
 | Reporting Interval | 0x66 | 3 | rw | 600 | 60 - 64800 |  |
 | Reporting Interval | 0x66 | 3 | rw | 10 | 1 - 1440 |  |
-| Open Window Detection | 0x68 | 1 | rw |  |  |  |
-| Sub-command | 0x68 | 2 | rw | 0 |  |  |
-| Enable | 0x68 | 2 | rw | 0 |  | 0：Disable<br>1：Enable |
-| Temperature Change | 0x68 | 3 | rw | 3 | 1 - 20 |  |
-| Stop Temperature Control For | 0x68 | 3 | rw | 30 | 1 - 1440 |  |
 | Temperature Data Source Settings | 0x6A | 1 | rw |  |  |  |
 | Sub-command | 0x6A | 2 | rw | 0 |  |  |
 | Data Source | 0x6A | 2 | rw | 4 |  | 0: External Temperature Sensor<br>4: Internal Temperature Sensor |
