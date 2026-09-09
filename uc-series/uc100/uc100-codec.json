@@ -509,7 +509,7 @@
             "access_mode": "R",
             "data_type": "TEXT",
             "value_type": "STRING",
-            "max_length": 255,
+            "max_length": 242,
             "bacnet_type": "character_string_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS"
