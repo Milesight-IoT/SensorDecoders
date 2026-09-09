@@ -192,9 +192,20 @@ function handle_downlink_response(channel_type, bytes, offset) {
             decoded.confirm_mode_enable = readEnableStatus(bytes[offset]);
             offset += 1;
             break;
+        case 0x05:
+            decoded.lora_channel_mask = {};
+            decoded.lora_channel_mask.id = readUInt8(bytes[offset]);
+            decoded.lora_channel_mask.mask = readUInt16BE(bytes.slice(offset + 1, offset + 3));
+            offset += 3;
+            break;
         case 0x10:
             decoded.reboot = readYesNoStatus(1);
             offset += 1;
+            break;
+        case 0x11:
+            decoded.device_time = {};
+            decoded.device_time.timestamp = readUInt32LE(bytes.slice(offset, offset + 4));
+            offset += 4;
             break;
         case 0x35:
             decoded.d2d_key = bytesToHexString(bytes.slice(offset, offset + 8));
@@ -202,6 +213,14 @@ function handle_downlink_response(channel_type, bytes, offset) {
             break;
         case 0x40:
             decoded.adr_enable = readEnableStatus(bytes[offset]);
+            offset += 1;
+            break;
+        case 0x41:
+            decoded.lora_port = readUInt8(bytes[offset]);
+            offset += 1;
+            break;
+        case 0x42:
+            decoded.wifi_enable = readEnableStatus(bytes[offset]);
             offset += 1;
             break;
         case 0x43:
@@ -380,6 +399,12 @@ function handle_downlink_response_ext(code, channel_type, bytes, offset) {
             offset += 7;
             decoded.time_schedule = decoded.time_schedule || [];
             decoded.time_schedule.push(time_schedule);
+            break;
+        case 0xb7:
+            decoded.region_people_counting_max_dwell_config = {};
+            decoded.region_people_counting_max_dwell_config.enable = readEnableStatus(bytes[offset]);
+            decoded.region_people_counting_max_dwell_config.max_dwell_time = readUInt16LE(bytes.slice(offset + 1, offset + 3));
+            offset += 3;
             break;
         case 0xba:
             decoded.led_indicator_enable = readEnableStatus(bytes[offset]);

@@ -92,7 +92,9 @@ function milesightDeviceEncode(payload) {
     if ("people_count_change_report_enable" in payload) {
         encoded = encoded.concat(setPeopleCountChangeReportEnable(payload.people_count_change_report_enable));
     }
-    if ("people_count_jitter" in payload) {
+    if ("people_count_jitter_config" in payload) {
+        encoded = encoded.concat(setPeopleCountJitter(payload.people_count_jitter_config));
+    } else if ("people_count_jitter" in payload) {
         encoded = encoded.concat(setPeopleCountJitter(payload.people_count_jitter));
     }
     if ("report_with_timestamp" in payload) {
@@ -184,6 +186,21 @@ function milesightDeviceEncode(payload) {
     }
     if ("clear_all_cumulative_count" in payload) {
         encoded = encoded.concat(clearAllCumulativeCount(payload.clear_all_cumulative_count));
+    }
+    if ("lora_channel_mask" in payload) {
+        encoded = encoded.concat(setLoRaChannelMask(payload.lora_channel_mask));
+    }
+    if ("lora_port" in payload) {
+        encoded = encoded.concat(setLoRaPort(payload.lora_port));
+    }
+    if ("wifi_enable" in payload) {
+        encoded = encoded.concat(setWifiEnable(payload.wifi_enable));
+    }
+    if ("device_time" in payload) {
+        encoded = encoded.concat(setDeviceTime(payload.device_time));
+    }
+    if ("region_people_counting_max_dwell_config" in payload) {
+        encoded = encoded.concat(setRegionPeopleCountingMaxDwellConfig(payload.region_people_counting_max_dwell_config));
     }
 
     return encoded;
@@ -1351,6 +1368,111 @@ function clearAllCumulativeCount(clear_all_cumulative_count) {
     return [0xf9, 0xd8, 0x01];
 }
 
+/**
+ * set LoRa channel mask
+ * @param {object} lora_channel_mask
+ * @param {number} lora_channel_mask.id range: [1, 6], 1: 0-15, 2: 16-31, 3: 32-47, 4: 48-63, 5: 64-79, 6: 80-95
+ * @param {number} lora_channel_mask.mask 16 bits, bit0 is the first channel of the group (0: off, 1: on)
+ * mask is big-endian on wire, e.g. ff 05 01 00 01 enables channel 1
+ * @example { "lora_channel_mask": { "id": 1, "mask": 1 } }
+ */
+function setLoRaChannelMask(lora_channel_mask) {
+    var id = lora_channel_mask.id;
+    var mask = lora_channel_mask.mask;
+
+    if (id < 1 || id > 6) {
+        throw new Error("lora_channel_mask.id must be between 1 and 6");
+    }
+    if (mask < 0 || mask > 0xffff) {
+        throw new Error("lora_channel_mask.mask must be between 0 and 65535");
+    }
+
+    var buffer = new Buffer(5);
+    buffer.writeUInt8(0xff);
+    buffer.writeUInt8(0x05);
+    buffer.writeUInt8(id);
+    buffer.writeUInt16BE(mask);
+    return buffer.toBytes();
+}
+
+/**
+ * set LoRaWAN port
+ * @param {number} lora_port range: [1, 223], default: 85
+ * @example { "lora_port": 85 }
+ */
+function setLoRaPort(lora_port) {
+    if (lora_port < 1 || lora_port > 223) {
+        throw new Error("lora_port must be between 1 and 223");
+    }
+
+    var buffer = new Buffer(3);
+    buffer.writeUInt8(0xff);
+    buffer.writeUInt8(0x41);
+    buffer.writeUInt8(lora_port);
+    return buffer.toBytes();
+}
+
+/**
+ * wifi enable
+ * @param {number} wifi_enable values: (0: disable, 1: enable)
+ * @example { "wifi_enable": 1 }
+ */
+function setWifiEnable(wifi_enable) {
+    var enable_map = { 0: "disable", 1: "enable" };
+    var enable_values = getValues(enable_map);
+    if (enable_values.indexOf(wifi_enable) === -1) {
+        throw new Error("wifi_enable must be one of " + enable_values.join(", "));
+    }
+
+    var buffer = new Buffer(3);
+    buffer.writeUInt8(0xff);
+    buffer.writeUInt8(0x42);
+    buffer.writeUInt8(getValue(enable_map, wifi_enable));
+    return buffer.toBytes();
+}
+
+/**
+ * set device time manually
+ * @param {object} device_time
+ * @param {number} device_time.timestamp unit: second
+ * @example { "device_time": { "timestamp": 1628832309 } }
+ */
+function setDeviceTime(device_time) {
+    var timestamp = device_time.timestamp;
+
+    var buffer = new Buffer(6);
+    buffer.writeUInt8(0xff);
+    buffer.writeUInt8(0x11);
+    buffer.writeUInt32LE(timestamp);
+    return buffer.toBytes();
+}
+
+/**
+ * set region people counting max dwell time
+ * max dwell time must be greater than or equal to min dwell time
+ * @param {object} region_people_counting_max_dwell_config
+ * @param {number} region_people_counting_max_dwell_config.enable values: (0: disable, 1: enable)
+ * @param {number} region_people_counting_max_dwell_config.max_dwell_time unit: second
+ * @example { "region_people_counting_max_dwell_config": { "enable": 1, "max_dwell_time": 5 } }
+ */
+function setRegionPeopleCountingMaxDwellConfig(region_people_counting_max_dwell_config) {
+    var enable = region_people_counting_max_dwell_config.enable;
+    var max_dwell_time = region_people_counting_max_dwell_config.max_dwell_time;
+
+    var enable_map = { 0: "disable", 1: "enable" };
+    var enable_values = getValues(enable_map);
+    if (enable_values.indexOf(enable) === -1) {
+        throw new Error("region_people_counting_max_dwell_config.enable must be one of " + enable_values.join(", "));
+    }
+
+    var buffer = new Buffer(5);
+    buffer.writeUInt8(0xf9);
+    buffer.writeUInt8(0xb7);
+    buffer.writeUInt8(getValue(enable_map, enable));
+    buffer.writeUInt16LE(max_dwell_time);
+    return buffer.toBytes();
+}
+
 function getValues(map) {
     var values = [];
     for (var key in map) {
@@ -1426,6 +1548,18 @@ Buffer.prototype.writeUInt32LE = function (value) {
 Buffer.prototype.writeInt32LE = function (value) {
     this._write(value < 0 ? value + 0x100000000 : value, 4, true);
     this.offset += 4;
+};
+
+Buffer.prototype.writeUInt16BE = function (value) {
+    this._write(value, 2, false);
+    this.offset += 2;
+};
+
+Buffer.prototype.writeBytes = function (bytes) {
+    for (var i = 0; i < bytes.length; i++) {
+        this.buffer[this.offset] = bytes[i] & 0xff;
+        this.offset += 1;
+    }
 };
 
 Buffer.prototype.writeD2DCommand = function (value, defaultValue) {
