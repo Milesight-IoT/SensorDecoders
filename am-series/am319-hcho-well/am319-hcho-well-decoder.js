@@ -50,7 +50,7 @@ function milesightDeviceDecode(bytes) {
         }
         // DEVICE STATUS
         else if (channel_id === 0xff && channel_type === 0x0b) {
-            decoded.device_status = readDeviceStatus(bytes[i]);
+            decoded.device_status = readDeviceStatus(1);
             i += 1;
         }
         // LORAWAN CLASS

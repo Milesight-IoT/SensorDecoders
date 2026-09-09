@@ -38,7 +38,7 @@ function milesightDeviceDecode(bytes) {
 
         // DEVICE STATUS
         if (channel_id === 0xff && channel_type === 0x0b) {
-            decoded.device_status = bytes[i];
+            decoded.device_status = readOnOffStatus(1);
             i += 1;
         }
         // IPSO VERSION
@@ -436,6 +436,17 @@ function readLoRaWANClass(type) {
             return "ClassC";
         case 3:
             return "ClassCtoB";
+    }
+}
+
+function readOnOffStatus(status) {
+    switch (status) {
+        case 0:
+            return "off";
+        case 1:
+            return "on";
+        default:
+            return "Unknown";
     }
 }
 
