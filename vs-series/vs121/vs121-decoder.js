@@ -38,10 +38,18 @@ function milesightDeviceDecode(bytes) {
             decoded.protocol_version = bytes[i];
             i += 1;
         }
-        // SERIAL NUMBER
+        // SERIAL NUMBER (6B -> 12-char sn, 8B -> 16-char sn)
         else if (channel_id === 0xff && channel_type === 0x08) {
-            decoded.sn = readSerialNumber(bytes.slice(i, i + 6));
-            i += 6;
+            var sn_length = 6;
+            // sn bytes are decimal digit pairs, 0xff can never appear inside an sn,
+            // and the following frame of the device info packet starts with 0xff
+            if (bytes[i + 6] !== 0xff && bytes[i + 6] !== undefined) {
+                if (bytes[i + 8] === 0xff || bytes[i + 8] === undefined) {
+                    sn_length = 8;
+                }
+            }
+            decoded.sn = readSerialNumber(bytes.slice(i, i + sn_length));
+            i += sn_length;
         }
         // HARDWARE VERSION
         else if (channel_id === 0xff && channel_type === 0x09) {
