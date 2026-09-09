@@ -146,6 +146,18 @@
             "bacnet_unit_type": "UNITS_NO_UNITS"
         },
         {
+            "id": "button_1_msgid",
+            "name": "Button 1 Press Message Id",
+            "value": "187272",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "NUMBER",
+            "value_type": "UINT16",
+            "bacnet_type": "analog_input_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS"
+        },
+        {
             "id": "button_2",
             "name": "Button 2",
             "value": "0",
@@ -158,6 +170,18 @@
                 { "value": 1, "name": "pressed" }
             ],
             "bacnet_type": "binary_input_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS"
+        },
+        {
+            "id": "button_2_msgid",
+            "name": "Button 2 Press Message Id",
+            "value": "187272",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "NUMBER",
+            "value_type": "UINT16",
+            "bacnet_type": "analog_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS"
         },
@@ -178,6 +202,18 @@
             "bacnet_unit_type": "UNITS_NO_UNITS"
         },
         {
+            "id": "button_3_msgid",
+            "name": "Button 3 Press Message Id",
+            "value": "187272",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "NUMBER",
+            "value_type": "UINT16",
+            "bacnet_type": "analog_input_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS"
+        },
+        {
             "id": "button_4",
             "name": "Button 4",
             "value": "",
@@ -190,6 +226,18 @@
                 { "value": 1, "name": "pressed" }
             ],
             "bacnet_type": "binary_input_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS"
+        },
+        {
+            "id": "button_4_msgid",
+            "name": "Button 4 Press Message Id",
+            "value": "187272",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "NUMBER",
+            "value_type": "UINT16",
+            "bacnet_type": "analog_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS"
         },
@@ -210,6 +258,18 @@
             "bacnet_unit_type": "UNITS_NO_UNITS"
         },
         {
+            "id": "button_5_msgid",
+            "name": "Button 5 Press Message Id",
+            "value": "187272",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "NUMBER",
+            "value_type": "UINT16",
+            "bacnet_type": "analog_input_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS"
+        },
+        {
             "id": "button_6",
             "name": "Button 6",
             "value": "1",
@@ -222,6 +282,18 @@
                 { "value": 1, "name": "pressed" }
             ],
             "bacnet_type": "binary_input_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS"
+        },
+        {
+            "id": "button_6_msgid",
+            "name": "Button 6 Press Message Id",
+            "value": "187272",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "NUMBER",
+            "value_type": "UINT16",
+            "bacnet_type": "analog_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS"
         },

@@ -86,6 +86,7 @@ function milesightDeviceDecode(bytes) {
             decoded[btn_chn_name] = 1;
             decoded[btn_chn_name + "_mode"] = readButtonMode(bytes[i + 1]);
             decoded[btn_chn_name + "_event"] = readButtonEvent(bytes[i + 2]);
+            decoded[btn_chn_name + "_msgid"] = getRandomIntInclusive(100000, 999999);
             i += 3;
         } else {
             break;
@@ -145,6 +146,12 @@ function readResetEvent(status) {
 function readDeviceStatus(status) {
     var status_map = { 0: "off", 1: "on" };
     return getEnumValue(status_map, status);
+}
+
+function getRandomIntInclusive(min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min + 1)) + min;
 }
 
 /* eslint-disable */
