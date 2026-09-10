@@ -1214,7 +1214,7 @@
             "id": "filter_clean_settings.reminder_period",
             "name": "Reminder Period(Filter Clean Reminder Setting)",
             "value": "90",
-            "unit": "Day",
+            "unit": "d",
             "access_mode": "RW",
             "data_type": "NUMBER",
             "value_type": "UINT16",
@@ -1223,8 +1223,8 @@
                 730
             ],
             "bacnet_type": "analog_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "bacnet_unit_type_id": 70,
+            "bacnet_unit_type": "UNITS_DAYS",
             "reference": []
         },
         {
@@ -1756,7 +1756,7 @@
                 },
                 {
                     "value": 3,
-                    "name": "1.0.3"
+                    "name": "1.0.3B"
                 },
                 {
                     "value": 4,
@@ -1879,8 +1879,8 @@
                     "name": "BLE+LORA"
                 },
                 {
-                    "value": 0,
-                    "name": "BLE+LORA"
+                    "value": 1,
+                    "name": "Unsupported Command"
                 }
             ],
             "bacnet_type": "multistate_value_object",
@@ -2374,11 +2374,11 @@
             "values": [
                 {
                     "value": 0,
-                    "name": "°C"
+                    "name": "Celsius"
                 },
                 {
                     "value": 1,
-                    "name": "°F"
+                    "name": "Fahrenheit"
                 }
             ],
             "bacnet_type": "multistate_value_object",
@@ -3258,9 +3258,10 @@
             "name": "Format Code Data(Infrared Format Code)",
             "value": "",
             "unit": "",
-            "access_mode": "RW",
-            "data_type": "STRING",
-            "value_type": "HEXSTRING",
+            "access_mode": "W",
+            "data_type": "TEXT",
+            "value_type": "STRING",
+            "max_length": 242,
             "bacnet_type": "character_string_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
