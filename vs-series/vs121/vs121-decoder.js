@@ -246,8 +246,8 @@ function handle_downlink_response(channel_type, bytes, offset) {
         case 0x46:
             decoded.people_count_jitter_config = {};
             decoded.people_count_jitter_config.enable = readEnableStatus(bytes[offset]);
-            decoded.people_count_jitter_config.time = readUInt16LE(bytes.slice(offset + 1, offset + 3));
-            offset += 3;
+            decoded.people_count_jitter_config.time = bytes[offset + 1];
+            offset += 2;
             break;
         case 0x48:
             decoded.line_detect_enable = readEnableStatus(bytes[offset]);

@@ -182,7 +182,10 @@ function milesightDeviceEncode(payload) {
         encoded = encoded.concat(setRegionDwellConfig(payload.region_dwell_config));
     }
     if ("work_schedule" in payload) {
-        encoded = encoded.concat(setWorkSchedule(payload.work_schedule));
+        var work_schedule = Array.isArray(payload.work_schedule) ? payload.work_schedule : [payload.work_schedule];
+        for (var i = 0; i < work_schedule.length; i++) {
+            encoded = encoded.concat(setWorkSchedule(work_schedule[i]));
+        }
     }
     if ("clear_all_cumulative_count" in payload) {
         encoded = encoded.concat(clearAllCumulativeCount(payload.clear_all_cumulative_count));
@@ -659,11 +662,11 @@ function setPeopleCountJitter(people_count_jitter_config) {
         throw new Error("people_count_jitter_config.time must be between 1 and 60");
     }
 
-    var buffer = new Buffer(5);
+    var buffer = new Buffer(4);
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0x46);
     buffer.writeUInt8(getValue(enable_map, enable));
-    buffer.writeUInt16LE(time);
+    buffer.writeUInt8(time);
     return buffer.toBytes();
 }
 
