@@ -35,7 +35,6 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Fan Mode | 0x07 | 2 | r | 0 |  | 0: Auto<br>1: Low<br>2: Medium<br>3: High |
 | Fan Status | 0x07 | 2 | r | 0 |  | 0：Off<br>1: Low<br>2: Medium<br>3: High |
 | Schedule | 0x08 | 2 | r | 255 |  | 0：Schedule1<br>1：Schedule2<br>2：Schedule3<br>3：Schedule4<br>4：Schedule5<br>5：Schedule6<br>6：Schedule7<br>7：Schedule8<br>8：Schedule9<br>9：Schedule10<br>10：Schedule11<br>11：Schedule12<br>12：Schedule13<br>13：Schedule14<br>14：Schedule15<br>15：Schedule16<br>255：Not executed |
-| Occupied Status | 0x0C | 2 | r | 0 |  | 0：Available<br>1：Occupied<br>2：Occupied at Night |
 | Temperature Control Authority Status | 0x0D | 2 | r | 0 |  | 0: Thermostat Control<br>1: Remote Control |
 | Relay/Valve Status  | 0x10 | 5 | r |  |  |  |
 | Fan Low | 0x10 | 5 | r | 0 |  | 0：Open<br>1：Close |
@@ -61,11 +60,7 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Temperature Data Source | 0x85 | 1 | rw |  |  |  |
 | Temperature Source | 0x85 | 2 | rw | 0 |  | 0：Embedded Temperature<br>1：External NTC<br>2：LoRa Receive<br>3：D2D Receive |
 | LoRa Receive | 0x85 | 3 | rw |  |  |  |
-| Timeout | 0x85 | 2 | rw | 10 | 1 - 60 |  |
-| Device Offline Settings | 0x85 | 2 | rw | 0 |  | 0: Keep Control<br>1: Turn Off The Control<br>2: Switch The Embedded Temperature |
 | D2D Receive | 0x85 | 3 | rw |  |  |  |
-| Timeout | 0x85 | 2 | rw | 10 | 1 - 60 |  |
-| Device Offline Settings | 0x85 | 2 | rw | 0 |  | 0: Keep Control<br>1: Turn Off The Control<br>2: Switch The Embedded Temperature |
 | Temperature Data Source Configuration | 0xA0 | 2 | rw | 0 |  | 0：Embedded Temperature<br>1：External NTC<br>2：LoRa Receive<br>3：D2D Receive |
 | External Data Source Timeout Configuration | 0xA7 | 1 | rw |  |  |  |
 | Sub-command | 0xA7 | 2 | rw | 0 |  |  |
@@ -81,14 +76,8 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Heating Target Temperature Regulation Range | 0x6D | 5 | rw |  |  |  |
 | Min Value | 0x6D | 3 | rw | 10 | 5 - 35 |  |
 | Max Value | 0x6D | 3 | rw | 19 | 5 - 35 |  |
-| Heating Target Temperature Regulation Range | 0x6D | 5 | rw |  |  |  |
-| Min Value | 0x6D | 3 | rw | 5 | 5 - 35 |  |
-| Max Value | 0x6D | 3 | rw | 35 | 5 - 35 |  |
 | Cooling Target Temperature Regulation Range | 0x6E | 5 | rw |  |  |  |
 | Min Value | 0x6E | 3 | rw | 23 | 5 - 35 |  |
-| Max Value | 0x6E | 3 | rw | 35 | 5 - 35 |  |
-| Cooling Target Temperature Regulation Range | 0x6E | 5 | rw |  |  |  |
-| Min Value | 0x6E | 3 | rw | 5 | 5 - 35 |  |
 | Max Value | 0x6E | 3 | rw | 35 | 5 - 35 |  |
 | Target Humidity Regulation Range | 0x70 | 5 | rw |  |  |  |
 | Min Value | 0x70 | 3 | rw | 40 | 0 - 100 |  |
@@ -155,7 +144,6 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Temperature Control Mode | 0x66 | 2 | rw | 1 |  | 0：disable<br>1：enable |
 | Fan Control Mode | 0x66 | 2 | rw | 1 |  | 0：disable<br>1：enable |
 | Reserved | 0x66 | 2 | rw |  |  |  |
-| Screen Front Light Enable | 0x93 | 2 | rw | 1 |  | 0：disable<br>1：enable |
 | Child Lock | 0x75 | 3 | rw |  |  |  |
 | Child Lock Enable | 0x75 | 2 | rw | 0 |  | 0：disable<br>1：enable |
 | System On/Off  | 0x75 | 2 | rw | 1 |  | 0：disable<br>1：enable |
@@ -280,34 +268,6 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Fri. | 0x7B | 2 | rw | 0 |  | 0：disable<br>1：enable |
 | Sat. | 0x7B | 2 | rw | 0 |  | 0：disable<br>1：enable |
 | Reserved | 0x7B | 2 | rw |  |  |  |
-| Schedule Settings | 0x7B | 1 | rw |  |  |  |
-| Schedule Settings | 0x7B | 1 | rw |  |  |  |
-| Schedule ID | 0x7B | 2 | rw | 0 | 0 - 15 |  |
-| Sub-command | 0x7B | 2 | rw | 0 |  |  |
-| Schedule Enable | 0x7B | 2 | rw | 0 |  | 0：disable<br>1：enable |
-| Name (prefix6) | 0x7B | 7 | rw |  |  |  |
-| Name (suffix4) | 0x7B | 5 | rw |  |  |  |
-| Schedule Content | 0x7B | 8 | rw |  |  |  |
-| Fan Mode | 0x7B | 2 | rw | 0 |  | 0：auto<br>1：low<br>2：medium<br>3：high |
-| Heating Target Temperature Enable | 0x7B | 3 | rw | 0 |  | 0：disable<br>1：enable |
-| Heating Target Temperature | 0x7B | 3 | rw | 17 | 5 - 35 |  |
-| Cooling Target Temperature Enable | 0x7B | 3 | rw | 0 |  | 0：disable<br>1：enable |
-| Cooling Target Temperature | 0x7B | 3 | rw | 26 | 5 - 35 |  |
-| Temperature Control Tolerance Enable | 0x7B | 3 | rw | 0 |  | 0：disable<br>1：enable |
-| Temperature Control Tolerance | 0x7B | 3 | rw | 2 | 0.1 - 5 |  |
-| Time | 0x7B | 6 | rw |  |  |  |
-| Time Configuration | 0x7B | 6 | rw |  |  |  |
-| Time ID | 0x7B | 2 | rw | 0 | 0 - 15 |  |
-| Enable | 0x7B | 2 | rw | 0 |  | 0：disable<br>1：enable |
-| Time | 0x7B | 3 | rw | 0 |  |  |
-| Sun. | 0x7B | 2 | rw | 0 |  | 0：disable<br>1：enable |
-| Mon. | 0x7B | 2 | rw | 0 |  | 0：disable<br>1：enable |
-| Tues. | 0x7B | 2 | rw | 0 |  | 0：disable<br>1：enable |
-| Wed. | 0x7B | 2 | rw | 0 |  | 0：disable<br>1：enable |
-| Thur. | 0x7B | 2 | rw | 0 |  | 0：disable<br>1：enable |
-| Fri. | 0x7B | 2 | rw | 0 |  | 0：disable<br>1：enable |
-| Sat. | 0x7B | 2 | rw | 0 |  | 0：disable<br>1：enable |
-| Reserved | 0x7B | 2 | rw |  |  |  |
 | Interface Settings | 0x7C | 1 | rw |  |  |  |
 | System Type | 0x7C | 2 | rw | 1 |  |  |
 | Four-pipe, Two-wire Valve+Three-speeds Fan | 0x7C | 3 | rw |  |  |  |
@@ -318,7 +278,6 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Two-pipe, Three-wire Valve+Three-speeds Fan | 0x7C | 3 | rw |  |  |  |
 | NO | 0x7C | 2 | rw | 1 |  | 1：V1/ NO<br>2：V2/ NC |
 | NC | 0x7C | 2 | rw | 2 |  | 1：V1/ NO<br>2：V2/ NC |
-| Interface Type Configuration | 0x9E | 2 | rw | 1 |  | 0：Four-pipe<br>Two-wire Valve+Three-speeds Fan<br>1：Two-pipe<br>Two-wire Valve+Three-speeds Fan<br>2：Two-pipe<br>Three-wire Valve+Three-speeds Fan |
 | Fan Stop Settings | 0x8E | 2 | rw | 1 |  | 0：disable<br>1：enable |
 | DI Enable | 0x80 | 2 | rw | 0 |  | 0：disable<br>1：enable |
 | DI Settings | 0x81 | 1 | rw |  |  |  |
@@ -377,41 +336,14 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Preconfigured Objects | 0x91 | 2 | w | 0 |  | 0: Reboot<br>1: Reset<br>2: Overtemperature Protection<br>3: Ventilation Icon<br>4: Ventilation Text<br>5: Heat Icon<br>6: Heat Text<br>7: Cool Icon<br>8: Cool Text<br>9: Auto Fan Icon<br>10: Auto Fan Text<br>11: Low Fan Speed Icon<br>12: Low Fan Speed Text<br>13: Medium Fan Speed Icon<br>14: Medium Fan Speed Text<br>15: High Fan Speed Icon<br>16: High Fan Speed Text<br>17: Temperature Set<br>18: Schedule Icon<br>19: Schedule 1 Name<br>20: Schedule 2 Name<br>21: Schedule 3 Name<br>22: Schedule 4 Name<br>23: Schedule 5 Name<br>24: Schedule 6 Name<br>25: Schedule 7 Name<br>26: Schedule 8 Name<br>27: Schedule 9 Name<br>28: Schedule 10 Name<br>29: Schedule 11 Name<br>30: Schedule 12 Name<br>31: Schedule 13 Name<br>32: Schedule 14 Name<br>33: Schedule 15 Name<br>34: Schedule 16 Name |
 | Image Length | 0x91 | 3 | w | 0 | 0 - 65535 |  |
 | Content | 0x91 | 1 | w | 0 |  |  |
-| Occupied Detection Configuration | 0x94 | 1 | rw |  |  |  |
-| Sub-command | 0x94 | 2 | rw | 0 |  |  |
-| Occupied Detection Enable | 0x94 | 2 | rw | 1 |  | 0：disable<br>1：enable |
-| Occupied Condition Detection Enable | 0x94 | 2 | rw | 0 |  | 0：disable<br>1：enable |
-| Occupied Condition Detection Trigger Period | 0x94 | 3 | rw | 5 | 1 - 360 |  |
-| Occupied Condition Detection Trigger Rate | 0x94 | 2 | rw | 50 | 1 - 100 |  |
-| Night Occupied Detection Enable | 0x94 | 2 | rw | 1 |  | 0：disable<br>1：enable |
-| Night Occupied Condition  Detection Enable | 0x94 | 2 | rw | 1 |  | 0：disable<br>1：enable |
-| Night Occupied Condition  Detection Trigger Period | 0x94 | 3 | rw | 5 | 1 - 360 |  |
-| Night Occupied Condition  Detection Trigger Rate | 0x94 | 2 | rw | 50 | 1 - 100 |  |
-| Night Start Time | 0x94 | 3 | rw | 1260 | 0 - 1439 |  |
-| Night Stop Time | 0x94 | 3 | rw | 480 | 0 - 1439 |  |
-| Vacant Time | 0x94 | 3 | rw | 30 | 1 - 360 |  |
-| Energy Saving Configuration | 0x95 | 1 | rw |  |  |  |
-| Sub-command | 0x95 | 2 | rw | 0 |  |  |
-| Energy Saving Enable | 0x95 | 2 | rw | 0 |  | 0：disable<br>1：enable |
-| Occupied Exec Plan | 0x95 | 2 | rw | 0 |  | 0：Schedule1<br>1：Schedule2<br>2：Schedule3<br>255：None |
-| Unoccupied Exec Plan | 0x95 | 2 | rw | 1 |  | 0：Schedule1<br>1：Schedule2<br>2：Schedule3<br>255：None |
-| Night Exec Plan | 0x95 | 2 | rw | 2 |  | 0：Schedule1<br>1：Schedule2<br>2：Schedule3<br>255：None |
-| Energy Saving Level1 Enable | 0x95 | 2 | rw | 0 |  | 0：disable<br>1：enable |
-| Energy Saving Level1 Vacant Time | 0x95 | 3 | rw | 480 | 1 - 1440 |  |
-| Energy Saving Level1 Target Temp Tolerance | 0x95 | 3 | rw | 2 | 0.1 - 5 |  |
-| Energy Saving Level2 Enable | 0x95 | 2 | rw | 0 |  | 0：disable<br>1：enable |
-| Energy Saving Level2 Vacant Time | 0x95 | 3 | rw | 720 | 1 - 1440 |  |
-| Energy Saving Level2 Target Temp Tolerance | 0x95 | 3 | rw | 4 | 0.1 - 5 |  |
-| Energy Saving Mode | 0x95 | 2 | rw | 1 |  | 0：Execute Plan<br>1：Adjust Energy Saving Level |
 | Screen Display Configuration | 0xA2 | 1 | rw |  |  |  |
 | Sub-command | 0xA2 | 2 | rw | 0 |  |  |
 | Enable Screen Display Data When System Is Off | 0xA2 | 2 | rw | 1 |  | 0：disable<br>1：enable |
 | Unilateral Tolerance Enable | 0xA3 | 2 | rw | 0 |  | 0：disable<br>1：enable |
 | Active Data Reporting Configuration | 0xC3 | 1 | rw |  |  |  |
 | Sub-command | 0xC3 | 2 | rw | 0 |  |  |
-| Active Data Reporting Enable | 0xC3 | 2 | rw | 0 |  | 0：disable<br>1：enable |
 | Active Data Reporting Start Time | 0xC3 | 3 | rw | 240 | 0 - 1439 |  |
-| Active Data Reporting Times | 0xC3 | 2 | rw | 1 | 0 - 12 |  |
+| Active Data Reporting Times | 0xC3 | 2 | rw | 0 | 0 - 12 |  |
 | Active Data Reporting Mode | 0xC3 | 2 | rw | 0 |  | 0: Disable All<br>1: Enable All<br>2: Custom |
 | Active Data Reporting Custom Configuration | 0xC3 | 3 | rw |  |  |  |
 | Active Data Reporting Custom Command Configuration | 0xC3 | 2 | rw |  |  |  |

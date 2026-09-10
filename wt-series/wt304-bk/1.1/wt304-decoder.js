@@ -323,15 +323,9 @@ function milesightDeviceDecode(bytes) {
 				decoded.temperature_source.type = readUInt8(bytes, counterObj, 1);
 				if (decoded.temperature_source.type == 0x02) {
 					decoded.temperature_source.lorawan_reception = decoded.temperature_source.lorawan_reception || {};
-					decoded.temperature_source.lorawan_reception.timeout = readUInt8(bytes, counterObj, 1);
-					// 0: Keep Control, 1: Turn Off The Control, 2: Switch The Embedded Temperature
-					decoded.temperature_source.lorawan_reception.timeout_response = readUInt8(bytes, counterObj, 1);
 				}
 				if (decoded.temperature_source.type == 0x03) {
 					decoded.temperature_source.d2d_reception = decoded.temperature_source.d2d_reception || {};
-					decoded.temperature_source.d2d_reception.timeout = readUInt8(bytes, counterObj, 1);
-					// 0: Keep Control, 1: Turn Off The Control, 2: Switch The Embedded Temperature
-					decoded.temperature_source.d2d_reception.timeout_response = readUInt8(bytes, counterObj, 1);
 				}
 				break;
 			case 0xa0:

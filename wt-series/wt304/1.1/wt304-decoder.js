@@ -323,15 +323,9 @@ function milesightDeviceDecode(bytes) {
 				decoded.temperature_source.type = readUInt8(bytes, counterObj, 1);
 				if (decoded.temperature_source.type == 0x02) {
 					decoded.temperature_source.lorawan_reception = decoded.temperature_source.lorawan_reception || {};
-					decoded.temperature_source.lorawan_reception.timeout = readUInt8(bytes, counterObj, 1);
-					// 0: Keep Control, 1: Turn Off The Control, 2: Switch The Embedded Temperature
-					decoded.temperature_source.lorawan_reception.timeout_response = readUInt8(bytes, counterObj, 1);
 				}
 				if (decoded.temperature_source.type == 0x03) {
 					decoded.temperature_source.d2d_reception = decoded.temperature_source.d2d_reception || {};
-					decoded.temperature_source.d2d_reception.timeout = readUInt8(bytes, counterObj, 1);
-					// 0: Keep Control, 1: Turn Off The Control, 2: Switch The Embedded Temperature
-					decoded.temperature_source.d2d_reception.timeout_response = readUInt8(bytes, counterObj, 1);
 				}
 				break;
 			case 0xa0:
@@ -378,14 +372,8 @@ function milesightDeviceDecode(bytes) {
 				decoded.heating_target_temperature_range = decoded.heating_target_temperature_range || {};
 				decoded.heating_target_temperature_range.min = readInt16LE(bytes, counterObj, 2) / 100;
 				decoded.heating_target_temperature_range.max = readInt16LE(bytes, counterObj, 2) / 100;
-				decoded.heating_target_temperature_range = decoded.heating_target_temperature_range || {};
-				decoded.heating_target_temperature_range.min = readInt16LE(bytes, counterObj, 2) / 100;
-				decoded.heating_target_temperature_range.max = readInt16LE(bytes, counterObj, 2) / 100;
 				break;
 			case 0x6e:
-				decoded.cooling_target_temperature_range = decoded.cooling_target_temperature_range || {};
-				decoded.cooling_target_temperature_range.min = readInt16LE(bytes, counterObj, 2) / 100;
-				decoded.cooling_target_temperature_range.max = readInt16LE(bytes, counterObj, 2) / 100;
 				decoded.cooling_target_temperature_range = decoded.cooling_target_temperature_range || {};
 				decoded.cooling_target_temperature_range.min = readInt16LE(bytes, counterObj, 2) / 100;
 				decoded.cooling_target_temperature_range.max = readInt16LE(bytes, counterObj, 2) / 100;
@@ -776,7 +764,7 @@ function milesightDeviceDecode(bytes) {
 				}
 				if (schedule_settings_item_command == 0x03) {
 					schedule_settings_item.content = schedule_settings_item.content || {};
-					// 0：auto, 1：low, 2：medium, 3：high
+					// 0：Auto, 1：Low, 2：Medium, 3：High
 					schedule_settings_item.content.fan_mode = readUInt8(bytes, counterObj, 1);
 					var bitOptions = readUInt16LE(bytes, counterObj, 2);
 					schedule_settings_item.content.heat_target_temperature_enable = extractBits(bitOptions, 0, 1);
@@ -870,10 +858,6 @@ function milesightDeviceDecode(bytes) {
 					// 0：None, 3：Q1, 4：Q2, 5：Q3
 					decoded.interface_settings.valve_2_pipe_3_wire_fan_ec.fan_power = readUInt8(bytes, counterObj, 1);
 				}
-				break;
-			case 0x9e:
-				// 0：Four-pipe, 0~10V Valve+Three-speeds Fan, 1：Two-pipe, 0~10V Valve+Three-speeds Fan, 2：Two-pipe, 0~10V Valve+EC Fan, 3：Four-pipe,Two-wire Valve+EC Fan, 4：Two-pipe, Two-wire Valve+EC Fan, 5：Two-pipe, Three-wire Valve+EC Fan
-				decoded.interface_type_cfg = readUInt8(bytes, counterObj, 1);
 				break;
 			case 0x7d:
 				decoded.valve_control_settings = decoded.valve_control_settings || {};
@@ -1737,7 +1721,6 @@ function cmdMap() {
 		  "7c03": "interface_settings.valve_4_pipe_2_wire_fan_ec",
 		  "7c04": "interface_settings.valve_2_pipe_2_wire_fan_ec",
 		  "7c05": "interface_settings.valve_2_pipe_3_wire_fan_ec",
-		  "9e": "interface_type_cfg",
 		  "7d": "valve_control_settings",
 		  "7d02": "valve_control_settings.control_interval",
 		  "7d00": "valve_control_settings.control_adjustment_range",

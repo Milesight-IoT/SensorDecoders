@@ -62,11 +62,7 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Temperature Data Source | 0x85 | 1 | rw |  |  |  |
 | Temperature Source | 0x85 | 2 | rw | 0 |  | 0：Embedded Temperature<br>1：External NTC<br>2：LoRa Receive<br>3：D2D Receive |
 | LoRa Receive | 0x85 | 3 | rw |  |  |  |
-| Timeout | 0x85 | 2 | r | 10 | 1 - 60 |  |
-| Device Offline Settings | 0x85 | 2 | r | 0 |  | 0: Keep Control<br>1: Turn Off The Control<br>2: Switch The Embedded Temperature |
 | D2D Receive | 0x85 | 3 | rw |  |  |  |
-| Timeout | 0x85 | 2 | r | 10 | 1 - 60 |  |
-| Device Offline Settings | 0x85 | 2 | r | 0 |  | 0: Keep Control<br>1: Turn Off The Control<br>2: Switch The Embedded Temperature |
 | Temperature Data Source Configuration | 0xA0 | 2 | rw | 0 |  | 0：Embedded Temperature<br>1：External NTC<br>2：LoRa Receive<br>3：D2D Receive |
 | External Data Source Timeout Configuration | 0xA7 | 1 | rw |  |  |  |
 | Sub-command | 0xA7 | 2 | rw | 0 |  |  |

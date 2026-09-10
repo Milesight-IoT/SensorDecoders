@@ -62,11 +62,7 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Temperature Data Source | 0x85 | 1 | rw |  |  |  |
 | Temperature Source | 0x85 | 2 | rw | 0 |  | 0：Embedded Temperature<br>1：External NTC<br>2：LoRa Receive<br>3：D2D Receive |
 | LoRa Receive | 0x85 | 3 | rw |  |  |  |
-| Timeout | 0x85 | 2 | r | 10 | 1 - 60 |  |
-| Device Offline Settings | 0x85 | 2 | r | 0 |  | 0: Keep Control<br>1: Turn Off The Control<br>2: Switch The Embedded Temperature |
 | D2D Receive | 0x85 | 3 | rw |  |  |  |
-| Timeout | 0x85 | 2 | r | 10 | 1 - 60 |  |
-| Device Offline Settings | 0x85 | 2 | r | 0 |  | 0: Keep Control<br>1: Turn Off The Control<br>2: Switch The Embedded Temperature |
 | Temperature Data Source Configuration | 0xA0 | 2 | rw | 0 |  | 0：Embedded Temperature<br>1：External NTC<br>2：LoRa Receive<br>3：D2D Receive |
 | External Data Source Timeout Configuration | 0xA7 | 1 | rw |  |  |  |
 | Sub-command | 0xA7 | 2 | rw | 0 |  |  |
@@ -82,14 +78,8 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Heating Target Temperature Regulation Range | 0x6D | 5 | rw |  |  |  |
 | Min Value | 0x6D | 3 | rw | 10 | 5 - 35 |  |
 | Max Value | 0x6D | 3 | rw | 19 | 5 - 35 |  |
-| Heating Target Temperature Regulation Range | 0x6D | 5 | rw |  |  |  |
-| Min Value | 0x6D | 3 | rw | 5 | 5 - 35 |  |
-| Max Value | 0x6D | 3 | rw | 35 | 5 - 35 |  |
 | Cooling Target Temperature Regulation Range | 0x6E | 5 | rw |  |  |  |
 | Min Value | 0x6E | 3 | rw | 23 | 5 - 35 |  |
-| Max Value | 0x6E | 3 | rw | 35 | 5 - 35 |  |
-| Cooling Target Temperature Regulation Range | 0x6E | 5 | rw |  |  |  |
-| Min Value | 0x6E | 3 | rw | 5 | 5 - 35 |  |
 | Max Value | 0x6E | 3 | rw | 35 | 5 - 35 |  |
 | Target Humidity Regulation Range | 0x70 | 5 | rw |  |  |  |
 | Min Value | 0x70 | 3 | rw | 40 | 0 - 100 |  |
@@ -280,34 +270,6 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Fri. | 0x7B | 2 | rw | 0 |  | 0：disable<br>1：enable |
 | Sat. | 0x7B | 2 | rw | 0 |  | 0：disable<br>1：enable |
 | Reserved | 0x7B | 2 | rw |  |  |  |
-| Schedule Settings | 0x7B | 1 | rw |  |  |  |
-| Schedule Settings | 0x7B | 1 | rw |  |  |  |
-| Schedule ID | 0x7B | 2 | rw | 0 | 0 - 15 |  |
-| Sub-command | 0x7B | 2 | rw | 0 |  |  |
-| Schedule Enable | 0x7B | 2 | rw | 0 |  | 0：disable<br>1：enable |
-| Name (prefix6) | 0x7B | 7 | rw |  |  |  |
-| Name (suffix4) | 0x7B | 5 | rw |  |  |  |
-| Schedule Content | 0x7B | 8 | rw |  |  |  |
-| Fan Mode | 0x7B | 2 | rw | 0 |  | 0：auto<br>1：low<br>2：medium<br>3：high |
-| Heating Target Temperature Enable | 0x7B | 3 | rw | 0 |  | 0：disable<br>1：enable |
-| Heating Target Temperature | 0x7B | 3 | rw | 17 | 5 - 35 |  |
-| Cooling Target Temperature Enable | 0x7B | 3 | rw | 0 |  | 0：disable<br>1：enable |
-| Cooling Target Temperature | 0x7B | 3 | rw | 26 | 5 - 35 |  |
-| Temperature Control Tolerance Enable | 0x7B | 3 | rw | 0 |  | 0：disable<br>1：enable |
-| Temperature Control Tolerance | 0x7B | 3 | rw | 2 | 0.1 - 5 |  |
-| Time | 0x7B | 6 | rw |  |  |  |
-| Time Configuration | 0x7B | 6 | rw |  |  |  |
-| Time ID | 0x7B | 2 | rw | 0 | 0 - 15 |  |
-| Enable | 0x7B | 2 | rw | 0 |  | 0：disable<br>1：enable |
-| Time | 0x7B | 3 | rw | 0 |  |  |
-| Sun. | 0x7B | 2 | rw | 0 |  | 0：disable<br>1：enable |
-| Mon. | 0x7B | 2 | rw | 0 |  | 0：disable<br>1：enable |
-| Tues. | 0x7B | 2 | rw | 0 |  | 0：disable<br>1：enable |
-| Wed. | 0x7B | 2 | rw | 0 |  | 0：disable<br>1：enable |
-| Thur. | 0x7B | 2 | rw | 0 |  | 0：disable<br>1：enable |
-| Fri. | 0x7B | 2 | rw | 0 |  | 0：disable<br>1：enable |
-| Sat. | 0x7B | 2 | rw | 0 |  | 0：disable<br>1：enable |
-| Reserved | 0x7B | 2 | rw |  |  |  |
 | Interface Settings | 0x7C | 1 | rw |  |  |  |
 | System Type | 0x7C | 2 | rw | 1 |  |  |
 | Four-pipe, 0~10V Valve+Three-speeds Fan | 0x7C | 3 | rw |  |  |  |
@@ -333,7 +295,6 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | NC | 0x7C | 2 | rw | 4 |  | 3：Q1<br>4：Q2<br>5：Q3 |
 | EC Fan | 0x7C | 2 | rw | 2 |  | 1：AO1<br>2：AO2 |
 | Fan Power WIre | 0x7C | 2 | rw | 5 |  | 0：None<br>3：Q1<br>4：Q2<br>5：Q3 |
-| Interface Type Configuration | 0x9E | 2 | rw | 1 |  | 0：Four-pipe<br>0~10V Valve+Three-speeds Fan<br>1：Two-pipe<br>0~10V Valve+Three-speeds Fan<br>2：Two-pipe<br>0~10V Valve+EC Fan<br>3：Four-pipe<br>Two-wire Valve+EC Fan<br>4：Two-pipe<br>Two-wire Valve+EC Fan<br>5：Two-pipe<br>Three-wire Valve+EC Fan |
 | Valve Control Settingd | 0x7D | 1 | rw |  |  |  |
 | Control Content | 0x7D | 2 | rw | 0 |  |  |
 | Valve Control Interval | 0x7D | 2 | rw | 30 | 1 - 60 |  |

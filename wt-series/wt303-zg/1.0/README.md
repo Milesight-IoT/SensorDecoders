@@ -58,11 +58,7 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Temperature Data Source | 0x85 | 1 | rw |  |  |  |
 | Temperature Source | 0x85 | 2 | rw | 0 |  | 0：Embedded Temperature<br>1：External NTC<br>2：LoRa Receive<br>3：D2D Receive |
 | LoRa Receive | 0x85 | 3 | rw |  |  |  |
-| Timeout | 0x85 | 2 | rw | 10 | 1 - 60 |  |
-| Device Offline Settings | 0x85 | 2 | rw | 0 |  | 0: Keep Control<br>1: Turn Off The Control<br>2: Switch The Embedded Temperature |
 | D2D Receive | 0x85 | 3 | rw |  |  |  |
-| Timeout | 0x85 | 2 | rw | 10 | 1 - 60 |  |
-| Device Offline Settings | 0x85 | 2 | rw | 0 |  | 0: Keep Control<br>1: Turn Off The Control<br>2: Switch The Embedded Temperature |
 | System On/Off | 0x67 | 2 | rw | 0 |  | 0：Off<br>1：On |
 | Mode Enable | 0x64 | 2 | rw | 7 |  | 7：Ventilation、Heat、Cool<br>3：Ventilation、Heat<br>5：Ventilation、Cool |
 | Temperature Control Mode | 0x68 | 2 | rw | 1 |  | 0：Ventilation<br>1：Heat<br>2：Cool |
@@ -282,6 +278,7 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | :------ | :--: | :----: | :--------: | :-----: | :---: | :--: |
 | Sequence Number Check Response | 0xFF | 2 | r |  |  |  |
 | Order Check Response | 0xFE | 2 | r |  |  |  |
+| Password Check Response | 0xFB | 2 | r |  |  |  |
 | Command Response | 0xEF | 1 | r |  |  |  |
 | Request to Push All Configurations | 0xEE | 1 | r |  |  |  |
 | Historical Data | 0xED | 5 | r |  |  |  |
@@ -300,6 +297,9 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Order Check | 0xFE | 2 | w |  |  |  |
 | Order | 0xFE | 2 | w | 0 | 0 - 255 |  |
 | Order | 0xFE | 2 | r | 0 | 0 - 255 |  |
+| Password Check | 0xFB | 7 | w |  |  |  |
+| Password | 0xFB | 7 | w | 123456 |  |  |
+| Result | 0xFB | 2 | r | 0 |  | 0：success<br>1：failed |
 | Command Queries | 0xEF | 1 | w |  |  |  |
 | Query Information | 0xEF | 2 | w |  |  |  |
 | Command Length | 0xEF | 2 | w | 1 | 1 - 15 |  |

@@ -35,7 +35,6 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Fan Mode | 0x07 | 2 | r | 0 |  | 0: Auto<br>1: Low<br>2: Medium<br>3: High |
 | Fan Status | 0x07 | 2 | r | 0 |  | 0：Off<br>1: Low<br>2: Medium<br>3: High |
 | Schedule | 0x08 | 2 | r | 255 |  | 0：Schedule1<br>1：Schedule2<br>2：Schedule3<br>3：Schedule4<br>4：Schedule5<br>5：Schedule6<br>6：Schedule7<br>7：Schedule8<br>8：Schedule9<br>9：Schedule10<br>10：Schedule11<br>11：Schedule12<br>12：Schedule13<br>13：Schedule14<br>14：Schedule15<br>15：Schedule16<br>255：Not executed |
-| Temperature Control Authority Status | 0x0D | 2 | r | 0 |  | 0: Thermostat Control<br>1: Remote Control |
 | Relay/Valve Status  | 0x10 | 5 | r |  |  |  |
 | Fan Low | 0x10 | 5 | r | 0 |  | 0：Open<br>1：Close |
 | Fan Medium | 0x10 | 5 | r | 0 |  | 0：Open<br>1：Close |
@@ -43,8 +42,6 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Valve 1 | 0x10 | 5 | r | 0 |  | 0：Open<br>1：Close |
 | Valve 2 | 0x10 | 5 | r | 0 |  | 0：Open<br>1：Close |
 | Reserved | 0x10 | 5 | r |  |  |  |
-| AO1 Duty | 0x10 | 5 | r | 0 |  |  |
-| AO2 Duty | 0x10 | 5 | r | 0 |  |  |
 | Random key | 0xC9 | 2 | rw | 0 |  | 0：disable<br>1：enable |
 | Device Status | 0xC8 | 2 | r | 1 |  | 0：Off<br>1：On |
 | Collecting Interval | 0x60 | 1 | rw |  |  |  |
@@ -55,7 +52,6 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Reporting Interval Unit | 0x62 | 2 | rw | 1 |  | 0：second<br>1：min |
 | Reporting Interval | 0x62 | 3 | rw | 600 | 10 - 64800 |  |
 | Reporting Interval | 0x62 | 3 | rw | 10 | 1 - 1440 |  |
-| Reporting Interval Configuration | 0xA1 | 3 | rw | 10 | 1 - 1440 |  |
 | Auto-P | 0xC4 | 2 | rw | 1 |  | 0：disable<br>1：enable |
 | Relay/Valve Change Report | 0x90 | 2 | rw | 0 |  | 0：disable<br>1：enable |
 | Temperature Unit | 0x63 | 2 | rw | 0 |  | 0：℃<br>1：℉ |
@@ -67,11 +63,6 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | D2D Receive | 0x85 | 3 | rw |  |  |  |
 | Timeout | 0x85 | 2 | rw | 10 | 1 - 60 |  |
 | Device Offline Settings | 0x85 | 2 | rw | 0 |  | 0: Keep Control<br>1: Turn Off The Control<br>2: Switch The Embedded Temperature |
-| Temperature Data Source Configuration | 0xA0 | 2 | rw | 0 |  | 0：Embedded Temperature<br>1：External NTC<br>2：LoRa Receive<br>3：D2D Receive |
-| External Data Source Timeout Configuration | 0xA7 | 1 | rw |  |  |  |
-| Sub-command | 0xA7 | 2 | rw | 0 |  |  |
-| Timeout | 0xA7 | 2 | rw | 10 | 1 - 60 |  |
-| Device Offline Settings | 0xA7 | 2 | rw | 0 |  | 0: Keep Control<br>1: Turn Off The Control<br>2: Switch The Embedded Temperature |
 | System On/Off | 0x67 | 2 | rw | 0 |  | 0：Off<br>1：On |
 | Mode Enable | 0x64 | 2 | rw | 7 |  | 7：Ventilation、Heat、Cool<br>3：Ventilation、Heat<br>5：Ventilation、Cool |
 | Temperature Control Mode | 0x68 | 2 | rw | 1 |  | 0：Ventilation<br>1：Heat<br>2：Cool |
@@ -80,10 +71,10 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | CoolingTarget Temperature | 0x6C | 3 | rw | 28 | 5 - 35 |  |
 | Target Temperature Tolerance | 0x6A | 3 | rw | 1 | 0.1 - 5 |  |
 | Heating Target Temperature Regulation Range | 0x6D | 5 | rw |  |  |  |
-| Min Value | 0x6D | 3 | rw | 5 | 5 - 35 |  |
-| Max Value | 0x6D | 3 | rw | 35 | 5 - 35 |  |
+| Min Value | 0x6D | 3 | rw | 10 | 5 - 35 |  |
+| Max Value | 0x6D | 3 | rw | 19 | 5 - 35 |  |
 | Cooling Target Temperature Regulation Range | 0x6E | 5 | rw |  |  |  |
-| Min Value | 0x6E | 3 | rw | 5 | 5 - 35 |  |
+| Min Value | 0x6E | 3 | rw | 23 | 5 - 35 |  |
 | Max Value | 0x6E | 3 | rw | 35 | 5 - 35 |  |
 | Target Humidity Regulation Range | 0x70 | 5 | rw |  |  |  |
 | Min Value | 0x70 | 3 | rw | 40 | 0 - 100 |  |
@@ -92,25 +83,13 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Temp. Control and Dehumidify | 0x6F | 2 | rw | 0 |  | 0：disable<br>1：enable |
 | Temp. Tolerance for Dehumidification
  | 0x6F | 3 | rw | 1 | 0.1 - 5 |  |
-| Temp Control and Dehumidify Configuration | 0x71 | 1 | rw |  |  |  |
-| Sub-command | 0x71 | 2 | rw | 0 |  |  |
-| Temp Control and Dehumidify Enable | 0x71 | 2 | rw | 0 |  | 0：disable<br>1：enable |
-| Temp Control and Dehumidify Enable Tolerance | 0x71 | 3 | rw | 1 | 0.1 - 5 |  |
 | Fan Mode | 0x72 | 2 | rw | 0 |  | 0：Auto<br>1：Low<br>2:Medium<br>3:High |
 | Fan Delay | 0x74 | 4 | rw |  |  |  |
 | Fan Delay Enable | 0x74 | 2 | rw | 0 |  | 0：disable<br>1：enable |
 | The Duration of Delay | 0x74 | 3 | rw | 60 | 30 - 3600 |  |
-| Fan Delay Close Configuration | 0x7F | 1 | rw |  |  |  |
-| Sub-command | 0x7F | 2 | rw | 0 |  |  |
-| Fan Delay Close Enable | 0x7F | 2 | rw | 0 |  | 0：disable<br>1：enable |
-| Fan Delay Close Timeout Time | 0x7F | 3 | rw | 60 | 30 - 3600 |  |
 | Auto Fan Speed Control Delta Settings | 0x73 | 5 | rw |  |  |  |
 | ΔT1 | 0x73 | 3 | rw | 3 | 1 - 15 |  |
 | ΔT2 | 0x73 | 3 | rw | 5 | 1 - 15 |  |
-| Fan Speed Control Delta Configuration | 0x9F | 1 | rw |  |  |  |
-| Sub-command | 0x9F | 2 | rw | 0 |  |  |
-| ΔT1 | 0x9F | 3 | rw | 3 | 1 - 15 |  |
-| ΔT2 | 0x9F | 3 | rw | 5 | 1 - 15 |  |
 | Timer Switch System | 0x8C | 1 | rw |  |  |  |
 | Sub-command | 0x8C | 2 | rw | 0 |  |  |
 | Timer Switch Enable | 0x8C | 2 | rw | 0 |  | 0：disable<br>1：enable |
@@ -158,15 +137,6 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Temperature Control Mode | 0x75 | 2 | rw | 1 |  | 0：disable<br>1：enable |
 | Reboot&amp;Reset | 0x75 | 2 | rw | 1 |  | 0：disable<br>1：enable |
 | Reserved | 0x75 | 2 | rw |  |  |  |
-| Child Lock Enable Configuration | 0x96 | 1 | rw |  |  |  |
-| Sub-command | 0x96 | 2 | rw | 0 |  |  |
-| Child Lock Function Enable | 0x96 | 2 | rw | 0 |  | 0：disable<br>1：enable |
-| Child Lock Key Enable | 0x96 | 2 | rw | 0 |  | 0：disable<br>1：enable |
-| System On/Off  | 0x96 | 2 | rw | 0 |  | 0：disable<br>1：enable |
-| Temperature + &amp; Temperature - | 0x96 | 2 | rw | 0 |  | 0：disable<br>1：enable |
-| Fan | 0x96 | 2 | rw | 0 |  | 0：disable<br>1：enable |
-| Temperature Control Mode | 0x96 | 2 | rw | 0 |  | 0：disable<br>1：enable |
-| Reboot&amp;Reset | 0x96 | 2 | rw | 0 |  | 0：disable<br>1：enable |
 | Unlock Button Settings | 0x8D | 5 | rw |  |  |  |
 | Unlock Function Enable | 0x8D | 2 | rw | 0 |  | 0：disable<br>1：enable |
 | System On/Off  | 0x8D | 2 | rw | 0 |  | 0：disable<br>1：enable |
@@ -176,15 +146,6 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Temperature Control Mode | 0x8D | 2 | rw | 0 |  | 0：disable<br>1：enable |
 | Reserved | 0x8D | 2 | rw |  |  |  |
 | Unlocking Time | 0x8D | 3 | rw | 30 | 1 - 3600 |  |
-| Temporary Button Unlock Configuration | 0x97 | 1 | rw |  |  |  |
-| Sub-command | 0x97 | 2 | rw | 0 |  |  |
-| Temporary Button Unlock Enable | 0x97 | 2 | rw | 0 |  | 0：Disable<br>3：System switch & Temperature +<br>5：System switch & Temperature -<br>6：Temperature + & Temperature -<br>7：System switch & Temperature + & Temperature -<br>9：System switch & Fan<br>10：Temperature + & Fan<br>11：System switch & Temperature + & Fan<br>12：Temperature - & Fan<br>13：System switch & Temperature - & Fan<br>14：Temperature + & Temperature - & Fan<br>15：System switch & Temperature + & Temperature - & Fan<br>17：System switch & Temperature control mode<br>18：Temperature + & Temperature control mode<br>19：System switch & Temperature + & Temperature control mode<br>20：Temperature - & Temperature control mode<br>21：System switch & Temperature - & Temperature control mode<br>22：Temperature + & Temperature - & Temperature control mode<br>23：System switch & Temperature + & Temperature - & Temperature control mode<br>24：Fan & Temperature control mode<br>25：System switch & Fan & Temperature control mode<br>26：Temperature + & Fan & Temperature control mode<br>27：System switch & Temperature + & Fan & Temperature control mode<br>28：Temperature - & Fan & Temperature control mode<br>29：System switch & Temperature - & Fan & Temperature control mode<br>30：Temperature + & Temperature - & Fan & Temperature control mode<br>31：System switch & Temperature + & Temperature - & Fan & Temperature control mode |
-| System On/Off  | 0x97 | 2 | rw | 0 |  | 0：disable<br>1：enable |
-| Temperature +  | 0x97 | 2 | rw | 0 |  | 0：disable<br>1：enable |
-| Temperature - | 0x97 | 2 | rw | 0 |  | 0：disable<br>1：enable |
-| Fan Mode | 0x97 | 2 | rw | 0 |  | 0：disable<br>1：enable |
-| Temperature Control Mode | 0x97 | 2 | rw | 0 |  | 0：disable<br>1：enable |
-| Unlocking Time | 0x97 | 2 | rw | 30 | 1 - 3600 |  |
 | Time Zone | 0xC7 | 3 | rw | 0 |  | -720：UTC-12(IDLW)<br>-660：UTC-11(SST)<br>-600：UTC-10(HST)<br>-570：UTC-9:30(MIT)<br>-540：UTC-9(AKST)<br>-480：UTC-8(PST)<br>-420：UTC-7(MST)<br>-360：UTC-6(CST)<br>-300：UTC-5(EST)<br>-240：UTC-4(AST)<br>-210：UTC-3:30(NST)<br>-180：UTC-3(BRT)<br>-120：UTC-2(FNT)<br>-60：UTC-1(CVT)<br>0：UTC(WET)<br>60：UTC+1(CET)<br>120：UTC+2(EET)<br>180：UTC+3(MSK)<br>210：UTC+3:30(IRST)<br>240：UTC+4(GST)<br>270：UTC+4:30(AFT)<br>300：UTC+5(PKT)<br>330：UTC+5:30(IST)<br>345：UTC+5:45(NPT)<br>360：UTC+6(BHT)<br>390：UTC+6:30(MMT)<br>420：UTC+7(ICT)<br>480：UTC+8(CT/CST)<br>540：UTC+9(JST)<br>570：UTC+9:30(ACST)<br>600：UTC+10(AEST)<br>630：UTC+10:30(LHST)<br>660：UTC+11(VUT)<br>720：UTC+12(NZST)<br>765：UTC+12:45(CHAST)<br>780：UTC+13(PHOT)<br>840：UTC+14(LINT) |
 | Daylight Saving Time | 0xC6 | M | rw |  |  |  |
 | Daylight Saving Time | 0xC6 | 2 | rw | 0 |  | 0：disable<br>1：enable |
@@ -206,46 +167,22 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Temperature Calibration Settings | 0x79 | 4 | rw |  |  |  |
 | Temperature Calibration | 0x79 | 2 | rw | 0 |  | 0：disable<br>1：enable |
 | Calibration Value | 0x79 | 3 | rw | 0 | -80 - 80 |  |
-| Temperature Calibration Configuration | 0x9C | 1 | rw |  |  |  |
-| Sub-command | 0x9C | 2 | rw | 0 |  |  |
-| Temperature Calibration Enable | 0x9C | 2 | rw | 0 |  | 0：disable<br>1：enable |
-| Temperature Calibration Value | 0x9C | 3 | rw | 0 | -80 - 80 |  |
 | Humidity Calibration Settings | 0x7A | 4 | rw |  |  |  |
 | Humidity Calibration | 0x7A | 2 | rw | 0 |  | 0：disable<br>1：enable |
 | Calibration Value | 0x7A | 3 | rw | 0 | -100 - 100 |  |
-| Humidity Calibration Configuration | 0x9D | 1 | rw |  |  |  |
-| Sub-command | 0x9D | 2 | rw | 0 |  |  |
-| Humidity Calibration Enable | 0x9D | 2 | rw | 0 |  | 0：disable<br>1：enable |
-| Humidity Calibration Value | 0x9D | 3 | rw | 0 | -100 - 100 |  |
 | Temperature Threshold Alarm Settings | 0x76 | 7 | rw |  |  |  |
 | Temperature Threshold Alarm | 0x76 | 2 | rw | 0 |  | 0：disable<br>1：enable |
 | Threshold Mode | 0x76 | 2 | rw | 0 |  | 0:disable<br>1:condition: x<A<br>2:condition: x>B<br>3:condition: A≤x≤B<br>4:condition: x<A or x>B |
 | Value A | 0x76 | 3 | rw | 0 | -20 - 60 |  |
 | Value B | 0x76 | 3 | rw | 0 | -20 - 60 |  |
-| Temperature Threshold Alarm Configuration | 0x99 | 1 | rw |  |  |  |
-| Sub-command | 0x99 | 2 | rw | 0 |  |  |
-| Temperature Threshold Alarm Enable | 0x99 | 2 | rw | 0 |  | 0：disable<br>1：enable |
-| Temperature Threshold Alarm Mode | 0x99 | 2 | rw | 0 |  | 0:disable<br>1:condition: x<A<br>2:condition: x>B<br>3:condition: A≤x≤B<br>4:condition: x<A or x>B |
-| Temperature Threshold Alarm Value A | 0x99 | 3 | rw | 0 | -20 - 60 |  |
-| Temperature Threshold Alarm Value B | 0x99 | 3 | rw | 0 | -20 - 60 |  |
 | Persistent High Temperature Alarm Settings | 0x77 | 5 | rw |  |  |  |
 | Persistent High Temperature | 0x77 | 2 | rw | 0 |  | 0：disable<br>1：enable |
 | Difference in Temperature | 0x77 | 3 | rw | 3 | 1 - 10 |  |
 | Duration | 0x77 | 2 | rw | 5 | 0 - 60 |  |
-| Persistent High Temperature Alarm Configuration | 0x9A | 1 | rw |  |  |  |
-| Sub-command | 0x9A | 2 | rw | 0 |  |  |
-| Persistent High Temperature Alarm Enable | 0x9A | 2 | rw | 0 |  | 0：disable<br>1：enable |
-| Persistent High Temperature Alarm Delta | 0x9A | 3 | rw | 3 | 1 - 10 |  |
-| Persistent High Temperature Alarm Duration | 0x9A | 2 | rw | 5 | 0 - 60 |  |
 | Persistent Low Temperature Alarm Settings | 0x78 | 5 | rw |  |  |  |
 | Persistent Low Temperature | 0x78 | 2 | rw | 0 |  | 0：disable<br>1：enable |
 | Difference in Temperature | 0x78 | 3 | rw | 3 | 1 - 10 |  |
 | Duration | 0x78 | 2 | rw | 5 | 0 - 60 |  |
-| Persistent Low Temperature Alarm Configuration | 0x9B | 1 | rw |  |  |  |
-| Sub-command | 0x9B | 2 | rw | 0 |  |  |
-| Persistent Low Temperature Alarm Enable | 0x9B | 2 | rw | 0 |  | 0：disable<br>1：enable |
-| Persistent Low Temperature Alarm Delta | 0x9B | 3 | rw | 3 | 1 - 10 |  |
-| Persistent Low Temperature Alarm Duration | 0x9B | 2 | rw | 5 | 0 - 60 |  |
 | Schedule Settings | 0x7B | 1 | rw |  |  |  |
 | Schedule Settings | 0x7B | 1 | rw |  |  |  |
 | Schedule ID | 0x7B | 2 | rw | 0 | 0 - 15 |  |
@@ -299,7 +236,6 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | NC | 0x7C | 2 | rw | 4 |  | 3：Q1<br>4：Q2<br>5：Q3 |
 | EC Fan | 0x7C | 2 | rw | 2 |  | 1：AO1<br>2：AO2 |
 | Fan Power WIre | 0x7C | 2 | rw | 5 |  | 0：None<br>3：Q1<br>4：Q2<br>5：Q3 |
-| Interface Type Configuration | 0x9E | 2 | rw | 1 |  | 0：Four-pipe<br>0~10V Valve+Three-speeds Fan<br>1：Two-pipe<br>0~10V Valve+Three-speeds Fan<br>2：Two-pipe<br>0~10V Valve+EC Fan<br>3：Four-pipe<br>Two-wire Valve+EC Fan<br>4：Two-pipe<br>Two-wire Valve+EC Fan<br>5：Two-pipe<br>Three-wire Valve+EC Fan |
 | Valve Control Settingd | 0x7D | 1 | rw |  |  |  |
 | Control Content | 0x7D | 2 | rw | 0 |  |  |
 | Valve Control Interval | 0x7D | 2 | rw | 30 | 1 - 60 |  |
@@ -337,10 +273,6 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Freeze Protection | 0x84 | 4 | rw |  |  |  |
 | Freeze Protection | 0x84 | 2 | rw | 1 |  | 0：disable<br>1：enable |
 | Protection Temperature | 0x84 | 3 | rw | 3 | 1 - 5 |  |
-| Freeze Protection Configuration | 0x98 | 1 | rw |  |  |  |
-| Sub-command | 0x98 | 2 | rw | 0 |  |  |
-| Freeze Protection Enable | 0x98 | 2 | rw | 1 |  | 0：disable<br>1：enable |
-| Freeze Protection Target Temperature | 0x98 | 3 | rw | 3 | 1 - 5 |  |
 | D2D Pairing Enable | 0x86 | 2 | rw | 0 |  | 0：disable<br>1：enable |
 | D2D Pairing Information | 0x87 | 1 | rw |  |  |  |
 | D2D Pairing Information | 0x87 | 1 | rw |  |  |  |
@@ -371,34 +303,6 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Preconfigured Objects | 0x91 | 2 | w | 0 |  | 0: Reboot<br>1: Reset<br>2: Overtemperature Protection<br>3: Ventilation Icon<br>4: Ventilation Text<br>5: Heat Icon<br>6: Heat Text<br>7: Cool Icon<br>8: Cool Text<br>9: Auto Fan Icon<br>10: Auto Fan Text<br>11: Low Fan Speed Icon<br>12: Low Fan Speed Text<br>13: Medium Fan Speed Icon<br>14: Medium Fan Speed Text<br>15: High Fan Speed Icon<br>16: High Fan Speed Text<br>17: Temperature Set<br>18: Schedule Icon<br>19: Schedule 1 Name<br>20: Schedule 2 Name<br>21: Schedule 3 Name<br>22: Schedule 4 Name<br>23: Schedule 5 Name<br>24: Schedule 6 Name<br>25: Schedule 7 Name<br>26: Schedule 8 Name<br>27: Schedule 9 Name<br>28: Schedule 10 Name<br>29: Schedule 11 Name<br>30: Schedule 12 Name<br>31: Schedule 13 Name<br>32: Schedule 14 Name<br>33: Schedule 15 Name<br>34: Schedule 16 Name |
 | Image Length | 0x91 | 3 | w | 0 | 0 - 65535 |  |
 | Content | 0x91 | 1 | w | 0 |  |  |
-| Screen Display Configuration | 0xA2 | 1 | rw |  |  |  |
-| Sub-command | 0xA2 | 2 | rw | 0 |  |  |
-| Enable Screen Display Data When System Is Off | 0xA2 | 2 | rw | 1 |  | 0：disable<br>1：enable |
-| Unilateral Tolerance Enable | 0xA3 | 2 | rw | 0 |  | 0：disable<br>1：enable |
-| Active Data Reporting Configuration | 0xC3 | 1 | rw |  |  |  |
-| Sub-command | 0xC3 | 2 | rw | 0 |  |  |
-| Active Data Reporting Enable | 0xC3 | 2 | rw | 0 |  | 0：disable<br>1：enable |
-| Active Data Reporting Start Time | 0xC3 | 3 | rw | 240 | 0 - 1439 |  |
-| Active Data Reporting Times | 0xC3 | 2 | rw | 1 | 0 - 12 |  |
-| Active Data Reporting Mode | 0xC3 | 2 | rw | 0 |  | 0: Disable All<br>1: Enable All<br>2: Custom |
-| Active Data Reporting Custom Configuration | 0xC3 | 3 | rw |  |  |  |
-| Active Data Reporting Custom Command Configuration | 0xC3 | 2 | rw |  |  |  |
-| Active Data Reporting Custom Command | 0xC3 | 2 | rw |  |  |  |
-| Active Data Reporting Common Command | 0xC3 | 2 | rw |  |  |  |
-| Active Data Reporting Custom Command Enable | 0xC3 | 2 | rw | 0 |  | 0：disable<br>1：enable |
-| Temperature Control Permission Configuration | 0xA5 | 1 | rw |  |  |  |
-| Sub-command | 0xA5 | 2 | rw | 0 |  |  |
-| Temperature Control Permission | 0xA5 | 2 | rw | 0 |  | 0: Thermostat Control<br>1: Remote Control |
-|  Debug Commands | 0xA6 | 1 | rw |  |  |  |
-| Sub-command | 0xA6 | 2 | rw | 0 |  |  |
-| Ambient Temperature Debug Enable | 0xA6 | 2 | rw | 0 |  | 0：disable<br>1：enable |
-| Ambient Temperature Debug Value | 0xA6 | 3 | rw |  | -20 - 60 |  |
-| Ambient Humidity Debug Enable | 0xA6 | 2 | rw | 0 |  | 0：disable<br>1：enable |
-| Ambient Humidity Debug Value | 0xA6 | 3 | rw |  | 0 - 100 |  |
-| Remote Control Configuration Interface Switch | 0x59 | 4 | w |  |  |  |
-| Remote Control Configuration Interface Enable | 0x59 | 2 | w | 0 |  | 0: Disable All<br>1: Enable Q1 Interface<br>2: Enable Q2 Interface<br>3: Enable Q1 and Q2 Interfaces<br>4: Enable Q3 Interface<br>5: Enable Q1 and Q3 Interfaces<br>6: Enable Q2 and Q3 Interfaces<br>7: Enable Q1<br>Q2<br>and Q3 Interfaces<br>255: Enable All Interfaces |
-| Remote Control Configuration AO1 Duty Cycle | 0x59 | 2 | w | 0 |  |  |
-| Remote Control Configuration AO2 Duty Cycle | 0x59 | 2 | w | 0 |  |  |
 
 ### Event
 

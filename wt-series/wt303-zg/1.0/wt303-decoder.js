@@ -43,6 +43,11 @@ function milesightDeviceDecode(bytes) {
 				decoded.check_order_reply = decoded.check_order_reply || {};
 				decoded.check_order_reply.order = readUInt8(bytes, counterObj, 1);
 				break;
+			case 0xfb:
+				decoded.check_password_reply = decoded.check_password_reply || {};
+				// 0：success, 1：failed
+				decoded.check_password_reply.result = readUInt8(bytes, counterObj, 1);
+				break;
 			case 0xef:
 				decoded.ans = decoded.ans || [];
 				var ans_item = {};
@@ -315,15 +320,9 @@ function milesightDeviceDecode(bytes) {
 				decoded.temperature_source.type = readUInt8(bytes, counterObj, 1);
 				if (decoded.temperature_source.type == 0x02) {
 					decoded.temperature_source.lorawan_reception = decoded.temperature_source.lorawan_reception || {};
-					decoded.temperature_source.lorawan_reception.timeout = readUInt8(bytes, counterObj, 1);
-					// 0: Keep Control, 1: Turn Off The Control, 2: Switch The Embedded Temperature
-					decoded.temperature_source.lorawan_reception.timeout_response = readUInt8(bytes, counterObj, 1);
 				}
 				if (decoded.temperature_source.type == 0x03) {
 					decoded.temperature_source.d2d_reception = decoded.temperature_source.d2d_reception || {};
-					decoded.temperature_source.d2d_reception.timeout = readUInt8(bytes, counterObj, 1);
-					// 0: Keep Control, 1: Turn Off The Control, 2: Switch The Embedded Temperature
-					decoded.temperature_source.d2d_reception.timeout_response = readUInt8(bytes, counterObj, 1);
 				}
 				break;
 			case 0x67:
@@ -1277,6 +1276,7 @@ function cmdMap() {
 		  "810001": "di_settings.card_control.insertion_plan",
 		  "ff": "request_check_sequence_number",
 		  "fe": "request_check_order",
+		  "fb": "request_check_password",
 		  "ef": "request_command_queries",
 		  "ee": "request_query_all_configurations",
 		  "ed": "historical_data_report",
