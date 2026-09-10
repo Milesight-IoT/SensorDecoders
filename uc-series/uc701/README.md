@@ -343,6 +343,9 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Collect Period | 0x8A | 3 | rw | 5 | 1 - 128 |  |
 | Collect threshold | 0x8A | 3 | rw | 100 | 30 - 1000 |  |
 | AC Type | 0x8A | 2 | rw | 0 |  | 0: Wall mounted machine<br>1: Vertical cabinet machine<br>2: Ceiling machine |
+| DeltaC | 0x8A | 2 | rw | 10 | 0 - 30 |  |
+| Timeout Period | 0x8A | 2 | rw | 3 | 1 - 10 |  |
+| Current Variation | 0x8A | 2 | rw | 0 | 0 - 5 |  |
 | Filter Clean Reminder Setting | 0x8B | 1 | rw |  |  |  |
 | Sub-command | 0x8B | 2 | rw | 0 |  |  |
 | Filter Clean Reminder Enable | 0x8B | 2 | rw | 0 |  | 0：Disable<br>1：Enable |

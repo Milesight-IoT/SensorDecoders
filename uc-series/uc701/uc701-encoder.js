@@ -2346,6 +2346,30 @@ function milesightDeviceEncode(payload) {
 			// 0: Wall mounted machine, 1: Vertical cabinet machine, 2: Ceiling machine
 			buffer.writeUInt8(payload.ct_sensor_settings.ac_type);
 		}
+		if (isValid(payload.ct_sensor_settings.deltac)) {
+			buffer.writeUInt8(0x8a);
+			buffer.writeUInt8(0x04);
+			if (payload.ct_sensor_settings.deltac < 0 || payload.ct_sensor_settings.deltac > 30) {
+				throw betweenError('ct_sensor_settings.deltac', 0, 30);
+			}
+			buffer.writeUInt8(payload.ct_sensor_settings.deltac);
+		}
+		if (isValid(payload.ct_sensor_settings.timeout_period)) {
+			buffer.writeUInt8(0x8a);
+			buffer.writeUInt8(0x05);
+			if (payload.ct_sensor_settings.timeout_period < 1 || payload.ct_sensor_settings.timeout_period > 10) {
+				throw betweenError('ct_sensor_settings.timeout_period', 1, 10);
+			}
+			buffer.writeUInt8(payload.ct_sensor_settings.timeout_period);
+		}
+		if (isValid(payload.ct_sensor_settings.current_variation)) {
+			buffer.writeUInt8(0x8a);
+			buffer.writeUInt8(0x06);
+			if (payload.ct_sensor_settings.current_variation < 0 || payload.ct_sensor_settings.current_variation > 5) {
+				throw betweenError('ct_sensor_settings.current_variation', 0, 5);
+			}
+			buffer.writeUInt8(payload.ct_sensor_settings.current_variation);
+		}
 		encoded = encoded.concat(buffer.toBytes());
 	}
 	//0x8b
@@ -3284,6 +3308,9 @@ function cmdMap() {
 		  "ct_sensor_settings.collect_period": "8a01",
 		  "ct_sensor_settings.collect_threshold": "8a02",
 		  "ct_sensor_settings.ac_type": "8a03",
+		  "ct_sensor_settings.deltac": "8a04",
+		  "ct_sensor_settings.timeout_period": "8a05",
+		  "ct_sensor_settings.current_variation": "8a06",
 		  "filter_clean_settings": "8b",
 		  "filter_clean_settings.enable": "8b00",
 		  "filter_clean_settings.reminder_period": "8b01",

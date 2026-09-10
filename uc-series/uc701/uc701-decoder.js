@@ -1241,6 +1241,15 @@ function milesightDeviceDecode(bytes) {
 					// 0: Wall mounted machine, 1: Vertical cabinet machine, 2: Ceiling machine
 					decoded.ct_sensor_settings.ac_type = readUInt8(bytes, counterObj, 1);
 				}
+				if (ct_sensor_settings_command == 0x04) {
+					decoded.ct_sensor_settings.deltac = readUInt8(bytes, counterObj, 1);
+				}
+				if (ct_sensor_settings_command == 0x05) {
+					decoded.ct_sensor_settings.timeout_period = readUInt8(bytes, counterObj, 1);
+				}
+				if (ct_sensor_settings_command == 0x06) {
+					decoded.ct_sensor_settings.current_variation = readUInt8(bytes, counterObj, 1);
+				}
 				break;
 			case 0x8b:
 				decoded.filter_clean_settings = decoded.filter_clean_settings || {};
@@ -2094,6 +2103,9 @@ function cmdMap() {
 		  "8a01": "ct_sensor_settings.collect_period",
 		  "8a02": "ct_sensor_settings.collect_threshold",
 		  "8a03": "ct_sensor_settings.ac_type",
+		  "8a04": "ct_sensor_settings.deltac",
+		  "8a05": "ct_sensor_settings.timeout_period",
+		  "8a06": "ct_sensor_settings.current_variation",
 		  "8b": "filter_clean_settings",
 		  "8b00": "filter_clean_settings.enable",
 		  "8b01": "filter_clean_settings.reminder_period",
