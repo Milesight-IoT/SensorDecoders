@@ -3,7 +3,7 @@
  *
  * Copyright 2025 Milesight IoT
  *
- * @product WT303
+ * @product WT304-ZH
  */
 
 /* eslint no-redeclare: "off" */
@@ -72,10 +72,15 @@ function milesightDeviceDecode(bytes) {
 				break;
 			case 0xcf:
 				decoded.lorawan_configuration_settings = decoded.lorawan_configuration_settings || {};
-				// 1：1.0.2, 2：1.0.3, 3：1.0.3, 4：1.0.4
-				decoded.lorawan_configuration_settings.version = readUInt8(bytes, counterObj, 1);
-				// 0:ClassA, 1:ClassB, 2:ClassC, 3:ClassC to B
-				decoded.lorawan_configuration_settings.mode = readUInt8(bytes, counterObj, 1);
+				var lorawan_configuration_settings_command = readUInt8(bytes, counterObj, 1);
+				if (lorawan_configuration_settings_command == 0xd8) {
+					// 1：1.0.2, 2：1.0.3, 3：1.0.3, 4：1.0.4
+					decoded.lorawan_configuration_settings.version = readUInt8(bytes, counterObj, 1);
+				}
+				if (lorawan_configuration_settings_command == 0x00) {
+					// 0:ClassA, 1:ClassB, 2:ClassC, 3:ClassC to B
+					decoded.lorawan_configuration_settings.mode = readUInt8(bytes, counterObj, 1);
+				}
 				break;
 			case 0xdf:
 				decoded.tsl_version = readProtocolVersion(readBytes(bytes, counterObj, 2));
@@ -129,7 +134,6 @@ function milesightDeviceDecode(bytes) {
 				decoded.temperature_control_info.status = extractBits(bitOptions, 0, 4);
 				break;
 			case 0x06:
-				// 0：Close, 100：Open
 				decoded.temperature_control_valve_status = readUInt8(bytes, counterObj, 1);
 				break;
 			case 0x07:
@@ -602,7 +606,7 @@ function milesightDeviceDecode(bytes) {
 				}
 				if (schedule_settings_item_command == 0x03) {
 					schedule_settings_item.content = schedule_settings_item.content || {};
-					// 0：Auto, 1：Low, 2：Medium, 3：High
+					// 0：auto, 1：low, 2：medium, 3：high
 					schedule_settings_item.content.fan_mode = readUInt8(bytes, counterObj, 1);
 					var bitOptions = readUInt16LE(bytes, counterObj, 2);
 					schedule_settings_item.content.heat_target_temperature_enable = extractBits(bitOptions, 0, 1);
@@ -645,28 +649,93 @@ function milesightDeviceDecode(bytes) {
 				decoded.interface_settings = decoded.interface_settings || {};
 				decoded.interface_settings.object = readUInt8(bytes, counterObj, 1);
 				if (decoded.interface_settings.object == 0x00) {
-					decoded.interface_settings.valve_4_pipe_2_wire = decoded.interface_settings.valve_4_pipe_2_wire || {};
-					// 1：V1/ NO, 2：V2/ NC
-					decoded.interface_settings.valve_4_pipe_2_wire.cooling = readUInt8(bytes, counterObj, 1);
-					// 1：V1/ NO, 2：V2/ NC
-					decoded.interface_settings.valve_4_pipe_2_wire.heating = readUInt8(bytes, counterObj, 1);
+					decoded.interface_settings.valve_4_pipe_10_v = decoded.interface_settings.valve_4_pipe_10_v || {};
+					// 1：AO1, 2：AO2
+					decoded.interface_settings.valve_4_pipe_10_v.cooling = readUInt8(bytes, counterObj, 1);
+					// 1：AO1, 2：AO2
+					decoded.interface_settings.valve_4_pipe_10_v.heating = readUInt8(bytes, counterObj, 1);
 				}
 				if (decoded.interface_settings.object == 0x01) {
-					decoded.interface_settings.valve_2_pipe_2_wire = decoded.interface_settings.valve_2_pipe_2_wire || {};
-					// 1：V1/ NO, 2：V2/ NC
-					decoded.interface_settings.valve_2_pipe_2_wire.control = readUInt8(bytes, counterObj, 1);
+					decoded.interface_settings.valve_2_pipe_10_v = decoded.interface_settings.valve_2_pipe_10_v || {};
+					// 1：AO1, 2：AO2
+					decoded.interface_settings.valve_2_pipe_10_v.control = readUInt8(bytes, counterObj, 1);
 				}
 				if (decoded.interface_settings.object == 0x02) {
-					decoded.interface_settings.valve_2_pipe_3_wire = decoded.interface_settings.valve_2_pipe_3_wire || {};
-					// 1：V1/ NO, 2：V2/ NC
-					decoded.interface_settings.valve_2_pipe_3_wire.no = readUInt8(bytes, counterObj, 1);
-					// 1：V1/ NO, 2：V2/ NC
-					decoded.interface_settings.valve_2_pipe_3_wire.nc = readUInt8(bytes, counterObj, 1);
+					decoded.interface_settings.valve_2_pipe_10_v_fan_ec = decoded.interface_settings.valve_2_pipe_10_v_fan_ec || {};
+					// 1：AO1, 2：AO2
+					decoded.interface_settings.valve_2_pipe_10_v_fan_ec.control = readUInt8(bytes, counterObj, 1);
+					// 1：AO1, 2：AO2
+					decoded.interface_settings.valve_2_pipe_10_v_fan_ec.fan = readUInt8(bytes, counterObj, 1);
+					// 0：None, 3：Q1, 4：Q2, 5：Q3
+					decoded.interface_settings.valve_2_pipe_10_v_fan_ec.fan_power = readUInt8(bytes, counterObj, 1);
+				}
+				if (decoded.interface_settings.object == 0x03) {
+					decoded.interface_settings.valve_4_pipe_2_wire_fan_ec = decoded.interface_settings.valve_4_pipe_2_wire_fan_ec || {};
+					// 3：Q1, 4：Q2, 5：Q3
+					decoded.interface_settings.valve_4_pipe_2_wire_fan_ec.cooling = readUInt8(bytes, counterObj, 1);
+					// 3：Q1, 4：Q2, 5：Q3
+					decoded.interface_settings.valve_4_pipe_2_wire_fan_ec.heating = readUInt8(bytes, counterObj, 1);
+					// 1：AO1, 2：AO2
+					decoded.interface_settings.valve_4_pipe_2_wire_fan_ec.fan = readUInt8(bytes, counterObj, 1);
+					// 0：None, 3：Q1, 4：Q2, 5：Q3
+					decoded.interface_settings.valve_4_pipe_2_wire_fan_ec.fan_power = readUInt8(bytes, counterObj, 1);
+				}
+				if (decoded.interface_settings.object == 0x04) {
+					decoded.interface_settings.valve_2_pipe_2_wire_fan_ec = decoded.interface_settings.valve_2_pipe_2_wire_fan_ec || {};
+					// 3：Q1, 4：Q2, 5：Q3
+					decoded.interface_settings.valve_2_pipe_2_wire_fan_ec.control = readUInt8(bytes, counterObj, 1);
+					// 1：AO1, 2：AO2
+					decoded.interface_settings.valve_2_pipe_2_wire_fan_ec.fan = readUInt8(bytes, counterObj, 1);
+					// 0：None, 3：Q1, 4：Q2, 5：Q3
+					decoded.interface_settings.valve_2_pipe_2_wire_fan_ec.fan_power = readUInt8(bytes, counterObj, 1);
+				}
+				if (decoded.interface_settings.object == 0x05) {
+					decoded.interface_settings.valve_2_pipe_3_wire_fan_ec = decoded.interface_settings.valve_2_pipe_3_wire_fan_ec || {};
+					// 3：Q1, 4：Q2, 5：Q3
+					decoded.interface_settings.valve_2_pipe_3_wire_fan_ec.no = readUInt8(bytes, counterObj, 1);
+					// 3：Q1, 4：Q2, 5：Q3
+					decoded.interface_settings.valve_2_pipe_3_wire_fan_ec.nc = readUInt8(bytes, counterObj, 1);
+					// 1：AO1, 2：AO2
+					decoded.interface_settings.valve_2_pipe_3_wire_fan_ec.fan = readUInt8(bytes, counterObj, 1);
+					// 0：None, 3：Q1, 4：Q2, 5：Q3
+					decoded.interface_settings.valve_2_pipe_3_wire_fan_ec.fan_power = readUInt8(bytes, counterObj, 1);
+				}
+				break;
+			case 0x7d:
+				decoded.valve_control_settings = decoded.valve_control_settings || {};
+				var valve_control_settings_type = readUInt8(bytes, counterObj, 1);
+				if (valve_control_settings_type == 0x02) {
+					decoded.valve_control_settings.control_interval = readUInt8(bytes, counterObj, 1);
+				}
+				if (valve_control_settings_type == 0x00) {
+					decoded.valve_control_settings.control_adjustment_range = readInt16LE(bytes, counterObj, 2) / 100;
+				}
+				if (valve_control_settings_type == 0x01) {
+					decoded.valve_control_settings.opening_range = decoded.valve_control_settings.opening_range || {};
+					decoded.valve_control_settings.opening_range.min = readUInt8(bytes, counterObj, 1);
+					decoded.valve_control_settings.opening_range.max = readUInt8(bytes, counterObj, 1);
+				}
+				break;
+			case 0x7e:
+				decoded.fan_ec_control_settings = decoded.fan_ec_control_settings || {};
+				var fan_ec_control_settings_type = readUInt8(bytes, counterObj, 1);
+				if (fan_ec_control_settings_type == 0x00) {
+					decoded.fan_ec_control_settings.low_threshold = readUInt8(bytes, counterObj, 1);
+				}
+				if (fan_ec_control_settings_type == 0x01) {
+					decoded.fan_ec_control_settings.mid_threshold = readUInt8(bytes, counterObj, 1);
+				}
+				if (fan_ec_control_settings_type == 0x02) {
+					decoded.fan_ec_control_settings.high_threshold = readUInt8(bytes, counterObj, 1);
 				}
 				break;
 			case 0x8e:
 				// 0：disable, 1：enable
 				decoded.fan_stop_enable = readUInt8(bytes, counterObj, 1);
+				break;
+			case 0x8f:
+				// 0：disable, 1：enable
+				decoded.valve_output_0v_enable = readUInt8(bytes, counterObj, 1);
 				break;
 			case 0x80:
 				// 0：disable, 1：enable
@@ -791,9 +860,6 @@ function milesightDeviceDecode(bytes) {
 				screen_content_settings_item.length = readUInt16LE(bytes, counterObj, 2);
 				screen_content_settings_item.data = readHexString(bytes, counterObj, screen_content_settings_item.length);
 				break;
-			case 0xb9:
-				decoded.query_device_status = readOnlyCommand(bytes, counterObj, 0);
-				break;
 			case 0xb7:
 				decoded.set_time = decoded.set_time || {};
 				decoded.set_time.timestamp = readUInt32LE(bytes, counterObj, 4);
@@ -833,11 +899,6 @@ function milesightDeviceDecode(bytes) {
 				decoded.insert_schedule = decoded.insert_schedule || {};
 				// 0：Schedule1, 1：Schedule2, 2：Schedule3, 3：Schedule4, 4：Schedule5, 5：Schedule6, 6：Schedule7, 7：Schedule8
 				decoded.insert_schedule.type = readUInt8(bytes, counterObj, 1);
-				break;
-			case 0x5f:
-				decoded.delete_schedule = decoded.delete_schedule || {};
-				// 0：Schedule1, 1：Schedule2, 2：Schedule3, 3：Schedule4, 4：Schedule5, 5：Schedule6, 6：Schedule7, 7：Schedule8, 255：Reset All 
-				decoded.delete_schedule.type = readUInt8(bytes, counterObj, 1);
 				break;
 			case 0xbe:
 				decoded.reboot = readOnlyCommand(bytes, counterObj, 0);
@@ -1289,6 +1350,8 @@ function cmdMap() {
 		  "ee": "request_query_all_configurations",
 		  "ed": "historical_data_report",
 		  "cf": "lorawan_configuration_settings",
+		  "cfd8": "lorawan_configuration_settings.version",
+		  "cf00": "lorawan_configuration_settings.mode",
 		  "df": "tsl_version",
 		  "de": "product_name",
 		  "dd": "product_pn",
@@ -1365,10 +1428,22 @@ function cmdMap() {
 		  "7bxx04": "schedule_settings._item.cycle_settings",
 		  "7bxx04xx": "schedule_settings._item.cycle_settings._item",
 		  "7c": "interface_settings",
-		  "7c00": "interface_settings.valve_4_pipe_2_wire",
-		  "7c01": "interface_settings.valve_2_pipe_2_wire",
-		  "7c02": "interface_settings.valve_2_pipe_3_wire",
+		  "7c00": "interface_settings.valve_4_pipe_10_v",
+		  "7c01": "interface_settings.valve_2_pipe_10_v",
+		  "7c02": "interface_settings.valve_2_pipe_10_v_fan_ec",
+		  "7c03": "interface_settings.valve_4_pipe_2_wire_fan_ec",
+		  "7c04": "interface_settings.valve_2_pipe_2_wire_fan_ec",
+		  "7c05": "interface_settings.valve_2_pipe_3_wire_fan_ec",
+		  "7d": "valve_control_settings",
+		  "7d02": "valve_control_settings.control_interval",
+		  "7d00": "valve_control_settings.control_adjustment_range",
+		  "7d01": "valve_control_settings.opening_range",
+		  "7e": "fan_ec_control_settings",
+		  "7e00": "fan_ec_control_settings.low_threshold",
+		  "7e01": "fan_ec_control_settings.mid_threshold",
+		  "7e02": "fan_ec_control_settings.high_threshold",
 		  "8e": "fan_stop_enable",
+		  "8f": "valve_output_0v_enable",
 		  "87xx": "d2d_pairing_settings._item",
 		  "87xx00": "d2d_pairing_settings._item.enable",
 		  "87xx01": "d2d_pairing_settings._item.deveui",
@@ -1379,7 +1454,6 @@ function cmdMap() {
 		  "8b": "d2d_slave_settings",
 		  "8bxx": "d2d_slave_settings._item",
 		  "91xx": "screen_content_settings._item",
-		  "b9": "query_device_status",
 		  "b7": "set_time",
 		  "bd": "clear_historical_data",
 		  "bc": "stop_historical_data_retrieval",
@@ -1390,7 +1464,6 @@ function cmdMap() {
 		  "5c": "send_humidity",
 		  "5d": "update_open_windows_state",
 		  "5e": "insert_schedule",
-		  "5f": "delete_schedule",
 		  "be": "reboot"
 	};
 }
@@ -1537,6 +1610,10 @@ function processTemperature(decoded) {
         "unitName": "℃"
     },
     "schedule_settings._item.content.temperature_tolerance": {
+        "precision": 2,
+        "unitName": "℃"
+    },
+    "valve_control_settings.control_adjustment_range": {
         "precision": 2,
         "unitName": "℃"
     },

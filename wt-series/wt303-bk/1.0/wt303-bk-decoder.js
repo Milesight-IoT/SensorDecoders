@@ -3,7 +3,7 @@
  *
  * Copyright 2025 Milesight IoT
  *
- * @product WT303
+ * @product WT303-BK
  */
 
 /* eslint no-redeclare: "off" */
@@ -72,10 +72,15 @@ function milesightDeviceDecode(bytes) {
 				break;
 			case 0xcf:
 				decoded.lorawan_configuration_settings = decoded.lorawan_configuration_settings || {};
-				// 1：1.0.2, 2：1.0.3, 3：1.0.3, 4：1.0.4
-				decoded.lorawan_configuration_settings.version = readUInt8(bytes, counterObj, 1);
-				// 0:ClassA, 1:ClassB, 2:ClassC, 3:ClassC to B
-				decoded.lorawan_configuration_settings.mode = readUInt8(bytes, counterObj, 1);
+				var lorawan_configuration_settings_command = readUInt8(bytes, counterObj, 1);
+				if (lorawan_configuration_settings_command == 0xd8) {
+					// 1：1.0.2, 2：1.0.3, 3：1.0.3, 4：1.0.4
+					decoded.lorawan_configuration_settings.version = readUInt8(bytes, counterObj, 1);
+				}
+				if (lorawan_configuration_settings_command == 0x00) {
+					// 0:ClassA, 1:ClassB, 2:ClassC, 3:ClassC to B
+					decoded.lorawan_configuration_settings.mode = readUInt8(bytes, counterObj, 1);
+				}
 				break;
 			case 0xdf:
 				decoded.tsl_version = readProtocolVersion(readBytes(bytes, counterObj, 2));
@@ -602,7 +607,7 @@ function milesightDeviceDecode(bytes) {
 				}
 				if (schedule_settings_item_command == 0x03) {
 					schedule_settings_item.content = schedule_settings_item.content || {};
-					// 0：auto, 1：low, 2：medium, 3：high
+					// 0：Auto, 1：Low, 2：Medium, 3：High
 					schedule_settings_item.content.fan_mode = readUInt8(bytes, counterObj, 1);
 					var bitOptions = readUInt16LE(bytes, counterObj, 2);
 					schedule_settings_item.content.heat_target_temperature_enable = extractBits(bitOptions, 0, 1);
@@ -791,6 +796,9 @@ function milesightDeviceDecode(bytes) {
 				screen_content_settings_item.length = readUInt16LE(bytes, counterObj, 2);
 				screen_content_settings_item.data = readHexString(bytes, counterObj, screen_content_settings_item.length);
 				break;
+			case 0xb9:
+				decoded.query_device_status = readOnlyCommand(bytes, counterObj, 0);
+				break;
 			case 0xb7:
 				decoded.set_time = decoded.set_time || {};
 				decoded.set_time.timestamp = readUInt32LE(bytes, counterObj, 4);
@@ -830,6 +838,11 @@ function milesightDeviceDecode(bytes) {
 				decoded.insert_schedule = decoded.insert_schedule || {};
 				// 0：Schedule1, 1：Schedule2, 2：Schedule3, 3：Schedule4, 4：Schedule5, 5：Schedule6, 6：Schedule7, 7：Schedule8
 				decoded.insert_schedule.type = readUInt8(bytes, counterObj, 1);
+				break;
+			case 0x5f:
+				decoded.delete_schedule = decoded.delete_schedule || {};
+				// 0：Schedule1, 1：Schedule2, 2：Schedule3, 3：Schedule4, 4：Schedule5, 5：Schedule6, 6：Schedule7, 7：Schedule8, 255：Reset All 
+				decoded.delete_schedule.type = readUInt8(bytes, counterObj, 1);
 				break;
 			case 0xbe:
 				decoded.reboot = readOnlyCommand(bytes, counterObj, 0);
@@ -1281,6 +1294,8 @@ function cmdMap() {
 		  "ee": "request_query_all_configurations",
 		  "ed": "historical_data_report",
 		  "cf": "lorawan_configuration_settings",
+		  "cfd8": "lorawan_configuration_settings.version",
+		  "cf00": "lorawan_configuration_settings.mode",
 		  "df": "tsl_version",
 		  "de": "product_name",
 		  "dd": "product_pn",
@@ -1371,6 +1386,7 @@ function cmdMap() {
 		  "8b": "d2d_slave_settings",
 		  "8bxx": "d2d_slave_settings._item",
 		  "91xx": "screen_content_settings._item",
+		  "b9": "query_device_status",
 		  "b7": "set_time",
 		  "bd": "clear_historical_data",
 		  "bc": "stop_historical_data_retrieval",
@@ -1381,6 +1397,7 @@ function cmdMap() {
 		  "5c": "send_humidity",
 		  "5d": "update_open_windows_state",
 		  "5e": "insert_schedule",
+		  "5f": "delete_schedule",
 		  "be": "reboot"
 	};
 }

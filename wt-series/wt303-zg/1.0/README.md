@@ -1,8 +1,8 @@
-# WT303 Sensor
+# WT303-ZG Sensor
 
-![WT303](wt303.png)
+![WT303-ZG](wt303-zg.png)
 
-For more detailed information, please visit [Milesight Official Website](https://www.milesight.com/iot/product/lorawan-sensor/wt303)
+For more detailed information, please visit [Milesight Official Website](https://www.milesight.com/iot/product/lorawan-sensor/wt303-zg)
 
 ## Payload Definition
 
@@ -11,6 +11,7 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | CHANNEL |  ID  | LENGTH | READ/WRITE | DEFAULT | RANGE | ENUM |
 | :------ | :--: | :----: | :--------: | :-----: | :---: | :--: |
 | LoRaWAN  Settings | 0xCF | 1 | rw |  |  |  |
+| LoRaWAN Comand | 0xCF | 2 | rw |  |  |  |
 | LoRaWAN Version | 0xCF | 2 | rw | 2 |  | 1：1.0.2<br>2：1.0.3<br>3：1.0.3<br>4：1.0.4 |
 | LoRaWAN Work Mode | 0xCF | 2 | rw | 0 |  | 0:ClassA<br>1:ClassB<br>2:ClassC<br>3:ClassC to B |
 | TSL Version | 0xDF | 3 | r |  |  |  |
@@ -278,7 +279,6 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | :------ | :--: | :----: | :--------: | :-----: | :---: | :--: |
 | Sequence Number Check Response | 0xFF | 2 | r |  |  |  |
 | Order Check Response | 0xFE | 2 | r |  |  |  |
-| Password Check Response | 0xFB | 2 | r |  |  |  |
 | Command Response | 0xEF | 1 | r |  |  |  |
 | Request to Push All Configurations | 0xEE | 1 | r |  |  |  |
 | Historical Data | 0xED | 5 | r |  |  |  |
@@ -297,9 +297,6 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Order Check | 0xFE | 2 | w |  |  |  |
 | Order | 0xFE | 2 | w | 0 | 0 - 255 |  |
 | Order | 0xFE | 2 | r | 0 | 0 - 255 |  |
-| Password Check | 0xFB | 7 | w |  |  |  |
-| Password | 0xFB | 7 | w | 123456 |  |  |
-| Result | 0xFB | 2 | r | 0 |  | 0：success<br>1：failed |
 | Command Queries | 0xEF | 1 | w |  |  |  |
 | Query Information | 0xEF | 2 | w |  |  |  |
 | Command Length | 0xEF | 2 | w | 1 | 1 - 15 |  |

@@ -3,7 +3,7 @@
  *
  * Copyright 2025 Milesight IoT
  *
- * @product WT303
+ * @product WT303-BK
  */
 
 /* eslint no-redeclare: "off" */
@@ -117,17 +117,26 @@ function milesightDeviceEncode(payload) {
 	//0xcf
 	if ('lorawan_configuration_settings' in payload) {
 		var buffer = new Buffer();
-		buffer.writeUInt8(0xcf);
-		if ([1, 2, 3, 4].indexOf(payload.lorawan_configuration_settings.version) === -1) {
-			throw oneOfError('lorawan_configuration_settings.version', [1, 2, 3, 4]);
+		if (isValid(payload.lorawan_configuration_settings.version)) {
+			buffer.writeUInt8(0xcf);
+			// 1：1.0.2, 2：1.0.3, 3：1.0.3, 4：1.0.4
+			buffer.writeUInt8(0xd8);
+			if ([1, 2, 3, 4].indexOf(payload.lorawan_configuration_settings.version) === -1) {
+				throw oneOfError('lorawan_configuration_settings.version', [1, 2, 3, 4]);
+			}
+			// 1：1.0.2, 2：1.0.3, 3：1.0.3, 4：1.0.4
+			buffer.writeUInt8(payload.lorawan_configuration_settings.version);
 		}
-		// 1：1.0.2, 2：1.0.3, 3：1.0.3, 4：1.0.4
-		buffer.writeUInt8(payload.lorawan_configuration_settings.version);
-		if ([0, 1, 2, 3].indexOf(payload.lorawan_configuration_settings.mode) === -1) {
-			throw oneOfError('lorawan_configuration_settings.mode', [0, 1, 2, 3]);
+		if (isValid(payload.lorawan_configuration_settings.mode)) {
+			buffer.writeUInt8(0xcf);
+			// 0:ClassA, 1:ClassB, 2:ClassC, 3:ClassC to B
+			buffer.writeUInt8(0x00);
+			if ([0, 1, 2, 3].indexOf(payload.lorawan_configuration_settings.mode) === -1) {
+				throw oneOfError('lorawan_configuration_settings.mode', [0, 1, 2, 3]);
+			}
+			// 0:ClassA, 1:ClassB, 2:ClassC, 3:ClassC to B
+			buffer.writeUInt8(payload.lorawan_configuration_settings.mode);
 		}
-		// 0:ClassA, 1:ClassB, 2:ClassC, 3:ClassC to B
-		buffer.writeUInt8(payload.lorawan_configuration_settings.mode);
 		encoded = encoded.concat(buffer.toBytes());
 	}
 	//0xde
@@ -2484,6 +2493,8 @@ function cmdMap() {
 		  "request_query_all_configurations": "ee",
 		  "historical_data_report": "ed",
 		  "lorawan_configuration_settings": "cf",
+		  "lorawan_configuration_settings.version": "cfd8",
+		  "lorawan_configuration_settings.mode": "cf00",
 		  "tsl_version": "df",
 		  "product_name": "de",
 		  "product_pn": "dd",

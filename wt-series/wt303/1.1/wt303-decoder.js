@@ -72,10 +72,15 @@ function milesightDeviceDecode(bytes) {
 				break;
 			case 0xcf:
 				decoded.lorawan_configuration_settings = decoded.lorawan_configuration_settings || {};
-				// 1：1.0.2, 2：1.0.3, 3：1.0.3, 4：1.0.4
-				decoded.lorawan_configuration_settings.version = readUInt8(bytes, counterObj, 1);
-				// 0:ClassA, 1:ClassB, 2:ClassC, 3:ClassC to B
-				decoded.lorawan_configuration_settings.mode = readUInt8(bytes, counterObj, 1);
+				var lorawan_configuration_settings_command = readUInt8(bytes, counterObj, 1);
+				if (lorawan_configuration_settings_command == 0xd8) {
+					// 1：1.0.2, 2：1.0.3, 3：1.0.3, 4：1.0.4
+					decoded.lorawan_configuration_settings.version = readUInt8(bytes, counterObj, 1);
+				}
+				if (lorawan_configuration_settings_command == 0x00) {
+					// 0:ClassA, 1:ClassB, 2:ClassC, 3:ClassC to B
+					decoded.lorawan_configuration_settings.mode = readUInt8(bytes, counterObj, 1);
+				}
 				break;
 			case 0xdf:
 				decoded.tsl_version = readProtocolVersion(readBytes(bytes, counterObj, 2));
@@ -1548,6 +1553,8 @@ function cmdMap() {
 		  "ee": "request_query_all_configurations",
 		  "ed": "historical_data_report",
 		  "cf": "lorawan_configuration_settings",
+		  "cfd8": "lorawan_configuration_settings.version",
+		  "cf00": "lorawan_configuration_settings.mode",
 		  "df": "tsl_version",
 		  "de": "product_name",
 		  "dd": "product_pn",

@@ -3,7 +3,7 @@
  *
  * Copyright 2025 Milesight IoT
  *
- * @product WT303
+ * @product WT304-BK
  */
 
 /* eslint no-redeclare: "off" */
@@ -46,13 +46,6 @@ function milesightDeviceEncode(payload) {
 			throw betweenError('request_check_order.order', 0, 255);
 		}
 		buffer.writeUInt8(payload.request_check_order.order);
-		encoded = encoded.concat(buffer.toBytes());
-	}
-	//0xfb
-	if ('request_check_password' in payload) {
-		var buffer = new Buffer();
-		buffer.writeUInt8(0xfb);
-		buffer.writeString(payload.request_check_password.password, 6);
 		encoded = encoded.concat(buffer.toBytes());
 	}
 	//0xef
@@ -124,17 +117,26 @@ function milesightDeviceEncode(payload) {
 	//0xcf
 	if ('lorawan_configuration_settings' in payload) {
 		var buffer = new Buffer();
-		buffer.writeUInt8(0xcf);
-		if ([1, 2, 3, 4].indexOf(payload.lorawan_configuration_settings.version) === -1) {
-			throw oneOfError('lorawan_configuration_settings.version', [1, 2, 3, 4]);
+		if (isValid(payload.lorawan_configuration_settings.version)) {
+			buffer.writeUInt8(0xcf);
+			// 1：1.0.2, 2：1.0.3, 3：1.0.3, 4：1.0.4
+			buffer.writeUInt8(0xd8);
+			if ([1, 2, 3, 4].indexOf(payload.lorawan_configuration_settings.version) === -1) {
+				throw oneOfError('lorawan_configuration_settings.version', [1, 2, 3, 4]);
+			}
+			// 1：1.0.2, 2：1.0.3, 3：1.0.3, 4：1.0.4
+			buffer.writeUInt8(payload.lorawan_configuration_settings.version);
 		}
-		// 1：1.0.2, 2：1.0.3, 3：1.0.3, 4：1.0.4
-		buffer.writeUInt8(payload.lorawan_configuration_settings.version);
-		if ([0, 1, 2, 3].indexOf(payload.lorawan_configuration_settings.mode) === -1) {
-			throw oneOfError('lorawan_configuration_settings.mode', [0, 1, 2, 3]);
+		if (isValid(payload.lorawan_configuration_settings.mode)) {
+			buffer.writeUInt8(0xcf);
+			// 0:ClassA, 1:ClassB, 2:ClassC, 3:ClassC to B
+			buffer.writeUInt8(0x00);
+			if ([0, 1, 2, 3].indexOf(payload.lorawan_configuration_settings.mode) === -1) {
+				throw oneOfError('lorawan_configuration_settings.mode', [0, 1, 2, 3]);
+			}
+			// 0:ClassA, 1:ClassB, 2:ClassC, 3:ClassC to B
+			buffer.writeUInt8(payload.lorawan_configuration_settings.mode);
 		}
-		// 0:ClassA, 1:ClassB, 2:ClassC, 3:ClassC to B
-		buffer.writeUInt8(payload.lorawan_configuration_settings.mode);
 		encoded = encoded.concat(buffer.toBytes());
 	}
 	//0xde
@@ -248,10 +250,9 @@ function milesightDeviceEncode(payload) {
 	if ('temperature_control_valve_status' in payload) {
 		var buffer = new Buffer();
 		buffer.writeUInt8(0x06);
-		if ([0, 100].indexOf(payload.temperature_control_valve_status) === -1) {
-			throw oneOfError('temperature_control_valve_status', [0, 100]);
+		if (payload.temperature_control_valve_status < 0 || payload.temperature_control_valve_status > 100) {
+			throw betweenError('temperature_control_valve_status', 0, 100);
 		}
-		// 0：Close, 100：Open
 		buffer.writeUInt8(payload.temperature_control_valve_status);
 		encoded = encoded.concat(buffer.toBytes());
 	}
@@ -438,6 +439,10 @@ function milesightDeviceEncode(payload) {
 		bitOptions |= payload.relay_status.valve_2_status << 4;
 
 		bitOptions |= payload.relay_status.reserved << 5;
+
+		bitOptions |= payload.relay_status.ao1_duty << 16;
+
+		bitOptions |= payload.relay_status.ao2_duty << 24;
 		buffer.writeUInt32LE(bitOptions);
 
 		encoded = encoded.concat(buffer.toBytes());
@@ -1518,7 +1523,7 @@ function milesightDeviceEncode(payload) {
 				if ([0, 1, 2, 3].indexOf(schedule_settings_item.content.fan_mode) === -1) {
 					throw oneOfError('content.fan_mode', [0, 1, 2, 3]);
 				}
-				// 0：auto, 1：low, 2：medium, 3：high
+				// 0：Auto, 1：Low, 2：Medium, 3：High
 				buffer.writeUInt8(schedule_settings_item.content.fan_mode);
 				var bitOptions = 0;
 				bitOptions |= schedule_settings_item.content.heat_target_temperature_enable << 0;
@@ -1593,40 +1598,106 @@ function milesightDeviceEncode(payload) {
 	if ('interface_settings' in payload) {
 		var buffer = new Buffer();
 		buffer.writeUInt8(0x7c);
-		if (payload.interface_settings.object < 0 || payload.interface_settings.object > 2) {
-			throw rangeError('interface_settings.object', '[0,2]');
+		if (payload.interface_settings.object < 0 || payload.interface_settings.object > 5) {
+			throw rangeError('interface_settings.object', '[0,5]');
 		}
 		buffer.writeUInt8(payload.interface_settings.object);
 		if (payload.interface_settings.object == 0x00) {
-			if ([1, 2].indexOf(payload.interface_settings.valve_4_pipe_2_wire.cooling) === -1) {
-				throw oneOfError('interface_settings.valve_4_pipe_2_wire.cooling', [1, 2]);
+			if ([1, 2].indexOf(payload.interface_settings.valve_4_pipe_10_v.cooling) === -1) {
+				throw oneOfError('interface_settings.valve_4_pipe_10_v.cooling', [1, 2]);
 			}
-			// 1：V1/ NO, 2：V2/ NC
-			buffer.writeUInt8(payload.interface_settings.valve_4_pipe_2_wire.cooling);
-			if ([1, 2].indexOf(payload.interface_settings.valve_4_pipe_2_wire.heating) === -1) {
-				throw oneOfError('interface_settings.valve_4_pipe_2_wire.heating', [1, 2]);
+			// 1：AO1, 2：AO2
+			buffer.writeUInt8(payload.interface_settings.valve_4_pipe_10_v.cooling);
+			if ([1, 2].indexOf(payload.interface_settings.valve_4_pipe_10_v.heating) === -1) {
+				throw oneOfError('interface_settings.valve_4_pipe_10_v.heating', [1, 2]);
 			}
-			// 1：V1/ NO, 2：V2/ NC
-			buffer.writeUInt8(payload.interface_settings.valve_4_pipe_2_wire.heating);
+			// 1：AO1, 2：AO2
+			buffer.writeUInt8(payload.interface_settings.valve_4_pipe_10_v.heating);
 		}
 		if (payload.interface_settings.object == 0x01) {
-			if ([1, 2].indexOf(payload.interface_settings.valve_2_pipe_2_wire.control) === -1) {
-				throw oneOfError('interface_settings.valve_2_pipe_2_wire.control', [1, 2]);
+			if ([1, 2].indexOf(payload.interface_settings.valve_2_pipe_10_v.control) === -1) {
+				throw oneOfError('interface_settings.valve_2_pipe_10_v.control', [1, 2]);
 			}
-			// 1：V1/ NO, 2：V2/ NC
-			buffer.writeUInt8(payload.interface_settings.valve_2_pipe_2_wire.control);
+			// 1：AO1, 2：AO2
+			buffer.writeUInt8(payload.interface_settings.valve_2_pipe_10_v.control);
 		}
 		if (payload.interface_settings.object == 0x02) {
-			if ([1, 2].indexOf(payload.interface_settings.valve_2_pipe_3_wire.no) === -1) {
-				throw oneOfError('interface_settings.valve_2_pipe_3_wire.no', [1, 2]);
+			if ([1, 2].indexOf(payload.interface_settings.valve_2_pipe_10_v_fan_ec.control) === -1) {
+				throw oneOfError('interface_settings.valve_2_pipe_10_v_fan_ec.control', [1, 2]);
 			}
-			// 1：V1/ NO, 2：V2/ NC
-			buffer.writeUInt8(payload.interface_settings.valve_2_pipe_3_wire.no);
-			if ([1, 2].indexOf(payload.interface_settings.valve_2_pipe_3_wire.nc) === -1) {
-				throw oneOfError('interface_settings.valve_2_pipe_3_wire.nc', [1, 2]);
+			// 1：AO1, 2：AO2
+			buffer.writeUInt8(payload.interface_settings.valve_2_pipe_10_v_fan_ec.control);
+			if ([1, 2].indexOf(payload.interface_settings.valve_2_pipe_10_v_fan_ec.fan) === -1) {
+				throw oneOfError('interface_settings.valve_2_pipe_10_v_fan_ec.fan', [1, 2]);
 			}
-			// 1：V1/ NO, 2：V2/ NC
-			buffer.writeUInt8(payload.interface_settings.valve_2_pipe_3_wire.nc);
+			// 1：AO1, 2：AO2
+			buffer.writeUInt8(payload.interface_settings.valve_2_pipe_10_v_fan_ec.fan);
+			if ([0, 3, 4, 5].indexOf(payload.interface_settings.valve_2_pipe_10_v_fan_ec.fan_power) === -1) {
+				throw oneOfError('interface_settings.valve_2_pipe_10_v_fan_ec.fan_power', [0, 3, 4, 5]);
+			}
+			// 0：None, 3：Q1, 4：Q2, 5：Q3
+			buffer.writeUInt8(payload.interface_settings.valve_2_pipe_10_v_fan_ec.fan_power);
+		}
+		if (payload.interface_settings.object == 0x03) {
+			if ([3, 4, 5].indexOf(payload.interface_settings.valve_4_pipe_2_wire_fan_ec.cooling) === -1) {
+				throw oneOfError('interface_settings.valve_4_pipe_2_wire_fan_ec.cooling', [3, 4, 5]);
+			}
+			// 3：Q1, 4：Q2, 5：Q3
+			buffer.writeUInt8(payload.interface_settings.valve_4_pipe_2_wire_fan_ec.cooling);
+			if ([3, 4, 5].indexOf(payload.interface_settings.valve_4_pipe_2_wire_fan_ec.heating) === -1) {
+				throw oneOfError('interface_settings.valve_4_pipe_2_wire_fan_ec.heating', [3, 4, 5]);
+			}
+			// 3：Q1, 4：Q2, 5：Q3
+			buffer.writeUInt8(payload.interface_settings.valve_4_pipe_2_wire_fan_ec.heating);
+			if ([1, 2].indexOf(payload.interface_settings.valve_4_pipe_2_wire_fan_ec.fan) === -1) {
+				throw oneOfError('interface_settings.valve_4_pipe_2_wire_fan_ec.fan', [1, 2]);
+			}
+			// 1：AO1, 2：AO2
+			buffer.writeUInt8(payload.interface_settings.valve_4_pipe_2_wire_fan_ec.fan);
+			if ([0, 3, 4, 5].indexOf(payload.interface_settings.valve_4_pipe_2_wire_fan_ec.fan_power) === -1) {
+				throw oneOfError('interface_settings.valve_4_pipe_2_wire_fan_ec.fan_power', [0, 3, 4, 5]);
+			}
+			// 0：None, 3：Q1, 4：Q2, 5：Q3
+			buffer.writeUInt8(payload.interface_settings.valve_4_pipe_2_wire_fan_ec.fan_power);
+		}
+		if (payload.interface_settings.object == 0x04) {
+			if ([3, 4, 5].indexOf(payload.interface_settings.valve_2_pipe_2_wire_fan_ec.control) === -1) {
+				throw oneOfError('interface_settings.valve_2_pipe_2_wire_fan_ec.control', [3, 4, 5]);
+			}
+			// 3：Q1, 4：Q2, 5：Q3
+			buffer.writeUInt8(payload.interface_settings.valve_2_pipe_2_wire_fan_ec.control);
+			if ([1, 2].indexOf(payload.interface_settings.valve_2_pipe_2_wire_fan_ec.fan) === -1) {
+				throw oneOfError('interface_settings.valve_2_pipe_2_wire_fan_ec.fan', [1, 2]);
+			}
+			// 1：AO1, 2：AO2
+			buffer.writeUInt8(payload.interface_settings.valve_2_pipe_2_wire_fan_ec.fan);
+			if ([0, 3, 4, 5].indexOf(payload.interface_settings.valve_2_pipe_2_wire_fan_ec.fan_power) === -1) {
+				throw oneOfError('interface_settings.valve_2_pipe_2_wire_fan_ec.fan_power', [0, 3, 4, 5]);
+			}
+			// 0：None, 3：Q1, 4：Q2, 5：Q3
+			buffer.writeUInt8(payload.interface_settings.valve_2_pipe_2_wire_fan_ec.fan_power);
+		}
+		if (payload.interface_settings.object == 0x05) {
+			if ([3, 4, 5].indexOf(payload.interface_settings.valve_2_pipe_3_wire_fan_ec.no) === -1) {
+				throw oneOfError('interface_settings.valve_2_pipe_3_wire_fan_ec.no', [3, 4, 5]);
+			}
+			// 3：Q1, 4：Q2, 5：Q3
+			buffer.writeUInt8(payload.interface_settings.valve_2_pipe_3_wire_fan_ec.no);
+			if ([3, 4, 5].indexOf(payload.interface_settings.valve_2_pipe_3_wire_fan_ec.nc) === -1) {
+				throw oneOfError('interface_settings.valve_2_pipe_3_wire_fan_ec.nc', [3, 4, 5]);
+			}
+			// 3：Q1, 4：Q2, 5：Q3
+			buffer.writeUInt8(payload.interface_settings.valve_2_pipe_3_wire_fan_ec.nc);
+			if ([1, 2].indexOf(payload.interface_settings.valve_2_pipe_3_wire_fan_ec.fan) === -1) {
+				throw oneOfError('interface_settings.valve_2_pipe_3_wire_fan_ec.fan', [1, 2]);
+			}
+			// 1：AO1, 2：AO2
+			buffer.writeUInt8(payload.interface_settings.valve_2_pipe_3_wire_fan_ec.fan);
+			if ([0, 3, 4, 5].indexOf(payload.interface_settings.valve_2_pipe_3_wire_fan_ec.fan_power) === -1) {
+				throw oneOfError('interface_settings.valve_2_pipe_3_wire_fan_ec.fan_power', [0, 3, 4, 5]);
+			}
+			// 0：None, 3：Q1, 4：Q2, 5：Q3
+			buffer.writeUInt8(payload.interface_settings.valve_2_pipe_3_wire_fan_ec.fan_power);
 		}
 		encoded = encoded.concat(buffer.toBytes());
 	}
@@ -1634,11 +1705,73 @@ function milesightDeviceEncode(payload) {
 	if ('interface_type_cfg' in payload) {
 		var buffer = new Buffer();
 		buffer.writeUInt8(0x9e);
-		if ([0, 1, 2].indexOf(payload.interface_type_cfg) === -1) {
-			throw oneOfError('interface_type_cfg', [0, 1, 2]);
+		if ([0, 1, 2, 3, 4, 5].indexOf(payload.interface_type_cfg) === -1) {
+			throw oneOfError('interface_type_cfg', [0, 1, 2, 3, 4, 5]);
 		}
-		// 0：Four-pipe, Two-wire Valve+Three-speeds Fan, 1：Two-pipe, Two-wire Valve+Three-speeds Fan, 2：Two-pipe, Three-wire Valve+Three-speeds Fan
+		// 0：Four-pipe, 0~10V Valve+Three-speeds Fan, 1：Two-pipe, 0~10V Valve+Three-speeds Fan, 2：Two-pipe, 0~10V Valve+EC Fan, 3：Four-pipe,Two-wire Valve+EC Fan, 4：Two-pipe, Two-wire Valve+EC Fan, 5：Two-pipe, Three-wire Valve+EC Fan
 		buffer.writeUInt8(payload.interface_type_cfg);
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0x7d
+	if ('valve_control_settings' in payload) {
+		var buffer = new Buffer();
+		if (isValid(payload.valve_control_settings.control_interval)) {
+			buffer.writeUInt8(0x7d);
+			buffer.writeUInt8(0x02);
+			if (payload.valve_control_settings.control_interval < 1 || payload.valve_control_settings.control_interval > 60) {
+				throw betweenError('valve_control_settings.control_interval', 1, 60);
+			}
+			buffer.writeUInt8(payload.valve_control_settings.control_interval);
+		}
+		if (isValid(payload.valve_control_settings.control_adjustment_range)) {
+			buffer.writeUInt8(0x7d);
+			buffer.writeUInt8(0x00);
+			if (payload.valve_control_settings.control_adjustment_range < 1 || payload.valve_control_settings.control_adjustment_range > 15) {
+				throw betweenError('valve_control_settings.control_adjustment_range', 1, 15);
+			}
+			buffer.writeInt16LE(payload.valve_control_settings.control_adjustment_range * 100);
+		}
+		if (isValid(payload.valve_control_settings.opening_range)) {
+			buffer.writeUInt8(0x7d);
+			buffer.writeUInt8(0x01);
+			if (payload.valve_control_settings.opening_range.min < 0 || payload.valve_control_settings.opening_range.min > 100) {
+				throw betweenError('valve_control_settings.opening_range.min', 0, 100);
+			}
+			buffer.writeUInt8(payload.valve_control_settings.opening_range.min);
+			if (payload.valve_control_settings.opening_range.max < 0 || payload.valve_control_settings.opening_range.max > 100) {
+				throw betweenError('valve_control_settings.opening_range.max', 0, 100);
+			}
+			buffer.writeUInt8(payload.valve_control_settings.opening_range.max);
+		}
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0x7e
+	if ('fan_ec_control_settings' in payload) {
+		var buffer = new Buffer();
+		if (isValid(payload.fan_ec_control_settings.low_threshold)) {
+			buffer.writeUInt8(0x7e);
+			buffer.writeUInt8(0x00);
+			if (payload.fan_ec_control_settings.low_threshold < 1 || payload.fan_ec_control_settings.low_threshold > 100) {
+				throw betweenError('fan_ec_control_settings.low_threshold', 1, 100);
+			}
+			buffer.writeUInt8(payload.fan_ec_control_settings.low_threshold);
+		}
+		if (isValid(payload.fan_ec_control_settings.mid_threshold)) {
+			buffer.writeUInt8(0x7e);
+			buffer.writeUInt8(0x01);
+			if (payload.fan_ec_control_settings.mid_threshold < 1 || payload.fan_ec_control_settings.mid_threshold > 100) {
+				throw betweenError('fan_ec_control_settings.mid_threshold', 1, 100);
+			}
+			buffer.writeUInt8(payload.fan_ec_control_settings.mid_threshold);
+		}
+		if (isValid(payload.fan_ec_control_settings.high_threshold)) {
+			buffer.writeUInt8(0x7e);
+			buffer.writeUInt8(0x02);
+			if (payload.fan_ec_control_settings.high_threshold < 1 || payload.fan_ec_control_settings.high_threshold > 100) {
+				throw betweenError('fan_ec_control_settings.high_threshold', 1, 100);
+			}
+			buffer.writeUInt8(payload.fan_ec_control_settings.high_threshold);
+		}
 		encoded = encoded.concat(buffer.toBytes());
 	}
 	//0x8e
@@ -1650,6 +1783,17 @@ function milesightDeviceEncode(payload) {
 		}
 		// 0：disable, 1：enable
 		buffer.writeUInt8(payload.fan_stop_enable);
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0x8f
+	if ('valve_output_0v_enable' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0x8f);
+		if ([0, 1].indexOf(payload.valve_output_0v_enable) === -1) {
+			throw oneOfError('valve_output_0v_enable', [0, 1]);
+		}
+		// 0：disable, 1：enable
+		buffer.writeUInt8(payload.valve_output_0v_enable);
 		encoded = encoded.concat(buffer.toBytes());
 	}
 	//0x80
@@ -2122,15 +2266,23 @@ function milesightDeviceEncode(payload) {
 		buffer.writeUInt8(0xb6);
 		encoded = encoded.concat(buffer.toBytes());
 	}
-	//0x5a
-	if ('temperature_control_permission_cfg_303' in payload) {
+	//0x59
+	if ('' in payload) {
 		var buffer = new Buffer();
-		buffer.writeUInt8(0x5a);
-		if ([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 255].indexOf(payload.temperature_control_permission_cfg_303) === -1) {
-			throw oneOfError('temperature_control_permission_cfg_303', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 255]);
+		buffer.writeUInt8(0x59);
+		if ([0, 1, 2, 3, 4, 5, 6, 7, 255].indexOf(payload.temperature_control_permission_cfg.switch_304.enable) === -1) {
+			throw oneOfError('temperature_control_permission_cfg.switch_304.enable', [0, 1, 2, 3, 4, 5, 6, 7, 255]);
 		}
-		// 0: Disable All, 1: Enable GL Interface, 2: Enable GM Interface, 3: Enable GL and GM Interfaces, 4: Enable GH Interface, 5: Enable GL and GH Interfaces, 6: Enable GM and GH Interfaces, 7: Enable GL, GM, and GH Interfaces, 8: Enable V1 Interface, 9: Enable GL and V1 Interfaces, 10: Enable GM and V1 Interfaces, 11: Enable GL, GM, and V1 Interfaces, 12: Enable GH and V1 Interfaces, 13: Enable GL, GH, and V1 Interfaces, 14: Enable GM, GH, and V1 Interfaces, 15: Enable GL, GM, GH, and V1 Interfaces, 16: Enable V2 Interface, 17: Enable GL and V2 Interfaces, 18: Enable GM and V2 Interfaces, 19: Enable GL, GM, and V2 Interfaces, 20: Enable GH and V2 Interfaces, 21: Enable GL, GH, and V2 Interfaces, 22: Enable GM, GH, and V2 Interfaces, 23: Enable GL, GM, GH, and V2 Interfaces, 24: Enable V1 and V2 Interfaces, 25: Enable GL, V1, and V2 Interfaces, 26: Enable GM, V1, and V2 Interfaces, 27: Enable GL, GM, V1, and V2 Interfaces, 28: Enable GH, V1, and V2 Interfaces, 29: Enable GL, GH, V1, and V2 Interfaces, 30: Enable GM, GH, V1, and V2 Interfaces, 31: Enable GL, GM, GH, V1, and V2 Interfaces, 255: Enable All Interfaces
-		buffer.writeUInt8(payload.temperature_control_permission_cfg_303);
+		// 0: Disable All, 1: Enable Q1 Interface, 2: Enable Q2 Interface, 3: Enable Q1 and Q2 Interfaces, 4: Enable Q3 Interface, 5: Enable Q1 and Q3 Interfaces, 6: Enable Q2 and Q3 Interfaces, 7: Enable Q1, Q2, and Q3 Interfaces, 255: Enable All Interfaces
+		buffer.writeUInt8(payload.temperature_control_permission_cfg.switch_304.enable);
+		if (payload.temperature_control_permission_cfg.switch_304.ao1_duty_cycle < 0 || payload.temperature_control_permission_cfg.switch_304.ao1_duty_cycle > 100) {
+			throw rangeError('temperature_control_permission_cfg.switch_304.ao1_duty_cycle', '[0,100]');
+		}
+		buffer.writeUInt8(payload.temperature_control_permission_cfg.switch_304.ao1_duty_cycle);
+		if (payload.temperature_control_permission_cfg.switch_304.ao2_duty_cycle < 0 || payload.temperature_control_permission_cfg.switch_304.ao2_duty_cycle > 100) {
+			throw rangeError('temperature_control_permission_cfg.switch_304.ao2_duty_cycle', '[0,100]');
+		}
+		buffer.writeUInt8(payload.temperature_control_permission_cfg.switch_304.ao2_duty_cycle);
 		encoded = encoded.concat(buffer.toBytes());
 	}
 	//0x5b
@@ -2173,6 +2325,17 @@ function milesightDeviceEncode(payload) {
 		}
 		// 0：Schedule1, 1：Schedule2, 2：Schedule3, 3：Schedule4, 4：Schedule5, 5：Schedule6, 6：Schedule7, 7：Schedule8
 		buffer.writeUInt8(payload.insert_schedule.type);
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0x5f
+	if ('delete_schedule' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0x5f);
+		if ([0, 1, 2, 3, 4, 5, 6, 7, 255].indexOf(payload.delete_schedule.type) === -1) {
+			throw oneOfError('delete_schedule.type', [0, 1, 2, 3, 4, 5, 6, 7, 255]);
+		}
+		// 0：Schedule1, 1：Schedule2, 2：Schedule3, 3：Schedule4, 4：Schedule5, 5：Schedule6, 6：Schedule7, 7：Schedule8, 255：Reset All 
+		buffer.writeUInt8(payload.delete_schedule.type);
 		encoded = encoded.concat(buffer.toBytes());
 	}
 	//0xbe
@@ -2476,11 +2639,12 @@ function cmdMap() {
 	return {
 		  "request_check_sequence_number": "ff",
 		  "request_check_order": "fe",
-		  "request_check_password": "fb",
 		  "request_command_queries": "ef",
 		  "request_query_all_configurations": "ee",
 		  "historical_data_report": "ed",
 		  "lorawan_configuration_settings": "cf",
+		  "lorawan_configuration_settings.version": "cfd8",
+		  "lorawan_configuration_settings.mode": "cf00",
 		  "tsl_version": "df",
 		  "product_name": "de",
 		  "product_pn": "dd",
@@ -2624,11 +2788,23 @@ function cmdMap() {
 		  "schedule_settings._item.cycle_settings": "7bxx04",
 		  "schedule_settings._item.cycle_settings._item": "7bxx04xx",
 		  "interface_settings": "7c",
-		  "interface_settings.valve_4_pipe_2_wire": "7c00",
-		  "interface_settings.valve_2_pipe_2_wire": "7c01",
-		  "interface_settings.valve_2_pipe_3_wire": "7c02",
+		  "interface_settings.valve_4_pipe_10_v": "7c00",
+		  "interface_settings.valve_2_pipe_10_v": "7c01",
+		  "interface_settings.valve_2_pipe_10_v_fan_ec": "7c02",
+		  "interface_settings.valve_4_pipe_2_wire_fan_ec": "7c03",
+		  "interface_settings.valve_2_pipe_2_wire_fan_ec": "7c04",
+		  "interface_settings.valve_2_pipe_3_wire_fan_ec": "7c05",
 		  "interface_type_cfg": "9e",
+		  "valve_control_settings": "7d",
+		  "valve_control_settings.control_interval": "7d02",
+		  "valve_control_settings.control_adjustment_range": "7d00",
+		  "valve_control_settings.opening_range": "7d01",
+		  "fan_ec_control_settings": "7e",
+		  "fan_ec_control_settings.low_threshold": "7e00",
+		  "fan_ec_control_settings.mid_threshold": "7e01",
+		  "fan_ec_control_settings.high_threshold": "7e02",
 		  "fan_stop_enable": "8e",
+		  "valve_output_0v_enable": "8f",
 		  "di_enable": "80",
 		  "di_settings": "81",
 		  "di_settings.card_control": "8100",
@@ -2679,11 +2855,12 @@ function cmdMap() {
 		  "retrieve_historical_data_by_time_range": "bb",
 		  "retrieve_historical_data_by_time": "ba",
 		  "reconnect": "b6",
-		  "temperature_control_permission_cfg_303": "5a",
+		  "temperature_control_permission_cfg.switch_304": "59",
 		  "send_temperature": "5b",
 		  "send_humidity": "5c",
 		  "update_open_windows_state": "5d",
 		  "insert_schedule": "5e",
+		  "delete_schedule": "5f",
 		  "reboot": "be"
 	};
 }
@@ -2862,6 +3039,10 @@ function processTemperature(payload) {
         "unitName": "℃"
     },
     "schedule_settings._item.content.temperature_tolerance": {
+        "coefficient": 0.01,
+        "unitName": "℃"
+    },
+    "valve_control_settings.control_adjustment_range": {
         "coefficient": 0.01,
         "unitName": "℃"
     },

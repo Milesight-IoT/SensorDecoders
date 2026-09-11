@@ -89,6 +89,82 @@
             "reference": []
         },
         {
+            "id": "cooling_target_temperature_range.celsius_max",
+            "name": "Celsius Max Value(Cooling Target Temperature Regulation Range)",
+            "value": "35",
+            "unit": "°C",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "range": [
+                5,
+                35
+            ],
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 62,
+            "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
+            "reference": [
+                "cooling_target_temperature_range.celsius_min"
+            ]
+        },
+        {
+            "id": "cooling_target_temperature_range.celsius_min",
+            "name": "Celsius Min Value(Cooling Target Temperature Regulation Range)",
+            "value": "5",
+            "unit": "°C",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "range": [
+                5,
+                35
+            ],
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 62,
+            "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
+            "reference": [
+                "cooling_target_temperature_range.celsius_max"
+            ]
+        },
+        {
+            "id": "cooling_target_temperature_range.fahrenheit_max",
+            "name": "Fahrenheit Max Value(Cooling Target Temperature Regulation Range)",
+            "value": "95",
+            "unit": "°F",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "range": [
+                41,
+                95
+            ],
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 64,
+            "bacnet_unit_type": "UNITS_DEGREES_FAHRENHEIT",
+            "reference": [
+                "cooling_target_temperature_range.fahrenheit_min"
+            ]
+        },
+        {
+            "id": "cooling_target_temperature_range.fahrenheit_min",
+            "name": "Fahrenheit Min Value(Cooling Target Temperature Regulation Range)",
+            "value": "41",
+            "unit": "°F",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "range": [
+                41,
+                95
+            ],
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 64,
+            "bacnet_unit_type": "UNITS_DEGREES_FAHRENHEIT",
+            "reference": [
+                "cooling_target_temperature_range.fahrenheit_max"
+            ]
+        },
+        {
             "id": "data_source",
             "name": "Data Source",
             "value": "0",
@@ -435,6 +511,82 @@
             "reference": []
         },
         {
+            "id": "heating_target_temperature_range.celsius_max",
+            "name": "Celsius Max Value(Heating Target Temperature Regulation Range)",
+            "value": "35",
+            "unit": "°C",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "range": [
+                5,
+                35
+            ],
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 62,
+            "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
+            "reference": [
+                "heating_target_temperature_range.celsius_min"
+            ]
+        },
+        {
+            "id": "heating_target_temperature_range.celsius_min",
+            "name": "Celsius Min Value(Heating Target Temperature Regulation Range)",
+            "value": "5",
+            "unit": "°C",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "range": [
+                5,
+                35
+            ],
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 62,
+            "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
+            "reference": [
+                "heating_target_temperature_range.celsius_max"
+            ]
+        },
+        {
+            "id": "heating_target_temperature_range.fahrenheit_max",
+            "name": "Fahrenheit Max Value(Heating Target Temperature Regulation Range)",
+            "value": "95",
+            "unit": "°F",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "range": [
+                41,
+                95
+            ],
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 64,
+            "bacnet_unit_type": "UNITS_DEGREES_FAHRENHEIT",
+            "reference": [
+                "heating_target_temperature_range.fahrenheit_min"
+            ]
+        },
+        {
+            "id": "heating_target_temperature_range.fahrenheit_min",
+            "name": "Fahrenheit Min Value(Heating Target Temperature Regulation Range)",
+            "value": "41",
+            "unit": "°F",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "range": [
+                41,
+                95
+            ],
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 64,
+            "bacnet_unit_type": "UNITS_DEGREES_FAHRENHEIT",
+            "reference": [
+                "heating_target_temperature_range.fahrenheit_max"
+            ]
+        },
+        {
             "id": "high_temperature_alarm_cfg.celsius_delta",
             "name": "Celsius Persistent High Temperature Alarm Delta(Persistent High Temperature Alarm Configuration)",
             "value": "3",
@@ -560,18 +712,6 @@
                 },
                 {
                     "value": 2,
-                    "name": "Two-pipe"
-                },
-                {
-                    "value": 3,
-                    "name": "Four-pipe"
-                },
-                {
-                    "value": 4,
-                    "name": "Two-pipe"
-                },
-                {
-                    "value": 5,
                     "name": "Two-pipe"
                 }
             ],
@@ -1046,6 +1186,152 @@
                 }
             ],
             "bacnet_type": "multistate_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS"
+        },
+        {
+            "id": "temperature_control_permission_cfg_303",
+            "name": "Remote Control Configuration Interface Switch",
+            "value": "0",
+            "unit": "",
+            "access_mode": "W",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "Disable All"
+                },
+                {
+                    "value": 1,
+                    "name": "Enable GL Interface"
+                },
+                {
+                    "value": 2,
+                    "name": "Enable GM Interface"
+                },
+                {
+                    "value": 3,
+                    "name": "Enable GL and GM Interfaces"
+                },
+                {
+                    "value": 4,
+                    "name": "Enable GH Interface"
+                },
+                {
+                    "value": 5,
+                    "name": "Enable GL and GH Interfaces"
+                },
+                {
+                    "value": 6,
+                    "name": "Enable GM and GH Interfaces"
+                },
+                {
+                    "value": 7,
+                    "name": "Enable GL"
+                },
+                {
+                    "value": 8,
+                    "name": "Enable V1 Interface"
+                },
+                {
+                    "value": 9,
+                    "name": "Enable GL and V1 Interfaces"
+                },
+                {
+                    "value": 10,
+                    "name": "Enable GM and V1 Interfaces"
+                },
+                {
+                    "value": 11,
+                    "name": "Enable GL"
+                },
+                {
+                    "value": 12,
+                    "name": "Enable GH and V1 Interfaces"
+                },
+                {
+                    "value": 13,
+                    "name": "Enable GL"
+                },
+                {
+                    "value": 14,
+                    "name": "Enable GM"
+                },
+                {
+                    "value": 15,
+                    "name": "Enable GL"
+                },
+                {
+                    "value": 16,
+                    "name": "Enable V2 Interface"
+                },
+                {
+                    "value": 17,
+                    "name": "Enable GL and V2 Interfaces"
+                },
+                {
+                    "value": 18,
+                    "name": "Enable GM and V2 Interfaces"
+                },
+                {
+                    "value": 19,
+                    "name": "Enable GL"
+                },
+                {
+                    "value": 20,
+                    "name": "Enable GH and V2 Interfaces"
+                },
+                {
+                    "value": 21,
+                    "name": "Enable GL"
+                },
+                {
+                    "value": 22,
+                    "name": "Enable GM"
+                },
+                {
+                    "value": 23,
+                    "name": "Enable GL"
+                },
+                {
+                    "value": 24,
+                    "name": "Enable V1 and V2 Interfaces"
+                },
+                {
+                    "value": 25,
+                    "name": "Enable GL"
+                },
+                {
+                    "value": 26,
+                    "name": "Enable GM"
+                },
+                {
+                    "value": 27,
+                    "name": "Enable GL"
+                },
+                {
+                    "value": 28,
+                    "name": "Enable GH"
+                },
+                {
+                    "value": 29,
+                    "name": "Enable GL"
+                },
+                {
+                    "value": 30,
+                    "name": "Enable GM"
+                },
+                {
+                    "value": 31,
+                    "name": "Enable GL"
+                },
+                {
+                    "value": 255,
+                    "name": "Enable All Interfaces"
+                }
+            ],
+            "bacnet_type": "multistate_output_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS"
         },
