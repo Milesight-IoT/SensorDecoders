@@ -315,9 +315,15 @@ function milesightDeviceDecode(bytes) {
 				decoded.temperature_source.type = readUInt8(bytes, counterObj, 1);
 				if (decoded.temperature_source.type == 0x02) {
 					decoded.temperature_source.lorawan_reception = decoded.temperature_source.lorawan_reception || {};
+					decoded.temperature_source.lorawan_reception.timeout = readUInt8(bytes, counterObj, 1);
+					// 0: Keep Control, 1: Turn Off The Control, 2: Switch The Embedded Temperature
+					decoded.temperature_source.lorawan_reception.timeout_response = readUInt8(bytes, counterObj, 1);
 				}
 				if (decoded.temperature_source.type == 0x03) {
 					decoded.temperature_source.d2d_reception = decoded.temperature_source.d2d_reception || {};
+					decoded.temperature_source.d2d_reception.timeout = readUInt8(bytes, counterObj, 1);
+					// 0: Keep Control, 1: Turn Off The Control, 2: Switch The Embedded Temperature
+					decoded.temperature_source.d2d_reception.timeout_response = readUInt8(bytes, counterObj, 1);
 				}
 				break;
 			case 0x67:
@@ -784,6 +790,9 @@ function milesightDeviceDecode(bytes) {
 				insertArrayItem(decoded.screen_content_settings, screen_content_settings_item, 'object');
 				screen_content_settings_item.length = readUInt16LE(bytes, counterObj, 2);
 				screen_content_settings_item.data = readHexString(bytes, counterObj, screen_content_settings_item.length);
+				break;
+			case 0xb9:
+				decoded.query_device_status = readOnlyCommand(bytes, counterObj, 0);
 				break;
 			case 0xb7:
 				decoded.set_time = decoded.set_time || {};
@@ -1370,6 +1379,7 @@ function cmdMap() {
 		  "8b": "d2d_slave_settings",
 		  "8bxx": "d2d_slave_settings._item",
 		  "91xx": "screen_content_settings._item",
+		  "b9": "query_device_status",
 		  "b7": "set_time",
 		  "bd": "clear_historical_data",
 		  "bc": "stop_historical_data_retrieval",

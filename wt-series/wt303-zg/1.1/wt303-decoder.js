@@ -804,7 +804,8 @@ function milesightDeviceDecode(bytes) {
 					cycle_settings_item.execution_day_fri = extractBits(bitOptions, 5, 6);
 					// 0：disable, 1：enable
 					cycle_settings_item.execution_day_sat = extractBits(bitOptions, 6, 7);
-					cycle_settings_item.reserved = extractBits(bitOptions, 7, 8);
+					// 0：Not Configured, 1：Configured
+					cycle_settings_item.configuration_state = extractBits(bitOptions, 7, 8);
 				}
 				break;
 			case 0x7c:

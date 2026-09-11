@@ -1574,7 +1574,8 @@ function milesightDeviceEncode(payload) {
 				// 0：disable, 1：enable
 				bitOptions |= cycle_settings_item.execution_day_sat << 6;
 
-				bitOptions |= cycle_settings_item.reserved << 7;
+				// 0：Not Configured, 1：Configured
+				bitOptions |= cycle_settings_item.configuration_state << 7;
 				buffer.writeUInt8(bitOptions);
 
 			}

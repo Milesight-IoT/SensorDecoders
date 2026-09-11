@@ -2960,6 +2960,32 @@
             ]
         },
         {
+            "id": "interface_type_cfg",
+            "name": "Interface Type Configuration",
+            "value": "1",
+            "unit": "",
+            "access_mode": "RW",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "Four-pipe"
+                },
+                {
+                    "value": 1,
+                    "name": "Two-pipe"
+                },
+                {
+                    "value": 2,
+                    "name": "Two-pipe"
+                }
+            ],
+            "bacnet_type": "multistate_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS"
+        },
+        {
             "id": "lorawan_configuration_settings.mode",
             "name": "LoRaWAN Work Mode(LoRaWAN  Settings)",
             "value": "0",

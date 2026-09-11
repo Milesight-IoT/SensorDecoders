@@ -1574,7 +1574,8 @@ function milesightDeviceEncode(payload) {
 				// 0：disable, 1：enable
 				bitOptions |= cycle_settings_item.execution_day_sat << 6;
 
-				bitOptions |= cycle_settings_item.reserved << 7;
+				// 0：Not Configured, 1：Configured
+				bitOptions |= cycle_settings_item.configuration_state << 7;
 				buffer.writeUInt8(bitOptions);
 
 			}
@@ -1620,6 +1621,17 @@ function milesightDeviceEncode(payload) {
 			// 1：V1/ NO, 2：V2/ NC
 			buffer.writeUInt8(payload.interface_settings.valve_2_pipe_3_wire.nc);
 		}
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0x9e
+	if ('interface_type_cfg' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0x9e);
+		if ([0, 1, 2].indexOf(payload.interface_type_cfg) === -1) {
+			throw oneOfError('interface_type_cfg', [0, 1, 2]);
+		}
+		// 0：Four-pipe, Two-wire Valve+Three-speeds Fan, 1：Two-pipe, Two-wire Valve+Three-speeds Fan, 2：Two-pipe, Three-wire Valve+Three-speeds Fan
+		buffer.writeUInt8(payload.interface_type_cfg);
 		encoded = encoded.concat(buffer.toBytes());
 	}
 	//0x8e
@@ -2618,6 +2630,7 @@ function cmdMap() {
 		  "interface_settings.valve_4_pipe_2_wire": "7c00",
 		  "interface_settings.valve_2_pipe_2_wire": "7c01",
 		  "interface_settings.valve_2_pipe_3_wire": "7c02",
+		  "interface_type_cfg": "9e",
 		  "fan_stop_enable": "8e",
 		  "di_enable": "80",
 		  "di_settings": "81",

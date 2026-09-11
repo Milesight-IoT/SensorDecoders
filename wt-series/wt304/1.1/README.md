@@ -269,7 +269,7 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Thur. | 0x7B | 2 | rw | 0 |  | 0：disable<br>1：enable |
 | Fri. | 0x7B | 2 | rw | 0 |  | 0：disable<br>1：enable |
 | Sat. | 0x7B | 2 | rw | 0 |  | 0：disable<br>1：enable |
-| Reserved | 0x7B | 2 | rw |  |  |  |
+| Configuration State | 0x7B | 2 | rw | 0 |  | 0：Not Configured<br>1：Configured |
 | Interface Settings | 0x7C | 1 | rw |  |  |  |
 | System Type | 0x7C | 2 | rw | 1 |  |  |
 | Four-pipe, 0~10V Valve+Three-speeds Fan | 0x7C | 3 | rw |  |  |  |
@@ -295,6 +295,7 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | NC | 0x7C | 2 | rw | 4 |  | 3：Q1<br>4：Q2<br>5：Q3 |
 | EC Fan | 0x7C | 2 | rw | 2 |  | 1：AO1<br>2：AO2 |
 | Fan Power WIre | 0x7C | 2 | rw | 5 |  | 0：None<br>3：Q1<br>4：Q2<br>5：Q3 |
+| Interface Type Configuration | 0x9E | 2 | rw | 1 |  | 0：Four-pipe<br>0~10V Valve+Three-speeds Fan<br>1：Two-pipe<br>0~10V Valve+Three-speeds Fan<br>2：Two-pipe<br>0~10V Valve+EC Fan<br>3：Four-pipe<br>Two-wire Valve+EC Fan<br>4：Two-pipe<br>Two-wire Valve+EC Fan<br>5：Two-pipe<br>Three-wire Valve+EC Fan |
 | Valve Control Settingd | 0x7D | 1 | rw |  |  |  |
 | Control Content | 0x7D | 2 | rw | 0 |  |  |
 | Valve Control Interval | 0x7D | 2 | rw | 30 | 1 - 60 |  |

@@ -800,7 +800,8 @@ function milesightDeviceDecode(bytes) {
 					cycle_settings_item.execution_day_fri = extractBits(bitOptions, 5, 6);
 					// 0：disable, 1：enable
 					cycle_settings_item.execution_day_sat = extractBits(bitOptions, 6, 7);
-					cycle_settings_item.reserved = extractBits(bitOptions, 7, 8);
+					// 0：Not Configured, 1：Configured
+					cycle_settings_item.configuration_state = extractBits(bitOptions, 7, 8);
 				}
 				break;
 			case 0x7c:
@@ -858,6 +859,10 @@ function milesightDeviceDecode(bytes) {
 					// 0：None, 3：Q1, 4：Q2, 5：Q3
 					decoded.interface_settings.valve_2_pipe_3_wire_fan_ec.fan_power = readUInt8(bytes, counterObj, 1);
 				}
+				break;
+			case 0x9e:
+				// 0：Four-pipe, 0~10V Valve+Three-speeds Fan, 1：Two-pipe, 0~10V Valve+Three-speeds Fan, 2：Two-pipe, 0~10V Valve+EC Fan, 3：Four-pipe,Two-wire Valve+EC Fan, 4：Two-pipe, Two-wire Valve+EC Fan, 5：Two-pipe, Three-wire Valve+EC Fan
+				decoded.interface_type_cfg = readUInt8(bytes, counterObj, 1);
 				break;
 			case 0x7d:
 				decoded.valve_control_settings = decoded.valve_control_settings || {};
@@ -1721,6 +1726,7 @@ function cmdMap() {
 		  "7c03": "interface_settings.valve_4_pipe_2_wire_fan_ec",
 		  "7c04": "interface_settings.valve_2_pipe_2_wire_fan_ec",
 		  "7c05": "interface_settings.valve_2_pipe_3_wire_fan_ec",
+		  "9e": "interface_type_cfg",
 		  "7d": "valve_control_settings",
 		  "7d02": "valve_control_settings.control_interval",
 		  "7d00": "valve_control_settings.control_adjustment_range",

@@ -58,7 +58,11 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Temperature Data Source | 0x85 | 1 | rw |  |  |  |
 | Temperature Source | 0x85 | 2 | rw | 0 |  | 0：Embedded Temperature<br>1：External NTC<br>2：LoRa Receive<br>3：D2D Receive |
 | LoRa Receive | 0x85 | 3 | rw |  |  |  |
+| Timeout | 0x85 | 2 | rw | 10 | 1 - 60 |  |
+| Device Offline Settings | 0x85 | 2 | rw | 0 |  | 0: Keep Control<br>1: Turn Off The Control<br>2: Switch The Embedded Temperature |
 | D2D Receive | 0x85 | 3 | rw |  |  |  |
+| Timeout | 0x85 | 2 | rw | 10 | 1 - 60 |  |
+| Device Offline Settings | 0x85 | 2 | rw | 0 |  | 0: Keep Control<br>1: Turn Off The Control<br>2: Switch The Embedded Temperature |
 | System On/Off | 0x67 | 2 | rw | 0 |  | 0：Off<br>1：On |
 | Mode Enable | 0x64 | 2 | rw | 7 |  | 7：Ventilation、Heat、Cool<br>3：Ventilation、Heat<br>5：Ventilation、Cool |
 | Temperature Control Mode | 0x68 | 2 | rw | 1 |  | 0：Ventilation<br>1：Heat<br>2：Cool |
@@ -348,6 +352,7 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | No Data | 0x0A | 1 | r |  |  |  |
 | Alarm Type | 0x0B | 2 | r |  |  |  |
 | No Data | 0x0B | 1 | r |  |  |  |
+| Query Device Status | 0xB9 | 1 | w |  |  |  |
 | Time Synchronize | 0xB7 | 5 | w |  |  |  |
 | Timestamp | 0xB7 | 5 | w |  |  |  |
 | Clear Data | 0xBD | 1 | w |  |  |  |

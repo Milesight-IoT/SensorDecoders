@@ -535,8 +535,26 @@ function milesightDeviceEncode(payload) {
 		// 0：Embedded Temperature, 1：External NTC, 2：LoRa Receive, 3：D2D Receive
 		buffer.writeUInt8(payload.temperature_source.type);
 		if (payload.temperature_source.type == 0x02) {
+			if (payload.temperature_source.lorawan_reception.timeout < 1 || payload.temperature_source.lorawan_reception.timeout > 60) {
+				throw betweenError('temperature_source.lorawan_reception.timeout', 1, 60);
+			}
+			buffer.writeUInt8(payload.temperature_source.lorawan_reception.timeout);
+			if ([0, 1, 2].indexOf(payload.temperature_source.lorawan_reception.timeout_response) === -1) {
+				throw oneOfError('temperature_source.lorawan_reception.timeout_response', [0, 1, 2]);
+			}
+			// 0: Keep Control, 1: Turn Off The Control, 2: Switch The Embedded Temperature
+			buffer.writeUInt8(payload.temperature_source.lorawan_reception.timeout_response);
 		}
 		if (payload.temperature_source.type == 0x03) {
+			if (payload.temperature_source.d2d_reception.timeout < 1 || payload.temperature_source.d2d_reception.timeout > 60) {
+				throw betweenError('temperature_source.d2d_reception.timeout', 1, 60);
+			}
+			buffer.writeUInt8(payload.temperature_source.d2d_reception.timeout);
+			if ([0, 1, 2].indexOf(payload.temperature_source.d2d_reception.timeout_response) === -1) {
+				throw oneOfError('temperature_source.d2d_reception.timeout_response', [0, 1, 2]);
+			}
+			// 0: Keep Control, 1: Turn Off The Control, 2: Switch The Embedded Temperature
+			buffer.writeUInt8(payload.temperature_source.d2d_reception.timeout_response);
 		}
 		encoded = encoded.concat(buffer.toBytes());
 	}
@@ -1539,6 +1557,12 @@ function milesightDeviceEncode(payload) {
 		}
 		encoded = encoded.concat(buffer.toBytes());
 	}
+	//0xb9
+	if ('query_device_status' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0xb9);
+		encoded = encoded.concat(buffer.toBytes());
+	}
 	//0xb7
 	if ('set_time' in payload) {
 		var buffer = new Buffer();
@@ -2082,6 +2106,7 @@ function cmdMap() {
 		  "d2d_slave_settings._item": "8bxx",
 		  "screen_content_settings": "91",
 		  "screen_content_settings._item": "91xx",
+		  "query_device_status": "b9",
 		  "set_time": "b7",
 		  "clear_historical_data": "bd",
 		  "stop_historical_data_retrieval": "bc",
