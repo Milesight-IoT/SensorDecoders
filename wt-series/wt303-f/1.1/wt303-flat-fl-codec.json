@@ -89,6 +89,82 @@
             "reference": []
         },
         {
+            "id": "cooling_target_temperature_range.celsius_max",
+            "name": "Celsius Max Value(Cooling Target Temperature Regulation Range)",
+            "value": "35",
+            "unit": "°C",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "range": [
+                5,
+                35
+            ],
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 62,
+            "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
+            "reference": [
+                "cooling_target_temperature_range.celsius_min"
+            ]
+        },
+        {
+            "id": "cooling_target_temperature_range.celsius_min",
+            "name": "Celsius Min Value(Cooling Target Temperature Regulation Range)",
+            "value": "23",
+            "unit": "°C",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "range": [
+                5,
+                35
+            ],
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 62,
+            "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
+            "reference": [
+                "cooling_target_temperature_range.celsius_max"
+            ]
+        },
+        {
+            "id": "cooling_target_temperature_range.fahrenheit_max",
+            "name": "Fahrenheit Max Value(Cooling Target Temperature Regulation Range)",
+            "value": "95",
+            "unit": "°F",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "range": [
+                41,
+                95
+            ],
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 64,
+            "bacnet_unit_type": "UNITS_DEGREES_FAHRENHEIT",
+            "reference": [
+                "cooling_target_temperature_range.fahrenheit_min"
+            ]
+        },
+        {
+            "id": "cooling_target_temperature_range.fahrenheit_min",
+            "name": "Fahrenheit Min Value(Cooling Target Temperature Regulation Range)",
+            "value": "73.4",
+            "unit": "°F",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "range": [
+                41,
+                95
+            ],
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 64,
+            "bacnet_unit_type": "UNITS_DEGREES_FAHRENHEIT",
+            "reference": [
+                "cooling_target_temperature_range.fahrenheit_max"
+            ]
+        },
+        {
             "id": "data_source",
             "name": "Data Source",
             "value": "0",
@@ -697,6 +773,82 @@
             "bacnet_unit_type_id": 64,
             "bacnet_unit_type": "UNITS_DEGREES_FAHRENHEIT",
             "reference": []
+        },
+        {
+            "id": "heating_target_temperature_range.celsius_max",
+            "name": "Celsius Max Value(Heating Target Temperature Regulation Range)",
+            "value": "19",
+            "unit": "°C",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "range": [
+                5,
+                35
+            ],
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 62,
+            "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
+            "reference": [
+                "heating_target_temperature_range.celsius_min"
+            ]
+        },
+        {
+            "id": "heating_target_temperature_range.celsius_min",
+            "name": "Celsius Min Value(Heating Target Temperature Regulation Range)",
+            "value": "10",
+            "unit": "°C",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "range": [
+                5,
+                35
+            ],
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 62,
+            "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
+            "reference": [
+                "heating_target_temperature_range.celsius_max"
+            ]
+        },
+        {
+            "id": "heating_target_temperature_range.fahrenheit_max",
+            "name": "Fahrenheit Max Value(Heating Target Temperature Regulation Range)",
+            "value": "66.2",
+            "unit": "°F",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "range": [
+                41,
+                95
+            ],
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 64,
+            "bacnet_unit_type": "UNITS_DEGREES_FAHRENHEIT",
+            "reference": [
+                "heating_target_temperature_range.fahrenheit_min"
+            ]
+        },
+        {
+            "id": "heating_target_temperature_range.fahrenheit_min",
+            "name": "Fahrenheit Min Value(Heating Target Temperature Regulation Range)",
+            "value": "50",
+            "unit": "°F",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "range": [
+                41,
+                95
+            ],
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 64,
+            "bacnet_unit_type": "UNITS_DEGREES_FAHRENHEIT",
+            "reference": [
+                "heating_target_temperature_range.fahrenheit_max"
+            ]
         },
         {
             "id": "high_temperature_alarm_cfg.celsius_delta",

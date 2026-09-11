@@ -1,8 +1,8 @@
-# WT303 Sensor
+# WT303-Flat-FL Sensor
 
-![WT303](wt303.png)
+![WT303-Flat-FL](wt303-flat-fl.png)
 
-For more detailed information, please visit [Milesight Official Website](https://www.milesight.com/iot/product/lorawan-sensor/wt303)
+For more detailed information, please visit [Milesight Official Website](https://www.milesight.com/iot/product/lorawan-sensor/wt303-flat-fl)
 
 ## Payload Definition
 

@@ -3,7 +3,7 @@
  *
  * Copyright 2025 Milesight IoT
  *
- * @product WT303
+ * @product WT303-Flat-FL
  */
 
 /* eslint no-redeclare: "off" */
