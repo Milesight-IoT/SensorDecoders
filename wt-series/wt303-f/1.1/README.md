@@ -273,7 +273,7 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Thur. | 0x7B | 2 | rw | 0 |  | 0：disable<br>1：enable |
 | Fri. | 0x7B | 2 | rw | 0 |  | 0：disable<br>1：enable |
 | Sat. | 0x7B | 2 | rw | 0 |  | 0：disable<br>1：enable |
-| Reserved | 0x7B | 2 | rw |  |  |  |
+| Configuration State | 0x7B | 2 | rw | 0 |  | 0：Not Configured<br>1：Configured |
 | Interface Settings | 0x7C | 1 | rw |  |  |  |
 | System Type | 0x7C | 2 | rw | 1 |  |  |
 | Four-pipe, Two-wire Valve+Three-speeds Fan | 0x7C | 3 | rw |  |  |  |
