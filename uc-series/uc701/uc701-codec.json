@@ -1863,7 +1863,10 @@
             "bacnet_type": "multistate_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": []
+            "reference": [
+                "reporting_interval.ble_lora.seconds_of_time",
+                "reporting_interval.ble_lora.minutes_of_time"
+            ]
         },
         {
             "id": "reporting_interval.type",
@@ -2704,7 +2707,11 @@
             "bacnet_type": "analog_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": []
+            "reference": [
+                "dormant_settings.0.heating_date_settings.start_mon",
+                "dormant_settings.0.heating_date_settings.start_day",
+                "dormant_settings.0.heating_date_settings.end_mon"
+            ]
         },
         {
             "id": "dormant_settings.0.heating_date_settings.end_mon",
@@ -2721,7 +2728,11 @@
             "bacnet_type": "analog_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": []
+            "reference": [
+                "dormant_settings.0.heating_date_settings.start_mon",
+                "dormant_settings.0.heating_date_settings.start_day",
+                "dormant_settings.0.heating_date_settings.end_day"
+            ]
         },
         {
             "id": "dormant_settings.0.heating_date_settings.start_day",
@@ -2738,7 +2749,11 @@
             "bacnet_type": "analog_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": []
+            "reference": [
+                "dormant_settings.0.heating_date_settings.start_mon",
+                "dormant_settings.0.heating_date_settings.end_mon",
+                "dormant_settings.0.heating_date_settings.end_day"
+            ]
         },
         {
             "id": "dormant_settings.0.heating_date_settings.start_mon",
@@ -2755,7 +2770,11 @@
             "bacnet_type": "analog_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": []
+            "reference": [
+                "dormant_settings.0.heating_date_settings.start_day",
+                "dormant_settings.0.heating_date_settings.end_mon",
+                "dormant_settings.0.heating_date_settings.end_day"
+            ]
         },
         {
             "id": "dormant_settings.0.id",
@@ -2812,7 +2831,11 @@
             "bacnet_type": "analog_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": []
+            "reference": [
+                "dormant_settings.1.heating_date_settings.start_mon",
+                "dormant_settings.1.heating_date_settings.start_day",
+                "dormant_settings.1.heating_date_settings.end_mon"
+            ]
         },
         {
             "id": "dormant_settings.1.heating_date_settings.end_mon",
@@ -2829,7 +2852,11 @@
             "bacnet_type": "analog_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": []
+            "reference": [
+                "dormant_settings.1.heating_date_settings.start_mon",
+                "dormant_settings.1.heating_date_settings.start_day",
+                "dormant_settings.1.heating_date_settings.end_day"
+            ]
         },
         {
             "id": "dormant_settings.1.heating_date_settings.start_day",
@@ -2846,7 +2873,11 @@
             "bacnet_type": "analog_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": []
+            "reference": [
+                "dormant_settings.1.heating_date_settings.start_mon",
+                "dormant_settings.1.heating_date_settings.end_mon",
+                "dormant_settings.1.heating_date_settings.end_day"
+            ]
         },
         {
             "id": "dormant_settings.1.heating_date_settings.start_mon",
@@ -2863,7 +2894,11 @@
             "bacnet_type": "analog_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": []
+            "reference": [
+                "dormant_settings.1.heating_date_settings.start_day",
+                "dormant_settings.1.heating_date_settings.end_mon",
+                "dormant_settings.1.heating_date_settings.end_day"
+            ]
         },
         {
             "id": "dormant_settings.1.id",
@@ -2903,7 +2938,15 @@
             "bacnet_type": "binary_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": []
+            "reference": [
+                "temperature_limit_task_settings.0.cycle_settings.execution_day_sun",
+                "temperature_limit_task_settings.0.cycle_settings.execution_day_mon",
+                "temperature_limit_task_settings.0.cycle_settings.execution_day_tues",
+                "temperature_limit_task_settings.0.cycle_settings.execution_day_wed",
+                "temperature_limit_task_settings.0.cycle_settings.execution_day_thu",
+                "temperature_limit_task_settings.0.cycle_settings.execution_day_sat",
+                "temperature_limit_task_settings.0.cycle_settings.reserved"
+            ]
         },
         {
             "id": "temperature_limit_task_settings.0.cycle_settings.execution_day_mon",
@@ -2926,7 +2969,15 @@
             "bacnet_type": "binary_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": []
+            "reference": [
+                "temperature_limit_task_settings.0.cycle_settings.execution_day_sun",
+                "temperature_limit_task_settings.0.cycle_settings.execution_day_tues",
+                "temperature_limit_task_settings.0.cycle_settings.execution_day_wed",
+                "temperature_limit_task_settings.0.cycle_settings.execution_day_thu",
+                "temperature_limit_task_settings.0.cycle_settings.execution_day_fri",
+                "temperature_limit_task_settings.0.cycle_settings.execution_day_sat",
+                "temperature_limit_task_settings.0.cycle_settings.reserved"
+            ]
         },
         {
             "id": "temperature_limit_task_settings.0.cycle_settings.execution_day_sat",
@@ -2949,7 +3000,15 @@
             "bacnet_type": "binary_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": []
+            "reference": [
+                "temperature_limit_task_settings.0.cycle_settings.execution_day_sun",
+                "temperature_limit_task_settings.0.cycle_settings.execution_day_mon",
+                "temperature_limit_task_settings.0.cycle_settings.execution_day_tues",
+                "temperature_limit_task_settings.0.cycle_settings.execution_day_wed",
+                "temperature_limit_task_settings.0.cycle_settings.execution_day_thu",
+                "temperature_limit_task_settings.0.cycle_settings.execution_day_fri",
+                "temperature_limit_task_settings.0.cycle_settings.reserved"
+            ]
         },
         {
             "id": "temperature_limit_task_settings.0.cycle_settings.execution_day_sun",
@@ -2972,7 +3031,15 @@
             "bacnet_type": "binary_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": []
+            "reference": [
+                "temperature_limit_task_settings.0.cycle_settings.execution_day_mon",
+                "temperature_limit_task_settings.0.cycle_settings.execution_day_tues",
+                "temperature_limit_task_settings.0.cycle_settings.execution_day_wed",
+                "temperature_limit_task_settings.0.cycle_settings.execution_day_thu",
+                "temperature_limit_task_settings.0.cycle_settings.execution_day_fri",
+                "temperature_limit_task_settings.0.cycle_settings.execution_day_sat",
+                "temperature_limit_task_settings.0.cycle_settings.reserved"
+            ]
         },
         {
             "id": "temperature_limit_task_settings.0.cycle_settings.execution_day_thu",
@@ -2995,7 +3062,15 @@
             "bacnet_type": "binary_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": []
+            "reference": [
+                "temperature_limit_task_settings.0.cycle_settings.execution_day_sun",
+                "temperature_limit_task_settings.0.cycle_settings.execution_day_mon",
+                "temperature_limit_task_settings.0.cycle_settings.execution_day_tues",
+                "temperature_limit_task_settings.0.cycle_settings.execution_day_wed",
+                "temperature_limit_task_settings.0.cycle_settings.execution_day_fri",
+                "temperature_limit_task_settings.0.cycle_settings.execution_day_sat",
+                "temperature_limit_task_settings.0.cycle_settings.reserved"
+            ]
         },
         {
             "id": "temperature_limit_task_settings.0.cycle_settings.execution_day_tues",
@@ -3018,7 +3093,15 @@
             "bacnet_type": "binary_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": []
+            "reference": [
+                "temperature_limit_task_settings.0.cycle_settings.execution_day_sun",
+                "temperature_limit_task_settings.0.cycle_settings.execution_day_mon",
+                "temperature_limit_task_settings.0.cycle_settings.execution_day_wed",
+                "temperature_limit_task_settings.0.cycle_settings.execution_day_thu",
+                "temperature_limit_task_settings.0.cycle_settings.execution_day_fri",
+                "temperature_limit_task_settings.0.cycle_settings.execution_day_sat",
+                "temperature_limit_task_settings.0.cycle_settings.reserved"
+            ]
         },
         {
             "id": "temperature_limit_task_settings.0.cycle_settings.execution_day_wed",
@@ -3041,7 +3124,15 @@
             "bacnet_type": "binary_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": []
+            "reference": [
+                "temperature_limit_task_settings.0.cycle_settings.execution_day_sun",
+                "temperature_limit_task_settings.0.cycle_settings.execution_day_mon",
+                "temperature_limit_task_settings.0.cycle_settings.execution_day_tues",
+                "temperature_limit_task_settings.0.cycle_settings.execution_day_thu",
+                "temperature_limit_task_settings.0.cycle_settings.execution_day_fri",
+                "temperature_limit_task_settings.0.cycle_settings.execution_day_sat",
+                "temperature_limit_task_settings.0.cycle_settings.reserved"
+            ]
         },
         {
             "id": "temperature_limit_task_settings.0.cycle_settings.reserved",
@@ -3064,7 +3155,15 @@
             "bacnet_type": "binary_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": []
+            "reference": [
+                "temperature_limit_task_settings.0.cycle_settings.execution_day_sun",
+                "temperature_limit_task_settings.0.cycle_settings.execution_day_mon",
+                "temperature_limit_task_settings.0.cycle_settings.execution_day_tues",
+                "temperature_limit_task_settings.0.cycle_settings.execution_day_wed",
+                "temperature_limit_task_settings.0.cycle_settings.execution_day_thu",
+                "temperature_limit_task_settings.0.cycle_settings.execution_day_fri",
+                "temperature_limit_task_settings.0.cycle_settings.execution_day_sat"
+            ]
         },
         {
             "id": "temperature_limit_task_settings.0.enable",
@@ -3101,7 +3200,9 @@
             "bacnet_type": "character_string_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": []
+            "reference": [
+                "temperature_limit_task_settings.0.execute_period.start_minute"
+            ]
         },
         {
             "id": "temperature_limit_task_settings.0.execute_period.start_minute",
@@ -3115,7 +3216,9 @@
             "bacnet_type": "character_string_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": []
+            "reference": [
+                "temperature_limit_task_settings.0.execute_period.end_minute"
+            ]
         },
         {
             "id": "temperature_limit_task_settings.0.high_threshold",
@@ -3183,7 +3286,11 @@
             "bacnet_type": "analog_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": []
+            "reference": [
+                "temperature_limit_task_settings.0.task_date_settings.start_mon",
+                "temperature_limit_task_settings.0.task_date_settings.start_day",
+                "temperature_limit_task_settings.0.task_date_settings.end_mon"
+            ]
         },
         {
             "id": "temperature_limit_task_settings.0.task_date_settings.end_mon",
@@ -3200,7 +3307,11 @@
             "bacnet_type": "analog_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": []
+            "reference": [
+                "temperature_limit_task_settings.0.task_date_settings.start_mon",
+                "temperature_limit_task_settings.0.task_date_settings.start_day",
+                "temperature_limit_task_settings.0.task_date_settings.end_day"
+            ]
         },
         {
             "id": "temperature_limit_task_settings.0.task_date_settings.start_day",
@@ -3217,7 +3328,11 @@
             "bacnet_type": "analog_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": []
+            "reference": [
+                "temperature_limit_task_settings.0.task_date_settings.start_mon",
+                "temperature_limit_task_settings.0.task_date_settings.end_mon",
+                "temperature_limit_task_settings.0.task_date_settings.end_day"
+            ]
         },
         {
             "id": "temperature_limit_task_settings.0.task_date_settings.start_mon",
@@ -3234,7 +3349,11 @@
             "bacnet_type": "analog_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": []
+            "reference": [
+                "temperature_limit_task_settings.0.task_date_settings.start_day",
+                "temperature_limit_task_settings.0.task_date_settings.end_mon",
+                "temperature_limit_task_settings.0.task_date_settings.end_day"
+            ]
         },
         {
             "id": "low_battery_alarm.value",
@@ -3254,6 +3373,46 @@
             "reference": []
         },
         {
+            "id": "infrared_format_code.offset",
+            "name": "Offset(Infrared Format Code)",
+            "value": "0",
+            "unit": "",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "UINT8",
+            "range": [
+                0,
+                242
+            ],
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "infrared_format_code.length",
+                "infrared_format_code.format_code"
+            ]
+        },
+        {
+            "id": "infrared_format_code.length",
+            "name": "Data Length(Infrared Format Code)",
+            "value": "0",
+            "unit": "",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "UINT8",
+            "range": [
+                0,
+                242
+            ],
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "infrared_format_code.offset",
+                "infrared_format_code.format_code"
+            ]
+        },
+        {
             "id": "infrared_format_code.format_code",
             "name": "Format Code Data(Infrared Format Code)",
             "value": "",
@@ -3265,7 +3424,10 @@
             "bacnet_type": "character_string_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": []
+            "reference": [
+                "infrared_format_code.offset",
+                "infrared_format_code.length"
+            ]
         }
     ]
 }
