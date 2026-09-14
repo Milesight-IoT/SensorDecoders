@@ -146,8 +146,8 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Infrared Command Status | 0x04 | 5 | r |  |  |  |
 | Infrared Command | 0x04 | 3 | r |  |  |  |
 | Switch | 0x04 | 2 | r |  |  | 0: Switch Off<br>1: Switch On |
-| Mode | 0x04 | 2 | r |  |  | 0：heat<br>1：em heat<br>2：cool<br>3：auto<br>4：dehumidify<br>5：ventilation |
-| Fan Mode | 0x04 | 2 | r |  |  | 0：Auto<br>1：Ventilation<br>2：Always Open<br>3：Low<br>4：Medium<br>5：High<br>255：Disabled |
+| Mode | 0x04 | 2 | r |  |  | 0：heat<br>2：cool<br>3：auto<br>4：dehumidify<br>5：ventilation |
+| Fan Mode | 0x04 | 2 | r |  |  | 0：Auto<br>3：Low<br>4：Medium<br>5：High<br>255：Disabled |
 | Command Type | 0x04 | 2 | r |  |  | 0: Command<br>1: Local |
 | Control Word | 0x04 | 2 | r |  |  |  |
 | Infrared Command Valid | 0x04 | 2 | r |  |  | 0: Command Invalid<br>1: Command Valid |
@@ -202,7 +202,7 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Fan Mode | 0x67 | 2 | rw | 0 |  | 0：Auto<br>3：Low<br>4：Medium<br>5：High |
 | Target Temperature | 0x67 | 3 | rw | 16 | 16 - 30 |  |
 | AC On/Off | 0x67 | 2 | rw | 1 |  | 0：Switch Off<br>1：Switch On |
-| Work Mode | 0x67 | 2 | rw | 2 |  | 0：heat<br>1：em heat<br>2：cool<br>3：auto<br>4：dehumidify<br>5：ventilation |
+| Work Mode | 0x67 | 2 | rw | 2 |  | 0：heat<br>2：cool<br>3：auto<br>4：dehumidify<br>5：ventilation |
 | Time | 0x67 | 6 | rw |  |  |  |
 | Time Configuration | 0x67 | 6 | rw |  |  |  |
 | Time ID | 0x67 | 2 | rw | 0 | 0 - 15 |  |
@@ -243,7 +243,7 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | AC On/Off | 0x6F | 2 | rw | 0 |  | 0：Switch Off<br>1：Switch On |
 | Fan Settings | 0x70 | 1 | rw |  |  |  |
 | Sub-command | 0x70 | 2 | rw | 0 |  |  |
-| Fan Mode | 0x70 | 2 | rw | 0 |  | 0：Auto<br>1：Ventilation<br>2：Always Open<br>3：Low<br>4：Medium<br>5：High |
+| Fan Mode | 0x70 | 2 | rw | 0 |  | 0：Auto<br>3：Low<br>4：Medium<br>5：High |
 | Schedule Stay Duration Settings | 0x73 | 1 | rw |  |  |  |
 | Schedule | 0x73 | 1 | rw |  |  |  |
 | Schedule ID | 0x73 | 2 | rw | 0 | 0 - 15 |  |
@@ -314,6 +314,10 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Fri. | 0x85 | 2 | rw | 0 |  | 0：disable<br>1：enable |
 | Sat. | 0x85 | 2 | rw | 0 |  | 0：disable<br>1：enable |
 | Reserved | 0x85 | 2 | rw |  |  |  |
+| Fan Mode | 0x85 | 2 | rw | 0 |  | 0：Auto<br>3：Low<br>4：Medium<br>5：High |
+| Target Temperature | 0x85 | 3 | rw | 16 | 16 - 30 |  |
+| AC On/Off | 0x85 | 2 | rw | 1 |  | 0：Switch Off<br>1：Switch On |
+| Work Mode | 0x85 | 2 | rw | 2 |  | 0：heat<br>2：cool<br>3：auto<br>4：dehumidify<br>5：ventilation |
 | Infrared Learn | 0x86 | 1 | rw |  |  |  |
 | Sub-command | 0x86 | 2 | rw | 0 |  |  |
 | Learn Status | 0x86 | 2 | r | 0 |  | 0: Non learning state<br>1: During a learning session<br>2: In secondary learning (requires secondary learning+or - key)<br>3: In secondary learning (requires secondary learning mode key)<br>4: In secondary learning (requires secondary learning of wind keys)<br>5: Learning failure (timeout failure)<br>6: Learning failed (code library matching failed)<br>7: Success in Learning (One Study)<br>8: Learning success (secondary learning) |
