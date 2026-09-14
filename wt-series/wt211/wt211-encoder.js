@@ -100,7 +100,8 @@ function milesightDeviceEncode(payload) {
     }
     if ("temperature" in payload) {
         encoded = encoded.concat(setOutsideTemperature(payload.temperature));
-    } else if ("outside_temperature" in payload) {
+    }
+    if ("outside_temperature" in payload) {
         encoded = encoded.concat(setOutsideTemperature(payload.outside_temperature));
     }
     if ("humidity" in payload) {
