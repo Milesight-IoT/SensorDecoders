@@ -2133,25 +2133,36 @@ function milesightDeviceEncode(payload) {
 			buffer.writeUInt8(payload.active_data_reporting_cfg.mode);
 		}
 		if (isValid(payload.active_data_reporting_cfg.custom_cfg)) {
-			buffer.writeUInt8(0xc3);
-			buffer.writeUInt8(0x03);
-			if (payload.active_data_reporting_cfg.custom_cfg.cmd_cfg == 0x00) {
-				if (payload.active_data_reporting_cfg.custom_cfg.cmd_cfg.custom < 96 || payload.active_data_reporting_cfg.custom_cfg.cmd_cfg.custom > 175) {
-					throw rangeError('active_data_reporting_cfg.custom_cfg.cmd_cfg.custom', '[96,175]');
+			var custom_cfg_items = payload.active_data_reporting_cfg.custom_cfg;
+			if (!Array.isArray(custom_cfg_items)) {
+				custom_cfg_items = [custom_cfg_items];
+			}
+			for (var custom_cfg_index = 0; custom_cfg_index < custom_cfg_items.length; custom_cfg_index++) {
+				var custom_cfg_item = custom_cfg_items[custom_cfg_index];
+				var custom_cfg_cmd = custom_cfg_item.cmd_cfg;
+				var custom_cfg_command;
+				buffer.writeUInt8(0xc3);
+				buffer.writeUInt8(0x03);
+				if (custom_cfg_cmd && isValid(custom_cfg_cmd.custom)) {
+					custom_cfg_command = parseUint8HexString(custom_cfg_cmd.custom);
+					if (isNaN(custom_cfg_command) || custom_cfg_command < 96 || custom_cfg_command > 175) {
+						throw rangeError('active_data_reporting_cfg.custom_cfg.cmd_cfg.custom', '[0x60,0xaf]');
+					}
+				} else if (custom_cfg_cmd && isValid(custom_cfg_cmd.common)) {
+					custom_cfg_command = parseUint8HexString(custom_cfg_cmd.common);
+					if (isNaN(custom_cfg_command) || custom_cfg_command < 197 || custom_cfg_command > 200) {
+						throw rangeError('active_data_reporting_cfg.custom_cfg.cmd_cfg.common', '[0xc5,0xc8]');
+					}
+				} else {
+					throw new Error('active_data_reporting_cfg.custom_cfg.cmd_cfg requires custom or common');
 				}
-				buffer.writeUInt8(payload.active_data_reporting_cfg.custom_cfg.cmd_cfg.custom);
-			}
-			if (payload.active_data_reporting_cfg.custom_cfg.cmd_cfg == 0x01) {
-				if (payload.active_data_reporting_cfg.custom_cfg.cmd_cfg.common < 197 || payload.active_data_reporting_cfg.custom_cfg.cmd_cfg.common > 200) {
-					throw rangeError('active_data_reporting_cfg.custom_cfg.cmd_cfg.common', '[197,200]');
+				if (custom_cfg_item.cmd_enable !== true && custom_cfg_item.cmd_enable !== false) {
+					throw oneOfError('active_data_reporting_cfg.custom_cfg.cmd_enable', [true, false]);
 				}
-				buffer.writeUInt8(payload.active_data_reporting_cfg.custom_cfg.cmd_cfg.common);
+				buffer.writeUInt8(custom_cfg_command);
+				// 0：disable, 1：enable
+				buffer.writeUInt8(custom_cfg_item.cmd_enable ? 1 : 0);
 			}
-			if ([0, 1].indexOf(payload.active_data_reporting_cfg.custom_cfg.cmd_enable) === -1) {
-				throw oneOfError('active_data_reporting_cfg.custom_cfg.cmd_enable', [0, 1]);
-			}
-			// 0：disable, 1：enable
-			buffer.writeUInt8(payload.active_data_reporting_cfg.custom_cfg.cmd_enable);
 		}
 		encoded = encoded.concat(buffer.toBytes());
 	}
@@ -2513,6 +2524,14 @@ function encodeUtf8(str) {
 
 function isValid(value) {
 	return value !== undefined && value !== null && value !== '';
+}
+
+function parseUint8HexString(value) {
+	if (typeof value !== 'string' || !/^0x[0-9a-f]{2}$/i.test(value)) {
+		return NaN;
+	}
+
+	return parseInt(value, 16);
 }
 
 function hasPath(obj, path) {

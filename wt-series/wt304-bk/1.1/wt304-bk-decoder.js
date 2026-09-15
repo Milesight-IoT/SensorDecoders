@@ -1065,16 +1065,20 @@ function milesightDeviceDecode(bytes) {
 					decoded.active_data_reporting_cfg.mode = readUInt8(bytes, counterObj, 1);
 				}
 				if (active_data_reporting_cfg_cmd == 0x03) {
-					decoded.active_data_reporting_cfg.custom_cfg = decoded.active_data_reporting_cfg.custom_cfg || {};
-					decoded.active_data_reporting_cfg.custom_cfg.cmd_cfg = decoded.active_data_reporting_cfg.custom_cfg.cmd_cfg || {};
-					if (decoded.active_data_reporting_cfg.custom_cfg.cmd_cfg == 0x00) {
-						decoded.active_data_reporting_cfg.custom_cfg.cmd_cfg.custom = readUInt8(bytes, counterObj, 1);
-					}
-					if (decoded.active_data_reporting_cfg.custom_cfg.cmd_cfg == 0x01) {
-						decoded.active_data_reporting_cfg.custom_cfg.cmd_cfg.common = readUInt8(bytes, counterObj, 1);
+					var custom_cfg_item = { cmd_cfg: {} };
+					var custom_cfg_command = readUInt8(bytes, counterObj, 1);
+					if (custom_cfg_command >= 96 && custom_cfg_command <= 175) {
+						custom_cfg_item.cmd_cfg.custom = '0x' + ('0' + custom_cfg_command.toString(16)).slice(-2);
+					} else if (custom_cfg_command >= 197 && custom_cfg_command <= 200) {
+						custom_cfg_item.cmd_cfg.common = '0x' + ('0' + custom_cfg_command.toString(16)).slice(-2);
 					}
 					// 0：disable, 1：enable
-					decoded.active_data_reporting_cfg.custom_cfg.cmd_enable = readUInt8(bytes, counterObj, 1);
+					var custom_cfg_enable = readUInt8(bytes, counterObj, 1);
+					custom_cfg_item.cmd_enable = custom_cfg_enable == 1;
+					if (!Array.isArray(decoded.active_data_reporting_cfg.custom_cfg)) {
+						decoded.active_data_reporting_cfg.custom_cfg = [];
+					}
+					decoded.active_data_reporting_cfg.custom_cfg.push(custom_cfg_item);
 				}
 				break;
 			case 0xa5:
