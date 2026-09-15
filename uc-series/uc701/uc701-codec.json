@@ -2973,7 +2973,7 @@
         {
             "id": "dormant_settings.1.id",
             "name": "Dormant 1 ID(Dormant Settings)",
-            "value": "0",
+            "value": "1",
             "unit": "",
             "access_mode": "RW",
             "data_type": "NUMBER",
