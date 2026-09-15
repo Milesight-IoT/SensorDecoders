@@ -2654,8 +2654,8 @@
                     "name": "clean alarm"
                 },
                 {
-                    "value": 0,
-                    "name": "clean alarm"
+                    "value": 1,
+                    "name": "Unsupported Command"
                 }
             ],
             "bacnet_type": "multistate_output_object",
