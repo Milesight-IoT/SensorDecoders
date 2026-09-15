@@ -25,7 +25,7 @@ function Encoder(obj, port) {
     return milesightDeviceEncode(obj);
 }
 
-function milesightDeviceEncode(fPort, obj) {
+function milesightDeviceEncode(obj) {
     var encoded = [];
     return encoded;
 }
@@ -38,7 +38,7 @@ function getValues(map) {
     return values;
 }
 
-function getValue(map, value) {
+function getEnumKey(map, value) {
     if (RAW_VALUE) return value;
 
     for (var key in map) {
