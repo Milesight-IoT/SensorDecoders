@@ -36,14 +36,16 @@ For more detailed information, please visit [Milesight Official Website](https:/
 |   CHANNEL    |  ID  | TYPE | LENGTH | DESCRIPTION                                                                                                                                                                                                                                              |
 | :----------: | :--: | :--: | :----: | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 |   Battery    | 0x01 | 0x75 |   1    | battery(1B)<br/>battery, unit: %                                                                                                                                                                                                                         |
-| Button Press | 0xFF | 0x34 |   1    | id(1B) + button_id_mode(1B) + button_id_event(1B)<br/>mode: values: (0: short_press, 1: short_press+double_press, 2: short_press+long_press, 3: short_press+double_press+long_press)<br/>event, values: (1: short_press, 2: double_press, 3: long_press) |
+| Button Press (v1.6+) | 0xFF | 0x34 |   3    | id(1B) + button_id_mode(1B) + button_id_event(1B)<br/>mode: values: (0: short_press, 1: short_press+double_press, 2: short_press+long_press, 3: short_press+double_press+long_press)<br/>event, values: (0: short_press, 1: double_press, 2: long_press) |
 
 ## Example
 
 ```json
-// 017510 FF2E01
+// 017510 FF34010300
 {
     "battery": 16,
-    "press": "short"
+    "button_1": 1,
+    "button_1_mode": "short_press+double_press+long_press",
+    "button_1_event": "short_press"
 }
 ```
