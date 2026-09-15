@@ -3487,7 +3487,7 @@
             "name": "Format Code Data(Infrared Format Code)",
             "value": "",
             "unit": "",
-            "access_mode": "W",
+            "access_mode": "RW",
             "data_type": "TEXT",
             "value_type": "STRING",
             "max_length": 242,

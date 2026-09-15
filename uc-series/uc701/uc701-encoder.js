@@ -2448,17 +2448,53 @@ function milesightDeviceEncode(payload) {
 		buffer.writeUInt8(payload.lora_tx_max_random_time);
 		encoded = encoded.concat(buffer.toBytes());
 	}
-	//0x8e
+	//0x8d
+	// 协议 3.28：BACnet 下发红外格式码，186 字节（checksum 2B + 184B ir_config_package）
+	// 按每包 9 字节拆成 0x8D00~0x8D14 共 21 包，不足 9 字节用 0 补齐，默认值 {0}。
+	// 默认走 0x8D 整包下发；仅当 payload 显式携带 offset > 0 时走 0x8E 分块写（协议 3.29）。
+	// 参考实现假设一次编码输出全部包、由网关 ipso_v2 按包拆帧下发（待与网关确认）。
 	if ('infrared_format_code' in payload) {
-		var buffer = new Buffer();
-		buffer.writeUInt8(0x8e);
-		buffer.writeUInt8(payload.infrared_format_code.offset);
-		if (payload.infrared_format_code.length < 0 || payload.infrared_format_code.length > 255) {
-			throw betweenError('infrared_format_code.length', 0, 255);
+		var infrared_format_code = payload.infrared_format_code || {};
+		var infrared_data = infrared_format_code.format_code;
+		if (infrared_data !== undefined && infrared_data !== null) {
+			var infrared_bytes;
+			if (typeof infrared_data === 'string') {
+				// 值为原始字节字符串（每字符一字节，全码 186 字符 ≤ 网关 242 上限）
+				infrared_bytes = [];
+				for (var infrared_i = 0; infrared_i < infrared_data.length; infrared_i++) {
+					infrared_bytes.push(infrared_data.charCodeAt(infrared_i) & 0xff);
+				}
+			} else {
+				infrared_bytes = infrared_data;
+			}
+			if (isValid(payload.infrared_format_code.offset) && payload.infrared_format_code.offset > 0) {
+				// 0x8e 分块写（协议 3.29）：offset + length + data
+				var infrared_length = isValid(infrared_format_code.length) ? infrared_format_code.length : infrared_bytes.length;
+				if (infrared_length < 0 || infrared_length > 255) {
+					throw betweenError('infrared_format_code.length', 0, 255);
+				}
+				var infrared_e_buffer = new Buffer();
+				infrared_e_buffer.writeUInt8(0x8e);
+				infrared_e_buffer.writeUInt8(payload.infrared_format_code.offset);
+				infrared_e_buffer.writeUInt8(infrared_length);
+				infrared_e_buffer.writeBytes(infrared_bytes, infrared_length, true);
+				encoded = encoded.concat(infrared_e_buffer.toBytes());
+			} else {
+				if (infrared_bytes.length > 186) {
+					throw new Error('infrared_format_code.format_code must not exceed 186 bytes');
+				}
+				var infrared_buffer = new Buffer();
+				for (var infrared_packet = 0; infrared_packet < 21; infrared_packet++) {
+					infrared_buffer.writeUInt8(0x8d);
+					infrared_buffer.writeUInt8(infrared_packet);
+					for (var infrared_j = 0; infrared_j < 9; infrared_j++) {
+						var infrared_index = infrared_packet * 9 + infrared_j;
+						infrared_buffer.writeUInt8(infrared_index < infrared_bytes.length ? infrared_bytes[infrared_index] : 0x00);
+					}
+				}
+				encoded = encoded.concat(infrared_buffer.toBytes());
+			}
 		}
-		buffer.writeUInt8(payload.infrared_format_code.length);
-		buffer.writeBytes(payload.infrared_format_code.format_code, payload.infrared_format_code.length, true);
-		encoded = encoded.concat(buffer.toBytes());
 	}
 	//0x90
 	if ('ble_adv_time_settings' in payload) {
