@@ -1895,7 +1895,7 @@
             "id": "running_state.current_transformer.current",
             "name": "Current(Current Transformer)",
             "value": "",
-            "unit": "a",
+            "unit": "A",
             "access_mode": "R",
             "data_type": "NUMBER",
             "value_type": "FLOAT",
@@ -1904,8 +1904,8 @@
                 30
             ],
             "bacnet_type": "analog_input_object",
-            "bacnet_unit_type_id": 67,
-            "bacnet_unit_type": "UNITS_YEARS",
+            "bacnet_unit_type_id": 3,
+            "bacnet_unit_type": "UNITS_AMPERES",
             "reference": []
         },
         {
@@ -2766,7 +2766,7 @@
             "id": "dormant_settings.0.heating_date_settings.end_day",
             "name": "Dormant 0 End Day(Dormant Settings)",
             "value": "31",
-            "unit": "",
+            "unit": "d",
             "access_mode": "RW",
             "data_type": "NUMBER",
             "value_type": "UINT8",
@@ -2775,8 +2775,8 @@
                 31
             ],
             "bacnet_type": "analog_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "bacnet_unit_type_id": 70,
+            "bacnet_unit_type": "UNITS_DAYS",
             "reference": [
                 "dormant_settings.0.heating_date_settings.start_mon",
                 "dormant_settings.0.heating_date_settings.start_day",
@@ -2787,7 +2787,7 @@
             "id": "dormant_settings.0.heating_date_settings.end_mon",
             "name": "Dormant 0 End Month(Dormant Settings)",
             "value": "12",
-            "unit": "",
+            "unit": "Mon",
             "access_mode": "RW",
             "data_type": "NUMBER",
             "value_type": "UINT8",
@@ -2796,8 +2796,8 @@
                 12
             ],
             "bacnet_type": "analog_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "bacnet_unit_type_id": 68,
+            "bacnet_unit_type": "UNITS_MONTHS",
             "reference": [
                 "dormant_settings.0.heating_date_settings.start_mon",
                 "dormant_settings.0.heating_date_settings.start_day",
@@ -2808,7 +2808,7 @@
             "id": "dormant_settings.0.heating_date_settings.start_day",
             "name": "Dormant 0 Start Day(Dormant Settings)",
             "value": "1",
-            "unit": "",
+            "unit": "d",
             "access_mode": "RW",
             "data_type": "NUMBER",
             "value_type": "UINT8",
@@ -2817,8 +2817,8 @@
                 31
             ],
             "bacnet_type": "analog_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "bacnet_unit_type_id": 70,
+            "bacnet_unit_type": "UNITS_DAYS",
             "reference": [
                 "dormant_settings.0.heating_date_settings.start_mon",
                 "dormant_settings.0.heating_date_settings.end_mon",
@@ -2829,7 +2829,7 @@
             "id": "dormant_settings.0.heating_date_settings.start_mon",
             "name": "Dormant 0 Start Month(Dormant Settings)",
             "value": "1",
-            "unit": "",
+            "unit": "Mon",
             "access_mode": "RW",
             "data_type": "NUMBER",
             "value_type": "UINT8",
@@ -2838,8 +2838,8 @@
                 12
             ],
             "bacnet_type": "analog_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "bacnet_unit_type_id": 68,
+            "bacnet_unit_type": "UNITS_MONTHS",
             "reference": [
                 "dormant_settings.0.heating_date_settings.start_day",
                 "dormant_settings.0.heating_date_settings.end_mon",
@@ -2890,7 +2890,7 @@
             "id": "dormant_settings.1.heating_date_settings.end_day",
             "name": "Dormant 1 End Day(Dormant Settings)",
             "value": "31",
-            "unit": "",
+            "unit": "d",
             "access_mode": "RW",
             "data_type": "NUMBER",
             "value_type": "UINT8",
@@ -2899,8 +2899,8 @@
                 31
             ],
             "bacnet_type": "analog_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "bacnet_unit_type_id": 70,
+            "bacnet_unit_type": "UNITS_DAYS",
             "reference": [
                 "dormant_settings.1.heating_date_settings.start_mon",
                 "dormant_settings.1.heating_date_settings.start_day",
@@ -2911,7 +2911,7 @@
             "id": "dormant_settings.1.heating_date_settings.end_mon",
             "name": "Dormant 1 End Month(Dormant Settings)",
             "value": "12",
-            "unit": "",
+            "unit": "Mon",
             "access_mode": "RW",
             "data_type": "NUMBER",
             "value_type": "UINT8",
@@ -2920,8 +2920,8 @@
                 12
             ],
             "bacnet_type": "analog_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "bacnet_unit_type_id": 68,
+            "bacnet_unit_type": "UNITS_MONTHS",
             "reference": [
                 "dormant_settings.1.heating_date_settings.start_mon",
                 "dormant_settings.1.heating_date_settings.start_day",
@@ -2932,7 +2932,7 @@
             "id": "dormant_settings.1.heating_date_settings.start_day",
             "name": "Dormant 1 Start Day(Dormant Settings)",
             "value": "1",
-            "unit": "",
+            "unit": "d",
             "access_mode": "RW",
             "data_type": "NUMBER",
             "value_type": "UINT8",
@@ -2941,8 +2941,8 @@
                 31
             ],
             "bacnet_type": "analog_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "bacnet_unit_type_id": 70,
+            "bacnet_unit_type": "UNITS_DAYS",
             "reference": [
                 "dormant_settings.1.heating_date_settings.start_mon",
                 "dormant_settings.1.heating_date_settings.end_mon",
@@ -2953,7 +2953,7 @@
             "id": "dormant_settings.1.heating_date_settings.start_mon",
             "name": "Dormant 1 Start Month(Dormant Settings)",
             "value": "1",
-            "unit": "",
+            "unit": "Mon",
             "access_mode": "RW",
             "data_type": "NUMBER",
             "value_type": "UINT8",
@@ -2962,8 +2962,8 @@
                 12
             ],
             "bacnet_type": "analog_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "bacnet_unit_type_id": 68,
+            "bacnet_unit_type": "UNITS_MONTHS",
             "reference": [
                 "dormant_settings.1.heating_date_settings.start_day",
                 "dormant_settings.1.heating_date_settings.end_mon",
@@ -3345,7 +3345,7 @@
             "id": "temperature_limit_task_settings.0.task_date_settings.end_day",
             "name": "Task 0 End Day(Temperature Limit Task Settings)",
             "value": "31",
-            "unit": "",
+            "unit": "d",
             "access_mode": "RW",
             "data_type": "NUMBER",
             "value_type": "UINT8",
@@ -3354,8 +3354,8 @@
                 31
             ],
             "bacnet_type": "analog_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "bacnet_unit_type_id": 70,
+            "bacnet_unit_type": "UNITS_DAYS",
             "reference": [
                 "temperature_limit_task_settings.0.task_date_settings.start_mon",
                 "temperature_limit_task_settings.0.task_date_settings.start_day",
@@ -3366,7 +3366,7 @@
             "id": "temperature_limit_task_settings.0.task_date_settings.end_mon",
             "name": "Task 0 End Month(Temperature Limit Task Settings)",
             "value": "12",
-            "unit": "",
+            "unit": "Mon",
             "access_mode": "RW",
             "data_type": "NUMBER",
             "value_type": "UINT8",
@@ -3375,8 +3375,8 @@
                 12
             ],
             "bacnet_type": "analog_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "bacnet_unit_type_id": 68,
+            "bacnet_unit_type": "UNITS_MONTHS",
             "reference": [
                 "temperature_limit_task_settings.0.task_date_settings.start_mon",
                 "temperature_limit_task_settings.0.task_date_settings.start_day",
@@ -3387,7 +3387,7 @@
             "id": "temperature_limit_task_settings.0.task_date_settings.start_day",
             "name": "Task 0 Start Day(Temperature Limit Task Settings)",
             "value": "1",
-            "unit": "",
+            "unit": "d",
             "access_mode": "RW",
             "data_type": "NUMBER",
             "value_type": "UINT8",
@@ -3396,8 +3396,8 @@
                 31
             ],
             "bacnet_type": "analog_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "bacnet_unit_type_id": 70,
+            "bacnet_unit_type": "UNITS_DAYS",
             "reference": [
                 "temperature_limit_task_settings.0.task_date_settings.start_mon",
                 "temperature_limit_task_settings.0.task_date_settings.end_mon",
@@ -3408,7 +3408,7 @@
             "id": "temperature_limit_task_settings.0.task_date_settings.start_mon",
             "name": "Task 0 Start Month(Temperature Limit Task Settings)",
             "value": "1",
-            "unit": "",
+            "unit": "Mon",
             "access_mode": "RW",
             "data_type": "NUMBER",
             "value_type": "UINT8",
@@ -3417,8 +3417,8 @@
                 12
             ],
             "bacnet_type": "analog_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "bacnet_unit_type_id": 68,
+            "bacnet_unit_type": "UNITS_MONTHS",
             "reference": [
                 "temperature_limit_task_settings.0.task_date_settings.start_day",
                 "temperature_limit_task_settings.0.task_date_settings.end_mon",
