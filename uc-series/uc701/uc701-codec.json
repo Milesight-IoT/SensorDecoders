@@ -3128,6 +3128,40 @@
             "reference": []
         },
         {
+            "id": "temperature_limit_task_settings.0.celsius_high_threshold",
+            "name": "Celsius Task 0 High Temperature Threshold(Temperature Limit Task Settings)",
+            "value": "30",
+            "unit": "°C",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "range": [
+                16,
+                30
+            ],
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 62,
+            "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
+            "reference": []
+        },
+        {
+            "id": "temperature_limit_task_settings.0.celsius_low_threshold",
+            "name": "Celsius Task 0 Low Temperature Threshold(Temperature Limit Task Settings)",
+            "value": "16",
+            "unit": "°C",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "range": [
+                16,
+                30
+            ],
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 62,
+            "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
+            "reference": []
+        },
+        {
             "id": "temperature_limit_task_settings.0.cycle_settings.execution_day_fri",
             "name": "Task 0 Friday(Temperature Limit Task Settings)",
             "value": "0",
@@ -3431,20 +3465,37 @@
             ]
         },
         {
-            "id": "temperature_limit_task_settings.0.high_threshold",
-            "name": "Task 0 High Temperature Threshold(Temperature Limit Task Settings)",
-            "value": "35",
-            "unit": "°C",
+            "id": "temperature_limit_task_settings.0.fahrenheit_high_threshold",
+            "name": "Fahrenheit Task 0 High Temperature Threshold(Temperature Limit Task Settings)",
+            "value": "86",
+            "unit": "°F",
             "access_mode": "RW",
             "data_type": "NUMBER",
             "value_type": "FLOAT",
             "range": [
-                5,
-                35
+                60.8,
+                86
             ],
             "bacnet_type": "analog_value_object",
-            "bacnet_unit_type_id": 62,
-            "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
+            "bacnet_unit_type_id": 64,
+            "bacnet_unit_type": "UNITS_DEGREES_FAHRENHEIT",
+            "reference": []
+        },
+        {
+            "id": "temperature_limit_task_settings.0.fahrenheit_low_threshold",
+            "name": "Fahrenheit Task 0 Low Temperature Threshold(Temperature Limit Task Settings)",
+            "value": "60.8",
+            "unit": "°F",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "range": [
+                60.8,
+                86
+            ],
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 64,
+            "bacnet_unit_type": "UNITS_DEGREES_FAHRENHEIT",
             "reference": []
         },
         {
@@ -3462,23 +3513,6 @@
             "bacnet_type": "analog_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": []
-        },
-        {
-            "id": "temperature_limit_task_settings.0.low_threshold",
-            "name": "Task 0 Low Temperature Threshold(Temperature Limit Task Settings)",
-            "value": "5",
-            "unit": "°C",
-            "access_mode": "RW",
-            "data_type": "NUMBER",
-            "value_type": "FLOAT",
-            "range": [
-                5,
-                35
-            ],
-            "bacnet_type": "analog_value_object",
-            "bacnet_unit_type_id": 62,
-            "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
             "reference": []
         },
         {
