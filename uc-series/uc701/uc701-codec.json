@@ -1853,7 +1853,7 @@
         {
             "id": "infrared_format_code_divide.0.format_code",
             "name": "Format Code(Infrared Format Code)",
-            "value": "000000000000000000",
+            "value": "",
             "unit": "",
             "access_mode": "W",
             "data_type": "TEXT",
@@ -1878,7 +1878,7 @@
                 0,
                 20
             ],
-            "bacnet_type": "analog_value_object",
+            "bacnet_type": "analog_output_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": [
