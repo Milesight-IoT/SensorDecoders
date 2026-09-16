@@ -188,7 +188,10 @@
             "bacnet_type": "analog_input_object",
             "bacnet_unit_type_id": 62,
             "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
-            "reference": []
+            "reference": [
+                "cmd_temp_limit.over_range_alarm_trigger.celsius_high_threshold",
+                "cmd_temp_limit.type"
+            ]
         },
         {
             "id": "cmd_temp_limit.lower_range_alarm_trigger.fahrenheit_low_threshold",
@@ -205,7 +208,130 @@
             "bacnet_type": "analog_input_object",
             "bacnet_unit_type_id": 64,
             "bacnet_unit_type": "UNITS_DEGREES_FAHRENHEIT",
-            "reference": []
+            "reference": [
+                "cmd_temp_limit.over_range_alarm_trigger.celsius_high_threshold",
+                "cmd_temp_limit.type"
+            ]
+        },
+        {
+            "id": "cmd_temp_limit.lower_range_alarm_trigger.celsius_high_threshold",
+            "name": "Celsius High Threshold(Temperature Below Alarm)",
+            "value": "",
+            "unit": "°C",
+            "access_mode": "R",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "range": [
+                5,
+                35
+            ],
+            "bacnet_type": "analog_input_object",
+            "bacnet_unit_type_id": 62,
+            "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
+            "reference": [
+                "cmd_temp_limit.lower_range_alarm_trigger.celsius_low_threshold",
+                "cmd_temp_limit.lower_range_alarm_trigger.celsius_ambient_temp"
+            ]
+        },
+        {
+            "id": "cmd_temp_limit.lower_range_alarm_trigger.fahrenheit_high_threshold",
+            "name": "Fahrenheit High Threshold(Temperature Below Alarm)",
+            "value": "",
+            "unit": "°F",
+            "access_mode": "R",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "range": [
+                41,
+                95
+            ],
+            "bacnet_type": "analog_input_object",
+            "bacnet_unit_type_id": 64,
+            "bacnet_unit_type": "UNITS_DEGREES_FAHRENHEIT",
+            "reference": [
+                "cmd_temp_limit.lower_range_alarm_trigger.fahrenheit_low_threshold",
+                "cmd_temp_limit.lower_range_alarm_trigger.fahrenheit_ambient_temp"
+            ]
+        },
+        {
+            "id": "cmd_temp_limit.lower_range_alarm_trigger.celsius_ambient_temp",
+            "name": "Celsius Ambient Temperature(Temperature Below Alarm)",
+            "value": "",
+            "unit": "°C",
+            "access_mode": "R",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "range": [
+                -20,
+                60
+            ],
+            "bacnet_type": "analog_input_object",
+            "bacnet_unit_type_id": 62,
+            "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
+            "reference": [
+                "cmd_temp_limit.lower_range_alarm_trigger.celsius_low_threshold",
+                "cmd_temp_limit.lower_range_alarm_trigger.celsius_high_threshold"
+            ]
+        },
+        {
+            "id": "cmd_temp_limit.lower_range_alarm_trigger.fahrenheit_ambient_temp",
+            "name": "Fahrenheit Ambient Temperature(Temperature Below Alarm)",
+            "value": "",
+            "unit": "°F",
+            "access_mode": "R",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "range": [
+                -4,
+                140
+            ],
+            "bacnet_type": "analog_input_object",
+            "bacnet_unit_type_id": 64,
+            "bacnet_unit_type": "UNITS_DEGREES_FAHRENHEIT",
+            "reference": [
+                "cmd_temp_limit.lower_range_alarm_trigger.fahrenheit_low_threshold",
+                "cmd_temp_limit.lower_range_alarm_trigger.fahrenheit_high_threshold"
+            ]
+        },
+        {
+            "id": "cmd_temp_limit.over_range_alarm_trigger.celsius_low_threshold",
+            "name": "Celsius Low Threshold(Temperature Above Alarm)",
+            "value": "",
+            "unit": "°C",
+            "access_mode": "R",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "range": [
+                5,
+                35
+            ],
+            "bacnet_type": "analog_input_object",
+            "bacnet_unit_type_id": 62,
+            "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
+            "reference": [
+                "cmd_temp_limit.over_range_alarm_trigger.celsius_high_threshold",
+                "cmd_temp_limit.over_range_alarm_trigger.celsius_ambient_temp"
+            ]
+        },
+        {
+            "id": "cmd_temp_limit.over_range_alarm_trigger.fahrenheit_low_threshold",
+            "name": "Fahrenheit Low Threshold(Temperature Above Alarm)",
+            "value": "",
+            "unit": "°F",
+            "access_mode": "R",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "range": [
+                41,
+                95
+            ],
+            "bacnet_type": "analog_input_object",
+            "bacnet_unit_type_id": 64,
+            "bacnet_unit_type": "UNITS_DEGREES_FAHRENHEIT",
+            "reference": [
+                "cmd_temp_limit.over_range_alarm_trigger.fahrenheit_high_threshold",
+                "cmd_temp_limit.over_range_alarm_trigger.fahrenheit_ambient_temp"
+            ]
         },
         {
             "id": "cmd_temp_limit.over_range_alarm_trigger.celsius_high_threshold",
@@ -222,7 +348,10 @@
             "bacnet_type": "analog_input_object",
             "bacnet_unit_type_id": 62,
             "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
-            "reference": []
+            "reference": [
+                "cmd_temp_limit.lower_range_alarm_trigger.celsius_low_threshold",
+                "cmd_temp_limit.type"
+            ]
         },
         {
             "id": "cmd_temp_limit.over_range_alarm_trigger.fahrenheit_high_threshold",
@@ -239,7 +368,50 @@
             "bacnet_type": "analog_input_object",
             "bacnet_unit_type_id": 64,
             "bacnet_unit_type": "UNITS_DEGREES_FAHRENHEIT",
-            "reference": []
+            "reference": [
+                "cmd_temp_limit.lower_range_alarm_trigger.celsius_low_threshold",
+                "cmd_temp_limit.type"
+            ]
+        },
+        {
+            "id": "cmd_temp_limit.over_range_alarm_trigger.celsius_ambient_temp",
+            "name": "Celsius Ambient Temperature(Temperature Above Alarm)",
+            "value": "",
+            "unit": "°C",
+            "access_mode": "R",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "range": [
+                -20,
+                60
+            ],
+            "bacnet_type": "analog_input_object",
+            "bacnet_unit_type_id": 62,
+            "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
+            "reference": [
+                "cmd_temp_limit.over_range_alarm_trigger.celsius_low_threshold",
+                "cmd_temp_limit.over_range_alarm_trigger.celsius_high_threshold"
+            ]
+        },
+        {
+            "id": "cmd_temp_limit.over_range_alarm_trigger.fahrenheit_ambient_temp",
+            "name": "Fahrenheit Ambient Temperature(Temperature Above Alarm)",
+            "value": "",
+            "unit": "°F",
+            "access_mode": "R",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "range": [
+                -4,
+                140
+            ],
+            "bacnet_type": "analog_input_object",
+            "bacnet_unit_type_id": 64,
+            "bacnet_unit_type": "UNITS_DEGREES_FAHRENHEIT",
+            "reference": [
+                "cmd_temp_limit.over_range_alarm_trigger.fahrenheit_low_threshold",
+                "cmd_temp_limit.over_range_alarm_trigger.fahrenheit_high_threshold"
+            ]
         },
         {
             "id": "cmd_temp_limit.type",
@@ -262,7 +434,10 @@
             "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": []
+            "reference": [
+                "cmd_temp_limit.lower_range_alarm_trigger.celsius_low_threshold",
+                "cmd_temp_limit.over_range_alarm_trigger.celsius_high_threshold"
+            ]
         },
         {
             "id": "communication_mode",
@@ -1126,14 +1301,6 @@
                     "name": "Auto"
                 },
                 {
-                    "value": 1,
-                    "name": "Ventilation"
-                },
-                {
-                    "value": 2,
-                    "name": "Always Open"
-                },
-                {
                     "value": 3,
                     "name": "Low"
                 },
@@ -1364,10 +1531,6 @@
                     "name": "heat"
                 },
                 {
-                    "value": 1,
-                    "name": "em heat"
-                },
-                {
                     "value": 2,
                     "name": "cool"
                 },
@@ -1485,18 +1648,14 @@
                 },
                 {
                     "value": 3,
-                    "name": "RSD/MCQUAY/TICA"
-                },
-                {
-                    "value": 4,
                     "name": "WHIRLPOOL/BOSCH/AIRWELL"
                 },
                 {
-                    "value": 5,
+                    "value": 4,
                     "name": "FUJITSU/McQUAY"
                 },
                 {
-                    "value": 6,
+                    "value": 5,
                     "name": "TRUMA"
                 }
             ],
@@ -1630,7 +1789,10 @@
             "bacnet_type": "analog_input_object",
             "bacnet_unit_type_id": 62,
             "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
-            "reference": []
+            "reference": [
+                "local_temp_limit.over_range_alarm_trigger.celsius_high_threshold",
+                "local_temp_limit.type"
+            ]
         },
         {
             "id": "local_temp_limit.lower_range_alarm_trigger.fahrenheit_low_threshold",
@@ -1647,7 +1809,130 @@
             "bacnet_type": "analog_input_object",
             "bacnet_unit_type_id": 64,
             "bacnet_unit_type": "UNITS_DEGREES_FAHRENHEIT",
-            "reference": []
+            "reference": [
+                "local_temp_limit.over_range_alarm_trigger.celsius_high_threshold",
+                "local_temp_limit.type"
+            ]
+        },
+        {
+            "id": "local_temp_limit.lower_range_alarm_trigger.celsius_high_threshold",
+            "name": "Celsius High Threshold(Temperature Below Alarm)",
+            "value": "",
+            "unit": "°C",
+            "access_mode": "R",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "range": [
+                5,
+                35
+            ],
+            "bacnet_type": "analog_input_object",
+            "bacnet_unit_type_id": 62,
+            "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
+            "reference": [
+                "local_temp_limit.lower_range_alarm_trigger.celsius_low_threshold",
+                "local_temp_limit.lower_range_alarm_trigger.celsius_ambient_temp"
+            ]
+        },
+        {
+            "id": "local_temp_limit.lower_range_alarm_trigger.fahrenheit_high_threshold",
+            "name": "Fahrenheit High Threshold(Temperature Below Alarm)",
+            "value": "",
+            "unit": "°F",
+            "access_mode": "R",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "range": [
+                41,
+                95
+            ],
+            "bacnet_type": "analog_input_object",
+            "bacnet_unit_type_id": 64,
+            "bacnet_unit_type": "UNITS_DEGREES_FAHRENHEIT",
+            "reference": [
+                "local_temp_limit.lower_range_alarm_trigger.fahrenheit_low_threshold",
+                "local_temp_limit.lower_range_alarm_trigger.fahrenheit_ambient_temp"
+            ]
+        },
+        {
+            "id": "local_temp_limit.lower_range_alarm_trigger.celsius_ambient_temp",
+            "name": "Celsius Ambient Temperature(Temperature Below Alarm)",
+            "value": "",
+            "unit": "°C",
+            "access_mode": "R",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "range": [
+                -20,
+                60
+            ],
+            "bacnet_type": "analog_input_object",
+            "bacnet_unit_type_id": 62,
+            "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
+            "reference": [
+                "local_temp_limit.lower_range_alarm_trigger.celsius_low_threshold",
+                "local_temp_limit.lower_range_alarm_trigger.celsius_high_threshold"
+            ]
+        },
+        {
+            "id": "local_temp_limit.lower_range_alarm_trigger.fahrenheit_ambient_temp",
+            "name": "Fahrenheit Ambient Temperature(Temperature Below Alarm)",
+            "value": "",
+            "unit": "°F",
+            "access_mode": "R",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "range": [
+                -4,
+                140
+            ],
+            "bacnet_type": "analog_input_object",
+            "bacnet_unit_type_id": 64,
+            "bacnet_unit_type": "UNITS_DEGREES_FAHRENHEIT",
+            "reference": [
+                "local_temp_limit.lower_range_alarm_trigger.fahrenheit_low_threshold",
+                "local_temp_limit.lower_range_alarm_trigger.fahrenheit_high_threshold"
+            ]
+        },
+        {
+            "id": "local_temp_limit.over_range_alarm_trigger.celsius_low_threshold",
+            "name": "Celsius Low Threshold(Temperature Above Alarm)",
+            "value": "",
+            "unit": "°C",
+            "access_mode": "R",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "range": [
+                5,
+                35
+            ],
+            "bacnet_type": "analog_input_object",
+            "bacnet_unit_type_id": 62,
+            "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
+            "reference": [
+                "local_temp_limit.over_range_alarm_trigger.celsius_high_threshold",
+                "local_temp_limit.over_range_alarm_trigger.celsius_ambient_temp"
+            ]
+        },
+        {
+            "id": "local_temp_limit.over_range_alarm_trigger.fahrenheit_low_threshold",
+            "name": "Fahrenheit Low Threshold(Temperature Above Alarm)",
+            "value": "",
+            "unit": "°F",
+            "access_mode": "R",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "range": [
+                41,
+                95
+            ],
+            "bacnet_type": "analog_input_object",
+            "bacnet_unit_type_id": 64,
+            "bacnet_unit_type": "UNITS_DEGREES_FAHRENHEIT",
+            "reference": [
+                "local_temp_limit.over_range_alarm_trigger.fahrenheit_high_threshold",
+                "local_temp_limit.over_range_alarm_trigger.fahrenheit_ambient_temp"
+            ]
         },
         {
             "id": "local_temp_limit.over_range_alarm_trigger.celsius_high_threshold",
@@ -1664,7 +1949,10 @@
             "bacnet_type": "analog_input_object",
             "bacnet_unit_type_id": 62,
             "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
-            "reference": []
+            "reference": [
+                "local_temp_limit.lower_range_alarm_trigger.celsius_low_threshold",
+                "local_temp_limit.type"
+            ]
         },
         {
             "id": "local_temp_limit.over_range_alarm_trigger.fahrenheit_high_threshold",
@@ -1681,7 +1969,50 @@
             "bacnet_type": "analog_input_object",
             "bacnet_unit_type_id": 64,
             "bacnet_unit_type": "UNITS_DEGREES_FAHRENHEIT",
-            "reference": []
+            "reference": [
+                "local_temp_limit.lower_range_alarm_trigger.celsius_low_threshold",
+                "local_temp_limit.type"
+            ]
+        },
+        {
+            "id": "local_temp_limit.over_range_alarm_trigger.celsius_ambient_temp",
+            "name": "Celsius Ambient Temperature(Temperature Above Alarm)",
+            "value": "",
+            "unit": "°C",
+            "access_mode": "R",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "range": [
+                -20,
+                60
+            ],
+            "bacnet_type": "analog_input_object",
+            "bacnet_unit_type_id": 62,
+            "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
+            "reference": [
+                "local_temp_limit.over_range_alarm_trigger.celsius_low_threshold",
+                "local_temp_limit.over_range_alarm_trigger.celsius_high_threshold"
+            ]
+        },
+        {
+            "id": "local_temp_limit.over_range_alarm_trigger.fahrenheit_ambient_temp",
+            "name": "Fahrenheit Ambient Temperature(Temperature Above Alarm)",
+            "value": "",
+            "unit": "°F",
+            "access_mode": "R",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "range": [
+                -4,
+                140
+            ],
+            "bacnet_type": "analog_input_object",
+            "bacnet_unit_type_id": 64,
+            "bacnet_unit_type": "UNITS_DEGREES_FAHRENHEIT",
+            "reference": [
+                "local_temp_limit.over_range_alarm_trigger.fahrenheit_low_threshold",
+                "local_temp_limit.over_range_alarm_trigger.fahrenheit_high_threshold"
+            ]
         },
         {
             "id": "local_temp_limit.type",
@@ -1704,7 +2035,10 @@
             "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": []
+            "reference": [
+                "local_temp_limit.lower_range_alarm_trigger.celsius_low_threshold",
+                "local_temp_limit.over_range_alarm_trigger.celsius_high_threshold"
+            ]
         },
         {
             "id": "lorawan_configuration_settings.mode",
@@ -2669,17 +3003,17 @@
             "id": "window_opening_detection_settings.celsius_difference_in_temperature",
             "name": "Celsius Temperature Change(Open Window Detection)",
             "value": "3",
-            "unit": "°C",
+            "unit": "K",
             "access_mode": "RW",
             "data_type": "NUMBER",
             "value_type": "FLOAT",
             "range": [
                 1,
-                20
+                10
             ],
             "bacnet_type": "analog_value_object",
-            "bacnet_unit_type_id": 62,
-            "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
+            "bacnet_unit_type_id": 121,
+            "bacnet_unit_type": "UNITS_DELTA_DEGREES_KELVIN",
             "reference": []
         },
         {
@@ -2708,18 +3042,18 @@
         {
             "id": "window_opening_detection_settings.fahrenheit_difference_in_temperature",
             "name": "Fahrenheit Temperature Change(Open Window Detection)",
-            "value": "37.4",
-            "unit": "°F",
+            "value": "5.4",
+            "unit": "ΔT°F",
             "access_mode": "RW",
             "data_type": "NUMBER",
             "value_type": "FLOAT",
             "range": [
-                33.8,
-                68
+                1.8,
+                18
             ],
             "bacnet_type": "analog_value_object",
-            "bacnet_unit_type_id": 64,
-            "bacnet_unit_type": "UNITS_DEGREES_FAHRENHEIT",
+            "bacnet_unit_type_id": 120,
+            "bacnet_unit_type": "UNITS_DELTA_DEGREES_FAHRENHEIT",
             "reference": []
         },
         {
@@ -3460,6 +3794,41 @@
             "reference": [
                 "infrared_format_code.length",
                 "infrared_format_code.format_code"
+            ]
+        },
+        {
+            "id": "infrared_format_code_divide.0.index",
+            "name": "Index(Infrared Format Code)",
+            "value": "0",
+            "unit": "",
+            "access_mode": "W",
+            "data_type": "NUMBER",
+            "value_type": "UINT8",
+            "range": [
+                0,
+                20
+            ],
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "infrared_format_code_divide.0.format_code"
+            ]
+        },
+        {
+            "id": "infrared_format_code_divide.0.format_code",
+            "name": "Format Code(Infrared Format Code)",
+            "value": "000000000000000000",
+            "unit": "",
+            "access_mode": "W",
+            "data_type": "TEXT",
+            "value_type": "STRING",
+            "max_length": 18,
+            "bacnet_type": "character_string_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "infrared_format_code_divide.0.index"
             ]
         },
         {

@@ -960,8 +960,8 @@ function milesightDeviceEncode(payload) {
 		for (var pair_name_id = 0; pair_name_id < (payload.ble_configuration_settings.pair_name && payload.ble_configuration_settings.pair_name.length); pair_name_id++) {
 			var pair_name_item = payload.ble_configuration_settings.pair_name[pair_name_id];
 			var pair_name_item_id = pair_name_item.channel;
-			if (pair_name_item_id < 0 || pair_name_item_id > 11) {
-				throw rangeError('pair_name_item_id', '[0,11]');
+			if (pair_name_item_id < 0 || pair_name_item_id > 0) {
+				throw betweenError('pair_name_item_id', 0, 0);
 			}
 
 			buffer.writeUInt8(0xcd);
@@ -976,8 +976,8 @@ function milesightDeviceEncode(payload) {
 		for (var pair_mac_id = 0; pair_mac_id < (payload.ble_configuration_settings.pair_mac && payload.ble_configuration_settings.pair_mac.length); pair_mac_id++) {
 			var pair_mac_item = payload.ble_configuration_settings.pair_mac[pair_mac_id];
 			var pair_mac_item_id = pair_mac_item.channel;
-			if (pair_mac_item_id < 0 || pair_mac_item_id > 11) {
-				throw rangeError('pair_mac_item_id', '[0,11]');
+			if (pair_mac_item_id < 0 || pair_mac_item_id > 0) {
+				throw betweenError('pair_mac_item_id', 0, 0);
 			}
 
 			buffer.writeUInt8(0xcd);
@@ -988,8 +988,8 @@ function milesightDeviceEncode(payload) {
 		for (var pair_addr_id = 0; pair_addr_id < (payload.ble_configuration_settings.pair_addr && payload.ble_configuration_settings.pair_addr.length); pair_addr_id++) {
 			var pair_addr_item = payload.ble_configuration_settings.pair_addr[pair_addr_id];
 			var pair_addr_item_id = pair_addr_item.channel;
-			if (pair_addr_item_id < 0 || pair_addr_item_id > 11) {
-				throw rangeError('pair_addr_item_id', '[0,11]');
+			if (pair_addr_item_id < 0 || pair_addr_item_id > 0) {
+				throw betweenError('pair_addr_item_id', 0, 0);
 			}
 
 			buffer.writeUInt8(0xcd);
@@ -1282,6 +1282,10 @@ function milesightDeviceEncode(payload) {
 				throw betweenError('cmd_temp_limit.lower_range_alarm_trigger.high_threshold', 5, 35);
 			}
 			buffer.writeInt16LE(payload.cmd_temp_limit.lower_range_alarm_trigger.high_threshold * 100);
+			if (payload.cmd_temp_limit.lower_range_alarm_trigger.ambient_temp < -20 || payload.cmd_temp_limit.lower_range_alarm_trigger.ambient_temp > 60) {
+				throw betweenError('cmd_temp_limit.lower_range_alarm_trigger.ambient_temp', -20, 60);
+			}
+			buffer.writeInt16LE(payload.cmd_temp_limit.lower_range_alarm_trigger.ambient_temp * 100);
 		}
 		if (payload.cmd_temp_limit.type == 0x01) {
 			if (payload.cmd_temp_limit.over_range_alarm_trigger.low_threshold < 5 || payload.cmd_temp_limit.over_range_alarm_trigger.low_threshold > 35) {
@@ -1292,6 +1296,10 @@ function milesightDeviceEncode(payload) {
 				throw betweenError('cmd_temp_limit.over_range_alarm_trigger.high_threshold', 5, 35);
 			}
 			buffer.writeInt16LE(payload.cmd_temp_limit.over_range_alarm_trigger.high_threshold * 100);
+			if (payload.cmd_temp_limit.over_range_alarm_trigger.ambient_temp < -20 || payload.cmd_temp_limit.over_range_alarm_trigger.ambient_temp > 60) {
+				throw betweenError('cmd_temp_limit.over_range_alarm_trigger.ambient_temp', -20, 60);
+			}
+			buffer.writeInt16LE(payload.cmd_temp_limit.over_range_alarm_trigger.ambient_temp * 100);
 		}
 		encoded = encoded.concat(buffer.toBytes());
 	}
@@ -1309,6 +1317,10 @@ function milesightDeviceEncode(payload) {
 				throw betweenError('local_temp_limit.lower_range_alarm_trigger.high_threshold', 5, 35);
 			}
 			buffer.writeInt16LE(payload.local_temp_limit.lower_range_alarm_trigger.high_threshold * 100);
+			if (payload.local_temp_limit.lower_range_alarm_trigger.ambient_temp < -20 || payload.local_temp_limit.lower_range_alarm_trigger.ambient_temp > 60) {
+				throw betweenError('local_temp_limit.lower_range_alarm_trigger.ambient_temp', -20, 60);
+			}
+			buffer.writeInt16LE(payload.local_temp_limit.lower_range_alarm_trigger.ambient_temp * 100);
 		}
 		if (payload.local_temp_limit.type == 0x01) {
 			if (payload.local_temp_limit.over_range_alarm_trigger.low_threshold < 5 || payload.local_temp_limit.over_range_alarm_trigger.low_threshold > 35) {
@@ -1319,6 +1331,10 @@ function milesightDeviceEncode(payload) {
 				throw betweenError('local_temp_limit.over_range_alarm_trigger.high_threshold', 5, 35);
 			}
 			buffer.writeInt16LE(payload.local_temp_limit.over_range_alarm_trigger.high_threshold * 100);
+			if (payload.local_temp_limit.over_range_alarm_trigger.ambient_temp < -20 || payload.local_temp_limit.over_range_alarm_trigger.ambient_temp > 60) {
+				throw betweenError('local_temp_limit.over_range_alarm_trigger.ambient_temp', -20, 60);
+			}
+			buffer.writeInt16LE(payload.local_temp_limit.over_range_alarm_trigger.ambient_temp * 100);
 		}
 		encoded = encoded.concat(buffer.toBytes());
 	}
@@ -1690,8 +1706,8 @@ function milesightDeviceEncode(payload) {
 		if (isValid(payload.window_opening_detection_settings.difference_in_temperature)) {
 			buffer.writeUInt8(0x68);
 			buffer.writeUInt8(0x02);
-			if (payload.window_opening_detection_settings.difference_in_temperature < 1 || payload.window_opening_detection_settings.difference_in_temperature > 20) {
-				throw betweenError('window_opening_detection_settings.difference_in_temperature', 1, 20);
+			if (payload.window_opening_detection_settings.difference_in_temperature < 1 || payload.window_opening_detection_settings.difference_in_temperature > 10) {
+				throw betweenError('window_opening_detection_settings.difference_in_temperature', 1, 10);
 			}
 			buffer.writeInt16LE(payload.window_opening_detection_settings.difference_in_temperature * 100);
 		}
@@ -2060,8 +2076,8 @@ function milesightDeviceEncode(payload) {
 				buffer.writeUInt8(0x83);
 				buffer.writeUInt8(temperature_limit_task_settings_item_id);
 				buffer.writeUInt8(0x04);
-				if (temperature_limit_task_settings_item.low_threshold < 5 || temperature_limit_task_settings_item.low_threshold > 35) {
-					throw betweenError('low_threshold', 5, 35);
+				if (temperature_limit_task_settings_item.low_threshold < 16 || temperature_limit_task_settings_item.low_threshold > 30) {
+					throw betweenError('low_threshold', 16, 30);
 				}
 				buffer.writeInt16LE(temperature_limit_task_settings_item.low_threshold * 100);
 			}
@@ -2069,8 +2085,8 @@ function milesightDeviceEncode(payload) {
 				buffer.writeUInt8(0x83);
 				buffer.writeUInt8(temperature_limit_task_settings_item_id);
 				buffer.writeUInt8(0x05);
-				if (temperature_limit_task_settings_item.high_threshold < 5 || temperature_limit_task_settings_item.high_threshold > 35) {
-					throw betweenError('high_threshold', 5, 35);
+				if (temperature_limit_task_settings_item.high_threshold < 16 || temperature_limit_task_settings_item.high_threshold > 30) {
+					throw betweenError('high_threshold', 16, 30);
 				}
 				buffer.writeInt16LE(temperature_limit_task_settings_item.high_threshold * 100);
 			}
@@ -2238,12 +2254,12 @@ function milesightDeviceEncode(payload) {
 		}
 		if (isValid(payload.infrared_learn.predefine_brand)) {
 			buffer.writeUInt8(0x86);
-			// 0: NONE, 1: XIAOMI/TCL, 2: SHINCO/SAMSUNG/ELECTROLUX, 3: RSD/MCQUAY/TICA, 4: WHIRLPOOL/BOSCH/AIRWELL, 5: FUJITSU/McQUAY, 6: TRUMA
+			// 0: NONE, 1: XIAOMI/TCL, 2: SHINCO/SAMSUNG/ELECTROLUX, 3: WHIRLPOOL/BOSCH/AIRWELL, 4: FUJITSU/McQUAY, 5: TRUMA
 			buffer.writeUInt8(0x03);
-			if ([0, 1, 2, 3, 4, 5, 6].indexOf(payload.infrared_learn.predefine_brand) === -1) {
-				throw oneOfError('infrared_learn.predefine_brand', [0, 1, 2, 3, 4, 5, 6]);
+			if ([0, 1, 2, 3, 4, 5].indexOf(payload.infrared_learn.predefine_brand) === -1) {
+				throw oneOfError('infrared_learn.predefine_brand', [0, 1, 2, 3, 4, 5]);
 			}
-			// 0: NONE, 1: XIAOMI/TCL, 2: SHINCO/SAMSUNG/ELECTROLUX, 3: RSD/MCQUAY/TICA, 4: WHIRLPOOL/BOSCH/AIRWELL, 5: FUJITSU/McQUAY, 6: TRUMA
+			// 0: NONE, 1: XIAOMI/TCL, 2: SHINCO/SAMSUNG/ELECTROLUX, 3: WHIRLPOOL/BOSCH/AIRWELL, 4: FUJITSU/McQUAY, 5: TRUMA
 			buffer.writeUInt8(payload.infrared_learn.predefine_brand);
 		}
 		if (isValid(payload.infrared_learn.package_status)) {
@@ -2449,52 +2465,32 @@ function milesightDeviceEncode(payload) {
 		encoded = encoded.concat(buffer.toBytes());
 	}
 	//0x8d
-	// 协议 3.28：BACnet 下发红外格式码，186 字节（checksum 2B + 184B ir_config_package）
-	// 按每包 9 字节拆成 0x8D00~0x8D14 共 21 包，不足 9 字节用 0 补齐，默认值 {0}。
-	// 默认走 0x8D 整包下发；仅当 payload 显式携带 offset > 0 时走 0x8E 分块写（协议 3.29）。
-	// 参考实现假设一次编码输出全部包、由网关 ipso_v2 按包拆帧下发（待与网关确认）。
-	if ('infrared_format_code' in payload) {
-		var infrared_format_code = payload.infrared_format_code || {};
-		var infrared_data = infrared_format_code.format_code;
-		if (infrared_data !== undefined && infrared_data !== null) {
-			var infrared_bytes;
-			if (typeof infrared_data === 'string') {
-				// 值为原始字节字符串（每字符一字节，全码 186 字符 ≤ 网关 242 上限）
-				infrared_bytes = [];
-				for (var infrared_i = 0; infrared_i < infrared_data.length; infrared_i++) {
-					infrared_bytes.push(infrared_data.charCodeAt(infrared_i) & 0xff);
-				}
-			} else {
-				infrared_bytes = infrared_data;
+	if ('infrared_format_code_divide' in payload) {
+		var buffer = new Buffer();
+		for (var infrared_format_code_divide_id = 0; infrared_format_code_divide_id < (payload.infrared_format_code_divide && payload.infrared_format_code_divide.length); infrared_format_code_divide_id++) {
+			var infrared_format_code_divide_item = payload.infrared_format_code_divide[infrared_format_code_divide_id];
+			var infrared_format_code_divide_item_id = infrared_format_code_divide_item.index;
+			if (infrared_format_code_divide_item_id < 0 || infrared_format_code_divide_item_id > 20) {
+				throw rangeError('infrared_format_code_divide_item_id', '[0,20]');
 			}
-			if (isValid(payload.infrared_format_code.offset) && payload.infrared_format_code.offset > 0) {
-				// 0x8e 分块写（协议 3.29）：offset + length + data
-				var infrared_length = isValid(infrared_format_code.length) ? infrared_format_code.length : infrared_bytes.length;
-				if (infrared_length < 0 || infrared_length > 255) {
-					throw betweenError('infrared_format_code.length', 0, 255);
-				}
-				var infrared_e_buffer = new Buffer();
-				infrared_e_buffer.writeUInt8(0x8e);
-				infrared_e_buffer.writeUInt8(payload.infrared_format_code.offset);
-				infrared_e_buffer.writeUInt8(infrared_length);
-				infrared_e_buffer.writeBytes(infrared_bytes, infrared_length, true);
-				encoded = encoded.concat(infrared_e_buffer.toBytes());
-			} else {
-				if (infrared_bytes.length > 186) {
-					throw new Error('infrared_format_code.format_code must not exceed 186 bytes');
-				}
-				var infrared_buffer = new Buffer();
-				for (var infrared_packet = 0; infrared_packet < 21; infrared_packet++) {
-					infrared_buffer.writeUInt8(0x8d);
-					infrared_buffer.writeUInt8(infrared_packet);
-					for (var infrared_j = 0; infrared_j < 9; infrared_j++) {
-						var infrared_index = infrared_packet * 9 + infrared_j;
-						infrared_buffer.writeUInt8(infrared_index < infrared_bytes.length ? infrared_bytes[infrared_index] : 0x00);
-					}
-				}
-				encoded = encoded.concat(infrared_buffer.toBytes());
-			}
+
+			buffer.writeUInt8(0x8d);
+			buffer.writeUInt8(infrared_format_code_divide_item_id);
+			buffer.writeHexString(infrared_format_code_divide_item.format_code, 9);
 		}
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0x8e
+	if ('infrared_format_code' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0x8e);
+		buffer.writeUInt8(payload.infrared_format_code.offset);
+		if (payload.infrared_format_code.length < 0 || payload.infrared_format_code.length > 255) {
+			throw betweenError('infrared_format_code.length', 0, 255);
+		}
+		buffer.writeUInt8(payload.infrared_format_code.length);
+		buffer.writeBytes(payload.infrared_format_code.format_code, payload.infrared_format_code.length, true);
+		encoded = encoded.concat(buffer.toBytes());
 	}
 	//0x90
 	if ('ble_adv_time_settings' in payload) {
@@ -2803,6 +2799,31 @@ function milesightDeviceEncode(payload) {
 		buffer.writeUInt8(0x55);
 		encoded = encoded.concat(buffer.toBytes());
 	}
+	//0x54
+	if ('temp_control_param_config' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0x54);
+		if ([0, 1, 255].indexOf(payload.temp_control_param_config.on_off) === -1) {
+			throw oneOfError('temp_control_param_config.on_off', [0, 1, 255]);
+		}
+		// 0：System Off,  1：System On, 255：No Apply
+		buffer.writeUInt8(payload.temp_control_param_config.on_off);
+		if ([0, 2, 3, 4, 5, 255].indexOf(payload.temp_control_param_config.temp_ctrl_mode) === -1) {
+			throw oneOfError('temp_control_param_config.temp_ctrl_mode', [0, 2, 3, 4, 5, 255]);
+		}
+		// 0：heat, 2：cool, 3：auto, 4：dehumidify, 5：ventilation, 255：No Apply
+		buffer.writeUInt8(payload.temp_control_param_config.temp_ctrl_mode);
+		if ([0, 3, 4, 5, 255].indexOf(payload.temp_control_param_config.fan_mode) === -1) {
+			throw oneOfError('temp_control_param_config.fan_mode', [0, 3, 4, 5, 255]);
+		}
+		// 0：Auto, 3：Low, 4：Medium, 5：High, 255：不应用
+		buffer.writeUInt8(payload.temp_control_param_config.fan_mode);
+		if (payload.temp_control_param_config.target_temperature < 16 || payload.temp_control_param_config.target_temperature > 30) {
+			throw betweenError('temp_control_param_config.target_temperature', 16, 30);
+		}
+		buffer.writeInt16LE(payload.temp_control_param_config.target_temperature * 100);
+		encoded = encoded.concat(buffer.toBytes());
+	}
 	return encoded;
 }
 
@@ -3083,8 +3104,6 @@ function isInteger(str) {
     return typeof str === 'string' && /^[0-9]+$/.test(str);
 }
 
-// The gateway delivers array parameters as index-keyed maps ({"0":{...}}), while the
-// encoder iterates them as arrays whose items carry the index in the id field.
 function normalizeArrayParams(value) {
 	if (Array.isArray(value)) {
 		for (var i = 0; i < value.length; i++) {
@@ -3445,6 +3464,8 @@ function cmdMap() {
 		  "filter_clean_settings.enable": "8b00",
 		  "filter_clean_settings.reminder_period": "8b01",
 		  "lora_tx_max_random_time": "8c",
+		  "infrared_format_code_divide": "8d",
+		  "infrared_format_code_divide._item": "8dxx",
 		  "infrared_format_code": "8e",
 		  "ble_adv_time_settings": "90",
 		  "ble_adv_time_settings.enable": "9000",
@@ -3473,7 +3494,8 @@ function cmdMap() {
 		  "clear_infrared_format_code": "59",
 		  "delete_temperature_limit_task": "58",
 		  "delete_vacation_task": "56",
-		  "trigger_infrared_learn": "55"
+		  "trigger_infrared_learn": "55",
+		  "temp_control_param_config": "54"
 	};
 }
 function processTemperature(payload) {
@@ -3554,11 +3576,19 @@ function processTemperature(payload) {
         "coefficient": 0.01,
         "unitName": "℃"
     },
+    "cmd_temp_limit.lower_range_alarm_trigger.ambient_temp": {
+        "coefficient": 0.01,
+        "unitName": "℃"
+    },
     "cmd_temp_limit.over_range_alarm_trigger.low_threshold": {
         "coefficient": 0.01,
         "unitName": "℃"
     },
     "cmd_temp_limit.over_range_alarm_trigger.high_threshold": {
+        "coefficient": 0.01,
+        "unitName": "℃"
+    },
+    "cmd_temp_limit.over_range_alarm_trigger.ambient_temp": {
         "coefficient": 0.01,
         "unitName": "℃"
     },
@@ -3570,11 +3600,19 @@ function processTemperature(payload) {
         "coefficient": 0.01,
         "unitName": "℃"
     },
+    "local_temp_limit.lower_range_alarm_trigger.ambient_temp": {
+        "coefficient": 0.01,
+        "unitName": "℃"
+    },
     "local_temp_limit.over_range_alarm_trigger.low_threshold": {
         "coefficient": 0.01,
         "unitName": "℃"
     },
     "local_temp_limit.over_range_alarm_trigger.high_threshold": {
+        "coefficient": 0.01,
+        "unitName": "℃"
+    },
+    "local_temp_limit.over_range_alarm_trigger.ambient_temp": {
         "coefficient": 0.01,
         "unitName": "℃"
     },
@@ -3600,7 +3638,7 @@ function processTemperature(payload) {
     },
     "window_opening_detection_settings.difference_in_temperature": {
         "coefficient": 0.01,
-        "unitName": "℃"
+        "unitName": "K"
     },
     "continuous_high_temp_alarm_settings.difference": {
         "coefficient": 0.01,
@@ -3635,6 +3673,10 @@ function processTemperature(payload) {
         "unitName": "℃"
     },
     "external_sensor_settings.temp_calibration": {
+        "coefficient": 0.01,
+        "unitName": "℃"
+    },
+    "temp_control_param_config.target_temperature": {
         "coefficient": 0.01,
         "unitName": "℃"
     }

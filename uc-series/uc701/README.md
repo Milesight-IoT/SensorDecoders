@@ -119,16 +119,16 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Bluetooth Name | 0xCD | 1 | rw |  |  |  |
 | Paired Device Name | 0xCD | 1 | rw |  |  |  |
 | Paired Device Name | 0xCD | 1 | rw |  |  |  |
-| ID | 0xCD | 2 | rw | 0 |  |  |
+| ID | 0xCD | 2 | rw | 0 | 0 - 0 |  |
 | Name Length | 0xCD | 2 | rw | 13 | 1 - 13 |  |
 | Bluetooth Name | 0xCD | 1 | rw |  |  |  |
 | Paired Device | 0xCD | 1 | rw |  |  |  |
 | Paired Device | 0xCD | 10 | rw |  |  |  |
-| ID | 0xCD | 2 | rw | 0 |  |  |
+| ID | 0xCD | 2 | rw | 0 | 0 - 0 |  |
 | DevEUI | 0xCD | 9 | rw | 24e124123456789a |  |  |
 | Paired Device Bluetooth Mac Address | 0xCD | 1 | rw |  |  |  |
 | Paired Device Bluetooth Mac Address  | 0xCD | 9 | rw |  |  |  |
-| ID | 0xCD | 2 | rw | 0 |  |  |
+| ID | 0xCD | 2 | rw | 0 | 0 - 0 |  |
 | Address Type | 0xCD | 2 | rw | 0 |  | 0：public<br>1：private |
 | Bluetooth Mac Address | 0xCD | 7 | rw | 24e124123456 |  |  |
 | Paired Device Bluetooth Information | 0xCD | 1 | rw |  |  |  |
@@ -219,7 +219,7 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Open Window Detection | 0x68 | 1 | rw |  |  |  |
 | Sub-command | 0x68 | 2 | rw | 0 |  |  |
 | Enable | 0x68 | 2 | rw | 0 |  | 0：Disable<br>1：Enable |
-| Temperature Change | 0x68 | 3 | rw | 3 | 1 - 20 |  |
+| Temperature Change | 0x68 | 3 | rw | 3 | 1 - 10 |  |
 | Stop Temperature Control For | 0x68 | 3 | rw | 30 | 1 - 1440 |  |
 | Temperature Data Source Settings | 0x6A | 1 | rw |  |  |  |
 | Sub-command | 0x6A | 2 | rw | 0 |  |  |
@@ -290,8 +290,8 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Fri. | 0x83 | 2 | rw | 0 |  | 0：disable<br>1：enable |
 | Sat. | 0x83 | 2 | rw | 0 |  | 0：disable<br>1：enable |
 | Reserved | 0x83 | 2 | rw |  |  |  |
-| Low Temperature Threshold | 0x83 | 3 | rw | 5 | 5 - 35 |  |
-| High Temperature Threshold | 0x83 | 3 | rw | 35 | 5 - 35 |  |
+| Low Temperature Threshold | 0x83 | 3 | rw | 16 | 16 - 30 |  |
+| High Temperature Threshold | 0x83 | 3 | rw | 30 | 16 - 30 |  |
 | Vacation Task Settings | 0x85 | 1 | rw |  |  |  |
 | Task Settings | 0x85 | 1 | rw |  |  |  |
 | Task ID | 0x85 | 2 | rw | 0 | 0 - 7 |  |
@@ -323,7 +323,7 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Learn Status | 0x86 | 2 | r | 0 |  | 0: Non learning state<br>1: During a learning session<br>2: In secondary learning (requires secondary learning+or - key)<br>3: In secondary learning (requires secondary learning mode key)<br>4: In secondary learning (requires secondary learning of wind keys)<br>5: Learning failure (timeout failure)<br>6: Learning failed (code library matching failed)<br>7: Success in Learning (One Study)<br>8: Learning success (secondary learning) |
 | Findnext Max | 0x86 | 2 | r | 1 | 1 - 20 |  |
 | Findnext | 0x86 | 2 | rw | 1 | 1 - 20 |  |
-| Predefine Brand | 0x86 | 2 | rw | 0 |  | 0: NONE<br>1: XIAOMI/TCL<br>2: SHINCO/SAMSUNG/ELECTROLUX<br>3: RSD/MCQUAY/TICA<br>4: WHIRLPOOL/BOSCH/AIRWELL<br>5: FUJITSU/McQUAY<br>6: TRUMA |
+| Predefine Brand | 0x86 | 2 | rw | 0 |  | 0: NONE<br>1: XIAOMI/TCL<br>2: SHINCO/SAMSUNG/ELECTROLUX<br>3: WHIRLPOOL/BOSCH/AIRWELL<br>4: FUJITSU/McQUAY<br>5: TRUMA |
 | Infrared Package Status | 0x86 | 2 | r | 0 |  | 0: No infrared format packet<br>1: Infrared format package already exists |
 | Internal Temperature Sensor Setting | 0x88 | 1 | rw |  |  |  |
 | Sub-command | 0x88 | 2 | rw | 0 |  |  |
@@ -355,6 +355,10 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Filter Clean Reminder Enable | 0x8B | 2 | rw | 0 |  | 0：Disable<br>1：Enable |
 | Reminder Period | 0x8B | 3 | rw | 90 | 1 - 730 |  |
 | Lora Tx Max Random Time | 0x8C | 2 | rw | 5 | 0 - 60 |  |
+| Infrared Format Code | 0x8D | 1 | rw |  |  |  |
+| Format Code Package | 0x8D | M | rw |  |  |  |
+| ID | 0x8D | 2 | rw | 0 |  |  |
+| Format Code | 0x8D | 10 | rw | 000000000000000000 |  |  |
 | Infrared Format Code | 0x8E | 1 | rw |  |  |  |
 | Offset | 0x8E | 2 | rw | 0 |  |  |
 | Data Length | 0x8E | 2 | rw | 186 | 0 - 255 |  |
@@ -636,16 +640,20 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Temperature Below Alarm | 0x0A | 7 | r |  |  |  |
 | Low Threshold | 0x0A | 3 | r |  | 5 - 35 |  |
 | High Threshold | 0x0A | 3 | r |  | 5 - 35 |  |
+| Ambient Temperature | 0x0A | 3 | r |  | -20 - 60 |  |
 | Temperature Above Alarm | 0x0A | 7 | r |  |  |  |
 | Low Threshold | 0x0A | 3 | r |  | 5 - 35 |  |
 | High Threshold | 0x0A | 3 | r |  | 5 - 35 |  |
+| Ambient Temperature | 0x0A | 3 | r |  | -20 - 60 |  |
 | Alarm Type | 0x0B | 2 | r |  |  |  |
 | Temperature Below Alarm | 0x0B | 7 | r |  |  |  |
 | Low Threshold | 0x0B | 3 | r |  | 5 - 35 |  |
 | High Threshold | 0x0B | 3 | r |  | 5 - 35 |  |
+| Ambient Temperature | 0x0B | 3 | r |  | -20 - 60 |  |
 | Temperature Above Alarm | 0x0B | 7 | r |  |  |  |
 | Low Threshold | 0x0B | 3 | r |  | 5 - 35 |  |
 | High Threshold | 0x0B | 3 | r |  | 5 - 35 |  |
+| Ambient Temperature | 0x0B | 3 | r |  | -20 - 60 |  |
 | Reserved Cmd | 0x30 | 2 | r | 0 |  |  |
 | Reserved Cmd1 | 0x30 | 1 | r |  |  |  |
 | Sub-command | 0x30 | 2 | r |  |  |  |
@@ -684,4 +692,9 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Delete Vacation Task | 0x56 | 2 | w |  |  |  |
 | Delete Vacation Task | 0x56 | 2 | w | 255 |  | 0：Task1<br>1：Task2<br>2：Task3<br>3：Task4<br>4：Task5<br>5：Task6<br>6：Task7<br>7：Task8<br>255：All |
 | Trigger Infrared Learning | 0x55 | 1 | w |  |  |  |
+| Temperature Control Parameter Config | 0x54 | 6 | w |  |  |  |
+| System On/Off | 0x54 | 2 | w | 0 |  | 0：System Off<br>1：System On<br>255：No Apply |
+| Temperature Control Mode | 0x54 | 2 | w | 2 |  | 0：heat<br>2：cool<br>3：auto<br>4：dehumidify<br>5：ventilation<br>255：No Apply |
+| Fan Mode | 0x54 | 2 | w | 0 |  | 0：Auto<br>3：Low<br>4：Medium<br>5：High<br>255：不应用 |
+| Target Temperature | 0x54 | 3 | w | 17 | 16 - 30 |  |
 

@@ -719,11 +719,13 @@ function milesightDeviceDecode(bytes) {
 					decoded.cmd_temp_limit.lower_range_alarm_trigger = decoded.cmd_temp_limit.lower_range_alarm_trigger || {};
 					decoded.cmd_temp_limit.lower_range_alarm_trigger.low_threshold = readInt16LE(bytes, counterObj, 2) / 100;
 					decoded.cmd_temp_limit.lower_range_alarm_trigger.high_threshold = readInt16LE(bytes, counterObj, 2) / 100;
+					decoded.cmd_temp_limit.lower_range_alarm_trigger.ambient_temp = readInt16LE(bytes, counterObj, 2) / 100;
 				}
 				if (decoded.cmd_temp_limit.type == 0x01) {
 					decoded.cmd_temp_limit.over_range_alarm_trigger = decoded.cmd_temp_limit.over_range_alarm_trigger || {};
 					decoded.cmd_temp_limit.over_range_alarm_trigger.low_threshold = readInt16LE(bytes, counterObj, 2) / 100;
 					decoded.cmd_temp_limit.over_range_alarm_trigger.high_threshold = readInt16LE(bytes, counterObj, 2) / 100;
+					decoded.cmd_temp_limit.over_range_alarm_trigger.ambient_temp = readInt16LE(bytes, counterObj, 2) / 100;
 				}
 				break;
 			case 0x0b:
@@ -733,11 +735,13 @@ function milesightDeviceDecode(bytes) {
 					decoded.local_temp_limit.lower_range_alarm_trigger = decoded.local_temp_limit.lower_range_alarm_trigger || {};
 					decoded.local_temp_limit.lower_range_alarm_trigger.low_threshold = readInt16LE(bytes, counterObj, 2) / 100;
 					decoded.local_temp_limit.lower_range_alarm_trigger.high_threshold = readInt16LE(bytes, counterObj, 2) / 100;
+					decoded.local_temp_limit.lower_range_alarm_trigger.ambient_temp = readInt16LE(bytes, counterObj, 2) / 100;
 				}
 				if (decoded.local_temp_limit.type == 0x01) {
 					decoded.local_temp_limit.over_range_alarm_trigger = decoded.local_temp_limit.over_range_alarm_trigger || {};
 					decoded.local_temp_limit.over_range_alarm_trigger.low_threshold = readInt16LE(bytes, counterObj, 2) / 100;
 					decoded.local_temp_limit.over_range_alarm_trigger.high_threshold = readInt16LE(bytes, counterObj, 2) / 100;
+					decoded.local_temp_limit.over_range_alarm_trigger.ambient_temp = readInt16LE(bytes, counterObj, 2) / 100;
 				}
 				break;
 			case 0x30:
@@ -1185,7 +1189,7 @@ function milesightDeviceDecode(bytes) {
 					decoded.infrared_learn.findnext = readUInt8(bytes, counterObj, 1);
 				}
 				if (infrared_learn_command == 0x03) {
-					// 0: NONE, 1: XIAOMI/TCL, 2: SHINCO/SAMSUNG/ELECTROLUX, 3: RSD/MCQUAY/TICA, 4: WHIRLPOOL/BOSCH/AIRWELL, 5: FUJITSU/McQUAY, 6: TRUMA
+					// 0: NONE, 1: XIAOMI/TCL, 2: SHINCO/SAMSUNG/ELECTROLUX, 3: WHIRLPOOL/BOSCH/AIRWELL, 4: FUJITSU/McQUAY, 5: TRUMA
 					decoded.infrared_learn.predefine_brand = readUInt8(bytes, counterObj, 1);
 				}
 				if (infrared_learn_command == 0x04) {
@@ -1279,6 +1283,14 @@ function milesightDeviceDecode(bytes) {
 				break;
 			case 0x8c:
 				decoded.lora_tx_max_random_time = readUInt8(bytes, counterObj, 1);
+				break;
+			case 0x8d:
+				decoded.infrared_format_code_divide = decoded.infrared_format_code_divide || [];
+				var index = readUInt8(bytes, counterObj, 1);
+				var infrared_format_code_divide_item = pickArrayItem(decoded.infrared_format_code_divide, index, 'index');
+				infrared_format_code_divide_item.index = index;
+				insertArrayItem(decoded.infrared_format_code_divide, infrared_format_code_divide_item, 'index');
+				infrared_format_code_divide_item.format_code = readHexString(bytes, counterObj, 9);
 				break;
 			case 0x8e:
 				decoded.infrared_format_code = decoded.infrared_format_code || {};
@@ -1421,6 +1433,16 @@ function milesightDeviceDecode(bytes) {
 			case 0x55:
 				decoded.trigger_infrared_learn = readOnlyCommand(bytes, counterObj, 0);
 				break;
+			case 0x54:
+				decoded.temp_control_param_config = decoded.temp_control_param_config || {};
+				// 0：System Off,  1：System On, 255：No Apply
+				decoded.temp_control_param_config.on_off = readUInt8(bytes, counterObj, 1);
+				// 0：heat, 2：cool, 3：auto, 4：dehumidify, 5：ventilation, 255：No Apply
+				decoded.temp_control_param_config.temp_ctrl_mode = readUInt8(bytes, counterObj, 1);
+				// 0：Auto, 3：Low, 4：Medium, 5：High, 255：不应用
+				decoded.temp_control_param_config.fan_mode = readUInt8(bytes, counterObj, 1);
+				decoded.temp_control_param_config.target_temperature = readInt16LE(bytes, counterObj, 2) / 100;
+				break;
 			default:
 				unknown_command = 1;
 				break;
@@ -1483,10 +1505,10 @@ function readFirmwareVersion(bytes) {
 	var test = bytes[5] & 0xff;
 
 	var version = 'v' + major + '.' + minor;
-	if (release !== 0) version += '-r' + release;
-	if (alpha !== 0) version += '-a' + alpha;
-	if (unit_test !== 0) version += '-u' + unit_test;
-	if (test !== 0) version += '-t' + test;
+	if (release !== 0) version += '-r' + release.toString(16);
+	if (alpha !== 0) version += '-a' + alpha.toString(16);
+	if (unit_test !== 0) version += '-u' + unit_test.toString(16);
+	if (test !== 0) version += '-t' + test.toString(16);
 	return version;
 }
 
@@ -1817,6 +1839,7 @@ function isInteger(str) {
 function cmdMap() {
 	return {
 		  "30": "data_transparent",
+		  "54": "temp_control_param_config",
 		  "55": "trigger_infrared_learn",
 		  "56": "delete_vacation_task",
 		  "58": "delete_temperature_limit_task",
@@ -2129,6 +2152,8 @@ function cmdMap() {
 		  "8b00": "filter_clean_settings.enable",
 		  "8b01": "filter_clean_settings.reminder_period",
 		  "8c": "lora_tx_max_random_time",
+		  "8d": "infrared_format_code_divide",
+		  "8dxx": "infrared_format_code_divide._item",
 		  "8e": "infrared_format_code",
 		  "93xx": "dormant_settings._item",
 		  "93xx00": "dormant_settings._item.enable",
@@ -2227,11 +2252,19 @@ function processTemperature(decoded) {
         "precision": 2,
         "unitName": "℃"
     },
+    "cmd_temp_limit.lower_range_alarm_trigger.ambient_temp": {
+        "precision": 2,
+        "unitName": "℃"
+    },
     "cmd_temp_limit.over_range_alarm_trigger.low_threshold": {
         "precision": 2,
         "unitName": "℃"
     },
     "cmd_temp_limit.over_range_alarm_trigger.high_threshold": {
+        "precision": 2,
+        "unitName": "℃"
+    },
+    "cmd_temp_limit.over_range_alarm_trigger.ambient_temp": {
         "precision": 2,
         "unitName": "℃"
     },
@@ -2243,11 +2276,19 @@ function processTemperature(decoded) {
         "precision": 2,
         "unitName": "℃"
     },
+    "local_temp_limit.lower_range_alarm_trigger.ambient_temp": {
+        "precision": 2,
+        "unitName": "℃"
+    },
     "local_temp_limit.over_range_alarm_trigger.low_threshold": {
         "precision": 2,
         "unitName": "℃"
     },
     "local_temp_limit.over_range_alarm_trigger.high_threshold": {
+        "precision": 2,
+        "unitName": "℃"
+    },
+    "local_temp_limit.over_range_alarm_trigger.ambient_temp": {
         "precision": 2,
         "unitName": "℃"
     },
@@ -2273,7 +2314,7 @@ function processTemperature(decoded) {
     },
     "window_opening_detection_settings.difference_in_temperature": {
         "precision": 2,
-        "unitName": "℃"
+        "unitName": "K"
     },
     "continuous_high_temp_alarm_settings.difference": {
         "precision": 2,
@@ -2308,6 +2349,10 @@ function processTemperature(decoded) {
         "unitName": "℃"
     },
     "external_sensor_settings.temp_calibration": {
+        "precision": 2,
+        "unitName": "℃"
+    },
+    "temp_control_param_config.target_temperature": {
         "precision": 2,
         "unitName": "℃"
     }
