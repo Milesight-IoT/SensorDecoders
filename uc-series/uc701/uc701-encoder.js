@@ -2480,18 +2480,6 @@ function milesightDeviceEncode(payload) {
 		}
 		encoded = encoded.concat(buffer.toBytes());
 	}
-	//0x8e
-	if ('infrared_format_code' in payload) {
-		var buffer = new Buffer();
-		buffer.writeUInt8(0x8e);
-		buffer.writeUInt8(payload.infrared_format_code.offset);
-		if (payload.infrared_format_code.length < 0 || payload.infrared_format_code.length > 255) {
-			throw betweenError('infrared_format_code.length', 0, 255);
-		}
-		buffer.writeUInt8(payload.infrared_format_code.length);
-		buffer.writeHexString(payload.infrared_format_code.format_code, payload.infrared_format_code.length, true);
-		encoded = encoded.concat(buffer.toBytes());
-	}
 	//0x90
 	if ('ble_adv_time_settings' in payload) {
 		var buffer = new Buffer();
@@ -3466,7 +3454,6 @@ function cmdMap() {
 		  "lora_tx_max_random_time": "8c",
 		  "infrared_format_code_divide": "8d",
 		  "infrared_format_code_divide._item": "8dxx",
-		  "infrared_format_code": "8e",
 		  "ble_adv_time_settings": "90",
 		  "ble_adv_time_settings.enable": "9000",
 		  "ble_adv_time_settings.duration": "9001",

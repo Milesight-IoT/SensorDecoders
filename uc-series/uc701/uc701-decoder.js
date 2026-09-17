@@ -1292,12 +1292,6 @@ function milesightDeviceDecode(bytes) {
 				insertArrayItem(decoded.infrared_format_code_divide, infrared_format_code_divide_item, 'index');
 				infrared_format_code_divide_item.format_code = readHexString(bytes, counterObj, 9);
 				break;
-			case 0x8e:
-				decoded.infrared_format_code = decoded.infrared_format_code || {};
-				decoded.infrared_format_code.offset = readUInt8(bytes, counterObj, 1);
-				decoded.infrared_format_code.length = readUInt8(bytes, counterObj, 1);
-				decoded.infrared_format_code.format_code = readHexString(bytes, counterObj, decoded.infrared_format_code.length);
-				break;
 			case 0x90:
 				decoded.ble_adv_time_settings = decoded.ble_adv_time_settings || {};
 				var ble_adv_time_settings_command = readUInt8(bytes, counterObj, 1);
@@ -2154,7 +2148,6 @@ function cmdMap() {
 		  "8c": "lora_tx_max_random_time",
 		  "8d": "infrared_format_code_divide",
 		  "8dxx": "infrared_format_code_divide._item",
-		  "8e": "infrared_format_code",
 		  "93xx": "dormant_settings._item",
 		  "93xx00": "dormant_settings._item.enable",
 		  "93xx01": "dormant_settings._item.heating_date_settings",
