@@ -2489,7 +2489,7 @@ function milesightDeviceEncode(payload) {
 			throw betweenError('infrared_format_code.length', 0, 255);
 		}
 		buffer.writeUInt8(payload.infrared_format_code.length);
-		buffer.writeBytes(payload.infrared_format_code.format_code, payload.infrared_format_code.length, true);
+		buffer.writeHexString(payload.infrared_format_code.format_code, payload.infrared_format_code.length, true);
 		encoded = encoded.concat(buffer.toBytes());
 	}
 	//0x90

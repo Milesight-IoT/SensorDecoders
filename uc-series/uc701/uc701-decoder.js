@@ -1296,7 +1296,7 @@ function milesightDeviceDecode(bytes) {
 				decoded.infrared_format_code = decoded.infrared_format_code || {};
 				decoded.infrared_format_code.offset = readUInt8(bytes, counterObj, 1);
 				decoded.infrared_format_code.length = readUInt8(bytes, counterObj, 1);
-				decoded.infrared_format_code.format_code = readBytes(bytes, counterObj, decoded.infrared_format_code.length);
+				decoded.infrared_format_code.format_code = readHexString(bytes, counterObj, decoded.infrared_format_code.length);
 				break;
 			case 0x90:
 				decoded.ble_adv_time_settings = decoded.ble_adv_time_settings || {};
