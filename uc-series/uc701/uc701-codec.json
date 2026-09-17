@@ -1855,7 +1855,7 @@
             "name": "Format Code(Infrared Format Code)",
             "value": "",
             "unit": "",
-            "access_mode": "W",
+            "access_mode": "RW",
             "data_type": "TEXT",
             "value_type": "STRING",
             "max_length": 18,
@@ -1871,14 +1871,14 @@
             "name": "Index(Infrared Format Code)",
             "value": "0",
             "unit": "",
-            "access_mode": "W",
+            "access_mode": "RW",
             "data_type": "NUMBER",
             "value_type": "UINT8",
             "range": [
                 0,
                 20
             ],
-            "bacnet_type": "analog_output_object",
+            "bacnet_type": "analog_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": [
@@ -1890,7 +1890,7 @@
             "name": "Format Code Data(Infrared Format Code)",
             "value": "",
             "unit": "",
-            "access_mode": "RW",
+            "access_mode": "W",
             "data_type": "TEXT",
             "value_type": "STRING",
             "max_length": 242,
@@ -1907,14 +1907,14 @@
             "name": "Data Length(Infrared Format Code)",
             "value": "0",
             "unit": "",
-            "access_mode": "RW",
+            "access_mode": "W",
             "data_type": "NUMBER",
             "value_type": "UINT8",
             "range": [
                 0,
-                242
+                186
             ],
-            "bacnet_type": "analog_value_object",
+            "bacnet_type": "analog_output_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": [
@@ -1927,14 +1927,14 @@
             "name": "Offset(Infrared Format Code)",
             "value": "0",
             "unit": "",
-            "access_mode": "RW",
+            "access_mode": "W",
             "data_type": "NUMBER",
             "value_type": "UINT8",
             "range": [
                 0,
-                242
+                185
             ],
-            "bacnet_type": "analog_value_object",
+            "bacnet_type": "analog_output_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": [
