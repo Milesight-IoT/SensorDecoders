@@ -1,0 +1,3121 @@
+{
+    "version": "1.0.0",
+    "object": [
+        {
+            "id": "adr_mode",
+            "name": "ADR Mode",
+            "value": "0",
+            "unit": "",
+            "access_mode": "W",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "disable"
+                },
+                {
+                    "value": 1,
+                    "name": "enable"
+                }
+            ],
+            "bacnet_type": "binary_output_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS"
+        },
+        {
+            "id": "battery",
+            "name": "Electricity",
+            "value": "",
+            "unit": "%",
+            "access_mode": "R",
+            "data_type": "NUMBER",
+            "value_type": "UINT8",
+            "range": [
+                1,
+                100
+            ],
+            "bacnet_type": "analog_input_object",
+            "bacnet_unit_type_id": 98,
+            "bacnet_unit_type": "UNITS_PERCENT"
+        },
+        {
+            "id": "celsius_temperature",
+            "name": "Celsius Temperature",
+            "value": "",
+            "unit": "°C",
+            "access_mode": "R",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "range": [
+                -40,
+                125
+            ],
+            "bacnet_type": "analog_input_object",
+            "bacnet_unit_type_id": 62,
+            "bacnet_unit_type": "UNITS_DEGREES_CELSIUS"
+        },
+        {
+            "id": "d2d_enable",
+            "name": "D2D Enable",
+            "value": "0",
+            "unit": "",
+            "access_mode": "W",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "disable"
+                },
+                {
+                    "value": 1,
+                    "name": "enable"
+                }
+            ],
+            "bacnet_type": "binary_output_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS"
+        },
+        {
+            "id": "data_storage_enable",
+            "name": "Data Storage Enable",
+            "value": "0",
+            "unit": "",
+            "access_mode": "W",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "disable"
+                },
+                {
+                    "value": 1,
+                    "name": "enable"
+                }
+            ],
+            "bacnet_type": "binary_output_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS"
+        },
+        {
+            "id": "detect_confidence.id",
+            "name": "Detection Status  ID(Detection Status)",
+            "value": "",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 2,
+                    "name": "Detect Confidence"
+                },
+                {
+                    "value": 3,
+                    "name": "Unsupported Command"
+                }
+            ],
+            "bacnet_type": "multistate_input_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "detect_confidence.reliability"
+            ]
+        },
+        {
+            "id": "detect_confidence.reliability",
+            "name": "Detect Confidence Reliability(Detection Status)",
+            "value": "0",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "Normal Detection"
+                },
+                {
+                    "value": 1,
+                    "name": "Undetectable"
+                }
+            ],
+            "bacnet_type": "binary_input_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "detect_confidence.id"
+            ]
+        },
+        {
+            "id": "detection_interval",
+            "name": "Detection Interval",
+            "value": "2",
+            "unit": "min",
+            "access_mode": "W",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 2,
+                    "name": "2min"
+                },
+                {
+                    "value": 5,
+                    "name": "5min"
+                },
+                {
+                    "value": 10,
+                    "name": "10min"
+                },
+                {
+                    "value": 15,
+                    "name": "15min"
+                },
+                {
+                    "value": 30,
+                    "name": "30min"
+                },
+                {
+                    "value": 60,
+                    "name": "1h"
+                }
+            ],
+            "bacnet_type": "multistate_output_object",
+            "bacnet_unit_type_id": 72,
+            "bacnet_unit_type": "UNITS_MINUTES"
+        },
+        {
+            "id": "detection_mode",
+            "name": "Detection Mode",
+            "value": "0",
+            "unit": "",
+            "access_mode": "W",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "Auto"
+                },
+                {
+                    "value": 1,
+                    "name": "Always ON"
+                }
+            ],
+            "bacnet_type": "multistate_output_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS"
+        },
+        {
+            "id": "device_status",
+            "name": "Device Status",
+            "value": "0",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "off"
+                },
+                {
+                    "value": 1,
+                    "name": "on"
+                }
+            ],
+            "bacnet_type": "binary_input_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS"
+        },
+        {
+            "id": "fahrenheit_temperature",
+            "name": "Fahrenheit Temperature",
+            "value": "",
+            "unit": "°F",
+            "access_mode": "R",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "range": [
+                -40,
+                257
+            ],
+            "bacnet_type": "analog_input_object",
+            "bacnet_unit_type_id": 64,
+            "bacnet_unit_type": "UNITS_DEGREES_FAHRENHEIT"
+        },
+        {
+            "id": "firmware_version",
+            "name": "Firmware Version",
+            "value": "",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "TEXT",
+            "value_type": "STRING",
+            "max_length": 4,
+            "bacnet_type": "character_string_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS"
+        },
+        {
+            "id": "hardware_version",
+            "name": "Hardware Version",
+            "value": "",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "TEXT",
+            "value_type": "STRING",
+            "max_length": 4,
+            "bacnet_type": "character_string_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS"
+        },
+        {
+            "id": "historical_data.detection_mode",
+            "name": "Detection Mode(Historical Data Retransmission Package)",
+            "value": "",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "People Counting"
+                },
+                {
+                    "value": 1,
+                    "name": "Desk Occupancy"
+                }
+            ],
+            "bacnet_type": "multistate_input_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "historical_data.timestamp",
+                "historical_data.total_people",
+                "historical_data.region_status.region1_enable",
+                "historical_data.region_status.region1_occupancy_status",
+                "historical_data.region_status.region10_enable",
+                "historical_data.region_status.region10_occupancy_status",
+                "historical_data.region_status.region2_enable",
+                "historical_data.region_status.region2_occupancy_status",
+                "historical_data.region_status.region3_enable",
+                "historical_data.region_status.region3_occupancy_status",
+                "historical_data.region_status.region4_enable",
+                "historical_data.region_status.region4_occupancy_status",
+                "historical_data.region_status.region5_enable",
+                "historical_data.region_status.region5_occupancy_status",
+                "historical_data.region_status.region6_enable",
+                "historical_data.region_status.region6_occupancy_status",
+                "historical_data.region_status.region7_enable",
+                "historical_data.region_status.region7_occupancy_status",
+                "historical_data.region_status.region8_enable",
+                "historical_data.region_status.region8_occupancy_status",
+                "historical_data.region_status.region9_enable",
+                "historical_data.region_status.region9_occupancy_status"
+            ]
+        },
+        {
+            "id": "historical_data.region_status.region1_enable",
+            "name": "Region 1 Enable(Region Status)",
+            "value": "0",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "disable"
+                },
+                {
+                    "value": 1,
+                    "name": "enable"
+                }
+            ],
+            "bacnet_type": "binary_input_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "historical_data.region_status.region2_enable",
+                "historical_data.region_status.region3_enable",
+                "historical_data.region_status.region4_enable",
+                "historical_data.region_status.region5_enable",
+                "historical_data.region_status.region6_enable",
+                "historical_data.region_status.region7_enable",
+                "historical_data.region_status.region8_enable",
+                "historical_data.region_status.region9_enable",
+                "historical_data.region_status.region10_enable",
+                "historical_data.region_status.region1_occupancy_status",
+                "historical_data.region_status.region2_occupancy_status",
+                "historical_data.region_status.region3_occupancy_status",
+                "historical_data.region_status.region4_occupancy_status",
+                "historical_data.region_status.region5_occupancy_status",
+                "historical_data.region_status.region6_occupancy_status",
+                "historical_data.region_status.region7_occupancy_status",
+                "historical_data.region_status.region8_occupancy_status",
+                "historical_data.region_status.region9_occupancy_status",
+                "historical_data.region_status.region10_occupancy_status"
+            ]
+        },
+        {
+            "id": "historical_data.region_status.region1_occupancy_status",
+            "name": "Region 1 Occupancy Status(Region Status)",
+            "value": "0",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "vacant"
+                },
+                {
+                    "value": 1,
+                    "name": "occupied"
+                }
+            ],
+            "bacnet_type": "binary_input_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "historical_data.region_status.region1_enable",
+                "historical_data.region_status.region2_enable",
+                "historical_data.region_status.region3_enable",
+                "historical_data.region_status.region4_enable",
+                "historical_data.region_status.region5_enable",
+                "historical_data.region_status.region6_enable",
+                "historical_data.region_status.region7_enable",
+                "historical_data.region_status.region8_enable",
+                "historical_data.region_status.region9_enable",
+                "historical_data.region_status.region10_enable",
+                "historical_data.region_status.region2_occupancy_status",
+                "historical_data.region_status.region3_occupancy_status",
+                "historical_data.region_status.region4_occupancy_status",
+                "historical_data.region_status.region5_occupancy_status",
+                "historical_data.region_status.region6_occupancy_status",
+                "historical_data.region_status.region7_occupancy_status",
+                "historical_data.region_status.region8_occupancy_status",
+                "historical_data.region_status.region9_occupancy_status",
+                "historical_data.region_status.region10_occupancy_status"
+            ]
+        },
+        {
+            "id": "historical_data.region_status.region10_enable",
+            "name": "Region 10 Enable(Region Status)",
+            "value": "0",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "disable"
+                },
+                {
+                    "value": 1,
+                    "name": "enable"
+                }
+            ],
+            "bacnet_type": "binary_input_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "historical_data.region_status.region1_enable",
+                "historical_data.region_status.region2_enable",
+                "historical_data.region_status.region3_enable",
+                "historical_data.region_status.region4_enable",
+                "historical_data.region_status.region5_enable",
+                "historical_data.region_status.region6_enable",
+                "historical_data.region_status.region7_enable",
+                "historical_data.region_status.region8_enable",
+                "historical_data.region_status.region9_enable",
+                "historical_data.region_status.region1_occupancy_status",
+                "historical_data.region_status.region2_occupancy_status",
+                "historical_data.region_status.region3_occupancy_status",
+                "historical_data.region_status.region4_occupancy_status",
+                "historical_data.region_status.region5_occupancy_status",
+                "historical_data.region_status.region6_occupancy_status",
+                "historical_data.region_status.region7_occupancy_status",
+                "historical_data.region_status.region8_occupancy_status",
+                "historical_data.region_status.region9_occupancy_status",
+                "historical_data.region_status.region10_occupancy_status"
+            ]
+        },
+        {
+            "id": "historical_data.region_status.region10_occupancy_status",
+            "name": "Region 10 Occupancy Status(Region Status)",
+            "value": "0",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "vacant"
+                },
+                {
+                    "value": 1,
+                    "name": "occupied"
+                }
+            ],
+            "bacnet_type": "binary_input_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "historical_data.region_status.region1_enable",
+                "historical_data.region_status.region2_enable",
+                "historical_data.region_status.region3_enable",
+                "historical_data.region_status.region4_enable",
+                "historical_data.region_status.region5_enable",
+                "historical_data.region_status.region6_enable",
+                "historical_data.region_status.region7_enable",
+                "historical_data.region_status.region8_enable",
+                "historical_data.region_status.region9_enable",
+                "historical_data.region_status.region10_enable",
+                "historical_data.region_status.region1_occupancy_status",
+                "historical_data.region_status.region2_occupancy_status",
+                "historical_data.region_status.region3_occupancy_status",
+                "historical_data.region_status.region4_occupancy_status",
+                "historical_data.region_status.region5_occupancy_status",
+                "historical_data.region_status.region6_occupancy_status",
+                "historical_data.region_status.region7_occupancy_status",
+                "historical_data.region_status.region8_occupancy_status",
+                "historical_data.region_status.region9_occupancy_status"
+            ]
+        },
+        {
+            "id": "historical_data.region_status.region2_enable",
+            "name": "Region 2 Enable(Region Status)",
+            "value": "0",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "disable"
+                },
+                {
+                    "value": 1,
+                    "name": "enable"
+                }
+            ],
+            "bacnet_type": "binary_input_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "historical_data.region_status.region1_enable",
+                "historical_data.region_status.region3_enable",
+                "historical_data.region_status.region4_enable",
+                "historical_data.region_status.region5_enable",
+                "historical_data.region_status.region6_enable",
+                "historical_data.region_status.region7_enable",
+                "historical_data.region_status.region8_enable",
+                "historical_data.region_status.region9_enable",
+                "historical_data.region_status.region10_enable",
+                "historical_data.region_status.region1_occupancy_status",
+                "historical_data.region_status.region2_occupancy_status",
+                "historical_data.region_status.region3_occupancy_status",
+                "historical_data.region_status.region4_occupancy_status",
+                "historical_data.region_status.region5_occupancy_status",
+                "historical_data.region_status.region6_occupancy_status",
+                "historical_data.region_status.region7_occupancy_status",
+                "historical_data.region_status.region8_occupancy_status",
+                "historical_data.region_status.region9_occupancy_status",
+                "historical_data.region_status.region10_occupancy_status"
+            ]
+        },
+        {
+            "id": "historical_data.region_status.region2_occupancy_status",
+            "name": "Region 2 Occupancy Status(Region Status)",
+            "value": "0",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "vacant"
+                },
+                {
+                    "value": 1,
+                    "name": "occupied"
+                }
+            ],
+            "bacnet_type": "binary_input_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "historical_data.region_status.region1_enable",
+                "historical_data.region_status.region2_enable",
+                "historical_data.region_status.region3_enable",
+                "historical_data.region_status.region4_enable",
+                "historical_data.region_status.region5_enable",
+                "historical_data.region_status.region6_enable",
+                "historical_data.region_status.region7_enable",
+                "historical_data.region_status.region8_enable",
+                "historical_data.region_status.region9_enable",
+                "historical_data.region_status.region10_enable",
+                "historical_data.region_status.region1_occupancy_status",
+                "historical_data.region_status.region3_occupancy_status",
+                "historical_data.region_status.region4_occupancy_status",
+                "historical_data.region_status.region5_occupancy_status",
+                "historical_data.region_status.region6_occupancy_status",
+                "historical_data.region_status.region7_occupancy_status",
+                "historical_data.region_status.region8_occupancy_status",
+                "historical_data.region_status.region9_occupancy_status",
+                "historical_data.region_status.region10_occupancy_status"
+            ]
+        },
+        {
+            "id": "historical_data.region_status.region3_enable",
+            "name": "Region 3 Enable(Region Status)",
+            "value": "0",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "disable"
+                },
+                {
+                    "value": 1,
+                    "name": "enable"
+                }
+            ],
+            "bacnet_type": "binary_input_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "historical_data.region_status.region1_enable",
+                "historical_data.region_status.region2_enable",
+                "historical_data.region_status.region4_enable",
+                "historical_data.region_status.region5_enable",
+                "historical_data.region_status.region6_enable",
+                "historical_data.region_status.region7_enable",
+                "historical_data.region_status.region8_enable",
+                "historical_data.region_status.region9_enable",
+                "historical_data.region_status.region10_enable",
+                "historical_data.region_status.region1_occupancy_status",
+                "historical_data.region_status.region2_occupancy_status",
+                "historical_data.region_status.region3_occupancy_status",
+                "historical_data.region_status.region4_occupancy_status",
+                "historical_data.region_status.region5_occupancy_status",
+                "historical_data.region_status.region6_occupancy_status",
+                "historical_data.region_status.region7_occupancy_status",
+                "historical_data.region_status.region8_occupancy_status",
+                "historical_data.region_status.region9_occupancy_status",
+                "historical_data.region_status.region10_occupancy_status"
+            ]
+        },
+        {
+            "id": "historical_data.region_status.region3_occupancy_status",
+            "name": "Region 3 Occupancy Status(Region Status)",
+            "value": "0",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "vacant"
+                },
+                {
+                    "value": 1,
+                    "name": "occupied"
+                }
+            ],
+            "bacnet_type": "binary_input_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "historical_data.region_status.region1_enable",
+                "historical_data.region_status.region2_enable",
+                "historical_data.region_status.region3_enable",
+                "historical_data.region_status.region4_enable",
+                "historical_data.region_status.region5_enable",
+                "historical_data.region_status.region6_enable",
+                "historical_data.region_status.region7_enable",
+                "historical_data.region_status.region8_enable",
+                "historical_data.region_status.region9_enable",
+                "historical_data.region_status.region10_enable",
+                "historical_data.region_status.region1_occupancy_status",
+                "historical_data.region_status.region2_occupancy_status",
+                "historical_data.region_status.region4_occupancy_status",
+                "historical_data.region_status.region5_occupancy_status",
+                "historical_data.region_status.region6_occupancy_status",
+                "historical_data.region_status.region7_occupancy_status",
+                "historical_data.region_status.region8_occupancy_status",
+                "historical_data.region_status.region9_occupancy_status",
+                "historical_data.region_status.region10_occupancy_status"
+            ]
+        },
+        {
+            "id": "historical_data.region_status.region4_enable",
+            "name": "Region 4 Enable(Region Status)",
+            "value": "0",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "disable"
+                },
+                {
+                    "value": 1,
+                    "name": "enable"
+                }
+            ],
+            "bacnet_type": "binary_input_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "historical_data.region_status.region1_enable",
+                "historical_data.region_status.region2_enable",
+                "historical_data.region_status.region3_enable",
+                "historical_data.region_status.region5_enable",
+                "historical_data.region_status.region6_enable",
+                "historical_data.region_status.region7_enable",
+                "historical_data.region_status.region8_enable",
+                "historical_data.region_status.region9_enable",
+                "historical_data.region_status.region10_enable",
+                "historical_data.region_status.region1_occupancy_status",
+                "historical_data.region_status.region2_occupancy_status",
+                "historical_data.region_status.region3_occupancy_status",
+                "historical_data.region_status.region4_occupancy_status",
+                "historical_data.region_status.region5_occupancy_status",
+                "historical_data.region_status.region6_occupancy_status",
+                "historical_data.region_status.region7_occupancy_status",
+                "historical_data.region_status.region8_occupancy_status",
+                "historical_data.region_status.region9_occupancy_status",
+                "historical_data.region_status.region10_occupancy_status"
+            ]
+        },
+        {
+            "id": "historical_data.region_status.region4_occupancy_status",
+            "name": "Region 4 Occupancy Status(Region Status)",
+            "value": "0",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "vacant"
+                },
+                {
+                    "value": 1,
+                    "name": "occupied"
+                }
+            ],
+            "bacnet_type": "binary_input_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "historical_data.region_status.region1_enable",
+                "historical_data.region_status.region2_enable",
+                "historical_data.region_status.region3_enable",
+                "historical_data.region_status.region4_enable",
+                "historical_data.region_status.region5_enable",
+                "historical_data.region_status.region6_enable",
+                "historical_data.region_status.region7_enable",
+                "historical_data.region_status.region8_enable",
+                "historical_data.region_status.region9_enable",
+                "historical_data.region_status.region10_enable",
+                "historical_data.region_status.region1_occupancy_status",
+                "historical_data.region_status.region2_occupancy_status",
+                "historical_data.region_status.region3_occupancy_status",
+                "historical_data.region_status.region5_occupancy_status",
+                "historical_data.region_status.region6_occupancy_status",
+                "historical_data.region_status.region7_occupancy_status",
+                "historical_data.region_status.region8_occupancy_status",
+                "historical_data.region_status.region9_occupancy_status",
+                "historical_data.region_status.region10_occupancy_status"
+            ]
+        },
+        {
+            "id": "historical_data.region_status.region5_enable",
+            "name": "Region 5 Enable(Region Status)",
+            "value": "0",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "disable"
+                },
+                {
+                    "value": 1,
+                    "name": "enable"
+                }
+            ],
+            "bacnet_type": "binary_input_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "historical_data.region_status.region1_enable",
+                "historical_data.region_status.region2_enable",
+                "historical_data.region_status.region3_enable",
+                "historical_data.region_status.region4_enable",
+                "historical_data.region_status.region6_enable",
+                "historical_data.region_status.region7_enable",
+                "historical_data.region_status.region8_enable",
+                "historical_data.region_status.region9_enable",
+                "historical_data.region_status.region10_enable",
+                "historical_data.region_status.region1_occupancy_status",
+                "historical_data.region_status.region2_occupancy_status",
+                "historical_data.region_status.region3_occupancy_status",
+                "historical_data.region_status.region4_occupancy_status",
+                "historical_data.region_status.region5_occupancy_status",
+                "historical_data.region_status.region6_occupancy_status",
+                "historical_data.region_status.region7_occupancy_status",
+                "historical_data.region_status.region8_occupancy_status",
+                "historical_data.region_status.region9_occupancy_status",
+                "historical_data.region_status.region10_occupancy_status"
+            ]
+        },
+        {
+            "id": "historical_data.region_status.region5_occupancy_status",
+            "name": "Region 5 Occupancy Status(Region Status)",
+            "value": "0",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "vacant"
+                },
+                {
+                    "value": 1,
+                    "name": "occupied"
+                }
+            ],
+            "bacnet_type": "binary_input_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "historical_data.region_status.region1_enable",
+                "historical_data.region_status.region2_enable",
+                "historical_data.region_status.region3_enable",
+                "historical_data.region_status.region4_enable",
+                "historical_data.region_status.region5_enable",
+                "historical_data.region_status.region6_enable",
+                "historical_data.region_status.region7_enable",
+                "historical_data.region_status.region8_enable",
+                "historical_data.region_status.region9_enable",
+                "historical_data.region_status.region10_enable",
+                "historical_data.region_status.region1_occupancy_status",
+                "historical_data.region_status.region2_occupancy_status",
+                "historical_data.region_status.region3_occupancy_status",
+                "historical_data.region_status.region4_occupancy_status",
+                "historical_data.region_status.region6_occupancy_status",
+                "historical_data.region_status.region7_occupancy_status",
+                "historical_data.region_status.region8_occupancy_status",
+                "historical_data.region_status.region9_occupancy_status",
+                "historical_data.region_status.region10_occupancy_status"
+            ]
+        },
+        {
+            "id": "historical_data.region_status.region6_enable",
+            "name": "Region 6 Enable(Region Status)",
+            "value": "0",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "disable"
+                },
+                {
+                    "value": 1,
+                    "name": "enable"
+                }
+            ],
+            "bacnet_type": "binary_input_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "historical_data.region_status.region1_enable",
+                "historical_data.region_status.region2_enable",
+                "historical_data.region_status.region3_enable",
+                "historical_data.region_status.region4_enable",
+                "historical_data.region_status.region5_enable",
+                "historical_data.region_status.region7_enable",
+                "historical_data.region_status.region8_enable",
+                "historical_data.region_status.region9_enable",
+                "historical_data.region_status.region10_enable",
+                "historical_data.region_status.region1_occupancy_status",
+                "historical_data.region_status.region2_occupancy_status",
+                "historical_data.region_status.region3_occupancy_status",
+                "historical_data.region_status.region4_occupancy_status",
+                "historical_data.region_status.region5_occupancy_status",
+                "historical_data.region_status.region6_occupancy_status",
+                "historical_data.region_status.region7_occupancy_status",
+                "historical_data.region_status.region8_occupancy_status",
+                "historical_data.region_status.region9_occupancy_status",
+                "historical_data.region_status.region10_occupancy_status"
+            ]
+        },
+        {
+            "id": "historical_data.region_status.region6_occupancy_status",
+            "name": "Region 6 Occupancy Status(Region Status)",
+            "value": "0",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "vacant"
+                },
+                {
+                    "value": 1,
+                    "name": "occupied"
+                }
+            ],
+            "bacnet_type": "binary_input_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "historical_data.region_status.region1_enable",
+                "historical_data.region_status.region2_enable",
+                "historical_data.region_status.region3_enable",
+                "historical_data.region_status.region4_enable",
+                "historical_data.region_status.region5_enable",
+                "historical_data.region_status.region6_enable",
+                "historical_data.region_status.region7_enable",
+                "historical_data.region_status.region8_enable",
+                "historical_data.region_status.region9_enable",
+                "historical_data.region_status.region10_enable",
+                "historical_data.region_status.region1_occupancy_status",
+                "historical_data.region_status.region2_occupancy_status",
+                "historical_data.region_status.region3_occupancy_status",
+                "historical_data.region_status.region4_occupancy_status",
+                "historical_data.region_status.region5_occupancy_status",
+                "historical_data.region_status.region7_occupancy_status",
+                "historical_data.region_status.region8_occupancy_status",
+                "historical_data.region_status.region9_occupancy_status",
+                "historical_data.region_status.region10_occupancy_status"
+            ]
+        },
+        {
+            "id": "historical_data.region_status.region7_enable",
+            "name": "Region 7 Enable(Region Status)",
+            "value": "0",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "disable"
+                },
+                {
+                    "value": 1,
+                    "name": "enable"
+                }
+            ],
+            "bacnet_type": "binary_input_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "historical_data.region_status.region1_enable",
+                "historical_data.region_status.region2_enable",
+                "historical_data.region_status.region3_enable",
+                "historical_data.region_status.region4_enable",
+                "historical_data.region_status.region5_enable",
+                "historical_data.region_status.region6_enable",
+                "historical_data.region_status.region8_enable",
+                "historical_data.region_status.region9_enable",
+                "historical_data.region_status.region10_enable",
+                "historical_data.region_status.region1_occupancy_status",
+                "historical_data.region_status.region2_occupancy_status",
+                "historical_data.region_status.region3_occupancy_status",
+                "historical_data.region_status.region4_occupancy_status",
+                "historical_data.region_status.region5_occupancy_status",
+                "historical_data.region_status.region6_occupancy_status",
+                "historical_data.region_status.region7_occupancy_status",
+                "historical_data.region_status.region8_occupancy_status",
+                "historical_data.region_status.region9_occupancy_status",
+                "historical_data.region_status.region10_occupancy_status"
+            ]
+        },
+        {
+            "id": "historical_data.region_status.region7_occupancy_status",
+            "name": "Region 7 Occupancy Status(Region Status)",
+            "value": "0",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "vacant"
+                },
+                {
+                    "value": 1,
+                    "name": "occupied"
+                }
+            ],
+            "bacnet_type": "binary_input_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "historical_data.region_status.region1_enable",
+                "historical_data.region_status.region2_enable",
+                "historical_data.region_status.region3_enable",
+                "historical_data.region_status.region4_enable",
+                "historical_data.region_status.region5_enable",
+                "historical_data.region_status.region6_enable",
+                "historical_data.region_status.region7_enable",
+                "historical_data.region_status.region8_enable",
+                "historical_data.region_status.region9_enable",
+                "historical_data.region_status.region10_enable",
+                "historical_data.region_status.region1_occupancy_status",
+                "historical_data.region_status.region2_occupancy_status",
+                "historical_data.region_status.region3_occupancy_status",
+                "historical_data.region_status.region4_occupancy_status",
+                "historical_data.region_status.region5_occupancy_status",
+                "historical_data.region_status.region6_occupancy_status",
+                "historical_data.region_status.region8_occupancy_status",
+                "historical_data.region_status.region9_occupancy_status",
+                "historical_data.region_status.region10_occupancy_status"
+            ]
+        },
+        {
+            "id": "historical_data.region_status.region8_enable",
+            "name": "Region 8 Enable(Region Status)",
+            "value": "0",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "disable"
+                },
+                {
+                    "value": 1,
+                    "name": "enable"
+                }
+            ],
+            "bacnet_type": "binary_input_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "historical_data.region_status.region1_enable",
+                "historical_data.region_status.region2_enable",
+                "historical_data.region_status.region3_enable",
+                "historical_data.region_status.region4_enable",
+                "historical_data.region_status.region5_enable",
+                "historical_data.region_status.region6_enable",
+                "historical_data.region_status.region7_enable",
+                "historical_data.region_status.region9_enable",
+                "historical_data.region_status.region10_enable",
+                "historical_data.region_status.region1_occupancy_status",
+                "historical_data.region_status.region2_occupancy_status",
+                "historical_data.region_status.region3_occupancy_status",
+                "historical_data.region_status.region4_occupancy_status",
+                "historical_data.region_status.region5_occupancy_status",
+                "historical_data.region_status.region6_occupancy_status",
+                "historical_data.region_status.region7_occupancy_status",
+                "historical_data.region_status.region8_occupancy_status",
+                "historical_data.region_status.region9_occupancy_status",
+                "historical_data.region_status.region10_occupancy_status"
+            ]
+        },
+        {
+            "id": "historical_data.region_status.region8_occupancy_status",
+            "name": "Region 8 Occupancy Status(Region Status)",
+            "value": "0",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "vacant"
+                },
+                {
+                    "value": 1,
+                    "name": "occupied"
+                }
+            ],
+            "bacnet_type": "binary_input_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "historical_data.region_status.region1_enable",
+                "historical_data.region_status.region2_enable",
+                "historical_data.region_status.region3_enable",
+                "historical_data.region_status.region4_enable",
+                "historical_data.region_status.region5_enable",
+                "historical_data.region_status.region6_enable",
+                "historical_data.region_status.region7_enable",
+                "historical_data.region_status.region8_enable",
+                "historical_data.region_status.region9_enable",
+                "historical_data.region_status.region10_enable",
+                "historical_data.region_status.region1_occupancy_status",
+                "historical_data.region_status.region2_occupancy_status",
+                "historical_data.region_status.region3_occupancy_status",
+                "historical_data.region_status.region4_occupancy_status",
+                "historical_data.region_status.region5_occupancy_status",
+                "historical_data.region_status.region6_occupancy_status",
+                "historical_data.region_status.region7_occupancy_status",
+                "historical_data.region_status.region9_occupancy_status",
+                "historical_data.region_status.region10_occupancy_status"
+            ]
+        },
+        {
+            "id": "historical_data.region_status.region9_enable",
+            "name": "Region 9 Enable(Region Status)",
+            "value": "0",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "disable"
+                },
+                {
+                    "value": 1,
+                    "name": "enable"
+                }
+            ],
+            "bacnet_type": "binary_input_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "historical_data.region_status.region1_enable",
+                "historical_data.region_status.region2_enable",
+                "historical_data.region_status.region3_enable",
+                "historical_data.region_status.region4_enable",
+                "historical_data.region_status.region5_enable",
+                "historical_data.region_status.region6_enable",
+                "historical_data.region_status.region7_enable",
+                "historical_data.region_status.region8_enable",
+                "historical_data.region_status.region10_enable",
+                "historical_data.region_status.region1_occupancy_status",
+                "historical_data.region_status.region2_occupancy_status",
+                "historical_data.region_status.region3_occupancy_status",
+                "historical_data.region_status.region4_occupancy_status",
+                "historical_data.region_status.region5_occupancy_status",
+                "historical_data.region_status.region6_occupancy_status",
+                "historical_data.region_status.region7_occupancy_status",
+                "historical_data.region_status.region8_occupancy_status",
+                "historical_data.region_status.region9_occupancy_status",
+                "historical_data.region_status.region10_occupancy_status"
+            ]
+        },
+        {
+            "id": "historical_data.region_status.region9_occupancy_status",
+            "name": "Region 9 Occupancy Status(Region Status)",
+            "value": "0",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "vacant"
+                },
+                {
+                    "value": 1,
+                    "name": "occupied"
+                }
+            ],
+            "bacnet_type": "binary_input_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "historical_data.region_status.region1_enable",
+                "historical_data.region_status.region2_enable",
+                "historical_data.region_status.region3_enable",
+                "historical_data.region_status.region4_enable",
+                "historical_data.region_status.region5_enable",
+                "historical_data.region_status.region6_enable",
+                "historical_data.region_status.region7_enable",
+                "historical_data.region_status.region8_enable",
+                "historical_data.region_status.region9_enable",
+                "historical_data.region_status.region10_enable",
+                "historical_data.region_status.region1_occupancy_status",
+                "historical_data.region_status.region2_occupancy_status",
+                "historical_data.region_status.region3_occupancy_status",
+                "historical_data.region_status.region4_occupancy_status",
+                "historical_data.region_status.region5_occupancy_status",
+                "historical_data.region_status.region6_occupancy_status",
+                "historical_data.region_status.region7_occupancy_status",
+                "historical_data.region_status.region8_occupancy_status",
+                "historical_data.region_status.region10_occupancy_status"
+            ]
+        },
+        {
+            "id": "historical_data.timestamp",
+            "name": "Timestamp(Historical Data Retransmission Package)",
+            "value": "",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "NUMBER",
+            "value_type": "UINT8",
+            "bacnet_type": "analog_input_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "historical_data.detection_mode",
+                "historical_data.total_people",
+                "historical_data.region_status.region1_enable",
+                "historical_data.region_status.region1_occupancy_status",
+                "historical_data.region_status.region10_enable",
+                "historical_data.region_status.region10_occupancy_status",
+                "historical_data.region_status.region2_enable",
+                "historical_data.region_status.region2_occupancy_status",
+                "historical_data.region_status.region3_enable",
+                "historical_data.region_status.region3_occupancy_status",
+                "historical_data.region_status.region4_enable",
+                "historical_data.region_status.region4_occupancy_status",
+                "historical_data.region_status.region5_enable",
+                "historical_data.region_status.region5_occupancy_status",
+                "historical_data.region_status.region6_enable",
+                "historical_data.region_status.region6_occupancy_status",
+                "historical_data.region_status.region7_enable",
+                "historical_data.region_status.region7_occupancy_status",
+                "historical_data.region_status.region8_enable",
+                "historical_data.region_status.region8_occupancy_status",
+                "historical_data.region_status.region9_enable",
+                "historical_data.region_status.region9_occupancy_status"
+            ]
+        },
+        {
+            "id": "historical_data.total_people",
+            "name": "Total People(Historical Data Retransmission Package)",
+            "value": "",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "NUMBER",
+            "value_type": "UINT8",
+            "bacnet_type": "analog_input_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "historical_data.timestamp",
+                "historical_data.detection_mode",
+                "historical_data.region_status.region1_enable",
+                "historical_data.region_status.region1_occupancy_status",
+                "historical_data.region_status.region10_enable",
+                "historical_data.region_status.region10_occupancy_status",
+                "historical_data.region_status.region2_enable",
+                "historical_data.region_status.region2_occupancy_status",
+                "historical_data.region_status.region3_enable",
+                "historical_data.region_status.region3_occupancy_status",
+                "historical_data.region_status.region4_enable",
+                "historical_data.region_status.region4_occupancy_status",
+                "historical_data.region_status.region5_enable",
+                "historical_data.region_status.region5_occupancy_status",
+                "historical_data.region_status.region6_enable",
+                "historical_data.region_status.region6_occupancy_status",
+                "historical_data.region_status.region7_enable",
+                "historical_data.region_status.region7_occupancy_status",
+                "historical_data.region_status.region8_enable",
+                "historical_data.region_status.region8_occupancy_status",
+                "historical_data.region_status.region9_enable",
+                "historical_data.region_status.region9_occupancy_status"
+            ]
+        },
+        {
+            "id": "humidity",
+            "name": "Humidity",
+            "value": "",
+            "unit": "%",
+            "access_mode": "R",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "range": [
+                0,
+                100
+            ],
+            "bacnet_type": "analog_input_object",
+            "bacnet_unit_type_id": 98,
+            "bacnet_unit_type": "UNITS_PERCENT"
+        },
+        {
+            "id": "humidity_threshold_alarm.alarm_humidity",
+            "name": "Alarm Humidity(Humidity Threshold Alarm)",
+            "value": "",
+            "unit": "%",
+            "access_mode": "R",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "range": [
+                0,
+                100
+            ],
+            "bacnet_type": "analog_input_object",
+            "bacnet_unit_type_id": 98,
+            "bacnet_unit_type": "UNITS_PERCENT",
+            "reference": [
+                "humidity_threshold_alarm.status"
+            ]
+        },
+        {
+            "id": "humidity_threshold_alarm.status",
+            "name": "Status(Humidity Threshold Alarm)",
+            "value": "0",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "Release Alarm"
+                },
+                {
+                    "value": 1,
+                    "name": "Alarm"
+                }
+            ],
+            "bacnet_type": "binary_input_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "humidity_threshold_alarm.alarm_humidity"
+            ]
+        },
+        {
+            "id": "illuminance_status",
+            "name": "Illuminance Status",
+            "value": "",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "Bright"
+                },
+                {
+                    "value": 1,
+                    "name": "Dim"
+                }
+            ],
+            "bacnet_type": "multistate_input_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS"
+        },
+        {
+            "id": "ipso_version",
+            "name": "IPSO",
+            "value": "",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "NUMBER",
+            "value_type": "UINT8",
+            "bacnet_type": "analog_input_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS"
+        },
+        {
+            "id": "lorawan_class",
+            "name": "LoRaWAN Work Mode",
+            "value": "",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "class_a"
+                },
+                {
+                    "value": 1,
+                    "name": "Unsupported Command"
+                }
+            ],
+            "bacnet_type": "multistate_input_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS"
+        },
+        {
+            "id": "rebot",
+            "name": "Rebot",
+            "access_mode": "W",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "unit": "",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "bacnet_type": "binary_output_object",
+            "value": "",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "no"
+                },
+                {
+                    "value": 1,
+                    "name": "yes"
+                }
+            ]
+        },
+        {
+            "id": "region_status.region1_enable",
+            "name": "Region 1 Enable(Region Status)",
+            "value": "0",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "disable"
+                },
+                {
+                    "value": 1,
+                    "name": "enable"
+                }
+            ],
+            "bacnet_type": "binary_input_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "region_status.region2_enable",
+                "region_status.region3_enable",
+                "region_status.region4_enable",
+                "region_status.region5_enable",
+                "region_status.region6_enable",
+                "region_status.region7_enable",
+                "region_status.region8_enable",
+                "region_status.region9_enable",
+                "region_status.region10_enable",
+                "region_status.region1_occupancy_status",
+                "region_status.region2_occupancy_status",
+                "region_status.region3_occupancy_status",
+                "region_status.region4_occupancy_status",
+                "region_status.region5_occupancy_status",
+                "region_status.region6_occupancy_status",
+                "region_status.region7_occupancy_status",
+                "region_status.region8_occupancy_status",
+                "region_status.region9_occupancy_status",
+                "region_status.region10_occupancy_status"
+            ]
+        },
+        {
+            "id": "region_status.region1_occupancy_status",
+            "name": "Region 1 Occupancy Status(Region Status)",
+            "value": "0",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "vacant"
+                },
+                {
+                    "value": 1,
+                    "name": "occupied"
+                }
+            ],
+            "bacnet_type": "binary_input_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "region_status.region1_enable",
+                "region_status.region2_enable",
+                "region_status.region3_enable",
+                "region_status.region4_enable",
+                "region_status.region5_enable",
+                "region_status.region6_enable",
+                "region_status.region7_enable",
+                "region_status.region8_enable",
+                "region_status.region9_enable",
+                "region_status.region10_enable",
+                "region_status.region2_occupancy_status",
+                "region_status.region3_occupancy_status",
+                "region_status.region4_occupancy_status",
+                "region_status.region5_occupancy_status",
+                "region_status.region6_occupancy_status",
+                "region_status.region7_occupancy_status",
+                "region_status.region8_occupancy_status",
+                "region_status.region9_occupancy_status",
+                "region_status.region10_occupancy_status"
+            ]
+        },
+        {
+            "id": "region_status.region10_enable",
+            "name": "Region 10 Enable(Region Status)",
+            "value": "0",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "disable"
+                },
+                {
+                    "value": 1,
+                    "name": "enable"
+                }
+            ],
+            "bacnet_type": "binary_input_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "region_status.region1_enable",
+                "region_status.region2_enable",
+                "region_status.region3_enable",
+                "region_status.region4_enable",
+                "region_status.region5_enable",
+                "region_status.region6_enable",
+                "region_status.region7_enable",
+                "region_status.region8_enable",
+                "region_status.region9_enable",
+                "region_status.region1_occupancy_status",
+                "region_status.region2_occupancy_status",
+                "region_status.region3_occupancy_status",
+                "region_status.region4_occupancy_status",
+                "region_status.region5_occupancy_status",
+                "region_status.region6_occupancy_status",
+                "region_status.region7_occupancy_status",
+                "region_status.region8_occupancy_status",
+                "region_status.region9_occupancy_status",
+                "region_status.region10_occupancy_status"
+            ]
+        },
+        {
+            "id": "region_status.region10_occupancy_status",
+            "name": "Region 10 Occupancy Status(Region Status)",
+            "value": "0",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "vacant"
+                },
+                {
+                    "value": 1,
+                    "name": "occupied"
+                }
+            ],
+            "bacnet_type": "binary_input_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "region_status.region1_enable",
+                "region_status.region2_enable",
+                "region_status.region3_enable",
+                "region_status.region4_enable",
+                "region_status.region5_enable",
+                "region_status.region6_enable",
+                "region_status.region7_enable",
+                "region_status.region8_enable",
+                "region_status.region9_enable",
+                "region_status.region10_enable",
+                "region_status.region1_occupancy_status",
+                "region_status.region2_occupancy_status",
+                "region_status.region3_occupancy_status",
+                "region_status.region4_occupancy_status",
+                "region_status.region5_occupancy_status",
+                "region_status.region6_occupancy_status",
+                "region_status.region7_occupancy_status",
+                "region_status.region8_occupancy_status",
+                "region_status.region9_occupancy_status"
+            ]
+        },
+        {
+            "id": "region_status.region2_enable",
+            "name": "Region 2 Enable(Region Status)",
+            "value": "0",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "disable"
+                },
+                {
+                    "value": 1,
+                    "name": "enable"
+                }
+            ],
+            "bacnet_type": "binary_input_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "region_status.region1_enable",
+                "region_status.region3_enable",
+                "region_status.region4_enable",
+                "region_status.region5_enable",
+                "region_status.region6_enable",
+                "region_status.region7_enable",
+                "region_status.region8_enable",
+                "region_status.region9_enable",
+                "region_status.region10_enable",
+                "region_status.region1_occupancy_status",
+                "region_status.region2_occupancy_status",
+                "region_status.region3_occupancy_status",
+                "region_status.region4_occupancy_status",
+                "region_status.region5_occupancy_status",
+                "region_status.region6_occupancy_status",
+                "region_status.region7_occupancy_status",
+                "region_status.region8_occupancy_status",
+                "region_status.region9_occupancy_status",
+                "region_status.region10_occupancy_status"
+            ]
+        },
+        {
+            "id": "region_status.region2_occupancy_status",
+            "name": "Region 2 Occupancy Status(Region Status)",
+            "value": "0",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "vacant"
+                },
+                {
+                    "value": 1,
+                    "name": "occupied"
+                }
+            ],
+            "bacnet_type": "binary_input_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "region_status.region1_enable",
+                "region_status.region2_enable",
+                "region_status.region3_enable",
+                "region_status.region4_enable",
+                "region_status.region5_enable",
+                "region_status.region6_enable",
+                "region_status.region7_enable",
+                "region_status.region8_enable",
+                "region_status.region9_enable",
+                "region_status.region10_enable",
+                "region_status.region1_occupancy_status",
+                "region_status.region3_occupancy_status",
+                "region_status.region4_occupancy_status",
+                "region_status.region5_occupancy_status",
+                "region_status.region6_occupancy_status",
+                "region_status.region7_occupancy_status",
+                "region_status.region8_occupancy_status",
+                "region_status.region9_occupancy_status",
+                "region_status.region10_occupancy_status"
+            ]
+        },
+        {
+            "id": "region_status.region3_enable",
+            "name": "Region 3 Enable(Region Status)",
+            "value": "0",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "disable"
+                },
+                {
+                    "value": 1,
+                    "name": "enable"
+                }
+            ],
+            "bacnet_type": "binary_input_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "region_status.region1_enable",
+                "region_status.region2_enable",
+                "region_status.region4_enable",
+                "region_status.region5_enable",
+                "region_status.region6_enable",
+                "region_status.region7_enable",
+                "region_status.region8_enable",
+                "region_status.region9_enable",
+                "region_status.region10_enable",
+                "region_status.region1_occupancy_status",
+                "region_status.region2_occupancy_status",
+                "region_status.region3_occupancy_status",
+                "region_status.region4_occupancy_status",
+                "region_status.region5_occupancy_status",
+                "region_status.region6_occupancy_status",
+                "region_status.region7_occupancy_status",
+                "region_status.region8_occupancy_status",
+                "region_status.region9_occupancy_status",
+                "region_status.region10_occupancy_status"
+            ]
+        },
+        {
+            "id": "region_status.region3_occupancy_status",
+            "name": "Region 3 Occupancy Status(Region Status)",
+            "value": "0",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "vacant"
+                },
+                {
+                    "value": 1,
+                    "name": "occupied"
+                }
+            ],
+            "bacnet_type": "binary_input_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "region_status.region1_enable",
+                "region_status.region2_enable",
+                "region_status.region3_enable",
+                "region_status.region4_enable",
+                "region_status.region5_enable",
+                "region_status.region6_enable",
+                "region_status.region7_enable",
+                "region_status.region8_enable",
+                "region_status.region9_enable",
+                "region_status.region10_enable",
+                "region_status.region1_occupancy_status",
+                "region_status.region2_occupancy_status",
+                "region_status.region4_occupancy_status",
+                "region_status.region5_occupancy_status",
+                "region_status.region6_occupancy_status",
+                "region_status.region7_occupancy_status",
+                "region_status.region8_occupancy_status",
+                "region_status.region9_occupancy_status",
+                "region_status.region10_occupancy_status"
+            ]
+        },
+        {
+            "id": "region_status.region4_enable",
+            "name": "Region 4 Enable(Region Status)",
+            "value": "0",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "disable"
+                },
+                {
+                    "value": 1,
+                    "name": "enable"
+                }
+            ],
+            "bacnet_type": "binary_input_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "region_status.region1_enable",
+                "region_status.region2_enable",
+                "region_status.region3_enable",
+                "region_status.region5_enable",
+                "region_status.region6_enable",
+                "region_status.region7_enable",
+                "region_status.region8_enable",
+                "region_status.region9_enable",
+                "region_status.region10_enable",
+                "region_status.region1_occupancy_status",
+                "region_status.region2_occupancy_status",
+                "region_status.region3_occupancy_status",
+                "region_status.region4_occupancy_status",
+                "region_status.region5_occupancy_status",
+                "region_status.region6_occupancy_status",
+                "region_status.region7_occupancy_status",
+                "region_status.region8_occupancy_status",
+                "region_status.region9_occupancy_status",
+                "region_status.region10_occupancy_status"
+            ]
+        },
+        {
+            "id": "region_status.region4_occupancy_status",
+            "name": "Region 4 Occupancy Status(Region Status)",
+            "value": "0",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "vacant"
+                },
+                {
+                    "value": 1,
+                    "name": "occupied"
+                }
+            ],
+            "bacnet_type": "binary_input_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "region_status.region1_enable",
+                "region_status.region2_enable",
+                "region_status.region3_enable",
+                "region_status.region4_enable",
+                "region_status.region5_enable",
+                "region_status.region6_enable",
+                "region_status.region7_enable",
+                "region_status.region8_enable",
+                "region_status.region9_enable",
+                "region_status.region10_enable",
+                "region_status.region1_occupancy_status",
+                "region_status.region2_occupancy_status",
+                "region_status.region3_occupancy_status",
+                "region_status.region5_occupancy_status",
+                "region_status.region6_occupancy_status",
+                "region_status.region7_occupancy_status",
+                "region_status.region8_occupancy_status",
+                "region_status.region9_occupancy_status",
+                "region_status.region10_occupancy_status"
+            ]
+        },
+        {
+            "id": "region_status.region5_enable",
+            "name": "Region 5 Enable(Region Status)",
+            "value": "0",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "disable"
+                },
+                {
+                    "value": 1,
+                    "name": "enable"
+                }
+            ],
+            "bacnet_type": "binary_input_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "region_status.region1_enable",
+                "region_status.region2_enable",
+                "region_status.region3_enable",
+                "region_status.region4_enable",
+                "region_status.region6_enable",
+                "region_status.region7_enable",
+                "region_status.region8_enable",
+                "region_status.region9_enable",
+                "region_status.region10_enable",
+                "region_status.region1_occupancy_status",
+                "region_status.region2_occupancy_status",
+                "region_status.region3_occupancy_status",
+                "region_status.region4_occupancy_status",
+                "region_status.region5_occupancy_status",
+                "region_status.region6_occupancy_status",
+                "region_status.region7_occupancy_status",
+                "region_status.region8_occupancy_status",
+                "region_status.region9_occupancy_status",
+                "region_status.region10_occupancy_status"
+            ]
+        },
+        {
+            "id": "region_status.region5_occupancy_status",
+            "name": "Region 5 Occupancy Status(Region Status)",
+            "value": "0",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "vacant"
+                },
+                {
+                    "value": 1,
+                    "name": "occupied"
+                }
+            ],
+            "bacnet_type": "binary_input_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "region_status.region1_enable",
+                "region_status.region2_enable",
+                "region_status.region3_enable",
+                "region_status.region4_enable",
+                "region_status.region5_enable",
+                "region_status.region6_enable",
+                "region_status.region7_enable",
+                "region_status.region8_enable",
+                "region_status.region9_enable",
+                "region_status.region10_enable",
+                "region_status.region1_occupancy_status",
+                "region_status.region2_occupancy_status",
+                "region_status.region3_occupancy_status",
+                "region_status.region4_occupancy_status",
+                "region_status.region6_occupancy_status",
+                "region_status.region7_occupancy_status",
+                "region_status.region8_occupancy_status",
+                "region_status.region9_occupancy_status",
+                "region_status.region10_occupancy_status"
+            ]
+        },
+        {
+            "id": "region_status.region6_enable",
+            "name": "Region 6 Enable(Region Status)",
+            "value": "0",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "disable"
+                },
+                {
+                    "value": 1,
+                    "name": "enable"
+                }
+            ],
+            "bacnet_type": "binary_input_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "region_status.region1_enable",
+                "region_status.region2_enable",
+                "region_status.region3_enable",
+                "region_status.region4_enable",
+                "region_status.region5_enable",
+                "region_status.region7_enable",
+                "region_status.region8_enable",
+                "region_status.region9_enable",
+                "region_status.region10_enable",
+                "region_status.region1_occupancy_status",
+                "region_status.region2_occupancy_status",
+                "region_status.region3_occupancy_status",
+                "region_status.region4_occupancy_status",
+                "region_status.region5_occupancy_status",
+                "region_status.region6_occupancy_status",
+                "region_status.region7_occupancy_status",
+                "region_status.region8_occupancy_status",
+                "region_status.region9_occupancy_status",
+                "region_status.region10_occupancy_status"
+            ]
+        },
+        {
+            "id": "region_status.region6_occupancy_status",
+            "name": "Region 6 Occupancy Status(Region Status)",
+            "value": "0",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "vacant"
+                },
+                {
+                    "value": 1,
+                    "name": "occupied"
+                }
+            ],
+            "bacnet_type": "binary_input_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "region_status.region1_enable",
+                "region_status.region2_enable",
+                "region_status.region3_enable",
+                "region_status.region4_enable",
+                "region_status.region5_enable",
+                "region_status.region6_enable",
+                "region_status.region7_enable",
+                "region_status.region8_enable",
+                "region_status.region9_enable",
+                "region_status.region10_enable",
+                "region_status.region1_occupancy_status",
+                "region_status.region2_occupancy_status",
+                "region_status.region3_occupancy_status",
+                "region_status.region4_occupancy_status",
+                "region_status.region5_occupancy_status",
+                "region_status.region7_occupancy_status",
+                "region_status.region8_occupancy_status",
+                "region_status.region9_occupancy_status",
+                "region_status.region10_occupancy_status"
+            ]
+        },
+        {
+            "id": "region_status.region7_enable",
+            "name": "Region 7 Enable(Region Status)",
+            "value": "0",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "disable"
+                },
+                {
+                    "value": 1,
+                    "name": "enable"
+                }
+            ],
+            "bacnet_type": "binary_input_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "region_status.region1_enable",
+                "region_status.region2_enable",
+                "region_status.region3_enable",
+                "region_status.region4_enable",
+                "region_status.region5_enable",
+                "region_status.region6_enable",
+                "region_status.region8_enable",
+                "region_status.region9_enable",
+                "region_status.region10_enable",
+                "region_status.region1_occupancy_status",
+                "region_status.region2_occupancy_status",
+                "region_status.region3_occupancy_status",
+                "region_status.region4_occupancy_status",
+                "region_status.region5_occupancy_status",
+                "region_status.region6_occupancy_status",
+                "region_status.region7_occupancy_status",
+                "region_status.region8_occupancy_status",
+                "region_status.region9_occupancy_status",
+                "region_status.region10_occupancy_status"
+            ]
+        },
+        {
+            "id": "region_status.region7_occupancy_status",
+            "name": "Region 7 Occupancy Status(Region Status)",
+            "value": "0",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "vacant"
+                },
+                {
+                    "value": 1,
+                    "name": "occupied"
+                }
+            ],
+            "bacnet_type": "binary_input_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "region_status.region1_enable",
+                "region_status.region2_enable",
+                "region_status.region3_enable",
+                "region_status.region4_enable",
+                "region_status.region5_enable",
+                "region_status.region6_enable",
+                "region_status.region7_enable",
+                "region_status.region8_enable",
+                "region_status.region9_enable",
+                "region_status.region10_enable",
+                "region_status.region1_occupancy_status",
+                "region_status.region2_occupancy_status",
+                "region_status.region3_occupancy_status",
+                "region_status.region4_occupancy_status",
+                "region_status.region5_occupancy_status",
+                "region_status.region6_occupancy_status",
+                "region_status.region8_occupancy_status",
+                "region_status.region9_occupancy_status",
+                "region_status.region10_occupancy_status"
+            ]
+        },
+        {
+            "id": "region_status.region8_enable",
+            "name": "Region 8 Enable(Region Status)",
+            "value": "0",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "disable"
+                },
+                {
+                    "value": 1,
+                    "name": "enable"
+                }
+            ],
+            "bacnet_type": "binary_input_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "region_status.region1_enable",
+                "region_status.region2_enable",
+                "region_status.region3_enable",
+                "region_status.region4_enable",
+                "region_status.region5_enable",
+                "region_status.region6_enable",
+                "region_status.region7_enable",
+                "region_status.region9_enable",
+                "region_status.region10_enable",
+                "region_status.region1_occupancy_status",
+                "region_status.region2_occupancy_status",
+                "region_status.region3_occupancy_status",
+                "region_status.region4_occupancy_status",
+                "region_status.region5_occupancy_status",
+                "region_status.region6_occupancy_status",
+                "region_status.region7_occupancy_status",
+                "region_status.region8_occupancy_status",
+                "region_status.region9_occupancy_status",
+                "region_status.region10_occupancy_status"
+            ]
+        },
+        {
+            "id": "region_status.region8_occupancy_status",
+            "name": "Region 8 Occupancy Status(Region Status)",
+            "value": "0",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "vacant"
+                },
+                {
+                    "value": 1,
+                    "name": "occupied"
+                }
+            ],
+            "bacnet_type": "binary_input_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "region_status.region1_enable",
+                "region_status.region2_enable",
+                "region_status.region3_enable",
+                "region_status.region4_enable",
+                "region_status.region5_enable",
+                "region_status.region6_enable",
+                "region_status.region7_enable",
+                "region_status.region8_enable",
+                "region_status.region9_enable",
+                "region_status.region10_enable",
+                "region_status.region1_occupancy_status",
+                "region_status.region2_occupancy_status",
+                "region_status.region3_occupancy_status",
+                "region_status.region4_occupancy_status",
+                "region_status.region5_occupancy_status",
+                "region_status.region6_occupancy_status",
+                "region_status.region7_occupancy_status",
+                "region_status.region9_occupancy_status",
+                "region_status.region10_occupancy_status"
+            ]
+        },
+        {
+            "id": "region_status.region9_enable",
+            "name": "Region 9 Enable(Region Status)",
+            "value": "0",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "disable"
+                },
+                {
+                    "value": 1,
+                    "name": "enable"
+                }
+            ],
+            "bacnet_type": "binary_input_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "region_status.region1_enable",
+                "region_status.region2_enable",
+                "region_status.region3_enable",
+                "region_status.region4_enable",
+                "region_status.region5_enable",
+                "region_status.region6_enable",
+                "region_status.region7_enable",
+                "region_status.region8_enable",
+                "region_status.region10_enable",
+                "region_status.region1_occupancy_status",
+                "region_status.region2_occupancy_status",
+                "region_status.region3_occupancy_status",
+                "region_status.region4_occupancy_status",
+                "region_status.region5_occupancy_status",
+                "region_status.region6_occupancy_status",
+                "region_status.region7_occupancy_status",
+                "region_status.region8_occupancy_status",
+                "region_status.region9_occupancy_status",
+                "region_status.region10_occupancy_status"
+            ]
+        },
+        {
+            "id": "region_status.region9_occupancy_status",
+            "name": "Region 9 Occupancy Status(Region Status)",
+            "value": "0",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "vacant"
+                },
+                {
+                    "value": 1,
+                    "name": "occupied"
+                }
+            ],
+            "bacnet_type": "binary_input_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "region_status.region1_enable",
+                "region_status.region2_enable",
+                "region_status.region3_enable",
+                "region_status.region4_enable",
+                "region_status.region5_enable",
+                "region_status.region6_enable",
+                "region_status.region7_enable",
+                "region_status.region8_enable",
+                "region_status.region9_enable",
+                "region_status.region10_enable",
+                "region_status.region1_occupancy_status",
+                "region_status.region2_occupancy_status",
+                "region_status.region3_occupancy_status",
+                "region_status.region4_occupancy_status",
+                "region_status.region5_occupancy_status",
+                "region_status.region6_occupancy_status",
+                "region_status.region7_occupancy_status",
+                "region_status.region8_occupancy_status",
+                "region_status.region10_occupancy_status"
+            ]
+        },
+        {
+            "id": "reporting_interval_settings_switch.report_type",
+            "name": "Reporting Type(Reporting Interval Settings Switch)",
+            "value": "1",
+            "unit": "",
+            "access_mode": "W",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "Dot Report"
+                },
+                {
+                    "value": 1,
+                    "name": "Now Report"
+                }
+            ],
+            "bacnet_type": "multistate_output_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": []
+        },
+        {
+            "id": "reporting_interval_settings_switch.reporting_interval.id",
+            "name": "Reporting Interval ID(Reporting Interval Settings)",
+            "value": "",
+            "unit": "",
+            "access_mode": "W",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "sec"
+                },
+                {
+                    "value": 1,
+                    "name": "min"
+                }
+            ],
+            "bacnet_type": "multistate_output_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "reporting_interval_settings_switch.reporting_interval.time"
+            ]
+        },
+        {
+            "id": "reporting_interval_settings_switch.reporting_interval.time",
+            "name": "Reporting Interval(Reporting Interval Settings)",
+            "value": "10",
+            "unit": "min",
+            "access_mode": "W",
+            "data_type": "NUMBER",
+            "value_type": "UINT16",
+            "range": [
+                2,
+                1440
+            ],
+            "bacnet_type": "analog_output_object",
+            "bacnet_unit_type_id": 72,
+            "bacnet_unit_type": "UNITS_MINUTES",
+            "reference": [
+                "reporting_interval_settings_switch.reporting_interval.id"
+            ]
+        },
+        {
+            "id": "reporting_interval_settings_switch.reporting_interval1.id",
+            "name": "Reporting Interval ID(Reporting Interval Settings)",
+            "value": "",
+            "unit": "",
+            "access_mode": "W",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "sec"
+                },
+                {
+                    "value": 1,
+                    "name": "min"
+                }
+            ],
+            "bacnet_type": "multistate_output_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "reporting_interval_settings_switch.reporting_interval1.time"
+            ]
+        },
+        {
+            "id": "reporting_interval_settings_switch.reporting_interval1.time",
+            "name": "Reporting Interval(Reporting Interval Settings)",
+            "value": "10",
+            "unit": "min",
+            "access_mode": "W",
+            "data_type": "ENUM",
+            "value_type": "UINT16",
+            "values": [
+                {
+                    "value": 5,
+                    "name": "5min"
+                },
+                {
+                    "value": 10,
+                    "name": "10min"
+                },
+                {
+                    "value": 15,
+                    "name": "15min"
+                },
+                {
+                    "value": 30,
+                    "name": "30min"
+                },
+                {
+                    "value": 60,
+                    "name": "1h"
+                },
+                {
+                    "value": 240,
+                    "name": "4h"
+                },
+                {
+                    "value": 360,
+                    "name": "6h"
+                },
+                {
+                    "value": 480,
+                    "name": "8h"
+                },
+                {
+                    "value": 720,
+                    "name": "12h"
+                }
+            ],
+            "bacnet_type": "multistate_output_object",
+            "bacnet_unit_type_id": 72,
+            "bacnet_unit_type": "UNITS_MINUTES",
+            "reference": [
+                "reporting_interval_settings_switch.reporting_interval1.id"
+            ]
+        },
+        {
+            "id": "reset",
+            "name": "Reset",
+            "access_mode": "W",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "unit": "",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "bacnet_type": "binary_output_object",
+            "value": "",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "no"
+                },
+                {
+                    "value": 1,
+                    "name": "yes"
+                }
+            ]
+        },
+        {
+            "id": "retransmission_enable",
+            "name": "Data Retransmission Enable",
+            "value": "0",
+            "unit": "",
+            "access_mode": "W",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "disable"
+                },
+                {
+                    "value": 1,
+                    "name": "enable"
+                }
+            ],
+            "bacnet_type": "binary_output_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS"
+        },
+        {
+            "id": "retransmission_interval.interval",
+            "name": "Retransmission Interval(Retransmission Interval Settings)",
+            "value": "600",
+            "unit": "s",
+            "access_mode": "W",
+            "data_type": "NUMBER",
+            "value_type": "UINT16",
+            "range": [
+                30,
+                1200
+            ],
+            "bacnet_type": "analog_output_object",
+            "bacnet_unit_type_id": 73,
+            "bacnet_unit_type": "UNITS_SECONDS",
+            "reference": [
+                "retransmission_interval.type"
+            ]
+        },
+        {
+            "id": "retransmission_interval.type",
+            "name": "Retransmission(Retransmission Interval Settings)",
+            "value": "0",
+            "unit": "",
+            "access_mode": "W",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "retransmission interval"
+                },
+                {
+                    "value": 1,
+                    "name": "Unsupported Command"
+                }
+            ],
+            "bacnet_type": "multistate_output_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "retransmission_interval.interval"
+            ]
+        },
+        {
+            "id": "retrival_historical_data_by_time_range.end_time",
+            "name": "End Time(Retrival(Time Period))",
+            "value": "",
+            "unit": "s",
+            "access_mode": "W",
+            "data_type": "NUMBER",
+            "value_type": "UINT8",
+            "bacnet_type": "analog_output_object",
+            "bacnet_unit_type_id": 73,
+            "bacnet_unit_type": "UNITS_SECONDS",
+            "reference": [
+                "retrival_historical_data_by_time_range.start_time"
+            ]
+        },
+        {
+            "id": "retrival_historical_data_by_time_range.start_time",
+            "name": "Start Time(Retrival(Time Period))",
+            "value": "",
+            "unit": "s",
+            "access_mode": "W",
+            "data_type": "NUMBER",
+            "value_type": "UINT8",
+            "bacnet_type": "analog_output_object",
+            "bacnet_unit_type_id": 73,
+            "bacnet_unit_type": "UNITS_SECONDS",
+            "reference": [
+                "retrival_historical_data_by_time_range.end_time"
+            ]
+        },
+        {
+            "id": "retrival_historical_data_by_time.time",
+            "name": "Time Point(Retrival(Time Point))",
+            "value": "",
+            "unit": "s",
+            "access_mode": "W",
+            "data_type": "NUMBER",
+            "value_type": "UINT8",
+            "bacnet_type": "analog_output_object",
+            "bacnet_unit_type_id": 73,
+            "bacnet_unit_type": "UNITS_SECONDS",
+            "reference": []
+        },
+        {
+            "id": "retrival_interval.interval",
+            "name": "Retrival Interval(Retrival Interval Settings)",
+            "value": "600",
+            "unit": "s",
+            "access_mode": "W",
+            "data_type": "NUMBER",
+            "value_type": "UINT16",
+            "range": [
+                30,
+                1200
+            ],
+            "bacnet_type": "analog_output_object",
+            "bacnet_unit_type_id": 73,
+            "bacnet_unit_type": "UNITS_SECONDS",
+            "reference": [
+                "retrival_interval.type"
+            ]
+        },
+        {
+            "id": "retrival_interval.type",
+            "name": "Retrival(Retrival Interval Settings)",
+            "value": "1",
+            "unit": "",
+            "access_mode": "W",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 1,
+                    "name": "retrival interval"
+                },
+                {
+                    "value": 2,
+                    "name": "Unsupported Command"
+                }
+            ],
+            "bacnet_type": "multistate_output_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "retrival_interval.interval"
+            ]
+        },
+        {
+            "id": "set_threshold_alarm_humidity.reserved",
+            "name": "Threshold Enable(Threshold Alarm of Humidity)",
+            "value": "0",
+            "unit": "",
+            "access_mode": "W",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 1,
+                    "name": "enable"
+                },
+                {
+                    "value": 2,
+                    "name": "Unsupported Command"
+                }
+            ],
+            "bacnet_type": "binary_output_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "set_threshold_alarm_humidity.threshold_condition",
+                "set_threshold_alarm_humidity.threshold_type",
+                "set_threshold_alarm_humidity.value_less_than",
+                "set_threshold_alarm_humidity.value_greater_than",
+                "set_threshold_alarm_humidity.threshold_lock_time",
+                "set_threshold_alarm_humidity.threshold_duration"
+            ]
+        },
+        {
+            "id": "set_threshold_alarm_humidity.threshold_condition",
+            "name": "Threshold Alarm of Humidity(Threshold Alarm of Humidity)",
+            "value": "0",
+            "unit": "",
+            "access_mode": "W",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "Disabled"
+                },
+                {
+                    "value": 1,
+                    "name": "Condition: Humidity＜A"
+                },
+                {
+                    "value": 2,
+                    "name": "Condition: Humidity＞B"
+                },
+                {
+                    "value": 3,
+                    "name": "Condition: A＜Humidity＜B"
+                },
+                {
+                    "value": 4,
+                    "name": "Condition: Humidity＜A or Humidity＞B"
+                }
+            ],
+            "bacnet_type": "multistate_output_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "set_threshold_alarm_humidity.threshold_type",
+                "set_threshold_alarm_humidity.reserved",
+                "set_threshold_alarm_humidity.value_less_than",
+                "set_threshold_alarm_humidity.value_greater_than",
+                "set_threshold_alarm_humidity.threshold_lock_time",
+                "set_threshold_alarm_humidity.threshold_duration"
+            ]
+        },
+        {
+            "id": "set_threshold_alarm_humidity.threshold_duration",
+            "name": "Threshold Duration(Threshold Alarm of Humidity)",
+            "value": "",
+            "unit": "",
+            "access_mode": "W",
+            "data_type": "NUMBER",
+            "value_type": "UINT8",
+            "bacnet_type": "analog_output_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "set_threshold_alarm_humidity.threshold_condition",
+                "set_threshold_alarm_humidity.threshold_type",
+                "set_threshold_alarm_humidity.reserved",
+                "set_threshold_alarm_humidity.value_less_than",
+                "set_threshold_alarm_humidity.value_greater_than",
+                "set_threshold_alarm_humidity.threshold_lock_time"
+            ]
+        },
+        {
+            "id": "set_threshold_alarm_humidity.threshold_lock_time",
+            "name": "Threshold Lock Time(Threshold Alarm of Humidity)",
+            "value": "",
+            "unit": "",
+            "access_mode": "W",
+            "data_type": "NUMBER",
+            "value_type": "UINT8",
+            "bacnet_type": "analog_output_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "set_threshold_alarm_humidity.threshold_condition",
+                "set_threshold_alarm_humidity.threshold_type",
+                "set_threshold_alarm_humidity.reserved",
+                "set_threshold_alarm_humidity.value_less_than",
+                "set_threshold_alarm_humidity.value_greater_than",
+                "set_threshold_alarm_humidity.threshold_duration"
+            ]
+        },
+        {
+            "id": "set_threshold_alarm_humidity.threshold_type",
+            "name": "Threshold ID(Threshold Alarm of Humidity)",
+            "value": "2",
+            "unit": "",
+            "access_mode": "W",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 3,
+                    "name": "Threshold of Humidity"
+                },
+                {
+                    "value": 4,
+                    "name": "Unsupported Command"
+                }
+            ],
+            "bacnet_type": "multistate_output_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "set_threshold_alarm_humidity.threshold_condition",
+                "set_threshold_alarm_humidity.reserved",
+                "set_threshold_alarm_humidity.value_less_than",
+                "set_threshold_alarm_humidity.value_greater_than",
+                "set_threshold_alarm_humidity.threshold_lock_time",
+                "set_threshold_alarm_humidity.threshold_duration"
+            ]
+        },
+        {
+            "id": "set_threshold_alarm_humidity.value_greater_than",
+            "name": "Value B(Threshold Alarm of Humidity)",
+            "value": "0",
+            "unit": "%",
+            "access_mode": "W",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "range": [
+                0,
+                100
+            ],
+            "bacnet_type": "analog_output_object",
+            "bacnet_unit_type_id": 98,
+            "bacnet_unit_type": "UNITS_PERCENT",
+            "reference": [
+                "set_threshold_alarm_humidity.threshold_condition",
+                "set_threshold_alarm_humidity.threshold_type",
+                "set_threshold_alarm_humidity.reserved",
+                "set_threshold_alarm_humidity.value_less_than",
+                "set_threshold_alarm_humidity.threshold_lock_time",
+                "set_threshold_alarm_humidity.threshold_duration"
+            ]
+        },
+        {
+            "id": "set_threshold_alarm_humidity.value_less_than",
+            "name": "Value A(Threshold Alarm of Humidity)",
+            "value": "0",
+            "unit": "%",
+            "access_mode": "W",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "range": [
+                0,
+                100
+            ],
+            "bacnet_type": "analog_output_object",
+            "bacnet_unit_type_id": 98,
+            "bacnet_unit_type": "UNITS_PERCENT",
+            "reference": [
+                "set_threshold_alarm_humidity.threshold_condition",
+                "set_threshold_alarm_humidity.threshold_type",
+                "set_threshold_alarm_humidity.reserved",
+                "set_threshold_alarm_humidity.value_greater_than",
+                "set_threshold_alarm_humidity.threshold_lock_time",
+                "set_threshold_alarm_humidity.threshold_duration"
+            ]
+        },
+        {
+            "id": "set_threshold_alarm_temperature.celsius_value_greater_than",
+            "name": "Celsius Value B(Threshold Alarm of Temperature)",
+            "value": "0",
+            "unit": "°C",
+            "access_mode": "W",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "range": [
+                -40,
+                125
+            ],
+            "bacnet_type": "analog_output_object",
+            "bacnet_unit_type_id": 62,
+            "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
+            "reference": [
+                "set_threshold_alarm_temperature.threshold_condition",
+                "set_threshold_alarm_temperature.threshold_type",
+                "set_threshold_alarm_temperature.reserved",
+                "set_threshold_alarm_temperature.celsius_value_less_than",
+                "set_threshold_alarm_temperature.threshold_lock_time",
+                "set_threshold_alarm_temperature.threshold_duration"
+            ]
+        },
+        {
+            "id": "set_threshold_alarm_temperature.celsius_value_less_than",
+            "name": "Celsius Value A(Threshold Alarm of Temperature)",
+            "value": "0",
+            "unit": "°C",
+            "access_mode": "W",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "range": [
+                -40,
+                125
+            ],
+            "bacnet_type": "analog_output_object",
+            "bacnet_unit_type_id": 62,
+            "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
+            "reference": [
+                "set_threshold_alarm_temperature.threshold_condition",
+                "set_threshold_alarm_temperature.threshold_type",
+                "set_threshold_alarm_temperature.reserved",
+                "set_threshold_alarm_temperature.celsius_value_greater_than",
+                "set_threshold_alarm_temperature.threshold_lock_time",
+                "set_threshold_alarm_temperature.threshold_duration"
+            ]
+        },
+        {
+            "id": "set_threshold_alarm_temperature.fahrenheit_value_greater_than",
+            "name": "Fahrenheit Value B(Threshold Alarm of Temperature)",
+            "value": "32",
+            "unit": "°F",
+            "access_mode": "W",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "range": [
+                -40,
+                257
+            ],
+            "bacnet_type": "analog_output_object",
+            "bacnet_unit_type_id": 64,
+            "bacnet_unit_type": "UNITS_DEGREES_FAHRENHEIT",
+            "reference": [
+                "set_threshold_alarm_temperature.threshold_condition",
+                "set_threshold_alarm_temperature.threshold_type",
+                "set_threshold_alarm_temperature.reserved",
+                "set_threshold_alarm_temperature.fahrenheit_value_less_than",
+                "set_threshold_alarm_temperature.threshold_lock_time",
+                "set_threshold_alarm_temperature.threshold_duration"
+            ]
+        },
+        {
+            "id": "set_threshold_alarm_temperature.fahrenheit_value_less_than",
+            "name": "Fahrenheit Value A(Threshold Alarm of Temperature)",
+            "value": "32",
+            "unit": "°F",
+            "access_mode": "W",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "range": [
+                -40,
+                257
+            ],
+            "bacnet_type": "analog_output_object",
+            "bacnet_unit_type_id": 64,
+            "bacnet_unit_type": "UNITS_DEGREES_FAHRENHEIT",
+            "reference": [
+                "set_threshold_alarm_temperature.threshold_condition",
+                "set_threshold_alarm_temperature.threshold_type",
+                "set_threshold_alarm_temperature.reserved",
+                "set_threshold_alarm_temperature.fahrenheit_value_greater_than",
+                "set_threshold_alarm_temperature.threshold_lock_time",
+                "set_threshold_alarm_temperature.threshold_duration"
+            ]
+        },
+        {
+            "id": "set_threshold_alarm_temperature.reserved",
+            "name": "Threshold Enable(Threshold Alarm of Temperature)",
+            "value": "0",
+            "unit": "",
+            "access_mode": "W",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 1,
+                    "name": "enable"
+                },
+                {
+                    "value": 2,
+                    "name": "Unsupported Command"
+                }
+            ],
+            "bacnet_type": "binary_output_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "set_threshold_alarm_temperature.threshold_condition",
+                "set_threshold_alarm_temperature.threshold_type",
+                "set_threshold_alarm_temperature.threshold_lock_time",
+                "set_threshold_alarm_temperature.threshold_duration"
+            ]
+        },
+        {
+            "id": "set_threshold_alarm_temperature.threshold_condition",
+            "name": "Threshold Alarm of Temperature(Threshold Alarm of Temperature)",
+            "value": "0",
+            "unit": "",
+            "access_mode": "W",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "Disabled"
+                },
+                {
+                    "value": 1,
+                    "name": "Condition: Temperature＜A"
+                },
+                {
+                    "value": 2,
+                    "name": "Condition: Temperature＞B"
+                },
+                {
+                    "value": 3,
+                    "name": "Condition: A＜Temperature＜B"
+                },
+                {
+                    "value": 4,
+                    "name": "Condition: Temperature＜A or Temperature＞B"
+                }
+            ],
+            "bacnet_type": "multistate_output_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "set_threshold_alarm_temperature.threshold_type",
+                "set_threshold_alarm_temperature.reserved",
+                "set_threshold_alarm_temperature.threshold_lock_time",
+                "set_threshold_alarm_temperature.threshold_duration"
+            ]
+        },
+        {
+            "id": "set_threshold_alarm_temperature.threshold_duration",
+            "name": "Threshold Duration(Threshold Alarm of Temperature)",
+            "value": "",
+            "unit": "",
+            "access_mode": "W",
+            "data_type": "NUMBER",
+            "value_type": "UINT8",
+            "bacnet_type": "analog_output_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "set_threshold_alarm_temperature.threshold_condition",
+                "set_threshold_alarm_temperature.threshold_type",
+                "set_threshold_alarm_temperature.reserved",
+                "set_threshold_alarm_temperature.threshold_lock_time"
+            ]
+        },
+        {
+            "id": "set_threshold_alarm_temperature.threshold_lock_time",
+            "name": "Threshold Lock Time(Threshold Alarm of Temperature)",
+            "value": "",
+            "unit": "",
+            "access_mode": "W",
+            "data_type": "NUMBER",
+            "value_type": "UINT8",
+            "bacnet_type": "analog_output_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "set_threshold_alarm_temperature.threshold_condition",
+                "set_threshold_alarm_temperature.threshold_type",
+                "set_threshold_alarm_temperature.reserved",
+                "set_threshold_alarm_temperature.threshold_duration"
+            ]
+        },
+        {
+            "id": "set_threshold_alarm_temperature.threshold_type",
+            "name": "Threshold ID(Threshold Alarm of Temperature)",
+            "value": "1",
+            "unit": "",
+            "access_mode": "W",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 3,
+                    "name": "Threshold of Temperature"
+                },
+                {
+                    "value": 4,
+                    "name": "Unsupported Command"
+                }
+            ],
+            "bacnet_type": "multistate_output_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "set_threshold_alarm_temperature.threshold_condition",
+                "set_threshold_alarm_temperature.reserved",
+                "set_threshold_alarm_temperature.threshold_lock_time",
+                "set_threshold_alarm_temperature.threshold_duration"
+            ]
+        },
+        {
+            "id": "stop_historical_data_retrival",
+            "name": "Stop Retrival",
+            "access_mode": "W",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "unit": "",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "bacnet_type": "binary_output_object",
+            "value": "",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "no"
+                },
+                {
+                    "value": 1,
+                    "name": "yes"
+                }
+            ]
+        },
+        {
+            "id": "temperature_threshold_alarm.celsius_alarm_temperature",
+            "name": "Celsius Alarm Temperature(Temperature Threshold Alarm)",
+            "value": "",
+            "unit": "°C",
+            "access_mode": "R",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "range": [
+                -40,
+                125
+            ],
+            "bacnet_type": "analog_input_object",
+            "bacnet_unit_type_id": 62,
+            "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
+            "reference": [
+                "temperature_threshold_alarm.status"
+            ]
+        },
+        {
+            "id": "temperature_threshold_alarm.fahrenheit_alarm_temperature",
+            "name": "Fahrenheit Alarm Temperature(Temperature Threshold Alarm)",
+            "value": "",
+            "unit": "°F",
+            "access_mode": "R",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "range": [
+                -40,
+                257
+            ],
+            "bacnet_type": "analog_input_object",
+            "bacnet_unit_type_id": 64,
+            "bacnet_unit_type": "UNITS_DEGREES_FAHRENHEIT",
+            "reference": [
+                "temperature_threshold_alarm.status"
+            ]
+        },
+        {
+            "id": "temperature_threshold_alarm.status",
+            "name": "Status(Temperature Threshold Alarm)",
+            "value": "0",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "release"
+                },
+                {
+                    "value": 1,
+                    "name": "alarm"
+                }
+            ],
+            "bacnet_type": "binary_input_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": []
+        },
+        {
+            "id": "total_number",
+            "name": "Total Number",
+            "value": "",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "NUMBER",
+            "value_type": "UINT8",
+            "bacnet_type": "analog_input_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS"
+        },
+        {
+            "id": "trigger_a_detection",
+            "name": "Trigger a detection",
+            "access_mode": "W",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "unit": "",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "bacnet_type": "binary_output_object",
+            "value": "",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "no"
+                },
+                {
+                    "value": 1,
+                    "name": "yes"
+                }
+            ]
+        },
+        {
+            "id": "tsl_version",
+            "name": "TSL Version",
+            "value": "",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "TEXT",
+            "value_type": "STRING",
+            "max_length": 4,
+            "bacnet_type": "character_string_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS"
+        }
+    ]
+}
