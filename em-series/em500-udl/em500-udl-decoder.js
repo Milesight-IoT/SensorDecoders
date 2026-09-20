@@ -78,6 +78,14 @@ function milesightDeviceDecode(bytes) {
             decoded.battery = readUInt8(bytes[i]);
             i += 1;
         }
+        // MEASURING EQUIPMENT
+        else if (channel_id === 0xff && channel_type === 0x1b) {
+            decoded.measuring_equipment = {};
+            decoded.measuring_equipment.rate = readMeasuringRate(bytes[i] & 0x07);
+            decoded.measuring_equipment.range_max = readInt16LE(bytes.slice(i + 1, i + 3));
+            decoded.measuring_equipment.range_min = readInt16LE(bytes.slice(i + 3, i + 5));
+            i += 5;
+        }
         // DISTANCE
         else if (channel_id === 0x03 && channel_type === 0x82) {
             decoded.distance = readUInt16LE(bytes.slice(i, i + 2));
@@ -321,6 +329,11 @@ function readConditionType(condition) {
 function readDistanceAlarm(status) {
     var status_map = { 0: "normal", 1: "threshold_alarm", 2: "mutation_alarm" };
     return getValue(status_map, status);
+}
+
+function readMeasuringRate(rate) {
+    var rate_map = { 0: "0.01", 1: "0.1", 2: "1", 3: "10", 4: "100", 5: "1000" };
+    return getValue(rate_map, rate);
 }
 
 function readD2DMode(mode) {
