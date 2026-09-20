@@ -81,7 +81,7 @@
                 { "value": 2, "name": "Class C" },
                 { "value": 3, "name": "Class CtoB" }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS"
         },
@@ -166,7 +166,51 @@
                 { "value": 1, "name": "threshold_alarm" },
                 { "value": 2, "name": "mutation_alarm" }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_input_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS"
+        },
+        {
+            "id": "measuring_equipment.rate",
+            "name": "Measuring Equipment (Rate)",
+            "value": "",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [
+                { "value": 0, "name": "0.01" },
+                { "value": 1, "name": "0.1" },
+                { "value": 2, "name": "1" },
+                { "value": 3, "name": "10" },
+                { "value": 4, "name": "100" },
+                { "value": 5, "name": "1000" }
+            ],
+            "bacnet_type": "multistate_input_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS"
+        },
+        {
+            "id": "measuring_equipment.range_max",
+            "name": "Measuring Equipment (Range Max)",
+            "value": "",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "NUMBER",
+            "value_type": "INT16",
+            "bacnet_type": "analog_input_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS"
+        },
+        {
+            "id": "measuring_equipment.range_min",
+            "name": "Measuring Equipment (Range Min)",
+            "value": "",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "NUMBER",
+            "value_type": "INT16",
+            "bacnet_type": "analog_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS"
         },
