@@ -580,58 +580,86 @@ function milesightDeviceDecode(bytes) {
 				if (decoded.temperature_alarm.type == 0x00) {
 					decoded.temperature_alarm.window_status_detection_deactivation = decoded.temperature_alarm.window_status_detection_deactivation || {};
 					decoded.temperature_alarm.window_status_detection_deactivation.temperature = readInt16LE(bytes, counterObj, 2) / 100;
+					// 0：Internal SHT4X, 1：Internal NTC, 2：External NTC
+					decoded.temperature_alarm.window_status_detection_deactivation.source = readUInt8(bytes, counterObj, 1);
 				}
 				if (decoded.temperature_alarm.type == 0x01) {
 					decoded.temperature_alarm.window_status_detection_trigger = decoded.temperature_alarm.window_status_detection_trigger || {};
 					decoded.temperature_alarm.window_status_detection_trigger.temperature = readInt16LE(bytes, counterObj, 2) / 100;
+					// 0：Internal SHT4X, 1：Internal NTC, 2：External NTC
+					decoded.temperature_alarm.window_status_detection_trigger.source = readUInt8(bytes, counterObj, 1);
 				}
 				if (decoded.temperature_alarm.type == 0x20) {
 					decoded.temperature_alarm.over_range_alarm_trigger = decoded.temperature_alarm.over_range_alarm_trigger || {};
 					decoded.temperature_alarm.over_range_alarm_trigger.temperature = readInt16LE(bytes, counterObj, 2) / 100;
+					// 0：Internal SHT4X, 1：Internal NTC, 2：External NTC
+					decoded.temperature_alarm.over_range_alarm_trigger.source = readUInt8(bytes, counterObj, 1);
 				}
 				if (decoded.temperature_alarm.type == 0x21) {
 					decoded.temperature_alarm.over_range_alarm_deactivation = decoded.temperature_alarm.over_range_alarm_deactivation || {};
 					decoded.temperature_alarm.over_range_alarm_deactivation.temperature = readInt16LE(bytes, counterObj, 2) / 100;
+					// 0：Internal SHT4X, 1：Internal NTC, 2：External NTC
+					decoded.temperature_alarm.over_range_alarm_deactivation.source = readUInt8(bytes, counterObj, 1);
 				}
 				if (decoded.temperature_alarm.type == 0x22) {
 					decoded.temperature_alarm.lower_range_alarm_trigger = decoded.temperature_alarm.lower_range_alarm_trigger || {};
 					decoded.temperature_alarm.lower_range_alarm_trigger.temperature = readInt16LE(bytes, counterObj, 2) / 100;
+					// 0：Internal SHT4X, 1：Internal NTC, 2：External NTC
+					decoded.temperature_alarm.lower_range_alarm_trigger.source = readUInt8(bytes, counterObj, 1);
 				}
 				if (decoded.temperature_alarm.type == 0x23) {
 					decoded.temperature_alarm.lower_range_alarm_deactivation = decoded.temperature_alarm.lower_range_alarm_deactivation || {};
 					decoded.temperature_alarm.lower_range_alarm_deactivation.temperature = readInt16LE(bytes, counterObj, 2) / 100;
+					// 0：Internal SHT4X, 1：Internal NTC, 2：External NTC
+					decoded.temperature_alarm.lower_range_alarm_deactivation.source = readUInt8(bytes, counterObj, 1);
 				}
 				if (decoded.temperature_alarm.type == 0x24) {
 					decoded.temperature_alarm.within_range_alarm_trigger = decoded.temperature_alarm.within_range_alarm_trigger || {};
 					decoded.temperature_alarm.within_range_alarm_trigger.temperature = readInt16LE(bytes, counterObj, 2) / 100;
+					// 0：Internal SHT4X, 1：Internal NTC, 2：External NTC
+					decoded.temperature_alarm.within_range_alarm_trigger.source = readUInt8(bytes, counterObj, 1);
 				}
 				if (decoded.temperature_alarm.type == 0x25) {
 					decoded.temperature_alarm.within_range_alarm_deactivation = decoded.temperature_alarm.within_range_alarm_deactivation || {};
 					decoded.temperature_alarm.within_range_alarm_deactivation.temperature = readInt16LE(bytes, counterObj, 2) / 100;
+					// 0：Internal SHT4X, 1：Internal NTC, 2：External NTC
+					decoded.temperature_alarm.within_range_alarm_deactivation.source = readUInt8(bytes, counterObj, 1);
 				}
 				if (decoded.temperature_alarm.type == 0x26) {
 					decoded.temperature_alarm.outside_range_alarm_trigger = decoded.temperature_alarm.outside_range_alarm_trigger || {};
 					decoded.temperature_alarm.outside_range_alarm_trigger.temperature = readInt16LE(bytes, counterObj, 2) / 100;
+					// 0：Internal SHT4X, 1：Internal NTC, 2：External NTC
+					decoded.temperature_alarm.outside_range_alarm_trigger.source = readUInt8(bytes, counterObj, 1);
 				}
 				if (decoded.temperature_alarm.type == 0x27) {
 					decoded.temperature_alarm.outside_range_alarm_deactivation = decoded.temperature_alarm.outside_range_alarm_deactivation || {};
 					decoded.temperature_alarm.outside_range_alarm_deactivation.temperature = readInt16LE(bytes, counterObj, 2) / 100;
+					// 0：Internal SHT4X, 1：Internal NTC, 2：External NTC
+					decoded.temperature_alarm.outside_range_alarm_deactivation.source = readUInt8(bytes, counterObj, 1);
 				}
 				if (decoded.temperature_alarm.type == 0x30) {
 					decoded.temperature_alarm.persistent_low_temperature_alarm_deactivation = decoded.temperature_alarm.persistent_low_temperature_alarm_deactivation || {};
 					decoded.temperature_alarm.persistent_low_temperature_alarm_deactivation.temperature = readInt16LE(bytes, counterObj, 2) / 100;
+					// 0：Internal SHT4X, 1：Internal NTC, 2：External NTC
+					decoded.temperature_alarm.persistent_low_temperature_alarm_deactivation.source = readUInt8(bytes, counterObj, 1);
 				}
 				if (decoded.temperature_alarm.type == 0x31) {
 					decoded.temperature_alarm.persistent_low_temperature_alarm_trigger = decoded.temperature_alarm.persistent_low_temperature_alarm_trigger || {};
 					decoded.temperature_alarm.persistent_low_temperature_alarm_trigger.temperature = readInt16LE(bytes, counterObj, 2) / 100;
+					// 0：Internal SHT4X, 1：Internal NTC, 2：External NTC
+					decoded.temperature_alarm.persistent_low_temperature_alarm_trigger.source = readUInt8(bytes, counterObj, 1);
 				}
 				if (decoded.temperature_alarm.type == 0x40) {
 					decoded.temperature_alarm.persistent_high_alarm_deactivation = decoded.temperature_alarm.persistent_high_alarm_deactivation || {};
 					decoded.temperature_alarm.persistent_high_alarm_deactivation.temperature = readInt16LE(bytes, counterObj, 2) / 100;
+					// 0：Internal SHT4X, 1：Internal NTC, 2：External NTC
+					decoded.temperature_alarm.persistent_high_alarm_deactivation.source = readUInt8(bytes, counterObj, 1);
 				}
 				if (decoded.temperature_alarm.type == 0x41) {
 					decoded.temperature_alarm.persistent_high_alarm_trigger = decoded.temperature_alarm.persistent_high_alarm_trigger || {};
 					decoded.temperature_alarm.persistent_high_alarm_trigger.temperature = readInt16LE(bytes, counterObj, 2) / 100;
+					// 0：Internal SHT4X, 1：Internal NTC, 2：External NTC
+					decoded.temperature_alarm.persistent_high_alarm_trigger.source = readUInt8(bytes, counterObj, 1);
 				}
 				break;
 			case 0x03:
@@ -720,12 +748,16 @@ function milesightDeviceDecode(bytes) {
 					decoded.cmd_temp_limit.lower_range_alarm_trigger.low_threshold = readInt16LE(bytes, counterObj, 2) / 100;
 					decoded.cmd_temp_limit.lower_range_alarm_trigger.high_threshold = readInt16LE(bytes, counterObj, 2) / 100;
 					decoded.cmd_temp_limit.lower_range_alarm_trigger.ambient_temp = readInt16LE(bytes, counterObj, 2) / 100;
+					// 0：Internal SHT4X, 1：Internal NTC, 2：External NTC
+					decoded.cmd_temp_limit.lower_range_alarm_trigger.source = readUInt8(bytes, counterObj, 1);
 				}
 				if (decoded.cmd_temp_limit.type == 0x01) {
 					decoded.cmd_temp_limit.over_range_alarm_trigger = decoded.cmd_temp_limit.over_range_alarm_trigger || {};
 					decoded.cmd_temp_limit.over_range_alarm_trigger.low_threshold = readInt16LE(bytes, counterObj, 2) / 100;
 					decoded.cmd_temp_limit.over_range_alarm_trigger.high_threshold = readInt16LE(bytes, counterObj, 2) / 100;
 					decoded.cmd_temp_limit.over_range_alarm_trigger.ambient_temp = readInt16LE(bytes, counterObj, 2) / 100;
+					// 0：Internal SHT4X, 1：Internal NTC, 2：External NTC
+					decoded.cmd_temp_limit.over_range_alarm_trigger.source = readUInt8(bytes, counterObj, 1);
 				}
 				break;
 			case 0x0b:
@@ -736,12 +768,16 @@ function milesightDeviceDecode(bytes) {
 					decoded.local_temp_limit.lower_range_alarm_trigger.low_threshold = readInt16LE(bytes, counterObj, 2) / 100;
 					decoded.local_temp_limit.lower_range_alarm_trigger.high_threshold = readInt16LE(bytes, counterObj, 2) / 100;
 					decoded.local_temp_limit.lower_range_alarm_trigger.ambient_temp = readInt16LE(bytes, counterObj, 2) / 100;
+					// 0：Internal SHT4X, 1：Internal NTC, 2：External NTC
+					decoded.local_temp_limit.lower_range_alarm_trigger.source = readUInt8(bytes, counterObj, 1);
 				}
 				if (decoded.local_temp_limit.type == 0x01) {
 					decoded.local_temp_limit.over_range_alarm_trigger = decoded.local_temp_limit.over_range_alarm_trigger || {};
 					decoded.local_temp_limit.over_range_alarm_trigger.low_threshold = readInt16LE(bytes, counterObj, 2) / 100;
 					decoded.local_temp_limit.over_range_alarm_trigger.high_threshold = readInt16LE(bytes, counterObj, 2) / 100;
 					decoded.local_temp_limit.over_range_alarm_trigger.ambient_temp = readInt16LE(bytes, counterObj, 2) / 100;
+					// 0：Internal SHT4X, 1：Internal NTC, 2：External NTC
+					decoded.local_temp_limit.over_range_alarm_trigger.source = readUInt8(bytes, counterObj, 1);
 				}
 				break;
 			case 0x30:
@@ -817,7 +853,7 @@ function milesightDeviceDecode(bytes) {
 					decoded.temperature_control_mode.ctrl_mode = readUInt8(bytes, counterObj, 1);
 				}
 				if (temperature_control_mode_command == 0x01) {
-					// 0：disable, 1：enable
+					// 1：enable
 					decoded.temperature_control_mode.plan_enable = readUInt8(bytes, counterObj, 1);
 				}
 				break;

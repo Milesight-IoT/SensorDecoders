@@ -1071,84 +1071,154 @@ function milesightDeviceEncode(payload) {
 				throw betweenError('temperature_alarm.window_status_detection_deactivation.temperature', -20, 60);
 			}
 			buffer.writeInt16LE(payload.temperature_alarm.window_status_detection_deactivation.temperature * 100);
+			if ([0, 1, 2].indexOf(payload.temperature_alarm.window_status_detection_deactivation.source) === -1) {
+				throw oneOfError('temperature_alarm.window_status_detection_deactivation.source', [0, 1, 2]);
+			}
+			// 0：Internal SHT4X, 1：Internal NTC, 2：External NTC
+			buffer.writeUInt8(payload.temperature_alarm.window_status_detection_deactivation.source);
 		}
 		if (payload.temperature_alarm.type == 0x01) {
 			if (payload.temperature_alarm.window_status_detection_trigger.temperature < -20 || payload.temperature_alarm.window_status_detection_trigger.temperature > 60) {
 				throw betweenError('temperature_alarm.window_status_detection_trigger.temperature', -20, 60);
 			}
 			buffer.writeInt16LE(payload.temperature_alarm.window_status_detection_trigger.temperature * 100);
+			if ([0, 1, 2].indexOf(payload.temperature_alarm.window_status_detection_trigger.source) === -1) {
+				throw oneOfError('temperature_alarm.window_status_detection_trigger.source', [0, 1, 2]);
+			}
+			// 0：Internal SHT4X, 1：Internal NTC, 2：External NTC
+			buffer.writeUInt8(payload.temperature_alarm.window_status_detection_trigger.source);
 		}
 		if (payload.temperature_alarm.type == 0x20) {
 			if (payload.temperature_alarm.over_range_alarm_trigger.temperature < -20 || payload.temperature_alarm.over_range_alarm_trigger.temperature > 60) {
 				throw betweenError('temperature_alarm.over_range_alarm_trigger.temperature', -20, 60);
 			}
 			buffer.writeInt16LE(payload.temperature_alarm.over_range_alarm_trigger.temperature * 100);
+			if ([0, 1, 2].indexOf(payload.temperature_alarm.over_range_alarm_trigger.source) === -1) {
+				throw oneOfError('temperature_alarm.over_range_alarm_trigger.source', [0, 1, 2]);
+			}
+			// 0：Internal SHT4X, 1：Internal NTC, 2：External NTC
+			buffer.writeUInt8(payload.temperature_alarm.over_range_alarm_trigger.source);
 		}
 		if (payload.temperature_alarm.type == 0x21) {
 			if (payload.temperature_alarm.over_range_alarm_deactivation.temperature < -20 || payload.temperature_alarm.over_range_alarm_deactivation.temperature > 60) {
 				throw betweenError('temperature_alarm.over_range_alarm_deactivation.temperature', -20, 60);
 			}
 			buffer.writeInt16LE(payload.temperature_alarm.over_range_alarm_deactivation.temperature * 100);
+			if ([0, 1, 2].indexOf(payload.temperature_alarm.over_range_alarm_deactivation.source) === -1) {
+				throw oneOfError('temperature_alarm.over_range_alarm_deactivation.source', [0, 1, 2]);
+			}
+			// 0：Internal SHT4X, 1：Internal NTC, 2：External NTC
+			buffer.writeUInt8(payload.temperature_alarm.over_range_alarm_deactivation.source);
 		}
 		if (payload.temperature_alarm.type == 0x22) {
 			if (payload.temperature_alarm.lower_range_alarm_trigger.temperature < -20 || payload.temperature_alarm.lower_range_alarm_trigger.temperature > 60) {
 				throw betweenError('temperature_alarm.lower_range_alarm_trigger.temperature', -20, 60);
 			}
 			buffer.writeInt16LE(payload.temperature_alarm.lower_range_alarm_trigger.temperature * 100);
+			if ([0, 1, 2].indexOf(payload.temperature_alarm.lower_range_alarm_trigger.source) === -1) {
+				throw oneOfError('temperature_alarm.lower_range_alarm_trigger.source', [0, 1, 2]);
+			}
+			// 0：Internal SHT4X, 1：Internal NTC, 2：External NTC
+			buffer.writeUInt8(payload.temperature_alarm.lower_range_alarm_trigger.source);
 		}
 		if (payload.temperature_alarm.type == 0x23) {
 			if (payload.temperature_alarm.lower_range_alarm_deactivation.temperature < -20 || payload.temperature_alarm.lower_range_alarm_deactivation.temperature > 60) {
 				throw betweenError('temperature_alarm.lower_range_alarm_deactivation.temperature', -20, 60);
 			}
 			buffer.writeInt16LE(payload.temperature_alarm.lower_range_alarm_deactivation.temperature * 100);
+			if ([0, 1, 2].indexOf(payload.temperature_alarm.lower_range_alarm_deactivation.source) === -1) {
+				throw oneOfError('temperature_alarm.lower_range_alarm_deactivation.source', [0, 1, 2]);
+			}
+			// 0：Internal SHT4X, 1：Internal NTC, 2：External NTC
+			buffer.writeUInt8(payload.temperature_alarm.lower_range_alarm_deactivation.source);
 		}
 		if (payload.temperature_alarm.type == 0x24) {
 			if (payload.temperature_alarm.within_range_alarm_trigger.temperature < -20 || payload.temperature_alarm.within_range_alarm_trigger.temperature > 60) {
 				throw betweenError('temperature_alarm.within_range_alarm_trigger.temperature', -20, 60);
 			}
 			buffer.writeInt16LE(payload.temperature_alarm.within_range_alarm_trigger.temperature * 100);
+			if ([0, 1, 2].indexOf(payload.temperature_alarm.within_range_alarm_trigger.source) === -1) {
+				throw oneOfError('temperature_alarm.within_range_alarm_trigger.source', [0, 1, 2]);
+			}
+			// 0：Internal SHT4X, 1：Internal NTC, 2：External NTC
+			buffer.writeUInt8(payload.temperature_alarm.within_range_alarm_trigger.source);
 		}
 		if (payload.temperature_alarm.type == 0x25) {
 			if (payload.temperature_alarm.within_range_alarm_deactivation.temperature < -20 || payload.temperature_alarm.within_range_alarm_deactivation.temperature > 60) {
 				throw betweenError('temperature_alarm.within_range_alarm_deactivation.temperature', -20, 60);
 			}
 			buffer.writeInt16LE(payload.temperature_alarm.within_range_alarm_deactivation.temperature * 100);
+			if ([0, 1, 2].indexOf(payload.temperature_alarm.within_range_alarm_deactivation.source) === -1) {
+				throw oneOfError('temperature_alarm.within_range_alarm_deactivation.source', [0, 1, 2]);
+			}
+			// 0：Internal SHT4X, 1：Internal NTC, 2：External NTC
+			buffer.writeUInt8(payload.temperature_alarm.within_range_alarm_deactivation.source);
 		}
 		if (payload.temperature_alarm.type == 0x26) {
 			if (payload.temperature_alarm.outside_range_alarm_trigger.temperature < -20 || payload.temperature_alarm.outside_range_alarm_trigger.temperature > 60) {
 				throw betweenError('temperature_alarm.outside_range_alarm_trigger.temperature', -20, 60);
 			}
 			buffer.writeInt16LE(payload.temperature_alarm.outside_range_alarm_trigger.temperature * 100);
+			if ([0, 1, 2].indexOf(payload.temperature_alarm.outside_range_alarm_trigger.source) === -1) {
+				throw oneOfError('temperature_alarm.outside_range_alarm_trigger.source', [0, 1, 2]);
+			}
+			// 0：Internal SHT4X, 1：Internal NTC, 2：External NTC
+			buffer.writeUInt8(payload.temperature_alarm.outside_range_alarm_trigger.source);
 		}
 		if (payload.temperature_alarm.type == 0x27) {
 			if (payload.temperature_alarm.outside_range_alarm_deactivation.temperature < -20 || payload.temperature_alarm.outside_range_alarm_deactivation.temperature > 60) {
 				throw betweenError('temperature_alarm.outside_range_alarm_deactivation.temperature', -20, 60);
 			}
 			buffer.writeInt16LE(payload.temperature_alarm.outside_range_alarm_deactivation.temperature * 100);
+			if ([0, 1, 2].indexOf(payload.temperature_alarm.outside_range_alarm_deactivation.source) === -1) {
+				throw oneOfError('temperature_alarm.outside_range_alarm_deactivation.source', [0, 1, 2]);
+			}
+			// 0：Internal SHT4X, 1：Internal NTC, 2：External NTC
+			buffer.writeUInt8(payload.temperature_alarm.outside_range_alarm_deactivation.source);
 		}
 		if (payload.temperature_alarm.type == 0x30) {
 			if (payload.temperature_alarm.persistent_low_temperature_alarm_deactivation.temperature < -20 || payload.temperature_alarm.persistent_low_temperature_alarm_deactivation.temperature > 60) {
 				throw betweenError('temperature_alarm.persistent_low_temperature_alarm_deactivation.temperature', -20, 60);
 			}
 			buffer.writeInt16LE(payload.temperature_alarm.persistent_low_temperature_alarm_deactivation.temperature * 100);
+			if ([0, 1, 2].indexOf(payload.temperature_alarm.persistent_low_temperature_alarm_deactivation.source) === -1) {
+				throw oneOfError('temperature_alarm.persistent_low_temperature_alarm_deactivation.source', [0, 1, 2]);
+			}
+			// 0：Internal SHT4X, 1：Internal NTC, 2：External NTC
+			buffer.writeUInt8(payload.temperature_alarm.persistent_low_temperature_alarm_deactivation.source);
 		}
 		if (payload.temperature_alarm.type == 0x31) {
 			if (payload.temperature_alarm.persistent_low_temperature_alarm_trigger.temperature < -20 || payload.temperature_alarm.persistent_low_temperature_alarm_trigger.temperature > 60) {
 				throw betweenError('temperature_alarm.persistent_low_temperature_alarm_trigger.temperature', -20, 60);
 			}
 			buffer.writeInt16LE(payload.temperature_alarm.persistent_low_temperature_alarm_trigger.temperature * 100);
+			if ([0, 1, 2].indexOf(payload.temperature_alarm.persistent_low_temperature_alarm_trigger.source) === -1) {
+				throw oneOfError('temperature_alarm.persistent_low_temperature_alarm_trigger.source', [0, 1, 2]);
+			}
+			// 0：Internal SHT4X, 1：Internal NTC, 2：External NTC
+			buffer.writeUInt8(payload.temperature_alarm.persistent_low_temperature_alarm_trigger.source);
 		}
 		if (payload.temperature_alarm.type == 0x40) {
 			if (payload.temperature_alarm.persistent_high_alarm_deactivation.temperature < -20 || payload.temperature_alarm.persistent_high_alarm_deactivation.temperature > 60) {
 				throw betweenError('temperature_alarm.persistent_high_alarm_deactivation.temperature', -20, 60);
 			}
 			buffer.writeInt16LE(payload.temperature_alarm.persistent_high_alarm_deactivation.temperature * 100);
+			if ([0, 1, 2].indexOf(payload.temperature_alarm.persistent_high_alarm_deactivation.source) === -1) {
+				throw oneOfError('temperature_alarm.persistent_high_alarm_deactivation.source', [0, 1, 2]);
+			}
+			// 0：Internal SHT4X, 1：Internal NTC, 2：External NTC
+			buffer.writeUInt8(payload.temperature_alarm.persistent_high_alarm_deactivation.source);
 		}
 		if (payload.temperature_alarm.type == 0x41) {
 			if (payload.temperature_alarm.persistent_high_alarm_trigger.temperature < -20 || payload.temperature_alarm.persistent_high_alarm_trigger.temperature > 60) {
 				throw betweenError('temperature_alarm.persistent_high_alarm_trigger.temperature', -20, 60);
 			}
 			buffer.writeInt16LE(payload.temperature_alarm.persistent_high_alarm_trigger.temperature * 100);
+			if ([0, 1, 2].indexOf(payload.temperature_alarm.persistent_high_alarm_trigger.source) === -1) {
+				throw oneOfError('temperature_alarm.persistent_high_alarm_trigger.source', [0, 1, 2]);
+			}
+			// 0：Internal SHT4X, 1：Internal NTC, 2：External NTC
+			buffer.writeUInt8(payload.temperature_alarm.persistent_high_alarm_trigger.source);
 		}
 		encoded = encoded.concat(buffer.toBytes());
 	}
@@ -1286,6 +1356,11 @@ function milesightDeviceEncode(payload) {
 				throw betweenError('cmd_temp_limit.lower_range_alarm_trigger.ambient_temp', -20, 60);
 			}
 			buffer.writeInt16LE(payload.cmd_temp_limit.lower_range_alarm_trigger.ambient_temp * 100);
+			if ([0, 1, 2].indexOf(payload.cmd_temp_limit.lower_range_alarm_trigger.source) === -1) {
+				throw oneOfError('cmd_temp_limit.lower_range_alarm_trigger.source', [0, 1, 2]);
+			}
+			// 0：Internal SHT4X, 1：Internal NTC, 2：External NTC
+			buffer.writeUInt8(payload.cmd_temp_limit.lower_range_alarm_trigger.source);
 		}
 		if (payload.cmd_temp_limit.type == 0x01) {
 			if (payload.cmd_temp_limit.over_range_alarm_trigger.low_threshold < 5 || payload.cmd_temp_limit.over_range_alarm_trigger.low_threshold > 35) {
@@ -1300,6 +1375,11 @@ function milesightDeviceEncode(payload) {
 				throw betweenError('cmd_temp_limit.over_range_alarm_trigger.ambient_temp', -20, 60);
 			}
 			buffer.writeInt16LE(payload.cmd_temp_limit.over_range_alarm_trigger.ambient_temp * 100);
+			if ([0, 1, 2].indexOf(payload.cmd_temp_limit.over_range_alarm_trigger.source) === -1) {
+				throw oneOfError('cmd_temp_limit.over_range_alarm_trigger.source', [0, 1, 2]);
+			}
+			// 0：Internal SHT4X, 1：Internal NTC, 2：External NTC
+			buffer.writeUInt8(payload.cmd_temp_limit.over_range_alarm_trigger.source);
 		}
 		encoded = encoded.concat(buffer.toBytes());
 	}
@@ -1321,6 +1401,11 @@ function milesightDeviceEncode(payload) {
 				throw betweenError('local_temp_limit.lower_range_alarm_trigger.ambient_temp', -20, 60);
 			}
 			buffer.writeInt16LE(payload.local_temp_limit.lower_range_alarm_trigger.ambient_temp * 100);
+			if ([0, 1, 2].indexOf(payload.local_temp_limit.lower_range_alarm_trigger.source) === -1) {
+				throw oneOfError('local_temp_limit.lower_range_alarm_trigger.source', [0, 1, 2]);
+			}
+			// 0：Internal SHT4X, 1：Internal NTC, 2：External NTC
+			buffer.writeUInt8(payload.local_temp_limit.lower_range_alarm_trigger.source);
 		}
 		if (payload.local_temp_limit.type == 0x01) {
 			if (payload.local_temp_limit.over_range_alarm_trigger.low_threshold < 5 || payload.local_temp_limit.over_range_alarm_trigger.low_threshold > 35) {
@@ -1335,6 +1420,11 @@ function milesightDeviceEncode(payload) {
 				throw betweenError('local_temp_limit.over_range_alarm_trigger.ambient_temp', -20, 60);
 			}
 			buffer.writeInt16LE(payload.local_temp_limit.over_range_alarm_trigger.ambient_temp * 100);
+			if ([0, 1, 2].indexOf(payload.local_temp_limit.over_range_alarm_trigger.source) === -1) {
+				throw oneOfError('local_temp_limit.over_range_alarm_trigger.source', [0, 1, 2]);
+			}
+			// 0：Internal SHT4X, 1：Internal NTC, 2：External NTC
+			buffer.writeUInt8(payload.local_temp_limit.over_range_alarm_trigger.source);
 		}
 		encoded = encoded.concat(buffer.toBytes());
 	}
@@ -1455,12 +1545,12 @@ function milesightDeviceEncode(payload) {
 		}
 		if (isValid(payload.temperature_control_mode.plan_enable)) {
 			buffer.writeUInt8(0x60);
-			// 0：disable, 1：enable
+			// 1：enable
 			buffer.writeUInt8(0x01);
-			if ([0, 1].indexOf(payload.temperature_control_mode.plan_enable) === -1) {
-				throw oneOfError('temperature_control_mode.plan_enable', [0, 1]);
+			if ([1].indexOf(payload.temperature_control_mode.plan_enable) === -1) {
+				throw oneOfError('temperature_control_mode.plan_enable', [1]);
 			}
-			// 0：disable, 1：enable
+			// 1：enable
 			buffer.writeUInt8(payload.temperature_control_mode.plan_enable);
 		}
 		encoded = encoded.concat(buffer.toBytes());

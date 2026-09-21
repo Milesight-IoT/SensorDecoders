@@ -143,6 +143,20 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Bluetooth Status | 0xBA | 2 | r | 0 |  | 0: Not paired<br>1: Paired<br>2: Disconnected |
 | Paired Device DevEUI | 0xBA | 9 | r | 24e124123456789a |  |  |
 | Battery | 0x00 | 2 | r |  | 0 - 100 |  |
+| Data Source | 0x02 | 2 | r |  |  | 0：Internal SHT4X<br>1：Internal NTC<br>2：External NTC |
+| Data Source | 0x02 | 2 | r |  |  | 0：Internal SHT4X<br>1：Internal NTC<br>2：External NTC |
+| Data Source | 0x02 | 2 | r |  |  | 0：Internal SHT4X<br>1：Internal NTC<br>2：External NTC |
+| Data Source | 0x02 | 2 | r |  |  | 0：Internal SHT4X<br>1：Internal NTC<br>2：External NTC |
+| Data Source | 0x02 | 2 | r |  |  | 0：Internal SHT4X<br>1：Internal NTC<br>2：External NTC |
+| Data Source | 0x02 | 2 | r |  |  | 0：Internal SHT4X<br>1：Internal NTC<br>2：External NTC |
+| Data Source | 0x02 | 2 | r |  |  | 0：Internal SHT4X<br>1：Internal NTC<br>2：External NTC |
+| Data Source | 0x02 | 2 | r |  |  | 0：Internal SHT4X<br>1：Internal NTC<br>2：External NTC |
+| Data Source | 0x02 | 2 | r |  |  | 0：Internal SHT4X<br>1：Internal NTC<br>2：External NTC |
+| Data Source | 0x02 | 2 | r |  |  | 0：Internal SHT4X<br>1：Internal NTC<br>2：External NTC |
+| Data Source | 0x02 | 2 | r |  |  | 0：Internal SHT4X<br>1：Internal NTC<br>2：External NTC |
+| Data Source | 0x02 | 2 | r |  |  | 0：Internal SHT4X<br>1：Internal NTC<br>2：External NTC |
+| Data Source | 0x02 | 2 | r |  |  | 0：Internal SHT4X<br>1：Internal NTC<br>2：External NTC |
+| Data Source | 0x02 | 2 | r |  |  | 0：Internal SHT4X<br>1：Internal NTC<br>2：External NTC |
 | Infrared Command Status | 0x04 | 5 | r |  |  |  |
 | Infrared Command | 0x04 | 3 | r |  |  |  |
 | Switch | 0x04 | 2 | r |  |  | 0: Switch Off<br>1: Switch On |
@@ -163,6 +177,10 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Internal Temperature | 0x06 | 3 | r |  | -20 - 60 |  |
 | External Temperature | 0x07 | 3 | r |  | -20 - 60 |  |
 | Humidity | 0x08 | 3 | r |  | 0 - 100 |  |
+| Data Source | 0x0A | 2 | r |  |  | 0：Internal SHT4X<br>1：Internal NTC<br>2：External NTC |
+| Data Source | 0x0A | 2 | r |  |  | 0：Internal SHT4X<br>1：Internal NTC<br>2：External NTC |
+| Data Source | 0x0B | 2 | r |  |  | 0：Internal SHT4X<br>1：Internal NTC<br>2：External NTC |
+| Data Source | 0x0B | 2 | r |  |  | 0：Internal SHT4X<br>1：Internal NTC<br>2：External NTC |
 | Random key | 0xC9 | 2 | rw | 0 |  | 0：Disable<br>1：Enable |
 | Auto-P | 0xC4 | 2 | rw | 1 |  | 0：Disable<br>1：Enable |
 | Data Storage Settings | 0xC5 | 1 | rw |  |  |  |
@@ -174,7 +192,7 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Temperature Control Mode | 0x60 | 1 | rw |  |  |  |
 | Sub-command | 0x60 | 2 | rw | 0 |  | 0：Mode<br>1：Plan Temperature Control<br>Mode Enable |
 | Mode | 0x60 | 2 | rw | 2 |  | 0：heat<br>2：cool<br>3：auto<br>4：dehumidify<br>5：ventilation |
-| Plan Temperature Control Mode Enable | 0x60 | 2 | rw | 1 |  | 0：disable<br>1：enable |
+| Plan Temperature Control Mode Enable | 0x60 | 2 | rw | 1 |  | 1：enable |
 | Target Temperature Settings | 0x61 | 1 | rw |  |  |  |
 | Temperature Control Mode | 0x61 | 2 | rw | 0 |  |  |
 | Heat Target Temperature | 0x61 | 3 | rw | 17 | 16 - 30 |  |
@@ -359,10 +377,6 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Format Code Package | 0x8D | M | rw |  |  |  |
 | ID | 0x8D | 2 | rw | 0 |  |  |
 | Format Code | 0x8D | 10 | rw | 000000000000000000 |  |  |
-| Infrared Format Code | 0x8E | 1 | rw |  |  |  |
-| Offset | 0x8E | 2 | rw | 0 |  |  |
-| Data Length | 0x8E | 2 | rw | 186 | 0 - 255 |  |
-| Format Code Data | 0x8E | 1 | rw |  |  |  |
 | BLE Broadcast Duration Settings | 0x90 | 1 | rw |  |  |  |
 | Sub-command | 0x90 | 2 | rw | 0 |  |  |
 | Broadcast Duration Control Enable | 0x90 | 2 | rw | 1 |  | 0：Disable<br>1：Enable |
@@ -597,7 +611,7 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | BLE Server | 0xB4 | 2 | w | 0 |  | 0：Reset BLE Name<br>1：Cancel Pairing |
 | Battery | 0x01 | 2 | r |  | 0 - 100 |  |
 | Alarm Type | 0x02 | 2 | r |  |  |  |
-| Open Window Alarm Released | 0x02 | 3 | r |  |  |  |
+| Open Window Alarm Released | 0x02 | 4 | r |  |  |  |
 | Temperature | 0x02 | 3 | r |  | -20 - 60 |  |
 | Open Window Alarm | 0x02 | 3 | r |  |  |  |
 | Temperature | 0x02 | 3 | r |  | -20 - 60 |  |
@@ -637,7 +651,7 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Humidity Out of The High Range | 0x03 | 1 | r |  |  |  |
 | Usage Time | 0x09 | 5 | r |  |  |  |
 | Alarm Type | 0x0A | 2 | r |  |  |  |
-| Temperature Below Alarm | 0x0A | 7 | r |  |  |  |
+| Temperature Below Alarm | 0x0A | 8 | r |  |  |  |
 | Low Threshold | 0x0A | 3 | r |  | 5 - 35 |  |
 | High Threshold | 0x0A | 3 | r |  | 5 - 35 |  |
 | Ambient Temperature | 0x0A | 3 | r |  | -20 - 60 |  |

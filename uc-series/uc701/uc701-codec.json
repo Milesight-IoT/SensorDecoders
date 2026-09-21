@@ -294,6 +294,33 @@
             ]
         },
         {
+            "id": "cmd_temp_limit.lower_range_alarm_trigger.source",
+            "name": "Data Source(Temperature Below Alarm)",
+            "value": "",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "Internal SHT4X"
+                },
+                {
+                    "value": 1,
+                    "name": "Internal NTC"
+                },
+                {
+                    "value": 2,
+                    "name": "External NTC"
+                }
+            ],
+            "bacnet_type": "multistate_input_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": []
+        },
+        {
             "id": "cmd_temp_limit.over_range_alarm_trigger.celsius_ambient_temp",
             "name": "Celsius Ambient Temperature(Temperature Above Alarm)",
             "value": "",
@@ -412,6 +439,33 @@
                 "cmd_temp_limit.over_range_alarm_trigger.fahrenheit_high_threshold",
                 "cmd_temp_limit.over_range_alarm_trigger.fahrenheit_ambient_temp"
             ]
+        },
+        {
+            "id": "cmd_temp_limit.over_range_alarm_trigger.source",
+            "name": "Data Source(Temperature Above Alarm)",
+            "value": "",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "Internal SHT4X"
+                },
+                {
+                    "value": 1,
+                    "name": "Internal NTC"
+                },
+                {
+                    "value": 2,
+                    "name": "External NTC"
+                }
+            ],
+            "bacnet_type": "multistate_input_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": []
         },
         {
             "id": "cmd_temp_limit.type",
@@ -2178,6 +2232,33 @@
             ]
         },
         {
+            "id": "local_temp_limit.lower_range_alarm_trigger.source",
+            "name": "Data Source(Temperature Below Alarm)",
+            "value": "",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "Internal SHT4X"
+                },
+                {
+                    "value": 1,
+                    "name": "Internal NTC"
+                },
+                {
+                    "value": 2,
+                    "name": "External NTC"
+                }
+            ],
+            "bacnet_type": "multistate_input_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": []
+        },
+        {
             "id": "local_temp_limit.over_range_alarm_trigger.celsius_ambient_temp",
             "name": "Celsius Ambient Temperature(Temperature Above Alarm)",
             "value": "",
@@ -2296,6 +2377,33 @@
                 "local_temp_limit.over_range_alarm_trigger.fahrenheit_high_threshold",
                 "local_temp_limit.over_range_alarm_trigger.fahrenheit_ambient_temp"
             ]
+        },
+        {
+            "id": "local_temp_limit.over_range_alarm_trigger.source",
+            "name": "Data Source(Temperature Above Alarm)",
+            "value": "",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "Internal SHT4X"
+                },
+                {
+                    "value": 1,
+                    "name": "Internal NTC"
+                },
+                {
+                    "value": 2,
+                    "name": "External NTC"
+                }
+            ],
+            "bacnet_type": "multistate_input_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": []
         },
         {
             "id": "local_temp_limit.type",
@@ -2769,6 +2877,33 @@
             "reference": []
         },
         {
+            "id": "temperature_alarm.window_status_detection_deactivation.source",
+            "name": "Data Source(Open Window Alarm Released)",
+            "value": "",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "Internal SHT4X"
+                },
+                {
+                    "value": 1,
+                    "name": "Internal NTC"
+                },
+                {
+                    "value": 2,
+                    "name": "External NTC"
+                }
+            ],
+            "bacnet_type": "multistate_input_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": []
+        },
+        {
             "id": "temperature_alarm.window_status_detection_trigger.celsius_temperature",
             "name": "Celsius Temperature(Open Window Alarm)",
             "value": "",
@@ -2800,6 +2935,33 @@
             "bacnet_type": "analog_input_object",
             "bacnet_unit_type_id": 64,
             "bacnet_unit_type": "UNITS_DEGREES_FAHRENHEIT",
+            "reference": []
+        },
+        {
+            "id": "temperature_alarm.window_status_detection_trigger.source",
+            "name": "Data Source(Open Window Alarm)",
+            "value": "",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "Internal SHT4X"
+                },
+                {
+                    "value": 1,
+                    "name": "Internal NTC"
+                },
+                {
+                    "value": 2,
+                    "name": "External NTC"
+                }
+            ],
+            "bacnet_type": "multistate_input_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": []
         },
         {
