@@ -178,7 +178,10 @@ function handle_downlink_response(channel_type, bytes, offset) {
             offset += 2;
             break;
         default:
-            throw new Error("unknown downlink response");
+            // unknown response type: length is unknown, so stop parsing
+            // instead of throwing and losing all fields decoded so far
+            offset = bytes.length;
+            break;
     }
 
     return { data: decoded, offset: offset };
