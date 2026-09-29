@@ -5,7 +5,7 @@
  *
  * @product WT201
  */
-var RAW_VALUE = 0x00;
+var RAW_VALUE = 0x01;
 
 /* eslint-disable */
 // Chirpstack v4

@@ -5,7 +5,7 @@
  *
  * @product WS502
  */
-var RAW_VALUE = 0x00;
+var RAW_VALUE = 0x01;
 
 /* eslint no-redeclare: "off" */
 /* eslint-disable */
@@ -195,7 +195,7 @@ function handle_downlink_response(channel_type, bytes, offset) {
             var offset_map = mask ? switch_bit_offset : button_bit_offset;
             decoded[object_name] = {};
             for (var key in offset_map) {
-                decoded[object_name][key] = readOnOffStatus(data >>> offset_map[key] & 0x01);
+                decoded[object_name][key] = readOnOffStatus(data >>> (offset_map[key]) & 0x01);
                 if (mask) {
                     decoded[object_name][key + '_change'] = readYesNoStatus((data >>> (offset_map[key] + 4)) & 0x01);
                 }

@@ -5,7 +5,7 @@
  *
  * @product CT303 / CT305 / CT310
  */
-var RAW_VALUE = 0x00;
+var RAW_VALUE = 0x01;
 
 /* eslint no-redeclare: "off" */
 /* eslint-disable */
@@ -105,6 +105,7 @@ function milesightDeviceDecode(bytes) {
             }
             i += 2;
         }
+
         // CURRENT ALARM
         else if (includes(current_alarm_chns, channel_id) && channel_type === 0x99) {
             var current_alarm_chn_name = "current_chn" + (current_alarm_chns.indexOf(channel_id) + 1);

@@ -5,7 +5,7 @@
  *
  * @product CT101 / CT103 / CT105
  */
-var RAW_VALUE = 0x00;
+var RAW_VALUE = 0x01;
 
 /* eslint no-redeclare: "off" */
 /* eslint-disable */
@@ -99,6 +99,7 @@ function milesightDeviceDecode(bytes) {
             }
             i += 2;
         }
+
         // CURRENT ALARM
         else if (channel_id === 0x84 && channel_type === 0x98) {
             decoded.current_max = readUInt16LE(bytes.slice(i, i + 2)) / 100;
