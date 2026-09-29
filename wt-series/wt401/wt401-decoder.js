@@ -278,12 +278,12 @@ function milesightDeviceDecode(bytes) {
 				}
 				break;
 			case 0x8d:
-				// 0：BLE, 1：LoRa, 2：BLE+LoRa, 3：PowerBus+LoRa
+				// 0：BLE, 1：LoRa, 2：BLE+LoRa
 				decoded.communication_mode = readUInt8(bytes, counterObj, 1);
 				break;
 			case 0x61:
 				decoded.reporting_interval = decoded.reporting_interval || {};
-				// 0：BLE, 1：LoRa, 2：BLE+LoRa, 3：PowerBus+LoRa
+				// 0：BLE, 1：LORA, 2：BLE+LORA, 3：POWERBUS+lora
 				var reporting_interval_type = readUInt8(bytes, counterObj, 1);
 				if (reporting_interval_type == 0x00) {
 					decoded.reporting_interval.ble = decoded.reporting_interval.ble || {};
@@ -332,7 +332,7 @@ function milesightDeviceDecode(bytes) {
 				break;
 			case 0x6c:
 				decoded.communicate_interval = decoded.communicate_interval || {};
-				// 0:BLE, 1:LORA, 2:BLE+LORA, 3:POWERBUS+LORA
+				// 0：BLE, 1：LORA, 2：BLE+LORA, 3：POWERBUS+lora
 				var communicate_interval_id = readUInt8(bytes, counterObj, 1);
 				if (communicate_interval_id == 0x00) {
 					decoded.communicate_interval.ble = decoded.communicate_interval.ble || {};
@@ -400,10 +400,6 @@ function milesightDeviceDecode(bytes) {
 				break;
 			case 0x7e:
 				decoded.data_sync_timeout = readUInt8(bytes, counterObj, 1);
-				break;
-			case 0x85:
-				// 0:disable, 1:enable
-				decoded.ble_enable = readUInt8(bytes, counterObj, 1);
 				break;
 			case 0x8b:
 				decoded.ble_name = readString(bytes, counterObj, 32);
@@ -499,7 +495,7 @@ function milesightDeviceDecode(bytes) {
 				break;
 			case 0x6b:
 				decoded.target_temperature_range = decoded.target_temperature_range || {};
-				// 0：heat, 1：em heat, 2：cool, 3：auto
+				// 0：heat, 1：em heat, 2：cool, 3：auto, 4：dehumidify, 5：ventilation
 				var target_temperature_range_id = readUInt8(bytes, counterObj, 1);
 				if (target_temperature_range_id == 0x00) {
 					decoded.target_temperature_range.heat = decoded.target_temperature_range.heat || {};
@@ -701,7 +697,7 @@ function milesightDeviceDecode(bytes) {
 				var bitOptions = readUInt8(bytes, counterObj, 1);
 				// 1:1st, 2: 2nd, 3: 3rd, 4: 4th, 5: last
 				decoded.daylight_saving_time.start_week_num = extractBits(bitOptions, 4, 8);
-				// 1：Sun., 2：Mon., 3：Tues., 4：Wed., 5：Thurs., 6：Fri., 7：Sat.,
+				// 1：Mon., 2：Tues., 3：Wed., 4：Thurs., 5：Fri., 6：Sat., 7：Sun.
 				decoded.daylight_saving_time.start_week_day = extractBits(bitOptions, 0, 4);
 				decoded.daylight_saving_time.start_hour_min = readUInt16LE(bytes, counterObj, 2);
 				// 1:Jan., 2:Feb., 3:Mar., 4:Apr., 5:May, 6:Jun., 7:Jul., 8:Aug., 9:Sep., 10:Oct., 11:Nov., 12:Dec.
@@ -779,9 +775,6 @@ function milesightDeviceDecode(bytes) {
 				if (schedule_settings_item_command == 0x0a) {
 					schedule_settings_item.auto_target_temperature = readInt16LE(bytes, counterObj, 2) / 100;
 				}
-				break;
-			case 0x54:
-				decoded.reset_ble_name = readOnlyCommand(bytes, counterObj, 1);
 				break;
 			case 0x86:
 				decoded.origin_temperature = readInt16LE(bytes, counterObj, 2) / 100;
@@ -1003,6 +996,7 @@ function extractBits(byte, startBit, endBit) {
 	if (startBit >= endBit) {
 	  throw new Error("invalid bit range");
 	}
+
 	var width = endBit - startBit;
 	var mask = (1 << width) - 1;
 	return (byte >>> startBit) & mask;
@@ -1077,12 +1071,14 @@ function readCommand(allBytes, counterObj, end) {
 function hasPath(obj, path) {
 	var parts = path.split('.');
 	var current = obj;
+
 	for (var i = 0; i < parts.length; i++) {
 	  	if (!current || !(parts[i] in current)) {
 			return false;
 	  	}
 	  	current = current[parts[i]];
 	}
+
 	return true;
 }
 
@@ -1181,6 +1177,7 @@ function getAllLeafPaths(obj, prefix) {
 		  var newPath = path ? (path + "." + index) : String(index);
 		  recurse(item, newPath);
 		});
+
 	  } else if (typeof current === 'object' && current !== null) {
 		for (var key in current) {
 		  if (Object.prototype.hasOwnProperty.call(current, key)) {
@@ -1188,6 +1185,7 @@ function getAllLeafPaths(obj, prefix) {
 			recurse(current[key], newPath);
 		  }
 		}
+
 	  } else {
 		paths.push(path);
 	  }
@@ -1204,9 +1202,7 @@ function isInteger(str) {
 
 function cmdMap() {
 	return {
-		  "54": "reset_ble_name",
 		  "55": "fan_error_alarm",
-		  "59": "system_status_control",
 		  "60": "collection_interval",
 		  "61": "reporting_interval",
 		  "62": "intelligent_display_enable",
@@ -1228,7 +1224,6 @@ function cmdMap() {
 		  "82": "pir_common",
 		  "83": "pir_energy",
 		  "84": "pir_night",
-		  "85": "ble_enable",
 		  "86": "origin_temperature",
 		  "87": "origin_humidity",
 		  "88": "fan_enable",
