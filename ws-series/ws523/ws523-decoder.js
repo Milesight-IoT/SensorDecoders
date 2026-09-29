@@ -5,7 +5,7 @@
  *
  * @product WS52x
  */
-var RAW_VALUE = 0x00;
+var RAW_VALUE = 0x01;
 
 /* eslint no-redeclare: "off" */
 /* eslint-disable */
@@ -71,6 +71,11 @@ function milesightDeviceDecode(bytes) {
         // DEVICE STATUS
         else if (channel_id === 0xff && channel_type === 0x0b) {
             decoded.device_status = readDeviceStatus(1);
+            i += 1;
+        }
+        // POWER OUTAGE ALARM
+        else if (channel_id === 0xff && channel_type === 0x3f) {
+            decoded.power_outage_alarm = readPowerOutageAlarm(bytes[i]);
             i += 1;
         }
         // VOLTAGE
@@ -244,6 +249,12 @@ function readResetEvent(status) {
 function readDeviceStatus(status) {
     var status_map = { 0: "off", 1: "on" };
     return getValue(status_map, status);
+}
+
+function readPowerOutageAlarm(status) {
+    if (RAW_VALUE) return status;
+    // 0xff: power outage alarm triggered, other values reserved
+    return status === 0xff ? "power_outage" : "normal";
 }
 
 function readSocketStatus(status) {

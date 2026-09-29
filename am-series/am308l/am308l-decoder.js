@@ -5,7 +5,7 @@
  *
  * @product AM308L(v2)
  */
-var RAW_VALUE = 0x00;
+var RAW_VALUE = 0x01;
 
 /* eslint no-redeclare: "off" */
 /* eslint-disable */
@@ -50,7 +50,7 @@ function milesightDeviceDecode(bytes) {
         }
         // DEVICE STATUS
         else if (channel_id === 0xff && channel_type === 0x0b) {
-            decoded.device_status = readDeviceStatus(bytes[i]);
+            decoded.device_status = readDeviceStatus(1);
             i += 1;
         }
         // LORAWAN CLASS
