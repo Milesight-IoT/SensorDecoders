@@ -1330,23 +1330,6 @@
             ]
         },
         {
-            "id": "dormant_settings.0.id",
-            "name": "Dormant 0 ID(Dormant Settings)",
-            "value": "0",
-            "unit": "",
-            "access_mode": "RW",
-            "data_type": "NUMBER",
-            "value_type": "UINT8",
-            "range": [
-                0,
-                1
-            ],
-            "bacnet_type": "analog_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": []
-        },
-        {
             "id": "dormant_settings.1.enable",
             "name": "Dormant 1 Enable(Dormant Settings)",
             "value": "0",
@@ -1452,23 +1435,6 @@
                 "dormant_settings.1.heating_date_settings.end_mon",
                 "dormant_settings.1.heating_date_settings.end_day"
             ]
-        },
-        {
-            "id": "dormant_settings.1.id",
-            "name": "Dormant 1 ID(Dormant Settings)",
-            "value": "1",
-            "unit": "",
-            "access_mode": "RW",
-            "data_type": "NUMBER",
-            "value_type": "UINT8",
-            "range": [
-                0,
-                1
-            ],
-            "bacnet_type": "analog_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": []
         },
         {
             "id": "enhanced_infrared_emission_power_enable",
@@ -3601,23 +3567,6 @@
             "bacnet_type": "analog_value_object",
             "bacnet_unit_type_id": 64,
             "bacnet_unit_type": "UNITS_DEGREES_FAHRENHEIT",
-            "reference": []
-        },
-        {
-            "id": "temperature_limit_task_settings.0.id",
-            "name": "Task 0 ID(Temperature Limit Task Settings)",
-            "value": "0",
-            "unit": "",
-            "access_mode": "RW",
-            "data_type": "NUMBER",
-            "value_type": "UINT8",
-            "range": [
-                0,
-                0
-            ],
-            "bacnet_type": "analog_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": []
         },
         {
