@@ -312,22 +312,22 @@ function milesightDeviceEncode(payload) {
 		}
 		if (isValid(payload.lorawan_configuration_settings.version)) {
 			buffer.writeUInt8(0xcf);
-			// 1：1.0.2, 2：1.0.3, 3：1.0.3, 4：1.0.4
+			// 1：1.0.2, 2：1.0.3
 			buffer.writeUInt8(0xd8);
-			if ([1, 2, 3, 4].indexOf(payload.lorawan_configuration_settings.version) === -1) {
-				throw oneOfError('lorawan_configuration_settings.version', [1, 2, 3, 4]);
+			if ([1, 2].indexOf(payload.lorawan_configuration_settings.version) === -1) {
+				throw oneOfError('lorawan_configuration_settings.version', [1, 2]);
 			}
-			// 1：1.0.2, 2：1.0.3, 3：1.0.3, 4：1.0.4
+			// 1：1.0.2, 2：1.0.3
 			buffer.writeUInt8(payload.lorawan_configuration_settings.version);
 		}
 		if (isValid(payload.lorawan_configuration_settings.mode)) {
 			buffer.writeUInt8(0xcf);
-			// 0:ClassA, 1:ClassB, 2:ClassC, 3:ClassC to B
+			// 1:ClassB, 2:ClassC
 			buffer.writeUInt8(0x00);
-			if ([0, 1, 2, 3].indexOf(payload.lorawan_configuration_settings.mode) === -1) {
-				throw oneOfError('lorawan_configuration_settings.mode', [0, 1, 2, 3]);
+			if ([1, 2].indexOf(payload.lorawan_configuration_settings.mode) === -1) {
+				throw oneOfError('lorawan_configuration_settings.mode', [1, 2]);
 			}
-			// 0:ClassA, 1:ClassB, 2:ClassC, 3:ClassC to B
+			// 1:ClassB, 2:ClassC
 			buffer.writeUInt8(payload.lorawan_configuration_settings.mode);
 		}
 		if (isValid(payload.lorawan_configuration_settings.confirmed_mode)) {

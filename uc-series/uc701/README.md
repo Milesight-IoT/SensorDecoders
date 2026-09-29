@@ -16,8 +16,8 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | APP EUI | 0xCF | 9 | rw | 24e124c0002a0001 |  |  |
 | Network ID | 0xCF | 4 | rw | 10203 |  |  |
 | Application Port | 0xCF | 2 | rw | 85 | 1 - 223 |  |
-| LoRaWAN Version | 0xCF | 2 | rw | 2 |  | 1：1.0.2<br>2：1.0.3<br>3：1.0.3<br>4：1.0.4 |
-| LoRaWAN Work Mode | 0xCF | 2 | rw | 2 |  | 0:ClassA<br>1:ClassB<br>2:ClassC<br>3:ClassC to B |
+| LoRaWAN Version | 0xCF | 2 | rw | 2 |  | 1：1.0.2<br>2：1.0.3 |
+| LoRaWAN Work Mode | 0xCF | 2 | rw | 2 |  | 1:ClassB<br>2:ClassC |
 | Confirmed Mode | 0xCF | 2 | rw | 0 |  | 0：disable<br>1：enable |
 | ACK | 0xCF | 2 | rw | 1 | 1 - 15 |  |
 | Join Type | 0xCF | 2 | rw | 1 |  | 0：ABP<br>1：OTAA |

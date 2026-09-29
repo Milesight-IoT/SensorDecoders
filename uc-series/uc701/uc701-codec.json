@@ -2407,20 +2407,12 @@
             "value_type": "UINT8",
             "values": [
                 {
-                    "value": 0,
-                    "name": "ClassA"
-                },
-                {
                     "value": 1,
                     "name": "ClassB"
                 },
                 {
                     "value": 2,
                     "name": "ClassC"
-                },
-                {
-                    "value": 3,
-                    "name": "ClassC to B"
                 }
             ],
             "bacnet_type": "multistate_value_object",
@@ -2444,14 +2436,6 @@
                 {
                     "value": 2,
                     "name": "1.0.3"
-                },
-                {
-                    "value": 3,
-                    "name": "1.0.3B"
-                },
-                {
-                    "value": 4,
-                    "name": "1.0.4"
                 }
             ],
             "bacnet_type": "multistate_value_object",

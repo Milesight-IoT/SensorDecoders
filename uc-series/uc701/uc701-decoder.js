@@ -231,11 +231,11 @@ function milesightDeviceDecode(bytes) {
 					decoded.lorawan_configuration_settings.app_port = readUInt8(bytes, counterObj, 1);
 				}
 				if (lorawan_configuration_settings_command == 0xd8) {
-					// 1：1.0.2, 2：1.0.3, 3：1.0.3, 4：1.0.4
+					// 1：1.0.2, 2：1.0.3
 					decoded.lorawan_configuration_settings.version = readUInt8(bytes, counterObj, 1);
 				}
 				if (lorawan_configuration_settings_command == 0x00) {
-					// 0:ClassA, 1:ClassB, 2:ClassC, 3:ClassC to B
+					// 1:ClassB, 2:ClassC
 					decoded.lorawan_configuration_settings.mode = readUInt8(bytes, counterObj, 1);
 				}
 				if (lorawan_configuration_settings_command == 0x5d) {
