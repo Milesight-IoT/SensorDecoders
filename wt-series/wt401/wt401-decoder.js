@@ -409,38 +409,62 @@ function milesightDeviceDecode(bytes) {
 				decoded.system_status = readUInt8(bytes, counterObj, 1);
 				break;
 			case 0x64:
-				decoded.mode_enable = decoded.mode_enable || {};
 				var bitOptions = readUInt8(bytes, counterObj, 1);
 				// 0：disable, 1：enable
-				decoded.mode_enable.heat = extractBits(bitOptions, 0, 1);
+				heat = extractBits(bitOptions, 0, 1);
 				// 0：disable, 1：enable
-				decoded.mode_enable.em_heat = extractBits(bitOptions, 1, 2);
+				em_heat = extractBits(bitOptions, 1, 2);
 				// 0：disable, 1：enable
-				decoded.mode_enable.cool = extractBits(bitOptions, 2, 3);
+				cool = extractBits(bitOptions, 2, 3);
 				// 0：disable, 1：enable
-				decoded.mode_enable.auto = extractBits(bitOptions, 3, 4);
+				auto = extractBits(bitOptions, 3, 4);
 				// 0：disable, 1：enable
-				decoded.mode_enable.dehumidity = extractBits(bitOptions, 4, 5);
+				dehumidity = extractBits(bitOptions, 4, 5);
 				// 0：disable, 1：enable
-				decoded.mode_enable.ventilation = extractBits(bitOptions, 5, 6);
-				decoded.mode_enable.reserved = extractBits(bitOptions, 6, 8);
+				ventilation = extractBits(bitOptions, 5, 6);
+				if (heat && em_heat && cool && auto && !dehumidity && !ventilation) {
+					decoded.mode_enable = 1;
+				} else if (heat && !em_heat && cool && auto && !dehumidity && !ventilation) {
+					decoded.mode_enable = 2;
+				} else if (heat && !em_heat && !cool && !auto && !dehumidity && !ventilation) {
+					decoded.mode_enable = 3;
+				} else if (!heat && !em_heat && cool && !auto && !dehumidity && !ventilation) {
+					decoded.mode_enable = 4;
+				} else if (heat && !em_heat && cool && !auto && !dehumidity && !ventilation) {
+					decoded.mode_enable = 5;
+				} else if (heat && em_heat && cool && auto && dehumidity && ventilation) {
+					decoded.mode_enable = 6;
+				} else {
+					decoded.mode_enable = 256;
+				}
 				break;
 			case 0x88:
-				decoded.fan_enable = decoded.fan_enable || {};
 				var bitOptions = readUInt8(bytes, counterObj, 1);
 				// 0：disable, 1：enable
-				decoded.fan_enable.auto = extractBits(bitOptions, 0, 1);
+				var auto = extractBits(bitOptions, 0, 1);
 				// 0：disable, 1：enable
-				decoded.fan_enable.circul = extractBits(bitOptions, 1, 2);
+				var circulation = extractBits(bitOptions, 1, 2);
 				// 0：disable, 1：enable
-				decoded.fan_enable.on = extractBits(bitOptions, 2, 3);
+				var on = extractBits(bitOptions, 2, 3);
 				// 0：disable, 1：enable
-				decoded.fan_enable.low = extractBits(bitOptions, 3, 4);
+				var low = extractBits(bitOptions, 3, 4);
 				// 0：disable, 1：enable
-				decoded.fan_enable.medium = extractBits(bitOptions, 4, 5);
+				var medium = extractBits(bitOptions, 4, 5);
 				// 0：disable, 1：enable
-				decoded.fan_enable.high = extractBits(bitOptions, 5, 6);
-				decoded.fan_enable.reserved = extractBits(bitOptions, 6, 8);
+				var high = extractBits(bitOptions, 5, 6);
+				if (auto && circulation && on && low && medium && high) {
+					decoded.fan_enable = 1;
+				} else if (auto && on && low && medium && high) {
+					decoded.fan_enable = 2;
+				} else if (circulation && on && low && medium && high) {
+					decoded.fan_enable = 3;
+				} else if (auto && circulation) {
+					decoded.fan_enable = 4;
+				} else if (on && low && medium && high) {
+					decoded.fan_enable = 5;
+				} else {
+					decoded.fan_enable = 256;
+				}
 				break;
 			case 0x68:
 				decoded.temperature_control_mode = decoded.temperature_control_mode || {};
@@ -644,24 +668,48 @@ function milesightDeviceDecode(bytes) {
 			case 0x72:
 				decoded.children_lock_settings = decoded.children_lock_settings || {};
 				// 0:disable, 1:enable
-				decoded.children_lock_settings.enable = readUInt8(bytes, counterObj, 1);
+				var enable = readUInt8(bytes, counterObj, 1);
 				var bitOptions = readUInt16LE(bytes, counterObj, 2);
-				decoded.children_lock_settings.temp_up = extractBits(bitOptions, 0, 1);
-				decoded.children_lock_settings.temp_down = extractBits(bitOptions, 1, 2);
-				decoded.children_lock_settings.system_on_off = extractBits(bitOptions, 2, 3);
-				decoded.children_lock_settings.fan_mode = extractBits(bitOptions, 3, 4);
-				decoded.children_lock_settings.temperature_control_mode = extractBits(bitOptions, 4, 5);
-				decoded.children_lock_settings.reboot_reset = extractBits(bitOptions, 5, 6);
-				decoded.children_lock_settings.power_on_off = extractBits(bitOptions, 6, 7);
-				decoded.children_lock_settings.cancel_pair = extractBits(bitOptions, 7, 8);
-				decoded.children_lock_settings.plan_switch = extractBits(bitOptions, 8, 9);
-				decoded.children_lock_settings.status_report = extractBits(bitOptions, 9, 10);
-				decoded.children_lock_settings.filter_clean_alarm_release = extractBits(bitOptions, 10, 11);
-				decoded.children_lock_settings.button1_event = extractBits(bitOptions, 11, 12);
-				decoded.children_lock_settings.button2_event = extractBits(bitOptions, 12, 13);
-				decoded.children_lock_settings.button3_event = extractBits(bitOptions, 13, 14);
-				decoded.children_lock_settings.temperature_unit_switch = extractBits(bitOptions, 14, 15);
-				decoded.children_lock_settings.reserved = extractBits(bitOptions, 15, 16);
+				var temp_up = extractBits(bitOptions, 0, 1);
+				var temp_down = extractBits(bitOptions, 1, 2);
+				var system_on_off = extractBits(bitOptions, 2, 3);
+				var fan_mode = extractBits(bitOptions, 3, 4);
+				var temperature_control_mode = extractBits(bitOptions, 4, 5);
+				var reboot_reset = extractBits(bitOptions, 5, 6);
+				var power_on_off = extractBits(bitOptions, 6, 7);
+				var cancel_pair = extractBits(bitOptions, 7, 8);
+				var plan_switch = extractBits(bitOptions, 8, 9);
+				var status_report = extractBits(bitOptions, 9, 10);
+				var filter_clean_alarm_release = extractBits(bitOptions, 10, 11);
+				var button1_event = extractBits(bitOptions, 11, 12);
+				var button2_event = extractBits(bitOptions, 12, 13);
+				var button3_event = extractBits(bitOptions, 13, 14);
+				var temperature_unit_switch = extractBits(bitOptions, 14, 15);
+
+				if (
+					!enable &&
+					!temp_up &&
+					!temp_down &&
+					!system_on_off &&
+					!fan_mode &&
+					!temperature_control_mode &&
+					!reboot_reset &&
+					!power_on_off &&
+					!cancel_pair &&
+					!plan_switch &&
+					!status_report &&
+					!filter_clean_alarm_release &&
+					!button1_event &&
+					!button2_event &&
+					!button3_event &&
+					!temperature_unit_switch
+				) {
+					decoded.children_lock_settings = 1;
+				} else if (enable && temp_up && temp_down && system_on_off && fan_mode && temperature_control_mode && reboot_reset && power_on_off && cancel_pair && plan_switch && status_report && filter_clean_alarm_release && button1_event && button2_event && button3_event && temperature_unit_switch) {
+					decoded.children_lock_settings = 2;
+				} else {
+					decoded.children_lock_settings = 256;
+				}
 				break;
 			case 0x81:
 				decoded.unlock_button = decoded.unlock_button || {};
@@ -673,16 +721,28 @@ function milesightDeviceDecode(bytes) {
 				decoded.unlock_combination_button_settings = decoded.unlock_combination_button_settings || {};
 				var bitOptions = readUInt8(bytes, counterObj, 1);
 				// 0：disable, 1：enable
-				decoded.unlock_combination_button_settings.button1 = extractBits(bitOptions, 0, 1);
-				// 0：disable, 1：enable
-				decoded.unlock_combination_button_settings.button2 = extractBits(bitOptions, 1, 2);
-				// 0：disable, 1：enable
-				decoded.unlock_combination_button_settings.button3 = extractBits(bitOptions, 2, 3);
-				// 0：disable, 1：enable
-				decoded.unlock_combination_button_settings.button4 = extractBits(bitOptions, 3, 4);
-				// 0：disable, 1：enable
-				decoded.unlock_combination_button_settings.button5 = extractBits(bitOptions, 4, 5);
-				decoded.unlock_combination_button_settings.reserved = extractBits(bitOptions, 5, 8);
+				var button1 = extractBits(bitOptions, 0, 1);
+				var button2 = extractBits(bitOptions, 1, 2);
+				var button3 = extractBits(bitOptions, 2, 3);
+				var button4 = extractBits(bitOptions, 3, 4);
+				var button5 = extractBits(bitOptions, 4, 5);
+				if (button1 && button2 && !button3 && !button4 && !button5) {
+					decoded.unlock_combination_button_settings = 1;
+				} else if (!button1 && button2 && button3 && !button4 && !button5) {
+					decoded.unlock_combination_button_settings = 2;
+				} else if (!button1 && !button2 && button3 && button4 && !button5) {
+					decoded.unlock_combination_button_settings = 3;
+				} else if (!button1 && !button2 && !button3 && button4 && button5) {
+					decoded.unlock_combination_button_settings = 4;
+				} else if (button1 && button2 && button3 && !button4 && !button5) {
+					decoded.unlock_combination_button_settings = 5;
+				} else if (!button1 && button2 && button3 && button4 && !button5) {
+					decoded.unlock_combination_button_settings = 6;
+				} else if (button1 && button2 && button3 && button4 && button5) {
+					decoded.unlock_combination_button_settings = 7;
+				} else {
+					decoded.unlock_combination_button_settings = 256;
+				}
 				break;
 			case 0xc7:
 				decoded.time_zone = readInt16LE(bytes, counterObj, 2);

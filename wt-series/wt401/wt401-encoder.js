@@ -723,25 +723,61 @@ function milesightDeviceEncode(payload) {
 		var buffer = new Buffer();
 		buffer.writeUInt8(0x64);
 		var bitOptions = 0;
-		// 0：disable, 1：enable
-		bitOptions |= payload.mode_enable.heat << 0;
+		if (payload.mode_enable == 1) {
+			// heat
+			bitOptions |= 1 << 0;
 
-		// 0：disable, 1：enable
-		bitOptions |= payload.mode_enable.em_heat << 1;
+			// em heat
+			bitOptions |= 1 << 1;
 
-		// 0：disable, 1：enable
-		bitOptions |= payload.mode_enable.cool << 2;
+			// cool
+			bitOptions |= 1 << 2;
 
-		// 0：disable, 1：enable
-		bitOptions |= payload.mode_enable.auto << 3;
+			// auto
+			bitOptions |= 1 << 3;
+		} else if (payload.mode_enable == 2) {
+			// heat
+			bitOptions |= 1 << 0;
 
-		// 0：disable, 1：enable
-		bitOptions |= payload.mode_enable.dehumidity << 4;
+			// cool
+			bitOptions |= 1 << 2;
 
-		// 0：disable, 1：enable
-		bitOptions |= payload.mode_enable.ventilation << 5;
+			// auto
+			bitOptions |= 1 << 3;
+		} else if (payload.mode_enable == 3) {
+			// heat
+			bitOptions |= 1 << 0;
+		} else if (payload.mode_enable == 4) {
+			// cool
+			bitOptions |= 1 << 2;
+		} else if (payload.mode_enable == 5) {
+			// heat
+			bitOptions |= 1 << 0;
 
-		bitOptions |= payload.mode_enable.reserved << 6;
+			// cool
+			bitOptions |= 1 << 2;
+		} else if (payload.mode_enable == 6) {
+			// heat
+			bitOptions |= 1 << 0;
+
+			// em heat
+			bitOptions |= 1 << 1;
+
+			// cool
+			bitOptions |= 1 << 2;
+
+			// auto
+			bitOptions |= 1 << 3;
+
+			// dehumidify
+			bitOptions |= 1 << 4;
+
+			// ventilation
+			bitOptions |= 1 << 5;
+		} else {
+			throw new Error('Invalid mode_enable: ' + payload.mode_enable);
+		}
+
 		buffer.writeUInt8(bitOptions);
 
 		encoded = encoded.concat(buffer.toBytes());
@@ -751,25 +787,31 @@ function milesightDeviceEncode(payload) {
 		var buffer = new Buffer();
 		buffer.writeUInt8(0x88);
 		var bitOptions = 0;
-		// 0：disable, 1：enable
-		bitOptions |= payload.fan_enable.auto << 0;
+		var auto = 0;
+		var circulation = 1;
+		var on = 2;
+		var low = 3;
+		var medium = 4;
+		var high = 5;
 
-		// 0：disable, 1：enable
-		bitOptions |= payload.fan_enable.circul << 1;
+		var operations = [];
+		if (payload.fan_enable == 1) {
+			operations = [auto, circulation, on, low, medium, high];
+		} else if (payload.fan_enable == 2) {
+			operations = [auto, on, low, medium, high];
+		} else if (payload.fan_enable == 3) {
+			operations = [circulation, on, low, medium, high];
+		} else if (payload.fan_enable == 4) {
+			operations = [auto, circulation];
+		} else if (payload.fan_enable == 5) {
+			operations = [on, low, medium, high];
+		} else {
+			throw new Error('Invalid fan_enable: ' + payload.fan_enable);
+		}
 
-		// 0：disable, 1：enable
-		bitOptions |= payload.fan_enable.on << 2;
-
-		// 0：disable, 1：enable
-		bitOptions |= payload.fan_enable.low << 3;
-
-		// 0：disable, 1：enable
-		bitOptions |= payload.fan_enable.medium << 4;
-
-		// 0：disable, 1：enable
-		bitOptions |= payload.fan_enable.high << 5;
-
-		bitOptions |= payload.fan_enable.reserved << 6;
+		for (var i = 0; i < operations.length; i++) {
+			bitOptions |= 1 << operations[i];
+		}
 		buffer.writeUInt8(bitOptions);
 
 		encoded = encoded.concat(buffer.toBytes());
@@ -1235,43 +1277,42 @@ function milesightDeviceEncode(payload) {
 	if ('children_lock_settings' in payload) {
 		var buffer = new Buffer();
 		buffer.writeUInt8(0x72);
-		if ([0, 1].indexOf(payload.children_lock_settings.enable) === -1) {
-			throw oneOfError('children_lock_settings.enable', [0, 1]);
-		}
+		// if ([0, 1].indexOf(payload.children_lock_settings.enable) === -1) {
+		// 	throw oneOfError('children_lock_settings.enable', [0, 1]);
+		// }
 		// 0:disable, 1:enable
-		buffer.writeUInt8(payload.children_lock_settings.enable);
+
 		var bitOptions = 0;
-		bitOptions |= payload.children_lock_settings.temp_up << 0;
+		var temp_up = 0;
+		var temp_down = 1;
+		var system_on_off = 2;
+		var fan_mode = 3;
+		var temperature_control_mode = 4;
+		var reboot_reset = 5;
+		var power_on_off = 6;
+		var cancel_pair = 7;
+		var plan_switch = 8;
+		var status_report = 9;
+		var filter_clean_alarm_release = 10;
+		var button1_event = 11;
+		var button2_event = 12;
+		var button3_event = 13;
+		var temperature_unit_switch = 14;
 
-		bitOptions |= payload.children_lock_settings.temp_down << 1;
+		var operations = [];
+		if (payload.children_lock_settings == 1) {
+			buffer.writeUInt8(0);
+		} else if (payload.children_lock_settings == 2) {
+			buffer.writeUInt8(1);
+			operations = [temp_up, temp_down, system_on_off, fan_mode, temperature_control_mode, reboot_reset, power_on_off, cancel_pair, plan_switch, status_report, filter_clean_alarm_release, button1_event, button2_event, button3_event, temperature_unit_switch];
+		} else {
+			throw new Error('Invalid children_lock_settings: ' + payload.children_lock_settings);
+		}
 
-		bitOptions |= payload.children_lock_settings.system_on_off << 2;
+		for (var i = 0; i < operations.length; i++) {
+			bitOptions |= 1 << operations[i];
+		}
 
-		bitOptions |= payload.children_lock_settings.fan_mode << 3;
-
-		bitOptions |= payload.children_lock_settings.temperature_control_mode << 4;
-
-		bitOptions |= payload.children_lock_settings.reboot_reset << 5;
-
-		bitOptions |= payload.children_lock_settings.power_on_off << 6;
-
-		bitOptions |= payload.children_lock_settings.cancel_pair << 7;
-
-		bitOptions |= payload.children_lock_settings.plan_switch << 8;
-
-		bitOptions |= payload.children_lock_settings.status_report << 9;
-
-		bitOptions |= payload.children_lock_settings.filter_clean_alarm_release << 10;
-
-		bitOptions |= payload.children_lock_settings.button1_event << 11;
-
-		bitOptions |= payload.children_lock_settings.button2_event << 12;
-
-		bitOptions |= payload.children_lock_settings.button3_event << 13;
-
-		bitOptions |= payload.children_lock_settings.temperature_unit_switch << 14;
-
-		bitOptions |= payload.children_lock_settings.reserved << 15;
 		buffer.writeUInt16LE(bitOptions);
 
 		encoded = encoded.concat(buffer.toBytes());
@@ -1296,22 +1337,35 @@ function milesightDeviceEncode(payload) {
 		var buffer = new Buffer();
 		buffer.writeUInt8(0x80);
 		var bitOptions = 0;
-		// 0：disable, 1：enable
-		bitOptions |= payload.unlock_combination_button_settings.button1 << 0;
+		var button1 = 0;
+		var button2 = 1;
+		var button3 = 2;
+		var button4 = 3;
+		var button5 = 4;
 
-		// 0：disable, 1：enable
-		bitOptions |= payload.unlock_combination_button_settings.button2 << 1;
+		var operations = [];
+		if (payload.unlock_combination_button_settings == 1) {
+			operations = [button1, button2];
+		} else if (payload.unlock_combination_button_settings == 2) {
+			operations = [button2, button3];
+		} else if (payload.unlock_combination_button_settings == 3) {
+			operations = [button3, button4];
+		} else if (payload.unlock_combination_button_settings == 4) {
+			operations = [button4, button5];
+		} else if (payload.unlock_combination_button_settings == 5) {
+			operations = [button1, button2, button3];
+		} else if (payload.unlock_combination_button_settings == 6) {
+			operations = [button2, button3, button4];
+		} else if (payload.unlock_combination_button_settings == 7) {
+			operations = [button1, button2, button3, button4, button5];
+		} else {
+			throw new Error('Invalid unlock_combination_button_settings: ' + payload.unlock_combination_button_settings);
+		}
 
-		// 0：disable, 1：enable
-		bitOptions |= payload.unlock_combination_button_settings.button3 << 2;
+		for (var i = 0; i < operations.length; i++) {
+			bitOptions |= 1 << operations[i];
+		}
 
-		// 0：disable, 1：enable
-		bitOptions |= payload.unlock_combination_button_settings.button4 << 3;
-
-		// 0：disable, 1：enable
-		bitOptions |= payload.unlock_combination_button_settings.button5 << 4;
-
-		bitOptions |= payload.unlock_combination_button_settings.reserved << 5;
 		buffer.writeUInt8(bitOptions);
 
 		encoded = encoded.concat(buffer.toBytes());
