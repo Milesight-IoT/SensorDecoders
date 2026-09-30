@@ -252,684 +252,30 @@
             "bacnet_unit_type": "UNITS_DEGREES_CELSIUS"
         },
         {
-            "id": "children_lock_settings.button1_event",
-            "name": "Button Event 1 (Child Lock)",
-            "value": "0",
+            "id": "children_lock_settings",
+            "name": "Children Lock",
+            "value": "1",
             "unit": "",
             "access_mode": "RW",
-            "data_type": "BOOL",
+            "data_type": "ENUM",
             "value_type": "UINT8",
             "values": [
                 {
-                    "value": 0,
-                    "name": "disable"
+                    "value": 1,
+                    "name": "disable all"
                 },
                 {
-                    "value": 1,
-                    "name": "enable"
-                }
-            ],
-            "bacnet_type": "binary_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": [
-                "children_lock_settings.enable",
-                "children_lock_settings.temp_up",
-                "children_lock_settings.temp_down",
-                "children_lock_settings.system_on_off",
-                "children_lock_settings.fan_mode",
-                "children_lock_settings.temperature_control_mode",
-                "children_lock_settings.reboot_reset",
-                "children_lock_settings.power_on_off",
-                "children_lock_settings.cancel_pair",
-                "children_lock_settings.plan_switch",
-                "children_lock_settings.status_report",
-                "children_lock_settings.filter_clean_alarm_release",
-                "children_lock_settings.button2_event",
-                "children_lock_settings.button3_event",
-                "children_lock_settings.temperature_unit_switch",
-                "children_lock_settings.reserved"
-            ]
-        },
-        {
-            "id": "children_lock_settings.button2_event",
-            "name": "Button Event 2 (Child Lock)",
-            "value": "0",
-            "unit": "",
-            "access_mode": "RW",
-            "data_type": "BOOL",
-            "value_type": "UINT8",
-            "values": [
-                {
-                    "value": 0,
-                    "name": "disable"
+                    "value": 2,
+                    "name": "enable all"
                 },
                 {
-                    "value": 1,
-                    "name": "enable"
+                    "value": 256,
+                    "name": "invalid"
                 }
             ],
-            "bacnet_type": "binary_value_object",
+            "bacnet_type": "multistate_value_object",
             "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": [
-                "children_lock_settings.enable",
-                "children_lock_settings.temp_up",
-                "children_lock_settings.temp_down",
-                "children_lock_settings.system_on_off",
-                "children_lock_settings.fan_mode",
-                "children_lock_settings.temperature_control_mode",
-                "children_lock_settings.reboot_reset",
-                "children_lock_settings.power_on_off",
-                "children_lock_settings.cancel_pair",
-                "children_lock_settings.plan_switch",
-                "children_lock_settings.status_report",
-                "children_lock_settings.filter_clean_alarm_release",
-                "children_lock_settings.button1_event",
-                "children_lock_settings.button3_event",
-                "children_lock_settings.temperature_unit_switch",
-                "children_lock_settings.reserved"
-            ]
-        },
-        {
-            "id": "children_lock_settings.button3_event",
-            "name": "Button Event 3 (Child Lock)",
-            "value": "0",
-            "unit": "",
-            "access_mode": "RW",
-            "data_type": "BOOL",
-            "value_type": "UINT8",
-            "values": [
-                {
-                    "value": 0,
-                    "name": "disable"
-                },
-                {
-                    "value": 1,
-                    "name": "enable"
-                }
-            ],
-            "bacnet_type": "binary_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": [
-                "children_lock_settings.enable",
-                "children_lock_settings.temp_up",
-                "children_lock_settings.temp_down",
-                "children_lock_settings.system_on_off",
-                "children_lock_settings.fan_mode",
-                "children_lock_settings.temperature_control_mode",
-                "children_lock_settings.reboot_reset",
-                "children_lock_settings.power_on_off",
-                "children_lock_settings.cancel_pair",
-                "children_lock_settings.plan_switch",
-                "children_lock_settings.status_report",
-                "children_lock_settings.filter_clean_alarm_release",
-                "children_lock_settings.button1_event",
-                "children_lock_settings.button2_event",
-                "children_lock_settings.temperature_unit_switch",
-                "children_lock_settings.reserved"
-            ]
-        },
-        {
-            "id": "children_lock_settings.cancel_pair",
-            "name": "Cancel Pairing(Child Lock)",
-            "value": "0",
-            "unit": "",
-            "access_mode": "RW",
-            "data_type": "BOOL",
-            "value_type": "UINT8",
-            "values": [
-                {
-                    "value": 0,
-                    "name": "disable"
-                },
-                {
-                    "value": 1,
-                    "name": "enable"
-                }
-            ],
-            "bacnet_type": "binary_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": [
-                "children_lock_settings.enable",
-                "children_lock_settings.temp_up",
-                "children_lock_settings.temp_down",
-                "children_lock_settings.system_on_off",
-                "children_lock_settings.fan_mode",
-                "children_lock_settings.temperature_control_mode",
-                "children_lock_settings.reboot_reset",
-                "children_lock_settings.power_on_off",
-                "children_lock_settings.plan_switch",
-                "children_lock_settings.status_report",
-                "children_lock_settings.filter_clean_alarm_release",
-                "children_lock_settings.button1_event",
-                "children_lock_settings.button2_event",
-                "children_lock_settings.button3_event",
-                "children_lock_settings.temperature_unit_switch",
-                "children_lock_settings.reserved"
-            ]
-        },
-        {
-            "id": "children_lock_settings.enable",
-            "name": "Enable(Child Lock)",
-            "value": "0",
-            "unit": "",
-            "access_mode": "RW",
-            "data_type": "BOOL",
-            "value_type": "UINT8",
-            "values": [
-                {
-                    "value": 0,
-                    "name": "disable"
-                },
-                {
-                    "value": 1,
-                    "name": "enable"
-                }
-            ],
-            "bacnet_type": "binary_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": [
-                "children_lock_settings.temp_up",
-                "children_lock_settings.temp_down",
-                "children_lock_settings.system_on_off",
-                "children_lock_settings.fan_mode",
-                "children_lock_settings.temperature_control_mode",
-                "children_lock_settings.reboot_reset",
-                "children_lock_settings.power_on_off",
-                "children_lock_settings.cancel_pair",
-                "children_lock_settings.plan_switch",
-                "children_lock_settings.status_report",
-                "children_lock_settings.filter_clean_alarm_release",
-                "children_lock_settings.button1_event",
-                "children_lock_settings.button2_event",
-                "children_lock_settings.button3_event",
-                "children_lock_settings.temperature_unit_switch",
-                "children_lock_settings.reserved"
-            ]
-        },
-        {
-            "id": "children_lock_settings.fan_mode",
-            "name": "Fan Mode(Child Lock)",
-            "value": "0",
-            "unit": "",
-            "access_mode": "RW",
-            "data_type": "BOOL",
-            "value_type": "UINT8",
-            "values": [
-                {
-                    "value": 0,
-                    "name": "disable"
-                },
-                {
-                    "value": 1,
-                    "name": "enable"
-                }
-            ],
-            "bacnet_type": "binary_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": [
-                "children_lock_settings.enable",
-                "children_lock_settings.temp_up",
-                "children_lock_settings.temp_down",
-                "children_lock_settings.system_on_off",
-                "children_lock_settings.temperature_control_mode",
-                "children_lock_settings.reboot_reset",
-                "children_lock_settings.power_on_off",
-                "children_lock_settings.cancel_pair",
-                "children_lock_settings.plan_switch",
-                "children_lock_settings.status_report",
-                "children_lock_settings.filter_clean_alarm_release",
-                "children_lock_settings.button1_event",
-                "children_lock_settings.button2_event",
-                "children_lock_settings.button3_event",
-                "children_lock_settings.temperature_unit_switch",
-                "children_lock_settings.reserved"
-            ]
-        },
-        {
-            "id": "children_lock_settings.filter_clean_alarm_release",
-            "name": "Filter Clean Reminder Release(Child Lock)",
-            "value": "0",
-            "unit": "",
-            "access_mode": "RW",
-            "data_type": "BOOL",
-            "value_type": "UINT8",
-            "values": [
-                {
-                    "value": 0,
-                    "name": "disable"
-                },
-                {
-                    "value": 1,
-                    "name": "enable"
-                }
-            ],
-            "bacnet_type": "binary_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": [
-                "children_lock_settings.enable",
-                "children_lock_settings.temp_up",
-                "children_lock_settings.temp_down",
-                "children_lock_settings.system_on_off",
-                "children_lock_settings.fan_mode",
-                "children_lock_settings.temperature_control_mode",
-                "children_lock_settings.reboot_reset",
-                "children_lock_settings.power_on_off",
-                "children_lock_settings.cancel_pair",
-                "children_lock_settings.plan_switch",
-                "children_lock_settings.status_report",
-                "children_lock_settings.button1_event",
-                "children_lock_settings.button2_event",
-                "children_lock_settings.button3_event",
-                "children_lock_settings.temperature_unit_switch",
-                "children_lock_settings.reserved"
-            ]
-        },
-        {
-            "id": "children_lock_settings.plan_switch",
-            "name": "Schedule Switch(Child Lock)",
-            "value": "0",
-            "unit": "",
-            "access_mode": "RW",
-            "data_type": "BOOL",
-            "value_type": "UINT8",
-            "values": [
-                {
-                    "value": 0,
-                    "name": "disable"
-                },
-                {
-                    "value": 1,
-                    "name": "enable"
-                }
-            ],
-            "bacnet_type": "binary_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": [
-                "children_lock_settings.enable",
-                "children_lock_settings.temp_up",
-                "children_lock_settings.temp_down",
-                "children_lock_settings.system_on_off",
-                "children_lock_settings.fan_mode",
-                "children_lock_settings.temperature_control_mode",
-                "children_lock_settings.reboot_reset",
-                "children_lock_settings.power_on_off",
-                "children_lock_settings.cancel_pair",
-                "children_lock_settings.status_report",
-                "children_lock_settings.filter_clean_alarm_release",
-                "children_lock_settings.button1_event",
-                "children_lock_settings.button2_event",
-                "children_lock_settings.button3_event",
-                "children_lock_settings.temperature_unit_switch",
-                "children_lock_settings.reserved"
-            ]
-        },
-        {
-            "id": "children_lock_settings.power_on_off",
-            "name": "Power On/Off(Child Lock)",
-            "value": "0",
-            "unit": "",
-            "access_mode": "RW",
-            "data_type": "BOOL",
-            "value_type": "UINT8",
-            "values": [
-                {
-                    "value": 0,
-                    "name": "disable"
-                },
-                {
-                    "value": 1,
-                    "name": "enable"
-                }
-            ],
-            "bacnet_type": "binary_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": [
-                "children_lock_settings.enable",
-                "children_lock_settings.temp_up",
-                "children_lock_settings.temp_down",
-                "children_lock_settings.system_on_off",
-                "children_lock_settings.fan_mode",
-                "children_lock_settings.temperature_control_mode",
-                "children_lock_settings.reboot_reset",
-                "children_lock_settings.cancel_pair",
-                "children_lock_settings.plan_switch",
-                "children_lock_settings.status_report",
-                "children_lock_settings.filter_clean_alarm_release",
-                "children_lock_settings.button1_event",
-                "children_lock_settings.button2_event",
-                "children_lock_settings.button3_event",
-                "children_lock_settings.temperature_unit_switch",
-                "children_lock_settings.reserved"
-            ]
-        },
-        {
-            "id": "children_lock_settings.reboot_reset",
-            "name": "Reboot&Reset(Child Lock)",
-            "value": "0",
-            "unit": "",
-            "access_mode": "RW",
-            "data_type": "BOOL",
-            "value_type": "UINT8",
-            "values": [
-                {
-                    "value": 0,
-                    "name": "disable"
-                },
-                {
-                    "value": 1,
-                    "name": "enable"
-                }
-            ],
-            "bacnet_type": "binary_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": [
-                "children_lock_settings.enable",
-                "children_lock_settings.temp_up",
-                "children_lock_settings.temp_down",
-                "children_lock_settings.system_on_off",
-                "children_lock_settings.fan_mode",
-                "children_lock_settings.temperature_control_mode",
-                "children_lock_settings.power_on_off",
-                "children_lock_settings.cancel_pair",
-                "children_lock_settings.plan_switch",
-                "children_lock_settings.status_report",
-                "children_lock_settings.filter_clean_alarm_release",
-                "children_lock_settings.button1_event",
-                "children_lock_settings.button2_event",
-                "children_lock_settings.button3_event",
-                "children_lock_settings.temperature_unit_switch",
-                "children_lock_settings.reserved"
-            ]
-        },
-        {
-            "id": "children_lock_settings.reserved",
-            "name": "Reserved(Child Lock)",
-            "value": "0",
-            "unit": "",
-            "access_mode": "RW",
-            "data_type": "NUMBER",
-            "value_type": "UINT8",
-            "bacnet_type": "analog_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": [
-                "children_lock_settings.enable",
-                "children_lock_settings.temp_up",
-                "children_lock_settings.temp_down",
-                "children_lock_settings.system_on_off",
-                "children_lock_settings.fan_mode",
-                "children_lock_settings.temperature_control_mode",
-                "children_lock_settings.reboot_reset",
-                "children_lock_settings.power_on_off",
-                "children_lock_settings.cancel_pair",
-                "children_lock_settings.plan_switch",
-                "children_lock_settings.status_report",
-                "children_lock_settings.filter_clean_alarm_release",
-                "children_lock_settings.button1_event",
-                "children_lock_settings.button2_event",
-                "children_lock_settings.button3_event",
-                "children_lock_settings.temperature_unit_switch"
-            ],
-            "values": [
-                {
-                    "value": 0,
-                    "name": "disable"
-                },
-                {
-                    "value": 1,
-                    "name": "enable"
-                }
-            ]
-        },
-        {
-            "id": "children_lock_settings.status_report",
-            "name": "Status Report (Child Lock)",
-            "value": "0",
-            "unit": "",
-            "access_mode": "RW",
-            "data_type": "BOOL",
-            "value_type": "UINT8",
-            "values": [
-                {
-                    "value": 0,
-                    "name": "disable"
-                },
-                {
-                    "value": 1,
-                    "name": "enable"
-                }
-            ],
-            "bacnet_type": "binary_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": [
-                "children_lock_settings.enable",
-                "children_lock_settings.temp_up",
-                "children_lock_settings.temp_down",
-                "children_lock_settings.system_on_off",
-                "children_lock_settings.fan_mode",
-                "children_lock_settings.temperature_control_mode",
-                "children_lock_settings.reboot_reset",
-                "children_lock_settings.power_on_off",
-                "children_lock_settings.cancel_pair",
-                "children_lock_settings.plan_switch",
-                "children_lock_settings.filter_clean_alarm_release",
-                "children_lock_settings.button1_event",
-                "children_lock_settings.button2_event",
-                "children_lock_settings.button3_event",
-                "children_lock_settings.temperature_unit_switch",
-                "children_lock_settings.reserved"
-            ]
-        },
-        {
-            "id": "children_lock_settings.system_on_off",
-            "name": "System On/Off(Child Lock)",
-            "value": "0",
-            "unit": "",
-            "access_mode": "RW",
-            "data_type": "BOOL",
-            "value_type": "UINT8",
-            "values": [
-                {
-                    "value": 0,
-                    "name": "disable"
-                },
-                {
-                    "value": 1,
-                    "name": "enable"
-                }
-            ],
-            "bacnet_type": "binary_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": [
-                "children_lock_settings.enable",
-                "children_lock_settings.temp_up",
-                "children_lock_settings.temp_down",
-                "children_lock_settings.fan_mode",
-                "children_lock_settings.temperature_control_mode",
-                "children_lock_settings.reboot_reset",
-                "children_lock_settings.power_on_off",
-                "children_lock_settings.cancel_pair",
-                "children_lock_settings.plan_switch",
-                "children_lock_settings.status_report",
-                "children_lock_settings.filter_clean_alarm_release",
-                "children_lock_settings.button1_event",
-                "children_lock_settings.button2_event",
-                "children_lock_settings.button3_event",
-                "children_lock_settings.temperature_unit_switch",
-                "children_lock_settings.reserved"
-            ]
-        },
-        {
-            "id": "children_lock_settings.temp_down",
-            "name": "Temperature -(Child Lock)",
-            "value": "0",
-            "unit": "",
-            "access_mode": "RW",
-            "data_type": "BOOL",
-            "value_type": "UINT8",
-            "values": [
-                {
-                    "value": 0,
-                    "name": "disable"
-                },
-                {
-                    "value": 1,
-                    "name": "enable"
-                }
-            ],
-            "bacnet_type": "binary_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": [
-                "children_lock_settings.enable",
-                "children_lock_settings.temp_up",
-                "children_lock_settings.system_on_off",
-                "children_lock_settings.fan_mode",
-                "children_lock_settings.temperature_control_mode",
-                "children_lock_settings.reboot_reset",
-                "children_lock_settings.power_on_off",
-                "children_lock_settings.cancel_pair",
-                "children_lock_settings.plan_switch",
-                "children_lock_settings.status_report",
-                "children_lock_settings.filter_clean_alarm_release",
-                "children_lock_settings.button1_event",
-                "children_lock_settings.button2_event",
-                "children_lock_settings.button3_event",
-                "children_lock_settings.temperature_unit_switch",
-                "children_lock_settings.reserved"
-            ]
-        },
-        {
-            "id": "children_lock_settings.temp_up",
-            "name": "Temperature +(Child Lock)",
-            "value": "0",
-            "unit": "",
-            "access_mode": "RW",
-            "data_type": "BOOL",
-            "value_type": "UINT8",
-            "values": [
-                {
-                    "value": 0,
-                    "name": "disable"
-                },
-                {
-                    "value": 1,
-                    "name": "enable"
-                }
-            ],
-            "bacnet_type": "binary_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": [
-                "children_lock_settings.enable",
-                "children_lock_settings.temp_down",
-                "children_lock_settings.system_on_off",
-                "children_lock_settings.fan_mode",
-                "children_lock_settings.temperature_control_mode",
-                "children_lock_settings.reboot_reset",
-                "children_lock_settings.power_on_off",
-                "children_lock_settings.cancel_pair",
-                "children_lock_settings.plan_switch",
-                "children_lock_settings.status_report",
-                "children_lock_settings.filter_clean_alarm_release",
-                "children_lock_settings.button1_event",
-                "children_lock_settings.button2_event",
-                "children_lock_settings.button3_event",
-                "children_lock_settings.temperature_unit_switch",
-                "children_lock_settings.reserved"
-            ]
-        },
-        {
-            "id": "children_lock_settings.temperature_control_mode",
-            "name": "Temperature Control Mode(Child Lock)",
-            "value": "0",
-            "unit": "",
-            "access_mode": "RW",
-            "data_type": "BOOL",
-            "value_type": "UINT8",
-            "values": [
-                {
-                    "value": 0,
-                    "name": "disable"
-                },
-                {
-                    "value": 1,
-                    "name": "enable"
-                }
-            ],
-            "bacnet_type": "binary_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": [
-                "children_lock_settings.enable",
-                "children_lock_settings.temp_up",
-                "children_lock_settings.temp_down",
-                "children_lock_settings.system_on_off",
-                "children_lock_settings.fan_mode",
-                "children_lock_settings.reboot_reset",
-                "children_lock_settings.power_on_off",
-                "children_lock_settings.cancel_pair",
-                "children_lock_settings.plan_switch",
-                "children_lock_settings.status_report",
-                "children_lock_settings.filter_clean_alarm_release",
-                "children_lock_settings.button1_event",
-                "children_lock_settings.button2_event",
-                "children_lock_settings.button3_event",
-                "children_lock_settings.temperature_unit_switch",
-                "children_lock_settings.reserved"
-            ]
-        },
-        {
-            "id": "children_lock_settings.temperature_unit_switch",
-            "name": "Temperature Unit Switch(Child Lock)",
-            "value": "0",
-            "unit": "",
-            "access_mode": "RW",
-            "data_type": "BOOL",
-            "value_type": "UINT8",
-            "values": [
-                {
-                    "value": 0,
-                    "name": "disable"
-                },
-                {
-                    "value": 1,
-                    "name": "enable"
-                }
-            ],
-            "bacnet_type": "binary_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": [
-                "children_lock_settings.enable",
-                "children_lock_settings.temp_up",
-                "children_lock_settings.temp_down",
-                "children_lock_settings.system_on_off",
-                "children_lock_settings.fan_mode",
-                "children_lock_settings.temperature_control_mode",
-                "children_lock_settings.reboot_reset",
-                "children_lock_settings.power_on_off",
-                "children_lock_settings.cancel_pair",
-                "children_lock_settings.plan_switch",
-                "children_lock_settings.status_report",
-                "children_lock_settings.filter_clean_alarm_release",
-                "children_lock_settings.button1_event",
-                "children_lock_settings.button2_event",
-                "children_lock_settings.button3_event",
-                "children_lock_settings.reserved"
-            ]
+            "bacnet_unit_type": "UNITS_NO_UNITS"
         },
         {
             "id": "collection_interval.minutes_of_time",
@@ -1226,214 +572,42 @@
             "bacnet_unit_type": "UNITS_NO_UNITS"
         },
         {
-            "id": "fan_enable.auto",
-            "name": "Auto(Fan Mode Enabled)",
+            "id": "fan_enable",
+            "name": "Fan Mode Enabled",
             "value": "1",
             "unit": "",
             "access_mode": "RW",
-            "data_type": "BOOL",
+            "data_type": "ENUM",
             "value_type": "UINT8",
             "values": [
                 {
-                    "value": 0,
-                    "name": "disable"
+                    "value": 1,
+                    "name": "auto/circulate/on/low/medium/high"
                 },
                 {
-                    "value": 1,
-                    "name": "enable"
-                }
-            ],
-            "bacnet_type": "binary_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": [
-                "fan_enable.circul",
-                "fan_enable.on",
-                "fan_enable.low",
-                "fan_enable.medium",
-                "fan_enable.high",
-                "fan_enable.reserved"
-            ]
-        },
-        {
-            "id": "fan_enable.circul",
-            "name": "Circulate(Fan Mode Enabled)",
-            "value": "1",
-            "unit": "",
-            "access_mode": "RW",
-            "data_type": "BOOL",
-            "value_type": "UINT8",
-            "values": [
-                {
-                    "value": 0,
-                    "name": "disable"
+                    "value": 2,
+                    "name": "auto/on/low/medium/high"
                 },
                 {
-                    "value": 1,
-                    "name": "enable"
-                }
-            ],
-            "bacnet_type": "binary_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": [
-                "fan_enable.auto",
-                "fan_enable.on",
-                "fan_enable.low",
-                "fan_enable.medium",
-                "fan_enable.high",
-                "fan_enable.reserved"
-            ]
-        },
-        {
-            "id": "fan_enable.high",
-            "name": "High(Fan Mode Enabled)",
-            "value": "1",
-            "unit": "",
-            "access_mode": "RW",
-            "data_type": "BOOL",
-            "value_type": "UINT8",
-            "values": [
-                {
-                    "value": 0,
-                    "name": "disable"
+                    "value": 3,
+                    "name": "circulate/on/low/medium/high"
                 },
                 {
-                    "value": 1,
-                    "name": "enable"
-                }
-            ],
-            "bacnet_type": "binary_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": [
-                "fan_enable.auto",
-                "fan_enable.circul",
-                "fan_enable.on",
-                "fan_enable.low",
-                "fan_enable.medium",
-                "fan_enable.reserved"
-            ]
-        },
-        {
-            "id": "fan_enable.low",
-            "name": "Low(Fan Mode Enabled)",
-            "value": "1",
-            "unit": "",
-            "access_mode": "RW",
-            "data_type": "BOOL",
-            "value_type": "UINT8",
-            "values": [
-                {
-                    "value": 0,
-                    "name": "disable"
+                    "value": 4,
+                    "name": "auto/circulate"
                 },
                 {
-                    "value": 1,
-                    "name": "enable"
-                }
-            ],
-            "bacnet_type": "binary_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": [
-                "fan_enable.auto",
-                "fan_enable.circul",
-                "fan_enable.on",
-                "fan_enable.medium",
-                "fan_enable.high",
-                "fan_enable.reserved"
-            ]
-        },
-        {
-            "id": "fan_enable.medium",
-            "name": "Medium(Fan Mode Enabled)",
-            "value": "1",
-            "unit": "",
-            "access_mode": "RW",
-            "data_type": "BOOL",
-            "value_type": "UINT8",
-            "values": [
-                {
-                    "value": 0,
-                    "name": "disable"
+                    "value": 5,
+                    "name": "on/low/medium/high"
                 },
                 {
-                    "value": 1,
-                    "name": "enable"
+                    "value": 256,
+                    "name": "invalid"
                 }
             ],
-            "bacnet_type": "binary_value_object",
+            "bacnet_type": "multistate_value_object",
             "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": [
-                "fan_enable.auto",
-                "fan_enable.circul",
-                "fan_enable.on",
-                "fan_enable.low",
-                "fan_enable.high",
-                "fan_enable.reserved"
-            ]
-        },
-        {
-            "id": "fan_enable.on",
-            "name": "On(Fan Mode Enabled)",
-            "value": "0",
-            "unit": "",
-            "access_mode": "RW",
-            "data_type": "BOOL",
-            "value_type": "UINT8",
-            "values": [
-                {
-                    "value": 0,
-                    "name": "disable"
-                },
-                {
-                    "value": 1,
-                    "name": "enable"
-                }
-            ],
-            "bacnet_type": "binary_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": [
-                "fan_enable.auto",
-                "fan_enable.circul",
-                "fan_enable.low",
-                "fan_enable.medium",
-                "fan_enable.high",
-                "fan_enable.reserved"
-            ]
-        },
-        {
-            "id": "fan_enable.reserved",
-            "name": "Reserved(Fan Mode Enabled)",
-            "value": "0",
-            "unit": "",
-            "access_mode": "RW",
-            "data_type": "NUMBER",
-            "value_type": "UINT8",
-            "bacnet_type": "analog_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": [
-                "fan_enable.auto",
-                "fan_enable.circul",
-                "fan_enable.on",
-                "fan_enable.low",
-                "fan_enable.medium",
-                "fan_enable.high"
-            ],
-            "values": [
-                {
-                    "value": 0,
-                    "name": "disable"
-                },
-                {
-                    "value": 1,
-                    "name": "enable"
-                }
-            ]
+            "bacnet_unit_type": "UNITS_NO_UNITS"
         },
         {
             "id": "fan_mode",
@@ -1551,214 +725,46 @@
             "reference": []
         },
         {
-            "id": "mode_enable.auto",
-            "name": "Auto(Temperature Control Mode Enable)",
-            "value": "1",
+            "id": "mode_enable",
+            "name": "Temperature Control Mode Enable",
+            "value": "6",
             "unit": "",
             "access_mode": "RW",
-            "data_type": "BOOL",
+            "data_type": "ENUM",
             "value_type": "UINT8",
             "values": [
                 {
-                    "value": 0,
-                    "name": "disable"
+                    "value": 1,
+                    "name": "heat/em heat/cool/auto"
                 },
                 {
-                    "value": 1,
-                    "name": "enable"
-                }
-            ],
-            "bacnet_type": "binary_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": [
-                "mode_enable.heat",
-                "mode_enable.em_heat",
-                "mode_enable.cool",
-                "mode_enable.dehumidity",
-                "mode_enable.ventilation",
-                "mode_enable.reserved"
-            ]
-        },
-        {
-            "id": "mode_enable.cool",
-            "name": "Cool(Temperature Control Mode Enable)",
-            "value": "1",
-            "unit": "",
-            "access_mode": "RW",
-            "data_type": "BOOL",
-            "value_type": "UINT8",
-            "values": [
-                {
-                    "value": 0,
-                    "name": "disable"
+                    "value": 2,
+                    "name": "heat/cool/auto"
                 },
                 {
-                    "value": 1,
-                    "name": "enable"
-                }
-            ],
-            "bacnet_type": "binary_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": [
-                "mode_enable.heat",
-                "mode_enable.em_heat",
-                "mode_enable.auto",
-                "mode_enable.dehumidity",
-                "mode_enable.ventilation",
-                "mode_enable.reserved"
-            ]
-        },
-        {
-            "id": "mode_enable.dehumidity",
-            "name": "Dehumidify(Temperature Control Mode Enable)",
-            "value": "1",
-            "unit": "",
-            "access_mode": "RW",
-            "data_type": "BOOL",
-            "value_type": "UINT8",
-            "values": [
-                {
-                    "value": 0,
-                    "name": "disable"
+                    "value": 3,
+                    "name": "heat"
                 },
                 {
-                    "value": 1,
-                    "name": "enable"
-                }
-            ],
-            "bacnet_type": "binary_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": [
-                "mode_enable.heat",
-                "mode_enable.em_heat",
-                "mode_enable.cool",
-                "mode_enable.auto",
-                "mode_enable.ventilation",
-                "mode_enable.reserved"
-            ]
-        },
-        {
-            "id": "mode_enable.em_heat",
-            "name": "EM Heat(Temperature Control Mode Enable)",
-            "value": "1",
-            "unit": "",
-            "access_mode": "RW",
-            "data_type": "BOOL",
-            "value_type": "UINT8",
-            "values": [
-                {
-                    "value": 0,
-                    "name": "disable"
+                    "value": 4,
+                    "name": "cool"
                 },
                 {
-                    "value": 1,
-                    "name": "enable"
-                }
-            ],
-            "bacnet_type": "binary_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": [
-                "mode_enable.heat",
-                "mode_enable.cool",
-                "mode_enable.auto",
-                "mode_enable.dehumidity",
-                "mode_enable.ventilation",
-                "mode_enable.reserved"
-            ]
-        },
-        {
-            "id": "mode_enable.heat",
-            "name": "Heat(Temperature Control Mode Enable)",
-            "value": "1",
-            "unit": "",
-            "access_mode": "RW",
-            "data_type": "BOOL",
-            "value_type": "UINT8",
-            "values": [
-                {
-                    "value": 0,
-                    "name": "disable"
+                    "value": 5,
+                    "name": "heat/cool"
                 },
                 {
-                    "value": 1,
-                    "name": "enable"
-                }
-            ],
-            "bacnet_type": "binary_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": [
-                "mode_enable.em_heat",
-                "mode_enable.cool",
-                "mode_enable.auto",
-                "mode_enable.dehumidity",
-                "mode_enable.ventilation",
-                "mode_enable.reserved"
-            ]
-        },
-        {
-            "id": "mode_enable.reserved",
-            "name": "Reserved(Temperature Control Mode Enable)",
-            "value": "",
-            "unit": "",
-            "access_mode": "RW",
-            "data_type": "NUMBER",
-            "value_type": "UINT8",
-            "bacnet_type": "analog_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": [
-                "mode_enable.heat",
-                "mode_enable.em_heat",
-                "mode_enable.cool",
-                "mode_enable.auto",
-                "mode_enable.dehumidity",
-                "mode_enable.ventilation"
-            ],
-            "values": [
-                {
-                    "value": 0,
-                    "name": "disable"
+                    "value": 6,
+                    "name": "heat/em heat/cool/auto/dehumidify/ventilation"
                 },
                 {
-                    "value": 1,
-                    "name": "enable"
-                }
-            ]
-        },
-        {
-            "id": "mode_enable.ventilation",
-            "name": "Ventilation(Temperature Control Mode Enable)",
-            "value": "1",
-            "unit": "",
-            "access_mode": "RW",
-            "data_type": "BOOL",
-            "value_type": "UINT8",
-            "values": [
-                {
-                    "value": 0,
-                    "name": "disable"
-                },
-                {
-                    "value": 1,
-                    "name": "enable"
+                    "value": 256,
+                    "name": "invalid"
                 }
             ],
-            "bacnet_type": "binary_value_object",
+            "bacnet_type": "multistate_value_object",
             "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": [
-                "mode_enable.heat",
-                "mode_enable.em_heat",
-                "mode_enable.cool",
-                "mode_enable.auto",
-                "mode_enable.dehumidity",
-                "mode_enable.reserved"
-            ]
+            "bacnet_unit_type": "UNITS_NO_UNITS"
         },
         {
             "id": "oem_id",
@@ -2915,178 +1921,50 @@
             ]
         },
         {
-            "id": "unlock_combination_button_settings.button1",
-            "name": "Button 1(Temporary Unlock Button Combination)",
+            "id": "unlock_combination_button_settings",
+            "name": "Temporary Unlock Button Combination",
             "value": "1",
             "unit": "",
             "access_mode": "RW",
-            "data_type": "BOOL",
+            "data_type": "ENUM",
             "value_type": "UINT8",
             "values": [
                 {
-                    "value": 0,
-                    "name": "disable"
+                    "value": 1,
+                    "name": "button1/button2"
                 },
                 {
-                    "value": 1,
-                    "name": "enable"
-                }
-            ],
-            "bacnet_type": "binary_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": [
-                "unlock_combination_button_settings.button2",
-                "unlock_combination_button_settings.button3",
-                "unlock_combination_button_settings.button4",
-                "unlock_combination_button_settings.button5",
-                "unlock_combination_button_settings.reserved"
-            ]
-        },
-        {
-            "id": "unlock_combination_button_settings.button2",
-            "name": "Button 2(Temporary Unlock Button Combination)",
-            "value": "1",
-            "unit": "",
-            "access_mode": "RW",
-            "data_type": "BOOL",
-            "value_type": "UINT8",
-            "values": [
-                {
-                    "value": 0,
-                    "name": "disable"
+                    "value": 2,
+                    "name": "button2/button3"
                 },
                 {
-                    "value": 1,
-                    "name": "enable"
-                }
-            ],
-            "bacnet_type": "binary_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": [
-                "unlock_combination_button_settings.button1",
-                "unlock_combination_button_settings.button3",
-                "unlock_combination_button_settings.button4",
-                "unlock_combination_button_settings.button5",
-                "unlock_combination_button_settings.reserved"
-            ]
-        },
-        {
-            "id": "unlock_combination_button_settings.button3",
-            "name": "Button 3(Temporary Unlock Button Combination)",
-            "value": "0",
-            "unit": "",
-            "access_mode": "RW",
-            "data_type": "BOOL",
-            "value_type": "UINT8",
-            "values": [
-                {
-                    "value": 0,
-                    "name": "disable"
+                    "value": 3,
+                    "name": "button3/button4"
                 },
                 {
-                    "value": 1,
-                    "name": "enable"
-                }
-            ],
-            "bacnet_type": "binary_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": [
-                "unlock_combination_button_settings.button1",
-                "unlock_combination_button_settings.button2",
-                "unlock_combination_button_settings.button4",
-                "unlock_combination_button_settings.button5",
-                "unlock_combination_button_settings.reserved"
-            ]
-        },
-        {
-            "id": "unlock_combination_button_settings.button4",
-            "name": "Button 4(Temporary Unlock Button Combination)",
-            "value": "0",
-            "unit": "",
-            "access_mode": "RW",
-            "data_type": "BOOL",
-            "value_type": "UINT8",
-            "values": [
-                {
-                    "value": 0,
-                    "name": "disable"
+                    "value": 4,
+                    "name": "button4/button5"
                 },
                 {
-                    "value": 1,
-                    "name": "enable"
-                }
-            ],
-            "bacnet_type": "binary_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": [
-                "unlock_combination_button_settings.button1",
-                "unlock_combination_button_settings.button2",
-                "unlock_combination_button_settings.button3",
-                "unlock_combination_button_settings.button5",
-                "unlock_combination_button_settings.reserved"
-            ]
-        },
-        {
-            "id": "unlock_combination_button_settings.button5",
-            "name": "Button 5(Temporary Unlock Button Combination)",
-            "value": "0",
-            "unit": "",
-            "access_mode": "RW",
-            "data_type": "BOOL",
-            "value_type": "UINT8",
-            "values": [
-                {
-                    "value": 0,
-                    "name": "disable"
+                    "value": 5,
+                    "name": "button1/button2/button3"
                 },
                 {
-                    "value": 1,
-                    "name": "enable"
-                }
-            ],
-            "bacnet_type": "binary_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": [
-                "unlock_combination_button_settings.button1",
-                "unlock_combination_button_settings.button2",
-                "unlock_combination_button_settings.button3",
-                "unlock_combination_button_settings.button4",
-                "unlock_combination_button_settings.reserved"
-            ]
-        },
-        {
-            "id": "unlock_combination_button_settings.reserved",
-            "name": "Reserved(Temporary Unlock Button Combination)",
-            "value": "0",
-            "unit": "",
-            "access_mode": "RW",
-            "data_type": "NUMBER",
-            "value_type": "UINT8",
-            "bacnet_type": "analog_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": [
-                "unlock_combination_button_settings.button1",
-                "unlock_combination_button_settings.button2",
-                "unlock_combination_button_settings.button3",
-                "unlock_combination_button_settings.button4",
-                "unlock_combination_button_settings.button5"
-            ],
-            "values": [
-                {
-                    "value": 0,
-                    "name": "disable"
+                    "value": 6,
+                    "name": "button2/button3/button4"
                 },
                 {
-                    "value": 1,
-                    "name": "enable"
+                    "value": 7,
+                    "name": "button1/button2/button 3/button 4/button 5"
+                },
+                {
+                    "value": 256,
+                    "name": "invalid"
                 }
-            ]
+            ],
+            "bacnet_type": "multistate_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS"
         },
         {
             "id": "version.firmware_version",
