@@ -174,13 +174,6 @@ function milesightDeviceEncode(payload) {
 		buffer.writeString(payload.product_frequency_band, 16);
 		encoded = encoded.concat(buffer.toBytes());
 	}
-	//0xb8
-	if ('battery_info' in payload) {
-		var buffer = new Buffer();
-		buffer.writeUInt8(0xb8);
-		buffer.writeHexString(payload.battery_info.current_battery_status, 2);
-		encoded = encoded.concat(buffer.toBytes());
-	}
 	//0x00
 	if ('battery' in payload) {
 		var buffer = new Buffer();
@@ -2112,7 +2105,6 @@ function cmdMap() {
 		  "version": "da",
 		  "oem_id": "d9",
 		  "product_frequency_band": "d8",
-		  "battery_info": "b8",
 		  "battery": "00",
 		  "data_source": "04",
 		  "temperature": "01",

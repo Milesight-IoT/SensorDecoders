@@ -174,13 +174,6 @@ function milesightDeviceEncode(payload) {
 		buffer.writeString(payload.product_frequency_band, 16);
 		encoded = encoded.concat(buffer.toBytes());
 	}
-	//0xb8
-	if ('battery_info' in payload) {
-		var buffer = new Buffer();
-		buffer.writeUInt8(0xb8);
-		buffer.writeHexString(payload.battery_info.current_battery_status, 2);
-		encoded = encoded.concat(buffer.toBytes());
-	}
 	//0x00
 	if ('battery' in payload) {
 		var buffer = new Buffer();
@@ -568,8 +561,26 @@ function milesightDeviceEncode(payload) {
 		// 0：Embedded Temperature, 1：External NTC, 2：LoRa Receive, 3：D2D Receive
 		buffer.writeUInt8(payload.temperature_source.type);
 		if (payload.temperature_source.type == 0x02) {
+			if (payload.temperature_source.lorawan_reception.timeout < 1 || payload.temperature_source.lorawan_reception.timeout > 60) {
+				throw betweenError('temperature_source.lorawan_reception.timeout', 1, 60);
+			}
+			buffer.writeUInt8(payload.temperature_source.lorawan_reception.timeout);
+			if ([0, 1, 2].indexOf(payload.temperature_source.lorawan_reception.timeout_response) === -1) {
+				throw oneOfError('temperature_source.lorawan_reception.timeout_response', [0, 1, 2]);
+			}
+			// 0: Keep Control, 1: Turn Off The Control, 2: Switch The Embedded Temperature
+			buffer.writeUInt8(payload.temperature_source.lorawan_reception.timeout_response);
 		}
 		if (payload.temperature_source.type == 0x03) {
+			if (payload.temperature_source.d2d_reception.timeout < 1 || payload.temperature_source.d2d_reception.timeout > 60) {
+				throw betweenError('temperature_source.d2d_reception.timeout', 1, 60);
+			}
+			buffer.writeUInt8(payload.temperature_source.d2d_reception.timeout);
+			if ([0, 1, 2].indexOf(payload.temperature_source.d2d_reception.timeout_response) === -1) {
+				throw oneOfError('temperature_source.d2d_reception.timeout_response', [0, 1, 2]);
+			}
+			// 0: Keep Control, 1: Turn Off The Control, 2: Switch The Embedded Temperature
+			buffer.writeUInt8(payload.temperature_source.d2d_reception.timeout_response);
 		}
 		encoded = encoded.concat(buffer.toBytes());
 	}
@@ -2671,7 +2682,6 @@ function cmdMap() {
 		  "version": "da",
 		  "oem_id": "d9",
 		  "product_frequency_band": "d8",
-		  "battery_info": "b8",
 		  "battery": "00",
 		  "data_source": "04",
 		  "temperature": "01",

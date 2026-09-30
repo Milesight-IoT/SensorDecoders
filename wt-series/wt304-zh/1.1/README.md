@@ -63,7 +63,11 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Temperature Data Source | 0x85 | 1 | rw |  |  |  |
 | Temperature Source | 0x85 | 2 | rw | 0 |  | 0：Embedded Temperature<br>1：External NTC<br>2：LoRa Receive<br>3：D2D Receive |
 | LoRa Receive | 0x85 | 3 | rw |  |  |  |
+| Timeout | 0x85 | 2 | rw | 10 | 1 - 60 |  |
+| Device Offline Settings | 0x85 | 2 | rw | 0 |  | 0: Keep Control<br>1: Turn Off The Control<br>2: Switch The Embedded Temperature |
 | D2D Receive | 0x85 | 3 | rw |  |  |  |
+| Timeout | 0x85 | 2 | rw | 10 | 1 - 60 |  |
+| Device Offline Settings | 0x85 | 2 | rw | 0 |  | 0: Keep Control<br>1: Turn Off The Control<br>2: Switch The Embedded Temperature |
 | Temperature Data Source Configuration | 0xA0 | 2 | rw | 0 |  | 0：Embedded Temperature<br>1：External NTC<br>2：LoRa Receive<br>3：D2D Receive |
 | External Data Source Timeout Configuration | 0xA7 | 1 | rw |  |  |  |
 | Sub-command | 0xA7 | 2 | rw | 0 |  |  |
@@ -404,7 +408,6 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Command Response | 0xEF | 1 | r |  |  |  |
 | Request to Push All Configurations | 0xEE | 1 | r |  |  |  |
 | Historical Data | 0xED | 5 | r |  |  |  |
-| Battery Status | 0xB8 | M | r |  |  |  |
 | Temperature  Alarm | 0x09 | 1 | r |  |  |  |
 | Humidity Alarm | 0x0A | 1 | r |  |  |  |
 | Target Temperature Alarm | 0x0B | 1 | r |  |  |  |
@@ -428,7 +431,6 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Answered Commands | 0xEF | 1 | r |  |  |  |
 | Request to Query All Configurations | 0xEE | 1 | w |  |  |  |
 | Historical Data Timestamps | 0xED | 5 | r |  |  |  |
-| Current Battery Status | 0xB8 | 3 | r |  |  |  |
 | Alarm Type | 0x09 | 2 | r |  |  |  |
 | Collection Error | 0x09 | 1 | r |  |  |  |
 | Exceed the Range Lower Limit | 0x09 | 1 | r |  |  |  |

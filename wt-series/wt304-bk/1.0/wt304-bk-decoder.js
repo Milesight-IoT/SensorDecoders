@@ -105,10 +105,6 @@ function milesightDeviceDecode(bytes) {
 			case 0xd8:
 				decoded.product_frequency_band = readString(bytes, counterObj, 16);
 				break;
-			case 0xb8:
-				decoded.battery_info = decoded.battery_info || {};
-				decoded.battery_info.current_battery_status = readHexString(bytes, counterObj, 2);
-				break;
 			case 0x00:
 				decoded.battery = readUInt8(bytes, counterObj, 1);
 				break;
@@ -1364,7 +1360,6 @@ function cmdMap() {
 		  "da": "version",
 		  "d9": "oem_id",
 		  "d8": "product_frequency_band",
-		  "b8": "battery_info",
 		  "00": "battery",
 		  "04": "data_source",
 		  "01": "temperature",
