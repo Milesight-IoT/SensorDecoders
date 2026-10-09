@@ -94,7 +94,7 @@ function milesightDeviceDecode(bytes) {
             var data = {};
             data.timestamp = readUInt32LE(bytes.slice(i, i + 4));
             data.temperature = readInt16LE(bytes.slice(i + 4, i + 6)) / 10;
-            data.humidity = readUInt8(bytes[i + 6]) / 2;
+            data.humidity = readUInt16LE(bytes.slice(i + 6, i + 8)) / 100;
             i += 8;
             decoded.history = decoded.history || [];
             decoded.history.push(data);
@@ -192,7 +192,7 @@ function handle_downlink_response(channel_type, bytes, offset) {
             } else if (channel === 0x01) {
                 decoded.humidity_calibration_settings = {};
                 decoded.humidity_calibration_settings.enable = readEnableStatus(enable_value);
-                decoded.humidity_calibration_settings.calibration_value = readInt16LE(bytes.slice(offset + 1, offset + 3)) / 2;
+                decoded.humidity_calibration_settings.calibration_value = readInt16LE(bytes.slice(offset + 1, offset + 3)) / 100;
             }
             offset += 3;
             break;
