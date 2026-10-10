@@ -388,7 +388,7 @@ function setHumidityCalibration(humidity_calibration_settings) {
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0xea);
     buffer.writeUInt8(data);
-    buffer.writeUInt16LE(calibration_value * 100);
+    buffer.writeUInt16LE(Math.round(calibration_value * 100));
     return buffer.toBytes();
 }
 
