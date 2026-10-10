@@ -422,6 +422,14 @@ function handle_downlink_response(channel_type, bytes, offset) {
             }
             offset += 3;
             break;
+        case 0x1f:
+            decoded.pressure_range = readPressureRange(bytes[offset]);
+            offset += 1;
+            break;
+        case 0x4a:
+            decoded.sync_time = readYesNoStatus(bytes[offset]);
+            offset += 1;
+            break;
         default:
             throw new Error("unknown downlink response");
     }
@@ -499,6 +507,11 @@ function readEnableStatus(status) {
 function readYesNoStatus(status) {
     var status_map = { 0: "no", 1: "yes" };
     return getValue(status_map, status);
+}
+
+function readPressureRange(range) {
+    var range_map = { 0: "0-1bar", 1: "0-3bar", 2: "0-6bar" };
+    return getValue(range_map, range);
 }
 
 function readAlarm(type) {

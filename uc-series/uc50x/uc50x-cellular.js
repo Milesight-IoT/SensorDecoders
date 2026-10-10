@@ -433,6 +433,13 @@ function decodeSensorData(bytes) {
                     decoded[modbus_chn_name + "_error"] = "unknown";
                     break;
             }
+        }
+        // DOWNLINK RESPONSE
+        else if (channel_id === 0xfe || channel_id === 0xff) {
+            var response = handle_downlink_response(channel_type, buffer);
+            for (var key in response) {
+                decoded[key] = response[key];
+            }
         } else {
             break;
         }
@@ -462,6 +469,76 @@ function readSensorStatus(status) {
 function readTamperStatus(status) {
     var status_map = { 0: "normal", 1: "triggered" };
     return getValue(status_map, status);
+}
+
+function readEnableStatus(status) {
+    var status_map = { 0: "disable", 1: "enable" };
+    return getValue(status_map, status);
+}
+
+function readYesNoStatus(status) {
+    var status_map = { 0: "no", 1: "yes" };
+    return getValue(status_map, status);
+}
+
+function readPressureRange(range) {
+    var range_map = { 0: "0-1bar", 1: "0-3bar", 2: "0-6bar" };
+    return getValue(range_map, range);
+}
+
+function handle_downlink_response(channel_type, buffer) {
+    var decoded = {};
+
+    switch (channel_type) {
+        case 0x02:
+            decoded.collection_interval = buffer.readUInt16LE();
+            break;
+        case 0x03:
+            decoded.report_interval = buffer.readUInt16LE();
+            break;
+        case 0x10:
+            decoded.reboot = readYesNoStatus(1);
+            buffer.readUInt8();
+            break;
+        case 0x11:
+            decoded.timestamp = buffer.readUInt32LE();
+            break;
+        case 0x17:
+            decoded.timezone = buffer.readInt16LE() / 10;
+            break;
+        case 0x27:
+            decoded.clear_history = readYesNoStatus(1);
+            buffer.readUInt8();
+            break;
+        case 0x28:
+            decoded.report_status = readYesNoStatus(1);
+            buffer.readUInt8();
+            break;
+        case 0x68:
+            decoded.history_enable = readEnableStatus(buffer.readUInt8());
+            break;
+        case 0x69:
+            decoded.retransmit_enable = readEnableStatus(buffer.readUInt8());
+            break;
+        case 0x6a:
+            var type = buffer.readUInt8();
+            if (type === 0x00) {
+                decoded.retransmit_interval = buffer.readUInt16LE();
+            } else if (type === 0x01) {
+                decoded.resend_interval = buffer.readUInt16LE();
+            }
+            break;
+        case 0x1f:
+            decoded.pressure_range = readPressureRange(buffer.readUInt8());
+            break;
+        case 0x4a:
+            decoded.sync_time = readYesNoStatus(buffer.readUInt8());
+            break;
+        default:
+            throw new Error("unknown downlink response");
+    }
+
+    return decoded;
 }
 
 function Buffer(bytes) {
