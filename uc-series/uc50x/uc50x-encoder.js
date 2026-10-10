@@ -77,6 +77,9 @@ function milesightDeviceEncode(payload) {
     if ("gpio_output_2" in payload) {
         encoded = encoded.concat(controlOutputStatus(2, payload.gpio_output_2));
     }
+    if ("pressure_range" in payload) {
+        encoded = encoded.concat(setPressureRange(payload.pressure_range));
+    }
 
     return encoded;
 }
@@ -381,6 +384,27 @@ function controlOutputStatus(gpio_index, status) {
     buffer.writeUInt8(getValue(on_off_map, status));
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0xff);
+    return buffer.toBytes();
+}
+
+/**
+ * Set pressure sensor range
+ * @param {number} pressure_range values: (0: 0-1bar, 1: 0-3bar, 2: 0-6bar)
+ * @example { "pressure_range": "0-1bar" }
+ * @example { "pressure_range": "0-3bar" }
+ * @example { "pressure_range": "0-6bar" }
+ */
+function setPressureRange(pressure_range) {
+    var range_map = { 0: "0-1bar", 1: "0-3bar", 2: "0-6bar" };
+    var range_values = getValues(range_map);
+    if (range_values.indexOf(pressure_range) === -1) {
+        throw new Error("pressure_range must be one of " + range_values.join(", "));
+    }
+
+    var buffer = new Buffer(3);
+    buffer.writeUInt8(0xff);
+    buffer.writeUInt8(0x1f);
+    buffer.writeUInt8(getValue(range_map, pressure_range));
     return buffer.toBytes();
 }
 
