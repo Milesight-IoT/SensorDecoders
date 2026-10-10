@@ -2,6 +2,396 @@
     "version": "1.0.0",
     "object": [
         {
+            "id": "thdi.0.value",
+            "name": "THDi(Phase 1)",
+            "value": "",
+            "unit": "%",
+            "access_mode": "R",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "bacnet_type": "analog_input_object",
+            "bacnet_unit_type_id": 98,
+            "bacnet_unit_type": "UNITS_PERCENT",
+            "reference": []
+        },
+        {
+            "id": "thdi.1.value",
+            "name": "THDi(Phase 2)",
+            "value": "",
+            "unit": "%",
+            "access_mode": "R",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "bacnet_type": "analog_input_object",
+            "bacnet_unit_type_id": 98,
+            "bacnet_unit_type": "UNITS_PERCENT",
+            "reference": []
+        },
+        {
+            "id": "thdi.2.value",
+            "name": "THDi(Phase 3)",
+            "value": "",
+            "unit": "%",
+            "access_mode": "R",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "bacnet_type": "analog_input_object",
+            "bacnet_unit_type_id": 98,
+            "bacnet_unit_type": "UNITS_PERCENT",
+            "reference": []
+        },
+        {
+            "id": "thdi.3.value",
+            "name": "THDi(Phase 4)",
+            "value": "",
+            "unit": "%",
+            "access_mode": "R",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "bacnet_type": "analog_input_object",
+            "bacnet_unit_type_id": 98,
+            "bacnet_unit_type": "UNITS_PERCENT",
+            "reference": []
+        },
+        {
+            "id": "thdi.4.value",
+            "name": "THDi(Phase 5)",
+            "value": "",
+            "unit": "%",
+            "access_mode": "R",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "bacnet_type": "analog_input_object",
+            "bacnet_unit_type_id": 98,
+            "bacnet_unit_type": "UNITS_PERCENT",
+            "reference": []
+        },
+        {
+            "id": "thdi.5.value",
+            "name": "THDi(Phase 6)",
+            "value": "",
+            "unit": "%",
+            "access_mode": "R",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "bacnet_type": "analog_input_object",
+            "bacnet_unit_type_id": 98,
+            "bacnet_unit_type": "UNITS_PERCENT",
+            "reference": []
+        },
+        {
+            "id": "thdi.6.value",
+            "name": "THDi(Phase 7)",
+            "value": "",
+            "unit": "%",
+            "access_mode": "R",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "bacnet_type": "analog_input_object",
+            "bacnet_unit_type_id": 98,
+            "bacnet_unit_type": "UNITS_PERCENT",
+            "reference": []
+        },
+        {
+            "id": "thdi.7.value",
+            "name": "THDi(Phase 8)",
+            "value": "",
+            "unit": "%",
+            "access_mode": "R",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "bacnet_type": "analog_input_object",
+            "bacnet_unit_type_id": 98,
+            "bacnet_unit_type": "UNITS_PERCENT",
+            "reference": []
+        },
+        {
+            "id": "thdi.8.value",
+            "name": "THDi(Phase 9)",
+            "value": "",
+            "unit": "%",
+            "access_mode": "R",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "bacnet_type": "analog_input_object",
+            "bacnet_unit_type_id": 98,
+            "bacnet_unit_type": "UNITS_PERCENT",
+            "reference": []
+        },
+        {
+            "id": "thdi.9.value",
+            "name": "THDi(Phase 10)",
+            "value": "",
+            "unit": "%",
+            "access_mode": "R",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "bacnet_type": "analog_input_object",
+            "bacnet_unit_type_id": 98,
+            "bacnet_unit_type": "UNITS_PERCENT",
+            "reference": []
+        },
+        {
+            "id": "thdi.10.value",
+            "name": "THDi(Phase 11)",
+            "value": "",
+            "unit": "%",
+            "access_mode": "R",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "bacnet_type": "analog_input_object",
+            "bacnet_unit_type_id": 98,
+            "bacnet_unit_type": "UNITS_PERCENT",
+            "reference": []
+        },
+        {
+            "id": "thdi.11.value",
+            "name": "THDi(Phase 12)",
+            "value": "",
+            "unit": "%",
+            "access_mode": "R",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "bacnet_type": "analog_input_object",
+            "bacnet_unit_type_id": 98,
+            "bacnet_unit_type": "UNITS_PERCENT",
+            "reference": []
+        },
+        {
+            "id": "thdv.0.value",
+            "name": "THDv(Phase 1)",
+            "value": "",
+            "unit": "%",
+            "access_mode": "R",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "bacnet_type": "analog_input_object",
+            "bacnet_unit_type_id": 98,
+            "bacnet_unit_type": "UNITS_PERCENT",
+            "reference": []
+        },
+        {
+            "id": "thdv.1.value",
+            "name": "THDv(Phase 2)",
+            "value": "",
+            "unit": "%",
+            "access_mode": "R",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "bacnet_type": "analog_input_object",
+            "bacnet_unit_type_id": 98,
+            "bacnet_unit_type": "UNITS_PERCENT",
+            "reference": []
+        },
+        {
+            "id": "thdv.2.value",
+            "name": "THDv(Phase 3)",
+            "value": "",
+            "unit": "%",
+            "access_mode": "R",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "bacnet_type": "analog_input_object",
+            "bacnet_unit_type_id": 98,
+            "bacnet_unit_type": "UNITS_PERCENT",
+            "reference": []
+        },
+        {
+            "id": "current.0.value",
+            "name": "Current(Phase 1)",
+            "value": "",
+            "unit": "a",
+            "access_mode": "R",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "bacnet_type": "analog_input_object",
+            "bacnet_unit_type_id": 67,
+            "bacnet_unit_type": "UNITS_YEARS",
+            "reference": []
+        },
+        {
+            "id": "current.1.value",
+            "name": "Current(Phase 2)",
+            "value": "",
+            "unit": "a",
+            "access_mode": "R",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "bacnet_type": "analog_input_object",
+            "bacnet_unit_type_id": 67,
+            "bacnet_unit_type": "UNITS_YEARS",
+            "reference": []
+        },
+        {
+            "id": "current.2.value",
+            "name": "Current(Phase 3)",
+            "value": "",
+            "unit": "a",
+            "access_mode": "R",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "bacnet_type": "analog_input_object",
+            "bacnet_unit_type_id": 67,
+            "bacnet_unit_type": "UNITS_YEARS",
+            "reference": []
+        },
+        {
+            "id": "current.3.value",
+            "name": "Current(Phase 4)",
+            "value": "",
+            "unit": "a",
+            "access_mode": "R",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "bacnet_type": "analog_input_object",
+            "bacnet_unit_type_id": 67,
+            "bacnet_unit_type": "UNITS_YEARS",
+            "reference": []
+        },
+        {
+            "id": "current.4.value",
+            "name": "Current(Phase 5)",
+            "value": "",
+            "unit": "a",
+            "access_mode": "R",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "bacnet_type": "analog_input_object",
+            "bacnet_unit_type_id": 67,
+            "bacnet_unit_type": "UNITS_YEARS",
+            "reference": []
+        },
+        {
+            "id": "current.5.value",
+            "name": "Current(Phase 6)",
+            "value": "",
+            "unit": "a",
+            "access_mode": "R",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "bacnet_type": "analog_input_object",
+            "bacnet_unit_type_id": 67,
+            "bacnet_unit_type": "UNITS_YEARS",
+            "reference": []
+        },
+        {
+            "id": "current.6.value",
+            "name": "Current(Phase 7)",
+            "value": "",
+            "unit": "a",
+            "access_mode": "R",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "bacnet_type": "analog_input_object",
+            "bacnet_unit_type_id": 67,
+            "bacnet_unit_type": "UNITS_YEARS",
+            "reference": []
+        },
+        {
+            "id": "current.7.value",
+            "name": "Current(Phase 8)",
+            "value": "",
+            "unit": "a",
+            "access_mode": "R",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "bacnet_type": "analog_input_object",
+            "bacnet_unit_type_id": 67,
+            "bacnet_unit_type": "UNITS_YEARS",
+            "reference": []
+        },
+        {
+            "id": "current.8.value",
+            "name": "Current(Phase 9)",
+            "value": "",
+            "unit": "a",
+            "access_mode": "R",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "bacnet_type": "analog_input_object",
+            "bacnet_unit_type_id": 67,
+            "bacnet_unit_type": "UNITS_YEARS",
+            "reference": []
+        },
+        {
+            "id": "current.9.value",
+            "name": "Current(Phase 10)",
+            "value": "",
+            "unit": "a",
+            "access_mode": "R",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "bacnet_type": "analog_input_object",
+            "bacnet_unit_type_id": 67,
+            "bacnet_unit_type": "UNITS_YEARS",
+            "reference": []
+        },
+        {
+            "id": "current.10.value",
+            "name": "Current(Phase 11)",
+            "value": "",
+            "unit": "a",
+            "access_mode": "R",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "bacnet_type": "analog_input_object",
+            "bacnet_unit_type_id": 67,
+            "bacnet_unit_type": "UNITS_YEARS",
+            "reference": []
+        },
+        {
+            "id": "current.11.value",
+            "name": "Current(Phase 12)",
+            "value": "",
+            "unit": "a",
+            "access_mode": "R",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "bacnet_type": "analog_input_object",
+            "bacnet_unit_type_id": 67,
+            "bacnet_unit_type": "UNITS_YEARS",
+            "reference": []
+        },
+        {
+            "id": "voltage.0.value",
+            "name": "Voltage(Phase 1)",
+            "value": "",
+            "unit": "V",
+            "access_mode": "R",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "bacnet_type": "analog_input_object",
+            "bacnet_unit_type_id": 5,
+            "bacnet_unit_type": "UNITS_VOLTS",
+            "reference": []
+        },
+        {
+            "id": "voltage.1.value",
+            "name": "Voltage(Phase 2)",
+            "value": "",
+            "unit": "V",
+            "access_mode": "R",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "bacnet_type": "analog_input_object",
+            "bacnet_unit_type_id": 5,
+            "bacnet_unit_type": "UNITS_VOLTS",
+            "reference": []
+        },
+        {
+            "id": "voltage.2.value",
+            "name": "Voltage(Phase 3)",
+            "value": "",
+            "unit": "V",
+            "access_mode": "R",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "bacnet_type": "analog_input_object",
+            "bacnet_unit_type_id": 5,
+            "bacnet_unit_type": "UNITS_VOLTS",
+            "reference": []
+        },
+        {
             "id": "active_power1.group1_value",
             "name": "Active Power a(Active Power)",
             "value": "0",
@@ -153,7 +543,7 @@
                     "name": "Active Power"
                 }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": [
@@ -186,7 +576,7 @@
                     "name": "Active Power"
                 }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": []
@@ -343,7 +733,7 @@
                     "name": "Active Power"
                 }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": [
@@ -376,7 +766,7 @@
                     "name": "Active Power"
                 }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": []
@@ -599,7 +989,7 @@
                     "name": "Apparent Energy"
                 }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": [
@@ -632,7 +1022,7 @@
                     "name": "Apparent Energy"
                 }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": []
@@ -789,7 +1179,7 @@
                     "name": "Apparent Energy"
                 }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": [
@@ -822,7 +1212,7 @@
                     "name": "Apparent Energy"
                 }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": []
@@ -979,7 +1369,7 @@
                     "name": "Apparent Power"
                 }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": [
@@ -1012,7 +1402,7 @@
                     "name": "Apparent Power"
                 }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": []
@@ -1169,7 +1559,7 @@
                     "name": "Apparent Power"
                 }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": [
@@ -1202,7 +1592,7 @@
                     "name": "Apparent Power"
                 }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": []
@@ -1284,7 +1674,7 @@
                     "name": "month min_max data"
                 }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_output_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": []
@@ -1498,7 +1888,7 @@
                     "name": "Current Out-of-Range Thresholds Alarm"
                 }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": []
@@ -2402,7 +2792,7 @@
             "id": "fahrenheit_temperature",
             "name": "Fahrenheit Temperature",
             "value": "",
-            "unit": "℉",
+            "unit": "°F",
             "access_mode": "R",
             "data_type": "NUMBER",
             "value_type": "FLOAT",
@@ -2566,7 +2956,7 @@
                     "name": "Imported Active Energy"
                 }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": [
@@ -2599,7 +2989,7 @@
                     "name": "Imported Active Energy"
                 }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": []
@@ -2756,7 +3146,7 @@
                     "name": "Imported Active Energy"
                 }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": [
@@ -2789,7 +3179,7 @@
                     "name": "Imported Active Energy"
                 }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": []
@@ -2946,7 +3336,7 @@
                     "name": "Imported Reactive Energy"
                 }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": [
@@ -2979,7 +3369,7 @@
                     "name": "Imported Reactive Energy"
                 }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": []
@@ -3136,7 +3526,7 @@
                     "name": "Imported Reactive Energy"
                 }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": [
@@ -3169,7 +3559,7 @@
                     "name": "Imported Reactive Energy"
                 }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": []
@@ -3196,7 +3586,7 @@
                     "name": "month time"
                 }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": [
@@ -3240,7 +3630,7 @@
                     "name": "month max"
                 }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": []
@@ -3676,7 +4066,7 @@
                     "name": "Power Factor"
                 }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": [
@@ -3725,7 +4115,7 @@
                     "name": "Power Factor"
                 }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": [
@@ -3774,7 +4164,7 @@
                     "name": "Power Factor"
                 }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": [
@@ -3823,7 +4213,7 @@
                     "name": "Power Factor"
                 }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": []
@@ -4037,7 +4427,7 @@
                     "name": "Reactive Power"
                 }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": [
@@ -4070,7 +4460,7 @@
                     "name": "Reactive Power"
                 }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": []
@@ -4227,7 +4617,7 @@
                     "name": "Reactive Power"
                 }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": [
@@ -4260,7 +4650,7 @@
                     "name": "Reactive Power"
                 }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": []
@@ -5037,7 +5427,7 @@
                     "name": "month min_max data"
                 }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_output_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": [
@@ -5086,7 +5476,7 @@
                     "name": "month min_max data"
                 }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_output_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": [
@@ -5245,7 +5635,7 @@
                     "name": "Exported Active Energy"
                 }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": [
@@ -5278,7 +5668,7 @@
                     "name": "Exported Active Energy"
                 }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": []
@@ -5435,7 +5825,7 @@
                     "name": "Exported Active Energy"
                 }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": [
@@ -5468,7 +5858,7 @@
                     "name": "Exported Active Energy"
                 }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": []
@@ -5625,7 +6015,7 @@
                     "name": "Exported Reactive Energy"
                 }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": [
@@ -5658,7 +6048,7 @@
                     "name": "Exported Reactive Energy"
                 }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": []
@@ -5815,7 +6205,7 @@
                     "name": "Exported Reactive Energy"
                 }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": [
@@ -5848,7 +6238,7 @@
                     "name": "Exported Reactive Energy"
                 }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": []
@@ -5879,7 +6269,7 @@
                     "name": "month min_max data"
                 }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_output_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": []
@@ -5995,7 +6385,7 @@
             "id": "temperature_alarm_settings.fahrenheit_threshold_max",
             "name": "Fahrenheit Value B(Temperature Threshold Alarm Settings)",
             "value": "32",
-            "unit": "℉",
+            "unit": "°F",
             "access_mode": "RW",
             "data_type": "NUMBER",
             "value_type": "FLOAT",
@@ -6016,7 +6406,7 @@
             "id": "temperature_alarm_settings.fahrenheit_threshold_min",
             "name": "Fahrenheit Value A(Temperature Threshold Alarm Settings)",
             "value": "32",
-            "unit": "℉",
+            "unit": "°F",
             "access_mode": "RW",
             "data_type": "NUMBER",
             "value_type": "FLOAT",
@@ -6168,7 +6558,7 @@
                     "name": "Temperature Outside Thresholds Alarm"
                 }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": []
@@ -6240,7 +6630,7 @@
             "id": "temperature_calibration_settings.fahrenheit_calibration_value",
             "name": "Fahrenheit Calibration Value(Temperature Calibration Settings)",
             "value": "32",
-            "unit": "℉",
+            "unit": "°F",
             "access_mode": "RW",
             "data_type": "NUMBER",
             "value_type": "FLOAT",
@@ -6346,7 +6736,7 @@
                     "name": "THDi Exceeds Threshold Alarm"
                 }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": []
@@ -6420,7 +6810,7 @@
                     "name": "THDv Exceeds Threshold Alarm"
                 }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": []
@@ -6841,7 +7231,7 @@
                     "name": "Voltage Out-of-Range Thresholds Alarm"
                 }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": []
@@ -7028,7 +7418,7 @@
                     "name": "Voltage Three-phase Unbalance Exceeds Threshold Alarm"
                 }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": []

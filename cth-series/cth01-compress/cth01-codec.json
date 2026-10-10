@@ -2,8 +2,398 @@
     "version": "1.0.0",
     "object": [
         {
+            "id": "thdi.0.value",
+            "name": "THDi(Phase 1)",
+            "value": "",
+            "unit": "%",
+            "access_mode": "R",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "bacnet_type": "analog_input_object",
+            "bacnet_unit_type_id": 98,
+            "bacnet_unit_type": "UNITS_PERCENT",
+            "reference": []
+        },
+        {
+            "id": "thdi.1.value",
+            "name": "THDi(Phase 2)",
+            "value": "",
+            "unit": "%",
+            "access_mode": "R",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "bacnet_type": "analog_input_object",
+            "bacnet_unit_type_id": 98,
+            "bacnet_unit_type": "UNITS_PERCENT",
+            "reference": []
+        },
+        {
+            "id": "thdi.2.value",
+            "name": "THDi(Phase 3)",
+            "value": "",
+            "unit": "%",
+            "access_mode": "R",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "bacnet_type": "analog_input_object",
+            "bacnet_unit_type_id": 98,
+            "bacnet_unit_type": "UNITS_PERCENT",
+            "reference": []
+        },
+        {
+            "id": "thdi.3.value",
+            "name": "THDi(Phase 4)",
+            "value": "",
+            "unit": "%",
+            "access_mode": "R",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "bacnet_type": "analog_input_object",
+            "bacnet_unit_type_id": 98,
+            "bacnet_unit_type": "UNITS_PERCENT",
+            "reference": []
+        },
+        {
+            "id": "thdi.4.value",
+            "name": "THDi(Phase 5)",
+            "value": "",
+            "unit": "%",
+            "access_mode": "R",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "bacnet_type": "analog_input_object",
+            "bacnet_unit_type_id": 98,
+            "bacnet_unit_type": "UNITS_PERCENT",
+            "reference": []
+        },
+        {
+            "id": "thdi.5.value",
+            "name": "THDi(Phase 6)",
+            "value": "",
+            "unit": "%",
+            "access_mode": "R",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "bacnet_type": "analog_input_object",
+            "bacnet_unit_type_id": 98,
+            "bacnet_unit_type": "UNITS_PERCENT",
+            "reference": []
+        },
+        {
+            "id": "thdi.6.value",
+            "name": "THDi(Phase 7)",
+            "value": "",
+            "unit": "%",
+            "access_mode": "R",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "bacnet_type": "analog_input_object",
+            "bacnet_unit_type_id": 98,
+            "bacnet_unit_type": "UNITS_PERCENT",
+            "reference": []
+        },
+        {
+            "id": "thdi.7.value",
+            "name": "THDi(Phase 8)",
+            "value": "",
+            "unit": "%",
+            "access_mode": "R",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "bacnet_type": "analog_input_object",
+            "bacnet_unit_type_id": 98,
+            "bacnet_unit_type": "UNITS_PERCENT",
+            "reference": []
+        },
+        {
+            "id": "thdi.8.value",
+            "name": "THDi(Phase 9)",
+            "value": "",
+            "unit": "%",
+            "access_mode": "R",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "bacnet_type": "analog_input_object",
+            "bacnet_unit_type_id": 98,
+            "bacnet_unit_type": "UNITS_PERCENT",
+            "reference": []
+        },
+        {
+            "id": "thdi.9.value",
+            "name": "THDi(Phase 10)",
+            "value": "",
+            "unit": "%",
+            "access_mode": "R",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "bacnet_type": "analog_input_object",
+            "bacnet_unit_type_id": 98,
+            "bacnet_unit_type": "UNITS_PERCENT",
+            "reference": []
+        },
+        {
+            "id": "thdi.10.value",
+            "name": "THDi(Phase 11)",
+            "value": "",
+            "unit": "%",
+            "access_mode": "R",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "bacnet_type": "analog_input_object",
+            "bacnet_unit_type_id": 98,
+            "bacnet_unit_type": "UNITS_PERCENT",
+            "reference": []
+        },
+        {
+            "id": "thdi.11.value",
+            "name": "THDi(Phase 12)",
+            "value": "",
+            "unit": "%",
+            "access_mode": "R",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "bacnet_type": "analog_input_object",
+            "bacnet_unit_type_id": 98,
+            "bacnet_unit_type": "UNITS_PERCENT",
+            "reference": []
+        },
+        {
+            "id": "thdv.0.value",
+            "name": "THDv(Phase 1)",
+            "value": "",
+            "unit": "%",
+            "access_mode": "R",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "bacnet_type": "analog_input_object",
+            "bacnet_unit_type_id": 98,
+            "bacnet_unit_type": "UNITS_PERCENT",
+            "reference": []
+        },
+        {
+            "id": "thdv.1.value",
+            "name": "THDv(Phase 2)",
+            "value": "",
+            "unit": "%",
+            "access_mode": "R",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "bacnet_type": "analog_input_object",
+            "bacnet_unit_type_id": 98,
+            "bacnet_unit_type": "UNITS_PERCENT",
+            "reference": []
+        },
+        {
+            "id": "thdv.2.value",
+            "name": "THDv(Phase 3)",
+            "value": "",
+            "unit": "%",
+            "access_mode": "R",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "bacnet_type": "analog_input_object",
+            "bacnet_unit_type_id": 98,
+            "bacnet_unit_type": "UNITS_PERCENT",
+            "reference": []
+        },
+        {
+            "id": "current.0.value",
+            "name": "Current(Phase 1)",
+            "value": "",
+            "unit": "a",
+            "access_mode": "R",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "bacnet_type": "analog_input_object",
+            "bacnet_unit_type_id": 67,
+            "bacnet_unit_type": "UNITS_YEARS",
+            "reference": []
+        },
+        {
+            "id": "current.1.value",
+            "name": "Current(Phase 2)",
+            "value": "",
+            "unit": "a",
+            "access_mode": "R",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "bacnet_type": "analog_input_object",
+            "bacnet_unit_type_id": 67,
+            "bacnet_unit_type": "UNITS_YEARS",
+            "reference": []
+        },
+        {
+            "id": "current.2.value",
+            "name": "Current(Phase 3)",
+            "value": "",
+            "unit": "a",
+            "access_mode": "R",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "bacnet_type": "analog_input_object",
+            "bacnet_unit_type_id": 67,
+            "bacnet_unit_type": "UNITS_YEARS",
+            "reference": []
+        },
+        {
+            "id": "current.3.value",
+            "name": "Current(Phase 4)",
+            "value": "",
+            "unit": "a",
+            "access_mode": "R",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "bacnet_type": "analog_input_object",
+            "bacnet_unit_type_id": 67,
+            "bacnet_unit_type": "UNITS_YEARS",
+            "reference": []
+        },
+        {
+            "id": "current.4.value",
+            "name": "Current(Phase 5)",
+            "value": "",
+            "unit": "a",
+            "access_mode": "R",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "bacnet_type": "analog_input_object",
+            "bacnet_unit_type_id": 67,
+            "bacnet_unit_type": "UNITS_YEARS",
+            "reference": []
+        },
+        {
+            "id": "current.5.value",
+            "name": "Current(Phase 6)",
+            "value": "",
+            "unit": "a",
+            "access_mode": "R",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "bacnet_type": "analog_input_object",
+            "bacnet_unit_type_id": 67,
+            "bacnet_unit_type": "UNITS_YEARS",
+            "reference": []
+        },
+        {
+            "id": "current.6.value",
+            "name": "Current(Phase 7)",
+            "value": "",
+            "unit": "a",
+            "access_mode": "R",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "bacnet_type": "analog_input_object",
+            "bacnet_unit_type_id": 67,
+            "bacnet_unit_type": "UNITS_YEARS",
+            "reference": []
+        },
+        {
+            "id": "current.7.value",
+            "name": "Current(Phase 8)",
+            "value": "",
+            "unit": "a",
+            "access_mode": "R",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "bacnet_type": "analog_input_object",
+            "bacnet_unit_type_id": 67,
+            "bacnet_unit_type": "UNITS_YEARS",
+            "reference": []
+        },
+        {
+            "id": "current.8.value",
+            "name": "Current(Phase 9)",
+            "value": "",
+            "unit": "a",
+            "access_mode": "R",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "bacnet_type": "analog_input_object",
+            "bacnet_unit_type_id": 67,
+            "bacnet_unit_type": "UNITS_YEARS",
+            "reference": []
+        },
+        {
+            "id": "current.9.value",
+            "name": "Current(Phase 10)",
+            "value": "",
+            "unit": "a",
+            "access_mode": "R",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "bacnet_type": "analog_input_object",
+            "bacnet_unit_type_id": 67,
+            "bacnet_unit_type": "UNITS_YEARS",
+            "reference": []
+        },
+        {
+            "id": "current.10.value",
+            "name": "Current(Phase 11)",
+            "value": "",
+            "unit": "a",
+            "access_mode": "R",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "bacnet_type": "analog_input_object",
+            "bacnet_unit_type_id": 67,
+            "bacnet_unit_type": "UNITS_YEARS",
+            "reference": []
+        },
+        {
+            "id": "current.11.value",
+            "name": "Current(Phase 12)",
+            "value": "",
+            "unit": "a",
+            "access_mode": "R",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "bacnet_type": "analog_input_object",
+            "bacnet_unit_type_id": 67,
+            "bacnet_unit_type": "UNITS_YEARS",
+            "reference": []
+        },
+        {
+            "id": "voltage.0.value",
+            "name": "Voltage(Phase 1)",
+            "value": "",
+            "unit": "V",
+            "access_mode": "R",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "bacnet_type": "analog_input_object",
+            "bacnet_unit_type_id": 5,
+            "bacnet_unit_type": "UNITS_VOLTS",
+            "reference": []
+        },
+        {
+            "id": "voltage.1.value",
+            "name": "Voltage(Phase 2)",
+            "value": "",
+            "unit": "V",
+            "access_mode": "R",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "bacnet_type": "analog_input_object",
+            "bacnet_unit_type_id": 5,
+            "bacnet_unit_type": "UNITS_VOLTS",
+            "reference": []
+        },
+        {
+            "id": "voltage.2.value",
+            "name": "Voltage(Phase 3)",
+            "value": "",
+            "unit": "V",
+            "access_mode": "R",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "bacnet_type": "analog_input_object",
+            "bacnet_unit_type_id": 5,
+            "bacnet_unit_type": "UNITS_VOLTS",
+            "reference": []
+        },
+        {
             "id": "active_power1.group1_value",
-            "name": "Active Power a",
+            "name": "Active Power a(Active Power)",
             "value": "0",
             "unit": "kW",
             "access_mode": "R",
@@ -18,7 +408,7 @@
         },
         {
             "id": "active_power1.group1.chan1",
-            "name": "Active Power1",
+            "name": "Active Power1(Active Power)",
             "value": "0",
             "unit": "kW",
             "access_mode": "R",
@@ -34,7 +424,7 @@
         },
         {
             "id": "active_power1.group1.chan2",
-            "name": "Active Power2",
+            "name": "Active Power2(Active Power)",
             "value": "0",
             "unit": "kW",
             "access_mode": "R",
@@ -50,7 +440,7 @@
         },
         {
             "id": "active_power1.group1.chan3",
-            "name": "Active Power3",
+            "name": "Active Power3(Active Power)",
             "value": "0",
             "unit": "kW",
             "access_mode": "R",
@@ -66,7 +456,7 @@
         },
         {
             "id": "active_power1.group2_value",
-            "name": "Active Power b",
+            "name": "Active Power b(Active Power)",
             "value": "0",
             "unit": "kW",
             "access_mode": "R",
@@ -81,7 +471,7 @@
         },
         {
             "id": "active_power1.group2.chan1",
-            "name": "Active Power4",
+            "name": "Active Power4(Active Power)",
             "value": "0",
             "unit": "kW",
             "access_mode": "R",
@@ -97,7 +487,7 @@
         },
         {
             "id": "active_power1.group2.chan2",
-            "name": "Active Power5",
+            "name": "Active Power5(Active Power)",
             "value": "0",
             "unit": "kW",
             "access_mode": "R",
@@ -113,7 +503,7 @@
         },
         {
             "id": "active_power1.group2.chan3",
-            "name": "Active Power6",
+            "name": "Active Power6(Active Power)",
             "value": "0",
             "unit": "kW",
             "access_mode": "R",
@@ -129,7 +519,7 @@
         },
         {
             "id": "active_power1.mask1",
-            "name": "Active Power",
+            "name": "Active Power(Active Power)",
             "value": "",
             "unit": "",
             "access_mode": "R",
@@ -153,7 +543,7 @@
                     "name": "Active Power"
                 }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": [
@@ -162,7 +552,7 @@
         },
         {
             "id": "active_power1.mask2",
-            "name": "Active Power",
+            "name": "Active Power(Active Power)",
             "value": "",
             "unit": "",
             "access_mode": "R",
@@ -186,14 +576,14 @@
                     "name": "Active Power"
                 }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": []
         },
         {
             "id": "active_power2.group1_value",
-            "name": "Active Power c",
+            "name": "Active Power c(Active Power)",
             "value": "0",
             "unit": "kW",
             "access_mode": "R",
@@ -208,7 +598,7 @@
         },
         {
             "id": "active_power2.group1.chan1",
-            "name": "Active Power7",
+            "name": "Active Power7(Active Power)",
             "value": "0",
             "unit": "kW",
             "access_mode": "R",
@@ -224,7 +614,7 @@
         },
         {
             "id": "active_power2.group1.chan2",
-            "name": "Active Power8",
+            "name": "Active Power8(Active Power)",
             "value": "0",
             "unit": "kW",
             "access_mode": "R",
@@ -240,7 +630,7 @@
         },
         {
             "id": "active_power2.group1.chan3",
-            "name": "Active Power9",
+            "name": "Active Power9(Active Power)",
             "value": "0",
             "unit": "kW",
             "access_mode": "R",
@@ -256,7 +646,7 @@
         },
         {
             "id": "active_power2.group2_value",
-            "name": "Active Power d",
+            "name": "Active Power d(Active Power)",
             "value": "0",
             "unit": "kW",
             "access_mode": "R",
@@ -271,7 +661,7 @@
         },
         {
             "id": "active_power2.group2.chan1",
-            "name": "Active Power10",
+            "name": "Active Power10(Active Power)",
             "value": "0",
             "unit": "kW",
             "access_mode": "R",
@@ -287,7 +677,7 @@
         },
         {
             "id": "active_power2.group2.chan2",
-            "name": "Active Power11",
+            "name": "Active Power11(Active Power)",
             "value": "0",
             "unit": "kW",
             "access_mode": "R",
@@ -303,7 +693,7 @@
         },
         {
             "id": "active_power2.group2.chan3",
-            "name": "Active Power12",
+            "name": "Active Power12(Active Power)",
             "value": "0",
             "unit": "kW",
             "access_mode": "R",
@@ -319,7 +709,7 @@
         },
         {
             "id": "active_power2.mask1",
-            "name": "Active Power",
+            "name": "Active Power(Active Power)",
             "value": "",
             "unit": "",
             "access_mode": "R",
@@ -343,7 +733,7 @@
                     "name": "Active Power"
                 }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": [
@@ -352,7 +742,7 @@
         },
         {
             "id": "active_power2.mask2",
-            "name": "Active Power",
+            "name": "Active Power(Active Power)",
             "value": "",
             "unit": "",
             "access_mode": "R",
@@ -376,14 +766,14 @@
                     "name": "Active Power"
                 }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": []
         },
         {
             "id": "alarm_global_settings.interval",
-            "name": "Alarm Interval",
+            "name": "Alarm Interval(Threshold Alarm Global Settings)",
             "value": "5",
             "unit": "min",
             "access_mode": "RW",
@@ -403,7 +793,7 @@
         },
         {
             "id": "alarm_global_settings.release_enable",
-            "name": "Threshold Released Report Enable",
+            "name": "Threshold Released Report Enable(Threshold Alarm Global Settings)",
             "value": "0",
             "unit": "",
             "access_mode": "RW",
@@ -429,7 +819,7 @@
         },
         {
             "id": "alarm_global_settings.times",
-            "name": "Alarm Times",
+            "name": "Alarm Times(Threshold Alarm Global Settings)",
             "value": "3",
             "unit": "",
             "access_mode": "RW",
@@ -449,7 +839,7 @@
         },
         {
             "id": "apparent_energy1.group1_value",
-            "name": "Apparent Energy a",
+            "name": "Apparent Energy a(Apparent Energy)",
             "value": "0",
             "unit": "kVAh",
             "access_mode": "R",
@@ -464,7 +854,7 @@
         },
         {
             "id": "apparent_energy1.group1.chan1",
-            "name": "Apparent Energy1",
+            "name": "Apparent Energy1(Apparent Energy)",
             "value": "0",
             "unit": "kVAh",
             "access_mode": "R",
@@ -480,7 +870,7 @@
         },
         {
             "id": "apparent_energy1.group1.chan2",
-            "name": "Apparent Energy2",
+            "name": "Apparent Energy2(Apparent Energy)",
             "value": "0",
             "unit": "kVAh",
             "access_mode": "R",
@@ -496,7 +886,7 @@
         },
         {
             "id": "apparent_energy1.group1.chan3",
-            "name": "Apparent Energy3",
+            "name": "Apparent Energy3(Apparent Energy)",
             "value": "0",
             "unit": "kVAh",
             "access_mode": "R",
@@ -512,7 +902,7 @@
         },
         {
             "id": "apparent_energy1.group2_value",
-            "name": "Apparent Energy b",
+            "name": "Apparent Energy b(Apparent Energy)",
             "value": "0",
             "unit": "kVAh",
             "access_mode": "R",
@@ -527,7 +917,7 @@
         },
         {
             "id": "apparent_energy1.group2.chan1",
-            "name": "Apparent Energy4",
+            "name": "Apparent Energy4(Apparent Energy)",
             "value": "0",
             "unit": "kVAh",
             "access_mode": "R",
@@ -543,7 +933,7 @@
         },
         {
             "id": "apparent_energy1.group2.chan2",
-            "name": "Apparent Energy5",
+            "name": "Apparent Energy5(Apparent Energy)",
             "value": "0",
             "unit": "kVAh",
             "access_mode": "R",
@@ -559,7 +949,7 @@
         },
         {
             "id": "apparent_energy1.group2.chan3",
-            "name": "Apparent Energy6",
+            "name": "Apparent Energy6(Apparent Energy)",
             "value": "0",
             "unit": "kVAh",
             "access_mode": "R",
@@ -575,7 +965,7 @@
         },
         {
             "id": "apparent_energy1.mask1",
-            "name": "Apparent Energy",
+            "name": "Apparent Energy(Apparent Energy)",
             "value": "",
             "unit": "",
             "access_mode": "R",
@@ -599,7 +989,7 @@
                     "name": "Apparent Energy"
                 }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": [
@@ -608,7 +998,7 @@
         },
         {
             "id": "apparent_energy1.mask2",
-            "name": "Apparent Energy",
+            "name": "Apparent Energy(Apparent Energy)",
             "value": "",
             "unit": "",
             "access_mode": "R",
@@ -632,14 +1022,14 @@
                     "name": "Apparent Energy"
                 }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": []
         },
         {
             "id": "apparent_energy2.group1_value",
-            "name": "Apparent Energy c",
+            "name": "Apparent Energy c(Apparent Energy)",
             "value": "0",
             "unit": "kVAh",
             "access_mode": "R",
@@ -654,7 +1044,7 @@
         },
         {
             "id": "apparent_energy2.group1.chan1",
-            "name": "Apparent Energy7",
+            "name": "Apparent Energy7(Apparent Energy)",
             "value": "0",
             "unit": "kVAh",
             "access_mode": "R",
@@ -670,7 +1060,7 @@
         },
         {
             "id": "apparent_energy2.group1.chan2",
-            "name": "Apparent Energy8",
+            "name": "Apparent Energy8(Apparent Energy)",
             "value": "0",
             "unit": "kVAh",
             "access_mode": "R",
@@ -686,7 +1076,7 @@
         },
         {
             "id": "apparent_energy2.group1.chan3",
-            "name": "Apparent Energy9",
+            "name": "Apparent Energy9(Apparent Energy)",
             "value": "0",
             "unit": "kVAh",
             "access_mode": "R",
@@ -702,7 +1092,7 @@
         },
         {
             "id": "apparent_energy2.group2_value",
-            "name": "Apparent Energy d",
+            "name": "Apparent Energy d(Apparent Energy)",
             "value": "0",
             "unit": "kVAh",
             "access_mode": "R",
@@ -717,7 +1107,7 @@
         },
         {
             "id": "apparent_energy2.group2.chan1",
-            "name": "Apparent Energy10",
+            "name": "Apparent Energy10(Apparent Energy)",
             "value": "0",
             "unit": "kVAh",
             "access_mode": "R",
@@ -733,7 +1123,7 @@
         },
         {
             "id": "apparent_energy2.group2.chan2",
-            "name": "Apparent Energy11",
+            "name": "Apparent Energy11(Apparent Energy)",
             "value": "0",
             "unit": "kVAh",
             "access_mode": "R",
@@ -749,7 +1139,7 @@
         },
         {
             "id": "apparent_energy2.group2.chan3",
-            "name": "Apparent Energy12",
+            "name": "Apparent Energy12(Apparent Energy)",
             "value": "0",
             "unit": "kVAh",
             "access_mode": "R",
@@ -765,7 +1155,7 @@
         },
         {
             "id": "apparent_energy2.mask1",
-            "name": "Apparent Energy",
+            "name": "Apparent Energy(Apparent Energy)",
             "value": "",
             "unit": "",
             "access_mode": "R",
@@ -789,7 +1179,7 @@
                     "name": "Apparent Energy"
                 }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": [
@@ -798,7 +1188,7 @@
         },
         {
             "id": "apparent_energy2.mask2",
-            "name": "Apparent Energy",
+            "name": "Apparent Energy(Apparent Energy)",
             "value": "",
             "unit": "",
             "access_mode": "R",
@@ -822,14 +1212,14 @@
                     "name": "Apparent Energy"
                 }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": []
         },
         {
             "id": "apparent_power1.group1_value",
-            "name": "Apparent Power a",
+            "name": "Apparent Power a(Apparent Power)",
             "value": "0",
             "unit": "kVA",
             "access_mode": "R",
@@ -844,7 +1234,7 @@
         },
         {
             "id": "apparent_power1.group1.chan1",
-            "name": "Apparent Power1",
+            "name": "Apparent Power1(Apparent Power)",
             "value": "0",
             "unit": "kVA",
             "access_mode": "R",
@@ -860,7 +1250,7 @@
         },
         {
             "id": "apparent_power1.group1.chan2",
-            "name": "Apparent Power2",
+            "name": "Apparent Power2(Apparent Power)",
             "value": "0",
             "unit": "kVA",
             "access_mode": "R",
@@ -876,7 +1266,7 @@
         },
         {
             "id": "apparent_power1.group1.chan3",
-            "name": "Apparent Power3",
+            "name": "Apparent Power3(Apparent Power)",
             "value": "0",
             "unit": "kVA",
             "access_mode": "R",
@@ -892,7 +1282,7 @@
         },
         {
             "id": "apparent_power1.group2_value",
-            "name": "Apparent Power b",
+            "name": "Apparent Power b(Apparent Power)",
             "value": "0",
             "unit": "kVA",
             "access_mode": "R",
@@ -907,7 +1297,7 @@
         },
         {
             "id": "apparent_power1.group2.chan1",
-            "name": "Apparent Power4",
+            "name": "Apparent Power4(Apparent Power)",
             "value": "0",
             "unit": "kVA",
             "access_mode": "R",
@@ -923,7 +1313,7 @@
         },
         {
             "id": "apparent_power1.group2.chan2",
-            "name": "Apparent Power5",
+            "name": "Apparent Power5(Apparent Power)",
             "value": "0",
             "unit": "kVA",
             "access_mode": "R",
@@ -939,7 +1329,7 @@
         },
         {
             "id": "apparent_power1.group2.chan3",
-            "name": "Apparent Power6",
+            "name": "Apparent Power6(Apparent Power)",
             "value": "0",
             "unit": "kVA",
             "access_mode": "R",
@@ -955,7 +1345,7 @@
         },
         {
             "id": "apparent_power1.mask1",
-            "name": "Apparent Power",
+            "name": "Apparent Power(Apparent Power)",
             "value": "",
             "unit": "",
             "access_mode": "R",
@@ -979,7 +1369,7 @@
                     "name": "Apparent Power"
                 }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": [
@@ -988,7 +1378,7 @@
         },
         {
             "id": "apparent_power1.mask2",
-            "name": "Apparent Power",
+            "name": "Apparent Power(Apparent Power)",
             "value": "",
             "unit": "",
             "access_mode": "R",
@@ -1012,14 +1402,14 @@
                     "name": "Apparent Power"
                 }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": []
         },
         {
             "id": "apparent_power2.group1_value",
-            "name": "Apparent Power c",
+            "name": "Apparent Power c(Apparent Power)",
             "value": "0",
             "unit": "kVA",
             "access_mode": "R",
@@ -1034,7 +1424,7 @@
         },
         {
             "id": "apparent_power2.group1.chan1",
-            "name": "Apparent Power7",
+            "name": "Apparent Power7(Apparent Power)",
             "value": "0",
             "unit": "kVA",
             "access_mode": "R",
@@ -1050,7 +1440,7 @@
         },
         {
             "id": "apparent_power2.group1.chan2",
-            "name": "Apparent Power8",
+            "name": "Apparent Power8(Apparent Power)",
             "value": "0",
             "unit": "kVA",
             "access_mode": "R",
@@ -1066,7 +1456,7 @@
         },
         {
             "id": "apparent_power2.group1.chan3",
-            "name": "Apparent Power9",
+            "name": "Apparent Power9(Apparent Power)",
             "value": "0",
             "unit": "kVA",
             "access_mode": "R",
@@ -1082,7 +1472,7 @@
         },
         {
             "id": "apparent_power2.group2_value",
-            "name": "Apparent Power d",
+            "name": "Apparent Power d(Apparent Power)",
             "value": "0",
             "unit": "kVA",
             "access_mode": "R",
@@ -1097,7 +1487,7 @@
         },
         {
             "id": "apparent_power2.group2.chan1",
-            "name": "Apparent Power10",
+            "name": "Apparent Power10(Apparent Power)",
             "value": "0",
             "unit": "kVA",
             "access_mode": "R",
@@ -1113,7 +1503,7 @@
         },
         {
             "id": "apparent_power2.group2.chan2",
-            "name": "Apparent Power11",
+            "name": "Apparent Power11(Apparent Power)",
             "value": "0",
             "unit": "kVA",
             "access_mode": "R",
@@ -1129,7 +1519,7 @@
         },
         {
             "id": "apparent_power2.group2.chan3",
-            "name": "Apparent Power12",
+            "name": "Apparent Power12(Apparent Power)",
             "value": "0",
             "unit": "kVA",
             "access_mode": "R",
@@ -1145,7 +1535,7 @@
         },
         {
             "id": "apparent_power2.mask1",
-            "name": "Apparent Power",
+            "name": "Apparent Power(Apparent Power)",
             "value": "",
             "unit": "",
             "access_mode": "R",
@@ -1169,7 +1559,7 @@
                     "name": "Apparent Power"
                 }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": [
@@ -1178,7 +1568,7 @@
         },
         {
             "id": "apparent_power2.mask2",
-            "name": "Apparent Power",
+            "name": "Apparent Power(Apparent Power)",
             "value": "",
             "unit": "",
             "access_mode": "R",
@@ -1202,14 +1592,14 @@
                     "name": "Apparent Power"
                 }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": []
         },
         {
             "id": "bluetooth_name.content",
-            "name": "Name",
+            "name": "Name(Bluetooth Name)",
             "value": "",
             "unit": "",
             "access_mode": "RW",
@@ -1217,15 +1607,15 @@
             "value_type": "STRING",
             "bacnet_type": "character_string_value_object",
             "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
             "max_length": 13,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": [
                 "bluetooth_name.length"
             ]
         },
         {
             "id": "bluetooth_name.length",
-            "name": "Name Length",
+            "name": "Name Length(Bluetooth Name)",
             "value": "13",
             "unit": "",
             "access_mode": "RW",
@@ -1243,8 +1633,24 @@
             ]
         },
         {
+            "id": "celsius_temperature",
+            "name": "Celsius Temperature",
+            "value": "",
+            "unit": "°C",
+            "access_mode": "R",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "range": [
+                -20,
+                100
+            ],
+            "bacnet_type": "analog_input_object",
+            "bacnet_unit_type_id": 62,
+            "bacnet_unit_type": "UNITS_DEGREES_CELSIUS"
+        },
+        {
             "id": "clear_data.type",
-            "name": "Data Type to Clear",
+            "name": "Data Type to Clear(Clear Historical Data)",
             "value": "0",
             "unit": "",
             "access_mode": "W",
@@ -1268,14 +1674,14 @@
                     "name": "month min_max data"
                 }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_output_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": []
         },
         {
             "id": "current_alarm.channel",
-            "name": "Alarm Channel",
+            "name": "Alarm Channel(Current Threshold  Alarm)",
             "value": "",
             "unit": "",
             "access_mode": "R",
@@ -1305,7 +1711,7 @@
         },
         {
             "id": "current_alarm.info.exceed_range_alarm_deactivation.current",
-            "name": "Current",
+            "name": "Current(Current Out-of-Range Thresholds Alarm Released)",
             "value": "",
             "unit": "a",
             "access_mode": "R",
@@ -1318,7 +1724,7 @@
         },
         {
             "id": "current_alarm.info.exceed_range_alarm_trigger.current",
-            "name": "Current",
+            "name": "Current(Current Out-of-Range Thresholds Alarm)",
             "value": "",
             "unit": "a",
             "access_mode": "R",
@@ -1331,7 +1737,7 @@
         },
         {
             "id": "current_alarm.info.lower_range_alarm_deactivation.current",
-            "name": "Current",
+            "name": "Current(Current Below Threshold Alarm Released)",
             "value": "",
             "unit": "a",
             "access_mode": "R",
@@ -1344,7 +1750,7 @@
         },
         {
             "id": "current_alarm.info.lower_range_alarm_trigger.current",
-            "name": "Current",
+            "name": "Current(Current Below Threshold Alarm)",
             "value": "",
             "unit": "a",
             "access_mode": "R",
@@ -1357,7 +1763,7 @@
         },
         {
             "id": "current_alarm.info.lower_range_error.current",
-            "name": "Current",
+            "name": "Current(Overrange (Lower Limit))",
             "value": "",
             "unit": "a",
             "access_mode": "R",
@@ -1370,7 +1776,7 @@
         },
         {
             "id": "current_alarm.info.over_range_alarm_deactivation.current",
-            "name": "Current",
+            "name": "Current(Current Exceeds Threshold Alarm Released)",
             "value": "",
             "unit": "a",
             "access_mode": "R",
@@ -1383,7 +1789,7 @@
         },
         {
             "id": "current_alarm.info.over_range_alarm_trigger.current",
-            "name": "Current",
+            "name": "Current(Current Exceeds Threshold Alarm)",
             "value": "",
             "unit": "a",
             "access_mode": "R",
@@ -1396,7 +1802,7 @@
         },
         {
             "id": "current_alarm.info.over_range_error.current",
-            "name": "Current",
+            "name": "Current(Overrange (Upper Limit))",
             "value": "",
             "unit": "a",
             "access_mode": "R",
@@ -1409,7 +1815,7 @@
         },
         {
             "id": "current_alarm.info.over_range_release.current",
-            "name": "Current",
+            "name": "Current(Overrange Release)",
             "value": "",
             "unit": "a",
             "access_mode": "R",
@@ -1422,7 +1828,7 @@
         },
         {
             "id": "current_alarm.info.type",
-            "name": "Alarm Type",
+            "name": "Alarm Type(Current Threshold Alarm Info)",
             "value": "",
             "unit": "",
             "access_mode": "R",
@@ -1482,14 +1888,14 @@
                     "name": "Current Out-of-Range Thresholds Alarm"
                 }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": []
         },
         {
             "id": "current_alarm.info.within_range_alarm_deactivation.current",
-            "name": "Current",
+            "name": "Current(Current in-Range Thresholds Alarm Released)",
             "value": "",
             "unit": "a",
             "access_mode": "R",
@@ -1502,7 +1908,7 @@
         },
         {
             "id": "current_alarm.info.within_range_alarm_trigger.current",
-            "name": "Current",
+            "name": "Current(Current in-Range Thresholds Alarm)",
             "value": "",
             "unit": "a",
             "access_mode": "R",
@@ -1515,7 +1921,7 @@
         },
         {
             "id": "current_interface1.type",
-            "name": "Circuit Type",
+            "name": "Circuit Type A(Group a)",
             "value": "0",
             "unit": "",
             "access_mode": "RW",
@@ -1538,7 +1944,7 @@
         },
         {
             "id": "current_interface2.type",
-            "name": "Circuit Type",
+            "name": "Circuit Type B(Group b)",
             "value": "0",
             "unit": "",
             "access_mode": "RW",
@@ -1561,7 +1967,7 @@
         },
         {
             "id": "current_interface3.type",
-            "name": "Circuit Type",
+            "name": "Circuit Type C(Group c)",
             "value": "0",
             "unit": "",
             "access_mode": "RW",
@@ -1584,7 +1990,7 @@
         },
         {
             "id": "current_interface4.type",
-            "name": "Circuit Type",
+            "name": "Circuit Type D(Group d)",
             "value": "0",
             "unit": "",
             "access_mode": "RW",
@@ -1607,7 +2013,7 @@
         },
         {
             "id": "data_storage_settings.command",
-            "name": "Sub-command",
+            "name": "Sub-command(Data Storage Settings)",
             "value": "0",
             "unit": "",
             "access_mode": "RW",
@@ -1638,7 +2044,7 @@
         },
         {
             "id": "data_storage_settings.enable",
-            "name": "Data Storage Enable",
+            "name": "Data Storage Enable(Data Storage Settings)",
             "value": "0",
             "unit": "",
             "access_mode": "RW",
@@ -1661,7 +2067,7 @@
         },
         {
             "id": "data_storage_settings.retransmission_enable",
-            "name": "Data Retransmission Enable",
+            "name": "Data Retransmission Enable(Data Storage Settings)",
             "value": "0",
             "unit": "",
             "access_mode": "RW",
@@ -1684,14 +2090,14 @@
         },
         {
             "id": "data_storage_settings.retransmission_interval",
-            "name": "Retransmission Interval",
+            "name": "Retransmission Interval(Data Storage Settings)",
             "value": "600",
             "unit": "s",
             "access_mode": "RW",
             "data_type": "NUMBER",
             "value_type": "UINT16",
             "range": [
-                30,
+                120,
                 1200
             ],
             "bacnet_type": "analog_value_object",
@@ -1701,14 +2107,14 @@
         },
         {
             "id": "data_storage_settings.retrieval_interval",
-            "name": "Retrieval Interval",
-            "value": "60",
+            "name": "Retrieval Interval(Data Storage Settings)",
+            "value": "120",
             "unit": "s",
             "access_mode": "RW",
             "data_type": "NUMBER",
             "value_type": "UINT16",
             "range": [
-                30,
+                120,
                 1200
             ],
             "bacnet_type": "analog_value_object",
@@ -1718,14 +2124,14 @@
         },
         {
             "id": "daylight_saving_time.daylight_saving_time_offset",
-            "name": "DST Bias",
+            "name": "DST Bias(Daylight Saving Time)",
             "value": "60",
             "unit": "min",
             "access_mode": "RW",
             "data_type": "NUMBER",
             "value_type": "UINT8",
             "range": [
-                0,
+                1,
                 120
             ],
             "bacnet_type": "analog_value_object",
@@ -1745,7 +2151,7 @@
         },
         {
             "id": "daylight_saving_time.enable",
-            "name": "Daylight Saving Time",
+            "name": "Daylight Saving Time(Daylight Saving Time)",
             "value": "0",
             "unit": "",
             "access_mode": "RW",
@@ -1778,7 +2184,7 @@
         },
         {
             "id": "daylight_saving_time.end_hour_min",
-            "name": "Time",
+            "name": "Time(Daylight Saving Time)",
             "value": "0",
             "unit": "min",
             "access_mode": "RW",
@@ -1899,7 +2305,7 @@
         },
         {
             "id": "daylight_saving_time.end_month",
-            "name": "Month",
+            "name": "Month(Daylight Saving Time)",
             "value": "1",
             "unit": "",
             "access_mode": "RW",
@@ -1972,7 +2378,7 @@
         },
         {
             "id": "daylight_saving_time.end_week_day",
-            "name": "Week",
+            "name": "Week(Daylight Saving Time)",
             "value": "1",
             "unit": "",
             "access_mode": "RW",
@@ -2025,7 +2431,7 @@
         },
         {
             "id": "daylight_saving_time.end_week_num",
-            "name": "Number of Week",
+            "name": "Number of Week(Daylight Saving Time)",
             "value": "1",
             "unit": "",
             "access_mode": "RW",
@@ -2070,7 +2476,7 @@
         },
         {
             "id": "daylight_saving_time.start_hour_min",
-            "name": "Time",
+            "name": "Time(Daylight Saving Time)",
             "value": "0",
             "unit": "min",
             "access_mode": "RW",
@@ -2191,7 +2597,7 @@
         },
         {
             "id": "daylight_saving_time.start_month",
-            "name": "Month",
+            "name": "Month(Daylight Saving Time)",
             "value": "1",
             "unit": "",
             "access_mode": "RW",
@@ -2264,7 +2670,7 @@
         },
         {
             "id": "daylight_saving_time.start_week_day",
-            "name": "Week",
+            "name": "Week(Daylight Saving Time)",
             "value": "1",
             "unit": "",
             "access_mode": "RW",
@@ -2317,7 +2723,7 @@
         },
         {
             "id": "daylight_saving_time.start_week_num",
-            "name": "Number of Week",
+            "name": "Number of Week(Daylight Saving Time)",
             "value": "1",
             "unit": "",
             "access_mode": "RW",
@@ -2361,8 +2767,46 @@
             ]
         },
         {
+            "id": "device_status",
+            "name": "Device Status",
+            "value": "0",
+            "unit": "",
+            "access_mode": "RW",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "Power Off"
+                },
+                {
+                    "value": 1,
+                    "name": "Power On"
+                }
+            ],
+            "bacnet_type": "binary_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS"
+        },
+        {
+            "id": "fahrenheit_temperature",
+            "name": "Fahrenheit Temperature",
+            "value": "",
+            "unit": "°F",
+            "access_mode": "R",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "range": [
+                -4,
+                212
+            ],
+            "bacnet_type": "analog_input_object",
+            "bacnet_unit_type_id": 64,
+            "bacnet_unit_type": "UNITS_DEGREES_FAHRENHEIT"
+        },
+        {
             "id": "forward_active_energy1.group1_value",
-            "name": "Imported Active Energy a",
+            "name": "Imported Active Energy a(Imported Active Energy)",
             "value": "0",
             "unit": "kWh",
             "access_mode": "R",
@@ -2377,7 +2821,7 @@
         },
         {
             "id": "forward_active_energy1.group1.chan1",
-            "name": "Imported Active Energy1",
+            "name": "Imported Active Energy1(Imported Active Energy)",
             "value": "0",
             "unit": "kWh",
             "access_mode": "R",
@@ -2393,7 +2837,7 @@
         },
         {
             "id": "forward_active_energy1.group1.chan2",
-            "name": "Imported Active Energy2",
+            "name": "Imported Active Energy2(Imported Active Energy)",
             "value": "0",
             "unit": "kWh",
             "access_mode": "R",
@@ -2409,7 +2853,7 @@
         },
         {
             "id": "forward_active_energy1.group1.chan3",
-            "name": "Imported Active Energy3",
+            "name": "Imported Active Energy3(Imported Active Energy)",
             "value": "0",
             "unit": "kWh",
             "access_mode": "R",
@@ -2425,7 +2869,7 @@
         },
         {
             "id": "forward_active_energy1.group2_value",
-            "name": "Imported Active Energy b",
+            "name": "Imported Active Energy b(Imported Active Energy)",
             "value": "0",
             "unit": "kWh",
             "access_mode": "R",
@@ -2440,7 +2884,7 @@
         },
         {
             "id": "forward_active_energy1.group2.chan1",
-            "name": "Imported Active Energy4",
+            "name": "Imported Active Energy4(Imported Active Energy)",
             "value": "0",
             "unit": "kWh",
             "access_mode": "R",
@@ -2456,7 +2900,7 @@
         },
         {
             "id": "forward_active_energy1.group2.chan2",
-            "name": "Imported Active Energy5",
+            "name": "Imported Active Energy5(Imported Active Energy)",
             "value": "0",
             "unit": "kWh",
             "access_mode": "R",
@@ -2472,7 +2916,7 @@
         },
         {
             "id": "forward_active_energy1.group2.chan3",
-            "name": "Imported Active Energy6",
+            "name": "Imported Active Energy6(Imported Active Energy)",
             "value": "0",
             "unit": "kWh",
             "access_mode": "R",
@@ -2488,7 +2932,7 @@
         },
         {
             "id": "forward_active_energy1.mask1",
-            "name": "Imported Active Energy",
+            "name": "Imported Active Energy(Imported Active Energy)",
             "value": "",
             "unit": "",
             "access_mode": "R",
@@ -2512,7 +2956,7 @@
                     "name": "Imported Active Energy"
                 }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": [
@@ -2521,7 +2965,7 @@
         },
         {
             "id": "forward_active_energy1.mask2",
-            "name": "Imported Active Energy",
+            "name": "Imported Active Energy(Imported Active Energy)",
             "value": "",
             "unit": "",
             "access_mode": "R",
@@ -2545,14 +2989,14 @@
                     "name": "Imported Active Energy"
                 }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": []
         },
         {
             "id": "forward_active_energy2.group1_value",
-            "name": "Imported Active Energy c",
+            "name": "Imported Active Energy c(Imported Active Energy)",
             "value": "0",
             "unit": "kWh",
             "access_mode": "R",
@@ -2567,7 +3011,7 @@
         },
         {
             "id": "forward_active_energy2.group1.chan1",
-            "name": "Imported Active Energy7",
+            "name": "Imported Active Energy7(Imported Active Energy)",
             "value": "0",
             "unit": "kWh",
             "access_mode": "R",
@@ -2583,7 +3027,7 @@
         },
         {
             "id": "forward_active_energy2.group1.chan2",
-            "name": "Imported Active Energy8",
+            "name": "Imported Active Energy8(Imported Active Energy)",
             "value": "0",
             "unit": "kWh",
             "access_mode": "R",
@@ -2599,7 +3043,7 @@
         },
         {
             "id": "forward_active_energy2.group1.chan3",
-            "name": "Imported Active Energy9",
+            "name": "Imported Active Energy9(Imported Active Energy)",
             "value": "0",
             "unit": "kWh",
             "access_mode": "R",
@@ -2615,7 +3059,7 @@
         },
         {
             "id": "forward_active_energy2.group2_value",
-            "name": "Imported Active Energy d",
+            "name": "Imported Active Energy d(Imported Active Energy)",
             "value": "0",
             "unit": "kWh",
             "access_mode": "R",
@@ -2630,7 +3074,7 @@
         },
         {
             "id": "forward_active_energy2.group2.chan1",
-            "name": "Imported Active Energy10",
+            "name": "Imported Active Energy10(Imported Active Energy)",
             "value": "0",
             "unit": "kWh",
             "access_mode": "R",
@@ -2646,7 +3090,7 @@
         },
         {
             "id": "forward_active_energy2.group2.chan2",
-            "name": "Imported Active Energy11",
+            "name": "Imported Active Energy11(Imported Active Energy)",
             "value": "0",
             "unit": "kWh",
             "access_mode": "R",
@@ -2662,7 +3106,7 @@
         },
         {
             "id": "forward_active_energy2.group2.chan3",
-            "name": "Imported Active Energy12",
+            "name": "Imported Active Energy12(Imported Active Energy)",
             "value": "0",
             "unit": "kWh",
             "access_mode": "R",
@@ -2678,7 +3122,7 @@
         },
         {
             "id": "forward_active_energy2.mask1",
-            "name": "Imported Active Energy",
+            "name": "Imported Active Energy(Imported Active Energy)",
             "value": "",
             "unit": "",
             "access_mode": "R",
@@ -2702,7 +3146,7 @@
                     "name": "Imported Active Energy"
                 }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": [
@@ -2711,7 +3155,7 @@
         },
         {
             "id": "forward_active_energy2.mask2",
-            "name": "Imported Active Energy",
+            "name": "Imported Active Energy(Imported Active Energy)",
             "value": "",
             "unit": "",
             "access_mode": "R",
@@ -2735,14 +3179,14 @@
                     "name": "Imported Active Energy"
                 }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": []
         },
         {
             "id": "forward_reactive_energy1.group1_value",
-            "name": "Imported Reactive Energy a",
+            "name": "Imported Reactive Energy a(Imported Reactive Energy)",
             "value": "0",
             "unit": "kVArh",
             "access_mode": "R",
@@ -2757,7 +3201,7 @@
         },
         {
             "id": "forward_reactive_energy1.group1.chan1",
-            "name": "Imported Reactive Energy1",
+            "name": "Imported Reactive Energy1(Imported Reactive Energy)",
             "value": "0",
             "unit": "kVArh",
             "access_mode": "R",
@@ -2773,7 +3217,7 @@
         },
         {
             "id": "forward_reactive_energy1.group1.chan2",
-            "name": "Imported Reactive Energy2",
+            "name": "Imported Reactive Energy2(Imported Reactive Energy)",
             "value": "0",
             "unit": "kVArh",
             "access_mode": "R",
@@ -2789,7 +3233,7 @@
         },
         {
             "id": "forward_reactive_energy1.group1.chan3",
-            "name": "Imported Reactive Energy3",
+            "name": "Imported Reactive Energy3(Imported Reactive Energy)",
             "value": "0",
             "unit": "kVArh",
             "access_mode": "R",
@@ -2805,7 +3249,7 @@
         },
         {
             "id": "forward_reactive_energy1.group2_value",
-            "name": "Imported Reactive Energy b",
+            "name": "Imported Reactive Energy b(Imported Reactive Energy)",
             "value": "0",
             "unit": "kVArh",
             "access_mode": "R",
@@ -2820,7 +3264,7 @@
         },
         {
             "id": "forward_reactive_energy1.group2.chan1",
-            "name": "Imported Reactive Energy4",
+            "name": "Imported Reactive Energy4(Imported Reactive Energy)",
             "value": "0",
             "unit": "kVArh",
             "access_mode": "R",
@@ -2836,7 +3280,7 @@
         },
         {
             "id": "forward_reactive_energy1.group2.chan2",
-            "name": "Imported Reactive Energy5",
+            "name": "Imported Reactive Energy5(Imported Reactive Energy)",
             "value": "0",
             "unit": "kVArh",
             "access_mode": "R",
@@ -2852,7 +3296,7 @@
         },
         {
             "id": "forward_reactive_energy1.group2.chan3",
-            "name": "Imported Reactive Energy6",
+            "name": "Imported Reactive Energy6(Imported Reactive Energy)",
             "value": "0",
             "unit": "kVArh",
             "access_mode": "R",
@@ -2868,7 +3312,7 @@
         },
         {
             "id": "forward_reactive_energy1.mask1",
-            "name": "Imported Reactive Energy",
+            "name": "Imported Reactive Energy(Imported Reactive Energy)",
             "value": "",
             "unit": "",
             "access_mode": "R",
@@ -2892,7 +3336,7 @@
                     "name": "Imported Reactive Energy"
                 }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": [
@@ -2901,7 +3345,7 @@
         },
         {
             "id": "forward_reactive_energy1.mask2",
-            "name": "Imported Reactive Energy",
+            "name": "Imported Reactive Energy(Imported Reactive Energy)",
             "value": "",
             "unit": "",
             "access_mode": "R",
@@ -2925,14 +3369,14 @@
                     "name": "Imported Reactive Energy"
                 }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": []
         },
         {
             "id": "forward_reactive_energy2.group1_value",
-            "name": "Imported Reactive Energy c",
+            "name": "Imported Reactive Energy c(Imported Reactive Energy)",
             "value": "0",
             "unit": "kVArh",
             "access_mode": "R",
@@ -2947,7 +3391,7 @@
         },
         {
             "id": "forward_reactive_energy2.group1.chan1",
-            "name": "Imported Reactive Energy7",
+            "name": "Imported Reactive Energy7(Imported Reactive Energy)",
             "value": "0",
             "unit": "kVArh",
             "access_mode": "R",
@@ -2963,7 +3407,7 @@
         },
         {
             "id": "forward_reactive_energy2.group1.chan2",
-            "name": "Imported Reactive Energy8",
+            "name": "Imported Reactive Energy8(Imported Reactive Energy)",
             "value": "0",
             "unit": "kVArh",
             "access_mode": "R",
@@ -2979,7 +3423,7 @@
         },
         {
             "id": "forward_reactive_energy2.group1.chan3",
-            "name": "Imported Reactive Energy9",
+            "name": "Imported Reactive Energy9(Imported Reactive Energy)",
             "value": "0",
             "unit": "kVArh",
             "access_mode": "R",
@@ -2995,7 +3439,7 @@
         },
         {
             "id": "forward_reactive_energy2.group2_value",
-            "name": "Imported Reactive Energy d",
+            "name": "Imported Reactive Energy d(Imported Reactive Energy)",
             "value": "0",
             "unit": "kVArh",
             "access_mode": "R",
@@ -3010,7 +3454,7 @@
         },
         {
             "id": "forward_reactive_energy2.group2.chan1",
-            "name": "Imported Reactive Energy10",
+            "name": "Imported Reactive Energy10(Imported Reactive Energy)",
             "value": "0",
             "unit": "kVArh",
             "access_mode": "R",
@@ -3026,7 +3470,7 @@
         },
         {
             "id": "forward_reactive_energy2.group2.chan2",
-            "name": "Imported Reactive Energy11",
+            "name": "Imported Reactive Energy11(Imported Reactive Energy)",
             "value": "0",
             "unit": "kVArh",
             "access_mode": "R",
@@ -3042,7 +3486,7 @@
         },
         {
             "id": "forward_reactive_energy2.group2.chan3",
-            "name": "Imported Reactive Energy12",
+            "name": "Imported Reactive Energy12(Imported Reactive Energy)",
             "value": "0",
             "unit": "kVArh",
             "access_mode": "R",
@@ -3058,7 +3502,7 @@
         },
         {
             "id": "forward_reactive_energy2.mask1",
-            "name": "Imported Reactive Energy",
+            "name": "Imported Reactive Energy(Imported Reactive Energy)",
             "value": "",
             "unit": "",
             "access_mode": "R",
@@ -3082,7 +3526,7 @@
                     "name": "Imported Reactive Energy"
                 }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": [
@@ -3091,7 +3535,7 @@
         },
         {
             "id": "forward_reactive_energy2.mask2",
-            "name": "Imported Reactive Energy",
+            "name": "Imported Reactive Energy(Imported Reactive Energy)",
             "value": "",
             "unit": "",
             "access_mode": "R",
@@ -3115,14 +3559,14 @@
                     "name": "Imported Reactive Energy"
                 }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": []
         },
         {
             "id": "historical_data_report.mode",
-            "name": "Historical Data Mode",
+            "name": "Historical Data Mode(Historical Data)",
             "value": "",
             "unit": "",
             "access_mode": "R",
@@ -3136,9 +3580,13 @@
                 {
                     "value": 1,
                     "name": "historical time"
+                },
+                {
+                    "value": 2,
+                    "name": "month time"
                 }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": [
@@ -3147,7 +3595,7 @@
         },
         {
             "id": "historical_data_report.timestamp",
-            "name": "Historical Data Timestamps",
+            "name": "Historical Data Timestamps(Historical Data)",
             "value": "",
             "unit": "",
             "access_mode": "R",
@@ -3162,7 +3610,7 @@
         },
         {
             "id": "history_type.type",
-            "name": "Historical Data Type",
+            "name": "Historical Data Type(Historical Data Type)",
             "value": "1",
             "unit": "",
             "access_mode": "R",
@@ -3182,14 +3630,14 @@
                     "name": "month max"
                 }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": []
         },
         {
             "id": "month_statistics_settings.day",
-            "name": "day",
+            "name": "day(Monthly Statistics Time)",
             "value": "1",
             "unit": "",
             "access_mode": "RW",
@@ -3209,7 +3657,7 @@
         },
         {
             "id": "month_statistics_settings.hour",
-            "name": "hour",
+            "name": "hour(Monthly Statistics Time)",
             "value": "0",
             "unit": "",
             "access_mode": "RW",
@@ -3229,7 +3677,7 @@
         },
         {
             "id": "month_statistics_settings.minute",
-            "name": "minute",
+            "name": "minute(Monthly Statistics Time)",
             "value": "0",
             "unit": "",
             "access_mode": "RW",
@@ -3262,7 +3710,7 @@
         },
         {
             "id": "power_factor.group1_value",
-            "name": "Power Factor a",
+            "name": "Power Factor a(Power Factor)",
             "value": "0",
             "unit": "",
             "access_mode": "R",
@@ -3281,7 +3729,7 @@
         },
         {
             "id": "power_factor.group1.chan1",
-            "name": "Power Factor1",
+            "name": "Power Factor1(Power Factor)",
             "value": "0",
             "unit": "",
             "access_mode": "R",
@@ -3301,7 +3749,7 @@
         },
         {
             "id": "power_factor.group1.chan2",
-            "name": "Power Factor2",
+            "name": "Power Factor2(Power Factor)",
             "value": "0",
             "unit": "",
             "access_mode": "R",
@@ -3321,7 +3769,7 @@
         },
         {
             "id": "power_factor.group1.chan3",
-            "name": "Power Factor3",
+            "name": "Power Factor3(Power Factor)",
             "value": "0",
             "unit": "",
             "access_mode": "R",
@@ -3341,7 +3789,7 @@
         },
         {
             "id": "power_factor.group2_value",
-            "name": "Power Factorb",
+            "name": "Power Factorb(Power Factor)",
             "value": "0",
             "unit": "",
             "access_mode": "R",
@@ -3360,7 +3808,7 @@
         },
         {
             "id": "power_factor.group2.chan1",
-            "name": "Power Factor4",
+            "name": "Power Factor4(Power Factor)",
             "value": "0",
             "unit": "",
             "access_mode": "R",
@@ -3380,7 +3828,7 @@
         },
         {
             "id": "power_factor.group2.chan2",
-            "name": "Power Factor5",
+            "name": "Power Factor5(Power Factor)",
             "value": "0",
             "unit": "",
             "access_mode": "R",
@@ -3400,7 +3848,7 @@
         },
         {
             "id": "power_factor.group2.chan3",
-            "name": "Power Factor6",
+            "name": "Power Factor6(Power Factor)",
             "value": "0",
             "unit": "",
             "access_mode": "R",
@@ -3420,7 +3868,7 @@
         },
         {
             "id": "power_factor.group3_value",
-            "name": "Power Factor c",
+            "name": "Power Factor c(Power Factor)",
             "value": "0",
             "unit": "",
             "access_mode": "R",
@@ -3439,7 +3887,7 @@
         },
         {
             "id": "power_factor.group3.chan1",
-            "name": "Power Factor7",
+            "name": "Power Factor7(Power Factor)",
             "value": "0",
             "unit": "",
             "access_mode": "R",
@@ -3459,7 +3907,7 @@
         },
         {
             "id": "power_factor.group3.chan2",
-            "name": "Power Factor8",
+            "name": "Power Factor8(Power Factor)",
             "value": "0",
             "unit": "",
             "access_mode": "R",
@@ -3479,7 +3927,7 @@
         },
         {
             "id": "power_factor.group3.chan3",
-            "name": "Power Factor9",
+            "name": "Power Factor9(Power Factor)",
             "value": "0",
             "unit": "",
             "access_mode": "R",
@@ -3499,7 +3947,7 @@
         },
         {
             "id": "power_factor.group4_value",
-            "name": "Power Factor d",
+            "name": "Power Factor d(Power Factor)",
             "value": "0",
             "unit": "",
             "access_mode": "R",
@@ -3518,7 +3966,7 @@
         },
         {
             "id": "power_factor.group4.chan1",
-            "name": "Power Factor10",
+            "name": "Power Factor10(Power Factor)",
             "value": "0",
             "unit": "",
             "access_mode": "R",
@@ -3538,7 +3986,7 @@
         },
         {
             "id": "power_factor.group4.chan2",
-            "name": "Power Factor11",
+            "name": "Power Factor11(Power Factor)",
             "value": "0",
             "unit": "",
             "access_mode": "R",
@@ -3558,7 +4006,7 @@
         },
         {
             "id": "power_factor.group4.chan3",
-            "name": "Power Factor12",
+            "name": "Power Factor12(Power Factor)",
             "value": "0",
             "unit": "",
             "access_mode": "R",
@@ -3578,7 +4026,7 @@
         },
         {
             "id": "power_factor.mask1",
-            "name": "Power Factor",
+            "name": "Power Factor(Power Factor)",
             "value": "",
             "unit": "",
             "access_mode": "R",
@@ -3618,7 +4066,7 @@
                     "name": "Power Factor"
                 }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": [
@@ -3627,7 +4075,7 @@
         },
         {
             "id": "power_factor.mask2",
-            "name": "Power Factor",
+            "name": "Power Factor(Power Factor)",
             "value": "",
             "unit": "",
             "access_mode": "R",
@@ -3667,7 +4115,7 @@
                     "name": "Power Factor"
                 }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": [
@@ -3676,7 +4124,7 @@
         },
         {
             "id": "power_factor.mask3",
-            "name": "Power Factor",
+            "name": "Power Factor(Power Factor)",
             "value": "",
             "unit": "",
             "access_mode": "R",
@@ -3716,7 +4164,7 @@
                     "name": "Power Factor"
                 }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": [
@@ -3725,7 +4173,7 @@
         },
         {
             "id": "power_factor.mask4",
-            "name": "Power Factor",
+            "name": "Power Factor(Power Factor)",
             "value": "",
             "unit": "",
             "access_mode": "R",
@@ -3765,7 +4213,7 @@
                     "name": "Power Factor"
                 }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": []
@@ -3829,7 +4277,7 @@
         },
         {
             "id": "reactive_power1.group1_value",
-            "name": "Reactive Power a",
+            "name": "Reactive Power a(Reactive Power)",
             "value": "0",
             "unit": "kvar",
             "access_mode": "R",
@@ -3844,7 +4292,7 @@
         },
         {
             "id": "reactive_power1.group1.chan1",
-            "name": "Reactive Power1",
+            "name": "Reactive Power1(Reactive Power)",
             "value": "0",
             "unit": "kvar",
             "access_mode": "R",
@@ -3860,7 +4308,7 @@
         },
         {
             "id": "reactive_power1.group1.chan2",
-            "name": "Reactive Power2",
+            "name": "Reactive Power2(Reactive Power)",
             "value": "0",
             "unit": "kvar",
             "access_mode": "R",
@@ -3876,7 +4324,7 @@
         },
         {
             "id": "reactive_power1.group1.chan3",
-            "name": "Reactive Power3",
+            "name": "Reactive Power3(Reactive Power)",
             "value": "0",
             "unit": "kvar",
             "access_mode": "R",
@@ -3892,7 +4340,7 @@
         },
         {
             "id": "reactive_power1.group2_value",
-            "name": "Reactive Power b",
+            "name": "Reactive Power b(Reactive Power)",
             "value": "0",
             "unit": "kvar",
             "access_mode": "R",
@@ -3907,7 +4355,7 @@
         },
         {
             "id": "reactive_power1.group2.chan1",
-            "name": "Reactive Power4",
+            "name": "Reactive Power4(Reactive Power)",
             "value": "0",
             "unit": "kvar",
             "access_mode": "R",
@@ -3923,7 +4371,7 @@
         },
         {
             "id": "reactive_power1.group2.chan2",
-            "name": "Reactive Power5",
+            "name": "Reactive Power5(Reactive Power)",
             "value": "0",
             "unit": "kvar",
             "access_mode": "R",
@@ -3939,7 +4387,7 @@
         },
         {
             "id": "reactive_power1.group2.chan3",
-            "name": "Reactive Power6",
+            "name": "Reactive Power6(Reactive Power)",
             "value": "0",
             "unit": "kvar",
             "access_mode": "R",
@@ -3955,7 +4403,7 @@
         },
         {
             "id": "reactive_power1.mask1",
-            "name": "Reactive Power",
+            "name": "Reactive Power(Reactive Power)",
             "value": "",
             "unit": "",
             "access_mode": "R",
@@ -3979,7 +4427,7 @@
                     "name": "Reactive Power"
                 }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": [
@@ -3988,7 +4436,7 @@
         },
         {
             "id": "reactive_power1.mask2",
-            "name": "Reactive Power",
+            "name": "Reactive Power(Reactive Power)",
             "value": "",
             "unit": "",
             "access_mode": "R",
@@ -4012,14 +4460,14 @@
                     "name": "Reactive Power"
                 }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": []
         },
         {
             "id": "reactive_power2.group1_value",
-            "name": "Reactive Power c",
+            "name": "Reactive Power c(Reactive Power)",
             "value": "0",
             "unit": "kvar",
             "access_mode": "R",
@@ -4034,7 +4482,7 @@
         },
         {
             "id": "reactive_power2.group1.chan1",
-            "name": "Reactive Power7",
+            "name": "Reactive Power7(Reactive Power)",
             "value": "0",
             "unit": "kvar",
             "access_mode": "R",
@@ -4050,7 +4498,7 @@
         },
         {
             "id": "reactive_power2.group1.chan2",
-            "name": "Reactive Power8",
+            "name": "Reactive Power8(Reactive Power)",
             "value": "0",
             "unit": "kvar",
             "access_mode": "R",
@@ -4066,7 +4514,7 @@
         },
         {
             "id": "reactive_power2.group1.chan3",
-            "name": "Reactive Power9",
+            "name": "Reactive Power9(Reactive Power)",
             "value": "0",
             "unit": "kvar",
             "access_mode": "R",
@@ -4082,7 +4530,7 @@
         },
         {
             "id": "reactive_power2.group2_value",
-            "name": "Reactive Power d",
+            "name": "Reactive Power d(Reactive Power)",
             "value": "0",
             "unit": "kvar",
             "access_mode": "R",
@@ -4097,7 +4545,7 @@
         },
         {
             "id": "reactive_power2.group2.chan1",
-            "name": "Reactive Power10",
+            "name": "Reactive Power10(Reactive Power)",
             "value": "0",
             "unit": "kvar",
             "access_mode": "R",
@@ -4113,7 +4561,7 @@
         },
         {
             "id": "reactive_power2.group2.chan2",
-            "name": "Reactive Power11",
+            "name": "Reactive Power11(Reactive Power)",
             "value": "0",
             "unit": "kvar",
             "access_mode": "R",
@@ -4129,7 +4577,7 @@
         },
         {
             "id": "reactive_power2.group2.chan3",
-            "name": "Reactive Power12",
+            "name": "Reactive Power12(Reactive Power)",
             "value": "0",
             "unit": "kvar",
             "access_mode": "R",
@@ -4145,7 +4593,7 @@
         },
         {
             "id": "reactive_power2.mask1",
-            "name": "Reactive Power",
+            "name": "Reactive Power(Reactive Power)",
             "value": "",
             "unit": "",
             "access_mode": "R",
@@ -4169,7 +4617,7 @@
                     "name": "Reactive Power"
                 }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": [
@@ -4178,7 +4626,7 @@
         },
         {
             "id": "reactive_power2.mask2",
-            "name": "Reactive Power",
+            "name": "Reactive Power(Reactive Power)",
             "value": "",
             "unit": "",
             "access_mode": "R",
@@ -4202,7 +4650,7 @@
                     "name": "Reactive Power"
                 }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": []
@@ -4253,7 +4701,7 @@
         },
         {
             "id": "report_enable.active_power",
-            "name": "Active Power",
+            "name": "Active Power(Report Parameters)",
             "value": "1",
             "unit": "",
             "access_mode": "RW",
@@ -4291,7 +4739,7 @@
         },
         {
             "id": "report_enable.apparent_energy",
-            "name": "Apparent Energy",
+            "name": "Apparent Energy(Report Parameters)",
             "value": "0",
             "unit": "",
             "access_mode": "RW",
@@ -4329,7 +4777,7 @@
         },
         {
             "id": "report_enable.apparent_power",
-            "name": "Apparent Power",
+            "name": "Apparent Power(Report Parameters)",
             "value": "0",
             "unit": "",
             "access_mode": "RW",
@@ -4367,7 +4815,7 @@
         },
         {
             "id": "report_enable.current",
-            "name": "Current(RMS)",
+            "name": "Current(RMS)(Report Parameters)",
             "value": "0",
             "unit": "",
             "access_mode": "RW",
@@ -4405,7 +4853,7 @@
         },
         {
             "id": "report_enable.forward_active_energy",
-            "name": "Imported Active Energy",
+            "name": "Imported Active Energy(Report Parameters)",
             "value": "1",
             "unit": "",
             "access_mode": "RW",
@@ -4443,7 +4891,7 @@
         },
         {
             "id": "report_enable.forward_reactive_energy",
-            "name": "Imported Reactive Energy",
+            "name": "Imported Reactive Energy(Report Parameters)",
             "value": "0",
             "unit": "",
             "access_mode": "RW",
@@ -4481,7 +4929,7 @@
         },
         {
             "id": "report_enable.power_factor",
-            "name": "Power Factor",
+            "name": "Power Factor(Report Parameters)",
             "value": "1",
             "unit": "",
             "access_mode": "RW",
@@ -4519,7 +4967,7 @@
         },
         {
             "id": "report_enable.reactive_power",
-            "name": "ReActive Power",
+            "name": "ReActive Power(Report Parameters)",
             "value": "0",
             "unit": "",
             "access_mode": "RW",
@@ -4557,7 +5005,7 @@
         },
         {
             "id": "report_enable.reverse_active_energy",
-            "name": "Exported Active Energy",
+            "name": "Exported Active Energy(Report Parameters)",
             "value": "0",
             "unit": "",
             "access_mode": "RW",
@@ -4595,7 +5043,7 @@
         },
         {
             "id": "report_enable.reverse_reactive_energy",
-            "name": "Exported Reactive Energy",
+            "name": "Exported Reactive Energy(Report Parameters)",
             "value": "0",
             "unit": "",
             "access_mode": "RW",
@@ -4633,7 +5081,7 @@
         },
         {
             "id": "report_enable.temperature",
-            "name": "Temperature",
+            "name": "Temperature(Report Parameters)",
             "value": "1",
             "unit": "",
             "access_mode": "RW",
@@ -4671,7 +5119,7 @@
         },
         {
             "id": "report_enable.thdi",
-            "name": "THDi",
+            "name": "THDi(Report Parameters)",
             "value": "0",
             "unit": "",
             "access_mode": "RW",
@@ -4709,7 +5157,7 @@
         },
         {
             "id": "report_enable.thdv",
-            "name": "THDv",
+            "name": "THDv(Report Parameters)",
             "value": "0",
             "unit": "",
             "access_mode": "RW",
@@ -4747,7 +5195,7 @@
         },
         {
             "id": "report_enable.voltage",
-            "name": "Voltage(RMS)",
+            "name": "Voltage(RMS)(Report Parameters)",
             "value": "0",
             "unit": "",
             "access_mode": "RW",
@@ -4785,7 +5233,7 @@
         },
         {
             "id": "report_enable.voltage_unbalance",
-            "name": "Voltage Three-phase Unbalance",
+            "name": "Voltage Three-phase Unbalance(Report Parameters)",
             "value": "0",
             "unit": "",
             "access_mode": "RW",
@@ -4823,8 +5271,8 @@
         },
         {
             "id": "reporting_interval.minutes_of_time",
-            "name": "Report Interval",
-            "value": "1",
+            "name": "Report Interval(Report Interval)",
+            "value": "10",
             "unit": "min",
             "access_mode": "RW",
             "data_type": "NUMBER",
@@ -4842,8 +5290,8 @@
         },
         {
             "id": "reporting_interval.seconds_of_time",
-            "name": "Report Interval",
-            "value": "30",
+            "name": "Report Interval(Report Interval)",
+            "value": "600",
             "unit": "s",
             "access_mode": "RW",
             "data_type": "NUMBER",
@@ -4861,7 +5309,7 @@
         },
         {
             "id": "reporting_interval.unit",
-            "name": "Report Interval Unit",
+            "name": "Report Interval Unit(Report Interval)",
             "value": "1",
             "unit": "",
             "access_mode": "RW",
@@ -4881,28 +5329,6 @@
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": []
-        },
-        {
-            "id": "request_query_all_configurations",
-            "name": "Request to Query All Configurations",
-            "access_mode": "W",
-            "data_type": "BOOL",
-            "value_type": "UINT8",
-            "unit": "",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "bacnet_type": "binary_output_object",
-            "value": "",
-            "values": [
-                {
-                    "value": 0,
-                    "name": "no"
-                },
-                {
-                    "value": 1,
-                    "name": "yes"
-                }
-            ]
         },
         {
             "id": "reset",
@@ -4928,7 +5354,7 @@
         },
         {
             "id": "reset_energy.channel",
-            "name": "Channel Number",
+            "name": "Channel Number(Clear Cumulative Energy Consumption)",
             "value": "0",
             "unit": "",
             "access_mode": "W",
@@ -4945,7 +5371,7 @@
         },
         {
             "id": "retrieve_historical_data_by_time_range.end_time",
-            "name": "End Time",
+            "name": "End Time(Retrieval (Time Period))",
             "value": "",
             "unit": "",
             "access_mode": "W",
@@ -4961,7 +5387,7 @@
         },
         {
             "id": "retrieve_historical_data_by_time_range.start_time",
-            "name": "Start Time",
+            "name": "Start Time(Retrieval (Time Period))",
             "value": "",
             "unit": "",
             "access_mode": "W",
@@ -4977,7 +5403,7 @@
         },
         {
             "id": "retrieve_historical_data_by_time_range.type",
-            "name": "Type",
+            "name": "Type(Retrieval (Time Period))",
             "value": "0",
             "unit": "",
             "access_mode": "W",
@@ -5001,7 +5427,7 @@
                     "name": "month min_max data"
                 }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_output_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": [
@@ -5011,7 +5437,7 @@
         },
         {
             "id": "retrieve_historical_data_by_time.time",
-            "name": "Time Point",
+            "name": "Time Point(Retrieval (Time Period))",
             "value": "",
             "unit": "",
             "access_mode": "W",
@@ -5026,7 +5452,7 @@
         },
         {
             "id": "retrieve_historical_data_by_time.type",
-            "name": "Type",
+            "name": "Type(Retrieval (Time Period))",
             "value": "0",
             "unit": "",
             "access_mode": "W",
@@ -5050,7 +5476,7 @@
                     "name": "month min_max data"
                 }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_output_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": [
@@ -5059,7 +5485,7 @@
         },
         {
             "id": "reverse_active_energy1.group1_value",
-            "name": "Exported Active Energy a",
+            "name": "Exported Active Energy a(Exported Active Energy)",
             "value": "0",
             "unit": "kWh",
             "access_mode": "R",
@@ -5074,7 +5500,7 @@
         },
         {
             "id": "reverse_active_energy1.group1.chan1",
-            "name": "Exported Active Energy1",
+            "name": "Exported Active Energy1(Exported Active Energy)",
             "value": "0",
             "unit": "kWh",
             "access_mode": "R",
@@ -5090,7 +5516,7 @@
         },
         {
             "id": "reverse_active_energy1.group1.chan2",
-            "name": "Exported Active Energy2",
+            "name": "Exported Active Energy2(Exported Active Energy)",
             "value": "0",
             "unit": "kWh",
             "access_mode": "R",
@@ -5106,7 +5532,7 @@
         },
         {
             "id": "reverse_active_energy1.group1.chan3",
-            "name": "Exported Active Energy3",
+            "name": "Exported Active Energy3(Exported Active Energy)",
             "value": "0",
             "unit": "kWh",
             "access_mode": "R",
@@ -5122,7 +5548,7 @@
         },
         {
             "id": "reverse_active_energy1.group2_value",
-            "name": "Exported Active Energy b",
+            "name": "Exported Active Energy b(Exported Active Energy)",
             "value": "0",
             "unit": "kWh",
             "access_mode": "R",
@@ -5137,7 +5563,7 @@
         },
         {
             "id": "reverse_active_energy1.group2.chan1",
-            "name": "Exported Active Energy4",
+            "name": "Exported Active Energy4(Exported Active Energy)",
             "value": "0",
             "unit": "kWh",
             "access_mode": "R",
@@ -5153,7 +5579,7 @@
         },
         {
             "id": "reverse_active_energy1.group2.chan2",
-            "name": "Exported Active Energy5",
+            "name": "Exported Active Energy5(Exported Active Energy)",
             "value": "0",
             "unit": "kWh",
             "access_mode": "R",
@@ -5169,7 +5595,7 @@
         },
         {
             "id": "reverse_active_energy1.group2.chan3",
-            "name": "Exported Active Energy6",
+            "name": "Exported Active Energy6(Exported Active Energy)",
             "value": "0",
             "unit": "kWh",
             "access_mode": "R",
@@ -5185,7 +5611,7 @@
         },
         {
             "id": "reverse_active_energy1.mask1",
-            "name": "Exported Active Energy",
+            "name": "Exported Active Energy(Exported Active Energy)",
             "value": "",
             "unit": "",
             "access_mode": "R",
@@ -5209,7 +5635,7 @@
                     "name": "Exported Active Energy"
                 }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": [
@@ -5218,7 +5644,7 @@
         },
         {
             "id": "reverse_active_energy1.mask2",
-            "name": "Exported Active Energy",
+            "name": "Exported Active Energy(Exported Active Energy)",
             "value": "",
             "unit": "",
             "access_mode": "R",
@@ -5242,14 +5668,14 @@
                     "name": "Exported Active Energy"
                 }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": []
         },
         {
             "id": "reverse_active_energy2.group1_value",
-            "name": "Exported Active Energy c",
+            "name": "Exported Active Energy c(Exported Active Energy)",
             "value": "0",
             "unit": "kWh",
             "access_mode": "R",
@@ -5264,7 +5690,7 @@
         },
         {
             "id": "reverse_active_energy2.group1.chan1",
-            "name": "Exported Active Energy7",
+            "name": "Exported Active Energy7(Exported Active Energy)",
             "value": "0",
             "unit": "kWh",
             "access_mode": "R",
@@ -5280,7 +5706,7 @@
         },
         {
             "id": "reverse_active_energy2.group1.chan2",
-            "name": "Exported Active Energy8",
+            "name": "Exported Active Energy8(Exported Active Energy)",
             "value": "0",
             "unit": "kWh",
             "access_mode": "R",
@@ -5296,7 +5722,7 @@
         },
         {
             "id": "reverse_active_energy2.group1.chan3",
-            "name": "Exported Active Energy9",
+            "name": "Exported Active Energy9(Exported Active Energy)",
             "value": "0",
             "unit": "kWh",
             "access_mode": "R",
@@ -5312,7 +5738,7 @@
         },
         {
             "id": "reverse_active_energy2.group2_value",
-            "name": "Exported Active Energy d",
+            "name": "Exported Active Energy d(Exported Active Energy)",
             "value": "0",
             "unit": "kWh",
             "access_mode": "R",
@@ -5327,7 +5753,7 @@
         },
         {
             "id": "reverse_active_energy2.group2.chan1",
-            "name": "Exported Active Energy10",
+            "name": "Exported Active Energy10(Exported Active Energy)",
             "value": "0",
             "unit": "kWh",
             "access_mode": "R",
@@ -5343,7 +5769,7 @@
         },
         {
             "id": "reverse_active_energy2.group2.chan2",
-            "name": "Exported Active Energy11",
+            "name": "Exported Active Energy11(Exported Active Energy)",
             "value": "0",
             "unit": "kWh",
             "access_mode": "R",
@@ -5359,7 +5785,7 @@
         },
         {
             "id": "reverse_active_energy2.group2.chan3",
-            "name": "Exported Active Energy12",
+            "name": "Exported Active Energy12(Exported Active Energy)",
             "value": "0",
             "unit": "kWh",
             "access_mode": "R",
@@ -5375,7 +5801,7 @@
         },
         {
             "id": "reverse_active_energy2.mask1",
-            "name": "Exported Active Energy",
+            "name": "Exported Active Energy(Exported Active Energy)",
             "value": "",
             "unit": "",
             "access_mode": "R",
@@ -5399,7 +5825,7 @@
                     "name": "Exported Active Energy"
                 }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": [
@@ -5408,7 +5834,7 @@
         },
         {
             "id": "reverse_active_energy2.mask2",
-            "name": "Exported Active Energy",
+            "name": "Exported Active Energy(Exported Active Energy)",
             "value": "",
             "unit": "",
             "access_mode": "R",
@@ -5432,14 +5858,14 @@
                     "name": "Exported Active Energy"
                 }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": []
         },
         {
             "id": "reverse_reactive_energy1.group1_value",
-            "name": "Exported Reactive Energy a",
+            "name": "Exported Reactive Energy a(Exported Reactive Energy)",
             "value": "0",
             "unit": "kVArh",
             "access_mode": "R",
@@ -5454,7 +5880,7 @@
         },
         {
             "id": "reverse_reactive_energy1.group1.chan1",
-            "name": "Exported Reactive Energy1",
+            "name": "Exported Reactive Energy1(Exported Reactive Energy)",
             "value": "0",
             "unit": "kVArh",
             "access_mode": "R",
@@ -5470,7 +5896,7 @@
         },
         {
             "id": "reverse_reactive_energy1.group1.chan2",
-            "name": "Exported Reactive Energy2",
+            "name": "Exported Reactive Energy2(Exported Reactive Energy)",
             "value": "0",
             "unit": "kVArh",
             "access_mode": "R",
@@ -5486,7 +5912,7 @@
         },
         {
             "id": "reverse_reactive_energy1.group1.chan3",
-            "name": "Exported Reactive Energy3",
+            "name": "Exported Reactive Energy3(Exported Reactive Energy)",
             "value": "0",
             "unit": "kVArh",
             "access_mode": "R",
@@ -5502,7 +5928,7 @@
         },
         {
             "id": "reverse_reactive_energy1.group2_value",
-            "name": "Exported Reactive Energy b",
+            "name": "Exported Reactive Energy b(Exported Reactive Energy)",
             "value": "0",
             "unit": "kVArh",
             "access_mode": "R",
@@ -5517,7 +5943,7 @@
         },
         {
             "id": "reverse_reactive_energy1.group2.chan1",
-            "name": "Exported Reactive Energy4",
+            "name": "Exported Reactive Energy4(Exported Reactive Energy)",
             "value": "0",
             "unit": "kVArh",
             "access_mode": "R",
@@ -5533,7 +5959,7 @@
         },
         {
             "id": "reverse_reactive_energy1.group2.chan2",
-            "name": "Exported Reactive Energy5",
+            "name": "Exported Reactive Energy5(Exported Reactive Energy)",
             "value": "0",
             "unit": "kVArh",
             "access_mode": "R",
@@ -5549,7 +5975,7 @@
         },
         {
             "id": "reverse_reactive_energy1.group2.chan3",
-            "name": "Exported Reactive Energy6",
+            "name": "Exported Reactive Energy6(Exported Reactive Energy)",
             "value": "0",
             "unit": "kVArh",
             "access_mode": "R",
@@ -5565,7 +5991,7 @@
         },
         {
             "id": "reverse_reactive_energy1.mask1",
-            "name": "Exported Reactive Energy",
+            "name": "Exported Reactive Energy(Exported Reactive Energy)",
             "value": "",
             "unit": "",
             "access_mode": "R",
@@ -5589,7 +6015,7 @@
                     "name": "Exported Reactive Energy"
                 }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": [
@@ -5598,7 +6024,7 @@
         },
         {
             "id": "reverse_reactive_energy1.mask2",
-            "name": "Exported Reactive Energy",
+            "name": "Exported Reactive Energy(Exported Reactive Energy)",
             "value": "",
             "unit": "",
             "access_mode": "R",
@@ -5622,14 +6048,29 @@
                     "name": "Exported Reactive Energy"
                 }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": []
         },
         {
+            "id": "reverse_reactive_energy2.group1_value",
+            "name": "Exported Reactive Energy c(Exported Reactive Energy)",
+            "value": "0",
+            "unit": "kVArh",
+            "access_mode": "R",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "bacnet_type": "analog_input_object",
+            "bacnet_unit_type_id": 243,
+            "bacnet_unit_type": "UNITS_KILOVOLT_AMPERE_HOURS_REACTIVE",
+            "reference": [
+                "reverse_reactive_energy2.mask2"
+            ]
+        },
+        {
             "id": "reverse_reactive_energy2.group1.chan1",
-            "name": "Exported Reactive Energy7",
+            "name": "Exported Reactive Energy7(Exported Reactive Energy)",
             "value": "0",
             "unit": "kVArh",
             "access_mode": "R",
@@ -5645,7 +6086,7 @@
         },
         {
             "id": "reverse_reactive_energy2.group1.chan2",
-            "name": "Exported Reactive Energy8",
+            "name": "Exported Reactive Energy8(Exported Reactive Energy)",
             "value": "0",
             "unit": "kVArh",
             "access_mode": "R",
@@ -5661,7 +6102,7 @@
         },
         {
             "id": "reverse_reactive_energy2.group1.chan3",
-            "name": "Exported Reactive Energy9",
+            "name": "Exported Reactive Energy9(Exported Reactive Energy)",
             "value": "0",
             "unit": "kVArh",
             "access_mode": "R",
@@ -5677,7 +6118,7 @@
         },
         {
             "id": "reverse_reactive_energy2.group2_value",
-            "name": "Exported Reactive Energy d",
+            "name": "Exported Reactive Energy d(Exported Reactive Energy)",
             "value": "0",
             "unit": "kVArh",
             "access_mode": "R",
@@ -5692,7 +6133,7 @@
         },
         {
             "id": "reverse_reactive_energy2.group2.chan1",
-            "name": "Exported Reactive Energy10",
+            "name": "Exported Reactive Energy10(Exported Reactive Energy)",
             "value": "0",
             "unit": "kVArh",
             "access_mode": "R",
@@ -5708,7 +6149,7 @@
         },
         {
             "id": "reverse_reactive_energy2.group2.chan2",
-            "name": "Exported Reactive Energy11",
+            "name": "Exported Reactive Energy11(Exported Reactive Energy)",
             "value": "0",
             "unit": "kVArh",
             "access_mode": "R",
@@ -5724,7 +6165,7 @@
         },
         {
             "id": "reverse_reactive_energy2.group2.chan3",
-            "name": "Exported Reactive Energy12",
+            "name": "Exported Reactive Energy12(Exported Reactive Energy)",
             "value": "0",
             "unit": "kVArh",
             "access_mode": "R",
@@ -5740,7 +6181,7 @@
         },
         {
             "id": "reverse_reactive_energy2.mask1",
-            "name": "Exported Reactive Energy",
+            "name": "Exported Reactive Energy(Exported Reactive Energy)",
             "value": "",
             "unit": "",
             "access_mode": "R",
@@ -5764,7 +6205,7 @@
                     "name": "Exported Reactive Energy"
                 }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": [
@@ -5773,7 +6214,7 @@
         },
         {
             "id": "reverse_reactive_energy2.mask2",
-            "name": "Exported Reactive Energy",
+            "name": "Exported Reactive Energy(Exported Reactive Energy)",
             "value": "",
             "unit": "",
             "access_mode": "R",
@@ -5797,14 +6238,14 @@
                     "name": "Exported Reactive Energy"
                 }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": []
         },
         {
             "id": "stop_historical_data_retrieval.type",
-            "name": "Stop Retrieval",
+            "name": "Stop Retrieval(Stop Retrieval)",
             "value": "0",
             "unit": "",
             "access_mode": "W",
@@ -5828,7 +6269,7 @@
                     "name": "month min_max data"
                 }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_output_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": []
@@ -5872,8 +6313,50 @@
             "bacnet_unit_type": "UNITS_DEGREES_CELSIUS"
         },
         {
+            "id": "temperature_alarm_settings.celsius_threshold_max",
+            "name": "Celsius Value B(Temperature Threshold Alarm Settings)",
+            "value": "0",
+            "unit": "°C",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "range": [
+                -20,
+                100
+            ],
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 62,
+            "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
+            "reference": [
+                "temperature_alarm_settings.enable",
+                "temperature_alarm_settings.threshold_condition",
+                "temperature_alarm_settings.threshold_min"
+            ]
+        },
+        {
+            "id": "temperature_alarm_settings.celsius_threshold_min",
+            "name": "Celsius Value A(Temperature Threshold Alarm Settings)",
+            "value": "0",
+            "unit": "°C",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "range": [
+                -20,
+                100
+            ],
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 62,
+            "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
+            "reference": [
+                "temperature_alarm_settings.enable",
+                "temperature_alarm_settings.threshold_condition",
+                "temperature_alarm_settings.threshold_max"
+            ]
+        },
+        {
             "id": "temperature_alarm_settings.enable",
-            "name": "Threshold Alarm Enable",
+            "name": "Threshold Alarm Enable(Temperature Threshold Alarm Settings)",
             "value": "0",
             "unit": "",
             "access_mode": "RW",
@@ -5899,18 +6382,56 @@
             ]
         },
         {
+            "id": "temperature_alarm_settings.fahrenheit_threshold_max",
+            "name": "Fahrenheit Value B(Temperature Threshold Alarm Settings)",
+            "value": "32",
+            "unit": "°F",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "range": [
+                -4,
+                212
+            ],
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 64,
+            "bacnet_unit_type": "UNITS_DEGREES_FAHRENHEIT",
+            "reference": [
+                "temperature_alarm_settings.enable",
+                "temperature_alarm_settings.threshold_condition",
+                "temperature_alarm_settings.threshold_min"
+            ]
+        },
+        {
+            "id": "temperature_alarm_settings.fahrenheit_threshold_min",
+            "name": "Fahrenheit Value A(Temperature Threshold Alarm Settings)",
+            "value": "32",
+            "unit": "°F",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "range": [
+                -4,
+                212
+            ],
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 64,
+            "bacnet_unit_type": "UNITS_DEGREES_FAHRENHEIT",
+            "reference": [
+                "temperature_alarm_settings.enable",
+                "temperature_alarm_settings.threshold_condition",
+                "temperature_alarm_settings.threshold_max"
+            ]
+        },
+        {
             "id": "temperature_alarm_settings.threshold_condition",
-            "name": "Threshold Mode",
-            "value": "0",
+            "name": "Threshold Mode(Temperature Threshold Alarm Settings)",
+            "value": "2",
             "unit": "",
             "access_mode": "RW",
             "data_type": "ENUM",
             "value_type": "UINT8",
             "values": [
-                {
-                    "value": 0,
-                    "name": "disable"
-                },
                 {
                     "value": 1,
                     "name": "condition: x<A"
@@ -5939,7 +6460,7 @@
         },
         {
             "id": "temperature_alarm_settings.threshold_max",
-            "name": "Value B",
+            "name": "Value B(Temperature Threshold Alarm Settings)",
             "value": "0",
             "unit": "°C",
             "access_mode": "RW",
@@ -5960,7 +6481,7 @@
         },
         {
             "id": "temperature_alarm_settings.threshold_min",
-            "name": "Value A",
+            "name": "Value A(Temperature Threshold Alarm Settings)",
             "value": "0",
             "unit": "°C",
             "access_mode": "RW",
@@ -5980,110 +6501,8 @@
             ]
         },
         {
-            "id": "temperature_alarm.exceed_range_alarm_deactivation.temperature",
-            "name": "Temperature",
-            "value": "",
-            "unit": "°C",
-            "access_mode": "R",
-            "data_type": "NUMBER",
-            "value_type": "FLOAT",
-            "range": [
-                -20,
-                100
-            ],
-            "bacnet_type": "analog_input_object",
-            "bacnet_unit_type_id": 62,
-            "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
-            "reference": []
-        },
-        {
-            "id": "temperature_alarm.exceed_range_alarm_trigger.temperature",
-            "name": "Temperature",
-            "value": "",
-            "unit": "°C",
-            "access_mode": "R",
-            "data_type": "NUMBER",
-            "value_type": "FLOAT",
-            "range": [
-                -20,
-                100
-            ],
-            "bacnet_type": "analog_input_object",
-            "bacnet_unit_type_id": 62,
-            "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
-            "reference": []
-        },
-        {
-            "id": "temperature_alarm.lower_range_alarm_deactivation.temperature",
-            "name": "Temperature",
-            "value": "",
-            "unit": "°C",
-            "access_mode": "R",
-            "data_type": "NUMBER",
-            "value_type": "FLOAT",
-            "range": [
-                -20,
-                100
-            ],
-            "bacnet_type": "analog_input_object",
-            "bacnet_unit_type_id": 62,
-            "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
-            "reference": []
-        },
-        {
-            "id": "temperature_alarm.lower_range_alarm_trigger.temperature",
-            "name": "Temperature",
-            "value": "",
-            "unit": "°C",
-            "access_mode": "R",
-            "data_type": "NUMBER",
-            "value_type": "FLOAT",
-            "range": [
-                -20,
-                100
-            ],
-            "bacnet_type": "analog_input_object",
-            "bacnet_unit_type_id": 62,
-            "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
-            "reference": []
-        },
-        {
-            "id": "temperature_alarm.over_range_alarm_deactivation.temperature",
-            "name": "Temperature",
-            "value": "",
-            "unit": "°C",
-            "access_mode": "R",
-            "data_type": "NUMBER",
-            "value_type": "FLOAT",
-            "range": [
-                -20,
-                100
-            ],
-            "bacnet_type": "analog_input_object",
-            "bacnet_unit_type_id": 62,
-            "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
-            "reference": []
-        },
-        {
-            "id": "temperature_alarm.over_range_alarm_trigger.temperature",
-            "name": "Temperature",
-            "value": "",
-            "unit": "°C",
-            "access_mode": "R",
-            "data_type": "NUMBER",
-            "value_type": "FLOAT",
-            "range": [
-                -20,
-                100
-            ],
-            "bacnet_type": "analog_input_object",
-            "bacnet_unit_type_id": 62,
-            "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
-            "reference": []
-        },
-        {
             "id": "temperature_alarm.type",
-            "name": "Alarm Type",
+            "name": "Alarm Type(Temperature Threshold Alarm)",
             "value": "",
             "unit": "",
             "access_mode": "R",
@@ -6139,48 +6558,33 @@
                     "name": "Temperature Outside Thresholds Alarm"
                 }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": []
         },
         {
-            "id": "temperature_alarm.within_range_alarm_deactivation.temperature",
-            "name": "Temperature",
-            "value": "",
-            "unit": "°C",
-            "access_mode": "R",
-            "data_type": "NUMBER",
-            "value_type": "FLOAT",
-            "range": [
-                -20,
-                100
-            ],
-            "bacnet_type": "analog_input_object",
-            "bacnet_unit_type_id": 62,
-            "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
-            "reference": []
-        },
-        {
-            "id": "temperature_alarm.within_range_alarm_trigger.temperature",
-            "name": "Temperature",
-            "value": "",
-            "unit": "°C",
-            "access_mode": "R",
-            "data_type": "NUMBER",
-            "value_type": "FLOAT",
-            "range": [
-                -20,
-                100
-            ],
-            "bacnet_type": "analog_input_object",
-            "bacnet_unit_type_id": 62,
-            "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
-            "reference": []
-        },
-        {
             "id": "temperature_calibration_settings.calibration_value",
-            "name": "Calibration Value",
+            "name": "Calibration Value(Temperature Calibration Settings)",
+            "value": "0",
+            "unit": "°C",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "range": [
+                -120,
+                120
+            ],
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 62,
+            "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
+            "reference": [
+                "temperature_calibration_settings.enable"
+            ]
+        },
+        {
+            "id": "temperature_calibration_settings.celsius_calibration_value",
+            "name": "Celsius Calibration Value(Temperature Calibration Settings)",
             "value": "0",
             "unit": "°C",
             "access_mode": "RW",
@@ -6199,7 +6603,7 @@
         },
         {
             "id": "temperature_calibration_settings.enable",
-            "name": "Temperature Calibration",
+            "name": "Temperature Calibration(Temperature Calibration Settings)",
             "value": "0",
             "unit": "",
             "access_mode": "RW",
@@ -6220,6 +6624,25 @@
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": [
                 "temperature_calibration_settings.calibration_value"
+            ]
+        },
+        {
+            "id": "temperature_calibration_settings.fahrenheit_calibration_value",
+            "name": "Fahrenheit Calibration Value(Temperature Calibration Settings)",
+            "value": "32",
+            "unit": "°F",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "range": [
+                -184,
+                248
+            ],
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 64,
+            "bacnet_unit_type": "UNITS_DEGREES_FAHRENHEIT",
+            "reference": [
+                "temperature_calibration_settings.enable"
             ]
         },
         {
@@ -6246,7 +6669,7 @@
         },
         {
             "id": "thdi_alarm.channel",
-            "name": "Alarm Channel",
+            "name": "Alarm Channel(THDi Threshold Alarm)",
             "value": "",
             "unit": "",
             "access_mode": "R",
@@ -6267,7 +6690,7 @@
         },
         {
             "id": "thdi_alarm.info.over_range_alarm_deactivation.thdi",
-            "name": "THDi",
+            "name": "THDi(THDi Exceeds Threshold Alarm Released)",
             "value": "",
             "unit": "%",
             "access_mode": "R",
@@ -6280,7 +6703,7 @@
         },
         {
             "id": "thdi_alarm.info.over_range_alarm_trigger.thdi",
-            "name": "THDi",
+            "name": "THDi(THDi Exceeds Threshold Alarm)",
             "value": "",
             "unit": "%",
             "access_mode": "R",
@@ -6293,7 +6716,7 @@
         },
         {
             "id": "thdi_alarm.info.type",
-            "name": "Alarm Type",
+            "name": "Alarm Type(THDi Threshold Alarm Info)",
             "value": "",
             "unit": "",
             "access_mode": "R",
@@ -6313,14 +6736,14 @@
                     "name": "THDi Exceeds Threshold Alarm"
                 }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": []
         },
         {
             "id": "thdv_alarm.channel",
-            "name": "Alarm Channel",
+            "name": "Alarm Channel(THDv Threshold Alarm)",
             "value": "",
             "unit": "",
             "access_mode": "R",
@@ -6341,7 +6764,7 @@
         },
         {
             "id": "thdv_alarm.info.over_range_alarm_deactivation.thdv",
-            "name": "THDv",
+            "name": "THDv(THDv Exceeds Threshold Alarm Released)",
             "value": "",
             "unit": "%",
             "access_mode": "R",
@@ -6354,7 +6777,7 @@
         },
         {
             "id": "thdv_alarm.info.over_range_alarm_trigger.thdv",
-            "name": "THDv",
+            "name": "THDv(THDv Exceeds Threshold Alarm)",
             "value": "",
             "unit": "%",
             "access_mode": "R",
@@ -6367,7 +6790,7 @@
         },
         {
             "id": "thdv_alarm.info.type",
-            "name": "Alarm Type",
+            "name": "Alarm Type(THDv Threshold Alarm Info)",
             "value": "",
             "unit": "",
             "access_mode": "R",
@@ -6387,7 +6810,7 @@
                     "name": "THDv Exceeds Threshold Alarm"
                 }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": []
@@ -6569,7 +6992,7 @@
         },
         {
             "id": "version.firmware_version",
-            "name": "Firmware Version",
+            "name": "Firmware Version(Product Version)",
             "value": "",
             "unit": "",
             "access_mode": "R",
@@ -6585,7 +7008,7 @@
         },
         {
             "id": "version.hardware_version",
-            "name": "Hardware Version",
+            "name": "Hardware Version(Product Version)",
             "value": "",
             "unit": "",
             "access_mode": "R",
@@ -6601,7 +7024,7 @@
         },
         {
             "id": "voltage_alarm.channel",
-            "name": "Alarm Channel",
+            "name": "Alarm Channel(Voltage Threshold  Alarm)",
             "value": "",
             "unit": "",
             "access_mode": "R",
@@ -6631,7 +7054,7 @@
         },
         {
             "id": "voltage_alarm.info.exceed_range_alarm_deactivation.voltage",
-            "name": "Voltage",
+            "name": "Voltage(Voltage Out-of-Range Thresholds Alarm Released)",
             "value": "",
             "unit": "V",
             "access_mode": "R",
@@ -6644,7 +7067,7 @@
         },
         {
             "id": "voltage_alarm.info.exceed_range_alarm_trigger.voltage",
-            "name": "Voltage",
+            "name": "Voltage(Voltage Out-of-Range Thresholds Alarm)",
             "value": "",
             "unit": "V",
             "access_mode": "R",
@@ -6657,7 +7080,7 @@
         },
         {
             "id": "voltage_alarm.info.lower_range_alarm_deactivation.voltage",
-            "name": "Voltage",
+            "name": "Voltage(Voltage Below Threshold Alarm Released)",
             "value": "",
             "unit": "V",
             "access_mode": "R",
@@ -6670,7 +7093,7 @@
         },
         {
             "id": "voltage_alarm.info.lower_range_alarm_trigger.voltage",
-            "name": "Voltage",
+            "name": "Voltage(Voltage Below Threshold Alarm)",
             "value": "",
             "unit": "V",
             "access_mode": "R",
@@ -6683,7 +7106,7 @@
         },
         {
             "id": "voltage_alarm.info.lower_range_error.voltage",
-            "name": "Voltage",
+            "name": "Voltage(Overrange (Lower Limit))",
             "value": "",
             "unit": "V",
             "access_mode": "R",
@@ -6696,7 +7119,7 @@
         },
         {
             "id": "voltage_alarm.info.over_range_alarm_deactivation.voltage",
-            "name": "Voltage",
+            "name": "Voltage(Voltage Exceeds Threshold Alarm Released)",
             "value": "",
             "unit": "V",
             "access_mode": "R",
@@ -6709,7 +7132,7 @@
         },
         {
             "id": "voltage_alarm.info.over_range_alarm_trigger.voltage",
-            "name": "Voltage",
+            "name": "Voltage(Voltage Exceeds Threshold Alarm)",
             "value": "",
             "unit": "V",
             "access_mode": "R",
@@ -6722,7 +7145,7 @@
         },
         {
             "id": "voltage_alarm.info.over_range_error.voltage",
-            "name": "Voltage",
+            "name": "Voltage(Overrange (Upper Limit))",
             "value": "",
             "unit": "V",
             "access_mode": "R",
@@ -6735,7 +7158,7 @@
         },
         {
             "id": "voltage_alarm.info.over_range_release.voltage",
-            "name": "Voltage",
+            "name": "Voltage(Overrange Release)",
             "value": "",
             "unit": "V",
             "access_mode": "R",
@@ -6748,7 +7171,7 @@
         },
         {
             "id": "voltage_alarm.info.type",
-            "name": "Alarm Type",
+            "name": "Alarm Type(Voltage Threshold Alarm Info)",
             "value": "",
             "unit": "",
             "access_mode": "R",
@@ -6808,14 +7231,14 @@
                     "name": "Voltage Out-of-Range Thresholds Alarm"
                 }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": []
         },
         {
             "id": "voltage_alarm.info.within_range_alarm_deactivation.voltage",
-            "name": "Voltage",
+            "name": "Voltage(Voltage in-Range Thresholds Alarm Released)",
             "value": "",
             "unit": "V",
             "access_mode": "R",
@@ -6828,7 +7251,7 @@
         },
         {
             "id": "voltage_alarm.info.within_range_alarm_trigger.voltage",
-            "name": "Voltage",
+            "name": "Voltage(Voltage in-Range Thresholds Alarm)",
             "value": "",
             "unit": "V",
             "access_mode": "R",
@@ -6879,7 +7302,7 @@
         },
         {
             "id": "voltage_unbalance_alarm_settings.enable",
-            "name": "Threshold Alarm Enable",
+            "name": "Threshold Alarm Enable(Voltage Three-phase Unbalance Threshold Alarm Settings)",
             "value": "0",
             "unit": "",
             "access_mode": "RW",
@@ -6906,16 +7329,16 @@
         },
         {
             "id": "voltage_unbalance_alarm_settings.threshold_condition",
-            "name": "Threshold Mode",
-            "value": "0",
+            "name": "Threshold Mode(Voltage Three-phase Unbalance Threshold Alarm Settings)",
+            "value": "2",
             "unit": "",
             "access_mode": "RW",
             "data_type": "ENUM",
             "value_type": "UINT8",
             "values": [
                 {
-                    "value": 0,
-                    "name": "disable"
+                    "value": 2,
+                    "name": "condition: x>B"
                 },
                 {
                     "value": 2,
@@ -6933,7 +7356,7 @@
         },
         {
             "id": "voltage_unbalance_alarm_settings.threshold_max",
-            "name": "Value B",
+            "name": "Value B(Voltage Three-phase Unbalance Threshold Alarm Settings)",
             "value": "3",
             "unit": "%",
             "access_mode": "RW",
@@ -6954,14 +7377,14 @@
         },
         {
             "id": "voltage_unbalance_alarm_settings.threshold_min",
-            "name": "Value A",
-            "value": "0",
+            "name": "Value A(Voltage Three-phase Unbalance Threshold Alarm Settings)",
+            "value": "1",
             "unit": "%",
             "access_mode": "RW",
             "data_type": "NUMBER",
             "value_type": "UINT8",
             "range": [
-                0,
+                1,
                 100
             ],
             "bacnet_type": "analog_value_object",
@@ -6974,34 +7397,8 @@
             ]
         },
         {
-            "id": "voltage_unbalance_alarm.over_range_alarm_deactivation.voltage_unbalance",
-            "name": "Voltage Three-phase Unbalance",
-            "value": "",
-            "unit": "%",
-            "access_mode": "R",
-            "data_type": "NUMBER",
-            "value_type": "FLOAT",
-            "bacnet_type": "analog_input_object",
-            "bacnet_unit_type_id": 98,
-            "bacnet_unit_type": "UNITS_PERCENT",
-            "reference": []
-        },
-        {
-            "id": "voltage_unbalance_alarm.over_range_alarm_trigger.voltage_unbalance",
-            "name": "Voltage Three-phase Unbalance",
-            "value": "",
-            "unit": "%",
-            "access_mode": "R",
-            "data_type": "NUMBER",
-            "value_type": "FLOAT",
-            "bacnet_type": "analog_input_object",
-            "bacnet_unit_type_id": 98,
-            "bacnet_unit_type": "UNITS_PERCENT",
-            "reference": []
-        },
-        {
             "id": "voltage_unbalance_alarm.type",
-            "name": "Alarm Type",
+            "name": "Alarm Type(Voltage Three-phase Unbalance Threshold Alarm)",
             "value": "",
             "unit": "",
             "access_mode": "R",
@@ -7021,7 +7418,7 @@
                     "name": "Voltage Three-phase Unbalance Exceeds Threshold Alarm"
                 }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": []
