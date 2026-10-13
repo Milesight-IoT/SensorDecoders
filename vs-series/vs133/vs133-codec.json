@@ -42,6 +42,19 @@
             "bacnet_unit_type": "UNITS_NO_UNITS"
         },
         {
+            "id": "device_version",
+            "name": "Device Version",
+            "value": "",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "TEXT",
+            "value_type": "STRING",
+            "max_length": 16,
+            "bacnet_type": "character_string_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS"
+        },
+        {
             "id": "sn",
             "name": "SN",
             "value": "",
@@ -714,7 +727,7 @@
                 { "value": 0, "name": "alarm_released" },
                 { "value": 1, "name": "alarm_triggered" }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS"
         },
@@ -730,7 +743,7 @@
                 { "value": 0, "name": "alarm_released" },
                 { "value": 1, "name": "alarm_triggered" }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS"
         },
@@ -746,7 +759,7 @@
                 { "value": 0, "name": "alarm_released" },
                 { "value": 1, "name": "alarm_triggered" }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS"
         },
@@ -762,7 +775,7 @@
                 { "value": 0, "name": "alarm_released" },
                 { "value": 1, "name": "alarm_triggered" }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS"
         },
