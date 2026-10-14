@@ -53,10 +53,25 @@ function milesightDeviceDecode(bytes) {
             decoded.tsl_version = readTslVersion(bytes.slice(i, i + 2));
             i += 2;
         }
-        // SERIAL NUMBER
+        // SERIAL NUMBER (12 digits)
         else if (channel_id === 0xff && channel_type === 0x08) {
             decoded.sn = readSerialNumber(bytes.slice(i, i + 6));
             i += 6;
+        }
+        // SERIAL NUMBER (16 digits)
+        else if (channel_id === 0xff && channel_type === 0x16) {
+            decoded.sn = readSerialNumber(bytes.slice(i, i + 8));
+            i += 8;
+        }
+        // ODM ID
+        else if (channel_id === 0xff && channel_type === 0xe7) {
+            decoded.odm_id = readSerialNumber(bytes.slice(i, i + 2));
+            i += 2;
+        }
+        // SOFTWARE SUB VERSION
+        else if (channel_id === 0xff && channel_type === 0xe8) {
+            decoded.software_sub_version = readSoftwareSubVersion(bytes.slice(i, i + 4));
+            i += 4;
         }
         // LORAWAN CLASS TYPE
         else if (channel_id === 0xff && channel_type === 0x0f) {
@@ -169,6 +184,16 @@ function readSerialNumber(bytes) {
         temp.push(("0" + (bytes[idx] & 0xff).toString(16)).slice(-2));
     }
     return temp.join("");
+}
+
+function readSoftwareSubVersion(bytes) {
+    var r = bytes[0] & 0xff;
+    var a = bytes[1] & 0xff;
+    var u = bytes[2] & 0xff;
+    var t = bytes[3] & 0xff;
+    var version = "-r" + r.toString(16) + "-a" + a.toString(16);
+    if (u) version += "-u" + u.toString(16);
+    return version + "-t" + t.toString(16);
 }
 
 function readLoRaWANClass(type) {
