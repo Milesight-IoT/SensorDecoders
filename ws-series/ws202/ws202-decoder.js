@@ -191,9 +191,12 @@ function readSoftwareSubVersion(bytes) {
     var a = bytes[1] & 0xff;
     var u = bytes[2] & 0xff;
     var t = bytes[3] & 0xff;
-    var version = "-r" + r.toString(16) + "-a" + a.toString(16);
+    var version = "";
+    if (r) version += "-r" + r.toString(16);
+    if (a) version += "-a" + a.toString(16);
     if (u) version += "-u" + u.toString(16);
-    return version + "-t" + t.toString(16);
+    if (t) version += "-t" + t.toString(16);
+    return version;
 }
 
 function readLoRaWANClass(type) {
