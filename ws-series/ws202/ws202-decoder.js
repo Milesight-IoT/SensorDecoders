@@ -98,10 +98,11 @@ function milesightDeviceDecode(bytes) {
             decoded.pir = readPirStatus(bytes[i]);
             i += 1;
         }
-        // DAYLIGHT
-        else if (channel_id === 0x04 && channel_type === 0x00) {
+        // DAYLIGHT & ILLUMINATION
+        else if (channel_id === 0x05 && channel_type === 0x9d) {
             decoded.daylight = readDaylight(bytes[i]);
-            i += 1;
+            decoded.illumination = readUInt16LE(bytes.slice(i + 1, i + 3));
+            i += 3;
         }
         // DOWNLINK RESPONSE
         else if (channel_id === 0xfe || channel_id === 0xff) {
