@@ -24,29 +24,6 @@
             "bacnet_unit_type": "UNITS_NO_UNITS"
         },
         {
-            "id": "ambient_temperature_alarm.type",
-            "name": "Alarm Type(Ambient Temperature  Alarm)",
-            "value": "",
-            "unit": "",
-            "access_mode": "R",
-            "data_type": "ENUM",
-            "value_type": "UINT8",
-            "values": [
-                {
-                    "value": 0,
-                    "name": "Collection Error"
-                },
-                {
-                    "value": 3,
-                    "name": "No Data"
-                }
-            ],
-            "bacnet_type": "multistate_input_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": []
-        },
-        {
             "id": "ambient_temperature_enable",
             "name": "Ambient Temperature Enable",
             "value": "1",
@@ -202,7 +179,7 @@
             "id": "anti_freeze_protection_settings.fahrenheit_temperature_value",
             "name": "Fahrenheit Freeze Temperature(Freeze Protection)",
             "value": "37.4",
-            "unit": "℉",
+            "unit": "°F",
             "access_mode": "RW",
             "data_type": "NUMBER",
             "value_type": "FLOAT",
@@ -214,19 +191,6 @@
             "bacnet_unit_type_id": 64,
             "bacnet_unit_type": "UNITS_DEGREES_FAHRENHEIT",
             "reference": []
-        },
-        {
-            "id": "bluetooth_name",
-            "name": "Bluetooth Connection Name",
-            "value": "",
-            "unit": "",
-            "access_mode": "RW",
-            "data_type": "TEXT",
-            "value_type": "STRING",
-            "max_length": 32,
-            "bacnet_type": "character_string_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS"
         },
         {
             "id": "button_lock_settings.switch_lock_enable",
@@ -323,7 +287,7 @@
             "id": "current",
             "name": "Current Rating",
             "value": "",
-            "unit": "a",
+            "unit": "A",
             "access_mode": "R",
             "data_type": "NUMBER",
             "value_type": "FLOAT",
@@ -332,31 +296,8 @@
                 65536
             ],
             "bacnet_type": "analog_input_object",
-            "bacnet_unit_type_id": 67,
-            "bacnet_unit_type": "UNITS_YEARS"
-        },
-        {
-            "id": "current_alarm.type",
-            "name": "Alarm Type(Current  Alarm)",
-            "value": "",
-            "unit": "",
-            "access_mode": "R",
-            "data_type": "ENUM",
-            "value_type": "UINT8",
-            "values": [
-                {
-                    "value": 0,
-                    "name": "Collection Error"
-                },
-                {
-                    "value": 1,
-                    "name": "Unsupported Command"
-                }
-            ],
-            "bacnet_type": "multistate_input_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": []
+            "bacnet_unit_type_id": 3,
+            "bacnet_unit_type": "UNITS_AMPERES"
         },
         {
             "id": "d2d_pairing_enable",
@@ -379,672 +320,6 @@
             "bacnet_type": "binary_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS"
-        },
-        {
-            "id": "d2d_slave_enable",
-            "name": "D2D Agent Enable",
-            "value": "0",
-            "unit": "",
-            "access_mode": "RW",
-            "data_type": "BOOL",
-            "value_type": "UINT8",
-            "values": [
-                {
-                    "value": 0,
-                    "name": "disable"
-                },
-                {
-                    "value": 1,
-                    "name": "enable"
-                }
-            ],
-            "bacnet_type": "binary_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS"
-        },
-        {
-            "id": "daylight_saving_time.daylight_saving_time_offset",
-            "name": "DST Bias(Daylight Saving Time)",
-            "value": "60",
-            "unit": "min",
-            "access_mode": "RW",
-            "data_type": "NUMBER",
-            "value_type": "UINT8",
-            "range": [
-                1,
-                120
-            ],
-            "bacnet_type": "analog_value_object",
-            "bacnet_unit_type_id": 72,
-            "bacnet_unit_type": "UNITS_MINUTES",
-            "reference": [
-                "daylight_saving_time.enable",
-                "daylight_saving_time.start_month",
-                "daylight_saving_time.start_week_num",
-                "daylight_saving_time.start_week_day",
-                "daylight_saving_time.start_hour_min",
-                "daylight_saving_time.end_month",
-                "daylight_saving_time.end_week_num",
-                "daylight_saving_time.end_week_day",
-                "daylight_saving_time.end_hour_min"
-            ]
-        },
-        {
-            "id": "daylight_saving_time.enable",
-            "name": "Enable(Daylight Saving Time)",
-            "value": "0",
-            "unit": "",
-            "access_mode": "RW",
-            "data_type": "BOOL",
-            "value_type": "UINT8",
-            "values": [
-                {
-                    "value": 0,
-                    "name": "Disable"
-                },
-                {
-                    "value": 1,
-                    "name": "Enable"
-                }
-            ],
-            "bacnet_type": "binary_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": [
-                "daylight_saving_time.daylight_saving_time_offset",
-                "daylight_saving_time.start_month",
-                "daylight_saving_time.start_week_num",
-                "daylight_saving_time.start_week_day",
-                "daylight_saving_time.start_hour_min",
-                "daylight_saving_time.end_month",
-                "daylight_saving_time.end_week_num",
-                "daylight_saving_time.end_week_day",
-                "daylight_saving_time.end_hour_min"
-            ]
-        },
-        {
-            "id": "daylight_saving_time.end_hour_min",
-            "name": "Time(Daylight Saving Time)",
-            "value": "0",
-            "unit": "min",
-            "access_mode": "RW",
-            "data_type": "ENUM",
-            "value_type": "UINT16",
-            "values": [
-                {
-                    "value": 0,
-                    "name": "00:00"
-                },
-                {
-                    "value": 60,
-                    "name": "01:00"
-                },
-                {
-                    "value": 120,
-                    "name": "02:00"
-                },
-                {
-                    "value": 180,
-                    "name": "03:00"
-                },
-                {
-                    "value": 240,
-                    "name": "04:00"
-                },
-                {
-                    "value": 300,
-                    "name": "05:00"
-                },
-                {
-                    "value": 360,
-                    "name": "06:00"
-                },
-                {
-                    "value": 420,
-                    "name": "07:00"
-                },
-                {
-                    "value": 480,
-                    "name": "08:00"
-                },
-                {
-                    "value": 540,
-                    "name": "09:00"
-                },
-                {
-                    "value": 600,
-                    "name": "10:00"
-                },
-                {
-                    "value": 660,
-                    "name": "11:00"
-                },
-                {
-                    "value": 720,
-                    "name": "12:00"
-                },
-                {
-                    "value": 780,
-                    "name": "13:00"
-                },
-                {
-                    "value": 840,
-                    "name": "14:00"
-                },
-                {
-                    "value": 900,
-                    "name": "15:00"
-                },
-                {
-                    "value": 960,
-                    "name": "16:00"
-                },
-                {
-                    "value": 1020,
-                    "name": "17:00"
-                },
-                {
-                    "value": 1080,
-                    "name": "18:00"
-                },
-                {
-                    "value": 1140,
-                    "name": "19:00"
-                },
-                {
-                    "value": 1200,
-                    "name": "20:00"
-                },
-                {
-                    "value": 1260,
-                    "name": "21:00"
-                },
-                {
-                    "value": 1320,
-                    "name": "22:00"
-                },
-                {
-                    "value": 1380,
-                    "name": "23:00"
-                }
-            ],
-            "bacnet_type": "multistate_value_object",
-            "bacnet_unit_type_id": 72,
-            "bacnet_unit_type": "UNITS_MINUTES",
-            "reference": [
-                "daylight_saving_time.enable",
-                "daylight_saving_time.daylight_saving_time_offset",
-                "daylight_saving_time.start_month",
-                "daylight_saving_time.start_week_num",
-                "daylight_saving_time.start_week_day",
-                "daylight_saving_time.start_hour_min",
-                "daylight_saving_time.end_month",
-                "daylight_saving_time.end_week_num",
-                "daylight_saving_time.end_week_day"
-            ]
-        },
-        {
-            "id": "daylight_saving_time.end_month",
-            "name": "Month(Daylight Saving Time)",
-            "value": "1",
-            "unit": "",
-            "access_mode": "RW",
-            "data_type": "ENUM",
-            "value_type": "UINT8",
-            "values": [
-                {
-                    "value": 1,
-                    "name": "Jan."
-                },
-                {
-                    "value": 2,
-                    "name": "Feb."
-                },
-                {
-                    "value": 3,
-                    "name": "Mar."
-                },
-                {
-                    "value": 4,
-                    "name": "Apr."
-                },
-                {
-                    "value": 5,
-                    "name": "May"
-                },
-                {
-                    "value": 6,
-                    "name": "Jun."
-                },
-                {
-                    "value": 7,
-                    "name": "Jul."
-                },
-                {
-                    "value": 8,
-                    "name": "Aug."
-                },
-                {
-                    "value": 9,
-                    "name": "Sep."
-                },
-                {
-                    "value": 10,
-                    "name": "Oct."
-                },
-                {
-                    "value": 11,
-                    "name": "Nov."
-                },
-                {
-                    "value": 12,
-                    "name": "Dec."
-                }
-            ],
-            "bacnet_type": "multistate_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": [
-                "daylight_saving_time.enable",
-                "daylight_saving_time.daylight_saving_time_offset",
-                "daylight_saving_time.start_month",
-                "daylight_saving_time.start_week_num",
-                "daylight_saving_time.start_week_day",
-                "daylight_saving_time.start_hour_min",
-                "daylight_saving_time.end_week_num",
-                "daylight_saving_time.end_week_day",
-                "daylight_saving_time.end_hour_min"
-            ]
-        },
-        {
-            "id": "daylight_saving_time.end_week_day",
-            "name": "Week(Daylight Saving Time)",
-            "value": "7",
-            "unit": "",
-            "access_mode": "RW",
-            "data_type": "ENUM",
-            "value_type": "UINT8",
-            "values": [
-                {
-                    "value": 1,
-                    "name": "Mon."
-                },
-                {
-                    "value": 2,
-                    "name": "Tues."
-                },
-                {
-                    "value": 3,
-                    "name": "Wed."
-                },
-                {
-                    "value": 4,
-                    "name": "Thurs."
-                },
-                {
-                    "value": 5,
-                    "name": "Fri."
-                },
-                {
-                    "value": 6,
-                    "name": "Sat."
-                },
-                {
-                    "value": 7,
-                    "name": "Sun."
-                }
-            ],
-            "bacnet_type": "multistate_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": [
-                "daylight_saving_time.enable",
-                "daylight_saving_time.daylight_saving_time_offset",
-                "daylight_saving_time.start_month",
-                "daylight_saving_time.start_week_num",
-                "daylight_saving_time.start_week_day",
-                "daylight_saving_time.start_hour_min",
-                "daylight_saving_time.end_month",
-                "daylight_saving_time.end_week_num",
-                "daylight_saving_time.end_hour_min"
-            ]
-        },
-        {
-            "id": "daylight_saving_time.end_week_num",
-            "name": "Number of Week(Daylight Saving Time)",
-            "value": "1",
-            "unit": "",
-            "access_mode": "RW",
-            "data_type": "ENUM",
-            "value_type": "UINT8",
-            "values": [
-                {
-                    "value": 1,
-                    "name": "1st"
-                },
-                {
-                    "value": 2,
-                    "name": "2nd"
-                },
-                {
-                    "value": 3,
-                    "name": "3rd"
-                },
-                {
-                    "value": 4,
-                    "name": "4th"
-                },
-                {
-                    "value": 5,
-                    "name": "last"
-                }
-            ],
-            "bacnet_type": "multistate_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": [
-                "daylight_saving_time.enable",
-                "daylight_saving_time.daylight_saving_time_offset",
-                "daylight_saving_time.start_month",
-                "daylight_saving_time.start_week_num",
-                "daylight_saving_time.start_week_day",
-                "daylight_saving_time.start_hour_min",
-                "daylight_saving_time.end_month",
-                "daylight_saving_time.end_week_day",
-                "daylight_saving_time.end_hour_min"
-            ]
-        },
-        {
-            "id": "daylight_saving_time.start_hour_min",
-            "name": "Time(Daylight Saving Time)",
-            "value": "0",
-            "unit": "min",
-            "access_mode": "RW",
-            "data_type": "ENUM",
-            "value_type": "UINT16",
-            "values": [
-                {
-                    "value": 0,
-                    "name": "00:00"
-                },
-                {
-                    "value": 60,
-                    "name": "01:00"
-                },
-                {
-                    "value": 120,
-                    "name": "02:00"
-                },
-                {
-                    "value": 180,
-                    "name": "03:00"
-                },
-                {
-                    "value": 240,
-                    "name": "04:00"
-                },
-                {
-                    "value": 300,
-                    "name": "05:00"
-                },
-                {
-                    "value": 360,
-                    "name": "06:00"
-                },
-                {
-                    "value": 420,
-                    "name": "07:00"
-                },
-                {
-                    "value": 480,
-                    "name": "08:00"
-                },
-                {
-                    "value": 540,
-                    "name": "09:00"
-                },
-                {
-                    "value": 600,
-                    "name": "10:00"
-                },
-                {
-                    "value": 660,
-                    "name": "11:00"
-                },
-                {
-                    "value": 720,
-                    "name": "12:00"
-                },
-                {
-                    "value": 780,
-                    "name": "13:00"
-                },
-                {
-                    "value": 840,
-                    "name": "14:00"
-                },
-                {
-                    "value": 900,
-                    "name": "15:00"
-                },
-                {
-                    "value": 960,
-                    "name": "16:00"
-                },
-                {
-                    "value": 1020,
-                    "name": "17:00"
-                },
-                {
-                    "value": 1080,
-                    "name": "18:00"
-                },
-                {
-                    "value": 1140,
-                    "name": "19:00"
-                },
-                {
-                    "value": 1200,
-                    "name": "20:00"
-                },
-                {
-                    "value": 1260,
-                    "name": "21:00"
-                },
-                {
-                    "value": 1320,
-                    "name": "22:00"
-                },
-                {
-                    "value": 1380,
-                    "name": "23:00"
-                }
-            ],
-            "bacnet_type": "multistate_value_object",
-            "bacnet_unit_type_id": 72,
-            "bacnet_unit_type": "UNITS_MINUTES",
-            "reference": [
-                "daylight_saving_time.enable",
-                "daylight_saving_time.daylight_saving_time_offset",
-                "daylight_saving_time.start_month",
-                "daylight_saving_time.start_week_num",
-                "daylight_saving_time.start_week_day",
-                "daylight_saving_time.end_month",
-                "daylight_saving_time.end_week_num",
-                "daylight_saving_time.end_week_day",
-                "daylight_saving_time.end_hour_min"
-            ]
-        },
-        {
-            "id": "daylight_saving_time.start_month",
-            "name": "Month(Daylight Saving Time)",
-            "value": "1",
-            "unit": "",
-            "access_mode": "RW",
-            "data_type": "ENUM",
-            "value_type": "UINT8",
-            "values": [
-                {
-                    "value": 1,
-                    "name": "Jan."
-                },
-                {
-                    "value": 2,
-                    "name": "Feb."
-                },
-                {
-                    "value": 3,
-                    "name": "Mar."
-                },
-                {
-                    "value": 4,
-                    "name": "Apr."
-                },
-                {
-                    "value": 5,
-                    "name": "May"
-                },
-                {
-                    "value": 6,
-                    "name": "Jun."
-                },
-                {
-                    "value": 7,
-                    "name": "Jul."
-                },
-                {
-                    "value": 8,
-                    "name": "Aug."
-                },
-                {
-                    "value": 9,
-                    "name": "Sep."
-                },
-                {
-                    "value": 10,
-                    "name": "Oct."
-                },
-                {
-                    "value": 11,
-                    "name": "Nov."
-                },
-                {
-                    "value": 12,
-                    "name": "Dec."
-                }
-            ],
-            "bacnet_type": "multistate_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": [
-                "daylight_saving_time.enable",
-                "daylight_saving_time.daylight_saving_time_offset",
-                "daylight_saving_time.start_week_num",
-                "daylight_saving_time.start_week_day",
-                "daylight_saving_time.start_hour_min",
-                "daylight_saving_time.end_month",
-                "daylight_saving_time.end_week_num",
-                "daylight_saving_time.end_week_day",
-                "daylight_saving_time.end_hour_min"
-            ]
-        },
-        {
-            "id": "daylight_saving_time.start_week_day",
-            "name": "Week(Daylight Saving Time)",
-            "value": "7",
-            "unit": "",
-            "access_mode": "RW",
-            "data_type": "ENUM",
-            "value_type": "UINT8",
-            "values": [
-                {
-                    "value": 1,
-                    "name": "Mon."
-                },
-                {
-                    "value": 2,
-                    "name": "Tues."
-                },
-                {
-                    "value": 3,
-                    "name": "Wed."
-                },
-                {
-                    "value": 4,
-                    "name": "Thurs."
-                },
-                {
-                    "value": 5,
-                    "name": "Fri."
-                },
-                {
-                    "value": 6,
-                    "name": "Sat."
-                },
-                {
-                    "value": 7,
-                    "name": "Sun."
-                }
-            ],
-            "bacnet_type": "multistate_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": [
-                "daylight_saving_time.enable",
-                "daylight_saving_time.daylight_saving_time_offset",
-                "daylight_saving_time.start_month",
-                "daylight_saving_time.start_week_num",
-                "daylight_saving_time.start_hour_min",
-                "daylight_saving_time.end_month",
-                "daylight_saving_time.end_week_num",
-                "daylight_saving_time.end_week_day",
-                "daylight_saving_time.end_hour_min"
-            ]
-        },
-        {
-            "id": "daylight_saving_time.start_week_num",
-            "name": "Number of Week(Daylight Saving Time)",
-            "value": "1",
-            "unit": "",
-            "access_mode": "RW",
-            "data_type": "ENUM",
-            "value_type": "UINT8",
-            "values": [
-                {
-                    "value": 1,
-                    "name": "1st"
-                },
-                {
-                    "value": 2,
-                    "name": "2nd"
-                },
-                {
-                    "value": 3,
-                    "name": "3rd"
-                },
-                {
-                    "value": 4,
-                    "name": "4th"
-                },
-                {
-                    "value": 5,
-                    "name": "last"
-                }
-            ],
-            "bacnet_type": "multistate_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": [
-                "daylight_saving_time.enable",
-                "daylight_saving_time.daylight_saving_time_offset",
-                "daylight_saving_time.start_month",
-                "daylight_saving_time.start_week_day",
-                "daylight_saving_time.start_hour_min",
-                "daylight_saving_time.end_month",
-                "daylight_saving_time.end_week_num",
-                "daylight_saving_time.end_week_day",
-                "daylight_saving_time.end_hour_min"
-            ]
         },
         {
             "id": "device_broken_alarm.status",
@@ -1108,60 +383,10 @@
             "bacnet_unit_type": "UNITS_WATTS"
         },
         {
-            "id": "electric_power_alarm.type",
-            "name": "Alarm Type(Electric Power  Alarm)",
-            "value": "",
-            "unit": "",
-            "access_mode": "R",
-            "data_type": "ENUM",
-            "value_type": "UINT8",
-            "values": [
-                {
-                    "value": 0,
-                    "name": "Collection Error"
-                },
-                {
-                    "value": 1,
-                    "name": "Unsupported Command"
-                }
-            ],
-            "bacnet_type": "multistate_input_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": []
-        },
-        {
-            "id": "equipment_temperature_alarm.type",
-            "name": "Alarm Type(Equipment Temperature  Alarm)",
-            "value": "",
-            "unit": "",
-            "access_mode": "R",
-            "data_type": "ENUM",
-            "value_type": "UINT8",
-            "values": [
-                {
-                    "value": 0,
-                    "name": "Collection Error"
-                },
-                {
-                    "value": 1,
-                    "name": "Exceed the Range Lower Limit"
-                },
-                {
-                    "value": 2,
-                    "name": "Exceed the Range Upper Limit"
-                }
-            ],
-            "bacnet_type": "multistate_input_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": []
-        },
-        {
             "id": "fahrenheit_ambient_temperature",
             "name": "Fahrenheit Ambient  Temperature",
             "value": "",
-            "unit": "℉",
+            "unit": "°F",
             "access_mode": "R",
             "data_type": "NUMBER",
             "value_type": "FLOAT",
@@ -1177,7 +402,7 @@
             "id": "fahrenheit_equipment_temperature",
             "name": "Fahrenheit Equipment Temperature",
             "value": "",
-            "unit": "℉",
+            "unit": "°F",
             "access_mode": "R",
             "data_type": "NUMBER",
             "value_type": "FLOAT",
@@ -1280,22 +505,6 @@
             "bacnet_unit_type": "UNITS_NO_UNITS"
         },
         {
-            "id": "lora_tx_rdt_max",
-            "name": "LoraTxRdtMax",
-            "value": "5",
-            "unit": "s",
-            "access_mode": "RW",
-            "data_type": "NUMBER",
-            "value_type": "UINT8",
-            "range": [
-                0,
-                60
-            ],
-            "bacnet_type": "analog_value_object",
-            "bacnet_unit_type_id": 73,
-            "bacnet_unit_type": "UNITS_SECONDS"
-        },
-        {
             "id": "lorawan_configuration_settings.mode",
             "name": "LoRaWAN Work Mode(LoRaWAN  Settings)",
             "value": "0",
@@ -1383,7 +592,7 @@
             "id": "open_window_settings.fahrenheit_cooling_rate",
             "name": "Fahrenheit Rate of Temperature Fall(Open Window Detection Settings)",
             "value": "37.4",
-            "unit": "℉",
+            "unit": "°F",
             "access_mode": "RW",
             "data_type": "NUMBER",
             "value_type": "FLOAT",
@@ -1440,7 +649,7 @@
             "id": "overcurrent_alarm_rule.threshold_max",
             "name": "Overcurrent Alarm Value(Overcurrent Alarm)",
             "value": "16",
-            "unit": "a",
+            "unit": "A",
             "access_mode": "RW",
             "data_type": "NUMBER",
             "value_type": "UINT8",
@@ -1449,8 +658,8 @@
                 16
             ],
             "bacnet_type": "analog_value_object",
-            "bacnet_unit_type_id": 67,
-            "bacnet_unit_type": "UNITS_YEARS",
+            "bacnet_unit_type_id": 3,
+            "bacnet_unit_type": "UNITS_AMPERES",
             "reference": []
         },
         {
@@ -1503,7 +712,7 @@
             "id": "overcurrent_protection_rule.threshold_max",
             "name": "Overcurrent Protection Value(Over current Protection)",
             "value": "16",
-            "unit": "a",
+            "unit": "A",
             "access_mode": "RW",
             "data_type": "NUMBER",
             "value_type": "UINT8",
@@ -1512,8 +721,8 @@
                 16
             ],
             "bacnet_type": "analog_value_object",
-            "bacnet_unit_type_id": 67,
-            "bacnet_unit_type": "UNITS_YEARS",
+            "bacnet_unit_type_id": 3,
+            "bacnet_unit_type": "UNITS_AMPERES",
             "reference": []
         },
         {
@@ -1589,7 +798,7 @@
             "id": "overvoltage_alarm_rule.threshold_max",
             "name": "Overvoltage Alarm Value(Overvoltage Alarm)",
             "value": "250",
-            "unit": "a",
+            "unit": "V",
             "access_mode": "RW",
             "data_type": "NUMBER",
             "value_type": "UINT8",
@@ -1598,8 +807,8 @@
                 250
             ],
             "bacnet_type": "analog_value_object",
-            "bacnet_unit_type_id": 67,
-            "bacnet_unit_type": "UNITS_YEARS",
+            "bacnet_unit_type_id": 5,
+            "bacnet_unit_type": "UNITS_VOLTS",
             "reference": []
         },
         {
@@ -1705,29 +914,6 @@
             "bacnet_unit_type": "UNITS_KILOWATT_HOURS"
         },
         {
-            "id": "power_consumption_alarm.type",
-            "name": "Alarm Type(Power Consumption Alarm)",
-            "value": "",
-            "unit": "",
-            "access_mode": "R",
-            "data_type": "ENUM",
-            "value_type": "UINT8",
-            "values": [
-                {
-                    "value": 0,
-                    "name": "Collection Error"
-                },
-                {
-                    "value": 1,
-                    "name": "Unsupported Command"
-                }
-            ],
-            "bacnet_type": "multistate_input_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": []
-        },
-        {
             "id": "power_factor",
             "name": "Power Factor",
             "value": "",
@@ -1742,29 +928,6 @@
             "bacnet_type": "analog_input_object",
             "bacnet_unit_type_id": 98,
             "bacnet_unit_type": "UNITS_PERCENT"
-        },
-        {
-            "id": "power_factor_alarm.type",
-            "name": "Alarm Type(Power Factor  Alarm)",
-            "value": "",
-            "unit": "",
-            "access_mode": "R",
-            "data_type": "ENUM",
-            "value_type": "UINT8",
-            "values": [
-                {
-                    "value": 0,
-                    "name": "Collection Error"
-                },
-                {
-                    "value": 1,
-                    "name": "Unsupported Command"
-                }
-            ],
-            "bacnet_type": "multistate_input_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": []
         },
         {
             "id": "power_metering_enable",
@@ -1803,11 +966,11 @@
                 },
                 {
                     "value": 0,
-                    "name": "normally closed"
+                    "name": "normally open"
                 },
                 {
                     "value": 1,
-                    "name": "normally open"
+                    "name": "normally closed"
                 }
             ],
             "bacnet_type": "multistate_value_object",
@@ -1850,28 +1013,6 @@
             ]
         },
         {
-            "id": "relay_abnormal_protection_enable",
-            "name": "Relay Abnormal Protection Enable",
-            "value": "1",
-            "unit": "",
-            "access_mode": "RW",
-            "data_type": "BOOL",
-            "value_type": "UINT8",
-            "values": [
-                {
-                    "value": 0,
-                    "name": "disable"
-                },
-                {
-                    "value": 1,
-                    "name": "enable"
-                }
-            ],
-            "bacnet_type": "binary_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS"
-        },
-        {
             "id": "relays_status",
             "name": "Relays Status",
             "value": "",
@@ -1882,11 +1023,11 @@
             "values": [
                 {
                     "value": 0,
-                    "name": "normally closed"
+                    "name": "normally open"
                 },
                 {
                     "value": 1,
-                    "name": "normally open"
+                    "name": "normally closed"
                 }
             ],
             "bacnet_type": "multistate_input_object",
@@ -1904,11 +1045,11 @@
             "values": [
                 {
                     "value": 0,
-                    "name": "normally closed"
+                    "name": "normally open"
                 },
                 {
                     "value": 1,
-                    "name": "normally open"
+                    "name": "normally closed"
                 }
             ],
             "bacnet_type": "binary_input_object",
@@ -2000,19 +1141,6 @@
             ]
         },
         {
-            "id": "reset_all_plans.reset",
-            "name": "Reset (Reset All Schedule)",
-            "value": "",
-            "unit": "",
-            "access_mode": "W",
-            "data_type": "NUMBER",
-            "value_type": "UINT8",
-            "bacnet_type": "analog_output_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": []
-        },
-        {
             "id": "send_temperature.celsius_temperature",
             "name": "Celsius Ambient Temperature Value(Ambient Temperature Settings)",
             "value": "0",
@@ -2033,7 +1161,7 @@
             "id": "send_temperature.fahrenheit_temperature",
             "name": "Fahrenheit Ambient Temperature Value(Ambient Temperature Settings)",
             "value": "32",
-            "unit": "℉",
+            "unit": "°F",
             "access_mode": "W",
             "data_type": "NUMBER",
             "value_type": "FLOAT",
@@ -2118,7 +1246,7 @@
             "id": "temperature_control_settings.fahrenheit_target",
             "name": "Fahrenheit Target Temperature(Temperature Control Settings)",
             "value": "66.2",
-            "unit": "℉",
+            "unit": "°F",
             "access_mode": "RW",
             "data_type": "NUMBER",
             "value_type": "FLOAT",
@@ -2131,7 +1259,7 @@
             "id": "temperature_control_settings.fahrenheit_tolerance",
             "name": "Fahrenheit Target Temperature Tolerance(Temperature Control Settings)",
             "value": "33.8",
-            "unit": "℉",
+            "unit": "°F",
             "access_mode": "RW",
             "data_type": "NUMBER",
             "value_type": "FLOAT",
@@ -2186,7 +1314,7 @@
             "id": "temperature_control_settings.range.fahrenheit_max",
             "name": "Fahrenheit Max Value(Target Temperature Range)",
             "value": "95",
-            "unit": "℉",
+            "unit": "°F",
             "access_mode": "RW",
             "data_type": "NUMBER",
             "value_type": "FLOAT",
@@ -2205,7 +1333,7 @@
             "id": "temperature_control_settings.range.fahrenheit_min",
             "name": "Fahrenheit Min Value(Target Temperature Range)",
             "value": "41",
-            "unit": "℉",
+            "unit": "°F",
             "access_mode": "RW",
             "data_type": "NUMBER",
             "value_type": "FLOAT",
@@ -2231,173 +1359,11 @@
             "values": [
                 {
                     "value": 0,
-                    "name": "℃"
+                    "name": "°C"
                 },
                 {
                     "value": 1,
-                    "name": "℉"
-                }
-            ],
-            "bacnet_type": "multistate_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS"
-        },
-        {
-            "id": "time_zone",
-            "name": "Time Zone",
-            "value": "0",
-            "unit": "",
-            "access_mode": "RW",
-            "data_type": "ENUM",
-            "value_type": "INT16",
-            "values": [
-                {
-                    "value": -720,
-                    "name": "UTC-12(IDLW)"
-                },
-                {
-                    "value": -660,
-                    "name": "UTC-11(SST)"
-                },
-                {
-                    "value": -600,
-                    "name": "UTC-10(HST)"
-                },
-                {
-                    "value": -570,
-                    "name": "UTC-9:30(MIT)"
-                },
-                {
-                    "value": -540,
-                    "name": "UTC-9(AKST)"
-                },
-                {
-                    "value": -480,
-                    "name": "UTC-8(PST)"
-                },
-                {
-                    "value": -420,
-                    "name": "UTC-7(MST)"
-                },
-                {
-                    "value": -360,
-                    "name": "UTC-6(CST)"
-                },
-                {
-                    "value": -300,
-                    "name": "UTC-5(EST)"
-                },
-                {
-                    "value": -240,
-                    "name": "UTC-4(AST)"
-                },
-                {
-                    "value": -210,
-                    "name": "UTC-3:30(NST)"
-                },
-                {
-                    "value": -180,
-                    "name": "UTC-3(BRT)"
-                },
-                {
-                    "value": -120,
-                    "name": "UTC-2(FNT)"
-                },
-                {
-                    "value": -60,
-                    "name": "UTC-1(CVT)"
-                },
-                {
-                    "value": 0,
-                    "name": "UTC(WET)"
-                },
-                {
-                    "value": 60,
-                    "name": "UTC+1(CET)"
-                },
-                {
-                    "value": 120,
-                    "name": "UTC+2(EET)"
-                },
-                {
-                    "value": 180,
-                    "name": "UTC+3(MSK)"
-                },
-                {
-                    "value": 210,
-                    "name": "UTC+3:30(IRST)"
-                },
-                {
-                    "value": 240,
-                    "name": "UTC+4(GST)"
-                },
-                {
-                    "value": 270,
-                    "name": "UTC+4:30(AFT)"
-                },
-                {
-                    "value": 300,
-                    "name": "UTC+5(PKT)"
-                },
-                {
-                    "value": 330,
-                    "name": "UTC+5:30(IST)"
-                },
-                {
-                    "value": 345,
-                    "name": "UTC+5:45(NPT)"
-                },
-                {
-                    "value": 360,
-                    "name": "UTC+6(BHT)"
-                },
-                {
-                    "value": 390,
-                    "name": "UTC+6:30(MMT)"
-                },
-                {
-                    "value": 420,
-                    "name": "UTC+7(ICT)"
-                },
-                {
-                    "value": 480,
-                    "name": "UTC+8(CT/CST)"
-                },
-                {
-                    "value": 540,
-                    "name": "UTC+9(JST)"
-                },
-                {
-                    "value": 570,
-                    "name": "UTC+9:30(ACST)"
-                },
-                {
-                    "value": 600,
-                    "name": "UTC+10(AEST)"
-                },
-                {
-                    "value": 630,
-                    "name": "UTC+10:30(LHST)"
-                },
-                {
-                    "value": 660,
-                    "name": "UTC+11(VUT)"
-                },
-                {
-                    "value": 720,
-                    "name": "UTC+12(NZST)"
-                },
-                {
-                    "value": 765,
-                    "name": "UTC+12:45(CHAST)"
-                },
-                {
-                    "value": 780,
-                    "name": "UTC+13(PHOT)"
-                },
-                {
-                    "value": 840,
-                    "name": "UTC+14(LINT)"
+                    "name": "°F"
                 }
             ],
             "bacnet_type": "multistate_value_object",
@@ -2426,29 +1392,6 @@
             "data_type": "NUMBER",
             "value_type": "UINT8",
             "bacnet_type": "analog_output_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": []
-        },
-        {
-            "id": "update_relay_state.state",
-            "name": "Relay Status( Relay Status Control)",
-            "value": "0",
-            "unit": "",
-            "access_mode": "W",
-            "data_type": "ENUM",
-            "value_type": "UINT8",
-            "values": [
-                {
-                    "value": 0,
-                    "name": "normally closed"
-                },
-                {
-                    "value": 1,
-                    "name": "normally open"
-                }
-            ],
-            "bacnet_type": "multistate_output_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": []
@@ -2500,29 +1443,6 @@
             "bacnet_type": "analog_input_object",
             "bacnet_unit_type_id": 5,
             "bacnet_unit_type": "UNITS_VOLTS"
-        },
-        {
-            "id": "voltage_alarm.type",
-            "name": "Alarm Type(Voltage  Alarm)",
-            "value": "",
-            "unit": "",
-            "access_mode": "R",
-            "data_type": "ENUM",
-            "value_type": "UINT8",
-            "values": [
-                {
-                    "value": 0,
-                    "name": "Collection Error"
-                },
-                {
-                    "value": 1,
-                    "name": "Unsupported Command"
-                }
-            ],
-            "bacnet_type": "multistate_input_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": []
         },
         {
             "id": "window_opening_detection_enable",

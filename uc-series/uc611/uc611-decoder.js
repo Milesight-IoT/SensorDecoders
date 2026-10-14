@@ -122,33 +122,33 @@ function milesightDeviceDecode(bytes) {
 				}
 				break;
 			case 0x07:
-				// 0：normally closed, 1：normally open
+				// 0：normally open, 1：normally closed
 				decoded.relays_status = readUInt8(bytes, counterObj, 1);
 				break;
 			case 0x0e:
 				decoded.overtemperature_protect = decoded.overtemperature_protect || {};
-				decoded.overtemperature_protect.temperature = readInt16LE(bytes, counterObj, 2) / 10;
+				decoded.overtemperature_protect.temperature = readInt16LE(bytes, counterObj, 2) / 100;
 				decoded.equipment_temperature = decoded.overtemperature_protect.temperature;
 				// 0：normal, 1：over temperature  trigger
 				decoded.overtemperature_protect.status = readUInt8(bytes, counterObj, 1);
 				break;
 			case 0x0f:
 				decoded.freeze_protection = decoded.freeze_protection || {};
-				decoded.freeze_protection.temperature = readInt16LE(bytes, counterObj, 2) / 10;
+				decoded.freeze_protection.temperature = readInt16LE(bytes, counterObj, 2) / 100;
 				decoded.ambient_temperature = decoded.freeze_protection.temperature;
 				// 0：normal, 1：freeze protection
 				decoded.freeze_protection.status = readUInt8(bytes, counterObj, 1);
 				break;
 			case 0x10:
 				decoded.open_window_detection = decoded.open_window_detection || {};
-				decoded.open_window_detection.temperature = readInt16LE(bytes, counterObj, 2) / 10;
+				decoded.open_window_detection.temperature = readInt16LE(bytes, counterObj, 2) / 100;
 				decoded.ambient_temperature = decoded.open_window_detection.temperature;
 				// 0：normal, 1：open window
 				decoded.open_window_detection.status = readUInt8(bytes, counterObj, 1);
 				break;
 			case 0x11:
 				decoded.relays_status_change = decoded.relays_status_change || {};
-				// 0：normally closed, 1：normally open
+				// 0：normally open , 1：normally closed
 				decoded.relays_status_change.status = readUInt8(bytes, counterObj, 1);
 				break;
 			case 0x60:
@@ -183,11 +183,11 @@ function milesightDeviceDecode(bytes) {
 				}
 				break;
 			case 0x6b:
-				// 2：Return to Previous Working State, 0：normally closed, 1：normally open
+				// 2：Return to Previous Working State, 0：normally open, 1：normally closed
 				decoded.power_on_relay_mode = readUInt8(bytes, counterObj, 1);
 				break;
 			case 0x6d:
-				decoded.bluetooth_name = readString(bytes, counterObj, 32);
+				decoded.bluetooth_name = readString(bytes, counterObj, 13);
 				break;
 			case 0x6e:
 				// 0：disable, 1：enable
@@ -318,7 +318,7 @@ function milesightDeviceDecode(bytes) {
 					schedule_settings_item.schedule_target = readUInt8(bytes, counterObj, 1);
 				}
 				if (schedule_settings_item_command == 0x03) {
-					// 0:normally open, 1:normally closed, 2:change, 3：Start up, 4：stop
+					// 0:normally open, 1:normally closed, 2:change
 					schedule_settings_item.schedule_action = readUInt8(bytes, counterObj, 1);
 				}
 				if (schedule_settings_item_command == 0x04) {
@@ -348,7 +348,7 @@ function milesightDeviceDecode(bytes) {
 					d2d_slave_settings_item.content = readUInt8(bytes, counterObj, 1);
 				}
 				if (d2d_slave_settings_item_type == 0x03) {
-					// 0:normally open, 1:normally closed, 2:change, 3：Start up, 4：stop
+					// 0:normally open, 1:normally closed, 2:change
 					d2d_slave_settings_item.action = readUInt8(bytes, counterObj, 1);
 				}
 				break;
@@ -382,7 +382,7 @@ function milesightDeviceDecode(bytes) {
 				break;
 			case 0x7a:
 				decoded.update_relay_state = decoded.update_relay_state || {};
-				// 0：normally closed, 1：normally open
+				// 0：normally open, 1：normally closed
 				decoded.update_relay_state.state = readUInt8(bytes, counterObj, 1);
 				break;
 			case 0x7b:

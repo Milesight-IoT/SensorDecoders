@@ -299,7 +299,7 @@ function milesightDeviceEncode(payload) {
 		if ([0, 1].indexOf(payload.relays_status) === -1) {
 			throw oneOfError('relays_status', [0, 1]);
 		}
-		// 0：normally closed, 1：normally open
+		// 0：normally open, 1：normally closed
 		buffer.writeUInt8(payload.relays_status);
 		encoded = encoded.concat(buffer.toBytes());
 	}
@@ -396,7 +396,7 @@ function milesightDeviceEncode(payload) {
 		if (payload.overtemperature_protect.temperature < -40 || payload.overtemperature_protect.temperature > 125) {
 			throw betweenError('overtemperature_protect.temperature', -40, 125);
 		}
-		buffer.writeInt16LE(payload.overtemperature_protect.temperature * 10);
+		buffer.writeInt16LE(payload.overtemperature_protect.temperature * 100);
 		if ([0, 1].indexOf(payload.overtemperature_protect.status) === -1) {
 			throw oneOfError('overtemperature_protect.status', [0, 1]);
 		}
@@ -411,7 +411,7 @@ function milesightDeviceEncode(payload) {
 		if (payload.freeze_protection.temperature < -20 || payload.freeze_protection.temperature > 60) {
 			throw betweenError('freeze_protection.temperature', -20, 60);
 		}
-		buffer.writeInt16LE(payload.freeze_protection.temperature * 10);
+		buffer.writeInt16LE(payload.freeze_protection.temperature * 100);
 		if ([0, 1].indexOf(payload.freeze_protection.status) === -1) {
 			throw oneOfError('freeze_protection.status', [0, 1]);
 		}
@@ -426,7 +426,7 @@ function milesightDeviceEncode(payload) {
 		if (payload.open_window_detection.temperature < -20 || payload.open_window_detection.temperature > 60) {
 			throw betweenError('open_window_detection.temperature', -20, 60);
 		}
-		buffer.writeInt16LE(payload.open_window_detection.temperature * 10);
+		buffer.writeInt16LE(payload.open_window_detection.temperature * 100);
 		if ([0, 1].indexOf(payload.open_window_detection.status) === -1) {
 			throw oneOfError('open_window_detection.status', [0, 1]);
 		}
@@ -441,7 +441,7 @@ function milesightDeviceEncode(payload) {
 		if ([0, 1].indexOf(payload.relays_status_change.status) === -1) {
 			throw oneOfError('relays_status_change.status', [0, 1]);
 		}
-		// 0：normally closed, 1：normally open
+		// 0：normally open , 1：normally closed
 		buffer.writeUInt8(payload.relays_status_change.status);
 		encoded = encoded.concat(buffer.toBytes());
 	}
@@ -647,7 +647,7 @@ function milesightDeviceEncode(payload) {
 		if ([2, 0, 1].indexOf(payload.power_on_relay_mode) === -1) {
 			throw oneOfError('power_on_relay_mode', [2, 0, 1]);
 		}
-		// 2：Return to Previous Working State, 0：normally closed, 1：normally open
+		// 2：Return to Previous Working State, 0：normally open, 1：normally closed
 		buffer.writeUInt8(payload.power_on_relay_mode);
 		encoded = encoded.concat(buffer.toBytes());
 	}
@@ -666,7 +666,7 @@ function milesightDeviceEncode(payload) {
 	if ('bluetooth_name' in payload) {
 		var buffer = new Buffer();
 		buffer.writeUInt8(0x6d);
-		buffer.writeString(payload.bluetooth_name, 32);
+		buffer.writeString(payload.bluetooth_name, 13);
 		encoded = encoded.concat(buffer.toBytes());
 	}
 	//0x6e
@@ -945,12 +945,12 @@ function milesightDeviceEncode(payload) {
 			if (isValid(schedule_settings_item.schedule_action)) {
 				buffer.writeUInt8(0x77);
 				buffer.writeUInt8(schedule_settings_item_id);
-				// 0:normally open, 1:normally closed, 2:change, 3：Start up, 4：stop
+				// 0:normally open, 1:normally closed, 2:change
 				buffer.writeUInt8(0x03);
-				if ([0, 1, 2, 3, 4].indexOf(schedule_settings_item.schedule_action) === -1) {
-					throw oneOfError('schedule_action', [0, 1, 2, 3, 4]);
+				if ([0, 1, 2].indexOf(schedule_settings_item.schedule_action) === -1) {
+					throw oneOfError('schedule_action', [0, 1, 2]);
 				}
-				// 0:normally open, 1:normally closed, 2:change, 3：Start up, 4：stop
+				// 0:normally open, 1:normally closed, 2:change
 				buffer.writeUInt8(schedule_settings_item.schedule_action);
 			}
 			if (isValid(schedule_settings_item.schedule_parameter)) {
@@ -1017,12 +1017,12 @@ function milesightDeviceEncode(payload) {
 			if (isValid(d2d_slave_settings_item.action)) {
 				buffer.writeUInt8(0x79);
 				buffer.writeUInt8(d2d_slave_settings_item_id);
-				// 0:normally open, 1:normally closed, 2:change, 3：Start up, 4：stop
+				// 0:normally open, 1:normally closed, 2:change
 				buffer.writeUInt8(0x03);
-				if ([0, 1, 2, 3, 4].indexOf(d2d_slave_settings_item.action) === -1) {
-					throw oneOfError('action', [0, 1, 2, 3, 4]);
+				if ([0, 1, 2].indexOf(d2d_slave_settings_item.action) === -1) {
+					throw oneOfError('action', [0, 1, 2]);
 				}
-				// 0:normally open, 1:normally closed, 2:change, 3：Start up, 4：stop
+				// 0:normally open, 1:normally closed, 2:change
 				buffer.writeUInt8(d2d_slave_settings_item.action);
 			}
 		}
@@ -1104,7 +1104,7 @@ function milesightDeviceEncode(payload) {
 		if ([0, 1].indexOf(payload.update_relay_state.state) === -1) {
 			throw oneOfError('update_relay_state.state', [0, 1]);
 		}
-		// 0：normally closed, 1：normally open
+		// 0：normally open, 1：normally closed
 		buffer.writeUInt8(payload.update_relay_state.state);
 		encoded = encoded.concat(buffer.toBytes());
 	}
@@ -1564,15 +1564,15 @@ function processTemperature(payload) {
         "unitName": "℃"
     },
     "overtemperature_protect.temperature": {
-        "coefficient": 0.1,
+        "coefficient": 0.01,
         "unitName": "℃"
     },
     "freeze_protection.temperature": {
-        "coefficient": 0.1,
+        "coefficient": 0.01,
         "unitName": "℃"
     },
     "open_window_detection.temperature": {
-        "coefficient": 0.1,
+        "coefficient": 0.01,
         "unitName": "℃"
     },
     "temperature_control_settings.range.min": {
