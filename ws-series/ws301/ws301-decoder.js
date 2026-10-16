@@ -58,6 +58,11 @@ function milesightDeviceDecode(bytes) {
             decoded.sn = readSerialNumber(bytes.slice(i, i + 6));
             i += 6;
         }
+        // SERIAL NUMBER (16 digits)
+        else if (channel_id === 0xff && channel_type === 0x16) {
+            decoded.sn = readSerialNumber(bytes.slice(i, i + 8));
+            i += 8;
+        }
         // LORAWAN CLASS TYPE
         else if (channel_id === 0xff && channel_type === 0x0f) {
             decoded.lorawan_class = readLoRaWANClass(bytes[i]);
