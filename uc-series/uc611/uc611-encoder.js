@@ -476,6 +476,9 @@ function milesightDeviceEncode(payload) {
 		if (isValid(payload.temperature_control_settings.target)) {
 			buffer.writeUInt8(0x73);
 			buffer.writeUInt8(0x00);
+			if (payload.temperature_control_settings.target < 5 || payload.temperature_control_settings.target > 35) {
+				throw betweenError('temperature_control_settings.target', 5, 35);
+			}
 			buffer.writeUInt16LE(payload.temperature_control_settings.target * 100);
 		}
 		if (isValid(payload.temperature_control_settings.tolerance)) {
@@ -1226,10 +1229,6 @@ function processTemperature(payload) {
         "unitName": "℃"
     },
     "temperature_control_settings.range.max": {
-        "coefficient": 0.01,
-        "unitName": "℃"
-    },
-    "open_window_settings.cooling_rate": {
         "coefficient": 0.01,
         "unitName": "℃"
     },

@@ -125,13 +125,6 @@ function milesightDeviceDecode(bytes) {
 			case 0x03:
 				decoded.power_consumption = readUInt32LE(bytes, counterObj, 4) / 1000;
 				break;
-			case 0x23:
-				decoded.power_consumption_alarm = decoded.power_consumption_alarm || {};
-				decoded.power_consumption_alarm.type = readUInt8(bytes, counterObj, 1);
-				if (decoded.power_consumption_alarm.type == 0x00) {
-					decoded.power_consumption_alarm.collection_error = decoded.power_consumption_alarm.collection_error || {};
-				}
-				break;
 			case 0x04:
 				decoded.current = readUInt16LE(bytes, counterObj, 2) / 1000;
 				break;
@@ -605,18 +598,18 @@ function readHardwareVersion(bytes) {
 }
 
 function readFirmwareVersion(bytes) {
-	var major = (bytes[0] & 0xff).toString(16);
-	var minor = (bytes[1] & 0xff).toString(16);
-	var release = (bytes[2] & 0xff).toString(16);
-	var alpha = (bytes[3] & 0xff).toString(16);
-	var unit_test = (bytes[4] & 0xff).toString(16);
-	var test = (bytes[5] & 0xff).toString(16);
+	var major = bytes[0] & 0xff;
+	var minor = bytes[1] & 0xff;
+	var release = bytes[2] & 0xff;
+	var alpha = bytes[3] & 0xff;
+	var unit_test = bytes[4] & 0xff;
+	var test = bytes[5] & 0xff;
 
 	var version = 'v' + major + '.' + minor;
-	if (release !== '0') version += '-r' + release;
-	if (alpha !== '0') version += '-a' + alpha;
-	if (unit_test !== '0') version += '-u' + unit_test;
-	if (test !== '0') version += '-t' + test;
+	if (release !== 0) version += '-r' + release;
+	if (alpha !== 0) version += '-a' + alpha;
+	if (unit_test !== 0) version += '-u' + unit_test;
+	if (test !== 0) version += '-t' + test;
 	return version;
 }
 
@@ -951,7 +944,6 @@ function cmdMap() {
 		  "20": "voltage_alarm",
 		  "21": "electric_power_alarm",
 		  "22": "power_factor_alarm",
-		  "23": "power_consumption_alarm",
 		  "24": "current_alarm",
 		  "25": "equipment_temperature_alarm",
 		  "26": "ambient_temperature_alarm",
@@ -978,7 +970,6 @@ function cmdMap() {
 		  "2000": "voltage_alarm.collection_error",
 		  "2100": "electric_power_alarm.collection_error",
 		  "2200": "power_factor_alarm.collection_error",
-		  "2300": "power_consumption_alarm.collection_error",
 		  "2400": "current_alarm.collection_error",
 		  "2500": "equipment_temperature_alarm.collection_error",
 		  "2501": "equipment_temperature_alarm.lower_range_error",
@@ -1098,10 +1089,6 @@ function processTemperature(decoded) {
         "unitName": "℃"
     },
     "temperature_control_settings.range.max": {
-        "precision": 2,
-        "unitName": "℃"
-    },
-    "open_window_settings.cooling_rate": {
         "precision": 2,
         "unitName": "℃"
     },

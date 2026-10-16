@@ -33,18 +33,18 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Relay Switching  | 0x63 | 2 | rw | 0 |  | 0：disable<br>1：enable |
 | Reset | 0x63 | 2 | rw | 0 |  | 0：disable<br>1：enable |
 | Power-On Relay Mode | 0x6B | 2 | rw | 2 |  | 2：Return to Previous Working State<br>0：normally open<br>1：normally closed |
-| D2D Data Receiving Enable | 0x6E | 2 | rw | 1 |  | 0：disable<br>1：enable |
-| Ambient Temperature Enable | 0x70 | 2 | rw | 1 |  | 0：disable<br>1：enable |
+| D2D Data Receiving Enable | 0x6E | 2 | rw | 0 |  | 0：disable<br>1：enable |
+| Ambient Temperature Enable | 0x70 | 2 | rw | 0 |  | 0：disable<br>1：enable |
 | Ambient Temperature Settings | 0x71 | 1 | rw |  |  |  |
 | Type | 0x71 | 2 | rw |  |  |  |
 | Data Source | 0x71 | 2 | rw | 0 |  | 0 : d2d data<br>1：lora data |
 | Time Out | 0x71 | 2 | rw | 10 | 1 - 60 |  |
 | Timeout Relay Status | 0x71 | 2 | rw | 1 |  | 0：keep status<br>1：normally open<br>2：normally closed |
-| Heater Relay Status | 0x71 | 2 | rw | 1 |  | 0：normally closed<br>1：normally open |
-| System Switch Enable | 0x72 | 2 | rw | 1 |  | 0：disable<br>1：enable |
+| Heater Relay Status | 0x71 | 2 | rw | 0 |  | 0：normally closed<br>1：normally open |
+| System Switch Enable | 0x72 | 2 | rw | 0 |  | 0：disable<br>1：enable |
 | Temperature Control Settings | 0x73 | 1 | rw |  |  |  |
 | Type | 0x73 | 2 | rw |  |  |  |
-| Target Temperature | 0x73 | 3 | rw | 19 |  |  |
+| Target Temperature | 0x73 | 3 | rw | 19 | 5 - 35 |  |
 | Target Temperature Tolerance | 0x73 | 3 | rw | 1 | 0.5 - 5 |  |
 | Target Temperature Range | 0x73 | 5 | rw |  |  |  |
 | Min Value | 0x73 | 3 | rw | 5 | 5 - 35 |  |
@@ -56,7 +56,7 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Stop Temperature Control | 0x75 | 3 | rw | 30 | 1 - 1440 |  |
 | Freeze Protection | 0x76 | 1 | rw |  |  |  |
 | Type | 0x76 | 2 | rw |  |  |  |
-| Enable | 0x76 | 2 | rw | 1 |  | 0：Disable<br>1：Enable |
+| Enable | 0x76 | 2 | rw | 0 |  | 0：Disable<br>1：Enable |
 | Freeze Temperature | 0x76 | 3 | rw | 3 | 1 - 5 |  |
 
 ### Event

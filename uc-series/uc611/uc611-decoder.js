@@ -914,10 +914,6 @@ function processTemperature(decoded) {
         "precision": 2,
         "unitName": "℃"
     },
-    "open_window_settings.cooling_rate": {
-        "precision": 2,
-        "unitName": "℃"
-    },
     "anti_freeze_protection_settings.temperature_value": {
         "precision": 2,
         "unitName": "℃"

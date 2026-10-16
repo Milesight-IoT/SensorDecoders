@@ -220,21 +220,12 @@ function milesightDeviceEncode(payload) {
 		buffer.writeUInt32LE(payload.power_consumption * 1000);
 		encoded = encoded.concat(buffer.toBytes());
 	}
-	//0x23
-	if ('power_consumption_alarm' in payload) {
-		var buffer = new Buffer();
-		buffer.writeUInt8(0x23);
-		buffer.writeUInt8(payload.power_consumption_alarm.type);
-		if (payload.power_consumption_alarm.type == 0x00) {
-		}
-		encoded = encoded.concat(buffer.toBytes());
-	}
 	//0x04
 	if ('current' in payload) {
 		var buffer = new Buffer();
 		buffer.writeUInt8(0x04);
-		if (payload.current < 0 || payload.current > 65536) {
-			throw betweenError('current', 0, 65536);
+		if (payload.current < 0 || payload.current > 65535) {
+			throw betweenError('current', 0, 65535);
 		}
 		buffer.writeUInt16LE(payload.current * 1000);
 		encoded = encoded.concat(buffer.toBytes());
@@ -793,6 +784,9 @@ function milesightDeviceEncode(payload) {
 		if (isValid(payload.temperature_control_settings.target)) {
 			buffer.writeUInt8(0x73);
 			buffer.writeUInt8(0x00);
+			if (payload.temperature_control_settings.target < 5 || payload.temperature_control_settings.target > 35) {
+				throw betweenError('temperature_control_settings.target', 5, 35);
+			}
 			buffer.writeUInt16LE(payload.temperature_control_settings.target * 100);
 		}
 		if (isValid(payload.temperature_control_settings.tolerance)) {
@@ -1453,8 +1447,6 @@ function cmdMap() {
 		  "power_factor_alarm": "22",
 		  "power_factor_alarm.collection_error": "2200",
 		  "power_consumption": "03",
-		  "power_consumption_alarm": "23",
-		  "power_consumption_alarm.collection_error": "2300",
 		  "current": "04",
 		  "current_alarm": "24",
 		  "current_alarm.collection_error": "2400",
@@ -1580,10 +1572,6 @@ function processTemperature(payload) {
         "unitName": "℃"
     },
     "temperature_control_settings.range.max": {
-        "coefficient": 0.01,
-        "unitName": "℃"
-    },
-    "open_window_settings.cooling_rate": {
         "coefficient": 0.01,
         "unitName": "℃"
     },

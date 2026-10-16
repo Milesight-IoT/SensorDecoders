@@ -453,7 +453,7 @@
             "id": "open_window_settings.cooling_rate",
             "name": "Rate of Temperature Fall(Open Window Detection Settings)",
             "value": "3",
-            "unit": "℃/min",
+            "unit": "K/min",
             "access_mode": "RW",
             "data_type": "NUMBER",
             "value_type": "FLOAT",
@@ -462,8 +462,8 @@
                 10
             ],
             "bacnet_type": "analog_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "bacnet_unit_type_id": 182,
+            "bacnet_unit_type": "UNITS_DEGREES_KELVIN_PER_MINUTE",
             "reference": []
         },
         {
@@ -756,6 +756,10 @@
             "access_mode": "RW",
             "data_type": "NUMBER",
             "value_type": "FLOAT",
+            "range": [
+                5,
+                35
+            ],
             "bacnet_type": "analog_value_object",
             "bacnet_unit_type_id": 62,
             "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
@@ -786,6 +790,10 @@
             "access_mode": "RW",
             "data_type": "NUMBER",
             "value_type": "FLOAT",
+            "range": [
+                41,
+                95
+            ],
             "bacnet_type": "analog_value_object",
             "bacnet_unit_type_id": 64,
             "bacnet_unit_type": "UNITS_DEGREES_FAHRENHEIT",
