@@ -73,6 +73,16 @@ function milesightDeviceDecode(bytes) {
             decoded.device_status = readDeviceStatus(1);
             i += 1;
         }
+        // ODM ID
+        else if (channel_id === 0xff && channel_type === 0xe7) {
+            decoded.odm_id = readHexString(bytes.slice(i, i + 2));
+            i += 2;
+        }
+        // SOFTWARE SUB VERSION
+        else if (channel_id === 0xff && channel_type === 0xe8) {
+            decoded.software_sub_version = readSoftwareSubVersion(bytes.slice(i, i + 4));
+            i += 4;
+        }
 
         // BATTERY
         else if (channel_id === 0x01 && channel_type === 0x75) {
@@ -157,6 +167,16 @@ function readTslVersion(bytes) {
     var major = bytes[0] & 0xff;
     var minor = bytes[1] & 0xff;
     return "v" + major + "." + minor;
+}
+
+function readSoftwareSubVersion(bytes) {
+    var names = ["r", "a", "u", "t"];
+    var version = "";
+    for (var idx = 0; idx < bytes.length; idx++) {
+        var value = (bytes[idx] & 0xff).toString(16);
+        if (value !== "0") version += "-" + names[idx] + value;
+    }
+    return version;
 }
 
 function readSerialNumber(bytes) {
