@@ -68,6 +68,16 @@ function milesightDeviceDecode(bytes) {
             decoded.reset_event = readResetEvent(1);
             i += 1;
         }
+        // OEM ID
+        else if (channel_id === 0xff && channel_type === 0xe7) {
+            decoded.oem_id = readOemId(bytes.slice(i, i + 2));
+            i += 2;
+        }
+        // SUB VERSION
+        else if (channel_id === 0xff && channel_type === 0xe8) {
+            decoded.sub_version = readSubVersion(bytes.slice(i, i + 4));
+            i += 4;
+        }
         // DEVICE STATUS
         else if (channel_id === 0xff && channel_type === 0x0b) {
             decoded.device_status = readDeviceStatus(bytes[i]);
@@ -369,6 +379,26 @@ function readFirmwareVersion(bytes) {
 	if (unit_test !== '0') version += '-u' + unit_test;
 	if (test !== '0') version += '-t' + test;
 	return version;
+}
+
+function readOemId(bytes) {
+    var id = "";
+    for (var i = 0; i < bytes.length; i++) {
+        id += ("0" + (bytes[i] & 0xff).toString(16)).slice(-2);
+    }
+    return id;
+}
+
+/**
+ * read sub version
+ * @param {number[]} bytes values: release(1B) + alpha(1B) + test(2B)
+ * @example 01020011 -> "r1-a2-t11"
+ */
+function readSubVersion(bytes) {
+    var release = (bytes[0] & 0xff).toString(16);
+    var alpha = (bytes[1] & 0xff).toString(16);
+    var test = (((bytes[2] & 0xff) << 8) + (bytes[3] & 0xff)).toString(16);
+    return "r" + release + "-a" + alpha + "-t" + test;
 }
 
 function readTslVersion(bytes) {
