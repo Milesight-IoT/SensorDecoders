@@ -1077,25 +1077,6 @@
             ]
         },
         {
-            "id": "reporting_interval.seconds_of_time",
-            "name": "Reporting Interval(Reporting Interval)",
-            "value": "1200",
-            "unit": "s",
-            "access_mode": "RW",
-            "data_type": "NUMBER",
-            "value_type": "UINT16",
-            "range": [
-                10,
-                64800
-            ],
-            "bacnet_type": "analog_value_object",
-            "bacnet_unit_type_id": 73,
-            "bacnet_unit_type": "UNITS_SECONDS",
-            "reference": [
-                "reporting_interval.unit"
-            ]
-        },
-        {
             "id": "reporting_interval.unit",
             "name": "Reporting Interval Unit(Reporting Interval)",
             "value": "1",

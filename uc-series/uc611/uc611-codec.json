@@ -4,7 +4,7 @@
         {
             "id": "ambient_temperature_enable",
             "name": "Ambient Temperature Enable",
-            "value": "1",
+            "value": "0",
             "unit": "",
             "access_mode": "RW",
             "data_type": "BOOL",
@@ -26,7 +26,7 @@
         {
             "id": "ambient_temperature_settings.relay_heat",
             "name": "Heater Relay Status(Ambient Temperature Settings)",
-            "value": "1",
+            "value": "0",
             "unit": "",
             "access_mode": "RW",
             "data_type": "ENUM",
@@ -133,7 +133,7 @@
         {
             "id": "anti_freeze_protection_settings.enable",
             "name": "Enable(Freeze Protection)",
-            "value": "1",
+            "value": "0",
             "unit": "",
             "access_mode": "RW",
             "data_type": "BOOL",
@@ -264,7 +264,7 @@
         {
             "id": "d2d_pairing_enable",
             "name": "D2D Data Receiving Enable",
-            "value": "1",
+            "value": "0",
             "unit": "",
             "access_mode": "RW",
             "data_type": "BOOL",
@@ -450,10 +450,10 @@
             "reference": []
         },
         {
-            "id": "open_window_settings.celsius_cooling_rate",
-            "name": "Celsius Rate of Temperature Fall(Open Window Detection Settings)",
+            "id": "open_window_settings.cooling_rate",
+            "name": "Rate of Temperature Fall(Open Window Detection Settings)",
             "value": "3",
-            "unit": "°C",
+            "unit": "℃/min",
             "access_mode": "RW",
             "data_type": "NUMBER",
             "value_type": "FLOAT",
@@ -462,25 +462,8 @@
                 10
             ],
             "bacnet_type": "analog_value_object",
-            "bacnet_unit_type_id": 62,
-            "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
-            "reference": []
-        },
-        {
-            "id": "open_window_settings.fahrenheit_cooling_rate",
-            "name": "Fahrenheit Rate of Temperature Fall(Open Window Detection Settings)",
-            "value": "37.4",
-            "unit": "°F",
-            "access_mode": "RW",
-            "data_type": "NUMBER",
-            "value_type": "FLOAT",
-            "range": [
-                35.6,
-                50
-            ],
-            "bacnet_type": "analog_value_object",
-            "bacnet_unit_type_id": 64,
-            "bacnet_unit_type": "UNITS_DEGREES_FAHRENHEIT",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": []
         },
         {
@@ -649,25 +632,6 @@
             ]
         },
         {
-            "id": "reporting_interval.seconds_of_time",
-            "name": "Reporting Interval(Reporting Interval)",
-            "value": "1200",
-            "unit": "s",
-            "access_mode": "RW",
-            "data_type": "NUMBER",
-            "value_type": "UINT16",
-            "range": [
-                10,
-                64800
-            ],
-            "bacnet_type": "analog_value_object",
-            "bacnet_unit_type_id": 73,
-            "bacnet_unit_type": "UNITS_SECONDS",
-            "reference": [
-                "reporting_interval.unit"
-            ]
-        },
-        {
             "id": "reporting_interval.unit",
             "name": "Reporting Interval Unit(Reporting Interval)",
             "value": "1",
@@ -765,7 +729,7 @@
         {
             "id": "temperature_control_enable",
             "name": "System Switch Enable",
-            "value": "1",
+            "value": "0",
             "unit": "",
             "access_mode": "RW",
             "data_type": "BOOL",
