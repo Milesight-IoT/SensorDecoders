@@ -21,13 +21,13 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Battery | 0x00 | 2 | r |  | 0 - 100 |  |
 | Temperature | 0x01 | 3 | r |  | -20 - 60 |  |
 | Humidity | 0x02 | 3 | r |  | 0 - 100 |  |
-| Occupied Status | 0x08 | 2 | r | 0 | 0 - 2 | 0：Vacant<br>1：Occupied<br>2：Night Occupied |
+| Occupied Status | 0x08 | 2 | r | 0 |  | 0：Vacant<br>1：Occupied<br>2：Night Occupied |
 | Temperature Control Mode | 0x03 | 2 | r | 0 |  | 0：heat<br>1：em heat<br>2：cool<br>3：auto<br>4：dehumidify<br>5：ventilation<br>10：off<br>11：none |
 | Target Temperature1 | 0x06 | 3 | r |  | 5 - 35 |  |
 | Target Temperature2 | 0x07 | 3 | r |  | 5 - 35 |  |
 | Fan Mode | 0x04 | 2 | r | 0 |  | 0：auto<br>1：circulate<br>2：on<br>3：low<br>4：medium<br>5：high<br>10：off<br>11：none/keep |
-| Schedule | 0x05 | 2 | r | 0 | 0 - 255 | 0:plan0<br>1:plan1<br>2:plan2<br>3:plan3<br>4:plan4<br>5:plan5<br>6:plan6<br>7:plan7<br>8:plan8<br>9:plan9<br>10:plan10<br>11:plan11<br>12:plan12<br>13:plan13<br>14:plan14<br>15:plan15<br>255:Not executed |
-| Communication Mode | 0x8D | 2 | rw | 2 | 0 - 3 | 0：BLE<br>1：LoRa<br>2：BLE+LoRa |
+| Schedule | 0x05 | 2 | r | 0 |  | 0:plan0<br>1:plan1<br>2:plan2<br>3:plan3<br>4:plan4<br>5:plan5<br>6:plan6<br>7:plan7<br>8:plan8<br>9:plan9<br>10:plan10<br>11:plan11<br>12:plan12<br>13:plan13<br>14:plan14<br>15:plan15<br>255:Not executed |
+| Communication Mode | 0x8D | 2 | rw | 2 |  | 0：BLE<br>1：LoRa<br>2：BLE+LoRa |
 | Reporting Interval | 0x61 | 1 | rw |  |  |  |
 | BLE_LoRa Reporting Interval | 0x61 | 1 | rw |  |  |  |
 | Reporting Interval Unit | 0x61 | 2 | rw | 1 |  | 0：second<br>1：min |
@@ -39,6 +39,8 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Temperature &amp; Humidity Data Source | 0x7D | 2 | rw | 0 |  | 0:Embedded Data<br>1:Lora Data<br>2: UCController |
 | Data Timeout | 0x7E | 2 | rw | 10 | 1 - 60 |  |
 | System On/Off | 0x67 | 2 | rw | 0 |  | 0：Off<br>1：On |
+| Temperature Control Mode Enable | 0x64 | 2 | rw |  |  |  |
+| Fan Mode Enabled | 0x88 | 2 | rw |  |  |  |
 | Temperature Control Mode | 0x68 | 1 | rw |  |  |  |
 | Subcmd ID | 0x68 | 2 | rw | 0 |  |  |
 | Temperature Control Mode | 0x68 | 2 | rw | 0 |  | 0：heat<br>1：em heat<br>2：cool<br>3：auto<br>4：dehumidify<br>5：ventilation |
@@ -61,20 +63,20 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Auto Target Temperature Range | 0x6B | 1 | rw |  |  |  |
 | Min Value | 0x6B | 3 | rw | 10 | 5 - 35 |  |
 | Max Value | 0x6B | 3 | rw | 35 | 5 - 35 |  |
-| Fan Mode | 0x74 | 2 | rw | 0 | 0 - 5 | 0：auto<br>1：circulate<br>2：on<br>3：low<br>4：medium<br>5：high |
+| Fan Mode | 0x74 | 2 | rw | 0 |  | 0：auto<br>1：circulate<br>2：on<br>3：low<br>4：medium<br>5：high |
 | Occupancy Detection | 0x82 | 1 | rw |  |  |  |
 | Common Cmd | 0x82 | 2 | rw | 1 |  |  |
-| Occupancy Detection | 0x82 | 2 | rw | 1 | 0 - 1 | 0:disable<br>1:enable |
+| Occupancy Detection | 0x82 | 2 | rw | 1 |  | 0:disable<br>1:enable |
 | Occupied to Vacant Delay | 0x82 | 3 | rw | 30 | 1 - 360 |  |
 | Night Occupancy Settings | 0x84 | 1 | rw |  |  |  |
 | Night Cmd | 0x84 | 2 | rw | 1 |  |  |
-| Night Occupancy Settings | 0x84 | 2 | rw | 0 | 0 - 1 | 0:disable<br>1:enable |
+| Night Occupancy Settings | 0x84 | 2 | rw | 0 |  | 0:disable<br>1:enable |
 | Nighttime | 0x84 | 1 | rw |  |  |  |
 | Start Time | 0x84 | 3 | rw | 1260 | 0 - 1439 |  |
 | Stop Time | 0x84 | 3 | rw | 480 | 0 - 1439 |  |
 | Energy-saving Setting | 0x83 | 1 | rw |  |  |  |
 | Energy Cmd | 0x83 | 2 | rw | 1 |  |  |
-| Energy-Saving Enable | 0x83 | 2 | rw | 1 | 0 - 1 | 0:disable<br>1:enable |
+| Energy-Saving Enable | 0x83 | 2 | rw | 1 |  | 0:disable<br>1:enable |
 | Energy Saving Plan | 0x83 | 1 | rw |  |  |  |
 | Occupied Execution | 0x83 | 2 | rw | 0 |  | 0:plan0<br>1:plan1<br>2:plan2<br>3:plan3<br>4:plan4<br>5:plan5<br>6:plan6<br>7:plan7<br>8:plan8<br>9:plan9<br>10:plan10<br>11:plan11<br>12:plan12<br>13:plan13<br>14:plan14<br>15:plan15<br>255:Not executed |
 | Vacant Execution | 0x83 | 2 | rw | 1 |  | 0:plan0<br>1:plan1<br>2:plan2<br>3:plan3<br>4:plan4<br>5:plan5<br>6:plan6<br>7:plan7<br>8:plan8<br>9:plan9<br>10:plan10<br>11:plan11<br>12:plan12<br>13:plan13<br>14:plan14<br>15:plan15<br>255:Not executed |
@@ -86,10 +88,12 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Button1 | 0x71 | 2 | rw | 1 |  | 1：Temperature Control Mode<br>2：Fan Mode<br>3：Schedule Switch<br>4：Status Report<br>5：Filter Cleaning Reset<br>6：Button Event1<br>7：Temperature Unit Switch |
 | Button2 | 0x71 | 2 | rw | 2 |  | 1：Temperature Control Mode<br>2：Fan Mode<br>3：Schedule Switch<br>4：Status Report<br>5：Filter Cleaning Reset<br>6：Button Event2<br>7：Temperature Unit Switch |
 | Button3 | 0x71 | 2 | rw | 0 |  | 0：System On/Off<br>3：Schedule Switch<br>4：Status Report<br>5：Filter Cleaning Reset<br>6：Button Event3<br>7：Temperature Unit Switch |
+| Child Lock | 0x72 | 4 | rw |  |  |  |
 | Temporary Unlock | 0x81 | 1 | rw |  |  |  |
 | Temporary Unlock Enable | 0x81 | 2 | rw | 0 |  | 0：disable<br>1：enable |
 | Temporary Unlock Time | 0x81 | 3 | rw | 30 | 1 - 3600 |  |
-| Time Zone | 0xC7 | 3 | rw | 0 | -720 - 840 | -720：UTC-12(IDLW)<br>-660：UTC-11(SST)<br>-600：UTC-10(HST)<br>-570：UTC-9:30(MIT)<br>-540：UTC-9(AKST)<br>-480：UTC-8(PST)<br>-420：UTC-7(MST)<br>-360：UTC-6(CST)<br>-300：UTC-5(EST)<br>-240：UTC-4(AST)<br>-210：UTC-3:30(NST)<br>-180：UTC-3(BRT)<br>-120：UTC-2(FNT)<br>-60：UTC-1(CVT)<br>0：UTC(WET)<br>60：UTC+1(CET)<br>120：UTC+2(EET)<br>180：UTC+3(MSK)<br>210：UTC+3:30(IRST)<br>240：UTC+4(GST)<br>270：UTC+4:30(AFT)<br>300：UTC+5(PKT)<br>330：UTC+5:30(IST)<br>345：UTC+5:45(NPT)<br>360：UTC+6(BHT)<br>390：UTC+6:30(MMT)<br>420：UTC+7(ICT)<br>480：UTC+8(CT/CST)<br>540：UTC+9(JST)<br>570：UTC+9:30(ACST)<br>600：UTC+10(AEST)<br>630：UTC+10:30(LHST)<br>660：UTC+11(VUT)<br>720：UTC+12(NZST)<br>765：UTC+12:45(CHAST)<br>780：UTC+13(PHOT)<br>840：UTC+14(LINT) |
+| Temporary Unlock Button Combination | 0x80 | 2 | rw |  |  |  |
+| Time Zone | 0xC7 | 3 | rw | 0 |  | -720：UTC-12(IDLW)<br>-660：UTC-11(SST)<br>-600：UTC-10(HST)<br>-570：UTC-9:30(MIT)<br>-540：UTC-9(AKST)<br>-480：UTC-8(PST)<br>-420：UTC-7(MST)<br>-360：UTC-6(CST)<br>-300：UTC-5(EST)<br>-240：UTC-4(AST)<br>-210：UTC-3:30(NST)<br>-180：UTC-3(BRT)<br>-120：UTC-2(FNT)<br>-60：UTC-1(CVT)<br>0：UTC(WET)<br>60：UTC+1(CET)<br>120：UTC+2(EET)<br>180：UTC+3(MSK)<br>210：UTC+3:30(IRST)<br>240：UTC+4(GST)<br>270：UTC+4:30(AFT)<br>300：UTC+5(PKT)<br>330：UTC+5:30(IST)<br>345：UTC+5:45(NPT)<br>360：UTC+6(BHT)<br>390：UTC+6:30(MMT)<br>420：UTC+7(ICT)<br>480：UTC+8(CT/CST)<br>540：UTC+9(JST)<br>570：UTC+9:30(ACST)<br>600：UTC+10(AEST)<br>630：UTC+10:30(LHST)<br>660：UTC+11(VUT)<br>720：UTC+12(NZST)<br>765：UTC+12:45(CHAST)<br>780：UTC+13(PHOT)<br>840：UTC+14(LINT) |
 
 ### Service
 
