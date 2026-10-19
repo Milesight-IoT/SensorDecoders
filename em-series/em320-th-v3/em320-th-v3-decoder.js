@@ -70,7 +70,7 @@ function milesightDeviceDecode(bytes) {
         }
         // OEM ID
         else if (channel_id === 0xff && channel_type === 0xe7) {
-            decoded.oem_id = readOemId(bytes.slice(i, i + 2));
+            decoded.odm_id = readOdmId(bytes.slice(i, i + 2));
             i += 2;
         }
         // SUB VERSION
@@ -381,7 +381,7 @@ function readFirmwareVersion(bytes) {
 	return version;
 }
 
-function readOemId(bytes) {
+function readOdmId(bytes) {
     var id = "";
     for (var i = 0; i < bytes.length; i++) {
         id += ("0" + (bytes[i] & 0xff).toString(16)).slice(-2);
