@@ -45,6 +45,10 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Freeze Protection Status | 0x0A | 0x00 |   1    | freeze_protection_status(1B)<br/>freeze_protection_status, read: uint8, values: (0: normal, 1: triggered)                                                                                        |
 | Motor Position          | 0x0B | 0x90 |   2    | motor_position(2B)<br/>motor_position, read: uint16                                                                                                                                              |
 | Target Valve Opening    | 0x0C | 0x92 |   1    | valve_opening_target(1B)<br/>valve_opening_target, read: uint8, unit: %                                                                                                                          |
+| LoRaWAN Join Mode (V1.2) | 0xF9 | 0x54 |   1    | lorawan_join_mode(1B)<br/>lorawan_join_mode, values: (0: ABP, 1: OTAA)                                                                                                                            |
+| LoRaWAN DR (V1.2)        | 0xF9 | 0x55 |   1    | lorawan_dr(1B)<br/>lorawan_dr, read: uint8, saved default DR                                                                                                                                      |
+| LoRaWAN ADR (V1.2)       | 0xF9 | 0x56 |   1    | lorawan_adr(1B)<br/>lorawan_adr, values: (0: disable, 1: enable)                                                                                                                                  |
+| Battery Voltage (V1.2)   | 0xF9 | 0x57 |   2    | battery_voltage(2B)<br/>battery_voltage, read: uint16, unit: mV; 0xFFFF = collection error                                                                                                        |
 
 ### Periodic Packet
 
@@ -56,6 +60,12 @@ Periodic packets are reported as a single combined TLV (channel + type + data), 
 | Periodic Packet (Integrated Control)  | 0x11 | 0xC1 |   6    | battery(1B) + valve_opening(1B) + temperature(2B) + temperature_target(2B)                                                |
 | Periodic Packet (Valve Opening Control) | 0x12 | 0xC2 |   5    | battery(1B) + valve_opening(1B) + temperature(2B) + valve_opening_target(1B)                                              |
 | Periodic Packet (Non-heating Season)  | 0x13 | 0xC3 |   2    | battery(1B) + valve_opening(1B)                                                                                           |
+| Periodic Packet (0-5 Scale Mode, V1.2) | 0x14 | 0xD0 |   8    | battery(1B) + valve_opening(1B) + temperature(2B) + temperature_target(2B) + level(1B) + report_reason(1B)                 |
+| Periodic Packet (Integrated Control, V1.2) | 0x15 | 0xD1 |   6 | battery(1B) + valve_opening(1B) + temperature(2B) + temperature_target(2B) + report_reason(1B)                             |
+| Periodic Packet (Valve Opening Control, V1.2) | 0x16 | 0xD2 |   5 | battery(1B) + valve_opening(1B) + temperature(2B) + valve_opening_target(1B) + report_reason(1B)                        |
+| Periodic Packet (Non-heating Season, V1.2) | 0x17 | 0xD3 |   3  | battery(1B) + valve_opening(1B) + report_reason(1B)                                                                        |
+
+V1.2 periodic packets append a report_reason byte: 0: timed report, 1: local modification, 2: query response, 3: off-season entry, 4: off-season temperature control enabled, 5: low battery protection completed.
 
 ### Alarm
 
@@ -64,10 +74,11 @@ Temperature alarm depends on a valid ambient temperature reading; while temperat
 | CHANNEL                     | ID   | TYPE | LENGTH | DESCRIPTION                                                                                                                                                                                                |
 | :--------------------------- | :--: | :--: | :----: | :------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Temperature Alarm           | 0x83 | 0x67 |   3    | temperature(2B) + alarm(1B)<br/>temperature_alarm.temperature, read: int16/100, unit: °C<br/>temperature_alarm.alarm, values: (0: high temperature alarm release, 1: high temperature alarm trigger, 2: low temperature alarm release, 3: low temperature alarm trigger) |
-| Valve Descale Result        | 0x84 | 0x92 |   4    | valve_opening(1B) + trigger_source(1B) + result(1B) + fail_reason(1B)<br/>valve_descale_result.trigger_source, values: (0: auto, 1: manual)<br/>valve_descale_result.result, values: (0: success, 1: fail)<br/>valve_descale_result.fail_reason, values: (0: none, 1: low battery, 2: not off-season, 3: motor busy, 4: calibration failed, 5: early stall, 6: device removed, 7: timeout/hall fault, 8: frost protection interrupted) |
+| Valve Descale Result        | 0x84 | 0x92 |   4    | valve_opening(1B) + trigger_source(1B) + result(1B) + fail_reason(1B)<br/>valve_descale_result.trigger_source, values: (0: auto, 1: manual)<br/>valve_descale_result.result, values: (0: success, 1: fail)<br/>valve_descale_result.fail_reason, values: (0: none, 1: low battery, 2: not off-season, 3: motor busy, 4: calibration failed, 5: early stall, 6: device removed, 7: timeout/hall fault, 8: frost protection interrupted, 9: temperature control enabled) |
 | Open Window Event           | 0x85 | 0x67 |   3    | temperature(2B) + status(1B)<br/>open_window_event.status, values: (0: closed, 1: open)                                                                                                                    |
 | Frost Protection Event      | 0x86 | 0x67 |   4    | temperature(2B) + status(1B) + valve_opening(1B)<br/>frost_protection_event.status, values: (0: normal, 1: triggered)                                                                                     |
 | Temperature Source Fault    | 0x87 | 0x00 |   1    | status(1B)<br/>temperature_source_fault, values: (0: normal, 1: fault)                                                                                                                                     |
+| Low Battery Status          | 0x88 | 0x00 |   1    | status(1B)<br/>low_battery_status, values: (0: normal, 1: low battery)                                                                                                                                     |
 
 ### Configuration
 
@@ -76,10 +87,10 @@ Downlink commands below configure device behavior. Fields map to the `milesightD
 | CHANNEL                                   | ID   | TYPE | LENGTH | DESCRIPTION                                                                                                                                            |
 | :------------------------------------------ | :--: | :--: | :----: | :-------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | Time Sync Enable                          | 0xFF | 0x3B |   1    | time_sync_enable, values: (0: disable, 1: enable)                                                                                                       |
-| Report Interval                           | 0xFF | 0x8E |   3    | report_interval, unit: minute, range: [1, 1440]                                                                                                         |
+| Report Interval                           | 0xFF | 0x8E |   3    | report_interval, unit: minute, range: [5, 1440]                                                                                                         |
 | Temperature Control Mode                  | 0xFF | 0xAE |   1    | temperature_control_mode, values: (0: 0-5 scale, 1: integrated control, 2: valve opening control)                                                        |
 | Ambient Temperature Calibration           | 0xFF | 0xAB |   3    | temperature_calibration.enable, temperature_calibration.value, unit: °C                                                                                   |
-| Temperature Threshold Alarm               | 0xFF | 0x06 |   9    | temperature_threshold_alarm.mode, .min, .max, unit: °C                                                                                                    |
+| Temperature Threshold Alarm               | 0xFF | 0x06 |   9    | temperature_threshold_alarm.mode values: (0: disable, 1: below, 2: above, 3: below or above), .min [-20, 60], .max [-20, 60], unit: °C                     |
 | Target Temperature                        | 0xFF | 0xB1 |   2    | target_temperature, unit: °C                                                                                                                            |
 | Temperature Control Algorithm             | 0xFF | 0xAC |   1    | temperature_control_algorithm, values: (0: pid, 1: platform)                                                                                             |
 | Freeze Protection                         | 0xFF | 0xB0 |   3    | freeze_protection.enable, freeze_protection.temperature, unit: °C                                                                                        |
@@ -94,10 +105,10 @@ Downlink commands below configure device behavior. Fields map to the `milesightD
 | Open Window Valve Strategy                | 0xF9 | 0x37 |   1    | open_window_valve_strategy, values: (0: keep, 1: close)                                                                                                  |
 | Daylight Saving Time                      | 0xFF | 0xBA |  10    | dst_config.enable, .offset (minute), .start_month/.start_week_num/.start_week_day/.start_time, .end_month/.end_week_num/.end_week_day/.end_time           |
 | Time Zone                                 | 0xFF | 0xBD |   2    | time_zone, unit: minute                                                                                                                                  |
-| Non-heating Season Report Interval        | 0xF9 | 0x32 |   2    | non_heating_report_interval, unit: minute, range: [1, 1440], default: 1440                                                                               |
+| Non-heating Season Report Interval        | 0xF9 | 0x32 |   2    | non_heating_report_interval, unit: minute, range: [5, 1440], default: 1440                                                                               |
 | Heating Date                              | 0xF9 | 0x33 |   4    | heating_date.start_month/.start_day/.end_month/.end_day; supports cross-year range                                                                      |
 | Heating Schedule                          | 0xF9 | 0x34 |   9    | heating_schedule[].id/.enable/.mode/.value/.period/.time/.week_recycle                                                                                   |
-| Target Temperature Adjustment Range       | 0xF9 | 0x35 |   4    | target_temperature_range.min [5, 15], .max [16, 35], unit: °C                                                                                            |
+| Target Temperature Adjustment Range       | 0xF9 | 0x35 |   4    | target_temperature_range.min [5, 35], .max [5, 35], max > min, unit: °C                                                                                  |
 | Local Modification Report Enable          | 0xF9 | 0x3A |   1    | change_report_enable, values: (0: disable, 1: enable)                                                                                                    |
 | Non-heating Season Valve Mode             | 0xF9 | 0x3B |   1    | non_heating_valve_mode, values: (0: fully close, 1: fully open)                                                                                          |
 | Valve Descale Enable                      | 0xF9 | 0x3C |   1    | valve_descale_enable, values: (0: disable, 1: enable)                                                                                                    |
@@ -116,9 +127,12 @@ Downlink commands below configure device behavior. Fields map to the `milesightD
 | Valve Opening Range                       | 0xF9 | 0x4B |   2    | valve_opening_range.min [0, 100] default 10, .max [0, 100] default 100                                                                                   |
 | Predict-on Enable                         | 0xF9 | 0x4C |   1    | predict_on_enable, values: (0: disable, 1: enable)                                                                                                       |
 | Valve Opening Display Enable              | 0xF9 | 0x4D |   1    | valve_opening_display_enable, values: (0: disable, 1: enable)                                                                                            |
-| Fixed Preheating Time                     | 0xF9 | 0x4E |   2    | fixed_preheating_time, unit: minute, range: [1, 1440], default: 60                                                                                       |
+| Fixed Preheating Time                     | 0xF9 | 0x4E |   2    | fixed_preheating_time, unit: minute, range: [1, 1440], default: 30                                                                                       |
 | System Key Enable                         | 0xF9 | 0x4F |   1    | system_key_enable, values: (0: disable, 1: enable)                                                                                                       |
 | Heating Schedule Enable                   | 0xF9 | 0x50 |   2    | heating_schedule_enable.id [0, 15], .enable, values: (0: disable, 1: enable)<br/>only toggles enable state, does not change other schedule fields         |
+| Thermal Conductivity Correction (V1.2)    | 0xF9 | 0x51 |   1    | thermal_conductivity_correction, values: (0: disable, 1: enable)                                                                                          |
+| Request Change Password (V1.2)            | 0xF9 | 0x52 |   6    | request_change_password, 6 printable ASCII characters (0x21-0x7E), no space/NUL/terminator                                                                |
+| Device Periodic Report (V1.2)             | 0xF9 | 0x53 |   3    | config_report.enable, values: (0: disable, 1: enable), .period, unit: minute, range: [60, 10080], default: 1440                                           |
 
 ### Downlink Response
 
@@ -129,6 +143,9 @@ Only commands where the device is documented to echo a confirmation are decoded.
 | Report Interval  | 0xFE | 0x8E |   3    | report_interval(2B), reply to Report Interval configuration; device silent if out of range |
 | Time Zone        | 0xFE | 0xBD |   2    | time_zone(2B), reply to Time Zone configuration; device silent on failure              |
 | Valve Descale    | 0xFE | 0x29 |   1    | valve_descale, reply to Trigger Valve Descale; echo only means the command was accepted, not that descaling has completed (see uplink 0x84) |
+| Thermal Conductivity Correction | 0xF8 | 0x51 |   1    | thermal_conductivity_correction(1B) + status(1B), reply to V1.2 2.44 configuration                                                    |
+| Change Password  | 0xF8 | 0x52 |   6    | 6B request data + status(1B), reply to V1.2 2.45 configuration; password content is not decoded                                       |
+| Device Periodic Report | 0xF8 | 0x53 |   3 | config_report.enable(1B) + period(2B) + status(1B), reply to V1.2 2.46 configuration                                                  |
 
 ### Service
 

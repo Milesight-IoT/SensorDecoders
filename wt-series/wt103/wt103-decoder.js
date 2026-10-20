@@ -164,6 +164,41 @@ function milesightDeviceDecode(bytes) {
             decoded.valve_opening = readUInt8(bytes[i + 1]);
             i += 2;
         }
+        // PERIODIC PACKET: 0-5 SCALE MODE (V1.2, WITH REPORT REASON)
+        else if (channel_id === 0x14 && channel_type === 0xd0) {
+            decoded.battery = readUInt8(bytes[i]);
+            decoded.valve_opening = readUInt8(bytes[i + 1]);
+            decoded.temperature = readInt16LE(bytes.slice(i + 2, i + 4)) / 100;
+            decoded.temperature_target = readInt16LE(bytes.slice(i + 4, i + 6)) / 100;
+            decoded.level = readUInt8(bytes[i + 6]);
+            decoded.report_reason = readReportReason(bytes[i + 7]);
+            i += 8;
+        }
+        // PERIODIC PACKET: INTEGRATED CONTROL MODE (V1.2, WITH REPORT REASON)
+        else if (channel_id === 0x15 && channel_type === 0xd1) {
+            decoded.battery = readUInt8(bytes[i]);
+            decoded.valve_opening = readUInt8(bytes[i + 1]);
+            decoded.temperature = readInt16LE(bytes.slice(i + 2, i + 4)) / 100;
+            decoded.temperature_target = readInt16LE(bytes.slice(i + 4, i + 6)) / 100;
+            decoded.report_reason = readReportReason(bytes[i + 6]);
+            i += 7;
+        }
+        // PERIODIC PACKET: VALVE OPENING CONTROL MODE (V1.2, WITH REPORT REASON)
+        else if (channel_id === 0x16 && channel_type === 0xd2) {
+            decoded.battery = readUInt8(bytes[i]);
+            decoded.valve_opening = readUInt8(bytes[i + 1]);
+            decoded.temperature = readInt16LE(bytes.slice(i + 2, i + 4)) / 100;
+            decoded.valve_opening_target = readUInt8(bytes[i + 4]);
+            decoded.report_reason = readReportReason(bytes[i + 5]);
+            i += 6;
+        }
+        // PERIODIC PACKET: NON-HEATING SEASON (V1.2, WITH REPORT REASON)
+        else if (channel_id === 0x17 && channel_type === 0xd3) {
+            decoded.battery = readUInt8(bytes[i]);
+            decoded.valve_opening = readUInt8(bytes[i + 1]);
+            decoded.report_reason = readReportReason(bytes[i + 2]);
+            i += 3;
+        }
         // TEMPERATURE ALARM
         else if (channel_id === 0x83 && channel_type === 0x67) {
             decoded.temperature_alarm = decoded.temperature_alarm || {};
@@ -200,9 +235,35 @@ function milesightDeviceDecode(bytes) {
             decoded.temperature_source_fault = readTemperatureSourceFaultStatus(bytes[i]);
             i += 1;
         }
-        // DOWNLINK RESPONSE
-        else if (channel_id === 0xfe) {
-            var result = handle_downlink_response(channel_type, bytes, i);
+        // LOW BATTERY STATUS
+        else if (channel_id === 0x88 && channel_type === 0x00) {
+            decoded.low_battery_status = readLowBatteryStatus(bytes[i]);
+            i += 1;
+        }
+        // LORAWAN JOIN MODE (V1.2)
+        else if (channel_id === 0xf9 && channel_type === 0x54) {
+            decoded.lorawan_join_mode = readJoinMode(bytes[i]);
+            i += 1;
+        }
+        // LORAWAN DR (V1.2)
+        else if (channel_id === 0xf9 && channel_type === 0x55) {
+            decoded.lorawan_dr = readUInt8(bytes[i]);
+            i += 1;
+        }
+        // LORAWAN ADR (V1.2)
+        else if (channel_id === 0xf9 && channel_type === 0x56) {
+            decoded.lorawan_adr = readEnableStatus(bytes[i]);
+            i += 1;
+        }
+        // BATTERY VOLTAGE (V1.2)
+        else if (channel_id === 0xf9 && channel_type === 0x57) {
+            var voltage = readUInt16LE(bytes.slice(i, i + 2));
+            decoded.battery_voltage = voltage === 0xffff ? "collection_err" : voltage;
+            i += 2;
+        }
+        // DOWNLINK RESPONSE (CONFIGURATION ACK: 0xFE echo / 0xF9-configuration reply)
+        else if (channel_id === 0xfe || channel_id === 0xf8) {
+            var result = handle_downlink_response(channel_id, channel_type, bytes, i);
             decoded = Object.assign(decoded, result.data);
             i = result.offset;
         } else {
@@ -213,25 +274,54 @@ function milesightDeviceDecode(bytes) {
     return decoded;
 }
 
-function handle_downlink_response(channel_type, bytes, offset) {
+// data lengths of configuration commands documented to echo a confirmation
+// (0xFE echo carries the original data only; 0xF8 reply appends one status byte)
+var CONFIG_RESPONSE_DATA_LENGTHS = {
+    0x04: 1, 0x05: 3, 0x06: 9, 0x25: 1, 0x29: 1,
+    0x32: 2, 0x33: 4, 0x34: 9, 0x35: 4, 0x36: 1, 0x37: 1, 0x3a: 1, 0x3b: 1,
+    0x3c: 1, 0x3d: 1, 0x3e: 1, 0x40: 1, 0x41: 2, 0x42: 1, 0x43: 3, 0x44: 1,
+    0x45: 1, 0x46: 1, 0x47: 1, 0x49: 2, 0x4a: 1, 0x4b: 2, 0x4c: 1, 0x4d: 1,
+    0x4e: 2, 0x4f: 1, 0x50: 2, 0x51: 1, 0x52: 6, 0x53: 3, 0x57: 1, 0x8e: 3,
+    0xab: 3, 0xac: 1, 0xad: 1, 0xae: 1, 0xaf: 5, 0xb0: 3, 0xb1: 2, 0xb3: 1,
+    0xb4: 1, 0xba: 10, 0xbd: 2, 0xc4: 2, 0xc5: 1, 0xf8: 1
+};
+
+function handle_downlink_response(channel_id, channel_type, bytes, offset) {
     var decoded = {};
+    var data_length = CONFIG_RESPONSE_DATA_LENGTHS[channel_type];
+    if (data_length === undefined) {
+        // undocumented echo format: frame length cannot be determined, stop parsing
+        return { data: decoded, offset: bytes.length };
+    }
+
+    var data_start = offset;
+    offset += data_length;
+    if (channel_id === 0xf8) {
+        offset += 1; // status byte appended to F9-configuration replies
+    }
 
     switch (channel_type) {
         case 0x8e:
             // ignore the reserved ID byte
-            decoded.report_interval = readUInt16LE(bytes.slice(offset + 1, offset + 3));
-            offset += 3;
+            decoded.report_interval = readUInt16LE(bytes.slice(data_start + 1, data_start + 3));
             break;
         case 0x29:
-            decoded.valve_descale = readYesNoStatus(bytes[offset] === 0x00 ? 1 : 0);
-            offset += 1;
+            decoded.valve_descale = readYesNoStatus(bytes[data_start] === 0x00 ? 1 : 0);
             break;
         case 0xbd:
-            decoded.time_zone = readInt16LE(bytes.slice(offset, offset + 2));
-            offset += 2;
+            decoded.time_zone = readInt16LE(bytes.slice(data_start, data_start + 2));
             break;
-        default:
-            throw new Error("unknown downlink response");
+        case 0x51:
+            // thermal conductivity correction echo (V1.2 2.44)
+            decoded.thermal_conductivity_correction = readEnableStatus(bytes[data_start]);
+            break;
+        case 0x53:
+            // device periodic report echo (V1.2 2.46); password echo (0x52) is not decoded
+            decoded.config_report = {
+                enable: readEnableStatus(bytes[data_start]),
+                period: readUInt16LE(bytes.slice(data_start + 1, data_start + 3)),
+            };
+            break;
     }
 
     return { data: decoded, offset: offset };
@@ -350,6 +440,7 @@ function readDescaleFailReason(type) {
         6: "device removed",
         7: "timeout/hall fault",
         8: "frost protection interrupted",
+        9: "temperature control enabled",
     };
     return getValue(descale_fail_reason_map, type);
 }
@@ -367,6 +458,33 @@ function readFrostProtectionEventStatus(type) {
 function readTemperatureSourceFaultStatus(type) {
     var temperature_source_fault_status_map = { 0: "normal", 1: "fault" };
     return getValue(temperature_source_fault_status_map, type);
+}
+
+function readLowBatteryStatus(type) {
+    var low_battery_status_map = { 0: "normal", 1: "low battery" };
+    return getValue(low_battery_status_map, type);
+}
+
+function readJoinMode(type) {
+    var join_mode_map = { 0: "ABP", 1: "OTAA" };
+    return getValue(join_mode_map, type);
+}
+
+function readEnableStatus(type) {
+    var enable_status_map = { 0: "disable", 1: "enable" };
+    return getValue(enable_status_map, type);
+}
+
+function readReportReason(type) {
+    var report_reason_map = {
+        0: "timed report",
+        1: "local modification",
+        2: "query response",
+        3: "off-season entry",
+        4: "off-season temperature control enabled",
+        5: "low battery protection completed",
+    };
+    return getValue(report_reason_map, type);
 }
 
 function readUInt8(bytes) {

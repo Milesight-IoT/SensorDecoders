@@ -188,6 +188,15 @@ function milesightDeviceEncode(payload) {
     if ("heating_schedule_enable" in payload) {
         encoded = encoded.concat(setHeatingScheduleEnable(payload.heating_schedule_enable));
     }
+    if ("thermal_conductivity_correction" in payload) {
+        encoded = encoded.concat(setThermalConductivityCorrection(payload.thermal_conductivity_correction));
+    }
+    if ("request_change_password" in payload) {
+        encoded = encoded.concat(setRequestChangePassword(payload.request_change_password));
+    }
+    if ("config_report" in payload) {
+        encoded = encoded.concat(setConfigReport(payload.config_report));
+    }
     return encoded;
 }
 
@@ -318,6 +327,9 @@ function setOutsideTemperature(outside_temperature) {
     if (typeof outside_temperature !== "number") {
         throw new Error("outside_temperature must be a number");
     }
+    if (outside_temperature < -20 || outside_temperature > 60) {
+        throw new Error("outside_temperature must be between -20 and 60");
+    }
 
     var buffer = new Buffer(4);
     buffer.writeUInt8(0x03);
@@ -369,15 +381,15 @@ function setTimeSyncEnable(time_sync_enable) {
 /**
  * report interval configuration
  * @since 2.2
- * @param {number} report_interval unit: minute, range: [1, 1440]
+ * @param {number} report_interval unit: minute, range: [5, 1440]
  * @example { "report_interval": 10 }
  */
 function setReportInterval(report_interval) {
     if (typeof report_interval !== "number") {
         throw new Error("report_interval must be a number");
     }
-    if (report_interval < 1 || report_interval > 1440) {
-        throw new Error("report_interval must be between 1 and 1440");
+    if (report_interval < 5 || report_interval > 1440) {
+        throw new Error("report_interval must be between 5 and 1440");
     }
 
     var buffer = new Buffer(5);
@@ -443,7 +455,7 @@ function setTemperatureCalibration(temperature_calibration) {
  * temperature threshold alarm configuration
  * @since 2.5
  * @param {object} temperature_threshold_alarm
- * @param {number} temperature_threshold_alarm.mode values: (0: disable, 1: below, 2: above, 3: within, 4: below or above)
+ * @param {number} temperature_threshold_alarm.mode values: (0: disable, 1: below, 2: above, 3: below or above)
  * @param {number} temperature_threshold_alarm.min unit: Celsius
  * @param {number} temperature_threshold_alarm.max unit: Celsius
  * @example { "temperature_threshold_alarm": { "mode": 1, "min": 5, "max": 30 } }
@@ -453,13 +465,19 @@ function setTemperatureThresholdAlarm(temperature_threshold_alarm) {
     var min = temperature_threshold_alarm.min || 0;
     var max = temperature_threshold_alarm.max || 0;
 
-    var mode_map = { 0: "disable", 1: "below", 2: "above", 3: "within", 4: "below or above" };
+    var mode_map = { 0: "disable", 1: "below", 2: "above", 3: "below or above" };
     var mode_values = getValues(mode_map);
     if (mode_values.indexOf(mode) === -1) {
         throw new Error("temperature_threshold_alarm.mode must be one of " + mode_values.join(", "));
     }
+    if (typeof min !== "number" || min < -20 || min > 60) {
+        throw new Error("temperature_threshold_alarm.min must be between -20 and 60");
+    }
+    if (typeof max !== "number" || max < -20 || max > 60) {
+        throw new Error("temperature_threshold_alarm.max must be between -20 and 60");
+    }
 
-    var ctrl = getValue(mode_map, mode) | (1 << 3);
+    var ctrl = mode;
     var buffer = new Buffer(11);
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0x06);
@@ -758,7 +776,7 @@ function setOpenWindowValveStrategy(open_window_valve_strategy) {
  */
 function setDaylightSavingTime(dst_config) {
     var enable = dst_config.enable;
-    var offset = dst_config.offset || 0;
+    var offset = dst_config.offset === undefined ? 60 : dst_config.offset;
     var start_month = dst_config.start_month;
     var start_week_num = dst_config.start_week_num;
     var start_week_day = dst_config.start_week_day;
@@ -786,6 +804,15 @@ function setDaylightSavingTime(dst_config) {
     }
     if (week_day_values.indexOf(end_week_day) === -1) {
         throw new Error("dst_config.end_week_day must be one of " + week_day_values.join(", "));
+    }
+    if (typeof offset !== "number" || offset < 1 || offset > 120) {
+        throw new Error("dst_config.offset must be between 1 and 120");
+    }
+    if (typeof start_time !== "number" || start_time < 0 || start_time > 1439) {
+        throw new Error("dst_config.start_time must be between 0 and 1439");
+    }
+    if (typeof end_time !== "number" || end_time < 0 || end_time > 1439) {
+        throw new Error("dst_config.end_time must be between 0 and 1439");
     }
 
     var buffer = new Buffer(12);
@@ -831,8 +858,8 @@ function setNonHeatingReportInterval(non_heating_report_interval) {
     if (typeof non_heating_report_interval !== "number") {
         throw new Error("non_heating_report_interval must be a number");
     }
-    if (non_heating_report_interval < 1 || non_heating_report_interval > 1440) {
-        throw new Error("non_heating_report_interval must be between 1 and 1440");
+    if (non_heating_report_interval < 5 || non_heating_report_interval > 1440) {
+        throw new Error("non_heating_report_interval must be between 5 and 1440");
     }
 
     var buffer = new Buffer(4);
@@ -927,6 +954,15 @@ function setHeatingSchedule(heating_schedule) {
     }
 
     var raw_mode = getValue(mode_map, mode);
+    if (raw_mode === 0 && (value < 0 || value > 5)) {
+        throw new Error("heating_schedule._item.value must be between 0 and 5 for scale mode");
+    }
+    if (raw_mode === 1 && (value < 5 || value > 35)) {
+        throw new Error("heating_schedule._item.value must be between 5 and 35 for integrated control mode");
+    }
+    if (raw_mode === 2 && (value < 0 || value > 100)) {
+        throw new Error("heating_schedule._item.value must be between 0 and 100 for valve opening mode");
+    }
     var raw_value = raw_mode === 1 ? Math.round(value * 100) : value;
 
     var week_day_offset = { monday: 1, tuesday: 2, wednesday: 3, thursday: 4, friday: 5, saturday: 6, sunday: 7 };
@@ -956,8 +992,8 @@ function setHeatingSchedule(heating_schedule) {
  * target temperature adjustment range configuration
  * @since 2.22
  * @param {object} target_temperature_range
- * @param {number} target_temperature_range.min unit: Celsius, range: [5, 15]
- * @param {number} target_temperature_range.max unit: Celsius, range: [16, 35]
+ * @param {number} target_temperature_range.min unit: Celsius, range: [5, 35]
+ * @param {number} target_temperature_range.max unit: Celsius, range: [5, 35], must be greater than min
  * @example { "target_temperature_range": { "min": 5, "max": 35 } }
  */
 function setTargetTemperatureRange(target_temperature_range) {
@@ -967,14 +1003,17 @@ function setTargetTemperatureRange(target_temperature_range) {
     if (typeof min !== "number") {
         throw new Error("target_temperature_range.min must be a number");
     }
-    if (min < 5 || min > 15) {
-        throw new Error("target_temperature_range.min must be between 5 and 15");
+    if (min < 5 || min > 35) {
+        throw new Error("target_temperature_range.min must be between 5 and 35");
     }
     if (typeof max !== "number") {
         throw new Error("target_temperature_range.max must be a number");
     }
-    if (max < 16 || max > 35) {
-        throw new Error("target_temperature_range.max must be between 16 and 35");
+    if (max < 5 || max > 35) {
+        throw new Error("target_temperature_range.max must be between 5 and 35");
+    }
+    if (max <= min) {
+        throw new Error("target_temperature_range.max must be greater than min");
     }
 
     var buffer = new Buffer(6);
@@ -1166,6 +1205,9 @@ function setTemperatureControlLevelMapping(temperature_control_level_mapping) {
     if (typeof temperature !== "number") {
         throw new Error("temperature_control_level_mapping.temperature must be a number");
     }
+    if (temperature < 5 || temperature > 35) {
+        throw new Error("temperature_control_level_mapping.temperature must be between 5 and 35");
+    }
 
     var buffer = new Buffer(5);
     buffer.writeUInt8(0xf9);
@@ -1318,6 +1360,9 @@ function setValveOpeningRange(valve_opening_range) {
     if (typeof max !== "number" || max < 0 || max > 100) {
         throw new Error("valve_opening_range.max must be between 0 and 100");
     }
+    if (max - min < 10) {
+        throw new Error("valve_opening_range.max minus min must be at least 10");
+    }
 
     var buffer = new Buffer(4);
     buffer.writeUInt8(0xf9);
@@ -1438,16 +1483,98 @@ function setHeatingScheduleEnable(heating_schedule_enable) {
     return buffer.toBytes();
 }
 
+/**
+ * thermal conductivity correction switch configuration
+ * @since 2.44
+ * @param {number} thermal_conductivity_correction values: (0: disable, 1: enable)
+ * @example { "thermal_conductivity_correction": 1 }
+ */
+function setThermalConductivityCorrection(thermal_conductivity_correction) {
+    var enable_map = { 0: "disable", 1: "enable" };
+    var enable_values = getValues(enable_map);
+    if (enable_values.indexOf(thermal_conductivity_correction) === -1) {
+        throw new Error("thermal_conductivity_correction must be one of " + enable_values.join(", "));
+    }
+
+    var buffer = new Buffer(3);
+    buffer.writeUInt8(0xf9);
+    buffer.writeUInt8(0x51);
+    buffer.writeUInt8(getValue(enable_map, thermal_conductivity_correction));
+    return buffer.toBytes();
+}
+
+/**
+ * LoRaWAN remote reset communication password configuration
+ * @since 2.45
+ * @param {string} request_change_password 6 printable ASCII characters (0x21-0x7e), no space/NUL/terminator
+ * @example { "request_change_password": "123456" }
+ */
+function setRequestChangePassword(request_change_password) {
+    if (typeof request_change_password !== "string" || request_change_password.length !== 6) {
+        throw new Error("request_change_password must be a string of 6 characters");
+    }
+    for (var i = 0; i < request_change_password.length; i++) {
+        var char_code = request_change_password.charCodeAt(i);
+        if (char_code < 0x21 || char_code > 0x7e) {
+            throw new Error("request_change_password must contain printable ASCII characters (0x21-0x7e) only");
+        }
+    }
+
+    var buffer = new Buffer(8);
+    buffer.writeUInt8(0xf9);
+    buffer.writeUInt8(0x52);
+    for (var idx = 0; idx < request_change_password.length; idx++) {
+        buffer.writeUInt8(request_change_password.charCodeAt(idx));
+    }
+    return buffer.toBytes();
+}
+
+/**
+ * device periodic report configuration
+ * @since 2.46
+ * @param {object} config_report
+ * @param {number} config_report.enable values: (0: disable, 1: enable)
+ * @param {number} config_report.period unit: minute, range: [60, 10080]
+ * @example { "config_report": { "enable": 1, "period": 1440 } }
+ */
+function setConfigReport(config_report) {
+    var enable = config_report.enable;
+    var period = config_report.period;
+
+    var enable_map = { 0: "disable", 1: "enable" };
+    var enable_values = getValues(enable_map);
+    if (enable_values.indexOf(enable) === -1) {
+        throw new Error("config_report.enable must be one of " + enable_values.join(", "));
+    }
+    if (typeof period !== "number") {
+        throw new Error("config_report.period must be a number");
+    }
+    if (period < 60 || period > 10080) {
+        throw new Error("config_report.period must be between 60 and 10080");
+    }
+
+    var buffer = new Buffer(5);
+    buffer.writeUInt8(0xf9);
+    buffer.writeUInt8(0x53);
+    buffer.writeUInt8(getValue(enable_map, enable));
+    buffer.writeUInt16LE(period);
+    return buffer.toBytes();
+}
+
 function getValues(map) {
     var values = [];
     for (var key in map) {
-        values.push(RAW_VALUE ? parseInt(key) : map[key]);
+        values.push(parseInt(key));
+        values.push(map[key]);
     }
     return values;
 }
 
 function getValue(map, value) {
     if (RAW_VALUE) return value;
+    if (typeof value === "number") {
+        return value;
+    }
 
     for (var key in map) {
         if (map[key] === value) {
