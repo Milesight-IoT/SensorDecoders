@@ -134,6 +134,10 @@ Downlink commands below configure device behavior. Fields map to the `milesightD
 | Request Change Password (V1.2)            | 0xF9 | 0x52 |   6    | request_change_password, 6 printable ASCII characters (0x21-0x7E), no space/NUL/terminator                                                                |
 | Device Periodic Report (V1.2)             | 0xF9 | 0x53 |   3    | config_report.enable, values: (0: disable, 1: enable), .period, unit: minute, range: [60, 10080], default: 1440                                           |
 
+### Configuration Report
+
+With Device Periodic Report enabled (0xF9 0x53, V1.2 2.46), the device reports its stored configuration values each reporting cycle as 0xFF/0xF9 frames (see the command list in protocol 2.46). These frames are decoded into the same fields as the downlink commands above; 0x52 (password) is never decoded.
+
 ### Downlink Response
 
 Only commands where the device is documented to echo a confirmation are decoded. Undocumented echo formats are not implemented to avoid guessing at unverified byte layouts.
