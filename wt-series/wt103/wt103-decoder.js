@@ -261,17 +261,31 @@ function milesightDeviceDecode(bytes) {
             decoded.battery_voltage = voltage === 0xffff ? "collection_err" : voltage;
             i += 2;
         }
-        // CONFIGURATION REPORT (device reports stored config values, V1.2 2.46)
-        else if ((channel_id === 0xff || channel_id === 0xf9) && CONFIG_RESPONSE_DATA_LENGTHS[channel_type] !== undefined) {
-            var report = handle_config_report(channel_id, channel_type, bytes, i);
-            decoded = Object.assign(decoded, report.data);
-            i = report.offset;
-        }
-        // DOWNLINK RESPONSE (CONFIGURATION ACK: 0xFE echo / 0xF9-configuration reply)
-        else if (channel_id === 0xfe || channel_id === 0xf8) {
-            var result = handle_downlink_response(channel_id, channel_type, bytes, i);
-            decoded = Object.assign(decoded, result.data);
-            i = result.offset;
+        // CONFIGURATION REPORT / DOWNLINK RESPONSE
+        // (config value reports on 0xFF/0xF9 uplink, 0xFE echo / 0xF8 reply)
+        else if (channel_id === 0xff || channel_id === 0xf9 || channel_id === 0xfe || channel_id === 0xf8) {
+            // data lengths of configuration commands documented to echo a
+            // confirmation (0xFE echo carries the original data only; 0xF8 reply
+            // appends one status byte). Declared inline on purpose - some hosted
+            // JS VMs drop top-level var assignments and keep only functions.
+            var config_data_lengths = {
+                4: 1, 5: 3, 6: 9, 37: 1, 41: 1,
+                50: 2, 51: 4, 52: 9, 53: 4, 54: 1, 55: 1, 58: 1, 59: 1,
+                60: 1, 61: 1, 62: 1, 64: 1, 65: 2, 66: 1, 67: 3, 68: 1,
+                69: 1, 70: 1, 71: 1, 73: 2, 74: 1, 75: 2, 76: 1, 77: 1,
+                78: 2, 79: 1, 80: 2, 81: 1, 82: 6, 83: 3, 87: 1, 142: 3,
+                171: 3, 172: 1, 173: 1, 174: 1, 175: 5, 176: 3, 177: 2, 179: 1,
+                180: 1, 186: 10, 189: 2, 196: 2, 197: 1, 248: 1, 254: 1
+            };
+            var config_data_length = config_data_lengths[channel_type];
+            if (config_data_length === undefined) {
+                // undocumented frame format: length cannot be determined, stop parsing
+                i = bytes.length;
+            } else {
+                var result = handle_config_frame(channel_id, channel_type, bytes, i, config_data_length);
+                decoded = Object.assign(decoded, result.data);
+                i = result.offset;
+            }
         } else {
             break;
         }
@@ -280,27 +294,18 @@ function milesightDeviceDecode(bytes) {
     return decoded;
 }
 
-// data lengths of configuration commands documented to echo a confirmation
-// (0xFE echo carries the original data only; 0xF8 reply appends one status byte)
-var CONFIG_RESPONSE_DATA_LENGTHS = {
-    0x04: 1, 0x05: 3, 0x06: 9, 0x25: 1, 0x29: 1,
-    0x32: 2, 0x33: 4, 0x34: 9, 0x35: 4, 0x36: 1, 0x37: 1, 0x3a: 1, 0x3b: 1,
-    0x3c: 1, 0x3d: 1, 0x3e: 1, 0x40: 1, 0x41: 2, 0x42: 1, 0x43: 3, 0x44: 1,
-    0x45: 1, 0x46: 1, 0x47: 1, 0x49: 2, 0x4a: 1, 0x4b: 2, 0x4c: 1, 0x4d: 1,
-    0x4e: 2, 0x4f: 1, 0x50: 2, 0x51: 1, 0x52: 6, 0x53: 3, 0x57: 1, 0x8e: 3,
-    0xab: 3, 0xac: 1, 0xad: 1, 0xae: 1, 0xaf: 5, 0xb0: 3, 0xb1: 2, 0xb3: 1,
-    0xb4: 1, 0xba: 10, 0xbd: 2, 0xc4: 2, 0xc5: 1, 0xf8: 1
-};
 
-function handle_config_report(channel_id, channel_type, bytes, offset) {
+function handle_config_frame(channel_id, channel_type, bytes, offset, data_length) {
     var decoded = {};
-    var data_length = CONFIG_RESPONSE_DATA_LENGTHS[channel_type];
     if (data_length === undefined) {
         return { data: decoded, offset: bytes.length };
     }
 
     var d = bytes.slice(offset, offset + data_length);
     offset += data_length;
+    if (channel_id === 0xf8) {
+        offset += 1; // status byte appended to F9-configuration replies
+    }
 
     switch (channel_type) {
         case 0x06:
@@ -312,6 +317,9 @@ function handle_config_report(channel_id, channel_type, bytes, offset) {
             break;
         case 0x25:
             decoded.child_lock = readUInt8(d[0]);
+            break;
+        case 0x29:
+            decoded.valve_descale = readYesNoStatus(d[0] === 0x00 ? 1 : 0);
             break;
         case 0x32:
             decoded.non_heating_report_interval = readUInt16LE(d.slice(0, 2));
@@ -506,46 +514,6 @@ function handle_config_report(channel_id, channel_type, bytes, offset) {
     return { data: decoded, offset: offset };
 }
 
-function handle_downlink_response(channel_id, channel_type, bytes, offset) {
-    var decoded = {};
-    var data_length = CONFIG_RESPONSE_DATA_LENGTHS[channel_type];
-    if (data_length === undefined) {
-        // undocumented echo format: frame length cannot be determined, stop parsing
-        return { data: decoded, offset: bytes.length };
-    }
-
-    var data_start = offset;
-    offset += data_length;
-    if (channel_id === 0xf8) {
-        offset += 1; // status byte appended to F9-configuration replies
-    }
-
-    switch (channel_type) {
-        case 0x8e:
-            // ignore the reserved ID byte
-            decoded.report_interval = readUInt16LE(bytes.slice(data_start + 1, data_start + 3));
-            break;
-        case 0x29:
-            decoded.valve_descale = readYesNoStatus(bytes[data_start] === 0x00 ? 1 : 0);
-            break;
-        case 0xbd:
-            decoded.time_zone = readInt16LE(bytes.slice(data_start, data_start + 2));
-            break;
-        case 0x51:
-            // thermal conductivity correction echo (V1.2 2.44)
-            decoded.thermal_conductivity_correction = readEnableStatus(bytes[data_start]);
-            break;
-        case 0x53:
-            // device periodic report echo (V1.2 2.46); password echo (0x52) is not decoded
-            decoded.config_report = {
-                enable: readEnableStatus(bytes[data_start]),
-                period: readUInt16LE(bytes.slice(data_start + 1, data_start + 3)),
-            };
-            break;
-    }
-
-    return { data: decoded, offset: offset };
-}
 
 function readYesNoStatus(type) {
     var yes_no_map = { 0: "no", 1: "yes" };
