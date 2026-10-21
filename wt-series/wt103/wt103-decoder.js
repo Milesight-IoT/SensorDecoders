@@ -78,6 +78,14 @@ function milesightDeviceDecode(bytes) {
             decoded.tsl_config_request = readYesNoStatus(1);
             i += 1;
         }
+        // TEST SIGNAL (appendix A: SNR int8 + RSSI int8)
+        else if (channel_id === 0x02 && channel_type === 0x5c) {
+            decoded.test_signal = {
+                SNR: readInt8(bytes[i]),
+                RSSI: readInt8(bytes[i + 1]),
+            };
+            i += 2;
+        }
         // BATTERY
         else if (channel_id === 0x01 && channel_type === 0x75) {
             decoded.battery = readUInt8(bytes[i]);
