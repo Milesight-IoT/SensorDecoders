@@ -73,6 +73,16 @@ function milesightDeviceDecode(bytes) {
             decoded.device_status = readDeviceStatus(1);
             i += 1;
         }
+        // ODM ID
+        else if (channel_id === 0xff && channel_type === 0xe7) {
+            decoded.odm_id = readSerialNumber(bytes.slice(i, i + 2));
+            i += 2;
+        }
+        // SOFTWARE SUB VERSION
+        else if (channel_id === 0xff && channel_type === 0xe8) {
+            decoded.software_sub_version = readSoftwareSubVersion(bytes.slice(i, i + 4));
+            i += 4;
+        }
 
         // BATTERY
         else if (channel_id === 0x01 && channel_type === 0x75) {
@@ -239,6 +249,19 @@ function readSerialNumber(bytes) {
         temp.push(("0" + (bytes[idx] & 0xff).toString(16)).slice(-2));
     }
     return temp.join("");
+}
+
+function readSoftwareSubVersion(bytes) {
+    var r = bytes[0] & 0xff;
+    var a = bytes[1] & 0xff;
+    var u = bytes[2] & 0xff;
+    var t = bytes[3] & 0xff;
+    var version = "";
+    if (r) version += "-r" + r.toString(16);
+    if (a) version += "-a" + a.toString(16);
+    if (u) version += "-u" + u.toString(16);
+    if (t) version += "-t" + t.toString(16);
+    return version;
 }
 
 function readLoRaWANClass(type) {
