@@ -30,6 +30,8 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | LoRaWAN Class | 0xFF | 0x0F |   1    | lorawan_class(1B)<br/>lorawan_class, values: (0: Class A, 1: Class B, 2: Class C, 3: Class CtoB) |
 |  Reset Event  | 0xFF | 0xFE |   1    | reset_event(1B)                                                                                  |
 | Device Status | 0xFF | 0x0B |   1    | device_status(1B)                                                                                |
+|    ODM ID     | 0xFF | 0xE7 |   2    | odm_id(2B)<br/>odm_id, e.g. 1234 -> "1234"                                                       |
+| Software Sub Version | 0xFF | 0xE8 |   4    | software_sub_version(4B)<br/>r(1B) + a(1B) + u(1B) + t(1B), e.g. 01020011 -> "-r1-a2-t11"        |
 
 ### Telemetry
 
