@@ -29,7 +29,7 @@ function Decoder(bytes, port) {
 function milesightDeviceDecode(bytes) {
     var decoded = {};
 
-    for (var i = 0; i < bytes.length; ) {
+    for (var i = 0; i < bytes.length;) {
         var channel_id = bytes[i++];
         var channel_type = bytes[i++];
 
@@ -37,6 +37,11 @@ function milesightDeviceDecode(bytes) {
         if (channel_id === 0xff && channel_type === 0x01) {
             decoded.ipso_version = readProtocolVersion(bytes[i]);
             i += 1;
+        }
+        // TSL VERSION
+        else if (channel_id === 0xff && channel_type === 0xff) {
+            decoded.tsl_version = readTslVersion(bytes.slice(i, i + 2));
+            i += 2;
         }
         // HARDWARE VERSION
         else if (channel_id === 0xff && channel_type === 0x09) {
@@ -63,6 +68,32 @@ function milesightDeviceDecode(bytes) {
             decoded.lorawan_class = readLoRaWANClass(bytes[i]);
             i += 1;
         }
+        // OEM ID
+        else if (channel_id === 0xff && channel_type === 0xe7) {
+            decoded.odm_id = readOdmId(bytes.slice(i, i + 2));
+            i += 2;
+        }
+        // SUB VERSION
+        else if (channel_id === 0xff && channel_type === 0xe8) {
+            decoded.sub_version = readSubVersion(bytes.slice(i, i + 4));
+            i += 4;
+        }
+        // CALIBRATION CONFIG
+        else if (channel_id === 0xff && channel_type === 0xea) {
+            var calibration_config = {};
+            var calibration_ctrl = readUInt8(bytes[i]);
+
+            calibration_config.id = calibration_ctrl & 0x7f;
+            calibration_config.calibration_value = readCalibrationValue(calibration_config.id, bytes.slice(i + 1, i + 3));
+            calibration_config.enable = readEnableStatus((calibration_ctrl >> 7) & 0x01);
+            decoded.calibration_config = calibration_config;
+            i += 3;
+        }
+        // SCREEN ELEMENT CONFIG
+        else if (channel_id === 0xff && channel_type === 0xf0) {
+            decoded.screen_element_config = readScreenElementConfig(bytes.slice(i, i + 4));
+            i += 4;
+        }
         // RESET EVENT
         else if (channel_id === 0xff && channel_type === 0xfe) {
             decoded.reset_event = readResetEvent(1);
@@ -73,7 +104,6 @@ function milesightDeviceDecode(bytes) {
             decoded.device_status = readDeviceStatus(1);
             i += 1;
         }
-
         // BATTERY
         else if (channel_id === 0x01 && channel_type === 0x75) {
             decoded.battery = readUInt8(bytes[i]);
@@ -96,7 +126,7 @@ function milesightDeviceDecode(bytes) {
             data.timestamp = readUInt32LE(bytes.slice(i, i + 4));
             data.temperature = readInt16LE(bytes.slice(i + 4, i + 6)) / 10;
             data.humidity = readUInt8(bytes[i + 6]) / 2;
-            i += 7;
+            i += 9;
             decoded.history = decoded.history || [];
             decoded.history.push(data);
         }
@@ -110,6 +140,28 @@ function milesightDeviceDecode(bytes) {
                 decoded.sensor_enable[key] = readEnableStatus((data >> sensor_bit_offset[key]) & 0x01);
             }
             i += 2;
+        }
+        else if (channel_id === 0xf9 && channel_type === 0xbe) {
+            decoded.report_interval = {};
+            decoded.report_interval.type = readUInt8(bytes[i]);
+            decoded.report_interval.period_unit = readPeriodUnit(readUInt8(bytes[i + 1]));
+            decoded.report_interval.period_time = readUInt16LE(bytes.slice(i + 2, i + 4));
+            i += 4;
+        }
+        // ALARM CONFIG
+        else if (channel_id === 0xf9 && channel_type === 0x0b) {
+            var alarm_config = {};
+            var alarm_id = readUInt8(bytes[i]);
+            var alarm_max_bytes = bytes.slice(i + 2, i + 4);
+            var alarm_min_bytes = bytes.slice(i + 4, i + 6);
+
+            alarm_config.id = alarm_id;
+            alarm_config.condition = readAlarmCondition(readUInt8(bytes[i + 1]));
+            alarm_config.max = readAlarmThreshold(alarm_id, alarm_max_bytes);
+            alarm_config.min = readAlarmThreshold(alarm_id, alarm_min_bytes);
+            alarm_config.enabled = readEnableStatus(readUInt8(bytes[i + 6]));
+            decoded.alarm_config = alarm_config;
+            i += 7;
         }
         // DOWNLINK RESPONSE
         else if (channel_id === 0xfe || channel_id === 0xff) {
@@ -128,28 +180,11 @@ function handle_downlink_response(channel_type, bytes, offset) {
     var decoded = {};
 
     switch (channel_type) {
-        case 0x03:
-            decoded.report_interval = readUInt16LE(bytes.slice(offset, offset + 2));
-            offset += 2;
-            break;
-        case 0x06:
-            decoded.temperature_alarm_config = {};
-            var condition = readUInt8(bytes[offset]);
-            decoded.temperature_alarm_config.condition = readMathCondition(condition & 0x07);
-            decoded.temperature_alarm_config.threshold_min = readInt16LE(bytes.slice(offset + 1, offset + 3)) / 10;
-            decoded.temperature_alarm_config.threshold_max = readInt16LE(bytes.slice(offset + 3, offset + 5)) / 10;
-            // skip 4 bytes
-            offset += 9;
-            break;
         case 0x10:
             decoded.reboot = readYesNoStatus(1);
             offset += 1;
             break;
-        case 0x11:
-            decoded.timestamp = readUInt32LE(bytes.slice(offset, offset + 4));
-            offset += 4;
-            break;
-        case 0x17:
+        case 0xbd:
             decoded.time_zone = readTimeZone(readInt16LE(bytes.slice(offset, offset + 2)));
             offset += 2;
             break;
@@ -161,27 +196,8 @@ function handle_downlink_response(channel_type, bytes, offset) {
             decoded.led_indicator_mode = readLedIndicatorStatus(bytes[offset]);
             offset += 1;
             break;
-        case 0x3a:
-            var num = readUInt8(bytes[offset]);
-            offset += 1;
-            for (var i = 0; i < num; i++) {
-                var report_schedule_config = {};
-                report_schedule_config.start_time = readUInt8(bytes[offset]) / 10;
-                report_schedule_config.end_time = readUInt8(bytes[offset + 1]) / 10;
-                report_schedule_config.report_interval = readUInt16LE(bytes.slice(offset + 2, offset + 4));
-                // skip 1 byte
-                report_schedule_config.collection_interval = readUInt8(bytes[offset + 5]);
-                offset += 6;
-                decoded.report_schedule_config = decoded.report_schedule_config || [];
-                decoded.report_schedule_config.push(report_schedule_config);
-            }
-            break;
         case 0x3b:
             decoded.time_sync_enable = readEnableStatus(bytes[offset]);
-            offset += 1;
-            break;
-        case 0x57:
-            decoded.clear_report_schedule = readYesNoStatus(1);
             offset += 1;
             break;
         case 0x59:
@@ -205,6 +221,12 @@ function handle_downlink_response(channel_type, bytes, offset) {
             }
             offset += 3;
             break;
+        case 0x8e:
+            decoded.report_interval = {}
+            decoded.report_interval.period_unit = readPeriodUnit(readUInt8(bytes[offset]));
+            decoded.report_interval.period_time = readUInt16LE(bytes.slice(offset + 1, offset + 3));
+            offset += 3;
+            break;
         default:
             throw new Error("unknown downlink response");
     }
@@ -218,6 +240,12 @@ function readProtocolVersion(bytes) {
     return "v" + major + "." + minor;
 }
 
+function readTslVersion(bytes) {
+    var major = bytes[0] & 0xff;
+    var minor = bytes[1] & 0xff;
+    return "v" + major + "." + minor;
+}
+
 function readHardwareVersion(bytes) {
     var major = (bytes[0] & 0xff).toString(16);
     var minor = (bytes[1] & 0xff) >> 4;
@@ -225,25 +253,95 @@ function readHardwareVersion(bytes) {
 }
 
 function readFirmwareVersion(bytes) {
-	var major = (bytes[0] & 0xff).toString(16);
-	var minor = (bytes[1] & 0xff).toString(16);
-	var release = (bytes[2] & 0xff).toString(16);
-	var alpha = (bytes[3] & 0xff).toString(16);
-	var unit_test = (bytes[4] & 0xff).toString(16);
-	var test = (bytes[5] & 0xff).toString(16);
+    var major = (bytes[0] & 0xff).toString(16);
+    var minor = (bytes[1] & 0xff).toString(16);
+    var release = (bytes[2] & 0xff).toString(16);
+    var alpha = (bytes[3] & 0xff).toString(16);
+    var unit_test = (bytes[4] & 0xff).toString(16);
+    var test = (bytes[5] & 0xff).toString(16);
 
-	var version = 'v' + major + '.' + minor;
-	if (release !== '0') version += '-r' + release;
-	if (alpha !== '0') version += '-a' + alpha;
-	if (unit_test !== '0') version += '-u' + unit_test;
-	if (test !== '0') version += '-t' + test;
-	return version;
+    var version = 'v' + major + '.' + minor;
+    if (release !== '0') version += '-r' + release;
+    if (alpha !== '0') version += '-a' + alpha;
+    if (unit_test !== '0') version += '-u' + unit_test;
+    if (test !== '0') version += '-t' + test;
+    return version;
+}
+
+function readOdmId(bytes) {
+    var id = "";
+    for (var i = 0; i < bytes.length; i++) {
+        id += ("0" + (bytes[i] & 0xff).toString(16)).slice(-2);
+    }
+    return id;
+}
+
+function readSubVersion(bytes) {
+    var release = (bytes[0] & 0xff).toString(16);
+    var alpha = (bytes[1] & 0xff).toString(16);
+    var test = (((bytes[2] & 0xff) << 8) + (bytes[3] & 0xff)).toString(16);
+    return "r" + release + "-a" + alpha + "-t" + test;
 }
 
 function readTslVersion(bytes) {
     var major = bytes[0] & 0xff;
     var minor = bytes[1] & 0xff;
     return "v" + major + "." + minor;
+}
+
+function readPeriodUnit(type) {
+    var period_unit_map = { 0: "second", 1: "minute" };
+    return getValue(period_unit_map, type);
+}
+
+function readAlarmCondition(type) {
+    var condition_map = {
+        1: "below",
+        2: "above",
+        3: "within",
+        4: "below_or_above",
+        5: "saltation",
+        6: "primary_alarm_only",
+        7: "secondary_alarm_only",
+        8: "primary_and_secondary_alarm"
+    };
+    return getValue(condition_map, type);
+}
+
+function readAlarmThreshold(id, bytes) {
+    if (id === 1 || id === 2) {
+        return readInt16LE(bytes) / 10;
+    }
+    if (id === 3) {
+        return readUInt16LE(bytes) / 10;
+    }
+    return readUInt16LE(bytes);
+}
+
+function readCalibrationValue(id, bytes) {
+    var value = readInt16LE(bytes);
+    if (id === 0) {
+        return value / 10;
+    }
+    if (id === 1) {
+        return value / 2;
+    }
+    return value;
+}
+
+function readScreenElementConfig(bytes) {
+    var mask = readUInt16LE(bytes.slice(0, 2));
+    var status = readUInt16LE(bytes.slice(2, 4));
+    var config = { mask: mask, status: status };
+    var element_bit_offset = { temperature: 0, humidity: 1, co2: 2, smile_face: 3 };
+
+    for (var key in element_bit_offset) {
+        var bit_offset = element_bit_offset[key];
+        if ((mask >> bit_offset) & 0x01) {
+            config[key] = readEnableStatus((status >> bit_offset) & 0x01);
+        }
+    }
+    return config;
 }
 
 function readSerialNumber(bytes) {
@@ -294,11 +392,6 @@ function readLedIndicatorStatus(status) {
     return getValue(status_map, status);
 }
 
-function readMathCondition(type) {
-    var condition_map = { 0: "disable", 1: "below", 2: "above", 3: "between", 4: "outside" };
-    return getValue(condition_map, type);
-}
-
 /* eslint-disable */
 function readUInt8(bytes) {
     return bytes & 0xff;
@@ -338,39 +431,39 @@ function getValue(map, key) {
 }
 
 //if (!Object.assign) {
-    Object.defineProperty(Object, "assign", {
-        enumerable: false,
-        configurable: true,
-        writable: true,
-        value: function (target) {
-            "use strict";
-            if (target == null) {
-                throw new TypeError("Cannot convert first argument to object");
+Object.defineProperty(Object, "assign", {
+    enumerable: false,
+    configurable: true,
+    writable: true,
+    value: function (target) {
+        "use strict";
+        if (target == null) {
+            throw new TypeError("Cannot convert first argument to object");
+        }
+
+        var to = Object(target);
+        for (var i = 1; i < arguments.length; i++) {
+            var nextSource = arguments[i];
+            if (nextSource == null) {
+                continue;
             }
+            nextSource = Object(nextSource);
 
-            var to = Object(target);
-            for (var i = 1; i < arguments.length; i++) {
-                var nextSource = arguments[i];
-                if (nextSource == null) {
-                    continue;
-                }
-                nextSource = Object(nextSource);
-
-                var keysArray = Object.keys(Object(nextSource));
-                for (var nextIndex = 0, len = keysArray.length; nextIndex < len; nextIndex++) {
-                    var nextKey = keysArray[nextIndex];
-                    var desc = Object.getOwnPropertyDescriptor(nextSource, nextKey);
-                    if (desc !== undefined && desc.enumerable) {
-                        // concat array
-                        if (Array.isArray(to[nextKey]) && Array.isArray(nextSource[nextKey])) {
-                            to[nextKey] = to[nextKey].concat(nextSource[nextKey]);
-                        } else {
-                            to[nextKey] = nextSource[nextKey];
-                        }
+            var keysArray = Object.keys(Object(nextSource));
+            for (var nextIndex = 0, len = keysArray.length; nextIndex < len; nextIndex++) {
+                var nextKey = keysArray[nextIndex];
+                var desc = Object.getOwnPropertyDescriptor(nextSource, nextKey);
+                if (desc !== undefined && desc.enumerable) {
+                    // concat array
+                    if (Array.isArray(to[nextKey]) && Array.isArray(nextSource[nextKey])) {
+                        to[nextKey] = to[nextKey].concat(nextSource[nextKey]);
+                    } else {
+                        to[nextKey] = nextSource[nextKey];
                     }
                 }
             }
-            return to;
-        },
-    });
+        }
+        return to;
+    },
+});
 //}
