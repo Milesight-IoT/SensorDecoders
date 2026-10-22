@@ -105,6 +105,99 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Threshold Lock Time | 0xFF | 0x06 | 3 | w |  |  |  |
 | Threshold Duration | 0xFF | 0x06 | 3 | w |  |  |  |
 | D2D Enable | 0xFF | 0x84 | 2 | w | 0 |  | 0：disable<br>1：enable |
+| Region Occupied | 0xFF | 0x96 | 9 | w |  |  |  |
+| Trigger Mode | 0xFF | 0x96 | 2 | w | 1 |  | 1：region occupied |
+| Trigger Enable | 0xFF | 0x96 | 2 | w | 0 |  | 0：disable<br>1：enable |
+| LoRa Uplink | 0xFF | 0x96 | 2 | w | 0 |  | 0：disable<br>1：enable |
+| Control Command | 0xFF | 0x96 | 3 | w | 0000 |  |  |
+| Control Time | 0xFF | 0x96 | 3 | w | 5 | 1 - 1440 |  |
+| Enable Control Time | 0xFF | 0x96 | 2 | w | 0 |  | 0：disable<br>1：enable |
+| Region Vacant | 0xFF | 0x96 | 9 | w |  |  |  |
+| Trigger Mode | 0xFF | 0x96 | 2 | w | 2 |  | 2：region vacant |
+| Trigger Enable | 0xFF | 0x96 | 2 | w | 0 |  | 0：disable<br>1：enable |
+| LoRa Uplink | 0xFF | 0x96 | 2 | w | 0 |  | 0：disable<br>1：enable |
+| Control Command | 0xFF | 0x96 | 3 | w | 0001 |  |  |
+| Control Time | 0xFF | 0x96 | 3 | w | 5 | 1 - 1440 |  |
+| Enable Control Time | 0xFF | 0x96 | 2 | w | 0 |  | 0：disable<br>1：enable |
+| Auxiliary Occupation | 0xF9 | 0xDA | 2 | w | 0 |  | 0:disable<br>1:enable |
+| Conference Room Occupancy Trigger Settings | 0xF9 | 0xDB | 3 | w |  |  |  |
+| Conference Room Occupancy Trigger ID | 0xF9 | 0xDB | 2 | w |  |  | 0：occupied trigger |
+| Conference Room Occupancy Trigger Control | 0xF9 | 0xDB | 2 | w | 0 |  | 0:disable<br>1:enable |
+| Conference Room Idle Trigger Settings | 0xF9 | 0xDB | 3 | w |  |  |  |
+| Conference Room Idle Trigger ID | 0xF9 | 0xDB | 2 | w |  |  | 1：vacant trigger |
+| Conference Room Idle Trigger Control | 0xF9 | 0xDB | 2 | w | 0 |  | 0:disable<br>1:enable |
+| Workstation Occupancy Trigger Settings | 0xF9 | 0xDB | 3 | w |  |  |  |
+| Workstation Occupancy Trigger  ID | 0xF9 | 0xDB | 2 | w |  |  | 0：occupied trigger |
+| Workstation Occupancy Trigger Control | 0xF9 | 0xDB | 2 | w | 0 |  | 0:disable<br>1:enable |
+| Workstation Vacant Trigger Settings | 0xF9 | 0xDB | 3 | w |  |  |  |
+| Workstation Vacant Trigger ID | 0xF9 | 0xDB | 2 | w |  |  | 1：vacant trigger |
+| Workstation Vacant Trigger Control | 0xF9 | 0xDB | 2 | w | 0 |  | 0:disable<br>1:enable |
+| Meeting Room Person Count Change Trigger Settings | 0xF9 | 0xDB | 3 | w |  |  |  |
+| Meeting Room Person Count Change Trigger ID | 0xF9 | 0xDB | 2 | w |  |  | 2：person count trigger |
+| Meeting Room Person Count Change Trigger Control | 0xF9 | 0xDB | 2 | w | 0 |  | 0:disable<br>1:enable |
+| PIR Occupancy Trigger Settings | 0xF9 | 0xDB | 3 | w |  |  |  |
+| PIR Occupancy Trigger ID | 0xF9 | 0xDB | 2 | w |  |  | 3：pir occupied trigger |
+| PIR Occupancy Trigger Control | 0xF9 | 0xDB | 2 | w | 0 |  | 0:disable<br>1:enable |
+| Workstation Area 1 Occupancy Trigger Settings | 0xF9 | 0xDB | 3 | w |  |  |  |
+| Workstation Area 1 Occupancy Trigger ID | 0xF9 | 0xDB | 2 | w |  |  | 4：workstation 1 occupancy trigger |
+| Workstation Area 1 Occupancy Trigger  Control | 0xF9 | 0xDB | 2 | w | 0 |  | 0:disable<br>1:enable |
+| Workstation Area 1 Vacant Trigger Settings | 0xF9 | 0xDB | 3 | w |  |  |  |
+| Workstation Area 1 Vacant Trigger ID | 0xF9 | 0xDB | 2 | w |  |  | 5：workstation 1 vacant trigger |
+| Workstation Area 1 Vacant Trigger Control | 0xF9 | 0xDB | 2 | w | 0 |  | 0:disable<br>1:enable |
+| Workstation Area 2 Occupancy Trigger Settings | 0xF9 | 0xDB | 3 | w |  |  |  |
+| Workstation Area 2 Occupancy Trigger ID | 0xF9 | 0xDB | 2 | w |  |  | 6：workstation 2 occupancy trigger |
+| Workstation Area 2 Occupancy Trigger Control | 0xF9 | 0xDB | 2 | w | 0 |  | 0:disable<br>1:enable |
+| Workstation Area 2 Vacant Trigger Settings | 0xF9 | 0xDB | 3 | w |  |  |  |
+| Workstation Area 2 Vacant Trigger ID | 0xF9 | 0xDB | 2 | w |  |  | 7：workstation 2 vacant trigger |
+| Workstation Area 2 Vacant Trigger Control | 0xF9 | 0xDB | 2 | w | 0 |  | 0:disable<br>1:enable |
+| Workstation Area 3 Occupancy Trigger Settings | 0xF9 | 0xDB | 3 | w |  |  |  |
+| Workstation Area 3 Occupancy Trigger ID | 0xF9 | 0xDB | 2 | w |  |  | 8：workstation 3 occupancy trigger |
+| Workstation Area 3 Occupancy Trigger Control | 0xF9 | 0xDB | 2 | w | 0 |  | 0:disable<br>1:enable |
+| Workstation Area 3 Vacant Trigger | 0xF9 | 0xDB | 3 | w |  |  |  |
+| Workstation Area 3 Vacant Trigger ID | 0xF9 | 0xDB | 2 | w |  |  | 9：workstation 3 vacant trigger |
+| Workstation Area 3 Vacant Trigger Control | 0xF9 | 0xDB | 2 | w | 0 |  | 0:disable<br>1:enable |
+| Workstation Area 4 Occupancy Trigger Settings | 0xF9 | 0xDB | 3 | w |  |  |  |
+| Workstation Area 4 Occupancy Trigger ID | 0xF9 | 0xDB | 2 | w |  |  | 10：workstation 4 occupancy trigger |
+| Workstation Area 4 Occupancy Trigger Control | 0xF9 | 0xDB | 2 | w | 0 |  | 0:disable<br>1:enable |
+| Workstation Area 4 Vacant Trigger Settings | 0xF9 | 0xDB | 3 | w |  |  |  |
+| Workstation Area 4 Vacant Trigger ID | 0xF9 | 0xDB | 2 | w |  |  | 11：workstation 4 vacant trigger |
+| Workstation Area 4 Vacant Trigger Control | 0xF9 | 0xDB | 2 | w | 0 |  | 0:disable<br>1:enable |
+| Workstation Area 5 Occupancy Trigger Settings | 0xF9 | 0xDB | 3 | w |  |  |  |
+| Workstation Area 5 Occupancy Trigger ID | 0xF9 | 0xDB | 2 | w |  |  | 12：workstation 5 occupancy trigger |
+| Workstation Area 5 Occupancy Trigger Control | 0xF9 | 0xDB | 2 | w | 0 |  | 0:disable<br>1:enable |
+| Workstation Area 5 Vacant Trigger Settings | 0xF9 | 0xDB | 3 | w |  |  |  |
+| Workstation Area 5 Vacant Trigger ID | 0xF9 | 0xDB | 2 | w |  |  | 13：workstation 5 vacant trigger |
+| Workstation Area 5 Vacant Trigger Control | 0xF9 | 0xDB | 2 | w | 0 |  | 0:disable<br>1:enable |
+| Workstation Area 6 Occupancy Trigger Settings | 0xF9 | 0xDB | 3 | w |  |  |  |
+| Workstation Area 6 Occupancy ID | 0xF9 | 0xDB | 2 | w |  |  | 14：workstation 6 occupancy trigger |
+| Workstation Area 6 Occupancy Trigger Control | 0xF9 | 0xDB | 2 | w | 0 |  | 0:disable<br>1:enable |
+| Workstation Area 6 Vacant Trigger Settings | 0xF9 | 0xDB | 3 | w |  |  |  |
+| Workstation Area 6 Vacant Trigger ID | 0xF9 | 0xDB | 2 | w |  |  | 15：workstation 6 vacant trigger |
+| Workstation Area 6 Vacant Trigger Control | 0xF9 | 0xDB | 2 | w | 0 |  | 0:disable<br>1:enable |
+| Workstation Area 7 Occupancy Trigger Settings | 0xF9 | 0xDB | 3 | w |  |  |  |
+| Workstation Area 7 Occupancy ID | 0xF9 | 0xDB | 2 | w |  |  | 16：workstation 7 occupancy trigger |
+| Workstation Area 7 Occupancy Trigger Control | 0xF9 | 0xDB | 2 | w | 0 |  | 0:disable<br>1:enable |
+| Workstation Area 7 Vacant Trigger Settings | 0xF9 | 0xDB | 3 | w |  |  |  |
+| Workstation Area 7 Vacant Trigger ID | 0xF9 | 0xDB | 2 | w |  |  | 17：workstation 7 vacant trigger |
+| Workstation Area 7 Vacant Trigger Control | 0xF9 | 0xDB | 2 | w | 0 |  | 0:disable<br>1:enable |
+| Workstation Area 8 Occupancy Trigger Settings | 0xF9 | 0xDB | 3 | w |  |  |  |
+| Workstation Area 8 Occupancy Trigger ID | 0xF9 | 0xDB | 2 | w |  |  | 18：workstation 8 occupancy trigger |
+| Workstation Area 8 Occupancy Trigger Control | 0xF9 | 0xDB | 2 | w | 0 |  | 0:disable<br>1:enable |
+| Workstation Area 8 Vacant Trigger Settings | 0xF9 | 0xDB | 3 | w |  |  |  |
+| Workstation Area 8 Vacant Trigger ID | 0xF9 | 0xDB | 2 | w |  |  | 19：workstation 8 vacant trigger |
+| Workstation Area 8 Vacant Trigger Control | 0xF9 | 0xDB | 2 | w | 0 |  | 0:disable<br>1:enable |
+| Workstation Area 9 Occupancy Trigger Settings | 0xF9 | 0xDB | 3 | w |  |  |  |
+| Workstation Area 9 Occupancy Trigger ID | 0xF9 | 0xDB | 2 | w |  |  | 20：workstation 9 occupancy trigger |
+| Workstation Area 9 Occupancy Trigger Control | 0xF9 | 0xDB | 2 | w | 0 |  | 0:disable<br>1:enable |
+| Workstation Area 9 Vacant Trigger Settings | 0xF9 | 0xDB | 3 | w |  |  |  |
+| Workstation Area 9 Vacant Trigger ID | 0xF9 | 0xDB | 2 | w |  |  | 21：workstation 2 vacant trigger |
+| Workstation Area 9 Vacant Trigger Control | 0xF9 | 0xDB | 2 | w | 0 |  | 0:disable<br>1:enable |
+| Workstation Area 10 Occupancy Trigger Settings | 0xF9 | 0xDB | 3 | w |  |  |  |
+| Workstation Area 10 Occupancy TriggerID | 0xF9 | 0xDB | 2 | w |  |  | 22：workstation 10 occupancy trigger |
+| Workstation Area 10 Occupancy Trigger Control | 0xF9 | 0xDB | 2 | w | 0 |  | 0:disable<br>1:enable |
+| Workstation Area 10 Vacant Trigger Settings | 0xF9 | 0xDB | 3 | w |  |  |  |
+| Workstation Area 10 Vacant Trigger ID | 0xF9 | 0xDB | 2 | w |  |  | 23：workstation 10 vacant trigger |
+| Workstation Area 10 Vacant Trigger Control | 0xF9 | 0xDB | 2 | w | 0 |  | 0:disable<br>1:enable |
 | Data Storage Enable | 0xFF | 0x68 | 2 | w | 0 |  | 0:disable<br>1:enable |
 | Data Retransmission Enable | 0xFF | 0x69 | 2 | w | 0 |  | 0:disable<br>1:enable |
 | Retransmission Interval Settings | 0xFF | 0x6A | 4 | w |  |  |  |

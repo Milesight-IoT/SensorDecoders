@@ -24,6 +24,28 @@
             "bacnet_unit_type": "UNITS_NO_UNITS"
         },
         {
+            "id": "auxiliary_occupation",
+            "name": "Auxiliary Occupation",
+            "value": "0",
+            "unit": "",
+            "access_mode": "W",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "disable"
+                },
+                {
+                    "value": 1,
+                    "name": "enable"
+                }
+            ],
+            "bacnet_type": "multistate_output_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS"
+        },
+        {
             "id": "battery",
             "name": "Electricity",
             "value": "",
@@ -54,6 +76,106 @@
             "bacnet_type": "analog_input_object",
             "bacnet_unit_type_id": 62,
             "bacnet_unit_type": "UNITS_DEGREES_CELSIUS"
+        },
+        {
+            "id": "conference_room_idle_trigger_settings.control",
+            "name": "Conference Room Idle Trigger Control(Conference Room Idle Trigger Settings)",
+            "value": "0",
+            "unit": "",
+            "access_mode": "W",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "disable"
+                },
+                {
+                    "value": 1,
+                    "name": "enable"
+                }
+            ],
+            "bacnet_type": "binary_output_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "conference_room_idle_trigger_settings.id"
+            ]
+        },
+        {
+            "id": "conference_room_idle_trigger_settings.id",
+            "name": "Conference Room Idle Trigger ID(Conference Room Idle Trigger Settings)",
+            "value": "",
+            "unit": "",
+            "access_mode": "W",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 1,
+                    "name": "vacant trigger"
+                },
+                {
+                    "value": 2,
+                    "name": "Unsupported Command"
+                }
+            ],
+            "bacnet_type": "multistate_output_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "conference_room_idle_trigger_settings.control"
+            ]
+        },
+        {
+            "id": "conference_room_occupancy_trigger_settings.control",
+            "name": "Conference Room Occupancy Trigger Control(Conference Room Occupancy Trigger Settings)",
+            "value": "0",
+            "unit": "",
+            "access_mode": "W",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "disable"
+                },
+                {
+                    "value": 1,
+                    "name": "enable"
+                }
+            ],
+            "bacnet_type": "binary_output_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "conference_room_occupancy_trigger_settings.id"
+            ]
+        },
+        {
+            "id": "conference_room_occupancy_trigger_settings.id",
+            "name": "Conference Room Occupancy Trigger ID(Conference Room Occupancy Trigger Settings)",
+            "value": "",
+            "unit": "",
+            "access_mode": "W",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "occupied trigger"
+                },
+                {
+                    "value": 1,
+                    "name": "Unsupported Command"
+                }
+            ],
+            "bacnet_type": "multistate_output_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "conference_room_occupancy_trigger_settings.control"
+            ]
         },
         {
             "id": "d2d_enable",
@@ -1368,6 +1490,106 @@
             "bacnet_unit_type": "UNITS_NO_UNITS"
         },
         {
+            "id": "meeting_room_person_count_change_trigger_settings.control",
+            "name": "Meeting Room Person Count Change Trigger Control(Meeting Room Person Count Change Trigger Settings)",
+            "value": "0",
+            "unit": "",
+            "access_mode": "W",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "disable"
+                },
+                {
+                    "value": 1,
+                    "name": "enable"
+                }
+            ],
+            "bacnet_type": "binary_output_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "meeting_room_person_count_change_trigger_settings.id"
+            ]
+        },
+        {
+            "id": "meeting_room_person_count_change_trigger_settings.id",
+            "name": "Meeting Room Person Count Change Trigger ID(Meeting Room Person Count Change Trigger Settings)",
+            "value": "",
+            "unit": "",
+            "access_mode": "W",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 2,
+                    "name": "person count trigger"
+                },
+                {
+                    "value": 3,
+                    "name": "Unsupported Command"
+                }
+            ],
+            "bacnet_type": "multistate_output_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "meeting_room_person_count_change_trigger_settings.control"
+            ]
+        },
+        {
+            "id": "pir_occupancy_trigger_settings.control",
+            "name": "PIR Occupancy Trigger Control(PIR Occupancy Trigger Settings)",
+            "value": "0",
+            "unit": "",
+            "access_mode": "W",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "disable"
+                },
+                {
+                    "value": 1,
+                    "name": "enable"
+                }
+            ],
+            "bacnet_type": "binary_output_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "pir_occupancy_trigger_settings.id"
+            ]
+        },
+        {
+            "id": "pir_occupancy_trigger_settings.id",
+            "name": "PIR Occupancy Trigger ID(PIR Occupancy Trigger Settings)",
+            "value": "",
+            "unit": "",
+            "access_mode": "W",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 3,
+                    "name": "pir occupied trigger"
+                },
+                {
+                    "value": 4,
+                    "name": "Unsupported Command"
+                }
+            ],
+            "bacnet_type": "multistate_output_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "pir_occupancy_trigger_settings.control"
+            ]
+        },
+        {
             "id": "rebot",
             "name": "Rebot",
             "access_mode": "W",
@@ -1387,6 +1609,165 @@
                     "value": 1,
                     "name": "yes"
                 }
+            ]
+        },
+        {
+            "id": "region_occupied_d2d_controller_settings.d2d_controller_command",
+            "name": "Control Command(Region Occupied)",
+            "value": "0000",
+            "unit": "",
+            "access_mode": "W",
+            "data_type": "TEXT",
+            "value_type": "STRING",
+            "max_length": 4,
+            "bacnet_type": "character_string_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "region_occupied_d2d_controller_settings.d2d_controller_trigger_mode",
+                "region_occupied_d2d_controller_settings.d2d_controller_occupied_enable",
+                "region_occupied_d2d_controller_settings.d2d_controller_lora_enable",
+                "region_occupied_d2d_controller_settings.d2d_controller_command_valid_time",
+                "region_occupied_d2d_controller_settings.d2d_controller_command_valid_time_enable"
+            ]
+        },
+        {
+            "id": "region_occupied_d2d_controller_settings.d2d_controller_command_valid_time",
+            "name": "Control Time(Region Occupied)",
+            "value": "5",
+            "unit": "min",
+            "access_mode": "W",
+            "data_type": "NUMBER",
+            "value_type": "UINT16",
+            "range": [
+                1,
+                1440
+            ],
+            "bacnet_type": "analog_output_object",
+            "bacnet_unit_type_id": 72,
+            "bacnet_unit_type": "UNITS_MINUTES",
+            "reference": [
+                "region_occupied_d2d_controller_settings.d2d_controller_trigger_mode",
+                "region_occupied_d2d_controller_settings.d2d_controller_occupied_enable",
+                "region_occupied_d2d_controller_settings.d2d_controller_lora_enable",
+                "region_occupied_d2d_controller_settings.d2d_controller_command",
+                "region_occupied_d2d_controller_settings.d2d_controller_command_valid_time_enable"
+            ]
+        },
+        {
+            "id": "region_occupied_d2d_controller_settings.d2d_controller_command_valid_time_enable",
+            "name": "Enable Control Time(Region Occupied)",
+            "value": "0",
+            "unit": "",
+            "access_mode": "W",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "disable"
+                },
+                {
+                    "value": 1,
+                    "name": "enable"
+                }
+            ],
+            "bacnet_type": "binary_output_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "region_occupied_d2d_controller_settings.d2d_controller_trigger_mode",
+                "region_occupied_d2d_controller_settings.d2d_controller_occupied_enable",
+                "region_occupied_d2d_controller_settings.d2d_controller_lora_enable",
+                "region_occupied_d2d_controller_settings.d2d_controller_command",
+                "region_occupied_d2d_controller_settings.d2d_controller_command_valid_time"
+            ]
+        },
+        {
+            "id": "region_occupied_d2d_controller_settings.d2d_controller_lora_enable",
+            "name": "LoRa Uplink(Region Occupied)",
+            "value": "0",
+            "unit": "",
+            "access_mode": "W",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "disable"
+                },
+                {
+                    "value": 1,
+                    "name": "enable"
+                }
+            ],
+            "bacnet_type": "binary_output_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "region_occupied_d2d_controller_settings.d2d_controller_trigger_mode",
+                "region_occupied_d2d_controller_settings.d2d_controller_occupied_enable",
+                "region_occupied_d2d_controller_settings.d2d_controller_command",
+                "region_occupied_d2d_controller_settings.d2d_controller_command_valid_time",
+                "region_occupied_d2d_controller_settings.d2d_controller_command_valid_time_enable"
+            ]
+        },
+        {
+            "id": "region_occupied_d2d_controller_settings.d2d_controller_occupied_enable",
+            "name": "Trigger Enable(Region Occupied)",
+            "value": "0",
+            "unit": "",
+            "access_mode": "W",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "disable"
+                },
+                {
+                    "value": 1,
+                    "name": "enable"
+                }
+            ],
+            "bacnet_type": "binary_output_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "region_occupied_d2d_controller_settings.d2d_controller_trigger_mode",
+                "region_occupied_d2d_controller_settings.d2d_controller_lora_enable",
+                "region_occupied_d2d_controller_settings.d2d_controller_command",
+                "region_occupied_d2d_controller_settings.d2d_controller_command_valid_time",
+                "region_occupied_d2d_controller_settings.d2d_controller_command_valid_time_enable"
+            ]
+        },
+        {
+            "id": "region_occupied_d2d_controller_settings.d2d_controller_trigger_mode",
+            "name": "Trigger Mode(Region Occupied)",
+            "value": "1",
+            "unit": "",
+            "access_mode": "W",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 1,
+                    "name": "region occupied"
+                },
+                {
+                    "value": 2,
+                    "name": "Unsupported Command"
+                }
+            ],
+            "bacnet_type": "multistate_output_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "region_occupied_d2d_controller_settings.d2d_controller_occupied_enable",
+                "region_occupied_d2d_controller_settings.d2d_controller_lora_enable",
+                "region_occupied_d2d_controller_settings.d2d_controller_command",
+                "region_occupied_d2d_controller_settings.d2d_controller_command_valid_time",
+                "region_occupied_d2d_controller_settings.d2d_controller_command_valid_time_enable"
             ]
         },
         {
@@ -2247,6 +2628,165 @@
                 "region_status.region7_occupancy_status",
                 "region_status.region8_occupancy_status",
                 "region_status.region10_occupancy_status"
+            ]
+        },
+        {
+            "id": "region_vacant_d2d_controller_settings.d2d_controller_command",
+            "name": "Control Command(Region Vacant)",
+            "value": "0001",
+            "unit": "",
+            "access_mode": "W",
+            "data_type": "TEXT",
+            "value_type": "STRING",
+            "max_length": 4,
+            "bacnet_type": "character_string_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "region_vacant_d2d_controller_settings.d2d_controller_trigger_mode",
+                "region_vacant_d2d_controller_settings.d2d_controller_idle_enable",
+                "region_vacant_d2d_controller_settings.d2d_controller_lora_enable",
+                "region_vacant_d2d_controller_settings.d2d_controller_command_valid_time",
+                "region_vacant_d2d_controller_settings.d2d_controller_command_valid_time_enable"
+            ]
+        },
+        {
+            "id": "region_vacant_d2d_controller_settings.d2d_controller_command_valid_time",
+            "name": "Control Time(Region Vacant)",
+            "value": "5",
+            "unit": "min",
+            "access_mode": "W",
+            "data_type": "NUMBER",
+            "value_type": "UINT16",
+            "range": [
+                1,
+                1440
+            ],
+            "bacnet_type": "analog_output_object",
+            "bacnet_unit_type_id": 72,
+            "bacnet_unit_type": "UNITS_MINUTES",
+            "reference": [
+                "region_vacant_d2d_controller_settings.d2d_controller_trigger_mode",
+                "region_vacant_d2d_controller_settings.d2d_controller_idle_enable",
+                "region_vacant_d2d_controller_settings.d2d_controller_lora_enable",
+                "region_vacant_d2d_controller_settings.d2d_controller_command",
+                "region_vacant_d2d_controller_settings.d2d_controller_command_valid_time_enable"
+            ]
+        },
+        {
+            "id": "region_vacant_d2d_controller_settings.d2d_controller_command_valid_time_enable",
+            "name": "Enable Control Time(Region Vacant)",
+            "value": "0",
+            "unit": "",
+            "access_mode": "W",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "disable"
+                },
+                {
+                    "value": 1,
+                    "name": "enable"
+                }
+            ],
+            "bacnet_type": "binary_output_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "region_vacant_d2d_controller_settings.d2d_controller_trigger_mode",
+                "region_vacant_d2d_controller_settings.d2d_controller_idle_enable",
+                "region_vacant_d2d_controller_settings.d2d_controller_lora_enable",
+                "region_vacant_d2d_controller_settings.d2d_controller_command",
+                "region_vacant_d2d_controller_settings.d2d_controller_command_valid_time"
+            ]
+        },
+        {
+            "id": "region_vacant_d2d_controller_settings.d2d_controller_idle_enable",
+            "name": "Trigger Enable(Region Vacant)",
+            "value": "0",
+            "unit": "",
+            "access_mode": "W",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "disable"
+                },
+                {
+                    "value": 1,
+                    "name": "enable"
+                }
+            ],
+            "bacnet_type": "binary_output_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "region_vacant_d2d_controller_settings.d2d_controller_trigger_mode",
+                "region_vacant_d2d_controller_settings.d2d_controller_lora_enable",
+                "region_vacant_d2d_controller_settings.d2d_controller_command",
+                "region_vacant_d2d_controller_settings.d2d_controller_command_valid_time",
+                "region_vacant_d2d_controller_settings.d2d_controller_command_valid_time_enable"
+            ]
+        },
+        {
+            "id": "region_vacant_d2d_controller_settings.d2d_controller_lora_enable",
+            "name": "LoRa Uplink(Region Vacant)",
+            "value": "0",
+            "unit": "",
+            "access_mode": "W",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "disable"
+                },
+                {
+                    "value": 1,
+                    "name": "enable"
+                }
+            ],
+            "bacnet_type": "binary_output_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "region_vacant_d2d_controller_settings.d2d_controller_trigger_mode",
+                "region_vacant_d2d_controller_settings.d2d_controller_idle_enable",
+                "region_vacant_d2d_controller_settings.d2d_controller_command",
+                "region_vacant_d2d_controller_settings.d2d_controller_command_valid_time",
+                "region_vacant_d2d_controller_settings.d2d_controller_command_valid_time_enable"
+            ]
+        },
+        {
+            "id": "region_vacant_d2d_controller_settings.d2d_controller_trigger_mode",
+            "name": "Trigger Mode(Region Vacant)",
+            "value": "2",
+            "unit": "",
+            "access_mode": "W",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 2,
+                    "name": "region vacant"
+                },
+                {
+                    "value": 3,
+                    "name": "Unsupported Command"
+                }
+            ],
+            "bacnet_type": "multistate_output_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "region_vacant_d2d_controller_settings.d2d_controller_idle_enable",
+                "region_vacant_d2d_controller_settings.d2d_controller_lora_enable",
+                "region_vacant_d2d_controller_settings.d2d_controller_command",
+                "region_vacant_d2d_controller_settings.d2d_controller_command_valid_time",
+                "region_vacant_d2d_controller_settings.d2d_controller_command_valid_time_enable"
             ]
         },
         {
@@ -3116,6 +3656,1106 @@
             "bacnet_type": "character_string_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS"
+        },
+        {
+            "id": "workstation_area_1_occupancy_trigger_settings.control",
+            "name": "Workstation Area 1 Occupancy Trigger  Control(Workstation Area 1 Occupancy Trigger Settings)",
+            "value": "0",
+            "unit": "",
+            "access_mode": "W",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "disable"
+                },
+                {
+                    "value": 1,
+                    "name": "enable"
+                }
+            ],
+            "bacnet_type": "binary_output_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "workstation_area_1_occupancy_trigger_settings.id"
+            ]
+        },
+        {
+            "id": "workstation_area_1_occupancy_trigger_settings.id",
+            "name": "Workstation Area 1 Occupancy Trigger ID(Workstation Area 1 Occupancy Trigger Settings)",
+            "value": "",
+            "unit": "",
+            "access_mode": "W",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 4,
+                    "name": "workstation 1 occupancy trigger"
+                },
+                {
+                    "value": 5,
+                    "name": "Unsupported Command"
+                }
+            ],
+            "bacnet_type": "multistate_output_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "workstation_area_1_occupancy_trigger_settings.control"
+            ]
+        },
+        {
+            "id": "workstation_area_1_vacant_trigger_settings.control",
+            "name": "Workstation Area 1 Vacant Trigger Control(Workstation Area 1 Vacant Trigger Settings)",
+            "value": "0",
+            "unit": "",
+            "access_mode": "W",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "disable"
+                },
+                {
+                    "value": 1,
+                    "name": "enable"
+                }
+            ],
+            "bacnet_type": "binary_output_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "workstation_area_1_vacant_trigger_settings.id"
+            ]
+        },
+        {
+            "id": "workstation_area_1_vacant_trigger_settings.id",
+            "name": "Workstation Area 1 Vacant Trigger ID(Workstation Area 1 Vacant Trigger Settings)",
+            "value": "",
+            "unit": "",
+            "access_mode": "W",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 5,
+                    "name": "workstation 1 vacant trigger"
+                },
+                {
+                    "value": 6,
+                    "name": "Unsupported Command"
+                }
+            ],
+            "bacnet_type": "multistate_output_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "workstation_area_1_vacant_trigger_settings.control"
+            ]
+        },
+        {
+            "id": "workstation_area_10_occupancy_trigger_settings.control",
+            "name": "Workstation Area 10 Occupancy Trigger Control(Workstation Area 10 Occupancy Trigger Settings)",
+            "value": "0",
+            "unit": "",
+            "access_mode": "W",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "disable"
+                },
+                {
+                    "value": 1,
+                    "name": "enable"
+                }
+            ],
+            "bacnet_type": "binary_output_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "workstation_area_10_occupancy_trigger_settings.id"
+            ]
+        },
+        {
+            "id": "workstation_area_10_occupancy_trigger_settings.id",
+            "name": "Workstation Area 10 Occupancy TriggerID(Workstation Area 10 Occupancy Trigger Settings)",
+            "value": "",
+            "unit": "",
+            "access_mode": "W",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 22,
+                    "name": "workstation 10 occupancy trigger"
+                },
+                {
+                    "value": 23,
+                    "name": "Unsupported Command"
+                }
+            ],
+            "bacnet_type": "multistate_output_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "workstation_area_10_occupancy_trigger_settings.control"
+            ]
+        },
+        {
+            "id": "workstation_area_10_vacant_trigger_settings.control",
+            "name": "Workstation Area 10 Vacant Trigger Control(Workstation Area 10 Vacant Trigger Settings)",
+            "value": "0",
+            "unit": "",
+            "access_mode": "W",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "disable"
+                },
+                {
+                    "value": 1,
+                    "name": "enable"
+                }
+            ],
+            "bacnet_type": "binary_output_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "workstation_area_10_vacant_trigger_settings.id"
+            ]
+        },
+        {
+            "id": "workstation_area_10_vacant_trigger_settings.id",
+            "name": "Workstation Area 10 Vacant Trigger ID(Workstation Area 10 Vacant Trigger Settings)",
+            "value": "",
+            "unit": "",
+            "access_mode": "W",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 23,
+                    "name": "workstation 10 vacant trigger"
+                },
+                {
+                    "value": 24,
+                    "name": "Unsupported Command"
+                }
+            ],
+            "bacnet_type": "multistate_output_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "workstation_area_10_vacant_trigger_settings.control"
+            ]
+        },
+        {
+            "id": "workstation_area_2_occupancy_trigger_settings.control",
+            "name": "Workstation Area 2 Occupancy Trigger Control(Workstation Area 2 Occupancy Trigger Settings)",
+            "value": "0",
+            "unit": "",
+            "access_mode": "W",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "disable"
+                },
+                {
+                    "value": 1,
+                    "name": "enable"
+                }
+            ],
+            "bacnet_type": "binary_output_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "workstation_area_2_occupancy_trigger_settings.id"
+            ]
+        },
+        {
+            "id": "workstation_area_2_occupancy_trigger_settings.id",
+            "name": "Workstation Area 2 Occupancy Trigger ID(Workstation Area 2 Occupancy Trigger Settings)",
+            "value": "",
+            "unit": "",
+            "access_mode": "W",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 6,
+                    "name": "workstation 2 occupancy trigger"
+                },
+                {
+                    "value": 7,
+                    "name": "Unsupported Command"
+                }
+            ],
+            "bacnet_type": "multistate_output_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "workstation_area_2_occupancy_trigger_settings.control"
+            ]
+        },
+        {
+            "id": "workstation_area_2_vacant_trigger_settings.control",
+            "name": "Workstation Area 2 Vacant Trigger Control(Workstation Area 2 Vacant Trigger Settings)",
+            "value": "0",
+            "unit": "",
+            "access_mode": "W",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "disable"
+                },
+                {
+                    "value": 1,
+                    "name": "enable"
+                }
+            ],
+            "bacnet_type": "binary_output_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "workstation_area_2_vacant_trigger_settings.id"
+            ]
+        },
+        {
+            "id": "workstation_area_2_vacant_trigger_settings.id",
+            "name": "Workstation Area 2 Vacant Trigger ID(Workstation Area 2 Vacant Trigger Settings)",
+            "value": "",
+            "unit": "",
+            "access_mode": "W",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 7,
+                    "name": "workstation 2 vacant trigger"
+                },
+                {
+                    "value": 8,
+                    "name": "Unsupported Command"
+                }
+            ],
+            "bacnet_type": "multistate_output_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "workstation_area_2_vacant_trigger_settings.control"
+            ]
+        },
+        {
+            "id": "workstation_area_3_occupancy_trigger_settings.control",
+            "name": "Workstation Area 3 Occupancy Trigger Control(Workstation Area 3 Occupancy Trigger Settings)",
+            "value": "0",
+            "unit": "",
+            "access_mode": "W",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "disable"
+                },
+                {
+                    "value": 1,
+                    "name": "enable"
+                }
+            ],
+            "bacnet_type": "binary_output_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "workstation_area_3_occupancy_trigger_settings.id"
+            ]
+        },
+        {
+            "id": "workstation_area_3_occupancy_trigger_settings.id",
+            "name": "Workstation Area 3 Occupancy Trigger ID(Workstation Area 3 Occupancy Trigger Settings)",
+            "value": "",
+            "unit": "",
+            "access_mode": "W",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 8,
+                    "name": "workstation 3 occupancy trigger"
+                },
+                {
+                    "value": 9,
+                    "name": "Unsupported Command"
+                }
+            ],
+            "bacnet_type": "multistate_output_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "workstation_area_3_occupancy_trigger_settings.control"
+            ]
+        },
+        {
+            "id": "workstation_area_3_vacant_trigger.control",
+            "name": "Workstation Area 3 Vacant Trigger Control(Workstation Area 3 Vacant Trigger)",
+            "value": "0",
+            "unit": "",
+            "access_mode": "W",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "disable"
+                },
+                {
+                    "value": 1,
+                    "name": "enable"
+                }
+            ],
+            "bacnet_type": "binary_output_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "workstation_area_3_vacant_trigger.id"
+            ]
+        },
+        {
+            "id": "workstation_area_3_vacant_trigger.id",
+            "name": "Workstation Area 3 Vacant Trigger ID(Workstation Area 3 Vacant Trigger)",
+            "value": "",
+            "unit": "",
+            "access_mode": "W",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 9,
+                    "name": "workstation 3 vacant trigger"
+                },
+                {
+                    "value": 10,
+                    "name": "Unsupported Command"
+                }
+            ],
+            "bacnet_type": "multistate_output_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "workstation_area_3_vacant_trigger.control"
+            ]
+        },
+        {
+            "id": "workstation_area_4_occupancy_trigger_settings.control",
+            "name": "Workstation Area 4 Occupancy Trigger Control(Workstation Area 4 Occupancy Trigger Settings)",
+            "value": "0",
+            "unit": "",
+            "access_mode": "W",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "disable"
+                },
+                {
+                    "value": 1,
+                    "name": "enable"
+                }
+            ],
+            "bacnet_type": "binary_output_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "workstation_area_4_occupancy_trigger_settings.id"
+            ]
+        },
+        {
+            "id": "workstation_area_4_occupancy_trigger_settings.id",
+            "name": "Workstation Area 4 Occupancy Trigger ID(Workstation Area 4 Occupancy Trigger Settings)",
+            "value": "",
+            "unit": "",
+            "access_mode": "W",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 10,
+                    "name": "workstation 4 occupancy trigger"
+                },
+                {
+                    "value": 11,
+                    "name": "Unsupported Command"
+                }
+            ],
+            "bacnet_type": "multistate_output_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "workstation_area_4_occupancy_trigger_settings.control"
+            ]
+        },
+        {
+            "id": "workstation_area_4_vacant_trigger_settings.control",
+            "name": "Workstation Area 4 Vacant Trigger Control(Workstation Area 4 Vacant Trigger Settings)",
+            "value": "0",
+            "unit": "",
+            "access_mode": "W",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "disable"
+                },
+                {
+                    "value": 1,
+                    "name": "enable"
+                }
+            ],
+            "bacnet_type": "binary_output_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "workstation_area_4_vacant_trigger_settings.id"
+            ]
+        },
+        {
+            "id": "workstation_area_4_vacant_trigger_settings.id",
+            "name": "Workstation Area 4 Vacant Trigger ID(Workstation Area 4 Vacant Trigger Settings)",
+            "value": "",
+            "unit": "",
+            "access_mode": "W",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 11,
+                    "name": "workstation 4 vacant trigger"
+                },
+                {
+                    "value": 12,
+                    "name": "Unsupported Command"
+                }
+            ],
+            "bacnet_type": "multistate_output_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "workstation_area_4_vacant_trigger_settings.control"
+            ]
+        },
+        {
+            "id": "workstation_area_5_occupancy_trigger_settings.control",
+            "name": "Workstation Area 5 Occupancy Trigger Control(Workstation Area 5 Occupancy Trigger Settings)",
+            "value": "0",
+            "unit": "",
+            "access_mode": "W",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "disable"
+                },
+                {
+                    "value": 1,
+                    "name": "enable"
+                }
+            ],
+            "bacnet_type": "binary_output_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "workstation_area_5_occupancy_trigger_settings.id"
+            ]
+        },
+        {
+            "id": "workstation_area_5_occupancy_trigger_settings.id",
+            "name": "Workstation Area 5 Occupancy Trigger ID(Workstation Area 5 Occupancy Trigger Settings)",
+            "value": "",
+            "unit": "",
+            "access_mode": "W",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 12,
+                    "name": "workstation 5 occupancy trigger"
+                },
+                {
+                    "value": 13,
+                    "name": "Unsupported Command"
+                }
+            ],
+            "bacnet_type": "multistate_output_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "workstation_area_5_occupancy_trigger_settings.control"
+            ]
+        },
+        {
+            "id": "workstation_area_5_vacant_trigger_settings.control",
+            "name": "Workstation Area 5 Vacant Trigger Control(Workstation Area 5 Vacant Trigger Settings)",
+            "value": "0",
+            "unit": "",
+            "access_mode": "W",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "disable"
+                },
+                {
+                    "value": 1,
+                    "name": "enable"
+                }
+            ],
+            "bacnet_type": "binary_output_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "workstation_area_5_vacant_trigger_settings.id"
+            ]
+        },
+        {
+            "id": "workstation_area_5_vacant_trigger_settings.id",
+            "name": "Workstation Area 5 Vacant Trigger ID(Workstation Area 5 Vacant Trigger Settings)",
+            "value": "",
+            "unit": "",
+            "access_mode": "W",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 13,
+                    "name": "workstation 5 vacant trigger"
+                },
+                {
+                    "value": 14,
+                    "name": "Unsupported Command"
+                }
+            ],
+            "bacnet_type": "multistate_output_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "workstation_area_5_vacant_trigger_settings.control"
+            ]
+        },
+        {
+            "id": "workstation_area_6_occupancy_trigger_settings.control",
+            "name": "Workstation Area 6 Occupancy Trigger Control(Workstation Area 6 Occupancy Trigger Settings)",
+            "value": "0",
+            "unit": "",
+            "access_mode": "W",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "disable"
+                },
+                {
+                    "value": 1,
+                    "name": "enable"
+                }
+            ],
+            "bacnet_type": "binary_output_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "workstation_area_6_occupancy_trigger_settings.id"
+            ]
+        },
+        {
+            "id": "workstation_area_6_occupancy_trigger_settings.id",
+            "name": "Workstation Area 6 Occupancy ID(Workstation Area 6 Occupancy Trigger Settings)",
+            "value": "",
+            "unit": "",
+            "access_mode": "W",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 14,
+                    "name": "workstation 6 occupancy trigger"
+                },
+                {
+                    "value": 15,
+                    "name": "Unsupported Command"
+                }
+            ],
+            "bacnet_type": "multistate_output_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "workstation_area_6_occupancy_trigger_settings.control"
+            ]
+        },
+        {
+            "id": "workstation_area_6_vacant_trigger_settings.control",
+            "name": "Workstation Area 6 Vacant Trigger Control(Workstation Area 6 Vacant Trigger Settings)",
+            "value": "0",
+            "unit": "",
+            "access_mode": "W",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "disable"
+                },
+                {
+                    "value": 1,
+                    "name": "enable"
+                }
+            ],
+            "bacnet_type": "binary_output_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "workstation_area_6_vacant_trigger_settings.id"
+            ]
+        },
+        {
+            "id": "workstation_area_6_vacant_trigger_settings.id",
+            "name": "Workstation Area 6 Vacant Trigger ID(Workstation Area 6 Vacant Trigger Settings)",
+            "value": "",
+            "unit": "",
+            "access_mode": "W",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 15,
+                    "name": "workstation 6 vacant trigger"
+                },
+                {
+                    "value": 16,
+                    "name": "Unsupported Command"
+                }
+            ],
+            "bacnet_type": "multistate_output_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "workstation_area_6_vacant_trigger_settings.control"
+            ]
+        },
+        {
+            "id": "workstation_area_7_occupancy_trigger_settings.control",
+            "name": "Workstation Area 7 Occupancy Trigger Control(Workstation Area 7 Occupancy Trigger Settings)",
+            "value": "0",
+            "unit": "",
+            "access_mode": "W",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "disable"
+                },
+                {
+                    "value": 1,
+                    "name": "enable"
+                }
+            ],
+            "bacnet_type": "binary_output_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "workstation_area_7_occupancy_trigger_settings.id"
+            ]
+        },
+        {
+            "id": "workstation_area_7_occupancy_trigger_settings.id",
+            "name": "Workstation Area 7 Occupancy ID(Workstation Area 7 Occupancy Trigger Settings)",
+            "value": "",
+            "unit": "",
+            "access_mode": "W",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 16,
+                    "name": "workstation 7 occupancy trigger"
+                },
+                {
+                    "value": 17,
+                    "name": "Unsupported Command"
+                }
+            ],
+            "bacnet_type": "multistate_output_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "workstation_area_7_occupancy_trigger_settings.control"
+            ]
+        },
+        {
+            "id": "workstation_area_7_vacant_trigger_settings.control",
+            "name": "Workstation Area 7 Vacant Trigger Control(Workstation Area 7 Vacant Trigger Settings)",
+            "value": "0",
+            "unit": "",
+            "access_mode": "W",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "disable"
+                },
+                {
+                    "value": 1,
+                    "name": "enable"
+                }
+            ],
+            "bacnet_type": "binary_output_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "workstation_area_7_vacant_trigger_settings.id"
+            ]
+        },
+        {
+            "id": "workstation_area_7_vacant_trigger_settings.id",
+            "name": "Workstation Area 7 Vacant Trigger ID(Workstation Area 7 Vacant Trigger Settings)",
+            "value": "",
+            "unit": "",
+            "access_mode": "W",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 17,
+                    "name": "workstation 7 vacant trigger"
+                },
+                {
+                    "value": 18,
+                    "name": "Unsupported Command"
+                }
+            ],
+            "bacnet_type": "multistate_output_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "workstation_area_7_vacant_trigger_settings.control"
+            ]
+        },
+        {
+            "id": "workstation_area_8_occupancy_trigger_settings.control",
+            "name": "Workstation Area 8 Occupancy Trigger Control(Workstation Area 8 Occupancy Trigger Settings)",
+            "value": "0",
+            "unit": "",
+            "access_mode": "W",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "disable"
+                },
+                {
+                    "value": 1,
+                    "name": "enable"
+                }
+            ],
+            "bacnet_type": "binary_output_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "workstation_area_8_occupancy_trigger_settings.id"
+            ]
+        },
+        {
+            "id": "workstation_area_8_occupancy_trigger_settings.id",
+            "name": "Workstation Area 8 Occupancy Trigger ID(Workstation Area 8 Occupancy Trigger Settings)",
+            "value": "",
+            "unit": "",
+            "access_mode": "W",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 18,
+                    "name": "workstation 8 occupancy trigger"
+                },
+                {
+                    "value": 19,
+                    "name": "Unsupported Command"
+                }
+            ],
+            "bacnet_type": "multistate_output_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "workstation_area_8_occupancy_trigger_settings.control"
+            ]
+        },
+        {
+            "id": "workstation_area_8_vacant_trigger_settings.control",
+            "name": "Workstation Area 8 Vacant Trigger Control(Workstation Area 8 Vacant Trigger Settings)",
+            "value": "0",
+            "unit": "",
+            "access_mode": "W",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "disable"
+                },
+                {
+                    "value": 1,
+                    "name": "enable"
+                }
+            ],
+            "bacnet_type": "binary_output_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "workstation_area_8_vacant_trigger_settings.id"
+            ]
+        },
+        {
+            "id": "workstation_area_8_vacant_trigger_settings.id",
+            "name": "Workstation Area 8 Vacant Trigger ID(Workstation Area 8 Vacant Trigger Settings)",
+            "value": "",
+            "unit": "",
+            "access_mode": "W",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 19,
+                    "name": "workstation 8 vacant trigger"
+                },
+                {
+                    "value": 20,
+                    "name": "Unsupported Command"
+                }
+            ],
+            "bacnet_type": "multistate_output_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "workstation_area_8_vacant_trigger_settings.control"
+            ]
+        },
+        {
+            "id": "workstation_area_9_occupancy_trigger_settings.control",
+            "name": "Workstation Area 9 Occupancy Trigger Control(Workstation Area 9 Occupancy Trigger Settings)",
+            "value": "0",
+            "unit": "",
+            "access_mode": "W",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "disable"
+                },
+                {
+                    "value": 1,
+                    "name": "enable"
+                }
+            ],
+            "bacnet_type": "binary_output_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "workstation_area_9_occupancy_trigger_settings.id"
+            ]
+        },
+        {
+            "id": "workstation_area_9_occupancy_trigger_settings.id",
+            "name": "Workstation Area 9 Occupancy Trigger ID(Workstation Area 9 Occupancy Trigger Settings)",
+            "value": "",
+            "unit": "",
+            "access_mode": "W",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 20,
+                    "name": "workstation 9 occupancy trigger"
+                },
+                {
+                    "value": 21,
+                    "name": "Unsupported Command"
+                }
+            ],
+            "bacnet_type": "multistate_output_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "workstation_area_9_occupancy_trigger_settings.control"
+            ]
+        },
+        {
+            "id": "workstation_area_9_vacant_trigger_settings.control",
+            "name": "Workstation Area 9 Vacant Trigger Control(Workstation Area 9 Vacant Trigger Settings)",
+            "value": "0",
+            "unit": "",
+            "access_mode": "W",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "disable"
+                },
+                {
+                    "value": 1,
+                    "name": "enable"
+                }
+            ],
+            "bacnet_type": "binary_output_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "workstation_area_9_vacant_trigger_settings.id"
+            ]
+        },
+        {
+            "id": "workstation_area_9_vacant_trigger_settings.id",
+            "name": "Workstation Area 9 Vacant Trigger ID(Workstation Area 9 Vacant Trigger Settings)",
+            "value": "",
+            "unit": "",
+            "access_mode": "W",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 21,
+                    "name": "workstation 2 vacant trigger"
+                },
+                {
+                    "value": 22,
+                    "name": "Unsupported Command"
+                }
+            ],
+            "bacnet_type": "multistate_output_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "workstation_area_9_vacant_trigger_settings.control"
+            ]
+        },
+        {
+            "id": "workstation_occupancy_trigger_settings.control",
+            "name": "Workstation Occupancy Trigger Control(Workstation Occupancy Trigger Settings)",
+            "value": "0",
+            "unit": "",
+            "access_mode": "W",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "disable"
+                },
+                {
+                    "value": 1,
+                    "name": "enable"
+                }
+            ],
+            "bacnet_type": "binary_output_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "workstation_occupancy_trigger_settings.id"
+            ]
+        },
+        {
+            "id": "workstation_occupancy_trigger_settings.id",
+            "name": "Workstation Occupancy Trigger  ID(Workstation Occupancy Trigger Settings)",
+            "value": "",
+            "unit": "",
+            "access_mode": "W",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "occupied trigger"
+                },
+                {
+                    "value": 1,
+                    "name": "Unsupported Command"
+                }
+            ],
+            "bacnet_type": "multistate_output_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "workstation_occupancy_trigger_settings.control"
+            ]
+        },
+        {
+            "id": "workstation_vacant_trigger_settings.control",
+            "name": "Workstation Vacant Trigger Control(Workstation Vacant Trigger Settings)",
+            "value": "0",
+            "unit": "",
+            "access_mode": "W",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "disable"
+                },
+                {
+                    "value": 1,
+                    "name": "enable"
+                }
+            ],
+            "bacnet_type": "binary_output_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "workstation_vacant_trigger_settings.id"
+            ]
+        },
+        {
+            "id": "workstation_vacant_trigger_settings.id",
+            "name": "Workstation Vacant Trigger ID(Workstation Vacant Trigger Settings)",
+            "value": "",
+            "unit": "",
+            "access_mode": "W",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 1,
+                    "name": "vacant trigger"
+                },
+                {
+                    "value": 2,
+                    "name": "Unsupported Command"
+                }
+            ],
+            "bacnet_type": "multistate_output_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "workstation_vacant_trigger_settings.control"
+            ]
         }
     ]
 }
