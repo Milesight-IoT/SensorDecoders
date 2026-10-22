@@ -1675,7 +1675,7 @@
             "value_type": "UINT16",
             "bacnet_type": "analog_input_object",
             "bacnet_unit_type_id": 124,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "bacnet_unit_type": "UNITS_MILLIVOLTS",
             "range": [0, 65535]
         },
         {
