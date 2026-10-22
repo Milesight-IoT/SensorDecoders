@@ -1285,10 +1285,11 @@
             "data_type": "ENUM",
             "value_type": "UINT8",
             "values": [
-                0,
-                1,
-                2,
-                3
+                { "value": 0, "name": "Disable" },
+                { "value": 1, "name": "Below" },
+                { "value": 2, "name": "Above" },
+                { "value": 3, "name": "Within" },
+                { "value": 4, "name": "Below or Above" }
             ],
             "bacnet_type": "multistate_value_object",
             "bacnet_unit_type_id": 95,
@@ -1445,7 +1446,7 @@
                 { "value": 6, "name": "Device Removed" },
                 { "value": 7, "name": "Timeout/Hall Fault" },
                 { "value": 8, "name": "Frost Protection Interrupted" },
-                9
+                { "value": 9, "name": "Temperature Control Enabled" }
             ],
             "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
@@ -1673,7 +1674,7 @@
             "data_type": "NUMBER",
             "value_type": "UINT16",
             "bacnet_type": "analog_input_object",
-            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type_id": 124,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "range": [0, 65535]
         },
