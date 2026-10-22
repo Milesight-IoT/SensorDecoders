@@ -405,17 +405,13 @@ function clearHistory(clear_history) {
 function getValues(map) {
     var values = [];
     for (var key in map) {
-        values.push(parseInt(key));
-        values.push(map[key]);
+        values.push(RAW_VALUE ? parseInt(key) : map[key]);
     }
     return values;
 }
 
 function getValue(map, value) {
     if (RAW_VALUE) return value;
-    if (typeof value === "number") {
-        return value;
-    }
 
     for (var key in map) {
         if (map[key] === value) {
