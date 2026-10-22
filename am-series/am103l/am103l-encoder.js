@@ -38,17 +38,8 @@ function milesightDeviceEncode(payload) {
     if ("time_zone" in payload) {
         encoded = encoded.concat(setTimeZone(payload.time_zone));
     }
-    if ("timestamp" in payload) {
-        encoded = encoded.concat(setTimestamp(payload.timestamp));
-    }
     if ("time_sync_enable" in payload) {
         encoded = encoded.concat(setTimeSyncEnable(payload.time_sync_enable));
-    }
-    if ("report_schedule_config" in payload) {
-        encoded = encoded.concat(setReportScheduleConfig(payload.report_schedule_config));
-    }
-    if ("clear_report_schedule" in payload) {
-        encoded = encoded.concat(clearReportSchedule(payload.clear_report_schedule));
     }
     if ("led_indicator_mode" in payload) {
         encoded = encoded.concat(setLedIndicatorMode(payload.led_indicator_mode));
@@ -56,8 +47,8 @@ function milesightDeviceEncode(payload) {
     if ("reset_battery" in payload) {
         encoded = encoded.concat(resetBattery(payload.reset_battery));
     }
-    if ("temperature_alarm_config" in payload) {
-        encoded = encoded.concat(setTemperatureAlarmConfig(payload.temperature_alarm_config));
+    if ("alarm_config" in payload) {
+        encoded = encoded.concat(setAlarmConfig(payload.alarm_config));
     }
     if ("co2_calibration_settings" in payload) {
         encoded = encoded.concat(setCO2CalibrationSettings(payload.co2_calibration_settings));
@@ -120,10 +111,25 @@ function reboot(reboot) {
  * @example { "report_interval": 300 }
  */
 function setReportInterval(report_interval) {
-    var buffer = new Buffer(4);
+    var period_unit = report_interval.period_unit;
+    var period_time = report_interval.period_time;
+
+    var unit_map = { 0: "second", 1: "minute" };
+    var unit_keys = [0, 1];
+    var unit_values = getValues(unit_map);
+    if (unit_keys.indexOf(period_unit) === -1 && unit_values.indexOf(period_unit) === -1) {
+        throw new Error("report_interval.period_unit must be one of " + unit_keys.join(", ") + " or " + unit_values.join(", "));
+    }
+    if (typeof period_time !== "number") {
+        throw new Error("report_interval.period_time must be a number");
+    }
+    var raw_unit = typeof period_unit === "number" ? period_unit : parseInt(getValue(unit_map, period_unit), 10);
+
+    var buffer = new Buffer(5);
     buffer.writeUInt8(0xff);
-    buffer.writeUInt8(0x03);
-    buffer.writeUInt16LE(report_interval);
+    buffer.writeUInt8(0x8e);
+    buffer.writeUInt8(raw_unit);
+    buffer.writeUInt16LE(period_time);
     return buffer.toBytes();
 }
 
@@ -141,30 +147,11 @@ function setTimeZone(time_zone) {
 
     var buffer = new Buffer(4);
     buffer.writeUInt8(0xff);
-    buffer.writeUInt8(0x17);
+    buffer.writeUInt8(0xbd);
     buffer.writeInt16LE(getValue(timezone_map, time_zone));
     return buffer.toBytes();
 }
 
-/**
- * timestamp
- * @param {number} timestamp unit: second
- * @example { "timestamp": 1717756800 }
- */
-function setTimestamp(timestamp) {
-    if (typeof timestamp !== "number") {
-        throw new Error("timestamp must be a number");
-    }
-    if (timestamp < 0) {
-        throw new Error("timestamp must be greater than 0");
-    }
-
-    var buffer = new Buffer(6);
-    buffer.writeUInt8(0xff);
-    buffer.writeUInt8(0x11);
-    buffer.writeUInt32LE(timestamp);
-    return buffer.toBytes();
-}
 
 /**
  * time sync enable
@@ -185,54 +172,7 @@ function setTimeSyncEnable(time_sync_enable) {
     return buffer.toBytes();
 }
 
-/**
- * report schedule config
- * @param {object} report_schedule_config
- * @param {number} report_schedule_config._item.start_time unit: hour, values: (0-23)
- * @param {number} report_schedule_config._item.end_time unit: hour, values: (0-23)
- * @param {number} report_schedule_config._item.report_interval unit: second
- * @param {number} report_schedule_config._item.co2_collection_interval unit: minute
- * @param {number} report_schedule_config._item.collection_interval unit: minute
- * @example { "report_schedule_config": [ { "id": 0, "start_time": 0, "end_time": 23, "report_interval": 10, "co2_collection_interval": 10, "collection_interval": 10 } ] }
- */
-function setReportScheduleConfig(report_schedule_config) {
-    var num = report_schedule_config.length;
-    if (num < 1 || num > 3) {
-        throw new Error("report_schedule_config.num must be between 1 and 3");
-    }
 
-    var buffer = new Buffer(3 + num * 6);
-    buffer.writeUInt8(0xff);
-    buffer.writeUInt8(0x3a);
-    buffer.writeUInt8(num);
-    for (var i = 0; i < num; i++) {
-        var item = report_schedule_config[i];
-        buffer.writeUInt8(item.start_time * 10);
-        buffer.writeUInt8(item.end_time * 10);
-        buffer.writeUInt16LE(item.report_interval);
-        buffer.writeUInt8(item.co2_collection_interval);
-        buffer.writeUInt8(item.collection_interval);
-    }
-    return buffer.toBytes();
-}
-
-/**
- * clear report schedule
- * @param {number} clear_report_schedule values: (0: no, 1: yes)
- * @example { "clear_report_schedule": 1 }
- */
-function clearReportSchedule(clear_report_schedule) {
-    var yes_no_map = { 0: "no", 1: "yes" };
-    var yes_no_values = getValues(yes_no_map);
-    if (yes_no_values.indexOf(clear_report_schedule) === -1) {
-        throw new Error("clear_report_schedule must be one of " + yes_no_values.join(", "));
-    }
-
-    if (getValue(yes_no_map, clear_report_schedule) === 0) {
-        return [];
-    }
-    return [0xff, 0x57, 0xff];
-}
 
 /**
  * led indicator mode
@@ -253,39 +193,6 @@ function setLedIndicatorMode(led_indicator_mode) {
     return buffer.toBytes();
 }
 
-/**
- * temperature threshold alarm
- * @param {object} temperature_alarm_config
- * @param {number} temperature_alarm_config.condition values: (0: disable, 1: below, 2: above, 3: between, 4: outside)
- * @param {number} temperature_alarm_config.threshold_min condition=(below, within, outside)
- * @param {number} temperature_alarm_config.threshold_max condition=(above, within, outside)
- * @example { "temperature_alarm_config": { "condition": 2, "threshold_min": 10, "threshold_max": 30 } }
- */
-function setTemperatureAlarmConfig(temperature_alarm_config) {
-    var condition = temperature_alarm_config.condition;
-    var threshold_min = temperature_alarm_config.threshold_min;
-    var threshold_max = temperature_alarm_config.threshold_max;
-
-    var condition_map = { 0: "disable", 1: "below", 2: "above", 3: "between", 4: "outside" };
-    var condition_values = getValues(condition_map);
-    if (condition_values.indexOf(condition) === -1) {
-        throw new Error("temperature_alarm_config.condition must be one of " + condition_values.join(", "));
-    }
-
-    var data = 0x00;
-    data |= getValue(condition_map, condition);
-    data |= 1 << 3; // temperature alarm
-
-    var buffer = new Buffer(11);
-    buffer.writeUInt8(0xff);
-    buffer.writeUInt8(0x06);
-    buffer.writeUInt8(data);
-    buffer.writeInt16LE(threshold_min * 10);
-    buffer.writeInt16LE(threshold_max * 10);
-    buffer.writeUInt16LE(0x00);
-    buffer.writeUInt16LE(0x00);
-    return buffer.toBytes();
-}
 /**
  * CO2 calibration settings
  * @param {object} co2_calibration_settings
@@ -415,6 +322,55 @@ function setAltitudeCalibrationSettings(altitude_calibration_settings) {
     buffer.writeUInt8(0x87);
     buffer.writeUInt8(getValue(enable_map, enable));
     buffer.writeUInt16LE(altitude);
+    return buffer.toBytes();
+}
+
+/**
+ * alarm config
+ * @param {object} alarm_config
+ * @param {number} alarm_config.id alarm id
+ * @param {number} alarm_config.condition values: (1: below, 2: above, 3: within, 4: below_or_above, 5: saltation, 6: primary_alarm_only, 7: secondary_alarm_only, 8: primary_and_secondary_alarm)
+ * @param {number} alarm_config.max threshold max
+ * @param {number} alarm_config.min threshold min
+ * @param {number} alarm_config.enabled values: (0: disable, 1: enable)
+ * @example { "alarm_config": { "id": 1, "condition": 2, "max": 60, "min": -20, "enabled": 1 } }
+ */
+function setAlarmConfig(alarm_config) {
+    var id = alarm_config.id;
+    var condition = alarm_config.condition;
+    var max = alarm_config.max;
+    var min = alarm_config.min;
+    var enabled = alarm_config.enabled;
+
+    var id_keys = [1, 2, 3];
+    if (id_keys.indexOf(id) === -1) {
+        throw new Error("alarm_config.id must be one of " + id_keys.join(", "));
+    }
+    var condition_map = { 1: "below", 2: "above", 3: "within", 4: "below_or_above", 5: "saltation", 6: "primary_alarm_only", 7: "secondary_alarm_only", 8: "primary_and_secondary_alarm" };
+    var condition_values = getValues(condition_map);
+    if (condition_values.indexOf(condition) === -1) {
+        throw new Error("alarm_config.condition must be one of " + condition_values.join(", "));
+    }
+    if (typeof max !== "number" || typeof min !== "number") {
+        throw new Error("alarm_config.max and alarm_config.min must be numbers");
+    }
+    var enable_map = { 0: "disable", 1: "enable" };
+    var enable_values = getValues(enable_map);
+    if (enable_values.indexOf(enabled) === -1) {
+        throw new Error("alarm_config.enabled must be one of " + enable_values.join(", "));
+    }
+
+    var raw_condition = typeof condition === "number" ? condition : parseInt(getValue(condition_map, condition), 10);
+    var raw_enabled = typeof enabled === "number" ? enabled : parseInt(getValue(enable_map, enabled), 10);
+
+    var buffer = new Buffer(9);
+    buffer.writeUInt8(0xf9);
+    buffer.writeUInt8(0x0b);
+    buffer.writeUInt8(id);
+    buffer.writeUInt8(raw_condition);
+    buffer.writeInt16LE(Math.round(max * 10));
+    buffer.writeInt16LE(Math.round(min * 10));
+    buffer.writeUInt8(raw_enabled);
     return buffer.toBytes();
 }
 
