@@ -1,7 +1,7 @@
 /**
- * Payload Decoder
+ * Payload Decoder for NB-IoT Device
  *
- * Copyright 2025 Milesight IoT
+ * Copyright 2024 Milesight IoT
  *
  * @product UC50x (odm: 7050)
  */
@@ -11,287 +11,240 @@ var RAW_VALUE = 0x00;
 /* eslint-disable */
 // Chirpstack v4
 function decodeUplink(input) {
-    var decoded = milesightDeviceDecode(input.bytes);
+    var decoded = decodePayload(input.bytes);
     return { data: decoded };
 }
 
 // Chirpstack v3
 function Decode(fPort, bytes) {
-    return milesightDeviceDecode(bytes);
+    return decodePayload(bytes);
 }
 
 // The Things Network
 function Decoder(bytes, port) {
-    return milesightDeviceDecode(bytes);
+    return decodePayload(bytes);
 }
 /* eslint-enable */
 
+function decodePayload(bytes) {
+    var buffer = new Buffer(bytes);
+
+    var payload = {};
+    payload.startFlag = buffer.readUInt8();
+    payload.id = buffer.readUInt16BE();
+    payload.length = buffer.readUInt16BE();
+    payload.flag = buffer.readUInt8();
+    payload.frameCnt = buffer.readUInt16BE();
+    payload.protocolVersion = buffer.readUInt8();
+    payload.firmwareVersion = buffer.readAscii(4);
+    payload.hardwareVersion = buffer.readAscii(4);
+    payload.sn = buffer.readAscii(16);
+    payload.imei = buffer.readAscii(15);
+    payload.imsi = buffer.readAscii(15);
+    payload.iccid = buffer.readAscii(20);
+    payload.csq = buffer.readUInt8();
+    payload.data_length = buffer.readUInt16BE();
+    payload.data = decodeSensorData(buffer.slice(payload.data_length));
+
+    return payload;
+}
+
 var gpio_chns = [0x03, 0x04];
-var adc_chns = [0x05, 0x06];
-var adc_alarm_chns = [0x85, 0x86];
+var ai_chns = [0x05, 0x06];
+var ai_alarm_chns = [0x85, 0x86];
+var ai_mutation_alarm_chns = [0x95, 0x96];
+var ai_error_chns = [0xb5, 0xb6];
 
-function milesightDeviceDecode(bytes) {
+function decodeSensorData(bytes) {
+    var history = [];
+
     var decoded = {};
+    var repack_flag = false;
+    var buffer = new Buffer(bytes);
+    while (buffer.remaining() > 0) {
+        var channel_id = buffer.readUInt8();
+        var channel_type = buffer.readUInt8();
 
-    for (var i = 0; i < bytes.length;) {
-        var channel_id = bytes[i++];
-        var channel_type = bytes[i++];
+        // set repack_flag to false when the end of the packet is reached
+        if (repack_flag === true && ((channel_id === 0x07 && channel_type === 0xef) || (channel_id === 0x20 && channel_type === 0xef))) {
+            history.push(decoded);
 
-        // IPSO VERSION
-        if (channel_id === 0xff && channel_type === 0x01) {
-            decoded.ipso_version = readProtocolVersion(bytes[i]);
-            i += 1;
+            repack_flag = false;
+            decoded = {};
         }
-        // HARDWARE VERSION
-        else if (channel_id === 0xff && channel_type === 0x09) {
-            decoded.hardware_version = readHardwareVersion(bytes.slice(i, i + 2));
-            i += 2;
-        }
-        // FIRMWARE VERSION
-        else if (channel_id === 0xff && channel_type === 0x0a) {
-            decoded.firmware_version = readFirmwareVersion(bytes.slice(i, i + 2));
-            i += 2;
-        }
-        // TSL VERSION
-        else if (channel_id === 0xff && channel_type === 0xff) {
-            decoded.tsl_version = readTslVersion(bytes.slice(i, i + 2));
-            i += 2;
-        }
-        // SERIAL NUMBER
-        else if (channel_id === 0xff && channel_type === 0x16) {
-            decoded.sn = readSerialNumber(bytes.slice(i, i + 8));
-            i += 8;
-        }
-        // LORAWAN CLASS TYPE
-        else if (channel_id === 0xff && channel_type === 0x0f) {
-            decoded.lorawan_class = readLoRaWANClass(bytes[i]);
-            i += 1;
-        }
-        // RESET EVENT
-        else if (channel_id === 0xff && channel_type === 0xfe) {
-            decoded.reset_event = readResetEvent(1);
-            i += 1;
-        }
-        // DEVICE STATUS
-        else if (channel_id === 0xff && channel_type === 0x0b) {
-            decoded.device_status = readOnOffStatus(1);
-            i += 1;
-        }
+
         // BATTERY
-        else if (channel_id === 0x01 && channel_type === 0x75) {
-            decoded.battery = readUInt8(bytes[i]);
-            i += 1;
+        if (channel_id === 0x01 && channel_type === 0x75) {
+            decoded.battery = buffer.readUInt8();
         }
-        // GPIO (GPIO as Digital Input)
+        // GPIO DIGITAL INPUT
         else if (includes(gpio_chns, channel_id) && channel_type === 0x00) {
             var gpio_channel_name = "gpio_input_" + (channel_id - gpio_chns[0] + 1);
-            decoded[gpio_channel_name] = readOnOffStatus(bytes[i]);
-            i += 1;
+            decoded[gpio_channel_name] = buffer.readUInt8() === 0 ? "low" : "high";
         }
-        // GPIO (GPIO as Digital Output)
+        // GPIO DIGITAL OUTPUT
         else if (includes(gpio_chns, channel_id) && channel_type === 0x01) {
             var gpio_channel_name = "gpio_output_" + (channel_id - gpio_chns[0] + 1);
-            decoded[gpio_channel_name] = readOnOffStatus(bytes[i]);
-            i += 1;
+            decoded[gpio_channel_name] = buffer.readUInt8() === 0 ? "low" : "high";
         }
-        //  GPIO (GPIO as PULSE COUNTER)
+        // GPIO COUNTER
         else if (includes(gpio_chns, channel_id) && channel_type === 0xc8) {
             var gpio_channel_name = "gpio_counter_" + (channel_id - gpio_chns[0] + 1);
-            decoded[gpio_channel_name] = readUInt32LE(bytes.slice(i, i + 4));
-            i += 4;
+            decoded[gpio_channel_name] = buffer.readUInt32LE();
         }
-        // ANALOG INPUT TYPE
-        else if (channel_id === 0xff && channel_type === 0x14) {
-            var channel = bytes[i];
-            var chn_name = "adc_" + (channel >>> 4) + "_type";
-            decoded[chn_name] = readAnalogInputType(channel & 0x0f);
-            i += 1;
+        // ANALOG INPUT
+        else if (includes(ai_chns, channel_id) && channel_type === 0xf1) {
+            var mode = buffer.readUInt8();
+            var ai_mode = (mode & 0x01) === 1 ? "voltage" : "current";
+            var ai_value_mode = ((mode >> 1) & 0x01) === 1 ? "multiple" : "single";
+            var ai_data_type = ((mode >> 2) & 0x01) === 1 ? "float16" : "float32";
+
+            var ai_chn_name;
+            if (ai_mode === "voltage") {
+                ai_chn_name = "adv_" + (channel_id - ai_chns[0] + 1);
+            } else {
+                ai_chn_name = "adc_" + (channel_id - ai_chns[0] + 1);
+            }
+
+            if (ai_data_type === "float16") {
+                decoded[ai_chn_name] = buffer.readFloat16LE();
+                if (ai_value_mode === "multiple") {
+                    decoded[ai_chn_name + "_min"] = buffer.readFloat16LE();
+                    decoded[ai_chn_name + "_max"] = buffer.readFloat16LE();
+                    decoded[ai_chn_name + "_avg"] = buffer.readFloat16LE();
+                }
+            } else {
+                decoded[ai_chn_name] = buffer.readFloatLE();
+                if (ai_value_mode === "multiple") {
+                    decoded[ai_chn_name + "_min"] = buffer.readFloatLE();
+                    decoded[ai_chn_name + "_max"] = buffer.readFloatLE();
+                    decoded[ai_chn_name + "_avg"] = buffer.readFloatLE();
+                }
+            }
         }
-        // ADC (UC50x v2)
-        // firmware version 1.10 and below and UC50x V1, change 1000 to 100.
-        else if (includes(adc_chns, channel_id) && channel_type === 0x02) {
-            var adc_channel_name = "adc_" + (channel_id - adc_chns[0] + 1);
-            decoded[adc_channel_name] = readInt16LE(bytes.slice(i, i + 2)) / 1000;
-            decoded[adc_channel_name + "_min"] = readInt16LE(bytes.slice(i + 2, i + 4)) / 1000;
-            decoded[adc_channel_name + "_max"] = readInt16LE(bytes.slice(i + 4, i + 6)) / 1000;
-            decoded[adc_channel_name + "_avg"] = readInt16LE(bytes.slice(i + 6, i + 8)) / 1000;
-            i += 8;
+        // ANALOG INPUT THRESHOLD ALARM
+        else if (includes(ai_alarm_chns, channel_id) && channel_type === 0xf1) {
+            var mode = buffer.readUInt8();
+            var ai_mode = (mode & 0x01) === 1 ? "voltage" : "current";
+            var ai_value_mode = ((mode >> 1) & 0x01) === 1 ? "multiple" : "single";
+            var ai_data_type = ((mode >> 2) & 0x01) === 1 ? "float16" : "float32";
+
+            var ai_chn_name;
+            if (ai_mode === "voltage") {
+                ai_chn_name = "adv_" + (channel_id - ai_alarm_chns[0] + 1);
+            } else {
+                ai_chn_name = "adc_" + (channel_id - ai_alarm_chns[0] + 1);
+            }
+
+            if (ai_data_type === "float16") {
+                decoded[ai_chn_name] = buffer.readFloat16LE();
+                if (ai_value_mode === "multiple") {
+                    decoded[ai_chn_name + "_min"] = buffer.readFloat16LE();
+                    decoded[ai_chn_name + "_max"] = buffer.readFloat16LE();
+                    decoded[ai_chn_name + "_avg"] = buffer.readFloat16LE();
+                }
+            } else {
+                decoded[ai_chn_name] = buffer.readFloatLE();
+                if (ai_value_mode === "multiple") {
+                    decoded[ai_chn_name + "_min"] = buffer.readFloatLE();
+                    decoded[ai_chn_name + "_max"] = buffer.readFloatLE();
+                    decoded[ai_chn_name + "_avg"] = buffer.readFloatLE();
+                }
+            }
+
+            decoded[ai_chn_name + "_alarm"] = buffer.readUInt8() === 1 ? "threshold alarm" : "threshold alarm release";
+
+            // pack
+            history.push(decoded);
+            if ("timestamp" in decoded && buffer.remaining()) {
+                decoded = { timestamp: decoded.timestamp };
+            } else {
+                decoded = {};
+            }
         }
-        // ADC (UC50x v3)
-        else if (includes(adc_chns, channel_id) && channel_type === 0xe2) {
-            var adc_channel_name = "adc_" + (channel_id - adc_chns[0] + 1);
-            decoded[adc_channel_name] = readFloat16LE(bytes.slice(i, i + 2));
-            decoded[adc_channel_name + "_min"] = readFloat16LE(bytes.slice(i + 2, i + 4));
-            decoded[adc_channel_name + "_max"] = readFloat16LE(bytes.slice(i + 4, i + 6));
-            decoded[adc_channel_name + "_avg"] = readFloat16LE(bytes.slice(i + 6, i + 8));
-            i += 8;
+        // ANALOG INPUT MUTATION ALARM
+        else if (includes(ai_mutation_alarm_chns, channel_id) && channel_type === 0xf1) {
+            var mode = buffer.readUInt8();
+            var ai_mode = (mode & 0x01) === 1 ? "voltage" : "current";
+            var ai_value_mode = ((mode >> 1) & 0x01) === 1 ? "multiple" : "single";
+            var ai_data_type = ((mode >> 2) & 0x01) === 1 ? "float16" : "float32";
+
+            var ai_chn_name;
+            if (ai_mode === "voltage") {
+                ai_chn_name = "adv_" + (channel_id - ai_mutation_alarm_chns[0] + 1);
+            } else {
+                ai_chn_name = "adc_" + (channel_id - ai_mutation_alarm_chns[0] + 1);
+            }
+
+            if (ai_data_type === "float16") {
+                decoded[ai_chn_name] = buffer.readFloat16LE();
+                if (ai_value_mode === "multiple") {
+                    decoded[ai_chn_name + "_min"] = buffer.readFloat16LE();
+                    decoded[ai_chn_name + "_max"] = buffer.readFloat16LE();
+                    decoded[ai_chn_name + "_avg"] = buffer.readFloat16LE();
+                }
+                decoded[ai_chn_name + "_mutation"] = buffer.readFloat16LE();
+            } else {
+                decoded[ai_chn_name] = buffer.readFloatLE();
+                if (ai_value_mode === "multiple") {
+                    decoded[ai_chn_name + "_min"] = buffer.readFloatLE();
+                    decoded[ai_chn_name + "_max"] = buffer.readFloatLE();
+                    decoded[ai_chn_name + "_avg"] = buffer.readFloatLE();
+                }
+                decoded[ai_chn_name + "_mutation"] = buffer.readFloatLE();
+            }
+
+            decoded[ai_chn_name + "_alarm"] = buffer.readUInt8() === 0 ? "mutation alarm" : "unknown";
+
+            // pack
+            history.push(decoded);
+            if ("timestamp" in decoded && buffer.remaining()) {
+                decoded = { timestamp: decoded.timestamp };
+            } else {
+                decoded = {};
+            }
+        }
+        // ANALOG INPUT ERROR
+        else if (includes(ai_error_chns, channel_id) && channel_type === 0xf1) {
+            var error_type = buffer.readUInt8();
+
+            var ai_chn_name = "ai_" + (channel_id - ai_error_chns[0] + 1);
+            switch (error_type) {
+                case 0x00:
+                    decoded[ai_chn_name + "_error"] = "read error";
+                    break;
+                case 0x01:
+                    decoded[ai_chn_name + "_error"] = "overload";
+                    break;
+                default:
+                    decoded[ai_chn_name + "_error"] = "unknown";
+                    break;
+            }
+        }
+        // TIMESTAMP
+        else if ((channel_id === 0x07 && channel_type === 0xef) || (channel_id === 0x20 && channel_type === 0xef)) {
+            decoded.timestamp = buffer.readUInt32LE();
+            repack_flag = true;
         }
         // SDI-12
-        else if (channel_id === 0x08 && channel_type === 0xdb) {
-            var name = "sdi12_" + (bytes[i++] + 1);
-            decoded[name] = readString(bytes.slice(i, i + 36));
-            i += 36;
-        }
-        // MODBUS
-        else if ((channel_id === 0xff || channel_id === 0x80) && channel_type === 0x0e) {
-            var modbus_chn_id = bytes[i++] - 6;
-            var package_type = bytes[i++];
-            var data_type = package_type & 0x07; // 0x07 = 0b00000111
-            var chn = "chn_" + modbus_chn_id;
-            switch (data_type) {
-                case 0:
-                case 1:
-                    decoded[chn] = readOnOffStatus(bytes[i]);
-                    i += 1;
-                    break;
-                case 2:
-                case 3:
-                    decoded[chn] = readUInt16LE(bytes.slice(i, i + 2));
-                    i += 2;
-                    break;
-                case 4:
-                case 6:
-                    decoded[chn] = readUInt32LE(bytes.slice(i, i + 4));
-                    i += 4;
-                    break;
-                case 5:
-                case 7:
-                    decoded[chn] = readFloatLE(bytes.slice(i, i + 4));
-                    i += 4;
-                    break;
+        else if (channel_id === 0x08 && channel_type === 0xf2) {
+            var sdi_chn_id = buffer.readUInt8() + 1;
+            var sdi_data_length = buffer.readUInt8();
+            if (sdi_data_length !== 0) {
+                var sdi_chn_name = "sdi_chn_" + sdi_chn_id;
+                decoded[sdi_chn_name] = buffer.readAscii(sdi_data_length);
             }
-
-            if (channel_id === 0x80) {
-                decoded[chn + "_alarm"] = readAlarm(bytes[i++]);
-            }
-        }
-        // MODBUS READ ERROR
-        else if (channel_id === 0xff && channel_type === 0x15) {
-            var modbus_error_chn_id = bytes[i] - 6;
-            var channel_name = "modbus_chn_" + modbus_error_chn_id;
-            decoded[channel_name + "_alarm"] = "read error";
-            i += 1;
-        }
-        // ADC alert (UC50x v3)
-        else if (includes(adc_alarm_chns, channel_id) && channel_type === 0xe2) {
-            var adc_channel_name = "adc_" + (channel_id - adc_alarm_chns[0] + 1);
-            decoded[adc_channel_name] = readFloat16LE(bytes.slice(i, i + 2));
-            decoded[adc_channel_name + "_min"] = readFloat16LE(bytes.slice(i + 2, i + 4));
-            decoded[adc_channel_name + "_max"] = readFloat16LE(bytes.slice(i + 4, i + 6));
-            decoded[adc_channel_name + "_avg"] = readFloat16LE(bytes.slice(i + 6, i + 8));
-            i += 8;
-
-            decoded[adc_channel_name + "_alarm"] = readAlarm(bytes[i++]);
-        }
-        // HISTORY DATA (odm: 7050)
-        else if (channel_id === 0x20 && channel_type === 0xdc) {
-            var timestamp = readUInt32LE(bytes.slice(i, i + 4));
-            var gpio_1_type = readUInt8(bytes[i + 4]);
-            var gpio_1_data = readUInt32LE(bytes.slice(i + 5, i + 9));
-            var gpio_2_type = readUInt8(bytes[i + 9]);
-            var gpio_2_data = readUInt32LE(bytes.slice(i + 10, i + 14));
-            var temperature_value = readUInt32LE(bytes.slice(i + 14, i + 18));
-            var pressure_value = readUInt32LE(bytes.slice(i + 18, i + 22));
-            var temperature_mutation_data = readInt16LE(bytes.slice(i + 22, i + 24)) / 10;
-            var pressure_mutation_data = readUInt16LE(bytes.slice(i + 24, i + 26));
-            var sensor_status_data = readUInt8(bytes[i + 26]);
-            var tamper_status_value = readUInt8(bytes[i + 27]);
-
-            var data = { timestamp: timestamp };
-            if (tamper_status_value === 0x01) {
-                data.tamper_status = readTamperStatus(tamper_status_value);
-            } else {
-                if (gpio_1_type === 0x00) {
-                    data.gpio_input_1 = readOnOffStatus(gpio_1_data);
-                } else if (gpio_1_type === 0x01) {
-                    data.gpio_output_1 = readOnOffStatus(gpio_1_data);
-                } else {
-                    data.gpio_counter_1 = gpio_1_data;
-                }
-                if (gpio_2_type === 0x00) {
-                    data.gpio_input_2 = readOnOffStatus(gpio_2_data);
-                } else if (gpio_2_type === 0x01) {
-                    data.gpio_output_2 = readOnOffStatus(gpio_2_data);
-                } else {
-                    data.gpio_counter_2 = gpio_2_data;
-                }
-                if (!hasIllegalValue(temperature_value)) {
-                    data.temperature = readInt32LE(bytes.slice(i + 14, i + 18)) / 10;
-                    // check if temperature mutation is triggered
-                    if ((sensor_status_data >>> 3) & 0x01 === 1) {
-                        data.temperature_mutation = temperature_mutation_data;
-                    }
-                }
-                if (!hasIllegalValue(pressure_value)) {
-                    data.pressure = pressure_value;
-                    // check if pressure mutation is triggered
-                    if ((sensor_status_data >>> 7) & 0x01 === 1) {
-                        data.pressure_mutation = pressure_mutation_data;
-                    }
-                }
-                data.sensor_status = readHistorySensorStatus(temperature_value, pressure_value, sensor_status_data);
-                data.tamper_status = readTamperStatus(tamper_status_value);
-            }
-            i += 28;
-
-            decoded.history = decoded.history || [];
-            decoded.history.push(data);
-        }
-        // HISTORY DATA (SDI-12)
-        else if (channel_id === 0x20 && channel_type === 0xe0) {
-            var timestamp = readUInt32LE(bytes.slice(i, i + 4));
-            var channel_mask = numToBits(readUInt16LE(bytes.slice(i + 4, i + 6)), 16);
-            i += 6;
-
-            var data = { timestamp: timestamp };
-            for (var j = 0; j < channel_mask.length; j++) {
-                // skip if channel is not enabled
-                if (channel_mask[j] === 0) continue;
-                var name = "sdi12_" + (j + 1);
-                data[name] = readString(bytes.slice(i, i + 36));
-                i += 36;
-            }
-
-            decoded.history = decoded.history || [];
-            decoded.history.push(data);
-        }
-        // HISTORY DATA (MODBUS)
-        else if (channel_id === 0x20 && channel_type === 0xdd) {
-            var timestamp = readUInt32LE(bytes.slice(i, i + 4));
-            var channel_mask = numToBits(readUInt16LE(bytes.slice(i + 4, i + 6)), 16);
-            i += 6;
-
-            var data = { timestamp: timestamp };
-            for (var j = 0; j < channel_mask.length; j++) {
-                // skip if channel is not enabled
-                if (channel_mask[j] === 0) continue;
-
-                var name = "modbus_chn_" + (j + 1);
-                var type = bytes[i++] & 0x07; // 0x07 = 0b00000111
-                // 5 MB_REG_HOLD_FLOAT, 7 MB_REG_INPUT_FLOAT
-                if (type === 5 || type === 7) {
-                    data[name] = readFloatLE(bytes.slice(i, i + 4));
-                } else {
-                    data[name] = readUInt32LE(bytes.slice(i, i + 4));
-                }
-
-                i += 4;
-            }
-
-            decoded.history = decoded.history || [];
-            decoded.history.push(data);
         }
         // TEMPERATURE (odm: 7050)
         else if (channel_id === 0x0a && channel_type === 0x67) {
-            decoded.temperature = readInt16LE(bytes.slice(i, i + 2)) / 10;
-            i += 2;
+            decoded.temperature = buffer.readInt16LE() / 10;
         }
-        // TEMPERATURE ALARM (odm: 7050)
+        // TEMPERATURE THRESHOLD ALARM (odm: 7050)
         else if (channel_id === 0x8a && channel_type === 0x67) {
             var event = {};
-            event.temperature = readInt16LE(bytes.slice(i, i + 2)) / 10;
-            event.alarm = readTemperatureAlarm(bytes[i + 2]);
-            i += 3;
+            event.temperature = buffer.readInt16LE() / 10;
+            event.alarm = readTemperatureAlarm(buffer.readUInt8());
+            
             decoded.event = decoded.event || [];
             decoded.event.push(event);
             decoded.temperature = event.temperature;
@@ -299,34 +252,29 @@ function milesightDeviceDecode(bytes) {
         // TEMPERATURE MUTATION ALARM (odm: 7050)
         else if (channel_id === 0x9a && channel_type === 0x67) {
             var event = {};
-            event.temperature = readInt16LE(bytes.slice(i, i + 2)) / 10;
-            event.temperature_mutation = readInt16LE(bytes.slice(i + 2, i + 4)) / 10;
-            event.alarm = readTemperatureAlarm(bytes[i + 4]);
-            i += 5;
+            event.temperature = buffer.readInt16LE() / 10;
+            event.temperature_mutation = buffer.readInt16LE() / 10;
+            event.alarm = readTemperatureAlarm(buffer.readUInt8());
             decoded.event = decoded.event || [];
             decoded.event.push(event);
             decoded.temperature = event.temperature;
         }
-        // TEMPERATURE SENSOR STATUS (odm: 7050)
+        // TEMPERATURE ERROR (odm: 7050)
         else if (channel_id === 0xba && channel_type === 0x67) {
             var event = {};
-            event.temperature_sensor_status = readSensorStatus(bytes[i]);
-            i += 1;
+            event.temperature_sensor_status = readSensorStatus(buffer.readUInt8());
             decoded.event = decoded.event || [];
             decoded.event.push(event);
-            decoded.temperature = event.temperature;
         }
-        // PRESSURE (mBar) (odm: 7050)
+        // PRESSURE (odm: 7050)
         else if (channel_id === 0x0b && channel_type === 0xaa) {
-            decoded.pressure = readUInt16LE(bytes.slice(i, i + 2));
-            i += 2;
+            decoded.pressure = buffer.readUInt16LE();
         }
-        // PRESSURE ALARM (odm: 7050)
+        // PRESSURE THRESHOLD ALARM (odm: 7050)
         else if (channel_id === 0x8b && channel_type === 0xaa) {
             var event = {};
-            event.pressure = readUInt16LE(bytes.slice(i, i + 2));
-            event.alarm = readPressureAlarm(bytes[i + 2]);
-            i += 3;
+            event.pressure = buffer.readUInt16LE();
+            event.alarm = readPressureAlarm(buffer.readUInt8());
             decoded.event = decoded.event || [];
             decoded.event.push(event);
             decoded.pressure = event.pressure;
@@ -334,168 +282,209 @@ function milesightDeviceDecode(bytes) {
         // PRESSURE MUTATION ALARM (odm: 7050)
         else if (channel_id === 0x9b && channel_type === 0xaa) {
             var event = {};
-            event.pressure = readUInt16LE(bytes.slice(i, i + 2));
-            event.pressure_mutation = readUInt16LE(bytes.slice(i + 2, i + 4));
-            event.alarm = readPressureAlarm(bytes[i + 4]);
-            i += 5;
+            event.pressure = buffer.readUInt16LE();
+            event.pressure_mutation = buffer.readUInt16LE();
+            event.alarm = readPressureAlarm(buffer.readUInt8());
             decoded.event = decoded.event || [];
             decoded.event.push(event);
             decoded.pressure = event.pressure;
         }
-        // PRESSURE SENSOR STATUS (odm: 7050)
+        // PRESSURE ERROR (odm: 7050)
         else if (channel_id === 0xbb && channel_type === 0xaa) {
             var event = {};
-            event.pressure_sensor_status = readSensorStatus(bytes[i]);
-            i += 1;
+            event.pressure_sensor_status = readSensorStatus(buffer.readUInt8());
             decoded.event = decoded.event || [];
             decoded.event.push(event);
         }
         // TAMPER STATUS (odm: 7050)
         else if (channel_id === 0x0c && channel_type === 0xab) {
-            decoded.tamper_status = readTamperStatus(bytes[i]);
-            i += 1;
+            decoded.tamper_status = readTamperStatus(buffer.readUInt8());
         }
         // TAMPER STATUS ALARM (odm: 7050)
         else if (channel_id === 0x8c && channel_type === 0xab) {
-            decoded.tamper_status = readTamperStatus(bytes[i]);
-            i += 1;
+            decoded.tamper_status = readTamperStatus(buffer.readUInt8());
+        }
+        // SDI-12 ERROR
+        else if (channel_id === 0xb8 && channel_type === 0xf2) {
+            var sdi_chn_id = buffer.readUInt8() + 1;
+            var error_type = buffer.readUInt8();
+
+            var sdi_chn_name = "sdi_chn_" + sdi_chn_id;
+            switch (error_type) {
+                case 0x00:
+                    decoded[sdi_chn_name + "_error"] = "read error";
+                    break;
+                case 0x01:
+                    decoded[sdi_chn_name + "_error"] = "overload";
+                    break;
+                default:
+                    decoded[sdi_chn_name + "_error"] = "unknown";
+                    break;
+            }
+        }
+        // MODBUS
+        else if (channel_id === 0x09 && channel_type === 0xf3) {
+            var modbus_chn_id = buffer.readUInt8() + 1;
+            var modbus_chn_definition = buffer.readUInt8();
+            var sign = (modbus_chn_definition >> 7) & 0x01;
+            var modbus_chn_data_type = modbus_chn_definition & 0x0f;
+            var modbus_chn_name = "modbus_chn_" + modbus_chn_id;
+
+            switch (modbus_chn_data_type) {
+                case 0:
+                case 1:
+                    decoded[modbus_chn_name] = buffer.readUInt8();
+                    break;
+                case 2:
+                case 3:
+                    decoded[modbus_chn_name] = sign ? buffer.readInt16LE() : buffer.readUInt16LE();
+                    break;
+                case 4:
+                case 6:
+                    decoded[modbus_chn_name] = sign ? buffer.readInt32LE() : buffer.readUInt32LE();
+                    break;
+                case 5:
+                case 7:
+                    decoded[modbus_chn_name] = buffer.readFloatLE();
+                    break;
+                default:
+                    break;
+            }
+        }
+        // MODBUS THRESHOLD ALARM
+        else if (channel_id === 0x89 && channel_type === 0xf3) {
+            var modbus_chn_id = buffer.readUInt8() + 1;
+            var modbus_chn_definition = buffer.readUInt8();
+            var sign = (modbus_chn_definition >> 7) & 0x01;
+            var modbus_chn_data_type = modbus_chn_definition & 0x0f;
+            var modbus_chn_name = "modbus_chn_" + modbus_chn_id;
+
+            switch (modbus_chn_data_type) {
+                case 0:
+                case 1:
+                    decoded[modbus_chn_name] = buffer.readUInt8();
+                    break;
+                case 2:
+                case 3:
+                    decoded[modbus_chn_name] = sign ? buffer.readInt16LE() : buffer.readUInt16LE();
+                    break;
+                case 4:
+                case 6:
+                    decoded[modbus_chn_name] = sign ? buffer.readInt32LE() : buffer.readUInt32LE();
+                    break;
+                case 5:
+                case 7:
+                    decoded[modbus_chn_name] = buffer.readFloatLE();
+                    break;
+                default:
+                    break;
+            }
+
+            decoded[modbus_chn_name + "_alarm"] = buffer.readUInt8() === 1 ? "threshold alarm" : "threshold alarm release";
+
+            // pack
+            history.push(decoded);
+            if ("timestamp" in decoded && buffer.remaining()) {
+                decoded = { timestamp: decoded.timestamp };
+            } else {
+                decoded = {};
+            }
+        }
+        // MODBUS MUTATION ALARM
+        else if (channel_id === 0x99 && channel_type === 0xf3) {
+            var modbus_chn_id = buffer.readUInt8() + 1;
+            var modbus_chn_definition = buffer.readUInt8();
+            var sign = (modbus_chn_definition >> 7) & 0x01;
+            var modbus_chn_data_type = modbus_chn_definition & 0x0f;
+            var modbus_chn_name = "modbus_chn_" + modbus_chn_id;
+
+            switch (modbus_chn_data_type) {
+                case 0:
+                case 1:
+                    decoded[modbus_chn_name] = buffer.readUInt8();
+                    decoded[modbus_chn_name + "_mutation"] = buffer.readUInt8();
+                    break;
+                case 2:
+                case 3:
+                    decoded[modbus_chn_name] = sign ? buffer.readInt16LE() : buffer.readUInt16LE();
+                    decoded[modbus_chn_name + "_mutation"] = sign ? buffer.readInt16LE() : buffer.readUInt16LE();
+                    break;
+                case 4:
+                case 6:
+                    decoded[modbus_chn_name] = sign ? buffer.readInt32LE() : buffer.readUInt32LE();
+                    decoded[modbus_chn_name + "_mutation"] = sign ? buffer.readInt32LE() : buffer.readUInt32LE();
+                    break;
+                case 5:
+                case 7:
+                    decoded[modbus_chn_name] = buffer.readFloatLE();
+                    decoded[modbus_chn_name + "_mutation"] = buffer.readFloatLE();
+                    break;
+                default:
+                    break;
+            }
+
+            decoded[modbus_chn_name + "_alarm"] = buffer.readInt8() === 0 ? "mutation alarm" : "unknown";
+
+            // pack
+            history.push(decoded);
+            if ("timestamp" in decoded && buffer.remaining()) {
+                decoded = { timestamp: decoded.timestamp };
+            } else {
+                decoded = {};
+            }
+        }
+        // MODBUS ERROR
+        else if (channel_id === 0xb9 && channel_type === 0xf3) {
+            var modbus_chn_id = buffer.readUInt8() + 1;
+            var error_type = buffer.readUInt8();
+
+            var modbus_chn_name = "modbus_chn_" + modbus_chn_id;
+            switch (error_type) {
+                case 0x00:
+                    decoded[modbus_chn_name + "_error"] = "read error";
+                    break;
+                case 0x01:
+                    decoded[modbus_chn_name + "_error"] = "overload";
+                    break;
+                default:
+                    decoded[modbus_chn_name + "_error"] = "unknown";
+                    break;
+            }
         }
         // DOWNLINK RESPONSE
         else if (channel_id === 0xfe || channel_id === 0xff) {
-            var result = handle_downlink_response(channel_type, bytes, i);
-            decoded = Object.assign(decoded, result.data);
-            i = result.offset;
+            var response = handle_downlink_response(channel_type, buffer);
+            for (var key in response) {
+                decoded[key] = response[key];
+            }
         } else {
             break;
         }
     }
 
-    return decoded;
-}
-
-function handle_downlink_response(channel_type, bytes, offset) {
-    var decoded = {};
-
-    switch (channel_type) {
-        case 0x02:
-            decoded.collection_interval = readUInt16LE(bytes.slice(offset, offset + 2));
-            offset += 2;
-            break;
-        case 0x03:
-            decoded.report_interval = readUInt16LE(bytes.slice(offset, offset + 2));
-            offset += 2;
-            break;
-        case 0x10:
-            decoded.reboot = readYesNoStatus(1);
-            offset += 1;
-            break;
-        case 0x11:
-            decoded.timestamp = readUInt32LE(bytes.slice(offset, offset + 4));
-            offset += 4;
-            break;
-        case 0x17:
-            decoded.timezone = readInt16LE(bytes.slice(offset, offset + 2)) / 10;
-            offset += 2;
-            break;
-        case 0x27:
-            decoded.clear_history = readYesNoStatus(1);
-            offset += 1;
-            break;
-        case 0x28:
-            decoded.report_status = readYesNoStatus(1);
-            offset += 1;
-            break;
-        case 0x68:
-            decoded.history_enable = readEnableStatus(bytes[offset]);
-            offset += 1;
-            break;
-        case 0x69:
-            decoded.retransmit_enable = readEnableStatus(bytes[offset]);
-            offset += 1;
-            break;
-        case 0x6a:
-            var type = readUInt8(bytes[offset]);
-            if (type === 0x00) {
-                decoded.retransmit_interval = readUInt16LE(bytes.slice(offset + 1, offset + 3));
-            } else if (type === 0x01) {
-                decoded.resend_interval = readUInt16LE(bytes.slice(offset + 1, offset + 3));
-            }
-            offset += 3;
-            break;
-        case 0x1f:
-            decoded.pressure_range = readPressureRange(bytes[offset]);
-            offset += 1;
-            break;
-        case 0x4a:
-            decoded.sync_time = readYesNoStatus(bytes[offset]);
-            offset += 1;
-            break;
-        default:
-            throw new Error("unknown downlink response");
+    if (Object.keys(decoded).length !== 0) {
+        history.push(decoded);
     }
-
-    return { data: decoded, offset: offset };
+    return history;
 }
 
-function readProtocolVersion(bytes) {
-    var major = (bytes & 0xf0) >> 4;
-    var minor = bytes & 0x0f;
-    return "v" + major + "." + minor;
-}
-
-function readHardwareVersion(bytes) {
-    var major = (bytes[0] & 0xff).toString(16);
-    var minor = (bytes[1] & 0xff) >> 4;
-    return "v" + major + "." + minor;
-}
-
-function readFirmwareVersion(bytes) {
-	var major = (bytes[0] & 0xff).toString(16);
-	var minor = (bytes[1] & 0xff).toString(16);
-	var release = (bytes[2] & 0xff).toString(16);
-	var alpha = (bytes[3] & 0xff).toString(16);
-	var unit_test = (bytes[4] & 0xff).toString(16);
-	var test = (bytes[5] & 0xff).toString(16);
-
-	var version = 'v' + major + '.' + minor;
-	if (release !== '0') version += '-r' + release;
-	if (alpha !== '0') version += '-a' + alpha;
-	if (unit_test !== '0') version += '-u' + unit_test;
-	if (test !== '0') version += '-t' + test;
-	return version;
-}
-
-function readTslVersion(bytes) {
-    var major = bytes[0] & 0xff;
-    var minor = bytes[1] & 0xff;
-    return "v" + major + "." + minor;
-}
-
-function readSerialNumber(bytes) {
-    var temp = [];
-    for (var idx = 0; idx < bytes.length; idx++) {
-        temp.push(("0" + (bytes[idx] & 0xff).toString(16)).slice(-2));
-    }
-    return temp.join("");
-}
-
-function readLoRaWANClass(type) {
-    var class_map = {
-        0: "Class A",
-        1: "Class B",
-        2: "Class C",
-        3: "Class CtoB",
-    };
-    return getValue(class_map, type);
-}
-
-function readResetEvent(status) {
-    var status_map = { 0: "normal", 1: "reset" };
+function readTemperatureAlarm(status) {
+    var status_map = { 0: "alarm release", 1: "threshold alarm", 2: "mutation alarm" };
     return getValue(status_map, status);
 }
 
-function readOnOffStatus(status) {
-    var status_map = { 0: "off", 1: "on" };
+function readPressureAlarm(status) {
+    var status_map = { 0: "alarm release", 1: "threshold alarm", 2: "mutation alarm" };
+    return getValue(status_map, status);
+}
+
+function readSensorStatus(status) {
+    var status_map = { 0: "normal", 1: "read failed", 2: "out of range" };
+    return getValue(status_map, status);
+}
+
+function readTamperStatus(status) {
+    var status_map = { 0: "normal", 1: "triggered" };
     return getValue(status_map, status);
 }
 
@@ -514,151 +503,157 @@ function readPressureRange(range) {
     return getValue(range_map, range);
 }
 
-function readAlarm(type) {
-    var alarm_map = { 1: "threshold alarm", 2: "value change alarm" };
-    return getValue(alarm_map, type);
-}
+function handle_downlink_response(channel_type, buffer) {
+    var decoded = {};
 
-function readAnalogInputType(type) {
-    var type_map = { 0: "current", 1: "voltage" };
-    return getValue(type_map, type);
-}
-
-function readTemperatureAlarm(status) {
-    var status_map = { 0: "alarm release", 1: "threshold alarm", 2: "mutation alarm" };
-    return getValue(status_map, status);
-}
-
-function readPressureAlarm(status) {
-    var status_map = { 0: "alarm release", 1: "threshold alarm", 2: "mutation alarm" };
-    return getValue(status_map, status);
-}
-
-function readTamperStatus(status) {
-    var status_map = { 0: "normal", 1: "triggered" };
-    return getValue(status_map, status);
-}
-
-function readHistorySensorStatus(temperature_value, pressure_value, status) {
-    var data = {};
-    // temperature sensor
-    if (temperature_value !== 0xfffe) {
-        if (temperature_value === 0xffff) {
-            data.temperature_sensor_status = readSensorStatus(1);
-        } else if (temperature_value === 0xfffd) {
-            data.temperature_sensor_status = readSensorStatus(2);
-        } else {
-            data.temperature_sensor_status = readSensorStatus(0);
-            data.temperature_alarm = readThresholdAlarm((status >>> 1) & 0x03);
-            data.temperature_mutation_alarm = readMutationAlarm((status >>> 3) & 0x01);
-        }
+    switch (channel_type) {
+        case 0x02:
+            decoded.collection_interval = buffer.readUInt16LE();
+            break;
+        case 0x03:
+            decoded.report_interval = buffer.readUInt16LE();
+            break;
+        case 0x10:
+            decoded.reboot = readYesNoStatus(1);
+            buffer.readUInt8();
+            break;
+        case 0x11:
+            decoded.timestamp = buffer.readUInt32LE();
+            break;
+        case 0x17:
+            decoded.timezone = buffer.readInt16LE() / 10;
+            break;
+        case 0x27:
+            decoded.clear_history = readYesNoStatus(1);
+            buffer.readUInt8();
+            break;
+        case 0x28:
+            decoded.report_status = readYesNoStatus(1);
+            buffer.readUInt8();
+            break;
+        case 0x68:
+            decoded.history_enable = readEnableStatus(buffer.readUInt8());
+            break;
+        case 0x69:
+            decoded.retransmit_enable = readEnableStatus(buffer.readUInt8());
+            break;
+        case 0x6a:
+            var type = buffer.readUInt8();
+            if (type === 0x00) {
+                decoded.retransmit_interval = buffer.readUInt16LE();
+            } else if (type === 0x01) {
+                decoded.resend_interval = buffer.readUInt16LE();
+            }
+            break;
+        case 0x1f:
+            decoded.pressure_range = readPressureRange(buffer.readUInt8());
+            break;
+        case 0x4a:
+            decoded.sync_time = readYesNoStatus(buffer.readUInt8());
+            break;
+        default:
+            throw new Error("unknown downlink response");
     }
-    // pressure sensor
-    else if (pressure_value !== 0xfffe) {
-        if (pressure_value === 0xffff) {
-            data.pressure_sensor_status = readSensorStatus(1);
-        } else if (pressure_value === 0xfffd) {
-            data.pressure_sensor_status = readSensorStatus(2);
-        } else {
-            data.pressure_sensor_status = readSensorStatus((status >>> 4) & 0x01);
-            data.pressure_alarm = readThresholdAlarm((status >>> 5) & 0x03);
-            data.pressure_mutation_alarm = readMutationAlarm((status >>> 7) & 0x01);
-        }
-    }
 
-    return data;
+    return decoded;
 }
 
-function readSensorStatus(status) {
-    var status_map = { 0: "normal", 1: "read error", 2: "out of range" };
-    return getValue(status_map, status);
+function Buffer(bytes) {
+    this.bytes = bytes;
+    this.length = bytes.length;
+    this.offset = 0;
 }
 
-function readThresholdAlarm(status) {
-    var status_map = { 0: "normal", 1: "threshold alarm", 2: "threshold alarm release" };
-    return getValue(status_map, status);
-}
+Buffer.prototype.readUInt8 = function () {
+    var value = this.bytes[this.offset];
+    this.offset += 1;
+    return value & 0xff;
+};
 
-function readMutationAlarm(status) {
-    var status_map = { 0: "normal", 1: "mutation alarm" };
-    return getValue(status_map, status);
-}
+Buffer.prototype.readInt8 = function () {
+    var value = this.readUInt8();
+    return value > 0x7f ? value - 0x100 : value;
+};
 
-function hasIllegalValue(value) {
-    return value === 0xfffe || value === 0xffff || value === 0xfffd;
-}
-
-function numToBits(num, bit_count) {
-    var bits = [];
-    for (var i = 0; i < bit_count; i++) {
-        bits.push((num >> i) & 1);
-    }
-    return bits;
-}
-
-/* eslint-disable */
-function readUInt8(bytes) {
-    return bytes & 0xff;
-}
-
-function readInt8(bytes) {
-    var ref = readUInt8(bytes);
-    return ref > 0x7f ? ref - 0x100 : ref;
-}
-
-function readUInt16LE(bytes) {
-    var value = (bytes[1] << 8) + bytes[0];
+Buffer.prototype.readUInt16LE = function () {
+    var value = (this.bytes[this.offset + 1] << 8) + this.bytes[this.offset];
+    this.offset += 2;
     return value & 0xffff;
-}
+};
 
-function readInt16LE(bytes) {
-    var ref = readUInt16LE(bytes);
-    return ref > 0x7fff ? ref - 0x10000 : ref;
-}
+Buffer.prototype.readInt16LE = function () {
+    var value = this.readUInt16LE();
+    return value > 0x7fff ? value - 0x10000 : value;
+};
 
-function readUInt32LE(bytes) {
-    var value = (bytes[3] << 24) + (bytes[2] << 16) + (bytes[1] << 8) + bytes[0];
-    return value & 0xffffffff;
-}
+Buffer.prototype.readUInt16BE = function () {
+    var value = (this.bytes[this.offset] << 8) + this.bytes[this.offset + 1];
+    this.offset += 2;
+    return value & 0xffff;
+};
 
-function readInt32LE(bytes) {
-    var ref = readUInt32LE(bytes);
-    return ref > 0x7fffffff ? ref - 0x100000000 : ref;
-}
+Buffer.prototype.readInt16BE = function () {
+    var value = this.readUIntBE();
+    return value > 0x7fff ? value - 0x10000 : value;
+};
 
-function readFloat16LE(bytes) {
-    var bits = (bytes[1] << 8) | bytes[0];
+Buffer.prototype.readUInt32LE = function () {
+    var value = (this.bytes[this.offset + 3] << 24) + (this.bytes[this.offset + 2] << 16) + (this.bytes[this.offset + 1] << 8) + this.bytes[this.offset];
+    this.offset += 4;
+    return (value & 0xffffffff) >>> 0;
+};
+
+Buffer.prototype.readInt32LE = function () {
+    var value = this.readUInt32LE();
+    return value > 0x7fffffff ? value - 0x100000000 : value;
+};
+
+Buffer.prototype.readFloat16LE = function () {
+    var bits = this.readUInt16LE();
     var sign = bits >>> 15 === 0 ? 1.0 : -1.0;
     var e = (bits >>> 10) & 0x1f;
     var m = e === 0 ? (bits & 0x3ff) << 1 : (bits & 0x3ff) | 0x400;
     var f = sign * m * Math.pow(2, e - 25);
-    return f;
-}
+    var v = Number(f.toFixed(2));
+    return v;
+};
 
-function readFloatLE(bytes) {
-    var bits = (bytes[3] << 24) | (bytes[2] << 16) | (bytes[1] << 8) | bytes[0];
-    var sign = bits >>> 31 === 0 ? 1.0 : -1.0;
-    var e = (bits >>> 23) & 0xff;
-    var m = e === 0 ? (bits & 0x7fffff) << 1 : (bits & 0x7fffff) | 0x800000;
+Buffer.prototype.readFloatLE = function () {
+    var value = this.readUInt32LE();
+    var sign = value >>> 31 === 0 ? 1.0 : -1.0;
+    var e = (value >>> 23) & 0xff;
+    var m = e === 0 ? (value & 0x7fffff) << 1 : (value & 0x7fffff) | 0x800000;
     var f = sign * m * Math.pow(2, e - 150);
-    return f;
-}
+    var v = Number(f.toFixed(2));
+    return v;
+};
 
-function readString(bytes) {
-    var str = "";
-    for (var i = 0; i < bytes.length; i++) {
-        if (bytes[i] === 0) {
+Buffer.prototype.readAscii = function (length) {
+    var end = length;
+    for (var i = 0; i < length; i++) {
+        if (this.bytes[this.offset + i] === 0) {
+            end = i;
             break;
         }
-        str += String.fromCharCode(bytes[i]);
     }
-    return str;
-}
 
-function includes(data, value) {
-    var size = data.length;
+    var str = String.fromCharCode.apply(null, this.bytes.slice(this.offset, this.offset + end));
+    this.offset += length;
+    return str;
+};
+
+Buffer.prototype.slice = function (length) {
+    return this.bytes.slice(this.offset, this.offset + length);
+};
+
+Buffer.prototype.remaining = function () {
+    return this.bytes.length - this.offset;
+};
+
+function includes(items, item) {
+    var size = items.length;
     for (var i = 0; i < size; i++) {
-        if (data[i] == value) {
+        if (items[i] == item) {
             return true;
         }
     }
@@ -672,41 +667,3 @@ function getValue(map, key) {
     if (!value) value = "unknown";
     return value;
 }
-
-//if (!Object.assign) {
-    Object.defineProperty(Object, "assign", {
-        enumerable: false,
-        configurable: true,
-        writable: true,
-        value: function (target) {
-            "use strict";
-            if (target == null) {
-                throw new TypeError("Cannot convert first argument to object");
-            }
-
-            var to = Object(target);
-            for (var i = 1; i < arguments.length; i++) {
-                var nextSource = arguments[i];
-                if (nextSource == null) {
-                    continue;
-                }
-                nextSource = Object(nextSource);
-
-                var keysArray = Object.keys(Object(nextSource));
-                for (var nextIndex = 0, len = keysArray.length; nextIndex < len; nextIndex++) {
-                    var nextKey = keysArray[nextIndex];
-                    var desc = Object.getOwnPropertyDescriptor(nextSource, nextKey);
-                    if (desc !== undefined && desc.enumerable) {
-                        // concat array
-                        if (Array.isArray(to[nextKey]) && Array.isArray(nextSource[nextKey])) {
-                            to[nextKey] = to[nextKey].concat(nextSource[nextKey]);
-                        } else {
-                            to[nextKey] = nextSource[nextKey];
-                        }
-                    }
-                }
-            }
-            return to;
-        },
-    });
-//}
