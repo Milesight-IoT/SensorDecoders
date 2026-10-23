@@ -14,12 +14,12 @@
                 100
             ],
             "bacnet_type": "analog_input_object",
-            "bacnet_unit_type_id": 98,
-            "bacnet_unit_type": "UNITS_PERCENT"
+            "bacnet_unit_type_id": 15,
+            "bacnet_unit_type": "UNITS_POWER_FACTOR"
         },
         {
             "id": "celsius_cooling_target_temperature",
-            "name": "Celsius CoolingTarget Temperature",
+            "name": "Celsius Cooling Target Temperature",
             "value": "28",
             "unit": "°C",
             "access_mode": "RW",
@@ -108,11 +108,11 @@
             "values": [
                 {
                     "value": 0,
-                    "name": "disable"
+                    "name": "Disable"
                 },
                 {
                     "value": 1,
-                    "name": "enable"
+                    "name": "Enable"
                 }
             ],
             "bacnet_type": "binary_value_object",
@@ -138,11 +138,11 @@
             "values": [
                 {
                     "value": 0,
-                    "name": "disable"
+                    "name": "Disable"
                 },
                 {
                     "value": 1,
-                    "name": "enable"
+                    "name": "Enable"
                 }
             ],
             "bacnet_type": "binary_value_object",
@@ -168,11 +168,11 @@
             "values": [
                 {
                     "value": 0,
-                    "name": "disable"
+                    "name": "Disable"
                 },
                 {
                     "value": 1,
-                    "name": "enable"
+                    "name": "Enable"
                 }
             ],
             "bacnet_type": "binary_value_object",
@@ -219,7 +219,7 @@
         },
         {
             "id": "child_lock.system_button",
-            "name": "System On/Off (Child Lock)",
+            "name": "System On/Off(Child Lock)",
             "value": "1",
             "unit": "",
             "access_mode": "RW",
@@ -228,11 +228,11 @@
             "values": [
                 {
                     "value": 0,
-                    "name": "disable"
+                    "name": "Disable"
                 },
                 {
                     "value": 1,
-                    "name": "enable"
+                    "name": "Enable"
                 }
             ],
             "bacnet_type": "binary_value_object",
@@ -258,11 +258,11 @@
             "values": [
                 {
                     "value": 0,
-                    "name": "disable"
+                    "name": "Disable"
                 },
                 {
                     "value": 1,
-                    "name": "enable"
+                    "name": "Enable"
                 }
             ],
             "bacnet_type": "binary_value_object",
@@ -288,11 +288,11 @@
             "values": [
                 {
                     "value": 0,
-                    "name": "disable"
+                    "name": "Disable"
                 },
                 {
                     "value": 1,
-                    "name": "enable"
+                    "name": "Enable"
                 }
             ],
             "bacnet_type": "binary_value_object",
@@ -356,11 +356,11 @@
             "values": [
                 {
                     "value": 0,
-                    "name": "second"
+                    "name": "Second"
                 },
                 {
                     "value": 1,
-                    "name": "min"
+                    "name": "Min"
                 }
             ],
             "bacnet_type": "multistate_value_object",
@@ -455,11 +455,11 @@
             "values": [
                 {
                     "value": 0,
-                    "name": "disable"
+                    "name": "Disable"
                 },
                 {
                     "value": 1,
-                    "name": "enable"
+                    "name": "Enable"
                 }
             ],
             "bacnet_type": "binary_value_object",
@@ -477,11 +477,11 @@
             "values": [
                 {
                     "value": 0,
-                    "name": "disable"
+                    "name": "Disable"
                 },
                 {
                     "value": 1,
-                    "name": "enable"
+                    "name": "Enable"
                 }
             ],
             "bacnet_type": "binary_value_object",
@@ -499,11 +499,11 @@
             "values": [
                 {
                     "value": 0,
-                    "name": "disable"
+                    "name": "Disable"
                 },
                 {
                     "value": 1,
-                    "name": "enable"
+                    "name": "Enable"
                 }
             ],
             "bacnet_type": "binary_value_object",
@@ -578,11 +578,11 @@
             "values": [
                 {
                     "value": 0,
-                    "name": "disable"
+                    "name": "Disable"
                 },
                 {
                     "value": 1,
-                    "name": "enable"
+                    "name": "Enable"
                 }
             ],
             "bacnet_type": "binary_value_object",
@@ -1217,11 +1217,11 @@
             "values": [
                 {
                     "value": 0,
-                    "name": "disable"
+                    "name": "Disable"
                 },
                 {
                     "value": 1,
-                    "name": "enable"
+                    "name": "Enable"
                 }
             ],
             "bacnet_type": "binary_value_object",
@@ -1345,11 +1345,11 @@
             "values": [
                 {
                     "value": 0,
-                    "name": "system off"
+                    "name": "System Off"
                 },
                 {
                     "value": 1,
-                    "name": "system on"
+                    "name": "System On"
                 }
             ],
             "bacnet_type": "multistate_value_object",
@@ -1391,11 +1391,11 @@
             "values": [
                 {
                     "value": 0,
-                    "name": "NO"
+                    "name": "NC"
                 },
                 {
                     "value": 1,
-                    "name": "NC"
+                    "name": "NO"
                 }
             ],
             "bacnet_type": "multistate_value_object",
@@ -1510,7 +1510,7 @@
         },
         {
             "id": "fahrenheit_cooling_target_temperature",
-            "name": "Fahrenheit CoolingTarget Temperature",
+            "name": "Fahrenheit Cooling Target Temperature",
             "value": "82.4",
             "unit": "°F",
             "access_mode": "RW",
@@ -1675,7 +1675,7 @@
             "values": [
                 {
                     "value": 0,
-                    "name": "Auto"
+                    "name": "Off"
                 },
                 {
                     "value": 1,
@@ -1771,11 +1771,11 @@
             "values": [
                 {
                     "value": 0,
-                    "name": "disable"
+                    "name": "Disable"
                 },
                 {
                     "value": 1,
-                    "name": "enable"
+                    "name": "Enable"
                 }
             ],
             "bacnet_type": "binary_value_object",
@@ -1815,11 +1815,11 @@
             "values": [
                 {
                     "value": 0,
-                    "name": "disable"
+                    "name": "Disable"
                 },
                 {
                     "value": 1,
-                    "name": "enable"
+                    "name": "Enable"
                 }
             ],
             "bacnet_type": "binary_value_object",
@@ -1856,11 +1856,11 @@
             "values": [
                 {
                     "value": 0,
-                    "name": "disable"
+                    "name": "Disable"
                 },
                 {
                     "value": 1,
-                    "name": "enable"
+                    "name": "Enable"
                 }
             ],
             "bacnet_type": "binary_value_object",
@@ -2013,11 +2013,11 @@
             "values": [
                 {
                     "value": 0,
-                    "name": "disable"
+                    "name": "Disable"
                 },
                 {
                     "value": 1,
-                    "name": "enable"
+                    "name": "Enable"
                 }
             ],
             "bacnet_type": "binary_value_object",
@@ -2049,7 +2049,7 @@
         },
         {
             "id": "historical_data_report.timestamp",
-            "name": "Historical Data Timestamps(Historical Data)",
+            "name": "Historical Data Timestamp(Historical Data)",
             "value": "",
             "unit": "",
             "access_mode": "R",
@@ -2073,8 +2073,8 @@
                 100
             ],
             "bacnet_type": "analog_input_object",
-            "bacnet_unit_type_id": 98,
-            "bacnet_unit_type": "UNITS_PERCENT"
+            "bacnet_unit_type_id": 15,
+            "bacnet_unit_type": "UNITS_POWER_FACTOR"
         },
         {
             "id": "humidity_alarm.type",
@@ -2112,8 +2112,8 @@
                 100
             ],
             "bacnet_type": "analog_value_object",
-            "bacnet_unit_type_id": 98,
-            "bacnet_unit_type": "UNITS_PERCENT",
+            "bacnet_unit_type_id": 15,
+            "bacnet_unit_type": "UNITS_POWER_FACTOR",
             "reference": [
                 "humidity_calibration_settings.enable"
             ]
@@ -2129,11 +2129,11 @@
             "values": [
                 {
                     "value": 0,
-                    "name": "disable"
+                    "name": "Disable"
                 },
                 {
                     "value": 1,
-                    "name": "enable"
+                    "name": "Enable"
                 }
             ],
             "bacnet_type": "binary_value_object",
@@ -2201,11 +2201,11 @@
             "values": [
                 {
                     "value": 0,
-                    "name": "disable"
+                    "name": "Disable"
                 },
                 {
                     "value": 1,
-                    "name": "enable"
+                    "name": "Enable"
                 }
             ],
             "bacnet_type": "binary_value_object",
@@ -2364,7 +2364,7 @@
         },
         {
             "id": "lorawan_configuration_settings.mode",
-            "name": "LoRaWAN Work Mode(LoRaWAN  Settings)",
+            "name": "LoRaWAN Work Mode(LoRaWAN Settings)",
             "value": "0",
             "unit": "",
             "access_mode": "RW",
@@ -2443,11 +2443,11 @@
             "values": [
                 {
                     "value": 0,
-                    "name": "disable"
+                    "name": "Disable"
                 },
                 {
                     "value": 1,
-                    "name": "enable"
+                    "name": "Enable"
                 }
             ],
             "bacnet_type": "binary_value_object",
@@ -2488,15 +2488,11 @@
             "values": [
                 {
                     "value": 7,
-                    "name": "Ventilation、Heat、Cool"
+                    "name": "Ventilation"
                 },
                 {
-                    "value": 3,
-                    "name": "Ventilation、Heat"
-                },
-                {
-                    "value": 5,
-                    "name": "Ventilation、Cool"
+                    "value": 8,
+                    "name": "Unsupported Command"
                 }
             ],
             "bacnet_type": "multistate_value_object",
@@ -2584,11 +2580,11 @@
             "values": [
                 {
                     "value": 0,
-                    "name": "disable"
+                    "name": "Disable"
                 },
                 {
                     "value": 1,
-                    "name": "enable"
+                    "name": "Enable"
                 }
             ],
             "bacnet_type": "binary_value_object",
@@ -2597,7 +2593,7 @@
         },
         {
             "id": "relay_status.high_status",
-            "name": "Fan High(Relay/Valve Status )",
+            "name": "Fan High(Relay/Valve Status)",
             "value": "0",
             "unit": "",
             "access_mode": "R",
@@ -2626,7 +2622,7 @@
         },
         {
             "id": "relay_status.low_status",
-            "name": "Fan Low(Relay/Valve Status )",
+            "name": "Fan Low(Relay/Valve Status)",
             "value": "0",
             "unit": "",
             "access_mode": "R",
@@ -2655,7 +2651,7 @@
         },
         {
             "id": "relay_status.mid_status",
-            "name": "Fan Medium(Relay/Valve Status )",
+            "name": "Fan Medium(Relay/Valve Status)",
             "value": "0",
             "unit": "",
             "access_mode": "R",
@@ -2684,7 +2680,7 @@
         },
         {
             "id": "relay_status.reserved",
-            "name": "Reserved(Relay/Valve Status )",
+            "name": "Reserved(Relay/Valve Status)",
             "value": "",
             "unit": "",
             "access_mode": "R",
@@ -2713,7 +2709,7 @@
         },
         {
             "id": "relay_status.valve_1_status",
-            "name": "Valve 1(Relay/Valve Status )",
+            "name": "Valve 1(Relay/Valve Status)",
             "value": "0",
             "unit": "",
             "access_mode": "R",
@@ -2742,7 +2738,7 @@
         },
         {
             "id": "relay_status.valve_2_status",
-            "name": "Valve 2(Relay/Valve Status )",
+            "name": "Valve 2(Relay/Valve Status)",
             "value": "0",
             "unit": "",
             "access_mode": "R",
@@ -2818,11 +2814,11 @@
             "values": [
                 {
                     "value": 0,
-                    "name": "second"
+                    "name": "Second"
                 },
                 {
                     "value": 1,
-                    "name": "min"
+                    "name": "Min"
                 }
             ],
             "bacnet_type": "multistate_value_object",
@@ -2841,11 +2837,11 @@
             "values": [
                 {
                     "value": 0,
-                    "name": "disable"
+                    "name": "Disable"
                 },
                 {
                     "value": 1,
-                    "name": "enable"
+                    "name": "Enable"
                 }
             ],
             "bacnet_type": "binary_value_object",
@@ -2872,11 +2868,11 @@
             "values": [
                 {
                     "value": 0,
-                    "name": "disable"
+                    "name": "Disable"
                 },
                 {
                     "value": 1,
-                    "name": "enable"
+                    "name": "Enable"
                 }
             ],
             "bacnet_type": "binary_value_object",
@@ -2903,11 +2899,11 @@
             "values": [
                 {
                     "value": 0,
-                    "name": "disable"
+                    "name": "Disable"
                 },
                 {
                     "value": 1,
-                    "name": "enable"
+                    "name": "Enable"
                 }
             ],
             "bacnet_type": "binary_value_object",
@@ -2934,11 +2930,11 @@
             "values": [
                 {
                     "value": 0,
-                    "name": "disable"
+                    "name": "Disable"
                 },
                 {
                     "value": 1,
-                    "name": "enable"
+                    "name": "Enable"
                 }
             ],
             "bacnet_type": "binary_value_object",
@@ -2996,11 +2992,11 @@
             "values": [
                 {
                     "value": 0,
-                    "name": "disable"
+                    "name": "Disable"
                 },
                 {
                     "value": 1,
-                    "name": "enable"
+                    "name": "Enable"
                 }
             ],
             "bacnet_type": "binary_value_object",
@@ -3018,7 +3014,7 @@
         },
         {
             "id": "screen_object_settings.target_temperature",
-            "name": "Target Temperature (Screen Display Settings)",
+            "name": "Target Temperature(Screen Display Settings)",
             "value": "1",
             "unit": "",
             "access_mode": "RW",
@@ -3027,11 +3023,11 @@
             "values": [
                 {
                     "value": 0,
-                    "name": "disable"
+                    "name": "Disable"
                 },
                 {
                     "value": 1,
-                    "name": "enable"
+                    "name": "Enable"
                 }
             ],
             "bacnet_type": "binary_value_object",
@@ -3058,11 +3054,11 @@
             "values": [
                 {
                     "value": 0,
-                    "name": "disable"
+                    "name": "Disable"
                 },
                 {
                     "value": 1,
-                    "name": "enable"
+                    "name": "Enable"
                 }
             ],
             "bacnet_type": "binary_value_object",
@@ -3080,7 +3076,7 @@
         },
         {
             "id": "send_humidity.humidity",
-            "name": "Humidity Extend Value(Humidity Extend Settings)",
+            "name": "Humidity Extend Value(External Humidity Settings)",
             "value": "0",
             "unit": "%",
             "access_mode": "W",
@@ -3091,13 +3087,13 @@
                 100
             ],
             "bacnet_type": "analog_output_object",
-            "bacnet_unit_type_id": 98,
-            "bacnet_unit_type": "UNITS_PERCENT",
+            "bacnet_unit_type_id": 15,
+            "bacnet_unit_type": "UNITS_POWER_FACTOR",
             "reference": []
         },
         {
             "id": "send_temperature.celsius_temperature",
-            "name": "Celsius Temperature Extend Value(Temperature Extend Settings)",
+            "name": "Celsius External Temperature Value(External Temperature Settings)",
             "value": "0",
             "unit": "°C",
             "access_mode": "W",
@@ -3114,7 +3110,7 @@
         },
         {
             "id": "send_temperature.fahrenheit_temperature",
-            "name": "Fahrenheit Temperature Extend Value(Temperature Extend Settings)",
+            "name": "Fahrenheit External Temperature Value(External Temperature Settings)",
             "value": "32",
             "unit": "°F",
             "access_mode": "W",
@@ -3164,8 +3160,8 @@
                 100
             ],
             "bacnet_type": "analog_value_object",
-            "bacnet_unit_type_id": 98,
-            "bacnet_unit_type": "UNITS_PERCENT",
+            "bacnet_unit_type_id": 15,
+            "bacnet_unit_type": "UNITS_POWER_FACTOR",
             "reference": [
                 "target_humidity_range.min"
             ]
@@ -3183,8 +3179,8 @@
                 100
             ],
             "bacnet_type": "analog_value_object",
-            "bacnet_unit_type_id": 98,
-            "bacnet_unit_type": "UNITS_PERCENT",
+            "bacnet_unit_type_id": 15,
+            "bacnet_unit_type": "UNITS_POWER_FACTOR",
             "reference": [
                 "target_humidity_range.max"
             ]
@@ -3382,7 +3378,7 @@
         },
         {
             "id": "temperature_alarm.type",
-            "name": "Alarm Type(Temperature  Alarm)",
+            "name": "Alarm Type(Temperature Alarm)",
             "value": "",
             "unit": "",
             "access_mode": "R",
@@ -3451,7 +3447,7 @@
                 },
                 {
                     "value": 35,
-                    "name": "Persistent High Temperature Alarm Released"
+                    "name": "Persistent High Temperature Alarm"
                 },
                 {
                     "value": 48,
@@ -3505,11 +3501,11 @@
             "values": [
                 {
                     "value": 0,
-                    "name": "disable"
+                    "name": "Disable"
                 },
                 {
                     "value": 1,
-                    "name": "enable"
+                    "name": "Enable"
                 }
             ],
             "bacnet_type": "binary_value_object",
@@ -3538,7 +3534,7 @@
         },
         {
             "id": "temperature_control_dehumidification.celsius_temperature_tolerance",
-            "name": "Celsius Temp. Tolerance for Dehumidification\n(Temp. Control and Dehumidify Settings)",
+            "name": "Celsius Temp. Tolerance for Dehumidification(Temp. Control and Dehumidify Settings)",
             "value": "1",
             "unit": "°C",
             "access_mode": "RW",
@@ -3566,11 +3562,11 @@
             "values": [
                 {
                     "value": 0,
-                    "name": "disable"
+                    "name": "Disable"
                 },
                 {
                     "value": 1,
-                    "name": "enable"
+                    "name": "Enable"
                 }
             ],
             "bacnet_type": "binary_value_object",
@@ -3580,7 +3576,7 @@
         },
         {
             "id": "temperature_control_dehumidification.fahrenheit_temperature_tolerance",
-            "name": "Fahrenheit Temp. Tolerance for Dehumidification\n(Temp. Control and Dehumidify Settings)",
+            "name": "Fahrenheit Temp. Tolerance for Dehumidification(Temp. Control and Dehumidify Settings)",
             "value": "33.8",
             "unit": "°F",
             "access_mode": "RW",
@@ -3845,11 +3841,11 @@
             "values": [
                 {
                     "value": 0,
-                    "name": "°C"
+                    "name": "Celsius"
                 },
                 {
                     "value": 1,
-                    "name": "°F"
+                    "name": "Fahrenheit"
                 }
             ],
             "bacnet_type": "multistate_value_object",
@@ -3867,11 +3863,11 @@
             "values": [
                 {
                     "value": 0,
-                    "name": "disable"
+                    "name": "Disable"
                 },
                 {
                     "value": 1,
-                    "name": "enable"
+                    "name": "Enable"
                 }
             ],
             "bacnet_type": "binary_value_object",
@@ -3898,11 +3894,11 @@
             "values": [
                 {
                     "value": 0,
-                    "name": "disable"
+                    "name": "Disable"
                 },
                 {
                     "value": 1,
-                    "name": "enable"
+                    "name": "Enable"
                 }
             ],
             "bacnet_type": "binary_value_object",
@@ -3960,11 +3956,11 @@
             "values": [
                 {
                     "value": 0,
-                    "name": "disable"
+                    "name": "Disable"
                 },
                 {
                     "value": 1,
-                    "name": "enable"
+                    "name": "Enable"
                 }
             ],
             "bacnet_type": "binary_value_object",
@@ -3991,11 +3987,11 @@
             "values": [
                 {
                     "value": 0,
-                    "name": "disable"
+                    "name": "Disable"
                 },
                 {
                     "value": 1,
-                    "name": "enable"
+                    "name": "Enable"
                 }
             ],
             "bacnet_type": "binary_value_object",
@@ -4022,11 +4018,11 @@
             "values": [
                 {
                     "value": 0,
-                    "name": "disable"
+                    "name": "Disable"
                 },
                 {
                     "value": 1,
-                    "name": "enable"
+                    "name": "Enable"
                 }
             ],
             "bacnet_type": "binary_value_object",
@@ -4053,11 +4049,11 @@
             "values": [
                 {
                     "value": 0,
-                    "name": "disable"
+                    "name": "Disable"
                 },
                 {
                     "value": 1,
-                    "name": "enable"
+                    "name": "Enable"
                 }
             ],
             "bacnet_type": "binary_value_object",
@@ -4271,11 +4267,11 @@
             "values": [
                 {
                     "value": 0,
-                    "name": "disable"
+                    "name": "Disable"
                 },
                 {
                     "value": 1,
-                    "name": "enable"
+                    "name": "Enable"
                 }
             ],
             "bacnet_type": "binary_value_object",
@@ -4298,7 +4294,7 @@
         },
         {
             "id": "update_open_windows_state.type",
-            "name": "Open Window Status Control( Open Window Status Control)",
+            "name": "Open Window Status Control(Open Window Status Control)",
             "value": "0",
             "unit": "",
             "access_mode": "W",
@@ -4362,11 +4358,11 @@
             "values": [
                 {
                     "value": 0,
-                    "name": "disable"
+                    "name": "Disable"
                 },
                 {
                     "value": 1,
-                    "name": "enable"
+                    "name": "Enable"
                 }
             ],
             "bacnet_type": "binary_value_object",

@@ -3,7 +3,7 @@
     "object": [
         {
             "id": "celsius_cooling_target_temperature",
-            "name": "Celsius CoolingTarget Temperature",
+            "name": "Celsius Cooling Target Temperature",
             "value": "28",
             "unit": "°C",
             "access_mode": "RW",
@@ -76,11 +76,269 @@
             "values": [
                 {
                     "value": 0,
-                    "name": "disable"
+                    "name": "Disable"
                 },
                 {
                     "value": 1,
-                    "name": "enable"
+                    "name": "Enable"
+                }
+            ],
+            "bacnet_type": "binary_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": []
+        },
+        {
+            "id": "child_lock_enable_cfg.fan",
+            "name": "Fan(Child Lock Enable Configuration)",
+            "value": "0",
+            "unit": "",
+            "access_mode": "RW",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "Disable"
+                },
+                {
+                    "value": 1,
+                    "name": "Enable"
+                }
+            ],
+            "bacnet_type": "binary_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": []
+        },
+        {
+            "id": "child_lock_enable_cfg.key_enable",
+            "name": "Child Lock Key Enable(Child Lock Enable Configuration)",
+            "value": "0",
+            "unit": "",
+            "access_mode": "RW",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "All Disabled"
+                },
+                {
+                    "value": 1,
+                    "name": "System Switch"
+                },
+                {
+                    "value": 2,
+                    "name": "Temp+ & Temp-"
+                },
+                {
+                    "value": 3,
+                    "name": "System Switch + Temp+ & Temp-"
+                },
+                {
+                    "value": 4,
+                    "name": "Fan"
+                },
+                {
+                    "value": 5,
+                    "name": "System Switch + Fan"
+                },
+                {
+                    "value": 6,
+                    "name": "Temp+ & Temp- + Fan"
+                },
+                {
+                    "value": 7,
+                    "name": "System Switch + Temp+ & Temp- + Fan"
+                },
+                {
+                    "value": 8,
+                    "name": "Temperature Control Mode"
+                },
+                {
+                    "value": 9,
+                    "name": "System Switch + Temperature Control Mode"
+                },
+                {
+                    "value": 10,
+                    "name": "Temp+ & Temp- + Temperature Control Mode"
+                },
+                {
+                    "value": 11,
+                    "name": "System Switch + Temp+ & Temp- + Temperature Control Mode"
+                },
+                {
+                    "value": 12,
+                    "name": "Fan + Temperature Control Mode"
+                },
+                {
+                    "value": 13,
+                    "name": "System Switch + Fan + Temperature Control Mode"
+                },
+                {
+                    "value": 14,
+                    "name": "Temp+ & Temp- + Fan + Temperature Control Mode"
+                },
+                {
+                    "value": 15,
+                    "name": "System Switch + Temp+ & Temp- + Fan + Temperature Control Mode"
+                },
+                {
+                    "value": 16,
+                    "name": "Restart/Reset"
+                },
+                {
+                    "value": 17,
+                    "name": "System Switch + Restart/Reset"
+                },
+                {
+                    "value": 18,
+                    "name": "Temp+ & Temp- + Restart/Reset"
+                },
+                {
+                    "value": 19,
+                    "name": "System Switch + Temp+ & Temp- + Restart/Reset"
+                },
+                {
+                    "value": 20,
+                    "name": "Fan + Restart/Reset"
+                },
+                {
+                    "value": 21,
+                    "name": "System Switch + Fan + Restart/Reset"
+                },
+                {
+                    "value": 22,
+                    "name": "Temp+ & Temp- + Fan + Restart/Reset"
+                },
+                {
+                    "value": 23,
+                    "name": "System Switch + Temp+ & Temp- + Fan + Restart/Reset"
+                },
+                {
+                    "value": 24,
+                    "name": "Temperature Control Mode + Restart/Reset"
+                },
+                {
+                    "value": 25,
+                    "name": "System Switch + Temperature Control Mode + Restart/Reset"
+                },
+                {
+                    "value": 26,
+                    "name": "Temp+ & Temp- + Temperature Control Mode + Restart/Reset"
+                },
+                {
+                    "value": 27,
+                    "name": "System Switch + Temp+ & Temp- + Temperature Control Mode + Restart/Reset"
+                },
+                {
+                    "value": 28,
+                    "name": "Fan + Temperature Control Mode + Restart/Reset"
+                },
+                {
+                    "value": 29,
+                    "name": "System Switch + Fan + Temperature Control Mode + Restart/Reset"
+                },
+                {
+                    "value": 30,
+                    "name": "Temp+ & Temp- + Fan + Temperature Control Mode + Restart/Reset"
+                },
+                {
+                    "value": 31,
+                    "name": "System Switch + Temp+ & Temp- + Fan + Temperature Control Mode + Restart/Reset"
+                }
+            ],
+            "bacnet_type": "multistate_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": []
+        },
+        {
+            "id": "child_lock_enable_cfg.reboot_reset",
+            "name": "Reboot&Reset(Child Lock Enable Configuration)",
+            "value": "0",
+            "unit": "",
+            "access_mode": "RW",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "Disable"
+                },
+                {
+                    "value": 1,
+                    "name": "Enable"
+                }
+            ],
+            "bacnet_type": "binary_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": []
+        },
+        {
+            "id": "child_lock_enable_cfg.system",
+            "name": "System On/Off (Child Lock Enable Configuration)",
+            "value": "0",
+            "unit": "",
+            "access_mode": "RW",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "Disable"
+                },
+                {
+                    "value": 1,
+                    "name": "Enable"
+                }
+            ],
+            "bacnet_type": "binary_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": []
+        },
+        {
+            "id": "child_lock_enable_cfg.temperature",
+            "name": "Temperature + & Temperature -(Child Lock Enable Configuration)",
+            "value": "0",
+            "unit": "",
+            "access_mode": "RW",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "Disable"
+                },
+                {
+                    "value": 1,
+                    "name": "Enable"
+                }
+            ],
+            "bacnet_type": "binary_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": []
+        },
+        {
+            "id": "child_lock_enable_cfg.temperature_control",
+            "name": "Temperature Control Mode(Child Lock Enable Configuration)",
+            "value": "0",
+            "unit": "",
+            "access_mode": "RW",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "Disable"
+                },
+                {
+                    "value": 1,
+                    "name": "Enable"
                 }
             ],
             "bacnet_type": "binary_value_object",
@@ -165,36 +423,6 @@
             ]
         },
         {
-            "id": "data_source",
-            "name": "Data Source",
-            "value": "0",
-            "unit": "",
-            "access_mode": "R",
-            "data_type": "ENUM",
-            "value_type": "UINT8",
-            "values": [
-                {
-                    "value": 0,
-                    "name": "Internal"
-                },
-                {
-                    "value": 1,
-                    "name": "External NTC"
-                },
-                {
-                    "value": 2,
-                    "name": "LoRaWAN Reception"
-                },
-                {
-                    "value": 3,
-                    "name": "D2D Reception"
-                }
-            ],
-            "bacnet_type": "multistate_input_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS"
-        },
-        {
             "id": "device_status",
             "name": "Device Status",
             "value": "1",
@@ -218,7 +446,7 @@
         },
         {
             "id": "fahrenheit_cooling_target_temperature",
-            "name": "Fahrenheit CoolingTarget Temperature",
+            "name": "Fahrenheit Cooling Target Temperature",
             "value": "82.4",
             "unit": "°F",
             "access_mode": "RW",
@@ -352,11 +580,11 @@
             "values": [
                 {
                     "value": 0,
-                    "name": "disable"
+                    "name": "Disable"
                 },
                 {
                     "value": 1,
-                    "name": "enable"
+                    "name": "Enable"
                 }
             ],
             "bacnet_type": "binary_value_object",
@@ -481,11 +709,11 @@
             "values": [
                 {
                     "value": 0,
-                    "name": "disable"
+                    "name": "Disable"
                 },
                 {
                     "value": 1,
-                    "name": "enable"
+                    "name": "Enable"
                 }
             ],
             "bacnet_type": "binary_value_object",
@@ -631,11 +859,11 @@
             "values": [
                 {
                     "value": 0,
-                    "name": "disable"
+                    "name": "Disable"
                 },
                 {
                     "value": 1,
-                    "name": "enable"
+                    "name": "Enable"
                 }
             ],
             "bacnet_type": "binary_value_object",
@@ -673,8 +901,8 @@
                 100
             ],
             "bacnet_type": "analog_input_object",
-            "bacnet_unit_type_id": 98,
-            "bacnet_unit_type": "UNITS_PERCENT"
+            "bacnet_unit_type_id": 15,
+            "bacnet_unit_type": "UNITS_POWER_FACTOR"
         },
         {
             "id": "humidity_calibration_cfg.calibration_value",
@@ -689,8 +917,31 @@
                 100
             ],
             "bacnet_type": "analog_value_object",
-            "bacnet_unit_type_id": 98,
-            "bacnet_unit_type": "UNITS_PERCENT",
+            "bacnet_unit_type_id": 15,
+            "bacnet_unit_type": "UNITS_POWER_FACTOR",
+            "reference": []
+        },
+        {
+            "id": "humidity_calibration_cfg.enable",
+            "name": "Humidity Calibration Enable(Humidity Calibration Configuration)",
+            "value": "0",
+            "unit": "",
+            "access_mode": "RW",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "Disable"
+                },
+                {
+                    "value": 1,
+                    "name": "Enable"
+                }
+            ],
+            "bacnet_type": "binary_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": []
         },
         {
@@ -709,22 +960,6 @@
                 {
                     "value": 1,
                     "name": "Two-pipe"
-                },
-                {
-                    "value": 2,
-                    "name": "Two-pipe"
-                },
-                {
-                    "value": 3,
-                    "name": "Four-pipe"
-                },
-                {
-                    "value": 4,
-                    "name": "Two-pipe"
-                },
-                {
-                    "value": 5,
-                    "name": "Two-pipe"
                 }
             ],
             "bacnet_type": "multistate_value_object",
@@ -733,7 +968,7 @@
         },
         {
             "id": "lorawan_configuration_settings.mode",
-            "name": "LoRaWAN Work Mode(LoRaWAN  Settings)",
+            "name": "LoRaWAN Work Mode(LoRaWAN Settings)",
             "value": "0",
             "unit": "",
             "access_mode": "RW",
@@ -807,11 +1042,11 @@
             "values": [
                 {
                     "value": 0,
-                    "name": "disable"
+                    "name": "Disable"
                 },
                 {
                     "value": 1,
-                    "name": "enable"
+                    "name": "Enable"
                 }
             ],
             "bacnet_type": "binary_value_object",
@@ -847,15 +1082,11 @@
             "values": [
                 {
                     "value": 7,
-                    "name": "Ventilation、Heat、Cool"
+                    "name": "Ventilation"
                 },
                 {
-                    "value": 3,
-                    "name": "Ventilation、Heat"
-                },
-                {
-                    "value": 5,
-                    "name": "Ventilation、Cool"
+                    "value": 8,
+                    "name": "Unsupported Command"
                 }
             ],
             "bacnet_type": "multistate_value_object",
@@ -887,6 +1118,234 @@
             "bacnet_type": "character_string_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS"
+        },
+        {
+            "id": "relay_status.ao1_duty",
+            "name": "AO1 Duty(Relay/Valve Status)",
+            "value": "0",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "NUMBER",
+            "value_type": "UINT8",
+            "bacnet_type": "analog_input_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "relay_status.low_status",
+                "relay_status.mid_status",
+                "relay_status.high_status",
+                "relay_status.valve_1_status",
+                "relay_status.valve_2_status",
+                "relay_status.reserved",
+                "relay_status.ao2_duty"
+            ]
+        },
+        {
+            "id": "relay_status.ao2_duty",
+            "name": "AO2 Duty(Relay/Valve Status)",
+            "value": "0",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "NUMBER",
+            "value_type": "UINT8",
+            "bacnet_type": "analog_input_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "relay_status.low_status",
+                "relay_status.mid_status",
+                "relay_status.high_status",
+                "relay_status.valve_1_status",
+                "relay_status.valve_2_status",
+                "relay_status.reserved",
+                "relay_status.ao1_duty"
+            ]
+        },
+        {
+            "id": "relay_status.high_status",
+            "name": "Fan High(Relay/Valve Status)",
+            "value": "0",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "Open"
+                },
+                {
+                    "value": 1,
+                    "name": "Close"
+                }
+            ],
+            "bacnet_type": "binary_input_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "relay_status.low_status",
+                "relay_status.mid_status",
+                "relay_status.valve_1_status",
+                "relay_status.valve_2_status",
+                "relay_status.reserved",
+                "relay_status.ao1_duty",
+                "relay_status.ao2_duty"
+            ]
+        },
+        {
+            "id": "relay_status.low_status",
+            "name": "Fan Low(Relay/Valve Status)",
+            "value": "0",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "Open"
+                },
+                {
+                    "value": 1,
+                    "name": "Close"
+                }
+            ],
+            "bacnet_type": "binary_input_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "relay_status.mid_status",
+                "relay_status.high_status",
+                "relay_status.valve_1_status",
+                "relay_status.valve_2_status",
+                "relay_status.reserved",
+                "relay_status.ao1_duty",
+                "relay_status.ao2_duty"
+            ]
+        },
+        {
+            "id": "relay_status.mid_status",
+            "name": "Fan Medium(Relay/Valve Status)",
+            "value": "0",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "Open"
+                },
+                {
+                    "value": 1,
+                    "name": "Close"
+                }
+            ],
+            "bacnet_type": "binary_input_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "relay_status.low_status",
+                "relay_status.high_status",
+                "relay_status.valve_1_status",
+                "relay_status.valve_2_status",
+                "relay_status.reserved",
+                "relay_status.ao1_duty",
+                "relay_status.ao2_duty"
+            ]
+        },
+        {
+            "id": "relay_status.reserved",
+            "name": "Reserved(Relay/Valve Status)",
+            "value": "",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "NUMBER",
+            "value_type": "UINT8",
+            "bacnet_type": "analog_input_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "relay_status.low_status",
+                "relay_status.mid_status",
+                "relay_status.high_status",
+                "relay_status.valve_1_status",
+                "relay_status.valve_2_status",
+                "relay_status.ao1_duty",
+                "relay_status.ao2_duty"
+            ],
+            "values": [
+                {
+                    "value": 0,
+                    "name": "disable"
+                },
+                {
+                    "value": 1,
+                    "name": "enable"
+                }
+            ]
+        },
+        {
+            "id": "relay_status.valve_1_status",
+            "name": "Valve 1(Relay/Valve Status)",
+            "value": "0",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "Open"
+                },
+                {
+                    "value": 1,
+                    "name": "Close"
+                }
+            ],
+            "bacnet_type": "binary_input_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "relay_status.low_status",
+                "relay_status.mid_status",
+                "relay_status.high_status",
+                "relay_status.valve_2_status",
+                "relay_status.reserved",
+                "relay_status.ao1_duty",
+                "relay_status.ao2_duty"
+            ]
+        },
+        {
+            "id": "relay_status.valve_2_status",
+            "name": "Valve 2(Relay/Valve Status)",
+            "value": "0",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "Open"
+                },
+                {
+                    "value": 1,
+                    "name": "Close"
+                }
+            ],
+            "bacnet_type": "binary_input_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "relay_status.low_status",
+                "relay_status.mid_status",
+                "relay_status.high_status",
+                "relay_status.valve_1_status",
+                "relay_status.reserved",
+                "relay_status.ao1_duty",
+                "relay_status.ao2_duty"
+            ]
         },
         {
             "id": "reporting_interval_cfg",
@@ -933,8 +1392,8 @@
                 100
             ],
             "bacnet_type": "analog_value_object",
-            "bacnet_unit_type_id": 98,
-            "bacnet_unit_type": "UNITS_PERCENT",
+            "bacnet_unit_type_id": 15,
+            "bacnet_unit_type": "UNITS_POWER_FACTOR",
             "reference": [
                 "target_humidity_range.min"
             ]
@@ -952,15 +1411,15 @@
                 100
             ],
             "bacnet_type": "analog_value_object",
-            "bacnet_unit_type_id": 98,
-            "bacnet_unit_type": "UNITS_PERCENT",
+            "bacnet_unit_type_id": 15,
+            "bacnet_unit_type": "UNITS_POWER_FACTOR",
             "reference": [
                 "target_humidity_range.max"
             ]
         },
         {
             "id": "temp_ctl_dehumi_cfg.celsius_temperature_tolerance",
-            "name": "Celsius Temp Control and Dehumidify Enable Tolerance(Temp Control and Dehumidify Configuration)",
+            "name": "Celsius Temp. Control and Dehumidify Tolerance(Temp. Control and Dehumidify Configuration)",
             "value": "1",
             "unit": "°C",
             "access_mode": "RW",
@@ -977,7 +1436,7 @@
         },
         {
             "id": "temp_ctl_dehumi_cfg.enable",
-            "name": "Temp Control and Dehumidify Enable(Temp Control and Dehumidify Configuration)",
+            "name": "Temp. Control and Dehumidify Enable(Temp. Control and Dehumidify Configuration)",
             "value": "0",
             "unit": "",
             "access_mode": "RW",
@@ -986,11 +1445,11 @@
             "values": [
                 {
                     "value": 0,
-                    "name": "disable"
+                    "name": "Disable"
                 },
                 {
                     "value": 1,
-                    "name": "enable"
+                    "name": "Enable"
                 }
             ],
             "bacnet_type": "binary_value_object",
@@ -1000,7 +1459,7 @@
         },
         {
             "id": "temp_ctl_dehumi_cfg.fahrenheit_temperature_tolerance",
-            "name": "Fahrenheit Temp Control and Dehumidify Enable Tolerance(Temp Control and Dehumidify Configuration)",
+            "name": "Fahrenheit Temp. Control and Dehumidify Tolerance(Temp. Control and Dehumidify Configuration)",
             "value": "33.8",
             "unit": "°F",
             "access_mode": "RW",
@@ -1017,7 +1476,7 @@
         },
         {
             "id": "temperature_alarm.type",
-            "name": "Alarm Type(Temperature  Alarm)",
+            "name": "Alarm Type(Temperature Alarm)",
             "value": "",
             "unit": "",
             "access_mode": "R",
@@ -1086,7 +1545,7 @@
                 },
                 {
                     "value": 35,
-                    "name": "Persistent High Temperature Alarm Released"
+                    "name": "Persistent High Temperature Alarm"
                 },
                 {
                     "value": 48,
@@ -1125,6 +1584,29 @@
             "bacnet_type": "analog_value_object",
             "bacnet_unit_type_id": 62,
             "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
+            "reference": []
+        },
+        {
+            "id": "temperature_calibration_cfg.enable",
+            "name": "Temperature Calibration Enable(Temperature Calibration Configuration)",
+            "value": "0",
+            "unit": "",
+            "access_mode": "RW",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "Disable"
+                },
+                {
+                    "value": 1,
+                    "name": "Enable"
+                }
+            ],
+            "bacnet_type": "binary_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": []
         },
         {
@@ -1232,6 +1714,37 @@
             "bacnet_unit_type": "UNITS_NO_UNITS"
         },
         {
+            "id": "temperature_source.type",
+            "name": "Temperature Source(Temperature Data Source)",
+            "value": "0",
+            "unit": "",
+            "access_mode": "RW",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "Embedded Temperature"
+                },
+                {
+                    "value": 1,
+                    "name": "External NTC"
+                },
+                {
+                    "value": 2,
+                    "name": "LoRa Receive"
+                },
+                {
+                    "value": 3,
+                    "name": "D2D Receive"
+                }
+            ],
+            "bacnet_type": "multistate_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": []
+        },
+        {
             "id": "temperature_unit",
             "name": "Temperature Unit",
             "value": "0",
@@ -1242,11 +1755,11 @@
             "values": [
                 {
                     "value": 0,
-                    "name": "°C"
+                    "name": "Celsius"
                 },
                 {
                     "value": 1,
-                    "name": "°F"
+                    "name": "Fahrenheit"
                 }
             ],
             "bacnet_type": "multistate_value_object",
@@ -1377,6 +1890,138 @@
             "reference": []
         },
         {
+            "id": "temporary_button_unlock_cfg.fan",
+            "name": "Fan Mode(Temporary Button Unlock Configuration)",
+            "value": "0",
+            "unit": "",
+            "access_mode": "RW",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "Disable"
+                },
+                {
+                    "value": 1,
+                    "name": "Enable"
+                }
+            ],
+            "bacnet_type": "binary_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": []
+        },
+        {
+            "id": "temporary_button_unlock_cfg.system",
+            "name": "System On/Off (Temporary Button Unlock Configuration)",
+            "value": "0",
+            "unit": "",
+            "access_mode": "RW",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "Disable"
+                },
+                {
+                    "value": 1,
+                    "name": "Enable"
+                }
+            ],
+            "bacnet_type": "binary_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": []
+        },
+        {
+            "id": "temporary_button_unlock_cfg.temperature_control",
+            "name": "Temperature Control Mode(Temporary Button Unlock Configuration)",
+            "value": "0",
+            "unit": "",
+            "access_mode": "RW",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "Disable"
+                },
+                {
+                    "value": 1,
+                    "name": "Enable"
+                }
+            ],
+            "bacnet_type": "binary_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": []
+        },
+        {
+            "id": "temporary_button_unlock_cfg.temperature_down",
+            "name": "Temperature -(Temporary Button Unlock Configuration)",
+            "value": "0",
+            "unit": "",
+            "access_mode": "RW",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "Disable"
+                },
+                {
+                    "value": 1,
+                    "name": "Enable"
+                }
+            ],
+            "bacnet_type": "binary_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": []
+        },
+        {
+            "id": "temporary_button_unlock_cfg.temperature_up",
+            "name": "Temperature + (Temporary Button Unlock Configuration)",
+            "value": "0",
+            "unit": "",
+            "access_mode": "RW",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "Disable"
+                },
+                {
+                    "value": 1,
+                    "name": "Enable"
+                }
+            ],
+            "bacnet_type": "binary_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": []
+        },
+        {
+            "id": "temporary_button_unlock_cfg.unlocking_duration",
+            "name": "Unlocking Time(Temporary Button Unlock Configuration)",
+            "value": "30",
+            "unit": "s",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "UINT16",
+            "range": [
+                1,
+                3600
+            ],
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 73,
+            "bacnet_unit_type": "UNITS_SECONDS",
+            "reference": []
+        },
+        {
             "id": "threshold_alarm_cfg.celsius_max",
             "name": "Celsius Temperature Threshold Alarm Value B(Temperature Threshold Alarm Configuration)",
             "value": "0",
@@ -1408,6 +2053,29 @@
             "bacnet_type": "analog_value_object",
             "bacnet_unit_type_id": 62,
             "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
+            "reference": []
+        },
+        {
+            "id": "threshold_alarm_cfg.enable",
+            "name": "Temperature Threshold Alarm Enable(Temperature Threshold Alarm Configuration)",
+            "value": "0",
+            "unit": "",
+            "access_mode": "RW",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "Disable"
+                },
+                {
+                    "value": 1,
+                    "name": "Enable"
+                }
+            ],
+            "bacnet_type": "binary_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": []
         },
         {
@@ -1503,11 +2171,11 @@
             "values": [
                 {
                     "value": 0,
-                    "name": "disable"
+                    "name": "Disable"
                 },
                 {
                     "value": 1,
-                    "name": "enable"
+                    "name": "Enable"
                 }
             ],
             "bacnet_type": "binary_value_object",

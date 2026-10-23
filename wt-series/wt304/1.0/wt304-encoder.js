@@ -26,6 +26,7 @@ function Encoder(obj, port) {
 /* eslint-enable */
 
 function milesightDeviceEncode(payload) {
+	normalizeArrayParams(payload);
 	processTemperature(payload);
 	var encoded = [];
 	//0xff
@@ -129,12 +130,12 @@ function milesightDeviceEncode(payload) {
 		}
 		if (isValid(payload.lorawan_configuration_settings.mode)) {
 			buffer.writeUInt8(0xcf);
-			// 0:ClassA, 1:ClassB, 2:ClassC, 3:ClassC to B
+			// 0：ClassA, 1：ClassB, 2：ClassC, 3：ClassC to B
 			buffer.writeUInt8(0x00);
 			if ([0, 1, 2, 3].indexOf(payload.lorawan_configuration_settings.mode) === -1) {
 				throw oneOfError('lorawan_configuration_settings.mode', [0, 1, 2, 3]);
 			}
-			// 0:ClassA, 1:ClassB, 2:ClassC, 3:ClassC to B
+			// 0：ClassA, 1：ClassB, 2：ClassC, 3：ClassC to B
 			buffer.writeUInt8(payload.lorawan_configuration_settings.mode);
 		}
 		encoded = encoded.concat(buffer.toBytes());
@@ -191,7 +192,7 @@ function milesightDeviceEncode(payload) {
 		if ([0, 1, 2, 3].indexOf(payload.data_source) === -1) {
 			throw oneOfError('data_source', [0, 1, 2, 3]);
 		}
-		// 0：Internal, 1：External NTC, 2：LoRaWAN Reception, 3：D2D Reception
+		// 0: Internal, 1: External NTC, 2: LoRaWAN Reception, 3: D2D Reception
 		buffer.writeUInt8(payload.data_source);
 		encoded = encoded.concat(buffer.toBytes());
 	}
@@ -230,10 +231,10 @@ function milesightDeviceEncode(payload) {
 		var buffer = new Buffer();
 		buffer.writeUInt8(0x05);
 		var bitOptions = 0;
-		// 0：Ventilation, 1：Heat, 2：Cool
+		// 0: Ventilation, 1: Heat, 2: Cool
 		bitOptions |= payload.temperature_control_info.mode << 4;
 
-		// 0：Standby, 1:Heat, 2:Cool, 3：Off
+		// 0: Standby, 1: Heat, 2: Cool, 3: Off
 		bitOptions |= payload.temperature_control_info.status << 0;
 		buffer.writeUInt8(bitOptions);
 
@@ -254,7 +255,7 @@ function milesightDeviceEncode(payload) {
 		var buffer = new Buffer();
 		buffer.writeUInt8(0x07);
 		var bitOptions = 0;
-		// 0: Auto, 1: Low, 2: Medium, 3: High
+		// 0: Off, 1: Low, 2: Medium, 3: High
 		bitOptions |= payload.fan_control_info.mode << 4;
 
 		// 0：Off, 1: Low, 2: Medium, 3: High
@@ -432,7 +433,7 @@ function milesightDeviceEncode(payload) {
 		if ([0, 1].indexOf(payload.random_key) === -1) {
 			throw oneOfError('random_key', [0, 1]);
 		}
-		// 0：disable, 1：enable
+		// 0: Disable, 1: Enable
 		buffer.writeUInt8(payload.random_key);
 		encoded = encoded.concat(buffer.toBytes());
 	}
@@ -443,7 +444,7 @@ function milesightDeviceEncode(payload) {
 		if ([0, 1].indexOf(payload.device_status) === -1) {
 			throw oneOfError('device_status', [0, 1]);
 		}
-		// 0：Off, 1：On
+		// 0: Off, 1: On
 		buffer.writeUInt8(payload.device_status);
 		encoded = encoded.concat(buffer.toBytes());
 	}
@@ -454,7 +455,7 @@ function milesightDeviceEncode(payload) {
 		if ([0, 1].indexOf(payload.collection_interval.unit) === -1) {
 			throw oneOfError('collection_interval.unit', [0, 1]);
 		}
-		// 0：second, 1：min
+		// 0: Second, 1: Min
 		buffer.writeUInt8(payload.collection_interval.unit);
 		if (payload.collection_interval.unit == 0x00) {
 			if (payload.collection_interval.seconds_of_time < 10 || payload.collection_interval.seconds_of_time > 64800) {
@@ -477,7 +478,7 @@ function milesightDeviceEncode(payload) {
 		if ([0, 1].indexOf(payload.reporting_interval.unit) === -1) {
 			throw oneOfError('reporting_interval.unit', [0, 1]);
 		}
-		// 0：second, 1：min
+		// 0: Second, 1: Min
 		buffer.writeUInt8(payload.reporting_interval.unit);
 		if (payload.reporting_interval.unit == 0x00) {
 			if (payload.reporting_interval.seconds_of_time < 10 || payload.reporting_interval.seconds_of_time > 64800) {
@@ -500,7 +501,7 @@ function milesightDeviceEncode(payload) {
 		if ([0, 1].indexOf(payload.auto_p_enable) === -1) {
 			throw oneOfError('auto_p_enable', [0, 1]);
 		}
-		// 0：disable, 1：enable
+		// 0: Disable, 1: Enable
 		buffer.writeUInt8(payload.auto_p_enable);
 		encoded = encoded.concat(buffer.toBytes());
 	}
@@ -511,7 +512,7 @@ function milesightDeviceEncode(payload) {
 		if ([0, 1].indexOf(payload.relay_changes_report_enable) === -1) {
 			throw oneOfError('relay_changes_report_enable', [0, 1]);
 		}
-		// 0：disable, 1：enable
+		// 0: Disable, 1: Enable
 		buffer.writeUInt8(payload.relay_changes_report_enable);
 		encoded = encoded.concat(buffer.toBytes());
 	}
@@ -577,7 +578,7 @@ function milesightDeviceEncode(payload) {
 		if ([7, 3, 5].indexOf(payload.mode_enable) === -1) {
 			throw oneOfError('mode_enable', [7, 3, 5]);
 		}
-		// 7：Ventilation、Heat、Cool, 3：Ventilation、Heat, 5：Ventilation、Cool
+		// 7: Ventilation, Heat, Cool, 3: Ventilation, Heat, 5: Ventilation, Cool
 		buffer.writeUInt8(payload.mode_enable);
 		encoded = encoded.concat(buffer.toBytes());
 	}
@@ -682,7 +683,7 @@ function milesightDeviceEncode(payload) {
 		if ([0, 1].indexOf(payload.temperature_control_dehumidification.enable) === -1) {
 			throw oneOfError('temperature_control_dehumidification.enable', [0, 1]);
 		}
-		// 0：disable, 1：enable
+		// 0: Disable, 1: Enable
 		buffer.writeUInt8(payload.temperature_control_dehumidification.enable);
 		if (payload.temperature_control_dehumidification.temperature_tolerance < 0.1 || payload.temperature_control_dehumidification.temperature_tolerance > 5) {
 			throw betweenError('temperature_control_dehumidification.temperature_tolerance', 0.1, 5);
@@ -697,7 +698,7 @@ function milesightDeviceEncode(payload) {
 		if ([0, 1, 2, 3].indexOf(payload.fan_control_mode) === -1) {
 			throw oneOfError('fan_control_mode', [0, 1, 2, 3]);
 		}
-		// 0：Auto, 1：Low, 2:Medium, 3:High
+		// 0: Auto, 1: Low, 2: Medium, 3: High
 		buffer.writeUInt8(payload.fan_control_mode);
 		encoded = encoded.concat(buffer.toBytes());
 	}
@@ -708,7 +709,7 @@ function milesightDeviceEncode(payload) {
 		if ([0, 1].indexOf(payload.fan_delay_close.enable) === -1) {
 			throw oneOfError('fan_delay_close.enable', [0, 1]);
 		}
-		// 0：disable, 1：enable
+		// 0: Disable, 1: Enable
 		buffer.writeUInt8(payload.fan_delay_close.enable);
 		if (payload.fan_delay_close.time < 30 || payload.fan_delay_close.time > 3600) {
 			throw betweenError('fan_delay_close.time', 30, 3600);
@@ -735,12 +736,12 @@ function milesightDeviceEncode(payload) {
 		var buffer = new Buffer();
 		if (isValid(payload.timed_system_control.enable)) {
 			buffer.writeUInt8(0x8c);
-			// 0：disable, 1：enable
+			// 0: Disable, 1: Enable
 			buffer.writeUInt8(0x00);
 			if ([0, 1].indexOf(payload.timed_system_control.enable) === -1) {
 				throw oneOfError('timed_system_control.enable', [0, 1]);
 			}
-			// 0：disable, 1：enable
+			// 0: Disable, 1: Enable
 			buffer.writeUInt8(payload.timed_system_control.enable);
 		}
 		for (var start_cycle_settings_id = 0; start_cycle_settings_id < (payload.timed_system_control.start_cycle_settings && payload.timed_system_control.start_cycle_settings.length); start_cycle_settings_id++) {
@@ -756,32 +757,32 @@ function milesightDeviceEncode(payload) {
 			if ([0, 1].indexOf(start_cycle_settings_item.enable) === -1) {
 				throw oneOfError('enable', [0, 1]);
 			}
-			// 0：disable, 1：enable
+			// 0: Disable, 1: Enable
 			buffer.writeUInt8(start_cycle_settings_item.enable);
 			if (start_cycle_settings_item.execution_time_point < 0 || start_cycle_settings_item.execution_time_point > 1439) {
 				throw rangeError('execution_time_point', '[0,1439]');
 			}
 			buffer.writeUInt16LE(start_cycle_settings_item.execution_time_point);
 			var bitOptions = 0;
-			// 0：disable, 1：enable
+			// 0: Disable, 1: Enable
 			bitOptions |= start_cycle_settings_item.execution_day_sun << 0;
 
-			// 0：disable, 1：enable
+			// 0: Disable, 1: Enable
 			bitOptions |= start_cycle_settings_item.execution_day_mon << 1;
 
-			// 0：disable, 1：enable
+			// 0: Disable, 1: Enable
 			bitOptions |= start_cycle_settings_item.execution_day_tues << 2;
 
-			// 0：disable, 1：enable
+			// 0: Disable, 1: Enable
 			bitOptions |= start_cycle_settings_item.execution_day_wed << 3;
 
-			// 0：disable, 1：enable
+			// 0: Disable, 1: Enable
 			bitOptions |= start_cycle_settings_item.execution_day_thu << 4;
 
-			// 0：disable, 1：enable
+			// 0: Disable, 1: Enable
 			bitOptions |= start_cycle_settings_item.execution_day_fri << 5;
 
-			// 0：disable, 1：enable
+			// 0: Disable, 1: Enable
 			bitOptions |= start_cycle_settings_item.execution_day_sat << 6;
 
 			bitOptions |= start_cycle_settings_item.reserved << 7;
@@ -801,32 +802,32 @@ function milesightDeviceEncode(payload) {
 			if ([0, 1].indexOf(end_cycle_settings_item.enable) === -1) {
 				throw oneOfError('enable', [0, 1]);
 			}
-			// 0：disable, 1：enable
+			// 0: Disable, 1: Enable
 			buffer.writeUInt8(end_cycle_settings_item.enable);
 			if (end_cycle_settings_item.execution_time_point < 0 || end_cycle_settings_item.execution_time_point > 1439) {
 				throw rangeError('execution_time_point', '[0,1439]');
 			}
 			buffer.writeUInt16LE(end_cycle_settings_item.execution_time_point);
 			var bitOptions = 0;
-			// 0：disable, 1：enable
+			// 0: Disable, 1: Enable
 			bitOptions |= end_cycle_settings_item.execution_day_sun << 0;
 
-			// 0：disable, 1：enable
+			// 0: Disable, 1: Enable
 			bitOptions |= end_cycle_settings_item.execution_day_mon << 1;
 
-			// 0：disable, 1：enable
+			// 0: Disable, 1: Enable
 			bitOptions |= end_cycle_settings_item.execution_day_tues << 2;
 
-			// 0：disable, 1：enable
+			// 0: Disable, 1: Enable
 			bitOptions |= end_cycle_settings_item.execution_day_wed << 3;
 
-			// 0：disable, 1：enable
+			// 0: Disable, 1: Enable
 			bitOptions |= end_cycle_settings_item.execution_day_thu << 4;
 
-			// 0：disable, 1：enable
+			// 0: Disable, 1: Enable
 			bitOptions |= end_cycle_settings_item.execution_day_fri << 5;
 
-			// 0：disable, 1：enable
+			// 0: Disable, 1: Enable
 			bitOptions |= end_cycle_settings_item.execution_day_sat << 6;
 
 			bitOptions |= end_cycle_settings_item.reserved << 7;
@@ -842,7 +843,7 @@ function milesightDeviceEncode(payload) {
 		if ([0, 1].indexOf(payload.intelligent_display_enable) === -1) {
 			throw oneOfError('intelligent_display_enable', [0, 1]);
 		}
-		// 0：disable, 1：enable
+		// 0: Disable, 1: Enable
 		buffer.writeUInt8(payload.intelligent_display_enable);
 		encoded = encoded.concat(buffer.toBytes());
 	}
@@ -853,25 +854,25 @@ function milesightDeviceEncode(payload) {
 		if ([0, 1].indexOf(payload.screen_object_settings.enable) === -1) {
 			throw oneOfError('screen_object_settings.enable', [0, 1]);
 		}
-		// 0：disable, 1：enable
+		// 0: Disable, 1: Enable
 		buffer.writeUInt8(payload.screen_object_settings.enable);
 		var bitOptions = 0;
-		// 0：disable, 1：enable
+		// 0: Disable, 1: Enable
 		bitOptions |= payload.screen_object_settings.environmental_temperature << 0;
 
-		// 0：disable, 1：enable
+		// 0: Disable, 1: Enable
 		bitOptions |= payload.screen_object_settings.environmental_humidity << 1;
 
-		// 0：disable, 1：enable
+		// 0: Disable, 1: Enable
 		bitOptions |= payload.screen_object_settings.target_temperature << 2;
 
-		// 0：disable, 1：enable
+		// 0: Disable, 1: Enable
 		bitOptions |= payload.screen_object_settings.schedule_name << 3;
 
-		// 0：disable, 1：enable
+		// 0: Disable, 1: Enable
 		bitOptions |= payload.screen_object_settings.temp_ctrl_mode << 4;
 
-		// 0：disable, 1：enable
+		// 0: Disable, 1: Enable
 		bitOptions |= payload.screen_object_settings.fan_ctrl_mode << 5;
 
 		bitOptions |= payload.screen_object_settings.reserved << 6;
@@ -886,22 +887,22 @@ function milesightDeviceEncode(payload) {
 		if ([0, 1].indexOf(payload.child_lock.enable) === -1) {
 			throw oneOfError('child_lock.enable', [0, 1]);
 		}
-		// 0：disable, 1：enable
+		// 0: Disable, 1: Enable
 		buffer.writeUInt8(payload.child_lock.enable);
 		var bitOptions = 0;
-		// 0：disable, 1：enable
+		// 0: Disable, 1: Enable
 		bitOptions |= payload.child_lock.system_button << 0;
 
-		// 0：disable, 1：enable
+		// 0: Disable, 1: Enable
 		bitOptions |= payload.child_lock.temperature_button << 1;
 
-		// 0：disable, 1：enable
+		// 0: Disable, 1: Enable
 		bitOptions |= payload.child_lock.fan_button << 2;
 
-		// 0：disable, 1：enable
+		// 0: Disable, 1: Enable
 		bitOptions |= payload.child_lock.temperature_control_button << 3;
 
-		// 0：disable, 1：enable
+		// 0: Disable, 1: Enable
 		bitOptions |= payload.child_lock.reboot_reset_button << 4;
 
 		bitOptions |= payload.child_lock.reserved << 5;
@@ -916,22 +917,22 @@ function milesightDeviceEncode(payload) {
 		if ([0, 1].indexOf(payload.temporary_unlock_settings.enable) === -1) {
 			throw oneOfError('temporary_unlock_settings.enable', [0, 1]);
 		}
-		// 0：disable, 1：enable
+		// 0: Disable, 1: Enable
 		buffer.writeUInt8(payload.temporary_unlock_settings.enable);
 		var bitOptions = 0;
-		// 0：disable, 1：enable
+		// 0: Disable, 1: Enable
 		bitOptions |= payload.temporary_unlock_settings.system << 0;
 
-		// 0：disable, 1：enable
+		// 0: Disable, 1: Enable
 		bitOptions |= payload.temporary_unlock_settings.temperature_up << 1;
 
-		// 0：disable, 1：enable
+		// 0: Disable, 1: Enable
 		bitOptions |= payload.temporary_unlock_settings.temperature_down << 2;
 
-		// 0：disable, 1：enable
+		// 0: Disable, 1: Enable
 		bitOptions |= payload.temporary_unlock_settings.fan << 3;
 
-		// 0：disable, 1：enable
+		// 0: Disable, 1: Enable
 		bitOptions |= payload.temporary_unlock_settings.temperature_control << 4;
 
 		bitOptions |= payload.temporary_unlock_settings.reserved << 5;
@@ -960,7 +961,7 @@ function milesightDeviceEncode(payload) {
 		if ([0, 1].indexOf(payload.daylight_saving_time.enable) === -1) {
 			throw oneOfError('daylight_saving_time.enable', [0, 1]);
 		}
-		// 0：disable, 1：enable
+		// 0: Disable, 1: Enable
 		buffer.writeUInt8(payload.daylight_saving_time.enable);
 		if (payload.daylight_saving_time.daylight_saving_time_offset < 1 || payload.daylight_saving_time.daylight_saving_time_offset > 120) {
 			throw betweenError('daylight_saving_time.daylight_saving_time_offset', 1, 120);
@@ -1007,22 +1008,22 @@ function milesightDeviceEncode(payload) {
 		var buffer = new Buffer();
 		if (isValid(payload.data_storage_settings.enable)) {
 			buffer.writeUInt8(0xc5);
-			// 0：disable, 1：enable
+			// 0: Disable, 1: Enable
 			buffer.writeUInt8(0x00);
 			if ([0, 1].indexOf(payload.data_storage_settings.enable) === -1) {
 				throw oneOfError('data_storage_settings.enable', [0, 1]);
 			}
-			// 0：disable, 1：enable
+			// 0: Disable, 1: Enable
 			buffer.writeUInt8(payload.data_storage_settings.enable);
 		}
 		if (isValid(payload.data_storage_settings.retransmission_enable)) {
 			buffer.writeUInt8(0xc5);
-			// 0：disable, 1：enable
+			// 0: Disable, 1: Enable
 			buffer.writeUInt8(0x01);
 			if ([0, 1].indexOf(payload.data_storage_settings.retransmission_enable) === -1) {
 				throw oneOfError('data_storage_settings.retransmission_enable', [0, 1]);
 			}
-			// 0：disable, 1：enable
+			// 0: Disable, 1: Enable
 			buffer.writeUInt8(payload.data_storage_settings.retransmission_enable);
 		}
 		if (isValid(payload.data_storage_settings.retransmission_interval)) {
@@ -1050,7 +1051,7 @@ function milesightDeviceEncode(payload) {
 		if ([0, 1].indexOf(payload.temperature_calibration_settings.enable) === -1) {
 			throw oneOfError('temperature_calibration_settings.enable', [0, 1]);
 		}
-		// 0：disable, 1：enable
+		// 0: Disable, 1: Enable
 		buffer.writeUInt8(payload.temperature_calibration_settings.enable);
 		if (payload.temperature_calibration_settings.calibration_value < -80 || payload.temperature_calibration_settings.calibration_value > 80) {
 			throw betweenError('temperature_calibration_settings.calibration_value', -80, 80);
@@ -1065,7 +1066,7 @@ function milesightDeviceEncode(payload) {
 		if ([0, 1].indexOf(payload.humidity_calibration_settings.enable) === -1) {
 			throw oneOfError('humidity_calibration_settings.enable', [0, 1]);
 		}
-		// 0：disable, 1：enable
+		// 0: Disable, 1: Enable
 		buffer.writeUInt8(payload.humidity_calibration_settings.enable);
 		if (payload.humidity_calibration_settings.calibration_value < -100 || payload.humidity_calibration_settings.calibration_value > 100) {
 			throw betweenError('humidity_calibration_settings.calibration_value', -100, 100);
@@ -1104,7 +1105,7 @@ function milesightDeviceEncode(payload) {
 		if ([0, 1].indexOf(payload.high_temperature_alarm_settings.enable) === -1) {
 			throw oneOfError('high_temperature_alarm_settings.enable', [0, 1]);
 		}
-		// 0：disable, 1：enable
+		// 0: Disable, 1: Enable
 		buffer.writeUInt8(payload.high_temperature_alarm_settings.enable);
 		if (payload.high_temperature_alarm_settings.difference_in_temperature < 1 || payload.high_temperature_alarm_settings.difference_in_temperature > 10) {
 			throw betweenError('high_temperature_alarm_settings.difference_in_temperature', 1, 10);
@@ -1123,7 +1124,7 @@ function milesightDeviceEncode(payload) {
 		if ([0, 1].indexOf(payload.low_temperature_alarm_settings.enable) === -1) {
 			throw oneOfError('low_temperature_alarm_settings.enable', [0, 1]);
 		}
-		// 0：disable, 1：enable
+		// 0: Disable, 1: Enable
 		buffer.writeUInt8(payload.low_temperature_alarm_settings.enable);
 		if (payload.low_temperature_alarm_settings.difference_in_temperature < 1 || payload.low_temperature_alarm_settings.difference_in_temperature > 10) {
 			throw betweenError('low_temperature_alarm_settings.difference_in_temperature', 1, 10);
@@ -1148,12 +1149,12 @@ function milesightDeviceEncode(payload) {
 			if (isValid(schedule_settings_item.enable)) {
 				buffer.writeUInt8(0x7b);
 				buffer.writeUInt8(schedule_settings_item_id);
-				// 0：disable, 1：enable
+				// 0: Disable, 1: Enable
 				buffer.writeUInt8(0x00);
 				if ([0, 1].indexOf(schedule_settings_item.enable) === -1) {
 					throw oneOfError('enable', [0, 1]);
 				}
-				// 0：disable, 1：enable
+				// 0: Disable, 1: Enable
 				buffer.writeUInt8(schedule_settings_item.enable);
 			}
 			if (isValid(schedule_settings_item.name_first)) {
@@ -1210,7 +1211,7 @@ function milesightDeviceEncode(payload) {
 				if ([0, 1].indexOf(cycle_settings_item.enable) === -1) {
 					throw oneOfError('enable', [0, 1]);
 				}
-				// 0：disable, 1：enable
+				// 0: Disable, 1: Enable
 				buffer.writeUInt8(cycle_settings_item.enable);
 				if (cycle_settings_item.execution_time_point < 0 || cycle_settings_item.execution_time_point > 1439) {
 					throw rangeError('execution_time_point', '[0,1439]');
@@ -1223,19 +1224,19 @@ function milesightDeviceEncode(payload) {
 				// 0：disable, 1：enable
 				bitOptions |= cycle_settings_item.execution_day_mon << 1;
 
-				// 0：disable, 1：enable
+				// 0: Disable, 1: Enable
 				bitOptions |= cycle_settings_item.execution_day_tues << 2;
 
-				// 0：disable, 1：enable
+				// 0: Disable, 1: Enable
 				bitOptions |= cycle_settings_item.execution_day_wed << 3;
 
-				// 0：disable, 1：enable
+				// 0: Disable, 1: Enable
 				bitOptions |= cycle_settings_item.execution_day_thu << 4;
 
-				// 0：disable, 1：enable
+				// 0: Disable, 1: Enable
 				bitOptions |= cycle_settings_item.execution_day_fri << 5;
 
-				// 0：disable, 1：enable
+				// 0: Disable, 1: Enable
 				bitOptions |= cycle_settings_item.execution_day_sat << 6;
 
 				bitOptions |= cycle_settings_item.reserved << 7;
@@ -1257,87 +1258,87 @@ function milesightDeviceEncode(payload) {
 			if ([1, 2].indexOf(payload.interface_settings.valve_4_pipe_10_v.cooling) === -1) {
 				throw oneOfError('interface_settings.valve_4_pipe_10_v.cooling', [1, 2]);
 			}
-			// 1：AO1, 2：AO2
+			// 1: AO1, 2: AO2
 			buffer.writeUInt8(payload.interface_settings.valve_4_pipe_10_v.cooling);
 			if ([1, 2].indexOf(payload.interface_settings.valve_4_pipe_10_v.heating) === -1) {
 				throw oneOfError('interface_settings.valve_4_pipe_10_v.heating', [1, 2]);
 			}
-			// 1：AO1, 2：AO2
+			// 1: AO1, 2: AO2
 			buffer.writeUInt8(payload.interface_settings.valve_4_pipe_10_v.heating);
 		}
 		if (payload.interface_settings.object == 0x01) {
 			if ([1, 2].indexOf(payload.interface_settings.valve_2_pipe_10_v.control) === -1) {
 				throw oneOfError('interface_settings.valve_2_pipe_10_v.control', [1, 2]);
 			}
-			// 1：AO1, 2：AO2
+			// 1: AO1, 2: AO2
 			buffer.writeUInt8(payload.interface_settings.valve_2_pipe_10_v.control);
 		}
 		if (payload.interface_settings.object == 0x02) {
 			if ([1, 2].indexOf(payload.interface_settings.valve_2_pipe_10_v_fan_ec.control) === -1) {
 				throw oneOfError('interface_settings.valve_2_pipe_10_v_fan_ec.control', [1, 2]);
 			}
-			// 1：AO1, 2：AO2
+			// 1: AO1, 2: AO2
 			buffer.writeUInt8(payload.interface_settings.valve_2_pipe_10_v_fan_ec.control);
 			if ([1, 2].indexOf(payload.interface_settings.valve_2_pipe_10_v_fan_ec.fan) === -1) {
 				throw oneOfError('interface_settings.valve_2_pipe_10_v_fan_ec.fan', [1, 2]);
 			}
-			// 1：AO1, 2：AO2
+			// 1: AO1, 2: AO2
 			buffer.writeUInt8(payload.interface_settings.valve_2_pipe_10_v_fan_ec.fan);
 			if ([0, 3, 4, 5].indexOf(payload.interface_settings.valve_2_pipe_10_v_fan_ec.fan_power) === -1) {
 				throw oneOfError('interface_settings.valve_2_pipe_10_v_fan_ec.fan_power', [0, 3, 4, 5]);
 			}
-			// 0：None, 3：Q1, 4：Q2, 5：Q3
+			// 0: None, 3: Q1, 4: Q2, 5: Q3
 			buffer.writeUInt8(payload.interface_settings.valve_2_pipe_10_v_fan_ec.fan_power);
 		}
 		if (payload.interface_settings.object == 0x03) {
 			if ([3, 4, 5].indexOf(payload.interface_settings.valve_4_pipe_2_wire_fan_ec.cooling) === -1) {
 				throw oneOfError('interface_settings.valve_4_pipe_2_wire_fan_ec.cooling', [3, 4, 5]);
 			}
-			// 3：Q1, 4：Q2, 5：Q3
+			// 3: Q1, 4: Q2, 5: Q3
 			buffer.writeUInt8(payload.interface_settings.valve_4_pipe_2_wire_fan_ec.cooling);
 			if ([3, 4, 5].indexOf(payload.interface_settings.valve_4_pipe_2_wire_fan_ec.heating) === -1) {
 				throw oneOfError('interface_settings.valve_4_pipe_2_wire_fan_ec.heating', [3, 4, 5]);
 			}
-			// 3：Q1, 4：Q2, 5：Q3
+			// 3: Q1, 4: Q2, 5: Q3
 			buffer.writeUInt8(payload.interface_settings.valve_4_pipe_2_wire_fan_ec.heating);
 			if ([1, 2].indexOf(payload.interface_settings.valve_4_pipe_2_wire_fan_ec.fan) === -1) {
 				throw oneOfError('interface_settings.valve_4_pipe_2_wire_fan_ec.fan', [1, 2]);
 			}
-			// 1：AO1, 2：AO2
+			// 1: AO1, 2: AO2
 			buffer.writeUInt8(payload.interface_settings.valve_4_pipe_2_wire_fan_ec.fan);
 			if ([0, 3, 4, 5].indexOf(payload.interface_settings.valve_4_pipe_2_wire_fan_ec.fan_power) === -1) {
 				throw oneOfError('interface_settings.valve_4_pipe_2_wire_fan_ec.fan_power', [0, 3, 4, 5]);
 			}
-			// 0：None, 3：Q1, 4：Q2, 5：Q3
+			// 0: None, 3: Q1, 4: Q2, 5: Q3
 			buffer.writeUInt8(payload.interface_settings.valve_4_pipe_2_wire_fan_ec.fan_power);
 		}
 		if (payload.interface_settings.object == 0x04) {
 			if ([3, 4, 5].indexOf(payload.interface_settings.valve_2_pipe_2_wire_fan_ec.control) === -1) {
 				throw oneOfError('interface_settings.valve_2_pipe_2_wire_fan_ec.control', [3, 4, 5]);
 			}
-			// 3：Q1, 4：Q2, 5：Q3
+			// 3: Q1, 4: Q2, 5: Q3
 			buffer.writeUInt8(payload.interface_settings.valve_2_pipe_2_wire_fan_ec.control);
 			if ([1, 2].indexOf(payload.interface_settings.valve_2_pipe_2_wire_fan_ec.fan) === -1) {
 				throw oneOfError('interface_settings.valve_2_pipe_2_wire_fan_ec.fan', [1, 2]);
 			}
-			// 1：AO1, 2：AO2
+			// 1: AO1, 2: AO2
 			buffer.writeUInt8(payload.interface_settings.valve_2_pipe_2_wire_fan_ec.fan);
 			if ([0, 3, 4, 5].indexOf(payload.interface_settings.valve_2_pipe_2_wire_fan_ec.fan_power) === -1) {
 				throw oneOfError('interface_settings.valve_2_pipe_2_wire_fan_ec.fan_power', [0, 3, 4, 5]);
 			}
-			// 0：None, 3：Q1, 4：Q2, 5：Q3
+			// 0: None, 3: Q1, 4: Q2, 5: Q3
 			buffer.writeUInt8(payload.interface_settings.valve_2_pipe_2_wire_fan_ec.fan_power);
 		}
 		if (payload.interface_settings.object == 0x05) {
 			if ([3, 4, 5].indexOf(payload.interface_settings.valve_2_pipe_3_wire_fan_ec.no) === -1) {
 				throw oneOfError('interface_settings.valve_2_pipe_3_wire_fan_ec.no', [3, 4, 5]);
 			}
-			// 3：Q1, 4：Q2, 5：Q3
+			// 3: Q1, 4: Q2, 5: Q3
 			buffer.writeUInt8(payload.interface_settings.valve_2_pipe_3_wire_fan_ec.no);
 			if ([3, 4, 5].indexOf(payload.interface_settings.valve_2_pipe_3_wire_fan_ec.nc) === -1) {
 				throw oneOfError('interface_settings.valve_2_pipe_3_wire_fan_ec.nc', [3, 4, 5]);
 			}
-			// 3：Q1, 4：Q2, 5：Q3
+			// 3: Q1, 4: Q2, 5: Q3
 			buffer.writeUInt8(payload.interface_settings.valve_2_pipe_3_wire_fan_ec.nc);
 			if ([1, 2].indexOf(payload.interface_settings.valve_2_pipe_3_wire_fan_ec.fan) === -1) {
 				throw oneOfError('interface_settings.valve_2_pipe_3_wire_fan_ec.fan', [1, 2]);
@@ -1347,7 +1348,7 @@ function milesightDeviceEncode(payload) {
 			if ([0, 3, 4, 5].indexOf(payload.interface_settings.valve_2_pipe_3_wire_fan_ec.fan_power) === -1) {
 				throw oneOfError('interface_settings.valve_2_pipe_3_wire_fan_ec.fan_power', [0, 3, 4, 5]);
 			}
-			// 0：None, 3：Q1, 4：Q2, 5：Q3
+			// 0: None, 3: Q1, 4: Q2, 5: Q3
 			buffer.writeUInt8(payload.interface_settings.valve_2_pipe_3_wire_fan_ec.fan_power);
 		}
 		encoded = encoded.concat(buffer.toBytes());
@@ -1421,7 +1422,7 @@ function milesightDeviceEncode(payload) {
 		if ([0, 1].indexOf(payload.fan_stop_enable) === -1) {
 			throw oneOfError('fan_stop_enable', [0, 1]);
 		}
-		// 0：disable, 1：enable
+		// 0: Disable, 1: Enable
 		buffer.writeUInt8(payload.fan_stop_enable);
 		encoded = encoded.concat(buffer.toBytes());
 	}
@@ -1432,7 +1433,7 @@ function milesightDeviceEncode(payload) {
 		if ([0, 1].indexOf(payload.valve_output_0v_enable) === -1) {
 			throw oneOfError('valve_output_0v_enable', [0, 1]);
 		}
-		// 0：disable, 1：enable
+		// 0: Disable, 1: Enable
 		buffer.writeUInt8(payload.valve_output_0v_enable);
 		encoded = encoded.concat(buffer.toBytes());
 	}
@@ -1443,7 +1444,7 @@ function milesightDeviceEncode(payload) {
 		if ([0, 1].indexOf(payload.di_enable) === -1) {
 			throw oneOfError('di_enable', [0, 1]);
 		}
-		// 0：disable, 1：enable
+		// 0: Disable, 1: Enable
 		buffer.writeUInt8(payload.di_enable);
 		encoded = encoded.concat(buffer.toBytes());
 	}
@@ -1464,7 +1465,7 @@ function milesightDeviceEncode(payload) {
 				if ([0, 1].indexOf(payload.di_settings.card_control.system_control.trigger_by_insertion) === -1) {
 					throw oneOfError('di_settings.card_control.system_control.trigger_by_insertion', [0, 1]);
 				}
-				// 0：system off, 1：system on
+				// 0: System Off, 1: System On
 				buffer.writeUInt8(payload.di_settings.card_control.system_control.trigger_by_insertion);
 			}
 			if (payload.di_settings.card_control.type == 0x01) {
@@ -1484,7 +1485,7 @@ function milesightDeviceEncode(payload) {
 			if ([0, 1].indexOf(payload.di_settings.magnet_detection.magnet_type) === -1) {
 				throw oneOfError('di_settings.magnet_detection.magnet_type', [0, 1]);
 			}
-			// 0：NO, 1：NC
+			// 0: NC, 1: NO
 			buffer.writeUInt8(payload.di_settings.magnet_detection.magnet_type);
 		}
 		encoded = encoded.concat(buffer.toBytes());
@@ -1496,7 +1497,7 @@ function milesightDeviceEncode(payload) {
 		if ([0, 1].indexOf(payload.window_opening_detection_enable) === -1) {
 			throw oneOfError('window_opening_detection_enable', [0, 1]);
 		}
-		// 0：disable, 1：enable
+		// 0: Disable, 1: Enable
 		buffer.writeUInt8(payload.window_opening_detection_enable);
 		encoded = encoded.concat(buffer.toBytes());
 	}
@@ -1533,7 +1534,7 @@ function milesightDeviceEncode(payload) {
 		if ([0, 1].indexOf(payload.freeze_protection_settings.enable) === -1) {
 			throw oneOfError('freeze_protection_settings.enable', [0, 1]);
 		}
-		// 0：disable, 1：enable
+		// 0: Disable, 1: Enable
 		buffer.writeUInt8(payload.freeze_protection_settings.enable);
 		if (payload.freeze_protection_settings.target_temperature < 1 || payload.freeze_protection_settings.target_temperature > 5) {
 			throw betweenError('freeze_protection_settings.target_temperature', 1, 5);
@@ -1548,7 +1549,7 @@ function milesightDeviceEncode(payload) {
 		if ([0, 1].indexOf(payload.d2d_pairing_enable) === -1) {
 			throw oneOfError('d2d_pairing_enable', [0, 1]);
 		}
-		// 0：disable, 1：enable
+		// 0: Disable, 1: Enable
 		buffer.writeUInt8(payload.d2d_pairing_enable);
 		encoded = encoded.concat(buffer.toBytes());
 	}
@@ -1565,12 +1566,12 @@ function milesightDeviceEncode(payload) {
 			if (isValid(d2d_pairing_settings_item.enable)) {
 				buffer.writeUInt8(0x87);
 				buffer.writeUInt8(d2d_pairing_settings_item_id);
-				// 0：disable, 1：enable
+				// 0: Disable, 1: Enable
 				buffer.writeUInt8(0x00);
 				if ([0, 1].indexOf(d2d_pairing_settings_item.enable) === -1) {
 					throw oneOfError('enable', [0, 1]);
 				}
-				// 0：disable, 1：enable
+				// 0: Disable, 1: Enable
 				buffer.writeUInt8(d2d_pairing_settings_item.enable);
 			}
 			if (isValid(d2d_pairing_settings_item.deveui)) {
@@ -1601,7 +1602,7 @@ function milesightDeviceEncode(payload) {
 		if ([0, 1].indexOf(payload.d2d_master_enable) === -1) {
 			throw oneOfError('d2d_master_enable', [0, 1]);
 		}
-		// 0：disable, 1：enable
+		// 0: Disable, 1: Enable
 		buffer.writeUInt8(payload.d2d_master_enable);
 		encoded = encoded.concat(buffer.toBytes());
 	}
@@ -1620,18 +1621,18 @@ function milesightDeviceEncode(payload) {
 			if ([0, 1].indexOf(d2d_master_settings_item.enable) === -1) {
 				throw oneOfError('enable', [0, 1]);
 			}
-			// 0：disable, 1：enable
+			// 0: Disable, 1: Enable
 			buffer.writeUInt8(d2d_master_settings_item.enable);
 			buffer.writeHexString(d2d_master_settings_item.command, 2);
 			if ([0, 1].indexOf(d2d_master_settings_item.uplink) === -1) {
 				throw oneOfError('uplink', [0, 1]);
 			}
-			// 0：disable, 1：enable
+			// 0: Disable, 1: Enable
 			buffer.writeUInt8(d2d_master_settings_item.uplink);
 			if ([0, 1].indexOf(d2d_master_settings_item.control_time_enable) === -1) {
 				throw oneOfError('control_time_enable', [0, 1]);
 			}
-			// 0：disable, 1：enable
+			// 0: Disable, 1: Enable
 			buffer.writeUInt8(d2d_master_settings_item.control_time_enable);
 			if (d2d_master_settings_item.control_time < 1 || d2d_master_settings_item.control_time > 1440) {
 				throw betweenError('control_time', 1, 1440);
@@ -1647,7 +1648,7 @@ function milesightDeviceEncode(payload) {
 		if ([0, 1].indexOf(payload.d2d_slave_enable) === -1) {
 			throw oneOfError('d2d_slave_enable', [0, 1]);
 		}
-		// 0：disable, 1：enable
+		// 0: Disable, 1: Enable
 		buffer.writeUInt8(payload.d2d_slave_enable);
 		encoded = encoded.concat(buffer.toBytes());
 	}
@@ -1666,7 +1667,7 @@ function milesightDeviceEncode(payload) {
 			if ([0, 1].indexOf(d2d_slave_settings_item.enable) === -1) {
 				throw oneOfError('enable', [0, 1]);
 			}
-			// 0：disable, 1：enable
+			// 0: Disable, 1: Enable
 			buffer.writeUInt8(d2d_slave_settings_item.enable);
 			buffer.writeHexString(d2d_slave_settings_item.command, 2);
 			if ([0, 1, 2, 3, 4, 5, 6, 7, 16, 17].indexOf(d2d_slave_settings_item.value) === -1) {
@@ -1798,7 +1799,7 @@ function milesightDeviceEncode(payload) {
 		if ([0, 1, 2, 3, 4, 5, 6, 7, 255].indexOf(payload.delete_schedule.type) === -1) {
 			throw oneOfError('delete_schedule.type', [0, 1, 2, 3, 4, 5, 6, 7, 255]);
 		}
-		// 0：Schedule1, 1：Schedule2, 2：Schedule3, 3：Schedule4, 4：Schedule5, 5：Schedule6, 6：Schedule7, 7：Schedule8, 255：Reset All 
+		// 0：Schedule1, 1：Schedule2, 2：Schedule3, 3：Schedule4, 4：Schedule5, 5：Schedule6, 6：Schedule7, 7：Schedule8, 255：Reset All
 		buffer.writeUInt8(payload.delete_schedule.type);
 		encoded = encoded.concat(buffer.toBytes());
 	}
@@ -2086,6 +2087,51 @@ function getAllLeafPaths(obj, prefix) {
 
 function isInteger(str) {
     return typeof str === 'string' && /^[0-9]+$/.test(str);
+}
+
+function normalizeArrayParams(value) {
+	if (Array.isArray(value)) {
+		for (var i = 0; i < value.length; i++) {
+			value[i] = normalizeArrayParams(value[i]);
+		}
+		return value;
+	}
+	if (value === null || typeof value !== 'object') {
+		return value;
+	}
+	var keys = [];
+	for (var key in value) {
+		if (Object.prototype.hasOwnProperty.call(value, key)) {
+			keys.push(key);
+		}
+	}
+	var allIntegerKeys = keys.length > 0;
+	for (var j = 0; j < keys.length; j++) {
+		if (!isInteger(keys[j])) {
+			allIntegerKeys = false;
+			break;
+		}
+	}
+	if (allIntegerKeys) {
+		var items = [];
+		for (var k = 0; k < keys.length; k++) {
+			var item = normalizeArrayParams(value[keys[k]]);
+			if (item !== null && typeof item === 'object' && item.id === undefined) {
+				item.id = parseInt(keys[k], 10);
+			}
+			items.push(item);
+		}
+		items.sort(function (a, b) {
+			return ((a && a.id) || 0) - ((b && b.id) || 0);
+		});
+		return items;
+	}
+	for (var prop in value) {
+		if (Object.prototype.hasOwnProperty.call(value, prop)) {
+			value[prop] = normalizeArrayParams(value[prop]);
+		}
+	}
+	return value;
 }
 
 function betweenError(path, min, max) {

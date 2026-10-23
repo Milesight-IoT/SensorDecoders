@@ -78,7 +78,7 @@ function milesightDeviceDecode(bytes) {
 					decoded.lorawan_configuration_settings.version = readUInt8(bytes, counterObj, 1);
 				}
 				if (lorawan_configuration_settings_command == 0x00) {
-					// 0:ClassA, 1:ClassB, 2:ClassC, 3:ClassC to B
+					// 0：ClassA, 1：ClassB, 2：ClassC, 3：ClassC to B
 					decoded.lorawan_configuration_settings.mode = readUInt8(bytes, counterObj, 1);
 				}
 				break;
@@ -109,7 +109,7 @@ function milesightDeviceDecode(bytes) {
 				decoded.battery = readUInt8(bytes, counterObj, 1);
 				break;
 			case 0x04:
-				// 0：Internal, 1：External NTC, 2：LoRaWAN Reception, 3：D2D Reception
+				// 0: Internal, 1: External NTC, 2: LoRaWAN Reception, 3: D2D Reception
 				decoded.data_source = readUInt8(bytes, counterObj, 1);
 				break;
 			case 0x01:
@@ -124,19 +124,19 @@ function milesightDeviceDecode(bytes) {
 			case 0x05:
 				decoded.temperature_control_info = decoded.temperature_control_info || {};
 				var bitOptions = readUInt8(bytes, counterObj, 1);
-				// 0：Ventilation, 1：Heat, 2：Cool
+				// 0: Ventilation, 1: Heat, 2: Cool
 				decoded.temperature_control_info.mode = extractBits(bitOptions, 4, 8);
-				// 0：Standby, 1:Heat, 2:Cool, 3：Off
+				// 0: Standby, 1: Heat, 2: Cool, 3: Off
 				decoded.temperature_control_info.status = extractBits(bitOptions, 0, 4);
 				break;
 			case 0x06:
-				// 0：Close, 100：Open
+				// 0: Close, 100: Open
 				decoded.temperature_control_valve_status = readUInt8(bytes, counterObj, 1);
 				break;
 			case 0x07:
 				decoded.fan_control_info = decoded.fan_control_info || {};
 				var bitOptions = readUInt8(bytes, counterObj, 1);
-				// 0: Auto, 1: Low, 2: Medium, 3: High
+				// 0: Off, 1: Low, 2: Medium, 3: High
 				decoded.fan_control_info.mode = extractBits(bitOptions, 4, 8);
 				// 0：Off, 1: Low, 2: Medium, 3: High
 				decoded.fan_control_info.status = extractBits(bitOptions, 0, 4);
@@ -273,16 +273,16 @@ function milesightDeviceDecode(bytes) {
 				decoded.relay_status.reserved = extractBits(bitOptions, 5, 32);
 				break;
 			case 0xc9:
-				// 0：disable, 1：enable
+				// 0: Disable, 1: Enable
 				decoded.random_key = readUInt8(bytes, counterObj, 1);
 				break;
 			case 0xc8:
-				// 0：Off, 1：On
+				// 0: Off, 1: On
 				decoded.device_status = readUInt8(bytes, counterObj, 1);
 				break;
 			case 0x60:
 				decoded.collection_interval = decoded.collection_interval || {};
-				// 0：second, 1：min
+				// 0: Second, 1: Min
 				decoded.collection_interval.unit = readUInt8(bytes, counterObj, 1);
 				if (decoded.collection_interval.unit == 0x00) {
 					decoded.collection_interval.seconds_of_time = readUInt16LE(bytes, counterObj, 2);
@@ -293,7 +293,7 @@ function milesightDeviceDecode(bytes) {
 				break;
 			case 0x62:
 				decoded.reporting_interval = decoded.reporting_interval || {};
-				// 0：second, 1：min
+				// 0: Second, 1: Min
 				decoded.reporting_interval.unit = readUInt8(bytes, counterObj, 1);
 				if (decoded.reporting_interval.unit == 0x00) {
 					decoded.reporting_interval.seconds_of_time = readUInt16LE(bytes, counterObj, 2);
@@ -306,11 +306,11 @@ function milesightDeviceDecode(bytes) {
 				decoded.reporting_interval_cfg = readUInt16LE(bytes, counterObj, 2);
 				break;
 			case 0xc4:
-				// 0：disable, 1：enable
+				// 0: Disable, 1: Enable
 				decoded.auto_p_enable = readUInt8(bytes, counterObj, 1);
 				break;
 			case 0x90:
-				// 0：disable, 1：enable
+				// 0: Disable, 1: Enable
 				decoded.relay_changes_report_enable = readUInt8(bytes, counterObj, 1);
 				break;
 			case 0x63:
@@ -354,7 +354,7 @@ function milesightDeviceDecode(bytes) {
 				decoded.system_status = readUInt8(bytes, counterObj, 1);
 				break;
 			case 0x64:
-				// 7：Ventilation、Heat、Cool, 3：Ventilation、Heat, 5：Ventilation、Cool
+				// 7: Ventilation, Heat, Cool, 3: Ventilation, Heat, 5: Ventilation, Cool
 				decoded.mode_enable = readUInt8(bytes, counterObj, 1);
 				break;
 			case 0x68:
@@ -391,7 +391,7 @@ function milesightDeviceDecode(bytes) {
 				break;
 			case 0x6f:
 				decoded.temperature_control_dehumidification = decoded.temperature_control_dehumidification || {};
-				// 0：disable, 1：enable
+				// 0: Disable, 1: Enable
 				decoded.temperature_control_dehumidification.enable = readUInt8(bytes, counterObj, 1);
 				decoded.temperature_control_dehumidification.temperature_tolerance = readInt16LE(bytes, counterObj, 2) / 100;
 				break;
@@ -399,7 +399,7 @@ function milesightDeviceDecode(bytes) {
 				decoded.temp_ctl_dehumi_cfg = decoded.temp_ctl_dehumi_cfg || {};
 				var temp_ctl_dehumi_cfg_cmd = readUInt8(bytes, counterObj, 1);
 				if (temp_ctl_dehumi_cfg_cmd == 0x00) {
-					// 0：disable, 1：enable
+					// 0: Disable, 1: Enable
 					decoded.temp_ctl_dehumi_cfg.enable = readUInt8(bytes, counterObj, 1);
 				}
 				if (temp_ctl_dehumi_cfg_cmd == 0x01) {
@@ -407,12 +407,12 @@ function milesightDeviceDecode(bytes) {
 				}
 				break;
 			case 0x72:
-				// 0：Auto, 1：Low, 2:Medium, 3:High
+				// 0: Auto, 1: Low, 2: Medium, 3: High
 				decoded.fan_control_mode = readUInt8(bytes, counterObj, 1);
 				break;
 			case 0x74:
 				decoded.fan_delay_close = decoded.fan_delay_close || {};
-				// 0：disable, 1：enable
+				// 0: Disable, 1: Enable
 				decoded.fan_delay_close.enable = readUInt8(bytes, counterObj, 1);
 				decoded.fan_delay_close.time = readUInt16LE(bytes, counterObj, 2);
 				break;
@@ -420,7 +420,7 @@ function milesightDeviceDecode(bytes) {
 				decoded.fan_delay_close_cfg = decoded.fan_delay_close_cfg || {};
 				var fan_delay_close_cfg_cmd = readUInt8(bytes, counterObj, 1);
 				if (fan_delay_close_cfg_cmd == 0x00) {
-					// 0：disable, 1：enable
+					// 0: Disable, 1: Enable
 					decoded.fan_delay_close_cfg.enable = readUInt8(bytes, counterObj, 1);
 				}
 				if (fan_delay_close_cfg_cmd == 0x01) {
@@ -446,7 +446,7 @@ function milesightDeviceDecode(bytes) {
 				decoded.timed_system_control = decoded.timed_system_control || {};
 				var timed_system_control_command = readUInt8(bytes, counterObj, 1);
 				if (timed_system_control_command == 0x00) {
-					// 0：disable, 1：enable
+					// 0: Disable, 1: Enable
 					decoded.timed_system_control.enable = readUInt8(bytes, counterObj, 1);
 				}
 				if (timed_system_control_command == 0x01) {
@@ -455,23 +455,23 @@ function milesightDeviceDecode(bytes) {
 					var start_cycle_settings_item = pickArrayItem(decoded.timed_system_control.start_cycle_settings, id, 'id');
 					start_cycle_settings_item.id = id;
 					insertArrayItem(decoded.timed_system_control.start_cycle_settings, start_cycle_settings_item, 'id');
-					// 0：disable, 1：enable
+					// 0: Disable, 1: Enable
 					start_cycle_settings_item.enable = readUInt8(bytes, counterObj, 1);
 					start_cycle_settings_item.execution_time_point = readUInt16LE(bytes, counterObj, 2);
 					var bitOptions = readUInt8(bytes, counterObj, 1);
-					// 0：disable, 1：enable
+					// 0: Disable, 1: Enable
 					start_cycle_settings_item.execution_day_sun = extractBits(bitOptions, 0, 1);
-					// 0：disable, 1：enable
+					// 0: Disable, 1: Enable
 					start_cycle_settings_item.execution_day_mon = extractBits(bitOptions, 1, 2);
-					// 0：disable, 1：enable
+					// 0: Disable, 1: Enable
 					start_cycle_settings_item.execution_day_tues = extractBits(bitOptions, 2, 3);
-					// 0：disable, 1：enable
+					// 0: Disable, 1: Enable
 					start_cycle_settings_item.execution_day_wed = extractBits(bitOptions, 3, 4);
-					// 0：disable, 1：enable
+					// 0: Disable, 1: Enable
 					start_cycle_settings_item.execution_day_thu = extractBits(bitOptions, 4, 5);
-					// 0：disable, 1：enable
+					// 0: Disable, 1: Enable
 					start_cycle_settings_item.execution_day_fri = extractBits(bitOptions, 5, 6);
-					// 0：disable, 1：enable
+					// 0: Disable, 1: Enable
 					start_cycle_settings_item.execution_day_sat = extractBits(bitOptions, 6, 7);
 					start_cycle_settings_item.reserved = extractBits(bitOptions, 7, 8);
 				}
@@ -481,64 +481,64 @@ function milesightDeviceDecode(bytes) {
 					var end_cycle_settings_item = pickArrayItem(decoded.timed_system_control.end_cycle_settings, id, 'id');
 					end_cycle_settings_item.id = id;
 					insertArrayItem(decoded.timed_system_control.end_cycle_settings, end_cycle_settings_item, 'id');
-					// 0：disable, 1：enable
+					// 0: Disable, 1: Enable
 					end_cycle_settings_item.enable = readUInt8(bytes, counterObj, 1);
 					end_cycle_settings_item.execution_time_point = readUInt16LE(bytes, counterObj, 2);
 					var bitOptions = readUInt8(bytes, counterObj, 1);
-					// 0：disable, 1：enable
+					// 0: Disable, 1: Enable
 					end_cycle_settings_item.execution_day_sun = extractBits(bitOptions, 0, 1);
-					// 0：disable, 1：enable
+					// 0: Disable, 1: Enable
 					end_cycle_settings_item.execution_day_mon = extractBits(bitOptions, 1, 2);
-					// 0：disable, 1：enable
+					// 0: Disable, 1: Enable
 					end_cycle_settings_item.execution_day_tues = extractBits(bitOptions, 2, 3);
-					// 0：disable, 1：enable
+					// 0: Disable, 1: Enable
 					end_cycle_settings_item.execution_day_wed = extractBits(bitOptions, 3, 4);
-					// 0：disable, 1：enable
+					// 0: Disable, 1: Enable
 					end_cycle_settings_item.execution_day_thu = extractBits(bitOptions, 4, 5);
-					// 0：disable, 1：enable
+					// 0: Disable, 1: Enable
 					end_cycle_settings_item.execution_day_fri = extractBits(bitOptions, 5, 6);
-					// 0：disable, 1：enable
+					// 0: Disable, 1: Enable
 					end_cycle_settings_item.execution_day_sat = extractBits(bitOptions, 6, 7);
 					end_cycle_settings_item.reserved = extractBits(bitOptions, 7, 8);
 				}
 				break;
 			case 0x65:
-				// 0：disable, 1：enable
+				// 0: Disable, 1: Enable
 				decoded.intelligent_display_enable = readUInt8(bytes, counterObj, 1);
 				break;
 			case 0x66:
 				decoded.screen_object_settings = decoded.screen_object_settings || {};
-				// 0：disable, 1：enable
+				// 0: Disable, 1: Enable
 				decoded.screen_object_settings.enable = readUInt8(bytes, counterObj, 1);
 				var bitOptions = readUInt8(bytes, counterObj, 1);
-				// 0：disable, 1：enable
+				// 0: Disable, 1: Enable
 				decoded.screen_object_settings.environmental_temperature = extractBits(bitOptions, 0, 1);
-				// 0：disable, 1：enable
+				// 0: Disable, 1: Enable
 				decoded.screen_object_settings.environmental_humidity = extractBits(bitOptions, 1, 2);
-				// 0：disable, 1：enable
+				// 0: Disable, 1: Enable
 				decoded.screen_object_settings.target_temperature = extractBits(bitOptions, 2, 3);
-				// 0：disable, 1：enable
+				// 0: Disable, 1: Enable
 				decoded.screen_object_settings.schedule_name = extractBits(bitOptions, 3, 4);
-				// 0：disable, 1：enable
+				// 0: Disable, 1: Enable
 				decoded.screen_object_settings.temp_ctrl_mode = extractBits(bitOptions, 4, 5);
-				// 0：disable, 1：enable
+				// 0: Disable, 1: Enable
 				decoded.screen_object_settings.fan_ctrl_mode = extractBits(bitOptions, 5, 6);
 				decoded.screen_object_settings.reserved = extractBits(bitOptions, 6, 8);
 				break;
 			case 0x75:
 				decoded.child_lock = decoded.child_lock || {};
-				// 0：disable, 1：enable
+				// 0: Disable, 1: Enable
 				decoded.child_lock.enable = readUInt8(bytes, counterObj, 1);
 				var bitOptions = readUInt8(bytes, counterObj, 1);
-				// 0：disable, 1：enable
+				// 0: Disable, 1: Enable
 				decoded.child_lock.system_button = extractBits(bitOptions, 0, 1);
-				// 0：disable, 1：enable
+				// 0: Disable, 1: Enable
 				decoded.child_lock.temperature_button = extractBits(bitOptions, 1, 2);
-				// 0：disable, 1：enable
+				// 0: Disable, 1: Enable
 				decoded.child_lock.fan_button = extractBits(bitOptions, 2, 3);
-				// 0：disable, 1：enable
+				// 0: Disable, 1: Enable
 				decoded.child_lock.temperature_control_button = extractBits(bitOptions, 3, 4);
-				// 0：disable, 1：enable
+				// 0: Disable, 1: Enable
 				decoded.child_lock.reboot_reset_button = extractBits(bitOptions, 4, 5);
 				decoded.child_lock.reserved = extractBits(bitOptions, 5, 8);
 				break;
@@ -546,39 +546,39 @@ function milesightDeviceDecode(bytes) {
 				decoded.child_lock_enable_cfg = decoded.child_lock_enable_cfg || {};
 				var child_lock_enable_cfg_cmd = readUInt8(bytes, counterObj, 1);
 				if (child_lock_enable_cfg_cmd == 0x00) {
-					// 0：disable, 1：enable
+					// 0: Disable, 1: Enable
 					decoded.child_lock_enable_cfg.enable = readUInt8(bytes, counterObj, 1);
 				}
 				if (child_lock_enable_cfg_cmd == 0x01) {
-					// 0：disable, 1：enable
+					// 0: All Disabled, 1: System Switch, 2: Temp+ & Temp-, 3: System Switch + Temp+ & Temp-, 4: Fan, 5: System Switch + Fan, 6: Temp+ & Temp- + Fan, 7: System Switch + Temp+ & Temp- + Fan, 8: Temperature Control Mode, 9: System Switch + Temperature Control Mode, 10: Temp+ & Temp- + Temperature Control Mode, 11: System Switch + Temp+ & Temp- + Temperature Control Mode, 12: Fan + Temperature Control Mode, 13: System Switch + Fan + Temperature Control Mode, 14: Temp+ & Temp- + Fan + Temperature Control Mode, 15: System Switch + Temp+ & Temp- + Fan + Temperature Control Mode, 16: Restart/Reset, 17: System Switch + Restart/Reset, 18: Temp+ & Temp- + Restart/Reset, 19: System Switch + Temp+ & Temp- + Restart/Reset, 20: Fan + Restart/Reset, 21: System Switch + Fan + Restart/Reset, 22: Temp+ & Temp- + Fan + Restart/Reset, 23: System Switch + Temp+ & Temp- + Fan + Restart/Reset, 24: Temperature Control Mode + Restart/Reset, 25: System Switch + Temperature Control Mode + Restart/Reset, 26: Temp+ & Temp- + Temperature Control Mode + Restart/Reset, 27: System Switch + Temp+ & Temp- + Temperature Control Mode + Restart/Reset, 28: Fan + Temperature Control Mode + Restart/Reset, 29: System Switch + Fan + Temperature Control Mode + Restart/Reset, 30: Temp+ & Temp- + Fan + Temperature Control Mode + Restart/Reset, 31: System Switch + Temp+ & Temp- + Fan + Temperature Control Mode + Restart/Reset
 					decoded.child_lock_enable_cfg.key_enable = readUInt8(bytes, counterObj, 1);
 				}
 				var bitOptions = readUInt8(bytes, counterObj, 1);
-				// 0：disable, 1：enable
+				// 0: Disable, 1: Enable
 				decoded.child_lock_enable_cfg.system = extractBits(bitOptions, 0, 1);
-				// 0：disable, 1：enable
+				// 0: Disable, 1: Enable
 				decoded.child_lock_enable_cfg.temperature = extractBits(bitOptions, 1, 2);
-				// 0：disable, 1：enable
+				// 0: Disable, 1: Enable
 				decoded.child_lock_enable_cfg.fan = extractBits(bitOptions, 2, 3);
-				// 0：disable, 1：enable
+				// 0: Disable, 1: Enable
 				decoded.child_lock_enable_cfg.temperature_control = extractBits(bitOptions, 3, 4);
-				// 0：disable, 1：enable
+				// 0: Disable, 1: Enable
 				decoded.child_lock_enable_cfg.reboot_reset = extractBits(bitOptions, 4, 5);
 				break;
 			case 0x8d:
 				decoded.temporary_unlock_settings = decoded.temporary_unlock_settings || {};
-				// 0：disable, 1：enable
+				// 0: Disable, 1: Enable
 				decoded.temporary_unlock_settings.enable = readUInt8(bytes, counterObj, 1);
 				var bitOptions = readUInt8(bytes, counterObj, 1);
-				// 0：disable, 1：enable
+				// 0: Disable, 1: Enable
 				decoded.temporary_unlock_settings.system = extractBits(bitOptions, 0, 1);
-				// 0：disable, 1：enable
+				// 0: Disable, 1: Enable
 				decoded.temporary_unlock_settings.temperature_up = extractBits(bitOptions, 1, 2);
-				// 0：disable, 1：enable
+				// 0: Disable, 1: Enable
 				decoded.temporary_unlock_settings.temperature_down = extractBits(bitOptions, 2, 3);
-				// 0：disable, 1：enable
+				// 0: Disable, 1: Enable
 				decoded.temporary_unlock_settings.fan = extractBits(bitOptions, 3, 4);
-				// 0：disable, 1：enable
+				// 0: Disable, 1: Enable
 				decoded.temporary_unlock_settings.temperature_control = extractBits(bitOptions, 4, 5);
 				decoded.temporary_unlock_settings.reserved = extractBits(bitOptions, 5, 8);
 				decoded.temporary_unlock_settings.unlocking_duration = readUInt16LE(bytes, counterObj, 2);
@@ -591,18 +591,18 @@ function milesightDeviceDecode(bytes) {
 					decoded.temporary_button_unlock_cfg.enable = readUInt8(bytes, counterObj, 1);
 				}
 				var bitOptions = readUInt8(bytes, counterObj, 1);
-				// 0：disable, 1：enable
+				// 0: Disable, 1: Enable
 				decoded.temporary_button_unlock_cfg.system = extractBits(bitOptions, 0, 1);
-				// 0：disable, 1：enable
+				// 0: Disable, 1: Enable
 				decoded.temporary_button_unlock_cfg.temperature_up = extractBits(bitOptions, 1, 2);
-				// 0：disable, 1：enable
+				// 0: Disable, 1: Enable
 				decoded.temporary_button_unlock_cfg.temperature_down = extractBits(bitOptions, 2, 3);
-				// 0：disable, 1：enable
+				// 0: Disable, 1: Enable
 				decoded.temporary_button_unlock_cfg.fan = extractBits(bitOptions, 3, 4);
-				// 0：disable, 1：enable
+				// 0: Disable, 1: Enable
 				decoded.temporary_button_unlock_cfg.temperature_control = extractBits(bitOptions, 4, 5);
 				if (temporary_button_unlock_cfg_cmd == 0x01) {
-					decoded.temporary_button_unlock_cfg.unlocking_duration = readUnknownDataType(bytes, counterObj, 1);
+					decoded.temporary_button_unlock_cfg.unlocking_duration = readUInt16LE(bytes, counterObj, 2);
 				}
 				break;
 			case 0xc7:
@@ -610,7 +610,7 @@ function milesightDeviceDecode(bytes) {
 				break;
 			case 0xc6:
 				decoded.daylight_saving_time = decoded.daylight_saving_time || {};
-				// 0：disable, 1：enable
+				// 0: Disable, 1: Enable
 				decoded.daylight_saving_time.enable = readUInt8(bytes, counterObj, 1);
 				decoded.daylight_saving_time.daylight_saving_time_offset = readUInt8(bytes, counterObj, 1);
 				// 1:Jan., 2:Feb., 3:Mar., 4:Apr., 5:May, 6:Jun., 7:Jul., 8:Aug., 9:Sep., 10:Oct., 11:Nov., 12:Dec.
@@ -634,11 +634,11 @@ function milesightDeviceDecode(bytes) {
 				decoded.data_storage_settings = decoded.data_storage_settings || {};
 				var data_storage_settings_command = readUInt8(bytes, counterObj, 1);
 				if (data_storage_settings_command == 0x00) {
-					// 0：disable, 1：enable
+					// 0: Disable, 1: Enable
 					decoded.data_storage_settings.enable = readUInt8(bytes, counterObj, 1);
 				}
 				if (data_storage_settings_command == 0x01) {
-					// 0：disable, 1：enable
+					// 0: Disable, 1: Enable
 					decoded.data_storage_settings.retransmission_enable = readUInt8(bytes, counterObj, 1);
 				}
 				if (data_storage_settings_command == 0x02) {
@@ -650,7 +650,7 @@ function milesightDeviceDecode(bytes) {
 				break;
 			case 0x79:
 				decoded.temperature_calibration_settings = decoded.temperature_calibration_settings || {};
-				// 0：disable, 1：enable
+				// 0: Disable, 1: Enable
 				decoded.temperature_calibration_settings.enable = readUInt8(bytes, counterObj, 1);
 				decoded.temperature_calibration_settings.calibration_value = readInt16LE(bytes, counterObj, 2) / 100;
 				break;
@@ -658,7 +658,7 @@ function milesightDeviceDecode(bytes) {
 				decoded.temperature_calibration_cfg = decoded.temperature_calibration_cfg || {};
 				var temperature_calibration_cfg_cmd = readUInt8(bytes, counterObj, 1);
 				if (temperature_calibration_cfg_cmd == 0x00) {
-					// 0：disable, 1：enable
+					// 0: Disable, 1: Enable
 					decoded.temperature_calibration_cfg.enable = readUInt8(bytes, counterObj, 1);
 				}
 				if (temperature_calibration_cfg_cmd == 0x01) {
@@ -667,7 +667,7 @@ function milesightDeviceDecode(bytes) {
 				break;
 			case 0x7a:
 				decoded.humidity_calibration_settings = decoded.humidity_calibration_settings || {};
-				// 0：disable, 1：enable
+				// 0: Disable, 1: Enable
 				decoded.humidity_calibration_settings.enable = readUInt8(bytes, counterObj, 1);
 				decoded.humidity_calibration_settings.calibration_value = readInt16LE(bytes, counterObj, 2) / 10;
 				break;
@@ -675,7 +675,7 @@ function milesightDeviceDecode(bytes) {
 				decoded.humidity_calibration_cfg = decoded.humidity_calibration_cfg || {};
 				var humidity_calibration_cfg_cmd = readUInt8(bytes, counterObj, 1);
 				if (humidity_calibration_cfg_cmd == 0x00) {
-					// 0：disable, 1：enable
+					// 0: Disable, 1: Enable
 					decoded.humidity_calibration_cfg.enable = readUInt8(bytes, counterObj, 1);
 				}
 				if (humidity_calibration_cfg_cmd == 0x01) {
@@ -695,7 +695,7 @@ function milesightDeviceDecode(bytes) {
 				decoded.threshold_alarm_cfg = decoded.threshold_alarm_cfg || {};
 				var threshold_alarm_cfg_cmd = readUInt8(bytes, counterObj, 1);
 				if (threshold_alarm_cfg_cmd == 0x00) {
-					// 0：disable, 1：enable
+					// 0: Disable, 1: Enable
 					decoded.threshold_alarm_cfg.enable = readUInt8(bytes, counterObj, 1);
 				}
 				if (threshold_alarm_cfg_cmd == 0x01) {
@@ -711,7 +711,7 @@ function milesightDeviceDecode(bytes) {
 				break;
 			case 0x77:
 				decoded.high_temperature_alarm_settings = decoded.high_temperature_alarm_settings || {};
-				// 0：disable, 1：enable
+				// 0: Disable, 1: Enable
 				decoded.high_temperature_alarm_settings.enable = readUInt8(bytes, counterObj, 1);
 				decoded.high_temperature_alarm_settings.difference_in_temperature = readInt16LE(bytes, counterObj, 2) / 100;
 				decoded.high_temperature_alarm_settings.duration = readUInt8(bytes, counterObj, 1);
@@ -720,7 +720,7 @@ function milesightDeviceDecode(bytes) {
 				decoded.high_temperature_alarm_cfg = decoded.high_temperature_alarm_cfg || {};
 				var high_temperature_alarm_cfg_cmd = readUInt8(bytes, counterObj, 1);
 				if (high_temperature_alarm_cfg_cmd == 0x00) {
-					// 0：disable, 1：enable
+					// 0: Disable, 1: Enable
 					decoded.high_temperature_alarm_cfg.enable = readUInt8(bytes, counterObj, 1);
 				}
 				if (high_temperature_alarm_cfg_cmd == 0x01) {
@@ -732,7 +732,7 @@ function milesightDeviceDecode(bytes) {
 				break;
 			case 0x78:
 				decoded.low_temperature_alarm_settings = decoded.low_temperature_alarm_settings || {};
-				// 0：disable, 1：enable
+				// 0: Disable, 1: Enable
 				decoded.low_temperature_alarm_settings.enable = readUInt8(bytes, counterObj, 1);
 				decoded.low_temperature_alarm_settings.difference_in_temperature = readInt16LE(bytes, counterObj, 2) / 100;
 				decoded.low_temperature_alarm_settings.duration = readUInt8(bytes, counterObj, 1);
@@ -741,7 +741,7 @@ function milesightDeviceDecode(bytes) {
 				decoded.low_temperature_alarm_cfg = decoded.low_temperature_alarm_cfg || {};
 				var low_temperature_alarm_cfg_cmd = readUInt8(bytes, counterObj, 1);
 				if (low_temperature_alarm_cfg_cmd == 0x00) {
-					// 0：disable, 1：enable
+					// 0: Disable, 1: Enable
 					decoded.low_temperature_alarm_cfg.enable = readUInt8(bytes, counterObj, 1);
 				}
 				if (low_temperature_alarm_cfg_cmd == 0x01) {
@@ -759,7 +759,7 @@ function milesightDeviceDecode(bytes) {
 				insertArrayItem(decoded.schedule_settings, schedule_settings_item, 'id');
 				var schedule_settings_item_command = readUInt8(bytes, counterObj, 1);
 				if (schedule_settings_item_command == 0x00) {
-					// 0：disable, 1：enable
+					// 0: Disable, 1: Enable
 					schedule_settings_item.enable = readUInt8(bytes, counterObj, 1);
 				}
 				if (schedule_settings_item_command == 0x01) {
@@ -770,7 +770,7 @@ function milesightDeviceDecode(bytes) {
 				}
 				if (schedule_settings_item_command == 0x03) {
 					schedule_settings_item.content = schedule_settings_item.content || {};
-					// 0：auto, 1：low, 2：medium, 3：high
+					// 0: Auto, 1: Low, 2: Medium, 3: High
 					schedule_settings_item.content.fan_mode = readUInt8(bytes, counterObj, 1);
 					var bitOptions = readUInt16LE(bytes, counterObj, 2);
 					schedule_settings_item.content.heat_target_temperature_enable = extractBits(bitOptions, 0, 1);
@@ -788,25 +788,25 @@ function milesightDeviceDecode(bytes) {
 					var cycle_settings_item = pickArrayItem(schedule_settings_item.cycle_settings, id, 'id');
 					cycle_settings_item.id = id;
 					insertArrayItem(schedule_settings_item.cycle_settings, cycle_settings_item, 'id');
-					// 0：disable, 1：enable
+					// 0: Disable, 1: Enable
 					cycle_settings_item.enable = readUInt8(bytes, counterObj, 1);
 					cycle_settings_item.execution_time_point = readUInt16LE(bytes, counterObj, 2);
 					var bitOptions = readUInt8(bytes, counterObj, 1);
-					// 0：disable, 1：enable
+					// 0: Disable, 1: Enable
 					cycle_settings_item.execution_day_sun = extractBits(bitOptions, 0, 1);
-					// 0：disable, 1：enable
+					// 0: Disable, 1: Enable
 					cycle_settings_item.execution_day_mon = extractBits(bitOptions, 1, 2);
-					// 0：disable, 1：enable
+					// 0: Disable, 1: Enable
 					cycle_settings_item.execution_day_tues = extractBits(bitOptions, 2, 3);
-					// 0：disable, 1：enable
+					// 0: Disable, 1: Enable
 					cycle_settings_item.execution_day_wed = extractBits(bitOptions, 3, 4);
-					// 0：disable, 1：enable
+					// 0: Disable, 1: Enable
 					cycle_settings_item.execution_day_thu = extractBits(bitOptions, 4, 5);
-					// 0：disable, 1：enable
+					// 0: Disable, 1: Enable
 					cycle_settings_item.execution_day_fri = extractBits(bitOptions, 5, 6);
-					// 0：disable, 1：enable
+					// 0: Disable, 1: Enable
 					cycle_settings_item.execution_day_sat = extractBits(bitOptions, 6, 7);
-					// 0：Not Configured, 1：Configured
+					// 0: Not Configured, 1: Configured
 					cycle_settings_item.configuration_state = extractBits(bitOptions, 7, 8);
 				}
 				break;
@@ -815,34 +815,34 @@ function milesightDeviceDecode(bytes) {
 				decoded.interface_settings.object = readUInt8(bytes, counterObj, 1);
 				if (decoded.interface_settings.object == 0x00) {
 					decoded.interface_settings.valve_4_pipe_2_wire = decoded.interface_settings.valve_4_pipe_2_wire || {};
-					// 1：V1/ NO, 2：V2/ NC
+					// 1: V1/ NO, 2: V2/ NC
 					decoded.interface_settings.valve_4_pipe_2_wire.cooling = readUInt8(bytes, counterObj, 1);
-					// 1：V1/ NO, 2：V2/ NC
+					// 1: V1/ NO, 2: V2/ NC
 					decoded.interface_settings.valve_4_pipe_2_wire.heating = readUInt8(bytes, counterObj, 1);
 				}
 				if (decoded.interface_settings.object == 0x01) {
 					decoded.interface_settings.valve_2_pipe_2_wire = decoded.interface_settings.valve_2_pipe_2_wire || {};
-					// 1：V1/ NO, 2：V2/ NC
+					// 1: V1/ NO, 2: V2/ NC
 					decoded.interface_settings.valve_2_pipe_2_wire.control = readUInt8(bytes, counterObj, 1);
 				}
 				if (decoded.interface_settings.object == 0x02) {
 					decoded.interface_settings.valve_2_pipe_3_wire = decoded.interface_settings.valve_2_pipe_3_wire || {};
-					// 1：V1/ NO, 2：V2/ NC
+					// 1: V1/ NO, 2: V2/ NC
 					decoded.interface_settings.valve_2_pipe_3_wire.no = readUInt8(bytes, counterObj, 1);
-					// 1：V1/ NO, 2：V2/ NC
+					// 1: V1/ NO, 2: V2/ NC
 					decoded.interface_settings.valve_2_pipe_3_wire.nc = readUInt8(bytes, counterObj, 1);
 				}
 				break;
 			case 0x9e:
-				// 0：Four-pipe, Two-wire Valve+Three-speeds Fan, 1：Two-pipe, Two-wire Valve+Three-speeds Fan, 2：Two-pipe, Three-wire Valve+Three-speeds Fan
+				// 0: Four-pipe, Two-wire Valve+Three-speeds Fan, 1: Two-pipe, Two-wire Valve+Three-speeds Fan, 2: Two-pipe, Three-wire Valve+Three-speeds Fan
 				decoded.interface_type_cfg = readUInt8(bytes, counterObj, 1);
 				break;
 			case 0x8e:
-				// 0：disable, 1：enable
+				// 0: Disable, 1: Enable
 				decoded.fan_stop_enable = readUInt8(bytes, counterObj, 1);
 				break;
 			case 0x80:
-				// 0：disable, 1：enable
+				// 0: Disable, 1: Enable
 				decoded.di_enable = readUInt8(bytes, counterObj, 1);
 				break;
 			case 0x81:
@@ -853,7 +853,7 @@ function milesightDeviceDecode(bytes) {
 					decoded.di_settings.card_control.type = readUInt8(bytes, counterObj, 1);
 					if (decoded.di_settings.card_control.type == 0x00) {
 						decoded.di_settings.card_control.system_control = decoded.di_settings.card_control.system_control || {};
-						// 0：system off, 1：system on
+						// 0: System Off, 1: System On
 						decoded.di_settings.card_control.system_control.trigger_by_insertion = readUInt8(bytes, counterObj, 1);
 					}
 					if (decoded.di_settings.card_control.type == 0x01) {
@@ -866,12 +866,12 @@ function milesightDeviceDecode(bytes) {
 				}
 				if (decoded.di_settings.object == 0x01) {
 					decoded.di_settings.magnet_detection = decoded.di_settings.magnet_detection || {};
-					// 0：NO, 1：NC
+					// 0: NC, 1: NO
 					decoded.di_settings.magnet_detection.magnet_type = readUInt8(bytes, counterObj, 1);
 				}
 				break;
 			case 0x82:
-				// 0：disable, 1：enable
+				// 0: Disable, 1: Enable
 				decoded.window_opening_detection_enable = readUInt8(bytes, counterObj, 1);
 				break;
 			case 0x83:
@@ -889,7 +889,7 @@ function milesightDeviceDecode(bytes) {
 				break;
 			case 0x84:
 				decoded.freeze_protection_settings = decoded.freeze_protection_settings || {};
-				// 0：disable, 1：enable
+				// 0: Disable, 1: Enable
 				decoded.freeze_protection_settings.enable = readUInt8(bytes, counterObj, 1);
 				decoded.freeze_protection_settings.target_temperature = readInt16LE(bytes, counterObj, 2) / 100;
 				break;
@@ -897,7 +897,7 @@ function milesightDeviceDecode(bytes) {
 				decoded.freeze_protection_cfg = decoded.freeze_protection_cfg || {};
 				var freeze_protection_cfg_cmd = readUInt8(bytes, counterObj, 1);
 				if (freeze_protection_cfg_cmd == 0x00) {
-					// 0：disable, 1：enable
+					// 0: Disable, 1: Enable
 					decoded.freeze_protection_cfg.enable = readUInt8(bytes, counterObj, 1);
 				}
 				if (freeze_protection_cfg_cmd == 0x01) {
@@ -905,7 +905,7 @@ function milesightDeviceDecode(bytes) {
 				}
 				break;
 			case 0x86:
-				// 0：disable, 1：enable
+				// 0: Disable, 1: Enable
 				decoded.d2d_pairing_enable = readUInt8(bytes, counterObj, 1);
 				break;
 			case 0x87:
@@ -916,7 +916,7 @@ function milesightDeviceDecode(bytes) {
 				insertArrayItem(decoded.d2d_pairing_settings, d2d_pairing_settings_item, 'index');
 				var d2d_pairing_settings_item_type = readUInt8(bytes, counterObj, 1);
 				if (d2d_pairing_settings_item_type == 0x00) {
-					// 0：disable, 1：enable
+					// 0: Disable, 1: Enable
 					d2d_pairing_settings_item.enable = readUInt8(bytes, counterObj, 1);
 				}
 				if (d2d_pairing_settings_item_type == 0x01) {
@@ -930,7 +930,7 @@ function milesightDeviceDecode(bytes) {
 				}
 				break;
 			case 0x88:
-				// 0：disable, 1：enable
+				// 0: Disable, 1: Enable
 				decoded.d2d_master_enable = readUInt8(bytes, counterObj, 1);
 				break;
 			case 0x89:
@@ -940,17 +940,17 @@ function milesightDeviceDecode(bytes) {
 				var d2d_master_settings_item = pickArrayItem(decoded.d2d_master_settings, trigger_condition, 'trigger_condition');
 				d2d_master_settings_item.trigger_condition = trigger_condition;
 				insertArrayItem(decoded.d2d_master_settings, d2d_master_settings_item, 'trigger_condition');
-				// 0：disable, 1：enable
+				// 0: Disable, 1: Enable
 				d2d_master_settings_item.enable = readUInt8(bytes, counterObj, 1);
 				d2d_master_settings_item.command = readHexString(bytes, counterObj, 2);
-				// 0：disable, 1：enable
+				// 0: Disable, 1: Enable
 				d2d_master_settings_item.uplink = readUInt8(bytes, counterObj, 1);
-				// 0：disable, 1：enable
+				// 0: Disable, 1: Enable
 				d2d_master_settings_item.control_time_enable = readUInt8(bytes, counterObj, 1);
 				d2d_master_settings_item.control_time = readUInt16LE(bytes, counterObj, 2);
 				break;
 			case 0x8a:
-				// 0：disable, 1：enable
+				// 0: Disable, 1: Enable
 				decoded.d2d_slave_enable = readUInt8(bytes, counterObj, 1);
 				break;
 			case 0x8b:
@@ -959,7 +959,7 @@ function milesightDeviceDecode(bytes) {
 				var d2d_slave_settings_item = pickArrayItem(decoded.d2d_slave_settings, index, 'index');
 				d2d_slave_settings_item.index = index;
 				insertArrayItem(decoded.d2d_slave_settings, d2d_slave_settings_item, 'index');
-				// 0：disable, 1：enable
+				// 0: Disable, 1: Enable
 				d2d_slave_settings_item.enable = readUInt8(bytes, counterObj, 1);
 				d2d_slave_settings_item.command = readHexString(bytes, counterObj, 2);
 				// 0：Schedule1, 1：Schedule2, 2：Schedule3, 3：Schedule4, 4：Schedule5, 5：Schedule6, 6：Schedule7, 7：Schedule8, 16：System Off, 17：System On
@@ -979,12 +979,12 @@ function milesightDeviceDecode(bytes) {
 				decoded.screen_display_cfg = decoded.screen_display_cfg || {};
 				var screen_display_cfg_cmd = readUInt8(bytes, counterObj, 1);
 				if (screen_display_cfg_cmd == 0x00) {
-					// 0：disable, 1：enable
+					// 0: Disable, 1: Enable
 					decoded.screen_display_cfg.display_data_enable_when_off = readUInt8(bytes, counterObj, 1);
 				}
 				break;
 			case 0xa3:
-				// 0：disable, 1：enable
+				// 0: Disable, 1: Enable
 				decoded.unilatera_tolerance_enable = readUInt8(bytes, counterObj, 1);
 				break;
 			case 0xc3:
@@ -1001,20 +1001,7 @@ function milesightDeviceDecode(bytes) {
 					decoded.active_data_reporting_cfg.mode = readUInt8(bytes, counterObj, 1);
 				}
 				if (active_data_reporting_cfg_cmd == 0x03) {
-					var custom_cfg_item = { cmd_cfg: {} };
-					var custom_cfg_command = readUInt8(bytes, counterObj, 1);
-					if (custom_cfg_command >= 96 && custom_cfg_command <= 175) {
-						custom_cfg_item.cmd_cfg.custom = '0x' + ('0' + custom_cfg_command.toString(16)).slice(-2);
-					} else if (custom_cfg_command >= 197 && custom_cfg_command <= 200) {
-						custom_cfg_item.cmd_cfg.common = '0x' + ('0' + custom_cfg_command.toString(16)).slice(-2);
-					}
-					// 0：disable, 1：enable
-					var custom_cfg_enable = readUInt8(bytes, counterObj, 1);
-					custom_cfg_item.cmd_enable = custom_cfg_enable == 1;
-					if (!Array.isArray(decoded.active_data_reporting_cfg.custom_cfg)) {
-						decoded.active_data_reporting_cfg.custom_cfg = [];
-					}
-					decoded.active_data_reporting_cfg.custom_cfg.push(custom_cfg_item);
+					decoded.active_data_reporting_cfg.custom_cfg = decoded.active_data_reporting_cfg.custom_cfg || {};
 				}
 				break;
 			case 0xa5:
@@ -1029,18 +1016,18 @@ function milesightDeviceDecode(bytes) {
 				decoded.debug_commands = decoded.debug_commands || {};
 				var debug_commands_cmd = readUInt8(bytes, counterObj, 1);
 				if (debug_commands_cmd == 0x00) {
-					// 0：disable, 1：enable
-					decoded.debug_commands.ambition_temp_enable = readUInt8(bytes, counterObj, 1);
+					// 0: Disable, 1: Enable
+					decoded.debug_commands.ambient_temp_enable = readUInt8(bytes, counterObj, 1);
 				}
 				if (debug_commands_cmd == 0x01) {
-					decoded.debug_commands.ambition_temp_value = readUInt16LE(bytes, counterObj, 2) / 100;
+					decoded.debug_commands.ambient_temp_value = readUInt16LE(bytes, counterObj, 2) / 100;
 				}
 				if (debug_commands_cmd == 0x02) {
-					// 0：disable, 1：enable
-					decoded.debug_commands.ambition_humi_enable = readUInt8(bytes, counterObj, 1);
+					// 0: Disable, 1: Enable
+					decoded.debug_commands.ambient_humi_enable = readUInt8(bytes, counterObj, 1);
 				}
 				if (debug_commands_cmd == 0x03) {
-					decoded.debug_commands.ambition_humi_value = readUInt16LE(bytes, counterObj, 2) / 10;
+					decoded.debug_commands.ambient_humi_value = readUInt16LE(bytes, counterObj, 2) / 10;
 				}
 				break;
 			case 0xb7:
@@ -1066,8 +1053,19 @@ function milesightDeviceDecode(bytes) {
 				decoded.reconnect = readOnlyCommand(bytes, counterObj, 0);
 				break;
 			case 0x5a:
-				// 0: Disable All, 1: Enable GL Interface, 2: Enable GM Interface, 3: Enable GL and GM Interfaces, 4: Enable GH Interface, 5: Enable GL and GH Interfaces, 6: Enable GM and GH Interfaces, 7: Enable GL, GM, and GH Interfaces, 8: Enable V1 Interface, 9: Enable GL and V1 Interfaces, 10: Enable GM and V1 Interfaces, 11: Enable GL, GM, and V1 Interfaces, 12: Enable GH and V1 Interfaces, 13: Enable GL, GH, and V1 Interfaces, 14: Enable GM, GH, and V1 Interfaces, 15: Enable GL, GM, GH, and V1 Interfaces, 16: Enable V2 Interface, 17: Enable GL and V2 Interfaces, 18: Enable GM and V2 Interfaces, 19: Enable GL, GM, and V2 Interfaces, 20: Enable GH and V2 Interfaces, 21: Enable GL, GH, and V2 Interfaces, 22: Enable GM, GH, and V2 Interfaces, 23: Enable GL, GM, GH, and V2 Interfaces, 24: Enable V1 and V2 Interfaces, 25: Enable GL, V1, and V2 Interfaces, 26: Enable GM, V1, and V2 Interfaces, 27: Enable GL, GM, V1, and V2 Interfaces, 28: Enable GH, V1, and V2 Interfaces, 29: Enable GL, GH, V1, and V2 Interfaces, 30: Enable GM, GH, V1, and V2 Interfaces, 31: Enable GL, GM, GH, V1, and V2 Interfaces, 255: Enable All Interfaces
-				decoded.temperature_control_permission_cfg_303 = readUInt8(bytes, counterObj, 1);
+				decoded.remote_control_cfg = decoded.remote_control_cfg || {};
+				var bitOptions = readUInt8(bytes, counterObj, 1);
+				// 0: Disable, 1: Enable
+				decoded.remote_control_cfg.gl_enable = extractBits(bitOptions, 0, 1);
+				// 0: Disable, 1: Enable
+				decoded.remote_control_cfg.gm_enable = extractBits(bitOptions, 1, 2);
+				// 0: Disable, 1: Enable
+				decoded.remote_control_cfg.gh_enable = extractBits(bitOptions, 2, 3);
+				// 0: Disable, 1: Enable
+				decoded.remote_control_cfg.v1_enable = extractBits(bitOptions, 3, 4);
+				// 0: Disable, 1: Enable
+				decoded.remote_control_cfg.v2_enable = extractBits(bitOptions, 4, 5);
+				decoded.remote_control_cfg.resvered = extractBits(bitOptions, 5, 8);
 				break;
 			case 0x5b:
 				decoded.send_temperature = decoded.send_temperature || {};
@@ -1152,10 +1150,10 @@ function readFirmwareVersion(bytes) {
 	var test = (bytes[5] & 0xff).toString(16);
 
 	var version = 'v' + major + '.' + minor;
-	if (release !== '0') version += '-r' + release;
-	if (alpha !== '0') version += '-a' + alpha;
-	if (unit_test !== '0') version += '-u' + unit_test;
-	if (test !== '0') version += '-t' + test;
+	if (release !== 0) version += '-r' + release.toString(16);
+	if (alpha !== 0) version += '-a' + alpha.toString(16);
+	if (unit_test !== 0) version += '-u' + unit_test.toString(16);
+	if (test !== 0) version += '-t' + test.toString(16);
 	return version;
 }
 
@@ -1683,17 +1681,17 @@ function cmdMap() {
 		  "a5": "temperature_control_permission_cfg",
 		  "a500": "temperature_control_permission_cfg.temp_ctrl_permission",
 		  "a6": "debug_commands",
-		  "a600": "debug_commands.ambition_temp_enable",
-		  "a601": "debug_commands.ambition_temp_value",
-		  "a602": "debug_commands.ambition_humi_enable",
-		  "a603": "debug_commands.ambition_humi_value",
+		  "a600": "debug_commands.ambient_temp_enable",
+		  "a601": "debug_commands.ambient_temp_value",
+		  "a602": "debug_commands.ambient_humi_enable",
+		  "a603": "debug_commands.ambient_humi_value",
 		  "b7": "set_time",
 		  "bd": "clear_historical_data",
 		  "bc": "stop_historical_data_retrieval",
 		  "bb": "retrieve_historical_data_by_time_range",
 		  "ba": "retrieve_historical_data_by_time",
 		  "b6": "reconnect",
-		  "5a": "temperature_control_permission_cfg_303",
+		  "5a": "remote_control_cfg",
 		  "5b": "send_temperature",
 		  "5c": "send_humidity",
 		  "5d": "update_open_windows_state",
@@ -1891,8 +1889,8 @@ function processTemperature(decoded) {
         "precision": 2,
         "unitName": "℃"
     },
-    "debug_commands.ambition_temp_value": {
-        "precision": 2,
+    "debug_commands.ambient_temp_value": {
+        "precision": null,
         "unitName": "℃"
     },
     "send_temperature.temperature": {
