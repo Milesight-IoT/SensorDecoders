@@ -24,6 +24,44 @@
             "bacnet_unit_type": "UNITS_NO_UNITS"
         },
         {
+            "id": "ae_target_setting",
+            "name": "AE Target Setting",
+            "value": "3",
+            "unit": "",
+            "access_mode": "W",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 1,
+                    "name": "Relatively dim"
+                },
+                {
+                    "value": 2,
+                    "name": "Slightly dim"
+                },
+                {
+                    "value": 3,
+                    "name": "Default"
+                },
+                {
+                    "value": 4,
+                    "name": "Relatively bright"
+                },
+                {
+                    "value": 5,
+                    "name": "Brighter"
+                },
+                {
+                    "value": 6,
+                    "name": "Brightest"
+                }
+            ],
+            "bacnet_type": "multistate_output_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS"
+        },
+        {
             "id": "auxiliary_occupation",
             "name": "Auxiliary Occupation",
             "value": "0",
@@ -58,8 +96,8 @@
                 100
             ],
             "bacnet_type": "analog_input_object",
-            "bacnet_unit_type_id": 98,
-            "bacnet_unit_type": "UNITS_PERCENT"
+            "bacnet_unit_type_id": 15,
+            "bacnet_unit_type": "UNITS_POWER_FACTOR"
         },
         {
             "id": "celsius_temperature",
@@ -1386,8 +1424,8 @@
                 100
             ],
             "bacnet_type": "analog_input_object",
-            "bacnet_unit_type_id": 98,
-            "bacnet_unit_type": "UNITS_PERCENT"
+            "bacnet_unit_type_id": 15,
+            "bacnet_unit_type": "UNITS_POWER_FACTOR"
         },
         {
             "id": "humidity_threshold_alarm.alarm_humidity",
@@ -1402,8 +1440,8 @@
                 100
             ],
             "bacnet_type": "analog_input_object",
-            "bacnet_unit_type_id": 98,
-            "bacnet_unit_type": "UNITS_PERCENT",
+            "bacnet_unit_type_id": 15,
+            "bacnet_unit_type": "UNITS_POWER_FACTOR",
             "reference": [
                 "humidity_threshold_alarm.status"
             ]
@@ -3264,8 +3302,8 @@
                 100
             ],
             "bacnet_type": "analog_output_object",
-            "bacnet_unit_type_id": 98,
-            "bacnet_unit_type": "UNITS_PERCENT",
+            "bacnet_unit_type_id": 15,
+            "bacnet_unit_type": "UNITS_POWER_FACTOR",
             "reference": [
                 "set_threshold_alarm_humidity.threshold_condition",
                 "set_threshold_alarm_humidity.threshold_type",
@@ -3288,8 +3326,8 @@
                 100
             ],
             "bacnet_type": "analog_output_object",
-            "bacnet_unit_type_id": 98,
-            "bacnet_unit_type": "UNITS_PERCENT",
+            "bacnet_unit_type_id": 15,
+            "bacnet_unit_type": "UNITS_POWER_FACTOR",
             "reference": [
                 "set_threshold_alarm_humidity.threshold_condition",
                 "set_threshold_alarm_humidity.threshold_type",
@@ -3526,6 +3564,19 @@
                 "set_threshold_alarm_temperature.threshold_lock_time",
                 "set_threshold_alarm_temperature.threshold_duration"
             ]
+        },
+        {
+            "id": "sn",
+            "name": "SN",
+            "value": "",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "TEXT",
+            "value_type": "STRING",
+            "max_length": 16,
+            "bacnet_type": "character_string_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS"
         },
         {
             "id": "stop_historical_data_retrival",
@@ -4643,7 +4694,7 @@
             "values": [
                 {
                     "value": 21,
-                    "name": "workstation 2 vacant trigger"
+                    "name": "workstation 9 vacant trigger"
                 },
                 {
                     "value": 22,

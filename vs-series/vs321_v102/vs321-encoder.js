@@ -26,6 +26,7 @@ function Encoder(obj, port) {
 /* eslint-enable */
 
 function milesightDeviceEncode(payload) {
+	normalizeArrayParams(payload);
 	processTemperature(payload);
 	var encoded = [];
 	//0xff_0x8e // reporting_interval_settings_switch.reporting_interval.id
@@ -297,6 +298,18 @@ function milesightDeviceEncode(payload) {
 		}
 		// 0:disable, 1:enable
 		buffer.writeUInt8(payload.auxiliary_occupation);
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0xf9_0xe3
+	if ('ae_target_setting' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0xf9);
+		buffer.writeUInt8(0xe3);
+		if (payload.ae_target_setting < 1 || payload.ae_target_setting > 6) {
+			throw betweenError('ae_target_setting', 1, 6);
+		}
+		// 1: Relatively dim,  2: Slightly dim , 3: Default , 4: Relatively bright , 5: Brighter , 6: Brightest
+		buffer.writeUInt8(payload.ae_target_setting);
 		encoded = encoded.concat(buffer.toBytes());
 	}
 	//0xf9_0xdb // conference_room_occupancy_trigger_settings.id
@@ -626,7 +639,7 @@ function milesightDeviceEncode(payload) {
 		var buffer = new Buffer();
 		buffer.writeUInt8(0xf9);
 		buffer.writeUInt8(0xdb);
-		// 21：workstation 2 vacant trigger
+		// 21：workstation 9 vacant trigger
 		buffer.writeUInt8(0x15);
 		if ([0, 1].indexOf(payload.workstation_area_9_vacant_trigger_settings.control) === -1) {
 			throw oneOfError('workstation_area_9_vacant_trigger_settings.control', [0, 1]);
@@ -966,6 +979,51 @@ function getAllLeafPaths(obj, prefix) {
 
 function isInteger(str) {
     return typeof str === 'string' && /^[0-9]+$/.test(str);
+}
+
+function normalizeArrayParams(value) {
+	if (Array.isArray(value)) {
+		for (var i = 0; i < value.length; i++) {
+			value[i] = normalizeArrayParams(value[i]);
+		}
+		return value;
+	}
+	if (value === null || typeof value !== 'object') {
+		return value;
+	}
+	var keys = [];
+	for (var key in value) {
+		if (Object.prototype.hasOwnProperty.call(value, key)) {
+			keys.push(key);
+		}
+	}
+	var allIntegerKeys = keys.length > 0;
+	for (var j = 0; j < keys.length; j++) {
+		if (!isInteger(keys[j])) {
+			allIntegerKeys = false;
+			break;
+		}
+	}
+	if (allIntegerKeys) {
+		var items = [];
+		for (var k = 0; k < keys.length; k++) {
+			var item = normalizeArrayParams(value[keys[k]]);
+			if (item !== null && typeof item === 'object' && item.id === undefined) {
+				item.id = parseInt(keys[k], 10);
+			}
+			items.push(item);
+		}
+		items.sort(function (a, b) {
+			return ((a && a.id) || 0) - ((b && b.id) || 0);
+		});
+		return items;
+	}
+	for (var prop in value) {
+		if (Object.prototype.hasOwnProperty.call(value, prop)) {
+			value[prop] = normalizeArrayParams(value[prop]);
+		}
+	}
+	return value;
 }
 
 function betweenError(path, min, max) {

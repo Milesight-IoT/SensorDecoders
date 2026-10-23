@@ -120,6 +120,7 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Control Time | 0xFF | 0x96 | 3 | w | 5 | 1 - 1440 |  |
 | Enable Control Time | 0xFF | 0x96 | 2 | w | 0 |  | 0：disable<br>1：enable |
 | Auxiliary Occupation | 0xF9 | 0xDA | 2 | w | 0 |  | 0:disable<br>1:enable |
+| AE Target Setting | 0xF9 | 0xE3 | 2 | w | 3 | 1 - 6 | 1: Relatively dim<br>2: Slightly dim<br>3: Default<br>4: Relatively bright<br>5: Brighter<br>6: Brightest |
 | Conference Room Occupancy Trigger Settings | 0xF9 | 0xDB | 3 | w |  |  |  |
 | Conference Room Occupancy Trigger ID | 0xF9 | 0xDB | 2 | w |  |  | 0：occupied trigger |
 | Conference Room Occupancy Trigger Control | 0xF9 | 0xDB | 2 | w | 0 |  | 0:disable<br>1:enable |
@@ -190,7 +191,7 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Workstation Area 9 Occupancy Trigger ID | 0xF9 | 0xDB | 2 | w |  |  | 20：workstation 9 occupancy trigger |
 | Workstation Area 9 Occupancy Trigger Control | 0xF9 | 0xDB | 2 | w | 0 |  | 0:disable<br>1:enable |
 | Workstation Area 9 Vacant Trigger Settings | 0xF9 | 0xDB | 3 | w |  |  |  |
-| Workstation Area 9 Vacant Trigger ID | 0xF9 | 0xDB | 2 | w |  |  | 21：workstation 2 vacant trigger |
+| Workstation Area 9 Vacant Trigger ID | 0xF9 | 0xDB | 2 | w |  |  | 21：workstation 9 vacant trigger |
 | Workstation Area 9 Vacant Trigger Control | 0xF9 | 0xDB | 2 | w | 0 |  | 0:disable<br>1:enable |
 | Workstation Area 10 Occupancy Trigger Settings | 0xF9 | 0xDB | 3 | w |  |  |  |
 | Workstation Area 10 Occupancy TriggerID | 0xF9 | 0xDB | 2 | w |  |  | 22：workstation 10 occupancy trigger |
