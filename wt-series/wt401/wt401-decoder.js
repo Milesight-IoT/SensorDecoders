@@ -174,15 +174,16 @@ function milesightDeviceDecode(bytes) {
 			case 0x00:
 				decoded.battery = readUInt8(bytes, counterObj, 1);
 				break;
-			case 0x01:
-				decoded.temperature = readInt16LE(bytes, counterObj, 2) / 100;
-				break;
 			case 0x02:
 				decoded.humidity = readUInt16LE(bytes, counterObj, 2) / 10;
 				break;
 			case 0x08:
 				// 0：Vacant, 1：Occupied, 2：Night Occupied
 				decoded.pir_status = readUInt8(bytes, counterObj, 1);
+				break;
+			case 0x13:
+				// 0：Others Trigger, 1：Button Trigger
+				decoded.cfg_trigger_src = readUInt8(bytes, counterObj, 1);
 				break;
 			case 0x03:
 				// 0：heat, 1：em heat, 2：cool, 3：auto, 4：dehumidify, 5：ventilation, 10：off, 11：none
@@ -407,6 +408,31 @@ function milesightDeviceDecode(bytes) {
 			case 0x67:
 				// 0：Off, 1：On
 				decoded.system_status = readUInt8(bytes, counterObj, 1);
+				break;
+			case 0x98:
+				decoded.d2d_send_config = decoded.d2d_send_config || {};
+				var d2d_send_config_subcmd = readUInt8(bytes, counterObj, 1);
+				if (d2d_send_config_subcmd == 0x00) {
+					// 0:disable, 1:enable
+					decoded.d2d_send_config.enable = readUInt8(bytes, counterObj, 1);
+				}
+				if (d2d_send_config_subcmd == 0x01) {
+					// 0:disable, 1:enable
+					decoded.d2d_send_config.uplink = readUInt8(bytes, counterObj, 1);
+				}
+				if (d2d_send_config_subcmd == 0x02) {
+					decoded.d2d_send_config.switch = decoded.d2d_send_config.switch || {};
+					var bitOptions = readUInt16LE(bytes, counterObj, 2);
+					decoded.d2d_send_config.switch.temp = extractBits(bitOptions, 0, 1);
+					decoded.d2d_send_config.switch.humi = extractBits(bitOptions, 1, 2);
+					decoded.d2d_send_config.switch.occupied = extractBits(bitOptions, 2, 3);
+					decoded.d2d_send_config.switch.system = extractBits(bitOptions, 3, 4);
+					decoded.d2d_send_config.switch.mode = extractBits(bitOptions, 4, 5);
+					decoded.d2d_send_config.switch.fan = extractBits(bitOptions, 5, 6);
+					decoded.d2d_send_config.switch.target = extractBits(bitOptions, 6, 7);
+					decoded.d2d_send_config.switch.plan = extractBits(bitOptions, 7, 8);
+					decoded.d2d_send_config.switch.reserved = extractBits(bitOptions, 8, 16);
+				}
 				break;
 			case 0x64:
 				var bitOptions = readUInt8(bytes, counterObj, 1);
@@ -646,6 +672,10 @@ function milesightDeviceDecode(bytes) {
 				// 0:disable, 1:enable
 				decoded.screen_fan_mode_enable = readUInt8(bytes, counterObj, 1);
 				break;
+			case 0x99:
+				// 0:disable, 1:enable
+				decoded.screen_off_enable = readUInt8(bytes, counterObj, 1);
+				break;
 			case 0x71:
 				decoded.button_custom_function = decoded.button_custom_function || {};
 				var button_custom_function_subcmd = readUInt8(bytes, counterObj, 1);
@@ -716,6 +746,17 @@ function milesightDeviceDecode(bytes) {
 				// 0：disable, 1：enable
 				decoded.unlock_button.enable = readUInt8(bytes, counterObj, 1);
 				decoded.unlock_button.timeout = readUInt16LE(bytes, counterObj, 2);
+				break;
+			case 0x96:
+				// 0：disable, 1：enable
+				decoded.bacnet_unlock_enable = readUInt8(bytes, counterObj, 1);
+				break;
+			case 0x97:
+				decoded.bacnet_unlock_timeout = readUInt16LE(bytes, counterObj, 2);
+				break;
+			case 0x95:
+				// 0：status pack, 1：config pack, 2：status and config pack
+				decoded.period_pack_mode = readUInt8(bytes, counterObj, 1);
 				break;
 			case 0x80:
 				decoded.unlock_combination_button_settings = decoded.unlock_combination_button_settings || {};
@@ -929,10 +970,10 @@ function readFirmwareVersion(bytes) {
 	var test = (bytes[5] & 0xff).toString(16);
 
 	var version = 'v' + major + '.' + minor;
-	if (release !== '0') version += '-r' + release;
-	if (alpha !== '0') version += '-a' + alpha;
-	if (unit_test !== '0') version += '-u' + unit_test;
-	if (test !== '0') version += '-t' + test;
+	if (release !== 0) version += '-r' + release.toString(16);
+	if (alpha !== 0) version += '-a' + alpha.toString(16);
+	if (unit_test !== 0) version += '-u' + unit_test.toString(16);
+	if (test !== 0) version += '-t' + test.toString(16);
 	return version;
 }
 
@@ -1262,6 +1303,7 @@ function isInteger(str) {
 
 function cmdMap() {
 	return {
+		  "13": "cfg_trigger_src",
 		  "55": "fan_error_alarm",
 		  "60": "collection_interval",
 		  "61": "reporting_interval",
@@ -1288,6 +1330,11 @@ function cmdMap() {
 		  "87": "origin_humidity",
 		  "88": "fan_enable",
 		  "89": "backlight_enable",
+		  "95": "period_pack_mode",
+		  "96": "bacnet_unlock_enable",
+		  "97": "bacnet_unlock_timeout",
+		  "98": "d2d_send_config",
+		  "99": "screen_off_enable",
 		  "6000": "collection_interval.seconds_of_time",
 		  "6001": "collection_interval.minutes_of_time",
 		  "6100": "reporting_interval.ble",
@@ -1319,6 +1366,9 @@ function cmdMap() {
 		  "8403": "pir_night.check",
 		  "8404": "pir_night.night_time",
 		  "8405": "pir_night.occupied",
+		  "9800": "d2d_send_config.enable",
+		  "9801": "d2d_send_config.uplink",
+		  "9802": "d2d_send_config.switch",
 		  "610000": "reporting_interval.ble.seconds_of_time",
 		  "610001": "reporting_interval.ble.minutes_of_time",
 		  "610100": "reporting_interval.lora.seconds_of_time",
@@ -1358,7 +1408,6 @@ function cmdMap() {
 		  "ba": "ble_new_event",
 		  "baxx": "ble_new_event._item",
 		  "00": "battery",
-		  "01": "temperature",
 		  "02": "humidity",
 		  "08": "pir_status",
 		  "03": "temperature_mode",
@@ -1440,10 +1489,6 @@ function cmdMap() {
 }
 function processTemperature(decoded) {
 	var allTemperatureProperties = {
-    "temperature": {
-        "precision": 2,
-        "unitName": "℃"
-    },
     "target_temperature1": {
         "precision": 2,
         "unitName": "℃"
