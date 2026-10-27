@@ -963,6 +963,17 @@ function milesightDeviceEncode(payload) {
 		buffer.writeUInt8(payload.intelligent_display_enable);
 		encoded = encoded.concat(buffer.toBytes());
 	}
+	//0x93
+	if ('screen_front_light_enable' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0x93);
+		if ([0, 1].indexOf(payload.screen_front_light_enable) === -1) {
+			throw oneOfError('screen_front_light_enable', [0, 1]);
+		}
+		// 0: Disable, 1: Enable
+		buffer.writeUInt8(payload.screen_front_light_enable);
+		encoded = encoded.concat(buffer.toBytes());
+	}
 	//0x66
 	if ('screen_object_settings' in payload) {
 		var buffer = new Buffer();
@@ -994,17 +1005,6 @@ function milesightDeviceEncode(payload) {
 		bitOptions |= payload.screen_object_settings.reserved << 6;
 		buffer.writeUInt8(bitOptions);
 
-		encoded = encoded.concat(buffer.toBytes());
-	}
-	//0x93
-	if ('screen_front_light_enable' in payload) {
-		var buffer = new Buffer();
-		buffer.writeUInt8(0x93);
-		if ([0, 1].indexOf(payload.screen_front_light_enable) === -1) {
-			throw oneOfError('screen_front_light_enable', [0, 1]);
-		}
-		// 0: Disable, 1: Enable
-		buffer.writeUInt8(payload.screen_front_light_enable);
 		encoded = encoded.concat(buffer.toBytes());
 	}
 	//0x75
@@ -2394,10 +2394,10 @@ function milesightDeviceEncode(payload) {
 	if ('delete_schedule' in payload) {
 		var buffer = new Buffer();
 		buffer.writeUInt8(0x5f);
-		if ([0, 1, 2, 3, 4, 5, 6, 7, 255].indexOf(payload.delete_schedule.type) === -1) {
-			throw oneOfError('delete_schedule.type', [0, 1, 2, 3, 4, 5, 6, 7, 255]);
+		if ([0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 255].indexOf(payload.delete_schedule.type) === -1) {
+			throw oneOfError('delete_schedule.type', [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 255]);
 		}
-		// 0：Schedule1, 1：Schedule2, 2：Schedule3, 3：Schedule4, 4：Schedule5, 5：Schedule6, 6：Schedule7, 7：Schedule8, 255：Reset All
+		// 0：Schedule1, 1：Schedule2, 2：Schedule3, 3：Schedule4, 4：Schedule5, 5：Schedule6, 6：Schedule7, 7：Schedule8, 8：Schedule9, 9：Schedule10, 10：Schedule11, 11：Schedule12, 12：Schedule13, 13：Schedule14, 14：Schedule15, 15：Schedule16, 255：Reset All
 		buffer.writeUInt8(payload.delete_schedule.type);
 		encoded = encoded.concat(buffer.toBytes());
 	}
@@ -2847,8 +2847,8 @@ function cmdMap() {
 		  "timed_system_control.end_cycle_settings": "8c02",
 		  "timed_system_control.end_cycle_settings._item": "8c02xx",
 		  "intelligent_display_enable": "65",
-		  "screen_object_settings": "66",
 		  "screen_front_light_enable": "93",
+		  "screen_object_settings": "66",
 		  "child_lock": "75",
 		  "child_lock_enable_cfg": "96",
 		  "child_lock_enable_cfg.enable": "9600",
