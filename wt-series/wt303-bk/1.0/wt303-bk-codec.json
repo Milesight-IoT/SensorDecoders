@@ -1226,6 +1226,38 @@
                     "name": "Schedule8"
                 },
                 {
+                    "value": 8,
+                    "name": "Schedule9"
+                },
+                {
+                    "value": 9,
+                    "name": "Schedule10"
+                },
+                {
+                    "value": 10,
+                    "name": "Schedule11"
+                },
+                {
+                    "value": 11,
+                    "name": "Schedule12"
+                },
+                {
+                    "value": 12,
+                    "name": "Schedule13"
+                },
+                {
+                    "value": 13,
+                    "name": "Schedule14"
+                },
+                {
+                    "value": 14,
+                    "name": "Schedule15"
+                },
+                {
+                    "value": 15,
+                    "name": "Schedule16"
+                },
+                {
                     "value": 255,
                     "name": "Reset All"
                 }
@@ -2644,7 +2676,7 @@
         },
         {
             "id": "relay_status.high_status",
-            "name": "Fan High(Relay/Valve Status)",
+            "name": "High-speed Fan(Relay/Valve Status)",
             "value": "0",
             "unit": "",
             "access_mode": "R",
@@ -2673,7 +2705,7 @@
         },
         {
             "id": "relay_status.low_status",
-            "name": "Fan Low(Relay/Valve Status)",
+            "name": "Fan Low Speed(Relay/Valve Status)",
             "value": "0",
             "unit": "",
             "access_mode": "R",
@@ -2702,7 +2734,7 @@
         },
         {
             "id": "relay_status.mid_status",
-            "name": "Fan Medium(Relay/Valve Status)",
+            "name": "Medium-speed Fan(Relay/Valve Status)",
             "value": "0",
             "unit": "",
             "access_mode": "R",

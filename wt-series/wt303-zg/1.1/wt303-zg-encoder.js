@@ -2189,6 +2189,17 @@ function milesightDeviceEncode(payload) {
 		buffer.writeUInt8(payload.insert_schedule.type);
 		encoded = encoded.concat(buffer.toBytes());
 	}
+	//0x5f
+	if ('delete_schedule' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0x5f);
+		if ([3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 255].indexOf(payload.delete_schedule.type) === -1) {
+			throw oneOfError('delete_schedule.type', [3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 255]);
+		}
+		// 3：Schedule4, 4：Schedule5, 5：Schedule6, 6：Schedule7, 7：Schedule8, 8：Schedule9, 9：Schedule10, 10：Schedule11, 11：Schedule12, 12：Schedule13, 13：Schedule14, 14：Schedule15, 15：Schedule16, 255：Reset All
+		buffer.writeUInt8(payload.delete_schedule.type);
+		encoded = encoded.concat(buffer.toBytes());
+	}
 	//0xbe
 	if ('reboot' in payload) {
 		var buffer = new Buffer();
@@ -2743,6 +2754,7 @@ function cmdMap() {
 		  "send_humidity": "5c",
 		  "update_open_windows_state": "5d",
 		  "insert_schedule": "5e",
+		  "delete_schedule": "5f",
 		  "reboot": "be"
 	};
 }

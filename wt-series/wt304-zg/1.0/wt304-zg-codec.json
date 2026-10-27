@@ -1185,6 +1185,77 @@
             ]
         },
         {
+            "id": "delete_schedule.type",
+            "name": "Delete Schedule(Delete Schedule List)",
+            "value": "255",
+            "unit": "",
+            "access_mode": "W",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 3,
+                    "name": "Schedule4"
+                },
+                {
+                    "value": 4,
+                    "name": "Schedule5"
+                },
+                {
+                    "value": 5,
+                    "name": "Schedule6"
+                },
+                {
+                    "value": 6,
+                    "name": "Schedule7"
+                },
+                {
+                    "value": 7,
+                    "name": "Schedule8"
+                },
+                {
+                    "value": 8,
+                    "name": "Schedule9"
+                },
+                {
+                    "value": 9,
+                    "name": "Schedule10"
+                },
+                {
+                    "value": 10,
+                    "name": "Schedule11"
+                },
+                {
+                    "value": 11,
+                    "name": "Schedule12"
+                },
+                {
+                    "value": 12,
+                    "name": "Schedule13"
+                },
+                {
+                    "value": 13,
+                    "name": "Schedule14"
+                },
+                {
+                    "value": 14,
+                    "name": "Schedule15"
+                },
+                {
+                    "value": 15,
+                    "name": "Schedule16"
+                },
+                {
+                    "value": 255,
+                    "name": "Reset All"
+                }
+            ],
+            "bacnet_type": "multistate_output_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": []
+        },
+        {
             "id": "device_status",
             "name": "Device Status",
             "value": "1",
@@ -3030,7 +3101,7 @@
         },
         {
             "id": "relay_status.high_status",
-            "name": "Fan High(Relay/Valve Status)",
+            "name": "High-speed Fan(Relay/Valve Status)",
             "value": "0",
             "unit": "",
             "access_mode": "R",
@@ -3059,7 +3130,7 @@
         },
         {
             "id": "relay_status.low_status",
-            "name": "Fan Low(Relay/Valve Status)",
+            "name": "Fan Low Speed(Relay/Valve Status)",
             "value": "0",
             "unit": "",
             "access_mode": "R",
@@ -3088,7 +3159,7 @@
         },
         {
             "id": "relay_status.mid_status",
-            "name": "Fan Medium(Relay/Valve Status)",
+            "name": "Medium-speed Fan(Relay/Valve Status)",
             "value": "0",
             "unit": "",
             "access_mode": "R",

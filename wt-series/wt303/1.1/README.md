@@ -29,8 +29,8 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Humidity | 0x02 | 3 | r |  | 0 - 100 |  |
 | Target Temperature | 0x03 | 3 | r |  | 5 - 35 |  |
 | Temperature Control Status | 0x05 | 2 | r |  |  |  |
-| Temperature Control Mode | 0x05 | 2 | r | 1 |  | 0: Ventilation<br>1: Heat<br>2: Cool |
-| Temperature Control Status | 0x05 | 2 | r | 0 |  | 0: Standby<br>1: Heat<br>2: Cool<br>3: Off |
+| Temperature Control Mode | 0x05 | 2 | r | 1 | 0 - 2 | 0: Ventilation<br>1: Heat<br>2: Cool |
+| Temperature Control Status | 0x05 | 2 | r | 0 | 0 - 3 | 0: Standby<br>1: Heat<br>2: Cool<br>3: Off |
 | Valve Status | 0x06 | 2 | r | 0 |  | 0: Close<br>100: Open |
 | Fan Status | 0x07 | 2 | r |  |  |  |
 | Fan Mode | 0x07 | 2 | r | 0 |  | 0: Off<br>1: Low<br>2: Medium<br>3: High |
@@ -38,9 +38,9 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Schedule | 0x08 | 2 | r | 255 |  | 0：Schedule1<br>1：Schedule2<br>2：Schedule3<br>3：Schedule4<br>4：Schedule5<br>5：Schedule6<br>6：Schedule7<br>7：Schedule8<br>8：Schedule9<br>9：Schedule10<br>10：Schedule11<br>11：Schedule12<br>12：Schedule13<br>13：Schedule14<br>14：Schedule15<br>15：Schedule16<br>255：Not executed |
 | Temperature Control Authority Status | 0x0D | 2 | r | 0 |  | 0: Thermostat Control<br>1: Remote Control |
 | Relay/Valve Status | 0x10 | 5 | r |  |  |  |
-| Fan Low | 0x10 | 5 | r | 0 |  | 0: Open<br>1: Close |
-| Fan Medium | 0x10 | 5 | r | 0 |  | 0: Open<br>1: Close |
-| Fan High | 0x10 | 5 | r | 0 |  | 0: Open<br>1: Close |
+| Fan Low Speed | 0x10 | 5 | r | 0 |  | 0: Open<br>1: Close |
+| Medium-speed Fan | 0x10 | 5 | r | 0 |  | 0: Open<br>1: Close |
+| High-speed Fan | 0x10 | 5 | r | 0 |  | 0: Open<br>1: Close |
 | Valve 1 | 0x10 | 5 | r | 0 |  | 0: Open<br>1: Close |
 | Valve 2 | 0x10 | 5 | r | 0 |  | 0: Open<br>1: Close |
 | Reserved | 0x10 | 5 | r |  |  |  |
@@ -362,13 +362,6 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Ambient Temperature Debug Value | 0xA6 | 3 | rw | 20 | -20 - 60 |  |
 | Ambient Humidity Debug Enable | 0xA6 | 2 | rw | 0 |  | 0: Disable<br>1: Enable |
 | Ambient Humidity Debug Value | 0xA6 | 3 | rw | 50 | 0 - 100 |  |
-| Remote Control Configuration Interface Switch | 0x5A | 2 | w |  |  |  |
-| GL Interface Enable | 0x5A | 2 | w | 0 |  | 0: Disable<br>1: Enable |
-| GM Interface Enable | 0x5A | 2 | w | 0 |  | 0: Disable<br>1: Enable |
-| GH Interface Enable | 0x5A | 2 | w | 0 |  | 0: Disable<br>1: Enable |
-| V1 Interface Enable | 0x5A | 2 | w | 0 |  | 0: Disable<br>1: Enable |
-| V2 Interface Enable | 0x5A | 2 | w | 0 |  | 0: Disable<br>1: Enable |
-| Reserved | 0x5A | 2 | w | 0 |  |  |
 
 ### Event
 
@@ -454,6 +447,13 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Retrieval(Time Point) | 0xBA | 5 | w |  |  |  |
 | Time Point | 0xBA | 5 | w |  |  |  |
 | Network Reconnection | 0xB6 | 1 | w |  |  |  |
+| Remote Control Configuration Interface Switch | 0x5A | 2 | w |  |  |  |
+| GL Interface Enable | 0x5A | 2 | w | 0 |  | 0: Disable<br>1: Enable |
+| GM Interface Enable | 0x5A | 2 | w | 0 |  | 0: Disable<br>1: Enable |
+| GH Interface Enable | 0x5A | 2 | w | 0 |  | 0: Disable<br>1: Enable |
+| V1 Interface Enable | 0x5A | 2 | w | 0 |  | 0: Disable<br>1: Enable |
+| V2 Interface Enable | 0x5A | 2 | w | 0 |  | 0: Disable<br>1: Enable |
+| Reserved | 0x5A | 2 | w | 0 |  |  |
 | External Temperature Settings | 0x5B | 3 | w |  |  |  |
 | External Temperature Value | 0x5B | 3 | w | 0 | -20 - 60 |  |
 | External Humidity Settings | 0x5C | 3 | w |  |  |  |
@@ -463,6 +463,6 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Event Control | 0x5E | 2 | w |  |  |  |
 | Event Control | 0x5E | 2 | w | 0 |  | 0：Schedule1<br>1：Schedule2<br>2：Schedule3<br>3：Schedule4<br>4：Schedule5<br>5：Schedule6<br>6：Schedule7<br>7：Schedule8 |
 | Delete Schedule List | 0x5F | 2 | w |  |  |  |
-| Delete Schedule | 0x5F | 2 | w | 255 |  | 0：Schedule1<br>1：Schedule2<br>2：Schedule3<br>3：Schedule4<br>4：Schedule5<br>5：Schedule6<br>6：Schedule7<br>7：Schedule8<br>255：Reset All |
+| Delete Schedule | 0x5F | 2 | w | 255 |  | 0：Schedule1<br>1：Schedule2<br>2：Schedule3<br>3：Schedule4<br>4：Schedule5<br>5：Schedule6<br>6：Schedule7<br>7：Schedule8<br>8：Schedule9<br>9：Schedule10<br>10：Schedule11<br>11：Schedule12<br>12：Schedule13<br>13：Schedule14<br>14：Schedule15<br>15：Schedule16<br>255：Reset All |
 | Reboot | 0xBE | 1 | w |  |  |  |
 

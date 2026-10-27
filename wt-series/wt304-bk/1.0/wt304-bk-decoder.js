@@ -898,7 +898,7 @@ function milesightDeviceDecode(bytes) {
 				break;
 			case 0x5f:
 				decoded.delete_schedule = decoded.delete_schedule || {};
-				// 0：Schedule1, 1：Schedule2, 2：Schedule3, 3：Schedule4, 4：Schedule5, 5：Schedule6, 6：Schedule7, 7：Schedule8, 255：Reset All
+				// 0：Schedule1, 1：Schedule2, 2：Schedule3, 3：Schedule4, 4：Schedule5, 5：Schedule6, 6：Schedule7, 7：Schedule8, 8：Schedule9, 9：Schedule10, 10：Schedule11, 11：Schedule12, 12：Schedule13, 13：Schedule14, 14：Schedule15, 15：Schedule16, 255：Reset All
 				decoded.delete_schedule.type = readUInt8(bytes, counterObj, 1);
 				break;
 			case 0xbe:
