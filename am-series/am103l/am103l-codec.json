@@ -298,154 +298,43 @@
             "data_type": "ENUM",
             "value_type": "INT16",
             "values": [
-                {
-                    "value": -120,
-                    "name": "UTC-12"
-                },
-                {
-                    "value": -110,
-                    "name": "UTC-11"
-                },
-                {
-                    "value": -100,
-                    "name": "UTC-10"
-                },
-                {
-                    "value": -95,
-                    "name": "UTC-9:30"
-                },
-                {
-                    "value": -90,
-                    "name": "UTC-9"
-                },
-                {
-                    "value": -80,
-                    "name": "UTC-8"
-                },
-                {
-                    "value": -70,
-                    "name": "UTC-7"
-                },
-                {
-                    "value": -60,
-                    "name": "UTC-6"
-                },
-                {
-                    "value": -50,
-                    "name": "UTC-5"
-                },
-                {
-                    "value": -40,
-                    "name": "UTC-4"
-                },
-                {
-                    "value": -35,
-                    "name": "UTC-3:30"
-                },
-                {
-                    "value": -30,
-                    "name": "UTC-3"
-                },
-                {
-                    "value": -20,
-                    "name": "UTC-2"
-                },
-                {
-                    "value": -10,
-                    "name": "UTC-1"
-                },
-                {
-                    "value": 0,
-                    "name": "UTC"
-                },
-                {
-                    "value": 10,
-                    "name": "UTC+1"
-                },
-                {
-                    "value": 20,
-                    "name": "UTC+2"
-                },
-                {
-                    "value": 30,
-                    "name": "UTC+3"
-                },
-                {
-                    "value": 35,
-                    "name": "UTC+3:30"
-                },
-                {
-                    "value": 40,
-                    "name": "UTC+4"
-                },
-                {
-                    "value": 45,
-                    "name": "UTC+4:30"
-                },
-                {
-                    "value": 50,
-                    "name": "UTC+5"
-                },
-                {
-                    "value": 55,
-                    "name": "UTC+5:30"
-                },
-                {
-                    "value": 57,
-                    "name": "UTC+5:45"
-                },
-                {
-                    "value": 60,
-                    "name": "UTC+6"
-                },
-                {
-                    "value": 65,
-                    "name": "UTC+6:30"
-                },
-                {
-                    "value": 70,
-                    "name": "UTC+7"
-                },
-                {
-                    "value": 80,
-                    "name": "UTC+8"
-                },
-                {
-                    "value": 90,
-                    "name": "UTC+9"
-                },
-                {
-                    "value": 95,
-                    "name": "UTC+9:30"
-                },
-                {
-                    "value": 100,
-                    "name": "UTC+10"
-                },
-                {
-                    "value": 105,
-                    "name": "UTC+10:30"
-                },
-                {
-                    "value": 110,
-                    "name": "UTC+11"
-                },
-                {
-                    "value": 120,
-                    "name": "UTC+12"
-                },
-                {
-                    "value": 127,
-                    "name": "UTC+12:45"
-                },
-                {
-                    "value": 130,
-                    "name": "UTC+13"
-                },
-                {
-                    "value": 140,
-                    "name": "UTC+14"
-                }
+                { "value": -720, "name": "UTC-12" },
+                { "value": -660, "name": "UTC-11" },
+                { "value": -600, "name": "UTC-10" },
+                { "value": -570, "name": "UTC-9:30" },
+                { "value": -540, "name": "UTC-9" },
+                { "value": -480, "name": "UTC-8" },
+                { "value": -420, "name": "UTC-7" },
+                { "value": -360, "name": "UTC-6" },
+                { "value": -300, "name": "UTC-5" },
+                { "value": -240, "name": "UTC-4" },
+                { "value": -210, "name": "UTC-3:30" },
+                { "value": -180, "name": "UTC-3" },
+                { "value": -120, "name": "UTC-2" },
+                { "value": -60, "name": "UTC-1" },
+                { "value": 0, "name": "UTC" },
+                { "value": 60, "name": "UTC+1" },
+                { "value": 120, "name": "UTC+2" },
+                { "value": 180, "name": "UTC+3" },
+                { "value": 210, "name": "UTC+3:30" },
+                { "value": 240, "name": "UTC+4" },
+                { "value": 270, "name": "UTC+4:30" },
+                { "value": 300, "name": "UTC+5" },
+                { "value": 330, "name": "UTC+5:30" },
+                { "value": 345, "name": "UTC+5:45" },
+                { "value": 360, "name": "UTC+6" },
+                { "value": 390, "name": "UTC+6:30" },
+                { "value": 420, "name": "UTC+7" },
+                { "value": 480, "name": "UTC+8" },
+                { "value": 540, "name": "UTC+9" },
+                { "value": 570, "name": "UTC+9:30" },
+                { "value": 600, "name": "UTC+10" },
+                { "value": 630, "name": "UTC+10:30" },
+                { "value": 660, "name": "UTC+11" },
+                { "value": 720, "name": "UTC+12" },
+                { "value": 765, "name": "UTC+12:45" },
+                { "value": 780, "name": "UTC+13" },
+                { "value": 840, "name": "UTC+14" }
             ],
             "bacnet_type": "multistate_value_object",
             "bacnet_unit_type_id": 95,
