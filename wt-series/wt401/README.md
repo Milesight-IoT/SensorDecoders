@@ -29,6 +29,9 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Schedule | 0x05 | 2 | r | 0 |  | 0:plan0<br>1:plan1<br>2:plan2<br>3:plan3<br>4:plan4<br>5:plan5<br>6:plan6<br>7:plan7<br>8:plan8<br>9:plan9<br>10:plan10<br>11:plan11<br>12:plan12<br>13:plan13<br>14:plan14<br>15:plan15<br>255:Not executed |
 | Communication Mode | 0x8D | 2 | rw | 2 |  | 0：BLE<br>1：LoRa<br>2：BLE+LoRa |
 | Reporting Interval | 0x61 | 1 | rw |  |  |  |
+| BLE Mode | 0x61 | 1 | rw |  |  |  |
+| Reporting Interval Unit | 0x61 | 2 | rw | 1 |  | 0：second<br>1：min |
+| LoRa Reporting Interval | 0x61 | 3 | rw | 10 | 1 - 1440 |  |
 | BLE_LoRa Reporting Interval | 0x61 | 1 | rw |  |  |  |
 | Reporting Interval Unit | 0x61 | 2 | rw | 1 |  | 0：second<br>1：min |
 | LoRa Reporting Interval | 0x61 | 3 | rw | 1440 | 1 - 1440 |  |
@@ -82,6 +85,7 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Vacant Execution | 0x83 | 2 | rw | 1 |  | 0:plan0<br>1:plan1<br>2:plan2<br>3:plan3<br>4:plan4<br>5:plan5<br>6:plan6<br>7:plan7<br>8:plan8<br>9:plan9<br>10:plan10<br>11:plan11<br>12:plan12<br>13:plan13<br>14:plan14<br>15:plan15<br>255:Not executed |
 | Smart Display | 0x62 | 2 | rw | 1 |  | 0：disable<br>1：enable |
 | Backlight Enable | 0x89 | 2 | rw | 1 |  | 0:disable<br>1:enable |
+| Screen OFF Enable | 0x99 | 2 | rw | 1 |  | 0:disable<br>1:enable |
 | Button Custom Function | 0x71 | 1 | rw |  |  |  |
 | ID | 0x71 | 2 | rw | 0 |  |  |
 | Enable | 0x71 | 2 | rw | 0 |  | 0：disable<br>1：enable |
