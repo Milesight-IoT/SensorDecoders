@@ -395,10 +395,12 @@ function handle_config_frame(channel_id, channel_type, bytes, offset, data_lengt
             decoded.platform_algorithm_timeout_strategy = readUInt8(d[0]);
             break;
         case 0x43:
-            decoded.temperature_control_level_mapping = {
+            // Scale mode 0 reports one frame per level (0..5) in a single uplink
+            decoded.temperature_control_level_mapping = decoded.temperature_control_level_mapping || [];
+            decoded.temperature_control_level_mapping.push({
                 level: readUInt8(d[0]),
                 temperature: readInt16LE(d.slice(1, 3)) / 100,
-            };
+            });
             break;
         case 0x44:
             decoded.temperature_control_level = readUInt8(d[0]);
