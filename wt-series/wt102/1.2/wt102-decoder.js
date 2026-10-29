@@ -705,7 +705,7 @@ function milesightDeviceDecode(bytes) {
 
 function patchDecode(decoded) {}
 
-function readOnlyCommand(bytes) {
+function readOnlyCommand(bytes, counterObj, end) {
 	return 1;
 }
 
