@@ -214,6 +214,8 @@ function milesightDeviceEncode(payload) {
 		var bitOptions = 0;
 		// 0：disable, 1：enable
 		bitOptions |= payload.d2d_settings.d2d_agent_enable << 1;
+		// bit4-bit7：mask, 0：not set, 1：set, must be set to apply the setting
+		bitOptions |= 0x20;
 		buffer.writeUInt8(bitOptions);
 
 		encoded = encoded.concat(buffer.toBytes());
