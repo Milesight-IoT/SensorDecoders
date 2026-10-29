@@ -930,6 +930,22 @@
             "bacnet_unit_type": "UNITS_NO_UNITS"
         },
         {
+            "id": "secondary_echo_disable",
+            "name": "Secondary Echo Disable",
+            "value": "",
+            "unit": "",
+            "access_mode": "RW",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                { "value": 0, "name": "enable" },
+                { "value": 1, "name": "disable" }
+            ],
+            "bacnet_type": "binary_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS"
+        },
+        {
             "id": "history_enable",
             "name": "History Enable",
             "value": "",

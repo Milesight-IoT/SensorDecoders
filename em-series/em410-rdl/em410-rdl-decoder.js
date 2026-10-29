@@ -368,6 +368,10 @@ function handle_downlink_response_ext(code, channel_type, bytes, offset) {
             decoded.collection_interval = readUInt16LE(bytes.slice(offset, offset + 2));
             offset += 2;
             break;
+        case 0x7b:
+            decoded.secondary_echo_disable = readDisableStatus(readUInt8(bytes[offset]));
+            offset += 1;
+            break;
         default:
             throw new Error("unknown downlink response");
     }
@@ -462,6 +466,11 @@ function readOnOffStatus(status) {
 
 function readEnableStatus(status) {
     var status_map = { 0: "disable", 1: "enable" };
+    return getValue(status_map, status);
+}
+
+function readDisableStatus(status) {
+    var status_map = { 0: "enable", 1: "disable" };
     return getValue(status_map, status);
 }
 

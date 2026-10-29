@@ -104,6 +104,9 @@ function milesightDeviceEncode(payload) {
     if ("stop_transmit" in payload) {
         encoded = encoded.concat(stopTransmit(payload.stop_transmit));
     }
+    if ("secondary_echo_disable" in payload) {
+        encoded = encoded.concat(setSecondaryEchoDisable(payload.secondary_echo_disable));
+    }
     if ("history_enable" in payload) {
         encoded = encoded.concat(setHistoryEnable(payload.history_enable));
     }
@@ -723,6 +726,25 @@ function stopTransmit(stop_transmit) {
         return [];
     }
     return [0xfd, 0x6d, 0xff];
+}
+
+/**
+ * secondary echo algorithm disable
+ * @param {number} secondary_echo_disable values: (0: enable, 1: disable)
+ * @example { "secondary_echo_disable": 1 }
+ */
+function setSecondaryEchoDisable(secondary_echo_disable) {
+    var disable_map = { 0: "enable", 1: "disable" };
+    var disable_values = getValues(disable_map);
+    if (disable_values.indexOf(secondary_echo_disable) === -1) {
+        throw new Error("secondary_echo_disable must be one of " + disable_values.join(", "));
+    }
+
+    var buffer = new Buffer(3);
+    buffer.writeUInt8(0xf9);
+    buffer.writeUInt8(0x7b);
+    buffer.writeUInt8(getValue(disable_map, secondary_echo_disable));
+    return buffer.toBytes();
 }
 
 /**
