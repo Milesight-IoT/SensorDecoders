@@ -1564,13 +1564,17 @@ function setConfigReport(config_report) {
 function getValues(map) {
     var values = [];
     for (var key in map) {
-        values.push(RAW_VALUE ? parseInt(key) : map[key]);
+        values.push(parseInt(key));
+        values.push(map[key]);
     }
     return values;
 }
 
 function getValue(map, value) {
     if (RAW_VALUE) return value;
+    if (typeof value === "number") {
+        return value;
+    }
 
     for (var key in map) {
         if (map[key] === value) {
