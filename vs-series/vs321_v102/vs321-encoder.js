@@ -36,8 +36,8 @@ function milesightDeviceEncode(payload) {
 		buffer.writeUInt8(0x8e);
 		// 0：sec, 1：min
 		buffer.writeUInt8(0x00);
-		if (payload.reporting_interval_settings_switch.reporting_interval.time < 2 || payload.reporting_interval_settings_switch.reporting_interval.time > 1440) {
-			throw betweenError('reporting_interval_settings_switch.reporting_interval.time', 2, 1440);
+		if (payload.reporting_interval_settings_switch.reporting_interval.time < 1 || payload.reporting_interval_settings_switch.reporting_interval.time > 1440) {
+			throw betweenError('reporting_interval_settings_switch.reporting_interval.time', 1, 1440);
 		}
 		buffer.writeUInt16LE(payload.reporting_interval_settings_switch.reporting_interval.time);
 		encoded = encoded.concat(buffer.toBytes());
@@ -60,8 +60,8 @@ function milesightDeviceEncode(payload) {
 		var buffer = new Buffer();
 		buffer.writeUInt8(0xff);
 		buffer.writeUInt8(0x02);
-		if ([2, 5, 10, 15, 30, 60].indexOf(payload.detection_interval) === -1) {
-			throw oneOfError('detection_interval', [2, 5, 10, 15, 30, 60]);
+		if ([1, 2, 5, 10, 15, 30, 60].indexOf(payload.detection_interval) === -1) {
+			throw oneOfError('detection_interval', [1, 2, 5, 10, 15, 30, 60]);
 		}
 		buffer.writeUInt16LE(payload.detection_interval);
 		encoded = encoded.concat(buffer.toBytes());
@@ -86,7 +86,7 @@ function milesightDeviceEncode(payload) {
 		buffer.writeUInt8(0xff);
 		encoded = encoded.concat(buffer.toBytes());
 	}
-	//0xff_0x06 // set_threshold_alarm_temperature.threshold_duration
+	//0xff_0x06
 	if ('set_threshold_alarm_temperature' in payload) {
 		var buffer = new Buffer();
 		buffer.writeUInt8(0xff);
@@ -113,33 +113,6 @@ function milesightDeviceEncode(payload) {
 		buffer.writeUInt16LE(0x00);
 		encoded = encoded.concat(buffer.toBytes());
 	}
-	//0xff_0x06 // set_threshold_alarm_humidity.threshold_duration
-	if ('set_threshold_alarm_humidity' in payload) {
-		var buffer = new Buffer();
-		buffer.writeUInt8(0xff);
-		buffer.writeUInt8(0x06);
-		var bitOptions = 0;
-		// 0：Disabled, 1：Condition: Humidity＜A, 2：Condition: Humidity＞B, 3：Condition: A＜Humidity＜B, 4：Condition: Humidity＜A or Humidity＞B
-		bitOptions |= payload.set_threshold_alarm_humidity.threshold_condition << 0;
-
-		// 3: Threshold of Humidity
-		bitOptions |= 0x02 << 3;
-
-		bitOptions |= 0x01 << 6;
-
-		buffer.writeUInt8(bitOptions);
-		if (payload.set_threshold_alarm_humidity.value_less_than < 0 || payload.set_threshold_alarm_humidity.value_less_than > 100) {
-			throw betweenError('set_threshold_alarm_humidity.value_less_than', 0, 100);
-		}
-		buffer.writeInt16LE(payload.set_threshold_alarm_humidity.value_less_than * 2);
-		if (payload.set_threshold_alarm_humidity.value_greater_than < 0 || payload.set_threshold_alarm_humidity.value_greater_than > 100) {
-			throw betweenError('set_threshold_alarm_humidity.value_greater_than', 0, 100);
-		}
-		buffer.writeInt16LE(payload.set_threshold_alarm_humidity.value_greater_than * 2);
-		buffer.writeUInt16LE(0x00);
-		buffer.writeUInt16LE(0x00);
-		encoded = encoded.concat(buffer.toBytes());
-	}
 	//0xff_0x84
 	if ('d2d_enable' in payload) {
 		var buffer = new Buffer();
@@ -152,62 +125,602 @@ function milesightDeviceEncode(payload) {
 		buffer.writeUInt8(payload.d2d_enable);
 		encoded = encoded.concat(buffer.toBytes());
 	}
-	//0xff_0x96 // region_occupied_d2d_controller_settings.d2d_controller_trigger_mode
-	if ('region_occupied_d2d_controller_settings' in payload) {
+	//0xff_0x96 // occupied_d2d_controller_settings.d2d_controller_lora_enable
+	if ('occupied_d2d_controller_settings' in payload) {
 		var buffer = new Buffer();
 		buffer.writeUInt8(0xff);
 		buffer.writeUInt8(0x96);
-		// 1：region occupied
-		buffer.writeUInt8(0x15);
-		if ([0, 1].indexOf(payload.region_occupied_d2d_controller_settings.d2d_controller_occupied_enable) === -1) {
-			throw oneOfError('region_occupied_d2d_controller_settings.d2d_controller_occupied_enable', [0, 1]);
+		// 1：occupied
+		buffer.writeUInt8(0x01);
+		if ([0, 1].indexOf(payload.occupied_d2d_controller_settings.d2d_controller_occupied_enable) === -1) {
+			throw oneOfError('occupied_d2d_controller_settings.d2d_controller_occupied_enable', [0, 1]);
 		}
 		// 0：disable, 1：enable
-		buffer.writeUInt8(payload.region_occupied_d2d_controller_settings.d2d_controller_occupied_enable);
-		if ([0, 1].indexOf(payload.region_occupied_d2d_controller_settings.d2d_controller_lora_enable) === -1) {
-			throw oneOfError('region_occupied_d2d_controller_settings.d2d_controller_lora_enable', [0, 1]);
+		buffer.writeUInt8(payload.occupied_d2d_controller_settings.d2d_controller_occupied_enable);
+		// 0：disable, 1：enable
+		buffer.writeUInt8(0x00);
+		buffer.writeHexString(payload.occupied_d2d_controller_settings.d2d_controller_command, 2);
+		if (payload.occupied_d2d_controller_settings.d2d_controller_command_valid_time < 1 || payload.occupied_d2d_controller_settings.d2d_controller_command_valid_time > 1440) {
+			throw betweenError('occupied_d2d_controller_settings.d2d_controller_command_valid_time', 1, 1440);
+		}
+		buffer.writeUInt16LE(payload.occupied_d2d_controller_settings.d2d_controller_command_valid_time);
+		if ([0, 1].indexOf(payload.occupied_d2d_controller_settings.d2d_controller_command_valid_time_enable) === -1) {
+			throw oneOfError('occupied_d2d_controller_settings.d2d_controller_command_valid_time_enable', [0, 1]);
 		}
 		// 0：disable, 1：enable
-		buffer.writeUInt8(payload.region_occupied_d2d_controller_settings.d2d_controller_lora_enable);
-		buffer.writeHexString(payload.region_occupied_d2d_controller_settings.d2d_controller_command, 2);
-		if (payload.region_occupied_d2d_controller_settings.d2d_controller_command_valid_time < 1 || payload.region_occupied_d2d_controller_settings.d2d_controller_command_valid_time > 1440) {
-			throw betweenError('region_occupied_d2d_controller_settings.d2d_controller_command_valid_time', 1, 1440);
-		}
-		buffer.writeUInt16LE(payload.region_occupied_d2d_controller_settings.d2d_controller_command_valid_time);
-		if ([0, 1].indexOf(payload.region_occupied_d2d_controller_settings.d2d_controller_command_valid_time_enable) === -1) {
-			throw oneOfError('region_occupied_d2d_controller_settings.d2d_controller_command_valid_time_enable', [0, 1]);
-		}
-		// 0：disable, 1：enable
-		buffer.writeUInt8(payload.region_occupied_d2d_controller_settings.d2d_controller_command_valid_time_enable);
+		buffer.writeUInt8(payload.occupied_d2d_controller_settings.d2d_controller_command_valid_time_enable);
 		encoded = encoded.concat(buffer.toBytes());
 	}
-	//0xff_0x96 // region_vacant_d2d_controller_settings.d2d_controller_trigger_mode
-	if ('region_vacant_d2d_controller_settings' in payload) {
+	//0xff_0x96 // vacant_d2d_controller_settings.d2d_controller_lora_enable
+	if ('vacant_d2d_controller_settings' in payload) {
 		var buffer = new Buffer();
 		buffer.writeUInt8(0xff);
 		buffer.writeUInt8(0x96);
-		// 2：region vacant
-		buffer.writeUInt8(0x16);
-		if ([0, 1].indexOf(payload.region_vacant_d2d_controller_settings.d2d_controller_idle_enable) === -1) {
-			throw oneOfError('region_vacant_d2d_controller_settings.d2d_controller_idle_enable', [0, 1]);
+		// 2：vacant
+		buffer.writeUInt8(0x02);
+		if ([0, 1].indexOf(payload.vacant_d2d_controller_settings.d2d_controller_idle_enable) === -1) {
+			throw oneOfError('vacant_d2d_controller_settings.d2d_controller_idle_enable', [0, 1]);
 		}
 		// 0：disable, 1：enable
-		buffer.writeUInt8(payload.region_vacant_d2d_controller_settings.d2d_controller_idle_enable);
-		if ([0, 1].indexOf(payload.region_vacant_d2d_controller_settings.d2d_controller_lora_enable) === -1) {
-			throw oneOfError('region_vacant_d2d_controller_settings.d2d_controller_lora_enable', [0, 1]);
+		buffer.writeUInt8(payload.vacant_d2d_controller_settings.d2d_controller_idle_enable);
+		// 0：disable, 1：enable
+		buffer.writeUInt8(0x00);
+		buffer.writeHexString(payload.vacant_d2d_controller_settings.d2d_controller_command, 2);
+		if (payload.vacant_d2d_controller_settings.d2d_controller_command_valid_time < 1 || payload.vacant_d2d_controller_settings.d2d_controller_command_valid_time > 1440) {
+			throw betweenError('vacant_d2d_controller_settings.d2d_controller_command_valid_time', 1, 1440);
+		}
+		buffer.writeUInt16LE(payload.vacant_d2d_controller_settings.d2d_controller_command_valid_time);
+		if ([0, 1].indexOf(payload.vacant_d2d_controller_settings.d2d_controller_command_valid_time_enable) === -1) {
+			throw oneOfError('vacant_d2d_controller_settings.d2d_controller_command_valid_time_enable', [0, 1]);
 		}
 		// 0：disable, 1：enable
-		buffer.writeUInt8(payload.region_vacant_d2d_controller_settings.d2d_controller_lora_enable);
-		buffer.writeHexString(payload.region_vacant_d2d_controller_settings.d2d_controller_command, 2);
-		if (payload.region_vacant_d2d_controller_settings.d2d_controller_command_valid_time < 1 || payload.region_vacant_d2d_controller_settings.d2d_controller_command_valid_time > 1440) {
-			throw betweenError('region_vacant_d2d_controller_settings.d2d_controller_command_valid_time', 1, 1440);
-		}
-		buffer.writeUInt16LE(payload.region_vacant_d2d_controller_settings.d2d_controller_command_valid_time);
-		if ([0, 1].indexOf(payload.region_vacant_d2d_controller_settings.d2d_controller_command_valid_time_enable) === -1) {
-			throw oneOfError('region_vacant_d2d_controller_settings.d2d_controller_command_valid_time_enable', [0, 1]);
+		buffer.writeUInt8(payload.vacant_d2d_controller_settings.d2d_controller_command_valid_time_enable);
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0xff_0x96 // people_change_d2d_controller_settings.d2d_controller_lora_enable
+	if ('people_change_d2d_controller_settings' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0xff);
+		buffer.writeUInt8(0x96);
+		// 3：People Number  Change
+		buffer.writeUInt8(0x03);
+		if ([0, 1].indexOf(payload.people_change_d2d_controller_settings.d2d_controller_idle_enable) === -1) {
+			throw oneOfError('people_change_d2d_controller_settings.d2d_controller_idle_enable', [0, 1]);
 		}
 		// 0：disable, 1：enable
-		buffer.writeUInt8(payload.region_vacant_d2d_controller_settings.d2d_controller_command_valid_time_enable);
+		buffer.writeUInt8(payload.people_change_d2d_controller_settings.d2d_controller_idle_enable);
+		// 0：disable, 1：enable
+		buffer.writeUInt8(0x00);
+		buffer.writeHexString(payload.people_change_d2d_controller_settings.d2d_controller_command, 2);
+		if (payload.people_change_d2d_controller_settings.d2d_controller_command_valid_time < 1 || payload.people_change_d2d_controller_settings.d2d_controller_command_valid_time > 1440) {
+			throw betweenError('people_change_d2d_controller_settings.d2d_controller_command_valid_time', 1, 1440);
+		}
+		buffer.writeUInt16LE(payload.people_change_d2d_controller_settings.d2d_controller_command_valid_time);
+		if ([0, 1].indexOf(payload.people_change_d2d_controller_settings.d2d_controller_command_valid_time_enable) === -1) {
+			throw oneOfError('people_change_d2d_controller_settings.d2d_controller_command_valid_time_enable', [0, 1]);
+		}
+		// 0：disable, 1：enable
+		buffer.writeUInt8(payload.people_change_d2d_controller_settings.d2d_controller_command_valid_time_enable);
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0xff_0x96 // region1_occupied_d2d_controller_settings.d2d_controller_lora_enable
+	if ('region1_occupied_d2d_controller_settings' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0xff);
+		buffer.writeUInt8(0x96);
+		// 1：region 1 occupied
+		buffer.writeUInt8(0x01);
+		if ([0, 1].indexOf(payload.region1_occupied_d2d_controller_settings.d2d_controller_occupied_brightness_enable) === -1) {
+			throw oneOfError('region1_occupied_d2d_controller_settings.d2d_controller_occupied_brightness_enable', [0, 1]);
+		}
+		// 0：disable, 1：enable
+		buffer.writeUInt8(payload.region1_occupied_d2d_controller_settings.d2d_controller_occupied_brightness_enable);
+		// 0：disable, 1：enable
+		buffer.writeUInt8(0x00);
+		buffer.writeHexString(payload.region1_occupied_d2d_controller_settings.d2d_controller_command, 2);
+		if (payload.region1_occupied_d2d_controller_settings.d2d_controller_command_valid_time < 1 || payload.region1_occupied_d2d_controller_settings.d2d_controller_command_valid_time > 1440) {
+			throw betweenError('region1_occupied_d2d_controller_settings.d2d_controller_command_valid_time', 1, 1440);
+		}
+		buffer.writeUInt16LE(payload.region1_occupied_d2d_controller_settings.d2d_controller_command_valid_time);
+		if ([0, 1].indexOf(payload.region1_occupied_d2d_controller_settings.d2d_controller_command_valid_time_enable) === -1) {
+			throw oneOfError('region1_occupied_d2d_controller_settings.d2d_controller_command_valid_time_enable', [0, 1]);
+		}
+		// 0：disable, 1：enable
+		buffer.writeUInt8(payload.region1_occupied_d2d_controller_settings.d2d_controller_command_valid_time_enable);
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0xff_0x96 // region1_vacant_d2d_controller_settings.d2d_controller_lora_enable
+	if ('region1_vacant_d2d_controller_settings' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0xff);
+		buffer.writeUInt8(0x96);
+		// 2：region 1 vacant
+		buffer.writeUInt8(0x02);
+		if ([0, 1].indexOf(payload.region1_vacant_d2d_controller_settings.d2d_controller_occupied_dusky_enable) === -1) {
+			throw oneOfError('region1_vacant_d2d_controller_settings.d2d_controller_occupied_dusky_enable', [0, 1]);
+		}
+		// 0：disable, 1：enable
+		buffer.writeUInt8(payload.region1_vacant_d2d_controller_settings.d2d_controller_occupied_dusky_enable);
+		// 0：disable, 1：enable
+		buffer.writeUInt8(0x00);
+		buffer.writeHexString(payload.region1_vacant_d2d_controller_settings.d2d_controller_command, 2);
+		if (payload.region1_vacant_d2d_controller_settings.d2d_controller_command_valid_time < 1 || payload.region1_vacant_d2d_controller_settings.d2d_controller_command_valid_time > 1440) {
+			throw betweenError('region1_vacant_d2d_controller_settings.d2d_controller_command_valid_time', 1, 1440);
+		}
+		buffer.writeUInt16LE(payload.region1_vacant_d2d_controller_settings.d2d_controller_command_valid_time);
+		if ([0, 1].indexOf(payload.region1_vacant_d2d_controller_settings.d2d_controller_command_valid_time_enable) === -1) {
+			throw oneOfError('region1_vacant_d2d_controller_settings.d2d_controller_command_valid_time_enable', [0, 1]);
+		}
+		// 0：disable, 1：enable
+		buffer.writeUInt8(payload.region1_vacant_d2d_controller_settings.d2d_controller_command_valid_time_enable);
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0xff_0x96 // region2_occupied_d2d_controller_settings.d2d_controller_lora_enable
+	if ('region2_occupied_d2d_controller_settings' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0xff);
+		buffer.writeUInt8(0x96);
+		// 3：region 2 occupied
+		buffer.writeUInt8(0x03);
+		if ([0, 1].indexOf(payload.region2_occupied_d2d_controller_settings.d2d_controller_occupied_brightness_enable) === -1) {
+			throw oneOfError('region2_occupied_d2d_controller_settings.d2d_controller_occupied_brightness_enable', [0, 1]);
+		}
+		// 0：disable, 1：enable
+		buffer.writeUInt8(payload.region2_occupied_d2d_controller_settings.d2d_controller_occupied_brightness_enable);
+		// 0：disable, 1：enable
+		buffer.writeUInt8(0x00);
+		buffer.writeHexString(payload.region2_occupied_d2d_controller_settings.d2d_controller_command, 2);
+		if (payload.region2_occupied_d2d_controller_settings.d2d_controller_command_valid_time < 1 || payload.region2_occupied_d2d_controller_settings.d2d_controller_command_valid_time > 1440) {
+			throw betweenError('region2_occupied_d2d_controller_settings.d2d_controller_command_valid_time', 1, 1440);
+		}
+		buffer.writeUInt16LE(payload.region2_occupied_d2d_controller_settings.d2d_controller_command_valid_time);
+		if ([0, 1].indexOf(payload.region2_occupied_d2d_controller_settings.d2d_controller_command_valid_time_enable) === -1) {
+			throw oneOfError('region2_occupied_d2d_controller_settings.d2d_controller_command_valid_time_enable', [0, 1]);
+		}
+		// 0：disable, 1：enable
+		buffer.writeUInt8(payload.region2_occupied_d2d_controller_settings.d2d_controller_command_valid_time_enable);
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0xff_0x96 // region2_vacant_d2d_controller_settings.d2d_controller_lora_enable
+	if ('region2_vacant_d2d_controller_settings' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0xff);
+		buffer.writeUInt8(0x96);
+		// 4：region 2 vacant
+		buffer.writeUInt8(0x04);
+		if ([0, 1].indexOf(payload.region2_vacant_d2d_controller_settings.d2d_controller_occupied_dusky_enable) === -1) {
+			throw oneOfError('region2_vacant_d2d_controller_settings.d2d_controller_occupied_dusky_enable', [0, 1]);
+		}
+		// 0：disable, 1：enable
+		buffer.writeUInt8(payload.region2_vacant_d2d_controller_settings.d2d_controller_occupied_dusky_enable);
+		// 0：disable, 1：enable
+		buffer.writeUInt8(0x00);
+		buffer.writeHexString(payload.region2_vacant_d2d_controller_settings.d2d_controller_command, 2);
+		if (payload.region2_vacant_d2d_controller_settings.d2d_controller_command_valid_time < 1 || payload.region2_vacant_d2d_controller_settings.d2d_controller_command_valid_time > 1440) {
+			throw betweenError('region2_vacant_d2d_controller_settings.d2d_controller_command_valid_time', 1, 1440);
+		}
+		buffer.writeUInt16LE(payload.region2_vacant_d2d_controller_settings.d2d_controller_command_valid_time);
+		if ([0, 1].indexOf(payload.region2_vacant_d2d_controller_settings.d2d_controller_command_valid_time_enable) === -1) {
+			throw oneOfError('region2_vacant_d2d_controller_settings.d2d_controller_command_valid_time_enable', [0, 1]);
+		}
+		// 0：disable, 1：enable
+		buffer.writeUInt8(payload.region2_vacant_d2d_controller_settings.d2d_controller_command_valid_time_enable);
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0xff_0x96 // region3_occupied_d2d_controller_settings.d2d_controller_lora_enable
+	if ('region3_occupied_d2d_controller_settings' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0xff);
+		buffer.writeUInt8(0x96);
+		// 5：region 3 occupied
+		buffer.writeUInt8(0x05);
+		if ([0, 1].indexOf(payload.region3_occupied_d2d_controller_settings.d2d_controller_occupied_brightness_enable) === -1) {
+			throw oneOfError('region3_occupied_d2d_controller_settings.d2d_controller_occupied_brightness_enable', [0, 1]);
+		}
+		// 0：disable, 1：enable
+		buffer.writeUInt8(payload.region3_occupied_d2d_controller_settings.d2d_controller_occupied_brightness_enable);
+		// 0：disable, 1：enable
+		buffer.writeUInt8(0x00);
+		buffer.writeHexString(payload.region3_occupied_d2d_controller_settings.d2d_controller_command, 2);
+		if (payload.region3_occupied_d2d_controller_settings.d2d_controller_command_valid_time < 1 || payload.region3_occupied_d2d_controller_settings.d2d_controller_command_valid_time > 1440) {
+			throw betweenError('region3_occupied_d2d_controller_settings.d2d_controller_command_valid_time', 1, 1440);
+		}
+		buffer.writeUInt16LE(payload.region3_occupied_d2d_controller_settings.d2d_controller_command_valid_time);
+		if ([0, 1].indexOf(payload.region3_occupied_d2d_controller_settings.d2d_controller_command_valid_time_enable) === -1) {
+			throw oneOfError('region3_occupied_d2d_controller_settings.d2d_controller_command_valid_time_enable', [0, 1]);
+		}
+		// 0：disable, 1：enable
+		buffer.writeUInt8(payload.region3_occupied_d2d_controller_settings.d2d_controller_command_valid_time_enable);
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0xff_0x96 // region3_vacant_d2d_controller_settings.d2d_controller_lora_enable
+	if ('region3_vacant_d2d_controller_settings' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0xff);
+		buffer.writeUInt8(0x96);
+		// 6：region 3 vacant
+		buffer.writeUInt8(0x06);
+		if ([0, 1].indexOf(payload.region3_vacant_d2d_controller_settings.d2d_controller_occupied_dusky_enable) === -1) {
+			throw oneOfError('region3_vacant_d2d_controller_settings.d2d_controller_occupied_dusky_enable', [0, 1]);
+		}
+		// 0：disable, 1：enable
+		buffer.writeUInt8(payload.region3_vacant_d2d_controller_settings.d2d_controller_occupied_dusky_enable);
+		// 0：disable, 1：enable
+		buffer.writeUInt8(0x00);
+		buffer.writeHexString(payload.region3_vacant_d2d_controller_settings.d2d_controller_command, 2);
+		if (payload.region3_vacant_d2d_controller_settings.d2d_controller_command_valid_time < 1 || payload.region3_vacant_d2d_controller_settings.d2d_controller_command_valid_time > 1440) {
+			throw betweenError('region3_vacant_d2d_controller_settings.d2d_controller_command_valid_time', 1, 1440);
+		}
+		buffer.writeUInt16LE(payload.region3_vacant_d2d_controller_settings.d2d_controller_command_valid_time);
+		if ([0, 1].indexOf(payload.region3_vacant_d2d_controller_settings.d2d_controller_command_valid_time_enable) === -1) {
+			throw oneOfError('region3_vacant_d2d_controller_settings.d2d_controller_command_valid_time_enable', [0, 1]);
+		}
+		// 0：disable, 1：enable
+		buffer.writeUInt8(payload.region3_vacant_d2d_controller_settings.d2d_controller_command_valid_time_enable);
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0xff_0x96 // region4_occupied_d2d_controller_settings.d2d_controller_lora_enable
+	if ('region4_occupied_d2d_controller_settings' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0xff);
+		buffer.writeUInt8(0x96);
+		// 7：region 4 occupied
+		buffer.writeUInt8(0x07);
+		if ([0, 1].indexOf(payload.region4_occupied_d2d_controller_settings.d2d_controller_occupied_brightness_enable) === -1) {
+			throw oneOfError('region4_occupied_d2d_controller_settings.d2d_controller_occupied_brightness_enable', [0, 1]);
+		}
+		// 0：disable, 1：enable
+		buffer.writeUInt8(payload.region4_occupied_d2d_controller_settings.d2d_controller_occupied_brightness_enable);
+		// 0：disable, 1：enable
+		buffer.writeUInt8(0x00);
+		buffer.writeHexString(payload.region4_occupied_d2d_controller_settings.d2d_controller_command, 2);
+		if (payload.region4_occupied_d2d_controller_settings.d2d_controller_command_valid_time < 1 || payload.region4_occupied_d2d_controller_settings.d2d_controller_command_valid_time > 1440) {
+			throw betweenError('region4_occupied_d2d_controller_settings.d2d_controller_command_valid_time', 1, 1440);
+		}
+		buffer.writeUInt16LE(payload.region4_occupied_d2d_controller_settings.d2d_controller_command_valid_time);
+		if ([0, 1].indexOf(payload.region4_occupied_d2d_controller_settings.d2d_controller_command_valid_time_enable) === -1) {
+			throw oneOfError('region4_occupied_d2d_controller_settings.d2d_controller_command_valid_time_enable', [0, 1]);
+		}
+		// 0：disable, 1：enable
+		buffer.writeUInt8(payload.region4_occupied_d2d_controller_settings.d2d_controller_command_valid_time_enable);
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0xff_0x96 // region4_vacant_d2d_controller_settings.d2d_controller_lora_enable
+	if ('region4_vacant_d2d_controller_settings' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0xff);
+		buffer.writeUInt8(0x96);
+		// 8：region 4 vacant
+		buffer.writeUInt8(0x08);
+		if ([0, 1].indexOf(payload.region4_vacant_d2d_controller_settings.d2d_controller_occupied_dusky_enable) === -1) {
+			throw oneOfError('region4_vacant_d2d_controller_settings.d2d_controller_occupied_dusky_enable', [0, 1]);
+		}
+		// 0：disable, 1：enable
+		buffer.writeUInt8(payload.region4_vacant_d2d_controller_settings.d2d_controller_occupied_dusky_enable);
+		// 0：disable, 1：enable
+		buffer.writeUInt8(0x00);
+		buffer.writeHexString(payload.region4_vacant_d2d_controller_settings.d2d_controller_command, 2);
+		if (payload.region4_vacant_d2d_controller_settings.d2d_controller_command_valid_time < 1 || payload.region4_vacant_d2d_controller_settings.d2d_controller_command_valid_time > 1440) {
+			throw betweenError('region4_vacant_d2d_controller_settings.d2d_controller_command_valid_time', 1, 1440);
+		}
+		buffer.writeUInt16LE(payload.region4_vacant_d2d_controller_settings.d2d_controller_command_valid_time);
+		if ([0, 1].indexOf(payload.region4_vacant_d2d_controller_settings.d2d_controller_command_valid_time_enable) === -1) {
+			throw oneOfError('region4_vacant_d2d_controller_settings.d2d_controller_command_valid_time_enable', [0, 1]);
+		}
+		// 0：disable, 1：enable
+		buffer.writeUInt8(payload.region4_vacant_d2d_controller_settings.d2d_controller_command_valid_time_enable);
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0xff_0x96 // region5_occupied_d2d_controller_settings.d2d_controller_lora_enable
+	if ('region5_occupied_d2d_controller_settings' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0xff);
+		buffer.writeUInt8(0x96);
+		// 9：region 5 occupied
+		buffer.writeUInt8(0x09);
+		if ([0, 1].indexOf(payload.region5_occupied_d2d_controller_settings.d2d_controller_occupied_brightness_enable) === -1) {
+			throw oneOfError('region5_occupied_d2d_controller_settings.d2d_controller_occupied_brightness_enable', [0, 1]);
+		}
+		// 0：disable, 1：enable
+		buffer.writeUInt8(payload.region5_occupied_d2d_controller_settings.d2d_controller_occupied_brightness_enable);
+		// 0：disable, 1：enable
+		buffer.writeUInt8(0x00);
+		buffer.writeHexString(payload.region5_occupied_d2d_controller_settings.d2d_controller_command, 2);
+		if (payload.region5_occupied_d2d_controller_settings.d2d_controller_command_valid_time < 1 || payload.region5_occupied_d2d_controller_settings.d2d_controller_command_valid_time > 1440) {
+			throw betweenError('region5_occupied_d2d_controller_settings.d2d_controller_command_valid_time', 1, 1440);
+		}
+		buffer.writeUInt16LE(payload.region5_occupied_d2d_controller_settings.d2d_controller_command_valid_time);
+		if ([0, 1].indexOf(payload.region5_occupied_d2d_controller_settings.d2d_controller_command_valid_time_enable) === -1) {
+			throw oneOfError('region5_occupied_d2d_controller_settings.d2d_controller_command_valid_time_enable', [0, 1]);
+		}
+		// 0：disable, 1：enable
+		buffer.writeUInt8(payload.region5_occupied_d2d_controller_settings.d2d_controller_command_valid_time_enable);
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0xff_0x96 // region5_vacant_d2d_controller_settings.d2d_controller_lora_enable
+	if ('region5_vacant_d2d_controller_settings' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0xff);
+		buffer.writeUInt8(0x96);
+		// 10：region 5 vacant
+		buffer.writeUInt8(0x0a);
+		if ([0, 1].indexOf(payload.region5_vacant_d2d_controller_settings.d2d_controller_occupied_dusky_enable) === -1) {
+			throw oneOfError('region5_vacant_d2d_controller_settings.d2d_controller_occupied_dusky_enable', [0, 1]);
+		}
+		// 0：disable, 1：enable
+		buffer.writeUInt8(payload.region5_vacant_d2d_controller_settings.d2d_controller_occupied_dusky_enable);
+		// 0：disable, 1：enable
+		buffer.writeUInt8(0x00);
+		buffer.writeHexString(payload.region5_vacant_d2d_controller_settings.d2d_controller_command, 2);
+		if (payload.region5_vacant_d2d_controller_settings.d2d_controller_command_valid_time < 1 || payload.region5_vacant_d2d_controller_settings.d2d_controller_command_valid_time > 1440) {
+			throw betweenError('region5_vacant_d2d_controller_settings.d2d_controller_command_valid_time', 1, 1440);
+		}
+		buffer.writeUInt16LE(payload.region5_vacant_d2d_controller_settings.d2d_controller_command_valid_time);
+		if ([0, 1].indexOf(payload.region5_vacant_d2d_controller_settings.d2d_controller_command_valid_time_enable) === -1) {
+			throw oneOfError('region5_vacant_d2d_controller_settings.d2d_controller_command_valid_time_enable', [0, 1]);
+		}
+		// 0：disable, 1：enable
+		buffer.writeUInt8(payload.region5_vacant_d2d_controller_settings.d2d_controller_command_valid_time_enable);
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0xff_0x96 // region6_occupied_d2d_controller_settings.d2d_controller_lora_enable
+	if ('region6_occupied_d2d_controller_settings' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0xff);
+		buffer.writeUInt8(0x96);
+		// 11：region 6 occupied
+		buffer.writeUInt8(0x0b);
+		if ([0, 1].indexOf(payload.region6_occupied_d2d_controller_settings.d2d_controller_occupied_brightness_enable) === -1) {
+			throw oneOfError('region6_occupied_d2d_controller_settings.d2d_controller_occupied_brightness_enable', [0, 1]);
+		}
+		// 0：disable, 1：enable
+		buffer.writeUInt8(payload.region6_occupied_d2d_controller_settings.d2d_controller_occupied_brightness_enable);
+		// 0：disable, 1：enable
+		buffer.writeUInt8(0x00);
+		buffer.writeHexString(payload.region6_occupied_d2d_controller_settings.d2d_controller_command, 2);
+		if (payload.region6_occupied_d2d_controller_settings.d2d_controller_command_valid_time < 1 || payload.region6_occupied_d2d_controller_settings.d2d_controller_command_valid_time > 1440) {
+			throw betweenError('region6_occupied_d2d_controller_settings.d2d_controller_command_valid_time', 1, 1440);
+		}
+		buffer.writeUInt16LE(payload.region6_occupied_d2d_controller_settings.d2d_controller_command_valid_time);
+		if ([0, 1].indexOf(payload.region6_occupied_d2d_controller_settings.d2d_controller_command_valid_time_enable) === -1) {
+			throw oneOfError('region6_occupied_d2d_controller_settings.d2d_controller_command_valid_time_enable', [0, 1]);
+		}
+		// 0：disable, 1：enable
+		buffer.writeUInt8(payload.region6_occupied_d2d_controller_settings.d2d_controller_command_valid_time_enable);
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0xff_0x96 // region6_vacant_d2d_controller_settings.d2d_controller_lora_enable
+	if ('region6_vacant_d2d_controller_settings' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0xff);
+		buffer.writeUInt8(0x96);
+		// 12：region 6 vacant
+		buffer.writeUInt8(0x0c);
+		if ([0, 1].indexOf(payload.region6_vacant_d2d_controller_settings.d2d_controller_occupied_dusky_enable) === -1) {
+			throw oneOfError('region6_vacant_d2d_controller_settings.d2d_controller_occupied_dusky_enable', [0, 1]);
+		}
+		// 0：disable, 1：enable
+		buffer.writeUInt8(payload.region6_vacant_d2d_controller_settings.d2d_controller_occupied_dusky_enable);
+		// 0：disable, 1：enable
+		buffer.writeUInt8(0x00);
+		buffer.writeHexString(payload.region6_vacant_d2d_controller_settings.d2d_controller_command, 2);
+		if (payload.region6_vacant_d2d_controller_settings.d2d_controller_command_valid_time < 1 || payload.region6_vacant_d2d_controller_settings.d2d_controller_command_valid_time > 1440) {
+			throw betweenError('region6_vacant_d2d_controller_settings.d2d_controller_command_valid_time', 1, 1440);
+		}
+		buffer.writeUInt16LE(payload.region6_vacant_d2d_controller_settings.d2d_controller_command_valid_time);
+		if ([0, 1].indexOf(payload.region6_vacant_d2d_controller_settings.d2d_controller_command_valid_time_enable) === -1) {
+			throw oneOfError('region6_vacant_d2d_controller_settings.d2d_controller_command_valid_time_enable', [0, 1]);
+		}
+		// 0：disable, 1：enable
+		buffer.writeUInt8(payload.region6_vacant_d2d_controller_settings.d2d_controller_command_valid_time_enable);
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0xff_0x96 // region7_occupied_d2d_controller_settings.d2d_controller_lora_enable
+	if ('region7_occupied_d2d_controller_settings' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0xff);
+		buffer.writeUInt8(0x96);
+		// 13：region 7 occupied
+		buffer.writeUInt8(0x0d);
+		if ([0, 1].indexOf(payload.region7_occupied_d2d_controller_settings.d2d_controller_occupied_brightness_enable) === -1) {
+			throw oneOfError('region7_occupied_d2d_controller_settings.d2d_controller_occupied_brightness_enable', [0, 1]);
+		}
+		// 0：disable, 1：enable
+		buffer.writeUInt8(payload.region7_occupied_d2d_controller_settings.d2d_controller_occupied_brightness_enable);
+		// 0：disable, 1：enable
+		buffer.writeUInt8(0x00);
+		buffer.writeHexString(payload.region7_occupied_d2d_controller_settings.d2d_controller_command, 2);
+		if (payload.region7_occupied_d2d_controller_settings.d2d_controller_command_valid_time < 1 || payload.region7_occupied_d2d_controller_settings.d2d_controller_command_valid_time > 1440) {
+			throw betweenError('region7_occupied_d2d_controller_settings.d2d_controller_command_valid_time', 1, 1440);
+		}
+		buffer.writeUInt16LE(payload.region7_occupied_d2d_controller_settings.d2d_controller_command_valid_time);
+		if ([0, 1].indexOf(payload.region7_occupied_d2d_controller_settings.d2d_controller_command_valid_time_enable) === -1) {
+			throw oneOfError('region7_occupied_d2d_controller_settings.d2d_controller_command_valid_time_enable', [0, 1]);
+		}
+		// 0：disable, 1：enable
+		buffer.writeUInt8(payload.region7_occupied_d2d_controller_settings.d2d_controller_command_valid_time_enable);
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0xff_0x96 // region7_vacant_d2d_controller_settings.d2d_controller_lora_enable
+	if ('region7_vacant_d2d_controller_settings' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0xff);
+		buffer.writeUInt8(0x96);
+		// 14：region 7 vacant
+		buffer.writeUInt8(0x0e);
+		if ([0, 1].indexOf(payload.region7_vacant_d2d_controller_settings.d2d_controller_occupied_dusky_enable) === -1) {
+			throw oneOfError('region7_vacant_d2d_controller_settings.d2d_controller_occupied_dusky_enable', [0, 1]);
+		}
+		// 0：disable, 1：enable
+		buffer.writeUInt8(payload.region7_vacant_d2d_controller_settings.d2d_controller_occupied_dusky_enable);
+		// 0：disable, 1：enable
+		buffer.writeUInt8(0x00);
+		buffer.writeHexString(payload.region7_vacant_d2d_controller_settings.d2d_controller_command, 2);
+		if (payload.region7_vacant_d2d_controller_settings.d2d_controller_command_valid_time < 1 || payload.region7_vacant_d2d_controller_settings.d2d_controller_command_valid_time > 1440) {
+			throw betweenError('region7_vacant_d2d_controller_settings.d2d_controller_command_valid_time', 1, 1440);
+		}
+		buffer.writeUInt16LE(payload.region7_vacant_d2d_controller_settings.d2d_controller_command_valid_time);
+		if ([0, 1].indexOf(payload.region7_vacant_d2d_controller_settings.d2d_controller_command_valid_time_enable) === -1) {
+			throw oneOfError('region7_vacant_d2d_controller_settings.d2d_controller_command_valid_time_enable', [0, 1]);
+		}
+		// 0：disable, 1：enable
+		buffer.writeUInt8(payload.region7_vacant_d2d_controller_settings.d2d_controller_command_valid_time_enable);
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0xff_0x96 // region8_occupied_d2d_controller_settings.d2d_controller_lora_enable
+	if ('region8_occupied_d2d_controller_settings' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0xff);
+		buffer.writeUInt8(0x96);
+		// 15：region 8 occupied
+		buffer.writeUInt8(0x0f);
+		if ([0, 1].indexOf(payload.region8_occupied_d2d_controller_settings.d2d_controller_occupied_brightness_enable) === -1) {
+			throw oneOfError('region8_occupied_d2d_controller_settings.d2d_controller_occupied_brightness_enable', [0, 1]);
+		}
+		// 0：disable, 1：enable
+		buffer.writeUInt8(payload.region8_occupied_d2d_controller_settings.d2d_controller_occupied_brightness_enable);
+		// 0：disable, 1：enable
+		buffer.writeUInt8(0x00);
+		buffer.writeHexString(payload.region8_occupied_d2d_controller_settings.d2d_controller_command, 2);
+		if (payload.region8_occupied_d2d_controller_settings.d2d_controller_command_valid_time < 1 || payload.region8_occupied_d2d_controller_settings.d2d_controller_command_valid_time > 1440) {
+			throw betweenError('region8_occupied_d2d_controller_settings.d2d_controller_command_valid_time', 1, 1440);
+		}
+		buffer.writeUInt16LE(payload.region8_occupied_d2d_controller_settings.d2d_controller_command_valid_time);
+		if ([0, 1].indexOf(payload.region8_occupied_d2d_controller_settings.d2d_controller_command_valid_time_enable) === -1) {
+			throw oneOfError('region8_occupied_d2d_controller_settings.d2d_controller_command_valid_time_enable', [0, 1]);
+		}
+		// 0：disable, 1：enable
+		buffer.writeUInt8(payload.region8_occupied_d2d_controller_settings.d2d_controller_command_valid_time_enable);
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0xff_0x96 // region8_vacant_d2d_controller_settings.d2d_controller_lora_enable
+	if ('region8_vacant_d2d_controller_settings' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0xff);
+		buffer.writeUInt8(0x96);
+		// 16：region 8 vacant
+		buffer.writeUInt8(0x10);
+		if ([0, 1].indexOf(payload.region8_vacant_d2d_controller_settings.d2d_controller_occupied_dusky_enable) === -1) {
+			throw oneOfError('region8_vacant_d2d_controller_settings.d2d_controller_occupied_dusky_enable', [0, 1]);
+		}
+		// 0：disable, 1：enable
+		buffer.writeUInt8(payload.region8_vacant_d2d_controller_settings.d2d_controller_occupied_dusky_enable);
+		// 0：disable, 1：enable
+		buffer.writeUInt8(0x00);
+		buffer.writeHexString(payload.region8_vacant_d2d_controller_settings.d2d_controller_command, 2);
+		if (payload.region8_vacant_d2d_controller_settings.d2d_controller_command_valid_time < 1 || payload.region8_vacant_d2d_controller_settings.d2d_controller_command_valid_time > 1440) {
+			throw betweenError('region8_vacant_d2d_controller_settings.d2d_controller_command_valid_time', 1, 1440);
+		}
+		buffer.writeUInt16LE(payload.region8_vacant_d2d_controller_settings.d2d_controller_command_valid_time);
+		if ([0, 1].indexOf(payload.region8_vacant_d2d_controller_settings.d2d_controller_command_valid_time_enable) === -1) {
+			throw oneOfError('region8_vacant_d2d_controller_settings.d2d_controller_command_valid_time_enable', [0, 1]);
+		}
+		// 0：disable, 1：enable
+		buffer.writeUInt8(payload.region8_vacant_d2d_controller_settings.d2d_controller_command_valid_time_enable);
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0xff_0x96 // region9_occupied_d2d_controller_settings.d2d_controller_lora_enable
+	if ('region9_occupied_d2d_controller_settings' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0xff);
+		buffer.writeUInt8(0x96);
+		// 17：region 9 occupied
+		buffer.writeUInt8(0x11);
+		if ([0, 1].indexOf(payload.region9_occupied_d2d_controller_settings.d2d_controller_occupied_brightness_enable) === -1) {
+			throw oneOfError('region9_occupied_d2d_controller_settings.d2d_controller_occupied_brightness_enable', [0, 1]);
+		}
+		// 0：disable, 1：enable
+		buffer.writeUInt8(payload.region9_occupied_d2d_controller_settings.d2d_controller_occupied_brightness_enable);
+		// 0：disable, 1：enable
+		buffer.writeUInt8(0x00);
+		buffer.writeHexString(payload.region9_occupied_d2d_controller_settings.d2d_controller_command, 2);
+		if (payload.region9_occupied_d2d_controller_settings.d2d_controller_command_valid_time < 1 || payload.region9_occupied_d2d_controller_settings.d2d_controller_command_valid_time > 1440) {
+			throw betweenError('region9_occupied_d2d_controller_settings.d2d_controller_command_valid_time', 1, 1440);
+		}
+		buffer.writeUInt16LE(payload.region9_occupied_d2d_controller_settings.d2d_controller_command_valid_time);
+		if ([0, 1].indexOf(payload.region9_occupied_d2d_controller_settings.d2d_controller_command_valid_time_enable) === -1) {
+			throw oneOfError('region9_occupied_d2d_controller_settings.d2d_controller_command_valid_time_enable', [0, 1]);
+		}
+		// 0：disable, 1：enable
+		buffer.writeUInt8(payload.region9_occupied_d2d_controller_settings.d2d_controller_command_valid_time_enable);
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0xff_0x96 // region9_vacant_d2d_controller_settings.d2d_controller_lora_enable
+	if ('region9_vacant_d2d_controller_settings' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0xff);
+		buffer.writeUInt8(0x96);
+		// 18：region 9 vacant
+		buffer.writeUInt8(0x12);
+		if ([0, 1].indexOf(payload.region9_vacant_d2d_controller_settings.d2d_controller_occupied_dusky_enable) === -1) {
+			throw oneOfError('region9_vacant_d2d_controller_settings.d2d_controller_occupied_dusky_enable', [0, 1]);
+		}
+		// 0：disable, 1：enable
+		buffer.writeUInt8(payload.region9_vacant_d2d_controller_settings.d2d_controller_occupied_dusky_enable);
+		// 0：disable, 1：enable
+		buffer.writeUInt8(0x00);
+		buffer.writeHexString(payload.region9_vacant_d2d_controller_settings.d2d_controller_command, 2);
+		if (payload.region9_vacant_d2d_controller_settings.d2d_controller_command_valid_time < 1 || payload.region9_vacant_d2d_controller_settings.d2d_controller_command_valid_time > 1440) {
+			throw betweenError('region9_vacant_d2d_controller_settings.d2d_controller_command_valid_time', 1, 1440);
+		}
+		buffer.writeUInt16LE(payload.region9_vacant_d2d_controller_settings.d2d_controller_command_valid_time);
+		if ([0, 1].indexOf(payload.region9_vacant_d2d_controller_settings.d2d_controller_command_valid_time_enable) === -1) {
+			throw oneOfError('region9_vacant_d2d_controller_settings.d2d_controller_command_valid_time_enable', [0, 1]);
+		}
+		// 0：disable, 1：enable
+		buffer.writeUInt8(payload.region9_vacant_d2d_controller_settings.d2d_controller_command_valid_time_enable);
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0xff_0x96 // region10_occupied_d2d_controller_settings.d2d_controller_lora_enable
+	if ('region10_occupied_d2d_controller_settings' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0xff);
+		buffer.writeUInt8(0x96);
+		// 19：region 10 occupied
+		buffer.writeUInt8(0x13);
+		if ([0, 1].indexOf(payload.region10_occupied_d2d_controller_settings.d2d_controller_occupied_brightness_enable) === -1) {
+			throw oneOfError('region10_occupied_d2d_controller_settings.d2d_controller_occupied_brightness_enable', [0, 1]);
+		}
+		// 0：disable, 1：enable
+		buffer.writeUInt8(payload.region10_occupied_d2d_controller_settings.d2d_controller_occupied_brightness_enable);
+		// 0：disable, 1：enable
+		buffer.writeUInt8(0x00);
+		buffer.writeHexString(payload.region10_occupied_d2d_controller_settings.d2d_controller_command, 2);
+		if (payload.region10_occupied_d2d_controller_settings.d2d_controller_command_valid_time < 1 || payload.region10_occupied_d2d_controller_settings.d2d_controller_command_valid_time > 1440) {
+			throw betweenError('region10_occupied_d2d_controller_settings.d2d_controller_command_valid_time', 1, 1440);
+		}
+		buffer.writeUInt16LE(payload.region10_occupied_d2d_controller_settings.d2d_controller_command_valid_time);
+		if ([0, 1].indexOf(payload.region10_occupied_d2d_controller_settings.d2d_controller_command_valid_time_enable) === -1) {
+			throw oneOfError('region10_occupied_d2d_controller_settings.d2d_controller_command_valid_time_enable', [0, 1]);
+		}
+		// 0：disable, 1：enable
+		buffer.writeUInt8(payload.region10_occupied_d2d_controller_settings.d2d_controller_command_valid_time_enable);
+		encoded = encoded.concat(buffer.toBytes());
+	}
+	//0xff_0x96 // region10_vacant_d2d_controller_settings.d2d_controller_lora_enable
+	if ('region10_vacant_d2d_controller_settings' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0xff);
+		buffer.writeUInt8(0x96);
+		// 20：region 10 vacant
+		buffer.writeUInt8(0x14);
+		if ([0, 1].indexOf(payload.region10_vacant_d2d_controller_settings.d2d_controller_occupied_dusky_enable) === -1) {
+			throw oneOfError('region10_vacant_d2d_controller_settings.d2d_controller_occupied_dusky_enable', [0, 1]);
+		}
+		// 0：disable, 1：enable
+		buffer.writeUInt8(payload.region10_vacant_d2d_controller_settings.d2d_controller_occupied_dusky_enable);
+		// 0：disable, 1：enable
+		buffer.writeUInt8(0x00);
+		buffer.writeHexString(payload.region10_vacant_d2d_controller_settings.d2d_controller_command, 2);
+		if (payload.region10_vacant_d2d_controller_settings.d2d_controller_command_valid_time < 1 || payload.region10_vacant_d2d_controller_settings.d2d_controller_command_valid_time > 1440) {
+			throw betweenError('region10_vacant_d2d_controller_settings.d2d_controller_command_valid_time', 1, 1440);
+		}
+		buffer.writeUInt16LE(payload.region10_vacant_d2d_controller_settings.d2d_controller_command_valid_time);
+		if ([0, 1].indexOf(payload.region10_vacant_d2d_controller_settings.d2d_controller_command_valid_time_enable) === -1) {
+			throw oneOfError('region10_vacant_d2d_controller_settings.d2d_controller_command_valid_time_enable', [0, 1]);
+		}
+		// 0：disable, 1：enable
+		buffer.writeUInt8(payload.region10_vacant_d2d_controller_settings.d2d_controller_command_valid_time_enable);
 		encoded = encoded.concat(buffer.toBytes());
 	}
 	//0xff_0x68
@@ -234,7 +747,7 @@ function milesightDeviceEncode(payload) {
 		buffer.writeUInt8(payload.retransmission_enable);
 		encoded = encoded.concat(buffer.toBytes());
 	}
-	//0xff_0x6a // retransmission_interval.type
+	//0xff_0x6a
 	if ('retransmission_interval' in payload) {
 		var buffer = new Buffer();
 		buffer.writeUInt8(0xff);
@@ -245,435 +758,6 @@ function milesightDeviceEncode(payload) {
 			throw betweenError('retransmission_interval.interval', 30, 1200);
 		}
 		buffer.writeUInt16LE(payload.retransmission_interval.interval);
-		encoded = encoded.concat(buffer.toBytes());
-	}
-	//0xff_0x6a // retrival_interval.type
-	if ('retrival_interval' in payload) {
-		var buffer = new Buffer();
-		buffer.writeUInt8(0xff);
-		buffer.writeUInt8(0x6a);
-		// 1: retrival interval
-		buffer.writeUInt8(0x01);
-		if (payload.retrival_interval.interval < 30 || payload.retrival_interval.interval > 1200) {
-			throw betweenError('retrival_interval.interval', 30, 1200);
-		}
-		buffer.writeUInt16LE(payload.retrival_interval.interval);
-		encoded = encoded.concat(buffer.toBytes());
-	}
-	//0xf9_0x6b
-	if ('detection_mode' in payload) {
-		var buffer = new Buffer();
-		buffer.writeUInt8(0xf9);
-		buffer.writeUInt8(0x6b);
-		if ([0, 1].indexOf(payload.detection_mode) === -1) {
-			throw oneOfError('detection_mode', [0, 1]);
-		}
-		// 0：Auto, 1：Always ON
-		buffer.writeUInt8(payload.detection_mode);
-		encoded = encoded.concat(buffer.toBytes());
-	}
-	//0xf9_0x6c
-	if ('trigger_a_detection' in payload) {
-		var buffer = new Buffer();
-		buffer.writeUInt8(0xf9);
-		buffer.writeUInt8(0x6c);
-		buffer.writeUInt8(0xff);
-		encoded = encoded.concat(buffer.toBytes());
-	}
-	//0xf9_0x6e
-	if ('reset' in payload) {
-		var buffer = new Buffer();
-		buffer.writeUInt8(0xf9);
-		buffer.writeUInt8(0x6e);
-		buffer.writeUInt8(0xff);
-		encoded = encoded.concat(buffer.toBytes());
-	}
-	//0xf9_0xda
-	if ('auxiliary_occupation' in payload) {
-		var buffer = new Buffer();
-		buffer.writeUInt8(0xf9);
-		buffer.writeUInt8(0xda);
-		if ([0, 1].indexOf(payload.auxiliary_occupation) === -1) {
-			throw oneOfError('auxiliary_occupation', [0, 1]);
-		}
-		// 0:disable, 1:enable
-		buffer.writeUInt8(payload.auxiliary_occupation);
-		encoded = encoded.concat(buffer.toBytes());
-	}
-	//0xf9_0xe3
-	if ('ae_target_setting' in payload) {
-		var buffer = new Buffer();
-		buffer.writeUInt8(0xf9);
-		buffer.writeUInt8(0xe3);
-		if (payload.ae_target_setting < 1 || payload.ae_target_setting > 6) {
-			throw betweenError('ae_target_setting', 1, 6);
-		}
-		// 1: Relatively dim,  2: Slightly dim , 3: Default , 4: Relatively bright , 5: Brighter , 6: Brightest
-		buffer.writeUInt8(payload.ae_target_setting);
-		encoded = encoded.concat(buffer.toBytes());
-	}
-	//0xf9_0xdb // conference_room_occupancy_trigger_settings.id
-	if ('conference_room_occupancy_trigger_settings' in payload) {
-		var buffer = new Buffer();
-		buffer.writeUInt8(0xf9);
-		buffer.writeUInt8(0xdb);
-		// 0：occupied trigger
-		buffer.writeUInt8(0x00);
-		if ([0, 1].indexOf(payload.conference_room_occupancy_trigger_settings.control) === -1) {
-			throw oneOfError('conference_room_occupancy_trigger_settings.control', [0, 1]);
-		}
-		// 0:disable, 1:enable
-		buffer.writeUInt8(payload.conference_room_occupancy_trigger_settings.control);
-		encoded = encoded.concat(buffer.toBytes());
-	}
-	//0xf9_0xdb // conference_room_idle_trigger_settings.id
-	if ('conference_room_idle_trigger_settings' in payload) {
-		var buffer = new Buffer();
-		buffer.writeUInt8(0xf9);
-		buffer.writeUInt8(0xdb);
-		// 1：vacant trigger
-		buffer.writeUInt8(0x01);
-		if ([0, 1].indexOf(payload.conference_room_idle_trigger_settings.control) === -1) {
-			throw oneOfError('conference_room_idle_trigger_settings.control', [0, 1]);
-		}
-		// 0:disable, 1:enable
-		buffer.writeUInt8(payload.conference_room_idle_trigger_settings.control);
-		encoded = encoded.concat(buffer.toBytes());
-	}
-	//0xf9_0xdb // workstation_occupancy_trigger_settings.id
-	if ('workstation_occupancy_trigger_settings' in payload) {
-		var buffer = new Buffer();
-		buffer.writeUInt8(0xf9);
-		buffer.writeUInt8(0xdb);
-		// 0：occupied trigger
-		buffer.writeUInt8(0x00);
-		if ([0, 1].indexOf(payload.workstation_occupancy_trigger_settings.control) === -1) {
-			throw oneOfError('workstation_occupancy_trigger_settings.control', [0, 1]);
-		}
-		// 0:disable, 1:enable
-		buffer.writeUInt8(payload.workstation_occupancy_trigger_settings.control);
-		encoded = encoded.concat(buffer.toBytes());
-	}
-	//0xf9_0xdb // workstation_vacant_trigger_settings.id
-	if ('workstation_vacant_trigger_settings' in payload) {
-		var buffer = new Buffer();
-		buffer.writeUInt8(0xf9);
-		buffer.writeUInt8(0xdb);
-		// 1：vacant trigger
-		buffer.writeUInt8(0x01);
-		if ([0, 1].indexOf(payload.workstation_vacant_trigger_settings.control) === -1) {
-			throw oneOfError('workstation_vacant_trigger_settings.control', [0, 1]);
-		}
-		// 0:disable, 1:enable
-		buffer.writeUInt8(payload.workstation_vacant_trigger_settings.control);
-		encoded = encoded.concat(buffer.toBytes());
-	}
-	//0xf9_0xdb // meeting_room_person_count_change_trigger_settings.id
-	if ('meeting_room_person_count_change_trigger_settings' in payload) {
-		var buffer = new Buffer();
-		buffer.writeUInt8(0xf9);
-		buffer.writeUInt8(0xdb);
-		// 2：person count trigger
-		buffer.writeUInt8(0x02);
-		if ([0, 1].indexOf(payload.meeting_room_person_count_change_trigger_settings.control) === -1) {
-			throw oneOfError('meeting_room_person_count_change_trigger_settings.control', [0, 1]);
-		}
-		// 0:disable, 1:enable
-		buffer.writeUInt8(payload.meeting_room_person_count_change_trigger_settings.control);
-		encoded = encoded.concat(buffer.toBytes());
-	}
-	//0xf9_0xdb // pir_occupancy_trigger_settings.id
-	if ('pir_occupancy_trigger_settings' in payload) {
-		var buffer = new Buffer();
-		buffer.writeUInt8(0xf9);
-		buffer.writeUInt8(0xdb);
-		// 3：pir occupied trigger
-		buffer.writeUInt8(0x03);
-		if ([0, 1].indexOf(payload.pir_occupancy_trigger_settings.control) === -1) {
-			throw oneOfError('pir_occupancy_trigger_settings.control', [0, 1]);
-		}
-		// 0:disable, 1:enable
-		buffer.writeUInt8(payload.pir_occupancy_trigger_settings.control);
-		encoded = encoded.concat(buffer.toBytes());
-	}
-	//0xf9_0xdb // workstation_area_1_occupancy_trigger_settings.id
-	if ('workstation_area_1_occupancy_trigger_settings' in payload) {
-		var buffer = new Buffer();
-		buffer.writeUInt8(0xf9);
-		buffer.writeUInt8(0xdb);
-		// 4：workstation 1 occupancy trigger
-		buffer.writeUInt8(0x04);
-		if ([0, 1].indexOf(payload.workstation_area_1_occupancy_trigger_settings.control) === -1) {
-			throw oneOfError('workstation_area_1_occupancy_trigger_settings.control', [0, 1]);
-		}
-		// 0:disable, 1:enable
-		buffer.writeUInt8(payload.workstation_area_1_occupancy_trigger_settings.control);
-		encoded = encoded.concat(buffer.toBytes());
-	}
-	//0xf9_0xdb // workstation_area_1_vacant_trigger_settings.id
-	if ('workstation_area_1_vacant_trigger_settings' in payload) {
-		var buffer = new Buffer();
-		buffer.writeUInt8(0xf9);
-		buffer.writeUInt8(0xdb);
-		// 5：workstation 1 vacant trigger
-		buffer.writeUInt8(0x05);
-		if ([0, 1].indexOf(payload.workstation_area_1_vacant_trigger_settings.control) === -1) {
-			throw oneOfError('workstation_area_1_vacant_trigger_settings.control', [0, 1]);
-		}
-		// 0:disable, 1:enable
-		buffer.writeUInt8(payload.workstation_area_1_vacant_trigger_settings.control);
-		encoded = encoded.concat(buffer.toBytes());
-	}
-	//0xf9_0xdb // workstation_area_2_occupancy_trigger_settings.id
-	if ('workstation_area_2_occupancy_trigger_settings' in payload) {
-		var buffer = new Buffer();
-		buffer.writeUInt8(0xf9);
-		buffer.writeUInt8(0xdb);
-		// 6：workstation 2 occupancy trigger
-		buffer.writeUInt8(0x06);
-		if ([0, 1].indexOf(payload.workstation_area_2_occupancy_trigger_settings.control) === -1) {
-			throw oneOfError('workstation_area_2_occupancy_trigger_settings.control', [0, 1]);
-		}
-		// 0:disable, 1:enable
-		buffer.writeUInt8(payload.workstation_area_2_occupancy_trigger_settings.control);
-		encoded = encoded.concat(buffer.toBytes());
-	}
-	//0xf9_0xdb // workstation_area_2_vacant_trigger_settings.id
-	if ('workstation_area_2_vacant_trigger_settings' in payload) {
-		var buffer = new Buffer();
-		buffer.writeUInt8(0xf9);
-		buffer.writeUInt8(0xdb);
-		// 7：workstation 2 vacant trigger
-		buffer.writeUInt8(0x07);
-		if ([0, 1].indexOf(payload.workstation_area_2_vacant_trigger_settings.control) === -1) {
-			throw oneOfError('workstation_area_2_vacant_trigger_settings.control', [0, 1]);
-		}
-		// 0:disable, 1:enable
-		buffer.writeUInt8(payload.workstation_area_2_vacant_trigger_settings.control);
-		encoded = encoded.concat(buffer.toBytes());
-	}
-	//0xf9_0xdb // workstation_area_3_occupancy_trigger_settings.id
-	if ('workstation_area_3_occupancy_trigger_settings' in payload) {
-		var buffer = new Buffer();
-		buffer.writeUInt8(0xf9);
-		buffer.writeUInt8(0xdb);
-		// 8：workstation 3 occupancy trigger
-		buffer.writeUInt8(0x08);
-		if ([0, 1].indexOf(payload.workstation_area_3_occupancy_trigger_settings.control) === -1) {
-			throw oneOfError('workstation_area_3_occupancy_trigger_settings.control', [0, 1]);
-		}
-		// 0:disable, 1:enable
-		buffer.writeUInt8(payload.workstation_area_3_occupancy_trigger_settings.control);
-		encoded = encoded.concat(buffer.toBytes());
-	}
-	//0xf9_0xdb // workstation_area_3_vacant_trigger.id
-	if ('workstation_area_3_vacant_trigger' in payload) {
-		var buffer = new Buffer();
-		buffer.writeUInt8(0xf9);
-		buffer.writeUInt8(0xdb);
-		// 9：workstation 3 vacant trigger
-		buffer.writeUInt8(0x09);
-		if ([0, 1].indexOf(payload.workstation_area_3_vacant_trigger.control) === -1) {
-			throw oneOfError('workstation_area_3_vacant_trigger.control', [0, 1]);
-		}
-		// 0:disable, 1:enable
-		buffer.writeUInt8(payload.workstation_area_3_vacant_trigger.control);
-		encoded = encoded.concat(buffer.toBytes());
-	}
-	//0xf9_0xdb // workstation_area_4_occupancy_trigger_settings.id
-	if ('workstation_area_4_occupancy_trigger_settings' in payload) {
-		var buffer = new Buffer();
-		buffer.writeUInt8(0xf9);
-		buffer.writeUInt8(0xdb);
-		// 10：workstation 4 occupancy trigger
-		buffer.writeUInt8(0x0a);
-		if ([0, 1].indexOf(payload.workstation_area_4_occupancy_trigger_settings.control) === -1) {
-			throw oneOfError('workstation_area_4_occupancy_trigger_settings.control', [0, 1]);
-		}
-		// 0:disable, 1:enable
-		buffer.writeUInt8(payload.workstation_area_4_occupancy_trigger_settings.control);
-		encoded = encoded.concat(buffer.toBytes());
-	}
-	//0xf9_0xdb // workstation_area_4_vacant_trigger_settings.id
-	if ('workstation_area_4_vacant_trigger_settings' in payload) {
-		var buffer = new Buffer();
-		buffer.writeUInt8(0xf9);
-		buffer.writeUInt8(0xdb);
-		// 11：workstation 4 vacant trigger
-		buffer.writeUInt8(0x0b);
-		if ([0, 1].indexOf(payload.workstation_area_4_vacant_trigger_settings.control) === -1) {
-			throw oneOfError('workstation_area_4_vacant_trigger_settings.control', [0, 1]);
-		}
-		// 0:disable, 1:enable
-		buffer.writeUInt8(payload.workstation_area_4_vacant_trigger_settings.control);
-		encoded = encoded.concat(buffer.toBytes());
-	}
-	//0xf9_0xdb // workstation_area_5_occupancy_trigger_settings.id
-	if ('workstation_area_5_occupancy_trigger_settings' in payload) {
-		var buffer = new Buffer();
-		buffer.writeUInt8(0xf9);
-		buffer.writeUInt8(0xdb);
-		// 12：workstation 5 occupancy trigger
-		buffer.writeUInt8(0x0c);
-		if ([0, 1].indexOf(payload.workstation_area_5_occupancy_trigger_settings.control) === -1) {
-			throw oneOfError('workstation_area_5_occupancy_trigger_settings.control', [0, 1]);
-		}
-		// 0:disable, 1:enable
-		buffer.writeUInt8(payload.workstation_area_5_occupancy_trigger_settings.control);
-		encoded = encoded.concat(buffer.toBytes());
-	}
-	//0xf9_0xdb // workstation_area_5_vacant_trigger_settings.id
-	if ('workstation_area_5_vacant_trigger_settings' in payload) {
-		var buffer = new Buffer();
-		buffer.writeUInt8(0xf9);
-		buffer.writeUInt8(0xdb);
-		// 13：workstation 5 vacant trigger
-		buffer.writeUInt8(0x0d);
-		if ([0, 1].indexOf(payload.workstation_area_5_vacant_trigger_settings.control) === -1) {
-			throw oneOfError('workstation_area_5_vacant_trigger_settings.control', [0, 1]);
-		}
-		// 0:disable, 1:enable
-		buffer.writeUInt8(payload.workstation_area_5_vacant_trigger_settings.control);
-		encoded = encoded.concat(buffer.toBytes());
-	}
-	//0xf9_0xdb // workstation_area_6_occupancy_trigger_settings.id
-	if ('workstation_area_6_occupancy_trigger_settings' in payload) {
-		var buffer = new Buffer();
-		buffer.writeUInt8(0xf9);
-		buffer.writeUInt8(0xdb);
-		// 14：workstation 6 occupancy trigger
-		buffer.writeUInt8(0x0e);
-		if ([0, 1].indexOf(payload.workstation_area_6_occupancy_trigger_settings.control) === -1) {
-			throw oneOfError('workstation_area_6_occupancy_trigger_settings.control', [0, 1]);
-		}
-		// 0:disable, 1:enable
-		buffer.writeUInt8(payload.workstation_area_6_occupancy_trigger_settings.control);
-		encoded = encoded.concat(buffer.toBytes());
-	}
-	//0xf9_0xdb // workstation_area_6_vacant_trigger_settings.id
-	if ('workstation_area_6_vacant_trigger_settings' in payload) {
-		var buffer = new Buffer();
-		buffer.writeUInt8(0xf9);
-		buffer.writeUInt8(0xdb);
-		// 15：workstation 6 vacant trigger
-		buffer.writeUInt8(0x0f);
-		if ([0, 1].indexOf(payload.workstation_area_6_vacant_trigger_settings.control) === -1) {
-			throw oneOfError('workstation_area_6_vacant_trigger_settings.control', [0, 1]);
-		}
-		// 0:disable, 1:enable
-		buffer.writeUInt8(payload.workstation_area_6_vacant_trigger_settings.control);
-		encoded = encoded.concat(buffer.toBytes());
-	}
-	//0xf9_0xdb // workstation_area_7_occupancy_trigger_settings.id
-	if ('workstation_area_7_occupancy_trigger_settings' in payload) {
-		var buffer = new Buffer();
-		buffer.writeUInt8(0xf9);
-		buffer.writeUInt8(0xdb);
-		// 16：workstation 7 occupancy trigger
-		buffer.writeUInt8(0x10);
-		if ([0, 1].indexOf(payload.workstation_area_7_occupancy_trigger_settings.control) === -1) {
-			throw oneOfError('workstation_area_7_occupancy_trigger_settings.control', [0, 1]);
-		}
-		// 0:disable, 1:enable
-		buffer.writeUInt8(payload.workstation_area_7_occupancy_trigger_settings.control);
-		encoded = encoded.concat(buffer.toBytes());
-	}
-	//0xf9_0xdb // workstation_area_7_vacant_trigger_settings.id
-	if ('workstation_area_7_vacant_trigger_settings' in payload) {
-		var buffer = new Buffer();
-		buffer.writeUInt8(0xf9);
-		buffer.writeUInt8(0xdb);
-		// 17：workstation 7 vacant trigger
-		buffer.writeUInt8(0x11);
-		if ([0, 1].indexOf(payload.workstation_area_7_vacant_trigger_settings.control) === -1) {
-			throw oneOfError('workstation_area_7_vacant_trigger_settings.control', [0, 1]);
-		}
-		// 0:disable, 1:enable
-		buffer.writeUInt8(payload.workstation_area_7_vacant_trigger_settings.control);
-		encoded = encoded.concat(buffer.toBytes());
-	}
-	//0xf9_0xdb // workstation_area_8_occupancy_trigger_settings.id
-	if ('workstation_area_8_occupancy_trigger_settings' in payload) {
-		var buffer = new Buffer();
-		buffer.writeUInt8(0xf9);
-		buffer.writeUInt8(0xdb);
-		// 18：workstation 8 occupancy trigger
-		buffer.writeUInt8(0x12);
-		if ([0, 1].indexOf(payload.workstation_area_8_occupancy_trigger_settings.control) === -1) {
-			throw oneOfError('workstation_area_8_occupancy_trigger_settings.control', [0, 1]);
-		}
-		// 0:disable, 1:enable
-		buffer.writeUInt8(payload.workstation_area_8_occupancy_trigger_settings.control);
-		encoded = encoded.concat(buffer.toBytes());
-	}
-	//0xf9_0xdb // workstation_area_8_vacant_trigger_settings.id
-	if ('workstation_area_8_vacant_trigger_settings' in payload) {
-		var buffer = new Buffer();
-		buffer.writeUInt8(0xf9);
-		buffer.writeUInt8(0xdb);
-		// 19：workstation 8 vacant trigger
-		buffer.writeUInt8(0x13);
-		if ([0, 1].indexOf(payload.workstation_area_8_vacant_trigger_settings.control) === -1) {
-			throw oneOfError('workstation_area_8_vacant_trigger_settings.control', [0, 1]);
-		}
-		// 0:disable, 1:enable
-		buffer.writeUInt8(payload.workstation_area_8_vacant_trigger_settings.control);
-		encoded = encoded.concat(buffer.toBytes());
-	}
-	//0xf9_0xdb // workstation_area_9_occupancy_trigger_settings.id
-	if ('workstation_area_9_occupancy_trigger_settings' in payload) {
-		var buffer = new Buffer();
-		buffer.writeUInt8(0xf9);
-		buffer.writeUInt8(0xdb);
-		// 20：workstation 9 occupancy trigger
-		buffer.writeUInt8(0x14);
-		if ([0, 1].indexOf(payload.workstation_area_9_occupancy_trigger_settings.control) === -1) {
-			throw oneOfError('workstation_area_9_occupancy_trigger_settings.control', [0, 1]);
-		}
-		// 0:disable, 1:enable
-		buffer.writeUInt8(payload.workstation_area_9_occupancy_trigger_settings.control);
-		encoded = encoded.concat(buffer.toBytes());
-	}
-	//0xf9_0xdb // workstation_area_9_vacant_trigger_settings.id
-	if ('workstation_area_9_vacant_trigger_settings' in payload) {
-		var buffer = new Buffer();
-		buffer.writeUInt8(0xf9);
-		buffer.writeUInt8(0xdb);
-		// 21：workstation 9 vacant trigger
-		buffer.writeUInt8(0x15);
-		if ([0, 1].indexOf(payload.workstation_area_9_vacant_trigger_settings.control) === -1) {
-			throw oneOfError('workstation_area_9_vacant_trigger_settings.control', [0, 1]);
-		}
-		// 0:disable, 1:enable
-		buffer.writeUInt8(payload.workstation_area_9_vacant_trigger_settings.control);
-		encoded = encoded.concat(buffer.toBytes());
-	}
-	//0xf9_0xdb // workstation_area_10_occupancy_trigger_settings.id
-	if ('workstation_area_10_occupancy_trigger_settings' in payload) {
-		var buffer = new Buffer();
-		buffer.writeUInt8(0xf9);
-		buffer.writeUInt8(0xdb);
-		// 22：workstation 10 occupancy trigger
-		buffer.writeUInt8(0x16);
-		if ([0, 1].indexOf(payload.workstation_area_10_occupancy_trigger_settings.control) === -1) {
-			throw oneOfError('workstation_area_10_occupancy_trigger_settings.control', [0, 1]);
-		}
-		// 0:disable, 1:enable
-		buffer.writeUInt8(payload.workstation_area_10_occupancy_trigger_settings.control);
-		encoded = encoded.concat(buffer.toBytes());
-	}
-	//0xf9_0xdb // workstation_area_10_vacant_trigger_settings.id
-	if ('workstation_area_10_vacant_trigger_settings' in payload) {
-		var buffer = new Buffer();
-		buffer.writeUInt8(0xf9);
-		buffer.writeUInt8(0xdb);
-		// 23：workstation 10 vacant trigger
-		buffer.writeUInt8(0x17);
-		if ([0, 1].indexOf(payload.workstation_area_10_vacant_trigger_settings.control) === -1) {
-			throw oneOfError('workstation_area_10_vacant_trigger_settings.control', [0, 1]);
-		}
-		// 0:disable, 1:enable
-		buffer.writeUInt8(payload.workstation_area_10_vacant_trigger_settings.control);
 		encoded = encoded.concat(buffer.toBytes());
 	}
 	//0xfd_0x6b

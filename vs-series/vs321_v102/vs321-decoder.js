@@ -108,6 +108,22 @@ function milesightDeviceDecode(bytes) {
 						break;
 				}
 				break;
+			case 0x09:
+				var ipso_type_v1 = bytes[counterObj.i++];
+				switch (ipso_type_v1) {
+					case 0x9f:
+						decoded.Pir_trigger = readUInt16LE(bytes, counterObj, 2);
+						break;
+				}
+				break;
+			case 0x0b:
+				var ipso_type_v1 = bytes[counterObj.i++];
+				switch (ipso_type_v1) {
+					case 0xf9:
+						decoded.Regional_State = readUInt32LE(bytes, counterObj, 4);
+						break;
+				}
+				break;
 			case 0x05:
 				var ipso_type_v1 = bytes[counterObj.i++];
 				switch (ipso_type_v1) {
@@ -131,19 +147,32 @@ function milesightDeviceDecode(bytes) {
 						decoded.region_status.region7_enable = extractBits(bitOptions, 6, 7);
 						decoded.region_status.region8_enable = extractBits(bitOptions, 7, 8);
 						var bitOptions = readUInt8(bytes, counterObj, 1);
-						decoded.region_status.region9_enable = extractBits(bitOptions, 8, 9);
-						decoded.region_status.region10_enable = extractBits(bitOptions, 9, 10);
-						decoded.region_status.region1_occupancy_status = extractBits(bitOptions, 16, 17);
-						decoded.region_status.region2_occupancy_status = extractBits(bitOptions, 17, 18);
-						decoded.region_status.region3_occupancy_status = extractBits(bitOptions, 18, 19);
-						decoded.region_status.region4_occupancy_status = extractBits(bitOptions, 19, 20);
-						decoded.region_status.region5_occupancy_status = extractBits(bitOptions, 20, 21);
-						decoded.region_status.region6_occupancy_status = extractBits(bitOptions, 21, 22);
+						decoded.region_status.region9_enable = extractBits(bitOptions, 0, 1);
+						decoded.region_status.region10_enable = extractBits(bitOptions, 1, 2);
 						var bitOptions = readUInt8(bytes, counterObj, 1);
-						decoded.region_status.region7_occupancy_status = extractBits(bitOptions, 22, 23);
-						decoded.region_status.region8_occupancy_status = extractBits(bitOptions, 23, 24);
-						decoded.region_status.region9_occupancy_status = extractBits(bitOptions, 24, 25);
-						decoded.region_status.region10_occupancy_status = extractBits(bitOptions, 25, 26);
+						decoded.region_status.region1_occupancy_status = extractBits(bitOptions, 0, 1);
+						decoded.region_status.region2_occupancy_status = extractBits(bitOptions, 1, 2);
+						decoded.region_status.region3_occupancy_status = extractBits(bitOptions, 2, 3);
+						decoded.region_status.region4_occupancy_status = extractBits(bitOptions, 3, 4);
+						decoded.region_status.region5_occupancy_status = extractBits(bitOptions, 4, 5);
+						decoded.region_status.region6_occupancy_status = extractBits(bitOptions, 5, 6);
+						decoded.region_status.region7_occupancy_status = extractBits(bitOptions, 6, 7);
+						decoded.region_status.region8_occupancy_status = extractBits(bitOptions, 7, 8);
+						var bitOptions = readUInt8(bytes, counterObj, 1);
+						decoded.region_status.region9_occupancy_status = extractBits(bitOptions, 0, 1);
+						decoded.region_status.region10_occupancy_status = extractBits(bitOptions, 1, 2);
+						break;
+				}
+				break;
+			case 0x0c:
+				var ipso_type_v1 = bytes[counterObj.i++];
+				switch (ipso_type_v1) {
+					case 0xf4:
+						decoded.sleep_status = decoded.sleep_status || {};
+						// 3：Sleep Status
+						decoded.sleep_status.id = readUInt8(bytes, counterObj, 1);
+						// 1：Enter Sleep
+						decoded.sleep_status.status = readUInt8(bytes, counterObj, 1);
 						break;
 				}
 				break;
