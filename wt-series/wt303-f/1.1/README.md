@@ -374,6 +374,76 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Active Data Reporting Times | 0xC3 | 2 | rw | 0 | 0 - 12 |  |
 | Active Data Reporting Mode | 0xC3 | 2 | rw | 0 |  | 0: Disable All<br>1: Enable All<br>2: Custom |
 | Active Data Reporting Custom Configuration | 0xC3 | 3 | rw |  |  |  |
+| Sub-command | 0xC3 | 2 | rw |  |  |  |
+| Collecting Interval | 0xC3 | 2 | rw | 0 |  | 0: Disable<br>1: Enable |
+| Reporting Interval | 0xC3 | 2 | rw | 0 |  | 0: Disable<br>1: Enable |
+| Temperature Unit | 0xC3 | 2 | rw | 0 |  | 0: Disable<br>1: Enable |
+| Mode Enable | 0xC3 | 2 | rw | 0 |  | 0: Disable<br>1: Enable |
+| Smart Display | 0xC3 | 2 | rw | 0 |  | 0: Disable<br>1: Enable |
+| Screen Display Settings | 0xC3 | 2 | rw | 0 |  | 0: Disable<br>1: Enable |
+| System On/Off | 0xC3 | 2 | rw | 0 |  | 0: Disable<br>1: Enable |
+| Temperature Control Mode | 0xC3 | 2 | rw | 0 |  | 0: Disable<br>1: Enable |
+| Target Temperature Resolution | 0xC3 | 2 | rw | 0 |  | 0: Disable<br>1: Enable |
+| Target Temperature Tolerance | 0xC3 | 2 | rw | 0 |  | 0: Disable<br>1: Enable |
+| Heating Target Temperature | 0xC3 | 2 | rw | 0 |  | 0: Disable<br>1: Enable |
+| Cooling Target Temperature | 0xC3 | 2 | rw | 0 |  | 0: Disable<br>1: Enable |
+| Heating Target Temperature Regulation Range | 0xC3 | 2 | rw | 0 |  | 0: Disable<br>1: Enable |
+| Cooling Target Temperature Regulation Range | 0xC3 | 2 | rw | 0 |  | 0: Disable<br>1: Enable |
+| Temp. Control and Dehumidify Settings | 0xC3 | 2 | rw | 0 |  | 0: Disable<br>1: Enable |
+| Target Humidity Regulation Range | 0xC3 | 2 | rw | 0 |  | 0: Disable<br>1: Enable |
+| Temp. Control and Dehumidify Configuration | 0xC3 | 2 | rw | 0 |  | 0: Disable<br>1: Enable |
+| Fan Mode | 0xC3 | 2 | rw | 0 |  | 0: Disable<br>1: Enable |
+| Auto Fan Speed Control Delta Settings | 0xC3 | 2 | rw | 0 |  | 0: Disable<br>1: Enable |
+| Fan Delay | 0xC3 | 2 | rw | 0 |  | 0: Disable<br>1: Enable |
+| Child Lock | 0xC3 | 2 | rw | 0 |  | 0: Disable<br>1: Enable |
+| Temperature Threshold Alarm Settings | 0xC3 | 2 | rw | 0 |  | 0: Disable<br>1: Enable |
+| Persistent High Temperature Alarm Settings | 0xC3 | 2 | rw | 0 |  | 0: Disable<br>1: Enable |
+| Persistent Low Temperature Alarm Settings | 0xC3 | 2 | rw | 0 |  | 0: Disable<br>1: Enable |
+| Temperature Calibration Settings | 0xC3 | 2 | rw | 0 |  | 0: Disable<br>1: Enable |
+| Humidity Calibration Settings | 0xC3 | 2 | rw | 0 |  | 0: Disable<br>1: Enable |
+| Schedule Settings | 0xC3 | 2 | rw | 0 |  | 0: Disable<br>1: Enable |
+| Interface Settings | 0xC3 | 2 | rw | 0 |  | 0: Disable<br>1: Enable |
+| Fan Delay Close Configuration | 0xC3 | 2 | rw | 0 |  | 0: Disable<br>1: Enable |
+| DI Enable | 0xC3 | 2 | rw | 0 |  | 0: Disable<br>1: Enable |
+| DI Settings | 0xC3 | 2 | rw | 0 |  | 0: Disable<br>1: Enable |
+| Open Window Detection Enable | 0xC3 | 2 | rw | 0 |  | 0: Disable<br>1: Enable |
+| Open Window Detection Settings | 0xC3 | 2 | rw | 0 |  | 0: Disable<br>1: Enable |
+| Freeze Protection | 0xC3 | 2 | rw | 0 |  | 0: Disable<br>1: Enable |
+| Temperature Data Source | 0xC3 | 2 | rw | 0 |  | 0: Disable<br>1: Enable |
+| D2D Pairing Enable | 0xC3 | 2 | rw | 0 |  | 0: Disable<br>1: Enable |
+| D2D Pairing Settings | 0xC3 | 2 | rw | 0 |  | 0: Disable<br>1: Enable |
+| D2D Controller Enable | 0xC3 | 2 | rw | 0 |  | 0: Disable<br>1: Enable |
+| D2D Master Control Settings | 0xC3 | 2 | rw | 0 |  | 0: Disable<br>1: Enable |
+| D2D Agent Enable | 0xC3 | 2 | rw | 0 |  | 0: Disable<br>1: Enable |
+| D2D Agent Settings | 0xC3 | 2 | rw | 0 |  | 0: Disable<br>1: Enable |
+| Timer Switch System | 0xC3 | 2 | rw | 0 |  | 0: Disable<br>1: Enable |
+| Unlock Button Settings | 0xC3 | 2 | rw | 0 |  | 0: Disable<br>1: Enable |
+| Fan Stop Settings | 0xC3 | 2 | rw | 0 |  | 0: Disable<br>1: Enable |
+| Relay/Valve Change Report | 0xC3 | 2 | rw | 0 |  | 0: Disable<br>1: Enable |
+| Preconfigured on The Screen | 0xC3 | 2 | rw | 0 |  | 0: Disable<br>1: Enable |
+| Valve Type Setting | 0xC3 | 2 | rw | 0 |  | 0: Disable<br>1: Enable |
+| Screen Front Light Enable | 0xC3 | 2 | rw | 0 |  | 0: Disable<br>1: Enable |
+| Occupied Detection Configuration | 0xC3 | 2 | rw | 0 |  | 0: Disable<br>1: Enable |
+| Energy Saving Configuration | 0xC3 | 2 | rw | 0 |  | 0: Disable<br>1: Enable |
+| Child Lock Enable Configuration | 0xC3 | 2 | rw | 0 |  | 0: Disable<br>1: Enable |
+| Temporary Button Unlock Configuration | 0xC3 | 2 | rw | 0 |  | 0: Disable<br>1: Enable |
+| Freeze Protection Configuration | 0xC3 | 2 | rw | 0 |  | 0: Disable<br>1: Enable |
+| Temperature Threshold Alarm Configuration | 0xC3 | 2 | rw | 0 |  | 0: Disable<br>1: Enable |
+| Persistent High Temperature Alarm Configuration | 0xC3 | 2 | rw | 0 |  | 0: Disable<br>1: Enable |
+| Persistent Low Temperature Alarm Configuration | 0xC3 | 2 | rw | 0 |  | 0: Disable<br>1: Enable |
+| Temperature Calibration Configuration | 0xC3 | 2 | rw | 0 |  | 0: Disable<br>1: Enable |
+| Humidity Calibration Configuration | 0xC3 | 2 | rw | 0 |  | 0: Disable<br>1: Enable |
+| Interface Type Configuration | 0xC3 | 2 | rw | 0 |  | 0: Disable<br>1: Enable |
+| Fan Speed Control Delta Configuration | 0xC3 | 2 | rw | 0 |  | 0: Disable<br>1: Enable |
+| Temperature Data Source Configuration | 0xC3 | 2 | rw | 0 |  | 0: Disable<br>1: Enable |
+| Reporting Interval Configuration | 0xC3 | 2 | rw | 0 |  | 0: Disable<br>1: Enable |
+| Screen Display Configuration | 0xC3 | 2 | rw | 0 |  | 0: Disable<br>1: Enable |
+| Unilateral Tolerance Enable | 0xC3 | 2 | rw | 0 |  | 0: Disable<br>1: Enable |
+| Temperature Control Permission Configuration | 0xC3 | 2 | rw | 0 |  | 0: Disable<br>1: Enable |
+| External Data Source Timeout Configuration | 0xC3 | 2 | rw | 0 |  | 0: Disable<br>1: Enable |
+| Daylight Saving Time | 0xC3 | 2 | rw | 0 |  | 0: Disable<br>1: Enable |
+| Time Zone | 0xC3 | 2 | rw | 0 |  | 0: Disable<br>1: Enable |
+| Device Status | 0xC3 | 2 | rw | 0 |  | 0: Disable<br>1: Enable |
 | Temperature Control Permission Configuration | 0xA5 | 1 | rw |  |  |  |
 | Sub-command | 0xA5 | 2 | rw | 0 |  |  |
 | Temperature Control Permission | 0xA5 | 2 | rw | 0 |  | 0: Thermostat Control<br>1: Remote Control |

@@ -2210,8 +2210,834 @@ function milesightDeviceEncode(payload) {
 			buffer.writeUInt8(payload.active_data_reporting_cfg.mode);
 		}
 		if (isValid(payload.active_data_reporting_cfg.custom_cfg)) {
-			buffer.writeUInt8(0xc3);
-			buffer.writeUInt8(0x03);
+			if (isValid(payload.active_data_reporting_cfg.custom_cfg.collection_interval)) {
+				buffer.writeUInt8(0xc3);
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(0x03);
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(0x60);
+				if ([0, 1].indexOf(payload.active_data_reporting_cfg.custom_cfg.collection_interval) === -1) {
+					throw oneOfError('active_data_reporting_cfg.custom_cfg.collection_interval', [0, 1]);
+				}
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(payload.active_data_reporting_cfg.custom_cfg.collection_interval);
+			}
+			if (isValid(payload.active_data_reporting_cfg.custom_cfg.reporting_interval)) {
+				buffer.writeUInt8(0xc3);
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(0x03);
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(0x62);
+				if ([0, 1].indexOf(payload.active_data_reporting_cfg.custom_cfg.reporting_interval) === -1) {
+					throw oneOfError('active_data_reporting_cfg.custom_cfg.reporting_interval', [0, 1]);
+				}
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(payload.active_data_reporting_cfg.custom_cfg.reporting_interval);
+			}
+			if (isValid(payload.active_data_reporting_cfg.custom_cfg.temperature_unit)) {
+				buffer.writeUInt8(0xc3);
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(0x03);
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(0x63);
+				if ([0, 1].indexOf(payload.active_data_reporting_cfg.custom_cfg.temperature_unit) === -1) {
+					throw oneOfError('active_data_reporting_cfg.custom_cfg.temperature_unit', [0, 1]);
+				}
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(payload.active_data_reporting_cfg.custom_cfg.temperature_unit);
+			}
+			if (isValid(payload.active_data_reporting_cfg.custom_cfg.mode_enable)) {
+				buffer.writeUInt8(0xc3);
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(0x03);
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(0x64);
+				if ([0, 1].indexOf(payload.active_data_reporting_cfg.custom_cfg.mode_enable) === -1) {
+					throw oneOfError('active_data_reporting_cfg.custom_cfg.mode_enable', [0, 1]);
+				}
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(payload.active_data_reporting_cfg.custom_cfg.mode_enable);
+			}
+			if (isValid(payload.active_data_reporting_cfg.custom_cfg.intelligent_display_enable)) {
+				buffer.writeUInt8(0xc3);
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(0x03);
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(0x65);
+				if ([0, 1].indexOf(payload.active_data_reporting_cfg.custom_cfg.intelligent_display_enable) === -1) {
+					throw oneOfError('active_data_reporting_cfg.custom_cfg.intelligent_display_enable', [0, 1]);
+				}
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(payload.active_data_reporting_cfg.custom_cfg.intelligent_display_enable);
+			}
+			if (isValid(payload.active_data_reporting_cfg.custom_cfg.screen_object_settings)) {
+				buffer.writeUInt8(0xc3);
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(0x03);
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(0x66);
+				if ([0, 1].indexOf(payload.active_data_reporting_cfg.custom_cfg.screen_object_settings) === -1) {
+					throw oneOfError('active_data_reporting_cfg.custom_cfg.screen_object_settings', [0, 1]);
+				}
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(payload.active_data_reporting_cfg.custom_cfg.screen_object_settings);
+			}
+			if (isValid(payload.active_data_reporting_cfg.custom_cfg.system_status)) {
+				buffer.writeUInt8(0xc3);
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(0x03);
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(0x67);
+				if ([0, 1].indexOf(payload.active_data_reporting_cfg.custom_cfg.system_status) === -1) {
+					throw oneOfError('active_data_reporting_cfg.custom_cfg.system_status', [0, 1]);
+				}
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(payload.active_data_reporting_cfg.custom_cfg.system_status);
+			}
+			if (isValid(payload.active_data_reporting_cfg.custom_cfg.temperature_control_mode)) {
+				buffer.writeUInt8(0xc3);
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(0x03);
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(0x68);
+				if ([0, 1].indexOf(payload.active_data_reporting_cfg.custom_cfg.temperature_control_mode) === -1) {
+					throw oneOfError('active_data_reporting_cfg.custom_cfg.temperature_control_mode', [0, 1]);
+				}
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(payload.active_data_reporting_cfg.custom_cfg.temperature_control_mode);
+			}
+			if (isValid(payload.active_data_reporting_cfg.custom_cfg.target_temperature_resolution)) {
+				buffer.writeUInt8(0xc3);
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(0x03);
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(0x69);
+				if ([0, 1].indexOf(payload.active_data_reporting_cfg.custom_cfg.target_temperature_resolution) === -1) {
+					throw oneOfError('active_data_reporting_cfg.custom_cfg.target_temperature_resolution', [0, 1]);
+				}
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(payload.active_data_reporting_cfg.custom_cfg.target_temperature_resolution);
+			}
+			if (isValid(payload.active_data_reporting_cfg.custom_cfg.target_temperature_tolerance)) {
+				buffer.writeUInt8(0xc3);
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(0x03);
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(0x6a);
+				if ([0, 1].indexOf(payload.active_data_reporting_cfg.custom_cfg.target_temperature_tolerance) === -1) {
+					throw oneOfError('active_data_reporting_cfg.custom_cfg.target_temperature_tolerance', [0, 1]);
+				}
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(payload.active_data_reporting_cfg.custom_cfg.target_temperature_tolerance);
+			}
+			if (isValid(payload.active_data_reporting_cfg.custom_cfg.heating_target_temperature)) {
+				buffer.writeUInt8(0xc3);
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(0x03);
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(0x6b);
+				if ([0, 1].indexOf(payload.active_data_reporting_cfg.custom_cfg.heating_target_temperature) === -1) {
+					throw oneOfError('active_data_reporting_cfg.custom_cfg.heating_target_temperature', [0, 1]);
+				}
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(payload.active_data_reporting_cfg.custom_cfg.heating_target_temperature);
+			}
+			if (isValid(payload.active_data_reporting_cfg.custom_cfg.cooling_target_temperature)) {
+				buffer.writeUInt8(0xc3);
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(0x03);
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(0x6c);
+				if ([0, 1].indexOf(payload.active_data_reporting_cfg.custom_cfg.cooling_target_temperature) === -1) {
+					throw oneOfError('active_data_reporting_cfg.custom_cfg.cooling_target_temperature', [0, 1]);
+				}
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(payload.active_data_reporting_cfg.custom_cfg.cooling_target_temperature);
+			}
+			if (isValid(payload.active_data_reporting_cfg.custom_cfg.heating_target_temperature_range)) {
+				buffer.writeUInt8(0xc3);
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(0x03);
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(0x6d);
+				if ([0, 1].indexOf(payload.active_data_reporting_cfg.custom_cfg.heating_target_temperature_range) === -1) {
+					throw oneOfError('active_data_reporting_cfg.custom_cfg.heating_target_temperature_range', [0, 1]);
+				}
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(payload.active_data_reporting_cfg.custom_cfg.heating_target_temperature_range);
+			}
+			if (isValid(payload.active_data_reporting_cfg.custom_cfg.cooling_target_temperature_range)) {
+				buffer.writeUInt8(0xc3);
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(0x03);
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(0x6e);
+				if ([0, 1].indexOf(payload.active_data_reporting_cfg.custom_cfg.cooling_target_temperature_range) === -1) {
+					throw oneOfError('active_data_reporting_cfg.custom_cfg.cooling_target_temperature_range', [0, 1]);
+				}
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(payload.active_data_reporting_cfg.custom_cfg.cooling_target_temperature_range);
+			}
+			if (isValid(payload.active_data_reporting_cfg.custom_cfg.temperature_control_dehumidification)) {
+				buffer.writeUInt8(0xc3);
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(0x03);
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(0x6f);
+				if ([0, 1].indexOf(payload.active_data_reporting_cfg.custom_cfg.temperature_control_dehumidification) === -1) {
+					throw oneOfError('active_data_reporting_cfg.custom_cfg.temperature_control_dehumidification', [0, 1]);
+				}
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(payload.active_data_reporting_cfg.custom_cfg.temperature_control_dehumidification);
+			}
+			if (isValid(payload.active_data_reporting_cfg.custom_cfg.target_humidity_range)) {
+				buffer.writeUInt8(0xc3);
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(0x03);
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(0x70);
+				if ([0, 1].indexOf(payload.active_data_reporting_cfg.custom_cfg.target_humidity_range) === -1) {
+					throw oneOfError('active_data_reporting_cfg.custom_cfg.target_humidity_range', [0, 1]);
+				}
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(payload.active_data_reporting_cfg.custom_cfg.target_humidity_range);
+			}
+			if (isValid(payload.active_data_reporting_cfg.custom_cfg.temp_ctl_dehumi_cfg)) {
+				buffer.writeUInt8(0xc3);
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(0x03);
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(0x71);
+				if ([0, 1].indexOf(payload.active_data_reporting_cfg.custom_cfg.temp_ctl_dehumi_cfg) === -1) {
+					throw oneOfError('active_data_reporting_cfg.custom_cfg.temp_ctl_dehumi_cfg', [0, 1]);
+				}
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(payload.active_data_reporting_cfg.custom_cfg.temp_ctl_dehumi_cfg);
+			}
+			if (isValid(payload.active_data_reporting_cfg.custom_cfg.fan_control_mode)) {
+				buffer.writeUInt8(0xc3);
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(0x03);
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(0x72);
+				if ([0, 1].indexOf(payload.active_data_reporting_cfg.custom_cfg.fan_control_mode) === -1) {
+					throw oneOfError('active_data_reporting_cfg.custom_cfg.fan_control_mode', [0, 1]);
+				}
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(payload.active_data_reporting_cfg.custom_cfg.fan_control_mode);
+			}
+			if (isValid(payload.active_data_reporting_cfg.custom_cfg.fan_auto_mode_temperature_range)) {
+				buffer.writeUInt8(0xc3);
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(0x03);
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(0x73);
+				if ([0, 1].indexOf(payload.active_data_reporting_cfg.custom_cfg.fan_auto_mode_temperature_range) === -1) {
+					throw oneOfError('active_data_reporting_cfg.custom_cfg.fan_auto_mode_temperature_range', [0, 1]);
+				}
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(payload.active_data_reporting_cfg.custom_cfg.fan_auto_mode_temperature_range);
+			}
+			if (isValid(payload.active_data_reporting_cfg.custom_cfg.fan_delay_close)) {
+				buffer.writeUInt8(0xc3);
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(0x03);
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(0x74);
+				if ([0, 1].indexOf(payload.active_data_reporting_cfg.custom_cfg.fan_delay_close) === -1) {
+					throw oneOfError('active_data_reporting_cfg.custom_cfg.fan_delay_close', [0, 1]);
+				}
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(payload.active_data_reporting_cfg.custom_cfg.fan_delay_close);
+			}
+			if (isValid(payload.active_data_reporting_cfg.custom_cfg.child_lock)) {
+				buffer.writeUInt8(0xc3);
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(0x03);
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(0x75);
+				if ([0, 1].indexOf(payload.active_data_reporting_cfg.custom_cfg.child_lock) === -1) {
+					throw oneOfError('active_data_reporting_cfg.custom_cfg.child_lock', [0, 1]);
+				}
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(payload.active_data_reporting_cfg.custom_cfg.child_lock);
+			}
+			if (isValid(payload.active_data_reporting_cfg.custom_cfg.temperature_alarm_settings)) {
+				buffer.writeUInt8(0xc3);
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(0x03);
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(0x76);
+				if ([0, 1].indexOf(payload.active_data_reporting_cfg.custom_cfg.temperature_alarm_settings) === -1) {
+					throw oneOfError('active_data_reporting_cfg.custom_cfg.temperature_alarm_settings', [0, 1]);
+				}
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(payload.active_data_reporting_cfg.custom_cfg.temperature_alarm_settings);
+			}
+			if (isValid(payload.active_data_reporting_cfg.custom_cfg.high_temperature_alarm_settings)) {
+				buffer.writeUInt8(0xc3);
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(0x03);
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(0x77);
+				if ([0, 1].indexOf(payload.active_data_reporting_cfg.custom_cfg.high_temperature_alarm_settings) === -1) {
+					throw oneOfError('active_data_reporting_cfg.custom_cfg.high_temperature_alarm_settings', [0, 1]);
+				}
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(payload.active_data_reporting_cfg.custom_cfg.high_temperature_alarm_settings);
+			}
+			if (isValid(payload.active_data_reporting_cfg.custom_cfg.low_temperature_alarm_settings)) {
+				buffer.writeUInt8(0xc3);
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(0x03);
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(0x78);
+				if ([0, 1].indexOf(payload.active_data_reporting_cfg.custom_cfg.low_temperature_alarm_settings) === -1) {
+					throw oneOfError('active_data_reporting_cfg.custom_cfg.low_temperature_alarm_settings', [0, 1]);
+				}
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(payload.active_data_reporting_cfg.custom_cfg.low_temperature_alarm_settings);
+			}
+			if (isValid(payload.active_data_reporting_cfg.custom_cfg.temperature_calibration_settings)) {
+				buffer.writeUInt8(0xc3);
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(0x03);
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(0x79);
+				if ([0, 1].indexOf(payload.active_data_reporting_cfg.custom_cfg.temperature_calibration_settings) === -1) {
+					throw oneOfError('active_data_reporting_cfg.custom_cfg.temperature_calibration_settings', [0, 1]);
+				}
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(payload.active_data_reporting_cfg.custom_cfg.temperature_calibration_settings);
+			}
+			if (isValid(payload.active_data_reporting_cfg.custom_cfg.humidity_calibration_settings)) {
+				buffer.writeUInt8(0xc3);
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(0x03);
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(0x7a);
+				if ([0, 1].indexOf(payload.active_data_reporting_cfg.custom_cfg.humidity_calibration_settings) === -1) {
+					throw oneOfError('active_data_reporting_cfg.custom_cfg.humidity_calibration_settings', [0, 1]);
+				}
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(payload.active_data_reporting_cfg.custom_cfg.humidity_calibration_settings);
+			}
+			if (isValid(payload.active_data_reporting_cfg.custom_cfg.schedule_settings)) {
+				buffer.writeUInt8(0xc3);
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(0x03);
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(0x7b);
+				if ([0, 1].indexOf(payload.active_data_reporting_cfg.custom_cfg.schedule_settings) === -1) {
+					throw oneOfError('active_data_reporting_cfg.custom_cfg.schedule_settings', [0, 1]);
+				}
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(payload.active_data_reporting_cfg.custom_cfg.schedule_settings);
+			}
+			if (isValid(payload.active_data_reporting_cfg.custom_cfg.interface_settings)) {
+				buffer.writeUInt8(0xc3);
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(0x03);
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(0x7c);
+				if ([0, 1].indexOf(payload.active_data_reporting_cfg.custom_cfg.interface_settings) === -1) {
+					throw oneOfError('active_data_reporting_cfg.custom_cfg.interface_settings', [0, 1]);
+				}
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(payload.active_data_reporting_cfg.custom_cfg.interface_settings);
+			}
+			if (isValid(payload.active_data_reporting_cfg.custom_cfg.fan_delay_close_cfg)) {
+				buffer.writeUInt8(0xc3);
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(0x03);
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(0x7f);
+				if ([0, 1].indexOf(payload.active_data_reporting_cfg.custom_cfg.fan_delay_close_cfg) === -1) {
+					throw oneOfError('active_data_reporting_cfg.custom_cfg.fan_delay_close_cfg', [0, 1]);
+				}
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(payload.active_data_reporting_cfg.custom_cfg.fan_delay_close_cfg);
+			}
+			if (isValid(payload.active_data_reporting_cfg.custom_cfg.di_enable)) {
+				buffer.writeUInt8(0xc3);
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(0x03);
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(0x80);
+				if ([0, 1].indexOf(payload.active_data_reporting_cfg.custom_cfg.di_enable) === -1) {
+					throw oneOfError('active_data_reporting_cfg.custom_cfg.di_enable', [0, 1]);
+				}
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(payload.active_data_reporting_cfg.custom_cfg.di_enable);
+			}
+			if (isValid(payload.active_data_reporting_cfg.custom_cfg.di_settings)) {
+				buffer.writeUInt8(0xc3);
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(0x03);
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(0x81);
+				if ([0, 1].indexOf(payload.active_data_reporting_cfg.custom_cfg.di_settings) === -1) {
+					throw oneOfError('active_data_reporting_cfg.custom_cfg.di_settings', [0, 1]);
+				}
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(payload.active_data_reporting_cfg.custom_cfg.di_settings);
+			}
+			if (isValid(payload.active_data_reporting_cfg.custom_cfg.window_opening_detection_enable)) {
+				buffer.writeUInt8(0xc3);
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(0x03);
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(0x82);
+				if ([0, 1].indexOf(payload.active_data_reporting_cfg.custom_cfg.window_opening_detection_enable) === -1) {
+					throw oneOfError('active_data_reporting_cfg.custom_cfg.window_opening_detection_enable', [0, 1]);
+				}
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(payload.active_data_reporting_cfg.custom_cfg.window_opening_detection_enable);
+			}
+			if (isValid(payload.active_data_reporting_cfg.custom_cfg.window_opening_detection_settings)) {
+				buffer.writeUInt8(0xc3);
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(0x03);
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(0x83);
+				if ([0, 1].indexOf(payload.active_data_reporting_cfg.custom_cfg.window_opening_detection_settings) === -1) {
+					throw oneOfError('active_data_reporting_cfg.custom_cfg.window_opening_detection_settings', [0, 1]);
+				}
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(payload.active_data_reporting_cfg.custom_cfg.window_opening_detection_settings);
+			}
+			if (isValid(payload.active_data_reporting_cfg.custom_cfg.freeze_protection_settings)) {
+				buffer.writeUInt8(0xc3);
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(0x03);
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(0x84);
+				if ([0, 1].indexOf(payload.active_data_reporting_cfg.custom_cfg.freeze_protection_settings) === -1) {
+					throw oneOfError('active_data_reporting_cfg.custom_cfg.freeze_protection_settings', [0, 1]);
+				}
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(payload.active_data_reporting_cfg.custom_cfg.freeze_protection_settings);
+			}
+			if (isValid(payload.active_data_reporting_cfg.custom_cfg.temperature_source)) {
+				buffer.writeUInt8(0xc3);
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(0x03);
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(0x85);
+				if ([0, 1].indexOf(payload.active_data_reporting_cfg.custom_cfg.temperature_source) === -1) {
+					throw oneOfError('active_data_reporting_cfg.custom_cfg.temperature_source', [0, 1]);
+				}
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(payload.active_data_reporting_cfg.custom_cfg.temperature_source);
+			}
+			if (isValid(payload.active_data_reporting_cfg.custom_cfg.d2d_pairing_enable)) {
+				buffer.writeUInt8(0xc3);
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(0x03);
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(0x86);
+				if ([0, 1].indexOf(payload.active_data_reporting_cfg.custom_cfg.d2d_pairing_enable) === -1) {
+					throw oneOfError('active_data_reporting_cfg.custom_cfg.d2d_pairing_enable', [0, 1]);
+				}
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(payload.active_data_reporting_cfg.custom_cfg.d2d_pairing_enable);
+			}
+			if (isValid(payload.active_data_reporting_cfg.custom_cfg.d2d_pairing_settings)) {
+				buffer.writeUInt8(0xc3);
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(0x03);
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(0x87);
+				if ([0, 1].indexOf(payload.active_data_reporting_cfg.custom_cfg.d2d_pairing_settings) === -1) {
+					throw oneOfError('active_data_reporting_cfg.custom_cfg.d2d_pairing_settings', [0, 1]);
+				}
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(payload.active_data_reporting_cfg.custom_cfg.d2d_pairing_settings);
+			}
+			if (isValid(payload.active_data_reporting_cfg.custom_cfg.d2d_master_enable)) {
+				buffer.writeUInt8(0xc3);
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(0x03);
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(0x88);
+				if ([0, 1].indexOf(payload.active_data_reporting_cfg.custom_cfg.d2d_master_enable) === -1) {
+					throw oneOfError('active_data_reporting_cfg.custom_cfg.d2d_master_enable', [0, 1]);
+				}
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(payload.active_data_reporting_cfg.custom_cfg.d2d_master_enable);
+			}
+			if (isValid(payload.active_data_reporting_cfg.custom_cfg.d2d_master_settings)) {
+				buffer.writeUInt8(0xc3);
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(0x03);
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(0x89);
+				if ([0, 1].indexOf(payload.active_data_reporting_cfg.custom_cfg.d2d_master_settings) === -1) {
+					throw oneOfError('active_data_reporting_cfg.custom_cfg.d2d_master_settings', [0, 1]);
+				}
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(payload.active_data_reporting_cfg.custom_cfg.d2d_master_settings);
+			}
+			if (isValid(payload.active_data_reporting_cfg.custom_cfg.d2d_slave_enable)) {
+				buffer.writeUInt8(0xc3);
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(0x03);
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(0x8a);
+				if ([0, 1].indexOf(payload.active_data_reporting_cfg.custom_cfg.d2d_slave_enable) === -1) {
+					throw oneOfError('active_data_reporting_cfg.custom_cfg.d2d_slave_enable', [0, 1]);
+				}
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(payload.active_data_reporting_cfg.custom_cfg.d2d_slave_enable);
+			}
+			if (isValid(payload.active_data_reporting_cfg.custom_cfg.d2d_slave_settings)) {
+				buffer.writeUInt8(0xc3);
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(0x03);
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(0x8b);
+				if ([0, 1].indexOf(payload.active_data_reporting_cfg.custom_cfg.d2d_slave_settings) === -1) {
+					throw oneOfError('active_data_reporting_cfg.custom_cfg.d2d_slave_settings', [0, 1]);
+				}
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(payload.active_data_reporting_cfg.custom_cfg.d2d_slave_settings);
+			}
+			if (isValid(payload.active_data_reporting_cfg.custom_cfg.timed_system_control)) {
+				buffer.writeUInt8(0xc3);
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(0x03);
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(0x8c);
+				if ([0, 1].indexOf(payload.active_data_reporting_cfg.custom_cfg.timed_system_control) === -1) {
+					throw oneOfError('active_data_reporting_cfg.custom_cfg.timed_system_control', [0, 1]);
+				}
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(payload.active_data_reporting_cfg.custom_cfg.timed_system_control);
+			}
+			if (isValid(payload.active_data_reporting_cfg.custom_cfg.temporary_unlock_settings)) {
+				buffer.writeUInt8(0xc3);
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(0x03);
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(0x8d);
+				if ([0, 1].indexOf(payload.active_data_reporting_cfg.custom_cfg.temporary_unlock_settings) === -1) {
+					throw oneOfError('active_data_reporting_cfg.custom_cfg.temporary_unlock_settings', [0, 1]);
+				}
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(payload.active_data_reporting_cfg.custom_cfg.temporary_unlock_settings);
+			}
+			if (isValid(payload.active_data_reporting_cfg.custom_cfg.fan_stop_enable)) {
+				buffer.writeUInt8(0xc3);
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(0x03);
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(0x8e);
+				if ([0, 1].indexOf(payload.active_data_reporting_cfg.custom_cfg.fan_stop_enable) === -1) {
+					throw oneOfError('active_data_reporting_cfg.custom_cfg.fan_stop_enable', [0, 1]);
+				}
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(payload.active_data_reporting_cfg.custom_cfg.fan_stop_enable);
+			}
+			if (isValid(payload.active_data_reporting_cfg.custom_cfg.relay_changes_report_enable)) {
+				buffer.writeUInt8(0xc3);
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(0x03);
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(0x90);
+				if ([0, 1].indexOf(payload.active_data_reporting_cfg.custom_cfg.relay_changes_report_enable) === -1) {
+					throw oneOfError('active_data_reporting_cfg.custom_cfg.relay_changes_report_enable', [0, 1]);
+				}
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(payload.active_data_reporting_cfg.custom_cfg.relay_changes_report_enable);
+			}
+			if (isValid(payload.active_data_reporting_cfg.custom_cfg.screen_content_settings)) {
+				buffer.writeUInt8(0xc3);
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(0x03);
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(0x91);
+				if ([0, 1].indexOf(payload.active_data_reporting_cfg.custom_cfg.screen_content_settings) === -1) {
+					throw oneOfError('active_data_reporting_cfg.custom_cfg.screen_content_settings', [0, 1]);
+				}
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(payload.active_data_reporting_cfg.custom_cfg.screen_content_settings);
+			}
+			if (isValid(payload.active_data_reporting_cfg.custom_cfg.valve_type_setting)) {
+				buffer.writeUInt8(0xc3);
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(0x03);
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(0x92);
+				if ([0, 1].indexOf(payload.active_data_reporting_cfg.custom_cfg.valve_type_setting) === -1) {
+					throw oneOfError('active_data_reporting_cfg.custom_cfg.valve_type_setting', [0, 1]);
+				}
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(payload.active_data_reporting_cfg.custom_cfg.valve_type_setting);
+			}
+			if (isValid(payload.active_data_reporting_cfg.custom_cfg.screen_front_light_enable)) {
+				buffer.writeUInt8(0xc3);
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(0x03);
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(0x93);
+				if ([0, 1].indexOf(payload.active_data_reporting_cfg.custom_cfg.screen_front_light_enable) === -1) {
+					throw oneOfError('active_data_reporting_cfg.custom_cfg.screen_front_light_enable', [0, 1]);
+				}
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(payload.active_data_reporting_cfg.custom_cfg.screen_front_light_enable);
+			}
+			if (isValid(payload.active_data_reporting_cfg.custom_cfg.occupied_detection_cfg)) {
+				buffer.writeUInt8(0xc3);
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(0x03);
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(0x94);
+				if ([0, 1].indexOf(payload.active_data_reporting_cfg.custom_cfg.occupied_detection_cfg) === -1) {
+					throw oneOfError('active_data_reporting_cfg.custom_cfg.occupied_detection_cfg', [0, 1]);
+				}
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(payload.active_data_reporting_cfg.custom_cfg.occupied_detection_cfg);
+			}
+			if (isValid(payload.active_data_reporting_cfg.custom_cfg.energy_saving_cfg)) {
+				buffer.writeUInt8(0xc3);
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(0x03);
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(0x95);
+				if ([0, 1].indexOf(payload.active_data_reporting_cfg.custom_cfg.energy_saving_cfg) === -1) {
+					throw oneOfError('active_data_reporting_cfg.custom_cfg.energy_saving_cfg', [0, 1]);
+				}
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(payload.active_data_reporting_cfg.custom_cfg.energy_saving_cfg);
+			}
+			if (isValid(payload.active_data_reporting_cfg.custom_cfg.child_lock_enable_cfg)) {
+				buffer.writeUInt8(0xc3);
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(0x03);
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(0x96);
+				if ([0, 1].indexOf(payload.active_data_reporting_cfg.custom_cfg.child_lock_enable_cfg) === -1) {
+					throw oneOfError('active_data_reporting_cfg.custom_cfg.child_lock_enable_cfg', [0, 1]);
+				}
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(payload.active_data_reporting_cfg.custom_cfg.child_lock_enable_cfg);
+			}
+			if (isValid(payload.active_data_reporting_cfg.custom_cfg.temporary_button_unlock_cfg)) {
+				buffer.writeUInt8(0xc3);
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(0x03);
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(0x97);
+				if ([0, 1].indexOf(payload.active_data_reporting_cfg.custom_cfg.temporary_button_unlock_cfg) === -1) {
+					throw oneOfError('active_data_reporting_cfg.custom_cfg.temporary_button_unlock_cfg', [0, 1]);
+				}
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(payload.active_data_reporting_cfg.custom_cfg.temporary_button_unlock_cfg);
+			}
+			if (isValid(payload.active_data_reporting_cfg.custom_cfg.freeze_protection_cfg)) {
+				buffer.writeUInt8(0xc3);
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(0x03);
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(0x98);
+				if ([0, 1].indexOf(payload.active_data_reporting_cfg.custom_cfg.freeze_protection_cfg) === -1) {
+					throw oneOfError('active_data_reporting_cfg.custom_cfg.freeze_protection_cfg', [0, 1]);
+				}
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(payload.active_data_reporting_cfg.custom_cfg.freeze_protection_cfg);
+			}
+			if (isValid(payload.active_data_reporting_cfg.custom_cfg.threshold_alarm_cfg)) {
+				buffer.writeUInt8(0xc3);
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(0x03);
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(0x99);
+				if ([0, 1].indexOf(payload.active_data_reporting_cfg.custom_cfg.threshold_alarm_cfg) === -1) {
+					throw oneOfError('active_data_reporting_cfg.custom_cfg.threshold_alarm_cfg', [0, 1]);
+				}
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(payload.active_data_reporting_cfg.custom_cfg.threshold_alarm_cfg);
+			}
+			if (isValid(payload.active_data_reporting_cfg.custom_cfg.high_temperature_alarm_cfg)) {
+				buffer.writeUInt8(0xc3);
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(0x03);
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(0x9a);
+				if ([0, 1].indexOf(payload.active_data_reporting_cfg.custom_cfg.high_temperature_alarm_cfg) === -1) {
+					throw oneOfError('active_data_reporting_cfg.custom_cfg.high_temperature_alarm_cfg', [0, 1]);
+				}
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(payload.active_data_reporting_cfg.custom_cfg.high_temperature_alarm_cfg);
+			}
+			if (isValid(payload.active_data_reporting_cfg.custom_cfg.low_temperature_alarm_cfg)) {
+				buffer.writeUInt8(0xc3);
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(0x03);
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(0x9b);
+				if ([0, 1].indexOf(payload.active_data_reporting_cfg.custom_cfg.low_temperature_alarm_cfg) === -1) {
+					throw oneOfError('active_data_reporting_cfg.custom_cfg.low_temperature_alarm_cfg', [0, 1]);
+				}
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(payload.active_data_reporting_cfg.custom_cfg.low_temperature_alarm_cfg);
+			}
+			if (isValid(payload.active_data_reporting_cfg.custom_cfg.temperature_calibration_cfg)) {
+				buffer.writeUInt8(0xc3);
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(0x03);
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(0x9c);
+				if ([0, 1].indexOf(payload.active_data_reporting_cfg.custom_cfg.temperature_calibration_cfg) === -1) {
+					throw oneOfError('active_data_reporting_cfg.custom_cfg.temperature_calibration_cfg', [0, 1]);
+				}
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(payload.active_data_reporting_cfg.custom_cfg.temperature_calibration_cfg);
+			}
+			if (isValid(payload.active_data_reporting_cfg.custom_cfg.humidity_calibration_cfg)) {
+				buffer.writeUInt8(0xc3);
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(0x03);
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(0x9d);
+				if ([0, 1].indexOf(payload.active_data_reporting_cfg.custom_cfg.humidity_calibration_cfg) === -1) {
+					throw oneOfError('active_data_reporting_cfg.custom_cfg.humidity_calibration_cfg', [0, 1]);
+				}
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(payload.active_data_reporting_cfg.custom_cfg.humidity_calibration_cfg);
+			}
+			if (isValid(payload.active_data_reporting_cfg.custom_cfg.interface_type_cfg)) {
+				buffer.writeUInt8(0xc3);
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(0x03);
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(0x9e);
+				if ([0, 1].indexOf(payload.active_data_reporting_cfg.custom_cfg.interface_type_cfg) === -1) {
+					throw oneOfError('active_data_reporting_cfg.custom_cfg.interface_type_cfg', [0, 1]);
+				}
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(payload.active_data_reporting_cfg.custom_cfg.interface_type_cfg);
+			}
+			if (isValid(payload.active_data_reporting_cfg.custom_cfg.fan_speed_ctl_delta_cfg)) {
+				buffer.writeUInt8(0xc3);
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(0x03);
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(0x9f);
+				if ([0, 1].indexOf(payload.active_data_reporting_cfg.custom_cfg.fan_speed_ctl_delta_cfg) === -1) {
+					throw oneOfError('active_data_reporting_cfg.custom_cfg.fan_speed_ctl_delta_cfg', [0, 1]);
+				}
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(payload.active_data_reporting_cfg.custom_cfg.fan_speed_ctl_delta_cfg);
+			}
+			if (isValid(payload.active_data_reporting_cfg.custom_cfg.temperature_data_source_cfg)) {
+				buffer.writeUInt8(0xc3);
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(0x03);
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(0xa0);
+				if ([0, 1].indexOf(payload.active_data_reporting_cfg.custom_cfg.temperature_data_source_cfg) === -1) {
+					throw oneOfError('active_data_reporting_cfg.custom_cfg.temperature_data_source_cfg', [0, 1]);
+				}
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(payload.active_data_reporting_cfg.custom_cfg.temperature_data_source_cfg);
+			}
+			if (isValid(payload.active_data_reporting_cfg.custom_cfg.reporting_interval_cfg)) {
+				buffer.writeUInt8(0xc3);
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(0x03);
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(0xa1);
+				if ([0, 1].indexOf(payload.active_data_reporting_cfg.custom_cfg.reporting_interval_cfg) === -1) {
+					throw oneOfError('active_data_reporting_cfg.custom_cfg.reporting_interval_cfg', [0, 1]);
+				}
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(payload.active_data_reporting_cfg.custom_cfg.reporting_interval_cfg);
+			}
+			if (isValid(payload.active_data_reporting_cfg.custom_cfg.screen_display_cfg)) {
+				buffer.writeUInt8(0xc3);
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(0x03);
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(0xa2);
+				if ([0, 1].indexOf(payload.active_data_reporting_cfg.custom_cfg.screen_display_cfg) === -1) {
+					throw oneOfError('active_data_reporting_cfg.custom_cfg.screen_display_cfg', [0, 1]);
+				}
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(payload.active_data_reporting_cfg.custom_cfg.screen_display_cfg);
+			}
+			if (isValid(payload.active_data_reporting_cfg.custom_cfg.unilatera_tolerance_enable)) {
+				buffer.writeUInt8(0xc3);
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(0x03);
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(0xa3);
+				if ([0, 1].indexOf(payload.active_data_reporting_cfg.custom_cfg.unilatera_tolerance_enable) === -1) {
+					throw oneOfError('active_data_reporting_cfg.custom_cfg.unilatera_tolerance_enable', [0, 1]);
+				}
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(payload.active_data_reporting_cfg.custom_cfg.unilatera_tolerance_enable);
+			}
+			if (isValid(payload.active_data_reporting_cfg.custom_cfg.temperature_control_permission_cfg)) {
+				buffer.writeUInt8(0xc3);
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(0x03);
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(0xa5);
+				if ([0, 1].indexOf(payload.active_data_reporting_cfg.custom_cfg.temperature_control_permission_cfg) === -1) {
+					throw oneOfError('active_data_reporting_cfg.custom_cfg.temperature_control_permission_cfg', [0, 1]);
+				}
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(payload.active_data_reporting_cfg.custom_cfg.temperature_control_permission_cfg);
+			}
+			if (isValid(payload.active_data_reporting_cfg.custom_cfg.external_data_src_timeout_cfg)) {
+				buffer.writeUInt8(0xc3);
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(0x03);
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(0xa7);
+				if ([0, 1].indexOf(payload.active_data_reporting_cfg.custom_cfg.external_data_src_timeout_cfg) === -1) {
+					throw oneOfError('active_data_reporting_cfg.custom_cfg.external_data_src_timeout_cfg', [0, 1]);
+				}
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(payload.active_data_reporting_cfg.custom_cfg.external_data_src_timeout_cfg);
+			}
+			if (isValid(payload.active_data_reporting_cfg.custom_cfg.daylight_saving_time)) {
+				buffer.writeUInt8(0xc3);
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(0x03);
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(0xc6);
+				if ([0, 1].indexOf(payload.active_data_reporting_cfg.custom_cfg.daylight_saving_time) === -1) {
+					throw oneOfError('active_data_reporting_cfg.custom_cfg.daylight_saving_time', [0, 1]);
+				}
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(payload.active_data_reporting_cfg.custom_cfg.daylight_saving_time);
+			}
+			if (isValid(payload.active_data_reporting_cfg.custom_cfg.time_zone)) {
+				buffer.writeUInt8(0xc3);
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(0x03);
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(0xc7);
+				if ([0, 1].indexOf(payload.active_data_reporting_cfg.custom_cfg.time_zone) === -1) {
+					throw oneOfError('active_data_reporting_cfg.custom_cfg.time_zone', [0, 1]);
+				}
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(payload.active_data_reporting_cfg.custom_cfg.time_zone);
+			}
+			if (isValid(payload.active_data_reporting_cfg.custom_cfg.device_status)) {
+				buffer.writeUInt8(0xc3);
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(0x03);
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(0xc8);
+				if ([0, 1].indexOf(payload.active_data_reporting_cfg.custom_cfg.device_status) === -1) {
+					throw oneOfError('active_data_reporting_cfg.custom_cfg.device_status', [0, 1]);
+				}
+				// 0: Disable, 1: Enable
+				buffer.writeUInt8(payload.active_data_reporting_cfg.custom_cfg.device_status);
+			}
 		}
 		encoded = encoded.concat(buffer.toBytes());
 	}
@@ -2962,6 +3788,75 @@ function cmdMap() {
 		  "active_data_reporting_cfg.times": "c301",
 		  "active_data_reporting_cfg.mode": "c302",
 		  "active_data_reporting_cfg.custom_cfg": "c303",
+		  "active_data_reporting_cfg.custom_cfg.collection_interval": "c30360",
+		  "active_data_reporting_cfg.custom_cfg.reporting_interval": "c30362",
+		  "active_data_reporting_cfg.custom_cfg.temperature_unit": "c30363",
+		  "active_data_reporting_cfg.custom_cfg.mode_enable": "c30364",
+		  "active_data_reporting_cfg.custom_cfg.intelligent_display_enable": "c30365",
+		  "active_data_reporting_cfg.custom_cfg.screen_object_settings": "c30366",
+		  "active_data_reporting_cfg.custom_cfg.system_status": "c30367",
+		  "active_data_reporting_cfg.custom_cfg.temperature_control_mode": "c30368",
+		  "active_data_reporting_cfg.custom_cfg.target_temperature_resolution": "c30369",
+		  "active_data_reporting_cfg.custom_cfg.target_temperature_tolerance": "c3036a",
+		  "active_data_reporting_cfg.custom_cfg.heating_target_temperature": "c3036b",
+		  "active_data_reporting_cfg.custom_cfg.cooling_target_temperature": "c3036c",
+		  "active_data_reporting_cfg.custom_cfg.heating_target_temperature_range": "c3036d",
+		  "active_data_reporting_cfg.custom_cfg.cooling_target_temperature_range": "c3036e",
+		  "active_data_reporting_cfg.custom_cfg.temperature_control_dehumidification": "c3036f",
+		  "active_data_reporting_cfg.custom_cfg.target_humidity_range": "c30370",
+		  "active_data_reporting_cfg.custom_cfg.temp_ctl_dehumi_cfg": "c30371",
+		  "active_data_reporting_cfg.custom_cfg.fan_control_mode": "c30372",
+		  "active_data_reporting_cfg.custom_cfg.fan_auto_mode_temperature_range": "c30373",
+		  "active_data_reporting_cfg.custom_cfg.fan_delay_close": "c30374",
+		  "active_data_reporting_cfg.custom_cfg.child_lock": "c30375",
+		  "active_data_reporting_cfg.custom_cfg.temperature_alarm_settings": "c30376",
+		  "active_data_reporting_cfg.custom_cfg.high_temperature_alarm_settings": "c30377",
+		  "active_data_reporting_cfg.custom_cfg.low_temperature_alarm_settings": "c30378",
+		  "active_data_reporting_cfg.custom_cfg.temperature_calibration_settings": "c30379",
+		  "active_data_reporting_cfg.custom_cfg.humidity_calibration_settings": "c3037a",
+		  "active_data_reporting_cfg.custom_cfg.schedule_settings": "c3037b",
+		  "active_data_reporting_cfg.custom_cfg.interface_settings": "c3037c",
+		  "active_data_reporting_cfg.custom_cfg.fan_delay_close_cfg": "c3037f",
+		  "active_data_reporting_cfg.custom_cfg.di_enable": "c30380",
+		  "active_data_reporting_cfg.custom_cfg.di_settings": "c30381",
+		  "active_data_reporting_cfg.custom_cfg.window_opening_detection_enable": "c30382",
+		  "active_data_reporting_cfg.custom_cfg.window_opening_detection_settings": "c30383",
+		  "active_data_reporting_cfg.custom_cfg.freeze_protection_settings": "c30384",
+		  "active_data_reporting_cfg.custom_cfg.temperature_source": "c30385",
+		  "active_data_reporting_cfg.custom_cfg.d2d_pairing_enable": "c30386",
+		  "active_data_reporting_cfg.custom_cfg.d2d_pairing_settings": "c30387",
+		  "active_data_reporting_cfg.custom_cfg.d2d_master_enable": "c30388",
+		  "active_data_reporting_cfg.custom_cfg.d2d_master_settings": "c30389",
+		  "active_data_reporting_cfg.custom_cfg.d2d_slave_enable": "c3038a",
+		  "active_data_reporting_cfg.custom_cfg.d2d_slave_settings": "c3038b",
+		  "active_data_reporting_cfg.custom_cfg.timed_system_control": "c3038c",
+		  "active_data_reporting_cfg.custom_cfg.temporary_unlock_settings": "c3038d",
+		  "active_data_reporting_cfg.custom_cfg.fan_stop_enable": "c3038e",
+		  "active_data_reporting_cfg.custom_cfg.relay_changes_report_enable": "c30390",
+		  "active_data_reporting_cfg.custom_cfg.screen_content_settings": "c30391",
+		  "active_data_reporting_cfg.custom_cfg.valve_type_setting": "c30392",
+		  "active_data_reporting_cfg.custom_cfg.screen_front_light_enable": "c30393",
+		  "active_data_reporting_cfg.custom_cfg.occupied_detection_cfg": "c30394",
+		  "active_data_reporting_cfg.custom_cfg.energy_saving_cfg": "c30395",
+		  "active_data_reporting_cfg.custom_cfg.child_lock_enable_cfg": "c30396",
+		  "active_data_reporting_cfg.custom_cfg.temporary_button_unlock_cfg": "c30397",
+		  "active_data_reporting_cfg.custom_cfg.freeze_protection_cfg": "c30398",
+		  "active_data_reporting_cfg.custom_cfg.threshold_alarm_cfg": "c30399",
+		  "active_data_reporting_cfg.custom_cfg.high_temperature_alarm_cfg": "c3039a",
+		  "active_data_reporting_cfg.custom_cfg.low_temperature_alarm_cfg": "c3039b",
+		  "active_data_reporting_cfg.custom_cfg.temperature_calibration_cfg": "c3039c",
+		  "active_data_reporting_cfg.custom_cfg.humidity_calibration_cfg": "c3039d",
+		  "active_data_reporting_cfg.custom_cfg.interface_type_cfg": "c3039e",
+		  "active_data_reporting_cfg.custom_cfg.fan_speed_ctl_delta_cfg": "c3039f",
+		  "active_data_reporting_cfg.custom_cfg.temperature_data_source_cfg": "c303a0",
+		  "active_data_reporting_cfg.custom_cfg.reporting_interval_cfg": "c303a1",
+		  "active_data_reporting_cfg.custom_cfg.screen_display_cfg": "c303a2",
+		  "active_data_reporting_cfg.custom_cfg.unilatera_tolerance_enable": "c303a3",
+		  "active_data_reporting_cfg.custom_cfg.temperature_control_permission_cfg": "c303a5",
+		  "active_data_reporting_cfg.custom_cfg.external_data_src_timeout_cfg": "c303a7",
+		  "active_data_reporting_cfg.custom_cfg.daylight_saving_time": "c303c6",
+		  "active_data_reporting_cfg.custom_cfg.time_zone": "c303c7",
+		  "active_data_reporting_cfg.custom_cfg.device_status": "c303c8",
 		  "temperature_control_permission_cfg": "a5",
 		  "temperature_control_permission_cfg.temp_ctrl_permission": "a500",
 		  "debug_commands": "a6",
