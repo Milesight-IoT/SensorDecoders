@@ -147,6 +147,7 @@ Only commands where the device is documented to echo a confirmation are decoded.
 | Report Interval  | 0xFE | 0x8E |   3    | report_interval(2B), reply to Report Interval configuration; device silent if out of range |
 | Time Zone        | 0xFE | 0xBD |   2    | time_zone(2B), reply to Time Zone configuration; device silent on failure              |
 | Valve Descale    | 0xFE | 0x29 |   1    | valve_descale, reply to Trigger Valve Descale; echo only means the command was accepted, not that descaling has completed (see uplink 0x84) |
+| Valve Calibration | 0xFE | 0xAD |   1    | valve_calibration, reply to Trigger Motor Stroke Calibration; only data 0xFF is valid, and the echo only means the request was accepted (see uplink 0x08) |
 | Thermal Conductivity Correction | 0xF8 | 0x51 |   1    | thermal_conductivity_correction(1B) + status(1B), reply to V1.2 2.44 configuration                                                    |
 | Change Password  | 0xF8 | 0x52 |   6    | 6B request data + status(1B), reply to V1.2 2.45 configuration; password content is not decoded                                       |
 | Device Periodic Report | 0xF8 | 0x53 |   3 | config_report.enable(1B) + period(2B) + status(1B), reply to V1.2 2.46 configuration                                                  |
@@ -162,9 +163,13 @@ Service commands trigger one-shot device actions rather than persistent configur
 | Query Device Status                      | 0xFF | 0x28 |   1    | report_status, values: (0: report a periodic packet immediately, 1: query heating date, 2: query heating schedule)             |
 | Trigger Valve Descale                    | 0xFF | 0x29 |   1    | valve_descale, values: (0: no, 1: yes)<br/>result reported asynchronously on uplink channel 0x84                                |
 | Open Window Status                       | 0xFF | 0x57 |   1    | open_window_status, values: (0: clear open window, 1: trigger open window)                                                     |
-| Trigger Motor Stroke Calibration         | 0xFF | 0xAD |   1    | valve_calibration, values: (0: no, 1: yes)                                                                                      |
+| Trigger Motor Stroke Calibration         | 0xFF | 0xAD |   1    | valve_calibration, values: (0: no, 1: yes)<br/>send 0xFF as request data; final status is reported asynchronously on uplink 0x08 |
 | Set Current Temperature (External Mode)  | 0x03 | -    |   4    | outside_temperature(2B), int16/100, unit: °C, followed by 1 reserved byte (0xFF); no TYPE byte in this command                  |
 | Reset                                     | 0xFF | 0xFE |   1    | reset, values: (0: no, 1: yes)<br/>restores factory defaults, clears network join info, calibration data and control runtime state |
+
+For motor stroke calibration, `FE AD FF` is only the request-accepted echo; it does not prove that calibration started or succeeded. The final result is reported separately as `08 E5 status`, where `00` is success, and no motor-stroke field is appended to that result. When temperature control is disabled, ordinary calibration does not execute and attempts to report status `04`. With confirmed critical low battery, an ordinary explicit calibration does not start the motor and immediately attempts one status `05` report. Non-heating all-closed and descaling flows use their own prerequisite calibration behavior; failed calibration follows the motor failure retraction and status classification rules.
+
+ToolBox NFC calibration is independent of the LoRaWAN IPSO payload above: it uses NFC write subcommand `0x10` with the 6-byte password and must not be sent as `FF AD FF`. The device must be powered on. If it is powered off, NFC calibration fails immediately rather than being queued for the next power-on; it drives no motor and produces no result uplink. Even after power-on it must be issued again. An NFC success ACK, like `FE AD FF`, only indicates event acceptance.
 
 ## Sample
 
@@ -357,6 +362,11 @@ Service commands trigger one-shot device actions rather than persistent configur
 // FE2900 (downlink response, uplink direction)
 {
     "valve_descale": "yes"
+}
+
+// FEADFF (downlink response, uplink direction)
+{
+    "valve_calibration": "yes"
 }
 ```
 

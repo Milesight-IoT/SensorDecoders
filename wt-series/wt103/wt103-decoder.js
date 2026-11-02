@@ -468,6 +468,12 @@ function handle_config_frame(channel_id, channel_type, bytes, offset, data_lengt
         case 0xac:
             decoded.temperature_control_algorithm = readUInt8(d[0]);
             break;
+        case 0xad:
+            // 0xFE 0xAD 0xFF only confirms request acceptance; final result is 0x08 0xE5.
+            if (channel_id === 0xfe && readUInt8(d[0]) === 0xff) {
+                decoded.valve_calibration = readYesNoStatus(1);
+            }
+            break;
         case 0xae:
             decoded.temperature_control_mode = readUInt8(d[0]);
             break;

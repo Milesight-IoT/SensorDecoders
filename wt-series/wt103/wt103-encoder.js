@@ -302,6 +302,7 @@ function setOpenWindowStatus(open_window_status) {
  * trigger motor stroke calibration
  * @since 3.6
  * @param {number} valve_calibration values: (0: no, 1: yes)
+ * @description Device echoes 0xFE 0xAD 0xFF after accepting the request; the echo only means the request was accepted. The final result is reported asynchronously on channel 0x08 (0x00 means success). ToolBox NFC calibration uses its own NFC write subcommand 0x10 and 6-byte password, not this IPSO payload; the device must be powered on. NFC calibration fails immediately when powered off, is not queued for the next power-on, drives no motor, produces no result uplink, and must be sent again after power-on.
  * @example { "valve_calibration": 1 }
  */
 function triggerValveCalibration(valve_calibration) {
