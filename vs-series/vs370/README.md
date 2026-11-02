@@ -28,6 +28,8 @@ For more detailed information, please visit [Milesight Official Website](https:/
 |      TSL      | 0xFF | 0xFF |   2    | tsl_version(2B)                                                                                  |
 | Serial Number | 0xFF | 0x16 |   2    | sn(8B)                                                                                           |
 | LoRaWAN Class | 0xFF | 0x0F |   1    | lorawan_class(1B)<br/>lorawan_class, values: (0: Class A, 1: Class B, 2: Class C, 3: Class CtoB) |
+| ODM Custom ID | 0xFF | 0xE7 |   2    | odm_custom_id(2B)<br/>odm_custom_id, e.g. 1234 -> 1234 |
+| Firmware Sub Version | 0xFF | 0xE8 |   4    | firmware_sub_version(4B)<br/>firmware_sub_version, e.g. 01020011 -> -r1-a2-t11 |
 |  Reset Event  | 0xFF | 0xFE |   1    | reset_event(1B)                                                                                  |
 | Device Status | 0xFF | 0x0B |   1    | device_status(1B)                                                                                |
 
