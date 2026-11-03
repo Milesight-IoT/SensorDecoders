@@ -428,9 +428,9 @@ function milesightDeviceEncode(payload) {
 
 		bitOptions |= payload.relay_status.high_status << 2;
 
-		bitOptions |= payload.relay_status.valve_1_status << 3;
+		bitOptions |= 0 << 3;
 
-		bitOptions |= payload.relay_status.valve_2_status << 4;
+		bitOptions |= 0 << 4;
 
 		bitOptions |= payload.relay_status.reserved << 5;
 
