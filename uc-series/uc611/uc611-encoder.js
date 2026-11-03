@@ -26,6 +26,7 @@ function Encoder(obj, port) {
 /* eslint-enable */
 
 function milesightDeviceEncode(payload) {
+	normalizeArrayParams(payload);
 	processTemperature(payload);
 	var encoded = [];
 	//0xef
@@ -273,12 +274,6 @@ function milesightDeviceEncode(payload) {
 		}
 		// 0：second, 1：min
 		buffer.writeUInt8(payload.reporting_interval.unit);
-		if (payload.reporting_interval.unit == 0x00) {
-			if (payload.reporting_interval.seconds_of_time < 10 || payload.reporting_interval.seconds_of_time > 64800) {
-				throw betweenError('reporting_interval.seconds_of_time', 10, 64800);
-			}
-			buffer.writeUInt16LE(payload.reporting_interval.seconds_of_time);
-		}
 		if (payload.reporting_interval.unit == 0x01) {
 			if (payload.reporting_interval.minutes_of_time < 1 || payload.reporting_interval.minutes_of_time > 1440) {
 				throw betweenError('reporting_interval.minutes_of_time', 1, 1440);
@@ -631,12 +626,12 @@ function milesightDeviceEncode(payload) {
 			if (isValid(schedule_settings_item.schedule_action)) {
 				buffer.writeUInt8(0x77);
 				buffer.writeUInt8(schedule_settings_item_id);
-				// 0:normally open, 1:normally closed, 2:change
+				// 0:normally open/stop, 1:normally closed/start, 2:change(only relay)
 				buffer.writeUInt8(0x03);
 				if ([0, 1, 2].indexOf(schedule_settings_item.schedule_action) === -1) {
 					throw oneOfError('schedule_action', [0, 1, 2]);
 				}
-				// 0:normally open, 1:normally closed, 2:change
+				// 0:normally open/stop, 1:normally closed/start, 2:change(only relay)
 				buffer.writeUInt8(schedule_settings_item.schedule_action);
 			}
 			if (isValid(schedule_settings_item.schedule_parameter)) {
@@ -703,12 +698,12 @@ function milesightDeviceEncode(payload) {
 			if (isValid(d2d_slave_settings_item.action)) {
 				buffer.writeUInt8(0x79);
 				buffer.writeUInt8(d2d_slave_settings_item_id);
-				// 0:normally open, 1:normally closed, 2:change
+				// 0:normally open/stop, 1:normally closed/start, 2:change(only relay)
 				buffer.writeUInt8(0x03);
 				if ([0, 1, 2].indexOf(d2d_slave_settings_item.action) === -1) {
 					throw oneOfError('action', [0, 1, 2]);
 				}
-				// 0:normally open, 1:normally closed, 2:change
+				// 0:normally open/stop, 1:normally closed/start, 2:change(only relay)
 				buffer.writeUInt8(d2d_slave_settings_item.action);
 			}
 		}
@@ -740,7 +735,7 @@ function milesightDeviceEncode(payload) {
 		if ([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].indexOf(payload.daylight_saving_time.start_month) === -1) {
 			throw oneOfError('daylight_saving_time.start_month', [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]);
 		}
-		// 1:Jan., 2:Feb., 3:Mar., 4:Apr., 5:May, 6:Jun., 7:Jul., 8:Aug., 9:Sep., 10:Oct., 11:Nov., 12:Dec.
+		// 1:Jan., 2:Feb., 3:Mar., 4:Apr., 5:May., 6:Jun., 7:Jul., 8:Aug., 9:Sep., 10:Oct., 11:Nov., 12:Dec.
 		buffer.writeUInt8(payload.daylight_saving_time.start_month);
 		var bitOptions = 0;
 		// 1:1st, 2: 2nd, 3: 3rd, 4: 4th, 5: last
@@ -757,7 +752,7 @@ function milesightDeviceEncode(payload) {
 		if ([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].indexOf(payload.daylight_saving_time.end_month) === -1) {
 			throw oneOfError('daylight_saving_time.end_month', [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]);
 		}
-		// 1:Jan., 2:Feb., 3:Mar., 4:Apr., 5:May, 6:Jun., 7:Jul., 8:Aug., 9:Sep., 10:Oct., 11:Nov., 12:Dec.
+		// 1:Jan., 2:Feb., 3:Mar., 4:Apr., 5:May., 6:Jun., 7:Jul., 8:Aug., 9:Sep., 10:Oct., 11:Nov., 12:Dec.
 		buffer.writeUInt8(payload.daylight_saving_time.end_month);
 		var bitOptions = 0;
 		// 1:1st, 2: 2nd, 3: 3rd, 4: 4th, 5: last
@@ -792,13 +787,6 @@ function milesightDeviceEncode(payload) {
 		}
 		// 0：normally open, 1：normally closed
 		buffer.writeUInt8(payload.update_relay_state.state);
-		encoded = encoded.concat(buffer.toBytes());
-	}
-	//0x7b
-	if ('clear_power_metering' in payload) {
-		var buffer = new Buffer();
-		buffer.writeUInt8(0x7b);
-		buffer.writeUInt8(payload.clear_power_metering.clear);
 		encoded = encoded.concat(buffer.toBytes());
 	}
 	//0x7c
@@ -1105,6 +1093,51 @@ function isInteger(str) {
     return typeof str === 'string' && /^[0-9]+$/.test(str);
 }
 
+function normalizeArrayParams(value) {
+	if (Array.isArray(value)) {
+		for (var i = 0; i < value.length; i++) {
+			value[i] = normalizeArrayParams(value[i]);
+		}
+		return value;
+	}
+	if (value === null || typeof value !== 'object') {
+		return value;
+	}
+	var keys = [];
+	for (var key in value) {
+		if (Object.prototype.hasOwnProperty.call(value, key)) {
+			keys.push(key);
+		}
+	}
+	var allIntegerKeys = keys.length > 0;
+	for (var j = 0; j < keys.length; j++) {
+		if (!isInteger(keys[j])) {
+			allIntegerKeys = false;
+			break;
+		}
+	}
+	if (allIntegerKeys) {
+		var items = [];
+		for (var k = 0; k < keys.length; k++) {
+			var item = normalizeArrayParams(value[keys[k]]);
+			if (item !== null && typeof item === 'object' && item.id === undefined) {
+				item.id = parseInt(keys[k], 10);
+			}
+			items.push(item);
+		}
+		items.sort(function (a, b) {
+			return ((a && a.id) || 0) - ((b && b.id) || 0);
+		});
+		return items;
+	}
+	for (var prop in value) {
+		if (Object.prototype.hasOwnProperty.call(value, prop)) {
+			value[prop] = normalizeArrayParams(value[prop]);
+		}
+	}
+	return value;
+}
+
 function betweenError(path, min, max) {
 	return new Error(path + ' must be between ' + min + ' and ' + max);
 }
@@ -1144,7 +1177,6 @@ function cmdMap() {
 		  "open_window_detection": "10",
 		  "relays_status_change": "11",
 		  "reporting_interval": "60",
-		  "reporting_interval.seconds_of_time": "6000",
 		  "reporting_interval.minutes_of_time": "6001",
 		  "temperature_unit": "61",
 		  "led_status": "62",
@@ -1196,7 +1228,6 @@ function cmdMap() {
 		  "daylight_saving_time": "c6",
 		  "lora_tx_rdt_max": "7e",
 		  "update_relay_state": "7a",
-		  "clear_power_metering": "7b",
 		  "update_open_windows_state": "7c",
 		  "send_temperature": "7d",
 		  "reset_all_plans": "7f"
@@ -1231,6 +1262,10 @@ function processTemperature(payload) {
     "temperature_control_settings.range.max": {
         "coefficient": 0.01,
         "unitName": "℃"
+    },
+    "open_window_settings.cooling_rate": {
+        "coefficient": 0.01,
+        "unitName": "K"
     },
     "anti_freeze_protection_settings.temperature_value": {
         "coefficient": 0.01,
