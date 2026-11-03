@@ -238,9 +238,6 @@ function milesightDeviceDecode(bytes) {
 				decoded.reporting_interval = decoded.reporting_interval || {};
 				// 0：second, 1：min
 				decoded.reporting_interval.unit = readUInt8(bytes, counterObj, 1);
-				if (decoded.reporting_interval.unit == 0x00) {
-					decoded.reporting_interval.seconds_of_time = readUInt16LE(bytes, counterObj, 2);
-				}
 				if (decoded.reporting_interval.unit == 0x01) {
 					decoded.reporting_interval.minutes_of_time = readUInt16LE(bytes, counterObj, 2);
 				}
@@ -264,6 +261,10 @@ function milesightDeviceDecode(bytes) {
 					// 0：disable, 1：enable
 					decoded.button_lock_settings.switch_reset_enable = readUInt8(bytes, counterObj, 1);
 				}
+				break;
+			case 0x6a:
+				// 0：disable, 1：enable
+				decoded.alarm_deactivation_enable = readUInt8(bytes, counterObj, 1);
 				break;
 			case 0x64:
 				decoded.overcurrent_alarm_rule = decoded.overcurrent_alarm_rule || {};
@@ -316,10 +317,6 @@ function milesightDeviceDecode(bytes) {
 			case 0x69:
 				// 0：disable, 1：enable
 				decoded.relay_abnormal_protection_enable = readUInt8(bytes, counterObj, 1);
-				break;
-			case 0x6a:
-				// 0：disable, 1：enable
-				decoded.alarm_deactivation_enable = readUInt8(bytes, counterObj, 1);
 				break;
 			case 0x6b:
 				// 2：Return to Previous Working State, 0：normally open, 1：normally closed
@@ -461,7 +458,7 @@ function milesightDeviceDecode(bytes) {
 					schedule_settings_item.schedule_target = readUInt8(bytes, counterObj, 1);
 				}
 				if (schedule_settings_item_command == 0x03) {
-					// 0:normally open, 1:normally closed, 2:change
+					// 0:normally open/stop, 1:normally closed/start, 2:change(only relay)
 					schedule_settings_item.schedule_action = readUInt8(bytes, counterObj, 1);
 				}
 				if (schedule_settings_item_command == 0x04) {
@@ -491,7 +488,7 @@ function milesightDeviceDecode(bytes) {
 					d2d_slave_settings_item.content = readUInt8(bytes, counterObj, 1);
 				}
 				if (d2d_slave_settings_item_type == 0x03) {
-					// 0:normally open, 1:normally closed, 2:change
+					// 0:normally open/stop, 1:normally closed/start, 2:change(only relay)
 					d2d_slave_settings_item.action = readUInt8(bytes, counterObj, 1);
 				}
 				break;
@@ -503,7 +500,7 @@ function milesightDeviceDecode(bytes) {
 				// 0：Disable, 1：Enable
 				decoded.daylight_saving_time.enable = readUInt8(bytes, counterObj, 1);
 				decoded.daylight_saving_time.daylight_saving_time_offset = readUInt8(bytes, counterObj, 1);
-				// 1:Jan., 2:Feb., 3:Mar., 4:Apr., 5:May, 6:Jun., 7:Jul., 8:Aug., 9:Sep., 10:Oct., 11:Nov., 12:Dec.
+				// 1:Jan., 2:Feb., 3:Mar., 4:Apr., 5:May., 6:Jun., 7:Jul., 8:Aug., 9:Sep., 10:Oct., 11:Nov., 12:Dec.
 				decoded.daylight_saving_time.start_month = readUInt8(bytes, counterObj, 1);
 				var bitOptions = readUInt8(bytes, counterObj, 1);
 				// 1:1st, 2: 2nd, 3: 3rd, 4: 4th, 5: last
@@ -511,7 +508,7 @@ function milesightDeviceDecode(bytes) {
 				// 1：Mon., 2：Tues., 3：Wed., 4：Thurs., 5：Fri., 6：Sat., 7：Sun.
 				decoded.daylight_saving_time.start_week_day = extractBits(bitOptions, 0, 4);
 				decoded.daylight_saving_time.start_hour_min = readUInt16LE(bytes, counterObj, 2);
-				// 1:Jan., 2:Feb., 3:Mar., 4:Apr., 5:May, 6:Jun., 7:Jul., 8:Aug., 9:Sep., 10:Oct., 11:Nov., 12:Dec.
+				// 1:Jan., 2:Feb., 3:Mar., 4:Apr., 5:May., 6:Jun., 7:Jul., 8:Aug., 9:Sep., 10:Oct., 11:Nov., 12:Dec.
 				decoded.daylight_saving_time.end_month = readUInt8(bytes, counterObj, 1);
 				var bitOptions = readUInt8(bytes, counterObj, 1);
 				// 1:1st, 2: 2nd, 3: 3rd, 4: 4th, 5: last
@@ -598,18 +595,18 @@ function readHardwareVersion(bytes) {
 }
 
 function readFirmwareVersion(bytes) {
-	var major = bytes[0] & 0xff;
-	var minor = bytes[1] & 0xff;
-	var release = bytes[2] & 0xff;
-	var alpha = bytes[3] & 0xff;
-	var unit_test = bytes[4] & 0xff;
-	var test = bytes[5] & 0xff;
+	var major = (bytes[0] & 0xff).toString(16);
+	var minor = (bytes[1] & 0xff).toString(16);
+	var release = (bytes[2] & 0xff).toString(16);
+	var alpha = (bytes[3] & 0xff).toString(16);
+	var unit_test = (bytes[4] & 0xff).toString(16);
+	var test = (bytes[5] & 0xff).toString(16);
 
 	var version = 'v' + major + '.' + minor;
-	if (release !== 0) version += '-r' + release;
-	if (alpha !== 0) version += '-a' + alpha;
-	if (unit_test !== 0) version += '-u' + unit_test;
-	if (test !== 0) version += '-t' + test;
+	if (release !== 0) version += '-r' + release.toString(16);
+	if (alpha !== 0) version += '-a' + alpha.toString(16);
+	if (unit_test !== 0) version += '-u' + unit_test.toString(16);
+	if (test !== 0) version += '-t' + test.toString(16);
 	return version;
 }
 
@@ -976,7 +973,6 @@ function cmdMap() {
 		  "2502": "equipment_temperature_alarm.over_range_error",
 		  "2600": "ambient_temperature_alarm.collection_error",
 		  "2603": "ambient_temperature_alarm.no_data",
-		  "6000": "reporting_interval.seconds_of_time",
 		  "6001": "reporting_interval.minutes_of_time",
 		  "6300": "button_lock_settings.switch_lock_enable",
 		  "6301": "button_lock_settings.switch_reset_enable",
@@ -1091,6 +1087,10 @@ function processTemperature(decoded) {
     "temperature_control_settings.range.max": {
         "precision": 2,
         "unitName": "℃"
+    },
+    "open_window_settings.cooling_rate": {
+        "precision": 2,
+        "unitName": "K"
     },
     "anti_freeze_protection_settings.temperature_value": {
         "precision": 2,
