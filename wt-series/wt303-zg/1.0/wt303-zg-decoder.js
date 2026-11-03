@@ -1476,7 +1476,7 @@ function processTemperature(decoded) {
     },
     "target_temperature_tolerance": {
         "precision": 2,
-        "unitName": "℃"
+        "unitName": "K"
     },
     "heating_target_temperature_range.min": {
         "precision": 2,
@@ -1496,19 +1496,19 @@ function processTemperature(decoded) {
     },
     "temperature_control_dehumidification.temperature_tolerance": {
         "precision": 2,
-        "unitName": "℃"
+        "unitName": "K"
     },
     "fan_auto_mode_temperature_range.speed_range_1": {
         "precision": 2,
-        "unitName": "℃"
+        "unitName": "K"
     },
     "fan_auto_mode_temperature_range.speed_range_2": {
         "precision": 2,
-        "unitName": "℃"
+        "unitName": "K"
     },
     "temperature_calibration_settings.calibration_value": {
         "precision": 2,
-        "unitName": "℃"
+        "unitName": "K"
     },
     "temperature_alarm_settings.threshold_min": {
         "precision": 2,
@@ -1520,11 +1520,11 @@ function processTemperature(decoded) {
     },
     "high_temperature_alarm_settings.difference_in_temperature": {
         "precision": 2,
-        "unitName": "℃"
+        "unitName": "K"
     },
     "low_temperature_alarm_settings.difference_in_temperature": {
         "precision": 2,
-        "unitName": "℃"
+        "unitName": "K"
     },
     "schedule_settings._item.content.heat_target_temperature": {
         "precision": 2,
@@ -1536,11 +1536,11 @@ function processTemperature(decoded) {
     },
     "schedule_settings._item.content.temperature_tolerance": {
         "precision": 2,
-        "unitName": "℃"
+        "unitName": "K"
     },
     "window_opening_detection_settings.temperature_detection.difference_in_temperature": {
         "precision": 2,
-        "unitName": "℃"
+        "unitName": "K"
     },
     "freeze_protection_settings.target_temperature": {
         "precision": 2,

@@ -37,7 +37,7 @@
             "id": "celsius_target_temperature_tolerance",
             "name": "Celsius Target Temperature Tolerance",
             "value": "1",
-            "unit": "°C",
+            "unit": "K",
             "access_mode": "RW",
             "data_type": "NUMBER",
             "value_type": "FLOAT",
@@ -46,8 +46,8 @@
                 5
             ],
             "bacnet_type": "analog_value_object",
-            "bacnet_unit_type_id": 62,
-            "bacnet_unit_type": "UNITS_DEGREES_CELSIUS"
+            "bacnet_unit_type_id": 121,
+            "bacnet_unit_type": "UNITS_DELTA_DEGREES_KELVIN"
         },
         {
             "id": "celsius_temperature",
@@ -479,18 +479,18 @@
         {
             "id": "fahrenheit_target_temperature_tolerance",
             "name": "Fahrenheit Target Temperature Tolerance",
-            "value": "33.8",
-            "unit": "°F",
+            "value": "1.8",
+            "unit": "ΔT°F",
             "access_mode": "RW",
             "data_type": "NUMBER",
             "value_type": "FLOAT",
             "range": [
-                32.18,
-                41
+                0.18,
+                9
             ],
             "bacnet_type": "analog_value_object",
-            "bacnet_unit_type_id": 64,
-            "bacnet_unit_type": "UNITS_DEGREES_FAHRENHEIT"
+            "bacnet_unit_type_id": 120,
+            "bacnet_unit_type": "UNITS_DELTA_DEGREES_FAHRENHEIT"
         },
         {
             "id": "fahrenheit_temperature",
@@ -617,7 +617,7 @@
             "id": "fan_speed_ctl_delta_cfg.celsius_delta1",
             "name": "Celsius ΔT1(Fan Speed Control Delta Configuration)",
             "value": "3",
-            "unit": "°C",
+            "unit": "K",
             "access_mode": "RW",
             "data_type": "NUMBER",
             "value_type": "FLOAT",
@@ -626,15 +626,15 @@
                 15
             ],
             "bacnet_type": "analog_value_object",
-            "bacnet_unit_type_id": 62,
-            "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
+            "bacnet_unit_type_id": 121,
+            "bacnet_unit_type": "UNITS_DELTA_DEGREES_KELVIN",
             "reference": []
         },
         {
             "id": "fan_speed_ctl_delta_cfg.celsius_delta2",
             "name": "Celsius ΔT2(Fan Speed Control Delta Configuration)",
             "value": "5",
-            "unit": "°C",
+            "unit": "K",
             "access_mode": "RW",
             "data_type": "NUMBER",
             "value_type": "FLOAT",
@@ -643,42 +643,42 @@
                 15
             ],
             "bacnet_type": "analog_value_object",
-            "bacnet_unit_type_id": 62,
-            "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
+            "bacnet_unit_type_id": 121,
+            "bacnet_unit_type": "UNITS_DELTA_DEGREES_KELVIN",
             "reference": []
         },
         {
             "id": "fan_speed_ctl_delta_cfg.fahrenheit_delta1",
             "name": "Fahrenheit ΔT1(Fan Speed Control Delta Configuration)",
-            "value": "37.4",
-            "unit": "°F",
+            "value": "5.4",
+            "unit": "ΔT°F",
             "access_mode": "RW",
             "data_type": "NUMBER",
             "value_type": "FLOAT",
             "range": [
-                33.8,
-                59
+                1.8,
+                27
             ],
             "bacnet_type": "analog_value_object",
-            "bacnet_unit_type_id": 64,
-            "bacnet_unit_type": "UNITS_DEGREES_FAHRENHEIT",
+            "bacnet_unit_type_id": 120,
+            "bacnet_unit_type": "UNITS_DELTA_DEGREES_FAHRENHEIT",
             "reference": []
         },
         {
             "id": "fan_speed_ctl_delta_cfg.fahrenheit_delta2",
             "name": "Fahrenheit ΔT2(Fan Speed Control Delta Configuration)",
-            "value": "41",
-            "unit": "°F",
+            "value": "9",
+            "unit": "ΔT°F",
             "access_mode": "RW",
             "data_type": "NUMBER",
             "value_type": "FLOAT",
             "range": [
-                33.8,
-                59
+                1.8,
+                27
             ],
             "bacnet_type": "analog_value_object",
-            "bacnet_unit_type_id": 64,
-            "bacnet_unit_type": "UNITS_DEGREES_FAHRENHEIT",
+            "bacnet_unit_type_id": 120,
+            "bacnet_unit_type": "UNITS_DELTA_DEGREES_FAHRENHEIT",
             "reference": []
         },
         {
@@ -818,7 +818,7 @@
             "id": "high_temperature_alarm_cfg.celsius_delta",
             "name": "Celsius Persistent High Temperature Alarm Delta(Persistent High Temperature Alarm Configuration)",
             "value": "3",
-            "unit": "°C",
+            "unit": "K",
             "access_mode": "RW",
             "data_type": "NUMBER",
             "value_type": "FLOAT",
@@ -827,8 +827,8 @@
                 10
             ],
             "bacnet_type": "analog_value_object",
-            "bacnet_unit_type_id": 62,
-            "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
+            "bacnet_unit_type_id": 121,
+            "bacnet_unit_type": "UNITS_DELTA_DEGREES_KELVIN",
             "reference": []
         },
         {
@@ -874,18 +874,18 @@
         {
             "id": "high_temperature_alarm_cfg.fahrenheit_delta",
             "name": "Fahrenheit Persistent High Temperature Alarm Delta(Persistent High Temperature Alarm Configuration)",
-            "value": "37.4",
-            "unit": "°F",
+            "value": "5.4",
+            "unit": "ΔT°F",
             "access_mode": "RW",
             "data_type": "NUMBER",
             "value_type": "FLOAT",
             "range": [
-                33.8,
-                50
+                1.8,
+                18
             ],
             "bacnet_type": "analog_value_object",
-            "bacnet_unit_type_id": 64,
-            "bacnet_unit_type": "UNITS_DEGREES_FAHRENHEIT",
+            "bacnet_unit_type_id": 120,
+            "bacnet_unit_type": "UNITS_DELTA_DEGREES_FAHRENHEIT",
             "reference": []
         },
         {
@@ -1001,7 +1001,7 @@
             "id": "low_temperature_alarm_cfg.celsius_delta",
             "name": "Celsius Persistent Low Temperature Alarm Delta(Persistent Low Temperature Alarm Configuration)",
             "value": "3",
-            "unit": "°C",
+            "unit": "K",
             "access_mode": "RW",
             "data_type": "NUMBER",
             "value_type": "FLOAT",
@@ -1010,8 +1010,8 @@
                 10
             ],
             "bacnet_type": "analog_value_object",
-            "bacnet_unit_type_id": 62,
-            "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
+            "bacnet_unit_type_id": 121,
+            "bacnet_unit_type": "UNITS_DELTA_DEGREES_KELVIN",
             "reference": []
         },
         {
@@ -1057,18 +1057,18 @@
         {
             "id": "low_temperature_alarm_cfg.fahrenheit_delta",
             "name": "Fahrenheit Persistent Low Temperature Alarm Delta(Persistent Low Temperature Alarm Configuration)",
-            "value": "37.4",
-            "unit": "°F",
+            "value": "5.4",
+            "unit": "ΔT°F",
             "access_mode": "RW",
             "data_type": "NUMBER",
             "value_type": "FLOAT",
             "range": [
-                33.8,
-                50
+                1.8,
+                18
             ],
             "bacnet_type": "analog_value_object",
-            "bacnet_unit_type_id": 64,
-            "bacnet_unit_type": "UNITS_DEGREES_FAHRENHEIT",
+            "bacnet_unit_type_id": 120,
+            "bacnet_unit_type": "UNITS_DELTA_DEGREES_FAHRENHEIT",
             "reference": []
         },
         {
@@ -1121,7 +1121,7 @@
         },
         {
             "id": "relay_status.ao1_duty",
-            "name": "AO1 Duty(Relay/Valve Status)",
+            "name": "AO1 Output(Relay/Valve Status)",
             "value": "0",
             "unit": "",
             "access_mode": "R",
@@ -1142,7 +1142,7 @@
         },
         {
             "id": "relay_status.ao2_duty",
-            "name": "AO2 Duty(Relay/Valve Status)",
+            "name": "AO2 Output(Relay/Valve Status)",
             "value": "0",
             "unit": "",
             "access_mode": "R",
@@ -1163,7 +1163,7 @@
         },
         {
             "id": "relay_status.high_status",
-            "name": "Fan High(Relay/Valve Status)",
+            "name": "High-speed Fan(Relay/Valve Status)",
             "value": "0",
             "unit": "",
             "access_mode": "R",
@@ -1194,7 +1194,7 @@
         },
         {
             "id": "relay_status.low_status",
-            "name": "Fan Low(Relay/Valve Status)",
+            "name": "Fan Low Speed(Relay/Valve Status)",
             "value": "0",
             "unit": "",
             "access_mode": "R",
@@ -1225,7 +1225,7 @@
         },
         {
             "id": "relay_status.mid_status",
-            "name": "Fan Medium(Relay/Valve Status)",
+            "name": "Medium-speed Fan(Relay/Valve Status)",
             "value": "0",
             "unit": "",
             "access_mode": "R",
@@ -1421,7 +1421,7 @@
             "id": "temp_ctl_dehumi_cfg.celsius_temperature_tolerance",
             "name": "Celsius Temp. Control and Dehumidify Tolerance(Temp. Control and Dehumidify Configuration)",
             "value": "1",
-            "unit": "°C",
+            "unit": "K",
             "access_mode": "RW",
             "data_type": "NUMBER",
             "value_type": "FLOAT",
@@ -1430,8 +1430,8 @@
                 5
             ],
             "bacnet_type": "analog_value_object",
-            "bacnet_unit_type_id": 62,
-            "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
+            "bacnet_unit_type_id": 121,
+            "bacnet_unit_type": "UNITS_DELTA_DEGREES_KELVIN",
             "reference": []
         },
         {
@@ -1460,18 +1460,18 @@
         {
             "id": "temp_ctl_dehumi_cfg.fahrenheit_temperature_tolerance",
             "name": "Fahrenheit Temp. Control and Dehumidify Tolerance(Temp. Control and Dehumidify Configuration)",
-            "value": "33.8",
-            "unit": "°F",
+            "value": "1.8",
+            "unit": "ΔT°F",
             "access_mode": "RW",
             "data_type": "NUMBER",
             "value_type": "FLOAT",
             "range": [
-                32.18,
-                41
+                0.18,
+                9
             ],
             "bacnet_type": "analog_value_object",
-            "bacnet_unit_type_id": 64,
-            "bacnet_unit_type": "UNITS_DEGREES_FAHRENHEIT",
+            "bacnet_unit_type_id": 120,
+            "bacnet_unit_type": "UNITS_DELTA_DEGREES_FAHRENHEIT",
             "reference": []
         },
         {
@@ -1573,7 +1573,7 @@
             "id": "temperature_calibration_cfg.celsius_calibration_value",
             "name": "Celsius Temperature Calibration Value(Temperature Calibration Configuration)",
             "value": "0",
-            "unit": "°C",
+            "unit": "K",
             "access_mode": "RW",
             "data_type": "NUMBER",
             "value_type": "FLOAT",
@@ -1582,8 +1582,8 @@
                 80
             ],
             "bacnet_type": "analog_value_object",
-            "bacnet_unit_type_id": 62,
-            "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
+            "bacnet_unit_type_id": 121,
+            "bacnet_unit_type": "UNITS_DELTA_DEGREES_KELVIN",
             "reference": []
         },
         {
@@ -1612,18 +1612,18 @@
         {
             "id": "temperature_calibration_cfg.fahrenheit_calibration_value",
             "name": "Fahrenheit Temperature Calibration Value(Temperature Calibration Configuration)",
-            "value": "32",
-            "unit": "°F",
+            "value": "0",
+            "unit": "ΔT°F",
             "access_mode": "RW",
             "data_type": "NUMBER",
             "value_type": "FLOAT",
             "range": [
-                -112,
-                176
+                -144,
+                144
             ],
             "bacnet_type": "analog_value_object",
-            "bacnet_unit_type_id": 64,
-            "bacnet_unit_type": "UNITS_DEGREES_FAHRENHEIT",
+            "bacnet_unit_type_id": 120,
+            "bacnet_unit_type": "UNITS_DELTA_DEGREES_FAHRENHEIT",
             "reference": []
         },
         {
