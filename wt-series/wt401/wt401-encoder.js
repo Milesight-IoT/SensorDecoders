@@ -1812,6 +1812,16 @@ function milesightDeviceEncode(payload) {
 		buffer.writeUInt8(0xbe);
 		encoded = encoded.concat(buffer.toBytes());
 	}
+	//0xb7
+	if ('set_time' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0xb7);
+		if (payload.set_time.timestamp < 0 || payload.set_time.timestamp > 4294967295) {
+			throw rangeError('set_time.timestamp', '[0,4294967295]');
+		}
+		buffer.writeUInt32LE(payload.set_time.timestamp);
+		encoded = encoded.concat(buffer.toBytes());
+	}
 	//0xb6
 	if ('reconnect' in payload) {
 		var buffer = new Buffer();
@@ -2353,6 +2363,7 @@ function cmdMap() {
 		  "fan_error_alarm": "55",
 		  "filter_clean_alarm": "5b",
 		  "reboot": "be",
+		  "set_time": "b7",
 		  "reconnect": "b6",
 		  "delete_task_plan": "5f"
 	};

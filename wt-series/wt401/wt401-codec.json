@@ -1170,6 +1170,19 @@
             "reference": []
         },
         {
+            "id": "set_time.timestamp",
+            "name": "Timestamp(Time Synchronize)",
+            "value": "",
+            "unit": "",
+            "access_mode": "W",
+            "data_type": "NUMBER",
+            "value_type": "UINT8",
+            "bacnet_type": "analog_output_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": []
+        },
+        {
             "id": "system_status",
             "name": "System On/Off",
             "value": "0",

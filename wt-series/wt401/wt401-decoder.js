@@ -950,6 +950,10 @@ function milesightDeviceDecode(bytes) {
 			case 0xbe:
 				decoded.reboot = readOnlyCommand(bytes, counterObj, 0);
 				break;
+			case 0xb7:
+				decoded.set_time = decoded.set_time || {};
+				decoded.set_time.timestamp = readUInt32LE(bytes, counterObj, 4);
+				break;
 			case 0xb6:
 				decoded.reconnect = readOnlyCommand(bytes, counterObj, 0);
 				break;
@@ -1539,6 +1543,7 @@ function cmdMap() {
 		  "5c": "insert_temporary_plan",
 		  "5b": "filter_clean_alarm",
 		  "be": "reboot",
+		  "b7": "set_time",
 		  "b6": "reconnect",
 		  "5f": "delete_task_plan"
 	};
