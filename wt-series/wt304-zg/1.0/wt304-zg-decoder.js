@@ -966,10 +966,10 @@ function readFirmwareVersion(bytes) {
 	var test = (bytes[5] & 0xff).toString(16);
 
 	var version = 'v' + major + '.' + minor;
-	if (release !== 0) version += '-r' + release.toString(16);
-	if (alpha !== 0) version += '-a' + alpha.toString(16);
-	if (unit_test !== 0) version += '-u' + unit_test.toString(16);
-	if (test !== 0) version += '-t' + test.toString(16);
+	if (release !== '0') version += '-r' + release;
+	if (alpha !== '0') version += '-a' + alpha;
+	if (unit_test !== '0') version += '-u' + unit_test;
+	if (test !== '0') version += '-t' + test;
 	return version;
 }
 
