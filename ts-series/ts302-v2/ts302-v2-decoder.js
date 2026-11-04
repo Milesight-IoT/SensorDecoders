@@ -53,6 +53,16 @@ function milesightDeviceDecode(bytes) {
             decoded.tsl_version = readTslVersion(bytes.slice(i, i + 2));
             i += 2;
         }
+        // OEM ID(ODM:7652)
+        else if (channel_id === 0xff && channel_type === 0xe7) {
+            decoded.odm_id = readOdmId(bytes.slice(i, i + 2));
+            i += 2;
+        }
+        // SUB VERSION(ODM:7652)
+        else if (channel_id === 0xff && channel_type === 0xe8) {
+            decoded.sub_version = readSubVersion(bytes.slice(i, i + 4));
+            i += 4;
+        }
         // SERIAL NUMBER
         else if (channel_id === 0xff && channel_type === 0x16) {
             decoded.sn = readSerialNumber(bytes.slice(i, i + 8));
@@ -103,19 +113,27 @@ function milesightDeviceDecode(bytes) {
             decoded.magnet_chn2 = readMagnetStatus(bytes[i]);
             i += 1;
         }
+        // MCU TEMPERATURE(ODM:7652)
+        else if (channel_id === 0x05 && channel_type === 0x67) {
+            decoded.mcu_temperature = readInt16LE(bytes.slice(i, i + 2)) / 10;
+            i += 2;
+        }
         // HUMIDITY(CHANNEL 2 SENSOR)
         else if (channel_id === 0x04 && channel_type === 0x9a) {
             decoded.humidity_chn2 = readInt16LE(bytes.slice(i, i + 2)) / 10;
             i += 2;
         }
-        // TEMPERATURE(CHANNEL 1 SENSOR) ALARM
+        // TEMPERATURE(CHANNEL 1 SENSOR) ALARM(ODM:7652)
         else if (channel_id === 0x83 && channel_type === 0x67) {
             var temp_value = readInt16LE(bytes.slice(i, i + 2)) / 10;
-            var alarm_type = readAlarmType(bytes[i + 2]);
+            var alarm_status = bytes[i + 2];
+            var alarm_type = readAlarmType(alarm_status & 0x07);
+            var alarm_retransmit_status = readAlarmRetransmitStatus(alarm_status & 0x80);
             decoded.temperature_chn1 = temp_value;
             decoded.temperature_chn1_alarm = alarm_type;
+            decoded.temperature_chn1_alarm_retransmit_status = alarm_retransmit_status;
             decoded.event = decoded.event || [];
-            decoded.event.push({ temperature_chn1: temp_value, temperature_chn1_alarm: alarm_type });
+            decoded.event.push({ temperature_chn1: temp_value, temperature_chn1_alarm: alarm_type, temperature_chn1_alarm_retransmit_status: alarm_retransmit_status });
             i += 3;
         }
         // HUMIDITY(CHANNEL 1 SENSOR) ALARM
@@ -128,14 +146,17 @@ function milesightDeviceDecode(bytes) {
             decoded.event.push({ humidity_chn1: hum_value, humidity_chn1_alarm: alarm_type });
             i += 3;
         }
-        // TEMPERATURE(CHANNEL 2 SENSOR) ALARM
+        // TEMPERATURE(CHANNEL 2 SENSOR) ALARM(ODM:7652)
         else if (channel_id === 0x84 && channel_type === 0x67) {
             var temp_value = readInt16LE(bytes.slice(i, i + 2)) / 10;
-            var alarm_type = readAlarmType(bytes[i + 2]);
+            var alarm_status = bytes[i + 2];
+            var alarm_type = readAlarmType(alarm_status & 0x07);
+            var alarm_retransmit_status = readAlarmRetransmitStatus(alarm_status & 0x80);
             decoded.temperature_chn2 = temp_value;
             decoded.temperature_chn2_alarm = alarm_type;
+            decoded.temperature_chn2_alarm_retransmit_status = alarm_retransmit_status;
             decoded.event = decoded.event || [];
-            decoded.event.push({ temperature_chn2: temp_value, temperature_chn2_alarm: alarm_type });
+            decoded.event.push({ temperature_chn2: temp_value, temperature_chn2_alarm: alarm_type, temperature_chn2_alarm_retransmit_status: alarm_retransmit_status });
             i += 3;
         }
         // HUMIDITY(CHANNEL 2 SENSOR) ALARM
@@ -147,6 +168,36 @@ function milesightDeviceDecode(bytes) {
             decoded.event = decoded.event || [];
             decoded.event.push({ humidity_chn2: hum_value, humidity_chn2_alarm: alarm_type });
             i += 3;
+        }
+        // MCU TEMPERATURE ALARM(ODM:7652)
+        else if (channel_id === 0x85 && channel_type === 0x67) {
+            var temp_value = readInt16LE(bytes.slice(i, i + 2)) / 10;
+            var alarm_status = bytes[i + 2];
+            var alarm_type = readAlarmType(alarm_status & 0x07);
+            var alarm_retransmit_status = readAlarmRetransmitStatus(alarm_status & 0x80);
+            decoded.mcu_temperature = temp_value;
+            decoded.mcu_temperature_alarm = alarm_type;
+            decoded.mcu_temperature_alarm_retransmit_status = alarm_retransmit_status;
+            decoded.event = decoded.event || [];
+            decoded.event.push({ mcu_temperature: temp_value, mcu_temperature_alarm: alarm_type, mcu_temperature_alarm_retransmit_status: alarm_retransmit_status });
+            i += 3;
+        }
+        // MCU TEMPERATURE ALARM CONFIG(ODM:7652)
+        else if (channel_id === 0xf9 && channel_type === 0x9b) {
+            var data = readUInt8(bytes[i]);
+            var condition_value = (data >>> 0) & 0x07;
+            var alarm_channel = (data >>> 3) & 0x07;
+            var enable_value = (data >>> 6) & 0x01;
+
+            if (alarm_channel === 0x00) {
+                var mcu_temperature_alarm_config = {};
+                mcu_temperature_alarm_config.enable = readEnableStatus(enable_value);
+                mcu_temperature_alarm_config.condition = readMcuTemperatureAlarmConditionType(condition_value);
+                mcu_temperature_alarm_config.threshold_min = readInt16LE(bytes.slice(i + 1, i + 3)) / 10;
+                mcu_temperature_alarm_config.threshold_max = readInt16LE(bytes.slice(i + 3, i + 5)) / 10;
+                decoded.mcu_temperature_alarm_config = mcu_temperature_alarm_config;
+            }
+            i += 9;
         }
         // TEMPERATURE(CHANNEL 1 SENSOR) MUTATION ALARM
         else if (channel_id === 0x93 && channel_type === 0x67) {
@@ -497,9 +548,10 @@ function handle_downlink_response(channel_type, bytes, offset) {
             offset += 1;
             break;
         case 0x7e:
+            // (ODM:7652)
             decoded.alarm_config = {};
-            decoded.alarm_config.alarm_interval = readUInt16LE(bytes.slice(offset + 1, offset + 3));
-            decoded.alarm_config.alarm_counts = readUInt16LE(bytes.slice(offset + 3, offset + 5));
+            decoded.alarm_config.alarm_retransmission_interval = readUInt16LE(bytes.slice(offset + 1, offset + 3));
+            decoded.alarm_config.alarm_total_packet_count = readUInt16LE(bytes.slice(offset + 3, offset + 5));
             offset += 5;
             break;
         case 0x8e:
@@ -682,6 +734,16 @@ function readSerialNumber(bytes) {
         temp.push(("0" + (bytes[idx] & 0xff).toString(16)).slice(-2));
     }
     return temp.join("");
+}
+
+function readAlarmRetransmitStatus(status) {
+    var alarm_retransmit_status_map = { 0: "first_packet", 1: "retransmit_packet" };
+    return getValue(alarm_retransmit_status_map, status);
+}
+
+function readMcuTemperatureAlarmConditionType(type) {
+    var condition_map = { 1: "below", 2: "above", 3: "within", 4: "below_or_above" };
+    return getValue(condition_map, type);
 }
 
 function readLoRaWANClass(type) {
@@ -921,6 +983,7 @@ function readQueryConfig(value) {
         magnet_throttle: 44,
         display_mode: 45,
         retransmit_enable: 46,
+        mcu_temperature_alarm_config: 47,
     };
     var query_config = {};
     for (var key in config_map) {

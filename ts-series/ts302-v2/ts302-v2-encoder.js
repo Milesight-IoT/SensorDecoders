@@ -101,6 +101,9 @@ function milesightDeviceEncode(payload) {
     if ("temperature_chn2_alarm_config" in payload) {
         encoded = encoded.concat(setTemperatureAlarmConfig(1, payload.temperature_chn2_alarm_config));
     }
+    if ("mcu_temperature_alarm_config" in payload) {
+        encoded = encoded.concat(setMcuTemperatureAlarmConfig(payload.mcu_temperature_alarm_config));
+    }
     if ("temperature_chn1_mutation_alarm_config" in payload) {
         encoded = encoded.concat(setTemperatureMutationAlarmConfig(2, payload.temperature_chn1_mutation_alarm_config));
     }
@@ -364,28 +367,29 @@ function setAlarmReleaseEnable(alarm_release_enable) {
 
 /**
  * set alarm config
+ * @since (ODM:7652)
  * @param {object} alarm_config
- * @param {number} alarm_config.alarm_interval unit: minute, range: [1, 1440]
- * @param {number} alarm_config.alarm_counts range: [1, 65535]
- * @example { "alarm_config": { "alarm_interval": 10, "alarm_counts": 10 } }
+ * @param {number} alarm_config.alarm_retransmission_interval unit: minute, range: [1, 1440]
+ * @param {number} alarm_config.alarm_total_packet_count range: [1, 65535]
+ * @example { "alarm_config": { "alarm_retransmission_interval": 10, "alarm_total_packet_count": 10 } }
  */
 function setAlarmConfig(alarm_config) {
-    var alarm_interval = alarm_config.alarm_interval;
-    var alarm_counts = alarm_config.alarm_counts;
+    var alarm_retransmission_interval = alarm_config.alarm_retransmission_interval;
+    var alarm_total_packet_count = alarm_config.alarm_total_packet_count;
 
-    if (alarm_interval < 1 || alarm_interval > 1440) {
-        throw new Error("alarm_interval must be in range [1, 1440]");
+    if (alarm_retransmission_interval < 1 || alarm_retransmission_interval > 10) {
+        throw new Error("alarm_retransmission_interval must be in range [1, 10]");
     }
-    if (alarm_counts < 1 || alarm_counts > 65535) {
-        throw new Error("alarm_counts must be in range [1, 65535]");
+    if (alarm_total_packet_count < 1 || alarm_total_packet_count > 256) {
+        throw new Error("alarm_total_packet_count must be in range [1, 256]");
     }
 
     var buffer = new Buffer(7);
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0x7e);
     buffer.writeUInt8(0x00);
-    buffer.writeUInt16LE(alarm_interval);
-    buffer.writeUInt16LE(alarm_counts);
+    buffer.writeUInt16LE(alarm_retransmission_interval);
+    buffer.writeUInt16LE(alarm_total_packet_count);
     return buffer.toBytes();
 }
 
@@ -633,6 +637,71 @@ function setTemperatureAlarmConfig(idx, temperature_alarm_config) {
     buffer.writeUInt8(data);
     buffer.writeUInt16LE(threshold_min * 10);
     buffer.writeUInt16LE(threshold_max * 10);
+    buffer.writeUInt16LE(0x00);
+    buffer.writeUInt16LE(0x00);
+    return buffer.toBytes();
+}
+
+/**
+ * set MCU temperature alarm config(ODM:7652)
+ * @param {object} mcu_temperature_alarm_config
+ * @param {number} mcu_temperature_alarm_config.enable values: (0: disable, 1: enable)
+ * @param {number} mcu_temperature_alarm_config.condition values: (1: below, 2: above, 3: within, 4: below_or_above)
+ * @param {number} mcu_temperature_alarm_config.threshold_min unit: Celsius, range: [-3000, 3000]
+ * @param {number} mcu_temperature_alarm_config.threshold_max unit: Celsius, range: [-3000, 3000]
+ * @example { "mcu_temperature_alarm_config": { "enable": 1, "condition": 2, "threshold_min": 0, "threshold_max": 70 } }
+ */
+function setMcuTemperatureAlarmConfig(mcu_temperature_alarm_config) {
+    var enable = mcu_temperature_alarm_config.enable;
+    var condition = mcu_temperature_alarm_config.condition;
+    var threshold_min = mcu_temperature_alarm_config.threshold_min;
+    var threshold_max = mcu_temperature_alarm_config.threshold_max;
+
+    var enable_map = { 0: "disable", 1: "enable" };
+    var enable_values = getValues(enable_map);
+    var enable_value;
+    if (enable_values.indexOf(enable) !== -1) {
+        enable_value = getValue(enable_map, enable);
+    } else if (enable === 0 || enable === 1) {
+        enable_value = enable;
+    } else {
+        throw new Error("mcu_temperature_alarm_config.enable must be one of " + enable_values.join(", "));
+    }
+
+    var condition_map = { 1: "below", 2: "above", 3: "within", 4: "below_or_above" };
+    var condition_values = getValues(condition_map);
+    var condition_value;
+    if (condition_values.indexOf(condition) !== -1) {
+        condition_value = getValue(condition_map, condition);
+    } else if (condition === 1 || condition === 2 || condition === 3 || condition === 4) {
+        condition_value = condition;
+    } else {
+        throw new Error("mcu_temperature_alarm_config.condition must be one of " + condition_values.join(", "));
+    }
+
+    if (threshold_min === undefined || threshold_min === null) {
+        throw new Error("mcu_temperature_alarm_config.threshold_min is required");
+    }
+    if (threshold_max === undefined || threshold_max === null) {
+        throw new Error("mcu_temperature_alarm_config.threshold_max is required");
+    }
+    if (threshold_min < -3000 || threshold_min > 3000) {
+        throw new Error("mcu_temperature_alarm_config.threshold_min must be in range [-3000, 3000]");
+    }
+    if (threshold_max < -3000 || threshold_max > 3000) {
+        throw new Error("mcu_temperature_alarm_config.threshold_max must be in range [-3000, 3000]");
+    }
+
+    var data = 0x00;
+    data |= condition_value;
+    data |= enable_value << 6;
+
+    var buffer = new Buffer(11);
+    buffer.writeUInt8(0xf9);
+    buffer.writeUInt8(0x9b);
+    buffer.writeUInt8(data);
+    buffer.writeInt16LE(threshold_min * 10);
+    buffer.writeInt16LE(threshold_max * 10);
     buffer.writeUInt16LE(0x00);
     buffer.writeUInt16LE(0x00);
     return buffer.toBytes();
@@ -1104,6 +1173,7 @@ function queryDeviceConfig(query_config) {
         magnet_throttle: 44,
         display_mode: 45,
         retransmit_enable: 46,
+        mcu_temperature_alarm_config: 47,
     };
 
     var yes_no_map = { 0: "no", 1: "yes" };
