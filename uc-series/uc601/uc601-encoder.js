@@ -1612,10 +1612,6 @@ function processTemperature(payload) {
         "coefficient": 0.01,
         "unitName": "℃"
     },
-    "open_window_settings.cooling_rate": {
-        "coefficient": 0.01,
-        "unitName": "K"
-    },
     "anti_freeze_protection_settings.temperature_value": {
         "coefficient": 0.01,
         "unitName": "℃"
