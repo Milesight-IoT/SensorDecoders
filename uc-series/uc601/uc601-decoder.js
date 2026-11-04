@@ -606,10 +606,10 @@ function readFirmwareVersion(bytes) {
 	var test = (bytes[5] & 0xff).toString(16);
 
 	var version = 'v' + major + '.' + minor;
-	if (release !== 0) version += '-r' + release.toString(16);
-	if (alpha !== 0) version += '-a' + alpha.toString(16);
-	if (unit_test !== 0) version += '-u' + unit_test.toString(16);
-	if (test !== 0) version += '-t' + test.toString(16);
+	if (release !== '0') version += '-r' + release;
+	if (alpha !== '0') version += '-a' + alpha;
+	if (unit_test !== '0') version += '-u' + unit_test;
+	if (test !== '0') version += '-t' + test;
 	return version;
 }
 
@@ -1092,6 +1092,10 @@ function processTemperature(decoded) {
         "precision": 2,
         "unitName": "℃"
     },
+    "open_window_settings.cooling_rate": {
+        "precision": 2,
+        "unitName": "K/min"
+    },
     "anti_freeze_protection_settings.temperature_value": {
         "precision": 2,
         "unitName": "℃"
@@ -1123,7 +1127,7 @@ function processTemperature(decoded) {
 			var fahrenheitProperty = convertName(propertyId, 'fahrenheit');
 			var celsiusProperty = convertName(propertyId, 'celsius');
 			var unitName = allTemperatureProperties[newPropertyId].unitName;
-			var constant = unitName == 'K' ? 0 : 32;
+			var constant = unitName == 'K' || unitName == 'K/min' ? 0 : 32;
 			if (hasPath(decoded, propertyId)) {
 				setPath(decoded, fahrenheitProperty,  Number((getPath(decoded, propertyId) * 1.8 + constant).toFixed(allTemperatureProperties[newPropertyId].precision)));
 				setPath(decoded, celsiusProperty,  Number(getPath(decoded, propertyId).toFixed(allTemperatureProperties[newPropertyId].precision)));
