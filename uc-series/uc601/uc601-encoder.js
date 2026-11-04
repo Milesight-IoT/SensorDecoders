@@ -437,6 +437,12 @@ function milesightDeviceEncode(payload) {
 		}
 		// 0：second, 1：min
 		buffer.writeUInt8(payload.reporting_interval.unit);
+		if (payload.reporting_interval.unit == 0x00) {
+			if (payload.reporting_interval.seconds_of_time < 10 || payload.reporting_interval.seconds_of_time > 64800) {
+				throw betweenError('reporting_interval.seconds_of_time', 10, 64800);
+			}
+			buffer.writeUInt16LE(payload.reporting_interval.seconds_of_time);
+		}
 		if (payload.reporting_interval.unit == 0x01) {
 			if (payload.reporting_interval.minutes_of_time < 1 || payload.reporting_interval.minutes_of_time > 1440) {
 				throw betweenError('reporting_interval.minutes_of_time', 1, 1440);
@@ -1502,6 +1508,7 @@ function cmdMap() {
 		  "open_window_detection": "10",
 		  "relays_status_change": "11",
 		  "reporting_interval": "60",
+		  "reporting_interval.seconds_of_time": "6000",
 		  "reporting_interval.minutes_of_time": "6001",
 		  "temperature_unit": "61",
 		  "led_status": "62",

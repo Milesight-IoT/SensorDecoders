@@ -238,6 +238,9 @@ function milesightDeviceDecode(bytes) {
 				decoded.reporting_interval = decoded.reporting_interval || {};
 				// 0：second, 1：min
 				decoded.reporting_interval.unit = readUInt8(bytes, counterObj, 1);
+				if (decoded.reporting_interval.unit == 0x00) {
+					decoded.reporting_interval.seconds_of_time = readUInt16LE(bytes, counterObj, 2);
+				}
 				if (decoded.reporting_interval.unit == 0x01) {
 					decoded.reporting_interval.minutes_of_time = readUInt16LE(bytes, counterObj, 2);
 				}
@@ -973,6 +976,7 @@ function cmdMap() {
 		  "2502": "equipment_temperature_alarm.over_range_error",
 		  "2600": "ambient_temperature_alarm.collection_error",
 		  "2603": "ambient_temperature_alarm.no_data",
+		  "6000": "reporting_interval.seconds_of_time",
 		  "6001": "reporting_interval.minutes_of_time",
 		  "6300": "button_lock_settings.switch_lock_enable",
 		  "6301": "button_lock_settings.switch_reset_enable",

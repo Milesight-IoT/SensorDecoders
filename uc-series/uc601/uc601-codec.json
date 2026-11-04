@@ -137,7 +137,7 @@
         },
         {
             "id": "anti_freeze_protection_settings.celsius_temperature_value",
-            "name": "Celsius Freeze Temperature(Freeze Protection)",
+            "name": "Celsius Freeze Protection Temperature(Freeze Protection)",
             "value": "3",
             "unit": "°C",
             "access_mode": "RW",
@@ -177,7 +177,7 @@
         },
         {
             "id": "anti_freeze_protection_settings.fahrenheit_temperature_value",
-            "name": "Fahrenheit Freeze Temperature(Freeze Protection)",
+            "name": "Fahrenheit Freeze Protection Temperature(Freeze Protection)",
             "value": "37.4",
             "unit": "°F",
             "access_mode": "RW",
@@ -1331,11 +1331,11 @@
             "values": [
                 {
                     "value": 0,
-                    "name": "°C"
+                    "name": "Celsius"
                 },
                 {
                     "value": 1,
-                    "name": "°F"
+                    "name": "Fahrenheit"
                 }
             ],
             "bacnet_type": "multistate_value_object",
@@ -1408,10 +1408,6 @@
             "access_mode": "R",
             "data_type": "NUMBER",
             "value_type": "FLOAT",
-            "range": [
-                0,
-                250
-            ],
             "bacnet_type": "analog_input_object",
             "bacnet_unit_type_id": 5,
             "bacnet_unit_type": "UNITS_VOLTS"
