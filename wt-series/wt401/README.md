@@ -29,21 +29,36 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Schedule | 0x05 | 2 | r | 0 |  | 0:plan0<br>1:plan1<br>2:plan2<br>3:plan3<br>4:plan4<br>5:plan5<br>6:plan6<br>7:plan7<br>8:plan8<br>9:plan9<br>10:plan10<br>11:plan11<br>12:plan12<br>13:plan13<br>14:plan14<br>15:plan15<br>255:Not executed |
 | Communication Mode | 0x8D | 2 | rw | 2 |  | 0：BLE<br>1：LoRa<br>2：BLE+LoRa |
 | Reporting Interval | 0x61 | 1 | rw |  |  |  |
-| BLE Mode | 0x61 | 1 | rw |  |  |  |
-| Reporting Interval Unit | 0x61 | 2 | rw | 1 |  | 0：second<br>1：min |
-| LoRa Reporting Interval | 0x61 | 3 | rw | 10 | 1 - 1440 |  |
 | BLE_LoRa Reporting Interval | 0x61 | 1 | rw |  |  |  |
 | Reporting Interval Unit | 0x61 | 2 | rw | 1 |  | 0：second<br>1：min |
 | LoRa Reporting Interval | 0x61 | 3 | rw | 1440 | 1 - 1440 |  |
+| Communicate Interval | 0x6C | 1 | rw |  |  |  |
+| BLE Communicate Interval | 0x6C | 1 | rw |  |  |  |
+| BLE Communicate Interval Unit | 0x6C | 2 | rw | 1 |  | 0：second<br>1：min |
+| BLE Communicate Interval | 0x6C | 3 | rw | 2 | 1 - 30 |  |
 | Collecting Interval | 0x60 | 1 | rw |  |  |  |
 | Collecting Interval Unit | 0x60 | 2 | rw | 0 |  | 0：second<br>1：min |
-| Collecting Interval | 0x60 | 3 | rw | 1 | 1 - 1440 |  |
+|  Collecting Interval | 0x60 | 3 | rw | 60 | 1 - 3600 |  |
 | Temperature Unit | 0x63 | 2 | rw | 0 |  | 0：℃<br>1：℉ |
 | Temperature &amp; Humidity Data Source | 0x7D | 2 | rw | 0 |  | 0:Embedded Data<br>1:Lora Data<br>2: UCController |
 | Data Timeout | 0x7E | 2 | rw | 10 | 1 - 60 |  |
 | System On/Off | 0x67 | 2 | rw | 0 |  | 0：Off<br>1：On |
 | Temperature Control Mode Enable | 0x64 | 2 | rw |  |  |  |
+| Heat | 0x64 | 2 | rw | 1 |  | 0：disable<br>1：enable |
+| EM Heat | 0x64 | 2 | rw | 1 |  | 0：disable<br>1：enable |
+| Cool | 0x64 | 2 | rw | 1 |  | 0：disable<br>1：enable |
+| Auto | 0x64 | 2 | rw | 1 |  | 0：disable<br>1：enable |
+| Dehumidify | 0x64 | 2 | rw | 1 |  | 0：disable<br>1：enable |
+| Ventilation | 0x64 | 2 | rw | 1 |  | 0：disable<br>1：enable |
+| Reserved | 0x64 | 2 | rw |  |  |  |
 | Fan Mode Enabled | 0x88 | 2 | rw |  |  |  |
+| Auto | 0x88 | 2 | rw | 1 |  | 0：disable<br>1：enable |
+| Circulate | 0x88 | 2 | rw | 1 |  | 0：disable<br>1：enable |
+| On | 0x88 | 2 | rw | 0 |  | 0：disable<br>1：enable |
+| Low | 0x88 | 2 | rw | 1 |  | 0：disable<br>1：enable |
+| Medium | 0x88 | 2 | rw | 1 |  | 0：disable<br>1：enable |
+| High | 0x88 | 2 | rw | 1 |  | 0：disable<br>1：enable |
+| Reserved | 0x88 | 2 | rw | 0 |  |  |
 | Temperature Control Mode | 0x68 | 1 | rw |  |  |  |
 | Subcmd ID | 0x68 | 2 | rw | 0 |  |  |
 | Temperature Control Mode | 0x68 | 2 | rw | 0 |  | 0：heat<br>1：em heat<br>2：cool<br>3：auto<br>4：dehumidify<br>5：ventilation |
@@ -85,7 +100,6 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Vacant Execution | 0x83 | 2 | rw | 1 |  | 0:plan0<br>1:plan1<br>2:plan2<br>3:plan3<br>4:plan4<br>5:plan5<br>6:plan6<br>7:plan7<br>8:plan8<br>9:plan9<br>10:plan10<br>11:plan11<br>12:plan12<br>13:plan13<br>14:plan14<br>15:plan15<br>255:Not executed |
 | Smart Display | 0x62 | 2 | rw | 1 |  | 0：disable<br>1：enable |
 | Backlight Enable | 0x89 | 2 | rw | 1 |  | 0:disable<br>1:enable |
-| Screen OFF Enable | 0x99 | 2 | rw | 1 |  | 0:disable<br>1:enable |
 | Button Custom Function | 0x71 | 1 | rw |  |  |  |
 | ID | 0x71 | 2 | rw | 0 |  |  |
 | Enable | 0x71 | 2 | rw | 0 |  | 0：disable<br>1：enable |
@@ -93,18 +107,34 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Button2 | 0x71 | 2 | rw | 2 |  | 1：Temperature Control Mode<br>2：Fan Mode<br>3：Schedule Switch<br>4：Status Report<br>5：Filter Cleaning Reset<br>6：Button Event2<br>7：Temperature Unit Switch |
 | Button3 | 0x71 | 2 | rw | 0 |  | 0：System On/Off<br>3：Schedule Switch<br>4：Status Report<br>5：Filter Cleaning Reset<br>6：Button Event3<br>7：Temperature Unit Switch |
 | Child Lock | 0x72 | 4 | rw |  |  |  |
+| Enable | 0x72 | 2 | rw | 0 |  | 0:disable<br>1:enable |
+| Temperature + | 0x72 | 3 | rw | 0 |  | 0:disable<br>1:enable |
+| Temperature - | 0x72 | 3 | rw | 0 |  | 0:disable<br>1:enable |
+| System On/Off | 0x72 | 3 | rw | 0 |  | 0:disable<br>1:enable |
+| Fan Mode | 0x72 | 3 | rw | 0 |  | 0:disable<br>1:enable |
+| Temperature Control Mode | 0x72 | 3 | rw | 0 |  | 0:disable<br>1:enable |
+| Reboot&amp;Reset | 0x72 | 3 | rw | 0 |  | 0:disable<br>1:enable |
+| Power On/Off | 0x72 | 3 | rw | 0 |  | 0:disable<br>1:enable |
+| Cancel Pairing | 0x72 | 3 | rw | 0 |  | 0:disable<br>1:enable |
+| Schedule Switch | 0x72 | 3 | rw | 0 |  | 0:disable<br>1:enable |
+| Status Report  | 0x72 | 3 | rw | 0 |  | 0:disable<br>1:enable |
+| Filter Clean Reminder Release | 0x72 | 3 | rw | 0 |  | 0:disable<br>1:enable |
+| Button Event 1  | 0x72 | 3 | rw | 0 |  | 0:disable<br>1:enable |
+| Button Event 2  | 0x72 | 3 | rw | 0 |  | 0:disable<br>1:enable |
+| Button Event 3  | 0x72 | 3 | rw | 0 |  | 0:disable<br>1:enable |
+| Temperature Unit Switch | 0x72 | 3 | rw | 0 |  | 0:disable<br>1:enable |
+| Reserved | 0x72 | 3 | rw | 0 |  |  |
 | Temporary Unlock | 0x81 | 1 | rw |  |  |  |
 | Temporary Unlock Enable | 0x81 | 2 | rw | 0 |  | 0：disable<br>1：enable |
 | Temporary Unlock Time | 0x81 | 3 | rw | 30 | 1 - 3600 |  |
-| Temporary Unlock Button Combination | 0x80 | 2 | rw |  |  |  |
 | Time Zone | 0xC7 | 3 | rw | 0 |  | -720：UTC-12(IDLW)<br>-660：UTC-11(SST)<br>-600：UTC-10(HST)<br>-570：UTC-9:30(MIT)<br>-540：UTC-9(AKST)<br>-480：UTC-8(PST)<br>-420：UTC-7(MST)<br>-360：UTC-6(CST)<br>-300：UTC-5(EST)<br>-240：UTC-4(AST)<br>-210：UTC-3:30(NST)<br>-180：UTC-3(BRT)<br>-120：UTC-2(FNT)<br>-60：UTC-1(CVT)<br>0：UTC(WET)<br>60：UTC+1(CET)<br>120：UTC+2(EET)<br>180：UTC+3(MSK)<br>210：UTC+3:30(IRST)<br>240：UTC+4(GST)<br>270：UTC+4:30(AFT)<br>300：UTC+5(PKT)<br>330：UTC+5:30(IST)<br>345：UTC+5:45(NPT)<br>360：UTC+6(BHT)<br>390：UTC+6:30(MMT)<br>420：UTC+7(ICT)<br>480：UTC+8(CT/CST)<br>540：UTC+9(JST)<br>570：UTC+9:30(ACST)<br>600：UTC+10(AEST)<br>630：UTC+10:30(LHST)<br>660：UTC+11(VUT)<br>720：UTC+12(NZST)<br>765：UTC+12:45(CHAST)<br>780：UTC+13(PHOT)<br>840：UTC+14(LINT) |
+| External Temperature | 0x86 | 3 | rw | 0 | -20 - 60 |  |
+| External Humidity | 0x87 | 3 | rw | 0 | 0 - 100 |  |
 
 ### Service
 
 | CHANNEL |  ID  | LENGTH | READ/WRITE | DEFAULT | RANGE | ENUM |
 | :------ | :--: | :----: | :--------: | :-----: | :---: | :--: |
-| External Temperature | 0x86 | 3 | rw |  | -20 - 60 |  |
-| External Humidity | 0x87 | 3 | rw |  | 0 - 100 |  |
 | Time Synchronize | 0xB7 | 5 | w |  |  |  |
 | Timestamp | 0xB7 | 5 | w |  |  |  |
 

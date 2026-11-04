@@ -600,18 +600,11 @@ function milesightDeviceEncode(payload) {
 		if (isValid(payload.reporting_interval.ble_lora)) {
 			buffer.writeUInt8(0x61);
 			buffer.writeUInt8(0x02);
-			if ([0, 1].indexOf(payload.reporting_interval.ble_lora.unit) === -1) {
-				throw oneOfError('reporting_interval.ble_lora.unit', [0, 1]);
-			}
+			var unit = 0x01;
+
 			// 0：second, 1：min
-			buffer.writeUInt8(payload.reporting_interval.ble_lora.unit);
-			if (payload.reporting_interval.ble_lora.unit == 0x00) {
-				if (payload.reporting_interval.ble_lora.seconds_of_time < 10 || payload.reporting_interval.ble_lora.seconds_of_time > 64800) {
-					throw betweenError('reporting_interval.ble_lora.seconds_of_time', 10, 64800);
-				}
-				buffer.writeUInt16LE(payload.reporting_interval.ble_lora.seconds_of_time);
-			}
-			if (payload.reporting_interval.ble_lora.unit == 0x01) {
+			buffer.writeUInt8(unit);
+			if (unit == 0x01) {
 				if (payload.reporting_interval.ble_lora.minutes_of_time < 1 || payload.reporting_interval.ble_lora.minutes_of_time > 1440) {
 					throw betweenError('reporting_interval.ble_lora.minutes_of_time', 1, 1440);
 				}
@@ -647,18 +640,11 @@ function milesightDeviceEncode(payload) {
 		if (isValid(payload.communicate_interval.ble)) {
 			buffer.writeUInt8(0x6c);
 			buffer.writeUInt8(0x00);
-			if ([0, 1].indexOf(payload.communicate_interval.ble.unit) === -1) {
-				throw oneOfError('communicate_interval.ble.unit', [0, 1]);
-			}
+			var unit = 0x01;
 			// 0：second, 1：min
-			buffer.writeUInt8(payload.communicate_interval.ble.unit);
-			if (payload.communicate_interval.ble.unit == 0x00) {
-				if (payload.communicate_interval.ble.seconds_of_time < 10 || payload.communicate_interval.ble.seconds_of_time > 1800) {
-					throw betweenError('communicate_interval.ble.seconds_of_time', 10, 1800);
-				}
-				buffer.writeUInt16LE(payload.communicate_interval.ble.seconds_of_time);
-			}
-			if (payload.communicate_interval.ble.unit == 0x01) {
+			buffer.writeUInt8(unit);
+
+			if (unit == 0x01) {
 				if (payload.communicate_interval.ble.minutes_of_time < 1 || payload.communicate_interval.ble.minutes_of_time > 30) {
 					throw betweenError('communicate_interval.ble.minutes_of_time', 1, 30);
 				}
@@ -734,22 +720,14 @@ function milesightDeviceEncode(payload) {
 	if ('collection_interval' in payload) {
 		var buffer = new Buffer();
 		buffer.writeUInt8(0x60);
-		if ([0, 1].indexOf(payload.collection_interval.unit) === -1) {
-			throw oneOfError('collection_interval.unit', [0, 1]);
-		}
+		var unit = 0x00;
 		// 0：second, 1：min
-		buffer.writeUInt8(payload.collection_interval.unit);
-		if (payload.collection_interval.unit == 0x00) {
+		buffer.writeUInt8(unit);
+		if (unit == 0x00) {
 			if (payload.collection_interval.seconds_of_time < 1 || payload.collection_interval.seconds_of_time > 3600) {
 				throw betweenError('collection_interval.seconds_of_time', 1, 3600);
 			}
 			buffer.writeUInt16LE(payload.collection_interval.seconds_of_time);
-		}
-		if (payload.collection_interval.unit == 0x01) {
-			if (payload.collection_interval.minutes_of_time < 1 || payload.collection_interval.minutes_of_time > 1440) {
-				throw betweenError('collection_interval.minutes_of_time', 1, 1440);
-			}
-			buffer.writeUInt16LE(payload.collection_interval.minutes_of_time);
 		}
 		encoded = encoded.concat(buffer.toBytes());
 	}
@@ -2546,7 +2524,7 @@ function processTemperature(payload) {
 		propertyId = recoverName(propertyId, 'celsius');
 		if (allTemperatureProperties[newPropertyId]) {
 			var unitName = allTemperatureProperties[newPropertyId].unitName;
-			var constant = unitName == 'K' ? 0 : 32;
+			var constant = unitName == 'K' || unitName == 'K/min' ? 0 : 32;
 			var fahrenheitProperty = convertName(propertyId, 'fahrenheit');
 			var celsiusProperty = convertName(propertyId, 'celsius');
 			var stringCoefficient = String(allTemperatureProperties[newPropertyId].coefficient);

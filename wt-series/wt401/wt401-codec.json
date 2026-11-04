@@ -204,6 +204,22 @@
             "bacnet_unit_type": "UNITS_DELTA_DEGREES_KELVIN"
         },
         {
+            "id": "celsius_origin_temperature",
+            "name": "Celsius External Temperature",
+            "value": "0",
+            "unit": "°C",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "range": [
+                -20,
+                60
+            ],
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 62,
+            "bacnet_unit_type": "UNITS_DEGREES_CELSIUS"
+        },
+        {
             "id": "celsius_target_temperature1",
             "name": "Celsius Target Temperature1",
             "value": "",
@@ -292,31 +308,6 @@
             "bacnet_type": "analog_value_object",
             "bacnet_unit_type_id": 73,
             "bacnet_unit_type": "UNITS_SECONDS",
-            "reference": [
-                "collection_interval.unit"
-            ]
-        },
-        {
-            "id": "collection_interval.unit",
-            "name": "Collecting Interval Unit(Collecting Interval)",
-            "value": "0",
-            "unit": "",
-            "access_mode": "RW",
-            "data_type": "ENUM",
-            "value_type": "UINT8",
-            "values": [
-                {
-                    "value": 0,
-                    "name": "second"
-                },
-                {
-                    "value": 1,
-                    "name": "min"
-                }
-            ],
-            "bacnet_type": "multistate_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": []
         },
         {
@@ -334,31 +325,6 @@
             "bacnet_type": "analog_value_object",
             "bacnet_unit_type_id": 72,
             "bacnet_unit_type": "UNITS_MINUTES",
-            "reference": [
-                "communicate_interval.ble.unit"
-            ]
-        },
-        {
-            "id": "communicate_interval.ble.unit",
-            "name": "BLE Communicate Interval Unit(BLE Communicate Interval)",
-            "value": "1",
-            "unit": "",
-            "access_mode": "RW",
-            "data_type": "ENUM",
-            "value_type": "UINT8",
-            "values": [
-                {
-                    "value": 0,
-                    "name": "second"
-                },
-                {
-                    "value": 1,
-                    "name": "min"
-                }
-            ],
-            "bacnet_type": "multistate_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": []
         },
         {
@@ -526,6 +492,22 @@
             "bacnet_type": "analog_value_object",
             "bacnet_unit_type_id": 120,
             "bacnet_unit_type": "UNITS_DELTA_DEGREES_FAHRENHEIT"
+        },
+        {
+            "id": "fahrenheit_origin_temperature",
+            "name": "Fahrenheit External Temperature",
+            "value": "32",
+            "unit": "°F",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "range": [
+                -4,
+                140
+            ],
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 64,
+            "bacnet_unit_type": "UNITS_DEGREES_FAHRENHEIT"
         },
         {
             "id": "fahrenheit_target_temperature1",
@@ -701,7 +683,7 @@
             "id": "humidity",
             "name": "Humidity",
             "value": "",
-            "unit": "%",
+            "unit": "%RH",
             "access_mode": "R",
             "data_type": "NUMBER",
             "value_type": "FLOAT",
@@ -710,8 +692,8 @@
                 100
             ],
             "bacnet_type": "analog_input_object",
-            "bacnet_unit_type_id": 98,
-            "bacnet_unit_type": "UNITS_PERCENT"
+            "bacnet_unit_type_id": 29,
+            "bacnet_unit_type": "UNITS_PERCENT_RELATIVE_HUMIDITY"
         },
         {
             "id": "intelligent_display_enable",
@@ -824,46 +806,18 @@
         {
             "id": "origin_humidity",
             "name": "External Humidity",
-            "access_mode": "W",
-            "data_type": "BOOL",
-            "value_type": "UINT8",
-            "unit": "",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "bacnet_type": "binary_output_object",
-            "value": "",
-            "values": [
-                {
-                    "value": 0,
-                    "name": "no"
-                },
-                {
-                    "value": 1,
-                    "name": "yes"
-                }
-            ]
-        },
-        {
-            "id": "origin_temperature",
-            "name": "External Temperature",
-            "access_mode": "W",
-            "data_type": "BOOL",
-            "value_type": "UINT8",
-            "unit": "",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "bacnet_type": "binary_output_object",
-            "value": "",
-            "values": [
-                {
-                    "value": 0,
-                    "name": "no"
-                },
-                {
-                    "value": 1,
-                    "name": "yes"
-                }
-            ]
+            "value": "0",
+            "unit": "%RH",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "range": [
+                0,
+                100
+            ],
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 29,
+            "bacnet_unit_type": "UNITS_PERCENT_RELATIVE_HUMIDITY"
         },
         {
             "id": "pir_common.enable",
@@ -1213,31 +1167,6 @@
             "bacnet_type": "analog_value_object",
             "bacnet_unit_type_id": 72,
             "bacnet_unit_type": "UNITS_MINUTES",
-            "reference": [
-                "reporting_interval.ble_lora.unit"
-            ]
-        },
-        {
-            "id": "reporting_interval.ble_lora.unit",
-            "name": "Reporting Interval Unit(BLE_LoRa Reporting Interval)",
-            "value": "1",
-            "unit": "",
-            "access_mode": "RW",
-            "data_type": "ENUM",
-            "value_type": "UINT8",
-            "values": [
-                {
-                    "value": 0,
-                    "name": "second"
-                },
-                {
-                    "value": 1,
-                    "name": "min"
-                }
-            ],
-            "bacnet_type": "multistate_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": []
         },
         {
@@ -1747,7 +1676,7 @@
             "id": "time_zone",
             "name": "Time Zone",
             "value": "0",
-            "unit": "min",
+            "unit": "",
             "access_mode": "RW",
             "data_type": "ENUM",
             "value_type": "INT16",
@@ -1902,8 +1831,8 @@
                 }
             ],
             "bacnet_type": "multistate_value_object",
-            "bacnet_unit_type_id": 72,
-            "bacnet_unit_type": "UNITS_MINUTES"
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS"
         },
         {
             "id": "tsl_version",
