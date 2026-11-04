@@ -10,6 +10,7 @@ var RAW_VALUE = 0x00;
 /* eslint no-redeclare: "off" */
 /* eslint-disable */
 // Chirpstack v4
+// 测试改动（演示 PR 流程）
 function decodeUplink(input) {
     var decoded = milesightDeviceDecode(input.bytes);
     return { data: decoded };
