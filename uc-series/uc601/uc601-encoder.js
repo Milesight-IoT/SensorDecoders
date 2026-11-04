@@ -29,6 +29,16 @@ function milesightDeviceEncode(payload) {
 	normalizeArrayParams(payload);
 	processTemperature(payload);
 	var encoded = [];
+	//0xfe
+	if ('request_check_order' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0xfe);
+		if (payload.request_check_order.order < 0 || payload.request_check_order.order > 255) {
+			throw betweenError('request_check_order.order', 0, 255);
+		}
+		buffer.writeUInt8(payload.request_check_order.order);
+		encoded = encoded.concat(buffer.toBytes());
+	}
 	//0xef
 	if ('req' in payload) {
 		var buffer = new Buffer();
@@ -1459,6 +1469,7 @@ function oneOfError(path, values) {
 }
 function cmdMap() {
 	return {
+		  "request_check_order": "fe",
 		  "command_queries_reply": "ef",
 		  "request_query_all_configurations": "ee",
 		  "lorawan_configuration_settings": "cf",
