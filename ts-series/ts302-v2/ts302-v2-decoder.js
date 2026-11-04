@@ -128,7 +128,7 @@ function milesightDeviceDecode(bytes) {
             var temp_value = readInt16LE(bytes.slice(i, i + 2)) / 10;
             var alarm_status = bytes[i + 2];
             var alarm_type = readAlarmType(alarm_status & 0x07);
-            var alarm_retransmit_status = readAlarmRetransmitStatus(alarm_status & 0x80);
+            var alarm_retransmit_status = readAlarmRetransmitStatus((alarm_status >>> 7) & 0x01);
             decoded.temperature_chn1 = temp_value;
             decoded.temperature_chn1_alarm = alarm_type;
             decoded.temperature_chn1_alarm_retransmit_status = alarm_retransmit_status;
@@ -151,7 +151,7 @@ function milesightDeviceDecode(bytes) {
             var temp_value = readInt16LE(bytes.slice(i, i + 2)) / 10;
             var alarm_status = bytes[i + 2];
             var alarm_type = readAlarmType(alarm_status & 0x07);
-            var alarm_retransmit_status = readAlarmRetransmitStatus(alarm_status & 0x80);
+            var alarm_retransmit_status = readAlarmRetransmitStatus((alarm_status >>> 7) & 0x01);
             decoded.temperature_chn2 = temp_value;
             decoded.temperature_chn2_alarm = alarm_type;
             decoded.temperature_chn2_alarm_retransmit_status = alarm_retransmit_status;
@@ -174,7 +174,7 @@ function milesightDeviceDecode(bytes) {
             var temp_value = readInt16LE(bytes.slice(i, i + 2)) / 10;
             var alarm_status = bytes[i + 2];
             var alarm_type = readAlarmType(alarm_status & 0x07);
-            var alarm_retransmit_status = readAlarmRetransmitStatus(alarm_status & 0x80);
+            var alarm_retransmit_status = readAlarmRetransmitStatus((alarm_status >>> 7) & 0x01);
             decoded.mcu_temperature = temp_value;
             decoded.mcu_temperature_alarm = alarm_type;
             decoded.mcu_temperature_alarm_retransmit_status = alarm_retransmit_status;
