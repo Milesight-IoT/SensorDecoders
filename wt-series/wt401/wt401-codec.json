@@ -278,20 +278,20 @@
             "bacnet_unit_type": "UNITS_NO_UNITS"
         },
         {
-            "id": "collection_interval.minutes_of_time",
+            "id": "collection_interval.seconds_of_time",
             "name": "Collecting Interval(Collecting Interval)",
-            "value": "1",
-            "unit": "min",
+            "value": "60",
+            "unit": "s",
             "access_mode": "RW",
             "data_type": "NUMBER",
             "value_type": "UINT16",
             "range": [
                 1,
-                1440
+                3600
             ],
             "bacnet_type": "analog_value_object",
-            "bacnet_unit_type_id": 72,
-            "bacnet_unit_type": "UNITS_MINUTES",
+            "bacnet_unit_type_id": 73,
+            "bacnet_unit_type": "UNITS_SECONDS",
             "reference": [
                 "collection_interval.unit"
             ]
@@ -300,6 +300,48 @@
             "id": "collection_interval.unit",
             "name": "Collecting Interval Unit(Collecting Interval)",
             "value": "0",
+            "unit": "",
+            "access_mode": "RW",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "second"
+                },
+                {
+                    "value": 1,
+                    "name": "min"
+                }
+            ],
+            "bacnet_type": "multistate_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": []
+        },
+        {
+            "id": "communicate_interval.ble.minutes_of_time",
+            "name": "BLE Communicate Interval(BLE Communicate Interval)",
+            "value": "2",
+            "unit": "min",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "UINT8",
+            "range": [
+                1,
+                30
+            ],
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 72,
+            "bacnet_unit_type": "UNITS_MINUTES",
+            "reference": [
+                "communicate_interval.ble.unit"
+            ]
+        },
+        {
+            "id": "communicate_interval.ble.unit",
+            "name": "BLE Communicate Interval Unit(BLE Communicate Interval)",
+            "value": "1",
             "unit": "",
             "access_mode": "RW",
             "data_type": "ENUM",
@@ -1197,70 +1239,6 @@
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": []
-        },
-        {
-            "id": "reporting_interval.ble.minutes_of_time",
-            "name": "LoRa Reporting Interval(BLE Mode)",
-            "value": "10",
-            "unit": "min",
-            "access_mode": "RW",
-            "data_type": "NUMBER",
-            "value_type": "UINT16",
-            "range": [
-                1,
-                1440
-            ],
-            "bacnet_type": "analog_value_object",
-            "bacnet_unit_type_id": 72,
-            "bacnet_unit_type": "UNITS_MINUTES",
-            "reference": [
-                "reporting_interval.ble.unit"
-            ]
-        },
-        {
-            "id": "reporting_interval.ble.unit",
-            "name": "Reporting Interval Unit(BLE Mode)",
-            "value": "1",
-            "unit": "",
-            "access_mode": "RW",
-            "data_type": "ENUM",
-            "value_type": "UINT8",
-            "values": [
-                {
-                    "value": 0,
-                    "name": "second"
-                },
-                {
-                    "value": 1,
-                    "name": "min"
-                }
-            ],
-            "bacnet_type": "multistate_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": []
-        },
-        {
-            "id": "screen_off_enable",
-            "name": "Screen OFF Enable",
-            "value": "1",
-            "unit": "",
-            "access_mode": "RW",
-            "data_type": "BOOL",
-            "value_type": "UINT8",
-            "values": [
-                {
-                    "value": 0,
-                    "name": "disable"
-                },
-                {
-                    "value": 1,
-                    "name": "enable"
-                }
-            ],
-            "bacnet_type": "binary_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS"
         },
         {
             "id": "system_status",
