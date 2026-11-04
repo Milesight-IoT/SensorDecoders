@@ -21,24 +21,36 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
         with:
-          fetch-depth: 2
+          fetch-depth: 0
 
       - name: Get changed codec files
         id: changed_files
+        env:
+          EVENT_NAME: ${{ github.event_name }}
+          PR_BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.sha }}
+          BEFORE_SHA: ${{ github.event.before }}
         run: |
-          if [ "${{ github.event_name }}" == "pull_request" ]; then
-            CHANGED_FILES=$(git diff --name-only ${{ github.event.pull_request.base.sha }} ${{ github.sha }} | grep -E '.*codec.*\.json$' || echo "")
+          if [ "$EVENT_NAME" = "pull_request" ]; then
+            base_sha="$PR_BASE_SHA"
+          elif [ -n "$BEFORE_SHA" ] && [ "$BEFORE_SHA" != "0000000000000000000000000000000000000000" ]; then
+            base_sha="$BEFORE_SHA"
           else
-            CHANGED_FILES=$(git diff --name-only HEAD~1 HEAD | grep -E '.*codec.*\.json$' || echo "")
+            base_sha="HEAD~1"
           fi
 
-          # 转换为 JSON 数组
-          if [ -z "$CHANGED_FILES" ]; then
-            echo "files=[]" >> $GITHUB_OUTPUT
-          else
-            FILES_JSON=$(echo "$CHANGED_FILES" | jq -R -s -c 'split("\n") | map(select(length > 0))')
-            echo "files=$FILES_JSON" >> $GITHUB_OUTPUT
-          fi
+          CHANGED_FILES=$(git diff --name-only --diff-filter=ACMR "$base_sha" "$HEAD_SHA" -- | grep -E '.*codec.*\.json$' || true)
+
+          # Renames/deletions can include old paths. Keep only files present at HEAD,
+          # so a deleted codec path is never passed to the validator.
+          CHANGED_FILES=$(printf '%s\n' "$CHANGED_FILES" | while IFS= read -r file; do
+            if [ -n "$file" ] && [ -f "$file" ]; then
+              printf '%s\n' "$file"
+            fi
+          done)
+
+          FILES_JSON=$(printf '%s' "$CHANGED_FILES" | jq -R -s -c 'split("\n") | map(select(length > 0))')
+          echo "files=$FILES_JSON" >> "$GITHUB_OUTPUT"
 
   validate:
     needs: detect-files
