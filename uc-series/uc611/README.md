@@ -57,7 +57,7 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Freeze Protection | 0x76 | 1 | rw |  |  |  |
 | Type | 0x76 | 2 | rw |  |  |  |
 | Enable | 0x76 | 2 | rw | 0 |  | 0：Disable<br>1：Enable |
-| Freeze Temperature | 0x76 | 3 | rw | 3 | 1 - 5 |  |
+| Freeze Protection Temperature | 0x76 | 3 | rw | 3 | 1 - 5 |  |
 
 ### Event
 
@@ -82,8 +82,6 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Ambient Temperature | 0x10 | 3 | r |  | -20 - 60 |  |
 | Status | 0x10 | 2 | r |  |  | 0：normal<br>1：open window |
 | Relays Status | 0x11 | 2 | r |  |  | 0：normally open<br>1：normally closed |
-| Clear Power Consumption | 0x7B | 2 | w |  |  |  |
-| Clear | 0x7B | 2 | w |  |  |  |
 |  Open Window Status Control | 0x7C | 2 | w |  |  |  |
 |  Control | 0x7C | 2 | w |  |  |  |
 | Ambient Temperature Settings | 0x7D | 3 | w |  |  |  |

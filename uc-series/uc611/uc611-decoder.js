@@ -35,6 +35,10 @@ function milesightDeviceDecode(bytes) {
 	for (counterObj.i = 0; counterObj.i < bytes.length; ) {
 		var command_id = bytes[counterObj.i++];
 		switch (command_id) {
+			case 0xfe:
+				decoded.check_order_reply = decoded.check_order_reply || {};
+				decoded.check_order_reply.order = readUInt8(bytes, counterObj, 1);
+				break;
 			case 0xef:
 				decoded.ans = decoded.ans || [];
 				var ans_item = {};
@@ -155,6 +159,9 @@ function milesightDeviceDecode(bytes) {
 				decoded.reporting_interval = decoded.reporting_interval || {};
 				// 0：second, 1：min
 				decoded.reporting_interval.unit = readUInt8(bytes, counterObj, 1);
+				if (decoded.reporting_interval.unit == 0x00) {
+					decoded.reporting_interval.seconds_of_time = readUInt16LE(bytes, counterObj, 2);
+				}
 				if (decoded.reporting_interval.unit == 0x01) {
 					decoded.reporting_interval.minutes_of_time = readUInt16LE(bytes, counterObj, 2);
 				}
@@ -456,10 +463,10 @@ function readFirmwareVersion(bytes) {
 	var test = (bytes[5] & 0xff).toString(16);
 
 	var version = 'v' + major + '.' + minor;
-	if (release !== 0) version += '-r' + release.toString(16);
-	if (alpha !== 0) version += '-a' + alpha.toString(16);
-	if (unit_test !== 0) version += '-u' + unit_test.toString(16);
-	if (test !== 0) version += '-t' + test.toString(16);
+	if (release !== '0') version += '-r' + release;
+	if (alpha !== '0') version += '-a' + alpha;
+	if (unit_test !== '0') version += '-u' + unit_test;
+	if (test !== '0') version += '-t' + test;
 	return version;
 }
 
@@ -812,6 +819,7 @@ function cmdMap() {
 		  "2502": "equipment_temperature_alarm.over_range_error",
 		  "2600": "ambient_temperature_alarm.collection_error",
 		  "2603": "ambient_temperature_alarm.no_data",
+		  "6000": "reporting_interval.seconds_of_time",
 		  "6001": "reporting_interval.minutes_of_time",
 		  "6300": "button_lock_settings.switch_lock_enable",
 		  "6301": "button_lock_settings.switch_reset_enable",
@@ -826,6 +834,7 @@ function cmdMap() {
 		  "7501": "open_window_settings.stop_temperature_control_time",
 		  "7600": "anti_freeze_protection_settings.enable",
 		  "7601": "anti_freeze_protection_settings.temperature_value",
+		  "fe": "request_check_order",
 		  "ef": "command_queries_reply",
 		  "ee": "request_query_all_configurations",
 		  "cf": "lorawan_configuration_settings",
@@ -907,7 +916,7 @@ function processTemperature(decoded) {
     },
     "open_window_settings.cooling_rate": {
         "precision": 2,
-        "unitName": "K"
+        "unitName": "K/min"
     },
     "anti_freeze_protection_settings.temperature_value": {
         "precision": 2,
@@ -940,7 +949,7 @@ function processTemperature(decoded) {
 			var fahrenheitProperty = convertName(propertyId, 'fahrenheit');
 			var celsiusProperty = convertName(propertyId, 'celsius');
 			var unitName = allTemperatureProperties[newPropertyId].unitName;
-			var constant = unitName == 'K' ? 0 : 32;
+			var constant = unitName == 'K' || unitName == 'K/min' ? 0 : 32;
 			if (hasPath(decoded, propertyId)) {
 				setPath(decoded, fahrenheitProperty,  Number((getPath(decoded, propertyId) * 1.8 + constant).toFixed(allTemperatureProperties[newPropertyId].precision)));
 				setPath(decoded, celsiusProperty,  Number(getPath(decoded, propertyId).toFixed(allTemperatureProperties[newPropertyId].precision)));

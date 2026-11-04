@@ -115,7 +115,7 @@
         },
         {
             "id": "anti_freeze_protection_settings.celsius_temperature_value",
-            "name": "Celsius Freeze Temperature(Freeze Protection)",
+            "name": "Celsius Freeze Protection Temperature(Freeze Protection)",
             "value": "3",
             "unit": "°C",
             "access_mode": "RW",
@@ -155,7 +155,7 @@
         },
         {
             "id": "anti_freeze_protection_settings.fahrenheit_temperature_value",
-            "name": "Fahrenheit Freeze Temperature(Freeze Protection)",
+            "name": "Fahrenheit Freeze Protection Temperature(Freeze Protection)",
             "value": "37.4",
             "unit": "°F",
             "access_mode": "RW",
@@ -247,19 +247,6 @@
             "bacnet_type": "analog_input_object",
             "bacnet_unit_type_id": 62,
             "bacnet_unit_type": "UNITS_DEGREES_CELSIUS"
-        },
-        {
-            "id": "clear_power_metering.clear",
-            "name": "Clear(Clear Power Consumption)",
-            "value": "",
-            "unit": "",
-            "access_mode": "W",
-            "data_type": "NUMBER",
-            "value_type": "UINT8",
-            "bacnet_type": "analog_output_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": []
         },
         {
             "id": "d2d_pairing_enable",
@@ -450,8 +437,8 @@
             "reference": []
         },
         {
-            "id": "open_window_settings.cooling_rate",
-            "name": "Rate of Temperature Fall(Open Window Detection Settings)",
+            "id": "open_window_settings.celsius_cooling_rate",
+            "name": "Celsius Rate of Temperature Fall(Open Window Detection Settings)",
             "value": "3",
             "unit": "K/min",
             "access_mode": "RW",
@@ -464,6 +451,23 @@
             "bacnet_type": "analog_value_object",
             "bacnet_unit_type_id": 182,
             "bacnet_unit_type": "UNITS_DEGREES_KELVIN_PER_MINUTE",
+            "reference": []
+        },
+        {
+            "id": "open_window_settings.fahrenheit_cooling_rate",
+            "name": "Fahrenheit Rate of Temperature Fall(Open Window Detection Settings)",
+            "value": "5.4",
+            "unit": "°F/min",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "FLOAT",
+            "range": [
+                3.6,
+                18
+            ],
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 94,
+            "bacnet_unit_type": "UNITS_DEGREES_FAHRENHEIT_PER_MINUTE",
             "reference": []
         },
         {
@@ -903,11 +907,11 @@
             "values": [
                 {
                     "value": 0,
-                    "name": "°C"
+                    "name": "Celsius"
                 },
                 {
                     "value": 1,
-                    "name": "°F"
+                    "name": "Fahrenheit"
                 }
             ],
             "bacnet_type": "multistate_value_object",

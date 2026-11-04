@@ -29,6 +29,16 @@ function milesightDeviceEncode(payload) {
 	normalizeArrayParams(payload);
 	processTemperature(payload);
 	var encoded = [];
+	//0xfe
+	if ('request_check_order' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0xfe);
+		if (payload.request_check_order.order < 0 || payload.request_check_order.order > 255) {
+			throw betweenError('request_check_order.order', 0, 255);
+		}
+		buffer.writeUInt8(payload.request_check_order.order);
+		encoded = encoded.concat(buffer.toBytes());
+	}
 	//0xef
 	if ('req' in payload) {
 		var buffer = new Buffer();
@@ -274,6 +284,12 @@ function milesightDeviceEncode(payload) {
 		}
 		// 0：second, 1：min
 		buffer.writeUInt8(payload.reporting_interval.unit);
+		if (payload.reporting_interval.unit == 0x00) {
+			if (payload.reporting_interval.seconds_of_time < 10 || payload.reporting_interval.seconds_of_time > 64800) {
+				throw betweenError('reporting_interval.seconds_of_time', 10, 64800);
+			}
+			buffer.writeUInt16LE(payload.reporting_interval.seconds_of_time);
+		}
 		if (payload.reporting_interval.unit == 0x01) {
 			if (payload.reporting_interval.minutes_of_time < 1 || payload.reporting_interval.minutes_of_time > 1440) {
 				throw betweenError('reporting_interval.minutes_of_time', 1, 1440);
@@ -1147,6 +1163,7 @@ function oneOfError(path, values) {
 }
 function cmdMap() {
 	return {
+		  "request_check_order": "fe",
 		  "command_queries_reply": "ef",
 		  "request_query_all_configurations": "ee",
 		  "lorawan_configuration_settings": "cf",
@@ -1177,6 +1194,7 @@ function cmdMap() {
 		  "open_window_detection": "10",
 		  "relays_status_change": "11",
 		  "reporting_interval": "60",
+		  "reporting_interval.seconds_of_time": "6000",
 		  "reporting_interval.minutes_of_time": "6001",
 		  "temperature_unit": "61",
 		  "led_status": "62",
@@ -1265,7 +1283,7 @@ function processTemperature(payload) {
     },
     "open_window_settings.cooling_rate": {
         "coefficient": 0.01,
-        "unitName": "K"
+        "unitName": "K/min"
     },
     "anti_freeze_protection_settings.temperature_value": {
         "coefficient": 0.01,
@@ -1296,7 +1314,7 @@ function processTemperature(payload) {
 		propertyId = recoverName(propertyId, 'celsius');
 		if (allTemperatureProperties[newPropertyId]) {
 			var unitName = allTemperatureProperties[newPropertyId].unitName;
-			var constant = unitName == 'K' ? 0 : 32;
+			var constant = unitName == 'K' || unitName == 'K/min' ? 0 : 32;
 			var fahrenheitProperty = convertName(propertyId, 'fahrenheit');
 			var celsiusProperty = convertName(propertyId, 'celsius');
 			var stringCoefficient = String(allTemperatureProperties[newPropertyId].coefficient);
