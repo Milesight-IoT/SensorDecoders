@@ -48,9 +48,9 @@ function milesightDeviceDecode(bytes) {
             decoded.firmware_version = readFirmwareVersion(bytes.slice(i, i + 2));
             i += 2;
         }
-        // DEVICE STATUS (ODM firmware always reports 0xff = power on, same as WS202-ODM9978)
+        // DEVICE STATUS (ODM firmware reports 0xff = power on)
         else if (channel_id === 0xff && channel_type === 0x0b) {
-            decoded.device_status = readDeviceStatus(1);
+            decoded.device_status = readDeviceStatus(bytes[i] === 0xff ? 1 : bytes[i]);
             i += 1;
         }
         // LORAWAN CLASS
