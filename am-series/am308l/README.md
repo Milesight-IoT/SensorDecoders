@@ -31,7 +31,7 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | ODM Custom ID | 0xFF | 0xE7 |   2    | odm_custom_id(2B)<br/>odm_custom_id, e.g. 1234 -> 1234 |
 | Firmware Sub Version | 0xFF | 0xE8 |   4    | firmware_sub_version(4B)<br/>firmware_sub_version, e.g. 01020011 -> -r1-a2-t11 |
 |  Reset Event  | 0xFF | 0xFE |   1    | reset_event(1B)                                                                                  |
-| Device Status | 0xFF | 0x0B |   1    | device_status(1B)                                                                                |
+| Device Status | 0xFF | 0x0B |   1    | power(1B)<br/>ODM firmware always reports 0xff = power on, decoded as "on"                       |
 
 ### Telemetry
 
