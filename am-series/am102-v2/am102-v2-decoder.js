@@ -142,10 +142,10 @@ function milesightDeviceDecode(bytes) {
             i += 2;
         }
         else if (channel_id === 0xf9 && channel_type === 0xbe) {
-            decoded.report_interval = {};
-            decoded.report_interval.type = readUInt8(bytes[i]);
-            decoded.report_interval.period_unit = readPeriodUnit(readUInt8(bytes[i + 1]));
-            decoded.report_interval.period_time = readUInt16LE(bytes.slice(i + 2, i + 4));
+            decoded.collection_interval = {};
+            decoded.collection_interval.type = readUInt8(bytes[i]);
+            decoded.collection_interval.period_unit = readPeriodUnit(readUInt8(bytes[i + 1]));
+            decoded.collection_interval.period_time = readUInt16LE(bytes.slice(i + 2, i + 4));
             i += 4;
         }
         // ALARM CONFIG

@@ -35,6 +35,9 @@ function milesightDeviceEncode(payload) {
     if ("report_interval" in payload) {
         encoded = encoded.concat(setReportInterval(payload.report_interval));
     }
+    if ("collection_interval" in payload) {
+        encoded = encoded.concat(setCollectionInterval(payload.collection_interval));
+    }
     if ("time_zone" in payload) {
         encoded = encoded.concat(setTimeZone(payload.time_zone));
     }
@@ -139,6 +142,39 @@ function setReportInterval(report_interval) {
     var buffer = new Buffer(6);
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0x8e);
+    buffer.writeUInt8(type);
+    buffer.writeUInt8(raw_unit);
+    buffer.writeUInt16LE(period_time);
+    return buffer.toBytes();
+}
+
+/**
+ * collection interval
+ * @param {number} collection_interval unit: second
+ * @example { "collection_interval": 300 }
+ */
+function setCollectionInterval(collection_interval) {
+    var type = collection_interval.type;
+    var period_unit = collection_interval.period_unit;
+    var period_time = collection_interval.period_time;
+
+    var unit_map = { 0: "second", 1: "minute" };
+    var unit_keys = [0, 1];
+    if (type !== 0) {
+        throw new Error("collection_interval.type must be 0");
+    }
+    var unit_values = getValues(unit_map);
+    if (unit_keys.indexOf(period_unit) === -1 && unit_values.indexOf(period_unit) === -1) {
+        throw new Error("collection_interval.period_unit must be one of " + unit_keys.join(", ") + " or " + unit_values.join(", "));
+    }
+    if (typeof period_time !== "number") {
+        throw new Error("collection_interval.period_time must be a number");
+    }
+    var raw_unit = typeof period_unit === "number" ? period_unit : parseInt(getValue(unit_map, period_unit), 10);
+
+    var buffer = new Buffer(5);
+    buffer.writeUInt8(0xff);
+    buffer.writeUInt8(0xbe);
     buffer.writeUInt8(type);
     buffer.writeUInt8(raw_unit);
     buffer.writeUInt16LE(period_time);
