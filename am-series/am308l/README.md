@@ -29,7 +29,7 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Serial Number | 0xFF | 0x16 |   8    | sn(8B)                                                                                           |
 | LoRaWAN Class | 0xFF | 0x0F |   1    | lorawan_class(1B)<br/>lorawan_class, values: (0: Class A, 1: Class B, 2: Class C, 3: Class CtoB) |
 |  Reset Event  | 0xFF | 0xFE |   1    | reset_event(1B)                                                                                  |
-| Device Status | 0xFF | 0x0B |   1    | device_status(1B)                                                                                |
+| Device Status | 0xFF | 0x0B |   1    | power(1B)<br/>ODM firmware always reports 0xff = power on, decoded as "on"                       |
 
 ### Telemetry
 
