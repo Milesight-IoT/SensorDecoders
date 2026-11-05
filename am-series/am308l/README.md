@@ -48,8 +48,8 @@ For more detailed information, please visit [Milesight Official Website](https:/
 |    PM2.5     | 0x0B | 0x7D |   2    | pm2_5(2B)<br/>pm2_5, unit: µg/m³, read: uint16                                                                                                                                                                   |
 |     PM10     | 0x0C | 0x7D |   2    | pm10(2B)<br/>pm10, unit: µg/m³, read: uint16                                                                                                                                                                     |
 |    Buzzer    | 0x0E | 0x01 |   1    | buzzer_status(1B)<br/>buzzer_status, values: (0: off, 1: on)                                                                                                                                                     |
-| History Data | 0x20 | 0xCE |   20   | timestamp(4B) + temperature(2B) + humidity(2B) + pir(1B) + light_level(1B) + co2(2B) + tvoc(2B) + pressure(2B) + pm2.5(2B) + pm10(2B)<br/>timestamp, unit: s, read: uint32<br/>tvoc, unit: iaq, read: uint16/100 |
-| History Data | 0x21 | 0xCE |   20   | timestamp(4B) + temperature(2B) + humidity(2B) + pir(1B) + light_level(1B) + co2(2B) + tvoc(2B) + pressure(2B) + + pm2.5(2B) + pm10(2B)<br/>timestamp, unit: s, read: uint32<br/>tvoc, unit: µg/m³, read: uint16 |
+| History Data | 0x20 | 0xCE |   22   | timestamp(4B) + temperature(2B) + humidity(2B) + pir(1B) + als_unit(1B) + lux(2B) + co2(2B) + tvoc(2B) + pressure(2B) + pm2.5(2B) + pm10(2B)<br/>timestamp, unit: s, read: uint32<br/>als_unit, values: (0: lux is light level, 1: lux is light value)<br/>tvoc, unit: iaq, read: uint16/100 |
+| History Data | 0x21 | 0xCE |   22   | timestamp(4B) + temperature(2B) + humidity(2B) + pir(1B) + als_unit(1B) + lux(2B) + co2(2B) + tvoc(2B) + pressure(2B) + pm2.5(2B) + pm10(2B)<br/>timestamp, unit: s, read: uint32<br/>als_unit, values: (0: lux is light level, 1: lux is light value)<br/>tvoc, unit: µg/m³, read: uint16 |
 
 ## Example
 

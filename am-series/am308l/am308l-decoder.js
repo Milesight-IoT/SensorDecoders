@@ -164,14 +164,19 @@ function milesightDeviceDecode(bytes) {
             data.temperature = readInt16LE(bytes.slice(i + 4, i + 6)) / 10;
             data.humidity = readUInt16LE(bytes.slice(i + 6, i + 8)) / 2;
             data.pir = readPIRStatus(bytes[i + 8]);
-            data.light_level = readUInt8(bytes[i + 9]);
-            data.co2 = readUInt16LE(bytes.slice(i + 10, i + 12));
+            var light_unit = readUInt8(bytes[i + 9]);
+            if (light_unit === 0) {
+                data.light_level = readUInt16LE(bytes.slice(i + 10, i + 12));
+            } else {
+                data.light_value = readUInt16LE(bytes.slice(i + 10, i + 12));
+            }
+            data.co2 = readUInt16LE(bytes.slice(i + 12, i + 14));
             // unit: µg/m³
-            data.tvoc = readUInt16LE(bytes.slice(i + 12, i + 14));
-            data.pressure = readUInt16LE(bytes.slice(i + 14, i + 16)) / 10;
-            data.pm2_5 = readUInt16LE(bytes.slice(i + 16, i + 18));
-            data.pm10 = readUInt16LE(bytes.slice(i + 18, i + 20));
-            i += 20;
+            data.tvoc = readUInt16LE(bytes.slice(i + 14, i + 16));
+            data.pressure = readUInt16LE(bytes.slice(i + 16, i + 18)) / 10;
+            data.pm2_5 = readUInt16LE(bytes.slice(i + 18, i + 20));
+            data.pm10 = readUInt16LE(bytes.slice(i + 20, i + 22));
+            i += 22;
 
             decoded.history = decoded.history || [];
             decoded.history.push(data);
