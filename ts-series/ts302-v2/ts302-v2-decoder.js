@@ -722,6 +722,30 @@ function readFirmwareVersion(bytes) {
 	return version;
 }
 
+function readOdmId(bytes) {
+    var id = "";
+    for (var i = 0; i < bytes.length; i++) {
+        id += ("0" + (bytes[i] & 0xff).toString(16)).slice(-2);
+    }
+    return id;
+}
+
+/**
+ * read sub version
+ * @param {number[]} bytes values: release(1B) + alpha(1B) + test(2B)
+ * @example 01020011 -> "r1-a2-t11"
+ */
+function readSubVersion(bytes) {
+    var release = (bytes[0] & 0xff).toString(16);
+    var alpha = (bytes[1] & 0xff).toString(16);
+    var test = (((bytes[2] & 0xff) << 8) + (bytes[3] & 0xff)).toString(16);
+    var version = "";
+    if (release !== "0") version += "r" + release;
+    if (alpha !== "0") version += "a" + alpha;
+    if (test !== "0") version += "t" + test;
+    return version;
+}
+
 function readTslVersion(bytes) {
     var major = bytes[0] & 0xff;
     var minor = bytes[1] & 0xff;
