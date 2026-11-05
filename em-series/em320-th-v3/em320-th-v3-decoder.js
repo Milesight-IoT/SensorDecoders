@@ -398,7 +398,11 @@ function readSubVersion(bytes) {
     var release = (bytes[0] & 0xff).toString(16);
     var alpha = (bytes[1] & 0xff).toString(16);
     var test = (((bytes[2] & 0xff) << 8) + (bytes[3] & 0xff)).toString(16);
-    return "r" + release + "-a" + alpha + "-t" + test;
+    var version = "";
+    if (release !== "0") version += "r" + release;
+    if (alpha !== "0") version += "a" + alpha;
+    if (test !== "0") version += "t" + test;
+    return version;
 }
 
 function readTslVersion(bytes) {
