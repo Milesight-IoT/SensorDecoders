@@ -1140,11 +1140,13 @@ function milesightDeviceEncode(payload) {
 
 		// 0: Disable, 1: Enable
 		bitOptions |= payload.temporary_button_unlock_cfg.fan << 3;
+
+		// 0: Disable, 1: Enable
+		bitOptions |= payload.temporary_button_unlock_cfg.temperature_control << 4;
 		buffer.writeUInt8(bitOptions);
 
 		var bitOptions = 0;
-		// 0: Disable, 1: Enable
-		bitOptions |= payload.temporary_button_unlock_cfg.temperature_control << 4;
+		bitOptions |= payload.temporary_button_unlock_cfg.reserved << 5;
 
 		if (isValid(payload.temporary_button_unlock_cfg.unlocking_duration)) {
 			buffer.writeUInt8(0x97);

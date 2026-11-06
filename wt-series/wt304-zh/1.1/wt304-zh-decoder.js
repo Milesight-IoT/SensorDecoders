@@ -602,6 +602,7 @@ function milesightDeviceDecode(bytes) {
 				decoded.temporary_button_unlock_cfg.fan = extractBits(bitOptions, 3, 4);
 				// 0: Disable, 1: Enable
 				decoded.temporary_button_unlock_cfg.temperature_control = extractBits(bitOptions, 4, 5);
+				decoded.temporary_button_unlock_cfg.reserved = extractBits(bitOptions, 5, 8);
 				if (temporary_button_unlock_cfg_cmd == 0x01) {
 					decoded.temporary_button_unlock_cfg.unlocking_duration = readUInt16LE(bytes, counterObj, 2);
 				}
