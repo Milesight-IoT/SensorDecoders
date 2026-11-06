@@ -1188,8 +1188,8 @@
                 100
             ],
             "bacnet_type": "analog_input_object",
-            "bacnet_unit_type_id": 15,
-            "bacnet_unit_type": "UNITS_POWER_FACTOR"
+            "bacnet_unit_type_id": 98,
+            "bacnet_unit_type": "UNITS_PERCENT"
         },
         {
             "id": "humidity_calibration_cfg.calibration_value",
@@ -1204,8 +1204,8 @@
                 100
             ],
             "bacnet_type": "analog_value_object",
-            "bacnet_unit_type_id": 15,
-            "bacnet_unit_type": "UNITS_POWER_FACTOR",
+            "bacnet_unit_type_id": 98,
+            "bacnet_unit_type": "UNITS_PERCENT",
             "reference": []
         },
         {
@@ -1411,8 +1411,8 @@
                 100
             ],
             "bacnet_type": "analog_value_object",
-            "bacnet_unit_type_id": 15,
-            "bacnet_unit_type": "UNITS_POWER_FACTOR",
+            "bacnet_unit_type_id": 98,
+            "bacnet_unit_type": "UNITS_PERCENT",
             "reference": []
         },
         {
@@ -1491,8 +1491,8 @@
                 100
             ],
             "bacnet_type": "analog_value_object",
-            "bacnet_unit_type_id": 15,
-            "bacnet_unit_type": "UNITS_POWER_FACTOR",
+            "bacnet_unit_type_id": 98,
+            "bacnet_unit_type": "UNITS_PERCENT",
             "reference": []
         },
         {
@@ -1836,8 +1836,8 @@
                 100
             ],
             "bacnet_type": "analog_value_object",
-            "bacnet_unit_type_id": 15,
-            "bacnet_unit_type": "UNITS_POWER_FACTOR",
+            "bacnet_unit_type_id": 98,
+            "bacnet_unit_type": "UNITS_PERCENT",
             "reference": [
                 "target_humidity_range.min"
             ]
@@ -1855,8 +1855,8 @@
                 100
             ],
             "bacnet_type": "analog_value_object",
-            "bacnet_unit_type_id": 15,
-            "bacnet_unit_type": "UNITS_POWER_FACTOR",
+            "bacnet_unit_type_id": 98,
+            "bacnet_unit_type": "UNITS_PERCENT",
             "reference": [
                 "target_humidity_range.max"
             ]
@@ -2349,6 +2349,29 @@
                 {
                     "value": 1,
                     "name": "Enable"
+                }
+            ],
+            "bacnet_type": "binary_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": []
+        },
+        {
+            "id": "temporary_button_unlock_cfg.reserved",
+            "name": "Reserved(Temporary Button Unlock Configuration)",
+            "value": "0",
+            "unit": "",
+            "access_mode": "RW",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "disable"
+                },
+                {
+                    "value": 1,
+                    "name": "enable"
                 }
             ],
             "bacnet_type": "binary_value_object",
