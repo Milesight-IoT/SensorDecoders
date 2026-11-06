@@ -41,8 +41,6 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Fan Low Speed | 0x10 | 5 | r | 0 |  | 0: Open<br>1: Close |
 | Medium-speed Fan | 0x10 | 5 | r | 0 |  | 0: Open<br>1: Close |
 | High-speed Fan | 0x10 | 5 | r | 0 |  | 0: Open<br>1: Close |
-| Valve 1 | 0x10 | 5 | r | 0 |  | 0: Open<br>1: Close |
-| Valve 2 | 0x10 | 5 | r | 0 |  | 0: Open<br>1: Close |
 | Reserved | 0x10 | 5 | r |  |  |  |
 | AO1 Output | 0x10 | 5 | r | 0 |  |  |
 | AO2 Output | 0x10 | 5 | r | 0 |  |  |
