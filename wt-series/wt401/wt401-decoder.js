@@ -538,22 +538,22 @@ function milesightDeviceDecode(bytes) {
 					// 0：disable, 1：enable
 					var circulation = extractBits(bitOptions, 1, 2);
 					// 0：disable, 1：enable
-					var on = extractBits(bitOptions, 2, 3);
+					// var on = extractBits(bitOptions, 2, 3);
 					// 0：disable, 1：enable
 					var low = extractBits(bitOptions, 3, 4);
 					// 0：disable, 1：enable
 					var medium = extractBits(bitOptions, 4, 5);
 					// 0：disable, 1：enable
 					var high = extractBits(bitOptions, 5, 6);
-					if (auto && circulation && on && low && medium && high) {
+					if (auto && circulation && low && medium && high) {
 						decoded.fan_enable = 1;
-					} else if (auto && on && low && medium && high) {
+					} else if (auto && low && medium && high) {
 						decoded.fan_enable = 2;
-					} else if (circulation && on && low && medium && high) {
+					} else if (circulation && low && medium && high) {
 						decoded.fan_enable = 3;
 					} else if (auto && circulation) {
 						decoded.fan_enable = 4;
-					} else if (on && low && medium && high) {
+					} else if (low && medium && high) {
 						decoded.fan_enable = 5;
 					} else {
 						decoded.fan_enable = 256;
@@ -1003,10 +1003,6 @@ function milesightDeviceDecode(bytes) {
 				break;
 			case 0xbe:
 				decoded.reboot = readOnlyCommand(bytes, counterObj, 0);
-				break;
-			case 0xb7:
-				decoded.set_time = decoded.set_time || {};
-				decoded.set_time.timestamp = readUInt32LE(bytes, counterObj, 4);
 				break;
 			case 0xb6:
 				decoded.reconnect = readOnlyCommand(bytes, counterObj, 0);
@@ -1597,7 +1593,6 @@ function cmdMap() {
 		  "5c": "insert_temporary_plan",
 		  "5b": "filter_clean_alarm",
 		  "be": "reboot",
-		  "b7": "set_time",
 		  "b6": "reconnect",
 		  "5f": "delete_task_plan"
 	};

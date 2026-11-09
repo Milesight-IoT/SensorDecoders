@@ -49,7 +49,7 @@ function milesightDeviceEncode(payload) {
 			var req_command = reqList[idx];
 			var pureNumber = [];
 			var formateStrParts = [];
-
+		
 			req_command.split('.').forEach(function(part) {
 				if (/^[0-9]+$/.test(part)) {
 					// padStart ES5 兼容
@@ -61,17 +61,17 @@ function milesightDeviceEncode(payload) {
 					formateStrParts.push(part);
 				}
 			});
-
+		
 			var formateStr = formateStrParts.join('.');
 			var hexString = cmdMap()[formateStr];
-
+		
 			if (hexString && hexString.indexOf('xx') !== -1) {
 				var i = 0;
 				hexString = hexString.replace(/xx/g, function() {
 					return pureNumber[i++];
 				});
 			}
-
+		
 			if (hexString) {
 				var length = hexString.length / 2;
 				buffer.writeUInt8(0xef);
@@ -925,22 +925,21 @@ function milesightDeviceEncode(payload) {
 		} else {
 			var auto = 0;
 			var circulation = 1;
-			var on = 2;
 			var low = 3;
 			var medium = 4;
 			var high = 5;
 
 			var operations = [];
 			if (payload.fan_enable == 1) {
-				operations = [auto, circulation, on, low, medium, high];
+				operations = [auto, circulation, low, medium, high];
 			} else if (payload.fan_enable == 2) {
-				operations = [auto, on, low, medium, high];
+				operations = [auto, low, medium, high];
 			} else if (payload.fan_enable == 3) {
-				operations = [circulation, on, low, medium, high];
+				operations = [circulation, low, medium, high];
 			} else if (payload.fan_enable == 4) {
 				operations = [auto, circulation];
 			} else if (payload.fan_enable == 5) {
-				operations = [on, low, medium, high];
+				operations = [low, medium, high];
 			} else {
 				throw new Error('Invalid fan_enable: ' + payload.fan_enable);
 			}
@@ -1893,16 +1892,6 @@ function milesightDeviceEncode(payload) {
 		buffer.writeUInt8(0xbe);
 		encoded = encoded.concat(buffer.toBytes());
 	}
-	//0xb7
-	if ('set_time' in payload) {
-		var buffer = new Buffer();
-		buffer.writeUInt8(0xb7);
-		if (payload.set_time.timestamp < 0 || payload.set_time.timestamp > 4294967295) {
-			throw rangeError('set_time.timestamp', '[0,4294967295]');
-		}
-		buffer.writeUInt32LE(payload.set_time.timestamp);
-		encoded = encoded.concat(buffer.toBytes());
-	}
 	//0xb6
 	if ('reconnect' in payload) {
 		var buffer = new Buffer();
@@ -2444,7 +2433,6 @@ function cmdMap() {
 		  "fan_error_alarm": "55",
 		  "filter_clean_alarm": "5b",
 		  "reboot": "be",
-		  "set_time": "b7",
 		  "reconnect": "b6",
 		  "delete_task_plan": "5f"
 	};

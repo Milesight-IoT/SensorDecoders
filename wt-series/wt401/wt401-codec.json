@@ -349,6 +349,23 @@
             "reference": []
         },
         {
+            "id": "communicate_interval.ble_lora.minutes_of_time",
+            "name": "BLE Communicate Interval(BLE+LoRa Mode)",
+            "value": "2",
+            "unit": "min",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "UINT8",
+            "range": [
+                1,
+                30
+            ],
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 72,
+            "bacnet_unit_type": "UNITS_MINUTES",
+            "reference": []
+        },
+        {
             "id": "communicate_interval.ble.minutes_of_time",
             "name": "BLE Communicate Interval(BLE Communicate Interval)",
             "value": "2",
@@ -644,15 +661,15 @@
             "values": [
                 {
                     "value": 1,
-                    "name": "auto/circulate/on/low/medium/high"
+                    "name": "auto/circulate/low/medium/high"
                 },
                 {
                     "value": 2,
-                    "name": "auto/on/low/medium/high"
+                    "name": "auto/low/medium/high"
                 },
                 {
                     "value": 3,
-                    "name": "circulate/on/low/medium/high"
+                    "name": "circulate/low/medium/high"
                 },
                 {
                     "value": 4,
@@ -660,7 +677,7 @@
                 },
                 {
                     "value": 5,
-                    "name": "on/low/medium/high"
+                    "name": "low/medium/high"
                 },
                 {
                     "value": 256,
@@ -1194,6 +1211,23 @@
             "id": "reporting_interval.ble_lora.minutes_of_time",
             "name": "LoRa Reporting Interval(BLE_LoRa Reporting Interval)",
             "value": "1440",
+            "unit": "min",
+            "access_mode": "RW",
+            "data_type": "NUMBER",
+            "value_type": "UINT16",
+            "range": [
+                1,
+                1440
+            ],
+            "bacnet_type": "analog_value_object",
+            "bacnet_unit_type_id": 72,
+            "bacnet_unit_type": "UNITS_MINUTES",
+            "reference": []
+        },
+        {
+            "id": "reporting_interval.lora.minutes_of_time",
+            "name": "LoRa Reporting Interval(LoRa Reporting Interval)",
+            "value": "10",
             "unit": "min",
             "access_mode": "RW",
             "data_type": "NUMBER",

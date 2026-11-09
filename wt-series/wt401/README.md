@@ -29,11 +29,17 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Schedule | 0x05 | 2 | r | 0 |  | 0:plan0<br>1:plan1<br>2:plan2<br>3:plan3<br>4:plan4<br>5:plan5<br>6:plan6<br>7:plan7<br>8:plan8<br>9:plan9<br>10:plan10<br>11:plan11<br>12:plan12<br>13:plan13<br>14:plan14<br>15:plan15<br>255:Not executed |
 | Communication Mode | 0x8D | 2 | rw | 2 |  | 0：BLE<br>1：LoRa<br>2：BLE+LoRa |
 | Reporting Interval | 0x61 | 1 | rw |  |  |  |
+| LoRa Reporting Interval | 0x61 | 1 | rw |  |  |  |
+| Reporting Interval Unit | 0x61 | 2 | rw | 1 |  | 0：second<br>1：min |
+| LoRa Reporting Interval | 0x61 | 3 | rw | 10 | 1 - 1440 |  |
 | BLE_LoRa Reporting Interval | 0x61 | 1 | rw |  |  |  |
 | Reporting Interval Unit | 0x61 | 2 | rw | 1 |  | 0：second<br>1：min |
 | LoRa Reporting Interval | 0x61 | 3 | rw | 1440 | 1 - 1440 |  |
 | Communicate Interval | 0x6C | 1 | rw |  |  |  |
 | BLE Communicate Interval | 0x6C | 1 | rw |  |  |  |
+| BLE Communicate Interval Unit | 0x6C | 2 | rw | 1 |  | 0：second<br>1：min |
+| BLE Communicate Interval | 0x6C | 3 | rw | 2 | 1 - 30 |  |
+| BLE+LoRa Mode | 0x6C | 1 | rw |  |  |  |
 | BLE Communicate Interval Unit | 0x6C | 2 | rw | 1 |  | 0：second<br>1：min |
 | BLE Communicate Interval | 0x6C | 3 | rw | 2 | 1 - 30 |  |
 | Collecting Interval | 0x60 | 1 | rw |  |  |  |
