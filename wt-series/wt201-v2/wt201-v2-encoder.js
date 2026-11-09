@@ -95,8 +95,8 @@ function milesightDeviceEncode(payload) {
     if ("temperature_source_config" in payload) {
         encoded = encoded.concat(setTemperatureSourceConfig(payload.temperature_source_config));
     }
-    if ("temperature_control_enable" in payload) {
-        encoded = encoded.concat(setTemperatureControlEnableStatus(payload.temperature_control_enable));
+    if ("system_status" in payload) {
+        encoded = encoded.concat(setSystemStatus(payload.system_status));
     }
     if ("temperature" in payload) {
         encoded = encoded.concat(setOutsideTemperature(payload.temperature));
@@ -1434,18 +1434,18 @@ function setTemperatureControlStage(stage, key, channel_type) {
 }
 
 /**
- * set temperature control enable status
+ * set system status
  * @since v2.0
- * @param {number} temperature_control_enable values: (0: disable, 1: enable)
- * @example { "temperature_control_enable": 1 }
+ * @param {number} system_status values: (0: off, 1: on)
+ * @example { "system_status": 1 }
  */
-function setTemperatureControlEnableStatus(temperature_control_enable) {
-    var enable_map = { 0: "disable", 1: "enable" };
-    var enable_values = getValues(enable_map);
-    if (enable_values.indexOf(temperature_control_enable) === -1) {
-        throw new Error("temperature_control_enable must be one of " + enable_values.join(", "));
+function setSystemStatus(system_status) {
+    var system_status_map = { 0: "off", 1: "on" };
+    var system_status_values = getValues(system_status_map);
+    if (system_status_values.indexOf(system_status) === -1) {
+        throw new Error("system_status must be one of " + system_status_values.join(", "));
     }
-    return [0xff, 0xc5, getValue(enable_map, temperature_control_enable)];
+    return [0xff, 0xc5, getValue(system_status_map, system_status)];
 }
 
 /**

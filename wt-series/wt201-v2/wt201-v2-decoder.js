@@ -487,7 +487,7 @@ function handle_downlink_response(channel_type, bytes, offset) {
             offset += 2;
             break;
         case 0xc5:
-            decoded.temperature_control_enable = readEnableStatus(bytes[offset]);
+            decoded.system_status = readOnOffStatus(bytes[offset]);
             offset += 1;
             break;
         case 0xc7:
