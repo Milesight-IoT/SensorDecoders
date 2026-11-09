@@ -1242,17 +1242,26 @@
             "reference": []
         },
         {
-            "id": "set_time.timestamp",
-            "name": "Timestamp(Time Synchronize)",
-            "value": "",
-            "unit": "",
+            "id": "synchronize_time",
+            "name": "Synchronize Time",
             "access_mode": "W",
-            "data_type": "NUMBER",
+            "data_type": "BOOL",
             "value_type": "UINT8",
-            "bacnet_type": "analog_output_object",
+            "unit": "",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": []
+            "bacnet_type": "binary_output_object",
+            "value": "",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "no"
+                },
+                {
+                    "value": 1,
+                    "name": "yes"
+                }
+            ]
         },
         {
             "id": "system_status",

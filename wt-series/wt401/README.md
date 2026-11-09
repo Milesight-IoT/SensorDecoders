@@ -140,6 +140,5 @@ For more detailed information, please visit [Milesight Official Website](https:/
 
 | CHANNEL |  ID  | LENGTH | READ/WRITE | DEFAULT | RANGE | ENUM |
 | :------ | :--: | :----: | :--------: | :-----: | :---: | :--: |
-| Time Synchronize | 0xB7 | 5 | w |  |  |  |
-| Timestamp | 0xB7 | 5 | w |  |  |  |
+| Time Synchronize | 0xB8 | 1 | w |  |  |  |
 
