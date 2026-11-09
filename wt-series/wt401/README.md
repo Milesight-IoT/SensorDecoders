@@ -124,9 +124,8 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Button Event 3  | 0x72 | 3 | rw | 0 |  | 0:disable<br>1:enable |
 | Temperature Unit Switch | 0x72 | 3 | rw | 0 |  | 0:disable<br>1:enable |
 | Reserved | 0x72 | 3 | rw | 0 |  |  |
-| Temporary Unlock | 0x81 | 1 | rw |  |  |  |
-| Temporary Unlock Enable | 0x81 | 2 | rw | 0 |  | 0：disable<br>1：enable |
-| Temporary Unlock Time | 0x81 | 3 | rw | 30 | 1 - 3600 |  |
+| BACNET Temporary Unlock Enable | 0x96 | 2 | rw | 0 |  | 0：disable<br>1：enable |
+| BACNET Temporary Unlock Time | 0x97 | 3 | rw | 30 | 1 - 3600 |  |
 | Time Zone | 0xC7 | 3 | rw | 0 |  | -720：UTC-12(IDLW)<br>-660：UTC-11(SST)<br>-600：UTC-10(HST)<br>-570：UTC-9:30(MIT)<br>-540：UTC-9(AKST)<br>-480：UTC-8(PST)<br>-420：UTC-7(MST)<br>-360：UTC-6(CST)<br>-300：UTC-5(EST)<br>-240：UTC-4(AST)<br>-210：UTC-3:30(NST)<br>-180：UTC-3(BRT)<br>-120：UTC-2(FNT)<br>-60：UTC-1(CVT)<br>0：UTC(WET)<br>60：UTC+1(CET)<br>120：UTC+2(EET)<br>180：UTC+3(MSK)<br>210：UTC+3:30(IRST)<br>240：UTC+4(GST)<br>270：UTC+4:30(AFT)<br>300：UTC+5(PKT)<br>330：UTC+5:30(IST)<br>345：UTC+5:45(NPT)<br>360：UTC+6(BHT)<br>390：UTC+6:30(MMT)<br>420：UTC+7(ICT)<br>480：UTC+8(CT/CST)<br>540：UTC+9(JST)<br>570：UTC+9:30(ACST)<br>600：UTC+10(AEST)<br>630：UTC+10:30(LHST)<br>660：UTC+11(VUT)<br>720：UTC+12(NZST)<br>765：UTC+12:45(CHAST)<br>780：UTC+13(PHOT)<br>840：UTC+14(LINT) |
 | External Temperature | 0x86 | 3 | rw | 0 | -20 - 60 |  |
 | External Humidity | 0x87 | 3 | rw | 0 | 0 - 100 |  |
