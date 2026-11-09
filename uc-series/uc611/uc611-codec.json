@@ -374,7 +374,7 @@
             "name": "LoRaWAN Work Mode(LoRaWAN  Settings)",
             "value": "0",
             "unit": "",
-            "access_mode": "RW",
+            "access_mode": "R",
             "data_type": "ENUM",
             "value_type": "UINT8",
             "values": [
@@ -395,7 +395,7 @@
                     "name": "ClassC to B"
                 }
             ],
-            "bacnet_type": "multistate_value_object",
+            "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": []
@@ -717,18 +717,24 @@
         {
             "id": "synchronize_time",
             "name": "Synchronize Time",
-            "value": "",
-            "unit": "",
             "access_mode": "W",
-            "data_type": "NUMBER",
+            "data_type": "BOOL",
             "value_type": "UINT8",
-            "range": [
-                0,
-                255
-            ],
-            "bacnet_type": "analog_output_object",
+            "unit": "",
             "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS"
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "bacnet_type": "binary_output_object",
+            "value": "",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "no"
+                },
+                {
+                    "value": 1,
+                    "name": "yes"
+                }
+            ]
         },
         {
             "id": "temperature_control_enable",

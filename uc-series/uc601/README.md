@@ -19,7 +19,7 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Hardware Version | 0xDA | 3 | r |  |  |  |
 | Firmware Version | 0xDA | 7 | r |  |  |  |
 | Device Status | 0xC8 | 2 | rw | 1 |  | 0：Off<br>1：On |
-| Voltage  | 0x00 | 3 | r |  | 0 - 250 |  |
+| Voltage  | 0x00 | 3 | r |  | 0 - 65535 |  |
 | Electric Power  | 0x01 | 5 | r |  | 0 - 4000 |  |
 | Power Factor  | 0x02 | 2 | r |  | 0 - 100 |  |
 | Power Consumption  | 0x03 | 5 | r |  | 0 - 4294967295 |  |
@@ -37,6 +37,7 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Type | 0x63 | 2 | rw |  |  |  |
 | Relay Switching  | 0x63 | 2 | rw | 0 |  | 0：disable<br>1：enable |
 | Reset | 0x63 | 2 | rw | 0 |  | 0：disable<br>1：enable |
+| Alarm Dismiss Report Enable | 0x6A | 2 | rw | 0 |  | 0：disable<br>1：enable |
 | Overcurrent Alarm | 0x64 | 1 | rw |  |  |  |
 | Type | 0x64 | 2 | rw |  |  |  |
 | Overcurrent Alarm Enable | 0x64 | 2 | rw | 0 |  | 0：disable<br>1：enable |
@@ -54,7 +55,6 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Overvoltage Protection Enable | 0x67 | 2 | rw | 0 |  | 0：disable<br>1：enable |
 | Overvoltage Protection Value | 0x67 | 2 | rw | 250 | 1 - 250 |  |
 | High Current Protection Enable | 0x68 | 2 | rw | 1 |  | 0：disable<br>1：enable |
-| Alarm Dismiss Report Enable | 0x6A | 2 | rw | 0 |  | 0：disable<br>1：enable |
 | Power-On Relay Mode | 0x6B | 2 | rw | 2 |  | 2：Return to Previous Working State<br>0：normally open<br>1：normally closed |
 | Power Consumption Enable | 0x6C | 2 | rw | 1 |  | 0：disable<br>1：enable |
 | D2D Data Receiving Enable | 0x6E | 2 | rw | 0 |  | 0：disable<br>1：enable |
@@ -81,7 +81,7 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Freeze Protection | 0x76 | 1 | rw |  |  |  |
 | Type | 0x76 | 2 | rw |  |  |  |
 | Enable | 0x76 | 2 | rw | 0 |  | 0：Disable<br>1：Enable |
-| Freeze Temperature | 0x76 | 3 | rw | 3 | 1 - 5 |  |
+| Freeze Protection Temperature | 0x76 | 3 | rw | 3 | 1 - 5 |  |
 
 ### Event
 
@@ -111,9 +111,9 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Protection Status | 0x09 | 2 | r |  |  | 0：normal<br>1：over current protect  trigger |
 | Current | 0x0A | 3 | r |  | 0 - 65535 |  |
 | Protection Status | 0x0A | 2 | r |  |  | 0：normal<br>1：high current protect  trigger |
-| Voltage | 0x0B | 3 | r |  | 0 - 250 |  |
+| Voltage | 0x0B | 3 | r |  |  |  |
 | Alarm Status | 0x0B | 2 | r |  |  | 0：over voltage alarm Release<br>1：over voltage alarm trigger |
-| Voltage | 0x0C | 3 | r |  | 0 - 250 |  |
+| Voltage | 0x0C | 3 | r |  |  |  |
 | Protection Status | 0x0C | 2 | r |  |  | 0：normal<br>1：over voltage protect trigger |
 | Alarm  Status | 0x0D | 2 | r |  |  | 0：normal<br>1：device broken |
 | Equipment Temperature | 0x0E | 3 | r |  | -40 - 125 |  |
@@ -127,6 +127,6 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Clear | 0x7B | 2 | w |  |  |  |
 |  Open Window Status Control | 0x7C | 2 | w |  |  |  |
 |  Control | 0x7C | 2 | w |  |  |  |
-| Ambient Temperature Settings | 0x7D | 3 | w |  |  |  |
+| Ambient Temperature Settings(LoRa Data Source Only) | 0x7D | 3 | w |  |  |  |
 | Ambient Temperature Value | 0x7D | 3 | w | 0 | -20 - 60 |  |
 
