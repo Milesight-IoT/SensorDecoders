@@ -349,7 +349,7 @@
             "name": "Device Status",
             "value": "1",
             "unit": "",
-            "access_mode": "RW",
+            "access_mode": "R",
             "data_type": "BOOL",
             "value_type": "UINT8",
             "values": [
@@ -362,7 +362,7 @@
                     "name": "On"
                 }
             ],
-            "bacnet_type": "binary_value_object",
+            "bacnet_type": "binary_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS"
         },
@@ -1195,7 +1195,7 @@
             "id": "temperature_control_settings.celsius_tolerance",
             "name": "Celsius Target Temperature Tolerance(Temperature Control Settings)",
             "value": "1",
-            "unit": "°C",
+            "unit": "K",
             "access_mode": "RW",
             "data_type": "NUMBER",
             "value_type": "FLOAT",
@@ -1204,8 +1204,8 @@
                 5
             ],
             "bacnet_type": "analog_value_object",
-            "bacnet_unit_type_id": 62,
-            "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
+            "bacnet_unit_type_id": 121,
+            "bacnet_unit_type": "UNITS_DELTA_DEGREES_KELVIN",
             "reference": []
         },
         {
@@ -1228,18 +1228,18 @@
         {
             "id": "temperature_control_settings.fahrenheit_tolerance",
             "name": "Fahrenheit Target Temperature Tolerance(Temperature Control Settings)",
-            "value": "33.8",
-            "unit": "°F",
+            "value": "1.8",
+            "unit": "ΔT°F",
             "access_mode": "RW",
             "data_type": "NUMBER",
             "value_type": "FLOAT",
             "range": [
-                32.9,
-                41
+                0.9,
+                9
             ],
             "bacnet_type": "analog_value_object",
-            "bacnet_unit_type_id": 64,
-            "bacnet_unit_type": "UNITS_DEGREES_FAHRENHEIT",
+            "bacnet_unit_type_id": 120,
+            "bacnet_unit_type": "UNITS_DELTA_DEGREES_FAHRENHEIT",
             "reference": []
         },
         {

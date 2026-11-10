@@ -6,6 +6,8 @@
  * @product UC611
  */
 
+
+
 /* eslint no-redeclare: "off" */
 /* eslint-disable */
 // Chirpstack v4
@@ -322,7 +324,7 @@ function milesightDeviceDecode(bytes) {
 					schedule_settings_item.schedule_target = readUInt8(bytes, counterObj, 1);
 				}
 				if (schedule_settings_item_command == 0x03) {
-					// 0:normally open/stop, 1:normally closed/start, 2:change(only relay)
+					// 0:Relay normally open/Stop Temperature Control, 1:Relay normally closed/Start up Temperature Control, 2:Inverse(only relay)
 					schedule_settings_item.schedule_action = readUInt8(bytes, counterObj, 1);
 				}
 				if (schedule_settings_item_command == 0x04) {
@@ -352,7 +354,7 @@ function milesightDeviceDecode(bytes) {
 					d2d_slave_settings_item.content = readUInt8(bytes, counterObj, 1);
 				}
 				if (d2d_slave_settings_item_type == 0x03) {
-					// 0:normally open/stop, 1:normally closed/start, 2:change(only relay)
+					// 0:Relay normally open/Stop Temperature Control, 1:Relay normally closed/Start up Temperature Control, 2:Inverse(only relay)
 					d2d_slave_settings_item.action = readUInt8(bytes, counterObj, 1);
 				}
 				break;
@@ -835,7 +837,7 @@ function cmdMap() {
 		  "7600": "anti_freeze_protection_settings.enable",
 		  "7601": "anti_freeze_protection_settings.temperature_value",
 		  "fe": "request_check_order",
-		  "ef": "command_queries_reply",
+		  "ef": "request_command_queries.object_command",
 		  "ee": "request_query_all_configurations",
 		  "cf": "lorawan_configuration_settings",
 		  "cf00": "lorawan_configuration_settings.mode",
@@ -905,6 +907,10 @@ function processTemperature(decoded) {
     "open_window_detection.temperature": {
         "precision": 1,
         "unitName": "℃"
+    },
+    "temperature_control_settings.tolerance": {
+        "precision": 2,
+        "unitName": "K"
     },
     "temperature_control_settings.range.min": {
         "precision": 2,

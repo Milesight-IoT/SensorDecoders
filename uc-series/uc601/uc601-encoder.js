@@ -31,16 +31,6 @@ function milesightDeviceEncode(payload) {
 	normalizeArrayParams(payload);
 	processTemperature(payload);
 	var encoded = [];
-	//0xfe
-	if ('request_check_order' in payload) {
-		var buffer = new Buffer();
-		buffer.writeUInt8(0xfe);
-		if (payload.request_check_order.order < 0 || payload.request_check_order.order > 255) {
-			throw betweenError('request_check_order.order', 0, 255);
-		}
-		buffer.writeUInt8(payload.request_check_order.order);
-		encoded = encoded.concat(buffer.toBytes());
-	}
 	//0xef
 	if ('req' in payload) {
 		var buffer = new Buffer();
@@ -170,6 +160,9 @@ function milesightDeviceEncode(payload) {
 	if ('voltage' in payload) {
 		var buffer = new Buffer();
 		buffer.writeUInt8(0x00);
+		if (payload.voltage < 0 || payload.voltage > 65535) {
+			throw betweenError('voltage', 0, 65535);
+		}
 		buffer.writeUInt16LE(payload.voltage * 10);
 		encoded = encoded.concat(buffer.toBytes());
 	}
@@ -935,12 +928,12 @@ function milesightDeviceEncode(payload) {
 			if (isValid(schedule_settings_item.schedule_action)) {
 				buffer.writeUInt8(0x77);
 				buffer.writeUInt8(schedule_settings_item_id);
-				// 0:normally open/stop, 1:normally closed/start, 2:change(only relay)
+				// 0:Relay normally open/Stop Temperature Control, 1:Relay normally closed/Start up Temperature Control, 2:Inverse(only relay)
 				buffer.writeUInt8(0x03);
 				if ([0, 1, 2].indexOf(schedule_settings_item.schedule_action) === -1) {
 					throw oneOfError('schedule_action', [0, 1, 2]);
 				}
-				// 0:normally open/stop, 1:normally closed/start, 2:change(only relay)
+				// 0:Relay normally open/Stop Temperature Control, 1:Relay normally closed/Start up Temperature Control, 2:Inverse(only relay)
 				buffer.writeUInt8(schedule_settings_item.schedule_action);
 			}
 			if (isValid(schedule_settings_item.schedule_parameter)) {
@@ -1007,12 +1000,12 @@ function milesightDeviceEncode(payload) {
 			if (isValid(d2d_slave_settings_item.action)) {
 				buffer.writeUInt8(0x79);
 				buffer.writeUInt8(d2d_slave_settings_item_id);
-				// 0:normally open/stop, 1:normally closed/start, 2:change(only relay)
+				// 0:Relay normally open/Stop Temperature Control, 1:Relay normally closed/Start up Temperature Control, 2:Inverse(only relay)
 				buffer.writeUInt8(0x03);
 				if ([0, 1, 2].indexOf(d2d_slave_settings_item.action) === -1) {
 					throw oneOfError('action', [0, 1, 2]);
 				}
-				// 0:normally open/stop, 1:normally closed/start, 2:change(only relay)
+				// 0:Relay normally open/Stop Temperature Control, 1:Relay normally closed/Start up Temperature Control, 2:Inverse(only relay)
 				buffer.writeUInt8(d2d_slave_settings_item.action);
 			}
 		}
@@ -1463,8 +1456,7 @@ function oneOfError(path, values) {
 }
 function cmdMap() {
 	return {
-		  "request_check_order": "fe",
-		  "command_queries_reply": "ef",
+		  "request_command_queries.object_command": "ef",
 		  "request_query_all_configurations": "ee",
 		  "lorawan_configuration_settings": "cf",
 		  "lorawan_configuration_settings.mode": "cf00",
@@ -1608,6 +1600,10 @@ function processTemperature(payload) {
     "open_window_detection.temperature": {
         "coefficient": 0.01,
         "unitName": "℃"
+    },
+    "temperature_control_settings.tolerance": {
+        "coefficient": 0.01,
+        "unitName": "K"
     },
     "temperature_control_settings.range.min": {
         "coefficient": 0.01,
