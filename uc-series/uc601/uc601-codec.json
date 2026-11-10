@@ -1072,31 +1072,6 @@
             "bacnet_type": "analog_value_object",
             "bacnet_unit_type_id": 72,
             "bacnet_unit_type": "UNITS_MINUTES",
-            "reference": [
-                "reporting_interval.unit"
-            ]
-        },
-        {
-            "id": "reporting_interval.unit",
-            "name": "Reporting Interval Unit(Reporting Interval)",
-            "value": "1",
-            "unit": "",
-            "access_mode": "RW",
-            "data_type": "ENUM",
-            "value_type": "UINT8",
-            "values": [
-                {
-                    "value": 0,
-                    "name": "second"
-                },
-                {
-                    "value": 1,
-                    "name": "min"
-                }
-            ],
-            "bacnet_type": "multistate_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
             "reference": []
         },
         {

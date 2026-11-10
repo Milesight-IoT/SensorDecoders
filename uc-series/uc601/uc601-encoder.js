@@ -444,18 +444,10 @@ function milesightDeviceEncode(payload) {
 	if ('reporting_interval' in payload) {
 		var buffer = new Buffer();
 		buffer.writeUInt8(0x60);
-		if ([0, 1].indexOf(payload.reporting_interval.unit) === -1) {
-			throw oneOfError('reporting_interval.unit', [0, 1]);
-		}
+		var unit = 0x01;
 		// 0：second, 1：min
-		buffer.writeUInt8(payload.reporting_interval.unit);
-		if (payload.reporting_interval.unit == 0x00) {
-			if (payload.reporting_interval.seconds_of_time < 10 || payload.reporting_interval.seconds_of_time > 64800) {
-				throw betweenError('reporting_interval.seconds_of_time', 10, 64800);
-			}
-			buffer.writeUInt16LE(payload.reporting_interval.seconds_of_time);
-		}
-		if (payload.reporting_interval.unit == 0x01) {
+		buffer.writeUInt8(unit);
+		if (unit == 0x01) {
 			if (payload.reporting_interval.minutes_of_time < 1 || payload.reporting_interval.minutes_of_time > 1440) {
 				throw betweenError('reporting_interval.minutes_of_time', 1, 1440);
 			}
