@@ -1367,6 +1367,29 @@
             "reference": []
         },
         {
+            "id": "update_relay_state.state",
+            "name": "Relay Status( Relay Status Control)",
+            "value": "0",
+            "unit": "",
+            "access_mode": "W",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "normally open"
+                },
+                {
+                    "value": 1,
+                    "name": "normally closed"
+                }
+            ],
+            "bacnet_type": "multistate_output_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": []
+        },
+        {
             "id": "version.firmware_version",
             "name": "Firmware Version(Product Version)",
             "value": "",

@@ -82,8 +82,10 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Ambient Temperature | 0x10 | 3 | r |  | -20 - 60 |  |
 | Status | 0x10 | 2 | r |  |  | 0：normal<br>1：open window |
 | Relays Status | 0x11 | 2 | r |  |  | 0：normally open<br>1：normally closed |
+|  Relay Status Control | 0x7A | 2 | w |  |  |  |
+|  Relay Status | 0x7A | 2 | w | 0 |  | 0：normally open<br>1：normally closed |
 |  Open Window Status Control | 0x7C | 2 | w |  |  |  |
 |  Control | 0x7C | 2 | w |  |  |  |
-| Ambient Temperature Settings | 0x7D | 3 | w |  |  |  |
+| Ambient Temperature Settings(LoRa Data Source Only) | 0x7D | 3 | w |  |  |  |
 | Ambient Temperature Value | 0x7D | 3 | w | 0 | -20 - 60 |  |
 
