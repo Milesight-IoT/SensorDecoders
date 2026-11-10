@@ -6,6 +6,8 @@
  * @product UC611
  */
 
+
+
 /* eslint no-redeclare: "off" */
 /* eslint-disable */
 // Chirpstack v4
@@ -809,7 +811,7 @@ function milesightDeviceEncode(payload) {
 	if ('update_open_windows_state' in payload) {
 		var buffer = new Buffer();
 		buffer.writeUInt8(0x7c);
-		buffer.writeUInt8(payload.update_open_windows_state.update);
+		buffer.writeUInt8(0x01);
 		encoded = encoded.concat(buffer.toBytes());
 	}
 	//0x7d
