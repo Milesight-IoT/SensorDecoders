@@ -324,7 +324,7 @@ function milesightDeviceDecode(bytes) {
 				decoded.relay_abnormal_protection_enable = readUInt8(bytes, counterObj, 1);
 				break;
 			case 0x6b:
-				// 2：Return to Previous Working State, 0：normally open, 1：normally closed
+				// 0：normally open, 1：normally closed, 2：Return to Previous Working State
 				decoded.power_on_relay_mode = readUInt8(bytes, counterObj, 1);
 				break;
 			case 0x6c:
@@ -1086,6 +1086,10 @@ function processTemperature(decoded) {
         "precision": 1,
         "unitName": "℃"
     },
+    "temperature_control_settings.target": {
+        "precision": 2,
+        "unitName": "℃"
+    },
     "temperature_control_settings.tolerance": {
         "precision": 2,
         "unitName": "K"
@@ -1103,6 +1107,10 @@ function processTemperature(decoded) {
         "unitName": "K/min"
     },
     "anti_freeze_protection_settings.temperature_value": {
+        "precision": 2,
+        "unitName": "℃"
+    },
+    "schedule_settings._item.schedule_parameter": {
         "precision": 2,
         "unitName": "℃"
     },

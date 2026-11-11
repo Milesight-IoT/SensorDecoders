@@ -343,10 +343,10 @@ function milesightDeviceEncode(payload) {
 	if ('power_on_relay_mode' in payload) {
 		var buffer = new Buffer();
 		buffer.writeUInt8(0x6b);
-		if ([2, 0, 1].indexOf(payload.power_on_relay_mode) === -1) {
-			throw oneOfError('power_on_relay_mode', [2, 0, 1]);
+		if ([0, 1, 2].indexOf(payload.power_on_relay_mode) === -1) {
+			throw oneOfError('power_on_relay_mode', [0, 1, 2]);
 		}
-		// 2：Return to Previous Working State, 0：normally open, 1：normally closed
+		// 0：normally open, 1：normally closed, 2：Return to Previous Working State
 		buffer.writeUInt8(payload.power_on_relay_mode);
 		encoded = encoded.concat(buffer.toBytes());
 	}
@@ -1267,6 +1267,10 @@ function processTemperature(payload) {
         "coefficient": 0.01,
         "unitName": "℃"
     },
+    "temperature_control_settings.target": {
+        "coefficient": 0.01,
+        "unitName": "℃"
+    },
     "temperature_control_settings.tolerance": {
         "coefficient": 0.01,
         "unitName": "K"
@@ -1284,6 +1288,10 @@ function processTemperature(payload) {
         "unitName": "K/min"
     },
     "anti_freeze_protection_settings.temperature_value": {
+        "coefficient": 0.01,
+        "unitName": "℃"
+    },
+    "schedule_settings._item.schedule_parameter": {
         "coefficient": 0.01,
         "unitName": "℃"
     },
