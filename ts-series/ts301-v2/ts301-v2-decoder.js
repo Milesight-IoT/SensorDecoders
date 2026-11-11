@@ -105,7 +105,7 @@ function milesightDeviceDecode(bytes) {
         }
         // DEVICE REPORTING TIME(ODM:2193)
         else if (channel_id === 0xff && channel_type === 0x11) {
-            decoded.device_reporting_time = readUInt32LE(bytes.slice(i, i + 4));
+            decoded.device_reporting_time = formatReportingTime(readUInt32LE(bytes.slice(i, i + 4)));
             i += 4;
         }
         // TEMPERATURE ALARM
@@ -633,6 +633,12 @@ function readUInt16LE(bytes) {
 function readInt16LE(bytes) {
     var ref = readUInt16LE(bytes);
     return ref > 0x7fff ? ref - 0x10000 : ref;
+}
+
+// Format device reporting time in UTC, independent of the runtime timezone.
+function formatReportingTime(timestamp) {
+    var date = new Date(timestamp * 1000);
+    return date.toISOString().slice(0, 19).replace("T", " ");
 }
 
 function readUInt32LE(bytes) {
