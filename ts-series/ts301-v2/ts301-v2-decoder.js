@@ -53,6 +53,16 @@ function milesightDeviceDecode(bytes) {
             decoded.tsl_version = readTslVersion(bytes.slice(i, i + 2));
             i += 2;
         }
+        // OEM ID(ODM:2193)
+        else if (channel_id === 0xff && channel_type === 0xe7) {
+            decoded.odm_id = readOdmId(bytes.slice(i, i + 2));
+            i += 2;
+        }
+        // SUB VERSION(ODM:2193)
+        else if (channel_id === 0xff && channel_type === 0xe8) {
+            decoded.sub_version = readSubVersion(bytes.slice(i, i + 4));
+            i += 4;
+        }
         // SERIAL NUMBER
         else if (channel_id === 0xff && channel_type === 0x16) {
             decoded.sn = readSerialNumber(bytes.slice(i, i + 8));
@@ -92,6 +102,11 @@ function milesightDeviceDecode(bytes) {
         else if (channel_id === 0x03 && channel_type === 0x9a) {
             decoded.humidity = readInt16LE(bytes.slice(i, i + 2)) / 10;
             i += 2;
+        }
+        // DEVICE REPORTING TIME(ODM:2193)
+        else if (channel_id === 0xff && channel_type === 0x11) {
+            decoded.device_reporting_time = readUInt32LE(bytes.slice(i, i + 4));
+            i += 4;
         }
         // TEMPERATURE ALARM
         else if (channel_id === 0x83 && channel_type === 0x67) {
@@ -490,6 +505,30 @@ function readFirmwareVersion(bytes) {
 	if (unit_test !== '0') version += '-u' + unit_test;
 	if (test !== '0') version += '-t' + test;
 	return version;
+}
+
+function readOdmId(bytes) {
+    var id = "";
+    for (var i = 0; i < bytes.length; i++) {
+        id += ("0" + (bytes[i] & 0xff).toString(16)).slice(-2);
+    }
+    return id;
+}
+
+/**
+ * read sub version
+ * @param {number[]} bytes values: release(1B) + alpha(1B) + test(2B)
+ * @example 01020011 -> "r1-a2-t11"
+ */
+function readSubVersion(bytes) {
+    var release = (bytes[0] & 0xff).toString(16);
+    var alpha = (bytes[1] & 0xff).toString(16);
+    var test = (((bytes[2] & 0xff) << 8) + (bytes[3] & 0xff)).toString(16);
+    var version = "";
+    if (release !== "0") version += "r" + release;
+    if (alpha !== "0") version += "a" + alpha;
+    if (test !== "0") version += "t" + test;
+    return version;
 }
 
 function readTslVersion(bytes) {
