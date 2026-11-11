@@ -6,6 +6,8 @@
  * @product VS321
  */
 
+
+
 /* eslint no-redeclare: "off" */
 /* eslint-disable */
 // Chirpstack v4
@@ -198,15 +200,16 @@ function milesightDeviceDecode(bytes) {
 						var bitOptions = readUInt8(bytes, counterObj, 1);
 						decoded.historical_data.region_status.region9_enable = extractBits(bitOptions, 8, 9);
 						decoded.historical_data.region_status.region10_enable = extractBits(bitOptions, 9, 10);
+						var bitOptions = readUInt8(bytes, counterObj, 1);
 						decoded.historical_data.region_status.region1_occupancy_status = extractBits(bitOptions, 16, 17);
 						decoded.historical_data.region_status.region2_occupancy_status = extractBits(bitOptions, 17, 18);
 						decoded.historical_data.region_status.region3_occupancy_status = extractBits(bitOptions, 18, 19);
 						decoded.historical_data.region_status.region4_occupancy_status = extractBits(bitOptions, 19, 20);
 						decoded.historical_data.region_status.region5_occupancy_status = extractBits(bitOptions, 20, 21);
 						decoded.historical_data.region_status.region6_occupancy_status = extractBits(bitOptions, 21, 22);
-						var bitOptions = readUInt8(bytes, counterObj, 1);
 						decoded.historical_data.region_status.region7_occupancy_status = extractBits(bitOptions, 22, 23);
 						decoded.historical_data.region_status.region8_occupancy_status = extractBits(bitOptions, 23, 24);
+						var bitOptions = readUInt8(bytes, counterObj, 1);
 						decoded.historical_data.region_status.region9_occupancy_status = extractBits(bitOptions, 24, 25);
 						decoded.historical_data.region_status.region10_occupancy_status = extractBits(bitOptions, 25, 26);
 						break;
@@ -296,10 +299,10 @@ function readFirmwareVersion(bytes) {
 	var test = (bytes[5] & 0xff).toString(16);
 
 	var version = 'v' + major + '.' + minor;
-	if (release !== 0) version += '-r' + release.toString(16);
-	if (alpha !== 0) version += '-a' + alpha.toString(16);
-	if (unit_test !== 0) version += '-u' + unit_test.toString(16);
-	if (test !== 0) version += '-t' + test.toString(16);
+	if (release !== '0') version += '-r' + release;
+	if (alpha !== '0') version += '-a' + alpha;
+	if (unit_test !== '0') version += '-u' + unit_test;
+	if (test !== '0') version += '-t' + test;
 	return version;
 }
 
@@ -624,7 +627,7 @@ function processTemperature(decoded) {
 			var fahrenheitProperty = convertName(propertyId, 'fahrenheit');
 			var celsiusProperty = convertName(propertyId, 'celsius');
 			var unitName = allTemperatureProperties[newPropertyId].unitName;
-			var constant = unitName == 'K' ? 0 : 32;
+			var constant = unitName == 'K' || unitName == 'K/min' ? 0 : 32;
 			if (hasPath(decoded, propertyId)) {
 				setPath(decoded, fahrenheitProperty,  Number((getPath(decoded, propertyId) * 1.8 + constant).toFixed(allTemperatureProperties[newPropertyId].precision)));
 				setPath(decoded, celsiusProperty,  Number(getPath(decoded, propertyId).toFixed(allTemperatureProperties[newPropertyId].precision)));

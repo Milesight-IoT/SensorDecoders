@@ -6,6 +6,8 @@
  * @product VS321
  */
 
+
+
 /* eslint no-redeclare: "off" */
 /* eslint-disable */
 // Chirpstack v4
@@ -1157,7 +1159,7 @@ function processTemperature(payload) {
 		propertyId = recoverName(propertyId, 'celsius');
 		if (allTemperatureProperties[newPropertyId]) {
 			var unitName = allTemperatureProperties[newPropertyId].unitName;
-			var constant = unitName == 'K' ? 0 : 32;
+			var constant = unitName == 'K' || unitName == 'K/min' ? 0 : 32;
 			var fahrenheitProperty = convertName(propertyId, 'fahrenheit');
 			var celsiusProperty = convertName(propertyId, 'celsius');
 			var stringCoefficient = String(allTemperatureProperties[newPropertyId].coefficient);
