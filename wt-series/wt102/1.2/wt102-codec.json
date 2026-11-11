@@ -206,14 +206,6 @@
                 {
                     "value": 33,
                     "name": "Auto-Away Trigger"
-                },
-                {
-                    "value": 34,
-                    "name": "Auto-Away Exit"
-                },
-                {
-                    "value": 35,
-                    "name": "Auto-Away Trigger"
                 }
             ],
             "bacnet_type": "multistate_input_object",
@@ -2277,14 +2269,6 @@
                 {
                     "value": 2,
                     "name": "Calibration failed"
-                },
-                {
-                    "value": 3,
-                    "name": "Calibration failed"
-                },
-                {
-                    "value": 4,
-                    "name": "Calibration failed"
                 }
             ],
             "bacnet_type": "multistate_input_object",
@@ -3475,11 +3459,11 @@
             "values": [
                 {
                     "value": 0,
-                    "name": "°C"
+                    "name": "Celsius"
                 },
                 {
                     "value": 1,
-                    "name": "°F"
+                    "name": "Fahrenheit"
                 }
             ],
             "bacnet_type": "multistate_value_object",

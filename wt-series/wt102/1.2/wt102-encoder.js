@@ -26,6 +26,7 @@ function Encoder(obj, port) {
 /* eslint-enable */
 
 function milesightDeviceEncode(payload) {
+	normalizeArrayParams(payload);
 	processTemperature(payload);
 	var encoded = [];
 	//0xff
@@ -117,26 +118,17 @@ function milesightDeviceEncode(payload) {
 	//0xcf
 	if ('lorawan_configuration_settings' in payload) {
 		var buffer = new Buffer();
-		if (isValid(payload.lorawan_configuration_settings.version)) {
-			buffer.writeUInt8(0xcf);
-			// 1：1.0.2, 2：1.0.3, 3：1.0.3, 4：1.0.4
-			buffer.writeUInt8(0xd8);
-			if ([1, 2, 3, 4].indexOf(payload.lorawan_configuration_settings.version) === -1) {
-				throw oneOfError('lorawan_configuration_settings.version', [1, 2, 3, 4]);
-			}
-			// 1：1.0.2, 2：1.0.3, 3：1.0.3, 4：1.0.4
-			buffer.writeUInt8(payload.lorawan_configuration_settings.version);
+		buffer.writeUInt8(0xcf);
+		if ([1, 2, 3, 4].indexOf(payload.lorawan_configuration_settings.version) === -1) {
+			throw oneOfError('lorawan_configuration_settings.version', [1, 2, 3, 4]);
 		}
-		if (isValid(payload.lorawan_configuration_settings.mode)) {
-			buffer.writeUInt8(0xcf);
-			// 0:ClassA, 1:ClassB, 2:ClassC, 3:ClassC to B
-			buffer.writeUInt8(0x00);
-			if ([0, 1, 2, 3].indexOf(payload.lorawan_configuration_settings.mode) === -1) {
-				throw oneOfError('lorawan_configuration_settings.mode', [0, 1, 2, 3]);
-			}
-			// 0:ClassA, 1:ClassB, 2:ClassC, 3:ClassC to B
-			buffer.writeUInt8(payload.lorawan_configuration_settings.mode);
+		// 1：1.0.2, 2：1.0.3, 3：1.0.3, 4：1.0.4
+		buffer.writeUInt8(payload.lorawan_configuration_settings.version);
+		if ([0, 1, 2, 3].indexOf(payload.lorawan_configuration_settings.mode) === -1) {
+			throw oneOfError('lorawan_configuration_settings.mode', [0, 1, 2, 3]);
 		}
+		// 0:ClassA, 1:ClassB, 2:ClassC, 3:ClassC to B
+		buffer.writeUInt8(payload.lorawan_configuration_settings.mode);
 		encoded = encoded.concat(buffer.toBytes());
 	}
 	//0xde
@@ -1658,6 +1650,51 @@ function isInteger(str) {
     return typeof str === 'string' && /^[0-9]+$/.test(str);
 }
 
+function normalizeArrayParams(value) {
+	if (Array.isArray(value)) {
+		for (var i = 0; i < value.length; i++) {
+			value[i] = normalizeArrayParams(value[i]);
+		}
+		return value;
+	}
+	if (value === null || typeof value !== 'object') {
+		return value;
+	}
+	var keys = [];
+	for (var key in value) {
+		if (Object.prototype.hasOwnProperty.call(value, key)) {
+			keys.push(key);
+		}
+	}
+	var allIntegerKeys = keys.length > 0;
+	for (var j = 0; j < keys.length; j++) {
+		if (!isInteger(keys[j])) {
+			allIntegerKeys = false;
+			break;
+		}
+	}
+	if (allIntegerKeys) {
+		var items = [];
+		for (var k = 0; k < keys.length; k++) {
+			var item = normalizeArrayParams(value[keys[k]]);
+			if (item !== null && typeof item === 'object' && item.id === undefined) {
+				item.id = parseInt(keys[k], 10);
+			}
+			items.push(item);
+		}
+		items.sort(function (a, b) {
+			return ((a && a.id) || 0) - ((b && b.id) || 0);
+		});
+		return items;
+	}
+	for (var prop in value) {
+		if (Object.prototype.hasOwnProperty.call(value, prop)) {
+			value[prop] = normalizeArrayParams(value[prop]);
+		}
+	}
+	return value;
+}
+
 function betweenError(path, min, max) {
 	return new Error(path + ' must be between ' + min + ' and ' + max);
 }
@@ -1677,8 +1714,6 @@ function cmdMap() {
 		  "request_query_all_configurations": "ee",
 		  "historical_data_report": "ed",
 		  "lorawan_configuration_settings": "cf",
-		  "lorawan_configuration_settings.version": "cfd8",
-		  "lorawan_configuration_settings.mode": "cf00",
 		  "tsl_version": "df",
 		  "product_name": "de",
 		  "product_pn": "dd",

@@ -11,7 +11,6 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | CHANNEL |  ID  | LENGTH | READ/WRITE | DEFAULT | RANGE | ENUM |
 | :------ | :--: | :----: | :--------: | :-----: | :---: | :--: |
 | LoRaWAN  Settings | 0xCF | 1 | rw |  |  |  |
-| LoRaWAN Comand | 0xCF | 2 | rw |  |  |  |
 | LoRaWAN Version | 0xCF | 2 | rw | 2 |  | 1：1.0.2<br>2：1.0.3<br>3：1.0.3<br>4：1.0.4 |
 | LoRaWAN Work Mode | 0xCF | 2 | rw | 0 |  | 0:ClassA<br>1:ClassB<br>2:ClassC<br>3:ClassC to B |
 | TSL Version | 0xDF | 3 | r |  |  |  |
@@ -253,19 +252,19 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Non-heating Period Reporting | 0x0E | 3 | r |  |  |  |
 | Target Valve Opening | 0x0E | 2 | r |  | 0 - 100 |  |
 | Battery | 0x0E | 2 | r |  | 0 - 100 |  |
-| Heating Period Temperature Control Reporting | 0x0E | 7 | r |  |  |  |
+| Heating Period Temperature Control Reporting | 0x0E | 9 | r |  |  |  |
 | Ambient Temperature | 0x0E | 3 | r |  | -20 - 60 |  |
 | Current Valve Opening | 0x0E | 2 | r |  | 0 - 100 |  |
 | Target Temperature | 0x0E | 3 | r |  | 5 - 35 |  |
 | Battery | 0x0E | 2 | r |  | 0 - 100 |  |
 | Valve Temperature | 0x0E | 3 | r |  | -20 - 60 |  |
-| Heating Period Valve Opening Control Reporting | 0x0E | 6 | r |  |  |  |
+| Heating Period Valve Opening Control Reporting | 0x0E | 8 | r |  |  |  |
 | Ambient Temperature | 0x0E | 3 | r |  | -20 - 60 |  |
 | Current Valve Opening | 0x0E | 2 | r |  | 0 - 100 |  |
 | Target Valve Opening | 0x0E | 2 | r |  | 0 - 100 |  |
 | Battery | 0x0E | 2 | r |  | 0 - 100 |  |
 | Valve Temperature | 0x0E | 3 | r |  | -20 - 60 |  |
-| Heating Period Integrated Control Reporting | 0x0E | 8 | r |  |  |  |
+| Heating Period Integrated Control Reporting | 0x0E | 10 | r |  |  |  |
 | Ambient Temperature | 0x0E | 3 | r |  | -20 - 60 |  |
 | Current Valve Opening | 0x0E | 2 | r |  | 0 - 100 |  |
 | Target Temperature | 0x0E | 3 | r |  | 5 - 35 |  |
