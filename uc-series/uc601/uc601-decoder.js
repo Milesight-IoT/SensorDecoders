@@ -37,6 +37,10 @@ function milesightDeviceDecode(bytes) {
 	for (counterObj.i = 0; counterObj.i < bytes.length; ) {
 		var command_id = bytes[counterObj.i++];
 		switch (command_id) {
+			case 0xfe:
+				decoded.check_order_reply = decoded.check_order_reply || {};
+				decoded.check_order_reply.order = readUInt8(bytes, counterObj, 1);
+				break;
 			case 0xef:
 				decoded.ans = decoded.ans || [];
 				var ans_item = {};
@@ -1001,6 +1005,7 @@ function cmdMap() {
 		  "7501": "open_window_settings.stop_temperature_control_time",
 		  "7600": "anti_freeze_protection_settings.enable",
 		  "7601": "anti_freeze_protection_settings.temperature_value",
+		  "fe": "request_check_order",
 		  "ef": "request_command_queries.object_command",
 		  "ee": "request_query_all_configurations",
 		  "cf": "lorawan_configuration_settings",
