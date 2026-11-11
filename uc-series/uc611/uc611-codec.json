@@ -520,16 +520,16 @@
             "value_type": "UINT8",
             "values": [
                 {
-                    "value": 2,
-                    "name": "Return to Previous Working State"
-                },
-                {
                     "value": 0,
                     "name": "normally open"
                 },
                 {
                     "value": 1,
                     "name": "normally closed"
+                },
+                {
+                    "value": 2,
+                    "name": "Return to Previous Working State"
                 }
             ],
             "bacnet_type": "multistate_value_object",

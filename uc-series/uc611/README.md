@@ -32,7 +32,7 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Type | 0x63 | 2 | rw |  |  |  |
 | Relay Switching  | 0x63 | 2 | rw | 0 |  | 0：disable<br>1：enable |
 | Reset | 0x63 | 2 | rw | 0 |  | 0：disable<br>1：enable |
-| Power-On Relay Mode | 0x6B | 2 | rw | 2 |  | 2：Return to Previous Working State<br>0：normally open<br>1：normally closed |
+| Power-On Relay Mode | 0x6B | 2 | rw | 2 |  | 0：normally open<br>1：normally closed<br>2：Return to Previous Working State |
 | D2D Data Receiving Enable | 0x6E | 2 | rw | 0 |  | 0：disable<br>1：enable |
 | Ambient Temperature Enable | 0x70 | 2 | rw | 0 |  | 0：disable<br>1：enable |
 | Ambient Temperature Settings | 0x71 | 1 | rw |  |  |  |

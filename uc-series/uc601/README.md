@@ -55,7 +55,7 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Overvoltage Protection Enable | 0x67 | 2 | rw | 0 |  | 0：disable<br>1：enable |
 | Overvoltage Protection Value | 0x67 | 2 | rw | 250 | 1 - 250 |  |
 | High Current Protection Enable | 0x68 | 2 | rw | 1 |  | 0：disable<br>1：enable |
-| Power-On Relay Mode | 0x6B | 2 | rw | 2 |  | 2：Return to Previous Working State<br>0：normally open<br>1：normally closed |
+| Power-On Relay Mode | 0x6B | 2 | rw | 2 |  | 0：normally open<br>1：normally closed<br>2：Return to Previous Working State |
 | Power Consumption Enable | 0x6C | 2 | rw | 1 |  | 0：disable<br>1：enable |
 | D2D Data Receiving Enable | 0x6E | 2 | rw | 0 |  | 0：disable<br>1：enable |
 | Ambient Temperature Enable | 0x70 | 2 | rw | 0 |  | 0：disable<br>1：enable |
