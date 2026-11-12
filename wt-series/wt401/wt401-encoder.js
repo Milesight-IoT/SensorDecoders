@@ -581,18 +581,10 @@ function milesightDeviceEncode(payload) {
 		if (isValid(payload.reporting_interval.lora)) {
 			buffer.writeUInt8(0x61);
 			buffer.writeUInt8(0x01);
-			if ([0, 1].indexOf(payload.reporting_interval.lora.unit) === -1) {
-				throw oneOfError('reporting_interval.lora.unit', [0, 1]);
-			}
+			var unit = 0x01;
 			// 0：second, 1：min
-			buffer.writeUInt8(payload.reporting_interval.lora.unit);
-			if (payload.reporting_interval.lora.unit == 0x00) {
-				if (payload.reporting_interval.lora.seconds_of_time < 10 || payload.reporting_interval.lora.seconds_of_time > 64800) {
-					throw betweenError('reporting_interval.lora.seconds_of_time', 10, 64800);
-				}
-				buffer.writeUInt16LE(payload.reporting_interval.lora.seconds_of_time);
-			}
-			if (payload.reporting_interval.lora.unit == 0x01) {
+			buffer.writeUInt8(unit);
+			if (unit == 0x01) {
 				if (payload.reporting_interval.lora.minutes_of_time < 1 || payload.reporting_interval.lora.minutes_of_time > 1440) {
 					throw betweenError('reporting_interval.lora.minutes_of_time', 1, 1440);
 				}
@@ -677,18 +669,11 @@ function milesightDeviceEncode(payload) {
 		if (isValid(payload.communicate_interval.ble_lora)) {
 			buffer.writeUInt8(0x6c);
 			buffer.writeUInt8(0x02);
-			if ([0, 1].indexOf(payload.communicate_interval.ble_lora.unit) === -1) {
-				throw oneOfError('communicate_interval.ble_lora.unit', [0, 1]);
-			}
+			var unit = 0x01;
 			// 0：second, 1：min
-			buffer.writeUInt8(payload.communicate_interval.ble_lora.unit);
-			if (payload.communicate_interval.ble_lora.unit == 0x00) {
-				if (payload.communicate_interval.ble_lora.seconds_of_time < 10 || payload.communicate_interval.ble_lora.seconds_of_time > 1800) {
-					throw betweenError('communicate_interval.ble_lora.seconds_of_time', 10, 1800);
-				}
-				buffer.writeUInt16LE(payload.communicate_interval.ble_lora.seconds_of_time);
-			}
-			if (payload.communicate_interval.ble_lora.unit == 0x01) {
+			buffer.writeUInt8(unit);
+
+			if (unit == 0x01) {
 				if (payload.communicate_interval.ble_lora.minutes_of_time < 1 || payload.communicate_interval.ble_lora.minutes_of_time > 30) {
 					throw betweenError('communicate_interval.ble_lora.minutes_of_time', 1, 30);
 				}
