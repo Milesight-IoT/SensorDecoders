@@ -1,6 +1,6 @@
 # WT102 Sensor
 
-![WT102](wt102.png)
+![WT102](WT102.png)
 
 For more detailed information, please visit [Milesight Official Website](https://www.milesight.com/iot/product/lorawan-sensor/wt102)
 
