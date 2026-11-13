@@ -150,7 +150,13 @@ function milesightDeviceEncode(payload) {
         encoded = encoded.concat(setPlatformAlgorithmTimeoutStrategy(payload.platform_algorithm_timeout_strategy));
     }
     if ("temperature_control_level_mapping" in payload) {
-        encoded = encoded.concat(setTemperatureControlLevelMapping(payload.temperature_control_level_mapping));
+        var level_mappings = payload.temperature_control_level_mapping;
+        if (!Array.isArray(level_mappings)) {
+            level_mappings = [level_mappings];
+        }
+        for (var level_mapping_index = 0; level_mapping_index < level_mappings.length; level_mapping_index++) {
+            encoded = encoded.concat(setTemperatureControlLevelMapping(level_mappings[level_mapping_index]));
+        }
     }
     if ("temperature_control_level" in payload) {
         encoded = encoded.concat(setTemperatureControlLevel(payload.temperature_control_level));
@@ -362,11 +368,11 @@ function reset(reset) {
 /**
  * time sync enable configuration
  * @since 2.1
- * @param {number} time_sync_enable values: (0: disable, 1: enable)
- * @example { "time_sync_enable": 1 }
+ * @param {number} time_sync_enable values: (0: disable, 2: enable)
+ * @example { "time_sync_enable": 2 }
  */
 function setTimeSyncEnable(time_sync_enable) {
-    var enable_map = { 0: "disable", 1: "enable" };
+    var enable_map = { 0: "disable", 2: "enable" };
     var enable_values = getValues(enable_map);
     if (enable_values.indexOf(time_sync_enable) === -1) {
         throw new Error("time_sync_enable must be one of " + enable_values.join(", "));
@@ -375,7 +381,7 @@ function setTimeSyncEnable(time_sync_enable) {
     var buffer = new Buffer(3);
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0x3b);
-    buffer.writeUInt8(getValue(enable_map, time_sync_enable) === 1 ? 0x02 : 0x00);
+    buffer.writeUInt8(getValue(enable_map, time_sync_enable));
     return buffer.toBytes();
 }
 
@@ -478,7 +484,7 @@ function setTemperatureThresholdAlarm(temperature_threshold_alarm) {
         throw new Error("temperature_threshold_alarm.max must be between -20 and 60");
     }
 
-    var ctrl = mode;
+    var ctrl = getValue(mode_map, mode);
     var buffer = new Buffer(11);
     buffer.writeUInt8(0xff);
     buffer.writeUInt8(0x06);
