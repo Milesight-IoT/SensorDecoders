@@ -5,7 +5,7 @@
  *
  * @product WT103
  */
-var RAW_VALUE = 0x00;
+var RAW_VALUE = 0x10;
 
 /* eslint no-redeclare: "off" */
 /* eslint-disable */
