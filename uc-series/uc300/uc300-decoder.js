@@ -175,12 +175,16 @@ function milesightDeviceDecode(bytes) {
             i += 1;
         }
         // ANALOG INPUT STATISTICS
+        // 0xE2: cur(2B) + min(2B) + max(2B) + avg(2B), float16.
+        // Keep the 0x02 value when both are present; float16 current drops the 0.01 precision.
         else if (includes(ai_chns, channel_id) && channel_type === 0xe2) {
             var id = channel_id - ai_chns[0] + 1;
             var adc_name = "adc_" + id;
-            decoded[adc_name] = readFloat16LE(bytes.slice(i, i + 2));
-            decoded[adc_name + "_max"] = readFloat16LE(bytes.slice(i + 2, i + 4));
-            decoded[adc_name + "_min"] = readFloat16LE(bytes.slice(i + 4, i + 6));
+            if (decoded[adc_name] === undefined) {
+                decoded[adc_name] = readFloat16LE(bytes.slice(i, i + 2));
+            }
+            decoded[adc_name + "_min"] = readFloat16LE(bytes.slice(i + 2, i + 4));
+            decoded[adc_name + "_max"] = readFloat16LE(bytes.slice(i + 4, i + 6));
             decoded[adc_name + "_avg"] = readFloat16LE(bytes.slice(i + 6, i + 8));
             i += 8;
         }
@@ -188,9 +192,11 @@ function milesightDeviceDecode(bytes) {
         else if (includes(av_chns, channel_id) && channel_type === 0xe2) {
             var id = channel_id - av_chns[0] + 1;
             var adc_name = "adv_" + id;
-            decoded[adc_name] = readFloat16LE(bytes.slice(i, i + 2));
-            decoded[adc_name + "_max"] = readFloat16LE(bytes.slice(i + 2, i + 4));
-            decoded[adc_name + "_min"] = readFloat16LE(bytes.slice(i + 4, i + 6));
+            if (decoded[adc_name] === undefined) {
+                decoded[adc_name] = readFloat16LE(bytes.slice(i, i + 2));
+            }
+            decoded[adc_name + "_min"] = readFloat16LE(bytes.slice(i + 2, i + 4));
+            decoded[adc_name + "_max"] = readFloat16LE(bytes.slice(i + 4, i + 6));
             decoded[adc_name + "_avg"] = readFloat16LE(bytes.slice(i + 6, i + 8));
             i += 8;
         }
@@ -198,9 +204,11 @@ function milesightDeviceDecode(bytes) {
         else if (includes(pt100_chns, channel_id) && channel_type === 0xe2) {
             var id = channel_id - pt100_chns[0] + 1;
             var pt100_name = "pt100_" + id;
-            decoded[pt100_name] = readFloat16LE(bytes.slice(i, i + 2));
-            decoded[pt100_name + "_max"] = readFloat16LE(bytes.slice(i + 2, i + 4));
-            decoded[pt100_name + "_min"] = readFloat16LE(bytes.slice(i + 4, i + 6));
+            if (decoded[pt100_name] === undefined) {
+                decoded[pt100_name] = readFloat16LE(bytes.slice(i, i + 2));
+            }
+            decoded[pt100_name + "_min"] = readFloat16LE(bytes.slice(i + 2, i + 4));
+            decoded[pt100_name + "_max"] = readFloat16LE(bytes.slice(i + 4, i + 6));
             decoded[pt100_name + "_avg"] = readFloat16LE(bytes.slice(i + 6, i + 8));
             i += 8;
         }
@@ -247,8 +255,8 @@ function milesightDeviceDecode(bytes) {
                 else if (j < 10) {
                     var name = "adc_" + (j - 8 + 1);
                     data[name] = readFloat16LE(bytes.slice(i, i + 2));
-                    data[name + "_max"] = readFloat16LE(bytes.slice(i + 2, i + 4));
-                    data[name + "_min"] = readFloat16LE(bytes.slice(i + 4, i + 6));
+                    data[name + "_min"] = readFloat16LE(bytes.slice(i + 2, i + 4));
+                    data[name + "_max"] = readFloat16LE(bytes.slice(i + 4, i + 6));
                     data[name + "_avg"] = readFloat16LE(bytes.slice(i + 6, i + 8));
                     i += 8;
                 }
@@ -256,8 +264,8 @@ function milesightDeviceDecode(bytes) {
                 else if (j < 12) {
                     var name = "adv_" + (j - 10 + 1);
                     data[name] = readFloat16LE(bytes.slice(i, i + 2));
-                    data[name + "_max"] = readFloat16LE(bytes.slice(i + 2, i + 4));
-                    data[name + "_min"] = readFloat16LE(bytes.slice(i + 4, i + 6));
+                    data[name + "_min"] = readFloat16LE(bytes.slice(i + 2, i + 4));
+                    data[name + "_max"] = readFloat16LE(bytes.slice(i + 4, i + 6));
                     data[name + "_avg"] = readFloat16LE(bytes.slice(i + 6, i + 8));
                     i += 8;
                 }

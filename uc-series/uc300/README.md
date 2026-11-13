@@ -56,12 +56,12 @@ For more detailed information, please visit [Milesight Official Website](https:/
 |    Analog to Digital (voltage) 2     | 0x0E | 0x02 |   4    | adv_2(4B)                                                             |
 |                MODBUS                | 0xFF | 0x19 |   N    | modbus_chn_id(1B) + data_size(1B) + data_type(1B) + channel_value(MB) |
 |             MODBUS ERROR             | 0xFF | 0x15 |   1    | modbus_chn_id_alarm(1B)                                               |
-|            PT100 1(stats)            | 0x09 | 0xE2 |   8    | pt100_1(2B) + pt100_1_max(2B) + pt100_1_min(2B) + pt100_1_avg(2B)     |
-|            PT100 2(stats)            | 0x0A | 0xE2 |   8    | pt100_2(2B) + pt100_2_max(2B) + pt100_2_min(2B) + pt100_2_avg(2B)     |
-| Analog to Digital (current) 1(stats) | 0x0B | 0xE2 |   8    | adc_1(2B) + adc_1_max(2B) + adc_1_min(2B) + adc_1_avg(2B)             |
-| Analog to Digital (current) 2(stats) | 0x0C | 0xE2 |   8    | adc_2(2B) + adc_2_max(2B) + adc_2_min(2B) + adc_2_avg(2B)             |
-| Analog to Digital (voltage) 1(stats) | 0x0D | 0xE2 |   8    | adv_1(2B) + adv_1_max(2B) + adv_1_min(2B) + adv_1_avg(2B)             |
-| Analog to Digital (voltage) 2(stats) | 0x0E | 0xE2 |   8    | adv_2(2B) + adv_2_max(2B) + adv_2_min(2B) + adv_2_avg(2B)             |
+|            PT100 1(stats)            | 0x09 | 0xE2 |   8    | pt100_1(2B) + pt100_1_min(2B) + pt100_1_max(2B) + pt100_1_avg(2B)     |
+|            PT100 2(stats)            | 0x0A | 0xE2 |   8    | pt100_2(2B) + pt100_2_min(2B) + pt100_2_max(2B) + pt100_2_avg(2B)     |
+| Analog to Digital (current) 1(stats) | 0x0B | 0xE2 |   8    | adc_1(2B) + adc_1_min(2B) + adc_1_max(2B) + adc_1_avg(2B)             |
+| Analog to Digital (current) 2(stats) | 0x0C | 0xE2 |   8    | adc_2(2B) + adc_2_min(2B) + adc_2_max(2B) + adc_2_avg(2B)             |
+| Analog to Digital (voltage) 1(stats) | 0x0D | 0xE2 |   8    | adv_1(2B) + adv_1_min(2B) + adv_1_max(2B) + adv_1_avg(2B)             |
+| Analog to Digital (voltage) 2(stats) | 0x0E | 0xE2 |   8    | adv_2(2B) + adv_2_min(2B) + adv_2_max(2B) + adv_2_avg(2B)             |
 
 ### MODBUS DATA_TYPE
 
@@ -134,14 +134,14 @@ For more detailed information, please visit [Milesight Official Website](https:/
 
 // 0DE28F425C428F428D42 0EE29442664294429342
 {
-    "adv_1": 3.279296875,
-    "adv_1_avg": 3.275390625,
-    "adv_1_max": 3.1796875,
-    "adv_1_min": 3.279296875,
-    "adv_2": 3.2890625,
-    "adv_2_avg": 3.287109375,
-    "adv_2_max": 3.19921875,
-    "adv_2_min": 3.2890625
+    "adv_1": 3.28,
+    "adv_1_avg": 3.28,
+    "adv_1_max": 3.28,
+    "adv_1_min": 3.18,
+    "adv_2": 3.29,
+    "adv_2_avg": 3.29,
+    "adv_2_max": 3.29,
+    "adv_2_min": 3.2
 }
 
 // ff190002020b00ff190102020200 ff190202020d00ff190302026100 ff190402023900ff190502023700 ff190602022400ff190702021900 ff190802022500ff190902023600 ff190a02021700ff190b02021c00 ff190c02022400ff190d02022700 ff190e02022d00ff190f02022f00 ff191002020b00ff191102022500 ff191202024000ff191302024300 ff191402024700ff191502024d00 ff191602025000ff191702025600 ff191802025900ff191902025d00 ff191a02026000ff191b02022d00 ff191c02028d00ff191d02021200 ff191e02021800ff191f02020900
