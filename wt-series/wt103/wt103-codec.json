@@ -1340,13 +1340,13 @@
         {
             "id": "time_sync_enable",
             "name": "Time Sync Enable",
-            "value": "1",
+            "value": "2",
             "unit": "",
             "access_mode": "RW",
-            "data_type": "BOOL",
+            "data_type": "ENUM",
             "value_type": "UINT8",
-            "values": [{ "value": 0, "name": "Disable" }, { "value": 1, "name": "Enable" }],
-            "bacnet_type": "binary_value_object",
+            "values": [{ "value": 0, "name": "Disable" }, { "value": 2, "name": "Enable" }],
+            "bacnet_type": "multistate_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS"
         },

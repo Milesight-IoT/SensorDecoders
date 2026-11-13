@@ -88,7 +88,7 @@ Downlink commands below configure device behavior. Fields map to the `milesightD
 
 | CHANNEL                                   | ID   | TYPE | LENGTH | DESCRIPTION                                                                                                                                            |
 | :------------------------------------------ | :--: | :--: | :----: | :-------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| Time Sync Enable                          | 0xFF | 0x3B |   1    | time_sync_enable, values: (0: disable, 1: enable)                                                                                                       |
+| Time Sync Enable                          | 0xFF | 0x3B |   1    | time_sync_enable, values: (0: disable, 2: enable)                                                                                                       |
 | Report Interval                           | 0xFF | 0x8E |   3    | report_interval, unit: minute, range: [5, 1440]                                                                                                         |
 | Temperature Control Mode                  | 0xFF | 0xAE |   1    | temperature_control_mode, values: (0: 0-5 scale, 1: integrated control, 2: valve opening control)                                                        |
 | Ambient Temperature Calibration           | 0xFF | 0xAB |   3    | temperature_calibration.enable, temperature_calibration.value, unit: °C                                                                                   |

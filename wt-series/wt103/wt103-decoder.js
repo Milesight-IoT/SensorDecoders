@@ -318,13 +318,15 @@ function handle_config_frame(channel_id, channel_type, bytes, offset, data_lengt
     switch (channel_type) {
         case 0x06:
             decoded.temperature_threshold_alarm = {
-                mode: readUInt8(d[0]),
+                mode: readTemperatureThresholdAlarmMode(d[0]),
                 min: readInt16LE(d.slice(1, 3)) / 100,
                 max: readInt16LE(d.slice(3, 5)) / 100,
             };
             break;
         case 0x25:
-            decoded.child_lock = readUInt8(d[0]);
+            decoded.child_lock = {
+                enable: readChildLockStatus(d[0]),
+            };
             break;
         case 0x29:
             decoded.valve_descale = readYesNoStatus(d[0] === 0x00 ? 1 : 0);
@@ -344,15 +346,24 @@ function handle_config_frame(channel_id, channel_type, bytes, offset, data_lengt
             var sched_ctrl = readUInt8(d[0]);
             var sched_mode = readUInt8(d[1]);
             var sched_value = readInt16LE(d.slice(2, 4));
-            decoded.heating_schedule = {
+            decoded.heating_schedule = decoded.heating_schedule || [];
+            decoded.heating_schedule.push({
                 id: (sched_ctrl >> 4) & 0x0f,
-                enable: sched_ctrl & 0x0f,
-                mode: sched_mode,
+                enable: readEnableStatus(sched_ctrl & 0x0f),
+                mode: readTemperatureControlMode(sched_mode),
                 value: sched_mode === 1 ? sched_value / 100 : sched_value,
                 period: readUInt16LE(d.slice(4, 6)),
                 time: readUInt16LE(d.slice(6, 8)),
-                week_mask: readUInt8(d[8]),
-            };
+                week_recycle: {
+                    monday: readEnableStatus((readUInt8(d[8]) >> 1) & 0x01),
+                    tuesday: readEnableStatus((readUInt8(d[8]) >> 2) & 0x01),
+                    wednesday: readEnableStatus((readUInt8(d[8]) >> 3) & 0x01),
+                    thursday: readEnableStatus((readUInt8(d[8]) >> 4) & 0x01),
+                    friday: readEnableStatus((readUInt8(d[8]) >> 5) & 0x01),
+                    saturday: readEnableStatus((readUInt8(d[8]) >> 6) & 0x01),
+                    sunday: readEnableStatus((readUInt8(d[8]) >> 7) & 0x01),
+                },
+            });
             break;
         case 0x35:
             decoded.target_temperature_range = {
@@ -364,26 +375,26 @@ function handle_config_frame(channel_id, channel_type, bytes, offset, data_lengt
             decoded.display_ambient_temperature = readEnableStatus(d[0]);
             break;
         case 0x37:
-            decoded.open_window_valve_strategy = readUInt8(d[0]);
+            decoded.open_window_valve_strategy = readOpenWindowValveStrategy(d[0]);
             break;
         case 0x3a:
             decoded.change_report_enable = readEnableStatus(d[0]);
             break;
         case 0x3b:
-            if (channel_id === 0xff) {
-                decoded.time_sync_enable = d[0] === 0x02 ? "enable" : "disable";
+            if (channel_id === 0xf9 || channel_id === 0xf8) {
+                decoded.non_heating_valve_mode = readNonHeatingValveMode(d[0]);
             } else {
-                decoded.non_heating_valve_mode = readUInt8(d[0]);
+                decoded.time_sync_enable = readTimeSyncEnable(d[0]);
             }
             break;
         case 0x3c:
             decoded.valve_descale_enable = readEnableStatus(d[0]);
             break;
         case 0x3d:
-            decoded.installation_mode = readUInt8(d[0]);
+            decoded.installation_mode = readInstallationMode(d[0]);
             break;
         case 0x3e:
-            decoded.temperature_unit = readUInt8(d[0]);
+            decoded.temperature_unit = readTemperatureUnit(d[0]);
             break;
         case 0x40:
             decoded.ambient_temperature_display_time = readUInt8(d[0]);
@@ -392,7 +403,7 @@ function handle_config_frame(channel_id, channel_type, bytes, offset, data_lengt
             decoded.platform_algorithm_timeout = readUInt16LE(d.slice(0, 2));
             break;
         case 0x42:
-            decoded.platform_algorithm_timeout_strategy = readUInt8(d[0]);
+            decoded.platform_algorithm_timeout_strategy = readPlatformAlgorithmTimeoutStrategy(d[0]);
             break;
         case 0x43:
             // Scale mode 0 reports one frame per level (0..5) in a single uplink
@@ -409,7 +420,7 @@ function handle_config_frame(channel_id, channel_type, bytes, offset, data_lengt
             decoded.temperature_control_level_display_time = readUInt8(d[0]);
             break;
         case 0x46:
-            decoded.target_temperature_resolution = readUInt8(d[0]);
+            decoded.target_temperature_resolution = readTargetTemperatureResolution(d[0]);
             break;
         case 0x47:
             decoded.target_temperature_display_time = readUInt8(d[0]);
@@ -418,7 +429,7 @@ function handle_config_frame(channel_id, channel_type, bytes, offset, data_lengt
             decoded.open_window_status_timeout = readUInt16LE(d.slice(0, 2));
             break;
         case 0x4a:
-            if (channel_id === 0xf9) {
+            if (channel_id === 0xf9 || channel_id === 0xf8) {
                 decoded.valve_emergency_position = readUInt8(d[0]);
             }
             break;
@@ -466,7 +477,7 @@ function handle_config_frame(channel_id, channel_type, bytes, offset, data_lengt
             };
             break;
         case 0xac:
-            decoded.temperature_control_algorithm = readUInt8(d[0]);
+            decoded.temperature_control_algorithm = readTemperatureControlAlgorithm(d[0]);
             break;
         case 0xad:
             // 0xFE 0xAD 0xFF only confirms request acceptance; final result is 0x08 0xE5.
@@ -475,7 +486,7 @@ function handle_config_frame(channel_id, channel_type, bytes, offset, data_lengt
             }
             break;
         case 0xae:
-            decoded.temperature_control_mode = readUInt8(d[0]);
+            decoded.temperature_control_mode = readTemperatureControlMode(d[0]);
             break;
         case 0xaf:
             decoded.open_window_detection = {
@@ -491,13 +502,13 @@ function handle_config_frame(channel_id, channel_type, bytes, offset, data_lengt
             };
             break;
         case 0xb1:
-            decoded.temperature_target = readInt16LE(d.slice(0, 2)) / 100;
+            decoded.target_temperature = readInt16LE(d.slice(0, 2)) / 100;
             break;
         case 0xb3:
             decoded.temperature_control_enable = readEnableStatus(d[0]);
             break;
         case 0xb4:
-            decoded.valve_opening_target = readUInt8(d[0]);
+            decoded.valve_opening = readUInt8(d[0]);
             break;
         case 0xba:
             decoded.dst_config = {
@@ -520,10 +531,10 @@ function handle_config_frame(channel_id, channel_type, bytes, offset, data_lengt
             decoded.outside_temperature_timeout = readUInt16LE(d.slice(0, 2));
             break;
         case 0xc5:
-            decoded.temperature_source = readUInt8(d[0]);
+            decoded.temperature_source = readTemperatureSource(d[0]);
             break;
         case 0xf8:
-            decoded.outside_temperature_timeout_strategy = readUInt8(d[0]);
+            decoded.outside_temperature_timeout_strategy = readOutsideTemperatureTimeoutStrategy(d[0]);
             break;
     }
 
@@ -677,6 +688,71 @@ function readJoinMode(type) {
 function readEnableStatus(type) {
     var enable_status_map = { 0: "disable", 1: "enable" };
     return getValue(enable_status_map, type);
+}
+
+function readTimeSyncEnable(type) {
+    var time_sync_enable_map = { 0: "disable", 2: "enable" };
+    return getValue(time_sync_enable_map, type);
+}
+
+function readTemperatureControlAlgorithm(type) {
+    var temperature_control_algorithm_map = { 0: "pid", 1: "platform" };
+    return getValue(temperature_control_algorithm_map, type);
+}
+
+function readTemperatureControlMode(type) {
+    var temperature_control_mode_map = { 0: "0-5 scale", 1: "integrated control", 2: "valve opening control" };
+    return getValue(temperature_control_mode_map, type);
+}
+
+function readTemperatureThresholdAlarmMode(type) {
+    var temperature_threshold_alarm_mode_map = { 0: "disable", 1: "below", 2: "above", 3: "below or above" };
+    return getValue(temperature_threshold_alarm_mode_map, type);
+}
+
+function readChildLockStatus(type) {
+    var child_lock_map = { 0: "disable", 1: "all keys locked", 2: "temperature keys only", 3: "system key only" };
+    return getValue(child_lock_map, type);
+}
+
+function readOutsideTemperatureTimeoutStrategy(type) {
+    var outside_temperature_timeout_strategy_map = { 0: "keep", 1: "switch to internal temperature", 2: "close valve" };
+    return getValue(outside_temperature_timeout_strategy_map, type);
+}
+
+function readTemperatureSource(type) {
+    var temperature_source_map = { 0: "embedded", 1: "external" };
+    return getValue(temperature_source_map, type);
+}
+
+function readOpenWindowValveStrategy(type) {
+    var open_window_valve_strategy_map = { 0: "keep", 1: "close" };
+    return getValue(open_window_valve_strategy_map, type);
+}
+
+function readNonHeatingValveMode(type) {
+    var non_heating_valve_mode_map = { 0: "fully close", 1: "fully open" };
+    return getValue(non_heating_valve_mode_map, type);
+}
+
+function readInstallationMode(type) {
+    var installation_mode_map = { 0: "horizontal", 1: "vertical" };
+    return getValue(installation_mode_map, type);
+}
+
+function readTemperatureUnit(type) {
+    var temperature_unit_map = { 0: "celsius", 1: "fahrenheit" };
+    return getValue(temperature_unit_map, type);
+}
+
+function readPlatformAlgorithmTimeoutStrategy(type) {
+    var platform_algorithm_timeout_strategy_map = { 0: "keep", 1: "switch to internal algorithm", 2: "close valve" };
+    return getValue(platform_algorithm_timeout_strategy_map, type);
+}
+
+function readTargetTemperatureResolution(type) {
+    var target_temperature_resolution_map = { 0: "0.5", 1: "1.0" };
+    return getValue(target_temperature_resolution_map, type);
 }
 
 function readReportReason(type) {
