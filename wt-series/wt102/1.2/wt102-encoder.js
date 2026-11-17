@@ -1710,7 +1710,7 @@ function cmdMap() {
 	return {
 		  "request_check_sequence_number": "ff",
 		  "request_check_order": "fe",
-		  "command_queries_reply": "ef",
+		  "request_command_queries": "ef",
 		  "request_query_all_configurations": "ee",
 		  "historical_data_report": "ed",
 		  "lorawan_configuration_settings": "cf",

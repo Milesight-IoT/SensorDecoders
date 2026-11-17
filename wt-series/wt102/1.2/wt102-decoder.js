@@ -279,7 +279,7 @@ function milesightDeviceDecode(bytes) {
 					decoded.periodic_reporting.target_temperature_for_heating.battery_level = readUInt8(bytes, counterObj, 1);
 					decoded.battery = decoded.periodic_reporting.target_temperature_for_heating.battery_level;
 					decoded.periodic_reporting.target_temperature_for_heating.valve_temperature = readInt16LE(bytes, counterObj, 2) / 100;
-					decoded.valve_temperature = decoded.periodic_reporting.target_temperature_for_heating.valve_temperature;
+					decoded.temperature_valve = decoded.periodic_reporting.target_temperature_for_heating.valve_temperature;
 				}
 				if (decoded.periodic_reporting.report_type == 0x02) {
 					decoded.periodic_reporting.target_valve_opening_for_heating = decoded.periodic_reporting.target_valve_opening_for_heating || {};
@@ -292,7 +292,7 @@ function milesightDeviceDecode(bytes) {
 					decoded.periodic_reporting.target_valve_opening_for_heating.battery_level = readUInt8(bytes, counterObj, 1);
 					decoded.battery = decoded.periodic_reporting.target_valve_opening_for_heating.battery_level;
 					decoded.periodic_reporting.target_valve_opening_for_heating.valve_temperature = readInt16LE(bytes, counterObj, 2) / 100;
-					decoded.valve_temperature = decoded.periodic_reporting.target_valve_opening_for_heating.valve_temperature;
+					decoded.temperature_valve = decoded.periodic_reporting.target_valve_opening_for_heating.valve_temperature;
 				}
 				if (decoded.periodic_reporting.report_type == 0x03) {
 					decoded.periodic_reporting.integrated_control_for_heating = decoded.periodic_reporting.integrated_control_for_heating || {};
@@ -307,7 +307,7 @@ function milesightDeviceDecode(bytes) {
 					decoded.periodic_reporting.integrated_control_for_heating.battery_level = readUInt8(bytes, counterObj, 1);
 					decoded.battery = decoded.periodic_reporting.integrated_control_for_heating.battery_level;
 					decoded.periodic_reporting.integrated_control_for_heating.valve_temperature = readInt16LE(bytes, counterObj, 2) / 100;
-					decoded.valve_temperature = decoded.periodic_reporting.integrated_control_for_heating.valve_temperature;
+					decoded.temperature_valve = decoded.periodic_reporting.integrated_control_for_heating.valve_temperature;
 				}
 				break;
 			case 0xc9:
@@ -1103,7 +1103,7 @@ function cmdMap() {
 		  "650602": "target_temperature_control_settings.mode_settings.intergrated_control",
 		  "ff": "request_check_sequence_number",
 		  "fe": "request_check_order",
-		  "ef": "command_queries_reply",
+		  "ef": "request_command_queries",
 		  "ee": "request_query_all_configurations",
 		  "ed": "historical_data_report",
 		  "cf": "lorawan_configuration_settings",

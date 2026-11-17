@@ -2338,40 +2338,6 @@
             "bacnet_unit_type": "UNITS_NO_UNITS"
         },
         {
-            "id": "periodic_reporting.integrated_control_for_heating.celsius_valve_temperature",
-            "name": "Celsius Valve Temperature(Heating Period Integrated Control Reporting)",
-            "value": "",
-            "unit": "°C",
-            "access_mode": "R",
-            "data_type": "NUMBER",
-            "value_type": "FLOAT",
-            "range": [
-                -20,
-                60
-            ],
-            "bacnet_type": "analog_input_object",
-            "bacnet_unit_type_id": 62,
-            "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
-            "reference": []
-        },
-        {
-            "id": "periodic_reporting.integrated_control_for_heating.fahrenheit_valve_temperature",
-            "name": "Fahrenheit Valve Temperature(Heating Period Integrated Control Reporting)",
-            "value": "",
-            "unit": "°F",
-            "access_mode": "R",
-            "data_type": "NUMBER",
-            "value_type": "FLOAT",
-            "range": [
-                -4,
-                140
-            ],
-            "bacnet_type": "analog_input_object",
-            "bacnet_unit_type_id": 64,
-            "bacnet_unit_type": "UNITS_DEGREES_FAHRENHEIT",
-            "reference": []
-        },
-        {
             "id": "periodic_reporting.report_type",
             "name": "Reporting Type(Periodic Reporting)",
             "value": "",
@@ -2400,74 +2366,6 @@
             "bacnet_type": "multistate_input_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": []
-        },
-        {
-            "id": "periodic_reporting.target_temperature_for_heating.celsius_valve_temperature",
-            "name": "Celsius Valve Temperature(Heating Period Temperature Control Reporting)",
-            "value": "",
-            "unit": "°C",
-            "access_mode": "R",
-            "data_type": "NUMBER",
-            "value_type": "FLOAT",
-            "range": [
-                -20,
-                60
-            ],
-            "bacnet_type": "analog_input_object",
-            "bacnet_unit_type_id": 62,
-            "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
-            "reference": []
-        },
-        {
-            "id": "periodic_reporting.target_temperature_for_heating.fahrenheit_valve_temperature",
-            "name": "Fahrenheit Valve Temperature(Heating Period Temperature Control Reporting)",
-            "value": "",
-            "unit": "°F",
-            "access_mode": "R",
-            "data_type": "NUMBER",
-            "value_type": "FLOAT",
-            "range": [
-                -4,
-                140
-            ],
-            "bacnet_type": "analog_input_object",
-            "bacnet_unit_type_id": 64,
-            "bacnet_unit_type": "UNITS_DEGREES_FAHRENHEIT",
-            "reference": []
-        },
-        {
-            "id": "periodic_reporting.target_valve_opening_for_heating.celsius_valve_temperature",
-            "name": "Celsius Valve Temperature(Heating Period Valve Opening Control Reporting)",
-            "value": "",
-            "unit": "°C",
-            "access_mode": "R",
-            "data_type": "NUMBER",
-            "value_type": "FLOAT",
-            "range": [
-                -20,
-                60
-            ],
-            "bacnet_type": "analog_input_object",
-            "bacnet_unit_type_id": 62,
-            "bacnet_unit_type": "UNITS_DEGREES_CELSIUS",
-            "reference": []
-        },
-        {
-            "id": "periodic_reporting.target_valve_opening_for_heating.fahrenheit_valve_temperature",
-            "name": "Fahrenheit Valve Temperature(Heating Period Valve Opening Control Reporting)",
-            "value": "",
-            "unit": "°F",
-            "access_mode": "R",
-            "data_type": "NUMBER",
-            "value_type": "FLOAT",
-            "range": [
-                -4,
-                140
-            ],
-            "bacnet_type": "analog_input_object",
-            "bacnet_unit_type_id": 64,
-            "bacnet_unit_type": "UNITS_DEGREES_FAHRENHEIT",
             "reference": []
         },
         {
