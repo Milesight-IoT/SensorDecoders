@@ -114,7 +114,12 @@ function milesightDeviceDecode(bytes) {
 				var ipso_type_v1 = bytes[counterObj.i++];
 				switch (ipso_type_v1) {
 					case 0x9f:
-						decoded.Pir_trigger = readUInt16LE(bytes, counterObj, 2);
+						var Pir_trigger = readUInt16LE(bytes, counterObj, 2);
+						if (Pir_trigger == 0xffff) {
+							decoded.Pir_trigger = 'trigger';
+						} else {
+							decoded.Pir_trigger = 'no trigger';
+						}
 						break;
 				}
 				break;
@@ -122,7 +127,14 @@ function milesightDeviceDecode(bytes) {
 				var ipso_type_v1 = bytes[counterObj.i++];
 				switch (ipso_type_v1) {
 					case 0xf9:
-						decoded.Regional_State = readUInt32LE(bytes, counterObj, 4);
+						var Regional_State = readUInt32LE(bytes, counterObj, 4);
+						if (Regional_State == 0x00ffffff) {
+							decoded.Regional_State = 'occupied';
+						} else if (Regional_State == 0x01ffffff) {
+							decoded.Regional_State = 'vacant';
+						} else {
+							decoded.Regional_State = 'unknown';
+						}
 						break;
 				}
 				break;

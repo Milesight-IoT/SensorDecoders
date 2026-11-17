@@ -101,8 +101,8 @@ function milesightDeviceEncode(payload) {
 		bitOptions |= 0x01 << 3;
 
 		bitOptions |= 0x01 << 6;
-
 		buffer.writeUInt8(bitOptions);
+
 		if (payload.set_threshold_alarm_temperature.value_less_than < -40 || payload.set_threshold_alarm_temperature.value_less_than > 125) {
 			throw betweenError('set_threshold_alarm_temperature.value_less_than', -40, 125);
 		}
