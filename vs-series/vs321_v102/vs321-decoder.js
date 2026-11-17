@@ -128,9 +128,9 @@ function milesightDeviceDecode(bytes) {
 				switch (ipso_type_v1) {
 					case 0xf9:
 						var Regional_State = readUInt32LE(bytes, counterObj, 4);
-						if (Regional_State == 0x00ffffff) {
+						if (Regional_State == 0xffffff00) {
 							decoded.Regional_State = 'occupied';
-						} else if (Regional_State == 0x01ffffff) {
+						} else if (Regional_State == 0xffffff01) {
 							decoded.Regional_State = 'vacant';
 						} else {
 							decoded.Regional_State = 'unknown';
