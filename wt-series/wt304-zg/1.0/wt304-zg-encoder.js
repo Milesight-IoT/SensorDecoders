@@ -1692,6 +1692,12 @@ function milesightDeviceEncode(payload) {
 		}
 		encoded = encoded.concat(buffer.toBytes());
 	}
+	//0xb8
+	if ('synchronize_time' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0xb8);
+		encoded = encoded.concat(buffer.toBytes());
+	}
 	//0xb7
 	if ('set_time' in payload) {
 		var buffer = new Buffer();
@@ -2293,6 +2299,7 @@ function cmdMap() {
 		  "d2d_slave_settings._item": "8bxx",
 		  "screen_content_settings": "91",
 		  "screen_content_settings._item": "91xx",
+		  "synchronize_time": "b8",
 		  "set_time": "b7",
 		  "clear_historical_data": "bd",
 		  "stop_historical_data_retrieval": "bc",

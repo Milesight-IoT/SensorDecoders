@@ -348,6 +348,7 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | No Data | 0x0A | 1 | r |  |  |  |
 | Alarm Type | 0x0B | 2 | r |  |  |  |
 | No Data | 0x0B | 1 | r |  |  |  |
+| Time Synchronize | 0xB8 | 1 | w |  |  |  |
 | Time Synchronize | 0xB7 | 5 | w |  |  |  |
 | Timestamp | 0xB7 | 5 | w |  |  |  |
 | Clear Data | 0xBD | 1 | w |  |  |  |

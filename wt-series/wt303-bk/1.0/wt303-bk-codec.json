@@ -2147,7 +2147,7 @@
             "id": "humidity",
             "name": "Humidity",
             "value": "",
-            "unit": "%",
+            "unit": "%RH",
             "access_mode": "R",
             "data_type": "NUMBER",
             "value_type": "FLOAT",
@@ -2156,8 +2156,8 @@
                 100
             ],
             "bacnet_type": "analog_input_object",
-            "bacnet_unit_type_id": 98,
-            "bacnet_unit_type": "UNITS_PERCENT"
+            "bacnet_unit_type_id": 29,
+            "bacnet_unit_type": "UNITS_PERCENT_RELATIVE_HUMIDITY"
         },
         {
             "id": "humidity_alarm.type",
@@ -2186,7 +2186,7 @@
             "id": "humidity_calibration_settings.calibration_value",
             "name": "Calibration Value(Humidity Calibration Settings)",
             "value": "0",
-            "unit": "%",
+            "unit": "%RH",
             "access_mode": "RW",
             "data_type": "NUMBER",
             "value_type": "FLOAT",
@@ -2195,8 +2195,8 @@
                 100
             ],
             "bacnet_type": "analog_value_object",
-            "bacnet_unit_type_id": 98,
-            "bacnet_unit_type": "UNITS_PERCENT",
+            "bacnet_unit_type_id": 29,
+            "bacnet_unit_type": "UNITS_PERCENT_RELATIVE_HUMIDITY",
             "reference": [
                 "humidity_calibration_settings.enable"
             ]
@@ -3087,7 +3087,7 @@
             "id": "send_humidity.humidity",
             "name": "Humidity Extend Value(External Humidity Settings)",
             "value": "0",
-            "unit": "%",
+            "unit": "%RH",
             "access_mode": "W",
             "data_type": "NUMBER",
             "value_type": "FLOAT",
@@ -3096,8 +3096,8 @@
                 100
             ],
             "bacnet_type": "analog_output_object",
-            "bacnet_unit_type_id": 98,
-            "bacnet_unit_type": "UNITS_PERCENT",
+            "bacnet_unit_type_id": 29,
+            "bacnet_unit_type": "UNITS_PERCENT_RELATIVE_HUMIDITY",
             "reference": []
         },
         {
@@ -3135,6 +3135,22 @@
             "reference": []
         },
         {
+            "id": "synchronize_time",
+            "name": "Synchronize Time",
+            "value": "",
+            "unit": "",
+            "access_mode": "W",
+            "data_type": "NUMBER",
+            "value_type": "UINT8",
+            "range": [
+                0,
+                255
+            ],
+            "bacnet_type": "analog_output_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS"
+        },
+        {
             "id": "system_status",
             "name": "System On/Off",
             "value": "0",
@@ -3160,7 +3176,7 @@
             "id": "target_humidity_range.max",
             "name": "Max Value(Target Humidity Regulation Range)",
             "value": "80",
-            "unit": "%",
+            "unit": "%RH",
             "access_mode": "RW",
             "data_type": "NUMBER",
             "value_type": "FLOAT",
@@ -3169,8 +3185,8 @@
                 100
             ],
             "bacnet_type": "analog_value_object",
-            "bacnet_unit_type_id": 98,
-            "bacnet_unit_type": "UNITS_PERCENT",
+            "bacnet_unit_type_id": 29,
+            "bacnet_unit_type": "UNITS_PERCENT_RELATIVE_HUMIDITY",
             "reference": [
                 "target_humidity_range.min"
             ]
@@ -3179,7 +3195,7 @@
             "id": "target_humidity_range.min",
             "name": "Min Value(Target Humidity Regulation Range)",
             "value": "40",
-            "unit": "%",
+            "unit": "%RH",
             "access_mode": "RW",
             "data_type": "NUMBER",
             "value_type": "FLOAT",
@@ -3188,8 +3204,8 @@
                 100
             ],
             "bacnet_type": "analog_value_object",
-            "bacnet_unit_type_id": 98,
-            "bacnet_unit_type": "UNITS_PERCENT",
+            "bacnet_unit_type_id": 29,
+            "bacnet_unit_type": "UNITS_PERCENT_RELATIVE_HUMIDITY",
             "reference": [
                 "target_humidity_range.max"
             ]

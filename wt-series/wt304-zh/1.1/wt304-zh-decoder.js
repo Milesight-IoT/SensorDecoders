@@ -1378,6 +1378,9 @@ function milesightDeviceDecode(bytes) {
 					decoded.debug_commands.ambient_humi_value = readUInt16LE(bytes, counterObj, 2) / 10;
 				}
 				break;
+			case 0xb8:
+				decoded.synchronize_time = readOnlyCommand(bytes, counterObj, 0);
+				break;
 			case 0xb7:
 				decoded.set_time = decoded.set_time || {};
 				decoded.set_time.timestamp = readUInt32LE(bytes, counterObj, 4);
@@ -2120,6 +2123,7 @@ function cmdMap() {
 		  "a601": "debug_commands.ambient_temp_value",
 		  "a602": "debug_commands.ambient_humi_enable",
 		  "a603": "debug_commands.ambient_humi_value",
+		  "b8": "synchronize_time",
 		  "b7": "set_time",
 		  "bd": "clear_historical_data",
 		  "bc": "stop_historical_data_retrieval",

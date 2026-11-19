@@ -788,6 +788,9 @@ function milesightDeviceDecode(bytes) {
 				screen_content_settings_item.length = readUInt16LE(bytes, counterObj, 2);
 				screen_content_settings_item.data = readHexString(bytes, counterObj, screen_content_settings_item.length);
 				break;
+			case 0xb8:
+				decoded.synchronize_time = readOnlyCommand(bytes, counterObj, 0);
+				break;
 			case 0xb7:
 				decoded.set_time = decoded.set_time || {};
 				decoded.set_time.timestamp = readUInt32LE(bytes, counterObj, 4);
@@ -1374,6 +1377,7 @@ function cmdMap() {
 		  "8b": "d2d_slave_settings",
 		  "8bxx": "d2d_slave_settings._item",
 		  "91xx": "screen_content_settings._item",
+		  "b8": "synchronize_time",
 		  "b7": "set_time",
 		  "bd": "clear_historical_data",
 		  "bc": "stop_historical_data_retrieval",

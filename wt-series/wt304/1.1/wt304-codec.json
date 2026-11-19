@@ -339,6 +339,36 @@
             ]
         },
         {
+            "id": "data_source",
+            "name": "Data Source",
+            "value": "0",
+            "unit": "",
+            "access_mode": "R",
+            "data_type": "ENUM",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "Internal"
+                },
+                {
+                    "value": 1,
+                    "name": "External NTC"
+                },
+                {
+                    "value": 2,
+                    "name": "LoRaWAN Reception"
+                },
+                {
+                    "value": 3,
+                    "name": "D2D Reception"
+                }
+            ],
+            "bacnet_type": "multistate_input_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS"
+        },
+        {
             "id": "device_status",
             "name": "Device Status",
             "value": "1",
@@ -486,8 +516,8 @@
             "bacnet_unit_type": "UNITS_NO_UNITS"
         },
         {
-            "id": "fan_delay_close.enable",
-            "name": "Fan Delay Enable(Fan Delay)",
+            "id": "fan_delay_close_cfg.enable",
+            "name": "Fan Delay Close Enable(Fan Delay Close Configuration)",
             "value": "0",
             "unit": "",
             "access_mode": "RW",
@@ -506,13 +536,11 @@
             "bacnet_type": "binary_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": [
-                "fan_delay_close.time"
-            ]
+            "reference": []
         },
         {
-            "id": "fan_delay_close.time",
-            "name": "The Duration of Delay(Fan Delay)",
+            "id": "fan_delay_close_cfg.timeout_time",
+            "name": "Fan Delay Close Timeout Time(Fan Delay Close Configuration)",
             "value": "60",
             "unit": "s",
             "access_mode": "RW",
@@ -525,9 +553,7 @@
             "bacnet_type": "analog_value_object",
             "bacnet_unit_type_id": 73,
             "bacnet_unit_type": "UNITS_SECONDS",
-            "reference": [
-                "fan_delay_close.enable"
-            ]
+            "reference": []
         },
         {
             "id": "fan_speed_ctl_delta_cfg.celsius_delta1",
@@ -808,7 +834,7 @@
             "id": "humidity",
             "name": "Humidity",
             "value": "",
-            "unit": "%",
+            "unit": "%RH",
             "access_mode": "R",
             "data_type": "NUMBER",
             "value_type": "FLOAT",
@@ -817,14 +843,14 @@
                 100
             ],
             "bacnet_type": "analog_input_object",
-            "bacnet_unit_type_id": 98,
-            "bacnet_unit_type": "UNITS_PERCENT"
+            "bacnet_unit_type_id": 29,
+            "bacnet_unit_type": "UNITS_PERCENT_RELATIVE_HUMIDITY"
         },
         {
             "id": "humidity_calibration_cfg.calibration_value",
             "name": "Humidity Calibration Value(Humidity Calibration Configuration)",
             "value": "0",
-            "unit": "%",
+            "unit": "%RH",
             "access_mode": "RW",
             "data_type": "NUMBER",
             "value_type": "FLOAT",
@@ -833,8 +859,8 @@
                 100
             ],
             "bacnet_type": "analog_value_object",
-            "bacnet_unit_type_id": 98,
-            "bacnet_unit_type": "UNITS_PERCENT",
+            "bacnet_unit_type_id": 29,
+            "bacnet_unit_type": "UNITS_PERCENT_RELATIVE_HUMIDITY",
             "reference": []
         },
         {
@@ -1206,10 +1232,26 @@
             "bacnet_unit_type": "UNITS_MINUTES"
         },
         {
+            "id": "synchronize_time",
+            "name": "Synchronize Time",
+            "value": "",
+            "unit": "",
+            "access_mode": "W",
+            "data_type": "NUMBER",
+            "value_type": "UINT8",
+            "range": [
+                0,
+                255
+            ],
+            "bacnet_type": "analog_output_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS"
+        },
+        {
             "id": "target_humidity_range.max",
             "name": "Max Value(Target Humidity Regulation Range)",
             "value": "80",
-            "unit": "%",
+            "unit": "%RH",
             "access_mode": "RW",
             "data_type": "NUMBER",
             "value_type": "FLOAT",
@@ -1218,8 +1260,8 @@
                 100
             ],
             "bacnet_type": "analog_value_object",
-            "bacnet_unit_type_id": 98,
-            "bacnet_unit_type": "UNITS_PERCENT",
+            "bacnet_unit_type_id": 29,
+            "bacnet_unit_type": "UNITS_PERCENT_RELATIVE_HUMIDITY",
             "reference": [
                 "target_humidity_range.min"
             ]
@@ -1228,7 +1270,7 @@
             "id": "target_humidity_range.min",
             "name": "Min Value(Target Humidity Regulation Range)",
             "value": "40",
-            "unit": "%",
+            "unit": "%RH",
             "access_mode": "RW",
             "data_type": "NUMBER",
             "value_type": "FLOAT",
@@ -1237,8 +1279,8 @@
                 100
             ],
             "bacnet_type": "analog_value_object",
-            "bacnet_unit_type_id": 98,
-            "bacnet_unit_type": "UNITS_PERCENT",
+            "bacnet_unit_type_id": 29,
+            "bacnet_unit_type": "UNITS_PERCENT_RELATIVE_HUMIDITY",
             "reference": [
                 "target_humidity_range.max"
             ]
@@ -1538,37 +1580,6 @@
             "bacnet_type": "multistate_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS"
-        },
-        {
-            "id": "temperature_source.type",
-            "name": "Temperature Source(Temperature Data Source)",
-            "value": "0",
-            "unit": "",
-            "access_mode": "RW",
-            "data_type": "ENUM",
-            "value_type": "UINT8",
-            "values": [
-                {
-                    "value": 0,
-                    "name": "Embedded Temperature"
-                },
-                {
-                    "value": 1,
-                    "name": "External NTC"
-                },
-                {
-                    "value": 2,
-                    "name": "LoRa Receive"
-                },
-                {
-                    "value": 3,
-                    "name": "D2D Receive"
-                }
-            ],
-            "bacnet_type": "multistate_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": []
         },
         {
             "id": "temperature_unit",
