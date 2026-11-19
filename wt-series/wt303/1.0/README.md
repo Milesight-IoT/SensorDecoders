@@ -47,7 +47,7 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Device Status | 0xC8 | 2 | r | 1 |  | 0: Off<br>1: On |
 | Collecting Interval | 0x60 | 1 | rw |  |  |  |
 | Collecting Interval Unit | 0x60 | 2 | rw | 0 |  | 0: Second<br>1: Min |
-| Collecting Interval | 0x60 | 3 | rw | 30 | 10 - 64800 |  |
+| Collecting Interval | 0x60 | 3 | rw | 30 | 10 - 3600 |  |
 | Collecting Interval | 0x60 | 3 | rw | 1 | 1 - 1440 |  |
 | Reporting Interval | 0x62 | 1 | rw |  |  |  |
 | Reporting Interval Unit | 0x62 | 2 | rw | 1 |  | 0: Second<br>1: Min |
@@ -126,8 +126,6 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Ambient Humidity | 0x66 | 2 | rw | 1 |  | 0: Disable<br>1: Enable |
 | Target Temperature | 0x66 | 2 | rw | 1 |  | 0: Disable<br>1: Enable |
 | Schedule | 0x66 | 2 | rw | 1 |  | 0: Disable<br>1: Enable |
-| Temperature Control Mode | 0x66 | 2 | rw | 1 |  | 0: Disable<br>1: Enable |
-| Fan Control Mode | 0x66 | 2 | rw | 1 |  | 0: Disable<br>1: Enable |
 | Reserved | 0x66 | 2 | rw |  |  |  |
 | Child Lock | 0x75 | 3 | rw |  |  |  |
 | Child Lock Enable | 0x75 | 2 | rw | 0 |  | 0: Disable<br>1: Enable |

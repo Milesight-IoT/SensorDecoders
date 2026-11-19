@@ -550,20 +550,20 @@ function milesightDeviceDecode(bytes) {
 					decoded.child_lock_enable_cfg.enable = readUInt8(bytes, counterObj, 1);
 				}
 				if (child_lock_enable_cfg_cmd == 0x01) {
-					// 0: All Disabled, 1: System Switch, 2: Temp+ & Temp-, 3: System Switch + Temp+ & Temp-, 4: Fan, 5: System Switch + Fan, 6: Temp+ & Temp- + Fan, 7: System Switch + Temp+ & Temp- + Fan, 8: Temperature Control Mode, 9: System Switch + Temperature Control Mode, 10: Temp+ & Temp- + Temperature Control Mode, 11: System Switch + Temp+ & Temp- + Temperature Control Mode, 12: Fan + Temperature Control Mode, 13: System Switch + Fan + Temperature Control Mode, 14: Temp+ & Temp- + Fan + Temperature Control Mode, 15: System Switch + Temp+ & Temp- + Fan + Temperature Control Mode, 16: Restart/Reset, 17: System Switch + Restart/Reset, 18: Temp+ & Temp- + Restart/Reset, 19: System Switch + Temp+ & Temp- + Restart/Reset, 20: Fan + Restart/Reset, 21: System Switch + Fan + Restart/Reset, 22: Temp+ & Temp- + Fan + Restart/Reset, 23: System Switch + Temp+ & Temp- + Fan + Restart/Reset, 24: Temperature Control Mode + Restart/Reset, 25: System Switch + Temperature Control Mode + Restart/Reset, 26: Temp+ & Temp- + Temperature Control Mode + Restart/Reset, 27: System Switch + Temp+ & Temp- + Temperature Control Mode + Restart/Reset, 28: Fan + Temperature Control Mode + Restart/Reset, 29: System Switch + Fan + Temperature Control Mode + Restart/Reset, 30: Temp+ & Temp- + Fan + Temperature Control Mode + Restart/Reset, 31: System Switch + Temp+ & Temp- + Fan + Temperature Control Mode + Restart/Reset
-					decoded.child_lock_enable_cfg.key_enable = readUInt8(bytes, counterObj, 1);
+					decoded.child_lock_enable_cfg.key_enable_cfg = decoded.child_lock_enable_cfg.key_enable_cfg || {};
+					var bitOptions = readUInt8(bytes, counterObj, 1);
+					// 0: Disable, 1: Enable
+					decoded.child_lock_enable_cfg.key_enable_cfg.system = extractBits(bitOptions, 0, 1);
+					// 0: Disable, 1: Enable
+					decoded.child_lock_enable_cfg.key_enable_cfg.temperature = extractBits(bitOptions, 1, 2);
+					// 0: Disable, 1: Enable
+					decoded.child_lock_enable_cfg.key_enable_cfg.fan = extractBits(bitOptions, 2, 3);
+					// 0: Disable, 1: Enable
+					decoded.child_lock_enable_cfg.key_enable_cfg.temperature_control = extractBits(bitOptions, 3, 4);
+					// 0: Disable, 1: Enable
+					decoded.child_lock_enable_cfg.key_enable_cfg.reboot_reset = extractBits(bitOptions, 4, 5);
+					decoded.child_lock_enable_cfg.key_enable_cfg.reserved = extractBits(bitOptions, 5, 8);
 				}
-				var bitOptions = readUInt8(bytes, counterObj, 1);
-				// 0: Disable, 1: Enable
-				decoded.child_lock_enable_cfg.system = extractBits(bitOptions, 0, 1);
-				// 0: Disable, 1: Enable
-				decoded.child_lock_enable_cfg.temperature = extractBits(bitOptions, 1, 2);
-				// 0: Disable, 1: Enable
-				decoded.child_lock_enable_cfg.fan = extractBits(bitOptions, 2, 3);
-				// 0: Disable, 1: Enable
-				decoded.child_lock_enable_cfg.temperature_control = extractBits(bitOptions, 3, 4);
-				// 0: Disable, 1: Enable
-				decoded.child_lock_enable_cfg.reboot_reset = extractBits(bitOptions, 4, 5);
 				break;
 			case 0x8d:
 				decoded.temporary_unlock_settings = decoded.temporary_unlock_settings || {};
@@ -587,21 +587,20 @@ function milesightDeviceDecode(bytes) {
 				decoded.temporary_button_unlock_cfg = decoded.temporary_button_unlock_cfg || {};
 				var temporary_button_unlock_cfg_cmd = readUInt8(bytes, counterObj, 1);
 				if (temporary_button_unlock_cfg_cmd == 0x00) {
-					// 0：Disable, 3：System switch & Temperature +, 5：System switch & Temperature -, 6：Temperature + & Temperature -, 7：System switch & Temperature + & Temperature -, 9：System switch & Fan, 10：Temperature + & Fan, 11：System switch & Temperature + & Fan, 12：Temperature - & Fan, 13：System switch & Temperature - & Fan, 14：Temperature + & Temperature - & Fan, 15：System switch & Temperature + & Temperature - & Fan, 17：System switch & Temperature control mode, 18：Temperature + & Temperature control mode, 19：System switch & Temperature + & Temperature control mode, 20：Temperature - & Temperature control mode, 21：System switch & Temperature - & Temperature control mode, 22：Temperature + & Temperature - & Temperature control mode, 23：System switch & Temperature + & Temperature - & Temperature control mode, 24：Fan & Temperature control mode, 25：System switch & Fan & Temperature control mode, 26：Temperature + & Fan & Temperature control mode, 27：System switch & Temperature + & Fan & Temperature control mode, 28：Temperature - & Fan & Temperature control mode, 29：System switch & Temperature - & Fan & Temperature control mode, 30：Temperature + & Temperature - & Fan & Temperature control mode, 31：System switch & Temperature + & Temperature - & Fan & Temperature control mode
-					decoded.temporary_button_unlock_cfg.enable = readUInt8(bytes, counterObj, 1);
+					decoded.temporary_button_unlock_cfg.enable_cfg = decoded.temporary_button_unlock_cfg.enable_cfg || {};
+					var bitOptions = readUInt8(bytes, counterObj, 1);
+					// 0: Disable, 1: Enable
+					decoded.temporary_button_unlock_cfg.enable_cfg.system = extractBits(bitOptions, 0, 1);
+					// 0: Disable, 1: Enable
+					decoded.temporary_button_unlock_cfg.enable_cfg.temperature_up = extractBits(bitOptions, 1, 2);
+					// 0: Disable, 1: Enable
+					decoded.temporary_button_unlock_cfg.enable_cfg.temperature_down = extractBits(bitOptions, 2, 3);
+					// 0: Disable, 1: Enable
+					decoded.temporary_button_unlock_cfg.enable_cfg.fan = extractBits(bitOptions, 3, 4);
+					// 0: Disable, 1: Enable
+					decoded.temporary_button_unlock_cfg.enable_cfg.temperature_control = extractBits(bitOptions, 4, 5);
+					decoded.temporary_button_unlock_cfg.enable_cfg.reserved = extractBits(bitOptions, 5, 8);
 				}
-				var bitOptions = readUInt8(bytes, counterObj, 1);
-				// 0: Disable, 1: Enable
-				decoded.temporary_button_unlock_cfg.system = extractBits(bitOptions, 0, 1);
-				// 0: Disable, 1: Enable
-				decoded.temporary_button_unlock_cfg.temperature_up = extractBits(bitOptions, 1, 2);
-				// 0: Disable, 1: Enable
-				decoded.temporary_button_unlock_cfg.temperature_down = extractBits(bitOptions, 2, 3);
-				// 0: Disable, 1: Enable
-				decoded.temporary_button_unlock_cfg.fan = extractBits(bitOptions, 3, 4);
-				// 0: Disable, 1: Enable
-				decoded.temporary_button_unlock_cfg.temperature_control = extractBits(bitOptions, 4, 5);
-				decoded.temporary_button_unlock_cfg.reserved = extractBits(bitOptions, 5, 8);
 				if (temporary_button_unlock_cfg_cmd == 0x01) {
 					decoded.temporary_button_unlock_cfg.unlocking_duration = readUInt16LE(bytes, counterObj, 2);
 				}
@@ -998,275 +997,282 @@ function milesightDeviceDecode(bytes) {
 					decoded.active_data_reporting_cfg.times = readUInt8(bytes, counterObj, 1);
 				}
 				if (active_data_reporting_cfg_cmd == 0x02) {
-					// 0: Disable All, 1: Enable All, 2: Custom
-					decoded.active_data_reporting_cfg.mode = readUInt8(bytes, counterObj, 1);
-				}
-				if (active_data_reporting_cfg_cmd == 0x03) {
-					decoded.active_data_reporting_cfg.custom_cfg = decoded.active_data_reporting_cfg.custom_cfg || {};
-					var active_data_reporting_cfg_custom_cfg_cmd = readUInt8(bytes, counterObj, 1);
-					if (active_data_reporting_cfg_custom_cfg_cmd == 0x60) {
-						// 0: Disable, 1: Enable
-						decoded.active_data_reporting_cfg.custom_cfg.collection_interval = readUInt8(bytes, counterObj, 1);
-					}
-					if (active_data_reporting_cfg_custom_cfg_cmd == 0x62) {
-						// 0: Disable, 1: Enable
-						decoded.active_data_reporting_cfg.custom_cfg.reporting_interval = readUInt8(bytes, counterObj, 1);
-					}
-					if (active_data_reporting_cfg_custom_cfg_cmd == 0x63) {
-						// 0: Disable, 1: Enable
-						decoded.active_data_reporting_cfg.custom_cfg.temperature_unit = readUInt8(bytes, counterObj, 1);
-					}
-					if (active_data_reporting_cfg_custom_cfg_cmd == 0x64) {
-						// 0: Disable, 1: Enable
-						decoded.active_data_reporting_cfg.custom_cfg.mode_enable = readUInt8(bytes, counterObj, 1);
-					}
-					if (active_data_reporting_cfg_custom_cfg_cmd == 0x65) {
-						// 0: Disable, 1: Enable
-						decoded.active_data_reporting_cfg.custom_cfg.intelligent_display_enable = readUInt8(bytes, counterObj, 1);
-					}
-					if (active_data_reporting_cfg_custom_cfg_cmd == 0x66) {
-						// 0: Disable, 1: Enable
-						decoded.active_data_reporting_cfg.custom_cfg.screen_object_settings = readUInt8(bytes, counterObj, 1);
-					}
-					if (active_data_reporting_cfg_custom_cfg_cmd == 0x67) {
-						// 0: Disable, 1: Enable
-						decoded.active_data_reporting_cfg.custom_cfg.system_status = readUInt8(bytes, counterObj, 1);
-					}
-					if (active_data_reporting_cfg_custom_cfg_cmd == 0x68) {
-						// 0: Disable, 1: Enable
-						decoded.active_data_reporting_cfg.custom_cfg.temperature_control_mode = readUInt8(bytes, counterObj, 1);
-					}
-					if (active_data_reporting_cfg_custom_cfg_cmd == 0x69) {
-						// 0: Disable, 1: Enable
-						decoded.active_data_reporting_cfg.custom_cfg.target_temperature_resolution = readUInt8(bytes, counterObj, 1);
-					}
-					if (active_data_reporting_cfg_custom_cfg_cmd == 0x6a) {
-						// 0: Disable, 1: Enable
-						decoded.active_data_reporting_cfg.custom_cfg.target_temperature_tolerance = readUInt8(bytes, counterObj, 1);
-					}
-					if (active_data_reporting_cfg_custom_cfg_cmd == 0x6b) {
-						// 0: Disable, 1: Enable
-						decoded.active_data_reporting_cfg.custom_cfg.heating_target_temperature = readUInt8(bytes, counterObj, 1);
-					}
-					if (active_data_reporting_cfg_custom_cfg_cmd == 0x6c) {
-						// 0: Disable, 1: Enable
-						decoded.active_data_reporting_cfg.custom_cfg.cooling_target_temperature = readUInt8(bytes, counterObj, 1);
-					}
-					if (active_data_reporting_cfg_custom_cfg_cmd == 0x6d) {
-						// 0: Disable, 1: Enable
-						decoded.active_data_reporting_cfg.custom_cfg.heating_target_temperature_range = readUInt8(bytes, counterObj, 1);
-					}
-					if (active_data_reporting_cfg_custom_cfg_cmd == 0x6e) {
-						// 0: Disable, 1: Enable
-						decoded.active_data_reporting_cfg.custom_cfg.cooling_target_temperature_range = readUInt8(bytes, counterObj, 1);
-					}
-					if (active_data_reporting_cfg_custom_cfg_cmd == 0x6f) {
-						// 0: Disable, 1: Enable
-						decoded.active_data_reporting_cfg.custom_cfg.temperature_control_dehumidification = readUInt8(bytes, counterObj, 1);
-					}
-					if (active_data_reporting_cfg_custom_cfg_cmd == 0x70) {
-						// 0: Disable, 1: Enable
-						decoded.active_data_reporting_cfg.custom_cfg.target_humidity_range = readUInt8(bytes, counterObj, 1);
-					}
-					if (active_data_reporting_cfg_custom_cfg_cmd == 0x71) {
-						// 0: Disable, 1: Enable
-						decoded.active_data_reporting_cfg.custom_cfg.temp_ctl_dehumi_cfg = readUInt8(bytes, counterObj, 1);
-					}
-					if (active_data_reporting_cfg_custom_cfg_cmd == 0x72) {
-						// 0: Disable, 1: Enable
-						decoded.active_data_reporting_cfg.custom_cfg.fan_control_mode = readUInt8(bytes, counterObj, 1);
-					}
-					if (active_data_reporting_cfg_custom_cfg_cmd == 0x73) {
-						// 0: Disable, 1: Enable
-						decoded.active_data_reporting_cfg.custom_cfg.fan_auto_mode_temperature_range = readUInt8(bytes, counterObj, 1);
-					}
-					if (active_data_reporting_cfg_custom_cfg_cmd == 0x74) {
-						// 0: Disable, 1: Enable
-						decoded.active_data_reporting_cfg.custom_cfg.fan_delay_close = readUInt8(bytes, counterObj, 1);
-					}
-					if (active_data_reporting_cfg_custom_cfg_cmd == 0x75) {
-						// 0: Disable, 1: Enable
-						decoded.active_data_reporting_cfg.custom_cfg.child_lock = readUInt8(bytes, counterObj, 1);
-					}
-					if (active_data_reporting_cfg_custom_cfg_cmd == 0x76) {
-						// 0: Disable, 1: Enable
-						decoded.active_data_reporting_cfg.custom_cfg.temperature_alarm_settings = readUInt8(bytes, counterObj, 1);
-					}
-					if (active_data_reporting_cfg_custom_cfg_cmd == 0x77) {
-						// 0: Disable, 1: Enable
-						decoded.active_data_reporting_cfg.custom_cfg.high_temperature_alarm_settings = readUInt8(bytes, counterObj, 1);
-					}
-					if (active_data_reporting_cfg_custom_cfg_cmd == 0x78) {
-						// 0: Disable, 1: Enable
-						decoded.active_data_reporting_cfg.custom_cfg.low_temperature_alarm_settings = readUInt8(bytes, counterObj, 1);
-					}
-					if (active_data_reporting_cfg_custom_cfg_cmd == 0x79) {
-						// 0: Disable, 1: Enable
-						decoded.active_data_reporting_cfg.custom_cfg.temperature_calibration_settings = readUInt8(bytes, counterObj, 1);
-					}
-					if (active_data_reporting_cfg_custom_cfg_cmd == 0x7a) {
-						// 0: Disable, 1: Enable
-						decoded.active_data_reporting_cfg.custom_cfg.humidity_calibration_settings = readUInt8(bytes, counterObj, 1);
-					}
-					if (active_data_reporting_cfg_custom_cfg_cmd == 0x7b) {
-						// 0: Disable, 1: Enable
-						decoded.active_data_reporting_cfg.custom_cfg.schedule_settings = readUInt8(bytes, counterObj, 1);
-					}
-					if (active_data_reporting_cfg_custom_cfg_cmd == 0x7c) {
-						// 0: Disable, 1: Enable
-						decoded.active_data_reporting_cfg.custom_cfg.interface_settings = readUInt8(bytes, counterObj, 1);
-					}
-					if (active_data_reporting_cfg_custom_cfg_cmd == 0x7f) {
-						// 0: Disable, 1: Enable
-						decoded.active_data_reporting_cfg.custom_cfg.fan_delay_close_cfg = readUInt8(bytes, counterObj, 1);
-					}
-					if (active_data_reporting_cfg_custom_cfg_cmd == 0x80) {
-						// 0: Disable, 1: Enable
-						decoded.active_data_reporting_cfg.custom_cfg.di_enable = readUInt8(bytes, counterObj, 1);
-					}
-					if (active_data_reporting_cfg_custom_cfg_cmd == 0x81) {
-						// 0: Disable, 1: Enable
-						decoded.active_data_reporting_cfg.custom_cfg.di_settings = readUInt8(bytes, counterObj, 1);
-					}
-					if (active_data_reporting_cfg_custom_cfg_cmd == 0x82) {
-						// 0: Disable, 1: Enable
-						decoded.active_data_reporting_cfg.custom_cfg.window_opening_detection_enable = readUInt8(bytes, counterObj, 1);
-					}
-					if (active_data_reporting_cfg_custom_cfg_cmd == 0x83) {
-						// 0: Disable, 1: Enable
-						decoded.active_data_reporting_cfg.custom_cfg.window_opening_detection_settings = readUInt8(bytes, counterObj, 1);
-					}
-					if (active_data_reporting_cfg_custom_cfg_cmd == 0x84) {
-						// 0: Disable, 1: Enable
-						decoded.active_data_reporting_cfg.custom_cfg.freeze_protection_settings = readUInt8(bytes, counterObj, 1);
-					}
-					if (active_data_reporting_cfg_custom_cfg_cmd == 0x85) {
-						// 0: Disable, 1: Enable
-						decoded.active_data_reporting_cfg.custom_cfg.temperature_source = readUInt8(bytes, counterObj, 1);
-					}
-					if (active_data_reporting_cfg_custom_cfg_cmd == 0x86) {
-						// 0: Disable, 1: Enable
-						decoded.active_data_reporting_cfg.custom_cfg.d2d_pairing_enable = readUInt8(bytes, counterObj, 1);
-					}
-					if (active_data_reporting_cfg_custom_cfg_cmd == 0x87) {
-						// 0: Disable, 1: Enable
-						decoded.active_data_reporting_cfg.custom_cfg.d2d_pairing_settings = readUInt8(bytes, counterObj, 1);
-					}
-					if (active_data_reporting_cfg_custom_cfg_cmd == 0x88) {
-						// 0: Disable, 1: Enable
-						decoded.active_data_reporting_cfg.custom_cfg.d2d_master_enable = readUInt8(bytes, counterObj, 1);
-					}
-					if (active_data_reporting_cfg_custom_cfg_cmd == 0x89) {
-						// 0: Disable, 1: Enable
-						decoded.active_data_reporting_cfg.custom_cfg.d2d_master_settings = readUInt8(bytes, counterObj, 1);
-					}
-					if (active_data_reporting_cfg_custom_cfg_cmd == 0x8a) {
-						// 0: Disable, 1: Enable
-						decoded.active_data_reporting_cfg.custom_cfg.d2d_slave_enable = readUInt8(bytes, counterObj, 1);
-					}
-					if (active_data_reporting_cfg_custom_cfg_cmd == 0x8b) {
-						// 0: Disable, 1: Enable
-						decoded.active_data_reporting_cfg.custom_cfg.d2d_slave_settings = readUInt8(bytes, counterObj, 1);
-					}
-					if (active_data_reporting_cfg_custom_cfg_cmd == 0x8c) {
-						// 0: Disable, 1: Enable
-						decoded.active_data_reporting_cfg.custom_cfg.timed_system_control = readUInt8(bytes, counterObj, 1);
-					}
-					if (active_data_reporting_cfg_custom_cfg_cmd == 0x8d) {
-						// 0: Disable, 1: Enable
-						decoded.active_data_reporting_cfg.custom_cfg.temporary_unlock_settings = readUInt8(bytes, counterObj, 1);
-					}
-					if (active_data_reporting_cfg_custom_cfg_cmd == 0x8e) {
-						// 0: Disable, 1: Enable
-						decoded.active_data_reporting_cfg.custom_cfg.fan_stop_enable = readUInt8(bytes, counterObj, 1);
-					}
-					if (active_data_reporting_cfg_custom_cfg_cmd == 0x90) {
-						// 0: Disable, 1: Enable
-						decoded.active_data_reporting_cfg.custom_cfg.relay_changes_report_enable = readUInt8(bytes, counterObj, 1);
-					}
-					if (active_data_reporting_cfg_custom_cfg_cmd == 0x91) {
-						// 0: Disable, 1: Enable
-						decoded.active_data_reporting_cfg.custom_cfg.screen_content_settings = readUInt8(bytes, counterObj, 1);
-					}
-					if (active_data_reporting_cfg_custom_cfg_cmd == 0x92) {
-						// 0: Disable, 1: Enable
-						decoded.active_data_reporting_cfg.custom_cfg.valve_type_setting = readUInt8(bytes, counterObj, 1);
-					}
-					if (active_data_reporting_cfg_custom_cfg_cmd == 0x96) {
-						// 0: Disable, 1: Enable
-						decoded.active_data_reporting_cfg.custom_cfg.child_lock_enable_cfg = readUInt8(bytes, counterObj, 1);
-					}
-					if (active_data_reporting_cfg_custom_cfg_cmd == 0x97) {
-						// 0: Disable, 1: Enable
-						decoded.active_data_reporting_cfg.custom_cfg.temporary_button_unlock_cfg = readUInt8(bytes, counterObj, 1);
-					}
-					if (active_data_reporting_cfg_custom_cfg_cmd == 0x98) {
-						// 0: Disable, 1: Enable
-						decoded.active_data_reporting_cfg.custom_cfg.freeze_protection_cfg = readUInt8(bytes, counterObj, 1);
-					}
-					if (active_data_reporting_cfg_custom_cfg_cmd == 0x99) {
-						// 0: Disable, 1: Enable
-						decoded.active_data_reporting_cfg.custom_cfg.threshold_alarm_cfg = readUInt8(bytes, counterObj, 1);
-					}
-					if (active_data_reporting_cfg_custom_cfg_cmd == 0x9a) {
-						// 0: Disable, 1: Enable
-						decoded.active_data_reporting_cfg.custom_cfg.high_temperature_alarm_cfg = readUInt8(bytes, counterObj, 1);
-					}
-					if (active_data_reporting_cfg_custom_cfg_cmd == 0x9b) {
-						// 0: Disable, 1: Enable
-						decoded.active_data_reporting_cfg.custom_cfg.low_temperature_alarm_cfg = readUInt8(bytes, counterObj, 1);
-					}
-					if (active_data_reporting_cfg_custom_cfg_cmd == 0x9c) {
-						// 0: Disable, 1: Enable
-						decoded.active_data_reporting_cfg.custom_cfg.temperature_calibration_cfg = readUInt8(bytes, counterObj, 1);
-					}
-					if (active_data_reporting_cfg_custom_cfg_cmd == 0x9d) {
-						// 0: Disable, 1: Enable
-						decoded.active_data_reporting_cfg.custom_cfg.humidity_calibration_cfg = readUInt8(bytes, counterObj, 1);
-					}
-					if (active_data_reporting_cfg_custom_cfg_cmd == 0x9e) {
-						// 0: Disable, 1: Enable
-						decoded.active_data_reporting_cfg.custom_cfg.interface_type_cfg = readUInt8(bytes, counterObj, 1);
-					}
-					if (active_data_reporting_cfg_custom_cfg_cmd == 0x9f) {
-						// 0: Disable, 1: Enable
-						decoded.active_data_reporting_cfg.custom_cfg.fan_speed_ctl_delta_cfg = readUInt8(bytes, counterObj, 1);
-					}
-					if (active_data_reporting_cfg_custom_cfg_cmd == 0xa0) {
-						// 0: Disable, 1: Enable
-						decoded.active_data_reporting_cfg.custom_cfg.temperature_data_source_cfg = readUInt8(bytes, counterObj, 1);
-					}
-					if (active_data_reporting_cfg_custom_cfg_cmd == 0xa1) {
-						// 0: Disable, 1: Enable
-						decoded.active_data_reporting_cfg.custom_cfg.reporting_interval_cfg = readUInt8(bytes, counterObj, 1);
-					}
-					if (active_data_reporting_cfg_custom_cfg_cmd == 0xa2) {
-						// 0: Disable, 1: Enable
-						decoded.active_data_reporting_cfg.custom_cfg.screen_display_cfg = readUInt8(bytes, counterObj, 1);
-					}
-					if (active_data_reporting_cfg_custom_cfg_cmd == 0xa3) {
-						// 0: Disable, 1: Enable
-						decoded.active_data_reporting_cfg.custom_cfg.unilatera_tolerance_enable = readUInt8(bytes, counterObj, 1);
-					}
-					if (active_data_reporting_cfg_custom_cfg_cmd == 0xa5) {
-						// 0: Disable, 1: Enable
-						decoded.active_data_reporting_cfg.custom_cfg.temperature_control_permission_cfg = readUInt8(bytes, counterObj, 1);
-					}
-					if (active_data_reporting_cfg_custom_cfg_cmd == 0xa7) {
-						// 0: Disable, 1: Enable
-						decoded.active_data_reporting_cfg.custom_cfg.external_data_src_timeout_cfg = readUInt8(bytes, counterObj, 1);
-					}
-					if (active_data_reporting_cfg_custom_cfg_cmd == 0xc6) {
-						// 0: Disable, 1: Enable
-						decoded.active_data_reporting_cfg.custom_cfg.daylight_saving_time = readUInt8(bytes, counterObj, 1);
-					}
-					if (active_data_reporting_cfg_custom_cfg_cmd == 0xc7) {
-						// 0: Disable, 1: Enable
-						decoded.active_data_reporting_cfg.custom_cfg.time_zone = readUInt8(bytes, counterObj, 1);
-					}
-					if (active_data_reporting_cfg_custom_cfg_cmd == 0xc8) {
-						// 0: Disable, 1: Enable
-						decoded.active_data_reporting_cfg.custom_cfg.device_status = readUInt8(bytes, counterObj, 1);
+					decoded.active_data_reporting_cfg.mode = decoded.active_data_reporting_cfg.mode || {};
+					// 0：All Close, 1：All Open, 2：Custom
+					decoded.active_data_reporting_cfg.mode.type = readUInt8(bytes, counterObj, 1);
+					if (decoded.active_data_reporting_cfg.mode.type == 0x00) {
+						decoded.active_data_reporting_cfg.mode.all_close = decoded.active_data_reporting_cfg.mode.all_close || {};
+					}
+					if (decoded.active_data_reporting_cfg.mode.type == 0x01) {
+						decoded.active_data_reporting_cfg.mode.all_open = decoded.active_data_reporting_cfg.mode.all_open || {};
+					}
+					if (decoded.active_data_reporting_cfg.mode.type == 0x02) {
+						decoded.active_data_reporting_cfg.mode.custom = decoded.active_data_reporting_cfg.mode.custom || {};
+						var active_data_reporting_cfg_mode_custom_cmd = readUInt8(bytes, counterObj, 1);
+						if (active_data_reporting_cfg_mode_custom_cmd == 0x60) {
+							// 0: Disable, 1: Enable
+							decoded.active_data_reporting_cfg.mode.custom.collection_interval = readUInt8(bytes, counterObj, 1);
+						}
+						if (active_data_reporting_cfg_mode_custom_cmd == 0x62) {
+							// 0: Disable, 1: Enable
+							decoded.active_data_reporting_cfg.mode.custom.reporting_interval = readUInt8(bytes, counterObj, 1);
+						}
+						if (active_data_reporting_cfg_mode_custom_cmd == 0x63) {
+							// 0: Disable, 1: Enable
+							decoded.active_data_reporting_cfg.mode.custom.temperature_unit = readUInt8(bytes, counterObj, 1);
+						}
+						if (active_data_reporting_cfg_mode_custom_cmd == 0x64) {
+							// 0: Disable, 1: Enable
+							decoded.active_data_reporting_cfg.mode.custom.mode_enable = readUInt8(bytes, counterObj, 1);
+						}
+						if (active_data_reporting_cfg_mode_custom_cmd == 0x65) {
+							// 0: Disable, 1: Enable
+							decoded.active_data_reporting_cfg.mode.custom.intelligent_display_enable = readUInt8(bytes, counterObj, 1);
+						}
+						if (active_data_reporting_cfg_mode_custom_cmd == 0x66) {
+							// 0: Disable, 1: Enable
+							decoded.active_data_reporting_cfg.mode.custom.screen_object_settings = readUInt8(bytes, counterObj, 1);
+						}
+						if (active_data_reporting_cfg_mode_custom_cmd == 0x67) {
+							// 0: Disable, 1: Enable
+							decoded.active_data_reporting_cfg.mode.custom.system_status = readUInt8(bytes, counterObj, 1);
+						}
+						if (active_data_reporting_cfg_mode_custom_cmd == 0x68) {
+							// 0: Disable, 1: Enable
+							decoded.active_data_reporting_cfg.mode.custom.temperature_control_mode = readUInt8(bytes, counterObj, 1);
+						}
+						if (active_data_reporting_cfg_mode_custom_cmd == 0x69) {
+							// 0: Disable, 1: Enable
+							decoded.active_data_reporting_cfg.mode.custom.target_temperature_resolution = readUInt8(bytes, counterObj, 1);
+						}
+						if (active_data_reporting_cfg_mode_custom_cmd == 0x6a) {
+							// 0: Disable, 1: Enable
+							decoded.active_data_reporting_cfg.mode.custom.target_temperature_tolerance = readUInt8(bytes, counterObj, 1);
+						}
+						if (active_data_reporting_cfg_mode_custom_cmd == 0x6b) {
+							// 0: Disable, 1: Enable
+							decoded.active_data_reporting_cfg.mode.custom.heating_target_temperature = readUInt8(bytes, counterObj, 1);
+						}
+						if (active_data_reporting_cfg_mode_custom_cmd == 0x6c) {
+							// 0: Disable, 1: Enable
+							decoded.active_data_reporting_cfg.mode.custom.cooling_target_temperature = readUInt8(bytes, counterObj, 1);
+						}
+						if (active_data_reporting_cfg_mode_custom_cmd == 0x6d) {
+							// 0: Disable, 1: Enable
+							decoded.active_data_reporting_cfg.mode.custom.heating_target_temperature_range = readUInt8(bytes, counterObj, 1);
+						}
+						if (active_data_reporting_cfg_mode_custom_cmd == 0x6e) {
+							// 0: Disable, 1: Enable
+							decoded.active_data_reporting_cfg.mode.custom.cooling_target_temperature_range = readUInt8(bytes, counterObj, 1);
+						}
+						if (active_data_reporting_cfg_mode_custom_cmd == 0x6f) {
+							// 0: Disable, 1: Enable
+							decoded.active_data_reporting_cfg.mode.custom.temperature_control_dehumidification = readUInt8(bytes, counterObj, 1);
+						}
+						if (active_data_reporting_cfg_mode_custom_cmd == 0x70) {
+							// 0: Disable, 1: Enable
+							decoded.active_data_reporting_cfg.mode.custom.target_humidity_range = readUInt8(bytes, counterObj, 1);
+						}
+						if (active_data_reporting_cfg_mode_custom_cmd == 0x71) {
+							// 0: Disable, 1: Enable
+							decoded.active_data_reporting_cfg.mode.custom.temp_ctl_dehumi_cfg = readUInt8(bytes, counterObj, 1);
+						}
+						if (active_data_reporting_cfg_mode_custom_cmd == 0x72) {
+							// 0: Disable, 1: Enable
+							decoded.active_data_reporting_cfg.mode.custom.fan_control_mode = readUInt8(bytes, counterObj, 1);
+						}
+						if (active_data_reporting_cfg_mode_custom_cmd == 0x73) {
+							// 0: Disable, 1: Enable
+							decoded.active_data_reporting_cfg.mode.custom.fan_auto_mode_temperature_range = readUInt8(bytes, counterObj, 1);
+						}
+						if (active_data_reporting_cfg_mode_custom_cmd == 0x74) {
+							// 0: Disable, 1: Enable
+							decoded.active_data_reporting_cfg.mode.custom.fan_delay_close = readUInt8(bytes, counterObj, 1);
+						}
+						if (active_data_reporting_cfg_mode_custom_cmd == 0x75) {
+							// 0: Disable, 1: Enable
+							decoded.active_data_reporting_cfg.mode.custom.child_lock = readUInt8(bytes, counterObj, 1);
+						}
+						if (active_data_reporting_cfg_mode_custom_cmd == 0x76) {
+							// 0: Disable, 1: Enable
+							decoded.active_data_reporting_cfg.mode.custom.temperature_alarm_settings = readUInt8(bytes, counterObj, 1);
+						}
+						if (active_data_reporting_cfg_mode_custom_cmd == 0x77) {
+							// 0: Disable, 1: Enable
+							decoded.active_data_reporting_cfg.mode.custom.high_temperature_alarm_settings = readUInt8(bytes, counterObj, 1);
+						}
+						if (active_data_reporting_cfg_mode_custom_cmd == 0x78) {
+							// 0: Disable, 1: Enable
+							decoded.active_data_reporting_cfg.mode.custom.low_temperature_alarm_settings = readUInt8(bytes, counterObj, 1);
+						}
+						if (active_data_reporting_cfg_mode_custom_cmd == 0x79) {
+							// 0: Disable, 1: Enable
+							decoded.active_data_reporting_cfg.mode.custom.temperature_calibration_settings = readUInt8(bytes, counterObj, 1);
+						}
+						if (active_data_reporting_cfg_mode_custom_cmd == 0x7a) {
+							// 0: Disable, 1: Enable
+							decoded.active_data_reporting_cfg.mode.custom.humidity_calibration_settings = readUInt8(bytes, counterObj, 1);
+						}
+						if (active_data_reporting_cfg_mode_custom_cmd == 0x7b) {
+							// 0: Disable, 1: Enable
+							decoded.active_data_reporting_cfg.mode.custom.schedule_settings = readUInt8(bytes, counterObj, 1);
+						}
+						if (active_data_reporting_cfg_mode_custom_cmd == 0x7c) {
+							// 0: Disable, 1: Enable
+							decoded.active_data_reporting_cfg.mode.custom.interface_settings = readUInt8(bytes, counterObj, 1);
+						}
+						if (active_data_reporting_cfg_mode_custom_cmd == 0x7f) {
+							// 0: Disable, 1: Enable
+							decoded.active_data_reporting_cfg.mode.custom.fan_delay_close_cfg = readUInt8(bytes, counterObj, 1);
+						}
+						if (active_data_reporting_cfg_mode_custom_cmd == 0x80) {
+							// 0: Disable, 1: Enable
+							decoded.active_data_reporting_cfg.mode.custom.di_enable = readUInt8(bytes, counterObj, 1);
+						}
+						if (active_data_reporting_cfg_mode_custom_cmd == 0x81) {
+							// 0: Disable, 1: Enable
+							decoded.active_data_reporting_cfg.mode.custom.di_settings = readUInt8(bytes, counterObj, 1);
+						}
+						if (active_data_reporting_cfg_mode_custom_cmd == 0x82) {
+							// 0: Disable, 1: Enable
+							decoded.active_data_reporting_cfg.mode.custom.window_opening_detection_enable = readUInt8(bytes, counterObj, 1);
+						}
+						if (active_data_reporting_cfg_mode_custom_cmd == 0x83) {
+							// 0: Disable, 1: Enable
+							decoded.active_data_reporting_cfg.mode.custom.window_opening_detection_settings = readUInt8(bytes, counterObj, 1);
+						}
+						if (active_data_reporting_cfg_mode_custom_cmd == 0x84) {
+							// 0: Disable, 1: Enable
+							decoded.active_data_reporting_cfg.mode.custom.freeze_protection_settings = readUInt8(bytes, counterObj, 1);
+						}
+						if (active_data_reporting_cfg_mode_custom_cmd == 0x85) {
+							// 0: Disable, 1: Enable
+							decoded.active_data_reporting_cfg.mode.custom.temperature_source = readUInt8(bytes, counterObj, 1);
+						}
+						if (active_data_reporting_cfg_mode_custom_cmd == 0x86) {
+							// 0: Disable, 1: Enable
+							decoded.active_data_reporting_cfg.mode.custom.d2d_pairing_enable = readUInt8(bytes, counterObj, 1);
+						}
+						if (active_data_reporting_cfg_mode_custom_cmd == 0x87) {
+							// 0: Disable, 1: Enable
+							decoded.active_data_reporting_cfg.mode.custom.d2d_pairing_settings = readUInt8(bytes, counterObj, 1);
+						}
+						if (active_data_reporting_cfg_mode_custom_cmd == 0x88) {
+							// 0: Disable, 1: Enable
+							decoded.active_data_reporting_cfg.mode.custom.d2d_master_enable = readUInt8(bytes, counterObj, 1);
+						}
+						if (active_data_reporting_cfg_mode_custom_cmd == 0x89) {
+							// 0: Disable, 1: Enable
+							decoded.active_data_reporting_cfg.mode.custom.d2d_master_settings = readUInt8(bytes, counterObj, 1);
+						}
+						if (active_data_reporting_cfg_mode_custom_cmd == 0x8a) {
+							// 0: Disable, 1: Enable
+							decoded.active_data_reporting_cfg.mode.custom.d2d_slave_enable = readUInt8(bytes, counterObj, 1);
+						}
+						if (active_data_reporting_cfg_mode_custom_cmd == 0x8b) {
+							// 0: Disable, 1: Enable
+							decoded.active_data_reporting_cfg.mode.custom.d2d_slave_settings = readUInt8(bytes, counterObj, 1);
+						}
+						if (active_data_reporting_cfg_mode_custom_cmd == 0x8c) {
+							// 0: Disable, 1: Enable
+							decoded.active_data_reporting_cfg.mode.custom.timed_system_control = readUInt8(bytes, counterObj, 1);
+						}
+						if (active_data_reporting_cfg_mode_custom_cmd == 0x8d) {
+							// 0: Disable, 1: Enable
+							decoded.active_data_reporting_cfg.mode.custom.temporary_unlock_settings = readUInt8(bytes, counterObj, 1);
+						}
+						if (active_data_reporting_cfg_mode_custom_cmd == 0x8e) {
+							// 0: Disable, 1: Enable
+							decoded.active_data_reporting_cfg.mode.custom.fan_stop_enable = readUInt8(bytes, counterObj, 1);
+						}
+						if (active_data_reporting_cfg_mode_custom_cmd == 0x90) {
+							// 0: Disable, 1: Enable
+							decoded.active_data_reporting_cfg.mode.custom.relay_changes_report_enable = readUInt8(bytes, counterObj, 1);
+						}
+						if (active_data_reporting_cfg_mode_custom_cmd == 0x91) {
+							// 0: Disable, 1: Enable
+							decoded.active_data_reporting_cfg.mode.custom.screen_content_settings = readUInt8(bytes, counterObj, 1);
+						}
+						if (active_data_reporting_cfg_mode_custom_cmd == 0x92) {
+							// 0: Disable, 1: Enable
+							decoded.active_data_reporting_cfg.mode.custom.valve_type_setting = readUInt8(bytes, counterObj, 1);
+						}
+						if (active_data_reporting_cfg_mode_custom_cmd == 0x96) {
+							// 0: Disable, 1: Enable
+							decoded.active_data_reporting_cfg.mode.custom.child_lock_enable_cfg = readUInt8(bytes, counterObj, 1);
+						}
+						if (active_data_reporting_cfg_mode_custom_cmd == 0x97) {
+							// 0: Disable, 1: Enable
+							decoded.active_data_reporting_cfg.mode.custom.temporary_button_unlock_cfg = readUInt8(bytes, counterObj, 1);
+						}
+						if (active_data_reporting_cfg_mode_custom_cmd == 0x98) {
+							// 0: Disable, 1: Enable
+							decoded.active_data_reporting_cfg.mode.custom.freeze_protection_cfg = readUInt8(bytes, counterObj, 1);
+						}
+						if (active_data_reporting_cfg_mode_custom_cmd == 0x99) {
+							// 0: Disable, 1: Enable
+							decoded.active_data_reporting_cfg.mode.custom.threshold_alarm_cfg = readUInt8(bytes, counterObj, 1);
+						}
+						if (active_data_reporting_cfg_mode_custom_cmd == 0x9a) {
+							// 0: Disable, 1: Enable
+							decoded.active_data_reporting_cfg.mode.custom.high_temperature_alarm_cfg = readUInt8(bytes, counterObj, 1);
+						}
+						if (active_data_reporting_cfg_mode_custom_cmd == 0x9b) {
+							// 0: Disable, 1: Enable
+							decoded.active_data_reporting_cfg.mode.custom.low_temperature_alarm_cfg = readUInt8(bytes, counterObj, 1);
+						}
+						if (active_data_reporting_cfg_mode_custom_cmd == 0x9c) {
+							// 0: Disable, 1: Enable
+							decoded.active_data_reporting_cfg.mode.custom.temperature_calibration_cfg = readUInt8(bytes, counterObj, 1);
+						}
+						if (active_data_reporting_cfg_mode_custom_cmd == 0x9d) {
+							// 0: Disable, 1: Enable
+							decoded.active_data_reporting_cfg.mode.custom.humidity_calibration_cfg = readUInt8(bytes, counterObj, 1);
+						}
+						if (active_data_reporting_cfg_mode_custom_cmd == 0x9e) {
+							// 0: Disable, 1: Enable
+							decoded.active_data_reporting_cfg.mode.custom.interface_type_cfg = readUInt8(bytes, counterObj, 1);
+						}
+						if (active_data_reporting_cfg_mode_custom_cmd == 0x9f) {
+							// 0: Disable, 1: Enable
+							decoded.active_data_reporting_cfg.mode.custom.fan_speed_ctl_delta_cfg = readUInt8(bytes, counterObj, 1);
+						}
+						if (active_data_reporting_cfg_mode_custom_cmd == 0xa0) {
+							// 0: Disable, 1: Enable
+							decoded.active_data_reporting_cfg.mode.custom.temperature_data_source_cfg = readUInt8(bytes, counterObj, 1);
+						}
+						if (active_data_reporting_cfg_mode_custom_cmd == 0xa1) {
+							// 0: Disable, 1: Enable
+							decoded.active_data_reporting_cfg.mode.custom.reporting_interval_cfg = readUInt8(bytes, counterObj, 1);
+						}
+						if (active_data_reporting_cfg_mode_custom_cmd == 0xa2) {
+							// 0: Disable, 1: Enable
+							decoded.active_data_reporting_cfg.mode.custom.screen_display_cfg = readUInt8(bytes, counterObj, 1);
+						}
+						if (active_data_reporting_cfg_mode_custom_cmd == 0xa3) {
+							// 0: Disable, 1: Enable
+							decoded.active_data_reporting_cfg.mode.custom.unilatera_tolerance_enable = readUInt8(bytes, counterObj, 1);
+						}
+						if (active_data_reporting_cfg_mode_custom_cmd == 0xa5) {
+							// 0: Disable, 1: Enable
+							decoded.active_data_reporting_cfg.mode.custom.temperature_control_permission_cfg = readUInt8(bytes, counterObj, 1);
+						}
+						if (active_data_reporting_cfg_mode_custom_cmd == 0xa7) {
+							// 0: Disable, 1: Enable
+							decoded.active_data_reporting_cfg.mode.custom.external_data_src_timeout_cfg = readUInt8(bytes, counterObj, 1);
+						}
+						if (active_data_reporting_cfg_mode_custom_cmd == 0xc6) {
+							// 0: Disable, 1: Enable
+							decoded.active_data_reporting_cfg.mode.custom.daylight_saving_time = readUInt8(bytes, counterObj, 1);
+						}
+						if (active_data_reporting_cfg_mode_custom_cmd == 0xc7) {
+							// 0: Disable, 1: Enable
+							decoded.active_data_reporting_cfg.mode.custom.time_zone = readUInt8(bytes, counterObj, 1);
+						}
+						if (active_data_reporting_cfg_mode_custom_cmd == 0xc8) {
+							// 0: Disable, 1: Enable
+							decoded.active_data_reporting_cfg.mode.custom.device_status = readUInt8(bytes, counterObj, 1);
+						}
 					}
 				}
 				break;
@@ -1806,8 +1812,8 @@ function cmdMap() {
 		  "8502": "temperature_source.lorawan_reception",
 		  "8503": "temperature_source.d2d_reception",
 		  "9600": "child_lock_enable_cfg.enable",
-		  "9601": "child_lock_enable_cfg.key_enable",
-		  "9700": "temporary_button_unlock_cfg.enable",
+		  "9601": "child_lock_enable_cfg.key_enable_cfg",
+		  "9700": "temporary_button_unlock_cfg.enable_cfg",
 		  "9701": "temporary_button_unlock_cfg.unlocking_duration",
 		  "9800": "freeze_protection_cfg.enable",
 		  "9801": "freeze_protection_cfg.target_temperature",
@@ -1948,73 +1954,75 @@ function cmdMap() {
 		  "c300": "active_data_reporting_cfg.start_time",
 		  "c301": "active_data_reporting_cfg.times",
 		  "c302": "active_data_reporting_cfg.mode",
-		  "c303": "active_data_reporting_cfg.custom_cfg",
-		  "c30360": "active_data_reporting_cfg.custom_cfg.collection_interval",
-		  "c30362": "active_data_reporting_cfg.custom_cfg.reporting_interval",
-		  "c30363": "active_data_reporting_cfg.custom_cfg.temperature_unit",
-		  "c30364": "active_data_reporting_cfg.custom_cfg.mode_enable",
-		  "c30365": "active_data_reporting_cfg.custom_cfg.intelligent_display_enable",
-		  "c30366": "active_data_reporting_cfg.custom_cfg.screen_object_settings",
-		  "c30367": "active_data_reporting_cfg.custom_cfg.system_status",
-		  "c30368": "active_data_reporting_cfg.custom_cfg.temperature_control_mode",
-		  "c30369": "active_data_reporting_cfg.custom_cfg.target_temperature_resolution",
-		  "c3036a": "active_data_reporting_cfg.custom_cfg.target_temperature_tolerance",
-		  "c3036b": "active_data_reporting_cfg.custom_cfg.heating_target_temperature",
-		  "c3036c": "active_data_reporting_cfg.custom_cfg.cooling_target_temperature",
-		  "c3036d": "active_data_reporting_cfg.custom_cfg.heating_target_temperature_range",
-		  "c3036e": "active_data_reporting_cfg.custom_cfg.cooling_target_temperature_range",
-		  "c3036f": "active_data_reporting_cfg.custom_cfg.temperature_control_dehumidification",
-		  "c30370": "active_data_reporting_cfg.custom_cfg.target_humidity_range",
-		  "c30371": "active_data_reporting_cfg.custom_cfg.temp_ctl_dehumi_cfg",
-		  "c30372": "active_data_reporting_cfg.custom_cfg.fan_control_mode",
-		  "c30373": "active_data_reporting_cfg.custom_cfg.fan_auto_mode_temperature_range",
-		  "c30374": "active_data_reporting_cfg.custom_cfg.fan_delay_close",
-		  "c30375": "active_data_reporting_cfg.custom_cfg.child_lock",
-		  "c30376": "active_data_reporting_cfg.custom_cfg.temperature_alarm_settings",
-		  "c30377": "active_data_reporting_cfg.custom_cfg.high_temperature_alarm_settings",
-		  "c30378": "active_data_reporting_cfg.custom_cfg.low_temperature_alarm_settings",
-		  "c30379": "active_data_reporting_cfg.custom_cfg.temperature_calibration_settings",
-		  "c3037a": "active_data_reporting_cfg.custom_cfg.humidity_calibration_settings",
-		  "c3037b": "active_data_reporting_cfg.custom_cfg.schedule_settings",
-		  "c3037c": "active_data_reporting_cfg.custom_cfg.interface_settings",
-		  "c3037f": "active_data_reporting_cfg.custom_cfg.fan_delay_close_cfg",
-		  "c30380": "active_data_reporting_cfg.custom_cfg.di_enable",
-		  "c30381": "active_data_reporting_cfg.custom_cfg.di_settings",
-		  "c30382": "active_data_reporting_cfg.custom_cfg.window_opening_detection_enable",
-		  "c30383": "active_data_reporting_cfg.custom_cfg.window_opening_detection_settings",
-		  "c30384": "active_data_reporting_cfg.custom_cfg.freeze_protection_settings",
-		  "c30385": "active_data_reporting_cfg.custom_cfg.temperature_source",
-		  "c30386": "active_data_reporting_cfg.custom_cfg.d2d_pairing_enable",
-		  "c30387": "active_data_reporting_cfg.custom_cfg.d2d_pairing_settings",
-		  "c30388": "active_data_reporting_cfg.custom_cfg.d2d_master_enable",
-		  "c30389": "active_data_reporting_cfg.custom_cfg.d2d_master_settings",
-		  "c3038a": "active_data_reporting_cfg.custom_cfg.d2d_slave_enable",
-		  "c3038b": "active_data_reporting_cfg.custom_cfg.d2d_slave_settings",
-		  "c3038c": "active_data_reporting_cfg.custom_cfg.timed_system_control",
-		  "c3038d": "active_data_reporting_cfg.custom_cfg.temporary_unlock_settings",
-		  "c3038e": "active_data_reporting_cfg.custom_cfg.fan_stop_enable",
-		  "c30390": "active_data_reporting_cfg.custom_cfg.relay_changes_report_enable",
-		  "c30391": "active_data_reporting_cfg.custom_cfg.screen_content_settings",
-		  "c30392": "active_data_reporting_cfg.custom_cfg.valve_type_setting",
-		  "c30396": "active_data_reporting_cfg.custom_cfg.child_lock_enable_cfg",
-		  "c30397": "active_data_reporting_cfg.custom_cfg.temporary_button_unlock_cfg",
-		  "c30398": "active_data_reporting_cfg.custom_cfg.freeze_protection_cfg",
-		  "c30399": "active_data_reporting_cfg.custom_cfg.threshold_alarm_cfg",
-		  "c3039a": "active_data_reporting_cfg.custom_cfg.high_temperature_alarm_cfg",
-		  "c3039b": "active_data_reporting_cfg.custom_cfg.low_temperature_alarm_cfg",
-		  "c3039c": "active_data_reporting_cfg.custom_cfg.temperature_calibration_cfg",
-		  "c3039d": "active_data_reporting_cfg.custom_cfg.humidity_calibration_cfg",
-		  "c3039e": "active_data_reporting_cfg.custom_cfg.interface_type_cfg",
-		  "c3039f": "active_data_reporting_cfg.custom_cfg.fan_speed_ctl_delta_cfg",
-		  "c303a0": "active_data_reporting_cfg.custom_cfg.temperature_data_source_cfg",
-		  "c303a1": "active_data_reporting_cfg.custom_cfg.reporting_interval_cfg",
-		  "c303a2": "active_data_reporting_cfg.custom_cfg.screen_display_cfg",
-		  "c303a3": "active_data_reporting_cfg.custom_cfg.unilatera_tolerance_enable",
-		  "c303a5": "active_data_reporting_cfg.custom_cfg.temperature_control_permission_cfg",
-		  "c303a7": "active_data_reporting_cfg.custom_cfg.external_data_src_timeout_cfg",
-		  "c303c6": "active_data_reporting_cfg.custom_cfg.daylight_saving_time",
-		  "c303c7": "active_data_reporting_cfg.custom_cfg.time_zone",
-		  "c303c8": "active_data_reporting_cfg.custom_cfg.device_status",
+		  "c30200": "active_data_reporting_cfg.mode.all_close",
+		  "c30201": "active_data_reporting_cfg.mode.all_open",
+		  "c30202": "active_data_reporting_cfg.mode.custom",
+		  "c3020260": "active_data_reporting_cfg.mode.custom.collection_interval",
+		  "c3020262": "active_data_reporting_cfg.mode.custom.reporting_interval",
+		  "c3020263": "active_data_reporting_cfg.mode.custom.temperature_unit",
+		  "c3020264": "active_data_reporting_cfg.mode.custom.mode_enable",
+		  "c3020265": "active_data_reporting_cfg.mode.custom.intelligent_display_enable",
+		  "c3020266": "active_data_reporting_cfg.mode.custom.screen_object_settings",
+		  "c3020267": "active_data_reporting_cfg.mode.custom.system_status",
+		  "c3020268": "active_data_reporting_cfg.mode.custom.temperature_control_mode",
+		  "c3020269": "active_data_reporting_cfg.mode.custom.target_temperature_resolution",
+		  "c302026a": "active_data_reporting_cfg.mode.custom.target_temperature_tolerance",
+		  "c302026b": "active_data_reporting_cfg.mode.custom.heating_target_temperature",
+		  "c302026c": "active_data_reporting_cfg.mode.custom.cooling_target_temperature",
+		  "c302026d": "active_data_reporting_cfg.mode.custom.heating_target_temperature_range",
+		  "c302026e": "active_data_reporting_cfg.mode.custom.cooling_target_temperature_range",
+		  "c302026f": "active_data_reporting_cfg.mode.custom.temperature_control_dehumidification",
+		  "c3020270": "active_data_reporting_cfg.mode.custom.target_humidity_range",
+		  "c3020271": "active_data_reporting_cfg.mode.custom.temp_ctl_dehumi_cfg",
+		  "c3020272": "active_data_reporting_cfg.mode.custom.fan_control_mode",
+		  "c3020273": "active_data_reporting_cfg.mode.custom.fan_auto_mode_temperature_range",
+		  "c3020274": "active_data_reporting_cfg.mode.custom.fan_delay_close",
+		  "c3020275": "active_data_reporting_cfg.mode.custom.child_lock",
+		  "c3020276": "active_data_reporting_cfg.mode.custom.temperature_alarm_settings",
+		  "c3020277": "active_data_reporting_cfg.mode.custom.high_temperature_alarm_settings",
+		  "c3020278": "active_data_reporting_cfg.mode.custom.low_temperature_alarm_settings",
+		  "c3020279": "active_data_reporting_cfg.mode.custom.temperature_calibration_settings",
+		  "c302027a": "active_data_reporting_cfg.mode.custom.humidity_calibration_settings",
+		  "c302027b": "active_data_reporting_cfg.mode.custom.schedule_settings",
+		  "c302027c": "active_data_reporting_cfg.mode.custom.interface_settings",
+		  "c302027f": "active_data_reporting_cfg.mode.custom.fan_delay_close_cfg",
+		  "c3020280": "active_data_reporting_cfg.mode.custom.di_enable",
+		  "c3020281": "active_data_reporting_cfg.mode.custom.di_settings",
+		  "c3020282": "active_data_reporting_cfg.mode.custom.window_opening_detection_enable",
+		  "c3020283": "active_data_reporting_cfg.mode.custom.window_opening_detection_settings",
+		  "c3020284": "active_data_reporting_cfg.mode.custom.freeze_protection_settings",
+		  "c3020285": "active_data_reporting_cfg.mode.custom.temperature_source",
+		  "c3020286": "active_data_reporting_cfg.mode.custom.d2d_pairing_enable",
+		  "c3020287": "active_data_reporting_cfg.mode.custom.d2d_pairing_settings",
+		  "c3020288": "active_data_reporting_cfg.mode.custom.d2d_master_enable",
+		  "c3020289": "active_data_reporting_cfg.mode.custom.d2d_master_settings",
+		  "c302028a": "active_data_reporting_cfg.mode.custom.d2d_slave_enable",
+		  "c302028b": "active_data_reporting_cfg.mode.custom.d2d_slave_settings",
+		  "c302028c": "active_data_reporting_cfg.mode.custom.timed_system_control",
+		  "c302028d": "active_data_reporting_cfg.mode.custom.temporary_unlock_settings",
+		  "c302028e": "active_data_reporting_cfg.mode.custom.fan_stop_enable",
+		  "c3020290": "active_data_reporting_cfg.mode.custom.relay_changes_report_enable",
+		  "c3020291": "active_data_reporting_cfg.mode.custom.screen_content_settings",
+		  "c3020292": "active_data_reporting_cfg.mode.custom.valve_type_setting",
+		  "c3020296": "active_data_reporting_cfg.mode.custom.child_lock_enable_cfg",
+		  "c3020297": "active_data_reporting_cfg.mode.custom.temporary_button_unlock_cfg",
+		  "c3020298": "active_data_reporting_cfg.mode.custom.freeze_protection_cfg",
+		  "c3020299": "active_data_reporting_cfg.mode.custom.threshold_alarm_cfg",
+		  "c302029a": "active_data_reporting_cfg.mode.custom.high_temperature_alarm_cfg",
+		  "c302029b": "active_data_reporting_cfg.mode.custom.low_temperature_alarm_cfg",
+		  "c302029c": "active_data_reporting_cfg.mode.custom.temperature_calibration_cfg",
+		  "c302029d": "active_data_reporting_cfg.mode.custom.humidity_calibration_cfg",
+		  "c302029e": "active_data_reporting_cfg.mode.custom.interface_type_cfg",
+		  "c302029f": "active_data_reporting_cfg.mode.custom.fan_speed_ctl_delta_cfg",
+		  "c30202a0": "active_data_reporting_cfg.mode.custom.temperature_data_source_cfg",
+		  "c30202a1": "active_data_reporting_cfg.mode.custom.reporting_interval_cfg",
+		  "c30202a2": "active_data_reporting_cfg.mode.custom.screen_display_cfg",
+		  "c30202a3": "active_data_reporting_cfg.mode.custom.unilatera_tolerance_enable",
+		  "c30202a5": "active_data_reporting_cfg.mode.custom.temperature_control_permission_cfg",
+		  "c30202a7": "active_data_reporting_cfg.mode.custom.external_data_src_timeout_cfg",
+		  "c30202c6": "active_data_reporting_cfg.mode.custom.daylight_saving_time",
+		  "c30202c7": "active_data_reporting_cfg.mode.custom.time_zone",
+		  "c30202c8": "active_data_reporting_cfg.mode.custom.device_status",
 		  "a5": "temperature_control_permission_cfg",
 		  "a500": "temperature_control_permission_cfg.temp_ctrl_permission",
 		  "a6": "debug_commands",

@@ -48,7 +48,7 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Device Status | 0xC8 | 2 | r | 1 |  | 0: Off<br>1: On |
 | Collecting Interval | 0x60 | 1 | rw |  |  |  |
 | Collecting Interval Unit | 0x60 | 2 | rw | 0 |  | 0: Second<br>1: Min |
-| Collecting Interval | 0x60 | 3 | rw | 30 | 10 - 64800 |  |
+| Collecting Interval | 0x60 | 3 | rw | 30 | 10 - 3600 |  |
 | Collecting Interval | 0x60 | 3 | rw | 1 | 1 - 1440 |  |
 | Reporting Interval | 0x62 | 1 | rw |  |  |  |
 | Reporting Interval Unit | 0x62 | 2 | rw | 1 |  | 0: Second<br>1: Min |
@@ -159,12 +159,13 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Child Lock Enable Configuration | 0x96 | 1 | rw |  |  |  |
 | Sub-command | 0x96 | 2 | rw | 0 |  |  |
 | Child Lock Function Enable | 0x96 | 2 | rw | 0 |  | 0: Disable<br>1: Enable |
-| Child Lock Key Enable | 0x96 | 2 | rw | 0 |  | 0: All Disabled<br>1: System Switch<br>2: Temp+ & Temp-<br>3: System Switch + Temp+ & Temp-<br>4: Fan<br>5: System Switch + Fan<br>6: Temp+ & Temp- + Fan<br>7: System Switch + Temp+ & Temp- + Fan<br>8: Temperature Control Mode<br>9: System Switch + Temperature Control Mode<br>10: Temp+ & Temp- + Temperature Control Mode<br>11: System Switch + Temp+ & Temp- + Temperature Control Mode<br>12: Fan + Temperature Control Mode<br>13: System Switch + Fan + Temperature Control Mode<br>14: Temp+ & Temp- + Fan + Temperature Control Mode<br>15: System Switch + Temp+ & Temp- + Fan + Temperature Control Mode<br>16: Restart/Reset<br>17: System Switch + Restart/Reset<br>18: Temp+ & Temp- + Restart/Reset<br>19: System Switch + Temp+ & Temp- + Restart/Reset<br>20: Fan + Restart/Reset<br>21: System Switch + Fan + Restart/Reset<br>22: Temp+ & Temp- + Fan + Restart/Reset<br>23: System Switch + Temp+ & Temp- + Fan + Restart/Reset<br>24: Temperature Control Mode + Restart/Reset<br>25: System Switch + Temperature Control Mode + Restart/Reset<br>26: Temp+ & Temp- + Temperature Control Mode + Restart/Reset<br>27: System Switch + Temp+ & Temp- + Temperature Control Mode + Restart/Reset<br>28: Fan + Temperature Control Mode + Restart/Reset<br>29: System Switch + Fan + Temperature Control Mode + Restart/Reset<br>30: Temp+ & Temp- + Fan + Temperature Control Mode + Restart/Reset<br>31: System Switch + Temp+ & Temp- + Fan + Temperature Control Mode + Restart/Reset |
+| Child Lock Key Enable | 0x96 | 2 | rw |  |  |  |
 | System On/Off  | 0x96 | 2 | rw | 0 |  | 0: Disable<br>1: Enable |
 | Temperature + &amp; Temperature - | 0x96 | 2 | rw | 0 |  | 0: Disable<br>1: Enable |
 | Fan | 0x96 | 2 | rw | 0 |  | 0: Disable<br>1: Enable |
 | Temperature Control Mode | 0x96 | 2 | rw | 0 |  | 0: Disable<br>1: Enable |
 | Reboot&amp;Reset | 0x96 | 2 | rw | 0 |  | 0: Disable<br>1: Enable |
+| Reserved | 0x96 | 2 | rw |  |  |  |
 | Unlock Button Settings | 0x8D | 5 | rw |  |  |  |
 | Unlock Function Enable | 0x8D | 2 | rw | 0 |  | 0: Disable<br>1: Enable |
 | System On/Off  | 0x8D | 2 | rw | 0 |  | 0: Disable<br>1: Enable |
@@ -176,7 +177,7 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Unlocking Time | 0x8D | 3 | rw | 30 | 1 - 3600 |  |
 | Temporary Button Unlock Configuration | 0x97 | 1 | rw |  |  |  |
 | Sub-command | 0x97 | 2 | rw | 0 |  |  |
-| Temporary Button Unlock Enable | 0x97 | 2 | rw | 0 |  | 0：Disable<br>3：System switch & Temperature +<br>5：System switch & Temperature -<br>6：Temperature + & Temperature -<br>7：System switch & Temperature + & Temperature -<br>9：System switch & Fan<br>10：Temperature + & Fan<br>11：System switch & Temperature + & Fan<br>12：Temperature - & Fan<br>13：System switch & Temperature - & Fan<br>14：Temperature + & Temperature - & Fan<br>15：System switch & Temperature + & Temperature - & Fan<br>17：System switch & Temperature control mode<br>18：Temperature + & Temperature control mode<br>19：System switch & Temperature + & Temperature control mode<br>20：Temperature - & Temperature control mode<br>21：System switch & Temperature - & Temperature control mode<br>22：Temperature + & Temperature - & Temperature control mode<br>23：System switch & Temperature + & Temperature - & Temperature control mode<br>24：Fan & Temperature control mode<br>25：System switch & Fan & Temperature control mode<br>26：Temperature + & Fan & Temperature control mode<br>27：System switch & Temperature + & Fan & Temperature control mode<br>28：Temperature - & Fan & Temperature control mode<br>29：System switch & Temperature - & Fan & Temperature control mode<br>30：Temperature + & Temperature - & Fan & Temperature control mode<br>31：System switch & Temperature + & Temperature - & Fan & Temperature control mode |
+| Temporary Button Unlock Enable Cfg | 0x97 | 2 | rw |  |  |  |
 | System On/Off  | 0x97 | 2 | rw | 0 |  | 0: Disable<br>1: Enable |
 | Temperature +  | 0x97 | 2 | rw | 0 |  | 0: Disable<br>1: Enable |
 | Temperature - | 0x97 | 2 | rw | 0 |  | 0: Disable<br>1: Enable |
@@ -350,8 +351,11 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Sub-command | 0xC3 | 2 | rw | 0 |  |  |
 | Active Data Reporting Start Time | 0xC3 | 3 | rw | 240 | 0 - 1439 |  |
 | Active Data Reporting Times | 0xC3 | 2 | rw | 0 | 0 - 12 |  |
-| Active Data Reporting Mode | 0xC3 | 2 | rw | 0 |  | 0: Disable All<br>1: Enable All<br>2: Custom |
-| Active Data Reporting Custom Configuration | 0xC3 | 3 | rw |  |  |  |
+| Active Data Reporting Mode | 0xC3 | 2 | rw |  |  |  |
+| Active Data Reporting Mode Type | 0xC3 | 2 | rw | 0 |  | 0：All Close<br>1：All Open<br>2：Custom |
+| Active Data Reporting Instruction All Close | 0xC3 | 1 | rw |  |  |  |
+| Active Data Reporting Instruction All Open | 0xC3 | 1 | rw |  |  |  |
+| Active Data Reporting Instruction Custom | 0xC3 | 1 | rw |  |  |  |
 | Sub-command | 0xC3 | 2 | rw |  |  |  |
 | Collecting Interval | 0xC3 | 2 | rw | 0 |  | 0: Disable<br>1: Enable |
 | Reporting Interval | 0xC3 | 2 | rw | 0 |  | 0: Disable<br>1: Enable |

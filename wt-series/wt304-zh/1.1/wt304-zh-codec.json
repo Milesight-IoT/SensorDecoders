@@ -89,8 +89,8 @@
             "reference": []
         },
         {
-            "id": "child_lock_enable_cfg.fan",
-            "name": "Fan(Child Lock Enable Configuration)",
+            "id": "child_lock_enable_cfg.key_enable_cfg.fan",
+            "name": "Fan(Child Lock Key Enable)",
             "value": "0",
             "unit": "",
             "access_mode": "RW",
@@ -109,154 +109,17 @@
             "bacnet_type": "binary_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": []
+            "reference": [
+                "child_lock_enable_cfg.key_enable_cfg.system",
+                "child_lock_enable_cfg.key_enable_cfg.temperature",
+                "child_lock_enable_cfg.key_enable_cfg.temperature_control",
+                "child_lock_enable_cfg.key_enable_cfg.reboot_reset",
+                "child_lock_enable_cfg.key_enable_cfg.reserved"
+            ]
         },
         {
-            "id": "child_lock_enable_cfg.key_enable",
-            "name": "Child Lock Key Enable(Child Lock Enable Configuration)",
-            "value": "0",
-            "unit": "",
-            "access_mode": "RW",
-            "data_type": "ENUM",
-            "value_type": "UINT8",
-            "values": [
-                {
-                    "value": 0,
-                    "name": "All Disabled"
-                },
-                {
-                    "value": 1,
-                    "name": "System Switch"
-                },
-                {
-                    "value": 2,
-                    "name": "Temp+ & Temp-"
-                },
-                {
-                    "value": 3,
-                    "name": "System Switch + Temp+ & Temp-"
-                },
-                {
-                    "value": 4,
-                    "name": "Fan"
-                },
-                {
-                    "value": 5,
-                    "name": "System Switch + Fan"
-                },
-                {
-                    "value": 6,
-                    "name": "Temp+ & Temp- + Fan"
-                },
-                {
-                    "value": 7,
-                    "name": "System Switch + Temp+ & Temp- + Fan"
-                },
-                {
-                    "value": 8,
-                    "name": "Temperature Control Mode"
-                },
-                {
-                    "value": 9,
-                    "name": "System Switch + Temperature Control Mode"
-                },
-                {
-                    "value": 10,
-                    "name": "Temp+ & Temp- + Temperature Control Mode"
-                },
-                {
-                    "value": 11,
-                    "name": "System Switch + Temp+ & Temp- + Temperature Control Mode"
-                },
-                {
-                    "value": 12,
-                    "name": "Fan + Temperature Control Mode"
-                },
-                {
-                    "value": 13,
-                    "name": "System Switch + Fan + Temperature Control Mode"
-                },
-                {
-                    "value": 14,
-                    "name": "Temp+ & Temp- + Fan + Temperature Control Mode"
-                },
-                {
-                    "value": 15,
-                    "name": "System Switch + Temp+ & Temp- + Fan + Temperature Control Mode"
-                },
-                {
-                    "value": 16,
-                    "name": "Restart/Reset"
-                },
-                {
-                    "value": 17,
-                    "name": "System Switch + Restart/Reset"
-                },
-                {
-                    "value": 18,
-                    "name": "Temp+ & Temp- + Restart/Reset"
-                },
-                {
-                    "value": 19,
-                    "name": "System Switch + Temp+ & Temp- + Restart/Reset"
-                },
-                {
-                    "value": 20,
-                    "name": "Fan + Restart/Reset"
-                },
-                {
-                    "value": 21,
-                    "name": "System Switch + Fan + Restart/Reset"
-                },
-                {
-                    "value": 22,
-                    "name": "Temp+ & Temp- + Fan + Restart/Reset"
-                },
-                {
-                    "value": 23,
-                    "name": "System Switch + Temp+ & Temp- + Fan + Restart/Reset"
-                },
-                {
-                    "value": 24,
-                    "name": "Temperature Control Mode + Restart/Reset"
-                },
-                {
-                    "value": 25,
-                    "name": "System Switch + Temperature Control Mode + Restart/Reset"
-                },
-                {
-                    "value": 26,
-                    "name": "Temp+ & Temp- + Temperature Control Mode + Restart/Reset"
-                },
-                {
-                    "value": 27,
-                    "name": "System Switch + Temp+ & Temp- + Temperature Control Mode + Restart/Reset"
-                },
-                {
-                    "value": 28,
-                    "name": "Fan + Temperature Control Mode + Restart/Reset"
-                },
-                {
-                    "value": 29,
-                    "name": "System Switch + Fan + Temperature Control Mode + Restart/Reset"
-                },
-                {
-                    "value": 30,
-                    "name": "Temp+ & Temp- + Fan + Temperature Control Mode + Restart/Reset"
-                },
-                {
-                    "value": 31,
-                    "name": "System Switch + Temp+ & Temp- + Fan + Temperature Control Mode + Restart/Reset"
-                }
-            ],
-            "bacnet_type": "multistate_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": []
-        },
-        {
-            "id": "child_lock_enable_cfg.reboot_reset",
-            "name": "Reboot&Reset(Child Lock Enable Configuration)",
+            "id": "child_lock_enable_cfg.key_enable_cfg.reboot_reset",
+            "name": "Reboot&Reset(Child Lock Key Enable)",
             "value": "0",
             "unit": "",
             "access_mode": "RW",
@@ -275,11 +138,46 @@
             "bacnet_type": "binary_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": []
+            "reference": [
+                "child_lock_enable_cfg.key_enable_cfg.system",
+                "child_lock_enable_cfg.key_enable_cfg.temperature",
+                "child_lock_enable_cfg.key_enable_cfg.fan",
+                "child_lock_enable_cfg.key_enable_cfg.temperature_control",
+                "child_lock_enable_cfg.key_enable_cfg.reserved"
+            ]
         },
         {
-            "id": "child_lock_enable_cfg.system",
-            "name": "System On/Off (Child Lock Enable Configuration)",
+            "id": "child_lock_enable_cfg.key_enable_cfg.reserved",
+            "name": "Reserved(Child Lock Key Enable)",
+            "value": "0",
+            "unit": "",
+            "access_mode": "RW",
+            "data_type": "BOOL",
+            "value_type": "UINT8",
+            "values": [
+                {
+                    "value": 0,
+                    "name": "disable"
+                },
+                {
+                    "value": 1,
+                    "name": "enable"
+                }
+            ],
+            "bacnet_type": "binary_value_object",
+            "bacnet_unit_type_id": 95,
+            "bacnet_unit_type": "UNITS_NO_UNITS",
+            "reference": [
+                "child_lock_enable_cfg.key_enable_cfg.system",
+                "child_lock_enable_cfg.key_enable_cfg.temperature",
+                "child_lock_enable_cfg.key_enable_cfg.fan",
+                "child_lock_enable_cfg.key_enable_cfg.temperature_control",
+                "child_lock_enable_cfg.key_enable_cfg.reboot_reset"
+            ]
+        },
+        {
+            "id": "child_lock_enable_cfg.key_enable_cfg.system",
+            "name": "System On/Off (Child Lock Key Enable)",
             "value": "0",
             "unit": "",
             "access_mode": "RW",
@@ -298,11 +196,17 @@
             "bacnet_type": "binary_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": []
+            "reference": [
+                "child_lock_enable_cfg.key_enable_cfg.temperature",
+                "child_lock_enable_cfg.key_enable_cfg.fan",
+                "child_lock_enable_cfg.key_enable_cfg.temperature_control",
+                "child_lock_enable_cfg.key_enable_cfg.reboot_reset",
+                "child_lock_enable_cfg.key_enable_cfg.reserved"
+            ]
         },
         {
-            "id": "child_lock_enable_cfg.temperature",
-            "name": "Temperature + & Temperature -(Child Lock Enable Configuration)",
+            "id": "child_lock_enable_cfg.key_enable_cfg.temperature",
+            "name": "Temperature + & Temperature -(Child Lock Key Enable)",
             "value": "0",
             "unit": "",
             "access_mode": "RW",
@@ -321,11 +225,17 @@
             "bacnet_type": "binary_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": []
+            "reference": [
+                "child_lock_enable_cfg.key_enable_cfg.system",
+                "child_lock_enable_cfg.key_enable_cfg.fan",
+                "child_lock_enable_cfg.key_enable_cfg.temperature_control",
+                "child_lock_enable_cfg.key_enable_cfg.reboot_reset",
+                "child_lock_enable_cfg.key_enable_cfg.reserved"
+            ]
         },
         {
-            "id": "child_lock_enable_cfg.temperature_control",
-            "name": "Temperature Control Mode(Child Lock Enable Configuration)",
+            "id": "child_lock_enable_cfg.key_enable_cfg.temperature_control",
+            "name": "Temperature Control Mode(Child Lock Key Enable)",
             "value": "0",
             "unit": "",
             "access_mode": "RW",
@@ -344,7 +254,13 @@
             "bacnet_type": "binary_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": []
+            "reference": [
+                "child_lock_enable_cfg.key_enable_cfg.system",
+                "child_lock_enable_cfg.key_enable_cfg.temperature",
+                "child_lock_enable_cfg.key_enable_cfg.fan",
+                "child_lock_enable_cfg.key_enable_cfg.reboot_reset",
+                "child_lock_enable_cfg.key_enable_cfg.reserved"
+            ]
         },
         {
             "id": "cooling_target_temperature_range.celsius_max",
@@ -1677,131 +1593,8 @@
             "bacnet_unit_type": "UNITS_NO_UNITS"
         },
         {
-            "id": "temporary_button_unlock_cfg.enable",
-            "name": "Temporary Button Unlock Enable(Temporary Button Unlock Configuration)",
-            "value": "0",
-            "unit": "",
-            "access_mode": "RW",
-            "data_type": "ENUM",
-            "value_type": "UINT8",
-            "values": [
-                {
-                    "value": 0,
-                    "name": "Disable"
-                },
-                {
-                    "value": 3,
-                    "name": "System switch & Temperature +"
-                },
-                {
-                    "value": 5,
-                    "name": "System switch & Temperature -"
-                },
-                {
-                    "value": 6,
-                    "name": "Temperature + & Temperature -"
-                },
-                {
-                    "value": 7,
-                    "name": "System switch & Temperature + & Temperature -"
-                },
-                {
-                    "value": 9,
-                    "name": "System switch & Fan"
-                },
-                {
-                    "value": 10,
-                    "name": "Temperature + & Fan"
-                },
-                {
-                    "value": 11,
-                    "name": "System switch & Temperature + & Fan"
-                },
-                {
-                    "value": 12,
-                    "name": "Temperature - & Fan"
-                },
-                {
-                    "value": 13,
-                    "name": "System switch & Temperature - & Fan"
-                },
-                {
-                    "value": 14,
-                    "name": "Temperature + & Temperature - & Fan"
-                },
-                {
-                    "value": 15,
-                    "name": "System switch & Temperature + & Temperature - & Fan"
-                },
-                {
-                    "value": 17,
-                    "name": "System switch & Temperature control mode"
-                },
-                {
-                    "value": 18,
-                    "name": "Temperature + & Temperature control mode"
-                },
-                {
-                    "value": 19,
-                    "name": "System switch & Temperature + & Temperature control mode"
-                },
-                {
-                    "value": 20,
-                    "name": "Temperature - & Temperature control mode"
-                },
-                {
-                    "value": 21,
-                    "name": "System switch & Temperature - & Temperature control mode"
-                },
-                {
-                    "value": 22,
-                    "name": "Temperature + & Temperature - & Temperature control mode"
-                },
-                {
-                    "value": 23,
-                    "name": "System switch & Temperature + & Temperature - & Temperature control mode"
-                },
-                {
-                    "value": 24,
-                    "name": "Fan & Temperature control mode"
-                },
-                {
-                    "value": 25,
-                    "name": "System switch & Fan & Temperature control mode"
-                },
-                {
-                    "value": 26,
-                    "name": "Temperature + & Fan & Temperature control mode"
-                },
-                {
-                    "value": 27,
-                    "name": "System switch & Temperature + & Fan & Temperature control mode"
-                },
-                {
-                    "value": 28,
-                    "name": "Temperature - & Fan & Temperature control mode"
-                },
-                {
-                    "value": 29,
-                    "name": "System switch & Temperature - & Fan & Temperature control mode"
-                },
-                {
-                    "value": 30,
-                    "name": "Temperature + & Temperature - & Fan & Temperature control mode"
-                },
-                {
-                    "value": 31,
-                    "name": "System switch & Temperature + & Temperature - & Fan & Temperature control mode"
-                }
-            ],
-            "bacnet_type": "multistate_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": []
-        },
-        {
-            "id": "temporary_button_unlock_cfg.fan",
-            "name": "Fan Mode(Temporary Button Unlock Configuration)",
+            "id": "temporary_button_unlock_cfg.enable_cfg.fan",
+            "name": "Fan Mode(Temporary Button Unlock Enable Cfg)",
             "value": "0",
             "unit": "",
             "access_mode": "RW",
@@ -1820,11 +1613,17 @@
             "bacnet_type": "binary_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": []
+            "reference": [
+                "temporary_button_unlock_cfg.enable_cfg.system",
+                "temporary_button_unlock_cfg.enable_cfg.temperature_up",
+                "temporary_button_unlock_cfg.enable_cfg.temperature_down",
+                "temporary_button_unlock_cfg.enable_cfg.temperature_control",
+                "temporary_button_unlock_cfg.enable_cfg.reserved"
+            ]
         },
         {
-            "id": "temporary_button_unlock_cfg.reserved",
-            "name": "Reserved(Temporary Button Unlock Configuration)",
+            "id": "temporary_button_unlock_cfg.enable_cfg.reserved",
+            "name": "Reserved(Temporary Button Unlock Enable Cfg)",
             "value": "0",
             "unit": "",
             "access_mode": "RW",
@@ -1843,11 +1642,17 @@
             "bacnet_type": "binary_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": []
+            "reference": [
+                "temporary_button_unlock_cfg.enable_cfg.system",
+                "temporary_button_unlock_cfg.enable_cfg.temperature_up",
+                "temporary_button_unlock_cfg.enable_cfg.temperature_down",
+                "temporary_button_unlock_cfg.enable_cfg.fan",
+                "temporary_button_unlock_cfg.enable_cfg.temperature_control"
+            ]
         },
         {
-            "id": "temporary_button_unlock_cfg.system",
-            "name": "System On/Off (Temporary Button Unlock Configuration)",
+            "id": "temporary_button_unlock_cfg.enable_cfg.system",
+            "name": "System On/Off (Temporary Button Unlock Enable Cfg)",
             "value": "0",
             "unit": "",
             "access_mode": "RW",
@@ -1866,11 +1671,17 @@
             "bacnet_type": "binary_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": []
+            "reference": [
+                "temporary_button_unlock_cfg.enable_cfg.temperature_up",
+                "temporary_button_unlock_cfg.enable_cfg.temperature_down",
+                "temporary_button_unlock_cfg.enable_cfg.fan",
+                "temporary_button_unlock_cfg.enable_cfg.temperature_control",
+                "temporary_button_unlock_cfg.enable_cfg.reserved"
+            ]
         },
         {
-            "id": "temporary_button_unlock_cfg.temperature_control",
-            "name": "Temperature Control Mode(Temporary Button Unlock Configuration)",
+            "id": "temporary_button_unlock_cfg.enable_cfg.temperature_control",
+            "name": "Temperature Control Mode(Temporary Button Unlock Enable Cfg)",
             "value": "0",
             "unit": "",
             "access_mode": "RW",
@@ -1889,11 +1700,17 @@
             "bacnet_type": "binary_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": []
+            "reference": [
+                "temporary_button_unlock_cfg.enable_cfg.system",
+                "temporary_button_unlock_cfg.enable_cfg.temperature_up",
+                "temporary_button_unlock_cfg.enable_cfg.temperature_down",
+                "temporary_button_unlock_cfg.enable_cfg.fan",
+                "temporary_button_unlock_cfg.enable_cfg.reserved"
+            ]
         },
         {
-            "id": "temporary_button_unlock_cfg.temperature_down",
-            "name": "Temperature -(Temporary Button Unlock Configuration)",
+            "id": "temporary_button_unlock_cfg.enable_cfg.temperature_down",
+            "name": "Temperature -(Temporary Button Unlock Enable Cfg)",
             "value": "0",
             "unit": "",
             "access_mode": "RW",
@@ -1912,11 +1729,17 @@
             "bacnet_type": "binary_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": []
+            "reference": [
+                "temporary_button_unlock_cfg.enable_cfg.system",
+                "temporary_button_unlock_cfg.enable_cfg.temperature_up",
+                "temporary_button_unlock_cfg.enable_cfg.fan",
+                "temporary_button_unlock_cfg.enable_cfg.temperature_control",
+                "temporary_button_unlock_cfg.enable_cfg.reserved"
+            ]
         },
         {
-            "id": "temporary_button_unlock_cfg.temperature_up",
-            "name": "Temperature + (Temporary Button Unlock Configuration)",
+            "id": "temporary_button_unlock_cfg.enable_cfg.temperature_up",
+            "name": "Temperature + (Temporary Button Unlock Enable Cfg)",
             "value": "0",
             "unit": "",
             "access_mode": "RW",
@@ -1935,7 +1758,13 @@
             "bacnet_type": "binary_value_object",
             "bacnet_unit_type_id": 95,
             "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": []
+            "reference": [
+                "temporary_button_unlock_cfg.enable_cfg.system",
+                "temporary_button_unlock_cfg.enable_cfg.temperature_down",
+                "temporary_button_unlock_cfg.enable_cfg.fan",
+                "temporary_button_unlock_cfg.enable_cfg.temperature_control",
+                "temporary_button_unlock_cfg.enable_cfg.reserved"
+            ]
         },
         {
             "id": "temporary_button_unlock_cfg.unlocking_duration",

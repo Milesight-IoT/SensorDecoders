@@ -458,8 +458,8 @@ function milesightDeviceEncode(payload) {
 		// 0: Second, 1: Min
 		buffer.writeUInt8(payload.collection_interval.unit);
 		if (payload.collection_interval.unit == 0x00) {
-			if (payload.collection_interval.seconds_of_time < 10 || payload.collection_interval.seconds_of_time > 64800) {
-				throw betweenError('collection_interval.seconds_of_time', 10, 64800);
+			if (payload.collection_interval.seconds_of_time < 10 || payload.collection_interval.seconds_of_time > 3600) {
+				throw betweenError('collection_interval.seconds_of_time', 10, 3600);
 			}
 			buffer.writeUInt16LE(payload.collection_interval.seconds_of_time);
 		}
@@ -869,13 +869,7 @@ function milesightDeviceEncode(payload) {
 		// 0: Disable, 1: Enable
 		bitOptions |= payload.screen_object_settings.schedule_name << 3;
 
-		// 0: Disable, 1: Enable
-		bitOptions |= payload.screen_object_settings.temp_ctrl_mode << 4;
-
-		// 0: Disable, 1: Enable
-		bitOptions |= payload.screen_object_settings.fan_ctrl_mode << 5;
-
-		bitOptions |= payload.screen_object_settings.reserved << 6;
+		bitOptions |= payload.screen_object_settings.reserved << 4;
 		buffer.writeUInt8(bitOptions);
 
 		encoded = encoded.concat(buffer.toBytes());

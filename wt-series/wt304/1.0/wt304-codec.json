@@ -14,8 +14,8 @@
                 100
             ],
             "bacnet_type": "analog_input_object",
-            "bacnet_unit_type_id": 15,
-            "bacnet_unit_type": "UNITS_POWER_FACTOR"
+            "bacnet_unit_type_id": 98,
+            "bacnet_unit_type": "UNITS_PERCENT"
         },
         {
             "id": "celsius_cooling_target_temperature",
@@ -336,7 +336,7 @@
             "value_type": "UINT16",
             "range": [
                 10,
-                64800
+                3600
             ],
             "bacnet_type": "analog_value_object",
             "bacnet_unit_type_id": 73,
@@ -1900,8 +1900,8 @@
                 100
             ],
             "bacnet_type": "analog_value_object",
-            "bacnet_unit_type_id": 15,
-            "bacnet_unit_type": "UNITS_POWER_FACTOR",
+            "bacnet_unit_type_id": 98,
+            "bacnet_unit_type": "UNITS_PERCENT",
             "reference": []
         },
         {
@@ -1917,8 +1917,8 @@
                 100
             ],
             "bacnet_type": "analog_value_object",
-            "bacnet_unit_type_id": 15,
-            "bacnet_unit_type": "UNITS_POWER_FACTOR",
+            "bacnet_unit_type_id": 98,
+            "bacnet_unit_type": "UNITS_PERCENT",
             "reference": []
         },
         {
@@ -1934,8 +1934,8 @@
                 100
             ],
             "bacnet_type": "analog_value_object",
-            "bacnet_unit_type_id": 15,
-            "bacnet_unit_type": "UNITS_POWER_FACTOR",
+            "bacnet_unit_type_id": 98,
+            "bacnet_unit_type": "UNITS_PERCENT",
             "reference": []
         },
         {
@@ -2207,8 +2207,8 @@
                 100
             ],
             "bacnet_type": "analog_input_object",
-            "bacnet_unit_type_id": 15,
-            "bacnet_unit_type": "UNITS_POWER_FACTOR"
+            "bacnet_unit_type_id": 98,
+            "bacnet_unit_type": "UNITS_PERCENT"
         },
         {
             "id": "humidity_alarm.type",
@@ -2246,8 +2246,8 @@
                 100
             ],
             "bacnet_type": "analog_value_object",
-            "bacnet_unit_type_id": 15,
-            "bacnet_unit_type": "UNITS_POWER_FACTOR",
+            "bacnet_unit_type_id": 98,
+            "bacnet_unit_type": "UNITS_PERCENT",
             "reference": [
                 "humidity_calibration_settings.enable"
             ]
@@ -3372,8 +3372,6 @@
                 "screen_object_settings.environmental_humidity",
                 "screen_object_settings.target_temperature",
                 "screen_object_settings.schedule_name",
-                "screen_object_settings.temp_ctrl_mode",
-                "screen_object_settings.fan_ctrl_mode",
                 "screen_object_settings.reserved"
             ]
         },
@@ -3403,8 +3401,6 @@
                 "screen_object_settings.environmental_temperature",
                 "screen_object_settings.target_temperature",
                 "screen_object_settings.schedule_name",
-                "screen_object_settings.temp_ctrl_mode",
-                "screen_object_settings.fan_ctrl_mode",
                 "screen_object_settings.reserved"
             ]
         },
@@ -3434,39 +3430,6 @@
                 "screen_object_settings.environmental_humidity",
                 "screen_object_settings.target_temperature",
                 "screen_object_settings.schedule_name",
-                "screen_object_settings.temp_ctrl_mode",
-                "screen_object_settings.fan_ctrl_mode",
-                "screen_object_settings.reserved"
-            ]
-        },
-        {
-            "id": "screen_object_settings.fan_ctrl_mode",
-            "name": "Fan Control Mode(Screen Display Settings)",
-            "value": "1",
-            "unit": "",
-            "access_mode": "RW",
-            "data_type": "BOOL",
-            "value_type": "UINT8",
-            "values": [
-                {
-                    "value": 0,
-                    "name": "Disable"
-                },
-                {
-                    "value": 1,
-                    "name": "Enable"
-                }
-            ],
-            "bacnet_type": "binary_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": [
-                "screen_object_settings.enable",
-                "screen_object_settings.environmental_temperature",
-                "screen_object_settings.environmental_humidity",
-                "screen_object_settings.target_temperature",
-                "screen_object_settings.schedule_name",
-                "screen_object_settings.temp_ctrl_mode",
                 "screen_object_settings.reserved"
             ]
         },
@@ -3496,9 +3459,7 @@
                 "screen_object_settings.environmental_temperature",
                 "screen_object_settings.environmental_humidity",
                 "screen_object_settings.target_temperature",
-                "screen_object_settings.schedule_name",
-                "screen_object_settings.temp_ctrl_mode",
-                "screen_object_settings.fan_ctrl_mode"
+                "screen_object_settings.schedule_name"
             ]
         },
         {
@@ -3527,8 +3488,6 @@
                 "screen_object_settings.environmental_temperature",
                 "screen_object_settings.environmental_humidity",
                 "screen_object_settings.target_temperature",
-                "screen_object_settings.temp_ctrl_mode",
-                "screen_object_settings.fan_ctrl_mode",
                 "screen_object_settings.reserved"
             ]
         },
@@ -3558,39 +3517,6 @@
                 "screen_object_settings.environmental_temperature",
                 "screen_object_settings.environmental_humidity",
                 "screen_object_settings.schedule_name",
-                "screen_object_settings.temp_ctrl_mode",
-                "screen_object_settings.fan_ctrl_mode",
-                "screen_object_settings.reserved"
-            ]
-        },
-        {
-            "id": "screen_object_settings.temp_ctrl_mode",
-            "name": "Temperature Control Mode(Screen Display Settings)",
-            "value": "1",
-            "unit": "",
-            "access_mode": "RW",
-            "data_type": "BOOL",
-            "value_type": "UINT8",
-            "values": [
-                {
-                    "value": 0,
-                    "name": "Disable"
-                },
-                {
-                    "value": 1,
-                    "name": "Enable"
-                }
-            ],
-            "bacnet_type": "binary_value_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": [
-                "screen_object_settings.enable",
-                "screen_object_settings.environmental_temperature",
-                "screen_object_settings.environmental_humidity",
-                "screen_object_settings.target_temperature",
-                "screen_object_settings.schedule_name",
-                "screen_object_settings.fan_ctrl_mode",
                 "screen_object_settings.reserved"
             ]
         },
@@ -3607,8 +3533,8 @@
                 100
             ],
             "bacnet_type": "analog_output_object",
-            "bacnet_unit_type_id": 15,
-            "bacnet_unit_type": "UNITS_POWER_FACTOR",
+            "bacnet_unit_type_id": 98,
+            "bacnet_unit_type": "UNITS_PERCENT",
             "reference": []
         },
         {
@@ -3680,8 +3606,8 @@
                 100
             ],
             "bacnet_type": "analog_value_object",
-            "bacnet_unit_type_id": 15,
-            "bacnet_unit_type": "UNITS_POWER_FACTOR",
+            "bacnet_unit_type_id": 98,
+            "bacnet_unit_type": "UNITS_PERCENT",
             "reference": [
                 "target_humidity_range.min"
             ]
@@ -3699,8 +3625,8 @@
                 100
             ],
             "bacnet_type": "analog_value_object",
-            "bacnet_unit_type_id": 15,
-            "bacnet_unit_type": "UNITS_POWER_FACTOR",
+            "bacnet_unit_type_id": 98,
+            "bacnet_unit_type": "UNITS_PERCENT",
             "reference": [
                 "target_humidity_range.max"
             ]
@@ -4214,8 +4140,8 @@
                 100
             ],
             "bacnet_type": "analog_input_object",
-            "bacnet_unit_type_id": 15,
-            "bacnet_unit_type": "UNITS_POWER_FACTOR"
+            "bacnet_unit_type_id": 98,
+            "bacnet_unit_type": "UNITS_PERCENT"
         },
         {
             "id": "temperature_source.d2d_reception.timeout",
@@ -4893,8 +4819,8 @@
                 100
             ],
             "bacnet_type": "analog_value_object",
-            "bacnet_unit_type_id": 15,
-            "bacnet_unit_type": "UNITS_POWER_FACTOR",
+            "bacnet_unit_type_id": 98,
+            "bacnet_unit_type": "UNITS_PERCENT",
             "reference": [
                 "valve_control_settings.opening_range.min"
             ]

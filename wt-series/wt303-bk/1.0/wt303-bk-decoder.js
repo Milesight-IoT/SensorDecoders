@@ -465,11 +465,7 @@ function milesightDeviceDecode(bytes) {
 				decoded.screen_object_settings.target_temperature = extractBits(bitOptions, 2, 3);
 				// 0: Disable, 1: Enable
 				decoded.screen_object_settings.schedule_name = extractBits(bitOptions, 3, 4);
-				// 0: Disable, 1: Enable
-				decoded.screen_object_settings.temp_ctrl_mode = extractBits(bitOptions, 4, 5);
-				// 0: Disable, 1: Enable
-				decoded.screen_object_settings.fan_ctrl_mode = extractBits(bitOptions, 5, 6);
-				decoded.screen_object_settings.reserved = extractBits(bitOptions, 6, 8);
+				decoded.screen_object_settings.reserved = extractBits(bitOptions, 4, 8);
 				break;
 			case 0x75:
 				decoded.child_lock = decoded.child_lock || {};
