@@ -835,6 +835,10 @@ function milesightDeviceDecode(bytes) {
 					decoded.interface_settings.valve_2_pipe_3_wire.nc = readUInt8(bytes, counterObj, 1);
 				}
 				break;
+			case 0x9e:
+				// 0: Four-pipe, Two-wire Valve+Three-speeds Fan, 1: Two-pipe, Two-wire Valve+Three-speeds Fan, 2: Two-pipe, Three-wire Valve+Three-speeds Fan
+				decoded.interface_type_cfg = readUInt8(bytes, counterObj, 1);
+				break;
 			case 0x8e:
 				// 0: Disable, 1: Enable
 				decoded.fan_stop_enable = readUInt8(bytes, counterObj, 1);
@@ -1396,6 +1400,9 @@ function milesightDeviceDecode(bytes) {
 				if (debug_commands_cmd == 0x03) {
 					decoded.debug_commands.ambient_humi_value = readUInt16LE(bytes, counterObj, 2) / 10;
 				}
+				break;
+			case 0xb8:
+				decoded.synchronize_time = readOnlyCommand(bytes, counterObj, 0);
 				break;
 			case 0xb7:
 				decoded.set_time = decoded.set_time || {};
@@ -2051,6 +2058,7 @@ function cmdMap() {
 		  "7c00": "interface_settings.valve_4_pipe_2_wire",
 		  "7c01": "interface_settings.valve_2_pipe_2_wire",
 		  "7c02": "interface_settings.valve_2_pipe_3_wire",
+		  "9e": "interface_type_cfg",
 		  "8e": "fan_stop_enable",
 		  "87xx": "d2d_pairing_settings._item",
 		  "87xx00": "d2d_pairing_settings._item.enable",
@@ -2150,6 +2158,7 @@ function cmdMap() {
 		  "a601": "debug_commands.ambient_temp_value",
 		  "a602": "debug_commands.ambient_humi_enable",
 		  "a603": "debug_commands.ambient_humi_value",
+		  "b8": "synchronize_time",
 		  "b7": "set_time",
 		  "bd": "clear_historical_data",
 		  "bc": "stop_historical_data_retrieval",

@@ -1638,6 +1638,17 @@ function milesightDeviceEncode(payload) {
 		}
 		encoded = encoded.concat(buffer.toBytes());
 	}
+	//0x9e
+	if ('interface_type_cfg' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0x9e);
+		if ([0, 1, 2].indexOf(payload.interface_type_cfg) === -1) {
+			throw oneOfError('interface_type_cfg', [0, 1, 2]);
+		}
+		// 0: Four-pipe, Two-wire Valve+Three-speeds Fan, 1: Two-pipe, Two-wire Valve+Three-speeds Fan, 2: Two-pipe, Three-wire Valve+Three-speeds Fan
+		buffer.writeUInt8(payload.interface_type_cfg);
+		encoded = encoded.concat(buffer.toBytes());
+	}
 	//0x8e
 	if ('fan_stop_enable' in payload) {
 		var buffer = new Buffer();
@@ -2949,6 +2960,12 @@ function milesightDeviceEncode(payload) {
 		}
 		encoded = encoded.concat(buffer.toBytes());
 	}
+	//0xb8
+	if ('synchronize_time' in payload) {
+		var buffer = new Buffer();
+		buffer.writeUInt8(0xb8);
+		encoded = encoded.concat(buffer.toBytes());
+	}
 	//0xb7
 	if ('set_time' in payload) {
 		var buffer = new Buffer();
@@ -3578,6 +3595,7 @@ function cmdMap() {
 		  "interface_settings.valve_4_pipe_2_wire": "7c00",
 		  "interface_settings.valve_2_pipe_2_wire": "7c01",
 		  "interface_settings.valve_2_pipe_3_wire": "7c02",
+		  "interface_type_cfg": "9e",
 		  "fan_stop_enable": "8e",
 		  "di_enable": "80",
 		  "di_settings": "81",
@@ -3718,6 +3736,7 @@ function cmdMap() {
 		  "debug_commands.ambient_temp_value": "a601",
 		  "debug_commands.ambient_humi_enable": "a602",
 		  "debug_commands.ambient_humi_value": "a603",
+		  "synchronize_time": "b8",
 		  "set_time": "b7",
 		  "clear_historical_data": "bd",
 		  "stop_historical_data_retrieval": "bc",

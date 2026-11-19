@@ -282,6 +282,7 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Two-pipe, Three-wire Valve+Three-speeds Fan | 0x7C | 3 | rw |  |  |  |
 | NO | 0x7C | 2 | rw | 1 |  | 1: V1/ NO<br>2: V2/ NC |
 | NC | 0x7C | 2 | rw | 2 |  | 1: V1/ NO<br>2: V2/ NC |
+| Interface Type Configuration | 0x9E | 2 | rw | 1 |  | 0: Four-pipe<br>Two-wire Valve+Three-speeds Fan<br>1: Two-pipe<br>Two-wire Valve+Three-speeds Fan<br>2: Two-pipe<br>Three-wire Valve+Three-speeds Fan |
 | Fan Stop Settings | 0x8E | 2 | rw | 1 |  | 0: Disable<br>1: Enable |
 | DI Enable | 0x80 | 2 | rw | 0 |  | 0: Disable<br>1: Enable |
 | DI Settings | 0x81 | 1 | rw |  |  |  |
@@ -533,6 +534,7 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | No Data | 0x0A | 1 | r |  |  |  |
 | Alarm Type | 0x0B | 2 | r |  |  |  |
 | No Data | 0x0B | 1 | r |  |  |  |
+| Time Synchronize | 0xB8 | 1 | w |  |  |  |
 | Time Synchronize | 0xB7 | 5 | w |  |  |  |
 | Timestamp | 0xB7 | 5 | w |  |  |  |
 | Clear Data | 0xBD | 1 | w |  |  |  |
