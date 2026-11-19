@@ -1,6 +1,8 @@
-# Smart Radiator Thermostat - WT103
+# WT103 Sensor
 
-For more detailed information, please visit [Milesight Official Website](https://www.milesight.com/iot/product/lorawan-sensor/wt103)
+![WT103](WT103.png)
+
+For more detailed information, please visit [Milesight Official Website](https://www.milesight.com/iot/product/lorawan-sensor/WT103)
 
 ## Payload
 
