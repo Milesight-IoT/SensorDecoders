@@ -153,9 +153,7 @@ function milesightDeviceDecode(bytes) {
 				decoded.open_window_detection.status = readUInt8(bytes, counterObj, 1);
 				break;
 			case 0x11:
-				decoded.relays_status_change = decoded.relays_status_change || {};
-				// 0：normally open , 1：normally closed
-				decoded.relays_status_change.status = readUInt8(bytes, counterObj, 1);
+				decoded.relays_status = readUInt8(bytes, counterObj, 1);
 				break;
 			case 0x60:
 				decoded.reporting_interval = decoded.reporting_interval || {};
