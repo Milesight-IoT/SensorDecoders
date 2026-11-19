@@ -594,29 +594,6 @@
             "bacnet_unit_type": "UNITS_NO_UNITS"
         },
         {
-            "id": "relays_status_change.status",
-            "name": "Relays Status(Relays Status Change)",
-            "value": "0",
-            "unit": "",
-            "access_mode": "R",
-            "data_type": "BOOL",
-            "value_type": "UINT8",
-            "values": [
-                {
-                    "value": 0,
-                    "name": "normally open"
-                },
-                {
-                    "value": 1,
-                    "name": "normally closed"
-                }
-            ],
-            "bacnet_type": "binary_input_object",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "reference": []
-        },
-        {
             "id": "reporting_interval.minutes_of_time",
             "name": "Reporting Interval(Reporting Interval)",
             "value": "20",

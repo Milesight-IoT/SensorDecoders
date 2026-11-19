@@ -66,7 +66,6 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Over Temperature Protection | 0x0E | 4 | r |  |  |  |
 | Freeze Protection | 0x0F | 4 | r |  |  |  |
 | Open Window detection | 0x10 | 4 | r |  |  |  |
-| Relays Status Change | 0x11 | 2 | r |  |  |  |
 
 ### Service
 
@@ -80,7 +79,6 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Protection Status | 0x0F | 2 | r |  |  | 0：normal<br>1：freeze protection |
 | Ambient Temperature | 0x10 | 3 | r |  | -20 - 60 |  |
 | Status | 0x10 | 2 | r |  |  | 0：normal<br>1：open window |
-| Relays Status | 0x11 | 2 | r |  |  | 0：normally open<br>1：normally closed |
 |  Relay Status Control | 0x7A | 2 | w |  |  |  |
 |  Relay Status | 0x7A | 2 | w | 0 |  | 0：normally open<br>1：normally closed |
 |  Open Window Status Control | 0x7C | 2 | w |  |  |  |
