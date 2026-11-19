@@ -1075,28 +1075,6 @@
             "reference": []
         },
         {
-            "id": "reset",
-            "name": "Reset",
-            "access_mode": "W",
-            "data_type": "BOOL",
-            "value_type": "UINT8",
-            "unit": "",
-            "bacnet_unit_type_id": 95,
-            "bacnet_unit_type": "UNITS_NO_UNITS",
-            "bacnet_type": "binary_output_object",
-            "value": "",
-            "values": [
-                {
-                    "value": 0,
-                    "name": "no"
-                },
-                {
-                    "value": 1,
-                    "name": "yes"
-                }
-            ]
-        },
-        {
             "id": "send_temperature.celsius_temperature",
             "name": "Celsius Ambient Temperature Value(Ambient Temperature Settings(LoRa Data Source Only))",
             "value": "0",

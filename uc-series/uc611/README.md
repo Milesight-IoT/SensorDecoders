@@ -73,7 +73,6 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | CHANNEL |  ID  | LENGTH | READ/WRITE | DEFAULT | RANGE | ENUM |
 | :------ | :--: | :----: | :--------: | :-----: | :---: | :--: |
 | Time Synchronize | 0xB8 | 1 | w |  |  |  |
-| Reset | 0xBF | 1 | w |  |  |  |
 | Reboot | 0xBE | 1 | w |  |  |  |
 | Equipment Temperature | 0x0E | 3 | r |  | -40 - 125 |  |
 | Protection Status | 0x0E | 2 | r |  |  | 0：normal<br>1：over temperature  trigger |

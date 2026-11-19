@@ -103,7 +103,6 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | CHANNEL |  ID  | LENGTH | READ/WRITE | DEFAULT | RANGE | ENUM |
 | :------ | :--: | :----: | :--------: | :-----: | :---: | :--: |
 | Time Synchronize | 0xB8 | 1 | w |  |  |  |
-| Reset | 0xBF | 1 | w |  |  |  |
 | Reboot | 0xBE | 1 | w |  |  |  |
 | Current | 0x08 | 3 | r |  | 0 - 65535 |  |
 | Alarm Status | 0x08 | 2 | r |  |  | 0：over current alarm Release<br>1：over current alarm trigger |
