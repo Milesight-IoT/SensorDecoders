@@ -98,6 +98,7 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Nighttime | 0x84 | 1 | rw |  |  |  |
 | Start Time | 0x84 | 3 | rw | 1260 | 0 - 1439 |  |
 | Stop Time | 0x84 | 3 | rw | 480 | 0 - 1439 |  |
+| Night Occupied Execution | 0x84 | 2 | rw | 2 |  | 0:plan0<br>1:plan1<br>2:plan2<br>3:plan3<br>4:plan4<br>5:plan5<br>6:plan6<br>7:plan7<br>8:plan8<br>9:plan9<br>10:plan10<br>11:plan11<br>12:plan12<br>13:plan13<br>14:plan14<br>15:plan15<br>255:Not executed |
 | Energy-saving Setting | 0x83 | 1 | rw |  |  |  |
 | Energy Cmd | 0x83 | 2 | rw | 1 |  |  |
 | Energy-Saving Enable | 0x83 | 2 | rw | 1 |  | 0:disable<br>1:enable |
