@@ -29,6 +29,8 @@ For more detailed information, please visit [Milesight Official Website](https:/
 | Serial Number | 0xFF | 0x16 |   2    | sn(8B)                                                                                           |
 | LoRaWAN Class | 0xFF | 0x0F |   1    | lorawan_class(1B)<br/>lorawan_class, values: (0: Class A, 1: Class B, 2: Class C, 3: Class CtoB) |
 |  Reset Event  | 0xFF | 0xFE |   1    | reset_event(1B)                                                                                  |
+|     ODM ID    | 0xFF | 0xE7 |   2    | odm_id(2B)<br/>odm_id, e.g. 12 34 -> 1234                                                        |
+|  Sub Version  | 0xFF | 0xE8 |   4    | sub_version(4B)<br/>sub_version, e.g. 01 02 00 11 -> r1-a2-t11                                   |
 | Device Status | 0xFF | 0x0B |   1    | device_status(1B)                                                                                |
 
 ### Telemetry
@@ -56,5 +58,16 @@ For more detailed information, please visit [Milesight Official Website](https:/
       "timestamp": 1665561758
     }
   ]
+}
+
+// FFE71234 FFE801020011
+{
+    "odm_id": "1234",
+    "sub_version": "r1-a2-t11"
+}
+
+// FFE801000000 (parts equal to 0 are omitted)
+{
+    "sub_version": "r1"
 }
 ```
