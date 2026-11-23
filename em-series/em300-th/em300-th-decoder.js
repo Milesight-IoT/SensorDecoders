@@ -5,7 +5,7 @@
  *
  * @product EM300-TH
  */
-var RAW_VALUE = 0x00;
+var RAW_VALUE = 0x01;
 
 /* eslint no-redeclare: "off" */
 /* eslint-disable */
@@ -67,6 +67,16 @@ function milesightDeviceDecode(bytes) {
         else if (channel_id === 0xff && channel_type === 0xfe) {
             decoded.reset_event = readResetEvent(1);
             i += 1;
+        }
+        // ODM ID
+        else if (channel_id === 0xff && channel_type === 0xe7) {
+            decoded.odm_id = readOdmId(bytes.slice(i, i + 2));
+            i += 2;
+        }
+        // SUB VERSION
+        else if (channel_id === 0xff && channel_type === 0xe8) {
+            decoded.sub_version = readSubVersion(bytes.slice(i, i + 4));
+            i += 4;
         }
         // DEVICE STATUS
         else if (channel_id === 0xff && channel_type === 0x0b) {
@@ -229,6 +239,33 @@ function readFirmwareVersion(bytes) {
 	if (unit_test !== '0') version += '-u' + unit_test;
 	if (test !== '0') version += '-t' + test;
 	return version;
+}
+
+function readOdmId(bytes) {
+    var temp = [];
+    for (var idx = 0; idx < bytes.length; idx++) {
+        temp.push(("0" + (bytes[idx] & 0xff).toString(16)).slice(-2));
+    }
+    return temp.join("");
+}
+
+/**
+ * read sub version
+ * @param {number[]} bytes values: release(1B) + alpha(1B) + unit_test(1B) + test(1B)
+ * @example 01020011 -> "r1-a2-t11", 01000000 -> "r1"
+ */
+function readSubVersion(bytes) {
+    var release = (bytes[0] & 0xff).toString(16);
+    var alpha = (bytes[1] & 0xff).toString(16);
+    var unit_test = (bytes[2] & 0xff).toString(16);
+    var test = (bytes[3] & 0xff).toString(16);
+
+    var versions = [];
+    if (release !== "0") versions.push("r" + release);
+    if (alpha !== "0") versions.push("a" + alpha);
+    if (unit_test !== "0") versions.push("u" + unit_test);
+    if (test !== "0") versions.push("t" + test);
+    return versions.join("-");
 }
 
 function readTslVersion(bytes) {
