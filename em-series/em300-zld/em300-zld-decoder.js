@@ -5,7 +5,7 @@
  *
  * @product EM300-SLD / EM300-ZLD
  */
-var RAW_VALUE = 0x01;
+var RAW_VALUE = 0x00;
 
 /* eslint no-redeclare: "off" */
 /* eslint-disable */

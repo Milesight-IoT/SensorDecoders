@@ -5,7 +5,7 @@
  *
  * @product EM300-DI
  */
-var RAW_VALUE = 0x01;
+var RAW_VALUE = 0x00;
 
 /* eslint no-redeclare: "off" */
 /* eslint-disable */
