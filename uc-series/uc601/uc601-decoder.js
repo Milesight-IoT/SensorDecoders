@@ -230,7 +230,16 @@ function milesightDeviceDecode(bytes) {
 				break;
 			case 0x10:
 				decoded.open_window_detection = decoded.open_window_detection || {};
-				decoded.open_window_detection.temperature = readInt16LE(bytes, counterObj, 2) / 100;
+
+				var temperature = readUInt16LE(bytes, counterObj, 2);
+				if (temperature == 0xffff) {
+					temperature = 'error';
+				} else {
+					temperature = temperature > 0x7fff ? temperature - 0x10000 : temperature;
+					temperature = temperature / 100;
+				}
+
+				decoded.open_window_detection.temperature = temperature;
 				decoded.ambient_temperature = decoded.open_window_detection.temperature;
 				// 0：normal, 1：open window
 				decoded.open_window_detection.status = readUInt8(bytes, counterObj, 1);
@@ -937,6 +946,24 @@ function getAllLeafPaths(obj, prefix) {
 
 }
 
+function isNumeric(value) {
+    if (typeof value === "number") {
+        return isFinite(value);
+    }
+
+    if (typeof value !== "string") {
+        return false;
+    }
+
+    value = value.trim();
+
+    if (value === "") {
+        return false;
+    }
+
+    return !isNaN(Number(value));
+}
+
 function isInteger(str) {
 	return typeof str === 'string' && /^[0-9]+$/.test(str);
 }
@@ -1146,9 +1173,11 @@ function processTemperature(decoded) {
 			var unitName = allTemperatureProperties[newPropertyId].unitName;
 			var constant = unitName == 'K' || unitName == 'K/min' ? 0 : 32;
 			if (hasPath(decoded, propertyId)) {
-				setPath(decoded, fahrenheitProperty,  Number((getPath(decoded, propertyId) * 1.8 + constant).toFixed(allTemperatureProperties[newPropertyId].precision)));
-				setPath(decoded, celsiusProperty,  Number(getPath(decoded, propertyId).toFixed(allTemperatureProperties[newPropertyId].precision)));
-				removePath(decoded, propertyId);
+                if (isNumeric(getPath(decoded, propertyId))) {
+				    setPath(decoded, fahrenheitProperty,  Number((getPath(decoded, propertyId) * 1.8 + constant).toFixed(allTemperatureProperties[newPropertyId].precision)));
+				    setPath(decoded, celsiusProperty,  Number(getPath(decoded, propertyId).toFixed(allTemperatureProperties[newPropertyId].precision)));
+				    removePath(decoded, propertyId);
+                }
 			}
 		}
 	}
