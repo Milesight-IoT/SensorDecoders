@@ -1934,7 +1934,7 @@
             "bacnet_unit_type": "UNITS_NO_UNITS"
         },
         {
-            "id": "unilatera_tolerance_enable",
+            "id": "unilateral_tolerance_enable",
             "name": "Unilateral Tolerance Enable",
             "value": "0",
             "unit": "",

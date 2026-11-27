@@ -6,6 +6,8 @@
  * @product WT303
  */
 
+
+
 /* eslint no-redeclare: "off" */
 /* eslint-disable */
 // Chirpstack v4
@@ -1956,14 +1958,14 @@ function milesightDeviceEncode(payload) {
 		encoded = encoded.concat(buffer.toBytes());
 	}
 	//0xa3
-	if ('unilatera_tolerance_enable' in payload) {
+	if ('unilateral_tolerance_enable' in payload) {
 		var buffer = new Buffer();
 		buffer.writeUInt8(0xa3);
-		if ([0, 1].indexOf(payload.unilatera_tolerance_enable) === -1) {
-			throw oneOfError('unilatera_tolerance_enable', [0, 1]);
+		if ([0, 1].indexOf(payload.unilateral_tolerance_enable) === -1) {
+			throw oneOfError('unilateral_tolerance_enable', [0, 1]);
 		}
 		// 0: Disable, 1: Enable
-		buffer.writeUInt8(payload.unilatera_tolerance_enable);
+		buffer.writeUInt8(payload.unilateral_tolerance_enable);
 		encoded = encoded.concat(buffer.toBytes());
 	}
 	//0xc3
@@ -2598,15 +2600,15 @@ function milesightDeviceEncode(payload) {
 					// 0: Disable, 1: Enable
 					buffer.writeUInt8(payload.active_data_reporting_cfg.mode.custom.screen_display_cfg);
 				}
-				if (isValid(payload.active_data_reporting_cfg.mode.custom.unilatera_tolerance_enable)) {
+				if (isValid(payload.active_data_reporting_cfg.mode.custom.unilateral_tolerance_enable)) {
 					buffer.writeUInt8(0xc3);
 					// 0: Disable, 1: Enable
 					buffer.writeUInt8(0xa3);
-					if ([0, 1].indexOf(payload.active_data_reporting_cfg.mode.custom.unilatera_tolerance_enable) === -1) {
-						throw oneOfError('active_data_reporting_cfg.mode.custom.unilatera_tolerance_enable', [0, 1]);
+					if ([0, 1].indexOf(payload.active_data_reporting_cfg.mode.custom.unilateral_tolerance_enable) === -1) {
+						throw oneOfError('active_data_reporting_cfg.mode.custom.unilateral_tolerance_enable', [0, 1]);
 					}
 					// 0: Disable, 1: Enable
-					buffer.writeUInt8(payload.active_data_reporting_cfg.mode.custom.unilatera_tolerance_enable);
+					buffer.writeUInt8(payload.active_data_reporting_cfg.mode.custom.unilateral_tolerance_enable);
 				}
 				if (isValid(payload.active_data_reporting_cfg.mode.custom.temperature_control_permission_cfg)) {
 					buffer.writeUInt8(0xc3);
@@ -3384,7 +3386,7 @@ function cmdMap() {
 		  "screen_content_settings._item": "91xx",
 		  "screen_display_cfg": "a2",
 		  "screen_display_cfg.display_data_enable_when_off": "a200",
-		  "unilatera_tolerance_enable": "a3",
+		  "unilateral_tolerance_enable": "a3",
 		  "active_data_reporting_cfg": "c3",
 		  "active_data_reporting_cfg.start_time": "c300",
 		  "active_data_reporting_cfg.times": "c301",
@@ -3452,7 +3454,7 @@ function cmdMap() {
 		  "active_data_reporting_cfg.mode.custom.temperature_data_source_cfg": "c30202a0",
 		  "active_data_reporting_cfg.mode.custom.reporting_interval_cfg": "c30202a1",
 		  "active_data_reporting_cfg.mode.custom.screen_display_cfg": "c30202a2",
-		  "active_data_reporting_cfg.mode.custom.unilatera_tolerance_enable": "c30202a3",
+		  "active_data_reporting_cfg.mode.custom.unilateral_tolerance_enable": "c30202a3",
 		  "active_data_reporting_cfg.mode.custom.temperature_control_permission_cfg": "c30202a5",
 		  "active_data_reporting_cfg.mode.custom.external_data_src_timeout_cfg": "c30202a7",
 		  "active_data_reporting_cfg.mode.custom.daylight_saving_time": "c30202c6",
