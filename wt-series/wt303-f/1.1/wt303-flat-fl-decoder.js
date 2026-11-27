@@ -6,6 +6,8 @@
  * @product WT303-Flat-FL
  */
 
+
+
 /* eslint no-redeclare: "off" */
 /* eslint-disable */
 // Chirpstack v4
@@ -1072,7 +1074,7 @@ function milesightDeviceDecode(bytes) {
 				break;
 			case 0xa3:
 				// 0: Disable, 1: Enable
-				decoded.unilatera_tolerance_enable = readUInt8(bytes, counterObj, 1);
+				decoded.unilateral_tolerance_enable = readUInt8(bytes, counterObj, 1);
 				break;
 			case 0xc3:
 				decoded.active_data_reporting_cfg = decoded.active_data_reporting_cfg || {};
@@ -1350,7 +1352,7 @@ function milesightDeviceDecode(bytes) {
 						}
 						if (active_data_reporting_cfg_mode_custom_cmd == 0xa3) {
 							// 0: Disable, 1: Enable
-							decoded.active_data_reporting_cfg.mode.custom.unilatera_tolerance_enable = readUInt8(bytes, counterObj, 1);
+							decoded.active_data_reporting_cfg.mode.custom.unilateral_tolerance_enable = readUInt8(bytes, counterObj, 1);
 						}
 						if (active_data_reporting_cfg_mode_custom_cmd == 0xa5) {
 							// 0: Disable, 1: Enable
@@ -1650,14 +1652,17 @@ function readHexStringLE(allBytes, counterObj, end) {
 }
 
 function extractBits(byte, startBit, endBit) {
-	if (byte < 0 || byte > 0xffff) {
-	  throw new Error("byte must be in range 0..65535");
+	if (byte < 0 || byte > 0xffffffff) {
+	  throw new Error("byte must be in range 0..4294967295");
 	}
 	if (startBit >= endBit) {
 	  throw new Error("invalid bit range");
 	}
 
 	var width = endBit - startBit;
+	if (width >= 32) {
+	  return byte >>> startBit;
+	}
 	var mask = (1 << width) - 1;
 	return (byte >>> startBit) & mask;
 }
@@ -2074,7 +2079,7 @@ function cmdMap() {
 		  "950a": "energy_saving_cfg.mode",
 		  "a2": "screen_display_cfg",
 		  "a200": "screen_display_cfg.display_data_enable_when_off",
-		  "a3": "unilatera_tolerance_enable",
+		  "a3": "unilateral_tolerance_enable",
 		  "c3": "active_data_reporting_cfg",
 		  "c300": "active_data_reporting_cfg.start_time",
 		  "c301": "active_data_reporting_cfg.times",
@@ -2145,7 +2150,7 @@ function cmdMap() {
 		  "c30202a0": "active_data_reporting_cfg.mode.custom.temperature_data_source_cfg",
 		  "c30202a1": "active_data_reporting_cfg.mode.custom.reporting_interval_cfg",
 		  "c30202a2": "active_data_reporting_cfg.mode.custom.screen_display_cfg",
-		  "c30202a3": "active_data_reporting_cfg.mode.custom.unilatera_tolerance_enable",
+		  "c30202a3": "active_data_reporting_cfg.mode.custom.unilateral_tolerance_enable",
 		  "c30202a5": "active_data_reporting_cfg.mode.custom.temperature_control_permission_cfg",
 		  "c30202a7": "active_data_reporting_cfg.mode.custom.external_data_src_timeout_cfg",
 		  "c30202c6": "active_data_reporting_cfg.mode.custom.daylight_saving_time",
